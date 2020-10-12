@@ -41,12 +41,12 @@ namespace clan
 			{
 				continue;
 			}
-			else if (child->style_cascade().computed_value("position").is_keyword("absolute"))
+			else if (child->style_cascade().computed_value(PropertyHash::hash_position).is_keyword("absolute"))
 			{
 				// To do: decide how we determine the containing box used for absolute positioning. For now, use the parent padding box.
 				layout_from_containing_box(canvas, child.get(), view->geometry().padding_box().translate(-view->geometry().content_pos()));
 			}
-			else if (child->style_cascade().computed_value("position").is_keyword("fixed"))
+			else if (child->style_cascade().computed_value(PropertyHash::hash_position).is_keyword("fixed"))
 			{
 				Rectf offset_initial_containing_box;
 				View *current = view->parent();
@@ -79,13 +79,13 @@ namespace clan
 
 	ViewGeometry PositionedLayout::get_geometry(Canvas &canvas, View *view, const Rectf &containing_box)
 	{
-		bool definite_left = !view->style_cascade().computed_value("left").is_keyword("auto");
-		bool definite_right = !view->style_cascade().computed_value("right").is_keyword("auto");
-		bool definite_width = !view->style_cascade().computed_value("width").is_keyword("auto");
+		bool definite_left = !view->style_cascade().computed_value(PropertyHash::hash_left).is_keyword("auto");
+		bool definite_right = !view->style_cascade().computed_value(PropertyHash::hash_right).is_keyword("auto");
+		bool definite_width = !view->style_cascade().computed_value(PropertyHash::hash_width).is_keyword("auto");
 
-		float computed_left = resolve_percentage(view->style_cascade().computed_value("left"), containing_box.get_width());
-		float computed_right = resolve_percentage(view->style_cascade().computed_value("right"), containing_box.get_width());
-		float computed_width = resolve_percentage(view->style_cascade().computed_value("width"), containing_box.get_width());
+		float computed_left = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_left), containing_box.get_width());
+		float computed_right = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_right), containing_box.get_width());
+		float computed_width = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_width), containing_box.get_width());
 
 		float x = 0.0f;
 		float width = 0.0f;
@@ -121,7 +121,7 @@ namespace clan
 		else if (definite_width)
 		{
 			x = 0.0f;
-			width = view->style_cascade().computed_value("width").number();
+			width = view->style_cascade().computed_value(PropertyHash::hash_width).number();
 		}
 		else
 		{
@@ -129,13 +129,13 @@ namespace clan
 			width = view->preferred_width(canvas);
 		}
 
-		bool definite_top = !view->style_cascade().computed_value("top").is_keyword("auto");
-		bool definite_bottom = !view->style_cascade().computed_value("bottom").is_keyword("auto");
-		bool definite_height = !view->style_cascade().computed_value("height").is_keyword("auto");
+		bool definite_top = !view->style_cascade().computed_value(PropertyHash::hash_top).is_keyword("auto");
+		bool definite_bottom = !view->style_cascade().computed_value(PropertyHash::hash_bottom).is_keyword("auto");
+		bool definite_height = !view->style_cascade().computed_value(PropertyHash::hash_height).is_keyword("auto");
 
-		float computed_top = resolve_percentage(view->style_cascade().computed_value("top"), containing_box.get_height());
-		float computed_bottom = resolve_percentage(view->style_cascade().computed_value("bottom"), containing_box.get_height());
-		float computed_height = resolve_percentage(view->style_cascade().computed_value("height"), containing_box.get_height());
+		float computed_top = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_top), containing_box.get_height());
+		float computed_bottom = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_bottom), containing_box.get_height());
+		float computed_height = resolve_percentage(view->style_cascade().computed_value(PropertyHash::hash_height), containing_box.get_height());
 
 		float y = 0.0f;
 		float height = 0.0f;

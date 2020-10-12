@@ -99,23 +99,23 @@ namespace clan
 			bgclip = StyleSetValue::from_keyword("inherit");
 			bgsize = StyleSetValue::from_keyword("inherit");
 
-			setter->set_value("background-color", bgcolor);
-			setter->set_value("background-image", bgimage);
-			setter->set_value("background-repeat", bgrepeat);
-			setter->set_value_array("background-repeat-x", bgrepeatx);
-			setter->set_value_array("background-repeat-y", bgrepeaty);
-			setter->set_value("background-attachment", bgattachment);
-			setter->set_value_array("background-attachment", bgattachments);
-			setter->set_value("background-position", bgposition);
-			setter->set_value_array("background-position-x", bgpositionsx);
-			setter->set_value_array("background-position-y", bgpositionsy);
-			setter->set_value("background-origin", bgorigin);
-			setter->set_value_array("background-origin", bgorigins);
-			setter->set_value("background-clip", bgclip);
-			setter->set_value_array("background-clip", bgclips);
-			setter->set_value("background-size", bgsize);
-			setter->set_value_array("background-size-x", bgsizesx);
-			setter->set_value_array("background-size-y", bgsizesy);
+			setter->set_value(PropertyHash::hash_background_color, bgcolor);
+			setter->set_value(PropertyHash::hash_background_image, bgimage);
+			setter->set_value(PropertyHash::hash_background_repeat, bgrepeat);
+			setter->set_value_array(PropertyHash::hash_background_repeat_x, bgrepeatx);
+			setter->set_value_array(PropertyHash::hash_background_repeat_y, bgrepeaty);
+			setter->set_value(PropertyHash::hash_background_attachment, bgattachment);
+			setter->set_value_array(PropertyHash::hash_background_attachment, bgattachments);
+			setter->set_value(PropertyHash::hash_background_position, bgposition);
+			setter->set_value_array(PropertyHash::hash_background_position_x, bgpositionsx);
+			setter->set_value_array(PropertyHash::hash_background_position_y, bgpositionsy);
+			setter->set_value(PropertyHash::hash_background_origin, bgorigin);
+			setter->set_value_array(PropertyHash::hash_background_origin, bgorigins);
+			setter->set_value(PropertyHash::hash_background_clip, bgclip);
+			setter->set_value_array(PropertyHash::hash_background_clip, bgclips);
+			setter->set_value(PropertyHash::hash_background_size, bgsize);
+			setter->set_value_array(PropertyHash::hash_background_size_x, bgsizesx);
+			setter->set_value_array(PropertyHash::hash_background_size_y, bgsizesy);
 			return;
 		}
 
@@ -208,8 +208,8 @@ namespace clan
 				return;
 		}
 
-		setter->set_value("background-color", bgcolor);
-		setter->set_value("background-image", bgimage);
+		setter->set_value(PropertyHash::hash_background_color, bgcolor);
+		setter->set_value(PropertyHash::hash_background_image, bgimage);
 		for (size_t i = 0; i < bgimages.size(); i++)
 		{
 			auto &img = bgimages[i];
@@ -239,21 +239,21 @@ namespace clan
 				setter->set_value(prop_name, StyleSetValue::from_keyword("none"));
 			}
 		}
-		setter->set_value("background-repeat", bgrepeat);
-		setter->set_value_array("background-repeat-x", bgrepeatx);
-		setter->set_value_array("background-repeat-y", bgrepeaty);
-		setter->set_value("background-attachment", bgattachment);
-		setter->set_value_array("background-attachment", bgattachments);
-		setter->set_value("background-position", bgposition);
-		setter->set_value_array("background-position-x", bgpositionsx);
-		setter->set_value_array("background-position-y", bgpositionsy);
-		setter->set_value("background-origin", bgorigin);
-		setter->set_value_array("background-origin", bgorigins);
-		setter->set_value("background-clip", bgclip);
-		setter->set_value_array("background-clip", bgclips);
-		setter->set_value("background-size", bgsize);
-		setter->set_value_array("background-size-x", bgsizesx);
-		setter->set_value_array("background-size-y", bgsizesy);
+		setter->set_value(PropertyHash::hash_background_repeat, bgrepeat);
+		setter->set_value_array(PropertyHash::hash_background_repeat_x, bgrepeatx);
+		setter->set_value_array(PropertyHash::hash_background_repeat_y, bgrepeaty);
+		setter->set_value(PropertyHash::hash_background_attachment, bgattachment);
+		setter->set_value_array(PropertyHash::hash_background_attachment, bgattachments);
+		setter->set_value(PropertyHash::hash_background_position, bgposition);
+		setter->set_value_array(PropertyHash::hash_background_position_x, bgpositionsx);
+		setter->set_value_array(PropertyHash::hash_background_position_y, bgpositionsy);
+		setter->set_value(PropertyHash::hash_background_origin, bgorigin);
+		setter->set_value_array(PropertyHash::hash_background_origin, bgorigins);
+		setter->set_value(PropertyHash::hash_background_clip, bgclip);
+		setter->set_value_array(PropertyHash::hash_background_clip, bgclips);
+		setter->set_value(PropertyHash::hash_background_size, bgsize);
+		setter->set_value_array(PropertyHash::hash_background_size_x, bgsizesx);
+		setter->set_value_array(PropertyHash::hash_background_size_y, bgsizesy);
 	}
 
 	bool BackgroundPropertyParser::parse_bgcolor(StyleSetValue &bgcolor, size_t &parse_pos, const std::vector<StyleToken> &tokens)
@@ -559,8 +559,8 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			attachment = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-attachment", attachment);
-			setter->set_value_array("background-attachment", attachments);
+			setter->set_value(PropertyHash::hash_background_attachment, attachment);
+			setter->set_value_array(PropertyHash::hash_background_attachment, attachments);
 		}
 		else
 		{
@@ -590,8 +590,8 @@ namespace clan
 					break;
 				}
 			}
-			setter->set_value("background-attachment", attachment);
-			setter->set_value_array("background-attachment", attachments);
+			setter->set_value(PropertyHash::hash_background_attachment, attachment);
+			setter->set_value_array(PropertyHash::hash_background_attachment, attachments);
 		}
 	}
 
@@ -608,8 +608,8 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_clip = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-clip", background_clip);
-			setter->set_value_array("background-clip", background_clips);
+			setter->set_value(PropertyHash::hash_background_clip, background_clip);
+			setter->set_value_array(PropertyHash::hash_background_clip, background_clips);
 		}
 		else
 		{
@@ -647,8 +647,8 @@ namespace clan
 				token = next_token(pos, tokens);
 			}
 
-			setter->set_value("background-clip", background_clip);
-			setter->set_value_array("background-clip", background_clips);
+			setter->set_value(PropertyHash::hash_background_clip, background_clip);
+			setter->set_value_array(PropertyHash::hash_background_clip, background_clips);
 		}
 	}
 
@@ -663,7 +663,7 @@ namespace clan
 		if (parse_color(tokens, pos, color) && pos == tokens.size())
 		{
 			background_color = StyleSetValue::from_color(color);
-			setter->set_value("background-color", background_color);
+			setter->set_value(PropertyHash::hash_background_color, background_color);
 		}
 		else
 		{
@@ -673,12 +673,12 @@ namespace clan
 				if (equals(token.value, "inherit"))
 				{
 					background_color = StyleSetValue::from_keyword("inherit");
-					setter->set_value("background-color", background_color);
+					setter->set_value(PropertyHash::hash_background_color, background_color);
 				}
 				else if (equals(token.value, "none"))
 				{
 					background_color = StyleSetValue::from_color(StandardColorf::transparent());
-					setter->set_value("background-color", background_color);
+					setter->set_value(PropertyHash::hash_background_color, background_color);
 				}
 			}
 		}
@@ -697,7 +697,7 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_image = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-image", background_image);
+			setter->set_value(PropertyHash::hash_background_image, background_image);
 		}
 		else
 		{
@@ -729,7 +729,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("background-image", background_image);
+		setter->set_value(PropertyHash::hash_background_image, background_image);
 
 		for (size_t i = 0; i < background_images.size(); i++)
 		{
@@ -775,8 +775,8 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_origin = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-origin", background_origin);
-			setter->set_value_array("background-origin", background_origins);
+			setter->set_value(PropertyHash::hash_background_origin, background_origin);
+			setter->set_value_array(PropertyHash::hash_background_origin, background_origins);
 		}
 		else
 		{
@@ -817,8 +817,8 @@ namespace clan
 			}
 		}
 
-		setter->set_value("background-origin", background_origin);
-		setter->set_value_array("background-origin", background_origins);
+		setter->set_value(PropertyHash::hash_background_origin, background_origin);
+		setter->set_value_array(PropertyHash::hash_background_origin, background_origins);
 	}
 
 	void BackgroundPositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -835,9 +835,9 @@ namespace clan
 		if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && tokens.size() == 1)
 		{
 			position = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-position", position);
-			setter->set_value_array("background-position-x", positions_x);
-			setter->set_value_array("background-position-y", positions_y);
+			setter->set_value(PropertyHash::hash_background_position, position);
+			setter->set_value_array(PropertyHash::hash_background_position_x, positions_x);
+			setter->set_value_array(PropertyHash::hash_background_position_y, positions_y);
 			return;
 		}
 
@@ -1089,9 +1089,9 @@ namespace clan
 			positions_y.push_back(bg_pos_y);
 		}
 
-		setter->set_value("background-position", position);
-		setter->set_value_array("background-position-x", positions_x);
-		setter->set_value_array("background-position-y", positions_y);
+		setter->set_value(PropertyHash::hash_background_position, position);
+		setter->set_value_array(PropertyHash::hash_background_position_x, positions_x);
+		setter->set_value_array(PropertyHash::hash_background_position_y, positions_y);
 	}
 
 	void BackgroundRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1108,9 +1108,9 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_repeat = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-repeat", background_repeat);
-			setter->set_value_array("background-repeat-x", background_repeat_x);
-			setter->set_value_array("background-repeat-y", background_repeat_y);
+			setter->set_value(PropertyHash::hash_background_repeat, background_repeat);
+			setter->set_value_array(PropertyHash::hash_background_repeat_x, background_repeat_x);
+			setter->set_value_array(PropertyHash::hash_background_repeat_y, background_repeat_y);
 		}
 		else
 		{
@@ -1216,9 +1216,9 @@ namespace clan
 			}
 		}
 
-		setter->set_value("background-repeat", background_repeat);
-		setter->set_value_array("background-repeat-x", background_repeat_x);
-		setter->set_value_array("background-repeat-y", background_repeat_y);
+		setter->set_value(PropertyHash::hash_background_repeat, background_repeat);
+		setter->set_value_array(PropertyHash::hash_background_repeat_x, background_repeat_x);
+		setter->set_value_array(PropertyHash::hash_background_repeat_y, background_repeat_y);
 	}
 
 	void BackgroundSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1235,9 +1235,9 @@ namespace clan
 		if (token.type == StyleTokenType::ident && pos == tokens.size() && equals(token.value, "inherit"))
 		{
 			background_size = StyleSetValue::from_keyword("inherit");
-			setter->set_value("background-size", background_size);
-			setter->set_value_array("background-size-x", background_sizes_x);
-			setter->set_value_array("background-size-y", background_sizes_y);
+			setter->set_value(PropertyHash::hash_background_size, background_size);
+			setter->set_value_array(PropertyHash::hash_background_size_x, background_sizes_x);
+			setter->set_value_array(PropertyHash::hash_background_size_y, background_sizes_y);
 		}
 		else
 		{
@@ -1350,8 +1350,8 @@ namespace clan
 			}
 		}
 
-		setter->set_value("background-size", background_size);
-		setter->set_value_array("background-size-x", background_sizes_x);
-		setter->set_value_array("background-size-y", background_sizes_y);
+		setter->set_value(PropertyHash::hash_background_size, background_size);
+		setter->set_value_array(PropertyHash::hash_background_size_x, background_sizes_x);
+		setter->set_value_array(PropertyHash::hash_background_size_y, background_sizes_y);
 	}
 }

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "UI/precomp.h"
@@ -37,15 +38,16 @@
 
 namespace clan
 {
-	std::unordered_map<StyleString, std::pair<StyleGetValue, bool>, StyleString::hash> &style_defaults()
+
+	std::map<PropertyHash, std::pair<StyleGetValue, bool> > &style_defaults()
 	{
-		static std::unordered_map<StyleString, std::pair<StyleGetValue, bool>, StyleString::hash> defaults;
+		static std::map<PropertyHash, std::pair<StyleGetValue, bool> > defaults;
 		return defaults;
 	}
 
-	std::unordered_map<StyleString, StylePropertyParser *, StyleString::hash> &style_parsers()
+	std::map<PropertyHash, StylePropertyParser * > &style_parsers()
 	{
-		static std::unordered_map<StyleString, StylePropertyParser *, StyleString::hash> parsers;
+		static std::map<PropertyHash, StylePropertyParser * > parsers;
 		return parsers;
 	}
 
@@ -53,7 +55,9 @@ namespace clan
 
 	StylePropertyDefault::StylePropertyDefault(const std::string &name, const StyleGetValue &value, bool inherit)
 	{
-		style_defaults()[name] = { value, inherit };
+
+		PropertyHash hash(name);
+		style_defaults()[hash] = {value, inherit};
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -62,7 +66,10 @@ namespace clan
 	{
 		auto &parsers = style_parsers();
 		for (const auto &name : property_names)
-			parsers[name] = this;
+		{
+			PropertyHash hash(name);
+			parsers[hash] = this;
+		}
 	}
 
 	StyleToken StylePropertyParser::next_token(size_t &pos, const std::vector<StyleToken> &tokens, bool skip_whitespace)
@@ -804,12 +811,12 @@ namespace clan
 		{
 			if (equals(token.value, "transparent"))
 			{
-				out_color = StandardColorf::transparent();
+				out_color = Colorf::transparent;
 				in_out_pos = pos;
 				return true;
 			}
 
-			if (StandardColorf::parse(StringHelp::text_to_lower(token.value), out_color))
+			if (Colorf::find_color(StringHelp::text_to_lower(token.value), out_color))
 			{
 				in_out_pos = pos;
 				return true;
@@ -1062,9 +1069,9 @@ namespace clan
 
 	/////////////////////////////////////////////////////////////////////////
 
-	bool StyleProperty::is_inherited(const char *name)
+	bool StyleProperty::is_inherited(PropertyHash hash)
 	{
-		auto it = style_defaults().find(name);
+		auto it = style_defaults().find(hash);
 		if (it != style_defaults().end())
 		{
 			return it->second.second;
@@ -1075,9 +1082,9 @@ namespace clan
 		}
 	}
 	
-	const StyleGetValue &StyleProperty::default_value(const char *name)
+	const StyleGetValue &StyleProperty::default_value(PropertyHash hash)
 	{
-		auto it = style_defaults().find(name);
+		auto it = style_defaults().find(hash);
 		if (it != style_defaults().end())
 		{
 			return it->second.first;
@@ -1108,7 +1115,8 @@ namespace clan
 					StyleParser parser;
 					parser.tokens = tokenizer.read_property_value(token, parser.important_flag);
 
-					auto it = style_parsers().find(name);
+					PropertyHash hash(name);
+					auto it = style_parsers().find(hash);
 					if (it != style_parsers().end())
 						it->second->parse(setter, name, parser);
 				}

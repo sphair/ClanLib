@@ -76,7 +76,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("layout", layout);
+		setter->set_value(PropertyHash::hash_layout, layout);
 	}
 
 	void PositionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -107,7 +107,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("position", position);
+		setter->set_value(PropertyHash::hash_position, position);
 	}
 
 	void LeftPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -169,7 +169,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("left", left);
+		setter->set_value(PropertyHash::hash_left, left);
 	}
 
 	void TopPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -231,7 +231,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("top", top);
+		setter->set_value(PropertyHash::hash_top, top);
 	}
 
 	void RightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -297,7 +297,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("right", right);
+		setter->set_value(PropertyHash::hash_right, right);
 	}
 
 	void BottomPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -359,7 +359,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("bottom", bottom);
+		setter->set_value(PropertyHash::hash_bottom, bottom);
 	}
 
 	void ZIndexPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -396,6 +396,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("z-index", z_index);
+		setter->set_value(PropertyHash::hash_z_index, z_index);
 	}
 }

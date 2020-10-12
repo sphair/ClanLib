@@ -147,12 +147,12 @@ namespace clan
 			}
 		}
 
-		setter->set_value("box-shadow", box_shadow);
-		setter->set_value_array("box-shadow-style", box_shadow_styles);
-		setter->set_value_array("box-shadow-color", box_shadow_colors);
-		setter->set_value_array("box-shadow-horizontal-offset", box_shadow_horizontal_offsets);
-		setter->set_value_array("box-shadow-vertical-offset", box_shadow_vertical_offsets);
-		setter->set_value_array("box-shadow-blur-radius", box_shadow_blur_radius);
+		setter->set_value(PropertyHash::hash_box_shadow, box_shadow);
+		setter->set_value_array(PropertyHash::hash_box_shadow_style, box_shadow_styles);
+		setter->set_value_array(PropertyHash::hash_box_shadow_color, box_shadow_colors);
+		setter->set_value_array(PropertyHash::hash_box_shadow_horizontal_offset, box_shadow_horizontal_offsets);
+		setter->set_value_array(PropertyHash::hash_box_shadow_vertical_offset, box_shadow_vertical_offsets);
+		setter->set_value_array(PropertyHash::hash_box_shadow_blur_radius, box_shadow_blur_radius);
 		setter->set_value_array("box-shadow-spread_distance", box_shadow_spread_distances);
 	}
 }

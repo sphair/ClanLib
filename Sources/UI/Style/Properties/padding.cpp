@@ -58,10 +58,10 @@ namespace clan
 			if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
 				padding_widths[0] = StyleSetValue::from_keyword("inherit");
-				setter->set_value("padding-left", padding_widths[0]);
-				setter->set_value("padding-top", padding_widths[0]);
-				setter->set_value("padding-right", padding_widths[0]);
-				setter->set_value("padding-bottom", padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_left, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_top, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_right, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_bottom, padding_widths[0]);
 				return;
 			}
 			else if (is_length(token))
@@ -124,28 +124,28 @@ namespace clan
 			switch (count)
 			{
 			case 1:
-				setter->set_value("padding-left", padding_widths[0]);
-				setter->set_value("padding-top", padding_widths[0]);
-				setter->set_value("padding-right", padding_widths[0]);
-				setter->set_value("padding-bottom", padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_left, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_top, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_right, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_bottom, padding_widths[0]);
 				break;
 			case 2:
-				setter->set_value("padding-top", padding_widths[0]);
-				setter->set_value("padding-bottom", padding_widths[0]);
-				setter->set_value("padding-left", padding_widths[1]);
-				setter->set_value("padding-right", padding_widths[1]);
+				setter->set_value(PropertyHash::hash_padding_top, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_bottom, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_left, padding_widths[1]);
+				setter->set_value(PropertyHash::hash_padding_right, padding_widths[1]);
 				break;
 			case 3:
-				setter->set_value("padding-top", padding_widths[0]);
-				setter->set_value("padding-left", padding_widths[1]);
-				setter->set_value("padding-right", padding_widths[1]);
-				setter->set_value("padding-bottom", padding_widths[2]);
+				setter->set_value(PropertyHash::hash_padding_top, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_left, padding_widths[1]);
+				setter->set_value(PropertyHash::hash_padding_right, padding_widths[1]);
+				setter->set_value(PropertyHash::hash_padding_bottom, padding_widths[2]);
 				break;
 			case 4:
-				setter->set_value("padding-top", padding_widths[0]);
-				setter->set_value("padding-right", padding_widths[1]);
-				setter->set_value("padding-bottom", padding_widths[2]);
-				setter->set_value("padding-left", padding_widths[3]);
+				setter->set_value(PropertyHash::hash_padding_top, padding_widths[0]);
+				setter->set_value(PropertyHash::hash_padding_right, padding_widths[1]);
+				setter->set_value(PropertyHash::hash_padding_bottom, padding_widths[2]);
+				setter->set_value(PropertyHash::hash_padding_left, padding_widths[3]);
 				break;
 			default:
 				break;

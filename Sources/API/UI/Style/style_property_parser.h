@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -37,6 +38,7 @@
 #include "style_set_image.h"
 #include "style_token.h"
 #include "style_tokenizer.h"
+#include "property_hash.h"
 
 namespace clan
 {
@@ -53,10 +55,10 @@ namespace clan
 		virtual ~StylePropertySetter() { }
 
 		/// Set the value for the specified property name
-		virtual void set_value(const std::string &name, const StyleSetValue &value) = 0;
+		virtual void set_value(PropertyHash hash, const StyleSetValue &value) = 0;
 
 		/// Set a value array for the specified property name
-		virtual void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) = 0;
+		virtual void set_value_array(PropertyHash hash, const std::vector<StyleSetValue> &value_array) = 0;
 	};
 
 	/// Parser interface used during property parsing
@@ -115,12 +117,10 @@ namespace clan
 	{
 	public:
 		/// Gets the default value for a given property
-		static const StyleGetValue &default_value(const char *name);
-		static const StyleGetValue &default_value(const std::string &name);
+		static const StyleGetValue &default_value(PropertyHash hash);
 
 		/// Indicates if this an inherited property or not
-		static bool is_inherited(const char *name);
-		static bool is_inherited(const std::string &name);
+		static bool is_inherited(PropertyHash hash);
 
 		/// Parses a string of styles and sets the values
 		static void parse(StylePropertySetter *setter, const std::string &styles);

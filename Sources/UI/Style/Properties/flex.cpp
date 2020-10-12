@@ -78,9 +78,9 @@ namespace clan
 				flex_shrink = StyleSetValue::from_number(0.0f);
 				flex_basis = StyleSetValue::from_keyword("auto");
 
-				setter->set_value("flex-grow", flex_grow);
-				setter->set_value("flex-shrink", flex_shrink);
-				setter->set_value("flex-basis", flex_basis);
+				setter->set_value(PropertyHash::hash_flex_grow, flex_grow);
+				setter->set_value(PropertyHash::hash_flex_shrink, flex_shrink);
+				setter->set_value(PropertyHash::hash_flex_basis, flex_basis);
 			}
 			else if (equals(token.value, "auto"))
 			{
@@ -88,9 +88,9 @@ namespace clan
 				flex_shrink = StyleSetValue::from_number(1.0f);
 				flex_basis = StyleSetValue::from_keyword("auto");
 
-				setter->set_value("flex-grow", flex_grow);
-				setter->set_value("flex-shrink", flex_shrink);
-				setter->set_value("flex-basis", flex_basis);
+				setter->set_value(PropertyHash::hash_flex_grow, flex_grow);
+				setter->set_value(PropertyHash::hash_flex_shrink, flex_shrink);
+				setter->set_value(PropertyHash::hash_flex_basis, flex_basis);
 			}
 			else if (equals(token.value, "inherit"))
 			{
@@ -98,9 +98,9 @@ namespace clan
 				flex_shrink = StyleSetValue::from_keyword("inherit");
 				flex_basis = StyleSetValue::from_keyword("inherit");
 
-				setter->set_value("flex-grow", flex_grow);
-				setter->set_value("flex-shrink", flex_shrink);
-				setter->set_value("flex-basis", flex_basis);
+				setter->set_value(PropertyHash::hash_flex_grow, flex_grow);
+				setter->set_value(PropertyHash::hash_flex_shrink, flex_shrink);
+				setter->set_value(PropertyHash::hash_flex_basis, flex_basis);
 			}
 			else
 			{
@@ -134,9 +134,9 @@ namespace clan
 				}
 			} while (pos != tokens.size());
 
-			setter->set_value("flex-grow", flex_grow);
-			setter->set_value("flex-shrink", flex_shrink);
-			setter->set_value("flex-basis", flex_basis);
+			setter->set_value(PropertyHash::hash_flex_grow, flex_grow);
+			setter->set_value(PropertyHash::hash_flex_shrink, flex_shrink);
+			setter->set_value(PropertyHash::hash_flex_basis, flex_basis);
 		}
 	}
 
@@ -254,7 +254,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("flex-basis", flex_basis);
+		setter->set_value(PropertyHash::hash_flex_basis, flex_basis);
 	}
 
 	void FlexDirectionPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -285,7 +285,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("flex-direction", flex_direction);
+		setter->set_value(PropertyHash::hash_flex_direction, flex_direction);
 	}
 
 	void FlexFlowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -316,8 +316,8 @@ namespace clan
 			}
 		} while (pos != tokens.size());
 
-		setter->set_value("flex-direction", direction);
-		setter->set_value("flex-wrap", wrap);
+		setter->set_value(PropertyHash::hash_flex_direction, direction);
+		setter->set_value(PropertyHash::hash_flex_wrap, wrap);
 	}
 
 	bool FlexFlowPropertyParser::parse_direction(StyleSetValue &direction, size_t &parse_pos, const std::vector<StyleToken> &tokens)
@@ -400,7 +400,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("flex-grow", flex_grow);
+		setter->set_value(PropertyHash::hash_flex_grow, flex_grow);
 	}
 
 	void FlexShrinkPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -454,7 +454,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("flex-wrap", flex_wrap);
+		setter->set_value(PropertyHash::hash_flex_wrap, flex_wrap);
 	}
 
 	void OrderPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -489,7 +489,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("order", order);
+		setter->set_value(PropertyHash::hash_order, order);
 	}
 
 	void AlignContentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -504,37 +504,37 @@ namespace clan
 			if (equals(token.value, "flex-start"))
 			{
 				align_content = StyleSetValue::from_keyword("flex-start");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
 				align_content = StyleSetValue::from_keyword("flex-end");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "center"))
 			{
 				align_content = StyleSetValue::from_keyword("center");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "space-between"))
 			{
 				align_content = StyleSetValue::from_keyword("space-between");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "space-around"))
 			{
 				align_content = StyleSetValue::from_keyword("space-around");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "stretch"))
 			{
 				align_content = StyleSetValue::from_keyword("stretch");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 			else if (equals(token.value, "inherit"))
 			{
 				align_content = StyleSetValue::from_keyword("inherit");
-				setter->set_value("align-content", align_content);
+				setter->set_value(PropertyHash::hash_align_content, align_content);
 			}
 		}
 	}
@@ -551,32 +551,32 @@ namespace clan
 			if (equals(token.value, "flex-start"))
 			{
 				align_items = StyleSetValue::from_keyword("flex-start");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
 				align_items = StyleSetValue::from_keyword("flex-end");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 			else if (equals(token.value, "center"))
 			{
 				align_items = StyleSetValue::from_keyword("center");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 			else if (equals(token.value, "baseline"))
 			{
 				align_items = StyleSetValue::from_keyword("baseline");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 			else if (equals(token.value, "stretch"))
 			{
 				align_items = StyleSetValue::from_keyword("stretch");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 			else if (equals(token.value, "inherit"))
 			{
 				align_items = StyleSetValue::from_keyword("inherit");
-				setter->set_value("align-items", align_items);
+				setter->set_value(PropertyHash::hash_align_items, align_items);
 			}
 		}
 	}
@@ -594,37 +594,37 @@ namespace clan
 			if (equals(token.value, "auto"))
 			{
 				align_self = StyleSetValue::from_keyword("auto");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "flex-start"))
 			{
 				align_self = StyleSetValue::from_keyword("flex-start");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "flex-end"))
 			{
 				align_self = StyleSetValue::from_keyword("flex-end");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "center"))
 			{
 				align_self = StyleSetValue::from_keyword("center");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "baseline"))
 			{
 				align_self = StyleSetValue::from_keyword("baseline");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "stretch"))
 			{
 				align_self = StyleSetValue::from_keyword("stretch");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 			else if (equals(token.value, "inherit"))
 			{
 				align_self = StyleSetValue::from_keyword("inherit");
-				setter->set_value("align-self", align_self);
+				setter->set_value(PropertyHash::hash_align_self, align_self);
 			}
 		}
 	}
@@ -659,6 +659,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("justify-content", justify_content);
+		setter->set_value(PropertyHash::hash_justify_content, justify_content);
 	}
 }

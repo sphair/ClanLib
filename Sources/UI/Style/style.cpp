@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "UI/precomp.h"
@@ -70,46 +71,13 @@ namespace clan
 	{
 	}
 
-	void Style::set(const std::string &properties)
+	void Style::set(const std::string& properties)
 	{
 		StyleProperty::parse(impl.get(), properties);
 	}
 
-	StyleGetValue Style::declared_value(const char *property_name_str) const
+	StyleGetValue Style::declared_value(PropertyHash hash) const
 	{
-		StyleString property_name = property_name_str;
-		const auto it = impl->prop_type.find(property_name);
-		if (it != impl->prop_type.end())
-		{
-			switch (it->second)
-			{
-				default:
-				case StyleValueType::undefined:
-					return StyleGetValue();
-				case StyleValueType::keyword:
-					return StyleGetValue::from_keyword(impl->prop_text.find(property_name)->second.c_str());
-				case StyleValueType::string:
-					return StyleGetValue::from_string(impl->prop_text.find(property_name)->second.c_str());
-				case StyleValueType::url:
-					return StyleGetValue::from_url(impl->prop_text.find(property_name)->second.c_str());
-				case StyleValueType::length:
-					return StyleGetValue::from_length(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-				case StyleValueType::angle:
-					return StyleGetValue::from_angle(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-				case StyleValueType::time:
-					return StyleGetValue::from_time(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-				case StyleValueType::frequency:
-					return StyleGetValue::from_frequency(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-				case StyleValueType::resolution:
-					return StyleGetValue::from_resolution(impl->prop_number.find(property_name)->second, impl->prop_dimension.find(property_name)->second);
-				case StyleValueType::percentage:
-					return StyleGetValue::from_percentage(impl->prop_number.find(property_name)->second);
-				case StyleValueType::number:
-					return StyleGetValue::from_number(impl->prop_number.find(property_name)->second);
-				case StyleValueType::color:
-					return StyleGetValue::from_color(impl->prop_color.find(property_name)->second);
-			}
-		}
-		return StyleGetValue();
+		return impl->declared_value(hash);
 	}
 }

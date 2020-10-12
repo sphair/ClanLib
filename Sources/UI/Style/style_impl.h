@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -141,13 +142,20 @@ namespace clan
 	class StyleImpl : public StylePropertySetter
 	{
 	public:
-		void set_value(const std::string &name, const StyleSetValue &value) override;
-		void set_value_array(const std::string &name, const std::vector<StyleSetValue> &value_array) override;
+		void set_value(PropertyHash hash, const StyleSetValue& value) override;
+		void set_value_array(PropertyHash hash, const std::vector<StyleSetValue>& value_array) override;
 
-		std::unordered_map<StyleString, StyleValueType, StyleString::hash> prop_type;
-		std::unordered_map<StyleString, std::string, StyleString::hash> prop_text;
-		std::unordered_map<StyleString, float, StyleString::hash> prop_number;
-		std::unordered_map<StyleString, StyleDimension, StyleString::hash> prop_dimension;
-		std::unordered_map<StyleString, Colorf, StyleString::hash> prop_color;
+		StyleGetValue declared_value(PropertyHash hash) const;
+
+		const char* get_text(PropertyHash hash) const;
+		float get_number(PropertyHash hash) const;
+		StyleDimension get_dimension(PropertyHash hash) const;
+		Colorf get_color(PropertyHash hash) const;
+
+		std::vector<std::pair<PropertyHash, StyleValueType>> prop_type;
+		std::vector<std::pair<PropertyHash, std::string>> prop_text;
+		std::vector<std::pair<PropertyHash, float>> prop_number;
+		std::vector<std::pair<PropertyHash, StyleDimension>> prop_dimension;
+		std::vector<std::pair<PropertyHash, Colorf>> prop_color;
 	};
 }

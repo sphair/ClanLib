@@ -144,7 +144,7 @@ namespace clan
 
 	bool ScrollBarView::vertical() const
 	{
-		return style_cascade().computed_value("flex-direction").is_keyword("column");
+		return style_cascade().computed_value(PropertyHash::hash_flex_direction).is_keyword("column");
 	}
 
 	bool ScrollBarView::horizontal() const

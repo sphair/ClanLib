@@ -96,7 +96,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("width", width);
+		setter->set_value(PropertyHash::hash_width, width);
 	}
 
 	void HeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -145,7 +145,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("height", height);
+		setter->set_value(PropertyHash::hash_height, height);
 	}
 
 	void MinWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -186,7 +186,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("min-width", min_width);
+		setter->set_value(PropertyHash::hash_min_width, min_width);
 	}
 
 	void MinHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -227,7 +227,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("min-height", min_height);
+		setter->set_value(PropertyHash::hash_min_height, min_height);
 	}
 
 	void MaxWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -268,7 +268,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("max-width", max_width);
+		setter->set_value(PropertyHash::hash_max_width, max_width);
 	}
 
 	void MaxHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -309,6 +309,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("max-height", max_height);
+		setter->set_value(PropertyHash::hash_max_height, max_height);
 	}
 }

@@ -207,7 +207,7 @@ namespace clan
 
 	bool View::is_static_position_and_visible() const
 	{
-		return style_cascade().computed_value("position").is_keyword("static") && !hidden();
+		return style_cascade().computed_value(PropertyHash::hash_position).is_keyword("static") && !hidden();
 	}
 
 	bool View::needs_layout() const
@@ -410,7 +410,7 @@ namespace clan
 
 	float View::calculate_definite_width(bool &is_definite)
 	{
-		auto css_width = style_cascade().computed_value("width");
+		auto css_width = style_cascade().computed_value(PropertyHash::hash_width);
 		if (css_width.is_length())
 		{
 			is_definite = true;
@@ -430,7 +430,7 @@ namespace clan
 
 	float View::calculate_definite_height(bool &is_definite)
 	{
-		auto css_height = style_cascade().computed_value("height");
+		auto css_height = style_cascade().computed_value(PropertyHash::hash_height);
 		if (css_height.is_length())
 		{
 			is_definite = true;
@@ -884,7 +884,7 @@ namespace clan
 
 	ViewLayout *ViewImpl::active_layout(View *self)
 	{
-		if (self->style_cascade().computed_value("layout").is_keyword("flex"))
+		if (self->style_cascade().computed_value(PropertyHash::hash_layout).is_keyword("flex"))
 		{
 			return &flex;
 		}

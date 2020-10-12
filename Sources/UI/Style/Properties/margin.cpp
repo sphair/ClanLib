@@ -61,10 +61,10 @@ namespace clan
 			else if (token.type == StyleTokenType::ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
 				margin_widths[0] = StyleSetValue::from_keyword("inherit");
-				setter->set_value("margin-left", margin_widths[0]);
-				setter->set_value("margin-top", margin_widths[0]);
-				setter->set_value("margin-right", margin_widths[0]);
-				setter->set_value("margin-bottom", margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_left, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_top, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_right, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_bottom, margin_widths[0]);
 				return;
 			}
 			else if (is_length(token))
@@ -127,28 +127,28 @@ namespace clan
 			switch (count)
 			{
 			case 1:
-				setter->set_value("margin-left", margin_widths[0]);
-				setter->set_value("margin-top", margin_widths[0]);
-				setter->set_value("margin-right", margin_widths[0]);
-				setter->set_value("margin-bottom", margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_left, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_top, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_right, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_bottom, margin_widths[0]);
 				break;
 			case 2:
-				setter->set_value("margin-top", margin_widths[0]);
-				setter->set_value("margin-bottom", margin_widths[0]);
-				setter->set_value("margin-left", margin_widths[1]);
-				setter->set_value("margin-right", margin_widths[1]);
+				setter->set_value(PropertyHash::hash_margin_top, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_bottom, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_left, margin_widths[1]);
+				setter->set_value(PropertyHash::hash_margin_right, margin_widths[1]);
 				break;
 			case 3:
-				setter->set_value("margin-top", margin_widths[0]);
-				setter->set_value("margin-left", margin_widths[1]);
-				setter->set_value("margin-right", margin_widths[1]);
-				setter->set_value("margin-bottom", margin_widths[2]);
+				setter->set_value(PropertyHash::hash_margin_top, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_left, margin_widths[1]);
+				setter->set_value(PropertyHash::hash_margin_right, margin_widths[1]);
+				setter->set_value(PropertyHash::hash_margin_bottom, margin_widths[2]);
 				break;
 			case 4:
-				setter->set_value("margin-top", margin_widths[0]);
-				setter->set_value("margin-right", margin_widths[1]);
-				setter->set_value("margin-bottom", margin_widths[2]);
-				setter->set_value("margin-left", margin_widths[3]);
+				setter->set_value(PropertyHash::hash_margin_top, margin_widths[0]);
+				setter->set_value(PropertyHash::hash_margin_right, margin_widths[1]);
+				setter->set_value(PropertyHash::hash_margin_bottom, margin_widths[2]);
+				setter->set_value(PropertyHash::hash_margin_left, margin_widths[3]);
 				break;
 			default:
 				break;

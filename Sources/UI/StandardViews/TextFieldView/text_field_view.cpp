@@ -380,7 +380,7 @@ namespace clan
 			Path::rect(selection_rect).fill(canvas, focus_view() == this ? Brush::solid_rgb8(51, 153, 255) : Brush::solid_rgb8(200, 200, 200));
 		}
 
-		Colorf color = style_cascade().computed_value("color").color();
+		Colorf color = style_cascade().computed_value(PropertyHash::hash_color).color();
 		font.draw_text(canvas, -impl->scroll_pos, baseline, txt_before, color);
 		font.draw_text(canvas, advance_before - impl->scroll_pos, baseline, txt_selected, focus_view() == this ? Colorf(255, 255, 255) : color);
 		font.draw_text(canvas, advance_before + advance_selected - impl->scroll_pos, baseline, txt_after, color);

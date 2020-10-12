@@ -91,20 +91,20 @@ namespace clan
 						border_style = StyleSetValue::from_keyword("inherit");
 						border_color = StyleSetValue::from_keyword("inherit");
 
-						setter->set_value("border-left-width", border_width);
-						setter->set_value("border-top-width", border_width);
-						setter->set_value("border-right-width", border_width);
-						setter->set_value("border-bottom-width", border_width);
+						setter->set_value(PropertyHash::hash_border_left_width, border_width);
+						setter->set_value(PropertyHash::hash_border_top_width, border_width);
+						setter->set_value(PropertyHash::hash_border_right_width, border_width);
+						setter->set_value(PropertyHash::hash_border_bottom_width, border_width);
 
-						setter->set_value("border-left-style", border_style);
-						setter->set_value("border-top-style", border_style);
-						setter->set_value("border-right-style", border_style);
-						setter->set_value("border-bottom-style", border_style);
+						setter->set_value(PropertyHash::hash_border_left_style, border_style);
+						setter->set_value(PropertyHash::hash_border_top_style, border_style);
+						setter->set_value(PropertyHash::hash_border_right_style, border_style);
+						setter->set_value(PropertyHash::hash_border_bottom_style, border_style);
 
-						setter->set_value("border-left-color", border_color);
-						setter->set_value("border-top-color", border_color);
-						setter->set_value("border-right-color", border_color);
-						setter->set_value("border-bottom-color", border_color);
+						setter->set_value(PropertyHash::hash_border_left_color, border_color);
+						setter->set_value(PropertyHash::hash_border_top_color, border_color);
+						setter->set_value(PropertyHash::hash_border_right_color, border_color);
+						setter->set_value(PropertyHash::hash_border_bottom_color, border_color);
 
 						return;
 					}
@@ -201,20 +201,20 @@ namespace clan
 			}
 		}
 
-		setter->set_value("border-left-width", border_width);
-		setter->set_value("border-top-width", border_width);
-		setter->set_value("border-right-width", border_width);
-		setter->set_value("border-bottom-width", border_width);
+		setter->set_value(PropertyHash::hash_border_left_width, border_width);
+		setter->set_value(PropertyHash::hash_border_top_width, border_width);
+		setter->set_value(PropertyHash::hash_border_right_width, border_width);
+		setter->set_value(PropertyHash::hash_border_bottom_width, border_width);
 
-		setter->set_value("border-left-style", border_style);
-		setter->set_value("border-top-style", border_style);
-		setter->set_value("border-right-style", border_style);
-		setter->set_value("border-bottom-style", border_style);
+		setter->set_value(PropertyHash::hash_border_left_style, border_style);
+		setter->set_value(PropertyHash::hash_border_top_style, border_style);
+		setter->set_value(PropertyHash::hash_border_right_style, border_style);
+		setter->set_value(PropertyHash::hash_border_bottom_style, border_style);
 
-		setter->set_value("border-left-color", border_color);
-		setter->set_value("border-top-color", border_color);
-		setter->set_value("border-right-color", border_color);
-		setter->set_value("border-bottom-color", border_color);
+		setter->set_value(PropertyHash::hash_border_left_color, border_color);
+		setter->set_value(PropertyHash::hash_border_top_color, border_color);
+		setter->set_value(PropertyHash::hash_border_right_color, border_color);
+		setter->set_value(PropertyHash::hash_border_bottom_color, border_color);
 	}
 
 	void BorderColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -242,10 +242,10 @@ namespace clan
 						{
 							border_colors[0] = StyleSetValue::from_keyword("inherit");
 
-							setter->set_value("border-left-color", border_colors[0]);
-							setter->set_value("border-right-color", border_colors[0]);
-							setter->set_value("border-top-color", border_colors[0]);
-							setter->set_value("border-bottom-color", border_colors[0]);
+							setter->set_value(PropertyHash::hash_border_left_color, border_colors[0]);
+							setter->set_value(PropertyHash::hash_border_right_color, border_colors[0]);
+							setter->set_value(PropertyHash::hash_border_top_color, border_colors[0]);
+							setter->set_value(PropertyHash::hash_border_bottom_color, border_colors[0]);
 						}
 						else
 						{
@@ -276,28 +276,28 @@ namespace clan
 			switch (count)
 			{
 			case 1:
-				setter->set_value("border-left-color", border_colors[0]);
-				setter->set_value("border-right-color", border_colors[0]);
-				setter->set_value("border-top-color", border_colors[0]);
-				setter->set_value("border-bottom-color", border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_left_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_right_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_top_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_color, border_colors[0]);
 				break;
 			case 2:
-				setter->set_value("border-top-color", border_colors[0]);
-				setter->set_value("border-bottom-color", border_colors[0]);
-				setter->set_value("border-left-color", border_colors[1]);
-				setter->set_value("border-right-color", border_colors[1]);
+				setter->set_value(PropertyHash::hash_border_top_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_left_color, border_colors[1]);
+				setter->set_value(PropertyHash::hash_border_right_color, border_colors[1]);
 				break;
 			case 3:
-				setter->set_value("border-top-color", border_colors[0]);
-				setter->set_value("border-left-color", border_colors[1]);
-				setter->set_value("border-right-color", border_colors[1]);
-				setter->set_value("border-bottom-color", border_colors[2]);
+				setter->set_value(PropertyHash::hash_border_top_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_left_color, border_colors[1]);
+				setter->set_value(PropertyHash::hash_border_right_color, border_colors[1]);
+				setter->set_value(PropertyHash::hash_border_bottom_color, border_colors[2]);
 				break;
 			case 4:
-				setter->set_value("border-top-color", border_colors[0]);
-				setter->set_value("border-right-color", border_colors[1]);
-				setter->set_value("border-left-color", border_colors[2]);
-				setter->set_value("border-bottom-color", border_colors[3]);
+				setter->set_value(PropertyHash::hash_border_top_color, border_colors[0]);
+				setter->set_value(PropertyHash::hash_border_right_color, border_colors[1]);
+				setter->set_value(PropertyHash::hash_border_left_color, border_colors[2]);
+				setter->set_value(PropertyHash::hash_border_bottom_color, border_colors[3]);
 				break;
 			default:
 				break;
@@ -362,10 +362,10 @@ namespace clan
 					if (count == 0 && pos == tokens.size())
 					{
 						border_styles[0] = StyleSetValue::from_keyword("inherit");
-						setter->set_value("border-left-style", border_styles[0]);
-						setter->set_value("border-top-style", border_styles[0]);
-						setter->set_value("border-right-style", border_styles[0]);
-						setter->set_value("border-bottom-style", border_styles[0]);
+						setter->set_value(PropertyHash::hash_border_left_style, border_styles[0]);
+						setter->set_value(PropertyHash::hash_border_top_style, border_styles[0]);
+						setter->set_value(PropertyHash::hash_border_right_style, border_styles[0]);
+						setter->set_value(PropertyHash::hash_border_bottom_style, border_styles[0]);
 					}
 					else
 					{
@@ -395,28 +395,28 @@ namespace clan
 			switch (count)
 			{
 			case 1:
-				setter->set_value("border-left-style", border_styles[0]);
-				setter->set_value("border-top-style", border_styles[0]);
-				setter->set_value("border-right-style", border_styles[0]);
-				setter->set_value("border-bottom-style", border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_left_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_top_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_right_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_style, border_styles[0]);
 				break;
 			case 2:
-				setter->set_value("border-top-style", border_styles[0]);
-				setter->set_value("border-bottom-style", border_styles[0]);
-				setter->set_value("border-left-style", border_styles[1]);
-				setter->set_value("border-right-style", border_styles[1]);
+				setter->set_value(PropertyHash::hash_border_top_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_left_style, border_styles[1]);
+				setter->set_value(PropertyHash::hash_border_right_style, border_styles[1]);
 				break;
 			case 3:
-				setter->set_value("border-top-style", border_styles[0]);
-				setter->set_value("border-left-style", border_styles[1]);
-				setter->set_value("border-right-style", border_styles[1]);
-				setter->set_value("border-bottom-style", border_styles[2]);
+				setter->set_value(PropertyHash::hash_border_top_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_left_style, border_styles[1]);
+				setter->set_value(PropertyHash::hash_border_right_style, border_styles[1]);
+				setter->set_value(PropertyHash::hash_border_bottom_style, border_styles[2]);
 				break;
 			case 4:
-				setter->set_value("border-top-style", border_styles[0]);
-				setter->set_value("border-right-style", border_styles[1]);
-				setter->set_value("border-bottom-style", border_styles[2]);
-				setter->set_value("border-left-style", border_styles[3]);
+				setter->set_value(PropertyHash::hash_border_top_style, border_styles[0]);
+				setter->set_value(PropertyHash::hash_border_right_style, border_styles[1]);
+				setter->set_value(PropertyHash::hash_border_bottom_style, border_styles[2]);
+				setter->set_value(PropertyHash::hash_border_left_style, border_styles[3]);
 				break;
 			default:
 				break;
@@ -452,10 +452,10 @@ namespace clan
 				{
 					border_widths[0] = StyleSetValue::from_keyword("inherit");
 
-					setter->set_value("border-left-width", border_widths[0]);
-					setter->set_value("border-top-width", border_widths[0]);
-					setter->set_value("border-right-width", border_widths[0]);
-					setter->set_value("border-bottom-width", border_widths[0]);
+					setter->set_value(PropertyHash::hash_border_left_width, border_widths[0]);
+					setter->set_value(PropertyHash::hash_border_top_width, border_widths[0]);
+					setter->set_value(PropertyHash::hash_border_right_width, border_widths[0]);
+					setter->set_value(PropertyHash::hash_border_bottom_width, border_widths[0]);
 					return;
 				}
 				else
@@ -493,28 +493,28 @@ namespace clan
 			switch (count)
 			{
 			case 1:
-				setter->set_value("border-left-width", border_widths[0]);
-				setter->set_value("border-top-width", border_widths[0]);
-				setter->set_value("border-right-width", border_widths[0]);
-				setter->set_value("border-bottom-width", border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_left_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_top_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_right_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_width, border_widths[0]);
 				break;
 			case 2:
-				setter->set_value("border-top-width", border_widths[0]);
-				setter->set_value("border-bottom-width", border_widths[0]);
-				setter->set_value("border-left-width", border_widths[1]);
-				setter->set_value("border-right-width", border_widths[1]);
+				setter->set_value(PropertyHash::hash_border_top_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_bottom_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_left_width, border_widths[1]);
+				setter->set_value(PropertyHash::hash_border_right_width, border_widths[1]);
 				break;
 			case 3:
-				setter->set_value("border-top-width", border_widths[0]);
-				setter->set_value("border-left-width", border_widths[1]);
-				setter->set_value("border-right-width", border_widths[1]);
-				setter->set_value("border-bottom-width", border_widths[2]);
+				setter->set_value(PropertyHash::hash_border_top_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_left_width, border_widths[1]);
+				setter->set_value(PropertyHash::hash_border_right_width, border_widths[1]);
+				setter->set_value(PropertyHash::hash_border_bottom_width, border_widths[2]);
 				break;
 			case 4:
-				setter->set_value("border-top-width", border_widths[0]);
-				setter->set_value("border-right-width", border_widths[1]);
-				setter->set_value("border-bottom-width", border_widths[2]);
-				setter->set_value("border-left-width", border_widths[3]);
+				setter->set_value(PropertyHash::hash_border_top_width, border_widths[0]);
+				setter->set_value(PropertyHash::hash_border_right_width, border_widths[1]);
+				setter->set_value(PropertyHash::hash_border_bottom_width, border_widths[2]);
+				setter->set_value(PropertyHash::hash_border_left_width, border_widths[3]);
 				break;
 			default:
 				break;
@@ -770,14 +770,14 @@ namespace clan
 		{
 			radius_x[0] = StyleSetValue::from_keyword("inherit");
 			radius_y[0] = StyleSetValue::from_keyword("inherit");
-			setter->set_value("border-top-left-radius-x", radius_x[0]);
-			setter->set_value("border-top-left-radius-y", radius_y[0]);
-			setter->set_value("border-top-right-radius-x", radius_x[0]);
-			setter->set_value("border-top-right-radius-y", radius_y[0]);
-			setter->set_value("border-bottom-left-radius-x", radius_x[0]);
-			setter->set_value("border-bottom-left-radius-y", radius_y[0]);
-			setter->set_value("border-bottom-right-radius-x", radius_x[0]);
-			setter->set_value("border-bottom-right-radius-y", radius_y[0]);
+			setter->set_value(PropertyHash::hash_border_top_left_radius_x, radius_x[0]);
+			setter->set_value(PropertyHash::hash_border_top_left_radius_y, radius_y[0]);
+			setter->set_value(PropertyHash::hash_border_top_right_radius_x, radius_x[0]);
+			setter->set_value(PropertyHash::hash_border_top_right_radius_y, radius_y[0]);
+			setter->set_value(PropertyHash::hash_border_bottom_left_radius_x, radius_x[0]);
+			setter->set_value(PropertyHash::hash_border_bottom_left_radius_y, radius_y[0]);
+			setter->set_value(PropertyHash::hash_border_bottom_right_radius_x, radius_x[0]);
+			setter->set_value(PropertyHash::hash_border_bottom_right_radius_y, radius_y[0]);
 			return;
 		}
 
@@ -887,14 +887,14 @@ namespace clan
 			radius_y[1] = radius_y[0];
 		}
 
-		setter->set_value("border-top-left-radius-x", radius_x[0]);
-		setter->set_value("border-top-left-radius-y", radius_y[0]);
-		setter->set_value("border-top-right-radius-x", radius_x[1]);
-		setter->set_value("border-top-right-radius-y", radius_y[1]);
-		setter->set_value("border-bottom-right-radius-x", radius_x[2]);
-		setter->set_value("border-bottom-right-radius-y", radius_y[2]);
-		setter->set_value("border-bottom-left-radius-x", radius_x[3]);
-		setter->set_value("border-bottom-left-radius-y", radius_y[3]);
+		setter->set_value(PropertyHash::hash_border_top_left_radius_x, radius_x[0]);
+		setter->set_value(PropertyHash::hash_border_top_left_radius_y, radius_y[0]);
+		setter->set_value(PropertyHash::hash_border_top_right_radius_x, radius_x[1]);
+		setter->set_value(PropertyHash::hash_border_top_right_radius_y, radius_y[1]);
+		setter->set_value(PropertyHash::hash_border_bottom_right_radius_x, radius_x[2]);
+		setter->set_value(PropertyHash::hash_border_bottom_right_radius_y, radius_y[2]);
+		setter->set_value(PropertyHash::hash_border_bottom_left_radius_x, radius_x[3]);
+		setter->set_value(PropertyHash::hash_border_bottom_left_radius_y, radius_y[3]);
 	}
 
 	void BorderRadiusCornerPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)

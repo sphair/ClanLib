@@ -120,8 +120,8 @@ namespace clan
 	{
 		const auto &container_style = view->style_cascade();
 
-		auto computed_direction = container_style.computed_value("flex-direction");
-		auto computed_wrap = container_style.computed_value("flex-wrap");
+		auto computed_direction = container_style.computed_value(PropertyHash::hash_flex_direction);
+		auto computed_wrap = container_style.computed_value(PropertyHash::hash_flex_wrap);
 
 		direction = computed_direction.is_keyword("row") ? FlexDirection::row : FlexDirection::column;
 
@@ -181,27 +181,27 @@ namespace clan
 
 			item.definite_main_size = child->is_width_definite();
 			item.definite_cross_size = child->is_height_definite();
-			item.definite_min_main_size = item_style.computed_value("min-width").is_length();
-			item.definite_max_main_size = item_style.computed_value("max-width").is_length();
-			item.definite_min_cross_size = item_style.computed_value("min-height").is_length();
-			item.definite_max_cross_size = item_style.computed_value("max-height").is_length();
+			item.definite_min_main_size = item_style.computed_value(PropertyHash::hash_min_width).is_length();
+			item.definite_max_main_size = item_style.computed_value(PropertyHash::hash_max_width).is_length();
+			item.definite_min_cross_size = item_style.computed_value(PropertyHash::hash_min_height).is_length();
+			item.definite_max_cross_size = item_style.computed_value(PropertyHash::hash_max_height).is_length();
 
 			if (item.definite_main_size)
 				item.main_size = child->definite_width();
 			if (item.definite_cross_size)
 				item.cross_size = child->definite_height();
 			if (item.definite_min_main_size)
-				item.min_main_size = item_style.computed_value("min-width").number();
+				item.min_main_size = item_style.computed_value(PropertyHash::hash_min_width).number();
 			if (item.definite_max_main_size)
-				item.max_main_size = item_style.computed_value("max-width").number();
+				item.max_main_size = item_style.computed_value(PropertyHash::hash_max_width).number();
 			if (item.definite_min_cross_size)
-				item.min_cross_size = item_style.computed_value("min-height").number();
+				item.min_cross_size = item_style.computed_value(PropertyHash::hash_min_height).number();
 			if (item.definite_max_cross_size)
-				item.max_cross_size = item_style.computed_value("max-height").number();
+				item.max_cross_size = item_style.computed_value(PropertyHash::hash_max_height).number();
 
 			// Main axis auto min:
 
-			if (item_style.computed_value("min-width").is_keyword("auto"))
+			if (item_style.computed_value(PropertyHash::hash_min_width).is_keyword("auto"))
 			{
 				float min_content_size = 0.0f; // item.view->min_content_width(); // shrink-to-fit in CSS 2.1
 				if (item.definite_main_size)
@@ -233,31 +233,31 @@ namespace clan
 
 			// Non-content sizes:
 
-			item.main_noncontent_start += child->style_cascade().computed_value("margin-left").number();
-			item.main_noncontent_start += child->style_cascade().computed_value("border-left-width").number();
-			item.main_noncontent_start += child->style_cascade().computed_value("padding-left").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("padding-right").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("border-right-width").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("margin-right").number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_margin_left).number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_border_left_width).number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_padding_left).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_padding_right).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_border_right_width).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_margin_right).number();
 
-			item.main_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
-			item.main_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");
+			item.main_auto_margin_start = item_style.computed_value(PropertyHash::hash_margin_left).is_keyword("auto");
+			item.main_auto_margin_end = item_style.computed_value(PropertyHash::hash_margin_right).is_keyword("auto");
 
-			item.cross_noncontent_start += child->style_cascade().computed_value("margin-top").number();
-			item.cross_noncontent_start += child->style_cascade().computed_value("border-top-width").number();
-			item.cross_noncontent_start += child->style_cascade().computed_value("padding-top").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("padding-bottom").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("border-bottom-width").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("margin-bottom").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_margin_top).number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_border_top_width).number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_padding_top).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_padding_bottom).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_border_bottom_width).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_margin_bottom).number();
 
-			item.cross_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
-			item.cross_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
+			item.cross_auto_margin_start = item_style.computed_value(PropertyHash::hash_margin_top).is_keyword("auto");
+			item.cross_auto_margin_end = item_style.computed_value(PropertyHash::hash_margin_bottom).is_keyword("auto");
 
 			// Flex base size and hypothetical (preferred) main size:
 
-			if (item.view->style_cascade().computed_value("flex-basis").is_length())
-				item.flex_base_size = item.view->style_cascade().computed_value("flex-basis").number();
-			else if (item.definite_main_size && item.view->style_cascade().computed_value("flex-basis").is_keyword("auto"))
+			if (item.view->style_cascade().computed_value(PropertyHash::hash_flex_basis).is_length())
+				item.flex_base_size = item.view->style_cascade().computed_value(PropertyHash::hash_flex_basis).number();
+			else if (item.definite_main_size && item.view->style_cascade().computed_value(PropertyHash::hash_flex_basis).is_keyword("auto"))
 				item.flex_base_size = item.main_size;
 			else
 				item.flex_base_size = item.view->preferred_width(canvas);
@@ -270,8 +270,8 @@ namespace clan
 			if (item.definite_max_main_size)
 				item.flex_preferred_main_size = std::min(item.flex_preferred_main_size, item.max_main_size);
 
-			item.flex_grow = item.view->style_cascade().computed_value("flex-grow").number();
-			item.flex_shrink = item.view->style_cascade().computed_value("flex-shrink").number();
+			item.flex_grow = item.view->style_cascade().computed_value(PropertyHash::hash_flex_grow).number();
+			item.flex_shrink = item.view->style_cascade().computed_value(PropertyHash::hash_flex_shrink).number();
 
 			items.push_back(item);
 		}
@@ -320,27 +320,27 @@ namespace clan
 
 			item.definite_main_size = child->is_height_definite();
 			item.definite_cross_size = child->is_width_definite();
-			item.definite_min_main_size = item_style.computed_value("min-height").is_length();
-			item.definite_max_main_size = item_style.computed_value("max-height").is_length();
-			item.definite_min_cross_size = item_style.computed_value("min-width").is_length();
-			item.definite_max_cross_size = item_style.computed_value("max-width").is_length();
+			item.definite_min_main_size = item_style.computed_value(PropertyHash::hash_min_height).is_length();
+			item.definite_max_main_size = item_style.computed_value(PropertyHash::hash_max_height).is_length();
+			item.definite_min_cross_size = item_style.computed_value(PropertyHash::hash_min_width).is_length();
+			item.definite_max_cross_size = item_style.computed_value(PropertyHash::hash_max_width).is_length();
 
 			if (item.definite_main_size)
 				item.main_size = child->definite_height();
 			if (item.definite_cross_size)
 				item.cross_size = child->definite_width();
 			if (item.definite_min_main_size)
-				item.min_main_size = item_style.computed_value("min-height").number();
+				item.min_main_size = item_style.computed_value(PropertyHash::hash_min_height).number();
 			if (item.definite_max_main_size)
-				item.max_main_size = item_style.computed_value("max-height").number();
+				item.max_main_size = item_style.computed_value(PropertyHash::hash_max_height).number();
 			if (item.definite_min_cross_size)
-				item.min_cross_size = item_style.computed_value("min-width").number();
+				item.min_cross_size = item_style.computed_value(PropertyHash::hash_min_width).number();
 			if (item.definite_max_cross_size)
-				item.max_cross_size = item_style.computed_value("max-width").number();
+				item.max_cross_size = item_style.computed_value(PropertyHash::hash_max_width).number();
 
 			// Main axis auto min:
 
-			if (item_style.computed_value("min-height").is_keyword("auto"))
+			if (item_style.computed_value(PropertyHash::hash_min_height).is_keyword("auto"))
 			{
 				float min_content_size = 0.0f; // item.view->preferred_height(canvas, item.view->min_content_width()); // shrink-to-fit in CSS 2.1
 				if (item.definite_main_size)
@@ -372,31 +372,31 @@ namespace clan
 
 			// Non-content sizes:
 
-			item.main_noncontent_start += child->style_cascade().computed_value("margin-top").number();
-			item.main_noncontent_start += child->style_cascade().computed_value("border-top-width").number();
-			item.main_noncontent_start += child->style_cascade().computed_value("padding-top").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("padding-bottom").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("border-bottom-width").number();
-			item.main_noncontent_end += child->style_cascade().computed_value("margin-bottom").number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_margin_top).number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_border_top_width).number();
+			item.main_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_padding_top).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_padding_bottom).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_border_bottom_width).number();
+			item.main_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_margin_bottom).number();
 
-			item.main_auto_margin_start = item_style.computed_value("margin-top").is_keyword("auto");
-			item.main_auto_margin_end = item_style.computed_value("margin-bottom").is_keyword("auto");
+			item.main_auto_margin_start = item_style.computed_value(PropertyHash::hash_margin_top).is_keyword("auto");
+			item.main_auto_margin_end = item_style.computed_value(PropertyHash::hash_margin_bottom).is_keyword("auto");
 
-			item.cross_noncontent_start += child->style_cascade().computed_value("margin-left").number();
-			item.cross_noncontent_start += child->style_cascade().computed_value("border-left-width").number();
-			item.cross_noncontent_start += child->style_cascade().computed_value("padding-left").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("padding-right").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("border-right-width").number();
-			item.cross_noncontent_end += child->style_cascade().computed_value("margin-right").number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_margin_left).number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_border_left_width).number();
+			item.cross_noncontent_start += child->style_cascade().computed_value(PropertyHash::hash_padding_left).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_padding_right).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_border_right_width).number();
+			item.cross_noncontent_end += child->style_cascade().computed_value(PropertyHash::hash_margin_right).number();
 
-			item.cross_auto_margin_start = item_style.computed_value("margin-left").is_keyword("auto");
-			item.cross_auto_margin_end = item_style.computed_value("margin-right").is_keyword("auto");
+			item.cross_auto_margin_start = item_style.computed_value(PropertyHash::hash_margin_left).is_keyword("auto");
+			item.cross_auto_margin_end = item_style.computed_value(PropertyHash::hash_margin_right).is_keyword("auto");
 
 			// Flex base size and hypothetical (preferred) main size:
 
-			if (item.view->style_cascade().computed_value("flex-basis").is_length())
+			if (item.view->style_cascade().computed_value(PropertyHash::hash_flex_basis).is_length())
 			{
-				item.flex_base_size = item.view->style_cascade().computed_value("flex-basis").number();
+				item.flex_base_size = item.view->style_cascade().computed_value(PropertyHash::hash_flex_basis).number();
 			}
 			else if (item.definite_main_size)
 			{
@@ -431,8 +431,8 @@ namespace clan
 			if (item.definite_max_main_size)
 				item.flex_preferred_main_size = std::min(item.flex_preferred_main_size, item.max_main_size);
 
-			item.flex_grow = item.view->style_cascade().computed_value("flex-grow").number();
-			item.flex_shrink = item.view->style_cascade().computed_value("flex-shrink").number();
+			item.flex_grow = item.view->style_cascade().computed_value(PropertyHash::hash_flex_grow).number();
+			item.flex_shrink = item.view->style_cascade().computed_value(PropertyHash::hash_flex_shrink).number();
 
 			items.push_back(item);
 		}
@@ -764,10 +764,10 @@ namespace clan
 				{
 					auto &item_style = item.view->style_cascade();
 
-					auto align_self = item_style.computed_value("align-self");
+					auto align_self = item_style.computed_value(PropertyHash::hash_align_self);
 					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
 					{
-						align_self = view->style_cascade().computed_value("align-items");
+						align_self = view->style_cascade().computed_value(PropertyHash::hash_align_items);
 					}
 
 					if (restarted_layout && item.collapsed)
@@ -796,7 +796,7 @@ namespace clan
 			}
 		}
 
-		if (view->style_cascade().computed_value("align-content").is_keyword("stretch") && known_container_cross_size && lines.size() > 0)
+		if (view->style_cascade().computed_value(PropertyHash::hash_align_content).is_keyword("stretch") && known_container_cross_size && lines.size() > 0)
 		{
 			float total_cross_size = 0.0f;
 			for (auto &line : lines)
@@ -817,7 +817,7 @@ namespace clan
 		{
 			for (auto &item : line)
 			{
-				if (item.view->style_cascade().computed_value("visibility").is_keyword("collapse"))
+				if (item.view->style_cascade().computed_value(PropertyHash::hash_visibility).is_keyword("collapse"))
 				{
 					item.collapsed = true;
 					item.strut_size = line.cross_size;
@@ -841,10 +841,10 @@ namespace clan
 			{
 				auto &item_style = item.view->style_cascade();
 
-				auto align_self = item_style.computed_value("align-self");
+				auto align_self = item_style.computed_value(PropertyHash::hash_align_self);
 				if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
 				{
-					align_self = view->style_cascade().computed_value("align-items");
+					align_self = view->style_cascade().computed_value(PropertyHash::hash_align_items);
 				}
 
 				if (align_self.is_keyword("stretch") && !item.definite_cross_size && !item.cross_auto_margin_start && !item.cross_auto_margin_end)
@@ -913,7 +913,7 @@ namespace clan
 				space_available = 0.0f;
 			}
 
-			auto justify_content = view->style_cascade().computed_value("justify-content");
+			auto justify_content = view->style_cascade().computed_value(PropertyHash::hash_justify_content);
 			if (justify_content.is_keyword("flex-start") || ((item_count < 2 || space_available < 0.0f) && justify_content.is_keyword("space-between")))
 			{
 				float pos = 0.0f;
@@ -1036,10 +1036,10 @@ namespace clan
 				}
 				else
 				{
-					auto align_self = item.view->style_cascade().computed_value("align-self");
+					auto align_self = item.view->style_cascade().computed_value(PropertyHash::hash_align_self);
 					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
 					{
-						align_self = view->style_cascade().computed_value("align-items");
+						align_self = view->style_cascade().computed_value(PropertyHash::hash_align_items);
 					}
 
 					if (align_self.is_keyword("flex-start") || (direction == FlexDirection::column && align_self.is_keyword("baseline")) || align_self.is_keyword("stretch"))
@@ -1069,10 +1069,10 @@ namespace clan
 					if (item.collapsed || item.cross_auto_margin_start || item.cross_auto_margin_end)
 						continue;
 
-					auto align_self = item.view->style_cascade().computed_value("align-self");
+					auto align_self = item.view->style_cascade().computed_value(PropertyHash::hash_align_self);
 					if (align_self.is_keyword("auto")) // To do: computed_value should have done this for us
 					{
-						align_self = view->style_cascade().computed_value("align-items");
+						align_self = view->style_cascade().computed_value(PropertyHash::hash_align_items);
 					}
 
 					if (align_self.is_keyword("baseline"))
@@ -1095,7 +1095,7 @@ namespace clan
 			float line_pos = 0.0f;
 			float line_extra = 0.0f;
 
-			auto align_content = view->style_cascade().computed_value("align-content");
+			auto align_content = view->style_cascade().computed_value(PropertyHash::hash_align_content);
 			if (align_content.is_keyword("flex-start") || align_content.is_keyword("stretch") || (free_space < 0.0f && align_content.is_keyword("space-between")))
 			{
 			}

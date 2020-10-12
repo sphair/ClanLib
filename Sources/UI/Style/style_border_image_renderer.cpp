@@ -45,17 +45,17 @@ namespace clan
 
 	void StyleBorderImageRenderer::render()
 	{
-		if (!style.computed_value("border-image-source").is_url())
+		if (!style.computed_value(PropertyHash::hash_border_image_source).is_url())
 			return;
 
-		Image image = Image::resource(canvas, style.computed_value("border-image-source").text(), UIThread::get_resources());
+		Image image = Image::resource(canvas, style.computed_value(PropertyHash::hash_border_image_source).text(), UIThread::get_resources());
 		if (image)
 		{
 			int slice_left = get_left_slice_value(image.get_width());
 			int slice_right = get_right_slice_value(image.get_width());
 			int slice_top = get_top_slice_value(image.get_height());
 			int slice_bottom = get_bottom_slice_value(image.get_height());
-			bool fill_center = style.computed_value("border-image-slice-center").is_keyword("fill");
+			bool fill_center = style.computed_value(PropertyHash::hash_border_image_slice_center).is_keyword("fill");
 
 			Rectf border_image_area = get_border_image_area();
 
@@ -69,8 +69,8 @@ namespace clan
 			int sx[4] = { 0, slice_left, (int)image.get_width() - slice_right, (int)image.get_width() };
 			int sy[4] = { 0, slice_top, (int)image.get_height() - slice_bottom, (int)image.get_height() };
 			
-			StyleGetValue repeat_x = style.computed_value("border-image-repeat-x");
-			StyleGetValue repeat_y = style.computed_value("border-image-repeat-y");
+			StyleGetValue repeat_x = style.computed_value(PropertyHash::hash_border_image_repeat_x);
+			StyleGetValue repeat_y = style.computed_value(PropertyHash::hash_border_image_repeat_y);
 
 			for (int yy = 0; yy < 3; yy++)
 			{
@@ -161,10 +161,10 @@ namespace clan
 	{
 		Rectf box = geometry.border_box();
 
-		StyleGetValue outset_left = style.computed_value("border-image-outset-left");
-		StyleGetValue outset_right = style.computed_value("border-image-outset-right");
-		StyleGetValue outset_top = style.computed_value("border-image-outset-top");
-		StyleGetValue outset_bottom = style.computed_value("border-image-outset-bottom");
+		StyleGetValue outset_left = style.computed_value(PropertyHash::hash_border_image_outset_left);
+		StyleGetValue outset_right = style.computed_value(PropertyHash::hash_border_image_outset_right);
+		StyleGetValue outset_top = style.computed_value(PropertyHash::hash_border_image_outset_top);
+		StyleGetValue outset_bottom = style.computed_value(PropertyHash::hash_border_image_outset_bottom);
 
 		if (outset_left.is_length() || outset_left.is_number())
 			box.left -= outset_left.number();
@@ -183,7 +183,7 @@ namespace clan
 
 	float StyleBorderImageRenderer::get_left_grid(float image_area_width, float auto_width) const
 	{
-		StyleGetValue border_image_width = style.computed_value("border-image-width-left");
+		StyleGetValue border_image_width = style.computed_value(PropertyHash::hash_border_image_width_left);
 
 		if (border_image_width.is_percentage())
 			return border_image_width.number() * image_area_width / 100.0f;
@@ -195,7 +195,7 @@ namespace clan
 
 	float StyleBorderImageRenderer::get_right_grid(float image_area_width, float auto_width) const
 	{
-		StyleGetValue border_image_width = style.computed_value("border-image-width-right");
+		StyleGetValue border_image_width = style.computed_value(PropertyHash::hash_border_image_width_right);
 
 		if (border_image_width.is_percentage())
 			return border_image_width.number() * image_area_width / 100.0f;
@@ -207,7 +207,7 @@ namespace clan
 
 	float StyleBorderImageRenderer::get_top_grid(float image_area_height, float auto_height) const
 	{
-		StyleGetValue border_image_width = style.computed_value("border-image-width-top");
+		StyleGetValue border_image_width = style.computed_value(PropertyHash::hash_border_image_width_top);
 
 		if (border_image_width.is_percentage())
 			return border_image_width.number() * image_area_height / 100.0f;
@@ -219,7 +219,7 @@ namespace clan
 
 	float StyleBorderImageRenderer::get_bottom_grid(float image_area_height, float auto_height) const
 	{
-		StyleGetValue border_image_width = style.computed_value("border-image-width-bottom");
+		StyleGetValue border_image_width = style.computed_value(PropertyHash::hash_border_image_width_bottom);
 
 		if (border_image_width.is_percentage())
 			return border_image_width.number() * image_area_height / 100.0f;
@@ -231,7 +231,7 @@ namespace clan
 
 	int StyleBorderImageRenderer::get_left_slice_value(int image_width) const
 	{
-		StyleGetValue border_image_slice = style.computed_value("border-image-slice-left");
+		StyleGetValue border_image_slice = style.computed_value(PropertyHash::hash_border_image_slice_left);
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
@@ -243,7 +243,7 @@ namespace clan
 
 	int StyleBorderImageRenderer::get_right_slice_value(int image_width) const
 	{
-		StyleGetValue border_image_slice = style.computed_value("border-image-slice-right");
+		StyleGetValue border_image_slice = style.computed_value(PropertyHash::hash_border_image_slice_right);
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
@@ -255,7 +255,7 @@ namespace clan
 
 	int StyleBorderImageRenderer::get_top_slice_value(int image_height) const
 	{
-		StyleGetValue border_image_slice = style.computed_value("border-image-slice-top");
+		StyleGetValue border_image_slice = style.computed_value(PropertyHash::hash_border_image_slice_top);
 
 		int v = 0;
 		if (border_image_slice.is_percentage())
@@ -267,7 +267,7 @@ namespace clan
 
 	int StyleBorderImageRenderer::get_bottom_slice_value(int image_height) const
 	{
-		StyleGetValue border_image_slice = style.computed_value("border-image-slice-bottom");
+		StyleGetValue border_image_slice = style.computed_value(PropertyHash::hash_border_image_slice_bottom);
 
 		int v = 0;
 		if (border_image_slice.is_percentage())

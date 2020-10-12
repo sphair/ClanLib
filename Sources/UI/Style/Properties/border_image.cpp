@@ -83,22 +83,22 @@ namespace clan
 			border_image_repeat[0] = StyleSetValue::from_keyword("inherit");
 			border_image_repeat[1] = StyleSetValue::from_keyword("inherit");
 
-			setter->set_value("border-image-source", border_image_source);
-			setter->set_value("border-image-slice-top", border_image_slice[0]);
-			setter->set_value("border-image-slice-right", border_image_slice[1]);
-			setter->set_value("border-image-slice-bottom", border_image_slice[2]);
-			setter->set_value("border-image-slice-left", border_image_slice[3]);
-			setter->set_value("border-image-slice-center", border_image_slice[4]);
-			setter->set_value("border-image-width-top", border_image_width[0]);
-			setter->set_value("border-image-width-right", border_image_width[1]);
-			setter->set_value("border-image-width-bottom", border_image_width[2]);
-			setter->set_value("border-image-width-left", border_image_width[3]);
-			setter->set_value("border-image-outset-top", border_image_outset[0]);
-			setter->set_value("border-image-outset-right", border_image_outset[1]);
-			setter->set_value("border-image-outset-bottom", border_image_outset[2]);
-			setter->set_value("border-image-outset-left", border_image_outset[3]);
-			setter->set_value("border-image-repeat-x", border_image_repeat[0]);
-			setter->set_value("border-image-repeat-y", border_image_repeat[1]);
+			setter->set_value(PropertyHash::hash_border_image_source, border_image_source);
+			setter->set_value(PropertyHash::hash_border_image_slice_top, border_image_slice[0]);
+			setter->set_value(PropertyHash::hash_border_image_slice_right, border_image_slice[1]);
+			setter->set_value(PropertyHash::hash_border_image_slice_bottom, border_image_slice[2]);
+			setter->set_value(PropertyHash::hash_border_image_slice_left, border_image_slice[3]);
+			setter->set_value(PropertyHash::hash_border_image_slice_center, border_image_slice[4]);
+			setter->set_value(PropertyHash::hash_border_image_width_top, border_image_width[0]);
+			setter->set_value(PropertyHash::hash_border_image_width_right, border_image_width[1]);
+			setter->set_value(PropertyHash::hash_border_image_width_bottom, border_image_width[2]);
+			setter->set_value(PropertyHash::hash_border_image_width_left, border_image_width[3]);
+			setter->set_value(PropertyHash::hash_border_image_outset_top, border_image_outset[0]);
+			setter->set_value(PropertyHash::hash_border_image_outset_right, border_image_outset[1]);
+			setter->set_value(PropertyHash::hash_border_image_outset_bottom, border_image_outset[2]);
+			setter->set_value(PropertyHash::hash_border_image_outset_left, border_image_outset[3]);
+			setter->set_value(PropertyHash::hash_border_image_repeat_x, border_image_repeat[0]);
+			setter->set_value(PropertyHash::hash_border_image_repeat_y, border_image_repeat[1]);
 
 			return;
 		}
@@ -152,22 +152,22 @@ namespace clan
 			}
 		} while (pos != tokens.size());
 
-		setter->set_value("border-image-source", border_image_source);
-		setter->set_value("border-image-slice-top", border_image_slice[0]);
-		setter->set_value("border-image-slice-right", border_image_slice[1]);
-		setter->set_value("border-image-slice-bottom", border_image_slice[2]);
-		setter->set_value("border-image-slice-left", border_image_slice[3]);
-		setter->set_value("border-image-slice-center", border_image_slice[4]);
-		setter->set_value("border-image-width-top", border_image_width[0]);
-		setter->set_value("border-image-width-right", border_image_width[1]);
-		setter->set_value("border-image-width-bottom", border_image_width[2]);
-		setter->set_value("border-image-width-left", border_image_width[3]);
-		setter->set_value("border-image-outset-top", border_image_outset[0]);
-		setter->set_value("border-image-outset-right", border_image_outset[1]);
-		setter->set_value("border-image-outset-bottom", border_image_outset[2]);
-		setter->set_value("border-image-outset-left", border_image_outset[3]);
-		setter->set_value("border-image-repeat-x", border_image_repeat[0]);
-		setter->set_value("border-image-repeat-y", border_image_repeat[1]);
+		setter->set_value(PropertyHash::hash_border_image_source, border_image_source);
+		setter->set_value(PropertyHash::hash_border_image_slice_top, border_image_slice[0]);
+		setter->set_value(PropertyHash::hash_border_image_slice_right, border_image_slice[1]);
+		setter->set_value(PropertyHash::hash_border_image_slice_bottom, border_image_slice[2]);
+		setter->set_value(PropertyHash::hash_border_image_slice_left, border_image_slice[3]);
+		setter->set_value(PropertyHash::hash_border_image_slice_center, border_image_slice[4]);
+		setter->set_value(PropertyHash::hash_border_image_width_top, border_image_width[0]);
+		setter->set_value(PropertyHash::hash_border_image_width_right, border_image_width[1]);
+		setter->set_value(PropertyHash::hash_border_image_width_bottom, border_image_width[2]);
+		setter->set_value(PropertyHash::hash_border_image_width_left, border_image_width[3]);
+		setter->set_value(PropertyHash::hash_border_image_outset_top, border_image_outset[0]);
+		setter->set_value(PropertyHash::hash_border_image_outset_right, border_image_outset[1]);
+		setter->set_value(PropertyHash::hash_border_image_outset_bottom, border_image_outset[2]);
+		setter->set_value(PropertyHash::hash_border_image_outset_left, border_image_outset[3]);
+		setter->set_value(PropertyHash::hash_border_image_repeat_x, border_image_repeat[0]);
+		setter->set_value(PropertyHash::hash_border_image_repeat_y, border_image_repeat[1]);
 	}
 
 	bool BorderImagePropertyParser::parse_source(StyleSetValue &border_image_source, size_t &parse_pos, const std::vector<StyleToken> &tokens)
@@ -493,10 +493,10 @@ namespace clan
 			border_image_outset_left = values[3];
 		}
 
-		setter->set_value("border-image-outset-top", border_image_outset_top);
-		setter->set_value("border-image-outset-right", border_image_outset_right);
-		setter->set_value("border-image-outset-bottom", border_image_outset_bottom);
-		setter->set_value("border-image-outset-left", border_image_outset_left);
+		setter->set_value(PropertyHash::hash_border_image_outset_top, border_image_outset_top);
+		setter->set_value(PropertyHash::hash_border_image_outset_right, border_image_outset_right);
+		setter->set_value(PropertyHash::hash_border_image_outset_bottom, border_image_outset_bottom);
+		setter->set_value(PropertyHash::hash_border_image_outset_left, border_image_outset_left);
 	}
 
 	void BorderImageRepeatPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -511,8 +511,8 @@ namespace clan
 		{
 			border_image_repeat_x = StyleSetValue::from_keyword("inherit");
 			border_image_repeat_y = StyleSetValue::from_keyword("inherit");
-			setter->set_value("border-image-repeat-x", border_image_repeat_x);
-			setter->set_value("border-image-repeat-y", border_image_repeat_y);
+			setter->set_value(PropertyHash::hash_border_image_repeat_x, border_image_repeat_x);
+			setter->set_value(PropertyHash::hash_border_image_repeat_y, border_image_repeat_y);
 			return;
 		}
 		else if (token.type == StyleTokenType::ident && equals(token.value, "stretch"))
@@ -535,8 +535,8 @@ namespace clan
 		if (pos == tokens.size())
 		{
 			border_image_repeat_y = border_image_repeat_x;
-			setter->set_value("border-image-repeat-x", border_image_repeat_x);
-			setter->set_value("border-image-repeat-y", border_image_repeat_y);
+			setter->set_value(PropertyHash::hash_border_image_repeat_x, border_image_repeat_x);
+			setter->set_value(PropertyHash::hash_border_image_repeat_y, border_image_repeat_y);
 		}
 		else
 		{
@@ -558,8 +558,8 @@ namespace clan
 				return;
 			}
 
-			setter->set_value("border-image-repeat-x", border_image_repeat_x);
-			setter->set_value("border-image-repeat-y", border_image_repeat_y);
+			setter->set_value(PropertyHash::hash_border_image_repeat_x, border_image_repeat_x);
+			setter->set_value(PropertyHash::hash_border_image_repeat_y, border_image_repeat_y);
 		}
 	}
 
@@ -583,11 +583,11 @@ namespace clan
 			border_image_slice_bottom = StyleSetValue::from_keyword("inherit");
 			border_image_slice_left = StyleSetValue::from_keyword("inherit");
 			border_image_slice_center = StyleSetValue::from_keyword("inherit");
-			setter->set_value("border-image-slice-top", border_image_slice_top);
-			setter->set_value("border-image-slice-right", border_image_slice_right);
-			setter->set_value("border-image-slice-bottom", border_image_slice_bottom);
-			setter->set_value("border-image-slice-left", border_image_slice_left);
-			setter->set_value("border-image-slice-center", border_image_slice_center);
+			setter->set_value(PropertyHash::hash_border_image_slice_top, border_image_slice_top);
+			setter->set_value(PropertyHash::hash_border_image_slice_right, border_image_slice_right);
+			setter->set_value(PropertyHash::hash_border_image_slice_bottom, border_image_slice_bottom);
+			setter->set_value(PropertyHash::hash_border_image_slice_left, border_image_slice_left);
+			setter->set_value(PropertyHash::hash_border_image_slice_center, border_image_slice_center);
 		}
 		else
 		{
@@ -644,11 +644,11 @@ namespace clan
 			border_image_slice_bottom = values[2];
 			border_image_slice_left = values[3];
 
-			setter->set_value("border-image-slice-top", border_image_slice_top);
-			setter->set_value("border-image-slice-right", border_image_slice_right);
-			setter->set_value("border-image-slice-bottom", border_image_slice_bottom);
-			setter->set_value("border-image-slice-left", border_image_slice_left);
-			setter->set_value("border-image-slice-center", border_image_slice_center);
+			setter->set_value(PropertyHash::hash_border_image_slice_top, border_image_slice_top);
+			setter->set_value(PropertyHash::hash_border_image_slice_right, border_image_slice_right);
+			setter->set_value(PropertyHash::hash_border_image_slice_bottom, border_image_slice_bottom);
+			setter->set_value(PropertyHash::hash_border_image_slice_left, border_image_slice_left);
+			setter->set_value(PropertyHash::hash_border_image_slice_center, border_image_slice_center);
 		}
 	}
 
@@ -665,18 +665,18 @@ namespace clan
 			if (equals(token.value, "none"))
 			{
 				border_image_source = StyleSetValue::from_keyword("none");
-				setter->set_value("border-image-source", border_image_source);
+				setter->set_value(PropertyHash::hash_border_image_source, border_image_source);
 			}
 			else if (equals(token.value, "inherit"))
 			{
 				border_image_source = StyleSetValue::from_keyword("inherit");
-				setter->set_value("border-image-source", border_image_source);
+				setter->set_value(PropertyHash::hash_border_image_source, border_image_source);
 			}
 		}
 		else if (token.type == StyleTokenType::uri && pos == tokens.size())
 		{
 			border_image_source = StyleSetValue::from_url(token.value);
-			setter->set_value("border-image-source", border_image_source);
+			setter->set_value(PropertyHash::hash_border_image_source, border_image_source);
 		}
 	}
 
@@ -698,10 +698,10 @@ namespace clan
 			border_image_width_right = StyleSetValue::from_keyword("inherit");
 			border_image_width_bottom = StyleSetValue::from_keyword("inherit");
 			border_image_width_left = StyleSetValue::from_keyword("inherit");
-			setter->set_value("border-image-width-top", border_image_width_top);
-			setter->set_value("border-image-width-right", border_image_width_right);
-			setter->set_value("border-image-width-bottom", border_image_width_bottom);
-			setter->set_value("border-image-width-left", border_image_width_left);
+			setter->set_value(PropertyHash::hash_border_image_width_top, border_image_width_top);
+			setter->set_value(PropertyHash::hash_border_image_width_right, border_image_width_right);
+			setter->set_value(PropertyHash::hash_border_image_width_bottom, border_image_width_bottom);
+			setter->set_value(PropertyHash::hash_border_image_width_left, border_image_width_left);
 		}
 		else
 		{
@@ -758,10 +758,10 @@ namespace clan
 			border_image_width_bottom = values[2];
 			border_image_width_left = values[3];
 
-			setter->set_value("border-image-width-top", border_image_width_top);
-			setter->set_value("border-image-width-right", border_image_width_right);
-			setter->set_value("border-image-width-bottom", border_image_width_bottom);
-			setter->set_value("border-image-width-left", border_image_width_left);
+			setter->set_value(PropertyHash::hash_border_image_width_top, border_image_width_top);
+			setter->set_value(PropertyHash::hash_border_image_width_right, border_image_width_right);
+			setter->set_value(PropertyHash::hash_border_image_width_bottom, border_image_width_bottom);
+			setter->set_value(PropertyHash::hash_border_image_width_left, border_image_width_left);
 		}
 	}
 }

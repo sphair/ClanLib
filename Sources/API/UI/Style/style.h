@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -32,6 +33,7 @@
 #include "../../Core/Math/cl_math.h"
 #include "../../Display/2D/color.h"
 #include "style_get_value.h"
+#include "property_hash.h"
 #include <memory>
 
 namespace clan
@@ -65,8 +67,7 @@ namespace clan
 		}
 
 		/// Retrieve the declared value for a property
-		StyleGetValue declared_value(const char *property_name) const;
-		StyleGetValue declared_value(const std::string &property_name) const { return declared_value(property_name.c_str()); }
+		StyleGetValue declared_value(PropertyHash hash) const;
 
 		/// Static helper that generates a "rgba(%1,%2,%3,%4)" string for the given color.
 		static std::string to_rgba(const Colorf &c)

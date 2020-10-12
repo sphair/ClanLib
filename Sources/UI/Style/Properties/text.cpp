@@ -106,7 +106,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("color", color);
+		setter->set_value(PropertyHash::hash_color, color);
 	}
 
 	void TextAlignPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -137,7 +137,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("text-align", text_align);
+		setter->set_value(PropertyHash::hash_text_align, text_align);
 	}
 
 	void TextDecorationPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -213,10 +213,10 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("text-decoration-underline", text_decoration_underline);
-		setter->set_value("text-decoration-overline", text_decoration_overline);
-		setter->set_value("text-decoration-line-through", text_decoration_line_through);
-		setter->set_value("text-decoration-blink", text_decoration_blink);
+		setter->set_value(PropertyHash::hash_text_decoration_underline, text_decoration_underline);
+		setter->set_value(PropertyHash::hash_text_decoration_overline, text_decoration_overline);
+		setter->set_value(PropertyHash::hash_text_decoration_line_through, text_decoration_line_through);
+		setter->set_value(PropertyHash::hash_text_decoration_blink, text_decoration_blink);
 	}
 
 	void TextIndentPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -277,7 +277,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("text-indent", text_indent);
+		setter->set_value(PropertyHash::hash_text_indent, text_indent);
 	}
 
 	void TextTransformPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -308,7 +308,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("text-transform", text_transform);
+		setter->set_value(PropertyHash::hash_text_transform, text_transform);
 	}
 
 	void TextShadowPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -370,7 +370,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("word-spacing", word_spacing);
+		setter->set_value(PropertyHash::hash_word_spacing, word_spacing);
 	}
 
 	void LetterSpacingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -428,7 +428,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("letter-spacing", letter_spacing);
+		setter->set_value(PropertyHash::hash_letter_spacing, letter_spacing);
 	}
 
 	void FontPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser)
@@ -463,13 +463,13 @@ namespace clan
 					equals(token.value, "small-caption") ||
 					equals(token.value, "status-bar")))
 				{
-					setter->set_value("font-style", style);
-					setter->set_value("font-variant", variant);
-					setter->set_value("font-weight", weight);
-					setter->set_value("font-size", size);
-					setter->set_value("line-height", line_height);
-					setter->set_value("font-family", family);
-					setter->set_value_array("font-family-names", family_names);
+					setter->set_value(PropertyHash::hash_font_style, style);
+					setter->set_value(PropertyHash::hash_font_variant, variant);
+					setter->set_value(PropertyHash::hash_font_weight, weight);
+					setter->set_value(PropertyHash::hash_font_size, size);
+					setter->set_value(PropertyHash::hash_line_height, line_height);
+					setter->set_value(PropertyHash::hash_font_family, family);
+					setter->set_value_array(PropertyHash::hash_font_family_names, family_names);
 					return;
 				}
 				else if (equals(token.value, "inherit") && tokens.size() == 1)
@@ -482,13 +482,13 @@ namespace clan
 					family = StyleSetValue::from_keyword("inherit");
 					family_names.clear();
 
-					setter->set_value("font-style", style);
-					setter->set_value("font-variant", variant);
-					setter->set_value("font-weight", weight);
-					setter->set_value("font-size", size);
-					setter->set_value("line-height", line_height);
-					setter->set_value("font-family", family);
-					setter->set_value_array("font-family-names", family_names);
+					setter->set_value(PropertyHash::hash_font_style, style);
+					setter->set_value(PropertyHash::hash_font_variant, variant);
+					setter->set_value(PropertyHash::hash_font_weight, weight);
+					setter->set_value(PropertyHash::hash_font_size, size);
+					setter->set_value(PropertyHash::hash_line_height, line_height);
+					setter->set_value(PropertyHash::hash_font_family, family);
+					setter->set_value_array(PropertyHash::hash_font_family_names, family_names);
 					return;
 				}
 				else if (equals(token.value, "normal")) // font-style or font-weight or font-variant
@@ -796,13 +796,13 @@ namespace clan
 			}
 		}
 
-		setter->set_value("font-style", style);
-		setter->set_value("font-variant", variant);
-		setter->set_value("font-weight", weight);
-		setter->set_value("font-size", size);
-		setter->set_value("line-height", line_height);
-		setter->set_value("font-family", family);
-		setter->set_value_array("font-family-names", family_names);
+		setter->set_value(PropertyHash::hash_font_style, style);
+		setter->set_value(PropertyHash::hash_font_variant, variant);
+		setter->set_value(PropertyHash::hash_font_weight, weight);
+		setter->set_value(PropertyHash::hash_font_size, size);
+		setter->set_value(PropertyHash::hash_line_height, line_height);
+		setter->set_value(PropertyHash::hash_font_family, family);
+		setter->set_value_array(PropertyHash::hash_font_family_names, family_names);
 	}
 
 	void FontFamilyPropertyParser::parse(StylePropertySetter *setter, const std::string &propname, StyleParser &parser)
@@ -819,8 +819,8 @@ namespace clan
 		if (equals(token.value, "inherit") && tokens.size() == 1)
 		{
 			family = StyleSetValue::from_keyword("inherit");
-			setter->set_value("font-family", family);
-			setter->set_value_array("font-family-names", family_names);
+			setter->set_value(PropertyHash::hash_font_family, family);
+			setter->set_value_array(PropertyHash::hash_font_family_names, family_names);
 			return;
 		}
 
@@ -909,8 +909,8 @@ namespace clan
 			}
 		}
 
-		setter->set_value("font-family", family);
-		setter->set_value_array("font-family-names", family_names);
+		setter->set_value(PropertyHash::hash_font_family, family);
+		setter->set_value_array(PropertyHash::hash_font_family_names, family_names);
 	}
 
 	void FontSizePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -967,7 +967,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("font-size", font_size);
+		setter->set_value(PropertyHash::hash_font_size, font_size);
 	}
 
 	void LineHeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1012,7 +1012,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("line-height", line_height);
+		setter->set_value(PropertyHash::hash_line_height, line_height);
 	}
 
 	void FontStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1041,7 +1041,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("font-style", font_style);
+		setter->set_value(PropertyHash::hash_font_style, font_style);
 	}
 
 	void FontVariantPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1068,7 +1068,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("font-variant", font_variant);
+		setter->set_value(PropertyHash::hash_font_variant, font_variant);
 	}
 
 	void FontWeightPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1122,7 +1122,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("font-weight", font_weight);
+		setter->set_value(PropertyHash::hash_font_weight, font_weight);
 	}
 
 	void ClanFontRenderingPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -1151,6 +1151,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("-clan-font-rendering", rendering);
+		setter->set_value(PropertyHash::hash__clan_font_rendering, rendering);
 	}
 }

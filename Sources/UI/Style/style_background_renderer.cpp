@@ -52,7 +52,7 @@ namespace clan
 
 		int num_layers = style.array_size("background-image");
 
-		StyleGetValue bg_color = style.computed_value("background-color");
+		StyleGetValue bg_color = style.computed_value(PropertyHash::hash_background_color);
 		if (bg_color.is_color() && bg_color.color().a != 0.0f)
 		{
 			auto border_points = get_border_points();
@@ -342,10 +342,10 @@ namespace clan
 		if (!get_layer_clip(num_layers - 1).is_keyword("border-box"))
 			return;
 
-		StyleGetValue style_top = style.computed_value("border-top-style");
+		StyleGetValue style_top = style.computed_value(PropertyHash::hash_border_top_style);
 		if (style_top.is_keyword("solid"))
 		{
-			Colorf color = style.computed_value("border-top-color").color();
+			Colorf color = style.computed_value(PropertyHash::hash_border_top_color).color();
 			if (color.a > 0.0f)
 			{
 				auto border_points = get_border_points();
@@ -358,10 +358,10 @@ namespace clan
 
 	bool StyleBackgroundRenderer::is_render_border_antialias_fix_required()
 	{
-		StyleGetValue style_top = style.computed_value("border-top-style");
+		StyleGetValue style_top = style.computed_value(PropertyHash::hash_border_top_style);
 		if (style_top.is_keyword("solid"))
 		{
-			Colorf color = style.computed_value("border-top-color").color();
+			Colorf color = style.computed_value(PropertyHash::hash_border_top_color).color();
 			if (color.a > 0.5f)
 				return true;
 		}
@@ -603,14 +603,14 @@ namespace clan
 
 	std::array<Pointf, 2 * 4> StyleBackgroundRenderer::get_border_points()
 	{
-		float top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
-		float top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
-		float top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
-		float top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
-		float bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
-		float bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
-		float bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
-		float bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
+		float top_left_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_top_left_radius_x));
+		float top_left_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_top_left_radius_y));
+		float top_right_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_top_right_radius_x));
+		float top_right_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_top_right_radius_y));
+		float bottom_left_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_bottom_left_radius_x));
+		float bottom_left_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_bottom_left_radius_y));
+		float bottom_right_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_bottom_right_radius_x));
+		float bottom_right_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_bottom_right_radius_y));
 
 		Rectf border_box = geometry.border_box();
 
@@ -836,14 +836,14 @@ namespace clan
 
 			float kappa = 0.552228474f;
 
-			float top_left_x = get_horizontal_radius(style.computed_value("border-top-left-radius-x"));
-			float top_left_y = get_vertical_radius(style.computed_value("border-top-left-radius-y"));
-			float top_right_x = get_horizontal_radius(style.computed_value("border-top-right-radius-x"));
-			float top_right_y = get_vertical_radius(style.computed_value("border-top-right-radius-y"));
-			float bottom_left_x = get_horizontal_radius(style.computed_value("border-bottom-left-radius-x"));
-			float bottom_left_y = get_vertical_radius(style.computed_value("border-bottom-left-radius-y"));
-			float bottom_right_x = get_horizontal_radius(style.computed_value("border-bottom-right-radius-x"));
-			float bottom_right_y = get_vertical_radius(style.computed_value("border-bottom-right-radius-y"));
+			float top_left_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_top_left_radius_x));
+			float top_left_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_top_left_radius_y));
+			float top_right_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_top_right_radius_x));
+			float top_right_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_top_right_radius_y));
+			float bottom_left_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_bottom_left_radius_x));
+			float bottom_left_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_bottom_left_radius_y));
+			float bottom_right_x = get_horizontal_radius(style.computed_value(PropertyHash::hash_border_bottom_right_radius_x));
+			float bottom_right_y = get_vertical_radius(style.computed_value(PropertyHash::hash_border_bottom_right_radius_y));
 
 			if (shadow_blur_radius != 0.0f)
 			{

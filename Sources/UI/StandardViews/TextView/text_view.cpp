@@ -254,7 +254,7 @@ namespace clan
 		float top_y = baseline - font_metrics.get_ascent();
 		float bottom_y = baseline + font_metrics.get_descent();
 
-		Colorf color = style_cascade().computed_value("color").color();
+		Colorf color = style_cascade().computed_value(PropertyHash::hash_color).color();
 
 		float cursor_advance = canvas.grid_fit({ font.measure_text(canvas, impl->text_lines[impl->cursor_pos.y].substr(0, impl->cursor_pos.x)).advance.width, 0.0f }).x;
 

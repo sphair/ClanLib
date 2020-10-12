@@ -193,7 +193,7 @@ namespace clan
 		/// Reset the font.
 		Canvas dummycanvas; // Dummy to have a reference
 		impl->font = style_cascade().font(dummycanvas);	// Canvas actually is not needed in this case, use stub.
-		impl->font_color = style_cascade().computed_value("color").color();
+		impl->font_color = style_cascade().computed_value(PropertyHash::hash_color).color();
 	}
 
 }

@@ -74,9 +74,9 @@ namespace clan
 						outline_width = StyleSetValue::from_keyword("inherit");
 						outline_style = StyleSetValue::from_keyword("inherit");
 						outline_color = StyleSetValue::from_keyword("inherit");
-						setter->set_value("outline-width", outline_width);
-						setter->set_value("outline-style", outline_style);
-						setter->set_value("outline-color", outline_color);
+						setter->set_value(PropertyHash::hash_outline_width, outline_width);
+						setter->set_value(PropertyHash::hash_outline_style, outline_style);
+						setter->set_value(PropertyHash::hash_outline_color, outline_color);
 						return;
 					}
 					else if (!width_specified && equals(token.value, "thin"))
@@ -177,9 +177,9 @@ namespace clan
 			}
 		}
 
-		setter->set_value("outline-width", outline_width);
-		setter->set_value("outline-style", outline_style);
-		setter->set_value("outline-color", outline_color);
+		setter->set_value(PropertyHash::hash_outline_width, outline_width);
+		setter->set_value(PropertyHash::hash_outline_style, outline_style);
+		setter->set_value(PropertyHash::hash_outline_color, outline_color);
 	}
 
 	void OutlineColorPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -218,7 +218,7 @@ namespace clan
 			}
 		}
 
-		setter->set_value("outline-color", outline_color);
+		setter->set_value(PropertyHash::hash_outline_color, outline_color);
 	}
 
 	void OutlineStylePropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -261,7 +261,7 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("outline-style", outline_style);
+		setter->set_value(PropertyHash::hash_outline_style, outline_style);
 	}
 
 	void OutlineWidthPropertyParser::parse(StylePropertySetter *setter, const std::string &name, StyleParser &parser)
@@ -302,6 +302,6 @@ namespace clan
 			return;
 		}
 
-		setter->set_value("outline-width", outline_width);
+		setter->set_value(PropertyHash::hash_outline_width, outline_width);
 	}
 }

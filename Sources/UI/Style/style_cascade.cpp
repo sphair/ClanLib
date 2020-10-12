@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "UI/precomp.h"
@@ -40,28 +41,28 @@
 
 namespace clan
 {
-	StyleGetValue StyleCascade::cascade_value(const char *property_name) const
+	StyleGetValue StyleCascade::cascade_value(PropertyHash hash) const
 	{
 		for (Style *style : cascade)
 		{
-			StyleGetValue value = style->declared_value(property_name);
+			StyleGetValue value = style->declared_value(hash);
 			if (!value.is_undefined())
 				return value;
 		}
 		return StyleGetValue();
 	}
 
-	StyleGetValue StyleCascade::specified_value(const char *property_name) const
+	StyleGetValue StyleCascade::specified_value(PropertyHash hash) const
 	{
-		StyleGetValue value = cascade_value(property_name);
-		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(property_name)) || value.is_keyword("inherit");
+		StyleGetValue value = cascade_value(hash);
+		bool inherit = (value.is_undefined() && StyleProperty::is_inherited(hash)) || value.is_keyword("inherit");
 		if (inherit && parent)
 		{
-			return parent->computed_value(property_name);
+			return parent->computed_value(hash);
 		}
 		else if (value.is_undefined() || value.is_keyword("initial") || value.is_keyword("inherit"))
 		{
-			return StyleProperty::default_value(property_name);
+			return StyleProperty::default_value(hash);
 		}
 		else
 		{
@@ -69,11 +70,11 @@ namespace clan
 		}
 	}
 
-	StyleGetValue StyleCascade::computed_value(const char *property_name) const
+	StyleGetValue StyleCascade::computed_value(PropertyHash hash) const
 	{
 		// To do: pass on to property compute functions
 
-		StyleGetValue specified = specified_value(property_name);
+		StyleGetValue specified = specified_value(hash);
 		switch (specified.type())
 		{
 		case StyleValueType::length:
@@ -109,9 +110,9 @@ namespace clan
 		case StyleDimension::pc:
 			return StyleGetValue::from_length(length.number() * (float)(12.0 * 96.0 / 72.0));
 		case StyleDimension::em:
-			return StyleGetValue::from_length(computed_value("font-size").number() * length.number());
+			return StyleGetValue::from_length(computed_value(PropertyHash::hash_font_size).number() * length.number());
 		case StyleDimension::ex:
-			return StyleGetValue::from_length(computed_value("font-size").number() * length.number() * 0.5f);
+			return StyleGetValue::from_length(computed_value(PropertyHash::hash_font_size).number() * length.number() * 0.5f);
 		}
 	}
 
@@ -186,13 +187,13 @@ namespace clan
 
 	Font StyleCascade::font(Canvas &canvas) const
 	{
-		auto font_size = computed_value("font-size");
-		auto line_height = computed_value("line-height");
-		auto font_weight = computed_value("font-weight");
-		auto font_style = computed_value("font-style");
-		//auto font_variant = computed_value("font-variant"); // To do: needs FontDescription support
-		auto font_rendering = computed_value("-clan-font-rendering");
-		auto font_family_name = computed_value("font-family-names[0]");
+		auto font_size = computed_value(PropertyHash::hash_font_size);
+		auto line_height = computed_value(PropertyHash::hash_line_height);
+		auto font_weight = computed_value(PropertyHash::hash_font_weight);
+		auto font_style = computed_value(PropertyHash::hash_font_style);
+		//auto font_variant = computed_value(PropertyHash::hash_font_variant); // To do: needs FontDescription support
+		auto font_rendering = computed_value(PropertyHash::hash__clan_font_rendering);
+		auto font_family_name = computed_value(PropertyHash::hash_font_family_names_X0);
 
 		FontDescription font_desc;
 		font_desc.set_height(font_size.number());
@@ -231,20 +232,17 @@ namespace clan
 		return Font::resource(canvas, family, font_desc, UIThread::get_resources());
 	}
 
-	int StyleCascade::array_size(const char *property_name) const
+	int StyleCascade::array_size(PropertyHash hash) const
 	{
 		int size = 0;
 		while (true)
 		{
-			StyleString prop_name;
-			prop_name.append(property_name);
-			prop_name.append("[");
-			prop_name.append(StringHelp::int_to_text(size));
-			prop_name.append("]");
-			if (specified_value(prop_name).is_undefined())
+			PropertyHash size_hash = hash; 
+			if (specified_value(size_hash.append_index(size)).is_undefined())
 				break;
 			size++;
 		}
 		return size;
 	}
+
 }
