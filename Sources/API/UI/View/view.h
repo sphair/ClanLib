@@ -353,6 +353,8 @@ namespace clan
 		/// The content height used for percentages or other definite calculations
 		virtual float calculate_definite_height(bool &out_is_definite);
 
+		virtual void updated_view_tree() {}
+
 	private:
 		View(const View &) = delete;
 		View &operator=(const View &) = delete;

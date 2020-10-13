@@ -52,9 +52,8 @@
 
 namespace clan
 {
-	View::View() : impl(new ViewImpl())
+	View::View() : impl(new ViewImpl(this))
 	{
-		//box_style.set_style_changed(bind_member(this, &View::set_needs_layout));
 	}
 
 	View::~View()
@@ -147,6 +146,7 @@ namespace clan
 
 			impl->_children.push_back(view);
 			view->impl->_parent = this;
+			view->impl->set_view_tree(view_tree());
 			view->impl->update_style_cascade();
 			view->set_needs_layout();
 			set_needs_layout();
@@ -172,6 +172,7 @@ namespace clan
 
 			super->set_needs_layout();
 
+			impl->set_view_tree(nullptr);
 			child_removed(view_ptr);
 		}
 	}
@@ -450,20 +451,12 @@ namespace clan
 
 	ViewTree *View::view_tree()
 	{
-		View *super = parent();
-		if (super)
-			return super->view_tree();
-		else
-			return impl->view_tree;
+		return impl->view_tree;
 	}
 
 	const ViewTree *View::view_tree() const
 	{
-		View *super = parent();
-		if (super)
-			return super->view_tree();
-		else
-			return impl->view_tree;
+		return impl->view_tree;
 	}
 
 	View *View::focus_view() const
@@ -780,9 +773,9 @@ namespace clan
 		{
 			e->_phase = EventUIPhase::at_target;
 			e->_current_target = e->_target;
-			e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+			e->_current_target->impl->process_event(e, true);
 			if (!e->propagation_stopped())
-				e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+				e->_current_target->impl->process_event(e, false);
 		}
 		else
 		{
@@ -792,15 +785,15 @@ namespace clan
 			{
 				e->_phase = EventUIPhase::at_target;
 				e->_current_target = e->_target;
-				e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+				e->_current_target->impl->process_event(e, true);
 				if (!e->propagation_stopped())
-					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+					e->_current_target->impl->process_event(e, false);
 
 				while (e->_current_target->parent() && !e->propagation_stopped())
 				{
 					e->_phase = EventUIPhase::bubbling;
 					e->_current_target = e->_current_target->parent()->shared_from_this();
-					e->_current_target->impl->process_event(e->_current_target.get(), e, false);
+					e->_current_target->impl->process_event(e, false);
 				}
 			}
 		}
@@ -863,9 +856,9 @@ namespace clan
 
 		// Render.
 		if (prnt)
-			prnt->impl->render(prnt, canv);
+			prnt->impl->render(canv);
 		else
-			impl->render(this, canv);
+			impl->render(canv);
 	}
 
 	void View::render_border(Canvas &canvas)
@@ -895,13 +888,13 @@ namespace clan
 		}
 	}
 
-	void ViewImpl::render(View *self, Canvas &canvas)
+	void ViewImpl::render(Canvas &canvas)
 	{
 		// Draw the background.
-		self->render_background(canvas);
+		_self->render_background(canvas);
 
 		// Draw the border.
-		self->render_border(canvas);
+		_self->render_border(canvas);
 
 		// Prepare to draw the content.
 		Pointf translate = _geometry.content_pos();
@@ -921,12 +914,12 @@ namespace clan
 			cliprect_stack.push_cliprect(Rectf(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y)));
 		}
 
-		if (!self->render_exception_encountered())
+		if (!_self->render_exception_encountered())
 		{
 			bool success = UIThread::try_catch([&]
 			{
 				// Draw the content.
-				self->render_content(canvas);
+				_self->render_content(canvas);
 			});
 
 			if (!success)
@@ -935,7 +928,7 @@ namespace clan
 			}
 		}
 
-		if (self->render_exception_encountered())
+		if (_self->render_exception_encountered())
 		{
 			canvas.set_transform(transform_state.matrix * Mat4f::translate(translate.x, translate.y, 0));
 			canvas.fill_rect(0.0f, 0.0f, _geometry.content_width, _geometry.content_height, Colorf(1.0f, 0.2f, 0.2f, 0.5f));
@@ -956,7 +949,7 @@ namespace clan
 				Rectf transformed_border_box(std::min(tl_point.x, br_point.x), std::min(tl_point.y, br_point.y), std::max(tl_point.x, br_point.x), std::max(tl_point.y, br_point.y));
 				if (clip_box.is_overlapped(transformed_border_box))
 				{
-					view->impl->render(view.get(), canvas);
+					view->impl->render(canvas);
 				}
 			}
 		}
@@ -1051,7 +1044,7 @@ namespace clan
 		}
 	}
 
-	void ViewImpl::process_event(View *self, EventUI *e, bool use_capture)
+	void ViewImpl::process_event(EventUI *e, bool use_capture)
 	{
 		if (!use_capture)
 		{
@@ -1084,37 +1077,37 @@ namespace clan
 		{
 			switch (activation_change->type())
 			{
-			case ActivationChangeType::activated: self->sig_activated(use_capture)(*activation_change); break;
-			case ActivationChangeType::deactivated: self->sig_deactivated(use_capture)(*activation_change); break;
+			case ActivationChangeType::activated: _self->sig_activated(use_capture)(*activation_change); break;
+			case ActivationChangeType::deactivated: _self->sig_deactivated(use_capture)(*activation_change); break;
 			}
 		}
 		else if (close)
 		{
-			self->sig_close(use_capture)(*close);
+			_self->sig_close(use_capture)(*close);
 		}
 		else if (resize)
 		{
-			self->sig_resize(use_capture)(*resize);
+			_self->sig_resize(use_capture)(*resize);
 		}
 		else if (focus_change)
 		{
 			switch (focus_change->type())
 			{
-			case FocusChangeType::gained: self->sig_focus_gained(use_capture)(*focus_change); break;
-			case FocusChangeType::lost: self->sig_focus_lost(use_capture)(*focus_change); break;
+			case FocusChangeType::gained: _self->sig_focus_gained(use_capture)(*focus_change); break;
+			case FocusChangeType::lost: _self->sig_focus_lost(use_capture)(*focus_change); break;
 			}
 		}
 		else if (pointer)
 		{
 			switch (pointer->type())
 			{
-			case PointerEventType::enter: self->sig_pointer_enter(use_capture)(*pointer); break;
-			case PointerEventType::leave: self->sig_pointer_leave(use_capture)(*pointer); break;
-			case PointerEventType::move: self->sig_pointer_move(use_capture)(*pointer); break;
-			case PointerEventType::press: self->sig_pointer_press(use_capture)(*pointer); break;
-			case PointerEventType::release: self->sig_pointer_release(use_capture)(*pointer); break;
-			case PointerEventType::double_click: self->sig_pointer_double_click(use_capture)(*pointer); break;
-			case PointerEventType::promixity_change: self->sig_pointer_proximity_change(use_capture)(*pointer); break;
+			case PointerEventType::enter: _self->sig_pointer_enter(use_capture)(*pointer); break;
+			case PointerEventType::leave: _self->sig_pointer_leave(use_capture)(*pointer); break;
+			case PointerEventType::move: _self->sig_pointer_move(use_capture)(*pointer); break;
+			case PointerEventType::press: _self->sig_pointer_press(use_capture)(*pointer); break;
+			case PointerEventType::release: _self->sig_pointer_release(use_capture)(*pointer); break;
+			case PointerEventType::double_click: _self->sig_pointer_double_click(use_capture)(*pointer); break;
+			case PointerEventType::promixity_change: _self->sig_pointer_proximity_change(use_capture)(*pointer); break;
 			case PointerEventType::none: break;
 			}
 		}
@@ -1123,8 +1116,8 @@ namespace clan
 			switch (key->type())
 			{
 			case KeyEventType::none: break;
-			case KeyEventType::press: self->sig_key_press(use_capture)(*key); break;
-			case KeyEventType::release: self->sig_key_release(use_capture)(*key); break;
+			case KeyEventType::press: _self->sig_key_press(use_capture)(*key); break;
+			case KeyEventType::release: _self->sig_key_release(use_capture)(*key); break;
 			}
 		}
 	}
@@ -1140,7 +1133,7 @@ namespace clan
 				e->_phase = EventUIPhase::capturing;
 				e->_current_target = super;
 				if (e->_current_target)
-					e->_current_target->impl->process_event(e->_current_target.get(), e, true);
+					e->_current_target->impl->process_event(e, true);
 			}
 		}
 	}
@@ -1269,4 +1262,18 @@ namespace clan
 		return _parent->impl->find_prev_with_tab_index(search_index, this, true);
 	}
 
+	void ViewImpl::set_view_tree(ViewTree* new_view_tree)
+	{
+		if (new_view_tree != view_tree)
+		{
+			view_tree = new_view_tree;
+			for (const auto& child : _children)
+			{
+				child->impl->set_view_tree(new_view_tree);
+			}
+			_self->updated_view_tree();
+		}
+	}
+
 }
+

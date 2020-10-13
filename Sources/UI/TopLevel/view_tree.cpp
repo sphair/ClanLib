@@ -74,11 +74,14 @@ namespace clan
 
 	void ViewTree::set_root_view(std::shared_ptr<View> view)
 	{
+		if (view && view->parent())
+			throw clan::Exception("The root view must not have a parent");
+
 		if (impl->root)
-			impl->root->impl->view_tree = nullptr;
+			impl->root->impl->set_view_tree(nullptr);
 		impl->root = view;
 		if (impl->root)
-			impl->root->impl->view_tree = this;
+			impl->root->impl->set_view_tree(this);
 	}
 
 	void ViewTree::set_focus_view(View *new_focus_view)
@@ -116,7 +119,7 @@ namespace clan
 		}
 		view->impl->needs_layout = false;
 
-		view->impl->render(view, canvas);
+		view->impl->render(canvas);
 	}
 
 	void ViewTree::dispatch_activation_change(ActivationChangeType type)

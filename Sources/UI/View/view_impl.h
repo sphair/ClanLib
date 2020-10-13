@@ -77,12 +77,15 @@ namespace clan
 	class ViewImpl
 	{
 	public:
+		ViewImpl(View* self) :_self(self) {}
 		ViewLayout *active_layout(View *self);
 
-		void render(View *self, Canvas &canvas);
-		void process_event(View *self, EventUI *e, bool use_capture);
+		void render(Canvas &canvas);
+		void process_event(EventUI *e, bool use_capture);
 		void process_action(ViewAction *action, EventUI *e);
 		void update_style_cascade() const;
+
+		void set_view_tree(ViewTree* new_view_tree);
 
 		unsigned int find_next_tab_index(unsigned int tab_index) const;
 		unsigned int find_prev_tab_index(unsigned int tab_index) const;
@@ -94,6 +97,7 @@ namespace clan
 
 		void inverse_bubble(EventUI *e);
 
+		View* _self = nullptr;
 		View *_parent = nullptr;
 		std::vector<std::shared_ptr<View>> _children;
 
