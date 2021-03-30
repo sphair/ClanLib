@@ -84,7 +84,6 @@ namespace clan
 #else
 #if defined(__linux__) && defined(HAVE_ALSA_ASOUNDLIB_H)
 		// Try building ALSA
-
 		std::shared_ptr<SoundOutput_Impl> alsa_impl(std::make_shared<SoundOutput_alsa>(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		if ( ( (SoundOutput_alsa *) (alsa_impl.get()))->handle)
 		{

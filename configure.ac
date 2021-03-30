@@ -424,6 +424,7 @@ if test "$enable_clanSound" != "no"; then
 		AC_CHECK_LIB(ossaudio, _oss_ioctl, sound_libs=-lossaudio)
 		AC_CHECK_HEADERS(asoundlib.h alsa/asoundlib.h, [have_alsa=yes && break])
 		if test "$have_alsa" != "no"; then
+    		AC_DEFINE(HAVE_ALSA_ASOUNDLIB_H)
 			sound_libs="$sound_libs -lasound"
 		fi
 

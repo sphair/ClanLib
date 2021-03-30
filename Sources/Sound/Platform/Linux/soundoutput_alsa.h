@@ -32,12 +32,7 @@
 #ifdef __linux__
 
 #include "../../soundoutput_impl.h"
-#ifdef HAVE_ALSA_ASOUNDLIB_H
-#include <alsa/asoundlib.h> 
-#endif
-#ifdef HAVE_ASOUNDLIB_H
-#include <asoundlib.h>
-#endif
+#include <alsa/asoundlib.h>
 
 namespace clan
 {
