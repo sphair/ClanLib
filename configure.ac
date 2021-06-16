@@ -118,6 +118,10 @@ case $target in
 		CXXFLAGS="$CXXFLAGS -DARM_PLATFORM"
 		CFLAGS="$CXXFLAGS -DARM_PLATFORM"
 		;;
+	aarch64* )
+		CXXFLAGS="$CXXFLAGS -DARM_PLATFORM"
+		CFLAGS="$CXXFLAGS -DARM_PLATFORM"
+		;;
 esac
 
 dnl Extra flags that are needed to compile (for pkg-config)
