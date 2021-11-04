@@ -32,7 +32,7 @@
 namespace clan
 {
 
-#if defined(ARM_PLATFORM) || defined(CL_ARM) || defined(__sun)
+#if defined(ARM_PLATFORM) || defined(CL_ARM) || defined(__sun) || defined(__riscv)
 	bool System::detect_cpu_extension(CPU_ExtensionPPC ext)
 	{
 		throw ("Congratulations, you've just been selected to code this feature!");
