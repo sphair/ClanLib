@@ -230,5 +230,9 @@ namespace clan
 
 		WINDOWPLACEMENT window_positon_before_fullscreen = {};
 		DWORD window_style_before_fullscreen;
+
+		typedef UINT(WINAPI FuncGetDpiForWindow)(_In_ HWND hwnd);
+		static HMODULE moduleUser32;
+		static FuncGetDpiForWindow* ptrGetDpiForWindow;
 	};
 }

@@ -63,6 +63,9 @@
 
 namespace clan
 {
+	HMODULE Win32Window::moduleUser32 = 0;
+	Win32Window::FuncGetDpiForWindow* Win32Window::ptrGetDpiForWindow = nullptr;
+
 	Win32Window::Win32Window()
 	: hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
 	  minimum_size(0,0), maximum_size(0xffff, 0xffff), allow_dropshadow(false),
@@ -72,6 +75,16 @@ namespace clan
 		int ppi = GetDeviceCaps(dc, LOGPIXELSX);
 		ReleaseDC(0, dc);
 		set_pixel_ratio(ppi / 96.0f);
+
+		if (!moduleUser32)
+		{
+			moduleUser32 = LoadLibrary(L"user32.dll");
+		}
+		if (moduleUser32)
+		{
+			// This is available on Windows 10 and beyond
+			ptrGetDpiForWindow = (FuncGetDpiForWindow*)GetProcAddress(moduleUser32, "GetDpiForWindow");
+		}
 
 		keyboard = InputDevice(new InputDeviceProvider_Win32Keyboard(this));
 		mouse = InputDevice(new InputDeviceProvider_Win32Mouse(this));
@@ -640,6 +653,21 @@ namespace clan
 			else if ((wparam == ICON_SMALL || wparam == ICON_SMALL2) && small_icon)
 				return reinterpret_cast<LRESULT>(small_icon);
 			break;
+
+		case WM_DPICHANGED:
+			set_pixel_ratio(LOWORD(wparam) / 96.0f);
+			if (lparam)
+			{
+				RECT* const prcNewWindow = (RECT*)lparam;
+				SetWindowPos(wnd,
+					NULL,
+					prcNewWindow->left,
+					prcNewWindow->top,
+					prcNewWindow->right - prcNewWindow->left,
+					prcNewWindow->bottom - prcNewWindow->top,
+					SWP_NOZORDER | SWP_NOACTIVATE);
+			}
+			break;
 		}
 
 		// Do default window processing if our message handler didn't handle it:
@@ -727,6 +755,12 @@ namespace clan
 			}
 		}
 
+		if (ptrGetDpiForWindow)	// Supported for windows 10 and above
+		{
+			int ppi = ptrGetDpiForWindow(hwnd);
+			set_pixel_ratio(ppi / 96.0f);
+		}
+
 		connect_window_input(window_desc);
 	}
 
@@ -784,8 +818,6 @@ namespace clan
 		// Add to repeat count
 		if(keydown)
 		{
-			// bit 30 is "The previous key state. The value is 1 if the key is down before the message is sent, or it is zero if the key is up."
-			// We check this because during certain scenarious (e.g. using the debugger) WM_KEYUP is not received, thus repeat_count isn't reset
 			if( repeat_count.find(key_id) == repeat_count.end() || ((lparam & 1<<30) == 0))
 				repeat_count[key_id] = 0;
 			else
