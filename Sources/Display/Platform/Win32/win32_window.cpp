@@ -818,6 +818,8 @@ namespace clan
 		// Add to repeat count
 		if(keydown)
 		{
+			// bit 30 is "The previous key state. The value is 1 if the key is down before the message is sent, or it is zero if the key is up."
+			// We check this because during certain scenarious (e.g. using the debugger) WM_KEYUP is not received, thus repeat_count isn't reset
 			if( repeat_count.find(key_id) == repeat_count.end() || ((lparam & 1<<30) == 0))
 				repeat_count[key_id] = 0;
 			else
