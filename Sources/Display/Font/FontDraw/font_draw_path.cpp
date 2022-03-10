@@ -65,8 +65,13 @@ namespace clan
 		float offset_y = 0;
 		UTF8_Reader reader(text.data(), text.length());
 
-		const Mat4f original_transform = canvas.get_transform();
-		clan::Mat4f scale_matrix = clan::Mat4f::scale(scaled_height, scaled_height, scaled_height);
+		clan::TransformState original_transform(&canvas);
+
+		float pixel_ratio = canvas.get_pixel_ratio();
+		if (pixel_ratio == 0.0f)
+			pixel_ratio = 1.0f;
+		float scaled_pixel_ratio = scaled_height / pixel_ratio;
+		clan::Mat4f scale_matrix = clan::Mat4f::scale(scaled_pixel_ratio, scaled_pixel_ratio, scaled_pixel_ratio);
 		Brush brush(color);
 		Sizef advance;
 
@@ -82,7 +87,7 @@ namespace clan
 				continue;
 			}
 
-			canvas.set_transform(original_transform * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
+			canvas.set_transform(original_transform.matrix * Mat4f::translate(position.x + offset_x, position.y + offset_y, 0) * scale_matrix);
 			Font_PathGlyph *gptr = path_cache->get_glyph(canvas, font_engine, glyph);
 			if (gptr)
 			{
@@ -91,6 +96,5 @@ namespace clan
 				offset_y += gptr->metrics.advance.height * scaled_height;
 			}
 		}
-		canvas.set_transform(original_transform);
 	}
 }
