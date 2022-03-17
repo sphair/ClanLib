@@ -5,7 +5,7 @@ exec_prefix=${prefix}
 libdir=@libdir@
 includedir=${prefix}/include/ClanLib-@LT_RELEASE@
 
-Name: clanUI
+Name: clanXML
 Description: XML support for ClanLib
 Version: @VERSION@
 Requires: clanCore-@LT_RELEASE@ = @VERSION@
