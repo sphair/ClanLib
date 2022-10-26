@@ -50,6 +50,7 @@ libclan41UI_la_SOURCES = \
 ./Style/Properties/outline.cpp \
 ./Style/Properties/border_image.cpp \
 ./Style/Properties/text.cpp \
+./Style/property_hash.cpp \
 ./Style/style_cascade.cpp \
 ./Style/style_impl.cpp \
 ./Style/style_tokenizer.cpp \

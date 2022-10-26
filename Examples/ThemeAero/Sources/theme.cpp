@@ -49,7 +49,7 @@ std::shared_ptr<clan::ScrollBarView> Theme::create_scrollbar(bool isHorizontal)
 	return scrollbar;
 }
 
-void Theme::initialize_scrollbar(std::shared_ptr<clan::ScrollBarView> &scrollbar, bool isHorizontal)
+void Theme::initialize_scrollbar(const std::shared_ptr<clan::ScrollBarView> &scrollbar, bool isHorizontal)
 {
 	scrollbar->style()->set("flex: 0 0 auto");
 	scrollbar->style()->set("background: rgb(232, 232, 236)");
