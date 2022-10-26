@@ -338,7 +338,7 @@ clanUI_includes = \
 	UI/SystemDialogs/open_file_dialog.h \
 	UI/SystemDialogs/save_file_dialog.h \
 	UI/SystemDialogs/folder_browse_dialog.h \
-	UI/Style/property_hash.h \	
+	UI/Style/property_hash.h \
 	UI/Style/style_set_value.h \
 	UI/Style/style_cascade.h \
 	UI/Style/style_tokenizer.h \

@@ -3,10 +3,10 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl Ensure that a recent enough version of Autoconv is being used
-AC_PREREQ(2.50)
+AC_PREREQ([2.71])
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 4.1.0)
+AC_INIT([ClanLib],[4.1.0])
 
 AC_CONFIG_MACRO_DIR(Setup/Unix/m4)
 
@@ -85,7 +85,7 @@ dnl Check for a BSD-compatible install program
 AC_PROG_INSTALL
 
 dnl Check for libtool (enabled shared libraries)
-AC_PROG_LIBTOOL
+LT_INIT
 
 dnl Using C++
 AC_LANG(C++)
@@ -186,10 +186,7 @@ AC_CHECK_HEADER(libgen.h)
 
 dnl Check if "extern const char *__progname" is available
 AC_MSG_CHECKING([for extern *__progname])
-AC_TRY_COMPILE([],
-[extern const char *__progname;],
-AC_MSG_RESULT(yes);AC_DEFINE(EXTERN___PROGNAME),
-AC_MSG_RESULT(no))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[extern const char *__progname;]])],[AC_MSG_RESULT(yes);AC_DEFINE(EXTERN___PROGNAME)],[AC_MSG_RESULT(no)])
 
 dnl Check for GNU extensions
 AC_CHECK_FUNCS(wcscasecmp)
@@ -203,7 +200,7 @@ dnl Check for optional SSE2 support:
 dnl -----------------------------------------------------
 AC_MSG_CHECKING(for SSE2 support)
 use_sse2=no
-AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
+AC_ARG_ENABLE(sse2, AS_HELP_STRING([--enable-sse2],[Enable SSE2 support]),
 [
 	if test "$enable_sse2" != "no"; then
 		CLANLIB_CHECK_CPP([`cat $srcdir/Setup/Unix/Tests/sse2.cpp`], [ ], [ -msse2 ] )
@@ -269,10 +266,7 @@ if test "$WIN32" = "no"; then
 	for _thread in "pthread" "pthreads" "lpthread"; do
 		AC_MSG_CHECKING([pthread_create in -${_thread}])
 		CFLAGS="$save_CFLAGS -${_thread}"
-		AC_TRY_COMPILE(
-			[#include <pthread.h>],
-			[pthread_create(0,NULL,0,NULL);],
-			AC_MSG_RESULT(yes);has_pthreads=yes && break, AC_MSG_RESULT(no);)
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <pthread.h>]], [[pthread_create(0,NULL,0,NULL);]])],[AC_MSG_RESULT(yes);has_pthreads=yes && break],[AC_MSG_RESULT(no);])
 	done
 
 	if test x$has_pthreads = "xyes"; then
@@ -384,9 +378,8 @@ if test "$enable_clanDisplay" != "no"; then
 
 				dnl Check that glXGetProcAddressARB is defined in glx.h
 				AC_MSG_CHECKING([whether glx.h defines glXGetProcAddressARB]);
-				AC_TRY_COMPILE([#define GLX_GLXEXT_PROTOTYPES
-					#include <GL/glx.h>], [ char *foo = (char*) glXGetProcAddressARB; ],
-					glx_has_getprocaddressarb="yes", glx_has_getprocaddressarb="no")
+				AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#define GLX_GLXEXT_PROTOTYPES
+					#include <GL/glx.h>]], [[ char *foo = (char*) glXGetProcAddressARB; ]])],[glx_has_getprocaddressarb="yes"],[glx_has_getprocaddressarb="no"])
 				AC_MSG_RESULT([$glx_has_getprocaddressarb])
 
 				if test "x$glx_has_getprocaddressarb" = "xyes"; then
@@ -458,7 +451,7 @@ if test "$enable_clanNetwork" != "no"; then
 
 	AC_MSG_CHECKING(for GetAddr ipv6 support)
 	CHECK_ENABLED(getaddr,
-		AC_HELP_STRING([--enable-getaddr], [Enable getaddr(ipv6) functions in Network]),
+		AS_HELP_STRING([--enable-getaddr],[Enable getaddr(ipv6) functions in Network]),
 		USE_GETADDR, $getaddr)
 
 	echo ""
@@ -609,7 +602,7 @@ dnl --------------------
 echo "Checking for debugging and profiling"
 echo "===================================="
 AC_MSG_CHECKING(for debug mode)
-AC_ARG_ENABLE(debug, AC_HELP_STRING([--enable-debug], [Enable debugging support]),, enable_debug="no")
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug],[Enable debugging support]),, enable_debug="no")
 
 if test "$enable_debug" != "no"; then
 	CXXFLAGS="$CXXFLAGS -DDEBUG=1 -g -O0 -Wall"
@@ -623,7 +616,7 @@ dnl Check for profile mode
 dnl ----------------------
 
 AC_MSG_CHECKING(for profile mode)
-AC_ARG_ENABLE(profile, AC_HELP_STRING([--enable-profile], [Enable profiling  supprt]),, enable_profile="no")
+AC_ARG_ENABLE(profile, AS_HELP_STRING([--enable-profile],[Enable profiling  supprt]),, enable_profile="no")
 
 if test "$enable_profile" != "no"; then
 	CXXFLAGS="$CXXFLAGS -pg -g3 -ggdb3 -ftest-coverage -fprofile-arcs"
@@ -638,7 +631,7 @@ dnl -------------------------
 dnl Check for Maintainer Mode
 dnl -------------------------
 AC_MSG_CHECKING(for maintainer mode)
-AC_ARG_ENABLE(maintainer-mode, AC_HELP_STRING([--enable-maintainer-mode], [Enable maintainer mode]),, enable_maintainer_mode="no")
+AC_ARG_ENABLE(maintainer-mode, AS_HELP_STRING([--enable-maintainer-mode],[Enable maintainer mode]),, enable_maintainer_mode="no")
 
 if test "$enable_maintainer_mode" != "no"; then
 	CXXFLAGS="$CXXFLAGS -Wall -Wextra"

@@ -40,7 +40,7 @@ AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile Setup/Unix/pkgconfig/cla
 
 dnl CLANLIB_ARG_ENABLE(option, default, option label, checking message)
 define([CLANLIB_ARG_ENABLE],[AC_MSG_CHECKING($4)
-AC_ARG_ENABLE($1, AC_HELP_STRING([--enable-$1], [$3]), ,[enable_$1="$2"])
+AC_ARG_ENABLE($1, AS_HELP_STRING([--enable-$1],[$3]),,[enable_$1="$2"])
 AC_MSG_RESULT([$enable_$1])])
 dnl ------------------------------------------------
 dnl BBNs macro for checking commandline parameters:
