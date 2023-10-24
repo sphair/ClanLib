@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		D3DUnit() { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) shader_index[i] = -1; }
-		int shader_index[ShaderType::num_types];
+		int shader_index[static_cast<int>(ShaderType::num_types)];
 		Type object;
 	};
 
@@ -56,8 +56,8 @@ namespace clan
 	{
 	public:
 		D3DStorageUnit() { for (int i = 0; i < static_cast<int>(ShaderType::num_types); i++) { shader_srv_index[i] = -1; shader_uav_index[i] = -1; } }
-		int shader_srv_index[ShaderType::num_types];
-		int shader_uav_index[ShaderType::num_types];
+		int shader_srv_index[static_cast<int>(ShaderType::num_types)];
+		int shader_uav_index[static_cast<int>(ShaderType::num_types)];
 		StorageBuffer object;
 	};
 
@@ -101,10 +101,10 @@ namespace clan
 			typedef int SamplerBinding;
 			typedef int BufferBinding;
 
-			std::vector<ShaderResourceBinding> shader_resources[ShaderType::num_types];
-			std::vector<SamplerBinding> samplers[ShaderType::num_types];
-			std::vector<BufferBinding> uniforms[ShaderType::num_types];
-			std::vector<UnorderedBinding> uavs[ShaderType::num_types];
+			std::vector<ShaderResourceBinding> shader_resources[static_cast<int>(ShaderType::num_types)];
+			std::vector<SamplerBinding> samplers[static_cast<int>(ShaderType::num_types)];
+			std::vector<BufferBinding> uniforms[static_cast<int>(ShaderType::num_types)];
+			std::vector<UnorderedBinding> uavs[static_cast<int>(ShaderType::num_types)];
 		*/
 		std::vector<D3DSamplerUnit> sampler_units;
 		std::vector<D3DTextureUnit> texture_units;

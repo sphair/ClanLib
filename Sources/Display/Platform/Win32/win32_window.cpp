@@ -1522,7 +1522,7 @@ namespace clan
 	void Win32Window::register_clipboard_formats()
 	{
 	//	WCHAR *png_format_str = L"image/png";
-		WCHAR *png_format_str = L"PNG";
+		const WCHAR *png_format_str = L"PNG";
 		png_clipboard_format = RegisterClipboardFormat(png_format_str);
 	}
 

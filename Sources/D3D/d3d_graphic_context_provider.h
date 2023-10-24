@@ -160,7 +160,7 @@ namespace clan
 		D3D11_RECT scissor_rects[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 		bool input_layout_set;
 		D3DUnitMap unit_map;
-		bool shader_bound[ShaderType::num_types];
+		bool shader_bound[static_cast<int>(ShaderType::num_types)];
 
 		Signal<void(const Size &)> window_resized_signal;
 

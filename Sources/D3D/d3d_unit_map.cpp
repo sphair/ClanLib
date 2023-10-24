@@ -184,7 +184,7 @@ namespace clan
 					ID3D11SamplerState *sampler_state = 0;
 					if (!sampler_units[index].object.is_null())
 						sampler_state = static_cast<D3DTextureProvider*>(sampler_units[index].object.get_provider())->get_sampler_state(gc->get_window()->get_device());
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
@@ -221,7 +221,7 @@ namespace clan
 					ID3D11ShaderResourceView *srv = 0;
 					if (!texture_units[index].object.is_null())
 						srv = static_cast<D3DTextureProvider*>(texture_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
@@ -274,7 +274,7 @@ namespace clan
 					ID3D11Buffer *d3d_buffer = 0;
 					if (!uniform_units[index].object.is_null())
 						d3d_buffer = static_cast<D3DUniformBufferProvider*>(uniform_units[index].object.get_provider())->get_buffer(gc->get_window()->get_device());
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
@@ -311,7 +311,7 @@ namespace clan
 					ID3D11ShaderResourceView *srv = 0;
 					if (!storage_units[index].object.is_null())
 						srv = static_cast<D3DStorageBufferProvider*>(storage_units[index].object.get_provider())->get_srv(gc->get_window()->get_device());
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);
@@ -356,7 +356,7 @@ namespace clan
 				{
 					ID3D11SamplerState *sampler_state = 0;
 
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetSamplers(sampler_units[index].shader_index[j], 1, &sampler_state);
@@ -392,7 +392,7 @@ namespace clan
 				{
 					ID3D11ShaderResourceView *srv = 0;
 
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(texture_units[index].shader_index[j], 1, &srv);
@@ -438,7 +438,7 @@ namespace clan
 				if (uniform_units[index].shader_index[j] != -1)
 				{
 					ID3D11Buffer *d3d_buffer = 0;
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetConstantBuffers(uniform_units[index].shader_index[j], 1, &d3d_buffer);
@@ -473,7 +473,7 @@ namespace clan
 				if (storage_units[index].shader_srv_index[j] != -1)
 				{
 					ID3D11ShaderResourceView *srv = 0;
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex:
 						gc->get_window()->get_device_context()->VSSetShaderResources(storage_units[index].shader_srv_index[j], 1, &srv);

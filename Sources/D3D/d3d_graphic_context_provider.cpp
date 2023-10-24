@@ -341,7 +341,7 @@ namespace clan
 			D3DShaderObjectProvider *shader_provider = current_program_provider->get_shader_provider((ShaderType)j);
 			if (shader_provider)
 			{
-				switch (j)
+				switch (static_cast<ShaderType>(j))
 				{
 				case ShaderType::vertex: window->get_device_context()->VSSetShader(shader_provider->get_vertex(), 0, 0); break;
 				case ShaderType::tess_control: window->get_device_context()->HSSetShader(shader_provider->get_hull(), 0, 0); break;
@@ -354,7 +354,7 @@ namespace clan
 			}
 			else if (shader_bound[j])
 			{
-				switch (j)
+				switch (static_cast<ShaderType>(j))
 				{
 				case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
 				case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
@@ -380,7 +380,7 @@ namespace clan
 			{
 				if (shader_bound[j])
 				{
-					switch (j)
+					switch (static_cast<ShaderType>(j))
 					{
 					case ShaderType::vertex: window->get_device_context()->VSSetShader(0, 0, 0); break;
 					case ShaderType::tess_control: window->get_device_context()->HSSetShader(0, 0, 0); break;
