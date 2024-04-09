@@ -649,6 +649,8 @@ namespace clan
 				justify_content = StyleSetValue::from_keyword("space-between");
 			else if (equals(token.value, "space-around"))
 				justify_content = StyleSetValue::from_keyword("space-around");
+			else if (equals(token.value, "space-evenly"))
+				justify_content = StyleSetValue::from_keyword("space-evenly");
 			else if (equals(token.value, "inherit"))
 				justify_content = StyleSetValue::from_keyword("inherit");
 			else

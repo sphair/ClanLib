@@ -992,6 +992,23 @@ namespace clan
 					pos += space_extra;
 				}
 			}
+			else if (justify_content.is_keyword("space-evenly") && item_count > 0)
+			{
+				int item_number = 0;
+				float item_position = 0.0f;
+				for (auto& item : line)
+				{
+					if (item.collapsed)
+						continue;
+
+					float item_offset = (space_available * (float)(++item_number)) / (float)(item_count + 1);
+
+					item_position += item.main_noncontent_start;
+					item.used_main_pos = item_position + item_offset;
+					item_position += item.used_main_size;
+					item_position += item.main_noncontent_end;
+				}
+			}
 		}
 	}
 
