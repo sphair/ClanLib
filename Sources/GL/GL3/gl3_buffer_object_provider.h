@@ -72,5 +72,6 @@ namespace clan
 
 		void *data_ptr;
 		GraphicContext lock_gc;
+		CLsync fence_object = 0;
 	};
 }
