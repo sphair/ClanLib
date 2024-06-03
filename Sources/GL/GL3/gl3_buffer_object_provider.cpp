@@ -102,19 +102,6 @@ namespace clan
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
 
-		// If any rendering in the pipeline makes reference to data in the buffer object being updated by glBufferSubData, especially from the specific region being updated, that rendering must drain from the pipeline before the data store can be updated.
-		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
-		if (fence_object)
-		{
-			GLenum result = glClientWaitSync(fence_object, GL_SYNC_FLUSH_COMMANDS_BIT, 5000000000);
-			if (result == GL_TIMEOUT_EXPIRED)
-			{
-				throw clan::Exception("OpenGL Buffer 5 second timeout expired");
-			}
-			glDeleteSync(fence_object);
-			fence_object = 0;
-		}
-
 #ifdef CLANLIB_OPENGL_ES3
 		data_ptr = (void*)glMapBufferRange(target, 0, buffer_size, OpenGL::to_enum(access));
 #else
@@ -145,9 +132,27 @@ namespace clan
 		if (binding)
 			glGetIntegerv(binding, &last_buffer);
 		glBindBuffer(target, handle);
+
+		// This fence_object is required to fix a bug in the Intel OpenGL driver.
+		// It appears the Intel driver is not waiting for completion of rendering, before the data is modified by the glBufferSubData() call.
+		// For research, reduce "RenderBatchBuffer::vertex_buffer_size to 1024*10, and run Examples/Display/Path using OpenGL Windows with Intel GPU
+		//
+		// Maybe an interpretation of:
+		// If any rendering in the pipeline makes reference to data in the buffer object being updated by glBufferSubData, especially from the specific region being updated, that rendering must drain from the pipeline before the data store can be updated.
+		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glBufferSubData.xhtml
+		if (fence_object)
+		{
+			GLenum result = glClientWaitSync(fence_object, GL_SYNC_FLUSH_COMMANDS_BIT, 5000000000);
+			if (result == GL_TIMEOUT_EXPIRED)
+			{
+				throw clan::Exception("OpenGL Buffer 5 second timeout expired");
+			}
+			glDeleteSync(fence_object);
+			fence_object = 0;
+		}
+
 		glBufferSubData(target, offset, size, data);
 
-		// See "lock()" for comments about the reason this is here
 		if (glFenceSync)
 			fence_object = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
