@@ -1767,7 +1767,18 @@ namespace clan
 			int primary_screen = 0;
 			ScreenInfo screen_info;
 			std::vector<Rectf> screen_rects = screen_info.get_screen_geometries(primary_screen);
-			Rectf R = screen_rects[desc.get_fullscreen_monitor()];
+			Rectf R;
+			if (desc.get_fullscreen_monitor() < screen_rects.size())
+			{
+				R = screen_rects[desc.get_fullscreen_monitor()];
+			}else if (screen_rects.empty())
+			{
+				R.right = GetSystemMetrics(SM_CXSCREEN);
+				R.bottom = GetSystemMetrics(SM_CYSCREEN);
+			}else
+			{
+				R = screen_rects[0];
+			}
 
 			clientSize = false;
 			x = (int)std::round(R.left * pixel_ratio);
