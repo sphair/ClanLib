@@ -646,6 +646,7 @@ namespace clan
 
 			memcpy(dest, table, size_to_copy);
 			dest += size_to_copy;
+            dest_size -= size_to_copy;
 		}
 
 		// Mirror the table
