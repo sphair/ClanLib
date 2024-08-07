@@ -39,9 +39,8 @@ namespace clan
 	class RenderBuffer_Impl
 	{
 	public:
-		RenderBuffer_Impl() : provider(nullptr)
-		{
-		}
+		RenderBuffer_Impl() : provider(nullptr) { }
+		~RenderBuffer_Impl() { if (provider) delete provider; }
 
 		RenderBufferProvider *provider;
 		Size size;
