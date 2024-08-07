@@ -79,26 +79,14 @@ namespace clan
 		type = shader_type;
 		handle = glCreateShader(shadertype_to_opengl(type));
 
-		GLchar ** array_sources = nullptr;
-		GLint *array_source_lengths = nullptr;
-		try
+		std::vector<GLint> array_lengths(sources.size());
+		std::vector<GLchar*> array_sources(sources.size());
+		for (size_t i = 0; i < sources.size(); i++)
 		{
-			array_sources = new GLchar*[sources.size()];
-			array_source_lengths = new GLint[sources.size()];
-
-			for (std::vector<std::string>::size_type i = 0; i < sources.size(); i++)
-			{
-				array_source_lengths[i] = sources[i].length();
-				array_sources[i] = (GLchar*)sources[i].c_str();
-			}
-			glShaderSource(handle, sources.size(), (const GLchar**)array_sources, array_source_lengths);
+		    array_lengths[i] = sources[i].length();
+		    array_sources[i] = (GLchar*)sources[i].c_str();
 		}
-		catch (...)
-		{
-			delete[] array_source_lengths;
-			delete[] array_sources;
-			throw;
-		}
+		glShaderSource(handle, sources.size(), array_sources.data(), array_lengths.data());
 	}
 
 	GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
