@@ -75,11 +75,11 @@ namespace clan
 
 		/// \brief Select the OpenGL version number
 		///
-		/// Defaults to OpenGL 3.2 with lower versions (will drop to Legacy OpenGL without shader support if lower)
+		/// Defaults to OpenGL 4.3 (will drop to Legacy OpenGL without shader support if lower)
 		///
 		/// \param major = OpenGL major number (e.g. 4)
-		/// \param minor = OpenGL minor number (e.g. 1)
-		/// \param allow_lower_versions = Allow lower versions of the specified opengl
+		/// \param minor = OpenGL minor number (e.g. 3)
+		/// \param allow_lower_versions = Allow lower versions of the specified opengl (4.3 is minimum
 		void set_version(int major, int minor, bool allow_lower_versions);
 
 		/// \brief Sets the debug flag

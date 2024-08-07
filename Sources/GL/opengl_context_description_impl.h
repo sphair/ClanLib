@@ -37,9 +37,9 @@ namespace clan
 	public:
 		OpenGLContextDescription_Impl()
 		{
-			version_major = 3;
-			version_minor = 2;
-			allow_lower_versions = true;
+			version_major = 4;
+			version_minor = 3;
+			allow_lower_versions = false;
 			debug_flag = false;
 			forward_compatible_flag = false;
 			core_profile_flag = true;
