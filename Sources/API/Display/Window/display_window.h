@@ -314,7 +314,6 @@ namespace clan
 		void maximize();
 
 		/// Toggle fullscreen
-		/// Only Win32 implementation for now
 		void toggle_fullscreen();
 
 		/// \brief Displays the window in its current size and position.

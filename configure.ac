@@ -354,7 +354,7 @@ if test "$enable_clanDisplay" != "no"; then
 
 		LIBS="$OLDLIBS"
 		clanDisplay_CFLAGS="$clanDisplay_CFLAGS $X_CFLAGS"
-		extra_LIBS_clanDisplay=" -lX11 $extra_LIBS_clanDisplay "
+		extra_LIBS_clanDisplay=" -lX11 -lXinerama $extra_LIBS_clanDisplay "
 
 
 		echo ""

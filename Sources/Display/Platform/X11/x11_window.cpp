@@ -46,6 +46,7 @@
 #include <cstdio>
 #include <X11/Xatom.h>
 #include <X11/XKBlib.h>
+#include <X11/extensions/Xinerama.h>
 #include <dlfcn.h>
 #include <unistd.h>
 
@@ -105,6 +106,8 @@ namespace clan
 		handle.screen = visual->screen;
 		atoms = X11Atoms(handle.display);
 
+		int disp_xpos_px = 0;
+		int disp_ypos_px = 0;
 		int disp_width_px = XDisplayWidth(handle.display, handle.screen);
 		int disp_height_px = XDisplayHeight(handle.display, handle.screen);
 		int disp_width_mm = XDisplayWidthMM(handle.display, handle.screen);
@@ -118,6 +121,22 @@ namespace clan
 		// Get X11 root window.
 		auto _root_window = RootWindow(handle.display, handle.screen);
 
+		// Get the number of screens and information about them
+		int screenCount = 0;
+		XineramaScreenInfo* screens = XineramaQueryScreens(handle.display, &screenCount);
+
+		if (screens)
+		{
+			if (screenCount > 0)
+			{
+				disp_xpos_px = screens[0].x_org;
+				disp_ypos_px = screens[0].y_org;
+				disp_width_px = screens[0].width;
+				disp_height_px = screens[0].height;
+			}
+			XFree(screens);
+		}
+
 		// Get and validate initial window position and size.
 		int win_x = desc.get_position().left * pixel_ratio;
 		int win_y = desc.get_position().top * pixel_ratio;
@@ -130,20 +149,22 @@ namespace clan
 		if (win_height <= 0)
 			throw Exception("Invalid window height.");
 
-		// Set values if fullscreen requested.
-		if (desc.is_fullscreen())
-		{
-			win_x = 0;
-			win_y = 0;
-			win_width = disp_width_px;
-			win_height = disp_height_px;
-		}
-
 		// Center window if position supplied is (-1, -1)
 		if (win_x == -1 && win_y == -1)
 		{
 			win_x = (disp_width_px - win_width)/2 - 1;
 			win_y = (disp_height_px - win_height)/2 - 1;
+		}
+
+		initial_position = Rect(win_x, win_y, Size(win_width, win_height));
+
+		// Set values if fullscreen requested.
+		if (desc.is_fullscreen())
+		{
+			win_x = disp_xpos_px;
+			win_y = disp_ypos_px;
+			win_width = disp_width_px;
+			win_height = disp_height_px;
 		}
 
 		// Set minimum and maximum size
@@ -386,6 +407,73 @@ namespace clan
 		// Go looking for joysticks:
 		setup_joysticks();
 	}
+
+	void X11Window::toggle_fullscreen()
+	{
+		if (atoms["_NET_WM_STATE"] == None && atoms["_NET_WM_STATE_FULLSCREEN"])
+		{
+			log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
+			return;
+		}
+
+		fullscreen = !fullscreen;
+
+		if (fullscreen)
+		{
+
+			bool was_mapped = is_window_mapped;
+			if (was_mapped)
+				unmap_window();
+
+			int disp_xpos_px = 0;
+			int disp_ypos_px = 0;
+			int disp_width_px = XDisplayWidth(handle.display, handle.screen);
+			int disp_height_px = XDisplayHeight(handle.display, handle.screen);
+			int disp_width_mm = XDisplayWidthMM(handle.display, handle.screen);
+			// Get the number of screens and information about them
+			int screenCount = 0;
+			XineramaScreenInfo* screens = XineramaQueryScreens(handle.display, &screenCount);
+			if (screens)
+			{
+				if (screenCount > 0)
+				{
+					disp_xpos_px = screens[0].x_org;
+					disp_ypos_px = screens[0].y_org;
+					disp_width_px = screens[0].width;
+					disp_height_px = screens[0].height;
+				}
+				XFree(screens);
+			}
+
+			set_position(clan::Rect(disp_xpos_px,disp_ypos_px, disp_width_px, disp_height_px), false);
+
+			Atom state = atoms["_NET_WM_STATE_FULLSCREEN"];
+			XChangeProperty(handle.display, handle.window, atoms["_NET_WM_STATE"], XA_ATOM, 32, PropModeReplace, (unsigned char *)&state, 1);
+
+			if (was_mapped)
+				map_window();
+
+		}
+		else
+		{
+			XEvent event;
+			memset(&event, 0, sizeof(event));
+			event.xclient.type = ClientMessage;
+			event.xclient.window = handle.window;
+			event.xclient.message_type = atoms["_NET_WM_STATE"];
+			event.xclient.format = 32;
+			event.xclient.data.l[0] = _NET_WM_STATE_REMOVE;
+			event.xclient.data.l[1] = atoms["_NET_WM_STATE_FULLSCREEN"];
+			event.xclient.data.l[2] = 0;
+			event.xclient.data.l[3] = None;
+
+			// Send the event to the root window
+			XSendEvent(handle.display, DefaultRootWindow(handle.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+
+			set_position(initial_position, false);
+		}
+	}
+
 
 	void X11Window::update_frame_extents()
 	{

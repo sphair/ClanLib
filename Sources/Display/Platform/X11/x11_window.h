@@ -47,7 +47,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
-//#include <X11/extensions/XInput.h>
+#include <X11/extensions/Xinerama.h>
 
 #include <sys/time.h>
 
@@ -147,6 +147,8 @@ namespace clan
 		void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 		Point get_mouse_position() const;
 
+		void toggle_fullscreen();
+
 	private:
 		void process_window_sockets();
 		void process_window_resize(const Rect &new_rect);
@@ -211,5 +213,7 @@ namespace clan
 
 		float ppi = 96.0f;
 		float pixel_ratio = 0.0f;	// 0.0f = Unset
+
+		Rect initial_position;
 	};
 }
