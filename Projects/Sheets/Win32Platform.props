@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+		<LanguageStandard>stdcpp20</LanguageStandard>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>

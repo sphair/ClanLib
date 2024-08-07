@@ -93,7 +93,7 @@ AC_LANG(C++)
 dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
-CXXFLAGS="$CXXFLAGS -std=c++11"
+CXXFLAGS="$CXXFLAGS -std=c++20"
 
 case $target in
 	*cygwin* )
