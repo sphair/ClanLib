@@ -42,17 +42,7 @@ namespace clan
 	class ShaderObject_Impl
 	{
 	public:
-		ShaderObject_Impl() : provider(nullptr)
-		{
-		}
-
-		~ShaderObject_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		ShaderObjectProvider *provider;
+		std::unique_ptr<ShaderObjectProvider> provider;
 	};
 
 	ShaderObject::ShaderObject()
@@ -181,7 +171,7 @@ namespace clan
 
 	ShaderObjectProvider *ShaderObject::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool ShaderObject::operator==(const ShaderObject &other) const

@@ -52,8 +52,8 @@ namespace clan
 	{
 	}
 
-	PixelBuffer::PixelBuffer(PixelBufferProvider *provider)
-		: impl(std::make_shared<PixelBuffer_Impl>(provider))
+	PixelBuffer::PixelBuffer(std::unique_ptr<PixelBufferProvider> provider)
+		: impl(std::make_shared<PixelBuffer_Impl>(std::move(provider)))
 	{
 	}
 
@@ -272,7 +272,7 @@ namespace clan
 
 	PixelBufferProvider *PixelBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	Colorf PixelBuffer::get_pixel(int x, int y)

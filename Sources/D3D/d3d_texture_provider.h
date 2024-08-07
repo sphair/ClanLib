@@ -103,7 +103,7 @@ namespace clan
 		void set_max_anisotropy(float v);
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
 
-		TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+		std::unique_ptr<TextureProvider> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);
 		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);

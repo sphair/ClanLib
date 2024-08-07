@@ -138,43 +138,43 @@ namespace clan
 		virtual PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const = 0;
 
 		/// \brief Allocate texture provider for this gc.
-		virtual TextureProvider *alloc_texture(TextureDimensions texture_dimensions) = 0;
+		virtual std::unique_ptr<TextureProvider> alloc_texture(TextureDimensions texture_dimensions) = 0;
 
 		/// \brief Allocate occlusion query provider of this gc.
-		virtual OcclusionQueryProvider *alloc_occlusion_query() = 0;
+		virtual std::unique_ptr<OcclusionQueryProvider> alloc_occlusion_query() = 0;
 
 		/// \brief Allocate program object provider of this gc.
-		virtual ProgramObjectProvider *alloc_program_object() = 0;
+		virtual std::unique_ptr<ProgramObjectProvider> alloc_program_object() = 0;
 
 		/// \brief Allocate shader object provider of this gc.
-		virtual ShaderObjectProvider *alloc_shader_object() = 0;
+		virtual std::unique_ptr<ShaderObjectProvider> alloc_shader_object() = 0;
 
 		/// \brief Allocate frame buffer provider for this gc.
-		virtual FrameBufferProvider *alloc_frame_buffer() = 0;
+		virtual std::unique_ptr<FrameBufferProvider> alloc_frame_buffer() = 0;
 
 		/// \brief Allocate render buffer provider for this gc.
-		virtual RenderBufferProvider *alloc_render_buffer() = 0;
+		virtual std::unique_ptr<RenderBufferProvider> alloc_render_buffer() = 0;
 
 		/// \brief Allocate vertex array buffer provider for this gc.
-		virtual VertexArrayBufferProvider *alloc_vertex_array_buffer() = 0;
+		virtual std::unique_ptr<VertexArrayBufferProvider> alloc_vertex_array_buffer() = 0;
 
 		/// \brief Allocate uniform buffer provider for this gc.
-		virtual UniformBufferProvider *alloc_uniform_buffer() = 0;
+		virtual std::unique_ptr<UniformBufferProvider> alloc_uniform_buffer() = 0;
 
 		/// \brief Allocate storage buffer provider for this gc.
-		virtual StorageBufferProvider *alloc_storage_buffer() = 0;
+		virtual std::unique_ptr<StorageBufferProvider> alloc_storage_buffer() = 0;
 
 		/// \brief Allocate element array buffer provider for this gc.
-		virtual ElementArrayBufferProvider *alloc_element_array_buffer() = 0;
+		virtual std::unique_ptr<ElementArrayBufferProvider> alloc_element_array_buffer() = 0;
 
 		/// \brief Allocate transfer buffer provider for this gc.
-		virtual TransferBufferProvider *alloc_transfer_buffer() = 0;
+		virtual std::unique_ptr<TransferBufferProvider> alloc_transfer_buffer() = 0;
 
 		/// \brief Allocate pixel buffer provider for this gc.
-		virtual PixelBufferProvider *alloc_pixel_buffer() = 0;
+		virtual std::unique_ptr<PixelBufferProvider> alloc_pixel_buffer() = 0;
 
 		/// \brief Allocate primitives array provider for this gc.
-		virtual PrimitivesArrayProvider *alloc_primitives_array() = 0;
+		virtual std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array() = 0;
 
 		/// \brief Retrieve rasterizer state object.
 		virtual std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;

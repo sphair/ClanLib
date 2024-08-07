@@ -39,10 +39,7 @@ namespace clan
 	class RenderBuffer_Impl
 	{
 	public:
-		RenderBuffer_Impl() : provider(nullptr) { }
-		~RenderBuffer_Impl() { if (provider) delete provider; }
-
-		RenderBufferProvider *provider;
+		std::unique_ptr<RenderBufferProvider> provider;
 		Size size;
 	};
 
@@ -68,7 +65,7 @@ namespace clan
 
 	RenderBufferProvider *RenderBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	const Size &RenderBuffer::get_size() const

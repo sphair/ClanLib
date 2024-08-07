@@ -97,7 +97,7 @@ namespace clan
 		void set_mag_filter(TextureFilter filter) override;
 		void set_max_anisotropy(float v) override;
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override;
-		TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
+		std::unique_ptr<TextureProvider> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
 
 	private:
 		void create_initial(TextureDimensions texture_dimensions);

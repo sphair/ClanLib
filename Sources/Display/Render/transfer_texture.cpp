@@ -39,26 +39,25 @@ namespace clan
 	{
 	}
 
-	TransferTexture::TransferTexture(PixelBufferProvider *provider) : PixelBuffer(provider)
+	TransferTexture::TransferTexture(std::unique_ptr<PixelBufferProvider> provider) : PixelBuffer(std::move(provider))
 	{
 	}
 
 	TransferTexture::TransferTexture(GraphicContext &gc, int width, int height, PixelBufferDirection direction, TextureFormat texture_format, const void *data, BufferUsage usage)
 	{
 		GraphicContextProvider *gc_provider = gc.get_provider();
-		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-		*this = TransferTexture(provider);
-
+		std::unique_ptr<PixelBufferProvider> provider = gc_provider->alloc_pixel_buffer();
 		provider->create(data, Size(width, height), direction, texture_format, usage);
+		*this = TransferTexture(std::move(provider));
 	}
 
 	TransferTexture::TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction, BufferUsage usage)
 	{
 		GraphicContextProvider *gc_provider = gc.get_provider();
-		PixelBufferProvider *provider = gc_provider->alloc_pixel_buffer();
-		*this = TransferTexture(provider);
-
+		std::unique_ptr<PixelBufferProvider> provider = gc_provider->alloc_pixel_buffer();
+	
 		provider->create(pbuff.get_data(), pbuff.get_size(), direction, pbuff.get_format(), usage);
+		*this = TransferTexture(std::move(provider));
 	}
 
 	TransferTexture::~TransferTexture()

@@ -508,9 +508,9 @@ namespace clan
 		return dsv;
 	}
 
-	TextureProvider *D3DTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::unique_ptr<TextureProvider> D3DTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
-		return new D3DTextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
+		return std::make_unique<D3DTextureProvider>(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
 	}
 
 	void D3DTextureProvider::generate_mipmap()

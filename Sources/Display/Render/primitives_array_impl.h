@@ -36,9 +36,6 @@ namespace clan
 	class PrimitivesArray_Impl
 	{
 	public:
-		PrimitivesArray_Impl() : provider(nullptr) { }
-		~PrimitivesArray_Impl() { if (provider) delete provider; }
-
-		PrimitivesArrayProvider *provider;
+		std::unique_ptr<PrimitivesArrayProvider> provider;
 	};
 }

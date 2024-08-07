@@ -84,7 +84,7 @@ namespace clan
 		/// \brief Constructs a ProgramObject
 		///
 		/// \param provider = Font Provider
-		ProgramObject(ProgramObjectProvider *provider);
+		ProgramObject(std::unique_ptr<ProgramObjectProvider> provider);
 
 		/// \brief Load
 		///

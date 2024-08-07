@@ -116,7 +116,7 @@ namespace clan
 		/// \brief Constructs a texture from a texture provider
 		///
 		/// \param provider = The provider
-		Texture(TextureProvider *provider);
+		Texture(std::unique_ptr<TextureProvider> provider);
 
 		virtual ~Texture();
 

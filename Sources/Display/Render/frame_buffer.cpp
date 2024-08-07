@@ -39,17 +39,7 @@ namespace clan
 	class FrameBuffer_Impl
 	{
 	public:
-		FrameBuffer_Impl() : provider(nullptr)
-		{
-		}
-
-		~FrameBuffer_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		FrameBufferProvider *provider;
+		std::unique_ptr<FrameBufferProvider> provider;
 		float pixel_ratio = 0.0f;
 	};
 
@@ -77,7 +67,7 @@ namespace clan
 
 	FrameBufferProvider *FrameBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	Size FrameBuffer::get_size() const

@@ -42,14 +42,14 @@ namespace clan
 	{
 	public:
 		PixelBuffer_Impl();
-		PixelBuffer_Impl(PixelBufferProvider *provider);
+		PixelBuffer_Impl(std::unique_ptr<PixelBufferProvider> provider);
 
 		PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data);
 		~PixelBuffer_Impl();
 
 		Colorf get_pixel(int x, int y);
 
-		PixelBufferProvider *provider;
+		std::unique_ptr<PixelBufferProvider> provider;
 
 		float pixel_ratio = 0.0f;
 

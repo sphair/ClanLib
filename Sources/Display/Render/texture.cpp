@@ -142,10 +142,10 @@ namespace clan
 		}
 	}
 
-	Texture::Texture(TextureProvider *provider)
+	Texture::Texture(std::unique_ptr<TextureProvider> provider)
 		: impl(std::make_shared<Texture_Impl>())
 	{
-		impl->provider = provider;
+		impl->provider = std::move(provider);
 	}
 
 	Texture::Texture(const std::shared_ptr<Texture_Impl> &impl)
@@ -223,7 +223,7 @@ namespace clan
 		if (!impl)
 			return nullptr;
 		else
-			return impl->provider;
+			return impl->provider.get();
 	}
 
 	std::weak_ptr<Texture_Impl> Texture::get_impl() const

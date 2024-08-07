@@ -546,9 +546,9 @@ namespace clan
 		glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));
 	}
 
-	TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::unique_ptr<TextureProvider> GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
-		return new GL3TextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
+		return std::unique_ptr<TextureProvider>(new GL3TextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers));
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

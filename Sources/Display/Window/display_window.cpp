@@ -77,10 +77,10 @@ namespace clan
 		impl->provider->create(&impl->site, description);
 	}
 
-	DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)
+	DisplayWindow::DisplayWindow(std::unique_ptr<DisplayWindowProvider> provider)
 		: impl(std::make_shared<DisplayWindow_Impl>())
 	{
-		impl->provider = provider;
+		impl->provider = std::move(provider);
 	}
 
 	DisplayWindow::~DisplayWindow()
@@ -270,7 +270,7 @@ namespace clan
 
 	DisplayWindowProvider *DisplayWindow::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool DisplayWindow::is_clipboard_text_available() const

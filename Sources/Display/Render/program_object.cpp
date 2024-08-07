@@ -44,17 +44,7 @@ namespace clan
 	class ProgramObject_Impl
 	{
 	public:
-		ProgramObject_Impl() : provider(nullptr)
-		{
-		}
-
-		~ProgramObject_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		ProgramObjectProvider *provider;
+		std::unique_ptr<ProgramObjectProvider> provider;
 	};
 
 	ProgramObject::ProgramObject()
@@ -75,10 +65,10 @@ namespace clan
 		impl->provider = gc_provider->alloc_program_object();
 	}
 
-	ProgramObject::ProgramObject(ProgramObjectProvider *provider)
+	ProgramObject::ProgramObject(std::unique_ptr<ProgramObjectProvider> provider)
 		: impl(std::make_shared<ProgramObject_Impl>())
 	{
-		impl->provider = provider;
+		impl->provider = std::move(provider);
 	}
 
 	ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs)
@@ -264,7 +254,7 @@ namespace clan
 	{
 		if (!impl)
 			return nullptr;
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	std::vector<ShaderObject> ProgramObject::get_shaders() const

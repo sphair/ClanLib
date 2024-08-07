@@ -130,7 +130,7 @@ namespace clan
 		/// \brief Constructs a window.
 		///
 		/// \param provider = Display target implementation object.
-		DisplayWindow(DisplayWindowProvider *provider);
+		DisplayWindow(std::unique_ptr<DisplayWindowProvider> provider);
 
 		~DisplayWindow();
 

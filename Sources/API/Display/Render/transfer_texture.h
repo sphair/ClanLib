@@ -59,7 +59,7 @@ namespace clan
 		/// \brief Constructs a GPU Transfer Buffer
 		///
 		/// \param provider = Font Provider
-		TransferTexture(PixelBufferProvider *provider);
+		TransferTexture(std::unique_ptr<PixelBufferProvider> provider);
 
 		/// \brief Constructs a GPU Transfer Buffer
 		///

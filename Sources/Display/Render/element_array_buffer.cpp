@@ -38,11 +38,8 @@ namespace clan
 	class ElementArrayBuffer_Impl
 	{
 	public:
-		ElementArrayBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~ElementArrayBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		ElementArrayBufferProvider *provider;
+		int lock_count = 0;
+		std::unique_ptr<ElementArrayBufferProvider> provider;
 	};
 
 	ElementArrayBuffer::ElementArrayBuffer()
@@ -77,7 +74,7 @@ namespace clan
 
 	ElementArrayBufferProvider *ElementArrayBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool ElementArrayBuffer::operator==(const ElementArrayBuffer &other) const

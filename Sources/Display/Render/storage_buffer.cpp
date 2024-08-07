@@ -39,10 +39,7 @@ namespace clan
 	class StorageBuffer_Impl
 	{
 	public:
-		StorageBuffer_Impl() : provider(nullptr) { }
-		~StorageBuffer_Impl() { if (provider) delete provider; }
-
-		StorageBufferProvider *provider;
+		std::unique_ptr<StorageBufferProvider> provider;
 	};
 
 	StorageBuffer::StorageBuffer()
@@ -73,7 +70,7 @@ namespace clan
 
 	StorageBufferProvider *StorageBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool StorageBuffer::operator==(const StorageBuffer &other) const

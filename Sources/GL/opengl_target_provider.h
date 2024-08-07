@@ -42,7 +42,7 @@ namespace clan
 		~OpenGLTargetProvider();
 
 		OpenGLContextDescription get_description() { return description; }
-		DisplayWindowProvider *alloc_display_window() override;
+		std::unique_ptr<DisplayWindowProvider> alloc_display_window() override;
 		void set_description(OpenGLContextDescription &desc) { description = desc; }
 
 	private:

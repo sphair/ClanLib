@@ -44,25 +44,22 @@ namespace clan
 	{
 	}
 
-	PixelBuffer_Impl::PixelBuffer_Impl(PixelBufferProvider *provider)
-		: provider(provider)
+	PixelBuffer_Impl::PixelBuffer_Impl(std::unique_ptr<PixelBufferProvider> provider)
+		: provider(std::move(provider))
 	{
 	}
 
 	PixelBuffer_Impl::PixelBuffer_Impl(int width, int height, TextureFormat texture_format, const void *data_ptr, bool only_reference_data)
-		: provider(nullptr)	// Default to locked for CPU buffer
 	{
-		auto cpu_provider = new CPUPixelBufferProvider;
-		provider = cpu_provider;
+		provider = std::make_unique<CPUPixelBufferProvider>();
 
-		cpu_provider->create(texture_format, Size(width, height), data_ptr, only_reference_data);
+		static_cast<CPUPixelBufferProvider *>(provider.get())->create(texture_format, Size(width, height), data_ptr, only_reference_data);
 
 	}
 
 	PixelBuffer_Impl::~PixelBuffer_Impl()
 	{
-		if (provider)
-			delete provider;
+
 	}
 
 	Colorf PixelBuffer_Impl::get_pixel(int x, int y)

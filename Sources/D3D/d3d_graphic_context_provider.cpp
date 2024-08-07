@@ -179,69 +179,69 @@ namespace clan
 		return pixels;
 	}
 
-	TextureProvider *D3DGraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
+	std::unique_ptr<TextureProvider> D3DGraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
-		return new D3DTextureProvider(window->get_device(), window->get_feature_level(), texture_dimensions);
+		return std::make_unique<D3DTextureProvider>(window->get_device(), window->get_feature_level(), texture_dimensions);
 	}
 
-	OcclusionQueryProvider *D3DGraphicContextProvider::alloc_occlusion_query()
+	std::unique_ptr<OcclusionQueryProvider> D3DGraphicContextProvider::alloc_occlusion_query()
 	{
-		return new D3DOcclusionQueryProvider;
+		return std::make_unique<D3DOcclusionQueryProvider>();
 	}
 
-	ProgramObjectProvider *D3DGraphicContextProvider::alloc_program_object()
+	std::unique_ptr<ProgramObjectProvider> D3DGraphicContextProvider::alloc_program_object()
 	{
-		return new D3DProgramObjectProvider(window->get_device(), window->get_device_context());
+		return std::make_unique<D3DProgramObjectProvider>(window->get_device(), window->get_device_context());
 	}
 
-	ShaderObjectProvider *D3DGraphicContextProvider::alloc_shader_object()
+	std::unique_ptr<ShaderObjectProvider> D3DGraphicContextProvider::alloc_shader_object()
 	{
-		return new D3DShaderObjectProvider(window->get_device(), window->get_feature_level());
+		return std::make_unique<D3DShaderObjectProvider>(window->get_device(), window->get_feature_level());
 	}
 
-	FrameBufferProvider *D3DGraphicContextProvider::alloc_frame_buffer()
+	std::unique_ptr<FrameBufferProvider> D3DGraphicContextProvider::alloc_frame_buffer()
 	{
-		return new D3DFrameBufferProvider(window->get_device());
+		return std::make_unique<D3DFrameBufferProvider>(window->get_device());
 	}
 
-	RenderBufferProvider *D3DGraphicContextProvider::alloc_render_buffer()
+	std::unique_ptr<RenderBufferProvider> D3DGraphicContextProvider::alloc_render_buffer()
 	{
-		return new D3DRenderBufferProvider(window->get_device());
+		return std::make_unique<D3DRenderBufferProvider>(window->get_device());
 	}
 
-	VertexArrayBufferProvider *D3DGraphicContextProvider::alloc_vertex_array_buffer()
+	std::unique_ptr<VertexArrayBufferProvider> D3DGraphicContextProvider::alloc_vertex_array_buffer()
 	{
-		return new D3DVertexArrayBufferProvider(window->get_device());
+		return std::make_unique<D3DVertexArrayBufferProvider>(window->get_device());
 	}
 
-	UniformBufferProvider *D3DGraphicContextProvider::alloc_uniform_buffer()
+	std::unique_ptr<UniformBufferProvider> D3DGraphicContextProvider::alloc_uniform_buffer()
 	{
-		return new D3DUniformBufferProvider(window->get_device());
+		return std::make_unique<D3DUniformBufferProvider>(window->get_device());
 	}
 
-	StorageBufferProvider *D3DGraphicContextProvider::alloc_storage_buffer()
+	std::unique_ptr<StorageBufferProvider> D3DGraphicContextProvider::alloc_storage_buffer()
 	{
-		return new D3DStorageBufferProvider(window->get_device());
+		return std::make_unique<D3DStorageBufferProvider>(window->get_device());
 	}
 
-	ElementArrayBufferProvider *D3DGraphicContextProvider::alloc_element_array_buffer()
+	std::unique_ptr<ElementArrayBufferProvider> D3DGraphicContextProvider::alloc_element_array_buffer()
 	{
-		return new D3DElementArrayBufferProvider(window->get_device());
+		return std::make_unique<D3DElementArrayBufferProvider>(window->get_device());
 	}
 
-	TransferBufferProvider *D3DGraphicContextProvider::alloc_transfer_buffer()
+	std::unique_ptr<TransferBufferProvider> D3DGraphicContextProvider::alloc_transfer_buffer()
 	{
-		return new D3DTransferBufferProvider(window->get_device());
+		return std::make_unique<D3DTransferBufferProvider>(window->get_device());
 	}
 
-	PixelBufferProvider *D3DGraphicContextProvider::alloc_pixel_buffer()
+	std::unique_ptr<PixelBufferProvider> D3DGraphicContextProvider::alloc_pixel_buffer()
 	{
-		return new D3DPixelBufferProvider(window->get_device());
+		return std::make_unique<D3DPixelBufferProvider>(window->get_device());
 	}
 
-	PrimitivesArrayProvider *D3DGraphicContextProvider::alloc_primitives_array()
+	std::unique_ptr<PrimitivesArrayProvider> D3DGraphicContextProvider::alloc_primitives_array()
 	{
-		return new D3DPrimitivesArrayProvider(window->get_device());
+		return std::make_unique<D3DPrimitivesArrayProvider>(window->get_device());
 	}
 
 	std::shared_ptr<RasterizerStateProvider> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)

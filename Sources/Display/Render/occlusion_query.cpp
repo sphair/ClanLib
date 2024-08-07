@@ -37,17 +37,7 @@ namespace clan
 	class OcclusionQuery_Impl
 	{
 	public:
-		OcclusionQuery_Impl() : provider(nullptr)
-		{
-		}
-
-		~OcclusionQuery_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
-		OcclusionQueryProvider *provider;
+		std::unique_ptr<OcclusionQueryProvider> provider;
 	};
 
 	OcclusionQuery::OcclusionQuery(GraphicContext &context)
@@ -83,7 +73,7 @@ namespace clan
 
 	OcclusionQueryProvider *OcclusionQuery::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	void OcclusionQuery::begin()

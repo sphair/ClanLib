@@ -50,14 +50,11 @@ namespace clan
 
 		~DisplayWindow_Impl()
 		{
-			if (provider)
-				delete provider;
-			provider = nullptr;
 			SharedGCData::release_ref();
 		}
 
 		Signal<void()> sig_window_flip;
-		DisplayWindowProvider *provider = nullptr;
+		std::unique_ptr<DisplayWindowProvider> provider;
 		DisplayWindowSite site;
 		Cursor current_cursor;
 	};

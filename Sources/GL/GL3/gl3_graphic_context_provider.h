@@ -97,19 +97,19 @@ namespace clan
 		int get_major_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
 		int get_minor_version() const override { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
 		bool has_compute_shader_support() const override { return false; }
-		TextureProvider *alloc_texture(TextureDimensions texture_dimensions) override;
-		OcclusionQueryProvider *alloc_occlusion_query() override;
-		ProgramObjectProvider *alloc_program_object() override;
-		ShaderObjectProvider *alloc_shader_object() override;
-		FrameBufferProvider *alloc_frame_buffer() override;
-		RenderBufferProvider *alloc_render_buffer() override;
-		PixelBufferProvider *alloc_pixel_buffer() override;
-		VertexArrayBufferProvider *alloc_vertex_array_buffer() override;
-		UniformBufferProvider *alloc_uniform_buffer() override;
-		StorageBufferProvider *alloc_storage_buffer() override;
-		ElementArrayBufferProvider *alloc_element_array_buffer() override;
-		TransferBufferProvider *alloc_transfer_buffer() override;
-		PrimitivesArrayProvider *alloc_primitives_array() override;
+		std::unique_ptr<TextureProvider> alloc_texture(TextureDimensions texture_dimensions) override;
+		std::unique_ptr<OcclusionQueryProvider> alloc_occlusion_query() override;
+		std::unique_ptr<ProgramObjectProvider> alloc_program_object() override;
+		std::unique_ptr<ShaderObjectProvider> alloc_shader_object() override;
+		std::unique_ptr<FrameBufferProvider> alloc_frame_buffer() override;
+		std::unique_ptr<RenderBufferProvider> alloc_render_buffer() override;
+		std::unique_ptr<PixelBufferProvider> alloc_pixel_buffer() override;
+		std::unique_ptr<VertexArrayBufferProvider> alloc_vertex_array_buffer() override;
+		std::unique_ptr<UniformBufferProvider> alloc_uniform_buffer() override;
+		std::unique_ptr<StorageBufferProvider> alloc_storage_buffer() override;
+		std::unique_ptr<ElementArrayBufferProvider> alloc_element_array_buffer() override;
+		std::unique_ptr<TransferBufferProvider> alloc_transfer_buffer() override;
+		std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array() override;
 		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) override;
 		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) override;
 		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;

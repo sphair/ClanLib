@@ -605,7 +605,7 @@ namespace clan
 		}
 	}
 
-	TextureProvider *GL1TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	std::unique_ptr<TextureProvider> GL1TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	{
 		throw Exception("OpenGL 1 does not support texture views");
 	}

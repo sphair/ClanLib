@@ -59,7 +59,7 @@ namespace clan
 
 	PrimitivesArrayProvider *PrimitivesArray::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	void PrimitivesArray::set_attributes(int index, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)

@@ -1989,6 +1989,6 @@ namespace clan
 	Texture OpenGL::from_texture_handle(GLuint type, GLuint handle)
 	{
 		//FIXME For GL1
-		return Texture(new GL3TextureProvider(type, handle));
+		return Texture(std::make_unique<GL3TextureProvider>(type, handle));
 	}
 }

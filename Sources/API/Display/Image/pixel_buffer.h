@@ -99,7 +99,7 @@ namespace clan
 		/// \brief Constructs a PixelBuffer
 		///
 		/// \param provider = Font Provider
-		PixelBuffer(PixelBufferProvider *provider);
+		PixelBuffer(std::unique_ptr<PixelBufferProvider> provider);
 
 		virtual ~PixelBuffer();
 

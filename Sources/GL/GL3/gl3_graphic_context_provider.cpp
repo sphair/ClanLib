@@ -292,69 +292,69 @@ namespace clan
 		return render_window->get_pixel_ratio();
 	}
 
-	OcclusionQueryProvider *GL3GraphicContextProvider::alloc_occlusion_query()
+	std::unique_ptr<OcclusionQueryProvider> GL3GraphicContextProvider::alloc_occlusion_query()
 	{
-		return new GL3OcclusionQueryProvider(this);
+		return std::make_unique<GL3OcclusionQueryProvider>(this);
 	}
 
-	ProgramObjectProvider *GL3GraphicContextProvider::alloc_program_object()
+	std::unique_ptr<ProgramObjectProvider> GL3GraphicContextProvider::alloc_program_object()
 	{
-		return new GL3ProgramObjectProvider();
+		return std::make_unique<GL3ProgramObjectProvider>();
 	}
 
-	ShaderObjectProvider *GL3GraphicContextProvider::alloc_shader_object()
+	std::unique_ptr<ShaderObjectProvider> GL3GraphicContextProvider::alloc_shader_object()
 	{
-		return new GL3ShaderObjectProvider();
+		return std::make_unique<GL3ShaderObjectProvider>();
 	}
 
-	TextureProvider *GL3GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
+	std::unique_ptr<TextureProvider> GL3GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
-		return new GL3TextureProvider(texture_dimensions);
+		return std::make_unique<GL3TextureProvider>(texture_dimensions);
 	}
 
-	FrameBufferProvider *GL3GraphicContextProvider::alloc_frame_buffer()
+	std::unique_ptr<FrameBufferProvider> GL3GraphicContextProvider::alloc_frame_buffer()
 	{
-		return new GL3FrameBufferProvider(this);
+		return std::make_unique<GL3FrameBufferProvider>(this);
 	}
 
-	RenderBufferProvider *GL3GraphicContextProvider::alloc_render_buffer()
+	std::unique_ptr<RenderBufferProvider> GL3GraphicContextProvider::alloc_render_buffer()
 	{
-		return new GL3RenderBufferProvider();
+		return std::make_unique<GL3RenderBufferProvider>();
 	}
 
-	VertexArrayBufferProvider *GL3GraphicContextProvider::alloc_vertex_array_buffer()
+	std::unique_ptr<VertexArrayBufferProvider> GL3GraphicContextProvider::alloc_vertex_array_buffer()
 	{
-		return new GL3VertexArrayBufferProvider();
+		return std::make_unique<GL3VertexArrayBufferProvider>();
 	}
 
-	UniformBufferProvider *GL3GraphicContextProvider::alloc_uniform_buffer()
+	std::unique_ptr<UniformBufferProvider> GL3GraphicContextProvider::alloc_uniform_buffer()
 	{
-		return new GL3UniformBufferProvider();
+		return std::make_unique<GL3UniformBufferProvider>();
 	}
 
-	StorageBufferProvider *GL3GraphicContextProvider::alloc_storage_buffer()
+	std::unique_ptr<StorageBufferProvider> GL3GraphicContextProvider::alloc_storage_buffer()
 	{
-		return new GL3StorageBufferProvider();
+		return std::make_unique<GL3StorageBufferProvider>();
 	}
 
-	ElementArrayBufferProvider *GL3GraphicContextProvider::alloc_element_array_buffer()
+	std::unique_ptr<ElementArrayBufferProvider> GL3GraphicContextProvider::alloc_element_array_buffer()
 	{
-		return new GL3ElementArrayBufferProvider();
+		return std::make_unique<GL3ElementArrayBufferProvider>();
 	}
 
-	TransferBufferProvider *GL3GraphicContextProvider::alloc_transfer_buffer()
+	std::unique_ptr<TransferBufferProvider> GL3GraphicContextProvider::alloc_transfer_buffer()
 	{
-		return new GL3TransferBufferProvider();
+		return std::make_unique<GL3TransferBufferProvider>();
 	}
 
-	PixelBufferProvider *GL3GraphicContextProvider::alloc_pixel_buffer()
+	std::unique_ptr<PixelBufferProvider> GL3GraphicContextProvider::alloc_pixel_buffer()
 	{
-		return new GL3PixelBufferProvider();
+		return std::make_unique<GL3PixelBufferProvider>();
 	}
 
-	PrimitivesArrayProvider *GL3GraphicContextProvider::alloc_primitives_array()
+	std::unique_ptr<PrimitivesArrayProvider> GL3GraphicContextProvider::alloc_primitives_array()
 	{
-		return new GL3PrimitivesArrayProvider(this);
+		return std::make_unique<GL3PrimitivesArrayProvider>(this);
 	}
 
 	std::shared_ptr<RasterizerStateProvider> GL3GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)

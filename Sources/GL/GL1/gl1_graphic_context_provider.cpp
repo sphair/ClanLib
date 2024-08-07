@@ -101,9 +101,7 @@ namespace clan
 		}
 
 		selected_textures.resize(max_texture_coords);
-
-		internal_program_provider = new GL1ProgramObjectProvider(this);	// <-- To be owned by "standard_program"
-		internal_program = ProgramObject(internal_program_provider);
+		internal_program = ProgramObject(std::make_unique<GL1ProgramObjectProvider>(this));
 
 		// Enable point sprites for legacy opengl
 		glEnable(GL_POINT_SPRITE);
@@ -245,69 +243,69 @@ namespace clan
 		}
 	}
 
-	OcclusionQueryProvider *GL1GraphicContextProvider::alloc_occlusion_query()
+	std::unique_ptr<OcclusionQueryProvider> GL1GraphicContextProvider::alloc_occlusion_query()
 	{
 		throw Exception("Occlusion Queries are not supported for OpenGL 1.3");
 	}
 
-	ProgramObjectProvider *GL1GraphicContextProvider::alloc_program_object()
+	std::unique_ptr<ProgramObjectProvider> GL1GraphicContextProvider::alloc_program_object()
 	{
 		throw Exception("Program Objects are not supported for OpenGL 1.3");
 	}
 
-	ShaderObjectProvider *GL1GraphicContextProvider::alloc_shader_object()
+	std::unique_ptr<ShaderObjectProvider> GL1GraphicContextProvider::alloc_shader_object()
 	{
 		throw Exception("Shader Objects are not supported for OpenGL 1.3");
 	}
 
-	TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
+	std::unique_ptr<TextureProvider> GL1GraphicContextProvider::alloc_texture(TextureDimensions texture_dimensions)
 	{
-		return new GL1TextureProvider(texture_dimensions);
+		return std::make_unique<GL1TextureProvider>(texture_dimensions);
 	}
 
-	FrameBufferProvider *GL1GraphicContextProvider::alloc_frame_buffer()
+	std::unique_ptr<FrameBufferProvider> GL1GraphicContextProvider::alloc_frame_buffer()
 	{
-		return new GL1FrameBufferProvider(this);
+		return std::make_unique<GL1FrameBufferProvider>(this);
 	}
 
-	RenderBufferProvider *GL1GraphicContextProvider::alloc_render_buffer()
+	std::unique_ptr<RenderBufferProvider> GL1GraphicContextProvider::alloc_render_buffer()
 	{
-		return new GL1RenderBufferProvider(this);
+		return std::make_unique<GL1RenderBufferProvider>(this);
 	}
 
-	VertexArrayBufferProvider *GL1GraphicContextProvider::alloc_vertex_array_buffer()
+	std::unique_ptr<VertexArrayBufferProvider> GL1GraphicContextProvider::alloc_vertex_array_buffer()
 	{
-		return new GL1VertexArrayBufferProvider;
+		return std::make_unique<GL1VertexArrayBufferProvider>();
 	}
 
-	UniformBufferProvider *GL1GraphicContextProvider::alloc_uniform_buffer()
+	std::unique_ptr<UniformBufferProvider> GL1GraphicContextProvider::alloc_uniform_buffer()
 	{
-		return new GL1UniformBufferProvider;
+		return std::make_unique<GL1UniformBufferProvider>();
 	}
 
-	StorageBufferProvider *GL1GraphicContextProvider::alloc_storage_buffer()
+	std::unique_ptr<StorageBufferProvider> GL1GraphicContextProvider::alloc_storage_buffer()
 	{
 		throw Exception("Storage Buffers are not supported for OpenGL 1.3");
 	}
 
-	ElementArrayBufferProvider *GL1GraphicContextProvider::alloc_element_array_buffer()
+	std::unique_ptr<ElementArrayBufferProvider> GL1GraphicContextProvider::alloc_element_array_buffer()
 	{
 		throw Exception("Element Array Buffers are not supported for OpenGL 1.3");
 	}
 
-	TransferBufferProvider *GL1GraphicContextProvider::alloc_transfer_buffer()
+	std::unique_ptr<TransferBufferProvider> GL1GraphicContextProvider::alloc_transfer_buffer()
 	{
-		return new GL1TransferBufferProvider;
+		return std::make_unique<GL1TransferBufferProvider>();
 	}
 
-	PixelBufferProvider *GL1GraphicContextProvider::alloc_pixel_buffer()
+	std::unique_ptr<PixelBufferProvider> GL1GraphicContextProvider::alloc_pixel_buffer()
 	{
 		throw Exception("Pixel Buffers Objects are not supported for OpenGL 1.3");
 	}
 
-	PrimitivesArrayProvider *GL1GraphicContextProvider::alloc_primitives_array()
+	std::unique_ptr<PrimitivesArrayProvider> GL1GraphicContextProvider::alloc_primitives_array()
 	{
-		return new GL1PrimitivesArrayProvider();
+		return std::make_unique<GL1PrimitivesArrayProvider>();
 	}
 
 	std::shared_ptr<RasterizerStateProvider> GL1GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)

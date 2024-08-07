@@ -39,11 +39,8 @@ namespace clan
 	class UniformBuffer_Impl
 	{
 	public:
-		UniformBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~UniformBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		UniformBufferProvider *provider;
+		int lock_count = 0;
+		std::unique_ptr<UniformBufferProvider> provider;
 	};
 
 	UniformBuffer::UniformBuffer()
@@ -82,7 +79,7 @@ namespace clan
 
 	UniformBufferProvider *UniformBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool UniformBuffer::operator==(const UniformBuffer &other) const

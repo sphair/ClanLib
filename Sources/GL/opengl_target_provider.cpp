@@ -51,8 +51,8 @@ namespace clan
 	{
 	}
 
-	DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
+	std::unique_ptr<DisplayWindowProvider> OpenGLTargetProvider::alloc_display_window()
 	{
-		return new OpenGLWindowProvider(description);
+		return std::make_unique<OpenGLWindowProvider>(description);
 	}
 }

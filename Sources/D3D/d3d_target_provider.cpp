@@ -40,8 +40,8 @@ namespace clan
 	{
 	}
 
-	DisplayWindowProvider *D3DTargetProvider::alloc_display_window()
+	std::unique_ptr<DisplayWindowProvider> D3DTargetProvider::alloc_display_window()
 	{
-		return new D3DDisplayWindowProvider;
+		return std::make_unique<D3DDisplayWindowProvider>();
 	}
 }

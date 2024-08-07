@@ -45,7 +45,7 @@ namespace clan
 		virtual ~DisplayTargetProvider() { return; }
 
 		/// \brief Allocates a display window provider.
-		virtual DisplayWindowProvider *alloc_display_window() = 0;
+		virtual std::unique_ptr<DisplayWindowProvider> alloc_display_window() = 0;
 	};
 
 	/// \}

@@ -38,6 +38,6 @@ namespace clan
 		D3DTargetProvider();
 		~D3DTargetProvider();
 
-		DisplayWindowProvider *alloc_display_window();
+		std::unique_ptr<DisplayWindowProvider> alloc_display_window();
 	};
 }

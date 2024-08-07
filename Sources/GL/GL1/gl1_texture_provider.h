@@ -119,7 +119,7 @@ namespace clan
 
 		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override;
 
-		TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
+		std::unique_ptr<TextureProvider> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
 
 		/// \brief Transform a non-power-of-two coordinate
 		///

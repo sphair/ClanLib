@@ -39,8 +39,7 @@ namespace clan
 	{
 	public:
 		Texture_Impl()
-			: provider(nullptr),
-			width(0),
+			: width(0),
 			height(0),
 			depth(0),
 			array_size(0),
@@ -61,18 +60,12 @@ namespace clan
 		{
 		}
 
-		~Texture_Impl()
-		{
-			if (provider)
-				delete provider;
-		}
-
 		bool operator<(const Texture_Impl &other) const
 		{
 			return provider < other.provider;
 		}
 
-		TextureProvider *provider;
+		std::unique_ptr<TextureProvider> provider;
 		int width, height, depth;
 		int array_size;
 		float min_lod;

@@ -38,11 +38,8 @@ namespace clan
 	class TransferBuffer_Impl
 	{
 	public:
-		TransferBuffer_Impl() : lock_count(0), provider(nullptr) { }
-		~TransferBuffer_Impl() { if (provider) delete provider; }
-
-		int lock_count;
-		TransferBufferProvider *provider;
+		int lock_count = 0;
+		std::unique_ptr<TransferBufferProvider> provider;
 	};
 
 	TransferBuffer::TransferBuffer()
@@ -84,7 +81,7 @@ namespace clan
 
 	TransferBufferProvider *TransferBuffer::get_provider() const
 	{
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	bool TransferBuffer::operator==(const TransferBuffer &other) const
