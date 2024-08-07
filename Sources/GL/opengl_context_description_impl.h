@@ -39,7 +39,7 @@ namespace clan
 		{
 			version_major = 4;
 			version_minor = 3;
-			allow_lower_versions = false;
+			allow_lower_versions = true;
 			debug_flag = false;
 			forward_compatible_flag = false;
 			core_profile_flag = true;
