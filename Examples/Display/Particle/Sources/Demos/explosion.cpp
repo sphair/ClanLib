@@ -41,14 +41,14 @@ DemoExplosion::DemoExplosion(clan::DisplayWindow &window) : window(window)
 
 	motion_ctrl.set_1d_acceleration(-0.0004);
 
-	particle = clan::make_unique<L_Particle>(&surface, 500);
+	particle = std::make_unique<L_Particle>(&surface, 500);
 
 	particle->set_color( L_Color(255,110,60,255) );
 	particle->coloring2( L_Color(255,255,255,100), L_Color(0,255,60,60) );
 	particle->sizing2( 1.0, 2.5 );
 	particle->set_motion_controller(&motion_ctrl);
 
-	effect = clan::make_unique<L_ExplosionEffect>(0, 0, 16, 4, 5, 0.3f);
+	effect = std::make_unique<L_ExplosionEffect>(0, 0, 16, 4, 5, 0.3f);
 	effect->add(particle.get());
 	effect->set_life(300); //set life of this effect
 	effect->set_rotation_distortion(L_2PI);
@@ -58,7 +58,7 @@ DemoExplosion::DemoExplosion(clan::DisplayWindow &window) : window(window)
 	effect->initialize();
 
 	// add the effect sample to effect emitter.
-	emitter = clan::make_unique<L_EffectEmitter>(effect.get());
+	emitter = std::make_unique<L_EffectEmitter>(effect.get());
 
 	font = clan::Font("Arial", 16 );
 

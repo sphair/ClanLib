@@ -62,31 +62,31 @@ bool Program::update()
 		switch (current_state)
 		{
 		case DemoState::menu:
-			demo = clan::make_unique<Particle>(window);
+			demo = std::make_unique<Particle>(window);
 			break;
 		case DemoState::simple:
-			demo = clan::make_unique<DemoSimple>(window);
+			demo = std::make_unique<DemoSimple>(window);
 			break;
 		case DemoState::circle:
-			demo = clan::make_unique<DemoCircle>(window);
+			demo = std::make_unique<DemoCircle>(window);
 			break;
 		case DemoState::circle2:
-			demo = clan::make_unique<DemoCircle2>(window);
+			demo = std::make_unique<DemoCircle2>(window);
 			break;
 		case DemoState::msmall:
-			demo = clan::make_unique<DemoMSmall>(window);
+			demo = std::make_unique<DemoMSmall>(window);
 			break;
 		case DemoState::shooting:
-			demo = clan::make_unique<DemoShooting>(window);
+			demo = std::make_unique<DemoShooting>(window);
 			break;
 		case DemoState::explosion:
-			demo = clan::make_unique<DemoExplosion>(window);
+			demo = std::make_unique<DemoExplosion>(window);
 			break;
 		case DemoState::cmotion:
-			demo = clan::make_unique<DemoCMotion>(window);
+			demo = std::make_unique<DemoCMotion>(window);
 			break;
 		case DemoState::usercollision:
-			demo = clan::make_unique<DemoUserCollision>(window);
+			demo = std::make_unique<DemoUserCollision>(window);
 			break;
 		default:
 			throw clan::Exception("Invalid State");

@@ -40,7 +40,7 @@ Program::Program()
 	clan::OpenGLTarget::set_current();
 #endif
 
-	target = clan::make_unique<Target>(Target::RenderTarget::legacy_gl);
+	target = std::make_unique<Target>(Target::RenderTarget::legacy_gl);
 }
 
 bool Program::update()
@@ -54,7 +54,7 @@ bool Program::update()
 	{
 		rt = target->render_target;
 		target.reset();	// This is important. Multiply Display targets cannot co-exist
-		target = clan::make_unique<Target>(rt);
+		target = std::make_unique<Target>(rt);
 	}
 	return true;
 }

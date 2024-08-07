@@ -35,14 +35,14 @@ DemoCMotion::DemoCMotion(clan::DisplayWindow &window) : window(window), fontColo
 	motion_ctrl.set_speed_limit(0.65f);
 	motion_ctrl.set_point_acceleration( 320, 240, 0.001f );
 
-	particle = clan::make_unique<L_Particle>(&surface, 3000);
+	particle = std::make_unique<L_Particle>(&surface, 3000);
 	particle->rotating4();
 	particle->set_motion_controller(&motion_ctrl);
 
 
 	L_Vector shooting_vector;
 	shooting_vector.set2( 0.4, L_DEGREE_TO_RADIAN(-90) );
-	effect = clan::make_unique<L_ShootingEffect>(460, 360, shooting_vector, 16, 6);
+	effect = std::make_unique<L_ShootingEffect>(460, 360, shooting_vector, 16, 6);
 	effect->add(particle.get());
 	effect->set_width_interval(20);
 	effect->set_angle_interval(L_DEGREE_TO_RADIAN(40));

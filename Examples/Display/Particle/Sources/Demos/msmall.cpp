@@ -34,13 +34,13 @@ DemoMSmall::DemoMSmall(clan::DisplayWindow &window) : window(window)
 	motion_ctrl.set_1d_acceleration(-0.0003); // set deceleration
 
 	// create sample of particle
-	particle = clan::make_unique<L_Particle>(&surface, 2000);
+	particle = std::make_unique<L_Particle>(&surface, 2000);
 	particle->set_color(L_Color(255,110,60,255));
 	particle->coloring2(L_Color(255,110,60,255),L_Color(0,200,100,255),0.6);
 	particle->set_motion_controller(&motion_ctrl); // assign motion cotroller
 
 	// create explosion effect
-	effect = clan::make_unique<L_ExplosionEffect>(320, 240, 16, 10, 12, 0.1);
+	effect = std::make_unique<L_ExplosionEffect>(320, 240, 16, 10, 12, 0.1);
 	effect->add(particle.get());
 
 	// apply random life distortion for each emitted particle

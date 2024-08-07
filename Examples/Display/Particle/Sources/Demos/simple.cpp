@@ -45,10 +45,10 @@ DemoSimple::DemoSimple(clan::DisplayWindow &window) : window(window)
 	surface.set_alignment(clan::Origin::center);
 
 	// create a sample of particle with life of 5000
-	particle = clan::make_unique<L_Particle>(&surface, 5000);
+	particle = std::make_unique<L_Particle>(&surface, 5000);
 
 	// create dropping effect with period of 16
-	dropper = clan::make_unique<L_DroppingEffect>(0, 0, 16);
+	dropper = std::make_unique<L_DroppingEffect>(0, 0, 16);
 
 	// add the particle to dropper effect
 	dropper->add(particle.get());

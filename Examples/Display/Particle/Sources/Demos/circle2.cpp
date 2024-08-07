@@ -31,18 +31,18 @@ DemoCircle2::DemoCircle2(clan::DisplayWindow &window) : window(window)
 	surface.set_alignment(clan::Origin::center);
 
 	// create 1st sample of particle
-	particle = clan::make_unique<L_Particle>(&surface, 2000);
+	particle = std::make_unique<L_Particle>(&surface, 2000);
 	particle->set_size(2.0);
 	particle->coloring2( L_Color(255,130,255,20), L_Color(0,255,10,10) );
 
 	// create 2nd sample of particle
-	particle2 = clan::make_unique<L_Particle>(&surface, 500);
+	particle2 = std::make_unique<L_Particle>(&surface, 500);
 	particle2->sizing2( 12.0, 1.0 );
 	particle2->coloring2( L_Color(255,80,40,255), L_Color(0,255,40,40) );
 
 	dropping_period = 16;
 	// create dropping effect with period of 16
-	dropper = clan::make_unique<L_DroppingEffect>(480, 240, dropping_period);
+	dropper = std::make_unique<L_DroppingEffect>(480, 240, dropping_period);
 
 	/* add 1st particle to dropper effect with 0.92 probability to be
 	chosen for an emission. */

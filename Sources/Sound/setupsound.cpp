@@ -67,7 +67,7 @@ namespace clan
 			return;
 
 		SetupCore::start();	// Sound depends on core.
-		SetupCore::instance.module_sound = clan::make_unique<SetupSound_Impl>();
+		SetupCore::instance.module_sound = std::make_unique<SetupSound_Impl>();
 	}
 
 	SetupSound_Impl::SetupSound_Impl()

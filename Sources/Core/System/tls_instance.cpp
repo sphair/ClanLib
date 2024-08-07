@@ -53,7 +53,7 @@ namespace clan
 #endif
 
 		ThreadLocalStorage::instance = this;
-		cl_tls = clan::make_unique<ThreadLocalStorage>();	// create initial instance
+		cl_tls = std::make_unique<ThreadLocalStorage>();	// create initial instance
 	}
 
 	ThreadLocalStorage_Instance::~ThreadLocalStorage_Instance()

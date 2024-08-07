@@ -64,7 +64,7 @@ namespace clan
 		if (instance.module_core)
 			return;
 
-		instance.module_core = clan::make_unique<SetupCore_Impl>();
+		instance.module_core = std::make_unique<SetupCore_Impl>();
 	}
 
 	SetupCore_Impl::SetupCore_Impl()

@@ -32,7 +32,7 @@ DemoShooting::DemoShooting(clan::DisplayWindow &window) : window(window)
 
 	motion_ctrl.set_1d_acceleration(-0.0003);
 
-	particle = clan::make_unique<L_Particle>(&surface, 3000);
+	particle = std::make_unique<L_Particle>(&surface, 3000);
 	particle->set_color(L_Color(255,110,60,255));
 	particle->coloring2(L_Color(255,110,60,255),L_Color(0,200,100,255),0.6);
 	particle->rotating2(L_2PI);
@@ -40,7 +40,7 @@ DemoShooting::DemoShooting(clan::DisplayWindow &window) : window(window)
 
 	L_Vector shooting_vector;
 	shooting_vector.set2( 0.4, L_DEGREE_TO_RADIAN(-90) );
-	effect = clan::make_unique<L_ShootingEffect>(460, 360, shooting_vector, 16, 4);
+	effect = std::make_unique<L_ShootingEffect>(460, 360, shooting_vector, 16, 4);
 	effect->add(particle.get());
 	effect->set_width_interval(100);
 	effect->set_angle_interval(L_DEGREE_TO_RADIAN(45));

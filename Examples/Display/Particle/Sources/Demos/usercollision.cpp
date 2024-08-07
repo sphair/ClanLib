@@ -38,7 +38,7 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 
 	/* If L_INFINITE_LIFE is used, the system will not remove
 	the particle automatically. */
-	particle_1 = clan::make_unique<L_Particle>(&particle_1_sur, L_INFINITE_LIFE);
+	particle_1 = std::make_unique<L_Particle>(&particle_1_sur, L_INFINITE_LIFE);
 	particle_1->set_color(L_Color(255,255,150,70));
 
 	// Set callback function.
@@ -48,7 +48,7 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 	// Setup shooting effect.
 	L_Vector shooting_vector;
 	shooting_vector.set2( 0.4, L_DEGREE_TO_RADIAN(-90) );
-	shooting_eff = clan::make_unique<L_ShootingEffect>(320, 400, shooting_vector, 40, 1);
+	shooting_eff = std::make_unique<L_ShootingEffect>(320, 400, shooting_vector, 40, 1);
 	shooting_eff->add(particle_1.get());
 	shooting_eff->set_angle_interval(L_DEGREE_TO_RADIAN(25));
 	shooting_eff->set_follow_shooting();
@@ -57,13 +57,13 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 
 	// Setup explosion effect
 	motion_ctrl.set_1d_acceleration(-0.0004);
-	particle_2 = clan::make_unique<L_Particle>(&particle_2_sur, 500);
+	particle_2 = std::make_unique<L_Particle>(&particle_2_sur, 500);
 	particle_2->set_color( L_Color(255,110,60,255) );
 	particle_2->coloring2( L_Color(255,255,255,100), L_Color(0,255,60,60) );
 	particle_2->sizing2( 0.8, 1.5 );
 	particle_2->set_motion_controller(&motion_ctrl);
 
-	exp_effect = clan::make_unique<L_ExplosionEffect>(0, 0, 16, 4, 5, 0.15f);
+	exp_effect = std::make_unique<L_ExplosionEffect>(0, 0, 16, 4, 5, 0.15f);
 	exp_effect->add(particle_2.get());
 	exp_effect->set_life(100); //set life of this effect
 	exp_effect->set_rotation_distortion(L_2PI);
@@ -72,7 +72,7 @@ DemoUserCollision::DemoUserCollision(clan::DisplayWindow &window) : window(windo
 	exp_effect->set_speed_distortion(0.1f);
 	exp_effect->initialize();
 
-	exp_emitter = clan::make_unique<L_EffectEmitter>(exp_effect.get());
+	exp_emitter = std::make_unique<L_EffectEmitter>(exp_effect.get());
 
 	circle_pos.set( 320, 100 );
 	circle_surface = clan::Image(canvas, "Resources/circle.png");

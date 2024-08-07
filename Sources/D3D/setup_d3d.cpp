@@ -50,7 +50,7 @@ namespace clan
 			return;
 
 		SetupDisplay::start();	// D3D depends on display
-		SetupCore::instance.module_d3d = clan::make_unique<SetupD3D_Impl>();
+		SetupCore::instance.module_d3d = std::make_unique<SetupD3D_Impl>();
 	}
 
 	SetupD3D_Impl::SetupD3D_Impl()

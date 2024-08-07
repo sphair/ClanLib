@@ -92,7 +92,7 @@ namespace clan
 			return;
 
 		SetupCore::start();	// Display depends on core.
-		SetupCore::instance.module_display = clan::make_unique<SetupDisplay_Impl>();
+		SetupCore::instance.module_display = std::make_unique<SetupDisplay_Impl>();
 	}
 
 	SetupDisplay_Impl::SetupDisplay_Impl()

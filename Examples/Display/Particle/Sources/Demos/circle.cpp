@@ -30,13 +30,13 @@ DemoCircle::DemoCircle(clan::DisplayWindow &window) : window(window)
 	surface.set_alignment(clan::Origin::center);
 
 	// create a sample of particle with life of 2000
-	particle = clan::make_unique<L_Particle>(&surface, 2000);
+	particle = std::make_unique<L_Particle>(&surface, 2000);
 	particle->set_size(2.0);
 	particle->coloring2( L_Color(255,130,255,20), L_Color(0,255,10,10) );
 
 	dropping_period = 16;
 	// create dropping effect with period of 16
-	dropper = clan::make_unique<L_DroppingEffect>(480,240,dropping_period);
+	dropper = std::make_unique<L_DroppingEffect>(480,240,dropping_period);
 
 	// add the particle to dropper effect
 	dropper->add(particle.get());

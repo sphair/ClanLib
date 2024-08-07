@@ -52,7 +52,7 @@ namespace clan
 		if (SetupCore::instance.module_network)
 			return;
 
-		SetupCore::instance.module_network = clan::make_unique<SetupNetwork_Impl>();
+		SetupCore::instance.module_network = std::make_unique<SetupNetwork_Impl>();
 
 	}
 

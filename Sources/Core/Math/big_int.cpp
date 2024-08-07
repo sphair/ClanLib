@@ -53,26 +53,26 @@
 
 namespace clan
 {
-	BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt() : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 	}
 
-	BigInt::BigInt(uint32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
-	{
-		set(value);
-	}
-
-	BigInt::BigInt(int32_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(uint32_t value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}
 
-	BigInt::BigInt(uint64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(int32_t value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}
 
-	BigInt::BigInt(int64_t value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	BigInt::BigInt(uint64_t value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+	{
+		set(value);
+	}
+
+	BigInt::BigInt(int64_t value) : impl(std::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 	{
 		set(value);
 	}
