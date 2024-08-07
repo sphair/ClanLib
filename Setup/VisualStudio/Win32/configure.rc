@@ -152,9 +152,8 @@ BEGIN
     CONTROL         "Compile Release using Whole Program Optimizations",IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,148,173,10
 
-	CONTROL         "Visual C++ .NET 201&5 (14.0)",IDC_RADIO_VC140,"Button",BS_AUTORADIOBUTTON,16,31,105,10
-    CONTROL         "Visual C++ .NET 201&9 (16.0)",IDC_RADIO_VC160,"Button",BS_AUTORADIOBUTTON,16,45,105,10
-	CONTROL         "Visual C++ .NET 201&9 (16.0) - Android (experimental)", IDC_RADIO_VC160_ANDROID, "Button", BS_AUTORADIOBUTTON, 16, 59, 200, 10
+    CONTROL         "Visual C++ .NET 202&2 (16.0)",IDC_RADIO_VC170,"Button",BS_AUTORADIOBUTTON,16,45,105,10
+	CONTROL         "Visual C++ .NET 202&2 (16.0) - Android (experimental)", IDC_RADIO_VC170_ANDROID, "Button", BS_AUTORADIOBUTTON, 16, 59, 200, 10
 	END
 
 /////////////////////////////////////////////////////////////////////////////

@@ -35,7 +35,7 @@ typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 
 PageTarget::PageTarget()
 {
-	target_version = 1600;
+	target_version = 1700;
 	include_sse2 = true;
 	include_intrinsics = true;
 	include_mtdll = false;
@@ -64,11 +64,6 @@ PageTarget::PageTarget()
 		if (result == ERROR_SUCCESS && type == REG_DWORD)
 		{
 			target_android = (value != 0);
-		}
-
-		if (target_version < 1400)	// Disable android target if visual studio does not support it
-		{
-			target_android = false;
 		}
 
 		size = sizeof(DWORD);
@@ -141,23 +136,19 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 			switch (self->target_version)
 			{
-			case 1400:
-				CheckRadioButton(hWnd, IDC_RADIO_VC140, IDC_RADIO_VC140, IDC_RADIO_VC140);
-				break;
-			case 1600:
+			case 1700:
 				if (self->target_android)
 				{
-					CheckRadioButton(hWnd, IDC_RADIO_VC160_ANDROID, IDC_RADIO_VC160_ANDROID, IDC_RADIO_VC160_ANDROID);
+					CheckRadioButton(hWnd, IDC_RADIO_VC170_ANDROID, IDC_RADIO_VC170_ANDROID, IDC_RADIO_VC170_ANDROID);
 				}
 				else
 				{
-					CheckRadioButton(hWnd, IDC_RADIO_VC160, IDC_RADIO_VC160, IDC_RADIO_VC160);
-
+					CheckRadioButton(hWnd, IDC_RADIO_VC170, IDC_RADIO_VC170, IDC_RADIO_VC170);
 				}
 				break;
 
 			default:
-				CheckRadioButton(hWnd, IDC_RADIO_VC160, IDC_RADIO_VC160, IDC_RADIO_VC160);
+				CheckRadioButton(hWnd, IDC_RADIO_VC170, IDC_RADIO_VC170, IDC_RADIO_VC170);
 				break;
 			}
 
@@ -192,19 +183,14 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 		return TRUE;
 	case PSN_WIZBACK:
 	case PSN_WIZNEXT:
-		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC140) == BST_CHECKED)
+		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC170) == BST_CHECKED)
 		{
-			target_version = 1400;
+			target_version = 1700;
 			target_android = false;
 		}
-		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC160) == BST_CHECKED)
+		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC170_ANDROID) == BST_CHECKED)
 		{
-			target_version = 1600;
-			target_android = false;
-		}
-		if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC160_ANDROID) == BST_CHECKED)
-		{
-			target_version = 1600;
+			target_version = 1700;
 			target_android = true;
 		}
 

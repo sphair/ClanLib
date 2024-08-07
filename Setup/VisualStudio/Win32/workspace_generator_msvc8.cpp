@@ -107,24 +107,10 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 	OutputWriter writer(sln_filename);
 
-	if (target_version == 1400)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
-		writer.write_line(0, "# Visual Studio 14");
-		writer.write_line(0, "VisualStudioVersion = 14.0.22310.1");
-		writer.write_line(0, "MinimumVisualStudioVersion = 10.0.40219.1");
-	}
-	else	// (target_version == 1600)
-	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
-		writer.write_line(0, "# Visual Studio Version 16");
-		writer.write_line(0, "VisualStudioVersion = 16.0.30523.141");
-		writer.write_line(0, "MinimumVisualStudioVersion = 10.0.40219.1");
-	}
-	
-		
-		
-		
+	writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
+	writer.write_line(0, "# Visual Studio Version 17");
+	writer.write_line(0, "VisualStudioVersion = 17.10.35013.160");
+	writer.write_line(0, "MinimumVisualStudioVersion = 10.0.40219.1");
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
 	{
@@ -1031,10 +1017,7 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 
 	std::string tools_version;
-	if (target_version == 1400)
-		tools_version = "14.0";
-	else
-		tools_version = "16.0";
+	tools_version = "17.0";
 
 	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"" + tools_version + "\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
   	output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
@@ -1084,10 +1067,7 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		{
 			output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
 			output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
-			if (target_version == 1400)
-				output.write_line(indent, "    <PlatformToolset>v140</PlatformToolset>");
-			else
-				output.write_line(indent, "    <PlatformToolset>v142</PlatformToolset>");
+			output.write_line(indent, "    <PlatformToolset>v143</PlatformToolset>");
 		}
 		output.write_line(indent, "  </PropertyGroup>");
 	}
