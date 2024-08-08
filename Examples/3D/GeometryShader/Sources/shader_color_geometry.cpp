@@ -30,82 +30,85 @@
 
 #include "shader_color_geometry.h"
 
-char ShaderColorGeometry::vertex[] =
-	"\n"
-	"#version 130\n"
-	"\n"
-	"in vec3 InPosition;\n"
-	"in vec4 InColor;\n"
-	"out vec4 PointColor;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
-	"	PointColor = InColor;"
-	"	gl_Position = in_position;\n"
-	"}\n"
-	;
+char ShaderColorGeometry::vertex[] = R"(
+#version 430 core
 
-char ShaderColorGeometry::geometry[] =
-	"\n"
-	"#version 150\n"
-	"layout(points) in;\n"
-	"layout(triangle_strip, max_vertices=3) out;\n"
-	"\n"
-	"layout (std140) uniform ProgramUniforms\n"
-	"{\n"
-	"	mat4 cl_ModelViewProjectionMatrix;\n"
-	"};\n"
-	"out vec2 TexCoord0;\n"
-	"in vec4 PointColor[1];\n"
-	"out vec4 TextureColor;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-   	"	int i;\n"
-	"	vec4 vertex = cl_ModelViewProjectionMatrix * gl_in[0].gl_Position;\n"
-	"	vec4 scale = cl_ModelViewProjectionMatrix * vec4(1.0, 0.0, 0.0, 0.0);\n"
-	"	float size = 1.5 * length(scale.xyz);"
-	"	const float texture_scale = 1.5;"
-	"	TexCoord0 = vec2(-0.5, texture_scale);"
+layout(location = 0) in vec3 InPosition;
+layout(location = 1) in vec4 InColor;
 
-	"	TextureColor = PointColor[0];"
-	"	gl_Position = vertex + vec4(size, size, 0.0, 0.0);\n"
-	"	EmitVertex();\n"
+out vec4 PointColor;
 
-	"	TexCoord0 = vec2(texture_scale+ 0.5, texture_scale);"
-	"	TextureColor = PointColor[0];"
-	"	gl_Position = vertex + vec4(-size, size, 0.0, 0.0);\n"
-	"	EmitVertex();\n"
+void main()
+{
+    vec4 in_position = vec4(InPosition, 1.0);
+    PointColor = InColor;
+    gl_Position = in_position;
+}
+)";
 
-	"	TexCoord0 = vec2(0.5, -0.5);"
-	"	TextureColor = PointColor[0];"
-	"	gl_Position = vertex + vec4(0.0, -size, 0.0, 0.0);\n"
-	"	EmitVertex();\n"
 
-   	"	EndPrimitive();\n"
-	"	\n"
-	"}\n"
-	;
+char ShaderColorGeometry::geometry[] = R"(
+#version 430 core
 
-char ShaderColorGeometry::fragment[] =
-	"\n"
-	"#version 130\n"
-	"\n"
-	"in vec2 TexCoord0;\n"
-	"uniform sampler2D Texture0;\n"
-	"in vec4 TextureColor;\n"
-	"out vec4 cl_FragColor;"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec4 fragment = texture2D(Texture0, TexCoord0);\n"
-	"	fragment = TextureColor * fragment;"
-	"\n"
-	"   if (fragment.a < 0.2) discard;\n"
-	"	cl_FragColor = fragment;\n"
-	"}\n"
-	;
+layout(points) in;
+layout(triangle_strip, max_vertices = 3) out;
+
+layout (std140) uniform ProgramUniforms
+{
+    mat4 cl_ModelViewProjectionMatrix;
+};
+
+in vec4 PointColor[1];
+out vec2 TexCoord0;
+out vec4 TextureColor;
+
+void main()
+{
+    vec4 vertex = cl_ModelViewProjectionMatrix * gl_in[0].gl_Position;
+    vec4 scale = cl_ModelViewProjectionMatrix * vec4(1.0, 0.0, 0.0, 0.0);
+    float size = 1.5 * length(scale.xyz);
+    const float texture_scale = 1.5;
+
+    // First vertex
+    TexCoord0 = vec2(-0.5, texture_scale);
+    TextureColor = PointColor[0];
+    gl_Position = vertex + vec4(size, size, 0.0, 0.0);
+    EmitVertex();
+
+    // Second vertex
+    TexCoord0 = vec2(texture_scale + 0.5, texture_scale);
+    TextureColor = PointColor[0];
+    gl_Position = vertex + vec4(-size, size, 0.0, 0.0);
+    EmitVertex();
+
+    // Third vertex
+    TexCoord0 = vec2(0.5, -0.5);
+    TextureColor = PointColor[0];
+    gl_Position = vertex + vec4(0.0, -size, 0.0, 0.0);
+    EmitVertex();
+
+    EndPrimitive();
+}
+)";
+
+char ShaderColorGeometry::fragment[] = R"(
+#version 430 core
+
+in vec2 TexCoord0;
+uniform sampler2D Texture0;
+in vec4 TextureColor;
+
+out vec4 cl_FragColor;
+
+void main()
+{
+    vec4 fragment = texture(Texture0, TexCoord0);
+    fragment = TextureColor * fragment;
+
+    if (fragment.a < 0.2) discard;
+    cl_FragColor = fragment;
+}
+)";
 
 ShaderColorGeometry::ShaderColorGeometry(GraphicContext &gc)
 {

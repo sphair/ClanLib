@@ -40,15 +40,15 @@ ParticleObject::ParticleObject(GraphicContext &gc, Scene &scene_owner, SceneObje
 	object_positions.resize(num_points);
 	object_colours.resize(num_points);
 
-	const float scale_x = 0.0015f;
-	const float scale_y = 0.0015f;
-	const float scale_z = 0.0015f;
+	const int random_scale = 100000;
+	const float scale = 40.0f / random_scale;
 	for (int cnt=0; cnt < num_points; cnt++)
 	{
+		Vec3i rand_int(std::rand() % random_scale, std::rand() % random_scale, std::rand() % random_scale);
 		object_positions[cnt] = Vec3f(
-			((rand() & 0xFFFFF) - (0xFFFFF/128.0f)) * scale_x,
-			((rand() & 0xFFFFF) - (0xFFFFF/128.0f)) * scale_y,
-			((rand() & 0xFFFFF) - (0xFFFFF/128.0f)) * scale_z );
+			rand_int.x * scale - (random_scale * scale * 0.5f),
+			rand_int.y * scale - (random_scale * scale * 0.5f),
+			rand_int.z * scale - (random_scale * scale * 0.5f) );
 
 		Vec3f pos = object_positions[cnt];
 		pos = pos * pos;
@@ -73,6 +73,7 @@ void ParticleObject::Draw(GraphicContext &gc, const Mat4f &current_modelview)
 
 	Draw(gc, scene->gs, modelview_matrix);
 
+
 	std::vector<SceneObject *>::size_type size, cnt;
 	size = child_objects.size();
 	for (cnt=0; cnt< size; cnt++)
@@ -96,3 +97,4 @@ void ParticleObject::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &mod
 	gc.draw_primitives(PrimitivesType::points, num_points, prim_array);
 	gc.reset_texture(0);
 }
+

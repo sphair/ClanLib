@@ -207,9 +207,10 @@ void App::control_camera()
 
 	xpos -= 100.0f;
 
-	camera->position = Vec3f(xpos, 100.0f, zpos);
+	camera->position = Vec3f(xpos, 90.0f, zpos);
 
 	camera->rotation_x = Angle(20.0f, AngleUnit::degrees);
 	camera->rotation_y = Angle(-(camera_angle+90.0f), AngleUnit::degrees);
 
 }
+
