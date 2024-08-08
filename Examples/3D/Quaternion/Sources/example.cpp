@@ -111,7 +111,7 @@ App::App()
 
 	create_scene(canvas);
 
-	font = clan::Font("tahoma", 24);
+	font = clan::Font("tahoma", 20);
 
 	time_last = System::get_time();
 	time_start = time_last;
