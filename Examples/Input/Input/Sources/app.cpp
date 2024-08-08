@@ -53,10 +53,9 @@ App::App()
 	sc.connect(window.get_mouse().sig_key_dblclk(), this, &App::on_mouse_down);
 
 	auto &controllers = window.get_game_controllers();
-	int id = 0;
 	for (auto &elem : controllers)
 	{
-		sc.connect(elem.sig_key_down(), [=](const clan::InputEvent &input_event) {on_controller_down(input_event, id); });
+		sc.connect(elem.sig_key_down(), [this](const clan::InputEvent &input_event) {on_controller_down(input_event, id); });
 		id++;
 	}
 

@@ -87,7 +87,8 @@ App::App()
 	button1->style()->set("width: 120px");
 	button1->label()->set_text("Folder browse");
 	button1->style()->set("flex: none");
-	button1->image_view()->set_image(clan::Image(pRootView->canvas(), "./document_open.png"));
+	Canvas canvas(pRootView->canvas());
+	button1->image_view()->set_image(clan::Image(canvas, "./document_open.png"));
 	button1->func_clicked() = clan::bind_member(this, &App::on_button1_down);
 	panel1->add_child(button1);
 

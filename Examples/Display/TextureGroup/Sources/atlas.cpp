@@ -131,6 +131,7 @@ bool Atlas::update()
 	}
 
 	font.draw_text(canvas, canvas.get_width() - 200, 32, clan::string_format("Texture Pages #%1", textures.size()));
+	font.draw_text(canvas, 8, canvas.get_height() - 44, "Note: **** The Texture Group image may contain garbage in unallocated space ***");
 	font.draw_text(canvas, 8, canvas.get_height() - 24, "Note: It is advisable for compatibility and performance that the texture group page size");
 	font.draw_text(canvas, 16, canvas.get_height() - 4, "is a number that is a power of 2, for example: 256, 512, 1024 or 2048");
 

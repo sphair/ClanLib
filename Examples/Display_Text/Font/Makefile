@@ -4,7 +4,7 @@ OBJF = ./Sources/font.o \
 ../../ThemeAero/Sources/theme.o \
 ./Sources/settings.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanUI clanXML
+LIBS=clanApp clanDisplay clanCore clanGL clanUI clanXML clanSound
 CXXFLAGS += -I Sources -I ./
 
 include ../../Makefile.conf

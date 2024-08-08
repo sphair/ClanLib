@@ -51,8 +51,8 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 	set_icon(iconNames);
 
 	// Exit run loop when close is clicked or ESC pressed.
-	pRootView->slots.connect(pRootView->sig_close(), [&](CloseEvent &e) { RunLoop::exit(); });
-	pRootView->slots.connect(pRootView->sig_key_press(), [&](clan::KeyEvent &e)
+	pRootView->slots.connect(pRootView->sig_close(), [this](CloseEvent &e) { RunLoop::exit(); });
+	pRootView->slots.connect(pRootView->sig_key_press(), [this](clan::KeyEvent &e)
 	{ if (e.key() == clan::Key::escape) RunLoop::exit(); }
 	);
 
@@ -186,7 +186,7 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 	}
 
 	// Create a popup window as hint on the label.
-	label->slots.connect(label->sig_pointer_enter(), [=](PointerEvent &e)
+	label->slots.connect(label->sig_pointer_enter(), [&](PointerEvent &e)
 	{
 		auto popup = std::make_shared<WindowController>();
 		popup->root_view()->style()->set("flex-direction: column; background: #FFFFE0; margin: 5px; border: 1px solid black; border-radius: 2px");
@@ -198,7 +198,7 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 		popup->root_view()->add_child(text);
 
 		std::weak_ptr<WindowController> popup_weak = popup;
-		popup->slots.connect(label->sig_pointer_leave(), [=](PointerEvent &e)
+		popup->slots.connect(label->sig_pointer_leave(), [&](PointerEvent &e)
 		{
 			auto p = popup_weak.lock();
 			if (p)

@@ -6,5 +6,6 @@
 #include <ClanLib/d3d.h>
 #include <ClanLib/gl.h>
 #include <ClanLib/xml.h>
+#include <ClanLib/sound.h>
 
 #include <cmath>

@@ -60,6 +60,7 @@ private:
 	clan::Font font;
 	
 	std::list<TextShooter> text_shooter;
+	int id = 0;
 
 	Canvas canvas;
 };
