@@ -128,91 +128,95 @@ const char Shader::fragment_hlsl[] =
 	"	return output;\n"
 	"}\n";
 
-const char Shader::vertex_glsl[] =
-	"\n"
-	"#version 150\n"
-	"\n"
-	"in vec3 InPosition;"
-	"in vec3 InNormal;"
-	"layout (std140) uniform ProgramUniforms\n"
-	"{\n"
-	"	mat4 cl_ModelViewMatrix;\n"
-	"	mat4 cl_ModelViewProjectionMatrix;\n"
-	"	mat3 cl_NormalMatrix;\n"
-	"	vec4 padding;\n"
-	"	vec4 MaterialEmission;\n"
-	"	vec4 MaterialSpecular;\n"
-	"	vec4 MaterialAmbient;\n"
-	"	vec4 LightSpecular;\n"
-	"	vec4 LightDiffuse;\n"
-	"	vec4 LightAmbient;\n"
-	"	vec3 LightVector;\n"
-	"	vec3 LightHalfVector;\n"
-	"	float MaterialShininess;\n"
-	"};\n"
-	"out vec3 WorldSpaceNormal; \n"
-	"out vec3 WorldSpacePosition; \n"
-	"out vec4 ObjPos;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
-	"	gl_Position = cl_ModelViewProjectionMatrix * in_position;\n"
-	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
-	"	WorldSpacePosition = InPosition;\n"
-	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
-	"}\n"
-	;
+const char Shader::vertex_glsl[] = R"(
+#version 430 core
 
-const char Shader::fragment_glsl[] =
-	"\n"
-	"#version 150\n"
-	"\n"
-	"in vec3 WorldSpaceNormal; \n"
-	"in vec3 WorldSpacePosition; \n"
-	"in vec4 ObjPos;\n"
-	"out vec4 cl_FragColor;\n"
-	"layout (std140) uniform ProgramUniforms\n"
-	"{\n"
-	"	mat4 cl_ModelViewMatrix;\n"
-	"	mat4 cl_ModelViewProjectionMatrix;\n"
-	"	mat3 cl_NormalMatrix;\n"
-	"	vec4 padding;\n"
-	"	vec4 MaterialEmission;\n"
-	"	vec4 MaterialSpecular;\n"
-	"	vec4 MaterialAmbient;\n"
-	"	vec4 LightSpecular;\n"
-	"	vec4 LightDiffuse;\n"
-	"	vec4 LightAmbient;\n"
-	"	vec3 LightVector;\n"
-	"	vec3 LightHalfVector;\n"
-	"	float MaterialShininess;\n"
-	"};\n"
- 	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec3 eye = -normalize(ObjPos.xyz); \n"
-	"	vec4 diff = vec4(0); \n"
-	"	vec4 spec = vec4(0); \n"
-	"\n"
-	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
-	"	float pf; \n"
-	"	if (nDotL == 0.0)\n"
-	"	{\n"
-	"		pf = 0.0; \n"
-	"	}else\n"
-	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
-	"			pf = pow(nDotHV, MaterialShininess);\n"
-	"	}\n"
-	"	spec += LightSpecular * pf; \n"
-	"	diff += LightDiffuse * nDotL;\n"
-	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
-	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
-	"	cl_FragColor.a = MaterialAmbient.a;\n"
-	"}\n"
-	;
+layout(location = 0) in vec3 InPosition;
+layout(location = 1) in vec3 InNormal;
+
+layout (std140) uniform ProgramUniforms
+{
+    mat4 cl_ModelViewMatrix;
+    mat4 cl_ModelViewProjectionMatrix;
+    mat3 cl_NormalMatrix;
+    vec4 padding;
+    vec4 MaterialEmission;
+    vec4 MaterialSpecular;
+    vec4 MaterialAmbient;
+    vec4 LightSpecular;
+    vec4 LightDiffuse;
+    vec4 LightAmbient;
+    vec3 LightVector;
+    vec3 LightHalfVector;
+    float MaterialShininess;
+};
+
+out vec3 WorldSpaceNormal; 
+out vec3 WorldSpacePosition; 
+out vec4 ObjPos;
+
+void main()
+{
+    vec4 in_position = vec4(InPosition, 1.0);
+    gl_Position = cl_ModelViewProjectionMatrix * in_position;
+    WorldSpaceNormal = normalize(cl_NormalMatrix * InNormal);
+    WorldSpacePosition = InPosition;
+    ObjPos = cl_ModelViewMatrix * in_position;
+}
+)";
+
+const char Shader::fragment_glsl[] = R"(
+#version 430 core
+
+in vec3 WorldSpaceNormal; 
+in vec3 WorldSpacePosition; 
+in vec4 ObjPos;
+
+out vec4 cl_FragColor;
+
+layout (std140) uniform ProgramUniforms
+{
+    mat4 cl_ModelViewMatrix;
+    mat4 cl_ModelViewProjectionMatrix;
+    mat3 cl_NormalMatrix;
+    vec4 padding;
+    vec4 MaterialEmission;
+    vec4 MaterialSpecular;
+    vec4 MaterialAmbient;
+    vec4 LightSpecular;
+    vec4 LightDiffuse;
+    vec4 LightAmbient;
+    vec3 LightVector;
+    vec3 LightHalfVector;
+    float MaterialShininess;
+};
+
+void main()
+{
+    vec3 eye = -normalize(ObjPos.xyz); 
+    vec4 diff = vec4(0); 
+    vec4 spec = vec4(0);
+
+    vec3 world_space_normal = normalize(WorldSpaceNormal);
+    float nDotL = max(0.0, dot(world_space_normal, LightVector)); 
+    float pf; 
+    if (nDotL == 0.0)
+    {
+        pf = 0.0; 
+    }
+    else
+    {
+        float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));
+        pf = pow(nDotHV, MaterialShininess);
+    }
+    spec += LightSpecular * pf; 
+    diff += LightDiffuse * nDotL;
+
+    vec4 final_texture_color = vec4(MaterialAmbient.rgb, 1.0);
+    cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color + spec * MaterialSpecular;
+    cl_FragColor.a = MaterialAmbient.a;
+}
+)";
 
 Shader::Shader(GraphicContext &gc)
 {
