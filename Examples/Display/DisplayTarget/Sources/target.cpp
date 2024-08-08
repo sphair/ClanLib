@@ -43,7 +43,7 @@ Target::Target(RenderTarget new_target) : render_target(new_target)
 
 	case (opengl) :
 		clan::OpenGLTarget::set_current();
-		opengl_desc.set_version(4, 3, true);
+		opengl_desc.set_version(4, 5, true);
 		clan::OpenGLTarget::set_description(opengl_desc);
 		break;
 #if defined(WIN32) && !defined(__MINGW32__)
@@ -108,11 +108,11 @@ void Target::run_demo()
 
 		if (canvas.get_gc().get_shader_language() == clan::ShaderLanguage::fixed_function)
 		{
-			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
+			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL1)", major, minor));
 		}
 		else
 		{
-			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("2) OpenGL 3.2 Compatable. Context = %1.%2 (clanGL)", major, minor));
+			target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("2) OpenGL 4.3 Compatable. Context = %1.%2 (clanGL3)", major, minor));
 		}
 	}
 

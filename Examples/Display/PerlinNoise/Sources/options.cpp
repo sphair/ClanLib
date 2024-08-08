@@ -52,19 +52,18 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 	position_z = 0.0f;
 	position_w = 0.0f;
 
-	std::shared_ptr<clan::ListBoxView> listbox;
-	listbox = create_listbox(450, 30, "Pixel Format");
-	listbox->set_items<std::string>( { "TextureFormat::rgb8", "TextureFormat::rgba8", "tf_r8", "tf_r32f" }, Theme::create_listbox_label);
-	listbox->func_selection_changed() = [=](){on_format_selected(listbox); };
-	listbox->set_selected_item(0);
+	listbox1 = create_listbox(450, 30, "Pixel Format");
+	listbox1->set_items<std::string>( { "TextureFormat::rgb8", "TextureFormat::rgba8", "tf_r8", "tf_r32f" }, Theme::create_listbox_label);
+	listbox1->func_selection_changed() = [this](){on_format_selected(listbox1); };
+	listbox1->set_selected_item(0);
 
 	checkbox_normals = create_checkbox(670, 35, "Draw Normals (rgb only)", is_normals_set);
 	checkbox_normals->func_state_changed() = bind_member(this, &Options::checkbox_normals_changed);
 
-	listbox = create_listbox(450, 180, "Dimension");
-	listbox->set_items<std::string>({ "1D", "2D", "3D", "4D" }, Theme::create_listbox_label);
-	listbox->func_selection_changed() = [=](){on_dimension_selected(listbox); };
-	listbox->set_selected_item(1);
+	listbox2 = create_listbox(450, 180, "Dimension");
+	listbox2->set_items<std::string>({ "1D", "2D", "3D", "4D" }, Theme::create_listbox_label);
+	listbox2->func_selection_changed() = [this](){on_dimension_selected(listbox2); };
+	listbox2->set_selected_item(1);
 
 	int slider_xpos = 450;
 	int slider_label_xpos = slider_xpos + 200;

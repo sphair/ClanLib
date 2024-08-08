@@ -56,12 +56,12 @@ Example::Example()
 	window_2 = clan::DisplayWindow(desc_window_2);
 
 	// Connect the Window close event - to both windows
-	sc.connect(window_1.sig_window_close(), [&](){on_window_close(&window_1); });
-	sc.connect(window_2.sig_window_close(), [&](){on_window_close(&window_2); });
+	sc.connect(window_1.sig_window_close(), [this](){on_window_close(&window_1); });
+	sc.connect(window_2.sig_window_close(), [this](){on_window_close(&window_2); });
 
 	// Connect a keyboard handler to on_key_up() - to both windows
-	sc.connect(window_1.get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 1); });
-	sc.connect(window_2.get_keyboard().sig_key_up(), [=](const clan::InputEvent &input_event){on_input_up(input_event, 2); });
+	sc.connect(window_1.get_keyboard().sig_key_up(), [this](const clan::InputEvent &input_event){on_input_up(input_event, 1); });
+	sc.connect(window_2.get_keyboard().sig_key_up(), [this](const clan::InputEvent &input_event){on_input_up(input_event, 2); });
 
 	// Get the canvas - for both windows
 	canvas_1 = clan::Canvas(window_1);

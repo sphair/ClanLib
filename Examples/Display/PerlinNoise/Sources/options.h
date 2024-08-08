@@ -109,6 +109,8 @@ private:
 	std::shared_ptr<clan::LabelView> label_dimension;
 
 	std::shared_ptr<clan::CheckBoxView> checkbox_normals;
+	std::shared_ptr<clan::ListBoxView> listbox1;
+	std::shared_ptr<clan::ListBoxView> listbox2;
 
 };
 
