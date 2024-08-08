@@ -84,7 +84,7 @@ CollisionOutline::CollisionOutline(
 
 		PixelBuffer pbuf = ImageProviderFactory::load(file, file_extension);
 	
-		if( pbuf.get_format() == tf_rgba8 )
+		if( pbuf.get_format() == TextureFormat::rgba8 )
 		{
 			OutlineProviderBitmap outline_provider(pbuf, alpha_limit, get_insides);
 			*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
@@ -96,7 +96,7 @@ CollisionOutline::CollisionOutline(
 		}
 	}
 
-	set_rotation_hotspot(origin_center);
+	set_rotation_hotspot(Origin::center);
 }
 
 CollisionOutline::CollisionOutline(
@@ -105,7 +105,7 @@ CollisionOutline::CollisionOutline(
 	OutlineAccuracy accuracy)
  : impl(std::make_shared<CollisionOutline_Impl>())
 {
-	if( pbuf.get_format() == tf_rgba8 )
+	if( pbuf.get_format() == TextureFormat::rgba8 )
 	{
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
 		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
@@ -116,7 +116,7 @@ CollisionOutline::CollisionOutline(
 		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw );
 	}
 	
-	set_rotation_hotspot(origin_center);
+	set_rotation_hotspot(Origin::center);
 }
 
 CollisionOutline::~CollisionOutline()
@@ -489,41 +489,41 @@ void CollisionOutline::set_alignment( Origin origin, float x, float y )
 
 		switch( old_origin )
 		{
-		 case origin_top_left:
+		 case Origin::top_left:
 			fix_x = -width;
 			fix_y = -height;
 			break;
-		 case origin_top_center:
+		 case Origin::top_center:
 			fix_x = 0;
 			fix_y = -height;
 			break;
-		 case origin_top_right:
+		 case Origin::top_right:
 			fix_x = width;
 			fix_y = -height;
 			break;
 
-		 case origin_center_left:
+		 case Origin::center_left:
 			fix_x = -width;
 			fix_y = 0;
 			break;
-		 case origin_center:
+		 case Origin::center:
 			fix_x = 0;
 			fix_y = 0;
 			break;
-		 case origin_center_right:
+		 case Origin::center_right:
 			fix_x = width;
 			fix_y = 0;
 			break;
 
-		 case origin_bottom_left:
+		 case Origin::bottom_left:
 			fix_x = -width;
 			fix_y = height;
 			break;
-		 case origin_bottom_center:
+		 case Origin::bottom_center:
 			fix_x = 0;
 			fix_y = height;
 			break;
-		 case origin_bottom_right:
+		 case Origin::bottom_right:
 			fix_x = width;
 			fix_y = height;
 			break;
@@ -543,7 +543,7 @@ void CollisionOutline::set_alignment( Origin origin, float x, float y )
 	impl->set_translation(x, y, true); // offset outline points
 
 	// set new origin offset.
-	if( origin != origin_center )
+	if( origin != Origin::center )
 	{
 		float fix_x = 0, fix_y = 0;
 
@@ -552,41 +552,41 @@ void CollisionOutline::set_alignment( Origin origin, float x, float y )
 
 		switch( origin )
 		{
-		 case origin_top_left:
+		 case Origin::top_left:
 			fix_x = width;
 			fix_y = height;
 			break;
-		 case origin_top_center:
+		 case Origin::top_center:
 			fix_x = 0;
 			fix_y = height;
 			break;
-		 case origin_top_right:
+		 case Origin::top_right:
 			fix_x = -width;
 			fix_y = height;
 			break;
 
-		 case origin_center_left:
+		 case Origin::center_left:
 			fix_x = width;
 			fix_y = 0;
 			break;
-		 case origin_center:
+		 case Origin::center:
 			fix_x = 0;
 			fix_y = 0;
 			break;
-		 case origin_center_right:
+		 case Origin::center_right:
 			fix_x = -width;
 			fix_y = 0;
 			break;
 
-		 case origin_bottom_left:
+		 case Origin::bottom_left:
 			fix_x = width;
 			fix_y = -height;
 			break;
-		 case origin_bottom_center:
+		 case Origin::bottom_center:
 			fix_x = 0;
 			fix_y = -height;
 			break;
-		 case origin_bottom_right:
+		 case Origin::bottom_right:
 			fix_x = -width;
 			fix_y = -height;
 			break;
@@ -605,57 +605,57 @@ void CollisionOutline::set_rotation_hotspot( Origin origin, float x, float y )
 {
 	// undo translation origin
 	Origin trans_origin = impl->translation_origin;	
-	set_alignment(origin_center);
+	set_alignment(Origin::center);
 
 	// undo the rotation of the current rotation hotspot
 	float angle = impl->angle;
-	impl->set_angle(Angle(0.0f,angle_degrees));
+	impl->set_angle(Angle(0.0f,AngleUnit::degrees));
 
 	float fix_x = 0, fix_y = 0;
 
 	// set new origin offset.
-	if( origin != origin_center )
+	if( origin != Origin::center )
 	{
 		float width = impl->width/2.0f;
 		float height = impl->height/2.0f;
 
 		switch( origin )
 		{
-		 case origin_top_left:
+		 case Origin::top_left:
 			fix_x = -width;
 			fix_y = -height;
 			break;
-		 case origin_top_center:
+		 case Origin::top_center:
 			fix_x = 0;
 			fix_y = -height;
 			break;
-		 case origin_top_right:
+		 case Origin::top_right:
 			fix_x = width;
 			fix_y = -height;
 			break;
 
-		 case origin_center_left:
+		 case Origin::center_left:
 			fix_x = -width;
 			fix_y = 0;
 			break;
-		 case origin_center:
+		 case Origin::center:
 			fix_x = 0;
 			fix_y = 0;
 			break;
-		 case origin_center_right:
+		 case Origin::center_right:
 			fix_x = width;
 			fix_y = 0;
 			break;
 
-		 case origin_bottom_left:
+		 case Origin::bottom_left:
 			fix_x = -width;
 			fix_y = height;
 			break;
-		 case origin_bottom_center:
+		 case Origin::bottom_center:
 			fix_x = 0;
 			fix_y = height;
 			break;
-		 case origin_bottom_right:
+		 case Origin::bottom_right:
 			fix_x = width;
 			fix_y = height;
 			break;
@@ -668,7 +668,7 @@ void CollisionOutline::set_rotation_hotspot( Origin origin, float x, float y )
 	impl->rotation_hotspot.y = fix_y + y;
 
 	// transform data using new rotation hotspot
-	impl->set_angle(Angle(angle,angle_degrees));
+	impl->set_angle(Angle(angle,AngleUnit::degrees));
 
 	set_alignment(trans_origin);
 

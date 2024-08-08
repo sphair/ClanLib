@@ -69,13 +69,13 @@ CollisionApp::CollisionApp()
 	co1.save("collision_1_test_outline_file.out");
 	co2.save("collision_2_test_outline_file.out");
 
-	co1.set_alignment(clan::origin_center);
-	co1.set_rotation_hotspot(clan::origin_center);
+	co1.set_alignment(clan::Origin::center);
+	co1.set_rotation_hotspot(clan::Origin::center);
 	co1.enable_collision_info(true, true, true, true);
 	co1.set_inside_test(true);
 
-	co2.set_alignment(clan::origin_center);
-	co2.set_rotation_hotspot(clan::origin_center);
+	co2.set_alignment(clan::Origin::center);
+	co2.set_rotation_hotspot(clan::Origin::center);
 	co2.enable_collision_info(true, true, true, true);
 	co2.set_inside_test(true);
 
@@ -85,11 +85,11 @@ CollisionApp::CollisionApp()
 	surface = clan::Sprite(canvas, file1);
 	surface2 = clan::Sprite(canvas, file2);
 
-	surface.set_rotation_hotspot(clan::origin_center);
-	surface.set_alignment(clan::origin_center);
+	surface.set_rotation_hotspot(clan::Origin::center);
+	surface.set_alignment(clan::Origin::center);
 
-	surface2.set_rotation_hotspot(clan::origin_center);
-	surface2.set_alignment(clan::origin_center);
+	surface2.set_rotation_hotspot(clan::Origin::center);
+	surface2.set_alignment(clan::Origin::center);
 
 
 	// Connect the Window close event
@@ -281,13 +281,13 @@ void CollisionApp::control_input()
 
 	if (keyboard.get_keycode(clan::keycode_e))
 	{
-		surface.rotate(clan::Angle(0.1f, clan::angle_degrees));
-		co1.rotate(clan::Angle(0.1f, clan::angle_degrees));
+		surface.rotate(clan::Angle(0.1f, clan::AngleUnit::degrees));
+		co1.rotate(clan::Angle(0.1f, clan::AngleUnit::degrees));
 	}
 	if (keyboard.get_keycode(clan::keycode_r))
 	{
-		co2.rotate(clan::Angle(0.1f, clan::angle_degrees));
-		surface2.rotate(clan::Angle(0.1f, clan::angle_degrees));
+		co2.rotate(clan::Angle(0.1f, clan::AngleUnit::degrees));
+		surface2.rotate(clan::Angle(0.1f, clan::AngleUnit::degrees));
 	}
 	if (keyboard.get_keycode(clan::keycode_1))
 	{
@@ -374,12 +374,12 @@ void CollisionApp::control_input()
 		co2 = CollisionOutline("collision_2_test_outline_file.out");
 
 		// Reset the options
-		co1.set_alignment(clan::origin_center);
-		co1.set_rotation_hotspot(clan::origin_center);
+		co1.set_alignment(clan::Origin::center);
+		co1.set_rotation_hotspot(clan::Origin::center);
 		co1.enable_collision_info(true, true, true, true);
 		co1.set_inside_test(true);
-		co2.set_alignment(clan::origin_center);
-		co2.set_rotation_hotspot(clan::origin_center);
+		co2.set_alignment(clan::Origin::center);
+		co2.set_rotation_hotspot(clan::Origin::center);
 		co2.enable_collision_info(true, true, true, true);
 		co2.set_inside_test(true);
 

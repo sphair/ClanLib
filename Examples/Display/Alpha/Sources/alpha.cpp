@@ -43,7 +43,7 @@ Alpha::Alpha()
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("Standard Compositing using the Alpha Channel");
-	desc.set_size(clan::Size(800, 800), true);
+	desc.set_size(clan::Size(1000, 800), true);
 	desc.set_allow_resize(true);
 
 	window = clan::DisplayWindow(desc);
@@ -184,10 +184,10 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
 
 	info = std::string(clan::string_format("Vertex = %1, %2, %3, %4", get_text(vertex_colour.r), get_text(vertex_colour.g), get_text(vertex_colour.b), get_text(vertex_colour.a)));
-	font.draw_text(canvas, xpos + 250, ypos, info, clan::Colorf::black);
+	font.draw_text(canvas, xpos + 300, ypos, info, clan::Colorf::black);
 
 	info = std::string(clan::string_format("Image = %1, %2, %3, %4", get_text(image_colour.r), get_text(image_colour.g), get_text(image_colour.b), get_text(image_colour.a)));
-	font.draw_text(canvas, xpos + 500, ypos, info, clan::Colorf::black);
+	font.draw_text(canvas, xpos + 600, ypos, info, clan::Colorf::black);
 
 	ypos += 20;
 	clan::Colorf source(vertex_colour * image_colour);
@@ -201,8 +201,8 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 	font.draw_text(canvas, xpos, ypos, info, clan::Colorf::black);
 
 	info = std::string(clan::string_format("Calculated = %1, %2, %3, %4", get_text(calculated.r), get_text(calculated.g), get_text(calculated.b), get_text(calculated.a)));
-	font.draw_text(canvas, xpos +  250, ypos, info, clan::Colorf::black);
+	font.draw_text(canvas, xpos +  300, ypos, info, clan::Colorf::black);
 
 	info = std::string(clan::string_format("Actual = %1, %2, %3, %4", get_text(output.r), get_text(output.g), get_text(output.b), get_text(output.a)));
-	font.draw_text(canvas, xpos + 500, ypos, info, clan::Colorf::black);
+	font.draw_text(canvas, xpos + 600, ypos, info, clan::Colorf::black);
 }

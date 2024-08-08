@@ -54,9 +54,9 @@ CollisionOutline_Impl::CollisionOutline_Impl()
 	position(0,0),
 	scale_factor(1,1),
 	translation_offset(0,0),
-	translation_origin(origin_top_left),
+	translation_origin(Origin::top_left),
 	rotation_hotspot(0,0),
-	rotation_origin(origin_center),
+	rotation_origin(Origin::center),
 	collision_info_points(false),
 	collision_info_normals(false),
 	collision_info_meta(false),
@@ -75,9 +75,9 @@ CollisionOutline_Impl::CollisionOutline_Impl(const std::vector<Contour> &new_con
 	position(0,0),
 	scale_factor(1,1),
 	translation_offset(0,0),
-	translation_origin(origin_top_left),
+	translation_origin(Origin::top_left),
 	rotation_hotspot(0,0),
-	rotation_origin(origin_center),
+	rotation_origin(Origin::center),
 	collision_info_points(false),
 	collision_info_normals(false),
 	collision_info_meta(false),
@@ -204,7 +204,7 @@ void CollisionOutline_Impl::set_angle(const Angle &angle)
 		std::vector<Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			contour_ptr->get_points()[inner_cnt].rotate(position+rotation_hotspot, Angle(rotate_angle, angle_degrees));
+			contour_ptr->get_points()[inner_cnt].rotate(position+rotation_hotspot, Angle(rotate_angle, AngleUnit::degrees));
 		}
 	}
 
@@ -214,12 +214,12 @@ void CollisionOutline_Impl::set_angle(const Angle &angle)
 		std::vector<Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			contour_ptr->get_sub_circles()[inner_cnt].position.rotate(position+rotation_hotspot, Angle(rotate_angle, angle_degrees));
+			contour_ptr->get_sub_circles()[inner_cnt].position.rotate(position+rotation_hotspot, Angle(rotate_angle, AngleUnit::degrees));
 		}
 	}
 
 	// Rotate our "radius" too
-	minimum_enclosing_disc.position.rotate(position+rotation_hotspot, Angle(rotate_angle,angle_degrees));
+	minimum_enclosing_disc.position.rotate(position+rotation_hotspot, Angle(rotate_angle,AngleUnit::degrees));
 }
 
 void CollisionOutline_Impl::set_scale(float new_scale_x, float new_scale_y)

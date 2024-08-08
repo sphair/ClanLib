@@ -50,8 +50,8 @@ private:
 	clan::Canvas canvas;
 	clan::Font font;
 
-	double tri_x_pos = 0;
-	double tri_y_pos = 0;
+	double tri_x_pos = 200.0f;
+	double tri_y_pos = 200.0f;
 	double other_x_pos = 0;
 	double other_y_pos = 0;
 

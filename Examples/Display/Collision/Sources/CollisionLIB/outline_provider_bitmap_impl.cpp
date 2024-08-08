@@ -52,7 +52,7 @@ OutlineProviderBitmap_Impl::OutlineProviderBitmap_Impl(
 	last_point(0,0),
 	last_dir(DIR_LEFT)
 {
-	if( pbuf.get_format() != tf_rgba8 )
+	if( pbuf.get_format() != TextureFormat::rgba8 )
 	{
 		// the image contains no alpha - add only a rectangle
 		Contour contour;
