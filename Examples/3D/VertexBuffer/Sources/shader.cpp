@@ -108,69 +108,72 @@ const char Shader::fragment_hlsl[] =
 	"	return output;\n"
 	"}\n";
 
-const char Shader::vertex_glsl[] =
-	"\n"
-	"#version 150\n"
-	"\n"
-	"in vec3 InPosition;"
-	"in vec3 InNormal;"
-	"in vec4 InMaterialAmbient;"
-	"layout (std140) uniform ProgramUniforms\n"
-	"{\n"
-	"	mat4 cl_ModelViewMatrix;\n"
-	"	mat4 cl_ModelViewProjectionMatrix;\n"
-	"	mat3 cl_NormalMatrix;\n"
-	"	vec4 padding;\n"
-	"	vec4 LightDiffuse;\n"
-	"	vec4 LightAmbient;\n"
-	"	vec3 LightVector;\n"
-	"};\n"
-	"out vec3 WorldSpaceNormal; \n"
-	"out vec4 ObjPos;\n"
-	"flat out vec4 MaterialAmbient;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
-	"	gl_Position = cl_ModelViewProjectionMatrix * in_position;\n"
-	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
-	"   MaterialAmbient = InMaterialAmbient;\n"
-	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
-	"}\n"
-	;
+const char Shader::vertex_glsl[] = R"(
+#version 430 core
 
-const char Shader::fragment_glsl[] =
-	"\n"
-	"#version 150\n"
-	"\n"
-	"in vec3 WorldSpaceNormal; \n"
-	"in vec4 ObjPos;\n"
-	"flat in vec4 MaterialAmbient;\n"
-	"out vec4 cl_FragColor;\n"
-	"layout (std140) uniform ProgramUniforms\n"
-	"{\n"
-	"	mat4 cl_ModelViewMatrix;\n"
-	"	mat4 cl_ModelViewProjectionMatrix;\n"
-	"	mat3 cl_NormalMatrix;\n"
-	"	vec4 padding;\n"
-	"	vec4 LightDiffuse;\n"
-	"	vec4 LightAmbient;\n"
-	"	vec3 LightVector;\n"
-	"};\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	vec3 eye = -normalize(ObjPos.xyz); \n"
-	"	vec4 diff = vec4(0); \n"
-	"\n"
-	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
-	"	diff += LightDiffuse * nDotL;\n"
-	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
-	"	cl_FragColor = LightAmbient * final_texture_color + diff * final_texture_color;\n"
-	"	cl_FragColor.a = MaterialAmbient.a;\n"
-	"}\n"
-	;
+layout(location = 0) in vec3 InPosition;
+layout(location = 1) in vec3 InNormal;
+layout(location = 2) in vec4 InMaterialAmbient;
+
+layout (std140) uniform ProgramUniforms
+{
+    mat4 cl_ModelViewMatrix;
+    mat4 cl_ModelViewProjectionMatrix;
+    mat3 cl_NormalMatrix;
+    vec4 padding;
+    vec4 LightDiffuse;
+    vec4 LightAmbient;
+    vec3 LightVector;
+};
+
+out vec3 WorldSpaceNormal; 
+out vec4 ObjPos;
+flat out vec4 MaterialAmbient;
+
+void main()
+{
+    vec4 in_position = vec4(InPosition, 1.0);
+    gl_Position = cl_ModelViewProjectionMatrix * in_position;
+    WorldSpaceNormal = normalize(cl_NormalMatrix * InNormal);
+    MaterialAmbient = InMaterialAmbient;
+    ObjPos = cl_ModelViewMatrix * in_position;
+}
+)";
+
+const char Shader::fragment_glsl[] = R"(
+#version 430 core
+
+in vec3 WorldSpaceNormal; 
+in vec4 ObjPos;
+flat in vec4 MaterialAmbient;
+
+out vec4 cl_FragColor;
+
+layout (std140) uniform ProgramUniforms
+{
+    mat4 cl_ModelViewMatrix;
+    mat4 cl_ModelViewProjectionMatrix;
+    mat3 cl_NormalMatrix;
+    vec4 padding;
+    vec4 LightDiffuse;
+    vec4 LightAmbient;
+    vec3 LightVector;
+};
+
+void main()
+{
+    vec3 eye = -normalize(ObjPos.xyz); 
+    vec4 diff = vec4(0);
+
+    vec3 world_space_normal = normalize(WorldSpaceNormal);
+    float nDotL = max(0.0, dot(world_space_normal, LightVector)); 
+    diff += LightDiffuse * nDotL;
+
+    vec4 final_texture_color = vec4(MaterialAmbient.rgb, 1.0);
+    cl_FragColor = LightAmbient * final_texture_color + diff * final_texture_color;
+    cl_FragColor.a = MaterialAmbient.a;
+}
+)";
 
 Shader::Shader(GraphicContext &gc)
 {

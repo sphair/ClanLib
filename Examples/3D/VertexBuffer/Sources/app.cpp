@@ -74,7 +74,7 @@ App::App()
 	std::vector<Vec3f> object_normals;
 	std::vector<Vec4f> object_material_ambient;
 
-	const int num_cubes = 200;
+	const int num_cubes = 400;
 	object_positions.reserve(num_cubes * 6 * 6);	// 6 faces, and 6 vertices per face
 	object_normals.reserve(num_cubes * 6 * 6);
 	object_material_ambient.reserve(num_cubes * 6 * 6);
