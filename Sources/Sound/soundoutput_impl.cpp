@@ -87,6 +87,11 @@ namespace clan
 		}
 	}
 
+	void SoundOutput_Impl::stop_all()
+	{
+		sessions.clear();
+	}
+
 	void SoundOutput_Impl::start_mixer_thread()
 	{
 		stop_flag = false;

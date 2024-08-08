@@ -94,6 +94,8 @@ namespace clan
 		/// \brief Mixes a single fragment and stores the result in stereo_buffer.
 		void mix_fragment();
 
+		void stop_all();
+
 	private:
 		/// \brief Worker thread for output device. Mixes the audio and sends it to write_fragment.
 		void mixer_thread();

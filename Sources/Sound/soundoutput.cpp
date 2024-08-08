@@ -155,6 +155,8 @@ namespace clan
 
 	void SoundOutput::stop_all()
 	{
+		if (impl)
+			impl->stop_all();
 	}
 
 	void SoundOutput::set_global_volume(float volume)
