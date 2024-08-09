@@ -83,14 +83,14 @@ App::App()
 	extract_highlights_shader = clan::ProgramObject::load(canvas, "Resources/highlights_vs.glsl", "Resources/highlights_fs.glsl");
 	extract_highlights_shader.bind_attribute_location(0, "Position");
 	extract_highlights_shader.bind_attribute_location(1, "TexCoord0");
-	//extract_highlights_shader.bind_frag_data_location(0, "cl_FragColor");
+	extract_highlights_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!extract_highlights_shader.link())
 		throw clan::Exception("Unable to link hightlights shader program: Error:" + extract_highlights_shader.get_info_log());
 
 	bloom_combine_shader = clan::ProgramObject::load(canvas, "Resources/bloom_vs.glsl", "Resources/bloom_fs.glsl");
 	bloom_combine_shader.bind_attribute_location(0, "Position");
 	bloom_combine_shader.bind_attribute_location(1, "TexCoord0");
-	//bloom_combine_shader.bind_frag_data_location(0, "cl_FragColor");
+	bloom_combine_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!bloom_combine_shader.link())
 		throw clan::Exception("Unable to link bloom shader program: Error:" + bloom_combine_shader.get_info_log());
 

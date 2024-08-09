@@ -101,6 +101,12 @@ private:
 	std::shared_ptr<clan::CheckBoxView> checkbox_blending;
 
 	std::shared_ptr<clan::ListBoxView> listbox_logic;
+	std::shared_ptr<clan::ListBoxView> listbox1;
+	std::shared_ptr<clan::ListBoxView> listbox2;
+	std::shared_ptr<clan::ListBoxView> listbox3;
+	std::shared_ptr<clan::ListBoxView> listbox4;
+	std::shared_ptr<clan::ListBoxView> listbox5;
+	std::shared_ptr<clan::ListBoxView> listbox6;
 
 };
 

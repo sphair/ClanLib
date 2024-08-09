@@ -111,36 +111,35 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 	listbox_logic->func_selection_changed() = clan::bind_member(this, &Options::on_logic_selected);
 	listbox_logic->set_selected_item(0);
 
-	std::shared_ptr<clan::ListBoxView> listbox;
-	listbox = create_listbox(400, 40, "COLOR EQUATION");
-	insert_equation(listbox);
-	listbox->func_selection_changed() = [=](){on_equation_selected(listbox, 0); };
-	listbox->set_selected_item(0);
+	listbox1 = create_listbox(400, 40, "COLOR EQUATION");
+	insert_equation(listbox1);
+	listbox1->func_selection_changed() = [this](){on_equation_selected(listbox1, 0); };
+	listbox1->set_selected_item(0);
 
-	listbox = create_listbox(650, 40, "ALPHA EQUATION");
-	insert_equation(listbox);
-	listbox->func_selection_changed() = [=](){on_equation_selected(listbox, 1); };
-	listbox->set_selected_item(0);
+	listbox2 = create_listbox(650, 40, "ALPHA EQUATION");
+	insert_equation(listbox2);
+	listbox2->func_selection_changed() = [this](){on_equation_selected(listbox2, 1); };
+	listbox2->set_selected_item(0);
 
-	listbox = create_listbox(400, 180, "SOURCE FUNCTION");
-	insert_blend(listbox);
-	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 0); };
-	listbox->set_selected_item(6);
+	listbox3 = create_listbox(400, 180, "SOURCE FUNCTION");
+	insert_blend(listbox3);
+	listbox3->func_selection_changed() = [this](){on_blend_selected(listbox3, 0); };
+	listbox3->set_selected_item(6);
 
-	listbox = create_listbox(650, 180, "DEST FUNCTION");
-	insert_blend(listbox);
-	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 1); };
-	listbox->set_selected_item(7);
+	listbox4 = create_listbox(650, 180, "DEST FUNCTION");
+	insert_blend(listbox4);
+	listbox4->func_selection_changed() = [this](){on_blend_selected(listbox4, 1); };
+	listbox4->set_selected_item(7);
 
-	listbox = create_listbox(900, 180, "SOURCE ALPHA FUNCTION");
-	insert_blend(listbox);
-	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 2); };
-	listbox->set_selected_item(6);
+	listbox5 = create_listbox(900, 180, "SOURCE ALPHA FUNCTION");
+	insert_blend(listbox5);
+	listbox5->func_selection_changed() = [this](){on_blend_selected(listbox5, 2); };
+	listbox5->set_selected_item(6);
 
-	listbox = create_listbox(1150, 180, "DEST ALPHA FUNCTION");
-	insert_blend(listbox);
-	listbox->func_selection_changed() = [=](){on_blend_selected(listbox, 3); };
-	listbox->set_selected_item(7);
+	listbox6 = create_listbox(1150, 180, "DEST ALPHA FUNCTION");
+	insert_blend(listbox6);
+	listbox6->func_selection_changed() = [this](){on_blend_selected(listbox6, 3); };
+	listbox6->set_selected_item(7);
 
 	update_all_slider_text();
 

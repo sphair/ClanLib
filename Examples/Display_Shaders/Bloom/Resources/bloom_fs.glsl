@@ -8,7 +8,7 @@ uniform sampler2D BloomTexture;
 uniform float BloomIntensity;
 uniform float BloomSaturation;
 out vec2 TexCoord;
-out vec4 fragColor;
+out vec4 cl_fragColor;
 
 vec4 AdjustSaturation(in vec4 color, in float saturation)
 {
@@ -33,5 +33,5 @@ vec4 BloomCombine()
 
 void main() 
 {
-    fragColor = BloomCombine();
+    cl_fragColor = BloomCombine();
 }

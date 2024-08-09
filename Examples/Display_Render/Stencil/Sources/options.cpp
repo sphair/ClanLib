@@ -70,21 +70,20 @@ Options::Options(clan::Canvas &canvas) : clan::TextureWindow(canvas)
 	checkbox_circle->func_state_changed() = bind_member(this, &Options::checkbox_circle_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-	std::shared_ptr<clan::ListBoxView> listbox;
-	listbox = create_listbox(600, 40, "Compare Function");
-	insert_compare(listbox);
-	listbox->func_selection_changed() = [=](){on_equation_compare(listbox); };
-	listbox->set_selected_item(3);
+	listbox1 = create_listbox(600, 40, "Compare Function");
+	insert_compare(listbox1);
+	listbox1->func_selection_changed() = [this](){on_equation_compare(listbox1); };
+	listbox1->set_selected_item(3);
 
-	listbox = create_listbox(600, 180, "Pass Operation");
-	insert_passfail(listbox);
-	listbox->func_selection_changed() = [=](){on_equation_passfail(listbox, true); };
-	listbox->set_selected_item(0);
+	listbox2 = create_listbox(600, 180, "Pass Operation");
+	insert_passfail(listbox2);
+	listbox2->func_selection_changed() = [this](){on_equation_passfail(listbox2, true); };
+	listbox2->set_selected_item(0);
 
-	listbox = create_listbox(850, 180, "Fail Operation");
-	insert_passfail(listbox);
-	listbox->func_selection_changed() = [=](){on_equation_passfail(listbox, false); };
-	listbox->set_selected_item(3);
+	listbox3 = create_listbox(850, 180, "Fail Operation");
+	insert_passfail(listbox3);
+	listbox3->func_selection_changed() = [this](){on_equation_passfail(listbox3, false); };
+	listbox3->set_selected_item(3);
 
 
 	update_all_slider_text();

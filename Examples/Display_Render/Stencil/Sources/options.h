@@ -74,6 +74,9 @@ private:
 	std::shared_ptr<clan::LabelView> label_comparefunc;
 	std::shared_ptr<clan::LabelView> label_pass;
 	std::shared_ptr<clan::LabelView> label_fail;
+	std::shared_ptr<clan::ListBoxView> listbox1;
+	std::shared_ptr<clan::ListBoxView> listbox2;
+	std::shared_ptr<clan::ListBoxView> listbox3;
 
 };
 
