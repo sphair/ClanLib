@@ -142,7 +142,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp" />
+    <ClCompile Include="Sources\theme.cpp" />
     <ClCompile Include="Sources\example.cpp" />
     <ClCompile Include="Sources\graphic_store.cpp" />
     <ClCompile Include="Sources\model.cpp" />
@@ -156,7 +156,7 @@
     <ClCompile Include="Sources\shader_color.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ThemeAero\Sources\theme.h" />
+    <ClInclude Include="Sources\theme.h" />
     <ClInclude Include="Sources\example.h" />
     <ClInclude Include="Sources\framerate_counter.h" />
     <ClInclude Include="Sources\graphic_store.h" />

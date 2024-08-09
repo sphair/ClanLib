@@ -1,7 +1,7 @@
 EXAMPLE_BIN=stencil
 OBJF = ./Sources/options.o \
 ./Sources/app.o \
-../../ThemeAero/Sources/theme.o \
+./Sources/theme.o \
 ./Sources/precomp.o
 
 LIBS=clanApp clanDisplay clanCore clanGL clanUI

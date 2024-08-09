@@ -141,7 +141,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp" />
+    <ClCompile Include="Sources\theme.cpp" />
     <ClCompile Include="Sources\Font.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -150,7 +150,7 @@
     <ClCompile Include="Sources\settings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ThemeAero\Sources\theme.h" />
+    <ClInclude Include="Sources\theme.h" />
     <ClInclude Include="Sources\Font.h" />
     <ClInclude Include="Sources\precomp.h" />
   </ItemGroup>

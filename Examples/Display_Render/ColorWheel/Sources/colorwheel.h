@@ -27,7 +27,7 @@
 */
 
 #pragma once
-#include "../../../ThemeAero/Sources/theme.h"
+#include "theme.h"
 
 class ColorWheelRadioRow : public clan::View
 {

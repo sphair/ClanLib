@@ -23,40 +23,24 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
+**    Artem Khomenko
 */
 
 #pragma once
 
-#include "theme.h"
-
-class Options : public clan::TextureWindow
+class Theme
 {
 public:
-	Options(clan::Canvas &canvas);
-	virtual ~Options();
+	static std::shared_ptr<clan::ScrollBarView> create_scrollbar(bool isHorizontal = true);
+	static void initialize_scrollbar(const std::shared_ptr<clan::ScrollBarView> &scrollbar, bool isHorizontal);
 
-	int outline_size = 0;
-	int group_size = 512;
-	bool options_changed = true;
-
-private:
-	std::shared_ptr<clan::CheckBoxView> create_checkbox(int xpos, int ypos, const std::string &name, bool state);
-	std::shared_ptr<clan::SliderView> create_slider(int xpos, int ypos);
-	void set_value(std::shared_ptr<clan::SliderView> slider, float value, float max_value);
-	float get_value(std::shared_ptr<clan::SliderView> slider);
-	std::shared_ptr<clan::LabelView> create_slider_label(int xpos, int ypos);
-
-	void update_all_slider_text();
-	void slider_outline_size_changed();
-	void slider_group_size_changed();
-
-private:
-	std::shared_ptr<clan::SliderView> slider_outline_size;
-	std::shared_ptr<clan::LabelView> label_outline_size;
-	std::shared_ptr<clan::SliderView> slider_group_size;
-	std::shared_ptr<clan::LabelView> label_group_size;
-
+	static std::shared_ptr<clan::ButtonView> create_button();
+	static std::shared_ptr<clan::SliderView> create_slider();
+	static std::shared_ptr<clan::CheckBoxView> create_checkbox();
+	static std::shared_ptr<clan::RadioButtonView> create_radiobutton();
+	static std::shared_ptr<clan::LabelView> create_label(bool subpixel = false);
+	static std::shared_ptr<clan::ListBoxView> create_listbox();
+	static std::shared_ptr<clan::LabelView> create_listbox_label(const std::string &text);
 };
-
-

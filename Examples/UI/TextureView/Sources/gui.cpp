@@ -29,7 +29,7 @@
 
 #include "precomp.h"
 #include "gui.h"
-#include "../../../ThemeAero/Sources/theme.h"
+#include "theme.h"
 
 clan::ApplicationInstance<GUI> clanapp;
 

@@ -33,7 +33,7 @@
     <ClCompile Include="Sources\shader_color.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp">
+    <ClCompile Include="Sources\theme.cpp">
       <Filter>Sources\Theme</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClInclude Include="Sources\shader_color.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ThemeAero\Sources\theme.h">
+    <ClInclude Include="Sources\theme.h">
       <Filter>Sources\Theme</Filter>
     </ClInclude>
   </ItemGroup>

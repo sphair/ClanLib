@@ -30,7 +30,7 @@
 
 #include "precomp.h"
 #include "helloworld.h"
-#include "../../../ThemeAero/Sources/theme.h"
+#include "theme.h"
 
 using namespace clan;
 

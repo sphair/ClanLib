@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../../../ThemeAero/Sources/theme.h"
+#include "theme.h"
 
 class Options : public clan::TextureWindow
 {

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Sources\precomp.cpp" />
-    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp">
+    <ClCompile Include="Sources\theme.cpp">
       <Filter>Theme</Filter>
     </ClCompile>
     <ClCompile Include="Sources\options.cpp" />
@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\precomp.h" />
-    <ClInclude Include="..\..\ThemeAero\Sources\theme.h">
+    <ClInclude Include="Sources\theme.h">
       <Filter>Theme</Filter>
     </ClInclude>
     <ClInclude Include="Sources\options.h" />

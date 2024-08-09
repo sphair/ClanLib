@@ -2,7 +2,7 @@ EXAMPLE_BIN=texturegroup
 OBJF = \
 ./Sources/atlas.o \
 ./Sources/precomp.o \
-../../ThemeAero/Sources/theme.o \
+./Sources/theme.o \
 ./Sources/options.o
 
 CXXFLAGS += -I Sources -I ./

@@ -30,7 +30,7 @@
 
 #include "precomp.h"
 #include "app.h"
-#include "../../../ThemeAero/Sources/theme.h"
+#include "theme.h"
 #include <ClanLib/UI/SystemDialogs/folder_browse_dialog.h>
 #include <ClanLib/UI/SystemDialogs/open_file_dialog.h>
 #include <ClanLib/UI/SystemDialogs/save_file_dialog.h>

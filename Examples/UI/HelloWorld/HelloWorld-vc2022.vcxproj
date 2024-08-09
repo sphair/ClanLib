@@ -136,7 +136,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ThemeAero\Sources\theme.cpp" />
+    <ClCompile Include="Sources\theme.cpp" />
     <ClCompile Include="Sources\helloworld.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -144,7 +144,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ThemeAero\Sources\theme.h" />
+    <ClInclude Include="Sources\theme.h" />
     <ClInclude Include="Sources\helloworld.h" />
     <ClInclude Include="Sources\precomp.h" />
   </ItemGroup>
