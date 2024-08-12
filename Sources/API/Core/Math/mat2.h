@@ -65,11 +65,7 @@ namespace clan
 				matrix[i] = 0;
 		}
 		/// \brief Constructs a 2x2 matrix (copied)
-		Mat2(const Mat2<Type> &copy)
-		{
-			for (int i = 0; i < 4; i++)
-				matrix[i] = copy.matrix[i];
-		}
+		Mat2(const Mat2<Type> &copy) = default;
 
 		/// \brief Constructs a 2x2 matrix (copied from a 3d matrix)
 		explicit Mat2(const Mat3<Type> &copy);
@@ -201,7 +197,7 @@ namespace clan
 		const Type &operator[](unsigned int i) const { return matrix[i]; }
 
 		/// \brief Copy assignment operator.
-		Mat2<Type> &operator =(const Mat2<Type> &copy) { memcpy(matrix, copy.matrix, sizeof(matrix)); return *this; }
+		Mat2<Type> &operator =(const Mat2<Type> &copy) = default;
 
 		/// \brief Copy assignment operator.
 		Mat2<Type> &operator =(const Mat4<Type> &copy);

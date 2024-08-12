@@ -62,11 +62,11 @@ namespace clan
 		Vec3<Type> v;
 
 		LineRay3x() : p(), v() {}
-		LineRay3x(const LineRay3x<Type> &copy) : p(copy.p), v(copy.v) {}
+		LineRay3x(const LineRay3x<Type> &copy) = default;
 		LineRay3x(const Vec3<Type> &point_p, const Vec3<Type> &direction_v) : p(point_p), v(direction_v) {}
 
 		/// \brief = operator.
-		LineRay3x<Type> &operator = (const LineRay3x<Type>& copy) { p = copy.p; v = copy.v; return *this; }
+		LineRay3x<Type> &operator = (const LineRay3x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const LineRay3x<Type>& line) const { return ((p == line.p) && (v == line.v)); }
@@ -90,11 +90,11 @@ namespace clan
 		Vec2<Type> v;
 
 		LineRay2x() : p(), v() {}
-		LineRay2x(const LineRay2x<Type> &copy) : p(copy.p), v(copy.v) {}
+		LineRay2x(const LineRay2x<Type> &copy) = default;
 		LineRay2x(const Vec2<Type> &point_p, const Vec2<Type> &direction_v) : p(point_p), v(direction_v) {}
 
 		/// \brief = operator.
-		LineRay2x<Type> &operator = (const LineRay2x<Type>& copy) { p = copy.p; v = copy.v; return *this; }
+		LineRay2x<Type> &operator = (const LineRay2x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const LineRay2x<Type>& line) const { return ((p == line.p) && (v == line.v)); }

@@ -58,7 +58,7 @@ namespace clan
 		Vec3<Type> q;
 
 		Line3x() : p(), q() {}
-		Line3x(const Line3x<Type> &copy) : p(copy.p), q(copy.q) {}
+		Line3x(const Line3x<Type> &copy) = default;
 		Line3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q) : p(point_p), q(point_q) {}
 
 		/// \brief Return the intersection of this and other line
@@ -70,7 +70,7 @@ namespace clan
 		Vec3<Type> get_intersection(const Line3x<Type> &second, bool &intersect, Type range = (Type) 0.5) const;
 
 		/// \brief = operator.
-		Line3x<Type> &operator = (const Line3x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		Line3x<Type> &operator = (const Line3x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const Line3x<Type>& line) const { return ((p == line.p) && (q == line.q)); }
@@ -93,7 +93,7 @@ namespace clan
 		Vec2<Type> q;
 
 		Line2x() : p(), q() { }
-		Line2x(const Line2x<Type> &copy) : p(copy.p), q(copy.q) {}
+		Line2x(const Line2x<Type> &copy) = default;
 		Line2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q) : p(point_p), q(point_q) {}
 		Line2x(const Vec2<Type> &point_p, Type gradient) : p(point_p), q(static_cast<Type> (1), gradient) {}
 
@@ -111,7 +111,7 @@ namespace clan
 		Type point_right_of_line(Vec2<Type> point) const { return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y); }
 
 		/// \brief = operator.
-		Line2x<Type> &operator = (const Line2x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		Line2x<Type> &operator = (const Line2x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const Line2x<Type>& line) const { return ((p == line.p) && (q == line.q)); }

@@ -53,7 +53,7 @@ namespace clan
 		Vec2<Type> r;
 
 		Trianglex() : p(), q(), r() {}
-		Trianglex(const Trianglex<Type> &copy) : p(copy.p), q(copy.q), r(copy.r) {}
+		Trianglex(const Trianglex<Type> &copy) = default;
 		Trianglex(const Vec2<Type> &point_p, const Vec2<Type> &point_q, const Vec2<Type> &point_r) : p(point_p), q(point_q), r(point_r) {}
 
 		/// \brief Return true if the point is inside the triangle.
@@ -62,7 +62,7 @@ namespace clan
 		/// \return true if the point is inside the triangle
 		bool point_inside(const Vec2<Type> &point) const;
 
-		Trianglex<Type> &operator = (const Trianglex<Type>& copy) { p = copy.p; q = copy.q; r = copy.r; return *this; }
+		Trianglex<Type> &operator = (const Trianglex<Type>& copy) = default;
 		bool operator == (const Trianglex<Type>& triangle) const { return ((p == triangle.p) && (q == triangle.q) && (r == triangle.r)); }
 		bool operator != (const Trianglex<Type>& triangle) const { return ((p != triangle.p) || (q != triangle.q) || (r != triangle.r)); }
 	};

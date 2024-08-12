@@ -65,7 +65,7 @@ namespace clan
 		Vec3<Type> q;
 
 		LineSegment3x() : p(), q() {}
-		LineSegment3x(const LineSegment3x<Type> &copy) : p(copy.p), q(copy.q) {}
+		LineSegment3x(const LineSegment3x<Type> &copy) = default;
 		LineSegment3x(const Vec3<Type> &point_p, const Vec3<Type> &point_q) : p(point_p), q(point_q) {}
 
 		/// \brief Get the midpoint of this line
@@ -81,7 +81,7 @@ namespace clan
 		Type point_distance(const Vec3<Type> &point, Vec3<Type> &dest_intercept) const;
 
 		/// \brief = operator.
-		LineSegment3x<Type> &operator = (const LineSegment3x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		LineSegment3x<Type> &operator = (const LineSegment3x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const LineSegment3x<Type>& line) const { return ((p == line.p) && (q == line.q)); }
@@ -105,7 +105,7 @@ namespace clan
 		Vec2<Type> q;
 
 		LineSegment2x() : p(), q() {}
-		LineSegment2x(const LineSegment2x<Type> &copy) : p(copy.p), q(copy.q) {}
+		LineSegment2x(const LineSegment2x<Type> &copy) = default;
 		LineSegment2x(const Vec2<Type> &point_p, const Vec2<Type> &point_q) : p(point_p), q(point_q) {}
 
 		/// \brief Get the midpoint of this line
@@ -161,7 +161,7 @@ namespace clan
 		LineSegment2x<Type> &clip(const Rectx<Type> &rect, bool &clipped);
 
 		/// \brief = operator.
-		LineSegment2x<Type> &operator = (const LineSegment2x<Type>& copy) { p = copy.p; q = copy.q; return *this; }
+		LineSegment2x<Type> &operator = (const LineSegment2x<Type>& copy) = default;
 
 		/// \brief == operator.
 		bool operator == (const LineSegment2x<Type>& line) const { return ((p == line.p) && (q == line.q)); }

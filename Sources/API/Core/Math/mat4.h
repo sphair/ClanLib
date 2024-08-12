@@ -85,11 +85,7 @@ namespace clan
 		}
 
 		/// \brief Constructs a 4x4 matrix (copied)
-		Mat4(const Mat4<Type> &copy)
-		{
-			for (int i = 0; i < 16; i++)
-				matrix[i] = copy.matrix[i];
-		}
+		Mat4(const Mat4<Type> &copy) = default;
 
 		/// \brief Constructs a 4x4 matrix (copied from a 2d matrix)
 		explicit Mat4(const Mat2<Type> &copy);
@@ -468,7 +464,7 @@ namespace clan
 		const Type &operator[](unsigned int i) const { return matrix[i]; }
 
 		/// \brief Copy assignment operator.
-		Mat4<Type> &operator =(const Mat4<Type> &copy) { memcpy(matrix, copy.matrix, sizeof(matrix)); return *this; }
+		Mat4<Type> &operator =(const Mat4<Type> &copy) = default;
 
 		/// \brief Copy assignment operator.
 		Mat4<Type> &operator =(const Mat3<Type> &copy);

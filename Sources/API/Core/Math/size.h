@@ -67,8 +67,7 @@ namespace clan
 		/// \brief Constructs a size structure.
 		///
 		/// \param s = Size structure to construct this one from.
-		Sizex(const Sizex<Type> &s)
-			: width(s.width), height(s.height) {}
+		Sizex(const Sizex<Type> &s) = default;
 
 		/// \brief Size width.
 		Type width;

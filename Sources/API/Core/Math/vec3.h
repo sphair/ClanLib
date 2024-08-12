@@ -237,7 +237,7 @@ namespace clan
 		void operator /= (Type value) { x /= value; y /= value; z /= value; }
 
 		/// \brief = operator.
-		Vec3<Type> &operator = (const Vec3<Type>& vector) { x = vector.x; y = vector.y; z = vector.z; return *this; }
+		Vec3<Type> &operator = (const Vec3<Type>& vector) = default;
 
 		/// \brief == operator.
 		bool operator == (const Vec3<Type>& vector) const { return ((x == vector.x) && (y == vector.y) && (z == vector.z)); }
@@ -362,7 +362,7 @@ namespace clan
 	inline Vec3<int>::Vec3(const Vec3<double> &copy) { x = (int)floor(copy.x + 0.5); y = (int)floor(copy.y + 0.5); z = (int)floor(copy.z + 0.5); }
 
 	template<>
-	inline Vec3<int>::Vec3(const Vec3<int> &copy) { x = (int)copy.x; y = (int)copy.y; z = (int)copy.z; }
+	inline Vec3<int>::Vec3(const Vec3<int> &copy) = default;
 
 	template<>
 	inline Vec3<unsigned int>::Vec3(const Vec3<float> &copy) { x = (unsigned int)floor(copy.x + 0.5f); y = (unsigned int)floor(copy.y + 0.5f); z = (unsigned int)floor(copy.z + 0.5f); }
@@ -374,7 +374,7 @@ namespace clan
 	inline Vec3<unsigned int>::Vec3(const Vec3<int> &copy) { x = (unsigned int)copy.x; y = (unsigned int)copy.y; z = (unsigned int)copy.z; }
 
 	template<>
-	inline Vec3<float>::Vec3(const Vec3<float> &copy) { x = (float)copy.x; y = (float)copy.y; z = (float)copy.z; }
+	inline Vec3<float>::Vec3(const Vec3<float> &copy) = default;
 
 	template<>
 	inline Vec3<float>::Vec3(const Vec3<double> &copy) { x = (float)copy.x; y = (float)copy.y; z = (float)copy.z; }
@@ -386,7 +386,7 @@ namespace clan
 	inline Vec3<double>::Vec3(const Vec3<float> &copy) { x = (double)copy.x; y = (double)copy.y; z = (double)copy.z; }
 
 	template<>
-	inline Vec3<double>::Vec3(const Vec3<double> &copy) { x = (double)copy.x; y = (double)copy.y; z = (double)copy.z; }
+	inline Vec3<double>::Vec3(const Vec3<double> &copy)  = default;
 
 	template<>
 	inline Vec3<double>::Vec3(const Vec3<int> &copy) { x = (double)copy.x; y = (double)copy.y; z = (double)copy.z; }

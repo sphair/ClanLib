@@ -40,19 +40,13 @@ namespace clan
 		{
 		}
 
-		HalfFloat(const HalfFloat &other) : value(other.value)
-		{
-		}
+		HalfFloat(const HalfFloat &other) = default;
 
 		HalfFloat(float v) : value(float_to_half(v))
 		{
 		}
 
-		HalfFloat &operator =(const HalfFloat &other)
-		{
-			value = other.value;
-			return *this;
-		}
+		HalfFloat &operator =(const HalfFloat &other) = default;
 
 		HalfFloat &operator =(const float v)
 		{

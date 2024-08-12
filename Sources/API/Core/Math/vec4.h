@@ -284,7 +284,7 @@ namespace clan
 		void operator /= (Type value) { x /= value; y /= value; z /= value; w /= value; }
 
 		/// \brief = operator.
-		Vec4<Type> &operator = (const Vec4<Type>& vector) { x = vector.x; y = vector.y; z = vector.z; w = vector.w; return *this; }
+		Vec4<Type> &operator = (const Vec4<Type>& vector) = default;
 
 		/// \brief == operator.
 		bool operator == (const Vec4<Type>& vector) const { return ((x == vector.x) && (y == vector.y) && (z == vector.z) && (w == vector.w)); }

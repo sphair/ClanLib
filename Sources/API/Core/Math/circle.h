@@ -52,11 +52,11 @@ namespace clan
 		Circlex(Type x, Type y, Type radius) : position(x, y), radius(radius) { }
 		Circlex(const Vec2<Type> &p, Type radius) : position(p), radius(radius) { }
 		Circlex() : position(), radius(static_cast<Type> (0))  { }
-		Circlex(const Circlex<Type> &copy) : position(copy.position), radius(copy.radius) {}
+		Circlex(const Circlex<Type> &copy) = default;
 
 		bool is_inside(const Vec2<Type> &point) { return radius >= position.distance(point); }
 
-		Circlex<Type> &operator = (const Circlex<Type>& copy) { position = copy.position; radius = copy.radius; return *this; }
+		Circlex<Type> &operator = (const Circlex<Type>& copy) = default;
 		bool operator == (const Circlex<Type>& circle) const { return ((position == circle.position) && (radius == circle.radius)); }
 		bool operator != (const Circlex<Type>& circle) const { return ((position != circle.position) || (radius != circle.radius)); }
 	};

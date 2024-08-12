@@ -248,7 +248,7 @@ namespace clan
 		void operator /= (Type value) { x /= value; y /= value; }
 
 		/// \brief = operator.
-		Vec2<Type> &operator = (const Vec2<Type>& vector) { x = vector.x; y = vector.y; return *this; }
+		Vec2<Type> &operator = (const Vec2<Type>& vector) = default;
 
 		/// \brief == operator.
 		bool operator == (const Vec2<Type>& vector) const { return ((x == vector.x) && (y == vector.y)); }
@@ -370,7 +370,7 @@ namespace clan
 	inline Vec2<int>::Vec2(const Vec2<double> &copy) { x = (int)std::floor(copy.x + 0.5); y = (int)std::floor(copy.y + 0.5); }
 
 	template<>
-	inline Vec2<int>::Vec2(const Vec2<int> &copy) { x = (int)copy.x; y = (int)copy.y; }
+	inline Vec2<int>::Vec2(const Vec2<int> &copy) = default;
 
 	template<>
 	inline Vec2<unsigned int>::Vec2(const Vec2<float> &copy) { x = (unsigned int)std::floor(copy.x + 0.5f); y = (unsigned int)std::floor(copy.y + 0.5f); }
@@ -382,7 +382,7 @@ namespace clan
 	inline Vec2<unsigned int>::Vec2(const Vec2<int> &copy) { x = (unsigned int)copy.x; y = (unsigned int)copy.y; }
 
 	template<>
-	inline Vec2<float>::Vec2(const Vec2<float> &copy) { x = (float)copy.x; y = (float)copy.y; }
+	inline Vec2<float>::Vec2(const Vec2<float> &copy) = default;
 
 	template<>
 	inline Vec2<float>::Vec2(const Vec2<double> &copy) { x = (float)copy.x; y = (float)copy.y; }
@@ -394,7 +394,7 @@ namespace clan
 	inline Vec2<double>::Vec2(const Vec2<float> &copy) { x = (double)copy.x; y = (double)copy.y; }
 
 	template<>
-	inline Vec2<double>::Vec2(const Vec2<double> &copy) { x = (double)copy.x; y = (double)copy.y; }
+	inline Vec2<double>::Vec2(const Vec2<double> &copy) = default;
 
 	template<>
 	inline Vec2<double>::Vec2(const Vec2<int> &copy) { x = (double)copy.x; y = (double)copy.y; }
