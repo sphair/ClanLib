@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		SoundProvider_Vorbis_Session(SoundProvider_Vorbis &source);
-		~SoundProvider_Vorbis_Session();
+		~SoundProvider_Vorbis_Session() override;
 
 		int get_num_samples() const override;
 		int get_frequency() const override;

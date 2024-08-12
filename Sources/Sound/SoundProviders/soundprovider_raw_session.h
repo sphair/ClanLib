@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		SoundProvider_Raw_Session(SoundProvider_Raw &source);
-		~SoundProvider_Raw_Session();
+		~SoundProvider_Raw_Session() override;
 
 		int get_num_samples() const override;
 		int get_frequency() const override;

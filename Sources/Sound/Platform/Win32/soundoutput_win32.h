@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		SoundOutput_Win32(int mixing_frequency, int mixing_latency = 50);
-		~SoundOutput_Win32();
+		~SoundOutput_Win32() override;
 
 		/// \brief Called when we have no samples to play - and wants to tell the sound card
 		/// \brief about this possible event.

@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		SoundProvider_Wave_Session(SoundProvider_Wave &source);
-		~SoundProvider_Wave_Session();
+		~SoundProvider_Wave_Session() override;
 
 		int get_num_samples() const override;
 		int get_frequency() const override;

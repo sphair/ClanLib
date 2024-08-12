@@ -50,12 +50,12 @@ namespace clan
 		virtual ~SoundProviderType();
 
 		/// \brief Called to load with this sound provider type.
-		virtual SoundProvider *load(
+		virtual std::unique_ptr<SoundProvider> load(
 			const std::string &filename,
 			bool streamed,
 			const FileSystem &file_system) = 0;
 
-		virtual SoundProvider *load(
+		virtual std::unique_ptr<SoundProvider> load(
 			IODevice &file, bool streamed) = 0;
 	};
 

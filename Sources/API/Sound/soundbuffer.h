@@ -37,7 +37,6 @@ namespace clan
 	/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 	/// \{
 
-	class XMLResourceDocument;
 	class SoundOutput;
 	class SoundProvider;
 	class SoundBuffer_Session;
@@ -46,6 +45,7 @@ namespace clan
 	class IODevice;
 	class FileSystem;
 	class ResourceManager;
+	class XMLResourceDocument;
 
 	/// \brief Sample interface in ClanLib.
 	///
@@ -73,9 +73,6 @@ namespace clan
 			deleted when the soundbuffer is deleted.</p>*/
 
 		SoundBuffer(
-			SoundProvider *provider);
-
-		SoundBuffer(
 			const std::string &fullname,
 			bool streamed = false,
 			const std::string &format = "");
@@ -99,7 +96,7 @@ namespace clan
 		static Resource<SoundBuffer> resource(const std::string &id, const ResourceManager &resources);
 
 		/// \brief Loads a SoundBuffer from a XML resource definition
-		static SoundBuffer load(const std::string &id, const XMLResourceDocument &doc);
+		static SoundBuffer load(const std::string & id, const XMLResourceDocument & doc);
 
 		virtual ~SoundBuffer();
 

@@ -39,43 +39,43 @@ class SoundOutput_MacOSX : public SoundOutput_Impl
 {
 public:
 	SoundOutput_MacOSX(int mixing_frequency, int mixing_latency);
-	~SoundOutput_MacOSX();
-    
+	~SoundOutput_MacOSX() override;
+
 	/// \brief Called when we have no samples to play - and wants to tell the soundcard
 	/// \brief about this possible event.
-	virtual void silence();
-    
+	void silence() override;
+
 	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
-	virtual int get_fragment_size();
-    
+	int get_fragment_size() override;
+
 	/// \brief Writes a fragment to the soundcard.
-	virtual void write_fragment(float *data);
-    
+	void write_fragment(float *data) override;
+
 	/// \brief Waits until output source isn't full anymore.
-	virtual void wait();
+	void wait() override;
 
     /// \brief Called by the mixer thread when it starts
-    virtual void mixer_thread_starting();
-    
+    void mixer_thread_starting() override;
+
     /// \brief Called by the mixer thread when it stops
-    virtual void mixer_thread_stopping();
-    
+    void mixer_thread_stopping() override;
+
 private:
     void audio_queue_callback(AudioQueueRef queue, AudioQueueBufferRef buffer);
     static void static_audio_queue_callback(void *userdata, AudioQueueRef queue, AudioQueueBufferRef buffer);
-    
+
     static const int fragment_buffer_count = 4;
     int frequency, latency;
     int fragment_size;
     int next_fragment, read_cursor;
     int fragments_available;
     DataBuffer fragment_data;
-    
+
     AudioStreamBasicDescription audio_format;
     AudioQueueRef audio_queue;
     AudioQueueBufferRef audio_buffers[fragment_buffer_count];
-    
+
 };
-    
+
 }
 

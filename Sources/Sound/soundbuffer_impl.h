@@ -42,7 +42,7 @@ namespace clan
 		SoundBuffer_Impl();
 		virtual ~SoundBuffer_Impl();
 
-		SoundProvider *provider;
+		std::unique_ptr<SoundProvider> provider;
 		float volume;
 		float pan;
 		std::vector<SoundFilter> filters;

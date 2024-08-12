@@ -66,7 +66,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 //		throw Error("Could not open " + DEFAULT_DSP + ". No sound will be available.");
 	}
 	fcntl(dev_dsp_fd, F_SETFL, fcntl(dev_dsp_fd, F_GETFL) &~ O_NONBLOCK);
-	
+
 #ifndef USE_DRIVER_FRAGSIZE
 	int frag_settings = 0x0003000b; // 0xMMMMSSSS
 		// (where MMMM = num fragments, SSSS = fragment size)
@@ -77,7 +77,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 	}
 
 #endif
-	
+
 	int format = AFMT_S16_NE;
 	ioctl(dev_dsp_fd, SNDCTL_DSP_SETFMT, &format);
 	if (format != AFMT_S16_NE)
@@ -85,7 +85,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 		close(dev_dsp_fd);
 		throw Exception("Requires 16 bit soundcard. No sound will be available.");
 	}
-	
+
 	int stereo = 1;
 	ioctl(dev_dsp_fd, SNDCTL_DSP_STEREO, &stereo);
 	if (stereo != 1)
@@ -93,7 +93,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 		close(dev_dsp_fd);
 		throw Exception("ClanSound: Requires 16 bit stereo capable soundcard. No sound will be available.");
 	}
-	
+
 	int speed = mixing_frequency;
 	ioctl(dev_dsp_fd, SNDCTL_DSP_SPEED, &speed);
 
@@ -103,7 +103,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 		close(dev_dsp_fd);
 		throw Exception("ClanSound: Mixing rate (22.05 kHz) not supported by soundcard.");
 	}
-	
+
 	// Try to improve mixing performance by using the same mixing buffer size
 	// as the sound device does:
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETBLKSIZE, &frag_size);
@@ -118,7 +118,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 
 	start_mixer_thread();
 }
-	
+
 SoundOutput_OSS::~SoundOutput_OSS()
 {
 	stop_mixer_thread();
@@ -167,7 +167,7 @@ void SoundOutput_OSS::write_fragment(float *data)
 	{
 		*(bptr++) = (int) ( *(data++) * 32767.0f );
 	}
-	
+
 
 	write(dev_dsp_fd, &buffer[0], frag_size);
 }

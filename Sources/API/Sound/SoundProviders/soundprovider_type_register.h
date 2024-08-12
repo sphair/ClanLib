@@ -47,20 +47,20 @@ namespace clan
 		}
 
 		/// \brief Called to load static with this sound provider type.
-		virtual SoundProvider *load(
+		std::unique_ptr<SoundProvider> load(
 			const std::string &filename,
 			bool stream,
 			const FileSystem &fs) override
 		{
-			return new SoundProviderClass(filename, fs, stream);
+			return std::make_unique<SoundProviderClass>(filename, fs, stream);
 		}
 
 		/// \brief Called to load static with this sound provider type.
-		virtual SoundProvider *load(
+		std::unique_ptr<SoundProvider> load(
 			IODevice &file,
 			bool stream) override
 		{
-			return new SoundProviderClass(file, stream);
+			return std::make_unique<SoundProviderClass>(file, stream);
 		}
 	};
 

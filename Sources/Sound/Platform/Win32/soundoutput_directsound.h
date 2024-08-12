@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		SoundOutput_DirectSound(int mixing_frequency, int mixing_latency = 50);
-		~SoundOutput_DirectSound();
+		~SoundOutput_DirectSound() override;
 
 		LPDIRECTSOUND directsound;
 		LPDIRECTSOUNDBUFFER soundbuffer;
@@ -53,16 +53,16 @@ namespace clan
 
 		/// \brief Called when we have no samples to play - and wants to tell the sound card
 		/// \brief about this possible event.
-		virtual void silence();
+		void silence() override;
 
 		/// \brief Returns the buffer size used by device (returned as number of [stereo] samples).
-		virtual int get_fragment_size();
+		int get_fragment_size() override;
 
 		/// \brief Writes a fragment to the sound card.
-		virtual void write_fragment(float *data);
+		void write_fragment(float *data) override;
 
 		/// \brief Waits until output source isn't full anymore.
-		virtual void wait();
+		void wait() override;
 
 	private:
 		void release_resources();

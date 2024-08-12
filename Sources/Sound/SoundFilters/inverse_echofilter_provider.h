@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		InverseEchoFilterProvider(int buffer_size);
-		~InverseEchoFilterProvider();
+		~InverseEchoFilterProvider() override;
 
 		void filter(float **sample_data, int num_samples, int channels) override;
 

@@ -29,6 +29,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
 namespace clan
 {
@@ -51,7 +52,7 @@ namespace clan
 			it is.</p>
 			<p>The input provider will be used as a the source for filename,
 			if specified.</p>*/
-		static SoundProvider *load(
+		static std::unique_ptr<SoundProvider>load(
 			const std::string &filename,
 			bool streamed,
 			const FileSystem &fs,
@@ -59,13 +60,13 @@ namespace clan
 			);
 
 		/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
-		static SoundProvider *load(
+		static std::unique_ptr<SoundProvider>load(
 			const std::string &fullname,
 			bool streamed,
 			const std::string &type = std::string());
 
 		/// \brief Loads an sample file from 'file', using the provider identified by 'type'.
-		static SoundProvider *load(
+		static std::unique_ptr<SoundProvider>load(
 			IODevice &file,
 			bool streamed,
 			const std::string &type);

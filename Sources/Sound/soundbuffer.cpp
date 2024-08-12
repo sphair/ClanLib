@@ -33,6 +33,7 @@
 #include "API/Sound/soundoutput.h"
 #include "API/Sound/sound.h"
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
+#include "API/Sound/SoundProviders/soundprovider.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "soundbuffer_impl.h"
@@ -43,13 +44,6 @@ namespace clan
 {
 	SoundBuffer::SoundBuffer()
 	{
-	}
-
-	SoundBuffer::SoundBuffer(
-		SoundProvider *provider)
-		: impl(std::make_shared<SoundBuffer_Impl>())
-	{
-		impl->provider = provider;
 	}
 
 	SoundBuffer::SoundBuffer(
@@ -93,7 +87,7 @@ namespace clan
 	{
 		if (!impl)
 			return nullptr;
-		return impl->provider;
+		return impl->provider.get();
 	}
 
 	void SoundBuffer::throw_if_null() const

@@ -48,8 +48,8 @@ inline UInt32 CalculateLPCMFlags (
      kAudioFormatFlagIsPacked : kAudioFormatFlagIsAlignedHigh)           |
     (inIsNonInterleaved ? ((UInt32)kAudioFormatFlagIsNonInterleaved) : 0);
 }
-    
-    
+
+
 SoundOutput_MacOSX::SoundOutput_MacOSX(int frequency, int latency)
 : SoundOutput_Impl(frequency, latency), frequency(frequency), latency(latency), fragment_size(0), next_fragment(0), read_cursor(0), fragments_available(0)
 {
@@ -57,7 +57,7 @@ SoundOutput_MacOSX::SoundOutput_MacOSX(int frequency, int latency)
     fragment_size = (fragment_size + 3) & ~3; // Force to be a multiple of 4
     fragments_available = fragment_buffer_count;
     fragment_data = DataBuffer(fragment_size * sizeof(short) * 2 * fragment_buffer_count);
-    
+
     audio_format = {0};
     start_mixer_thread();
 }
@@ -117,13 +117,13 @@ void SoundOutput_MacOSX::write_fragment(float *dataf)
 {
     if (fragments_available == 0)
         wait();
-    
+
     short *databuf = reinterpret_cast<short*>(fragment_data.get_data()) + next_fragment * fragment_size * 2;
     for (int i = 0; i < fragment_size * 2; i++)
     {
         databuf[i] = (short)(dataf[i]*32767);
     }
-    
+
     next_fragment++;
     if (next_fragment == fragment_buffer_count)
         next_fragment = 0;

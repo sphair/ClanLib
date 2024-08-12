@@ -42,16 +42,14 @@
 namespace clan
 {
 	class ResourceManager;
-	class XMLResourceDocument;
-
 	class SetupSound_Impl : public SetupModule
 	{
 	public:
 		SetupSound_Impl();
-		virtual ~SetupSound_Impl();
+		~SetupSound_Impl() override;
 
-		SoundProviderType *providertype_wave = nullptr;
-		SoundProviderType *providertype_ogg = nullptr;
+		std::unique_ptr<SoundProviderType> providertype_wave;
+		std::unique_ptr<SoundProviderType> providertype_ogg;
 
 		static SetupSound_Impl *instance;
 		std::map<std::string, SoundProviderType *> sound_provider_factory_types;
@@ -73,14 +71,14 @@ namespace clan
 	SetupSound_Impl::SetupSound_Impl()
 	{
 		instance = this;
-		providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
-		providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
+		providertype_wave = std::make_unique<SoundProviderType_Register<SoundProvider_Wave>>("wav");
+		providertype_ogg = std::make_unique<SoundProviderType_Register<SoundProvider_Vorbis>>("ogg");
 	}
 
 	SetupSound_Impl::~SetupSound_Impl()
 	{
-		delete providertype_wave;
-		delete providertype_ogg;
+		providertype_wave.reset();
+		providertype_ogg.reset();
 		instance = nullptr;
 	}
 

@@ -55,19 +55,19 @@ public:
 public:
 	//: Called when we have no samples to play - and wants to tell the soundcard
 	//: about this possible event.
-	virtual void silence() override;
+	void silence() override;
 
 	//: Returns true if all fragments are filled with data.
 	virtual bool is_full();
 
 	//: Returns the buffer size used by device (returned as num [stereo] samples).
-	virtual int get_fragment_size() override;
+	int get_fragment_size() override;
 
 	//: Writes a fragment to the soundcard.
-	virtual void write_fragment(float *data) override;
+	void write_fragment(float *data) override;
 
 	//: Waits until output source isn't full anymore.
-	virtual void wait() override;
+	void wait() override;
 
 //! Implementation:
 private:

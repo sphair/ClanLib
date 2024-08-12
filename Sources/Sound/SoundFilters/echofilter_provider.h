@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		EchoFilterProvider(int buffer_size, float shift_factor);
-		~EchoFilterProvider();
+		~EchoFilterProvider() override;
 
 		void filter(float **sample_data, int num_samples, int channels) override;
 

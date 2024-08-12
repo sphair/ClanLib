@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		FadeFilterProvider(float initial_volume);
-		~FadeFilterProvider();
+		~FadeFilterProvider() override;
 
 		void filter(float **sample_data, int num_samples, int channels) override;
 

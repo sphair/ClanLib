@@ -50,7 +50,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 {
 	int rc;
 	snd_pcm_hw_params_t *hwparams;
-	
+
 	rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (rc < 0)
 	{
@@ -69,7 +69,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 	snd_pcm_hw_params_set_buffer_size_near(handle, hwparams, &frames_in_buffer);
 	frames_in_period = frames_in_buffer / 4;
 	snd_pcm_hw_params_set_period_size_near(handle, hwparams, &frames_in_period, nullptr);
-	
+
 	rc = snd_pcm_hw_params(handle, hwparams);
 	if (rc < 0)
 	{
@@ -78,7 +78,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 		handle = nullptr;
 		return;
 	}
-	
+
 	snd_pcm_hw_params_get_period_size(hwparams, &frames_in_period, nullptr);
 
 	start_mixer_thread();
@@ -107,9 +107,9 @@ bool SoundOutput_alsa::is_full()
 {
 	int rc;
 	snd_pcm_sframes_t delay;
-	
+
 	if (handle == nullptr) return false;
-	
+
 	rc = snd_pcm_delay(handle, &delay);
 	if (rc < 0) {
 		log_event("debug", "ClanSound: snd_pcm_delay() failed!?");

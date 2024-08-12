@@ -32,6 +32,7 @@
 #pragma warning(disable : 4786)
 #endif
 
+#include "API/Sound/SoundProviders/soundprovider.h"
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
 #include "API/Sound/SoundProviders/soundprovider_type.h"
 #include "API/Core/System/exception.h"
@@ -43,7 +44,7 @@
 
 namespace clan
 {
-	SoundProvider *SoundProviderFactory::load(
+	std::unique_ptr<SoundProvider>SoundProviderFactory::load(
 		const std::string &filename,
 		bool streamed,
 		const FileSystem &fs,
@@ -70,7 +71,7 @@ namespace clan
 		return factory->load(filename, streamed, fs);
 	}
 
-	SoundProvider *SoundProviderFactory::load(
+	std::unique_ptr<SoundProvider>SoundProviderFactory::load(
 		const std::string &fullname,
 		bool streamed,
 		const std::string &type)
@@ -82,7 +83,7 @@ namespace clan
 		return SoundProviderFactory::load(filename, streamed, vfs, type);
 	}
 
-	SoundProvider *SoundProviderFactory::load(
+	std::unique_ptr<SoundProvider>SoundProviderFactory::load(
 		IODevice &file,
 		bool streamed,
 		const std::string &type)

@@ -46,7 +46,7 @@ namespace clan
 	///    <p>Whenever a soundbuffer is played, it returns a SoundBuffer_Session
 	///    class, which can be used to control the sound (its volume, pitch,
 	///    pan, position). It can also be used to retrigger the sound
-	///    or to stop it.</p> 
+	///    or to stop it.</p>
 	class SoundBuffer_Session
 	{
 	public:
