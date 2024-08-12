@@ -1,4 +1,5 @@
-#version 150
+#version 430
+
 in vec4 Position;
 in vec2 TexCoord0;
 
@@ -13,7 +14,7 @@ layout (std140) uniform ProgramUniforms
 
 void main(void) 
 { 
-	gl_Position = cl_ModelViewProjectionMatrix*Position; 
-
+	gl_Position = cl_ModelViewProjectionMatrix * Position;
 	TexCoord = TexCoord0; 
 }
+

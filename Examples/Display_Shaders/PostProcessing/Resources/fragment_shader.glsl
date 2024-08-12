@@ -1,8 +1,9 @@
-#version 150
+#version 430
+
 in vec2 TexCoord;
+out vec4 cl_FragColor;
 
 uniform sampler2D Texture;
-out vec4 cl_FragColor;
 
 layout (std140) uniform ProgramUniforms
 {
@@ -10,7 +11,6 @@ layout (std140) uniform ProgramUniforms
 	float Amount;
 	float Timer;
 };
-
 
 vec4 scanlines(in vec4 fragment)
 {
@@ -21,10 +21,10 @@ vec4 scanlines(in vec4 fragment)
 vec4 noise()
 {
     float x = TexCoord.x * TexCoord.y * 123456.0 * Timer;
-    x = (mod(x, 13.0) * mod(x, 123.0));
+    x = mod(x, 13.0) * mod(x, 123.0);
     float dx = mod(x, 0.0015) * Amount;
     float dy = mod(x, 0.0005) * Amount;
-    vec4 c = texture(Texture, (TexCoord + vec2(dx, dy)));
+    vec4 c = texture(Texture, TexCoord + vec2(dx, dy));
     return c;
 }
 
@@ -39,5 +39,6 @@ vec4 grey(in vec4 fragment)
 void main() 
 {
 	cl_FragColor = grey(scanlines(noise()));
-//	cl_FragColor = grey(scanlines(texture(Texture, TexCoord)));
+	// cl_FragColor = grey(scanlines(texture(Texture, TexCoord)));
 }
+

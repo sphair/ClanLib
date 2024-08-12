@@ -3,5 +3,6 @@ in vec4 PositionInProjection;
 
 void main()
 {
-	gl_Position = PositionInProjection;
+    gl_Position = PositionInProjection;
 }
+

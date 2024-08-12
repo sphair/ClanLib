@@ -1,8 +1,9 @@
-#version 150
+#version 430
 
 in vec4 Position;
 in float HueOffset0;
 in vec2 TexCoord0;
+
 out float HueOffset;
 out vec2 TexCoord;
 
@@ -12,3 +13,4 @@ void main(void)
 	HueOffset = HueOffset0;
 	TexCoord = TexCoord0;
 }
+

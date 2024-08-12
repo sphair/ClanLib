@@ -1,8 +1,9 @@
-#version 150
+#version 430
 
 uniform sampler2D SourceTexture;
 uniform float Threshold;
-out vec2 TexCoord;
+
+in vec2 TexCoord;
 out vec4 cl_fragColor;
 
 vec4 ExtractHighlights()
@@ -15,3 +16,4 @@ void main()
 {
     cl_fragColor = ExtractHighlights();
 }
+

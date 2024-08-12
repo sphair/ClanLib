@@ -1,8 +1,10 @@
-#version 150
+#version 430
 
 uniform sampler2D Texture0;
-varying float HueOffset;
-varying vec2 TexCoord;
+in float HueOffset;
+in vec2 TexCoord;
+
+out vec4 cl_FragColor;
 
 float min_channel(vec3 v);
 float max_channel(vec3 v);
@@ -11,7 +13,7 @@ vec3 hsv_to_rgb(vec3 hsv);
 
 void main(void)
 {
-	vec4 rgba = texture2D(Texture0, TexCoord);
+	vec4 rgba = texture(Texture0, TexCoord);
 	vec3 hsv = rgb_to_hsv(rgba.rgb);
 	hsv.x += HueOffset;
 	if (hsv.x < 0.0)
@@ -19,22 +21,18 @@ void main(void)
 	if (hsv.x > 1.0)
 		hsv.x -= 1.0;
 	
-	gl_FragColor.rgb = hsv_to_rgb(hsv);
-	gl_FragColor.a = rgba.a;
+	cl_FragColor.rgb = hsv_to_rgb(hsv);
+	cl_FragColor.a = rgba.a;
 }
 
 float min_channel(vec3 v)
 {
-    float t = (v.x<v.y) ? v.x : v.y;
-    t = (t < v.z) ? t : v.z;
-    return t;
+    return min(min(v.x, v.y), v.z);
 }
 
 float max_channel(vec3 v)
 {
-    float t = (v.x>v.y) ? v.x : v.y;
-    t = (t > v.z) ? t : v.z;
-    return t;
+    return max(max(v.x, v.y), v.z);
 }
 
 vec3 rgb_to_hsv(vec3 rgb)
@@ -47,7 +45,7 @@ vec3 rgb_to_hsv(vec3 rgb)
     if (delta != 0.0)
     {
         hsv.y = delta / max_val;
-        vec3 del_rgb = ( ( ( vec3(max_val,max_val,max_val) - rgb ) / 6.0 ) + ( delta / 2.0 ) ) / delta;
+        vec3 del_rgb = (((vec3(max_val, max_val, max_val) - rgb) / 6.0) + (delta / 2.0)) / delta;
         if (rgb.x >= max_val)
             hsv.x = del_rgb.z - del_rgb.y;
         else if (rgb.y == max_val)
@@ -64,7 +62,7 @@ vec3 rgb_to_hsv(vec3 rgb)
 
 vec3 hsv_to_rgb(vec3 hsv)
 {
-    vec3 rgb = vec3(hsv.z,hsv.z,hsv.z);
+    vec3 rgb = vec3(hsv.z, hsv.z, hsv.z);
     if (hsv.y != 0.0)
     {
         float h = hsv.x * 6.0;
@@ -87,3 +85,5 @@ vec3 hsv_to_rgb(vec3 hsv)
     }
     return rgb;
 }
+
+

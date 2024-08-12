@@ -121,6 +121,7 @@ ProgramObject HSVSpriteBatch::create_shader_program(GraphicContext &gc)
 	program.bind_attribute_location(0, "Position");
 	program.bind_attribute_location(1, "HueOffset0");
 	program.bind_attribute_location(2, "TexCoord0");
+	program.bind_frag_data_location(0, "cl_FragColor");
 	if (!program.link())
 		throw Exception("Unable to link program");
 	return program;

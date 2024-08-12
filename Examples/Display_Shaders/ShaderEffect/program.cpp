@@ -28,7 +28,7 @@ Program::Program()
 	uniformVector = UniformVector<Uniforms>(gc, &uniforms, 1);
 
 	ShaderEffectDescription effect_description;
-	effect_description.set_glsl_version(150);
+	effect_description.set_glsl_version(430);
 	effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
 	effect_description.set_fragment_shader(File::read_text("Resources/fragment_shader.glsl"));
 	effect_description.set_attribute_screen_quad("PositionInProjection");
