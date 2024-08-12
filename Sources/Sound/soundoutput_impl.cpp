@@ -57,6 +57,7 @@ namespace clan
 
 	SoundOutput_Impl::~SoundOutput_Impl()
 	{
+		stop_all();
 		SoundSSE::aligned_free(stereo_buffer);
 		SoundSSE::aligned_free(mix_buffers[0]);
 		SoundSSE::aligned_free(mix_buffers[1]);
