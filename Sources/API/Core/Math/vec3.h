@@ -80,17 +80,21 @@ namespace clan
 		union { Type y; Type t; Type g; };
 		union { Type z; Type u; Type b; };
 
-		Vec3() : x(0), y(0), z(0) { }
-		explicit Vec3(const Type &scalar) : x(scalar), y(scalar), z(scalar) { }
-		explicit Vec3(const Vec2<Type> &copy, const Type &p3) { x = copy.x; y = copy.y; z = p3; }
-		explicit Vec3(const Vec4<Type> &copy) { x = copy.x; y = copy.y; z = copy.z; }
+		Vec3() : x(0), y(0), z(0) {}
+		explicit Vec3(const Type &scalar) : x(scalar), y(scalar), z(scalar) {}
+		explicit Vec3(const Vec2<Type> &copy, const Type &p3) : x(copy.x), y(copy.y), z(p3) {}
+		explicit Vec3(const Vec4<Type> &copy): x(copy.x), y(copy.y), z(copy.z) {}
 
-		Vec3(const Vec3<double> &copy);
-		Vec3(const Vec3<float> &copy);
-		Vec3(const Vec3<int> &copy);
+		Vec3(const Vec3<Type> &copy) = default;
 
-		explicit Vec3(const Type &p1, const Type &p2, const Type &p3) : x(p1), y(p2), z(p3) { }
-		explicit Vec3(const Type *array_xyz) : x(array_xyz[0]), y(array_xyz[1]), z(array_xyz[2]) { }
+		template<typename OtherType, typename std::enable_if_t<std::is_integral<Type>::value && !std::is_integral<OtherType>::value, int> = 0>
+		Vec3(const Vec3<OtherType>& copy) : x(static_cast<Type>(std::floor(copy.x + 0.5f))), y(static_cast<Type>(std::floor(copy.y + 0.5f))), z(static_cast<Type>(std::floor(copy.z + 0.5f))) {}
+
+		template<typename OtherType, typename std::enable_if_t<!std::is_integral<Type>::value || std::is_integral<OtherType>::value, int> = 0>
+		Vec3(const Vec3<OtherType>& copy) : x(static_cast<Type>(copy.x)), y(static_cast<Type>(copy.y)), z(static_cast<Type>(copy.z)) {}
+
+		explicit Vec3(const Type &p1, const Type &p2, const Type &p3) : x(p1), y(p2), z(p3) {}
+		explicit Vec3(const Type *array_xyz) : x(array_xyz[0]), y(array_xyz[1]), z(array_xyz[2]) {}
 
 		/// \brief Normalizes a vector
 		///
@@ -318,78 +322,6 @@ namespace clan
 			matrix[0 * 3 + 1] * v.x + matrix[1 * 3 + 1] * v.y + matrix[2 * 3 + 1] * v.z,
 			matrix[0 * 3 + 2] * v.x + matrix[1 * 3 + 2] * v.y + matrix[2 * 3 + 2] * v.z);
 	}
-
-	template<>
-	inline Vec3<unsigned char>::Vec3(const Vec3<float> &copy) { x = (unsigned char)floor(copy.x + 0.5f); y = (unsigned char)floor(copy.y + 0.5f); z = (unsigned char)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<unsigned char>::Vec3(const Vec3<double> &copy) { x = (unsigned char)floor(copy.x + 0.5); y = (unsigned char)floor(copy.y + 0.5); z = (unsigned char)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<unsigned char>::Vec3(const Vec3<int> &copy) { x = (unsigned char)copy.x; y = (unsigned char)copy.y; z = (unsigned char)copy.z; }
-
-	template<>
-	inline Vec3<char>::Vec3(const Vec3<float> &copy) { x = (char)floor(copy.x + 0.5f); y = (char)floor(copy.y + 0.5f); z = (char)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<char>::Vec3(const Vec3<double> &copy) { x = (char)floor(copy.x + 0.5); y = (char)floor(copy.y + 0.5); z = (char)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<char>::Vec3(const Vec3<int> &copy) { x = (char)copy.x; y = (char)copy.y; z = (char)copy.z; }
-
-	template<>
-	inline Vec3<unsigned short>::Vec3(const Vec3<float> &copy) { x = (unsigned short)floor(copy.x + 0.5f); y = (unsigned short)floor(copy.y + 0.5f); z = (unsigned short)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<unsigned short>::Vec3(const Vec3<double> &copy) { x = (unsigned short)floor(copy.x + 0.5); y = (unsigned short)floor(copy.y + 0.5); z = (unsigned short)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<unsigned short>::Vec3(const Vec3<int> &copy) { x = (unsigned short)copy.x; y = (unsigned short)copy.y; z = (unsigned short)copy.z; }
-
-	template<>
-	inline Vec3<short>::Vec3(const Vec3<float> &copy) { x = (short)floor(copy.x + 0.5f); y = (short)floor(copy.y + 0.5f); z = (short)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<short>::Vec3(const Vec3<double> &copy) { x = (short)floor(copy.x + 0.5); y = (short)floor(copy.y + 0.5); z = (short)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<short>::Vec3(const Vec3<int> &copy) { x = (short)copy.x; y = (short)copy.y; z = (short)copy.z; }
-
-	template<>
-	inline Vec3<int>::Vec3(const Vec3<float> &copy) { x = (int)floor(copy.x + 0.5f); y = (int)floor(copy.y + 0.5f); z = (int)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<int>::Vec3(const Vec3<double> &copy) { x = (int)floor(copy.x + 0.5); y = (int)floor(copy.y + 0.5); z = (int)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<int>::Vec3(const Vec3<int> &copy) = default;
-
-	template<>
-	inline Vec3<unsigned int>::Vec3(const Vec3<float> &copy) { x = (unsigned int)floor(copy.x + 0.5f); y = (unsigned int)floor(copy.y + 0.5f); z = (unsigned int)floor(copy.z + 0.5f); }
-
-	template<>
-	inline Vec3<unsigned int>::Vec3(const Vec3<double> &copy) { x = (unsigned int)floor(copy.x + 0.5); y = (unsigned int)floor(copy.y + 0.5); z = (unsigned int)floor(copy.z + 0.5); }
-
-	template<>
-	inline Vec3<unsigned int>::Vec3(const Vec3<int> &copy) { x = (unsigned int)copy.x; y = (unsigned int)copy.y; z = (unsigned int)copy.z; }
-
-	template<>
-	inline Vec3<float>::Vec3(const Vec3<float> &copy) = default;
-
-	template<>
-	inline Vec3<float>::Vec3(const Vec3<double> &copy) { x = (float)copy.x; y = (float)copy.y; z = (float)copy.z; }
-
-	template<>
-	inline Vec3<float>::Vec3(const Vec3<int> &copy) { x = (float)copy.x; y = (float)copy.y; z = (float)copy.z; }
-
-	template<>
-	inline Vec3<double>::Vec3(const Vec3<float> &copy) { x = (double)copy.x; y = (double)copy.y; z = (double)copy.z; }
-
-	template<>
-	inline Vec3<double>::Vec3(const Vec3<double> &copy)  = default;
-
-	template<>
-	inline Vec3<double>::Vec3(const Vec3<int> &copy) { x = (double)copy.x; y = (double)copy.y; z = (double)copy.z; }
 
 	template<typename Type>
 	inline Type Vec3<Type>::length() const { return (Type)floor(sqrt(float(x*x + y*y + z*z)) + 0.5f); }

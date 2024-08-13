@@ -55,7 +55,7 @@ namespace clan
 	{
 	public:
 		/// \brief Constructs a size structure.
-		Sizex() : width(0), height(0) { return; }
+		Sizex() : width(0), height(0) { }
 
 		/// \brief Constructs a size structure.
 		///
@@ -68,6 +68,12 @@ namespace clan
 		///
 		/// \param s = Size structure to construct this one from.
 		Sizex(const Sizex<Type> &s) = default;
+
+		template<typename OtherType, typename std::enable_if_t<std::is_integral<Type>::value && !std::is_integral<OtherType>::value, int> = 0>
+		Sizex(const Sizex<OtherType>& copy) : width(static_cast<Type>(std::floor(copy.width + 0.5f))), height(static_cast<Type>(std::floor(copy.height + 0.5f))) {}
+
+		template<typename OtherType, typename std::enable_if_t<!std::is_integral<Type>::value || std::is_integral<OtherType>::value, int> = 0>
+		Sizex(const Sizex<OtherType>& copy) : width(static_cast<Type>(copy.width)), height(static_cast<Type>(copy.height)) {}
 
 		/// \brief Size width.
 		Type width;
@@ -171,11 +177,11 @@ namespace clan
 	public:
 		Size() : Sizex<int>() {}
 		Size(int width, int height) : Sizex<int>(width, height) {}
-		Size(const Sizex<int> &s) : Sizex<int>(s) {}
-		Size(const Vec2<int> &s) : Sizex<int>(s.x, s.y) {}
+		Size(const Sizex<int>& s) : Sizex<int>(s) {}
+		Size(const Vec2<int>& s) : Sizex<int>(s.x, s.y) {}
 
-		explicit Size(const Sizex<float> &copy) { width = (int)(copy.width + 0.5f); height = (int)(copy.height + 0.5f); }
-		explicit Size(const Sizex<double> &copy) { width = (int)(copy.width + 0.5); height = (int)(copy.height + 0.5); }
+		explicit Size(const Sizex<float>& copy) { width = (int)(copy.width + 0.5f); height = (int)(copy.height + 0.5f); }
+		explicit Size(const Sizex<double>& copy) { width = (int)(copy.width + 0.5); height = (int)(copy.height + 0.5); }
 	};
 
 	/// \brief 2D (width,height) size structure - Float
@@ -184,11 +190,11 @@ namespace clan
 	public:
 		Sizef() : Sizex<float>() {}
 		Sizef(float width, float height) : Sizex<float>(width, height) {}
-		Sizef(const Sizex<float> &s) : Sizex<float>(s) {}
-		Sizef(const Vec2<float> &s) : Sizex<float>(s.x, s.y) {}
+		Sizef(const Sizex<float>& s) : Sizex<float>(s) {}
+		Sizef(const Vec2<float>& s) : Sizex<float>(s.x, s.y) {}
 
-		Sizef(const Sizex<int> &copy) { width = (float)copy.width; height = (float)copy.height; }
-		explicit Sizef(const Sizex<double> &copy) { width = (float)copy.width; height = (float)copy.height; }
+		Sizef(const Sizex<int>& copy) { width = (float)copy.width; height = (float)copy.height; }
+		explicit Sizef(const Sizex<double>& copy) { width = (float)copy.width; height = (float)copy.height; }
 	};
 
 	/// \brief 2D (width,height) size structure - Double
@@ -197,11 +203,11 @@ namespace clan
 	public:
 		Sized() : Sizex<double>() {}
 		Sized(double width, double height) : Sizex<double>(width, height) {}
-		Sized(const Sizex<double> &s) : Sizex<double>(s) {}
-		Sized(const Vec2<double> &s) : Sizex<double>(s.x, s.y) {}
+		Sized(const Sizex<double>& s) : Sizex<double>(s) {}
+		Sized(const Vec2<double>& s) : Sizex<double>(s.x, s.y) {}
 
-		Sized(const Sizex<int> &copy) { width = (double)copy.width; height = (double)copy.height; }
-		Sized(const Sizex<float> &copy) { width = (double)copy.width; height = (double)copy.height; }
+		Sized(const Sizex<int>& copy) { width = (double)copy.width; height = (double)copy.height; }
+		Sized(const Sizex<float>& copy) { width = (double)copy.width; height = (double)copy.height; }
 	};
 
 	/// \}

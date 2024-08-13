@@ -82,14 +82,18 @@ namespace clan
 
 		Vec2() : x(0), y(0) { }
 		explicit Vec2(const Type &scalar) : x(scalar), y(scalar) { }
-		explicit Vec2(const Vec3<Type> &copy) { x = copy.x; y = copy.y; }
-		explicit Vec2(const Vec4<Type> &copy) { x = copy.x; y = copy.y; }
+		explicit Vec2(const Vec3<Type> &copy) : x(copy.x), y(copy.y) {}
+		explicit Vec2(const Vec4<Type> &copy) : x(copy.x), y(copy.y) {}
 		explicit Vec2(const Type &p1, const Type &p2) : x(p1), y(p2) { }
 		explicit Vec2(const Type *array_xy) : x(array_xy[0]), y(array_xy[1]) { }
 
-		Vec2(const Vec2<double> &copy);
-		Vec2(const Vec2<float> &copy);
-		Vec2(const Vec2<int> &copy);
+		Vec2(const Vec2<Type> &copy) = default;
+
+		template<typename OtherType, typename std::enable_if_t<std::is_integral<Type>::value && !std::is_integral<OtherType>::value, int> = 0>
+		Vec2(const Vec2<OtherType>& copy) : x(static_cast<Type>(std::floor(copy.x + 0.5f))), y(static_cast<Type>(std::floor(copy.y + 0.5f))) {}
+
+		template<typename OtherType, typename std::enable_if_t<!std::is_integral<Type>::value || std::is_integral<OtherType>::value, int> = 0>
+		Vec2(const Vec2<OtherType>& copy) : x(static_cast<Type>(copy.x)), y(static_cast<Type>(copy.y)) {}
 
 		/// \brief Normalizes a vector
 		///
@@ -326,78 +330,6 @@ namespace clan
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-
-	template<>
-	inline Vec2<unsigned char>::Vec2(const Vec2<float> &copy) { x = (unsigned char)std::floor(copy.x + 0.5f); y = (unsigned char)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<unsigned char>::Vec2(const Vec2<double> &copy) { x = (unsigned char)std::floor(copy.x + 0.5); y = (unsigned char)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<unsigned char>::Vec2(const Vec2<int> &copy) { x = (unsigned char)copy.x; y = (unsigned char)copy.y; }
-
-	template<>
-	inline Vec2<char>::Vec2(const Vec2<float> &copy) { x = (char)std::floor(copy.x + 0.5f); y = (char)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<char>::Vec2(const Vec2<double> &copy) { x = (char)std::floor(copy.x + 0.5); y = (char)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<char>::Vec2(const Vec2<int> &copy) { x = (char)copy.x; y = (char)copy.y; }
-
-	template<>
-	inline Vec2<unsigned short>::Vec2(const Vec2<float> &copy) { x = (unsigned short)std::floor(copy.x + 0.5f); y = (unsigned short)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<unsigned short>::Vec2(const Vec2<double> &copy) { x = (unsigned short)std::floor(copy.x + 0.5); y = (unsigned short)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<unsigned short>::Vec2(const Vec2<int> &copy) { x = (unsigned short)copy.x; y = (unsigned short)copy.y; }
-
-	template<>
-	inline Vec2<short>::Vec2(const Vec2<float> &copy) { x = (short)std::floor(copy.x + 0.5f); y = (short)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<short>::Vec2(const Vec2<double> &copy) { x = (short)std::floor(copy.x + 0.5); y = (short)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<short>::Vec2(const Vec2<int> &copy) { x = (short)copy.x; y = (short)copy.y; }
-
-	template<>
-	inline Vec2<int>::Vec2(const Vec2<float> &copy) { x = (int)std::floor(copy.x + 0.5f); y = (int)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<int>::Vec2(const Vec2<double> &copy) { x = (int)std::floor(copy.x + 0.5); y = (int)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<int>::Vec2(const Vec2<int> &copy) = default;
-
-	template<>
-	inline Vec2<unsigned int>::Vec2(const Vec2<float> &copy) { x = (unsigned int)std::floor(copy.x + 0.5f); y = (unsigned int)std::floor(copy.y + 0.5f); }
-
-	template<>
-	inline Vec2<unsigned int>::Vec2(const Vec2<double> &copy) { x = (unsigned int)std::floor(copy.x + 0.5); y = (unsigned int)std::floor(copy.y + 0.5); }
-
-	template<>
-	inline Vec2<unsigned int>::Vec2(const Vec2<int> &copy) { x = (unsigned int)copy.x; y = (unsigned int)copy.y; }
-
-	template<>
-	inline Vec2<float>::Vec2(const Vec2<float> &copy) = default;
-
-	template<>
-	inline Vec2<float>::Vec2(const Vec2<double> &copy) { x = (float)copy.x; y = (float)copy.y; }
-
-	template<>
-	inline Vec2<float>::Vec2(const Vec2<int> &copy) { x = (float)copy.x; y = (float)copy.y; }
-
-	template<>
-	inline Vec2<double>::Vec2(const Vec2<float> &copy) { x = (double)copy.x; y = (double)copy.y; }
-
-	template<>
-	inline Vec2<double>::Vec2(const Vec2<double> &copy) = default;
-
-	template<>
-	inline Vec2<double>::Vec2(const Vec2<int> &copy) { x = (double)copy.x; y = (double)copy.y; }
 
 	template<typename Type>
 	inline Type Vec2<Type>::length() const { return (Type)floor(sqrt(float(x*x + y*y)) + 0.5f); }

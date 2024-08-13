@@ -83,12 +83,20 @@ namespace clan
 
 		Vec4() : x(0), y(0), z(0), w(0) { }
 		explicit Vec4(const Type &scalar) : x(scalar), y(scalar), z(scalar), w(scalar) { }
-		explicit Vec4(const Vec2<Type> &copy, const Type &p3, const Type &p4) { x = copy.x; y = copy.y; z = p3; w = p4; }
-		explicit Vec4(const Vec2<Type> &copy, const Vec2<Type> &copy34) { x = copy.x; y = copy.y; z = copy34.x; w = copy34.y; }
-		explicit Vec4(const Vec3<Type> &copy, const Type &p4) { x = copy.x; y = copy.y; z = copy.z; w = p4; }
+		explicit Vec4(const Vec2<Type> &copy, const Type &p3, const Type &p4) : x(copy.x), y(copy.y), z(p3), w(p4) {}
+		explicit Vec4(const Vec2<Type> &copy, const Vec2<Type> &copy34) : x(copy.x), y(copy.y), z(copy34.x), w(copy34.y) {}
+		explicit Vec4(const Vec3<Type> &copy, const Type &p4) : x(copy.x), y(copy.y), z(copy.z), w(p4) {}
 		explicit Vec4(const Type &p1, const Type &p2, const Type &p3, const Type &p4) : x(p1), y(p2), z(p3), w(p4) { }
 		explicit Vec4(const Type &p1, const Type &p2, const Vec2<Type> &copy34) : x(p1), y(p2), z(copy34.x), w(copy34.y) { }
 		explicit Vec4(const Type *array_xyzw) : x(array_xyzw[0]), y(array_xyzw[1]), z(array_xyzw[2]), w(array_xyzw[3]) { }
+
+		Vec4(const Vec4<Type> &copy) = default;
+
+		template<typename OtherType, typename std::enable_if_t<std::is_integral<Type>::value && !std::is_integral<OtherType>::value, int> = 0>
+		Vec4(const Vec4<OtherType>& copy) : x(static_cast<Type>(std::floor(copy.x + 0.5f))), y(static_cast<Type>(std::floor(copy.y + 0.5f))), z(static_cast<Type>(std::floor(copy.z + 0.5f))), w(static_cast<Type>(std::floor(copy.z + 0.5f))) {}
+
+		template<typename OtherType, typename std::enable_if_t<!std::is_integral<Type>::value || std::is_integral<OtherType>::value, int> = 0>
+		Vec4(const Vec4<OtherType>& copy) : x(static_cast<Type>(copy.x)), y(static_cast<Type>(copy.y)), z(static_cast<Type>(copy.z)), w(static_cast<Type>(copy.z)) {}
 
 		/// \brief Normalizes a vector (not taking into account the w ordinate)
 		///

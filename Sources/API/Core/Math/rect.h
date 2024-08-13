@@ -87,17 +87,13 @@ namespace clan
 		/// \brief Constructs an rectangle.
 		///
 		/// \param rect Initial rectangle position and size.
-		Rectx(const Rectx<int> &rect);
+		Rectx(const Rectx<Type> &rect) = default;
 
-		/// \brief Constructs an rectangle.
-		///
-		/// \param rect Initial rectangle position and size.
-		Rectx(const Rectx<float> &rect);
+		template<typename OtherType, typename std::enable_if_t<std::is_integral<Type>::value && !std::is_integral<OtherType>::value, int> = 0>
+		Rectx(const Rectx<OtherType>& copy) : left(static_cast<Type>(std::floor(copy.left + 0.5f))), top(static_cast<Type>(std::floor(copy.top + 0.5f))), right(static_cast<Type>(std::floor(copy.right + 0.5f))), bottom(static_cast<Type>(std::floor(copy.bottom + 0.5f))) {}
 
-		/// \brief Constructs an rectangle.
-		///
-		/// \param rect Initial rectangle position and size.
-		Rectx(const Rectx<double> &rect);
+		template<typename OtherType, typename std::enable_if_t<!std::is_integral<Type>::value || std::is_integral<OtherType>::value, int> = 0>
+		Rectx(const Rectx<OtherType>& copy) : left(static_cast<Type>(copy.left)), top(static_cast<Type>(copy.top)), right(static_cast<Type>(copy.right)), bottom(static_cast<Type>(copy.bottom)) {}
 
 		/// \brief Rect == Rect operator.
 		bool operator==(const Rectx<Type> &r) const
@@ -445,57 +441,18 @@ namespace clan
 		}
 	};
 
-	template<>
-	inline Rectx<int>::Rectx(const Rectx<float> &rect)
-		: left(static_cast<int> (floor(rect.left + 0.5f))),
-		top(static_cast<int> (floor(rect.top + 0.5f))),
-		right(static_cast<int> (floor(rect.right + 0.5f))),
-		bottom(static_cast<int> (floor(rect.bottom + 0.5f)))
-	{
-	}
-
-	template<>
-	inline Rectx<int>::Rectx(const Rectx<double> &rect)
-		: left(static_cast<int> (floor(rect.left + 0.5))),
-		top(static_cast<int> (floor(rect.top + 0.5))),
-		right(static_cast<int> (floor(rect.right + 0.5))),
-		bottom(static_cast<int> (floor(rect.bottom + 0.5)))
-	{
-	}
-
-	template<typename Type>
-	inline Rectx<Type>::Rectx(const Rectx<int> &rect)
-		: left(static_cast<Type> (rect.left)), top(static_cast<Type> (rect.top)),
-		right(static_cast<Type> (rect.right)), bottom(static_cast<Type> (rect.bottom))
-	{
-	}
-
-	template<typename Type>
-	inline Rectx<Type>::Rectx(const Rectx<float> &rect)
-		: left(static_cast<Type> (rect.left)), top(static_cast<Type> (rect.top)),
-		right(static_cast<Type> (rect.right)), bottom(static_cast<Type> (rect.bottom))
-	{
-	}
-
-	template<typename Type>
-	inline Rectx<Type>::Rectx(const Rectx<double> &rect)
-		: left(static_cast<Type> (rect.left)), top(static_cast<Type> (rect.top)),
-		right(static_cast<Type> (rect.right)), bottom(static_cast<Type> (rect.bottom))
-	{
-	}
-
 	/// \brief 2D (left,top,right,bottom) rectangle structure - Integer
 	class Rect : public Rectx<int>
 	{
 	public:
 		Rect() : Rectx<int>() {}
-		Rect(const Sizex<int> &s) : Rectx<int>(s) {}
+		Rect(const Sizex<int>& s) : Rectx<int>(s) {}
 		Rect(int new_left, int new_top, int new_right, int new_bottom) : Rectx<int>(new_left, new_top, new_right, new_bottom) {}
-		Rect(const Pointx<int> &p, const Sizex<int> &size) : Rectx<int>(p, size) {}
-		Rect(const Rectx<int> &rect) : Rectx<int>(rect) {}
-		Rect(const Rectx<float> &rect) : Rectx<int>(rect) {}
-		Rect(const Rectx<double> &rect) : Rectx<int>(rect) {}
-		Rect(int new_left, int new_top, const Sizex<int> &size) : Rectx<int>(new_left, new_top, size) {}
+		Rect(const Pointx<int>& p, const Sizex<int>& size) : Rectx<int>(p, size) {}
+		Rect(const Rectx<int>& rect) : Rectx<int>(rect) {}
+		Rect(const Rectx<float>& rect) : Rectx<int>(rect) {}
+		Rect(const Rectx<double>& rect) : Rectx<int>(rect) {}
+		Rect(int new_left, int new_top, const Sizex<int>& size) : Rectx<int>(new_left, new_top, size) {}
 	};
 
 	/// \brief 2D (left,top,right,bottom) rectangle structure - Float
@@ -503,14 +460,14 @@ namespace clan
 	{
 	public:
 		Rectf() : Rectx<float>() {}
-		Rectf(const Sizex<int> &s) : Rectx<float>(s) {}
-		Rectf(const Sizex<float> &s) : Rectx<float>(s) {}
+		Rectf(const Sizex<int>& s) : Rectx<float>(s) {}
+		Rectf(const Sizex<float>& s) : Rectx<float>(s) {}
 		Rectf(float new_left, float new_top, float new_right, float new_bottom) : Rectx<float>(new_left, new_top, new_right, new_bottom) {}
-		Rectf(const Pointx<float> &p, const Sizex<float> &size) : Rectx<float>(p, size) {}
-		Rectf(const Rectx<int> &rect) : Rectx<float>(rect) {}
-		Rectf(const Rectx<float> &rect) : Rectx<float>(rect) {}
-		Rectf(const Rectx<double> &rect) : Rectx<float>(rect) {}
-		Rectf(float new_left, float new_top, const Sizex<float> &size) : Rectx<float>(new_left, new_top, size) {}
+		Rectf(const Pointx<float>& p, const Sizex<float>& size) : Rectx<float>(p, size) {}
+		Rectf(const Rectx<int>& rect) : Rectx<float>(rect) {}
+		Rectf(const Rectx<float>& rect) : Rectx<float>(rect) {}
+		Rectf(const Rectx<double>& rect) : Rectx<float>(rect) {}
+		Rectf(float new_left, float new_top, const Sizex<float>& size) : Rectx<float>(new_left, new_top, size) {}
 	};
 
 	/// \brief 2D (left,top,right,bottom) rectangle structure - Double
@@ -518,15 +475,15 @@ namespace clan
 	{
 	public:
 		Rectd() : Rectx<double>() {}
-		Rectd(const Sizex<int> &s) : Rectx<double>(s) {}
-		Rectd(const Sizex<float> &s) : Rectx<double>(s) {}
-		Rectd(const Sizex<double> &s) : Rectx<double>(s) {}
+		Rectd(const Sizex<int>& s) : Rectx<double>(s) {}
+		Rectd(const Sizex<float>& s) : Rectx<double>(s) {}
+		Rectd(const Sizex<double>& s) : Rectx<double>(s) {}
 		Rectd(double new_left, double new_top, double new_right, double new_bottom) : Rectx<double>(new_left, new_top, new_right, new_bottom) {}
-		Rectd(const Pointx<double> &p, const Sizex<double> &size) : Rectx<double>(p, size) {}
-		Rectd(const Rectx<int> &rect) : Rectx<double>(rect) {}
-		Rectd(const Rectx<float> &rect) : Rectx<double>(rect) {}
-		Rectd(const Rectx<double> &rect) : Rectx<double>(rect) {}
-		Rectd(double new_left, double new_top, const Sizex<double> &size) : Rectx<double>(new_left, new_top, size) {}
+		Rectd(const Pointx<double>& p, const Sizex<double>& size) : Rectx<double>(p, size) {}
+		Rectd(const Rectx<int>& rect) : Rectx<double>(rect) {}
+		Rectd(const Rectx<float>& rect) : Rectx<double>(rect) {}
+		Rectd(const Rectx<double>& rect) : Rectx<double>(rect) {}
+		Rectd(double new_left, double new_top, const Sizex<double>& size) : Rectx<double>(new_left, new_top, size) {}
 	};
 
 	inline Rect RectPS(int x, int y, int width, int height)
