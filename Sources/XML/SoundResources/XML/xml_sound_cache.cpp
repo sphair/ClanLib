@@ -42,7 +42,7 @@ namespace clan
 
 	void XMLSoundCache::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
 	{
-		SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
+		SoundCache::set(manager, std::make_shared<XMLSoundCache>(doc));
 	}
 
 	void XMLResourceFactory::set_sound()

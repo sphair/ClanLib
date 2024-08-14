@@ -100,7 +100,7 @@ namespace clan
 
 	void GlyphCache::insert_glyph(Canvas &canvas, FontPixelBuffer &pb)
 	{
-		auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
+		auto font_glyph = std::make_unique<Font_TextureGlyph>();
 
 		font_glyph->glyph = pb.glyph;
 		font_glyph->offset = pb.offset;
@@ -122,7 +122,7 @@ namespace clan
 
 	void GlyphCache::insert_glyph(Canvas &canvas, unsigned int glyph, Subtexture &sub_texture, const Pointf &offset, const Sizef &size, const GlyphMetrics &glyph_metrics)
 	{
-		auto font_glyph = std::unique_ptr<Font_TextureGlyph>(new Font_TextureGlyph());
+		auto font_glyph = std::make_unique<Font_TextureGlyph>();
 
 		font_glyph->glyph = glyph;
 		font_glyph->offset = offset;

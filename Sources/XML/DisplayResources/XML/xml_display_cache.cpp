@@ -49,7 +49,7 @@ namespace clan
 
 	void XMLDisplayCache::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
 	{
-		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
+		DisplayCache::set(manager, std::make_shared<XMLDisplayCache>(doc));
 	}
 
 	void XMLResourceFactory::set_display()

@@ -45,9 +45,9 @@ namespace clan
 	DirectoryScanner::DirectoryScanner()
 	{
 #ifdef WIN32
-		impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Win32());
+		impl = std::make_shared<DirectoryScanner_Win32>();
 #else
-		impl = std::shared_ptr<DirectoryScanner_Impl>(new DirectoryScanner_Unix());
+		impl = std::make_shared<DirectoryScanner_Unix>();
 #endif
 	}
 

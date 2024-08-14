@@ -162,12 +162,12 @@ namespace clan
 		case TextureFormat::bgra8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_bgra8());
+				return std::make_unique<PixelReaderSSE2_bgra8>();
 			else
 #endif
-				return std::unique_ptr<PixelReader>(new PixelReader_bgra8());
+				return std::make_unique<PixelReader_bgra8>();
 		case TextureFormat::bgr8:
-			return std::unique_ptr<PixelReader>(new PixelReader_bgr8());
+			return std::make_unique<PixelReader_bgr8>();
 		case TextureFormat::stencil_index1:
 		case TextureFormat::stencil_index4:
 		case TextureFormat::stencil_index8:
@@ -192,17 +192,17 @@ namespace clan
 			return std::unique_ptr<PixelReader>(new PixelReader_2norm<short>());
 
 		case TextureFormat::r3_g3_b2:
-			return std::unique_ptr<PixelReader>(new PixelReader_r3_g3_b2());
+			return std::make_unique<PixelReader_r3_g3_b2>();
 		case TextureFormat::rgb4:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgb4());
+			return std::make_unique<PixelReader_rgb4>();
 		case TextureFormat::rgb5:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgb5());
+			return std::make_unique<PixelReader_rgb5>();
 		case TextureFormat::rgb8:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<unsigned char>());
 		case TextureFormat::rgb8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_3norm<char>());
 		case TextureFormat::rgb10:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgb10());
+			return std::make_unique<PixelReader_rgb10>();
 		case TextureFormat::rgb12:
 			break;
 		case TextureFormat::rgb16:
@@ -212,26 +212,26 @@ namespace clan
 		case TextureFormat::rgba2:
 			break;
 		case TextureFormat::rgba4:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgba4());
+			return std::make_unique<PixelReader_rgba4>();
 		case TextureFormat::rgb5_a1:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgb5_a1());
+			return std::make_unique<PixelReader_rgb5_a1>();
 		case TextureFormat::rgba8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
+				return std::make_unique<PixelReaderSSE2_rgba8>();
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<unsigned char>());
 		case TextureFormat::rgba8_snorm:
 			return std::unique_ptr<PixelReader>(new PixelReader_4norm<char>());
 		case TextureFormat::rgb10_a2:
-			return std::unique_ptr<PixelReader>(new PixelReader_rgb10_a2());
+			return std::make_unique<PixelReader_rgb10_a2>();
 		case TextureFormat::rgba12:
 			break;
 		case TextureFormat::rgba16:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba16());
+				return std::make_unique<PixelReaderSSE2_rgba16>();
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<unsigned short>());
@@ -242,18 +242,18 @@ namespace clan
 		case TextureFormat::srgb8_alpha8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelReader>(new PixelReaderSSE2_rgba8());
+				return std::make_unique<PixelReaderSSE2_rgba8>();
 			else
 #endif
 				return std::unique_ptr<PixelReader>(new PixelReader_4norm<char>()); // TBD: should we add a 2.2 gamma filter?
 		case TextureFormat::r16f:
-			return std::unique_ptr<PixelReader>(new PixelReader_1hf());
+			return std::make_unique<PixelReader_1hf>();
 		case TextureFormat::rg16f:
-			return std::unique_ptr<PixelReader>(new PixelReader_2hf());
+			return std::make_unique<PixelReader_2hf>();
 		case TextureFormat::rgb16f:
-			return std::unique_ptr<PixelReader>(new PixelReader_3hf());
+			return std::make_unique<PixelReader_3hf>();
 		case TextureFormat::rgba16f:
-			return std::unique_ptr<PixelReader>(new PixelReader_4hf());
+			return std::make_unique<PixelReader_4hf>();
 		case TextureFormat::r32f:
 			return std::unique_ptr<PixelReader>(new PixelReader_1cast<float>());
 		case TextureFormat::rg32f:
@@ -349,12 +349,12 @@ namespace clan
 		case TextureFormat::bgra8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_bgra8());
+				return std::make_unique<PixelWriterSSE2_bgra8>();
 			else
 #endif
-				return std::unique_ptr<PixelWriter>(new PixelWriter_bgra8());
+				return std::make_unique<PixelWriter_bgra8>();
 		case TextureFormat::bgr8:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_bgr8());
+			return std::make_unique<PixelWriter_bgr8>();
 		case TextureFormat::stencil_index1:
 		case TextureFormat::stencil_index4:
 		case TextureFormat::stencil_index8:
@@ -379,17 +379,17 @@ namespace clan
 			return std::unique_ptr<PixelWriter>(new PixelWriter_2norm<short>());
 
 		case TextureFormat::r3_g3_b2:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_r3_g3_b2());
+			return std::make_unique<PixelWriter_r3_g3_b2>();
 		case TextureFormat::rgb4:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb4());
+			return std::make_unique<PixelWriter_rgb4>();
 		case TextureFormat::rgb5:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5());
+			return std::make_unique<PixelWriter_rgb5>();
 		case TextureFormat::rgb8:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<unsigned char>());
 		case TextureFormat::rgb8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_3norm<char>());
 		case TextureFormat::rgb10:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb10());
+			return std::make_unique<PixelWriter_rgb10>();
 		case TextureFormat::rgb12:
 			break;
 		case TextureFormat::rgb16:
@@ -399,26 +399,26 @@ namespace clan
 		case TextureFormat::rgba2:
 			break;
 		case TextureFormat::rgba4:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgba4());
+			return std::make_unique<PixelWriter_rgba4>();
 		case TextureFormat::rgb5_a1:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5_a1());
+			return std::make_unique<PixelWriter_rgb5_a1>();
 		case TextureFormat::rgba8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
+				return std::make_unique<PixelWriterSSE2_rgba8>();
 			else
 #endif
 				return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned char>());
 		case TextureFormat::rgba8_snorm:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<char>());
 		case TextureFormat::rgb10_a2:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_rgb10_a2());
+			return std::make_unique<PixelWriter_rgb10_a2>();
 		case TextureFormat::rgba12:
 			break;
 		case TextureFormat::rgba16:
 #if defined(__SSE4_1__)
 			if (sse4)
-				return std::unique_ptr<PixelWriter>(new PixelWriterSSE4_rgba16());
+				return std::make_unique<PixelWriterSSE4_rgba16>();
 			else
 				return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned short>());
 #else
@@ -431,18 +431,18 @@ namespace clan
 		case TextureFormat::srgb8_alpha8:
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
+				return std::make_unique<PixelWriterSSE2_rgba8>();
 			else
 #endif
 				return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<char>()); // TBD: should we add a 2.2 gamma filter?
 		case TextureFormat::r16f:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_1hf());
+			return std::make_unique<PixelWriter_1hf>();
 		case TextureFormat::rg16f:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_2hf());
+			return std::make_unique<PixelWriter_2hf>();
 		case TextureFormat::rgb16f:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_3hf());
+			return std::make_unique<PixelWriter_3hf>();
 		case TextureFormat::rgba16f:
-			return std::unique_ptr<PixelWriter>(new PixelWriter_4hf());
+			return std::make_unique<PixelWriter_4hf>();
 		case TextureFormat::r32f:
 			return std::unique_ptr<PixelWriter>(new PixelWriter_1cast<float>());
 		case TextureFormat::rg32f:
@@ -539,50 +539,50 @@ namespace clan
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_YCrCbToRGB()));
+				filters.push_back(std::make_shared<PixelFilterSSE2_YCrCbToRGB>());
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterYCrCbToRGB()));
+				filters.push_back(std::make_shared<PixelFilterYCrCbToRGB>());
 		}
 
 		if (premultiply_alpha)
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterPremultiplyAlphaSSE2()));
+				filters.push_back(std::make_shared<PixelFilterPremultiplyAlphaSSE2>());
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterPremultiplyAlpha()));
+				filters.push_back(std::make_shared<PixelFilterPremultiplyAlpha>());
 		}
 
 		if (gamma != 1.0f)
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGammaSSE2(gamma)));
+				filters.push_back(std::make_shared<PixelFilterGammaSSE2>(gamma));
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterGamma(gamma)));
+				filters.push_back(std::make_shared<PixelFilterGamma>(gamma));
 		}
 
 		if (swizzle != Vec4i(0, 1, 2, 3))
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzleSSE2(swizzle)));
+				filters.push_back(std::make_shared<PixelFilterSwizzleSSE2>(swizzle));
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzle(swizzle)));
+				filters.push_back(std::make_shared<PixelFilterSwizzle>(swizzle));
 		}
 
 		if (output_is_ycrcb)
 		{
 #if !defined __ANDROID__ && ! defined CL_DISABLE_SSE2
 			if (sse2)
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_RGBToYCrCb()));
+				filters.push_back(std::make_shared<PixelFilterSSE2_RGBToYCrCb>());
 			else
 #endif
-				filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterRGBToYCrCb()));
+				filters.push_back(std::make_shared<PixelFilterRGBToYCrCb>());
 		}
 
 		return filters;

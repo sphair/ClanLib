@@ -38,7 +38,7 @@ namespace clan
 	D3DTextureData::D3DTextureData(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions)
 		: feature_level(feature_level), texture_dimensions(texture_dimensions)
 	{
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device, decode_texture_type(texture_dimensions))));
+		handles.push_back(std::make_shared<DeviceHandles>(device, decode_texture_type(texture_dimensions)));
 	}
 
 	D3DTextureData::~D3DTextureData()
@@ -105,7 +105,7 @@ namespace clan
 			ComPtr<ID3D11Texture1D> texture_handle;
 			result = device->OpenSharedResource(handle, __uuidof(ID3D11Texture1D), (void**)texture_handle.output_variable());
 			D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
-			handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device, texture_type)));
+			handles.push_back(std::make_shared<DeviceHandles>(device, texture_type));
 			handles.back()->texture = ComPtr<ID3D11Resource>(texture_handle);
 		}
 		else if (texture_type == DeviceTextureType::ID3D11Texture2D)
@@ -113,7 +113,7 @@ namespace clan
 			ComPtr<ID3D11Texture2D> texture_handle;
 			result = device->OpenSharedResource(handle, __uuidof(ID3D11Texture2D), (void**)texture_handle.output_variable());
 			D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
-			handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device, texture_type)));
+			handles.push_back(std::make_shared<DeviceHandles>(device, texture_type));
 			handles.back()->texture = ComPtr<ID3D11Resource>(texture_handle);
 		}
 		else
@@ -121,7 +121,7 @@ namespace clan
 			ComPtr<ID3D11Texture3D> texture_handle;
 			result = device->OpenSharedResource(handle, __uuidof(ID3D11Texture3D), (void**)texture_handle.output_variable());
 			D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
-			handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device, texture_type)));
+			handles.push_back(std::make_shared<DeviceHandles>(device, texture_type));
 			handles.back()->texture = ComPtr<ID3D11Resource>(texture_handle);
 		}
 

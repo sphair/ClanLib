@@ -142,7 +142,7 @@ namespace clan
 	{
 		RasterizerStateDescription copy;
 		if (impl)
-			copy.impl = std::shared_ptr<RasterizerStateDescription_Impl>(new RasterizerStateDescription_Impl(*impl.get()));
+			copy.impl = std::make_shared<RasterizerStateDescription_Impl>(*impl.get());
 		return copy;
 	}
 

@@ -68,7 +68,7 @@ namespace clan
 	GraphicContext GraphicContext::create() const
 	{
 		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), false));
+		gc.impl = std::make_shared<GraphicContext_Impl>(impl.get(), false);
 
 		return gc;
 	}
@@ -76,7 +76,7 @@ namespace clan
 	GraphicContext GraphicContext::create(FrameBuffer &buffer) const
 	{
 		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), false));
+		gc.impl = std::make_shared<GraphicContext_Impl>(impl.get(), false);
 
 		gc.set_frame_buffer(buffer);
 		gc.set_viewport(gc.get_size());
@@ -88,7 +88,7 @@ namespace clan
 	GraphicContext GraphicContext::clone() const
 	{
 		GraphicContext gc;
-		gc.impl = std::shared_ptr<GraphicContext_Impl>(new GraphicContext_Impl(impl.get(), true));
+		gc.impl = std::make_shared<GraphicContext_Impl>(impl.get(), true);
 
 		return gc;
 	}

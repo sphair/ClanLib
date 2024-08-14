@@ -35,7 +35,7 @@ namespace clan
 {
 	D3DRenderBufferProvider::D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device)
 	{
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 	}
 
 	D3DRenderBufferProvider::~D3DRenderBufferProvider()
@@ -132,7 +132,7 @@ namespace clan
 		result = device->OpenSharedResource(handle, __uuidof(ID3D11Texture2D), (void**)texture_handle.output_variable());
 		D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
 
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 		handles.back()->texture = texture_handle;
 		return *handles.back();
 	}

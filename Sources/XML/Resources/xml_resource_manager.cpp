@@ -41,7 +41,7 @@ namespace clan
 	ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
 	{
 		ResourceManager manager;
-		manager.set_cache<XMLResourceDocument>("clan.xmldoc", std::shared_ptr<XMLResourceDocument>(new XMLResourceDocument(doc)));
+		manager.set_cache<XMLResourceDocument>("clan.xmldoc", std::make_shared<XMLResourceDocument>(doc));
 		for (auto & xml_cache_factory : xml_cache_factories)
 		{
 			xml_cache_factory(manager, doc);

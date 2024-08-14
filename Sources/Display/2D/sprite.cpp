@@ -259,7 +259,7 @@ namespace clan
 	Sprite Sprite::clone() const
 	{
 		Sprite copy;
-		copy.impl = std::shared_ptr<Sprite_Impl>(new Sprite_Impl());
+		copy.impl = std::make_shared<Sprite_Impl>();
 
 		copy.impl->angle = impl->angle;
 		copy.impl->angle_pitch = impl->angle_pitch;

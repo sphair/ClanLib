@@ -825,7 +825,7 @@ namespace clan
 
 			Size viewport_size = get_display_window_size();
 
-			default_depth_render_buffer = std::shared_ptr<D3DRenderBufferProvider>(new D3DRenderBufferProvider(window->get_device()));
+			default_depth_render_buffer = std::make_shared<D3DRenderBufferProvider>(window->get_device());
 			default_depth_render_buffer->create(viewport_size.width, viewport_size.height, texture_format, 1);
 			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
 		}

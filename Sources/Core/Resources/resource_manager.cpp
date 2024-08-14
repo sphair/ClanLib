@@ -54,7 +54,7 @@ namespace clan
 	{
 		std::shared_ptr<UserDataOwner> &cache = impl->caches[name];
 		if (!cache)
-			cache = std::shared_ptr<UserDataOwner>(new UserDataOwner());
+			cache = std::make_shared<UserDataOwner>();
 		return *cache.get();
 	}
 }

@@ -129,7 +129,7 @@ namespace clan
 
 	void SetupDisplay_Impl::add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc)
 	{
-		DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new FileDisplayCache(doc)));
+		DisplayCache::set(manager, std::make_shared<FileDisplayCache>(doc));
 	}
 
 #ifdef WIN32

@@ -116,7 +116,7 @@ namespace clan
 	{
 		BlendStateDescription copy;
 		if (impl)
-			copy.impl = std::shared_ptr<BlendStateDescription_Impl>(new BlendStateDescription_Impl(*impl.get()));
+			copy.impl = std::make_shared<BlendStateDescription_Impl>(*impl.get());
 		return copy;
 	}
 

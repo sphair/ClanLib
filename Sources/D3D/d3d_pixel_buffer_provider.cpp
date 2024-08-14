@@ -39,7 +39,7 @@ namespace clan
 		: map_gc_provider(0)
 
 	{
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 		map_data.pData = 0;
 		map_data.RowPitch = 0;
 		map_data.DepthPitch = 0;
@@ -178,7 +178,7 @@ namespace clan
 		result = device->OpenSharedResource(handle, __uuidof(ID3D11Texture2D), (void**)texture_handle.output_variable());
 		D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
 
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 		handles.back()->texture = texture_handle;
 		return *handles.back();
 	}

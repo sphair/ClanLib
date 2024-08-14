@@ -38,7 +38,7 @@ namespace clan
 	D3DVertexArrayBufferProvider::D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device)
 		: size(0)
 	{
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 	}
 
 	D3DVertexArrayBufferProvider::~D3DVertexArrayBufferProvider()
@@ -188,7 +188,7 @@ namespace clan
 		result = device->OpenSharedResource(handle, __uuidof(ID3D11Buffer), (void**)buffer_handle.output_variable());
 		D3DTarget::throw_if_failed("ID3D11Device.OpenSharedResource failed", result);
 
-		handles.push_back(std::shared_ptr<DeviceHandles>(new DeviceHandles(device)));
+		handles.push_back(std::make_shared<DeviceHandles>(device));
 		handles.back()->buffer = buffer_handle;
 		return *handles.back();
 	}

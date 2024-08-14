@@ -40,14 +40,14 @@ namespace clan
 	D3DTextureProvider::D3DTextureProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions)
 	: data(new D3DTextureData(device, feature_level, texture_dimensions)), view_min_layer(-1)
 	{
-		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(device)));
+		view_handles.push_back(std::make_shared<ViewHandles>(device));
 	}
 
 	D3DTextureProvider::D3DTextureProvider(D3DTextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 	: data(orig_texture->data), view_min_layer(min_layer)
 	{
 		// To do: save and use all view parameters
-		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(data->handles.front()->device)));
+		view_handles.push_back(std::make_shared<ViewHandles>(data->handles.front()->device));
 	}
 
 	D3DTextureProvider::~D3DTextureProvider()
@@ -962,7 +962,7 @@ namespace clan
 			if (view_handles[i]->device == device)
 				return *view_handles[i];
 
-		view_handles.push_back(std::shared_ptr<ViewHandles>(new ViewHandles(device)));
+		view_handles.push_back(std::make_shared<ViewHandles>(device));
 		return *view_handles.back();
 	}
 

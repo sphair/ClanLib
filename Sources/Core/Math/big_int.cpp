@@ -81,7 +81,7 @@ namespace clan
 	{
 		if (&other != this)
 		{
-			impl = std::unique_ptr<BigInt_Impl>(new BigInt_Impl(*other.impl.get()));
+			impl = std::make_unique<BigInt_Impl>(*other.impl.get());
 		}
 	}
 

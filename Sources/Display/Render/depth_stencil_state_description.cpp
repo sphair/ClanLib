@@ -160,7 +160,7 @@ namespace clan
 	{
 		DepthStencilStateDescription copy;
 		if (impl)
-			copy.impl = std::shared_ptr<DepthStencilStateDescription_Impl>(new DepthStencilStateDescription_Impl(*impl.get()));
+			copy.impl = std::make_shared<DepthStencilStateDescription_Impl>(*impl.get());
 		return copy;
 	}
 

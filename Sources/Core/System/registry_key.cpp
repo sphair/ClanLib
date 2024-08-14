@@ -101,7 +101,7 @@ namespace clan
 			throw Exception(string_format("Key already exists: %1", subkey));
 		}
 
-		impl = std::shared_ptr<RegistryKey_Impl>(new RegistryKey_Impl(new_key));
+		impl = std::make_shared<RegistryKey_Impl>(new_key);
 	}
 
 	RegistryKey::RegistryKey(HKEY key)

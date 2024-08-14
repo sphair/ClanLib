@@ -40,9 +40,9 @@ namespace clan
 	Service::Service(const std::string &service_name)
 	{
 #ifdef WIN32
-		impl = std::shared_ptr<Service_Impl>(new Service_Win32(this, service_name));
+		impl = std::make_shared<Service_Win32>(this, service_name);
 #else
-		impl = std::shared_ptr<Service_Impl>(new Service_Unix(this, service_name));
+		impl = std::make_shared<Service_Unix>(this, service_name);
 #endif
 	}
 
