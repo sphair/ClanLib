@@ -1,6 +1,11 @@
 ClanLib coding style and conventions:
 --------------------------------------
 
+*****************************************************************
+*** TODO - Rerewrite this document. It is decades out of date ***
+*****************************************************************
+
+
 1. All classes are in the clan namespace
 2. All macros have a "cl_" prefix. Eg. cl_assert, cl_info...
 

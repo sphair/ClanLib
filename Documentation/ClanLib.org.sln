@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,11 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		object-types.html = object-types.html
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{54F34B62-9AD4-453D-8703-F476EEA8111A}"
-	ProjectSection(SolutionItems) = preProject
-		js\examples.js = js\examples.js
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{B32A6748-7237-401B-A49F-F9A1C1FF443D}"
 	ProjectSection(SolutionItems) = preProject
 		css\examples.css = css\examples.css
@@ -39,11 +34,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{B32A6748-723
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{C2FF3027-9401-4894-BAD8-61FA884E6AEC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{5CE3824F-EE9C-4CCB-A258-6F11127573A0}"
-	ProjectSection(SolutionItems) = preProject
-		js\external\jquery-1.10.2.min.js = js\external\jquery-1.10.2.min.js
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Overview", "Overview", "{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8}"
 	ProjectSection(SolutionItems) = preProject
@@ -70,10 +60,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{54F34B62-9AD4-453D-8703-F476EEA8111A} = {67526D1E-B801-4460-A8D3-F5C604037478}
 		{B32A6748-7237-401B-A49F-F9A1C1FF443D} = {67526D1E-B801-4460-A8D3-F5C604037478}
 		{C2FF3027-9401-4894-BAD8-61FA884E6AEC} = {B32A6748-7237-401B-A49F-F9A1C1FF443D}
-		{5CE3824F-EE9C-4CCB-A258-6F11127573A0} = {54F34B62-9AD4-453D-8703-F476EEA8111A}
 		{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8} = {67526D1E-B801-4460-A8D3-F5C604037478}
 	EndGlobalSection
 EndGlobal

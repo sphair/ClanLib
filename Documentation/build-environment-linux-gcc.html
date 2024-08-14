@@ -5,8 +5,8 @@
         <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
 	    <title>GNU C++ on Linux - ClanLib SDK</title>
         <link rel="stylesheet" type="text/css" href="css/main.css" />
-        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
-        <script type="text/javascript" src="js/analytics.js"></script> 
+        	
+         
     </head>
     <body>
         <div id="page-wrapper">
@@ -115,22 +115,22 @@ make html</div>
 make
 ./basic2d</div>
 
-		            <p>On Fedora linux and CentOS, if you get "Package clanApp-4.0 was not found in the pkg-config search path", this command helps fix the problem</p>
+		            <p>On Fedora linux and CentOS, if you get "Package clanApp-4.2 was not found in the pkg-config search path", this command helps fix the problem</p>
 
 		            <div class="console">export PKG_CONFIG_PATH=/usr/lib/pkgconfig</div>
 
 
 		            <h3>Using ClanLib</h3>
 		
-		            <p>These examples compile and link a source file named mygame.cpp with the ClanLib 4.0.x modules required for graphics (2D or 3D, using OpenGL 2+) and input. If you use other parts of ClanLib such as networking (clanNetwork), sound (clanSound) or GUI (clanUI), amend them accordingly.</p>
+		            <p>These examples compile and link a source file named mygame.cpp with the ClanLib 4.2.x modules required for graphics (2D or 3D, using OpenGL 2+) and input. If you use other parts of ClanLib such as networking (clanNetwork), sound (clanSound) or GUI (clanUI), amend them accordingly.</p>
 
 		            <p><b>Command line</h></p>
 
-		            <div class="console">g++ -o mygame mygame.cpp `pkg-config --cflags --libs clanCore-4.0 clanDisplay-4.0 clanGL-4.0 clanApp-4.0` -lpthread</div>
+		            <div class="console">g++ -o mygame mygame.cpp `pkg-config --cflags --libs clanCore-4.2 clanDisplay-4.2 clanGL-4.2 clanApp-4.2` -lpthread</div>
 		
 		            <p><b>Makefile</b></p>
 		
-		            <div class="console">PACKAGES = clanCore-4.0 clanDisplay-4.0 clanApp-4.0 clanGL-4.0
+		            <div class="console">PACKAGES = clanCore-4.2 clanDisplay-4.2 clanApp-4.2 clanGL-4.2
 LIBS = `pkg-config --cflags --libs $(PACKAGES)`
 OBJS = mygame.o
 
@@ -144,7 +144,7 @@ clean:
 
             <div id="page-footer-wrapper">
                 <div id="page-footer">
-                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                    <div id="page-footer-copyright">&copy; ClanLib</div>
                 </div>
             </div>
         </div>
