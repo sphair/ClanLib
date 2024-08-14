@@ -84,11 +84,11 @@
         <li>clan::DisplayCache - Resource cache interface for clanDisplay resources</li>
     </ul>
 
-	<h2>Thread run-loop</h2>
+    <h2>Thread run-loop</h2>
 
-	<ul>
-	<li>clan::RunLoop - Application loop helper</li>
-	<li>clan::Timer - Timer class that invokes a callback on a specified interval</li>
-	</ul>
+    <ul>
+    <li>clan::RunLoop - Application loop helper</li>
+    <li>clan::Timer - Timer class that invokes a callback on a specified interval</li>
+    </ul>
 
 */
