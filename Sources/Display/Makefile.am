@@ -1,10 +1,10 @@
-lib_LTLIBRARIES = libclan41Display.la
+lib_LTLIBRARIES = libclan42Display.la
 
 if WIN32
 else
-libclan41Display_la_LIBADD =
+libclan42Display_la_LIBADD =
 endif
-libclan41Display_la_SOURCES = \
+libclan42Display_la_SOURCES = \
 Render/storage_buffer.cpp \
 Render/graphic_context.cpp \
 Render/shared_gc_data.cpp \
@@ -121,7 +121,7 @@ ImageProviders/provider_factory.cpp \
 ImageProviders/provider_type.cpp
 
 if WIN32
-libclan41Display_la_SOURCES += \
+libclan42Display_la_SOURCES += \
 Font/FontEngine/font_engine_win32.cpp \
 Platform/Win32/win32_window.cpp \
 Platform/Win32/screen_info_provider_win32.cpp \
@@ -133,7 +133,7 @@ Platform/Win32/cursor_provider_win32.cpp \
 Platform/Win32/input_device_provider_win32keyboard.cpp \
 Platform/Win32/dwm_functions.cpp
 else
-libclan41Display_la_SOURCES += \
+libclan42Display_la_SOURCES += \
 Font/FontEngine/font_engine_freetype.cpp \
 Platform/X11/display_message_queue_x11.cpp \
 Platform/X11/input_device_provider_x11keyboard.cpp \
@@ -144,17 +144,17 @@ Platform/X11/input_device_provider_x11mouse.cpp \
 Platform/X11/cursor_provider_x11.cpp
 
 if LINUX_JOYSTICK
-libclan41Display_la_SOURCES += \
+libclan42Display_la_SOURCES += \
 Platform/X11/input_device_provider_linuxjoystick.cpp
 endif
-libclan41Display_la_SOURCES += \
+libclan42Display_la_SOURCES += \
 Platform/X11/font_config.cpp
 endif
 
-libclan41Display_la_LDFLAGS = \
+libclan42Display_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanDisplay)
 
-libclan41Display_la_CXXFLAGS=$(clanDisplay_CXXFLAGS) $(extra_CFLAGS_clanDisplay)
+libclan42Display_la_CXXFLAGS=$(clanDisplay_CXXFLAGS) $(extra_CFLAGS_clanDisplay)
 # EOF #
 

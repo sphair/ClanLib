@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan41Sound.la
+lib_LTLIBRARIES = libclan42Sound.la
 
-libclan41Sound_la_SOURCES = \
+libclan42Sound_la_SOURCES = \
 Mixer/sound_format_conversion.cpp \
 soundbuffer_session.cpp \
 sound.cpp \
@@ -36,23 +36,23 @@ sound_cache.cpp \
 soundoutput.cpp
 
 if WIN32
-libclan41Sound_la_SOURCES += \
+libclan42Sound_la_SOURCES += \
 Platform/Win32/soundoutput_directsound.cpp \
 Platform/Win32/init_guids.cpp \
 Platform/Win32/soundoutput_win32.cpp
 else
-libclan41Sound_la_SOURCES += \
+libclan42Sound_la_SOURCES += \
 Platform/Linux/soundoutput_oss.cpp
 if ALSA
-libclan41Sound_la_SOURCES += \
+libclan42Sound_la_SOURCES += \
 Platform/Linux/soundoutput_alsa.cpp
 endif
 endif
 
-libclan41Sound_la_LDFLAGS = \
+libclan42Sound_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanSound)
 
-libclan41Sound_la_CXXFLAGS=$(clanSound_CXXFLAGS) $(extra_CFLAGS_clanSound)
+libclan42Sound_la_CXXFLAGS=$(clanSound_CXXFLAGS) $(extra_CFLAGS_clanSound)
 # EOF #
 

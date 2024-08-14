@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan41Core.la
+lib_LTLIBRARIES = libclan42Core.la
 
-libclan41Core_la_SOURCES = \
+libclan42Core_la_SOURCES = \
 System/block_allocator.cpp \
 System/service_impl.cpp \
 System/exception.cpp \
@@ -141,25 +141,25 @@ Crypto/sha256.cpp \
 Crypto/aes128_encrypt.cpp
 
 if WIN32
-libclan41Core_la_SOURCES += \
+libclan42Core_la_SOURCES += \
 System/Win32/system_win32.cpp \
 System/Win32/service_win32.cpp \
 IOData/Win32/directory_scanner_win32.cpp
 
 else
-libclan41Core_la_SOURCES += \
+libclan42Core_la_SOURCES += \
 System/Unix/system_unix.cpp \
 System/Unix/service_unix.cpp \
 IOData/Unix/directory_scanner_unix.cpp
 
 endif
 
-libclan41Core_la_LIBADD = @LIBPTHREAD@
+libclan42Core_la_LIBADD = @LIBPTHREAD@
 
-libclan41Core_la_LDFLAGS = \
+libclan42Core_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCore)
 
-libclan41Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
+libclan42Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
 
 # EOF #

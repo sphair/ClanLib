@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan41UI.la
+lib_LTLIBRARIES = libclan42UI.la
 
-libclan41UI_la_SOURCES = \
+libclan42UI_la_SOURCES = \
 ./precomp.cpp \
 ./TopLevel/view_tree.cpp \
 ./TopLevel/TopLevelWindow/top_level_window.cpp \
@@ -62,10 +62,10 @@ libclan41UI_la_SOURCES = \
 ./Image/image_source.cpp \
 ./Controller/window_manager.cpp
 
-libclan41UI_la_LDFLAGS = \
+libclan42UI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanUI)
 
-libclan41UI_la_CXXFLAGS=$(clanUI_CXXFLAGS) $(extra_CFLAGS_clanUI)
+libclan42UI_la_CXXFLAGS=$(clanUI_CXXFLAGS) $(extra_CFLAGS_clanUI)
 # EOF #
 

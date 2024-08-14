@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan41XML.la
+lib_LTLIBRARIES = libclan42XML.la
 
-libclan41XML_la_SOURCES = \
+libclan42XML_la_SOURCES = \
 XML/xml_writer.cpp \
 XML/dom_exception.cpp \
 XML/dom_entity.cpp \
@@ -42,10 +42,10 @@ DisplayResources/XML/sprite_xml.cpp \
 DisplayResources/XML/texture_xml.cpp \
 DisplayResources/XML/font_xml.cpp
 
-libclan41XML_la_LDFLAGS = \
+libclan42XML_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanXML)
 
-libclan41XML_la_CXXFLAGS=$(clanXML_CXXFLAGS) $(extra_CFLAGS_clanXML)
+libclan42XML_la_CXXFLAGS=$(clanXML_CXXFLAGS) $(extra_CFLAGS_clanXML)
 
 # EOF #

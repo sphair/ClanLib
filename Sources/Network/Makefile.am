@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan41Network.la
+lib_LTLIBRARIES = libclan42Network.la
 
-libclan41Network_la_SOURCES = \
+libclan42Network_la_SOURCES = \
 precomp.cpp \
 NetGame/connection_impl.cpp \
 NetGame/event_value.cpp \
@@ -17,17 +17,17 @@ Socket/tcp_connection.cpp \
 Socket/socket_name.cpp
 
 if WIN32
-libclan41Network_la_SOURCES += \
+libclan42Network_la_SOURCES += \
 setupnetwork_win32.cpp
 else
-libclan41Network_la_SOURCES += \
+libclan42Network_la_SOURCES += \
 setupnetwork_unix.cpp
 endif
 
-libclan41Network_la_LDFLAGS = \
+libclan42Network_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_Network)
 
-libclan41Network_la_CXXFLAGS=$(Network_CXXFLAGS) $(extra_CFLAGS_Network)
+libclan42Network_la_CXXFLAGS=$(Network_CXXFLAGS) $(extra_CFLAGS_Network)
 
 # EOF #
