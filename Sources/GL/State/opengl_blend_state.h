@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) {}
-		virtual ~OpenGLBlendStateProvider() {};
+		~OpenGLBlendStateProvider() override {};
 
 		BlendStateDescription desc;
 	};

@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		ButtonView();
-		~ButtonView();
+		~ButtonView() override;
 
 		std::shared_ptr<LabelView> label();
 		std::shared_ptr<ImageView> image_view();

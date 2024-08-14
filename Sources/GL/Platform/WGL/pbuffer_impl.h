@@ -42,13 +42,13 @@ namespace clan
 		PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 		~PBuffer_GL1_Impl();
 
-		void make_current() const;
+		void make_current() const override;
 
-		void get_opengl_version(int &version_major, int &version_minor) const;
-		void get_opengl_version(int &version_major, int &version_minor, int &version_release) const;
+		void get_opengl_version(int &version_major, int &version_minor) const override;
+		void get_opengl_version(int &version_major, int &version_minor, int &version_release) const override;
 
 		void create(OpenGLWindowProvider &window_provider, const Size &size);
-		ProcAddress *get_proc_address(const std::string& function_name) const;
+		ProcAddress *get_proc_address(const std::string& function_name) const override;
 
 	private:
 		void reset();

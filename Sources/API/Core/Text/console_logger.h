@@ -41,7 +41,7 @@ namespace clan
 	public:
 		/// \brief Constructs a console logger.
 		ConsoleLogger();
-		~ConsoleLogger();
+		~ConsoleLogger() override;
 
 		/// \brief Log text to console.
 		void log(const std::string &type, const std::string &text) override;

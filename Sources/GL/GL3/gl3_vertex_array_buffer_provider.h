@@ -42,7 +42,7 @@ namespace clan
 	{
 	public:
 		GL3VertexArrayBufferProvider();
-		~GL3VertexArrayBufferProvider();
+		~GL3VertexArrayBufferProvider() override;
 		void create(int size, BufferUsage usage) override;
 		void create(void *data, int size, BufferUsage usage) override;
 

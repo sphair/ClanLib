@@ -42,7 +42,7 @@ namespace clan
 	{
 	public:
 		GL3TransferBufferProvider();
-		~GL3TransferBufferProvider();
+		~GL3TransferBufferProvider() override;
 		void create(int size, BufferUsage usage) override;
 		void create(void *data, int size, BufferUsage usage) override;
 

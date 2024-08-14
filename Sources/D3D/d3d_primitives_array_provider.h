@@ -39,13 +39,13 @@ namespace clan
 	{
 	public:
 		D3DPrimitivesArrayProvider(const ComPtr<ID3D11Device> &device);
-		~D3DPrimitivesArrayProvider();
+		~D3DPrimitivesArrayProvider() override;
 
 		ComPtr<ID3D11Device> &get_device() { return device; }
 		void get_vertex_buffers(std::vector<ID3D11Buffer *> &out_buffers, std::vector<UINT> &out_strides, std::vector<UINT> &out_offsets);
 		size_t get_vertex_buffers_range() const;
 
-		void set_attribute(int index, const VertexData &data, bool normalize);
+		void set_attribute(int index, const VertexData &data, bool normalize) override;
 
 		ID3D11InputLayout *get_input_layout(D3DProgramObjectProvider *program);
 

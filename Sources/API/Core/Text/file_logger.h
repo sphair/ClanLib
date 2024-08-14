@@ -43,7 +43,7 @@ namespace clan
 	public:
 		/// \brief Constructs a file logger.
 		FileLogger(const std::string &filename);
-		~FileLogger();
+		~FileLogger() override;
 
 		/// \brief Log text to file.
 		void log(const std::string &type, const std::string &text) override;

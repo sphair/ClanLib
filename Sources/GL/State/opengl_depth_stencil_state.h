@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
-		virtual ~OpenGLDepthStencilStateProvider() { }
+		~OpenGLDepthStencilStateProvider() override { }
 
 		DepthStencilStateDescription desc;
 	};

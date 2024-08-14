@@ -36,18 +36,18 @@ namespace clan
 	{
 	public:
 		D3DTransferBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DTransferBufferProvider();
-		void create(int size, BufferUsage usage);
-		void create(void *data, int size, BufferUsage usage);
+		~D3DTransferBufferProvider() override;
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
-		void *get_data();
+		void *get_data() override;
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
 		int get_size() const { return size; }
 
-		void lock(GraphicContext &gc, BufferAccess access);
-		void unlock();
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+		void lock(GraphicContext &gc, BufferAccess access) override;
+		void unlock() override;
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
 
 	private:
 		struct DeviceHandles

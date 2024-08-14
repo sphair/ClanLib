@@ -36,17 +36,17 @@ namespace clan
 	{
 	public:
 		D3DStorageBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DStorageBufferProvider();
-		void create(int size, int stride, BufferUsage usage);
-		void create(const void *data, int size, int stride, BufferUsage usage);
+		~D3DStorageBufferProvider() override;
+		void create(int size, int stride, BufferUsage usage) override;
+		void create(const void *data, int size, int stride, BufferUsage usage) override;
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11ShaderResourceView> &get_srv(const ComPtr<ID3D11Device> &device);
 
-		void upload_data(GraphicContext &gc, const void *data, int size);
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(GraphicContext &gc, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		struct DeviceHandles

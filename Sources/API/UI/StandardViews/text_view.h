@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		TextView();
-		~TextView();
+		~TextView() override;
 
 		Size preferred_size() const;
 		void set_preferred_size(Size num_characters);

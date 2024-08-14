@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		FileSystemProvider_Zip(const ZipArchive &zip_archive);
-		~FileSystemProvider_Zip();
+		~FileSystemProvider_Zip() override;
 
 		std::string get_path() const override;
 		std::string get_identifier() const override;

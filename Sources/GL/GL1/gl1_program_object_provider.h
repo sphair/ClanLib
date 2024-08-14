@@ -44,7 +44,7 @@ namespace clan
 	{
 	public:
 		GL1ProgramObjectProvider(GL1GraphicContextProvider *gc_provider);
-		virtual ~GL1ProgramObjectProvider();
+		~GL1ProgramObjectProvider() override;
 
 		/// \brief Returns the OpenGL program object handle.
 		unsigned int get_handle() const override;

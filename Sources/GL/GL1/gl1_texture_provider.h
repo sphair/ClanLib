@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		GL1TextureProvider(TextureDimensions texture_dimensions);
-		~GL1TextureProvider();
+		~GL1TextureProvider() override;
 
 		GLuint get_handle() const { return handle; }
 		GLuint get_texture_type() const { return texture_type; }

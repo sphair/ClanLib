@@ -80,7 +80,7 @@ namespace clan
 		/// \param usage = Buffer Usage
 		TransferTexture(GraphicContext &gc, const PixelBuffer &pbuff, PixelBufferDirection direction = PixelBufferDirection::data_to_gpu, BufferUsage usage = BufferUsage::stream_draw);
 
-		~TransferTexture();
+		~TransferTexture() override;
 	};
 
 	/// \}

@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		GL3ShaderObjectProvider();
-		virtual ~GL3ShaderObjectProvider();
+		~GL3ShaderObjectProvider() override;
 
 		void create(ShaderType type, const std::string &source) override;
 		void create(ShaderType type, const void *source, int source_size) override;

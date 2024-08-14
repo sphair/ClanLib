@@ -55,11 +55,11 @@ namespace clan
 	{
 	public:
 		D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc);
-		~D3DGraphicContextProvider();
+		~D3DGraphicContextProvider() override;
 
-		int get_max_attributes();
-		Size get_max_texture_size() const;
-		Size get_display_window_size() const;
+		int get_max_attributes() override;
+		Size get_max_texture_size() const override;
+		Size get_display_window_size() const override;
 		float get_pixel_ratio() const override;
 		D3DDisplayWindowProvider *get_window() const { return window; }
 
@@ -67,82 +67,82 @@ namespace clan
 		HDC get_drawable() const;
 #endif
 
-		Signal<void(const Size &)> &sig_window_resized() { return window_resized_signal; }
-		ProgramObject get_program_object(StandardProgram standard_program) const;
+		Signal<void(const Size &)> &sig_window_resized() override { return window_resized_signal; }
+		ProgramObject get_program_object(StandardProgram standard_program) const override;
 
 		StandardPrograms standard_programs;
 
-		ClipZRange get_clip_z_range() const { return ClipZRange::zero_positive_w; }
-		TextureImageYAxis get_texture_image_y_axis() const { return TextureImageYAxis::y_top_down; }
-		ShaderLanguage get_shader_language() const { return ShaderLanguage::hlsl; }
-		int get_major_version() const;
-		int get_minor_version() const;
-		bool has_compute_shader_support() const;
-		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
-		std::unique_ptr<TextureProvider> alloc_texture(TextureDimensions texture_dimensions);
-		std::unique_ptr<OcclusionQueryProvider> alloc_occlusion_query();
-		std::unique_ptr<ProgramObjectProvider> alloc_program_object();
-		std::unique_ptr<ShaderObjectProvider> alloc_shader_object();
-		std::unique_ptr<FrameBufferProvider> alloc_frame_buffer();
-		std::unique_ptr<RenderBufferProvider> alloc_render_buffer();
-		std::unique_ptr<VertexArrayBufferProvider> alloc_vertex_array_buffer();
-		std::unique_ptr<UniformBufferProvider> alloc_uniform_buffer();
-		std::unique_ptr<StorageBufferProvider> alloc_storage_buffer();
-		std::unique_ptr<ElementArrayBufferProvider> alloc_element_array_buffer();
-		std::unique_ptr<TransferBufferProvider> alloc_transfer_buffer();
-		std::unique_ptr<PixelBufferProvider> alloc_pixel_buffer();
-		std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array();
-		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc);
-		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc);
-		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc);
-		void set_rasterizer_state(RasterizerStateProvider *state);
-		void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask);
-		void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref);
-		void set_program_object(StandardProgram standard_program);
-		void set_program_object(const ProgramObject &program);
-		void reset_program_object();
-		void set_uniform_buffer(int index, const UniformBuffer &buffer);
-		void reset_uniform_buffer(int index);
-		void set_storage_buffer(int index, const StorageBuffer &buffer);
-		void reset_storage_buffer(int index);
-		void set_texture(int unit_index, const Texture &texture);
-		void reset_texture(int unit_index);
-		void set_image_texture(int unit_index, const Texture &texture);
-		void reset_image_texture(int unit_index);
-		bool is_frame_buffer_owner(const FrameBuffer &fb);
-		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
-		void reset_frame_buffer();
-		void set_draw_buffer(DrawBuffer buffer);
+		ClipZRange get_clip_z_range() const override { return ClipZRange::zero_positive_w; }
+		TextureImageYAxis get_texture_image_y_axis() const override { return TextureImageYAxis::y_top_down; }
+		ShaderLanguage get_shader_language() const override { return ShaderLanguage::hlsl; }
+		int get_major_version() const override;
+		int get_minor_version() const override;
+		bool has_compute_shader_support() const override;
+		PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const override;
+		std::unique_ptr<TextureProvider> alloc_texture(TextureDimensions texture_dimensions) override;
+		std::unique_ptr<OcclusionQueryProvider> alloc_occlusion_query() override;
+		std::unique_ptr<ProgramObjectProvider> alloc_program_object() override;
+		std::unique_ptr<ShaderObjectProvider> alloc_shader_object() override;
+		std::unique_ptr<FrameBufferProvider> alloc_frame_buffer() override;
+		std::unique_ptr<RenderBufferProvider> alloc_render_buffer() override;
+		std::unique_ptr<VertexArrayBufferProvider> alloc_vertex_array_buffer() override;
+		std::unique_ptr<UniformBufferProvider> alloc_uniform_buffer() override;
+		std::unique_ptr<StorageBufferProvider> alloc_storage_buffer() override;
+		std::unique_ptr<ElementArrayBufferProvider> alloc_element_array_buffer() override;
+		std::unique_ptr<TransferBufferProvider> alloc_transfer_buffer() override;
+		std::unique_ptr<PixelBufferProvider> alloc_pixel_buffer() override;
+		std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array() override;
+		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) override;
+		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) override;
+		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		void set_rasterizer_state(RasterizerStateProvider *state) override;
+		void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) override;
+		void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) override;
+		void set_program_object(StandardProgram standard_program) override;
+		void set_program_object(const ProgramObject &program) override;
+		void reset_program_object() override;
+		void set_uniform_buffer(int index, const UniformBuffer &buffer) override;
+		void reset_uniform_buffer(int index) override;
+		void set_storage_buffer(int index, const StorageBuffer &buffer) override;
+		void reset_storage_buffer(int index) override;
+		void set_texture(int unit_index, const Texture &texture) override;
+		void reset_texture(int unit_index) override;
+		void set_image_texture(int unit_index, const Texture &texture) override;
+		void reset_image_texture(int unit_index) override;
+		bool is_frame_buffer_owner(const FrameBuffer &fb) override;
+		void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer) override;
+		void reset_frame_buffer() override;
+		void set_draw_buffer(DrawBuffer buffer) override;
 
-		bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
-		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
-		void set_primitives_array(const PrimitivesArray &primitives_array);
-		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
-		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
-		void set_primitives_elements(ElementArrayBufferProvider *array_provider);
-		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
-		void reset_primitives_elements();
-		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset);
-		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count);
-		void reset_primitives_array();
-		void set_scissor(const Rect &rect);
-		void reset_scissor();
-		void dispatch(int x, int y, int z);
-		void clear(const Colorf &color);
-		void clear_depth(float value);
-		void clear_stencil(int value);
-		void set_viewport(const Rectf &viewport);
-		void set_viewport(int index, const Rectf &viewport);
+		bool is_primitives_array_owner(const PrimitivesArray &primitives_array) override;
+		void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array) override;
+		void set_primitives_array(const PrimitivesArray &primitives_array) override;
+		void draw_primitives_array(PrimitivesType type, int offset, int num_vertices) override;
+		void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count) override;
+		void set_primitives_elements(ElementArrayBufferProvider *array_provider) override;
+		void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0) override;
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count) override;
+		void reset_primitives_elements() override;
+		void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset) override;
+		void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count) override;
+		void reset_primitives_array() override;
+		void set_scissor(const Rect &rect) override;
+		void reset_scissor() override;
+		void dispatch(int x, int y, int z) override;
+		void clear(const Colorf &color) override;
+		void clear_depth(float value) override;
+		void clear_stencil(int value) override;
+		void set_viewport(const Rectf &viewport) override;
+		void set_viewport(int index, const Rectf &viewport) override;
 
-		void set_depth_range(float n, float f);
-		void set_depth_range(int viewport, float n, float f);
+		void set_depth_range(float n, float f) override;
+		void set_depth_range(int viewport, float n, float f) override;
 		void on_window_resized();
 
 		void begin_resize_swap_chain();
 		void end_resize_swap_chain();
 
-		void flush();
+		void flush() override;
 
 	private:
 		void set_default_dsv();

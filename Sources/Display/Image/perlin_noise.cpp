@@ -349,8 +349,8 @@ namespace clan
 		// (1,1,0),(-1,1,0),(1,-1,0),(-1,-1,0),
 		// (1,0,1),(-1,0,1),(1,0,-1),(-1,0,-1),
 		// (0,1,1),(0,-1,1),(0,1,-1),(0,-1,-1)
-		// To  avoid  the  cost  of  dividing  by  12,  we  pad  to  16  gradient 
-		// directions,  adding  an  extra  (1,1,0),(-1,1,0),(0,-1,1)  and  (0,-1,-1). 
+		// To  avoid  the  cost  of  dividing  by  12,  we  pad  to  16  gradient
+		// directions,  adding  an  extra  (1,1,0),(-1,1,0),(0,-1,1)  and  (0,-1,-1).
 		// These  form  a  regular  tetrahedron,
 
 		float u, v;
@@ -646,7 +646,7 @@ namespace clan
 
 			memcpy(dest, table, size_to_copy);
 			dest += size_to_copy;
-            dest_size -= size_to_copy;
+			dest_size -= size_to_copy;
 		}
 
 		// Mirror the table

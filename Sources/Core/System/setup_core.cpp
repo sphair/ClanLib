@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		SetupCore_Impl();
-		virtual ~SetupCore_Impl();
+		~SetupCore_Impl() override;
 
 		ThreadLocalStorage_Instance tls_instance;
 

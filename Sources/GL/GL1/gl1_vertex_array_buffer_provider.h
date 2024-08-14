@@ -36,7 +36,7 @@ namespace clan
 	{
 	public:
 		GL1VertexArrayBufferProvider();
-		~GL1VertexArrayBufferProvider();
+		~GL1VertexArrayBufferProvider() override;
 		void create(int size, BufferUsage usage) override;
 		void create(void *data, int size, BufferUsage usage) override;
 

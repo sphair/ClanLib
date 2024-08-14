@@ -78,7 +78,7 @@ namespace clan
 		{
 		}
 
-		~SlotImplT()
+		~SlotImplT() override
 		{
 			std::shared_ptr<SignalImpl<SlotImplT>> sig = signal.lock();
 			if (sig)

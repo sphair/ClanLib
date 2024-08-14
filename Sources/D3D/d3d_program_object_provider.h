@@ -77,19 +77,19 @@ namespace clan
 	{
 	public:
 		D3DProgramObjectProvider(const ComPtr<ID3D11Device> &device, const ComPtr<ID3D11DeviceContext> &device_context);
-		~D3DProgramObjectProvider();
+		~D3DProgramObjectProvider() override;
 
-		unsigned int get_handle() const;
-		bool get_link_status() const;
-		bool get_validate_status() const;
-		std::string get_info_log() const;
-		std::vector<ShaderObject> get_shaders() const;
-		int get_attribute_location(const std::string &name) const;
-		int get_uniform_location(const std::string &name) const;
+		unsigned int get_handle() const override;
+		bool get_link_status() const override;
+		bool get_validate_status() const override;
+		std::string get_info_log() const override;
+		std::vector<ShaderObject> get_shaders() const override;
+		int get_attribute_location(const std::string &name) const override;
+		int get_uniform_location(const std::string &name) const override;
 
-		int get_uniform_buffer_size(int block_index) const;
-		int get_uniform_buffer_index(const std::string &block_name) const;
-		int get_storage_buffer_index(const std::string &name) const;
+		int get_uniform_buffer_size(int block_index) const override;
+		int get_uniform_buffer_index(const std::string &block_name) const override;
+		int get_storage_buffer_index(const std::string &name) const override;
 
 		DataBuffer &get_shader_bytecode(ShaderType shader_type);
 		D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
@@ -111,26 +111,26 @@ namespace clan
 		std::vector<D3DStorageBlock> storage_blocks;
 		std::map<std::string, int> storage_block_names;
 
-		void attach(const ShaderObject &obj);
-		void detach(const ShaderObject &obj);
-		void bind_attribute_location(int index, const std::string &name);
-		void bind_frag_data_location(int color_number, const std::string &name);
-		void link();
-		void validate();
+		void attach(const ShaderObject &obj) override;
+		void detach(const ShaderObject &obj) override;
+		void bind_attribute_location(int index, const std::string &name) override;
+		void bind_frag_data_location(int color_number, const std::string &name) override;
+		void link() override;
+		void validate() override;
 
-		void set_uniform1i(int location, int);
-		void set_uniform2i(int location, int, int);
-		void set_uniform3i(int location, int, int, int);
-		void set_uniform4i(int location, int, int, int, int);
-		void set_uniformiv(int location, int size, int count, const int *data);
-		void set_uniform1f(int location, float);
-		void set_uniform2f(int location, float, float);
-		void set_uniform3f(int location, float, float, float);
-		void set_uniform4f(int location, float, float, float, float);
-		void set_uniformfv(int location, int size, int count, const float *data);
-		void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data);
-		void set_uniform_buffer_index(int block_index, int bind_index);
-		void set_storage_buffer_index(int buffer_index, int bind_unit_index);
+		void set_uniform1i(int location, int) override;
+		void set_uniform2i(int location, int, int) override;
+		void set_uniform3i(int location, int, int, int) override;
+		void set_uniform4i(int location, int, int, int, int) override;
+		void set_uniformiv(int location, int size, int count, const int *data) override;
+		void set_uniform1f(int location, float) override;
+		void set_uniform2f(int location, float, float) override;
+		void set_uniform3f(int location, float, float, float) override;
+		void set_uniform4f(int location, float, float, float, float) override;
+		void set_uniformfv(int location, int size, int count, const float *data) override;
+		void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data) override;
+		void set_uniform_buffer_index(int block_index, int bind_index) override;
+		void set_storage_buffer_index(int buffer_index, int bind_unit_index) override;
 
 	private:
 		ComPtr<ID3D11Device> device;

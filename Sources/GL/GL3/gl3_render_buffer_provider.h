@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		GL3RenderBufferProvider();
-		~GL3RenderBufferProvider();
+		~GL3RenderBufferProvider() override;
 
 		GLuint get_handle();
 

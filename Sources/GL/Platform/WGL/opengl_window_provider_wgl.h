@@ -48,77 +48,77 @@ namespace clan
 	{
 	public:
 		OpenGLWindowProvider(OpenGLContextDescription &opengl_desc);
-		~OpenGLWindowProvider();
+		~OpenGLWindowProvider() override;
 
 		bool is_double_buffered() const { return double_buffered; }
-		Rect get_geometry() const;
-		Rect get_viewport() const;
-		bool is_fullscreen() const;
-		bool has_focus() const;
-		bool is_minimized() const;
-		bool is_maximized() const;
-		bool is_visible() const;
-		std::string get_title() const;
-		Size get_minimum_size(bool client_area) const;
-		Size get_maximum_size(bool client_area) const;
+		Rect get_geometry() const override;
+		Rect get_viewport() const override;
+		bool is_fullscreen() const override;
+		bool has_focus() const override;
+		bool is_minimized() const override;
+		bool is_maximized() const override;
+		bool is_visible() const override;
+		std::string get_title() const override;
+		Size get_minimum_size(bool client_area) const override;
+		Size get_maximum_size(bool client_area) const override;
 		DisplayWindowHandle get_handle() const override { DisplayWindowHandle handle; handle.hwnd = win32_window.get_hwnd(); return handle; }
 		HDC get_device_context() const { return device_context; }
 		HGLRC get_opengl_context() const { return opengl_context; }
-		GraphicContext& get_gc() { return gc; }
+		GraphicContext& get_gc() override { return gc; }
 		InputDevice &get_keyboard() override { return win32_window.get_keyboard(); }
 		InputDevice &get_mouse() override { return win32_window.get_mouse(); }
 		std::vector<InputDevice> &get_game_controllers() override { return win32_window.get_game_controllers(); }
-		bool is_clipboard_text_available() const;
-		bool is_clipboard_image_available() const;
-		std::string get_clipboard_text() const;
-		PixelBuffer get_clipboard_image() const;
+		bool is_clipboard_text_available() const override;
+		bool is_clipboard_image_available() const override;
+		std::string get_clipboard_text() const override;
+		PixelBuffer get_clipboard_image() const override;
 		float get_pixel_ratio() const override;
 
 		void make_current() const;
-		Point client_to_screen(const Point &client);
-		Point screen_to_client(const Point &screen);
-		void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
+		Point client_to_screen(const Point &client) override;
+		Point screen_to_client(const Point &screen) override;
+		void create(DisplayWindowSite *site, const DisplayWindowDescription &description) override;
 
 		HGLRC get_share_context();
-		void show_system_cursor();
-		CursorProvider *create_cursor(const CursorDescription &cursor_description);
-		void set_cursor(CursorProvider *cursor);
-		void set_cursor(StandardCursor type);
-		void set_cursor_handle(HCURSOR cursor);
-		void hide_system_cursor();
-		void set_title(const std::string &new_title);
-		void set_position(const Rect &pos, bool client_area);
-		void set_size(int width, int height, bool client_area);
-		void set_minimum_size(int width, int height, bool client_area);
-		void set_maximum_size(int width, int height, bool client_area);
-		void set_enabled(bool enable);
-		void minimize();
-		void restore();
-		void maximize();
-		void toggle_fullscreen();
-		void show(bool activate);
-		void hide();
-		void bring_to_front();
+		void show_system_cursor() override;
+		CursorProvider *create_cursor(const CursorDescription &cursor_description) override;
+		void set_cursor(CursorProvider *cursor) override;
+		void set_cursor(StandardCursor type) override;
+		void set_cursor_handle(HCURSOR cursor) override;
+		void hide_system_cursor() override;
+		void set_title(const std::string &new_title) override;
+		void set_position(const Rect &pos, bool client_area) override;
+		void set_size(int width, int height, bool client_area) override;
+		void set_minimum_size(int width, int height, bool client_area) override;
+		void set_maximum_size(int width, int height, bool client_area) override;
+		void set_enabled(bool enable) override;
+		void minimize() override;
+		void restore() override;
+		void maximize() override;
+		void toggle_fullscreen() override;
+		void show(bool activate) override;
+		void hide() override;
+		void bring_to_front() override;
 
 		/// \brief Flip OpenGL buffers.
-		void flip(int interval);
+		void flip(int interval) override;
 
 		/// \brief Capture/Release the mouse.
-		void capture_mouse(bool capture);
+		void capture_mouse(bool capture) override;
 
 		/// \brief Stores text in the clipboard.
-		void set_clipboard_text(const std::string &text);
+		void set_clipboard_text(const std::string &text) override;
 
-		void set_clipboard_image(const PixelBuffer &buf);
+		void set_clipboard_image(const PixelBuffer &buf) override;
 
 		/// \brief Invalidates a region of a screen, causing a repaint.
-		void request_repaint();
+		void request_repaint() override;
 
-		void set_large_icon(const PixelBuffer &image);
-		void set_small_icon(const PixelBuffer &image);
+		void set_large_icon(const PixelBuffer &image) override;
+		void set_small_icon(const PixelBuffer &image) override;
 
-		void enable_alpha_channel(const Rect &blur_rect);
-		void extend_frame_into_client_area(int left, int top, int right, int bottom);
+		void enable_alpha_channel(const Rect &blur_rect) override;
+		void extend_frame_into_client_area(int left, int top, int right, int bottom) override;
 
 		ProcAddress *get_proc_address(const std::string& function_name) const;
 

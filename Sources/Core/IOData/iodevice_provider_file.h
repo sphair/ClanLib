@@ -46,7 +46,7 @@ namespace clan
 			unsigned int a_share,
 			unsigned int a_flags);
 
-		~IODeviceProvider_File();
+		~IODeviceProvider_File() override;
 
 		size_t get_size() const override;
 		size_t get_position() const override;

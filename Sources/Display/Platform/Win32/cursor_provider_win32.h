@@ -44,7 +44,7 @@ namespace clan
 	{
 	public:
 		CursorProvider_Win32(const CursorDescription &cursor_description);
-		~CursorProvider_Win32();
+		~CursorProvider_Win32() override;
 
 		HCURSOR handle;
 

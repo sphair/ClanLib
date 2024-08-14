@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		XMLSoundCache(const XMLResourceDocument &doc);
-		~XMLSoundCache();
+		~XMLSoundCache() override;
 
 		Resource<SoundBuffer> get_sound(const std::string &id) override;
 		static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);

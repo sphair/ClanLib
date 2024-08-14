@@ -36,13 +36,13 @@ namespace clan
 	{
 	public:
 		D3DOcclusionQueryProvider();
-		~D3DOcclusionQueryProvider();
+		~D3DOcclusionQueryProvider() override;
 
-		bool is_result_ready() const;
-		int get_result() const;
+		bool is_result_ready() const override;
+		int get_result() const override;
 
-		void begin();
-		void end();
-		void create();
+		void begin() override;
+		void end() override;
+		void create() override;
 	};
 }

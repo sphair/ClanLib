@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		FileSystemProvider_File(const std::string &path);
-		~FileSystemProvider_File();
+		~FileSystemProvider_File() override;
 
 		std::string get_path() const override;
 		std::string get_identifier() const override;

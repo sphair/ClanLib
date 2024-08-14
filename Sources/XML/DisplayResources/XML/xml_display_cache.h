@@ -39,7 +39,7 @@ namespace clan
 	{
 	public:
 		XMLDisplayCache(const XMLResourceDocument &doc);
-		~XMLDisplayCache();
+		~XMLDisplayCache() override;
 
 		Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override;
 		Resource<Image> get_image(Canvas &canvas, const std::string &id) override;

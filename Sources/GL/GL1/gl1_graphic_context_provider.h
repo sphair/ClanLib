@@ -83,7 +83,7 @@ namespace clan
 	{
 	public:
 		GL1GraphicContextProvider(OpenGLWindowProvider * render_window);
-		~GL1GraphicContextProvider();
+		~GL1GraphicContextProvider() override;
 
 		int get_max_attributes() override;
 		Size get_max_texture_size() const override;

@@ -43,7 +43,7 @@ namespace clan
 	public:
 		FontEngine_Win32(const FontDescription &description, const std::string &typeface_name, float pixel_ratio);
 		FontEngine_Win32(const FontDescription &description, DataBuffer &font_databuffer, float pixel_ratio);
-		~FontEngine_Win32();
+		~FontEngine_Win32() override;
 
 		bool is_automatic_recreation_allowed() const override { return true; }
 		const FontMetrics &get_metrics() const override { return font_metrics; }

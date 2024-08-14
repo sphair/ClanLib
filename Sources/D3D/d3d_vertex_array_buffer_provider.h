@@ -38,15 +38,15 @@ namespace clan
 	{
 	public:
 		D3DVertexArrayBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DVertexArrayBufferProvider();
-		void create(int size, BufferUsage usage);
-		void create(void *data, int size, BufferUsage usage);
+		~D3DVertexArrayBufferProvider() override;
+		void create(int size, BufferUsage usage) override;
+		void create(void *data, int size, BufferUsage usage) override;
 
 		ComPtr<ID3D11Buffer> &get_buffer(const ComPtr<ID3D11Device> &device);
 
-		void upload_data(GraphicContext &gc, int offset, const void *data, int size);
-		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
-		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+		void upload_data(GraphicContext &gc, int offset, const void *data, int size) override;
+		void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
+		void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) override;
 
 	private:
 		struct DeviceHandles
@@ -56,7 +56,7 @@ namespace clan
 			ComPtr<ID3D11Buffer> buffer;
 		};
 
-		void device_destroyed(ID3D11Device *device);
+		void device_destroyed(ID3D11Device *device) override;
 		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
 
 		static D3D11_MAP to_d3d_map_type(BufferAccess access);

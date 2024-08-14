@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3PrimitivesArrayProvider();
+		~GL3PrimitivesArrayProvider() override;
 
 		GLuint handle;
 

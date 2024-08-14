@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		InputDeviceProvider_Win32Hid(HANDLE rawinput_device);
-		~InputDeviceProvider_Win32Hid();
+		~InputDeviceProvider_Win32Hid() override;
 
 		std::string get_name() const override;
 		std::string get_device_name() const override;
@@ -56,7 +56,7 @@ namespace clan
 		void update(InputDevice &joystick, RAWINPUT *raw_input);
 
 	private:
-		void on_dispose();
+		void on_dispose() override;
 
 		HANDLE open_device();
 		DataBuffer get_preparse_data();

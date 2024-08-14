@@ -37,6 +37,6 @@ namespace clan
 	public:
 		ScreenInfoProvider_Win32();
 
-		virtual std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const;
+		std::vector<Rectf> get_screen_geometries(int &primary_screen_index) const override;
 	};
 }

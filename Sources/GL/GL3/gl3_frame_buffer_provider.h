@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3FrameBufferProvider();
+		~GL3FrameBufferProvider() override;
 
 		GLuint get_handle();
 		Size get_size() const override;

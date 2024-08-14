@@ -39,16 +39,16 @@ namespace clan
 	{
 	public:
 		D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level);
-		~D3DShaderObjectProvider();
-		void create(ShaderType type, const std::string &source);
-		void create(ShaderType type, const void *source, int source_size);
-		void create(ShaderType type, const std::vector<std::string> &sources);
+		~D3DShaderObjectProvider() override;
+		void create(ShaderType type, const std::string &source) override;
+		void create(ShaderType type, const void *source, int source_size) override;
+		void create(ShaderType type, const std::vector<std::string> &sources) override;
 
-		unsigned int get_handle() const;
-		bool get_compile_status() const;
-		ShaderType get_shader_type() const;
-		std::string get_info_log() const;
-		std::string get_shader_source() const;
+		unsigned int get_handle() const override;
+		bool get_compile_status() const override;
+		ShaderType get_shader_type() const override;
+		std::string get_info_log() const override;
+		std::string get_shader_source() const override;
 
 		ID3D11VertexShader *get_vertex() { return static_cast<ID3D11VertexShader*>(shader.get()); }
 		ID3D11PixelShader *get_pixel() { return static_cast<ID3D11PixelShader*>(shader.get()); }
@@ -68,7 +68,7 @@ namespace clan
 		std::map<std::string, int> storage_buffer_srv_locations;
 		std::map<std::string, int> storage_buffer_uav_locations;
 
-		void compile();
+		void compile() override;
 
 	private:
 		void set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding);

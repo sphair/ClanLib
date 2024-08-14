@@ -38,40 +38,40 @@ namespace clan
 		/// \brief Construct initial directory scanner.
 		DirectoryScanner_Win32();
 
-		virtual ~DirectoryScanner_Win32();
+		~DirectoryScanner_Win32() override;
 
 		/// \brief Scan for files in a directory.
-		virtual bool scan(const std::string &pathname);
+		bool scan(const std::string &pathname) override;
 
 		/// \brief Scan for files matching a pattern.
-		virtual bool scan(const std::string &pathname, const std::string &pattern);
+		bool scan(const std::string &pathname, const std::string &pattern) override;
 
 		/// \brief Returns the path of the directory being scanned.
-		virtual std::string get_directory_path();
+		std::string get_directory_path() override;
 
 		/// \brief Returns the size of the current found file.
-		virtual int get_size();
+		int get_size() override;
 
 		/// \brief Returns the name of the current found file.
-		virtual std::string get_name();
+		std::string get_name() override;
 
 		/// \brief Returns the name of the current found file, including the directory path.
-		virtual std::string get_pathname();
+		std::string get_pathname() override;
 
 		/// \brief Returns true if filename is a directory.
-		virtual bool is_directory();
+		bool is_directory() override;
 
 		/// \brief Returns true if filename is hidden.
-		virtual bool is_hidden();
+		bool is_hidden() override;
 
 		/// \brief Returns true if filename is readable.
-		virtual bool is_readable();
+		bool is_readable() override;
 
 		/// \brief Returns true if filename is writable.
-		virtual bool is_writable();
+		bool is_writable() override;
 
 		/// \brief Find next file in directory scan. Returns false if no more files was found.
-		virtual bool next();
+		bool next() override;
 
 	private:
 		std::string path_with_ending_slash(const std::string &path);

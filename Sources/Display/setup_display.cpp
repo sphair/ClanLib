@@ -59,7 +59,7 @@ namespace clan
 	{
 	public:
 		SetupDisplay_Impl();
-		virtual ~SetupDisplay_Impl();
+		~SetupDisplay_Impl() override;
 
 		static void add_cache_factory_file(ResourceManager &manager, const FileResourceDocument &doc);
 

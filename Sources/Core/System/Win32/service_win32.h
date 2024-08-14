@@ -38,9 +38,9 @@ namespace clan
 	{
 	public:
 		Service_Win32(Service *service, const std::string &service_name);
-		virtual ~Service_Win32();
+		~Service_Win32() override;
 
-		int main(int argc, char **argv);
+		int main(int argc, char **argv) override;
 
 		int run_debug(std::vector<std::string> args);
 		int run_service();

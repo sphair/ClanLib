@@ -45,7 +45,7 @@ namespace clan
 	{
 	public:
 		GL1FrameBufferProvider(GL1GraphicContextProvider *gc_provider);
-		~GL1FrameBufferProvider();
+		~GL1FrameBufferProvider() override;
 
 		Size get_size() const override;
 		FrameBufferBindTarget get_bind_target() const override;

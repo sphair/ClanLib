@@ -39,7 +39,7 @@ namespace clan
 	{
 	public:
 		CPUPixelBufferProvider();
-		~CPUPixelBufferProvider();
+		~CPUPixelBufferProvider() override;
 
 		void create(TextureFormat new_format, const Size &new_size, const void *data_ptr, bool only_reference_data);
 		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;

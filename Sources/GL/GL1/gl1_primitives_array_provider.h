@@ -36,7 +36,7 @@ namespace clan
 	{
 	public:
 		GL1PrimitivesArrayProvider();
-		~GL1PrimitivesArrayProvider();
+		~GL1PrimitivesArrayProvider() override;
 
 		std::vector<PrimitivesArrayProvider::VertexData> attributes;
 		std::vector<bool> normalize_attributes;

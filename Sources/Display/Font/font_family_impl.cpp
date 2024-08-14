@@ -63,7 +63,7 @@ namespace clan
 	{
 	public:
 		FontEngine_Sprite(const FontDescription &desc, FontMetrics &metrics) : font_metrics(metrics) { font_description = desc.clone(); }
-		~FontEngine_Sprite() {}
+		~FontEngine_Sprite() override {}
 
 		bool is_automatic_recreation_allowed() const override { return false; }
 		const FontMetrics &get_metrics() const override { return font_metrics; }

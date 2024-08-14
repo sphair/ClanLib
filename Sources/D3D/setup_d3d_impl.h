@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		SetupD3D_Impl();
-		virtual ~SetupD3D_Impl();
+		~SetupD3D_Impl() override;
 
 		static SetupD3D_Impl *instance;
 	};

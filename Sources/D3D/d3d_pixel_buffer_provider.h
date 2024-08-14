@@ -39,21 +39,21 @@ namespace clan
 	{
 	public:
 		D3DPixelBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DPixelBufferProvider();
-		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
+		~D3DPixelBufferProvider() override;
+		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
-		void *get_data();
-		int get_pitch() const;
+		void *get_data() override;
+		int get_pitch() const override;
 
 		ComPtr<ID3D11Texture2D> &get_texture_2d(const ComPtr<ID3D11Device> &device);
-		Size get_size() const { return size; }
-		bool is_gpu() const { return true; }
+		Size get_size() const override { return size; }
+		bool is_gpu() const override { return true; }
 
-		TextureFormat get_format() const { return texture_format; };
+		TextureFormat get_format() const override { return texture_format; };
 
-		void lock(GraphicContext &gc, BufferAccess access);
-		void unlock();
-		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
+		void lock(GraphicContext &gc, BufferAccess access) override;
+		void unlock() override;
+		void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data) override;
 
 	private:
 		struct DeviceHandles
@@ -64,7 +64,7 @@ namespace clan
 			ComPtr<ID3D11Texture2D> texture;
 		};
 
-		void device_destroyed(ID3D11Device *device);
+		void device_destroyed(ID3D11Device *device) override;
 		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device);
 
 		static D3D11_MAP to_d3d_map_type(BufferAccess access);

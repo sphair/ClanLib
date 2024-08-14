@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		GL3ProgramObjectProvider();
-		virtual ~GL3ProgramObjectProvider();
+		~GL3ProgramObjectProvider() override;
 
 		/// \brief Returns the OpenGL program object handle.
 		unsigned int get_handle() const override;

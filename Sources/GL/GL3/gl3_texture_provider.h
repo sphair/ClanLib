@@ -43,7 +43,7 @@ namespace clan
 	public:
 		GL3TextureProvider(TextureDimensions texture_dimensions);
 		GL3TextureProvider(GLuint texture_type, GLuint handle);
-		~GL3TextureProvider();
+		~GL3TextureProvider() override;
 
 		GLuint get_handle() const { return handle; }
 		GLuint get_texture_type() const { return texture_type; }

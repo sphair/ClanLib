@@ -45,13 +45,13 @@ namespace clan
 		Exception(const std::string &message);
 
 		/// \brief Destructs an exception object
-		virtual ~Exception() noexcept {}
+		~Exception() noexcept override {}
 
 		/// \brief Description of exception.
 		std::string message;
 
 		/// \brief Returns description of exception
-		virtual const char* what() const throw() override;
+		const char* what() const throw() override;
 
 		/// \brief Returns the call stack present when the exception object was created.
 		/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/

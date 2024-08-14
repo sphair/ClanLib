@@ -41,16 +41,16 @@ namespace clan
 	{
 	public:
 		ZipIODevice_FileEntry(IODevice iodevice, const ZipFileEntry &entry);
-		~ZipIODevice_FileEntry();
+		~ZipIODevice_FileEntry() override;
 
-		virtual size_t get_size() const override;
-		virtual size_t get_position() const override;
+		size_t get_size() const override;
+		size_t get_position() const override;
 
-		virtual size_t send(const void *data, size_t len, bool send_all) override;
-		virtual size_t receive(void *data, size_t len, bool receive_all) override;
-		virtual size_t peek(void *data, size_t len) override;
+		size_t send(const void *data, size_t len, bool send_all) override;
+		size_t receive(void *data, size_t len, bool receive_all) override;
+		size_t peek(void *data, size_t len) override;
 
-		virtual bool seek(int position, IODevice::SeekMode mode) override;
+		bool seek(int position, IODevice::SeekMode mode) override;
 
 		IODeviceProvider *duplicate() override;
 

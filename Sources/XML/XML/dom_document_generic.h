@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		DomDocument_Impl();
-		~DomDocument_Impl();
+		~DomDocument_Impl() override;
 
 		std::string qualified_name;
 		std::string public_id;

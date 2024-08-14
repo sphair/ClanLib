@@ -37,13 +37,13 @@ namespace clan
 	{
 	public:
 		D3DRenderBufferProvider(const ComPtr<ID3D11Device> &device);
-		~D3DRenderBufferProvider();
+		~D3DRenderBufferProvider() override;
 
 		ComPtr<ID3D11Texture2D> &get_texture(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device);
 
-		void create(int width, int height, TextureFormat texture_format, int multisample_samples);
+		void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 
 	private:
 		struct DeviceHandles

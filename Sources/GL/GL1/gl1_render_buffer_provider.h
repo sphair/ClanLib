@@ -39,10 +39,10 @@ namespace clan
 	{
 	public:
 		GL1RenderBufferProvider(GL1GraphicContextProvider *gc_provider);
-		~GL1RenderBufferProvider();
+		~GL1RenderBufferProvider() override;
 
 		GLuint get_handle();
 		/// \brief Creates a render buffer image of the specified dimensions.
-		virtual void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
+		void create(int width, int height, TextureFormat texture_format, int multisample_samples) override;
 	};
 }

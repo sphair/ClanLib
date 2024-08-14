@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
-		virtual ~OpenGLRasterizerStateProvider() { }
+		~OpenGLRasterizerStateProvider() override { }
 
 		RasterizerStateDescription desc;
 	};

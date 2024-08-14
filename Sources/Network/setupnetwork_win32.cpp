@@ -42,7 +42,7 @@ namespace clan
 	{
 	public:
 		SetupNetwork_Impl();
-		virtual ~SetupNetwork_Impl();
+		~SetupNetwork_Impl() override;
 	};
 
 	void SetupNetwork::start()

@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		GL1TransferBufferProvider();
-		~GL1TransferBufferProvider();
+		~GL1TransferBufferProvider() override;
 		void create(int size, BufferUsage usage) override;
 		void create(void *data, int size, BufferUsage usage) override;
 

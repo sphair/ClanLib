@@ -36,8 +36,8 @@ namespace clan
 	{
 	public:
 		D3DTargetProvider();
-		~D3DTargetProvider();
+		~D3DTargetProvider() override;
 
-		std::unique_ptr<DisplayWindowProvider> alloc_display_window();
+		std::unique_ptr<DisplayWindowProvider> alloc_display_window() override;
 	};
 }

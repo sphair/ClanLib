@@ -42,7 +42,7 @@ namespace clan
 	{
 	public:
 		GL3StorageBufferProvider();
-		~GL3StorageBufferProvider();
+		~GL3StorageBufferProvider() override;
 		void create(int size, int stride, BufferUsage usage) override;
 		void create(const void *data, int size, int stride, BufferUsage usage) override;
 

@@ -39,7 +39,7 @@ namespace clan
 	{
 	public:
 		InputDeviceProvider_Win32Mouse(Win32Window *window);
-		~InputDeviceProvider_Win32Mouse();
+		~InputDeviceProvider_Win32Mouse() override;
 
 		InputDevice::Type get_type() const override { return InputDevice::pointer; }
 		Pointf get_position() const override;
@@ -54,7 +54,7 @@ namespace clan
 		void set_device_position(int x, int y) override;
 
 	private:
-		void on_dispose();
+		void on_dispose() override;
 
 		bool key_states[32];
 		Win32Window *window;

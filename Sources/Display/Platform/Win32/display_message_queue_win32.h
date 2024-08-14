@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		DisplayMessageQueue_Win32();
-		~DisplayMessageQueue_Win32();
+		~DisplayMessageQueue_Win32() override;
 
 		void run() override;
 		void exit() override;

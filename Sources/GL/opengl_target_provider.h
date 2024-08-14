@@ -39,7 +39,7 @@ namespace clan
 	{
 	public:
 		OpenGLTargetProvider();
-		~OpenGLTargetProvider();
+		~OpenGLTargetProvider() override;
 
 		OpenGLContextDescription get_description() { return description; }
 		std::unique_ptr<DisplayWindowProvider> alloc_display_window() override;

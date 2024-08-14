@@ -41,7 +41,7 @@ namespace clan
 	{
 	public:
 		GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
-		~GL3OcclusionQueryProvider();
+		~GL3OcclusionQueryProvider() override;
 
 		GLint get_result() const override;
 		bool is_result_ready() const override;

@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		TextFieldView();
-		~TextFieldView();
+		~TextFieldView() override;
 
 		int preferred_size() const;
 		void set_preferred_size(int num_characters);

@@ -63,7 +63,7 @@ namespace clan
 	public:
 		/// \brief Creates a new OpenGL graphic context provider for a rendering window.
 		GL3GraphicContextProvider(const OpenGLWindowProvider * const render_window);
-		~GL3GraphicContextProvider();
+		~GL3GraphicContextProvider() override;
 
 		int get_max_attributes() override;
 		Size get_max_texture_size() const override;

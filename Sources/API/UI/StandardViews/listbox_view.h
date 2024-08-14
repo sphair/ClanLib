@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		ListBoxView();
-		~ListBoxView();
+		~ListBoxView() override;
 		
 		void set_items(const std::vector<std::shared_ptr<View>> &items);
 		

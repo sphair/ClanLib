@@ -37,7 +37,7 @@ namespace clan
 	{
 	public:
 		D3DTextureData(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions);
-		~D3DTextureData();
+		~D3DTextureData() override;
 
 		enum class DeviceTextureType
 		{
@@ -76,7 +76,7 @@ namespace clan
 			DeviceTextureType texture_type;
 		};
 
-		void device_destroyed(ID3D11Device *device);
+		void device_destroyed(ID3D11Device *device) override;
 		DeviceHandles &get_handles(const ComPtr<ID3D11Device> &device) const;
 		DeviceTextureType decode_texture_type(TextureDimensions texture_dimensions) const;
 		void attach_to_another_device(ID3D11Device *not_this_device);

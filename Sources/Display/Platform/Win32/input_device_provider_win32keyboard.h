@@ -39,7 +39,7 @@ namespace clan
 	{
 	public:
 		InputDeviceProvider_Win32Keyboard(Win32Window *window);
-		~InputDeviceProvider_Win32Keyboard();
+		~InputDeviceProvider_Win32Keyboard() override;
 
 		InputDevice::Type get_type() const override { return InputDevice::keyboard; }
 		bool get_keycode(int keycode) const override;
@@ -49,7 +49,7 @@ namespace clan
 		int get_button_count() const override;
 
 	private:
-		void on_dispose();
+		void on_dispose() override;
 
 		Win32Window *window;
 

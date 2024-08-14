@@ -41,7 +41,7 @@ namespace clan
 	public:
 		D3DTextureProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level, TextureDimensions texture_dimensions);
 		D3DTextureProvider(D3DTextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
-		~D3DTextureProvider();
+		~D3DTextureProvider() override;
 
 		static bool is_stencil_or_depth_format(TextureFormat format);
 		static DXGI_FORMAT to_d3d_format(TextureFormat format);
@@ -55,11 +55,11 @@ namespace clan
 		ComPtr<ID3D11ShaderResourceView> &get_srv(const ComPtr<ID3D11Device> &device);
 		ComPtr<ID3D11UnorderedAccessView> &get_uav(const ComPtr<ID3D11Device> &device);
 
-		void generate_mipmap();
-		void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
-		PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
+		void generate_mipmap() override;
+		void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels) override;
+		PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const override;
 
-		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
+		void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect) override;
 
 		void copy_image_from(
 			int x,
@@ -68,7 +68,7 @@ namespace clan
 			int height,
 			int level,
 			TextureFormat texture_format,
-			GraphicContextProvider *gc);
+			GraphicContextProvider *gc) override;
 
 		void copy_subimage_from(
 			int offset_x,
@@ -78,32 +78,32 @@ namespace clan
 			int width,
 			int height,
 			int level,
-			GraphicContextProvider *gc);
+			GraphicContextProvider *gc) override;
 
-		void set_min_lod(double min_lod);
-		void set_max_lod(double max_lod);
-		void set_lod_bias(double lod_bias);
-		void set_base_level(int base_level);
-		void set_max_level(int max_level);
+		void set_min_lod(double min_lod) override;
+		void set_max_lod(double max_lod) override;
+		void set_lod_bias(double lod_bias) override;
+		void set_base_level(int base_level) override;
+		void set_max_level(int max_level) override;
 
 		void set_wrap_mode(
 			TextureWrapMode wrap_s,
 			TextureWrapMode wrap_t,
-			TextureWrapMode wrap_r);
+			TextureWrapMode wrap_r) override;
 
 		void set_wrap_mode(
 			TextureWrapMode wrap_s,
-			TextureWrapMode wrap_t);
+			TextureWrapMode wrap_t) override;
 
 		void set_wrap_mode(
-			TextureWrapMode wrap_s);
+			TextureWrapMode wrap_s) override;
 
-		void set_min_filter(TextureFilter filter);
-		void set_mag_filter(TextureFilter filter);
-		void set_max_anisotropy(float v);
-		void set_texture_compare(TextureCompareMode mode, CompareFunction func);
+		void set_min_filter(TextureFilter filter) override;
+		void set_mag_filter(TextureFilter filter) override;
+		void set_max_anisotropy(float v) override;
+		void set_texture_compare(TextureCompareMode mode, CompareFunction func) override;
 
-		std::unique_ptr<TextureProvider> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+		std::unique_ptr<TextureProvider> create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers) override;
 
 		ComPtr<ID3D11RenderTargetView> create_rtv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);
 		ComPtr<ID3D11DepthStencilView> create_dsv(const ComPtr<ID3D11Device> &device, int level, int slice, TextureSubtype subtype);
@@ -123,7 +123,7 @@ namespace clan
 			SamplerState sampler_state;
 		};
 
-		void device_destroyed(ID3D11Device *device);
+		void device_destroyed(ID3D11Device *device) override;
 		ViewHandles &get_view_handles(const ComPtr<ID3D11Device> &device) const;
 
 		std::shared_ptr<D3DTextureData> data;

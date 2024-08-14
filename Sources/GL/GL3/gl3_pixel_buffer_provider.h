@@ -43,7 +43,7 @@ namespace clan
 	{
 	public:
 		GL3PixelBufferProvider();
-		~GL3PixelBufferProvider();
+		~GL3PixelBufferProvider() override;
 		void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage) override;
 
 		void *get_data() override;

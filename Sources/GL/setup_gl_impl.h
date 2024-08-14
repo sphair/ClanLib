@@ -38,7 +38,7 @@ namespace clan
 	{
 	public:
 		SetupGL_Impl();
-		virtual ~SetupGL_Impl();
+		~SetupGL_Impl() override;
 
 		static SetupGL_Impl *instance;
 	};

@@ -914,7 +914,7 @@ namespace clan_jpge {
 	public:
 		cfile_stream() : m_pFile(nullptr), m_bStatus(false) { }
 
-		virtual ~cfile_stream()
+		~cfile_stream() override
 		{
 			close();
 		}
@@ -940,7 +940,7 @@ namespace clan_jpge {
 			return m_bStatus;
 		}
 
-		virtual bool put_buf(const void* pBuf, int len) override
+		bool put_buf(const void* pBuf, int len) override
 		{
 			m_bStatus = m_bStatus && (fwrite(pBuf, len, 1, m_pFile) == 1);
 			return m_bStatus;
@@ -991,9 +991,9 @@ namespace clan_jpge {
 	public:
 		memory_stream(void *pBuf, uint buf_size) : m_pBuf(static_cast<uint8*>(pBuf)), m_buf_size(buf_size), m_buf_ofs(0) { }
 
-		virtual ~memory_stream() { }
+		~memory_stream() override { }
 
-		virtual bool put_buf(const void* pBuf, int len) override
+		bool put_buf(const void* pBuf, int len) override
 		{
 			uint buf_remaining = m_buf_size - m_buf_ofs;
 			if ((uint)len > buf_remaining)

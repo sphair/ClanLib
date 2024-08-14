@@ -40,7 +40,7 @@ namespace clan
 	{
 	public:
 		FileDisplayCache(const FileResourceDocument &doc);
-		~FileDisplayCache();
+		~FileDisplayCache() override;
 
 		Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) override;
 		Resource<Image> get_image(Canvas &canvas, const std::string &id) override;
