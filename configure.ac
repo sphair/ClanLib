@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 dnl Ensure that a recent enough version of Autoconv is being used
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 
 dnl Set the name of the package and its version. (This must be called first)
 AC_INIT([ClanLib],[4.2.0])
@@ -314,6 +314,10 @@ if test "$enable_clanDisplay" != "no"; then
 	AC_CHECK_HEADERS(linux/input.h, has_linux_input=yes)
 
 	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
+		CLANLIB_CHECK_LIB(Xinerama, [`cat $srcdir/Setup/Unix/Tests/xinerama.cpp`], clanDisplay, [ *** Cannot find Xinerama. Try installing libxinerama-dev], [ -lXinerama])
+	fi
+
+	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Unix/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
 	fi
 	if test "$WIN32" = "yes" && test "$enable_clanDisplay" != "no"; then
@@ -354,7 +358,7 @@ if test "$enable_clanDisplay" != "no"; then
 
 		LIBS="$OLDLIBS"
 		clanDisplay_CFLAGS="$clanDisplay_CFLAGS $X_CFLAGS"
-		extra_LIBS_clanDisplay=" -lX11 -lXinerama $extra_LIBS_clanDisplay "
+		extra_LIBS_clanDisplay=" -lX11 $extra_LIBS_clanDisplay "
 
 
 		echo ""
