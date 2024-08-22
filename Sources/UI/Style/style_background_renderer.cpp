@@ -168,7 +168,9 @@ namespace clan
 						image_dest.bottom += delta;
 					}
 
-					image.draw(canvas, image_source, image_dest);
+					auto tl = canvas.grid_fit(image_dest.get_top_left());
+					auto br = canvas.grid_fit(image_dest.get_bottom_right());
+					image.draw(canvas, image_source, Rectf(tl.x, tl.y, br.x, br.y));
 
 					if (repeat_x.is_keyword("no-repeat"))
 					{
