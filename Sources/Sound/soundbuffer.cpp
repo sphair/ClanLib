@@ -156,7 +156,6 @@ namespace clan
 
 		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
 		SoundBuffer_Session session(*this, looping, *output);
-		session.impl->filters = impl->filters;
 		return session;
 	}
 }

@@ -42,6 +42,7 @@ namespace clan
 		: soundbuffer(soundbuffer), provider_session(nullptr), output(output), volume(1.0f), pan(0.0f), looping(looping), playing(false)
 	{
 		volume = soundbuffer.get_volume();
+        filters = soundbuffer.get_filters();
 		pan = soundbuffer.get_pan();
 		provider_session = soundbuffer.get_provider()->begin_session();
 		provider_session->set_looping(looping);
