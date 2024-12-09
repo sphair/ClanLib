@@ -146,6 +146,11 @@ namespace clan
 		}
 	}
 
+	const std::vector<SoundFilter>& SoundBuffer_Session::get_filters() const
+	{
+		return impl->filters;
+	}
+
 	bool SoundBuffer_Session::is_playing()
 	{
 		if (impl)

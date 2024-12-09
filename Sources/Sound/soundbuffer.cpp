@@ -106,6 +106,11 @@ namespace clan
 		return impl->pan;
 	}
 
+	const std::vector<SoundFilter>& SoundBuffer::get_filters() const
+	{
+		return impl->filters;
+	}
+
 	void SoundBuffer::set_volume(float new_volume)
 	{
 		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
@@ -150,6 +155,8 @@ namespace clan
 		if (output == nullptr) output = &current_output;
 
 		std::unique_lock<std::recursive_mutex> mutex_lock(impl->mutex);
-		return SoundBuffer_Session(*this, looping, *output);
+		SoundBuffer_Session session(*this, looping, *output);
+		session.impl->filters = impl->filters;
+		return session;
 	}
 }

@@ -66,7 +66,7 @@ App::App()
 bool App::update()
 {
 	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.2f));
-	font.draw_text(canvas, 32, 32, "Press 1 or 2", clan::Colorf::white);
+	font.draw_text(canvas, 32.0f, 32.0f, "Press 1 or 2", clan::StandardColorf::white());
 	window.flip(1);
 
 	return !quit;

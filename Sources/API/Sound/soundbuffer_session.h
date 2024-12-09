@@ -99,6 +99,9 @@ namespace clan
 		/// \brief Returns true if the session is playing
 		bool is_playing();
 
+		/// \brief Get the current sound filters used by this buffer
+		const std::vector<SoundFilter>& get_filters() const;
+
 		/// \brief Sets the session position to 'new_pos'.
 		///
 		/// \param new_pos = The new position of the session.

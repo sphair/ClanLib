@@ -109,6 +109,9 @@ namespace clan
 		/// \brief Returns the default panning position when the buffer is played.
 		float get_pan() const;
 
+		/// \brief Get the current sound filters used by this buffer
+		const std::vector<SoundFilter>& get_filters() const;
+
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !impl; }
 
