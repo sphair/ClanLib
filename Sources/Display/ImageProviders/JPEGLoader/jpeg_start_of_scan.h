@@ -30,7 +30,15 @@
 
 namespace clan
 {
-	class JPEGStartOfScanComponent;
+	class JPEGStartOfScanComponent
+	{
+	public:
+		JPEGStartOfScanComponent() : component_selector(0), dc_table_selector(0), ac_table_selector(0) { }
+
+		uint8_t component_selector;        // Cs
+		uint8_t dc_table_selector;         // Td
+		uint8_t ac_table_selector;         // Ta
+	};
 
 	class JPEGStartOfScan
 	{
@@ -42,15 +50,5 @@ namespace clan
 		uint8_t end_dct_coefficient;       // Se
 		uint8_t preceding_point_transform; // Ah
 		uint8_t point_transform;           // Al
-	};
-
-	class JPEGStartOfScanComponent
-	{
-	public:
-		JPEGStartOfScanComponent() : component_selector(0), dc_table_selector(0), ac_table_selector(0) { }
-
-		uint8_t component_selector;        // Cs
-		uint8_t dc_table_selector;         // Td
-		uint8_t ac_table_selector;         // Ta
 	};
 }
