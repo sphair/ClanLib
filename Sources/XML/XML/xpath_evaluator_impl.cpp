@@ -799,7 +799,7 @@ namespace clan
 			catch (Exception&)
 			{
 			}
-			return false;
+			return result;
 		}
 		else
 		{
