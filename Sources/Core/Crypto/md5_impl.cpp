@@ -122,20 +122,16 @@ namespace clan
 	{
 		memset(hmac_key_chunk, 0, block_size);
 
-		int key_chunk_filled;
-
 		if (key_size > block_size)
 		{
 			MD5 md5;
 			md5.add(key_data, key_size);
 			md5.calculate();
-			key_chunk_filled = MD5::hash_size;
 			md5.get_hash(hmac_key_chunk);
 		}
 		else
 		{
 			memcpy(hmac_key_chunk, key_data, key_size);
-			key_chunk_filled = key_size;
 		}
 
 		for (auto & elem : hmac_key_chunk)	// XOR key with inner pad values

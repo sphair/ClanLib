@@ -178,8 +178,6 @@ namespace clan
 	{
 		memset(hmac_key_chunk, 0, block_size);
 
-		int key_chunk_filled;
-
 		if (key_size > block_size)
 		{
 			if (sha_type == cl_sha_224)
@@ -187,7 +185,6 @@ namespace clan
 				SHA224 sha224;
 				sha224.add(key_data, key_size);
 				sha224.calculate();
-				key_chunk_filled = SHA224::hash_size;
 				sha224.get_hash(hmac_key_chunk);
 			}
 			else if (sha_type == cl_sha_256)
@@ -195,7 +192,6 @@ namespace clan
 				SHA256 sha256;
 				sha256.add(key_data, key_size);
 				sha256.calculate();
-				key_chunk_filled = SHA256::hash_size;
 				sha256.get_hash(hmac_key_chunk);
 			}
 			else
@@ -206,7 +202,6 @@ namespace clan
 		else
 		{
 			memcpy(hmac_key_chunk, key_data, key_size);
-			key_chunk_filled = key_size;
 		}
 
 		for (auto & elem : hmac_key_chunk)	// XOR key with inner pad values
