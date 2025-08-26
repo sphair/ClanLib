@@ -30,19 +30,6 @@
 
 namespace clan
 {
-	class JPEGStartOfFrameComponent;
-
-	class JPEGStartOfFrame
-	{
-	public:
-		JPEGStartOfFrame() : sample_precision(0), height(0), width(0) { }
-
-		uint8_t sample_precision;
-		uint16_t height;
-		uint16_t width;
-		std::vector<JPEGStartOfFrameComponent> components;
-	};
-
 	class JPEGStartOfFrameComponent
 	{
 	public:
@@ -60,4 +47,16 @@ namespace clan
 		// Specifies one of four possible quantization table destinations from which the quantization table to use for dequantization of DCT coefficients of the component.
 		uint8_t quantization_table_selector;
 	};
+
+	class JPEGStartOfFrame
+	{
+	public:
+		JPEGStartOfFrame() : sample_precision(0), height(0), width(0) { }
+
+		uint8_t sample_precision;
+		uint16_t height;
+		uint16_t width;
+		std::vector<JPEGStartOfFrameComponent> components;
+	};
+
 }
