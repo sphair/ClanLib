@@ -174,7 +174,7 @@ namespace clan
 		cipher_key_set = false;				// Force to reset after each call (to avoid keeping the cipher key in memory)
 		memset(key_expanded, 0, sizeof(key_expanded));
 
-		return true;
+		return return_code;
 
 	}
 
