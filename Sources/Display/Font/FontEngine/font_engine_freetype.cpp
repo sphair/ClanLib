@@ -66,11 +66,7 @@ FontEngine_Freetype_Library::FontEngine_Freetype_Library()
 
 FontEngine_Freetype_Library::~FontEngine_Freetype_Library()
 {
-	FT_Error error = FT_Done_FreeType(library);
-	if ( error )
-	{
-		throw Exception("FontEngine_Freetype_Library: Denitializing FreeType library failed.");
-	}
+	FT_Done_FreeType(library);
 }
 
 FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
