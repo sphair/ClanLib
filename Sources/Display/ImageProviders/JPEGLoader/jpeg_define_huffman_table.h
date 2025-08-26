@@ -30,7 +30,14 @@
 
 namespace clan
 {
-	struct JPEGHuffmanNode;
+	struct JPEGHuffmanNode
+	{
+		JPEGHuffmanNode() : leaf(false), value(0) { children[0] = 0; children[1] = 0; }
+
+		bool leaf;
+		int children[2];
+		unsigned int value;
+	};
 
 	class JPEGHuffmanTable
 	{
@@ -55,15 +62,6 @@ namespace clan
 	};
 
 	typedef std::vector<JPEGHuffmanTable> JPEGDefineHuffmanTable;
-
-	struct JPEGHuffmanNode
-	{
-		JPEGHuffmanNode() : leaf(false), value(0) { children[0] = 0; children[1] = 0; }
-
-		bool leaf;
-		int children[2];
-		unsigned int value;
-	};
 
 	inline void JPEGHuffmanTable::build_tree()
 	{
