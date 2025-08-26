@@ -271,29 +271,6 @@ namespace clan
 			glyph_cache->insert_glyph(canvas, pb);
 
 		}
-
-		float average_character_width = 0.0f;
-		float max_character_width = 0.0f;
-
-		if (monospace)
-		{
-			average_character_width = fixed_width;
-			max_character_width = fixed_width;
-		}
-		else
-		{
-			for (int i = 0; i < length; ++i)
-			{
-				int glyph_width = sprite.get_frame_size(i).width;
-				average_character_width += glyph_width;
-				if (glyph_width > max_character_width)
-					max_character_width = glyph_width;
-			}
-			if (length)
-				average_character_width /= length;
-
-		}
-
 	}
 
 	Font_Cache FontFamily_Impl::get_font(const FontDescription &desc, float pixel_ratio)
