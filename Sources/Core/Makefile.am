@@ -33,6 +33,7 @@ Zip/zlib_compression.cpp \
 Zip/zip_reader.cpp \
 Zip/zip_local_file_descriptor.cpp \
 Zip/zip_archive.cpp \
+Zip/miniz.cpp \
 core_iostream.cpp \
 Math/base64_decoder.cpp \
 Math/rect_packer.cpp \

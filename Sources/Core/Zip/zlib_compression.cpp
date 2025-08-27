@@ -31,7 +31,6 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/memory_device.h"
 
-#define INCLUDED_FROM_ZLIB_COMPRESSION_CPP
 #include "miniz.h"
 
 namespace clan
