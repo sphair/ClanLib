@@ -41,11 +41,11 @@ namespace clan
 			border_size = 0;
 		}
 
-		int old_width = pb.get_width();
-		int old_height = pb.get_height();
+		int old_width = rect.get_width();
+		int old_height = rect.get_height();
 
-		int new_width = rect.get_width() + border_size * 2;
-		int new_height = rect.get_height() + border_size * 2;
+		int new_width = old_width + border_size * 2;
+		int new_height = old_height + border_size * 2;
 
 		// Convert pixel buffer if in an unsupported format
 		PixelBuffer work_buffer;
