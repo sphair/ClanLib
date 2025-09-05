@@ -34,8 +34,15 @@
 
 #ifndef __GNUC__ // GCC automatically sets __SSE2__
 #ifndef CL_DISABLE_SSE2
+
+#ifndef __SSE__
 #define __SSE__
+#endif
+
+#ifndef __SSE2__
 #define __SSE2__
+#endif
+
 #endif
 #endif
 
