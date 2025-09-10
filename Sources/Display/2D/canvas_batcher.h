@@ -55,6 +55,7 @@ namespace clan
 
 		void flush();
 		bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
+		void stop_batcher(GraphicContext& gc);
 		void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
 		RenderBatchTriangle *get_triangle_batcher();

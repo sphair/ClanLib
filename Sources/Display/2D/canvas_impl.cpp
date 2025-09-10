@@ -104,7 +104,7 @@ namespace clan
 	Canvas_Impl::~Canvas_Impl()
 	{
 		if (!gc.is_null())
-			flush();
+			batcher.stop_batcher(gc);
 	}
 
 	void Canvas_Impl::flush()

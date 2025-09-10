@@ -43,6 +43,7 @@ namespace clan
 
 		void flush();
 		bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);
+		void stop_batcher(GraphicContext& gc);
 		void update_batcher_matrix(GraphicContext &gc, const Mat4f &modelview, const Mat4f &projection, TextureImageYAxis image_yaxis);
 
 		GraphicContext current_gc;
@@ -133,6 +134,16 @@ namespace clan
 		}
 	}
 
+	void CanvasBatcher_Impl::stop_batcher(GraphicContext& gc)
+	{
+		if (gc == current_gc)
+		{
+			flush();
+			current_gc = clan::GraphicContext();
+			active_batcher = nullptr;
+		}
+	}
+
 	bool CanvasBatcher_Impl::set_batcher(GraphicContext &gc, RenderBatcher *batcher)
 	{
 		if ((active_batcher != batcher) || (gc != current_gc))
@@ -159,4 +170,10 @@ namespace clan
 	{
 		return impl->set_batcher(gc, batcher);
 	}
+
+	void CanvasBatcher::stop_batcher(GraphicContext& gc)
+	{
+		impl->stop_batcher(gc);
+	}
+
 }
