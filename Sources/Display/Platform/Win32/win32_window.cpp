@@ -94,6 +94,11 @@ namespace clan
 
 	Win32Window::~Win32Window()
 	{
+		if (hwnd)
+		{
+			SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) nullptr);
+		}
+
 		if (update_window_worker_thread_started)
 		{
 			std::unique_lock<std::mutex> lock(update_window_mutex);
