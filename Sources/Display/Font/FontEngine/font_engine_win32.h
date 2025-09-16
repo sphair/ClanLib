@@ -112,7 +112,7 @@ namespace clan
 
 		inline float to_float(const FIXED &fixed)
 		{
-			double v = static_cast<int>(fixed.value) << 16 + static_cast<int>(fixed.fract);
+			double v = (static_cast<int>(fixed.value) << 16) + static_cast<int>(fixed.fract);
 			return static_cast<float>(v / 65536.0);
 		}
 
