@@ -446,7 +446,7 @@ namespace clan
 		if (empty_block) return false;
 
 		int block_x = (next_block * mask_block_size) % mask_texture_size;
-		int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
+		//int block_y = ((next_block * mask_block_size) / mask_texture_size)* mask_block_size;
 
 		for (unsigned int cnt = 0; cnt < mask_block_size; cnt++)
 		{

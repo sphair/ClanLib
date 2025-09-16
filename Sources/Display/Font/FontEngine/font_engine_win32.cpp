@@ -463,7 +463,6 @@ namespace clan
 		int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
 
 		DataBuffer glyph_buffer;
-		bool result = false;
 		DWORD result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, 0, 0, &matrix);
 		if (result_size != 0 && result_size != GDI_ERROR)
 		{
@@ -472,7 +471,6 @@ namespace clan
 			if (result_size != 0 && result_size != GDI_ERROR)
 			{
 				glyph_buffer = buffer;
-				result = true;
 			}
 		}
 

@@ -157,7 +157,7 @@ namespace clan
 			int xx = x + segment.x_position;
 			int xx0 = xx + segment.font.measure_text(canvas, segment_text.substr(0, s1)).advance.width;
 			int xx1 = xx0 + segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
-			int sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
+			//int sel_width = segment.font.measure_text(canvas, segment_text.substr(s1, s2 - s1)).advance.width;
 
 			canvas.fill_rect(xx0, y + line.ascender - segment.ascender, xx1, y + line.ascender + segment.descender, sel_background);
 

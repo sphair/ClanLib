@@ -1205,7 +1205,6 @@ namespace clan
 			throw Exception("Rectangle passed to Win32Window::create_bitmap_data() out of bounds");
 
 		// Convert pixel buffer to DIB compatible format:
-		int pitch = 4;
 		PixelBuffer bmp_image(rect.get_width(), rect.get_height(), TextureFormat::bgra8);
 
 		bmp_image.set_subimage(image, Point(0, 0), rect);
@@ -2106,8 +2105,8 @@ namespace clan
 			NCCALCSIZE_PARAMS *params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
 
 			RECT &window_box = params->rgrc[0]; // proposed new window coordinates
-			const RECT &old_window_box = params->rgrc[1];
-			const RECT &old_client_box = params->rgrc[2];
+			//const RECT &old_window_box = params->rgrc[1];
+			//const RECT &old_client_box = params->rgrc[2];
 
 			// Result indicates which part of the client area contains valid information or have to be redrawn
 			return WVR_HREDRAW | WVR_VREDRAW;
