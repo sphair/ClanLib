@@ -87,7 +87,7 @@ namespace clan
 			if (!thread_created)
 			{
 				thread_created = true;
-				thread = std::thread([=]() { worker_main(); });
+				thread = std::thread([this]() { worker_main(); });
 			}
 		}
 
