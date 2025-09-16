@@ -357,49 +357,19 @@ namespace clan
 		return std::make_unique<GL3PrimitivesArrayProvider>(this);
 	}
 
-	std::shared_ptr<RasterizerStateProvider> GL3GraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::unique_ptr<RasterizerStateProvider> GL3GraphicContextProvider::alloc_rasterizer_state(const RasterizerStateDescription &desc)
 	{
-		auto it = rasterizer_states.find(desc);
-		if (it != rasterizer_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<RasterizerStateProvider> state(new OpenGLRasterizerStateProvider(desc));
-			rasterizer_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<OpenGLRasterizerStateProvider>(desc);
 	}
 
-	std::shared_ptr<BlendStateProvider> GL3GraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::unique_ptr<BlendStateProvider> GL3GraphicContextProvider::alloc_blend_state(const BlendStateDescription &desc)
 	{
-		auto it = blend_states.find(desc);
-		if (it != blend_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<BlendStateProvider> state(new OpenGLBlendStateProvider(desc));
-			blend_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<OpenGLBlendStateProvider>(desc);
 	}
 
-	std::shared_ptr<DepthStencilStateProvider> GL3GraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::unique_ptr<DepthStencilStateProvider> GL3GraphicContextProvider::alloc_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
-		auto it = depth_stencil_states.find(desc);
-		if (it != depth_stencil_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<DepthStencilStateProvider> state(new OpenGLDepthStencilStateProvider(desc));
-			depth_stencil_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<OpenGLDepthStencilStateProvider>(desc);
 	}
 
 	void GL3GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *state)

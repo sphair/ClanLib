@@ -92,9 +92,9 @@ namespace clan
 		std::unique_ptr<TransferBufferProvider> alloc_transfer_buffer() override;
 		std::unique_ptr<PixelBufferProvider> alloc_pixel_buffer() override;
 		std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array() override;
-		std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) override;
-		std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) override;
-		std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) override;
+		std::unique_ptr<RasterizerStateProvider> alloc_rasterizer_state(const RasterizerStateDescription &desc) override;
+		std::unique_ptr<BlendStateProvider> alloc_blend_state(const BlendStateDescription &desc) override;
+		std::unique_ptr<DepthStencilStateProvider> alloc_depth_stencil_state(const DepthStencilStateDescription &desc) override;
 		void set_rasterizer_state(RasterizerStateProvider *state) override;
 		void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) override;
 		void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) override;
@@ -163,10 +163,6 @@ namespace clan
 		bool shader_bound[static_cast<int>(ShaderType::num_types)];
 
 		Signal<void(const Size &)> window_resized_signal;
-
-		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
-		std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
-		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
 
 		std::shared_ptr<D3DRenderBufferProvider> default_depth_render_buffer;
 		ComPtr<ID3D11DepthStencilView> default_dsv;

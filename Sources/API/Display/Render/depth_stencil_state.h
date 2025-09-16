@@ -38,6 +38,7 @@ namespace clan
 	class GraphicContext;
 	class DepthStencilStateDescription;
 	class DepthStencilStateProvider;
+	class GraphicContextProvider;
 
 	/// \brief DepthStencil state setup.
 	class DepthStencilState
@@ -46,11 +47,17 @@ namespace clan
 		/// \brief Constructs a null instance.
 		DepthStencilState();
 
-		/// \brief Constructs a Texture
+		/// \brief Constructs a Depth Stencil State
 		///
 		/// \param context = Graphic context
 		/// \param desc = DepthStencil state description
-		DepthStencilState(GraphicContext &context, const DepthStencilStateDescription &desc);
+		DepthStencilState(GraphicContext& context, const DepthStencilStateDescription& desc);
+
+		/// \brief Constructs a Depth Stencil State
+		///
+		/// \param gc_provider = Graphic content provider
+		/// \param desc = DepthStencil state description
+		DepthStencilState(GraphicContextProvider* gc_provider, const DepthStencilStateDescription &desc);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !provider; }

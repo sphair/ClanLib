@@ -38,6 +38,7 @@ namespace clan
 	class GraphicContext;
 	class RasterizerStateDescription;
 	class RasterizerStateProvider;
+	class GraphicContextProvider;
 
 	/// \brief Rasterizer state setup.
 	class RasterizerState
@@ -46,11 +47,17 @@ namespace clan
 		/// \brief Constructs a null instance.
 		RasterizerState();
 
-		/// \brief Constructs a Texture
+		/// \brief Constructs a Rasterizer State
 		///
 		/// \param context = Graphic context
 		/// \param desc = Rasterizer state description
-		RasterizerState(GraphicContext &context, const RasterizerStateDescription &desc);
+		RasterizerState(GraphicContext& context, const RasterizerStateDescription& desc);
+
+		/// \brief Constructs a Rasterizer State
+		///
+		/// \param gc_provider = Graphic content provider
+		/// \param desc = Rasterizer state description
+		RasterizerState(GraphicContextProvider* gc_provider, const RasterizerStateDescription &desc);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !provider; }

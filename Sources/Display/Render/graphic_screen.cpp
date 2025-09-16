@@ -31,12 +31,20 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "graphic_context_impl.h"
+#include "API/Display/Render/depth_stencil_state_description.h"
+#include "API/Display/Render/blend_state_description.h"
+#include "API/Display/Render/rasterizer_state_description.h"
 
 namespace clan
 {
 	GraphicScreen::GraphicScreen(GraphicContextProvider *provider) : max_attributes(0), provider(provider), current(nullptr)
 	{
 		SharedGCData::add_ref();
+
+		default_rasterizer_state = RasterizerState(provider, RasterizerStateDescription());
+		default_blend_state = BlendState(provider, BlendStateDescription());
+		default_depth_stencil_state = DepthStencilState(provider, DepthStencilStateDescription());
+
 		set_default_state();
 		max_attributes = provider->get_max_attributes();
 	}
@@ -52,10 +60,6 @@ namespace clan
 	{
 		if (current != state)
 		{
-			// To do: seems we have no GraphicContext available here, but we need one to flush the batcher
-			//if (current)
-			//	current->flush(gc);
-
 			current = state;
 
 			set_active_frame_buffer(state);	// Set the framebuffer first, this is more friendly for the GL1 target, so only the pbuffer context is set (depending on the application code flow)

@@ -42,9 +42,7 @@
 #include "primitives_array_impl.h"
 #include "graphic_context_impl.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/Render/depth_stencil_state_description.h"
-#include "API/Display/Render/blend_state_description.h"
-#include "API/Display/Render/rasterizer_state_description.h"
+
 
 namespace clan
 {
@@ -55,10 +53,6 @@ namespace clan
 	GraphicContext::GraphicContext(GraphicContextProvider *provider)
 		: impl(std::make_shared<GraphicContext_Impl>(provider))
 	{
-		impl->default_rasterizer_state = RasterizerState(*this, RasterizerStateDescription());
-		impl->default_blend_state = BlendState(*this, BlendStateDescription());
-		impl->default_depth_stencil_state = DepthStencilState(*this, DepthStencilStateDescription());
-
 		reset_rasterizer_state();
 		reset_blend_state();
 		reset_depth_stencil_state();
@@ -188,6 +182,9 @@ namespace clan
 		return impl->graphic_screen->get_provider()->get_max_texture_size();
 	}
 
+	GraphicContext::operator const GraphicContextProvider* () const { return get_provider(); }
+	GraphicContext::operator GraphicContextProvider* () { return get_provider(); }
+
 	GraphicContextProvider *GraphicContext::get_provider()
 	{
 		if (impl)
@@ -311,17 +308,17 @@ namespace clan
 
 	void GraphicContext::reset_rasterizer_state()
 	{
-		set_rasterizer_state(impl->default_rasterizer_state);
+		set_rasterizer_state(impl->graphic_screen->default_rasterizer_state);
 	}
 
 	void GraphicContext::reset_blend_state()
 	{
-		set_blend_state(impl->default_blend_state);
+		set_blend_state(impl->graphic_screen->default_blend_state);
 	}
 
 	void GraphicContext::reset_depth_stencil_state()
 	{
-		set_depth_stencil_state(impl->default_depth_stencil_state);
+		set_depth_stencil_state(impl->graphic_screen->default_depth_stencil_state);
 	}
 
 	ProgramObject GraphicContext::get_program_object() const

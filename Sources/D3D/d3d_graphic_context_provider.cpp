@@ -244,49 +244,19 @@ namespace clan
 		return std::make_unique<D3DPrimitivesArrayProvider>(window->get_device());
 	}
 
-	std::shared_ptr<RasterizerStateProvider> D3DGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+	std::unique_ptr<RasterizerStateProvider> D3DGraphicContextProvider::alloc_rasterizer_state(const RasterizerStateDescription &desc)
 	{
-		std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> >::iterator it = rasterizer_states.find(desc);
-		if (it != rasterizer_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<RasterizerStateProvider> state(new D3DRasterizerStateProvider(window->get_device(), desc));
-			rasterizer_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<D3DRasterizerStateProvider>(window->get_device(), desc);
 	}
 
-	std::shared_ptr<BlendStateProvider> D3DGraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+	std::unique_ptr<BlendStateProvider> D3DGraphicContextProvider::alloc_blend_state(const BlendStateDescription &desc)
 	{
-		std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> >::iterator it = blend_states.find(desc);
-		if (it != blend_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<BlendStateProvider> state(new D3DBlendStateProvider(window->get_device(), desc));
-			blend_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<D3DBlendStateProvider>(window->get_device(), desc);
 	}
 
-	std::shared_ptr<DepthStencilStateProvider> D3DGraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+	std::unique_ptr<DepthStencilStateProvider> D3DGraphicContextProvider::alloc_depth_stencil_state(const DepthStencilStateDescription &desc)
 	{
-		std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> >::iterator it = depth_stencil_states.find(desc);
-		if (it != depth_stencil_states.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			std::shared_ptr<DepthStencilStateProvider> state(new D3DDepthStencilStateProvider(window->get_device(), desc));
-			depth_stencil_states[desc.clone()] = state;
-			return state;
-		}
+		return std::make_unique<D3DDepthStencilStateProvider>(window->get_device(), desc);
 	}
 
 	void D3DGraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *state)

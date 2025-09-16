@@ -38,6 +38,7 @@ namespace clan
 	class GraphicContext;
 	class BlendStateDescription;
 	class BlendStateProvider;
+	class GraphicContextProvider;
 
 	/// \brief Blend state setup.
 	class BlendState
@@ -46,11 +47,17 @@ namespace clan
 		/// \brief Constructs a null instance.
 		BlendState();
 
-		/// \brief Constructs a Texture
+		/// \brief Constructs a Blend State
 		///
 		/// \param context = Graphic context
 		/// \param desc = Blend state description
-		BlendState(GraphicContext &context, const BlendStateDescription &desc);
+		BlendState(GraphicContext& context, const BlendStateDescription& desc);
+
+		/// \brief Constructs a Blend State
+		///
+		/// \param gc_provider = Graphic content provider
+		/// \param desc = Blend state description
+		BlendState(GraphicContextProvider* gc_provider, const BlendStateDescription &desc);
 
 		/// \brief Returns true if this object is invalid.
 		bool is_null() const { return !provider; }

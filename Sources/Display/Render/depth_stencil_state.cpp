@@ -37,8 +37,13 @@ namespace clan
 	{
 	}
 
-	DepthStencilState::DepthStencilState(GraphicContext &context, const DepthStencilStateDescription &desc)
-		: provider(context.get_provider()->create_depth_stencil_state(desc))
+	DepthStencilState::DepthStencilState(GraphicContext& context, const DepthStencilStateDescription& desc)
+		: provider(context.get_provider()->alloc_depth_stencil_state(desc))
+	{
+	}
+
+	DepthStencilState::DepthStencilState(GraphicContextProvider* gc_provider, const DepthStencilStateDescription &desc)
+		: provider(gc_provider->alloc_depth_stencil_state(desc))
 	{
 	}
 

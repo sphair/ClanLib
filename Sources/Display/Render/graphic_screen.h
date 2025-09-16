@@ -62,6 +62,9 @@ namespace clan
 		void on_program_changed(GraphicContext_State *state);
 		void on_draw_buffer_changed(GraphicContext_State *state);
 
+		RasterizerState default_rasterizer_state;
+		BlendState default_blend_state;
+		DepthStencilState default_depth_stencil_state;
 
 	private:
 		void set_default_state();

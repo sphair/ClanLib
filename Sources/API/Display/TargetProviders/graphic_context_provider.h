@@ -176,14 +176,14 @@ namespace clan
 		/// \brief Allocate primitives array provider for this gc.
 		virtual std::unique_ptr<PrimitivesArrayProvider> alloc_primitives_array() = 0;
 
-		/// \brief Retrieve rasterizer state object.
-		virtual std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc) = 0;
+		/// \brief Allocate rasterizer state object.
+		virtual std::unique_ptr<RasterizerStateProvider> alloc_rasterizer_state(const RasterizerStateDescription &desc) = 0;
 
-		/// \brief Retrieve blend state object.
-		virtual std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc) = 0;
+		/// \brief Allocate blend state object.
+		virtual std::unique_ptr<BlendStateProvider> alloc_blend_state(const BlendStateDescription &desc) = 0;
 
-		/// \brief Retrieve depth-stencil state object.
-		virtual std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
+		/// \brief Allocate depth-stencil state object.
+		virtual std::unique_ptr<DepthStencilStateProvider> alloc_depth_stencil_state(const DepthStencilStateDescription &desc) = 0;
 
 		/// \brief Set active rasterizer state
 		virtual void set_rasterizer_state(RasterizerStateProvider *state) = 0;

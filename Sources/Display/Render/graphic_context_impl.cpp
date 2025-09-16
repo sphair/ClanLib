@@ -43,10 +43,6 @@ namespace clan
 	GraphicContext_Impl::GraphicContext_Impl(const GraphicContext_Impl *from_gc, bool clone)
 		: graphic_screen(from_gc->graphic_screen)
 	{
-		default_rasterizer_state = from_gc->default_rasterizer_state;
-		default_blend_state = from_gc->default_blend_state;
-		default_depth_stencil_state = from_gc->default_depth_stencil_state;
-
 		resize_slot = graphic_screen->get_provider()->sig_window_resized().connect(bind_member(this, &GraphicContext_Impl::on_window_resized));
 		set_viewport(-1, from_gc->viewport[0]);
 
@@ -56,9 +52,9 @@ namespace clan
 		}
 		else
 		{
-			set_rasterizer_state(default_rasterizer_state);
-			set_blend_state(default_blend_state, StandardColorf::white(), 0xffffffff);
-			set_depth_stencil_state(default_depth_stencil_state, 0);
+			set_rasterizer_state(graphic_screen->default_rasterizer_state);
+			set_blend_state(graphic_screen->default_blend_state, StandardColorf::white(), 0xffffffff);
+			set_depth_stencil_state(graphic_screen->default_depth_stencil_state, 0);
 		}
 	}
 

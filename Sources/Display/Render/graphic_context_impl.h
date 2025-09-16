@@ -84,10 +84,6 @@ namespace clan
 		Size display_window_size;
 		Slot resize_slot;
 
-		RasterizerState default_rasterizer_state;
-		BlendState default_blend_state;
-		DepthStencilState default_depth_stencil_state;
-
 		friend class GraphicScreen;
 		friend class GraphicContext;
 	};
