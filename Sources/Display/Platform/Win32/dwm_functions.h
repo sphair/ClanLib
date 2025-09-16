@@ -39,7 +39,6 @@ namespace clan
 
 		static bool is_composition_enabled();
 		static void enable_alpha_channel(HWND hwnd, HRGN rgn);
-		static bool is_vista_or_later();
 
 		static void extend_frame_into_client_area(HWND hwnd, int left, int top, int right, int bottom);
 

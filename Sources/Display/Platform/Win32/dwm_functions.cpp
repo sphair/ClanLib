@@ -72,17 +72,9 @@ namespace clan
 		}
 	}
 
-	bool DwmFunctions::is_vista_or_later()
-	{
-		OSVERSIONINFO info = { 0 };
-		info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		GetVersionEx(&info);
-		return info.dwMajorVersion >= 6;
-	}
-
 	void DwmFunctions::open_dll()
 	{
-		if (dll_handle == 0 && is_vista_or_later())
+		if (dll_handle == 0)
 		{
 			dll_handle = LoadLibrary(L"dwmapi.dll");
 			if (dll_handle)
