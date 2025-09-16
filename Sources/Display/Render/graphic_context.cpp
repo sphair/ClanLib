@@ -182,9 +182,6 @@ namespace clan
 		return impl->graphic_screen->get_provider()->get_max_texture_size();
 	}
 
-	GraphicContext::operator const GraphicContextProvider* () const { return get_provider(); }
-	GraphicContext::operator GraphicContextProvider* () { return get_provider(); }
-
 	GraphicContextProvider *GraphicContext::get_provider()
 	{
 		if (impl)

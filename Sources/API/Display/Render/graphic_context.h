@@ -358,9 +358,6 @@ namespace clan
 		 */
 		Size get_max_texture_size() const;
 
-		operator const GraphicContextProvider* () const;
-		operator GraphicContextProvider* ();
-
 		/// Returns the provider for this graphic context.
 		GraphicContextProvider *get_provider();
 
