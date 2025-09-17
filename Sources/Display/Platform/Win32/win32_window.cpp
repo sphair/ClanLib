@@ -1959,6 +1959,12 @@ namespace clan
 		for (size_t i = 0; i < rects.size(); i++)
 			region_data_rects[i] = rects[i];
 
+		if (update_window_region)	// Deletion of the region shouldn't be required, since the main thread does this.
+		{
+			DeleteObject(update_window_region);
+			update_window_region = 0;
+		}
+
 		update_window_region = ExtCreateRegion(0, region_data_buffer.get_size(), region_data);
 		// SetWindowRgn() is called in update_layered()
 
