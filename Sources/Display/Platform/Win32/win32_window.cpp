@@ -1816,35 +1816,39 @@ namespace clan
 		else
 		{
 			std::unique_lock<std::mutex> lock(update_window_mutex);
-			update_window_main_event.wait(lock, [&]() { return update_window_completed_flag; });
-			update_window_completed_flag = false;
+			update_window_main_event.wait(lock, [this]() { return update_window_work_generation == update_window_completed_generation; });
 			lock.unlock();
 
 			// SetWindowRgn can only be called from the main thread, not a worker thread.
 			// The region is one frame behind, but nobody will notice!
 			if (update_window_region)
+			{
 				if (SetWindowRgn(hwnd, update_window_region, FALSE) == 0)
 					DeleteObject(update_window_region);
 
-			update_window_region = 0;
+				update_window_region = 0;
+			}
 		}
 		update_window_image = image;
 
 		std::unique_lock<std::mutex> lock(update_window_mutex);
-		update_window_start_flag = true;
+		++update_window_work_generation;	// post new job
 		lock.unlock();
 		update_window_worker_event.notify_one();
 	}
 
 	void Win32Window::update_layered_worker_thread()
 	{
+		int local_generation = 0;
+
 		while (true)
 		{
 			std::unique_lock<std::mutex> lock(update_window_mutex);
-			update_window_worker_event.wait(lock, [&]() { return update_window_start_flag || update_window_stop_flag; });
+
+			update_window_worker_event.wait(lock, [&]() { return update_window_work_generation > local_generation || update_window_stop_flag; });
 			if (update_window_stop_flag)
 				break;
-			update_window_start_flag = false;
+			local_generation = update_window_work_generation;	// claim this generation
 			lock.unlock();
 
 			if (DwmFunctions::is_composition_enabled())
@@ -1858,7 +1862,7 @@ namespace clan
 
 			lock.lock();
 			update_window_image = PixelBuffer();
-			update_window_completed_flag = true;
+			update_window_completed_generation = local_generation;
 			lock.unlock();
 			update_window_main_event.notify_one();
 		}

@@ -218,8 +218,8 @@ namespace clan
 		bool update_window_worker_thread_started;
 		PixelBuffer update_window_image;
 		bool update_window_stop_flag = false;
-		bool update_window_start_flag = false;
-		bool update_window_completed_flag = false;
+		int update_window_work_generation = 0;	// Incremented whenever main thread posts new work
+		int update_window_completed_generation = 0;	// Worker updates when done
 		std::mutex update_window_mutex;
 		std::condition_variable update_window_main_event;
 		std::condition_variable update_window_worker_event;
