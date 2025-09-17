@@ -145,6 +145,7 @@ namespace clan
 		void flush() override;
 
 	private:
+		void on_dispose() override;
 		void set_default_dsv();
 		static D3D11_PRIMITIVE_TOPOLOGY to_d3d_primitive_topology(PrimitivesType type);
 		static DXGI_FORMAT to_d3d_format(VertexAttributeDataType indices_type);

@@ -68,9 +68,7 @@ namespace clan
 
 	private:
 		void set_default_state();
-		void set_active_pen(GraphicContext_State *state);
 		void set_active_buffer_control(GraphicContext_State *state);
-		void set_active_polygon_rasterizer(GraphicContext_State *state);
 		void set_active_frame_buffer(GraphicContext_State *state);
 		void set_active_textures(GraphicContext_State *state);
 		void set_active_image_textures(GraphicContext_State *state);
@@ -79,7 +77,6 @@ namespace clan
 		void set_active_scissor(GraphicContext_State *state);
 		void set_active_viewport(GraphicContext_State *state);
 		void set_active_program(GraphicContext_State *state);
-		void set_active_standard_shader(GraphicContext_State *state);
 		void set_active_depth_range(GraphicContext_State *state);
 
 		int max_attributes;

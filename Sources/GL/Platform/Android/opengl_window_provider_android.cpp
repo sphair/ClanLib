@@ -62,9 +62,9 @@ namespace clan
 	{
 		if (!gc.is_null())
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
-			if (gl_provider)
-				gl_provider->dispose();
+			GraphicContextProvider* provider = gc.get_provider();
+			if (provider)
+				provider->dispose();
 		}
 
 		if (display != EGL_NO_DISPLAY)

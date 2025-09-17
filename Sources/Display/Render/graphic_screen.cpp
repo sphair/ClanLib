@@ -62,6 +62,7 @@ namespace clan
 		{
 			current = state;
 
+			provider->throw_if_disposed();
 			set_active_frame_buffer(state);	// Set the framebuffer first, this is more friendly for the GL1 target, so only the pbuffer context is set (depending on the application code flow)
 
 			active_state.rasterizer_state = state->rasterizer_state;
@@ -74,9 +75,7 @@ namespace clan
 			provider->set_blend_state(active_state.blend_state.get_provider(), active_state.blend_color, active_state.sample_mask);
 			provider->set_depth_stencil_state(active_state.depth_stencil_state.get_provider(), active_state.stencil_ref);
 
-			set_active_pen(state);
 			set_active_buffer_control(state);
-			set_active_polygon_rasterizer(state);
 			set_active_depth_range(state);
 			set_active_textures(state);
 			set_active_image_textures(state);
@@ -90,13 +89,22 @@ namespace clan
 	{
 		if (current == state)
 		{
-			// To do: reset objects on provider (so any destroyed, but still bound, objects are released now)
+			if (provider && !provider->is_disposed())
+			{
+				// Reset objects on provider (so any destroyed, but still bound, objects are released now)
+				GraphicContext_State default_state;
+				default_state.rasterizer_state = default_rasterizer_state;
+				default_state.blend_state = default_blend_state;
+				default_state.depth_stencil_state = default_depth_stencil_state;
+				set_active(&default_state);
+			}
 			current = nullptr;
 		}
 	}
 
 	void GraphicScreen::on_rasterizer_state_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			active_state.rasterizer_state = state->rasterizer_state;
@@ -110,6 +118,7 @@ namespace clan
 
 	void GraphicScreen::on_blend_state_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			active_state.blend_state = state->blend_state;
@@ -125,6 +134,7 @@ namespace clan
 
 	void GraphicScreen::on_depth_stencil_state_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			active_state.depth_stencil_state = state->depth_stencil_state;
@@ -139,6 +149,7 @@ namespace clan
 
 	void GraphicScreen::on_texture_changed(GraphicContext_State *state, int unit_index)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			if (active_state.textures.size() < unit_index + 1)
@@ -161,6 +172,7 @@ namespace clan
 
 	void GraphicScreen::on_textures_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_textures(state);
@@ -173,6 +185,7 @@ namespace clan
 
 	void GraphicScreen::on_image_texture_changed(GraphicContext_State *state, int unit_index)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			if (active_state.image_textures.size() < unit_index + 1)
@@ -195,6 +208,7 @@ namespace clan
 
 	void GraphicScreen::on_image_textures_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_image_textures(state);
@@ -207,6 +221,7 @@ namespace clan
 
 	void GraphicScreen::on_uniform_buffer_changed(GraphicContext_State *state, int unit_index)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			if (active_state.uniform_buffers.size() < unit_index + 1)
@@ -229,6 +244,7 @@ namespace clan
 
 	void GraphicScreen::on_storage_buffer_changed(GraphicContext_State *state, int unit_index)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			if (active_state.storage_buffers.size() < unit_index + 1)
@@ -251,6 +267,7 @@ namespace clan
 
 	void GraphicScreen::on_scissor_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_scissor(state);
@@ -263,6 +280,7 @@ namespace clan
 
 	void GraphicScreen::on_viewport_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_viewport(state);
@@ -276,6 +294,7 @@ namespace clan
 
 	void GraphicScreen::on_depth_range_changed(GraphicContext_State *state, int viewport)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_depth_range(state);
@@ -288,6 +307,7 @@ namespace clan
 
 	void GraphicScreen::on_framebuffer_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_frame_buffer(state);
@@ -301,6 +321,7 @@ namespace clan
 
 	void GraphicScreen::on_program_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			set_active_program(state);
@@ -313,6 +334,7 @@ namespace clan
 
 	void GraphicScreen::on_draw_buffer_changed(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (state == current)
 		{
 			active_state.draw_buffer = state->draw_buffer;
@@ -324,13 +346,9 @@ namespace clan
 		}
 	}
 
-	void GraphicScreen::set_active_pen(GraphicContext_State *state)
-	{
-
-	}
-
 	void GraphicScreen::set_active_buffer_control(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (active_state.draw_buffer != state->draw_buffer)
 		{
 			active_state.draw_buffer = state->draw_buffer;
@@ -338,13 +356,9 @@ namespace clan
 		}
 	}
 
-	void GraphicScreen::set_active_polygon_rasterizer(GraphicContext_State *state)
-	{
-
-	}
-
 	void GraphicScreen::set_active_depth_range(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (active_state.depth_range != state->depth_range)
 		{
 			active_state.depth_range = state->depth_range;
@@ -365,6 +379,7 @@ namespace clan
 
 	void GraphicScreen::set_active_frame_buffer(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		active_state.write_frame_buffer = state->write_frame_buffer;
 		active_state.read_frame_buffer = state->read_frame_buffer;
 
@@ -380,6 +395,7 @@ namespace clan
 
 	void GraphicScreen::set_active_textures(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		int old_max_textures = active_state.textures.size();
 		active_state.textures = state->textures;
 		unsigned int max_textures = active_state.textures.size();
@@ -403,6 +419,7 @@ namespace clan
 
 	void GraphicScreen::set_active_image_textures(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		int old_max_textures = active_state.image_textures.size();
 		active_state.image_textures = state->image_textures;
 		unsigned int max_textures = active_state.image_textures.size();
@@ -426,6 +443,7 @@ namespace clan
 
 	void GraphicScreen::set_active_uniform_buffers(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		int old_max_uniform_buffers = active_state.uniform_buffers.size();
 		active_state.uniform_buffers = state->uniform_buffers;
 		unsigned int max_uniform_buffers = active_state.uniform_buffers.size();
@@ -449,6 +467,7 @@ namespace clan
 
 	void GraphicScreen::set_active_storage_buffers(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		int old_max_storage_buffers = active_state.storage_buffers.size();
 		active_state.storage_buffers = state->storage_buffers;
 		unsigned int max_storage_buffers = active_state.storage_buffers.size();
@@ -472,6 +491,7 @@ namespace clan
 
 	void GraphicScreen::set_active_scissor(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		active_state.scissor_set = state->scissor_set;
 		if (active_state.scissor_set)
 		{
@@ -486,6 +506,7 @@ namespace clan
 
 	void GraphicScreen::set_active_viewport(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		if (active_state.viewport != state->viewport)
 		{
 			active_state.viewport = state->viewport;
@@ -507,6 +528,7 @@ namespace clan
 
 	void GraphicScreen::set_active_program(GraphicContext_State *state)
 	{
+		provider->throw_if_disposed();
 		active_state.program_standard = state->program_standard;
 		active_state.program_standard_set = state->program_standard_set;
 		active_state.program = state->program;

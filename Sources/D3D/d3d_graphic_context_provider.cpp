@@ -94,8 +94,14 @@ namespace clan
 
 	D3DGraphicContextProvider::~D3DGraphicContextProvider()
 	{
+		dispose();
+	}
+
+	void D3DGraphicContextProvider::on_dispose()
+	{
 		SharedGCData::remove_provider(this);
 	}
+
 
 	void D3DGraphicContextProvider::begin_resize_swap_chain()
 	{

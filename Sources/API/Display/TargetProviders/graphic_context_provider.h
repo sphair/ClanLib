@@ -35,6 +35,7 @@
 #include "../Render/texture.h"
 #include "../../Core/Math/mat4.h"
 #include "../../Core/Signals/signal.h"
+#include "../../Core/System/disposable_object.h"
 
 namespace clan
 {
@@ -82,7 +83,7 @@ namespace clan
 	};
 
 	/// \brief Interface for implementing a GraphicContext target.
-	class GraphicContextProvider
+	class GraphicContextProvider : public DisposableObject
 	{
 	public:
 		virtual ~GraphicContextProvider() { return; }

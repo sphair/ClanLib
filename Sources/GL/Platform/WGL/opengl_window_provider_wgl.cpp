@@ -65,20 +65,9 @@ namespace clan
 		{
 			if (!gc.is_null())
 			{
-				if (using_gl3)
-				{
-					GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
-					if (gl_provider)
-						gl_provider->dispose();
-				}
-				else
-				{
-#ifndef CLANLIB_OPENGL_ES3
-					GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
-					if (gl_provider)
-						gl_provider->dispose();
-#endif
-				}
+				GraphicContextProvider* provider = gc.get_provider();
+				if (provider)
+					provider->dispose();
 			}
 
 			// Delete the context

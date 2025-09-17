@@ -112,9 +112,9 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
 		if (!gc.is_null())
 		{
-			OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider*>(gc.get_provider());
-			if (gl_provider)
-				gl_provider->dispose();
+			GraphicContextProvider *provider = gc.get_provider();
+			if (provider)
+				provider->dispose();
 		}
 
 		// Delete the context

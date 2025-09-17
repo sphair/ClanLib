@@ -54,6 +54,13 @@ namespace clan
 
 	D3DDisplayWindowProvider::~D3DDisplayWindowProvider()
 	{
+		if (!gc.is_null())
+		{
+			GraphicContextProvider* provider = gc.get_provider();
+			if (provider)
+				provider->dispose();
+		}
+
 		if (device)
 			D3DShareList::device_destroyed(device);
 
