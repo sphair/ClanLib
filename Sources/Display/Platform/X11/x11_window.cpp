@@ -253,13 +253,13 @@ namespace clan
 		this->system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
 
 		log_event("debug", "clan::X11Window::create(): Creating window...");
-		log_event("debug", "    x%1 y%2 w%3 h%4 b%5 d%6", win_x, win_y, win_width, win_height, border_width, visual->depth);
+		log_event("debug", "    x%1 y%2 w%3 h%4 d%5", win_x, win_y, win_width, win_height, visual->depth);
 		log_event("debug", "    a.su%1, a.od%2", save_under, is_static_popup);
 
 		// Create window
 		handle.window = XCreateWindow(
 				handle.display, _root_window,
-				win_x, win_y, win_width, win_height, border_width,
+				win_x, win_y, win_width, win_height, 0,
 				visual->depth, InputOutput, visual->visual,
 				CWBorderPixel | CWOverrideRedirect | CWSaveUnder | CWEventMask | CWColormap,
 				&attr
@@ -475,15 +475,18 @@ namespace clan
 	}
 
 
+
 	void X11Window::update_frame_extents()
 	{
-		frame_extents = Rect { border_width, border_width, border_width, border_width };
+		frame_extents = Rect{0, 0, 0, 0};
 
-		if (atoms["_NET_FRAME_EXTENTS"] == None)
-			return;
+		Atom extents_atom = atoms["_NET_FRAME_EXTENTS"];
+		if (extents_atom == None)
+			return; // WM does not support it
 
-		// Request frame extents from WM.
-		if (atoms["_NET_REQUEST_FRAME_EXTENTS"] != None)
+		// Request extents from WM (only valid BEFORE mapping the window)
+		Atom request_atom = atoms["_NET_REQUEST_FRAME_EXTENTS"];
+		if (request_atom != None)
 		{
 			XEvent event;
 			memset(&event, 0, sizeof(event));
@@ -491,44 +494,45 @@ namespace clan
 			event.type = ClientMessage;
 			event.xclient.window = handle.window;
 			event.xclient.format = 32;
-			event.xclient.message_type = atoms["_NET_REQUEST_FRAME_EXTENTS"];
+			event.xclient.message_type = request_atom;
 
-			XSendEvent(handle.display, RootWindow(handle.display, handle.screen), False, SubstructureNotifyMask | SubstructureRedirectMask, &event);
-
-			int timer = 10;
-			while(true)
+			XSendEvent(handle.display,
+					RootWindow(handle.display, handle.screen),
+					   False,
+					   SubstructureNotifyMask | SubstructureRedirectMask,
+					&event);
+			XSync(handle.display, False);
+			// Wait for WM to respond with updated _NET_FRAME_EXTENTS
+			int retries = 40; // ~200 ms max
+			while (retries-- > 0)
 			{
-				if (timer < 0)
+				XEvent response;
+				if (XCheckTypedWindowEvent(handle.display, handle.window, PropertyNotify, &response))
 				{
-					log_event("debug", "clan::X11Window: Your window manager has a broken _NET_REQUEST_FRAME_EXTENTS implementation.");
-					break;
+					if (response.xproperty.atom == extents_atom)
+					{
+						break; // got the update we wanted
+					}
 				}
-
-				if (XCheckMaskEvent(handle.display, PropertyNotify, &event))
-				{
-					break;
-				}
-
 				clan::System::sleep(5);
-				timer--;
 			}
 		}
 
-		unsigned long  item_count;
-		// _NET_FRAME_EXTENTS, left, right, top, bottom, CARDINAL[4]/32
+		// Now read the property
+		unsigned long item_count = 0;
 		unsigned char *data = atoms.get_property(handle.window, "_NET_FRAME_EXTENTS", item_count);
-		if (data == NULL)
-			return;
-
+		if (!data)
+			return; // WM did not provide anything
 		if (item_count >= 4)
 		{
-			long *cardinal = (long *)data;
-			frame_extents.left   = cardinal[0];
-			frame_extents.right  = cardinal[1];
-			frame_extents.top    = cardinal[2];
-			frame_extents.bottom = cardinal[3];
-		}
 
+			// EWMH specifies CARDINAL[4] (32-bit unsigned)
+			uint32_t *cardinal = reinterpret_cast<uint32_t*>(data);
+			frame_extents.left   = static_cast<int>(cardinal[0]);
+			frame_extents.right  = static_cast<int>(cardinal[1]);
+			frame_extents.top    = static_cast<int>(cardinal[2]);
+			frame_extents.bottom = static_cast<int>(cardinal[3]);
+		}
 		XFree(data);
 	}
 

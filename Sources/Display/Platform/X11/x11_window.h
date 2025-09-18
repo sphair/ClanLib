@@ -193,10 +193,6 @@ namespace clan
 
 		X11Atoms atoms; //!< X11 Atom object container.
 
-		//! Legacy X11 border width attribute. Obsolete; Do not use.
-		//! Favour frame extents instead.
-		int border_width = 0;
-
 		//! Current window client area, which excludes the window frame.
 		Rect client_area;
 
