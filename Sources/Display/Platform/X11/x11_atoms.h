@@ -106,85 +106,8 @@ namespace clan
 			return get_property(_display_, window, (*this)[property], item_count);
 		}
 
-		//////////////////////////
-		// _NET_WM_STATE methods
-		//////////////////////////
-		std::vector<bool> check_net_wm_state(Window window, std::vector<std::string> state_atoms) const
-		{
-			// Atom not in _NET_WM_STATE MUST be considered not set.
-			std::vector< bool > states(state_atoms.size(), false);
-
-			if ((*this)["_NET_WM_STATE"] == None)
-			{
-				log_event("debug", "clan::X11Window::check_net_wm_state(): _NET_WM_STATE not provided by WM.");
-				return states;
-			}
-
-			// Get window states from WM
-			unsigned long  item_count;
-			unsigned char *data = get_property(window, "_NET_WM_STATE", item_count);
-			if (data == NULL)
-			{
-				log_event("debug", "clan::X11Atoms::check_net_wm_state(): Failed to query _NET_WM_STATE.");
-				return states;
-			}
-
-			unsigned long *items = (unsigned long *)data;
-
-			// Map each state atom to state boolean.
-			for (size_t i = 0; i < state_atoms.size(); i++)
-			{
-				const std::string &elem = state_atoms[i];
-				Atom state = static_cast<unsigned long>((*this)[elem]);
-				if (state == None)
-				{
-					log_event("debug", "clan::X11Atoms::check_net_wm_state(): %1 is not provided by WM.", elem);
-					continue; // Unsupported states are not queried.
-				}
-
-				auto it = std::find(items, items + item_count, state);
-				states[i] = (it != items + item_count);
-			}
-
-			XFree(data);
-			return states;
-		}
-
-		bool modify_net_wm_state(Window window, long action, const std::string &atom1, const std::string &atom2 = None)
-		{
-			Atom _NET_WM_STATE = (*this)["_NET_WM_STATE"];
-
-			if (_NET_WM_STATE == None)
-				return false;
-
-			XEvent xevent;
-			memset(&xevent, 0, sizeof(xevent));
-			xevent.xclient.type = ClientMessage;
-			xevent.xclient.window = window;
-			xevent.xclient.message_type = _NET_WM_STATE;
-			xevent.xclient.format = 32;
-			xevent.xclient.data.l[0] =
-				xevent.xclient.data.l[1] = (*this)[atom1];
-			xevent.xclient.data.l[2] = (*this)[atom2];
-			xevent.xclient.data.l[3] = 0; // or 2
-
-			Status ret = XSendEvent(
-				_display_, DefaultRootWindow(_display_), False,
-				SubstructureNotifyMask | SubstructureRedirectMask, &xevent
-				);
-
-			XFlush(_display_);
-
-			if (ret == 0)
-			{
-				log_event("debug", "clan::X11Atoms::modify_net_wm_state(): XSendEvent failed.");
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
+		std::vector<bool> check_net_wm_state(Window window, std::vector<std::string> state_atoms) const;
+		bool modify_net_wm_state(Window window, long action, const std::string &atom1, const std::string &atom2);
 
 	public:
 		//! List of all atoms handled by ClanLib.
