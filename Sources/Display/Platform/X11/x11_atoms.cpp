@@ -78,34 +78,26 @@ namespace clan
 
 	unsigned char *X11Atoms::get_property(::Display *display, Window window, Atom property, Atom &actual_type, int &actual_format, unsigned long &item_count)
 	{
-		/* IO */ long  read_bytes = 0; // Request 0 bytes first.
-		Atom _actual_type = actual_type;
-		int  _actual_format = actual_format;
-		unsigned long _item_count = item_count;
-		unsigned long  bytes_remaining;
-		unsigned char *read_data = NULL;
+		unsigned long bytes_after_return = 0;
+		unsigned char *read_data = nullptr;
 
-		do
+		int result = XGetWindowProperty(display, window, property,
+			0L,		// offset
+			~0L,	// request all (in 32-bit units)
+			False, AnyPropertyType,
+			&actual_type, &actual_format,
+			&item_count, &bytes_after_return,
+			&read_data);
+
+	    if (result != Success)
 		{
-			int result = XGetWindowProperty(
-				display, window, property, 0ul, read_bytes,
-				False, AnyPropertyType, &actual_type, &actual_format,
-				&_item_count, &bytes_remaining, &read_data
-				);
+	        actual_type = None;
+	        actual_format = 0;
+	        item_count = 0;
+			return nullptr;
+		}
 
-			if (result != Success)
-			{
-				actual_type = None;
-				actual_format = 0;
-				item_count = 0;
-				return NULL;
-			}
-
-			read_bytes = bytes_remaining;
-		} while (bytes_remaining > 0);
-
-		item_count = _item_count;
-		return read_data;
+		return read_data; // must be freed with XFree by caller
 	}
 
 	unsigned char *X11Atoms::get_property(::Display *display, Window window, Atom property, unsigned long &item_count)
@@ -116,3 +108,4 @@ namespace clan
 		return X11Atoms::get_property(display, window, property, _actual_type, _actual_format, item_count);
 	}
 }
+

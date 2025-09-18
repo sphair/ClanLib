@@ -195,3 +195,4 @@ namespace clan
 		X11AtomMap _map_;
 	};
 }
+
