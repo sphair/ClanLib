@@ -36,7 +36,10 @@ public:
 	MainWindow(std::shared_ptr<clan::WindowManager>& window_manager);
 
 private:
-	std::shared_ptr<clan::LabelView> label;
+	std::shared_ptr<clan::LabelView> m_label;
+	std::shared_ptr<WindowController> m_popup;
+	std::shared_ptr<clan::WindowManager> m_window_manager;
+	std::shared_ptr<WindowController> m_dialog;
 };
 
 class HelloWorld : public clan::Application

@@ -39,7 +39,7 @@ clan::ApplicationInstance<HelloWorld> clanapp;
 
 
 
-MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
+MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager) : m_window_manager(window_manager)
 {
 	set_title("UICore: Hello World");
 	set_content_size(Sizef(640.0f, 600.0f), true);
@@ -71,14 +71,14 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 	pRootView->add_child(body);
 
 	// Create a label with some text to have some content
-	label = std::make_shared<LabelView>();
-	label->style()->set("flex: none; font: 20px/40px 'Ravie'; color: #DD3B2A");
-	label->set_text("Click here");
-	body->add_child(label);
+	m_label = std::make_shared<LabelView>();
+	m_label->style()->set("flex: none; font: 20px/40px 'Ravie'; color: #DD3B2A");
+	m_label->set_text("Click here");
+	body->add_child(m_label);
 
 	// React to clicking
-	label->slots.connect(label->sig_pointer_press(), [&](PointerEvent &e) {
-		label->set_text(label->text() + " CLICK!");
+	m_label->slots.connect(m_label->sig_pointer_press(), [this](PointerEvent &e) {
+		m_label->set_text(m_label->text() + " CLICK!");
 	});
 
 	// Create a scrollable area with automatic vertical scrollbar.
@@ -138,7 +138,7 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 	listbox->style()->set("flex: none; height: 60px; margin: 7px 0; border: 1px solid black; padding: 5px; background: #f0f0f0");
 	listbox->set_items<std::string>(
 	{ "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "More items", "Even more items!!", "No more items!!!!!" },
-		[](const std::string &s) -> std::shared_ptr<View>
+		[this](const std::string &s) -> std::shared_ptr<View>
 	{
 		auto item = Theme::create_listbox_label(s);
 		return item;
@@ -186,53 +186,47 @@ MainWindow::MainWindow(std::shared_ptr<clan::WindowManager>& window_manager)
 	}
 
 	// Create a popup window as hint on the label.
-	label->slots.connect(label->sig_pointer_enter(), [&](PointerEvent &e)
+	m_label->slots.connect(m_label->sig_pointer_enter(), [this](PointerEvent &e)
 	{
-		auto popup = std::make_shared<WindowController>();
-		popup->root_view()->style()->set("flex-direction: column; background: #FFFFE0; margin: 5px; border: 1px solid black; border-radius: 2px");
-		popup->root_view()->style()->set("padding: 2px 5px 2px 5px; box-shadow: 0 0 3px rgba(0,0,0,0.2)");
+		m_popup = std::make_shared<WindowController>();
+		m_popup->root_view()->style()->set("flex-direction: column; background: #FFFFE0; margin: 5px; border: 1px solid black; border-radius: 2px");
+		m_popup->root_view()->style()->set("padding: 2px 5px 2px 5px; box-shadow: 0 0 3px rgba(0,0,0,0.2)");
 
 		auto text = Theme::create_label(true);
 		text->style()->set("font: 12px Tahoma; color: black");
 		text->set_text("This is an awesome popup");
-		popup->root_view()->add_child(text);
+		m_popup->root_view()->add_child(text);
 
-		std::weak_ptr<WindowController> popup_weak = popup;
-		popup->slots.connect(label->sig_pointer_leave(), [&](PointerEvent &e)
+		m_popup->slots.connect(m_label->sig_pointer_leave(), [this](PointerEvent &e)
 		{
-			auto p = popup_weak.lock();
-			if (p)
-				p->dismiss();
+			m_popup->dismiss();
 		});
 
-		window_manager->present_popup(label.get(), e.pos(label) + Pointf(10.0f, 10.0f), popup);
+		m_window_manager->present_popup(m_label.get(), e.pos(m_label) + Pointf(10.0f, 10.0f), m_popup);
 	});
 
 	// Show a modal dialog
-	button->func_clicked() = [=]()
+	button->func_clicked() = [this]()
 	{
-		auto dialog = std::make_shared<WindowController>();
-		dialog->set_title("Alarm!!");
-		dialog->root_view()->style()->set("flex-direction: column; background: rgb(240,240,240); padding: 11px; width: 250px");
+		m_dialog = std::make_shared<WindowController>();
+		m_dialog->set_title("Alarm!!");
+		m_dialog->root_view()->style()->set("flex-direction: column; background: rgb(240,240,240); padding: 11px; width: 250px");
 
 		auto text = Theme::create_label(true);
 		text->style()->set("margin-bottom: 7px; font: 12px Tahoma; color: black");
 		text->set_text("This a modal dialog");
-		dialog->root_view()->add_child(text);
+		m_dialog->root_view()->add_child(text);
 
 		auto ok_button = Theme::create_button();
 		ok_button->label()->set_text("OK");
-		dialog->root_view()->add_child(ok_button);
+		m_dialog->root_view()->add_child(ok_button);
 
-		std::weak_ptr<WindowController> dialog_weak = dialog;
-		ok_button->func_clicked() = [=]()
+		ok_button->func_clicked() = [this]()
 		{
-			auto d = dialog_weak.lock();
-			if (d)
-				d->dismiss();
+			m_dialog->dismiss();
 		};
 
-		window_manager->present_modal(pRootView.get(), dialog);
+		m_window_manager->present_modal(root_view().get(), m_dialog);
 	};
 }
 
