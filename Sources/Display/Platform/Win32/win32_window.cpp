@@ -2112,9 +2112,9 @@ namespace clan
 	{
 		if (wparam == FALSE)
 		{
-			NCCALCSIZE_PARAMS *params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
+			//NCCALCSIZE_PARAMS *params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
 
-			RECT &window_box = params->rgrc[0]; // proposed new window coordinates
+			//RECT &window_box = params->rgrc[0]; // proposed new window coordinates
 			//const RECT &old_window_box = params->rgrc[1];
 			//const RECT &old_client_box = params->rgrc[2];
 
