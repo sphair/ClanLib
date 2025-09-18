@@ -58,7 +58,7 @@ namespace clan
 	class OpenGLContextDescription;
 	class OpenGLWindowProvider;
 
-	class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public GraphicContextProvider
+	class GL3GraphicContextProvider final : public OpenGLGraphicContextProvider, public GraphicContextProvider
 	{
 	public:
 		/// \brief Creates a new OpenGL graphic context provider for a rendering window.

@@ -79,7 +79,7 @@ namespace clan
 		OpenGLDepthStencilState depth_stencil;
 	};
 
-	class GL1GraphicContextProvider : public OpenGLGraphicContextProvider, public GraphicContextProvider
+	class GL1GraphicContextProvider final : public OpenGLGraphicContextProvider, public GraphicContextProvider
 	{
 	public:
 		GL1GraphicContextProvider(OpenGLWindowProvider * render_window);

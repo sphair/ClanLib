@@ -51,7 +51,7 @@ namespace clan
 	class D3DElementArrayBufferProvider;
 	class DisplayWindowDescription;
 
-	class D3DGraphicContextProvider : public GraphicContextProvider
+	class D3DGraphicContextProvider final : public GraphicContextProvider
 	{
 	public:
 		D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc);
