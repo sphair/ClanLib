@@ -152,7 +152,7 @@ namespace clan
 	private:
 		void process_window_sockets();
 		void process_window_resize(const Rect &new_rect);
-		void update_frame_extents();
+		void update_unmapped_frame_extents();
 		void map_window();
 		void unmap_window();
 		Rect get_screen_position() const;
@@ -213,3 +213,4 @@ namespace clan
 		Rect initial_position;
 	};
 }
+

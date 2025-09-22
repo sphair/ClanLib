@@ -386,7 +386,7 @@ namespace clan
 			}
 		}
 
-		update_frame_extents();
+		update_unmapped_frame_extents();
 
 		auto new_client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
 			? Rect::xywh(win_x, win_y, win_width, win_height)
@@ -476,64 +476,75 @@ namespace clan
 
 
 
-	void X11Window::update_frame_extents()
+	void X11Window::update_unmapped_frame_extents()
 	{
-		frame_extents = Rect{0, 0, 0, 0};
+		// *** This is only for unmapped windows, after creation. Mapped windows use _NET_FRAME_EXTENTS within X11Window::process_message ***
 
-		Atom extents_atom = atoms["_NET_FRAME_EXTENTS"];
-		if (extents_atom == None)
+		Atom net_request_frame_extents = atoms["_NET_REQUEST_FRAME_EXTENTS"];
+		Atom net_frame_extents = atoms["_NET_FRAME_EXTENTS"];
+
+		if (net_request_frame_extents == None || net_frame_extents == None)
 			return; // WM does not support it
 
-		// Request extents from WM (only valid BEFORE mapping the window)
-		Atom request_atom = atoms["_NET_REQUEST_FRAME_EXTENTS"];
-		if (request_atom != None)
+		// To determine when the _NET_REQUEST_FRAME_EXTENTS succeeded, we set _NET_FRAME_EXTENTS initially with unlikely values
+		long forced_extents[4] = { 1, 0, 0, 1 };	// set for left and bottom
+		XChangeProperty(handle.display, handle.window, net_frame_extents, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)forced_extents, 4);
+		XFlush(handle.display);
+
+		// Ask the WM for frame extents
+		XEvent ev{};
+		ev.xclient.type = ClientMessage;
+		ev.xclient.serial = 0;
+		ev.xclient.send_event = True;
+		ev.xclient.display = handle.display;
+		ev.xclient.window = handle.window;
+		ev.xclient.message_type = net_request_frame_extents;
+		ev.xclient.format = 32;
+		ev.xclient.data.l[0] = 0;
+		ev.xclient.data.l[1] = 0;
+		ev.xclient.data.l[2] = 0;
+		ev.xclient.data.l[3] = 0;
+		ev.xclient.data.l[4] = 0;
+
+		XSendEvent(handle.display, RootWindow(handle.display, handle.screen), False,
+				   SubstructureRedirectMask | SubstructureNotifyMask,
+				   &ev);
+		XFlush(handle.display);
+
+		const int sleep_interval_ms = 50;		// 50ms
+		int retries = 500 / sleep_interval_ms;	// 500ms
+		for (int i = 0; i < retries; i++)
 		{
-			XEvent event;
-			memset(&event, 0, sizeof(event));
-
-			event.type = ClientMessage;
-			event.xclient.window = handle.window;
-			event.xclient.format = 32;
-			event.xclient.message_type = request_atom;
-
-			XSendEvent(handle.display,
-					RootWindow(handle.display, handle.screen),
-					   False,
-					   SubstructureNotifyMask | SubstructureRedirectMask,
-					&event);
-			XSync(handle.display, False);
-			// Wait for WM to respond with updated _NET_FRAME_EXTENTS
-			int retries = 40; // ~200 ms max
-			while (retries-- > 0)
+			Atom actual_type;
+			int actual_format;
+			unsigned long nitems, bytes_after;
+			unsigned char* prop = nullptr;
+			if (Success == XGetWindowProperty(handle.display, handle.window, net_frame_extents,
+											  0, 4, False, XA_CARDINAL,
+											  &actual_type, &actual_format,
+											  &nitems, &bytes_after, &prop))
 			{
-				XEvent response;
-				if (XCheckTypedWindowEvent(handle.display, handle.window, PropertyNotify, &response))
+				// Here we wait for nitems==4, when _NET_FRAME_EXTENTS is filled by the _NET_REQUEST_FRAME_EXTENTS request
+				if (prop && nitems == 4)
 				{
-					if (response.xproperty.atom == extents_atom)
+					long* extents = reinterpret_cast<long*>(prop);
+
+					// Ensure we have receieved the extents
+					if (forced_extents[0] != extents[0] || forced_extents[1] != extents[1] || forced_extents[2] != extents[2] || forced_extents[3] != extents[3])
 					{
-						break; // got the update we wanted
+						frame_extents.left = extents[0];
+						frame_extents.right = extents[1];	
+						frame_extents.top = extents[2];
+						frame_extents.bottom = extents[3];
+						XFree(prop);
+						break;
 					}
 				}
-				clan::System::sleep(5);
+				if (prop)
+					XFree(prop);
 			}
+			clan::System::sleep(sleep_interval_ms);
 		}
-
-		// Now read the property
-		unsigned long item_count = 0;
-		unsigned char *data = atoms.get_property(handle.window, "_NET_FRAME_EXTENTS", item_count);
-		if (!data)
-			return; // WM did not provide anything
-		if (item_count >= 4)
-		{
-
-			// EWMH specifies CARDINAL[4] (32-bit unsigned)
-			uint32_t *cardinal = reinterpret_cast<uint32_t*>(data);
-			frame_extents.left   = static_cast<int>(cardinal[0]);
-			frame_extents.right  = static_cast<int>(cardinal[1]);
-			frame_extents.top    = static_cast<int>(cardinal[2]);
-			frame_extents.bottom = static_cast<int>(cardinal[3]);
-		}
-		XFree(data);
 	}
 
 	void X11Window::close_window()
@@ -761,8 +772,6 @@ namespace clan
 
 	void X11Window::set_position(const Rect &pos, bool pos_is_client_area)
 	{
-		update_frame_extents();
-
 		if (!resize_allowed) // If resize has been disabled, we have to temporary enable it
 		{
 			long user_hints;
@@ -803,8 +812,6 @@ namespace clan
 
 	void X11Window::set_size(int width, int height, bool size_is_client_area)
 	{
-		update_frame_extents();
-
 		if (!resize_allowed) // If resize has been disabled, we have to temporary enable it
 		{
 			long user_hints;
@@ -942,7 +949,6 @@ namespace clan
 		}
 		else
 		{
-			update_frame_extents();
 			set_position(client_area, true);
 		}
 		request_repaint();
@@ -1138,6 +1144,34 @@ namespace clan
 
 				Atom _NET_WM_STATE = atoms["_NET_WM_STATE"];
 				Atom WM_STATE = atoms["WM_STATE"]; // legacy.
+				Atom _NET_FRAME_EXTENTS = atoms["_NET_FRAME_EXTENTS"];
+
+				if (_NET_FRAME_EXTENTS != None && event.xproperty.atom == _NET_FRAME_EXTENTS)
+				{
+					// _NET_FRAME_EXTENTS were updated
+
+					Atom actual_type;
+					int actual_format;
+					unsigned long nitems, bytes_after;
+					unsigned char* prop = nullptr;
+					if (Success == XGetWindowProperty(handle.display, handle.window, _NET_FRAME_EXTENTS,
+											  0, 4, False, XA_CARDINAL,
+											  &actual_type, &actual_format,
+											  &nitems, &bytes_after, &prop))
+					{
+						if (prop && nitems == 4)
+						{
+							long* extents = reinterpret_cast<long*>(prop);
+								frame_extents.left = extents[0];
+								frame_extents.right = extents[1];
+								frame_extents.top = extents[2];
+								frame_extents.bottom = extents[3];
+					}
+					if (prop)
+						XFree(prop);
+					}
+					break;
+				}
 
 				if (_NET_WM_STATE != None && event.xproperty.atom == _NET_WM_STATE && event.xproperty.state == PropertyNewValue)
 				{
