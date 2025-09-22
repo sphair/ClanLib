@@ -899,29 +899,18 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 	if (event.button != 1)	// Left mouse button
 		return true;
 
-	int height = get_viewport().get_height();
-
-	glDrawBuffer(GL_BACK);
-	glReadBuffer(GL_FRONT);
+	GraphicContext gc = get_gc();
 
 	Rect rect = Rect(event.x,event.y, Size(1,1));
+	Size size = gc.get_size();;
+	if ((rect.left < 0) || (rect.top < 0) || (rect.right > size.width) || (rect.bottom > size.height))
+		return false;
 
-	PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), TextureFormat::rgba8);
-	glReadPixels(
-		rect.left, height - rect.bottom,
-		rect.right - rect.left, rect.bottom - rect.top,
-		GL_RGBA,
-		GL_UNSIGNED_INT_8_8_8_8,
-		pixelbuffer.get_data());
-
-	const uint32_t *xptr = (const uint32_t *) (pixelbuffer.get_data());
-	if (((*xptr) & 0xFF) < 10)
+	PixelBuffer pixelbuffer = gc.get_pixeldata(rect, TextureFormat::rgba8, false);
+	if (pixelbuffer.get_data_uint8()[3] < 10)
 	{
-
-		XLowerWindow(x11_window.get_display(), x11_window.get_window());
-//		XWindowChanges wc;
-//		wc.stack_mode = Below;
-//		XConfigureWindow(x11_window.get_display(), x11_window.get_window(), CWStackMode, &wc);
+		// Disabled - For clickthough we should be using <X11/extensions/shape.h>
+		//XLowerWindow(x11_window.get_display(), x11_window.get_window());
 		return false;
 	}
 	return true;
