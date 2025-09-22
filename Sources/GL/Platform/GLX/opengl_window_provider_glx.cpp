@@ -909,7 +909,8 @@ bool OpenGLWindowProvider::on_clicked(XButtonEvent &event)
 	PixelBuffer pixelbuffer = gc.get_pixeldata(rect, TextureFormat::rgba8, false);
 	if (pixelbuffer.get_data_uint8()[3] < 10)
 	{
-		// Disabled - For clickthough we should be using <X11/extensions/shape.h>
+		// Disabled - Although this lowers the window. Layered windows on X11 use override redirect. Thus the window manager will not raise it.
+		// Maybe the application should lower the window, not this library ?
 		//XLowerWindow(x11_window.get_display(), x11_window.get_window());
 		return false;
 	}
