@@ -250,6 +250,8 @@ namespace clan
 			.cursor                 = None /* default; Let X11 handle the cursor for now. */
 		};
 
+		is_override_redirect = is_static_popup;
+
 		this->system_cursor = XCreateFontCursor(handle.display, XC_left_ptr); // This is allowed to fail
 
 		log_event("debug", "clan::X11Window::create(): Creating window...");
@@ -480,6 +482,10 @@ namespace clan
 	{
 		// *** This is only for unmapped windows, after creation. Mapped windows use _NET_FRAME_EXTENTS within X11Window::process_message ***
 
+		if (is_override_redirect)	// Window does not have a frame
+			return;
+
+
 		Atom net_request_frame_extents = atoms["_NET_REQUEST_FRAME_EXTENTS"];
 		Atom net_frame_extents = atoms["_NET_FRAME_EXTENTS"];
 
@@ -545,6 +551,8 @@ namespace clan
 			}
 			clan::System::sleep(sleep_interval_ms);
 		}
+		//printf("UFE:%d,%d,%d,%d\n", frame_extents.left, frame_extents.top, frame_extents.right, frame_extents.bottom);
+
 	}
 
 	void X11Window::close_window()
@@ -1146,7 +1154,7 @@ namespace clan
 				Atom WM_STATE = atoms["WM_STATE"]; // legacy.
 				Atom _NET_FRAME_EXTENTS = atoms["_NET_FRAME_EXTENTS"];
 
-				if (_NET_FRAME_EXTENTS != None && event.xproperty.atom == _NET_FRAME_EXTENTS)
+				if (_NET_FRAME_EXTENTS != None && event.xproperty.atom == _NET_FRAME_EXTENTS && is_override_redirect == false)
 				{
 					// _NET_FRAME_EXTENTS were updated
 
@@ -1166,6 +1174,9 @@ namespace clan
 								frame_extents.right = extents[1];
 								frame_extents.top = extents[2];
 								frame_extents.bottom = extents[3];
+
+								//printf("PROCESS:%d,%d,%d,%d\n", frame_extents.left, frame_extents.top, frame_extents.right, frame_extents.bottom);
+
 					}
 					if (prop)
 						XFree(prop);

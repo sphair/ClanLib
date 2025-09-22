@@ -211,6 +211,7 @@ namespace clan
 		float pixel_ratio = 0.0f;	// 0.0f = Unset
 
 		Rect initial_position;
+		bool is_override_redirect = false;
 	};
 }
 
