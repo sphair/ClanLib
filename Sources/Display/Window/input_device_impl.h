@@ -57,8 +57,8 @@ public:
 		for (pos = 0; pos < size; pos++)
 		{
 			CL_WeakPtr<CL_InputContext_Impl> &ic = input_contexts[pos];
-			if (!ic.is_null())
-				ic->received_event(e, input_device);
+			if (!ic.expired())
+				ic.lock()->received_event(e, input_device);
 		}
 	}
 

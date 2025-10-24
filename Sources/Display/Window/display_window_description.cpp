@@ -182,6 +182,11 @@ bool CL_DisplayWindowDescription::is_tool_window() const
 	return impl->tool_window;
 }
 
+bool CL_DisplayWindowDescription::is_dialog() const
+{
+	return impl->dialog_window;
+}
+
 bool CL_DisplayWindowDescription::is_topmost() const
 {
 	return impl->topmost;
@@ -207,14 +212,14 @@ bool CL_DisplayWindowDescription::get_tablet_context() const
 	return impl->create_tablet_context;
 }
 
-CL_UnknownSharedPtr CL_DisplayWindowDescription::get_data(const CL_String &name) const
+CL_SharedPtr<CL_DisplayWindowDescriptionData> CL_DisplayWindowDescription::get_data(const CL_String &name) const
 {
-	std::map<CL_String, CL_UnknownSharedPtr>::const_iterator it;
+	std::map<CL_String, CL_SharedPtr<CL_DisplayWindowDescriptionData> >::const_iterator it;
 	it = impl->data_objects.find(name);
 	if (it != impl->data_objects.end())
 		return it->second;
 	else
-		return CL_UnknownSharedPtr();
+		return CL_SharedPtr<CL_DisplayWindowDescriptionData>();
 }
 
 int CL_DisplayWindowDescription::get_depth_size() const
@@ -284,6 +289,11 @@ void CL_DisplayWindowDescription::set_visible(bool value)
 void CL_DisplayWindowDescription::set_tool_window(bool value)
 {
 	impl->tool_window = value;
+}
+
+void CL_DisplayWindowDescription::set_dialog_window(bool value)
+{
+	impl->dialog_window = value;
 }
 
 void CL_DisplayWindowDescription::set_drop_shadow(bool value)
@@ -361,7 +371,7 @@ void CL_DisplayWindowDescription::set_handle(HWND handle)
 }
 #endif
 
-void CL_DisplayWindowDescription::set_data(const CL_String &name, const CL_UnknownSharedPtr &ptr)
+void CL_DisplayWindowDescription::set_data(const CL_String &name, const CL_SharedPtr<CL_DisplayWindowDescriptionData> &ptr)
 {
 	impl->data_objects[name] = ptr;
 }

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_position.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserPosition::get_names()
 {
@@ -37,21 +37,25 @@ std::vector<CL_String> CL_CSSParserPosition::get_names()
 	return names;
 }
 
-void CL_CSSParserPosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserPosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "static")
+		if (equals(token.value, "static"))
 			properties.position.type = CL_CSSBoxPosition::type_static;
-		else if (token.value == "relative")
+		else if (equals(token.value, "relative"))
 			properties.position.type = CL_CSSBoxPosition::type_relative;
-		else if (token.value == "absolute")
+		else if (equals(token.value, "absolute"))
 			properties.position.type = CL_CSSBoxPosition::type_absolute;
-		else if (token.value == "fixed")
+		else if (equals(token.value, "fixed"))
 			properties.position.type = CL_CSSBoxPosition::type_fixed;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.position.type = CL_CSSBoxPosition::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["position"] = &properties.position;
 	}
 }

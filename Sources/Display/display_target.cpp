@@ -67,7 +67,7 @@ CL_DisplayTarget::CL_DisplayTarget(CL_DisplayTargetProvider *provider)
 }
 
 CL_DisplayTarget::CL_DisplayTarget(const CL_WeakPtr<CL_DisplayTarget_Impl> impl)
-: impl(impl.to_sharedptr())
+: impl(impl.lock())
 {
 }
 
@@ -80,7 +80,7 @@ CL_DisplayTarget::~CL_DisplayTarget()
 
 CL_DisplayTargetProvider *CL_DisplayTarget::get_provider()
 {
-	if (!impl.is_null())
+	if (impl)
 		return impl->provider;
 	else
 		return 0;
@@ -88,7 +88,7 @@ CL_DisplayTargetProvider *CL_DisplayTarget::get_provider()
 
 void CL_DisplayTarget::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_DisplayTarget is null");
 }
 

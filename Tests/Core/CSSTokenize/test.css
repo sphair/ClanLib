@@ -15,6 +15,7 @@ object.ok
     display: inline-block;
     float: none;
     margin: 2px;
+    border: solid 2px blue;
     padding: 2px;
 }
 
@@ -135,7 +136,6 @@ table
 {
     border-style: solid;
     border-spacing: 2px;
-    table-layout: fixed;
     width: 500px;
     margin-left: auto;
     margin-right: auto;

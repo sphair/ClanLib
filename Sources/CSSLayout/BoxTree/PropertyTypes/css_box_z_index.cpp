@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_z_index.h"
+#include "API/CSSLayout/PropertyTypes/css_box_z_index.h"
 
 CL_CSSBoxZIndex::CL_CSSBoxZIndex()
 : type(type_auto), value(0)
@@ -47,5 +47,19 @@ void CL_CSSBoxZIndex::compute(const CL_CSSBoxZIndex *parent, CL_CSSResourceCache
 		{
 			type = type_auto;
 		}
+	}
+}
+
+CL_String CL_CSSBoxZIndex::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_auto:
+		return "auto";
+	case type_integer:
+		return CL_StringHelp::int_to_text(value);
+	case type_inherit:
+		return "inherit";
 	}
 }

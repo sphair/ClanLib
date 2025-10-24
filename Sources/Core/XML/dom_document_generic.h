@@ -45,7 +45,6 @@ class CL_DomDocument_Generic : public CL_DomNode_Generic
 
 public:
 	CL_DomDocument_Generic();
-
 	~CL_DomDocument_Generic();
 
 
@@ -55,25 +54,15 @@ public:
 
 public:
 	CL_String qualified_name;
-
 	CL_String public_id;
-
 	CL_String system_id;
-
 	CL_String internal_subset;
-
 	CL_StringAllocator string_allocator;
-
 	CL_BlockAllocator node_allocator;
-
 	std::vector<CL_DomTreeNode *> nodes;
-
 	std::vector<int> free_nodes;
-
 	std::vector<CL_DomNode_Generic *> free_dom_nodes;
-
 	std::vector<CL_DomNamedNodeMap_Generic *> free_named_node_maps;
-
 
 /// \}
 /// \name Operations
@@ -86,16 +75,28 @@ public:
 		const CL_DomNode &search_node);
 
 	unsigned int allocate_tree_node();
-
 	void free_tree_node(unsigned int node_index);
-
 	CL_DomNode_Generic *allocate_dom_node();
-
 	void free_dom_node(CL_DomNode_Generic *node);
-
 	CL_DomNamedNodeMap_Generic *allocate_named_node_map();
-
 	void free_named_node_map(CL_DomNamedNodeMap_Generic *map);
+
+	struct NodeDeleter
+	{
+		CL_DomDocument_Generic *doc;
+
+		NodeDeleter(CL_DomDocument_Generic *doc) : doc(doc) { }
+		void operator()(CL_DomNode_Generic *node) { doc->free_dom_node(node); }
+	};
+
+	struct NamedNodeMapDeleter
+	{
+		CL_DomDocument_Generic *doc;
+
+		NamedNodeMapDeleter(CL_DomDocument_Generic *doc) : doc(doc) { }
+		void operator()(CL_DomNamedNodeMap_Generic *map) { doc->free_named_node_map(map); }
+	};
+
 /// \}
 };
 

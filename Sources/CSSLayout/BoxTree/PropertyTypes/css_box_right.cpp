@@ -27,9 +27,9 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_right.h"
-#include "css_box_left.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/PropertyTypes/css_box_right.h"
+#include "API/CSSLayout/PropertyTypes/css_box_left.h"
+#include "API/CSSLayout/css_box_properties.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxRight::CL_CSSBoxRight()
@@ -51,8 +51,6 @@ void CL_CSSBoxRight::compute(CL_CSSBoxLeft &left, CL_CSSBoxRight &right, const C
 		{
 			left.type = CL_CSSBoxLeft::type_auto;
 		}
-		if (left.type == CL_CSSBoxLeft::type_length)
-			left.length = layout->compute_length(left.length, em_size, ex_size);
 	}
 
 	if (right.type == type_inherit)
@@ -67,9 +65,13 @@ void CL_CSSBoxRight::compute(CL_CSSBoxLeft &left, CL_CSSBoxRight &right, const C
 		{
 			right.type = type_auto;
 		}
-		if (right.type == type_length)
-			right.length = layout->compute_length(right.length, em_size, ex_size);
 	}
+
+	if (left.type == CL_CSSBoxLeft::type_length)
+		left.length = layout->compute_length(left.length, em_size, ex_size);
+
+	if (right.type == type_length)
+		right.length = layout->compute_length(right.length, em_size, ex_size);
 
 	if (position.type == CL_CSSBoxPosition::type_static)
 	{
@@ -113,5 +115,21 @@ void CL_CSSBoxRight::compute(CL_CSSBoxLeft &left, CL_CSSBoxRight &right, const C
 				left.percentage = -right.percentage;
 			}
 		}
+	}
+}
+
+CL_String CL_CSSBoxRight::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_auto:
+		return "auto";
+	case type_inherit:
+		return "inherit";
 	}
 }

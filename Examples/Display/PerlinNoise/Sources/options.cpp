@@ -37,6 +37,7 @@
 
 Options::Options(CL_GUIManager &gui, CL_Rect gui_position) : CL_GUIComponent(&gui, CL_GUITopLevelDescription("Options", gui_position, false))
 {
+	is_normals_set = false;
 	sized_format = cl_rgb8;
 	dimension = perlin_2d;
 	amplitude = 1.0;
@@ -54,6 +55,9 @@ Options::Options(CL_GUIManager &gui, CL_Rect gui_position) : CL_GUIComponent(&gu
 	make_format_menu(combo_format_menu);
 	combo_format = create_format_combo_box(450, 30, combo_format_menu, 0);
 	label_format = create_combobox_label(combo_format, "Pixel Format");
+
+	checkbox_normals = create_checkbox(640, 35, "Draw Normals (rgb only)", is_normals_set);
+	checkbox_normals->func_state_changed().set(this, &Options::checkbox_normals_changed);
 
 	make_dimension_menu(combo_dimension_menu);
 	combo_dimension = create_dimension_combo_box(450, 80, combo_dimension_menu, 0);
@@ -150,6 +154,20 @@ Options::Options(CL_GUIManager &gui, CL_Rect gui_position) : CL_GUIComponent(&gu
 Options::~Options()
 {
 
+}
+
+CL_CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+{
+	CL_CheckBox *checkbox = new CL_CheckBox(this);
+	checkbox->set_geometry(CL_Rect(xpos, ypos , CL_Size(140, 16)));
+	checkbox->set_text(name);
+	checkbox->set_checked(state);
+	return checkbox;
+}
+
+void Options::checkbox_normals_changed()
+{
+	is_normals_set = checkbox_normals->is_checked();
 }
 
 void Options::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)

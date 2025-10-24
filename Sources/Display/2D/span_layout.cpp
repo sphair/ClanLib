@@ -118,3 +118,28 @@ void CL_SpanLayout::set_component_geometry()
 {
 	impl->set_component_geometry();
 }
+
+void CL_SpanLayout::show_cursor()
+{
+	impl->cursor_visible = true;
+}
+
+void CL_SpanLayout::hide_cursor()
+{
+	impl->cursor_visible = false;
+}
+
+void CL_SpanLayout::set_cursor_pos(CL_String::size_type pos)
+{
+	impl->cursor_pos = pos;
+}
+
+void CL_SpanLayout::set_cursor_overwrite_mode(bool enable)
+{
+	impl->cursor_overwrite_mode = enable;
+}
+
+void CL_SpanLayout::set_cursor_color(const CL_Colorf &color)
+{
+	impl->cursor_color = color;
+}

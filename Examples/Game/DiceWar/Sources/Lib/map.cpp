@@ -107,7 +107,7 @@ std::map<int, MapArea*> Map::create_areas(CL_DomElement &areas_element)
 		if (cur_element.get_local_name() == "area")
 		{
 			int area_id = CL_StringHelp::text_to_int(cur_element.get_attribute("id"));
-			CL_AutoPtr<MapArea> area(new MapArea(this, area_id));
+			std::auto_ptr<MapArea> area(new MapArea(this, area_id));
 
 			CL_DomElement position_element = cur_element.named_item("position").to_element();
 			CL_String pos_x = position_element.named_item("x").to_element().get_text();
@@ -116,7 +116,7 @@ std::map<int, MapArea*> Map::create_areas(CL_DomElement &areas_element)
 
 			if (area_id_map.find(area_id) != area_id_map.end())
 				throw CL_Exception(cl_format("Duplicate definitions of area with id %1", area_id));
-			area_id_map[area_id] = area;
+			area_id_map[area_id] = area.get();
 
 			areas.push_back(area.release());
 		}

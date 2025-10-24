@@ -28,14 +28,25 @@
 
 #pragma once
 
-class CL_CSSBlockLayout;
+class CL_CSSTableCell
+{
+public:
+	CL_CSSTableCell() : layout(0), row_span(0), col_span(0), minimum_width(0), maximum_width(0), height(0) { }
+
+	CL_CSSLayoutTreeNode *layout;
+	int row_span;
+	int col_span;
+	CL_CSSUsedValue minimum_width;
+	CL_CSSUsedValue maximum_width;
+	CL_CSSUsedValue height;
+};
 
 class CL_CSSTableColumn
 {
 public:
 	CL_CSSTableColumn() : cell_width(0), minimum_width(0), maximum_width(0) { }
 
-	std::vector<CL_CSSLayoutTreeNode *> rows;
+	std::vector<CL_CSSTableCell> rows;
 	CL_CSSUsedValue cell_width;
 	CL_CSSUsedValue minimum_width;
 	CL_CSSUsedValue maximum_width;

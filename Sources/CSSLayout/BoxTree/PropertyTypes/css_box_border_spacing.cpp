@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_border_spacing.h"
+#include "API/CSSLayout/PropertyTypes/css_box_border_spacing.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxBorderSpacing::CL_CSSBoxBorderSpacing()
@@ -61,4 +61,18 @@ void CL_CSSBoxBorderSpacing::compute(const CL_CSSBoxBorderSpacing *parent, CL_CS
 
 	length1 = layout->compute_length(length1, em_size, ex_size);
 	length2 = layout->compute_length(length2, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxBorderSpacing::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_one_length:
+		return length1.to_string();
+	case type_two_lengths:
+		return length1.to_string() + " " + length2.to_string();
+	case type_inherit:
+		return "inherit";
+	}
 }

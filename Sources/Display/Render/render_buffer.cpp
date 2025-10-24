@@ -67,7 +67,7 @@ CL_RenderBuffer::CL_RenderBuffer(CL_GraphicContext &context, int width, int heig
 
 void CL_RenderBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_RenderBuffer is null");
 }
 

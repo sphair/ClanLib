@@ -153,11 +153,9 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,89,173,10
     CONTROL         "Compile using SSE2 Intrinsics",IDC_CHECK_INCLUDE_INTRINSICS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,102,173,10
-    CONTROL         "Compile Debug with optimizations",IDC_CHECK_DEBUG_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,115,173,10
-    CONTROL         "Compile Release using Whole Program Optimizations",IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,128,173,10
+
 END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

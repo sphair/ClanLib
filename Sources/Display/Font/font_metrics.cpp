@@ -76,7 +76,7 @@ CL_FontMetrics::~CL_FontMetrics()
 
 void CL_FontMetrics::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_FontMetrics is null");
 }
 

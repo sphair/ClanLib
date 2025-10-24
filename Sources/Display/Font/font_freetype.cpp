@@ -40,8 +40,7 @@ CL_Font_Freetype::CL_Font_Freetype()
 {
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_StringRef &typeface_name, int height) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_StringRef &typeface_name, int height) : CL_Font(new CL_FontProvider_Freetype())
 {
 	CL_FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -49,8 +48,7 @@ CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
 	get_provider()->load_font(desc);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_StringRef &typeface_name, int height, CL_IODevice &file) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_StringRef &typeface_name, int height, CL_IODevice &file) : CL_Font(new CL_FontProvider_Freetype())
 {
 	CL_FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -58,8 +56,7 @@ CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
 	get_provider()->load_font(desc, file);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_StringRef &typeface_name, int height, const CL_VirtualDirectory &directory) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_StringRef &typeface_name, int height, const CL_VirtualDirectory &directory) : CL_Font(new CL_FontProvider_Freetype())
 {
 	CL_FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -67,32 +64,28 @@ CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
 	get_provider()->load_font(desc, directory);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_FontDescription &desc) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_FontDescription &desc) : CL_Font(new CL_FontProvider_Freetype())
 {
 	get_provider()->load_font(desc);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_FontDescription &desc, CL_IODevice &file) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_FontDescription &desc, CL_IODevice &file) : CL_Font(new CL_FontProvider_Freetype())
 {
 	get_provider()->load_font(desc, file);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc,
-	const CL_FontDescription &desc, const CL_VirtualDirectory &directory) : CL_Font( new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_FontDescription &desc, const CL_VirtualDirectory &directory) : CL_Font(new CL_FontProvider_Freetype())
 {
 	get_provider()->load_font(desc, directory);
 }
 
-CL_Font_Freetype::CL_Font_Freetype(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources) : CL_Font(new CL_FontProvider_Freetype(gc))
+CL_Font_Freetype::CL_Font_Freetype(const CL_StringRef &resource_id, CL_ResourceManager *resources) : CL_Font(new CL_FontProvider_Freetype())
 {
 	get_provider()->load_font(resource_id, resources);
 }
 
 CL_Font_Freetype::~CL_Font_Freetype()
 {
-
 }
 
 /////////////////////////////////////////////////////////////////////////////

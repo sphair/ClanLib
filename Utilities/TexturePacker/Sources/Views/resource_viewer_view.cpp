@@ -121,26 +121,32 @@ void ResourceViewerView::on_button_edit_resource()
 {
 }
 
+ResourceItem *ResourceViewerView::get_selected_resource_item()
+{
+	std::vector<ResourceItem *> &items = packer.get_resource_items();
+	int index = resource_list->get_selected_item().get_id();
+	ResourceItem *resource_item = items[index];
+
+	return resource_item;
+}
+
 void ResourceViewerView::on_button_create_collision_data()
 {
-	CL_UnknownSharedPtr ptr =  resource_list->get_selected_item().get_userdata();
-	ResourceItem *resource_item = (ResourceItem *)ptr.get();
+	ResourceItem *resource_item = get_selected_resource_item();
 	if(resource_item)
 	{
 		SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(resource_item);
 		if(sprite_item)
 		{
-			CreateCollisionDataDialog dlg(this);
+			CreateCollisionDataDialog dlg(this, sprite_item);
 			dlg.exec();
-//			resource.
 		}
 	}
 }
 
 void ResourceViewerView::on_selection_changed(CL_ListViewSelection selection)
 {
-	CL_UnknownSharedPtr ptr =  selection.get_first().get_item().get_userdata();
-	ResourceItem *resource_item = (ResourceItem *)ptr.get();
+	ResourceItem *resource_item = get_selected_resource_item();
 	if(resource_item)
 		show_resource(resource_item);
 }
@@ -169,16 +175,14 @@ void ResourceViewerView::load_resource_file(const CL_String &file)
 	packer.load_resources(get_gc(), file);
 
 	std::vector<ResourceItem *> &items = packer.get_resource_items();
-	std::vector<ResourceItem *>::iterator it;
-	for(it = items.begin(); it != items.end(); ++it)
+	for(size_t i = 0; i < items.size(); ++i)
 	{
-		ResourceItem *resource_item = (ResourceItem *)(*it);
+		ResourceItem *resource_item = items[i];
 
 		CL_ListViewItem item = resource_list->create_item();
 		item.set_column_text("Resource", cl_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
 
-		CL_SharedPtr<ResourceItem> userdata(resource_item);
-		item.set_userdata(userdata);
+		item.set_id(i);
 
 		NotSupportedResourceItem *not_supported_item = dynamic_cast<NotSupportedResourceItem *>(resource_item);
 		if(not_supported_item)

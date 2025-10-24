@@ -83,7 +83,7 @@ Model::Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Coll
 
 bool Model::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 void Model::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix)

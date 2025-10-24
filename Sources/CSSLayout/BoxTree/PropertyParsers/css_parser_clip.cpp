@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_clip.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserClip::get_names()
 {
@@ -37,22 +37,22 @@ std::vector<CL_String> CL_CSSParserClip::get_names()
 	return names;
 }
 
-void CL_CSSParserClip::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserClip::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "auto")
+		if (equals(token.value, "auto"))
 		{
 			properties.clip.type = CL_CSSBoxClip::type_auto;
 		}
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 		{
 			properties.clip.type = CL_CSSBoxClip::type_inherit;
 		}
 	}
-	else if (token.type == CL_CSSToken::type_function && token.value == "rect")
+	else if (token.type == CL_CSSToken::type_function && equals(token.value, "rect"))
 	{
 		CL_CSSBoxLength rect[4];
 		bool rect_auto[4] = { false, false, false, false };
@@ -72,14 +72,18 @@ void CL_CSSParserClip::parse(CL_CSSBoxProperties &properties, const CL_String &n
 			if (is_length(token))
 			{
 				if (!parse_length(token, rect[dir]))
+				{
+					debug_parse_error(name, tokens);
 					return;
+				}
 			}
-			else if (token.type == CL_CSSToken::type_ident && token.value == "auto")
+			else if (token.type == CL_CSSToken::type_ident && equals(token.value, "auto"))
 			{
 				rect_auto[dir] = true;
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -96,5 +100,9 @@ void CL_CSSParserClip::parse(CL_CSSBoxProperties &properties, const CL_String &n
 			properties.clip.bottom_auto = rect_auto[2];
 			properties.clip.left_auto = rect_auto[3];
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["clip"] = &properties.clip;
 	}
 }

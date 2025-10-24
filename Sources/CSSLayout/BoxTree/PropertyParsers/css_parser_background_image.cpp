@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_background_image.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBackgroundImage::get_names()
 {
@@ -37,20 +37,47 @@ std::vector<CL_String> CL_CSSParserBackgroundImage::get_names()
 	return names;
 }
 
-void CL_CSSParserBackgroundImage::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBackgroundImage::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
-	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
+
+	CL_CSSBoxBackgroundImage background_image;
+
+	if (token.type == CL_CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		if (token.value == "none")
-			properties.background_image.type = CL_CSSBoxBackgroundImage::type_none;
-		else if (token.value == "inherit")
-			properties.background_image.type = CL_CSSBoxBackgroundImage::type_inherit;
+		background_image.type = CL_CSSBoxBackgroundImage::type_inherit;
 	}
-	else if (token.type == CL_CSSToken::type_uri && pos == tokens.size())
+	else
 	{
-		properties.background_image.type = CL_CSSBoxBackgroundImage::type_uri;
-		properties.background_image.url = token.value;
+		background_image.type = CL_CSSBoxBackgroundImage::type_images;
+		background_image.images.clear();
+		while (true)
+		{
+			if (token.type == CL_CSSToken::type_ident && equals(token.value, "none"))
+				background_image.images.push_back(CL_CSSBoxBackgroundImage::Image(CL_CSSBoxBackgroundImage::image_type_none));
+			else if (token.type == CL_CSSToken::type_uri)
+				background_image.images.push_back(CL_CSSBoxBackgroundImage::Image(CL_CSSBoxBackgroundImage::image_type_uri, token.value));
+			else
+				return;
+
+			if (pos != tokens.size())
+			{
+				token = next_token(pos, tokens);
+				if (token.type != CL_CSSToken::type_delim || token.value != ",")
+					return;
+				token = next_token(pos, tokens);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+	properties.background_image = background_image;
+	if (out_change_set)
+	{
+		(*out_change_set)["background-image"] = &properties.background_image;
 	}
 }

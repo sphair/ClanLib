@@ -46,10 +46,8 @@ class CL_GlyphCache
 {
 /// \name Construction
 /// \{
-
 public:
-
-	CL_GlyphCache(CL_GraphicContext &gc);
+	CL_GlyphCache();
 	virtual ~CL_GlyphCache();
 
 /// \}
@@ -58,7 +56,7 @@ public:
 
 public:
 	/// \brief Returns information about the current font.
-	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics();
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	CL_Font_TextureGlyph *get_glyph(CL_FontEngine *font_engine, CL_GraphicContext &gc, unsigned int glyph);
@@ -66,7 +64,6 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 
 	/// \brief Print text on gc.
@@ -90,7 +87,6 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	/// \brief Set the font metrics from the OS font
 	void write_font_metrics(CL_GraphicContext &gc);
@@ -104,7 +100,10 @@ private:
 public:
 	// Contains the anti alias setting
 	bool anti_alias;
-	CL_FontMetrics font_metrics;
 
+	// true to enable subpixel rendering setting (implies anti_alias is true)
+	bool enable_subpixel;
+
+	CL_FontMetrics font_metrics;
 /// \}
 };

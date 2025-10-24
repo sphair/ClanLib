@@ -82,13 +82,6 @@ void CL_RenderWindowProvider_WGL::make_current() const
 	wglMakeCurrent(window.get_device_context(), wgl_context );
 }
 
-const CL_RenderWindowProvider * CL_RenderWindowProvider_WGL::new_worker_context() const
-{
-	HGLRC new_gl_context = wglCreateContext(window.get_device_context());
-	wglShareLists(window.get_opengl_context(), new_gl_context);
-	return new CL_RenderWindowProvider_WGL(window, new_gl_context, true);
-}
-
 CL_GL1WindowProvider_WGL &CL_RenderWindowProvider_WGL::get_window()
 {
 	return window;
@@ -398,23 +391,23 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 		int width = get_viewport().get_width();
 		int height = get_viewport().get_height();
 
-		CLint old_viewport[4], old_matrix_mode;
-		CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-		cl1GetIntegerv(CL_VIEWPORT, old_viewport);
-		cl1GetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-		cl1GetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-		cl1GetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-		CLboolean blending = cl1IsEnabled(CL_BLEND);
-		cl1Disable(CL_BLEND);
+		GLint old_viewport[4], old_matrix_mode;
+		GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+		cl1GetIntegerv(GL_VIEWPORT, old_viewport);
+		cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+		cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+		cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+		GLboolean blending = cl1IsEnabled(GL_BLEND);
+		cl1Disable(GL_BLEND);
 
 		cl1Viewport(0, 0, width, height);
-		cl1MatrixMode(CL_PROJECTION);
+		cl1MatrixMode(GL_PROJECTION);
 		cl1LoadIdentity();
 		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-		cl1MatrixMode(CL_MODELVIEW);
+		cl1MatrixMode(GL_MODELVIEW);
 		cl1LoadIdentity();
 
-		cl1ReadBuffer(CL_BACK);
+		cl1ReadBuffer(GL_BACK);
 		cl1RasterPos2i(0, 0);
 		cl1PixelZoom(1.0f, 1.0f);
 
@@ -422,18 +415,18 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 		cl1ReadPixels(
 			0, 0,
 			width, height,
-			CL_RGBA,
-			CL_UNSIGNED_INT_8_8_8_8,
+			GL_RGBA,
+			GL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer);
 
 		if (blending)
-			cl1Enable(CL_BLEND);
+			cl1Enable(GL_BLEND);
 		cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-		cl1MatrixMode(CL_PROJECTION);
+		cl1MatrixMode(GL_PROJECTION);
 		cl1LoadMatrixf(old_matrix_projection);
-		cl1MatrixMode(CL_MODELVIEW);
+		cl1MatrixMode(GL_MODELVIEW);
 		cl1LoadMatrixf(old_matrix_modelview);
 		cl1MatrixMode(old_matrix_mode);
 	}
@@ -469,25 +462,25 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 
 	CL_GL1::set_active(gc);
 
-	CLint old_viewport[4], old_matrix_mode;
-	CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-	cl1GetIntegerv(CL_VIEWPORT, old_viewport);
-	cl1GetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-	cl1GetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-	cl1GetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-	CLboolean blending = cl1IsEnabled(CL_BLEND);
-	cl1Disable(CL_BLEND);
+	GLint old_viewport[4], old_matrix_mode;
+	GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+	cl1GetIntegerv(GL_VIEWPORT, old_viewport);
+	cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+	cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+	cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+	GLboolean blending = cl1IsEnabled(GL_BLEND);
+	cl1Disable(GL_BLEND);
 
 	cl1Viewport(0, 0, width, height);
-	cl1MatrixMode(CL_PROJECTION);
+	cl1MatrixMode(GL_PROJECTION);
 	cl1LoadIdentity();
 	cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 	cl1LoadIdentity();
 
 	if (shadow_window)
 	{
-		cl1ReadBuffer(CL_BACK);
+		cl1ReadBuffer(GL_BACK);
 		cl1RasterPos2i(0, 0);
 		cl1PixelZoom(1.0f, 1.0f);
 
@@ -498,20 +491,20 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 		cl1ReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
-			CL_RGBA,
-			CL_UNSIGNED_INT_8_8_8_8,
+			GL_RGBA,
+			GL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer);
 	}
 	else
 	{
-		CLboolean isdoublebuffered = CL_TRUE;
-		cl1GetBooleanv(CL_DOUBLEBUFFER, &isdoublebuffered);
+		GLboolean isdoublebuffered = GL_TRUE;
+		cl1GetBooleanv(GL_DOUBLEBUFFER, &isdoublebuffered);
 		if (isdoublebuffered)
 		{
-			cl1ReadBuffer(CL_BACK);
-			cl1DrawBuffer(CL_FRONT);
+			cl1ReadBuffer(GL_BACK);
+			cl1DrawBuffer(GL_FRONT);
 
 			cl1RasterPos2i(rect.left, height - rect.bottom);
 			cl1PixelZoom(1.0f, 1.0f);
@@ -519,18 +512,18 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 			cl1CopyPixels(
 				rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,
-				CL_COLOR);
+				GL_COLOR);
 
-			cl1DrawBuffer(CL_BACK);
+			cl1DrawBuffer(GL_BACK);
 			cl1Flush();
 		}
 	}
 	if (blending)
-		cl1Enable(CL_BLEND);
+		cl1Enable(GL_BLEND);
 	cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	cl1MatrixMode(CL_PROJECTION);
+	cl1MatrixMode(GL_PROJECTION);
 	cl1LoadMatrixf(old_matrix_projection);
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 	cl1LoadMatrixf(old_matrix_modelview);
 	cl1MatrixMode(old_matrix_mode);
 

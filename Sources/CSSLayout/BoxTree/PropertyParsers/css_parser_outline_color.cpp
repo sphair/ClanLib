@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_outline_color.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserOutlineColor::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserOutlineColor::get_names()
 	return names;
 }
 
-void CL_CSSParserOutlineColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserOutlineColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_Colorf color;
@@ -51,14 +51,18 @@ void CL_CSSParserOutlineColor::parse(CL_CSSBoxProperties &properties, const CL_S
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 		{
-			if (token.value == "invert")
+			if (equals(token.value, "invert"))
 			{
 				properties.outline_color.type = CL_CSSBoxOutlineColor::type_invert;
 			}
-			else if (token.value == "inherit")
+			else if (equals(token.value, "inherit"))
 			{
 				properties.outline_color.type = CL_CSSBoxOutlineColor::type_inherit;
 			}
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["outline-color"] = &properties.outline_color;
 	}
 }

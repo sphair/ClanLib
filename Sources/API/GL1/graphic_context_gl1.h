@@ -65,7 +65,7 @@ public:
 //!Attributes
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -137,9 +137,9 @@ public:
 
 	/// \brief Set material
 	///
-	/// \param face = CLenum
+	/// \param face = GLenum
 	/// \param material = Material_ GL1
-	void set_material(CLenum face, const CL_Material_GL1 &material);
+	void set_material(GLenum face, const CL_Material_GL1 &material);
 
 	/// \brief Reset material
 	void reset_material();
@@ -164,9 +164,9 @@ public:
 
 	/// \brief Set color material
 	///
-	/// \param face = CLenum
+	/// \param face = GLenum
 	/// \param color = Color Material_ GL1
-	void set_color_material(CLenum face, CL_ColorMaterial_GL1 color);
+	void set_color_material(GLenum face, CL_ColorMaterial_GL1 color);
 
 	/// \brief Set light
 	///

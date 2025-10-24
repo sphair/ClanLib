@@ -73,6 +73,7 @@ public:
 private:
 	CL_StringRef test_stringref();
 	CL_String str;
+	void test_string();
 
 	void fail();
 };

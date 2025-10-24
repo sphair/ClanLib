@@ -59,14 +59,14 @@ CL_DomNamedNodeMap::~CL_DomNamedNodeMap()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNamedNodeMap attributes:
 
-int CL_DomNamedNodeMap::get_length() const
+unsigned long CL_DomNamedNodeMap::get_length() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	const CL_DomTreeNode *tree_node = impl->get_tree_node();
 	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
-	int length = 0;
+	unsigned long length = 0;
 	while (cur_attribute)
 	{
 		length++;
@@ -80,9 +80,9 @@ int CL_DomNamedNodeMap::get_length() const
 
 CL_DomNode CL_DomNamedNodeMap::get_named_item(const CL_DomString &name) const
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	const CL_DomTreeNode *tree_node = impl->get_tree_node();
 	unsigned int cur_index = tree_node->first_attribute;
 	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
@@ -92,10 +92,7 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item(const CL_DomString &name) const
 		{
 			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
 			dom_node->node_index = cur_index;
-			return CL_DomNode(
-				CL_SharedPtr<CL_DomNode_Generic>(
-					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node));
+			return CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(dom_node, CL_DomDocument_Generic::NodeDeleter(doc_impl)));
 		}
 		cur_index = cur_attribute->next_sibling;
 		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
@@ -107,9 +104,9 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
 	const CL_DomString &namespace_uri,
 	const CL_DomString &local_name) const
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	const CL_DomTreeNode *tree_node = impl->get_tree_node();
 	unsigned int cur_index = tree_node->first_attribute;
 	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
@@ -124,11 +121,7 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
 		{
 			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
 			dom_node->node_index = cur_index;
-			return CL_DomNode(
-				CL_SharedPtr<CL_DomNode_Generic>(
-					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node));
-
+			return CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(dom_node, CL_DomDocument_Generic::NodeDeleter(doc_impl)));
 		}
 		cur_index = cur_attribute->next_sibling;
 		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
@@ -138,9 +131,9 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
 
 CL_DomNode CL_DomNamedNodeMap::set_named_item(const CL_DomNode &node)
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	CL_DomString name = node.get_node_name();
 	CL_DomTreeNode *new_tree_node = (CL_DomTreeNode *) node.impl->get_tree_node();
 	CL_DomTreeNode *tree_node = impl->get_tree_node();
@@ -190,9 +183,9 @@ CL_DomNode CL_DomNamedNodeMap::set_named_item(const CL_DomNode &node)
 
 CL_DomNode CL_DomNamedNodeMap::set_named_item_ns(const CL_DomNode &node)
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	CL_DomString namespace_uri = node.get_namespace_uri();
 	CL_DomString local_name = node.get_local_name();
 	CL_DomTreeNode *new_tree_node = (CL_DomTreeNode *) node.impl->get_tree_node();
@@ -248,9 +241,9 @@ CL_DomNode CL_DomNamedNodeMap::set_named_item_ns(const CL_DomNode &node)
 
 CL_DomNode CL_DomNamedNodeMap::remove_named_item(const CL_DomString &name)
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	CL_DomTreeNode *tree_node = impl->get_tree_node();
 	unsigned int cur_index = tree_node->first_attribute;
 	unsigned int last_index = cl_null_node_index;
@@ -271,10 +264,7 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item(const CL_DomString &name)
 
 			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
 			dom_node->node_index = cur_index;
-			return CL_DomNode(
-				CL_SharedPtr<CL_DomNode_Generic>(
-					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node));
+			return CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(dom_node, CL_DomDocument_Generic::NodeDeleter(doc_impl)));
 		}
 		last_index = cur_index;
 		cur_index = cur_attribute->next_sibling;
@@ -288,9 +278,9 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
 	const CL_DomString &namespace_uri,
 	const CL_DomString &local_name)
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	CL_DomTreeNode *tree_node = impl->get_tree_node();
 	unsigned int cur_index = tree_node->first_attribute;
 	unsigned int last_index = cl_null_node_index;
@@ -316,10 +306,7 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
 
 			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
 			dom_node->node_index = cur_index;
-			return CL_DomNode(
-				CL_SharedPtr<CL_DomNode_Generic>(
-					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node));
+			return CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(dom_node, CL_DomDocument_Generic::NodeDeleter(doc_impl)));
 		}
 		last_index = cur_index;
 		cur_index = cur_attribute->next_sibling;
@@ -331,9 +318,9 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
 
 CL_DomNode CL_DomNamedNodeMap::item(unsigned long index) const
 {
-	if (impl.is_null())
+	if (!impl)
 		return CL_DomNode();
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	const CL_DomTreeNode *tree_node = impl->get_tree_node();
 	unsigned int cur_index = tree_node->first_attribute;
 	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
@@ -344,10 +331,7 @@ CL_DomNode CL_DomNamedNodeMap::item(unsigned long index) const
 		{
 			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
 			dom_node->node_index = cur_index;
-			return CL_DomNode(
-				CL_SharedPtr<CL_DomNode_Generic>(
-					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node));
+			return CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(dom_node, CL_DomDocument_Generic::NodeDeleter(doc_impl)));
  		}
 		pos++;
 		cur_index = cur_attribute->next_sibling;
@@ -378,7 +362,7 @@ inline CL_DomTreeNode *CL_DomNamedNodeMap_Generic::get_tree_node()
 {
 	if (node_index == cl_null_node_index)
 		return 0;
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }
 
@@ -386,6 +370,6 @@ inline const CL_DomTreeNode *CL_DomNamedNodeMap_Generic::get_tree_node() const
 {
 	if (node_index == cl_null_node_index)
 		return 0;
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.lock().get();
 	return doc_impl->nodes[node_index];
 }

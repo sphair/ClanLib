@@ -47,7 +47,8 @@ public:
 		strikeout = false;
 		fixed_pitch = false;
 		anti_alias = true;
-		anti_alias_set = false;
+		subpixel = true;
+		charset = CL_FontDescription::charset_default;
 	}
 
 	virtual ~CL_FontDescription_Impl() { return; }
@@ -69,7 +70,8 @@ public:
 	bool strikeout;
 	bool fixed_pitch;
 	bool anti_alias;
-	bool anti_alias_set;
+	bool subpixel;
+	CL_FontDescription::Charset charset;
 
 /// \}
 };

@@ -210,6 +210,10 @@
 			RelativePath="test.h"
 			>
 		</File>
+		<File
+			RelativePath=".\test_string.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

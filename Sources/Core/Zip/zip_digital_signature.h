@@ -29,7 +29,7 @@
 #ifndef zip_digital_signature
 #define zip_digital_signature
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 
 class CL_IODevice;
 
@@ -49,9 +49,9 @@ public:
 /// \{
 
 public:
-	cl_int32 signature; // 0x05054b50
+	cl_int signature; // 0x05054b50
 
-	cl_int16 size_of_data;
+	cl_short size_of_data;
 
 	CL_String signature_data;
 

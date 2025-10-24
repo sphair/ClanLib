@@ -111,50 +111,40 @@ public:
 		}
 	}
 
-	CL_Event get_wakeup_event()
-	{
-		return timer_event;
-	}
-
 	void process()
 	{
-		if (timer_event.wait(0))
+		CL_MutexSection mutex_lock(&mutex);
+
+		unsigned int current_time = CL_System::get_time();
+
+		// Scan for events and trigger them
+		for (std::map<int, CL_Timer_Object *>::iterator it = timer_objects.begin(); it != timer_objects.end();)
 		{
-			timer_event.reset();
+			CL_Timer_Object &object = *(it->second);
+			++it;	// We need to update the iterator here - Because func_expired may remove the timer object
 
-			CL_MutexSection mutex_lock(&mutex);
-
-			unsigned int current_time = CL_System::get_time();
-
-			// Scan for events and trigger them
-			for (std::map<int, CL_Timer_Object *>::iterator it = timer_objects.begin(); it != timer_objects.end();)
+			// Found a timer
+			const int grace_period = 1;	// Allow 1ms grace
+			if (object.end_time <= (current_time + grace_period))
 			{
-				CL_Timer_Object &object = *(it->second);
-				++it;	// We need to update the iterator here - Because func_expired may remove the timer object
-
-				// Found a timer
-				const int grace_period = 1;	// Allow 1ms grace
-				if (object.end_time <= (current_time + grace_period))
+				if (!object.stopped)
 				{
-					if (!object.stopped)
+					if (object.repeating)
 					{
-						if (object.repeating)
+						object.end_time += object.timeout;
+						if (object.end_time <= current_time)
 						{
-							object.end_time += object.timeout;
-							if (object.end_time <= current_time)
-							{
-								// An event has been missed, reset the timer
-								object.end_time = current_time + object.timeout;
-							}
+							// An event has been missed, reset the timer
+							object.end_time = current_time + object.timeout;
 						}
-						else
-						{
-							object.stopped = true;
-						}
-
-						if (!object.func_expired.is_null())
-							object.func_expired.invoke();
 					}
+					else
+					{
+						object.stopped = true;
+					}
+
+					if (!object.func_expired.is_null())
+						object.func_expired.invoke();
 				}
 			}
 		}
@@ -224,13 +214,12 @@ private:
 			mutex_lock.unlock();
 
 			if (CL_Event::wait(update_event, timeout) == -1)
-				timer_event.set();
+				set_wakeup_event();
 		}
 	}
 
 	CL_Thread thread;
 	CL_Event update_event;
-	CL_Event timer_event;
 	CL_Mutex mutex;
 	int timeout;
 	bool stop_thread;

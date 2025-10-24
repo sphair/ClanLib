@@ -31,18 +31,21 @@
 #include "css_view.h"
 
 CSSBrowser::CSSBrowser(CL_GUIManager *gui)
-: CL_Window(gui, get_window_description()), view(0)
+: CL_Window(gui, get_window_description()), label(0), edit(0), view(0)
 {
 	view = new CSSView(this);
 	func_close().set(this, &CSSBrowser::on_close);
 	func_resized().set(this, &CSSBrowser::on_resized);
+	label = new CL_Label(this);
+	edit = new CL_LineEdit(this);
+	label->set_text("Address:");
 	on_resized();
 }
 
 CL_GUITopLevelDescription CSSBrowser::get_window_description()
 {
 	CL_GUITopLevelDescription desc;
-	desc.set_size(CL_Size(1000, 700), false);
+	desc.set_size(CL_Size(1280, 865), false);
 	desc.set_title("CSS Browser");
 	desc.set_allow_resize(true);
 	return desc;
@@ -56,5 +59,14 @@ bool CSSBrowser::on_close()
 
 void CSSBrowser::on_resized()
 {
-	view->set_geometry(get_client_area());
+	CL_Rect client_box = get_client_area();
+	int height = 38;
+	CL_Rect toolbar_box(client_box.left, client_box.top, client_box.right, client_box.top + height);
+	toolbar_box.shrink(11,11,11,5);
+	CL_Rect label_box(toolbar_box.left, toolbar_box.top, toolbar_box.left+50, toolbar_box.bottom);
+	CL_Rect edit_box(label_box.right, label_box.top, toolbar_box.right, label_box.bottom);
+	CL_Rect view_box(client_box.left, client_box.top + height, client_box.right, client_box.bottom);
+	label->set_geometry(label_box);
+	edit->set_geometry(edit_box);
+	view->set_geometry(view_box);
 }

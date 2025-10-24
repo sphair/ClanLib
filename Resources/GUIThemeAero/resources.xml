@@ -524,4 +524,21 @@
     <image file="Images\XP\image_normal.png" />
   </image>
   
+  <image name="MessageBox">
+    <image file="Images\messagebox.png" />
+  </image>
+  <image name="MessageBoxIconError">
+    <image file="Images\messagebox_icon_error.png" />
+  </image>
+  <image name="MessageBoxIconWarning">
+    <image file="Images\messagebox_icon_warning.png" />
+  </image>
+  <image name="MessageBoxIconInfo">
+    <image file="Images\messagebox_icon_info.png" />
+  </image>
+  <image name="MessageBoxIconQuestion">
+    <image file="Images\messagebox_icon_question.png" />
+  </image>
+  
+  
 </resources>

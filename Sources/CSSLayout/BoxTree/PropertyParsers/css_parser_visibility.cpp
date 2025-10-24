@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_visibility.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserVisibility::get_names()
 {
@@ -37,19 +37,23 @@ std::vector<CL_String> CL_CSSParserVisibility::get_names()
 	return names;
 }
 
-void CL_CSSParserVisibility::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserVisibility::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "visible")
+		if (equals(token.value, "visible"))
 			properties.visibility.type = CL_CSSBoxVisibility::type_visible;
-		else if (token.value == "hidden")
+		else if (equals(token.value, "hidden"))
 			properties.visibility.type = CL_CSSBoxVisibility::type_hidden;
-		else if (token.value == "collapse")
+		else if (equals(token.value, "collapse"))
 			properties.visibility.type = CL_CSSBoxVisibility::type_collapse;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.visibility.type = CL_CSSBoxVisibility::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["visibility"] = &properties.visibility;
 	}
 }

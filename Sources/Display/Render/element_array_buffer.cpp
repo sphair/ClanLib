@@ -80,7 +80,7 @@ CL_ElementArrayBuffer::~CL_ElementArrayBuffer()
 
 void CL_ElementArrayBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ElementArrayBuffer is null");
 }
 

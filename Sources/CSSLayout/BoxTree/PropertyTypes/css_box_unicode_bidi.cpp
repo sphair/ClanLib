@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_unicode_bidi.h"
+#include "API/CSSLayout/PropertyTypes/css_box_unicode_bidi.h"
 
 CL_CSSBoxUnicodeBidi::CL_CSSBoxUnicodeBidi()
 : type(type_normal)
@@ -42,5 +42,21 @@ void CL_CSSBoxUnicodeBidi::compute(const CL_CSSBoxUnicodeBidi *parent, CL_CSSRes
 			type = parent->type;
 		else
 			type = type_normal;
+	}
+}
+
+CL_String CL_CSSBoxUnicodeBidi::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_embed:
+		return "embed";
+	case type_bidi_override:
+		return "bidi-override";
+	case type_inherit:
+		return "inherit";
 	}
 }

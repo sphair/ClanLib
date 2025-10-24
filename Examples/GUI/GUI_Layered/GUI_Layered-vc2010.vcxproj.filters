@@ -67,10 +67,10 @@
     <ClCompile Include="..\CommonCode\Sources\theme.cpp">
       <Filter>CommonCode</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\panel3d.cpp">
+    <ClCompile Include="Sources\gui_3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\gui_3d.cpp">
+    <ClCompile Include="Sources\panel3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

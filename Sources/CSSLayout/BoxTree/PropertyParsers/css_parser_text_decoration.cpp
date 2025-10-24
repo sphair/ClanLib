@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_text_decoration.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserTextDecoration::get_names()
 {
@@ -37,17 +37,17 @@ std::vector<CL_String> CL_CSSParserTextDecoration::get_names()
 	return names;
 }
 
-void CL_CSSParserTextDecoration::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserTextDecoration::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "none")
+		if (equals(token.value, "none"))
 		{
 			properties.text_decoration.type = CL_CSSBoxTextDecoration::type_none;
 		}
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 		{
 			properties.text_decoration.type = CL_CSSBoxTextDecoration::type_inherit;
 		}
@@ -61,17 +61,18 @@ void CL_CSSParserTextDecoration::parse(CL_CSSBoxProperties &properties, const CL
 			{
 				if (token.type == CL_CSSToken::type_ident)
 				{
-					if (token.value == "underline")
+					if (equals(token.value, "underline"))
 						underline++;
-					else if (token.value == "overline")
+					else if (equals(token.value, "overline"))
 						overline++;
-					else if (token.value == "line-through")
+					else if (equals(token.value, "line-through"))
 						line_through++;
-					else if (token.value == "blink")
+					else if (equals(token.value, "blink"))
 						blink++;
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 
@@ -87,5 +88,9 @@ void CL_CSSParserTextDecoration::parse(CL_CSSBoxProperties &properties, const CL
 				properties.text_decoration.blink = (blink == 1);
 			}
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["text-decoration"] = &properties.text_decoration;
 	}
 }

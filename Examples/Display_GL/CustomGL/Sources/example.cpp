@@ -64,11 +64,11 @@ int Example::start(const std::vector<CL_String> &args)
 
 		// Note, use "cl1" insteal of "cl", if you use the GL1 target
 
-		cl1MatrixMode(CL_MODELVIEW);							// Select The Modelview Matrix
-		cl1Clear(CL_COLOR_BUFFER_BIT | CL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
+		cl1MatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+		cl1Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
 		cl1LoadIdentity();									// Reset The Current Modelview Matrix
 		cl1Translatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
-		cl1Begin(CL_TRIANGLES);								// Drawing Using Triangles
+		cl1Begin(GL_TRIANGLES);								// Drawing Using Triangles
 			cl1Color3f(1.0f,0.0f,0.0f);						// Set The Color To Red
 			cl1Vertex3f( 0.0f, 1.0f, 0.0f);					// Top
 			cl1Color3f(0.0f,1.0f,0.0f);						// Set The Color To Green
@@ -78,7 +78,7 @@ int Example::start(const std::vector<CL_String> &args)
 		cl1End();											// Finished Drawing The Triangle
 		cl1Translatef(3.0f,0.0f,0.0f);						// Move Right 3 Units
 		cl1Color3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
-		cl1Begin(CL_QUADS);									// Draw A Quad
+		cl1Begin(GL_QUADS);									// Draw A Quad
 			cl1Vertex3f(-1.0f, 1.0f, 0.0f);					// Top Left
 			cl1Vertex3f( 1.0f, 1.0f, 0.0f);					// Top Right
 			cl1Vertex3f( 1.0f,-1.0f, 0.0f);					// Bottom Right

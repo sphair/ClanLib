@@ -29,7 +29,7 @@
 
 #include "Display/precomp.h"
 #include "glyph_cache.h"
-#include "FontEngine/font_engine_freetype.h"
+#include "FontEngine/font_engine.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -49,19 +49,20 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_GlyphCache Construction:
 
-CL_GlyphCache::CL_GlyphCache(CL_GraphicContext &gc)
+CL_GlyphCache::CL_GlyphCache()
 {
 	glyph_list.reserve(256);
 
 	// Note, the user can specify a different texture group size using set_texture_group()
-	texture_group = CL_TextureGroup(gc, CL_Size(256,256));
+	texture_group = CL_TextureGroup(CL_Size(256,256));
 
 	// Set default font metrics
 	font_metrics = CL_FontMetrics(
 		0,0, 0, 0,0,0,0,0, 0,0,
 		false, false, false, false);
 
-	anti_alias = false;
+	anti_alias = true;
+	enable_subpixel = true;
 }
 
 CL_GlyphCache::~CL_GlyphCache()
@@ -73,7 +74,7 @@ CL_GlyphCache::~CL_GlyphCache()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GlyphCache Attributes:
 
-CL_FontMetrics CL_GlyphCache::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_GlyphCache::get_font_metrics()
 {
 	return font_metrics;
 }
@@ -138,8 +139,9 @@ int CL_GlyphCache::get_character_index(CL_FontEngine *font_engine, CL_GraphicCon
 
 	int character_counter = 0;
 
-	CL_FontMetrics fm = get_font_metrics(gc);
+	CL_FontMetrics fm = get_font_metrics();
 	int font_height = fm.get_height();
+	int font_ascent = fm.get_ascent();
 	int font_external_leading = fm.get_external_leading();
 
 	std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
@@ -163,7 +165,7 @@ int CL_GlyphCache::get_character_index(CL_FontEngine *font_engine, CL_GraphicCon
 			CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 			if (gptr == NULL) continue;
 
-			CL_Rect position(xpos, ypos - font_height, CL_Size(gptr->increment.x, gptr->increment.y + font_height + font_external_leading));
+			CL_Rect position(xpos, ypos - font_ascent, CL_Size(gptr->increment.x, gptr->increment.y + font_height + font_external_leading));
 			if (position.contains(point))
 			{
 				return glyph_pos + character_counter;
@@ -257,11 +259,21 @@ void CL_GlyphCache::insert_glyph(CL_GraphicContext &gc, CL_Font_System_Position 
 
 void CL_GlyphCache::insert_glyph(CL_FontEngine *font_engine, CL_GraphicContext &gc, int glyph)
 {
-	CL_FontPixelBuffer pb = font_engine->get_font_glyph(glyph, anti_alias, CL_Colorf::white);
-
-	if (pb.glyph)	// Ignore invalid glyphs
+	if (enable_subpixel)
 	{
-		insert_glyph(gc, pb);
+		CL_FontPixelBuffer pb = font_engine->get_font_glyph_subpixel(glyph);
+		if (pb.glyph)	// Ignore invalid glyphs
+		{
+			insert_glyph(gc, pb);
+		}
+	}
+	else
+	{
+		CL_FontPixelBuffer pb = font_engine->get_font_glyph_standard(glyph, anti_alias);
+		if (pb.glyph)	// Ignore invalid glyphs
+		{
+			insert_glyph(gc, pb);
+		}
 	}
 }
 
@@ -291,7 +303,13 @@ void CL_GlyphCache::draw_text(CL_FontEngine *font_engine, CL_GraphicContext &gc,
 			float yp = ypos + gptr->offset.y;
 
 			CL_Rectf dest_size(xp, yp, CL_Sizef(gptr->geometry.get_size()));
-			batcher->draw_image(gc, gptr->geometry, dest_size, color, gptr->subtexture.get_texture());
+			if (enable_subpixel)
+			{
+				batcher->draw_glyph_subpixel(gc, gptr->geometry, dest_size, color, gptr->subtexture.get_texture());
+			}else
+			{
+				batcher->draw_image(gc, gptr->geometry, dest_size, color, gptr->subtexture.get_texture());
+			}
 		}
 		xpos += gptr->increment.x;
 		ypos += gptr->increment.y;

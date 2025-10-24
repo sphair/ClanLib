@@ -46,7 +46,7 @@ CL_DomDocumentType::CL_DomDocumentType(
 	const CL_DomString &system_id)
 : CL_DomNode(CL_DomDocument(), DOCUMENT_TYPE_NODE)
 {
-	CL_DomDocument_Generic *doc = dynamic_cast<CL_DomDocument_Generic *>(impl->owner_document.get());
+	CL_DomDocument_Generic *doc = dynamic_cast<CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 	doc->qualified_name = qualified_name;
 	doc->public_id = public_id;
 	doc->system_id = system_id;
@@ -72,7 +72,7 @@ CL_DomString CL_DomDocumentType::get_name() const
 {
 	if (impl)
 	{
-		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.get());
+		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		if (doc)
 			return doc->qualified_name;
 	}
@@ -93,7 +93,7 @@ CL_DomString CL_DomDocumentType::get_public_id() const
 {
 	if (impl)
 	{
-		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.get());
+		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		if (doc)
 			return doc->public_id;
 	}
@@ -104,7 +104,7 @@ CL_DomString CL_DomDocumentType::get_system_id() const
 {
 	if (impl)
 	{
-		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.get());
+		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		if (doc)
 			return doc->system_id;
 	}
@@ -115,7 +115,7 @@ CL_DomString CL_DomDocumentType::get_internal_subset() const
 {
 	if (impl)
 	{
-		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.get());
+		const CL_DomDocument_Generic *doc = dynamic_cast<const CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		if (doc)
 			return doc->internal_subset;
 	}

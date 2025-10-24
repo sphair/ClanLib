@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_list_style_type.h"
+#include "API/CSSLayout/PropertyTypes/css_box_list_style_type.h"
 
 CL_CSSBoxListStyleType::CL_CSSBoxListStyleType()
 : type(type_inherit)
@@ -42,5 +42,45 @@ void CL_CSSBoxListStyleType::compute(const CL_CSSBoxListStyleType *parent, CL_CS
 			type = parent->type;
 		else
 			type = type_disc;
+	}
+}
+
+CL_String CL_CSSBoxListStyleType::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_disc:
+		return "disc";
+	case type_circle:
+		return "circle";
+	case type_square:
+		return "square";
+	case type_decimal:
+		return "decimal";
+	case type_decimal_leading_zero:
+		return "decimal-leading-zero";
+	case type_lower_roman:
+		return "lower-roman";
+	case type_upper_roman:
+		return "upper-roman";
+	case type_lower_greek:
+		return "lower-greek";
+	case type_lower_latin:
+		return "lower-latin";
+	case type_upper_latin:
+		return "upper-latin";
+	case type_armenian:
+		return "armenian";
+	case type_georgian:
+		return "georgian";
+	case type_lower_alpha:
+		return "lower-alpha";
+	case type_upper_alpha:
+		return "upper-alpha";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -59,11 +59,11 @@ CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBuffer &pb, int bord
 	int old_pitch = work_pb.get_pitch();
 	int new_pitch = new_pb.get_pitch();
 
-	cl_int32 *actual_src_data = (cl_int32 *) work_pb.get_data();
+	cl_int *actual_src_data = (cl_int *) work_pb.get_data();
 	actual_src_data += (rect.top * new_pitch) / 4;
 	actual_src_data += rect.left;
 
-	cl_int32 *actual_dest_data = (cl_int32 *) new_pb.get_data();
+	cl_int *actual_dest_data = (cl_int *) new_pb.get_data();
 
 	for (int ypos = 0; ypos < new_height; ypos++)
 	{
@@ -74,10 +74,10 @@ CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBuffer &pb, int bord
 		if (real_ypos >= old_height)
 			real_ypos = old_height-1;
 
-		cl_int32 *src_data = actual_src_data;
+		cl_int *src_data = actual_src_data;
 		src_data += (old_pitch * real_ypos)/4;
 
-		cl_int32 *dest_data = actual_dest_data;
+		cl_int *dest_data = actual_dest_data;
 		dest_data += (new_pitch * ypos)/4;
 
 		for (int xpos = 0; xpos < new_width; xpos++)

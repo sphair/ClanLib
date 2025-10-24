@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_padding.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserPadding::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserPadding::get_names()
 	return names;
 }
 
-void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxPaddingWidth padding_widths[4];
 	int count;
@@ -45,7 +45,7 @@ void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String
 	for (count = 0; count < 4; count++)
 	{
 		CL_CSSToken token = next_token(pos, tokens);
-		if (token.type == CL_CSSToken::type_ident && token.value == "inherit" && count == 0 && pos == tokens.size())
+		if (token.type == CL_CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
 			properties.padding_width_left.type = CL_CSSBoxPaddingWidth::type_inherit;
 			properties.padding_width_top.type = CL_CSSBoxPaddingWidth::type_inherit;
@@ -63,6 +63,7 @@ void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -71,12 +72,42 @@ void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String
 			padding_widths[count].type = CL_CSSBoxPaddingWidth::type_percentage;
 			padding_widths[count].percentage = CL_StringHelp::text_to_float(token.value);
 		}
+		else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token))
+			{
+				CL_CSSBoxLength length;
+				if (parse_length(token, length))
+				{
+					length.value = -length.value;
+					padding_widths[count].type = CL_CSSBoxPaddingWidth::type_length;
+					padding_widths[count].length = length;
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+			else if (token.type == CL_CSSToken::type_percentage)
+			{
+				padding_widths[count].type = CL_CSSBoxPaddingWidth::type_percentage;
+				padding_widths[count].percentage = -CL_StringHelp::text_to_float(token.value);
+			}
+			else
+			{
+				debug_parse_error(name, tokens);
+				return;
+			}
+		}
 		else if (token.type == CL_CSSToken::type_null)
 		{
 			break;
 		}
 		else
 		{
+			debug_parse_error(name, tokens);
 			return;
 		}
 	}
@@ -112,5 +143,12 @@ void CL_CSSParserPadding::parse(CL_CSSBoxProperties &properties, const CL_String
 		default:
 			break;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["padding-left"] = &properties.padding_width_left;
+		(*out_change_set)["padding-right"] = &properties.padding_width_right;
+		(*out_change_set)["padding-top"] = &properties.padding_width_top;
+		(*out_change_set)["padding-bottom"] = &properties.padding_width_bottom;
 	}
 }

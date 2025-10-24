@@ -42,11 +42,11 @@ class CL_OpenGLBufferObjectProvider : public CL_DisposableObject
 /// \{
 
 public:
-	CL_OpenGLBufferObjectProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLBufferObjectProvider();
 
 	~CL_OpenGLBufferObjectProvider();
 
-	void create(const void *data, int size, CL_BufferUsage usage, CLenum new_binding, CLenum new_target);
+	void create(const void *data, int size, CL_BufferUsage usage, GLenum new_binding, GLenum new_target);
 
 	void destroy() { delete this; }
 
@@ -58,9 +58,9 @@ public:
 public:
 	void *get_data();
 
-	CLuint get_handle() const { return handle; }
-	CLenum get_binding() const { return binding; }
-	CLenum get_target() const { return target; }
+	GLuint get_handle() const { return handle; }
+	GLenum get_binding() const { return binding; }
+	GLenum get_target() const { return target; }
 
 /// \}
 /// \name Operations
@@ -79,15 +79,13 @@ public:
 
 private:
 	void on_dispose();
-	CLenum to_enum(CL_BufferUsage usage) const;
+	GLenum to_enum(CL_BufferUsage usage) const;
 
-	CLenum to_enum(CL_BufferAccess access) const;
+	GLenum to_enum(CL_BufferAccess access) const;
 
-	CL_OpenGLGraphicContextProvider *gc_provider;
-
-	CLuint handle;
-	CLenum binding;
-	CLenum target;
+	GLuint handle;
+	GLenum binding;
+	GLenum target;
 
 	void *data_ptr;
 /// \}

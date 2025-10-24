@@ -64,7 +64,6 @@ void CL_PixelCommandPixels::render_pixels_scale(CL_PixelThreadContext *context, 
 	start_tx += (box.left - dest_rect.left) * dtx;
 
 	int width = box.get_width();
-	int height = box.get_height();
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half, color;
@@ -130,7 +129,6 @@ void CL_PixelCommandPixels::render_pixels_noscale(CL_PixelThreadContext *context
 	start_tx += box.left - dest_rect.left;
 
 	int width = box.get_width();
-	int height = box.get_height();
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half, color;
@@ -188,7 +186,6 @@ void CL_PixelCommandPixels::render_pixels_noscale_white(CL_PixelThreadContext *c
 	start_tx += box.left - dest_rect.left;
 
 	int width = box.get_width();
-	int height = box.get_height();
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half;

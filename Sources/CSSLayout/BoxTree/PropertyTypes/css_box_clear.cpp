@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_clear.h"
+#include "API/CSSLayout/PropertyTypes/css_box_clear.h"
 
 CL_CSSBoxClear::CL_CSSBoxClear()
 : type(type_none)
@@ -42,5 +42,23 @@ void CL_CSSBoxClear::compute(const CL_CSSBoxClear *parent, CL_CSSResourceCache *
 			type = parent->type;
 		else
 			type = type_none;
+	}
+}
+
+CL_String CL_CSSBoxClear::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_none:
+		return "none";
+	case type_left:
+		return "left";
+	case type_right:
+		return "right";
+	case type_both:
+		return "both";
+	case type_inherit:
+		return "inherit";
 	}
 }

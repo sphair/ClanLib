@@ -30,10 +30,13 @@
 
 
 #include "../api_core.h"
+#include "../Signals/callback_0.h"
+#include "../Signals/callback_v1.h"
 #include "../Signals/callback_2.h"
 
 class CL_Event;
 class CL_KeepAliveObject;
+class CL_KeepAliveObject_Impl;
 
 /// \brief CL_KeepAlive application loop helper
 ///
@@ -56,6 +59,16 @@ public:
 	///         -1 = Timeout
 	///			events.size() = An external event was triggered
 	static CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > &func_event_wait();
+    
+	/// \brief Function that gets called when CL_KeepAliveObject objects are created.
+    ///
+    /// This callback is used to provide a thread identifier for the func_awake_thread callback.
+    static CL_Callback_0<void *> &func_thread_id();
+    
+	/// \brief Function that gets called when CL_KeepAliveObject::set_wakeup_event is called.
+    ///
+    /// This callback is used to provide a way to awaken a thread that needs to process keep alive events.
+    static CL_Callback_v1<void *> &func_awake_thread();
 
 	/// \brief Returns all the current keep alive objects available for this thread
 	static std::vector<CL_KeepAliveObject *> get_objects();
@@ -73,9 +86,13 @@ public:
 	/// \brief Unregisters a keep alive object
 	virtual ~CL_KeepAliveObject();
 
-	/// \brief Returns a CL_Event object that is signaled when the keep alive object got data to process
-	virtual CL_Event get_wakeup_event() = 0;
+    /// \brief Informs the CL_KeepAlive application loop this object got data to process
+    void set_wakeup_event();
 
 	/// \brief Called by CL_KeepAlive::process when the wakeup event is flagged
 	virtual void process() = 0;
+    
+private:
+    CL_SharedPtr<CL_KeepAliveObject_Impl> impl;
+    friend class CL_KeepAlive;
 };

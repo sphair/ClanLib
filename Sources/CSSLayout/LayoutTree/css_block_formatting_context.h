@@ -41,12 +41,13 @@ public:
 	void set_position(int x, int y);
 	CL_Rect place_left(CL_Rect box, int width);
 	CL_Rect place_right(CL_Rect box, int width);
-	CL_Rect float_left(CL_Rect box, int width, CL_CSSLayoutTreeNode *layout);
-	CL_Rect float_right(CL_Rect box, int width, CL_CSSLayoutTreeNode *layout);
+	CL_Rect place_right_shrink_to_fit(CL_Rect box, int width);
+	CL_Rect float_left(CL_Rect box, int width);
+	CL_Rect float_right(CL_Rect box, int width);
+	CL_Rect float_right_shrink_to_fit(CL_Rect box, int width);
 	CL_Rect find_line_box(int left, int right, int y, int height, int minimum_width) const;
 	int find_left_clearance() const;
 	int find_right_clearance() const;
-	//int find_available_width(const CSSLayoutCursor &cursor) const;
 
 	int get_x() const;
 	int get_y() const;
@@ -68,8 +69,14 @@ private:
 class CL_CSSFloat
 {
 public:
-	CL_CSSFloat(const CL_Rect &box, CL_CSSLayoutTreeNode *layout) : box(box), layout(layout) { }
+	enum Type
+	{
+		type_left,
+		type_right
+	};
+
+	CL_CSSFloat(const CL_Rect &box, Type type) : box(box), type(type) { }
 
 	CL_Rect box;
-	CL_CSSLayoutTreeNode *layout;
+	Type type;
 };

@@ -5,7 +5,7 @@
 
 GameModel::GameModel()
 {
-	players = new GamePlayerCollection();
+	players.reset(new GamePlayerCollection());
 }
 
 GameModel::~GameModel()

@@ -103,6 +103,7 @@ ResourceItem *TexturePacker::load_sprite(CL_GraphicContext &gc, CL_String &resou
 	CL_Sprite sprite(gc, resource_id, &resources);
 	sprite.set_play_loop(true);
 	sprite.set_alignment(origin_top_left);
+	sprite.set_angle(CL_Angle::from_degrees(360) - sprite.get_base_angle());
 
 	SpriteResourceItem *item = new SpriteResourceItem(resource);
 	item->sprite_description = desc;
@@ -127,7 +128,7 @@ ResourceItem *TexturePacker::load_image(CL_GraphicContext &gc, CL_String &resour
 
 CL_TextureGroup *TexturePacker::pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size)
 {
-	CL_TextureGroup *group = new CL_TextureGroup(gc, texture_size);
+	CL_TextureGroup *group = new CL_TextureGroup(texture_size);
 
 	std::vector<ResourceItem *> &items = get_resource_items();
 	std::vector<ResourceItem *>::size_type item_index, item_size;

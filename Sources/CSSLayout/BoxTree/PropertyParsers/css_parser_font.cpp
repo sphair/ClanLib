@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_font.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserFont::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserFont::get_names()
 	return names;
 }
 
-void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &propname, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxFontStyle style;
 	CL_CSSBoxFontVariant variant;
@@ -51,7 +51,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 	size.type = CL_CSSBoxFontSize::type_medium;
 	line_height.type = CL_CSSBoxLineHeight::type_normal;
 	family.type = CL_CSSBoxFontFamily::type_names;
-	family.names.push_back(CL_CSSBoxFontFamilyName("Times New Roman"));
+	family.names.push_back(CL_CSSBoxFontFamilyName());
 
 	bool font_style_set = false;
 	bool font_variant_set = false;
@@ -65,12 +65,12 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 		if (token.type == CL_CSSToken::type_ident)
 		{
 			if (tokens.size() == 1 &&
-				(token.value == "caption" ||
-				token.value == "icon" ||
-				token.value == "menu" ||
-				token.value == "message-box" ||
-				token.value == "small-caption" ||
-				token.value == "status-bar"))
+				(equals(token.value, "caption") ||
+				equals(token.value, "icon") ||
+				equals(token.value, "menu") ||
+				equals(token.value, "message-box") ||
+				equals(token.value, "small-caption") ||
+				equals(token.value, "status-bar")))
 			{
 				properties.font_style = style;
 				properties.font_variant = variant;
@@ -80,7 +80,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 				properties.font_family = family;
 				return;
 			}
-			else if (token.value == "inherit" && tokens.size() == 1)
+			else if (equals(token.value, "inherit") && tokens.size() == 1)
 			{
 				properties.font_style.type = CL_CSSBoxFontStyle::type_inherit;
 				properties.font_variant.type = CL_CSSBoxFontVariant::type_inherit;
@@ -90,7 +90,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 				properties.font_family.type = CL_CSSBoxFontFamily::type_inherit;
 				return;
 			}
-			else if (token.value == "normal") // font-style or font-weight or font-variant
+			else if (equals(token.value, "normal")) // font-style or font-weight or font-variant
 			{
 				int allowed = 3;
 				if (font_style_set)
@@ -102,32 +102,32 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 				if (normal_count < allowed)
 					normal_count++;
 			}
-			else if (token.value == "italic" && !font_style_set) // font-style
+			else if (equals(token.value, "italic") && !font_style_set) // font-style
 			{
 				font_style_set = true;
 				style.type = CL_CSSBoxFontStyle::type_italic;
 			}
-			else if (token.value == "oblique" && !font_style_set) // font-style
+			else if (equals(token.value, "oblique") && !font_style_set) // font-style
 			{
 				font_style_set = true;
 				style.type = CL_CSSBoxFontStyle::type_oblique;
 			}
-			else if (token.value == "small-caps" && !font_variant_set) // font-variant
+			else if (equals(token.value, "small-caps") && !font_variant_set) // font-variant
 			{
 				font_style_set = true;
 				variant.type = CL_CSSBoxFontVariant::type_small_caps;
 			}
-			else if (token.value == "bold" && !font_weight_set) // font-weight
+			else if (equals(token.value, "bold") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
 				weight.type = CL_CSSBoxFontWeight::type_bold;
 			}
-			else if (token.value == "bolder" && !font_weight_set) // font-weight
+			else if (equals(token.value, "bolder") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
 				weight.type = CL_CSSBoxFontWeight::type_bolder;
 			}
-			else if (token.value == "lighter" && !font_weight_set) // font-weight
+			else if (equals(token.value, "lighter") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
 				weight.type = CL_CSSBoxFontWeight::type_lighter;
@@ -189,32 +189,38 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 	}
 
 	if (pos == tokens.size())
+	{
+		debug_parse_error(propname, tokens);
 		return;
+	}
 
 	if (token.type == CL_CSSToken::type_ident)
 	{
-		if (token.value == "xx-small")
+		if (equals(token.value, "xx-small"))
 			size.type = CL_CSSBoxFontSize::type_xx_small;
-		else if (token.value == "x-small")
+		else if (equals(token.value, "x-small"))
 			size.type = CL_CSSBoxFontSize::type_x_small;
-		else if (token.value == "small")
+		else if (equals(token.value, "small"))
 			size.type = CL_CSSBoxFontSize::type_small;
-		else if (token.value == "medium")
+		else if (equals(token.value, "medium"))
 			size.type = CL_CSSBoxFontSize::type_medium;
-		else if (token.value == "large")
+		else if (equals(token.value, "large"))
 			size.type = CL_CSSBoxFontSize::type_large;
-		else if (token.value == "x-large")
+		else if (equals(token.value, "x-large"))
 			size.type = CL_CSSBoxFontSize::type_x_large;
-		else if (token.value == "xx-large")
+		else if (equals(token.value, "xx-large"))
 			size.type = CL_CSSBoxFontSize::type_xx_large;
-		else if (token.value == "smaller")
+		else if (equals(token.value, "smaller"))
 			size.type = CL_CSSBoxFontSize::type_smaller;
-		else if (token.value == "larger")
+		else if (equals(token.value, "larger"))
 			size.type = CL_CSSBoxFontSize::type_larger;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			size.type = CL_CSSBoxFontSize::type_inherit;
 		else
+		{
+			debug_parse_error(propname, tokens);
 			return;
+		}
 	}
 	else if (is_length(token))
 	{
@@ -226,6 +232,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 		}
 		else
 		{
+			debug_parse_error(propname, tokens);
 			return;
 		}
 	}
@@ -233,10 +240,10 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 	{
 		size.type = CL_CSSBoxFontSize::type_percentage;
 		size.percentage = CL_StringHelp::text_to_float(token.value);
-		return;
 	}
 	else
 	{
+		debug_parse_error(propname, tokens);
 		return;
 	}
 
@@ -247,12 +254,15 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 
 		if (token.type == CL_CSSToken::type_ident)
 		{
-			if (token.value == "normal")
+			if (equals(token.value, "normal"))
 				line_height.type = CL_CSSBoxLineHeight::type_normal;
-			else if (token.value == "inherit")
+			else if (equals(token.value, "inherit"))
 				line_height.type = CL_CSSBoxLineHeight::type_inherit;
 			else
+			{
+				debug_parse_error(propname, tokens);
 				return;
+			}
 		}
 		else if (token.type == CL_CSSToken::type_number)
 		{
@@ -269,6 +279,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 			}
 			else
 			{
+				debug_parse_error(propname, tokens);
 				return;
 			}
 		}
@@ -279,6 +290,7 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 		}
 		else
 		{
+			debug_parse_error(propname, tokens);
 			return;
 		}
 
@@ -291,32 +303,32 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 		if (token.type == CL_CSSToken::type_ident)
 		{
 			CL_CSSBoxFontFamilyName name;
-			if (token.value == "serif")
+			if (equals(token.value, "serif"))
 			{
 				name.type = CL_CSSBoxFontFamilyName::type_serif;
 			}
-			else if (token.value == "sans-serif")
+			else if (equals(token.value, "sans-serif"))
 			{
 				name.type = CL_CSSBoxFontFamilyName::type_sans_serif;
 			}
-			else if (token.value == "cursive")
+			else if (equals(token.value, "cursive"))
 			{
 				name.type = CL_CSSBoxFontFamilyName::type_cursive;
 			}
-			else if (token.value == "fantasy")
+			else if (equals(token.value, "fantasy"))
 			{
 				name.type = CL_CSSBoxFontFamilyName::type_fantasy;
 			}
-			else if (token.value == "monospace")
+			else if (equals(token.value, "monospace"))
 			{
 				name.type = CL_CSSBoxFontFamilyName::type_monospace;
 			}
-			else if (token.value == "default")
+			else if (equals(token.value, "default"))
 			{
 				// reserved for future use
 				return;
 			}
-			else if (token.value == "initial")
+			else if (equals(token.value, "initial"))
 			{
 				// reserved for future use
 				return;
@@ -358,7 +370,10 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 					break;
 				token = next_token(pos, tokens);
 				if (token.type != CL_CSSToken::type_delim || token.value != ",")
+				{
+					debug_parse_error(propname, tokens);
 					return;
+				}
 				token = next_token(pos, tokens);
 			}
 		}
@@ -373,11 +388,15 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 				break;
 			token = next_token(pos, tokens);
 			if (token.type != CL_CSSToken::type_delim || token.value != ",")
+			{
+				debug_parse_error(propname, tokens);
 				return;
+			}
 			token = next_token(pos, tokens);
 		}
 		else
 		{
+			debug_parse_error(propname, tokens);
 			return;
 		}
 	}
@@ -388,4 +407,14 @@ void CL_CSSParserFont::parse(CL_CSSBoxProperties &properties, const CL_String &n
 	properties.font_size = size;
 	properties.line_height = line_height;
 	properties.font_family = family;
+
+	if (out_change_set)
+	{
+		(*out_change_set)["font-style"] = &properties.font_style;
+		(*out_change_set)["font-variant"] = &properties.font_variant;
+		(*out_change_set)["font-weight"] = &properties.font_weight;
+		(*out_change_set)["font-size"] = &properties.font_size;
+		(*out_change_set)["line-height"] = &properties.line_height;
+		(*out_change_set)["font-family"] = &properties.font_family;
+	}
 }

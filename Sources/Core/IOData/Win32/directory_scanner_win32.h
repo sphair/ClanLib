@@ -31,9 +31,6 @@
 
 #include "../directory_scanner_impl.h"
 
-#include <io.h>
-#include <direct.h>
-
 class CL_DirectoryScanner_Win32: public CL_DirectoryScanner_Impl
 {
 /// \name Construction
@@ -99,8 +96,6 @@ private:
 	HANDLE handle;
 
 	bool first_next;
-
-	CL_String scan_exp;
 
 	CL_String directory_path;
 /// \}

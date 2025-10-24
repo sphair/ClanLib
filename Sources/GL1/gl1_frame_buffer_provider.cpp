@@ -140,7 +140,7 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 
 	// Find existing pbuffer
 	CL_WeakPtr<CL_Texture_Impl> texture_impl(texture.get_impl());
-	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1>::iterator texture_it = texture_pbuffer_map.find(texture_impl);
+	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1, WeakPtrCompare>::iterator texture_it = texture_pbuffer_map.find(texture_impl);
 	if (texture_it == texture_pbuffer_map.end())
 	{
 		// Not found, create a new entry
@@ -161,7 +161,7 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 	// Purge the cache from unused pbuffers. Maybe we could reuse them instead? But for this to occur, the user would be recreating CL_Textures anyway (which is slow). This added complexity is not required (at the moment)
 	for (texture_it = texture_pbuffer_map.begin(); texture_it != texture_pbuffer_map.end();)
 	{
-		if (texture_it->first.is_null())
+		if (texture_it->first.expired())
 		{
 			// This "texture_it = texture_pbuffer_map.erase(texture_it);" works on visual studio,
 			// but MSDN says This return type does not conform to the C++ standard. So do it a different way, so GCC does not complain
@@ -218,44 +218,44 @@ void CL_GL1FrameBufferProvider::sync_pbuffer()
 	CL_Size surface_size = selected_texture_provider->get_surface_size();
 	CL_Size texture_size = selected_texture_provider->get_texture_size();
 
-	CLint old_viewport[4], old_matrix_mode;
-	CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-	cl1GetIntegerv(CL_VIEWPORT, old_viewport);
-	cl1GetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-	cl1GetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-	cl1GetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-	CLboolean blending = cl1IsEnabled(CL_BLEND);
-	cl1Disable(CL_BLEND);
+	GLint old_viewport[4], old_matrix_mode;
+	GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+	cl1GetIntegerv(GL_VIEWPORT, old_viewport);
+	cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+	cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+	cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+	GLboolean blending = cl1IsEnabled(GL_BLEND);
+	cl1Disable(GL_BLEND);
 
 	cl1Viewport(0, 0, surface_size.width, surface_size.height);
-	cl1MatrixMode(CL_PROJECTION);
+	cl1MatrixMode(GL_PROJECTION);
 	cl1LoadIdentity();
 	cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height));
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 	cl1LoadIdentity();
 
 	// Copy texture to pbuffer:
 
-	cl1ActiveTexture( CL_TEXTURE0 + 0 );
-	cl1Enable(CL_TEXTURE_2D);
-	cl1BindTexture(CL_TEXTURE_2D, selected_texture_provider->get_handle());
+	cl1ActiveTexture( GL_TEXTURE0 + 0 );
+	cl1Enable(GL_TEXTURE_2D);
+	cl1BindTexture(GL_TEXTURE_2D, selected_texture_provider->get_handle());
 
 	if (cl1ActiveTexture != 0)
-			cl1ActiveTexture( CL_TEXTURE0 + 0 );
+			cl1ActiveTexture( GL_TEXTURE0 + 0 );
 
-	cl1DisableClientState(CL_TEXTURE_COORD_ARRAY);
+	cl1DisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	cl1MatrixMode(CL_TEXTURE);
-	CLfloat scale_matrix[16];
-	memset(scale_matrix, 0, sizeof(CLfloat)*16);
+	cl1MatrixMode(GL_TEXTURE);
+	GLfloat scale_matrix[16];
+	memset(scale_matrix, 0, sizeof(GLfloat)*16);
 	scale_matrix[0] = 1.0f/float(texture_size.width);
 	scale_matrix[5] = 1.0f/float(texture_size.height);
 	scale_matrix[10] = 1.0f;
 	scale_matrix[15] = 1.0f;
 	cl1LoadMatrixf(scale_matrix);
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 
-	cl1Begin(CL_QUADS);
+	cl1Begin(GL_QUADS);
 	cl1Color3f(1.0f, 1.0f, 1.0f);
 	cl1TexCoord2f(float(surface_size.width), 0.0f);
 	cl1Vertex2f(float(surface_size.width), 0.0f);
@@ -266,19 +266,19 @@ void CL_GL1FrameBufferProvider::sync_pbuffer()
 	cl1TexCoord2f(0.0f, 0.0f);
 	cl1Vertex2f(0.0f, 0.0f);
 	cl1End();
-	cl1Disable(CL_TEXTURE_2D);
-	cl1BindTexture(CL_TEXTURE_2D, 0);
+	cl1Disable(GL_TEXTURE_2D);
+	cl1BindTexture(GL_TEXTURE_2D, 0);
 
-	cl1MatrixMode(CL_TEXTURE);
+	cl1MatrixMode(GL_TEXTURE);
 	cl1LoadIdentity();
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 
 	if (blending)
-		cl1Enable(CL_BLEND);
+		cl1Enable(GL_BLEND);
 	cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	cl1MatrixMode(CL_PROJECTION);
+	cl1MatrixMode(GL_PROJECTION);
 	cl1LoadMatrixf(old_matrix_projection);
-	cl1MatrixMode(CL_MODELVIEW);
+	cl1MatrixMode(GL_MODELVIEW);
 	cl1LoadMatrixf(old_matrix_modelview);
 	cl1MatrixMode(old_matrix_mode);
 
@@ -297,46 +297,46 @@ void CL_GL1FrameBufferProvider::sync_texture()
 
 		CL_Size surface_size = selected_texture_provider->get_surface_size();
 
-		CLint old_viewport[4], old_matrix_mode;
-		CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-		cl1GetIntegerv(CL_VIEWPORT, old_viewport);
-		cl1GetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-		cl1GetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-		cl1GetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-		CLboolean blending = cl1IsEnabled(CL_BLEND);
-		cl1Disable(CL_BLEND);
+		GLint old_viewport[4], old_matrix_mode;
+		GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+		cl1GetIntegerv(GL_VIEWPORT, old_viewport);
+		cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+		cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+		cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+		GLboolean blending = cl1IsEnabled(GL_BLEND);
+		cl1Disable(GL_BLEND);
 
 		cl1Viewport(0, 0, surface_size.width, surface_size.height);
-		cl1MatrixMode(CL_PROJECTION);
+		cl1MatrixMode(GL_PROJECTION);
 		cl1LoadIdentity();
 		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)surface_size.width, 0.0f, (float)surface_size.height));
-		cl1MatrixMode(CL_MODELVIEW);
+		cl1MatrixMode(GL_MODELVIEW);
 		cl1LoadIdentity();
 
 		if (cl1ActiveTexture != 0)
-			cl1ActiveTexture( CL_TEXTURE0 );
+			cl1ActiveTexture( GL_TEXTURE0 );
 
 		cl1PixelZoom(1.0f, 1.0f);
 
 		// Copy pbuffer to texture:
-		cl1Enable(CL_TEXTURE_2D);
-		cl1BindTexture(CL_TEXTURE_2D,  selected_texture_provider->get_handle());
+		cl1Enable(GL_TEXTURE_2D);
+		cl1BindTexture(GL_TEXTURE_2D,  selected_texture_provider->get_handle());
 		cl1CopyTexSubImage2D(
-			CL_TEXTURE_2D,
+			GL_TEXTURE_2D,
 			0,
 			0, 0,
 			0, 0,
 			surface_size.width, surface_size.height);
 
-		cl1Disable(CL_TEXTURE_2D);
-		cl1BindTexture(CL_TEXTURE_2D, 0);
+		cl1Disable(GL_TEXTURE_2D);
+		cl1BindTexture(GL_TEXTURE_2D, 0);
 
 		if (blending)
-			cl1Enable(CL_BLEND);
+			cl1Enable(GL_BLEND);
 		cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-		cl1MatrixMode(CL_PROJECTION);
+		cl1MatrixMode(GL_PROJECTION);
 		cl1LoadMatrixf(old_matrix_projection);
-		cl1MatrixMode(CL_MODELVIEW);
+		cl1MatrixMode(GL_MODELVIEW);
 		cl1LoadMatrixf(old_matrix_modelview);
 		cl1MatrixMode(old_matrix_mode);
 

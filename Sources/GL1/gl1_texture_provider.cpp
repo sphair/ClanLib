@@ -52,30 +52,30 @@ CL_GL1TextureProvider::CL_GL1TextureProvider(CL_GL1GraphicContextProvider *gc_pr
 	switch (texture_dimensions)
 	{
 	case cl_texture_1d:
-		texture_type = CL_TEXTURE_1D;
+		texture_type = GL_TEXTURE_1D;
 		break;
 	case cl_texture_2d:
 	default:
-		texture_type = CL_TEXTURE_2D;
+		texture_type = GL_TEXTURE_2D;
 		break;
 	case cl_texture_3d:
-		texture_type = CL_TEXTURE_3D;
+		texture_type = GL_TEXTURE_3D;
 		break;
 	case cl_texture_cube_map:
-		texture_type = CL_TEXTURE_CUBE_MAP;
+		texture_type = GL_TEXTURE_CUBE_MAP;
 		break;
 	}
 
 	CL_GL1TextureStateTracker state_tracker(texture_type, 0, gc_provider);
 	cl1GenTextures(1, &handle);
 	cl1BindTexture(texture_type, handle);
-	cl1TexParameteri(texture_type, CL_TEXTURE_MIN_FILTER, CL_LINEAR);
-	cl1TexParameteri(texture_type, CL_TEXTURE_MAG_FILTER, CL_LINEAR);
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_S, CL_CLAMP_TO_EDGE);
-	if (texture_type != CL_TEXTURE_1D)
-		cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_T, CL_CLAMP_TO_EDGE);
-	if (texture_type == CL_TEXTURE_3D)
-		cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_R, CL_CLAMP_TO_EDGE);
+	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	cl1TexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	if (texture_type != GL_TEXTURE_1D)
+		cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	if (texture_type == GL_TEXTURE_3D)
+		cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
 CL_GL1TextureProvider::~CL_GL1TextureProvider()
@@ -109,8 +109,8 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 {
 	throw_if_disposed();
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_GL1::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
 
 	if ( (new_width > 32768) || (new_width < 1) )
@@ -118,7 +118,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 		throw CL_Exception("Invalid texture width in the GL1 target");
 	}
 
-	if ( (texture_type == CL_TEXTURE_2D) || (texture_type == CL_TEXTURE_3D) )
+	if ( (texture_type == GL_TEXTURE_2D) || (texture_type == GL_TEXTURE_3D) )
 	{
 		if ( (new_height > 32768) || (new_height < 1) )
 		{
@@ -126,7 +126,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 		}
 	}
 
-	if ( texture_type == CL_TEXTURE_3D )
+	if ( texture_type == GL_TEXTURE_3D )
 	{
 		if ( (new_depth > 32768) || (new_depth < 1) )
 		{
@@ -139,7 +139,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 	depth = new_depth;
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	if (texture_type == CL_TEXTURE_1D)
+	if (texture_type == GL_TEXTURE_1D)
 	{
 		pot_width = get_next_power_of_two(new_width);
 		if (pot_width == new_width)
@@ -153,16 +153,16 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 
 		pot_ratio_width = (float) width / pot_width;
 		cl1TexImage1D(
-			CL_TEXTURE_1D,			// target
+			GL_TEXTURE_1D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
 			pot_width,				// width
 			0,						// border
 			gl_pixel_format,		// format
-			CL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
+			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
 			0);						// texels (0 to avoid uploading)
 	}
-	else if (texture_type == CL_TEXTURE_2D)
+	else if (texture_type == GL_TEXTURE_2D)
 	{
 		pot_width = get_next_power_of_two(new_width);
 		pot_height = get_next_power_of_two(new_height);
@@ -178,14 +178,14 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 		pot_ratio_height = (float) height / pot_height;
 
 		cl1TexImage2D(
-			CL_TEXTURE_2D,			// target
+			GL_TEXTURE_2D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
 			pot_width,				// width
 			pot_height,				// height
 			0,						// border
 			gl_pixel_format,		// format 
-			CL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
+			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
 			0);						// texels (0 to avoid uploading)
 
 		// Clear the whole texture if it is npot
@@ -195,21 +195,18 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 			void *data = image.get_data();
 			memset(data, 0, pot_width * pot_height * 4);
 
-			CLenum format;
-			CLenum type;
+			GLenum format;
+			GLenum type;
 			CL_GL1::to_opengl_pixelformat(image, format, type);
 
-			cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+			cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-			cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-			cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-			cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
-
-			int image_width = image.get_width();
-			int image_height = image.get_height();
+			cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+			cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 			cl1TexImage2D(
-				CL_TEXTURE_2D,		// target
+				GL_TEXTURE_2D,		// target
 				0,					// level
 				gl_internal_format,	// internalformat
 				pot_width,			// width
@@ -239,7 +236,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 		}
 
 		cl1TexImage3D(
-			CL_TEXTURE_3D,			// target
+			GL_TEXTURE_3D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
 			pot_width,				// width
@@ -247,7 +244,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 			pot_depth,				// depth
 			0,						// border
 			gl_pixel_format,		// format 
-			CL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
+			GL_UNSIGNED_BYTE,		// type (it really doesn't matter since nothing is uploaded)
 			0);						// texels (0 to avoid uploading)
 	}
 }
@@ -269,7 +266,7 @@ CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_TextureFormat sized_forma
 		pot_width, pot_height,
 		cl_abgr8);
 
-	cl1GetTexImage(texture_type, level, CL_RGBA, CL_UNSIGNED_BYTE, buffer.get_data());
+	cl1GetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 
 	CL_PixelBuffer buffer_ref(width, height, buffer.get_format(), buffer.get_data());
 
@@ -280,13 +277,13 @@ void CL_GL1TextureProvider::set_image(CL_PixelBuffer &image, int level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	if (texture_type == CL_TEXTURE_2D)
+	if (texture_type == GL_TEXTURE_2D)
 	{
-		set_texture_image2d(CL_TEXTURE_2D, image, level);
+		set_texture_image2d(GL_TEXTURE_2D, image, level);
 	}
-	else if (texture_type == CL_TEXTURE_3D)
+	else if (texture_type == GL_TEXTURE_3D)
 	{
-		set_texture_image3d(CL_TEXTURE_3D, image, image.get_height() / height, level);
+		set_texture_image3d(GL_TEXTURE_3D, image, image.get_height() / height, level);
 	}
 }
 
@@ -302,12 +299,12 @@ void CL_GL1TextureProvider::set_cube_map(
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level);
+	set_texture_image2d(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level);
 }
 
 void CL_GL1TextureProvider::set_compressed_image(
@@ -320,8 +317,8 @@ void CL_GL1TextureProvider::set_compressed_image(
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_GL1::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
 
 	cl1CompressedTexImage2D(texture_type, level, gl_internal_format, width, height, 0, image.get_size(), image.get_data());
@@ -345,8 +342,8 @@ void CL_GL1TextureProvider::set_subimage(
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
-	CLenum format;
-	CLenum type;
+	GLenum format;
+	GLenum type;
 	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
@@ -361,11 +358,11 @@ void CL_GL1TextureProvider::set_subimage(
 	if (!conv_needed)
 	{
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, src_rect.left);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, src_rect.top);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
 
 	}
 	// conversion needed
@@ -386,25 +383,25 @@ void CL_GL1TextureProvider::set_subimage(
 	
 		image.convert(buffer, CL_Rect(0, 0, buffer.get_size()), src_rect);
 
-		format = needs_alpha ? CL_RGBA : CL_RGB;
+		format = needs_alpha ? GL_RGBA : GL_RGB;
 
 		// Upload to OpenGL1:
-		cl1BindTexture(CL_TEXTURE_2D, handle);
+		cl1BindTexture(GL_TEXTURE_2D, handle);
 
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
-		type = CL_UNSIGNED_BYTE;
+		type = GL_UNSIGNED_BYTE;
 		image = buffer;
 	}
 
 	// upload
 	cl1TexSubImage2D(
-		CL_TEXTURE_2D,            // target
+		GL_TEXTURE_2D,            // target
 		level,                    // level
 		x, y,                     // xoffset, yoffset
 		src_rect.get_width(),        // width
@@ -427,7 +424,7 @@ void CL_GL1TextureProvider::set_subimage(
 			for(int edge_cnt = right_edge; edge_cnt < pot_width; edge_cnt++)
 			{
 				cl1TexSubImage2D(
-					CL_TEXTURE_2D,		// target
+					GL_TEXTURE_2D,		// target
 					level,				// level
 					edge_cnt, y,		// xoffset, yoffset
 					1,					// width
@@ -447,7 +444,7 @@ void CL_GL1TextureProvider::set_subimage(
 			for(int edge_cnt = bottom_edge; edge_cnt < pot_height; edge_cnt++)
 			{
 				cl1TexSubImage2D(
-					CL_TEXTURE_2D,		// target
+					GL_TEXTURE_2D,		// target
 					level,				// level
 					x, edge_cnt,		// xoffset, yoffset
 					src_rect.get_width(),		// width
@@ -459,8 +456,8 @@ void CL_GL1TextureProvider::set_subimage(
 		}
 	}
 	// Restore these unpack values to the default
-	cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-	cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+	cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+	cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 }
 
 void CL_GL1TextureProvider::copy_image_from(
@@ -475,12 +472,12 @@ void CL_GL1TextureProvider::copy_image_from(
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, static_cast<CL_GL1GraphicContextProvider*>(gc));
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_GL1::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
 
 	cl1CopyTexImage2D(
-		CL_TEXTURE_2D,
+		GL_TEXTURE_2D,
 		level,
 		gl_internal_format,
 		x, y,
@@ -502,7 +499,7 @@ void CL_GL1TextureProvider::copy_subimage_from(
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, static_cast<CL_GL1GraphicContextProvider*>(gc));
 
 	cl1CopyTexSubImage2D( 
-		CL_TEXTURE_2D,
+		GL_TEXTURE_2D,
 		level, 
 		offset_x, 
 		offset_y, 
@@ -514,35 +511,35 @@ void CL_GL1TextureProvider::set_min_lod(double min_lod)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameterf(texture_type, CL_TEXTURE_MIN_LOD, (CLfloat)min_lod);
+	cl1TexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 }
 
 void CL_GL1TextureProvider::set_max_lod(double max_lod)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameterf(texture_type, CL_TEXTURE_MAX_LOD, (CLfloat)max_lod);
+	cl1TexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 }
 
 void CL_GL1TextureProvider::set_lod_bias(double lod_bias)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameterf(texture_type, CL_TEXTURE_LOD_BIAS, (CLfloat)lod_bias);
+	cl1TexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 }
 
 void CL_GL1TextureProvider::set_base_level(int base_level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_BASE_LEVEL, base_level);
+	cl1TexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 }
 
 void CL_GL1TextureProvider::set_max_level(int max_level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_MAX_LEVEL, max_level);
+	cl1TexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 }
 
 void CL_GL1TextureProvider::set_wrap_mode(
@@ -552,9 +549,9 @@ void CL_GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_T, to_enum(wrap_t));
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_R, to_enum(wrap_r));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
 }
 
 void CL_GL1TextureProvider::set_wrap_mode(
@@ -563,8 +560,8 @@ void CL_GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
 }
 
 void CL_GL1TextureProvider::set_wrap_mode(
@@ -572,21 +569,21 @@ void CL_GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 }
 
 void CL_GL1TextureProvider::set_min_filter(CL_TextureFilter filter)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_MIN_FILTER, to_enum(filter));
+	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
 }
 
 void CL_GL1TextureProvider::set_mag_filter(CL_TextureFilter filter)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_MAG_FILTER, to_enum(filter));
+	cl1TexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
 }
 
 void CL_GL1TextureProvider::set_max_anisotropy(float v)
@@ -597,8 +594,8 @@ void CL_GL1TextureProvider::set_texture_compare(CL_TextureCompareMode mode, CL_C
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_TEXTURE_COMPARE_MODE, to_enum(mode));	
-	cl1TexParameteri(texture_type, CL_TEXTURE_COMPARE_FUNC, to_enum(func));	
+	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
+	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
 }
 
 void CL_GL1TextureProvider::transform_coordinate(const CL_PrimitivesArrayData::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
@@ -662,35 +659,35 @@ void CL_GL1TextureProvider::transform_coordinate(const CL_PrimitivesArrayData::V
 
 
 void CL_GL1TextureProvider::set_texture_image2d(
-	CLuint target,
+	GLuint target,
 	CL_PixelBuffer &image,
 	int level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 
 /*
-	CL_UNPACK_SWAP_BYTES
-	CL_UNPACK_LSB_FIRST
-	CL_UNPACK_SKIP_ROWS
-	CL_UNPACK_SKIP_PIXELS
+	GL_UNPACK_SWAP_BYTES
+	GL_UNPACK_LSB_FIRST
+	GL_UNPACK_SKIP_ROWS
+	GL_UNPACK_SKIP_PIXELS
 
-	CL_UNPACK_ROW_LENGTH
-	CL_UNPACK_ALIGNMENT
-	CL_UNPACK_IMAGE_HEIGHT
-	CL_UNPACK_SKIP_IMAGES
+	GL_UNPACK_ROW_LENGTH
+	GL_UNPACK_ALIGNMENT
+	GL_UNPACK_IMAGE_HEIGHT
+	GL_UNPACK_SKIP_IMAGES
 */
 
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
-	CLenum format;
-	CLenum type;
+	GLenum format;
+	GLenum type;
 	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
@@ -707,11 +704,11 @@ void CL_GL1TextureProvider::set_texture_image2d(
 		// Upload to OpenGL1:
 
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
@@ -750,16 +747,16 @@ void CL_GL1TextureProvider::set_texture_image2d(
 	
 		image.convert(buffer);
 
-		format = needs_alpha ? CL_RGBA : CL_RGB;
+		format = needs_alpha ? GL_RGBA : GL_RGB;
 
 		// Upload to OpenGL:
 
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		// upload
 		cl1TexImage2D(
@@ -770,20 +767,20 @@ void CL_GL1TextureProvider::set_texture_image2d(
 			image.get_height(),       // height
 			0,                        // border
 			format,                   // format
-			CL_UNSIGNED_BYTE,         // type
+			GL_UNSIGNED_BYTE,         // type
 			buffer.get_data());       // texels
 
 		/*
-		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_MIN_FILTER, CL_LINEAR);
-		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_MAG_FILTER, CL_LINEAR);
-		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_S, CL_CLAMP_TO_EDGE);
-		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_T, CL_CLAMP_TO_EDGE);
+		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		*/
 	}
 }
 
 void CL_GL1TextureProvider::set_texture_image3d(
-	CLuint target,
+	GLuint target,
 	CL_PixelBuffer &image,
 	int image_depth,
 	int level)
@@ -791,15 +788,15 @@ void CL_GL1TextureProvider::set_texture_image3d(
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
-	CLenum format;
-	CLenum type;
+	GLenum format;
+	GLenum type;
 	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
@@ -816,11 +813,11 @@ void CL_GL1TextureProvider::set_texture_image3d(
 		// Upload to OpenGL1:
 
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
@@ -855,16 +852,16 @@ void CL_GL1TextureProvider::set_texture_image3d(
 	
 		image.convert(buffer);
 
-		format = needs_alpha ? CL_RGBA : CL_RGB;
+		format = needs_alpha ? GL_RGBA : GL_RGB;
 
 		// Upload to OpenGL:
 
 		// change alignment
-		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		int image_width = image.get_width();
 		int image_height = image.get_height() / image_depth;
@@ -879,66 +876,66 @@ void CL_GL1TextureProvider::set_texture_image3d(
 			image_depth,       // depth
 			0,                        // border
 			format,                   // format
-			CL_UNSIGNED_BYTE,         // type
+			GL_UNSIGNED_BYTE,         // type
 			buffer.get_data());       // texels
 
 	}
 }
 
-CLenum CL_GL1TextureProvider::to_enum(CL_TextureFilter filter)
+GLenum CL_GL1TextureProvider::to_enum(CL_TextureFilter filter)
 {
 	switch(filter)
 	{
-	case cl_filter_nearest: return CL_NEAREST;
-	case cl_filter_linear: return CL_LINEAR;
-	case cl_filter_nearest_mipmap_nearest: return CL_NEAREST_MIPMAP_NEAREST;
-	case cl_filter_nearest_mipmap_linear: return CL_NEAREST_MIPMAP_LINEAR;
-	case cl_filter_linear_mipmap_nearest: return CL_LINEAR_MIPMAP_NEAREST;
-	case cl_filter_linear_mipmap_linear: return CL_LINEAR_MIPMAP_LINEAR;
-	default: return CL_NEAREST;
+	case cl_filter_nearest: return GL_NEAREST;
+	case cl_filter_linear: return GL_LINEAR;
+	case cl_filter_nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
+	case cl_filter_nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
+	case cl_filter_linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
+	case cl_filter_linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
+	default: return GL_NEAREST;
 	}
 }
 
-CLenum CL_GL1TextureProvider::to_enum(CL_TextureWrapMode mode)
+GLenum CL_GL1TextureProvider::to_enum(CL_TextureWrapMode mode)
 {
  	switch(mode)
 	{
-	case cl_wrap_clamp_to_edge: return CL_CLAMP_TO_EDGE;
-	case cl_wrap_repeat: return CL_REPEAT;
-	case cl_wrap_mirrored_repeat: return CL_MIRRORED_REPEAT;
-	default: return CL_CLAMP_TO_EDGE;
+	case cl_wrap_clamp_to_edge: return GL_CLAMP_TO_EDGE;
+	case cl_wrap_repeat: return GL_REPEAT;
+	case cl_wrap_mirrored_repeat: return GL_MIRRORED_REPEAT;
+	default: return GL_CLAMP_TO_EDGE;
 	}
 }
 
-CLenum CL_GL1TextureProvider::to_enum(CL_TextureCompareMode mode)
+GLenum CL_GL1TextureProvider::to_enum(CL_TextureCompareMode mode)
 {
  	switch(mode)
 	{
-	case cl_comparemode_none: return CL_NONE;
-	case cl_comparemode_compare_r_to_texture: return CL_COMPARE_R_TO_TEXTURE;		
-	default: return CL_NONE;
+	case cl_comparemode_none: return GL_NONE;
+	case cl_comparemode_compare_r_to_texture: return GL_COMPARE_R_TO_TEXTURE;		
+	default: return GL_NONE;
 	}
 }
 
-CLenum CL_GL1TextureProvider::to_enum(CL_CompareFunction func)
+GLenum CL_GL1TextureProvider::to_enum(CL_CompareFunction func)
 {
 	switch( func )
 	{
-	case cl_comparefunc_never: return CL_NEVER;
-	case cl_comparefunc_less: return CL_LESS;
-	case cl_comparefunc_lequal: return CL_LEQUAL; 
-	case cl_comparefunc_greater: return CL_GREATER; 
-	case cl_comparefunc_gequal: return CL_GEQUAL; 
-	case cl_comparefunc_equal: return CL_EQUAL; 
-	case cl_comparefunc_notequal: return CL_NOTEQUAL; 
-	case cl_comparefunc_always: return CL_ALWAYS; 
-	default: return CL_LEQUAL;
+	case cl_comparefunc_never: return GL_NEVER;
+	case cl_comparefunc_less: return GL_LESS;
+	case cl_comparefunc_lequal: return GL_LEQUAL; 
+	case cl_comparefunc_greater: return GL_GREATER; 
+	case cl_comparefunc_gequal: return GL_GEQUAL; 
+	case cl_comparefunc_equal: return GL_EQUAL; 
+	case cl_comparefunc_notequal: return GL_NOTEQUAL; 
+	case cl_comparefunc_always: return GL_ALWAYS; 
+	default: return GL_LEQUAL;
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-CL_GL1TextureStateTracker::CL_GL1TextureStateTracker(CLuint texture_type, CLuint handle, CL_GL1GraphicContextProvider *gc_provider)
+CL_GL1TextureStateTracker::CL_GL1TextureStateTracker(GLuint texture_type, GLuint handle, CL_GL1GraphicContextProvider *gc_provider)
 {
 	// If the gc_provider is unknown, we need to use the first active provider
 	if (!gc_provider)
@@ -950,63 +947,63 @@ CL_GL1TextureStateTracker::CL_GL1TextureStateTracker(CLuint texture_type, CLuint
 		CL_GL1::set_active(gc_provider);
 	}
 
-	last_is_enabled_texture1d = cl1IsEnabled(CL_TEXTURE_1D);
-	last_is_enabled_texture2d = cl1IsEnabled(CL_TEXTURE_2D);
-	last_is_enabled_texture3d = cl1IsEnabled(CL_TEXTURE_3D);
-	last_is_enabled_texture_cube_map = cl1IsEnabled(CL_TEXTURE_CUBE_MAP);
-	cl1GetIntegerv(CL_TEXTURE_BINDING_1D, (CLint *) &last_bound_texture1d);
-	cl1GetIntegerv(CL_TEXTURE_BINDING_2D, (CLint *) &last_bound_texture2d);
-	cl1GetIntegerv(CL_TEXTURE_BINDING_3D, (CLint *) &last_bound_texture3d);
-	cl1GetIntegerv(CL_TEXTURE_BINDING_CUBE_MAP, (CLint *) &last_bound_texture_cube_map);
+	last_is_enabled_texture1d = cl1IsEnabled(GL_TEXTURE_1D);
+	last_is_enabled_texture2d = cl1IsEnabled(GL_TEXTURE_2D);
+	last_is_enabled_texture3d = cl1IsEnabled(GL_TEXTURE_3D);
+	last_is_enabled_texture_cube_map = cl1IsEnabled(GL_TEXTURE_CUBE_MAP);
+	cl1GetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
+	cl1GetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
+	cl1GetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
+	cl1GetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 
-	if (texture_type == CL_TEXTURE_1D)
+	if (texture_type == GL_TEXTURE_1D)
 	{
-		cl1Disable(CL_TEXTURE_2D);
-		cl1Disable(CL_TEXTURE_3D);
-		cl1Disable(CL_TEXTURE_CUBE_MAP);
-		cl1Enable(CL_TEXTURE_1D);
-		cl1BindTexture(CL_TEXTURE_1D, handle);
+		cl1Disable(GL_TEXTURE_2D);
+		cl1Disable(GL_TEXTURE_3D);
+		cl1Disable(GL_TEXTURE_CUBE_MAP);
+		cl1Enable(GL_TEXTURE_1D);
+		cl1BindTexture(GL_TEXTURE_1D, handle);
 	}
 
-	if (texture_type == CL_TEXTURE_2D)
+	if (texture_type == GL_TEXTURE_2D)
 	{
-		cl1Disable(CL_TEXTURE_1D);
-		cl1Disable(CL_TEXTURE_3D);
-		cl1Disable(CL_TEXTURE_CUBE_MAP);
-		cl1Enable(CL_TEXTURE_2D);
-		cl1BindTexture(CL_TEXTURE_2D, handle);
+		cl1Disable(GL_TEXTURE_1D);
+		cl1Disable(GL_TEXTURE_3D);
+		cl1Disable(GL_TEXTURE_CUBE_MAP);
+		cl1Enable(GL_TEXTURE_2D);
+		cl1BindTexture(GL_TEXTURE_2D, handle);
 	}
 
-	if (texture_type == CL_TEXTURE_3D)
+	if (texture_type == GL_TEXTURE_3D)
 	{
-		cl1Disable(CL_TEXTURE_1D);
-		cl1Disable(CL_TEXTURE_2D);
-		cl1Disable(CL_TEXTURE_CUBE_MAP);
-		cl1Enable(CL_TEXTURE_3D);
-		cl1BindTexture(CL_TEXTURE_3D, handle);
+		cl1Disable(GL_TEXTURE_1D);
+		cl1Disable(GL_TEXTURE_2D);
+		cl1Disable(GL_TEXTURE_CUBE_MAP);
+		cl1Enable(GL_TEXTURE_3D);
+		cl1BindTexture(GL_TEXTURE_3D, handle);
 	}
 
-	if (texture_type == CL_TEXTURE_CUBE_MAP)
+	if (texture_type == GL_TEXTURE_CUBE_MAP)
 	{
-		cl1Disable(CL_TEXTURE_1D);
-		cl1Disable(CL_TEXTURE_2D);
-		cl1Disable(CL_TEXTURE_3D);
-		cl1Enable(CL_TEXTURE_CUBE_MAP);
-		cl1BindTexture(CL_TEXTURE_CUBE_MAP, handle);
+		cl1Disable(GL_TEXTURE_1D);
+		cl1Disable(GL_TEXTURE_2D);
+		cl1Disable(GL_TEXTURE_3D);
+		cl1Enable(GL_TEXTURE_CUBE_MAP);
+		cl1BindTexture(GL_TEXTURE_CUBE_MAP, handle);
 	}
 }
 
 CL_GL1TextureStateTracker::~CL_GL1TextureStateTracker()
 {
-	if (last_is_enabled_texture1d) cl1Enable(CL_TEXTURE_1D); else cl1Disable(CL_TEXTURE_1D);
-	if (last_is_enabled_texture2d) cl1Enable(CL_TEXTURE_2D); else cl1Disable(CL_TEXTURE_2D);
-	if (last_is_enabled_texture3d) cl1Enable(CL_TEXTURE_3D); else cl1Disable(CL_TEXTURE_3D);
-	if (last_is_enabled_texture_cube_map) cl1Enable(CL_TEXTURE_CUBE_MAP); else cl1Disable(CL_TEXTURE_CUBE_MAP);
+	if (last_is_enabled_texture1d) cl1Enable(GL_TEXTURE_1D); else cl1Disable(GL_TEXTURE_1D);
+	if (last_is_enabled_texture2d) cl1Enable(GL_TEXTURE_2D); else cl1Disable(GL_TEXTURE_2D);
+	if (last_is_enabled_texture3d) cl1Enable(GL_TEXTURE_3D); else cl1Disable(GL_TEXTURE_3D);
+	if (last_is_enabled_texture_cube_map) cl1Enable(GL_TEXTURE_CUBE_MAP); else cl1Disable(GL_TEXTURE_CUBE_MAP);
 
-	if (last_is_enabled_texture1d) cl1BindTexture(CL_TEXTURE_1D, last_bound_texture1d);
-	if (last_is_enabled_texture2d) cl1BindTexture(CL_TEXTURE_2D, last_bound_texture2d);
-	if (last_is_enabled_texture3d) cl1BindTexture(CL_TEXTURE_3D, last_bound_texture3d);
-	if (last_is_enabled_texture_cube_map) cl1BindTexture(CL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
+	if (last_is_enabled_texture1d) cl1BindTexture(GL_TEXTURE_1D, last_bound_texture1d);
+	if (last_is_enabled_texture2d) cl1BindTexture(GL_TEXTURE_2D, last_bound_texture2d);
+	if (last_is_enabled_texture3d) cl1BindTexture(GL_TEXTURE_3D, last_bound_texture3d);
+	if (last_is_enabled_texture_cube_map) cl1BindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
 }
 
 int CL_GL1TextureProvider::get_next_power_of_two(int value)

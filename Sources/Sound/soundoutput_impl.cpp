@@ -126,6 +126,8 @@ void CL_SoundOutput_Impl::mix_fragment()
 
 void CL_SoundOutput_Impl::mixer_thread()
 {
+    mixer_thread_starting();
+    
 	while (if_continue_mixing())
 	{
 		// Mix some audio:
@@ -137,6 +139,8 @@ void CL_SoundOutput_Impl::mixer_thread()
 		// Wait for sound card to want more:
 		wait();
 	}
+    
+    mixer_thread_stopping();
 }
 
 bool CL_SoundOutput_Impl::if_continue_mixing()

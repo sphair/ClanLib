@@ -31,6 +31,7 @@
 
 #include "API/Display/api_display.h"
 #include "API/Core/System/event.h"
+#include "API/Core/System/thread_local_storage.h"
 #include <vector>
 
 class CL_Win32Window;
@@ -61,8 +62,9 @@ public:
 private:
 	void process_message();
 
-	struct ThreadData
+	class ThreadData : public CL_ThreadLocalStorageData
 	{
+	public:
 		ThreadData() : already_flagged(false) { }
 
 		std::vector<CL_Win32Window *> windows;

@@ -88,29 +88,29 @@ public:
 
 	static void on_init_source(j_decompress_ptr cinfo)
 	{
-		CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
+		// CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
 	}
 
 	static boolean on_fill_input_buffer(j_decompress_ptr cinfo)
 	{
-		CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
+		// CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
 		return TRUE;
 	}
 
 	static void on_skip_input_data(j_decompress_ptr cinfo, long num_bytes)
 	{
-		CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
+		// CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
 	}
 
 	static boolean on_resync_to_restart(j_decompress_ptr cinfo, int desired)
 	{
-		CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
+		// CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
 		return TRUE;
 	}
 
 	static void on_term_source(j_decompress_ptr cinfo)
 	{
-		CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
+		// CL_JPEGDecompressor_Impl *self = (CL_JPEGDecompressor_Impl *) cinfo->client_data;
 	}
 
 	static void on_error_exit(j_common_ptr cinfo)

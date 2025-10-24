@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_max_height.h"
+#include "API/CSSLayout/PropertyTypes/css_box_max_height.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxMaxHeight::CL_CSSBoxMaxHeight()
@@ -53,4 +53,20 @@ void CL_CSSBoxMaxHeight::compute(const CL_CSSBoxMaxHeight *parent, CL_CSSResourc
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxMaxHeight::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
+	}
 }

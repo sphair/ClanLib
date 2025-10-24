@@ -140,7 +140,7 @@ public:
 
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -170,6 +170,34 @@ public:
 	void *get_data();
 
 	const void *get_data() const;
+
+	/// \brief Returns a pointer to the beginning of the pixel buffer as 8 bit data.
+	unsigned char *get_data_uint8() { return reinterpret_cast<unsigned char*>(get_data()); }
+	const unsigned char *get_data_uint8() const { return reinterpret_cast<const unsigned char*>(get_data()); }
+
+	/// \brief Returns a pointer to the beginning of the pixel buffer as 16 bit data.
+	unsigned short *get_data_uint16() { return reinterpret_cast<unsigned short*>(get_data()); }
+	const unsigned short *get_data_uint16() const { return reinterpret_cast<const unsigned short*>(get_data()); }
+
+	/// \brief Returns a pointer to the beginning of the pixel buffer as 32 bit data.
+	unsigned int *get_data_uint32() { return reinterpret_cast<unsigned int*>(get_data()); }
+	const unsigned int *get_data_uint32() const { return reinterpret_cast<const unsigned int*>(get_data()); }
+
+	/// \brief Returns a pointer to the beginning of a specific line.
+	void *get_line(int line) { unsigned char *d = get_data_uint8(); return d + line * get_pitch(); }
+	const void *get_line(int line) const { const unsigned char *d = get_data_uint8(); return d + line * get_pitch(); }
+
+	/// \brief Returns a pointer to the beginning of a specific line as 8 bit data.
+	unsigned char *get_line_uint8(int line) { return reinterpret_cast<unsigned char*>(get_line(line)); }
+	const unsigned char *get_line_uint8(int line) const { return reinterpret_cast<const unsigned char*>(get_line(line)); }
+
+	/// \brief Returns a pointer to the beginning of a specific line as 16 bit data.
+	unsigned short *get_line_uint16(int line) { return reinterpret_cast<unsigned short*>(get_line(line)); }
+	const unsigned short *get_line_uint16(int line) const { return reinterpret_cast<const unsigned short*>(get_line(line)); }
+
+	/// \brief Returns a pointer to the beginning of a specific line as 32 bit data.
+	unsigned int *get_line_uint32(int line) { return reinterpret_cast<unsigned int*>(get_data()); }
+	const unsigned int *get_line_uint32(int line) const { return reinterpret_cast<const unsigned int*>(get_line(line)); }
 
 	/// \brief Returns true if format uses a source color key.
 	bool has_colorkey() const;

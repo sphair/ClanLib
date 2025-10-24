@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
 
 class CL_IODevice;
@@ -49,27 +49,27 @@ public:
 /// \{
 
 public:
-	cl_int32 signature; // 0x04034b50
+	cl_int signature; // 0x04034b50
 
-	cl_int16 version_needed_to_extract;
+	cl_short version_needed_to_extract;
 
-	cl_int16 general_purpose_bit_flag;
+	cl_short general_purpose_bit_flag;
 
-	cl_int16 compression_method;
+	cl_short compression_method;
 
-	cl_int16 last_mod_file_time;
+	cl_short last_mod_file_time;
 
-	cl_int16 last_mod_file_date;
+	cl_short last_mod_file_date;
 
-	cl_uint32 crc32;
+	cl_uint crc32;
 
-	cl_int32 compressed_size;
+	cl_int compressed_size;
 
-	cl_int32 uncompressed_size;
+	cl_int uncompressed_size;
 
-	cl_int16 file_name_length;
+	cl_short file_name_length;
 
-	cl_int16 extra_field_length;
+	cl_short extra_field_length;
 
 	CL_String filename;
 

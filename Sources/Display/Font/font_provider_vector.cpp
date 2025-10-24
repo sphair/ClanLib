@@ -98,7 +98,7 @@ CL_FontProvider_Vector::~CL_FontProvider_Vector()
 // CL_FontProvider_Vector Attributes:
 
 
-CL_FontMetrics CL_FontProvider_Vector::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_FontProvider_Vector::get_font_metrics()
 {
 	return metrics;
 }

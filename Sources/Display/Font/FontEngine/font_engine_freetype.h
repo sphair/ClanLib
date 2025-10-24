@@ -40,6 +40,7 @@ extern "C"
 	#include <ft2build.h>
 	#include FT_FREETYPE_H
 	#include FT_GLYPH_H
+	#include FT_LCD_FILTER_H
 }
 
 class CL_GlyphOutline;
@@ -80,9 +81,12 @@ public:
 	///
 	/// \param glyph The glyph
 	/// \param anti_alias If anti_aliasing should be used
-	/// \param color The glyph colour
-	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color);
+	CL_FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 
+	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
+	///
+	/// \param glyph The glyph
+	CL_FontPixelBuffer get_font_glyph_subpixel(int glyph);
 
 /// \}
 /// \name Operations

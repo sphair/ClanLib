@@ -36,25 +36,36 @@ CSSView::CSSView(CL_GUIComponent *parent)
 {
 	func_resized().set(this, &CSSView::on_resized);
 	func_render().set(this, &CSSView::on_render);
+	layout.func_get_image().set(this, &CSSView::on_layout_get_image);
 
 	scrollbar = new CL_ScrollBar(this);
 	scrollbar->set_vertical();
 	scrollbar->set_ranges(0, 30000, 12, 800);
 	scrollbar->func_scroll().set(this, &CSSView::on_scroll);
 
-	//load_html("clanlib.html", "clanlib.css");
-	//load_html("acid1.xml", "acid1.css");
-	//load_html("slashdot.html", "slashdot.css");
-	//load_html("politiken.html", "politiken.css");
-	load_html("test.xml", "test.css");
-	//load_html("zengarden-sample.html", "zengarden-sample.css");
-	//load_html("zengarden-sample.html", "zengarden-sample2.css");
+	//page.load("http://en.wikipedia.org/wiki/ClanLib");
+	//page.load("http://www.csszengarden.com/");
+	//page.load("http://www.csszengarden.com/?cssfile=/210/210.css&page=0");
+	//page.load("http://www.csszengarden.com/?cssfile=/207/207.css&page=0");
+	//page.load("http://www.csszengarden.com/?cssfile=/211/211.css&page=0");
+	//page.load("http://www.csszengarden.com/?cssfile=/209/209.css&page=0");
+	//page.load("http://www.csszengarden.com/?cssfile=/206/206.css&page=0");
+	//page.load("http://codegrind.net/2010/11/01/clanlib-tutorial-part-4-server-as-a-service/");
+	page.load("http://clanlib.org/wiki/Main_Page");
+	//page.load("http://www.dr.dk/nyheder/");
+	//page.load("http://politiken.dk/erhverv/ECE1134488/nemid-nedslider-ansatte-i-borgerservice/");
+	//page.load("http://nyhederne.tv2.dk/");
+	//page.load("http://www.w3.org/Style/CSS/Test/CSS1/current/test5526c.htm");
+
+	load_html("htmlpage.html", "htmlpage.css", page.pageurl);
 
 	on_resized();
 }
 
 CSSView::~CSSView()
 {
+	for (size_t i = 0; i < replaced_images.size(); i++)
+		delete replaced_images[i];
 }
 
 void CSSView::on_resized()
@@ -72,17 +83,26 @@ void CSSView::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 	if (size != last_layout_size)
 	{
 		layout.layout(gc, size);
-		CL_String s = layout.get_root_element().print_node();
+		/*CL_String s = layout.get_root_element().print_node();
 		CL_File f("C:\\Development\\layout debug.txt", CL_File::create_always, CL_File::access_write, CL_File::share_write);
 		CL_String8 s8 = CL_StringHelp::text_to_utf8(s);
 		f.write(s8.data(), s8.length());
-		f.close();
+		f.close();*/
 		last_layout_size = size;
 	}
 	set_cliprect(gc, get_size());
 	gc.clear(CL_Colorf::white);
 	gc.push_translate(0.0f, (float)-scrollbar->get_position());
 	layout.render(gc);
+
+	for (size_t i = 0; i < replaced_images.size(); i++)
+	{
+		if (!replaced_images[i]->image.is_null())
+		{
+			replaced_images[i]->image.draw(gc, replaced_images[i]->geometry);
+		}
+	}
+
 	gc.pop_modelview();
 	reset_cliprect(gc);
 }
@@ -92,7 +112,23 @@ void CSSView::on_scroll()
 	request_repaint();
 }
 
-void CSSView::load_html(const CL_String &html_filename, const CL_String &css_filename)
+CL_Image CSSView::on_layout_get_image(CL_GraphicContext &gc, const CL_String &uri)
+{
+	try
+	{
+		if (image_cache.find(uri) != image_cache.end())
+			return image_cache[uri];
+		image_cache[uri] = page.load_image(gc, uri);
+		return image_cache[uri];
+	}
+	catch (CL_Exception e)
+	{
+		image_cache[uri] = CL_Image();
+		return CL_Image();
+	}
+}
+
+void CSSView::load_html(const CL_String &html_filename, const CL_String &css_filename, const HTMLUrl &document_url)
 {
 	css_document.add_sheet("default.css");
 	css_document.add_sheet(css_filename);
@@ -105,6 +141,8 @@ void CSSView::load_html(const CL_String &html_filename, const CL_String &css_fil
 
 	HTMLTokenizer tokenizer;
 	tokenizer.append(CL_StringHelp::utf8_to_text(data));
+
+	CL_GraphicContext gc = get_gc();
 	
 	CL_DomDocument dom_document;
 	int level = 0;
@@ -127,71 +165,67 @@ void CSSView::load_html(const CL_String &html_filename, const CL_String &css_fil
 			if (!dom_elements.empty())
 				dom_elements.back().append_child(dom_element);
 
-			if (dom_element.get_attribute(L"class") == "deck140")
+/*			if (dom_element.get_attribute("class") == "title icon-home")
 			{
 				CL_Console::write_line("test");
-			}
+			}*/
 
-/*			if (token.name == "img")
+			CL_CSSLayoutElement element;
+			if (token.name == "img")
 			{
-				CL_String filename;
-				CL_String prop;
-				if (dom_element.get_attribute(L"src") == L"gfx/clanlib.png")
-				{
-					filename = L"clanlib.png";
-					prop = L"display: inline-block; width: 323px; height: 86px;";
-				}
-				else
-				{
-					filename = L"overview.png";
-					prop = L"display: inline-block; width: 48px; height: 48px;";
-				}
-				CL_ImageView *imgview = new CL_ImageView(this);
-				imgview->set_image(CL_PixelBuffer(filename));
+				CL_String src = dom_element.get_attribute("src");
+				Image *image = new Image(on_layout_get_image(gc, HTMLUrl(src, document_url).to_string()));
 				CL_CSSLayoutObject obj = layout.create_object();
-				obj.set_component(imgview);
-
-				CL_DomSelectNode select_node(dom_element);
-				obj.apply_properties(css_document.select(&select_node));
-				obj.apply_properties(dom_element.get_attribute("style"));
-				obj.apply_properties(prop);
-				if (!css_elements.empty())
-					css_elements.back().append_child(obj);
+				obj.set_component(image);
+				if (!image->image.is_null())
+				{
+					obj.set_intrinsic_width(image->get_intrinsic_width());
+					obj.set_intrinsic_height(image->get_intrinsic_height());
+					obj.set_intrinsic_ratio(image->get_intrinsic_ratio());
+				}
+				replaced_images.push_back(image);
+				element = obj;
 			}
-			else*/
+			else
 			{
-				CL_CSSLayoutElement element = layout.create_element();
-				element.set_name(cl_format(L"%1.%2", token.name, dom_element.get_attribute(L"class")));
+				element = layout.create_element();
+			}
+			element.set_name(cl_format("%1.%2", token.name, dom_element.get_attribute("class")));
 
-				CL_DomSelectNode select_node(dom_element);
-				element.apply_properties(css_document.select(&select_node));
-				element.apply_properties(dom_element.get_attribute("style"));
-				if (!css_elements.empty())
-					css_elements.back().append_child(element);
+			if (token.name == "body")
+			{
+				if (layout.get_html_body_element().is_null())
+					layout.set_html_body_element(element);
+			}
 
-				if (!css_elements.empty())
-				{
-					CL_CSSLayoutElement pseudo_before = layout.create_element();
-					pseudo_before.set_name(L":before");
-					pseudo_before.apply_properties(css_document.select(&select_node, "before"));
-					css_elements.back().insert_before(pseudo_before, element);
+			CL_DomSelectNode select_node(dom_element);
+			element.apply_properties(css_document.select(&select_node));
+			element.apply_properties(dom_element.get_attribute("style"), page.pageurl.to_string());
+			if (!css_elements.empty())
+				css_elements.back().append_child(element);
 
-					CL_CSSLayoutElement pseudo_after = layout.create_element();
-					pseudo_after.set_name(L":after");
-					pseudo_after.apply_properties(css_document.select(&select_node, "after"));
-					css_elements.back().insert_before(pseudo_after, element.get_next_sibling());
-				}
+			if (!css_elements.empty())
+			{
+				CL_CSSLayoutElement pseudo_before = layout.create_element();
+				pseudo_before.set_name(":before");
+				pseudo_before.apply_properties(css_document.select(&select_node, "before"));
+				css_elements.back().insert_before(pseudo_before, element);
 
-				if (is_end_tag_forbidden(token.name))
-				{
-				}
-				else
-				{
-					level++;
-					tags.push_back(token.name);
-					css_elements.push_back(element);
-					dom_elements.push_back(dom_element);
-				}
+				CL_CSSLayoutElement pseudo_after = layout.create_element();
+				pseudo_after.set_name(":after");
+				pseudo_after.apply_properties(css_document.select(&select_node, "after"));
+				css_elements.back().insert_before(pseudo_after, element.get_next_sibling());
+			}
+
+			if (is_end_tag_forbidden(token.name))
+			{
+			}
+			else
+			{
+				level++;
+				tags.push_back(token.name);
+				css_elements.push_back(element);
+				dom_elements.push_back(dom_element);
 			}
 		}
 		else if (token.type == HTMLToken::type_tag_end)

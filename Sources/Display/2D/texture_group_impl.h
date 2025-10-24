@@ -67,7 +67,7 @@ public:
 	};
 
 public:
-	CL_TextureGroup_Impl(CL_GraphicContext &context, const CL_Size &texture_sizes);
+	CL_TextureGroup_Impl(const CL_Size &texture_sizes);
 	~CL_TextureGroup_Impl();
 
 	int get_subtexture_count() const;

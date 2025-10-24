@@ -106,7 +106,7 @@ int CL_ZipIODevice_FileEntry::peek(void *data, int len)
 			memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 			return peeked_data.get_size();
 		}
-		catch (const CL_Exception&)
+		catch (const CL_Exception& e)
 		{
 			peeked_data.set_size(old_size);
 			throw;
@@ -116,7 +116,7 @@ int CL_ZipIODevice_FileEntry::peek(void *data, int len)
 
 bool CL_ZipIODevice_FileEntry::seek(int seek_pos, CL_IODevice::SeekMode mode)
 {
-	cl_int64 absolute_pos = 0;
+	cl_long absolute_pos = 0;
 	switch (mode)
 	{
 	case CL_IODevice::seek_set:

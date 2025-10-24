@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_quotes.h"
+#include "API/CSSLayout/PropertyTypes/css_box_quotes.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxQuotes::CL_CSSBoxQuotes()
@@ -49,5 +49,28 @@ void CL_CSSBoxQuotes::compute(const CL_CSSBoxQuotes *parent, CL_CSSResourceCache
 			type = type_strings;
 			strings = layout->get_default_quotes();
 		}
+	}
+}
+
+CL_String CL_CSSBoxQuotes::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_strings:
+		{
+			CL_String s;
+			for (size_t i = 0; i < strings.size(); i++)
+			{
+				if (i > 0)
+					s += ", ";
+				s += cl_format("\"%1\"", strings[i]);
+			}
+			return s;
+		}
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

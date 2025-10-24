@@ -144,6 +144,11 @@ public:
 	/// \return Callback_v0
 	CL_Callback_v0 &func_dropdown_closed();
 
+	/// \brief Func enter pressed
+	///
+	/// \return Callback_v0
+	CL_Callback_v0 &func_enter_pressed();
+
 	/// \brief Func before edit changed
 	///
 	/// \return Callback_v0

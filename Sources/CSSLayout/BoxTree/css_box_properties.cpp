@@ -27,7 +27,22 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/css_document2.h"
+#include "API/CSSLayout/css_property_list2.h"
+#include "css_property_parsers.h"
+
+void CL_CSSBoxProperties::apply_properties(const CL_String &style_string, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
+{
+	apply_properties(CL_CSSDocument2::get_style_properties(style_string), out_change_set);
+}
+
+void CL_CSSBoxProperties::apply_properties(const CL_CSSPropertyList2 &css_properties, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
+{
+	CL_CSSPropertyParsers property_parsers;
+	for (size_t i = css_properties.size(); i > 0; i--)
+		property_parsers.parse(*this, css_properties[i-1], out_change_set);
+}
 
 void CL_CSSBoxProperties::compute(const CL_CSSBoxProperties *parent, CL_CSSResourceCache *layout)
 {
@@ -71,15 +86,25 @@ void CL_CSSBoxProperties::compute(const CL_CSSBoxProperties *parent, CL_CSSResou
 		border_width_top.compute(&parent->border_width_top, layout, em_size, ex_size, border_style_top);
 		border_width_right.compute(&parent->border_width_right, layout, em_size, ex_size, border_style_right);
 		border_width_bottom.compute(&parent->border_width_bottom, layout, em_size, ex_size, border_style_bottom);
+		border_radius_top_left.compute(&parent->border_radius_top_left, layout, em_size, ex_size);
+		border_radius_top_right.compute(&parent->border_radius_top_right, layout, em_size, ex_size);
+		border_radius_bottom_left.compute(&parent->border_radius_bottom_left, layout, em_size, ex_size);
+		border_radius_bottom_right.compute(&parent->border_radius_bottom_right, layout, em_size, ex_size);
+		border_image_source.compute(&parent->border_image_source, layout, em_size, ex_size);
+		border_image_slice.compute(&parent->border_image_slice, layout, em_size, ex_size);
+		border_image_width.compute(&parent->border_image_width, layout, em_size, ex_size);
+		border_image_outset.compute(&parent->border_image_outset, layout, em_size, ex_size);
+		border_image_repeat.compute(&parent->border_image_repeat, layout, em_size, ex_size);
+		decoration_break.compute(&parent->decoration_break, layout, em_size, ex_size);
+		shadow.compute(&parent->shadow, layout, em_size, ex_size);
 		background_attachment.compute(&parent->background_attachment, layout, em_size, ex_size);
 		background_color.compute(&parent->background_color, layout, em_size, ex_size);
 		background_image.compute(&parent->background_image, layout, em_size, ex_size);
 		background_position.compute(&parent->background_position, layout, em_size, ex_size);
 		background_repeat.compute(&parent->background_repeat, layout, em_size, ex_size);
-		clan_background_border_left.compute(&parent->clan_background_border_left, layout, em_size, ex_size);
-		clan_background_border_top.compute(&parent->clan_background_border_top, layout, em_size, ex_size);
-		clan_background_border_right.compute(&parent->clan_background_border_right, layout, em_size, ex_size);
-		clan_background_border_bottom.compute(&parent->clan_background_border_bottom, layout, em_size, ex_size);
+		background_origin.compute(&parent->background_origin, layout, em_size, ex_size);
+		background_clip.compute(&parent->background_clip, layout, em_size, ex_size);
+		background_size.compute(&parent->background_size, layout, em_size, ex_size);
 		padding_width_left.compute(&parent->padding_width_left, layout, em_size, ex_size);
 		padding_width_top.compute(&parent->padding_width_top, layout, em_size, ex_size);
 		padding_width_right.compute(&parent->padding_width_right, layout, em_size, ex_size);
@@ -102,6 +127,7 @@ void CL_CSSBoxProperties::compute(const CL_CSSBoxProperties *parent, CL_CSSResou
 		text_decoration.compute(&parent->text_decoration, layout, em_size, ex_size);
 		text_indent.compute(&parent->text_indent, layout, em_size, ex_size);
 		text_transform.compute(&parent->text_transform, layout, em_size, ex_size);
+		text_align.compute(&parent->text_align, layout, em_size, ex_size);
 		font_family.compute(&parent->font_family, layout, em_size, ex_size);
 		font_style.compute(&parent->font_style, layout, em_size, ex_size);
 		font_variant.compute(&parent->font_variant, layout, em_size, ex_size);
@@ -162,15 +188,25 @@ void CL_CSSBoxProperties::compute(const CL_CSSBoxProperties *parent, CL_CSSResou
 		border_width_top.compute(0, layout, em_size, ex_size, border_style_top);
 		border_width_right.compute(0, layout, em_size, ex_size, border_style_right);
 		border_width_bottom.compute(0, layout, em_size, ex_size, border_style_bottom);
+		border_radius_top_left.compute(0, layout, em_size, ex_size);
+		border_radius_top_right.compute(0, layout, em_size, ex_size);
+		border_radius_bottom_left.compute(0, layout, em_size, ex_size);
+		border_radius_bottom_right.compute(0, layout, em_size, ex_size);
+		border_image_source.compute(0, layout, em_size, ex_size);
+		border_image_slice.compute(0, layout, em_size, ex_size);
+		border_image_width.compute(0, layout, em_size, ex_size);
+		border_image_outset.compute(0, layout, em_size, ex_size);
+		border_image_repeat.compute(0, layout, em_size, ex_size);
+		decoration_break.compute(0, layout, em_size, ex_size);
+		shadow.compute(0, layout, em_size, ex_size);
 		background_attachment.compute(0, layout, em_size, ex_size);
 		background_color.compute(0, layout, em_size, ex_size);
 		background_image.compute(0, layout, em_size, ex_size);
 		background_position.compute(0, layout, em_size, ex_size);
 		background_repeat.compute(0, layout, em_size, ex_size);
-		clan_background_border_left.compute(0, layout, em_size, ex_size);
-		clan_background_border_top.compute(0, layout, em_size, ex_size);
-		clan_background_border_right.compute(0, layout, em_size, ex_size);
-		clan_background_border_bottom.compute(0, layout, em_size, ex_size);
+		background_origin.compute(0, layout, em_size, ex_size);
+		background_clip.compute(0, layout, em_size, ex_size);
+		background_size.compute(0, layout, em_size, ex_size);
 		padding_width_left.compute(0, layout, em_size, ex_size);
 		padding_width_top.compute(0, layout, em_size, ex_size);
 		padding_width_right.compute(0, layout, em_size, ex_size);
@@ -193,6 +229,7 @@ void CL_CSSBoxProperties::compute(const CL_CSSBoxProperties *parent, CL_CSSResou
 		text_decoration.compute(0, layout, em_size, ex_size);
 		text_indent.compute(0, layout, em_size, ex_size);
 		text_transform.compute(0, layout, em_size, ex_size);
+		text_align.compute(0, layout, em_size, ex_size);
 		font_family.compute(0, layout, em_size, ex_size);
 		font_style.compute(0, layout, em_size, ex_size);
 		font_variant.compute(0, layout, em_size, ex_size);

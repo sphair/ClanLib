@@ -45,8 +45,6 @@ void CL_ThreadLocalStorage::create_initial_instance()
 
 CL_ThreadLocalStorage::CL_ThreadLocalStorage()
 {
-	CL_System::alloc_thread_temp_pool();
-
 #ifdef WIN32
 	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
 	{
@@ -116,14 +114,12 @@ CL_ThreadLocalStorage::~CL_ThreadLocalStorage()
 	if (cl_core_global.cl_tls_impl)
 		cl_core_global.cl_tls_impl->release_reference();
 #endif
-
-	CL_System::free_thread_temp_pool();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ThreadLocalStorage Attributes:
 
-CL_UnknownSharedPtr CL_ThreadLocalStorage::get_variable(const CL_StringRef &name)
+CL_SharedPtr<CL_ThreadLocalStorageData> CL_ThreadLocalStorage::get_variable(const CL_StringRef &name)
 {
 #ifdef WIN32
 	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
@@ -144,7 +140,7 @@ CL_UnknownSharedPtr CL_ThreadLocalStorage::get_variable(const CL_StringRef &name
 /////////////////////////////////////////////////////////////////////////////
 // CL_ThreadLocalStorage Operations:
 
-void CL_ThreadLocalStorage::set_variable(const CL_StringRef &name, CL_UnknownSharedPtr ptr)
+void CL_ThreadLocalStorage::set_variable(const CL_StringRef &name, CL_SharedPtr<CL_ThreadLocalStorageData> ptr)
 {
 #ifdef WIN32
 	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)

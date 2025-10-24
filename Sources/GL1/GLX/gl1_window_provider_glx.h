@@ -53,7 +53,7 @@ class CL_GL1GraphicContextProvider;
 
 class CL_OpenGLWindowProvider_GLX;
 
-#define CL_USE_DLOPEN		// Using dlopen for linux by default
+#define GL_USE_DLOPEN		// Using dlopen for linux by default
 
 class CL_GL1_GLXFunctions
 {
@@ -165,7 +165,6 @@ public:
 	virtual int get_viewport_height() const;
 	virtual void flip_buffers(int interval) const;
 	virtual void make_current() const;
-	virtual const CL_RenderWindowProvider * new_worker_context() const;
 	CL_GL1ProcAddress *get_proc_address(const CL_String8& function_name) const;
 
 	CL_GL1WindowProvider_GLX &get_window();
@@ -341,7 +340,7 @@ private:
 
 	int swap_interval;
 
-#ifdef CL_USE_DLOPEN
+#ifdef GL_USE_DLOPEN
 	void *opengl_lib_handle;
 #endif
 

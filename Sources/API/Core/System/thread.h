@@ -29,7 +29,6 @@
 /// \addtogroup clanCore_System clanCore System
 /// \{
 
-
 #pragma once
 
 
@@ -54,13 +53,11 @@ public:
 
 	~CL_Thread();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -175,7 +172,6 @@ public:
 	/** <p>Currently this only works with the Visual Studio compiler and debugger.</p>*/
 	static void set_thread_name(const char *name);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -184,6 +180,5 @@ private:
 	CL_SharedPtr<CL_Thread_Impl> impl;
 /// \}
 };
-
 
 /// \}

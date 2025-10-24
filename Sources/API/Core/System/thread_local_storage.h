@@ -36,6 +36,12 @@
 #include "../api_core.h"
 #include "sharedptr.h"
 
+class CL_ThreadLocalStorageData
+{
+public:
+	virtual ~CL_ThreadLocalStorageData() { }
+};
+
 class CL_ThreadLocalStorage_Impl;
 
 /// \brief Thread class.
@@ -62,7 +68,7 @@ private:
 
 public:
 	/// \brief Get a variable.
-	static CL_UnknownSharedPtr get_variable(const CL_StringRef &name);
+	static CL_SharedPtr<CL_ThreadLocalStorageData> get_variable(const CL_StringRef &name);
 
 
 /// \}
@@ -71,7 +77,7 @@ public:
 
 public:
 	/// \brief Set a variable.
-	static void set_variable(const CL_StringRef &name, CL_UnknownSharedPtr ptr);
+	static void set_variable(const CL_StringRef &name, CL_SharedPtr<CL_ThreadLocalStorageData> ptr);
 
 
 /// \}

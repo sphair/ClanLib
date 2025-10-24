@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 
 class CL_IODevice;
 
@@ -48,11 +48,11 @@ public:
 /// \{
 
 public:
-	cl_int32 crc32;
+	cl_int crc32;
 
-	cl_int32 compressed_size;
+	cl_int compressed_size;
 
-	cl_int32 uncompressed_size;
+	cl_int uncompressed_size;
 
 
 /// \}

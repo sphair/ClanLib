@@ -66,13 +66,13 @@ CL_SoundFilter::~CL_SoundFilter()
 
 void CL_SoundFilter::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_SoundFilter is null");
 }
 
 CL_SoundFilterProvider *CL_SoundFilter::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	return impl->provider;
 }

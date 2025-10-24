@@ -116,7 +116,14 @@ private:
 
 	mutable bool pbuffer_changed;
 	
-	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1> texture_pbuffer_map;
+	struct WeakPtrCompare
+	{
+		bool operator()(const CL_WeakPtr<CL_Texture_Impl> &p1, const CL_WeakPtr<CL_Texture_Impl> &p2) const
+		{
+			return p1.lock() < p2.lock();
+		}
+	};
+	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1, WeakPtrCompare> texture_pbuffer_map;
 
 	CL_PBuffer_GL1 pbuffer;
 	CL_Texture selected_surface;

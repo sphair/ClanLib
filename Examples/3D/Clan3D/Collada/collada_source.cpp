@@ -456,5 +456,5 @@ std::vector<CL_Vec3i> &CL_Collada_Source::get_vec3i_array()
 
 bool CL_Collada_Source::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }

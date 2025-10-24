@@ -30,26 +30,20 @@
 
 #include "api_csslayout.h"
 
-class CL_API_CSSLAYOUT CL_CSSSelectAttribute2
-{
-public:
-	CL_String name;
-	CL_String value;
-};
-
 class CL_API_CSSLAYOUT CL_CSSSelectNode2
 {
 public:
-	CL_CSSSelectNode2() : child_index(0) { }
 	virtual ~CL_CSSSelectNode2() { }
-	virtual CL_CSSSelectNode2 *get_parent() { return 0; }
-	virtual CL_CSSSelectNode2 *get_prev_sibling() { return 0; }
+	virtual bool parent() = 0;
+	virtual bool prev_sibling() = 0;
+	virtual void push() = 0;
+	virtual void pop() = 0;
 
-	CL_String name;
-	CL_String lang;
-	CL_String id;
-	std::vector<CL_String> element_classes;
-	std::vector<CL_String> pseudo_classes;
-	std::vector<CL_CSSSelectAttribute2> attributes;
-	int child_index;
+	virtual CL_String name() = 0;
+	virtual CL_String lang() = 0;
+	virtual CL_String id() = 0;
+	virtual std::vector<CL_String> element_classes() = 0;
+	virtual std::vector<CL_String> pseudo_classes() = 0;
+	virtual CL_String get_attribute_value(const CL_String &name, bool &out_found) = 0;
+	virtual int child_index() { return 0; }
 };

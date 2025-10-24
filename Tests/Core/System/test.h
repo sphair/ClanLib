@@ -70,9 +70,6 @@ class TestApp
 public:
 	virtual int main(const std::vector<CL_String> &args);
 private:
-	void test_sharedptr_part1(void);
-	void test_sharedptr_part2(void);
-	void test_weakptr(void);
 	void test_datetime();
 	void test_interlock();
 

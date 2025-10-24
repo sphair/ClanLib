@@ -141,7 +141,13 @@ void Target::run_demo()
 
 	CL_Font target_font(gc, "tahoma", 32);
 	CL_Font fps_font(gc, "tahoma", 20);
-	CL_Font fall_font(gc, "tahoma", 16);
+
+	// Because we are using the alpha channel on fonts, we must disable subpixel rendering
+	CL_FontDescription font_desc;
+	font_desc.set_typeface_name("tahoma");
+	font_desc.set_height(16);
+	font_desc.set_subpixel(false);
+	CL_Font fall_font(gc, font_desc);
 
 	std::vector<FontFall> font_fall;
 

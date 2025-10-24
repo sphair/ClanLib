@@ -40,5 +40,7 @@ private:
 	bool on_close();
 	void on_resized();
 
+	CL_Label *label;
+	CL_LineEdit *edit;
 	CSSView *view;
 };

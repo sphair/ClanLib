@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_color.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserColor::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserColor::get_names()
 	return names;
 }
 
-void CL_CSSParserColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_Colorf color;
@@ -51,10 +51,14 @@ void CL_CSSParserColor::parse(CL_CSSBoxProperties &properties, const CL_String &
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 		{
-			if (token.value == "inherit")
+			if (equals(token.value, "inherit"))
 			{
 				properties.color.type = CL_CSSBoxColor::type_inherit;
 			}
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["color"] = &properties.color;
 	}
 }

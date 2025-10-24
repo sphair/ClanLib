@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_word_spacing.h"
+#include "API/CSSLayout/PropertyTypes/css_box_word_spacing.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxWordSpacing::CL_CSSBoxWordSpacing()
@@ -58,4 +58,18 @@ void CL_CSSBoxWordSpacing::compute(const CL_CSSBoxWordSpacing *parent, CL_CSSRes
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxWordSpacing::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_length:
+		return length.to_string();
+	case type_inherit:
+		return "inherit";
+	}
 }

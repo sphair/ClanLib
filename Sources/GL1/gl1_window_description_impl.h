@@ -28,7 +28,9 @@
 
 #pragma once
 
-class CL_GL1WindowDescription_Impl
+#include "API/Display/Window/display_window_description.h"
+
+class CL_GL1WindowDescription_Impl : public CL_DisplayWindowDescriptionData
 {
 /// \name Construction
 /// \{

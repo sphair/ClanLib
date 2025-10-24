@@ -43,7 +43,7 @@ CL_DomAttr::CL_DomAttr()
 CL_DomAttr::CL_DomAttr(CL_DomDocument doc, const CL_DomString &name, const CL_DomString &namespace_uri)
 : CL_DomNode(doc, ATTRIBUTE_NODE)
 {
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	impl->get_tree_node()->set_node_name(doc_impl, name);
 	impl->get_tree_node()->set_namespace_uri(doc_impl, namespace_uri);
 }
@@ -82,7 +82,7 @@ void CL_DomAttr::set_value(const CL_DomString &value)
 {
 	if (impl)
 	{
-		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 		impl->get_tree_node()->set_node_value(doc_impl, value);
 	}
 }

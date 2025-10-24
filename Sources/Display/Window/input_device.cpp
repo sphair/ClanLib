@@ -53,7 +53,7 @@ CL_InputDevice::CL_InputDevice(CL_InputDeviceProvider *provider)
 }
 
 CL_InputDevice::CL_InputDevice(CL_WeakPtr<CL_InputDevice_Impl> impl)
-: impl(impl.to_sharedptr())
+: impl(impl.lock())
 {
 }
 
@@ -66,13 +66,13 @@ CL_InputDevice::~CL_InputDevice()
 
 void CL_InputDevice::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_InputDevice is null");
 }
 
 CL_InputDeviceProvider *CL_InputDevice::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	else
 		return impl->provider;

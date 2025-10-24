@@ -191,14 +191,14 @@ void CL_PrimitivesArrayBuilder::append(int num_vertices, const CL_PrimitivesArra
 	{
 		if (impl->blocks.empty() || impl->next_vertex_pos == CL_PrimitivesArrayBlock::total_vertices)
 		{
-			impl->blocks.push_back(new CL_PrimitivesArrayBlock(prim_array.impl));
+			impl->blocks.push_back(new CL_PrimitivesArrayBlock(prim_array.impl.get()));
 			impl->next_vertex_pos = 0;
 		}
 
 		int available = CL_PrimitivesArrayBlock::total_vertices - impl->next_vertex_pos;
 		int copy_amount = cl_min(available, num_vertices - pos);
 		CL_PrimitivesArrayBlock *block = impl->blocks.back();
-		block->copy_data(impl->next_vertex_pos, pos, prim_array.impl, copy_amount);
+		block->copy_data(impl->next_vertex_pos, pos, prim_array.impl.get(), copy_amount);
 		pos += copy_amount;
 		impl->next_vertex_pos += copy_amount;
 	}

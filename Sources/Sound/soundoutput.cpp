@@ -33,18 +33,19 @@
 #include "API/Sound/sound.h"
 #include "API/Core/System/thread.h"
 #include "soundoutput_impl.h"
+
 #ifdef WIN32
 #include "Win32/soundoutput_directsound.h"
 #else
 #ifdef __APPLE__
 #include "MacOSX/soundoutput_macosx.h"
 #else
+#include "Unix/soundoutput_oss.h"
+#endif
+#endif
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
 #include "Unix/soundoutput_alsa.h"
-#endif
-#include "Unix/soundoutput_oss.h"
-#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -64,7 +65,6 @@ CL_SoundOutput::CL_SoundOutput(int mixing_frequency, int latency)
 
 CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 {
-
 #ifdef WIN32
 	CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
@@ -73,9 +73,7 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 	CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
-#ifdef __linux__
-
-#ifdef HAVE_ALSA_ASOUNDLIB_H
+#if defined(__linux__) && defined(HAVE_ALSA_ASOUNDLIB_H)
 	// Try building ALSA
 
 	CL_SharedPtr<CL_SoundOutput_Impl> alsa_impl(new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency()));
@@ -85,17 +83,18 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 	}
 	else
 	{
-		alsa_impl.disconnect();
+		alsa_impl.reset();
 	}
 
-	if (impl.is_null())
-#endif
-
-#endif
+	if (!impl)
 	{
 		CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
+#else
+    CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+    impl = soundoutput_impl;
+#endif
 #endif
 #endif
 	CL_Sound::select_output(*this);
@@ -106,7 +105,7 @@ CL_SoundOutput::~CL_SoundOutput()
 }
 
 CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl)
-: impl(impl.to_sharedptr())
+: impl(impl.lock())
 {
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -114,7 +113,7 @@ CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl)
 
 void CL_SoundOutput::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_SoundOutput is null");
 }
 
@@ -157,7 +156,7 @@ void CL_SoundOutput::stop_all()
 	
 void CL_SoundOutput::set_global_volume(float volume)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->volume = volume;
@@ -166,7 +165,7 @@ void CL_SoundOutput::set_global_volume(float volume)
 
 void CL_SoundOutput::set_global_pan(float pan)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->pan = pan;
@@ -175,7 +174,7 @@ void CL_SoundOutput::set_global_pan(float pan)
 
 void CL_SoundOutput::add_filter(CL_SoundFilter &filter)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->filters.push_back(filter);
@@ -184,7 +183,7 @@ void CL_SoundOutput::add_filter(CL_SoundFilter &filter)
 
 void CL_SoundOutput::remove_filter(CL_SoundFilter &filter)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		for (std::vector<CL_SoundFilter>::size_type i=0; i<impl->filters.size(); i++)

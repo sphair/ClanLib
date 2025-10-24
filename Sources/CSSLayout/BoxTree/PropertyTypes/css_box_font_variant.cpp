@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_font_variant.h"
+#include "API/CSSLayout/PropertyTypes/css_box_font_variant.h"
 
 CL_CSSBoxFontVariant::CL_CSSBoxFontVariant()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxFontVariant::compute(const CL_CSSBoxFontVariant *parent, CL_CSSRes
 			type = parent->type;
 		else
 			type = type_normal;
+	}
+}
+
+CL_String CL_CSSBoxFontVariant::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_small_caps:
+		return "small-caps";
+	case type_inherit:
+		return "inherit";
 	}
 }

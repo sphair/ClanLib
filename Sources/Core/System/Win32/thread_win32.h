@@ -41,7 +41,6 @@ public:
 
 	~CL_Thread_Win32();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -69,4 +68,3 @@ private:
 	HANDLE handle;
 /// \}
 };
-

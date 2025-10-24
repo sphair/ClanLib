@@ -79,7 +79,7 @@ void CL_Collada_Material_Impl::load_material(CL_DomElement &material_element, st
 
 bool CL_Collada_Material::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 CL_Collada_Effect &CL_Collada_Material::get_effect()

@@ -271,6 +271,9 @@ public:
 	/// \brief Compare operator.
 	bool operator ==(const CL_DomNode &other) const;
 
+	/// \brief Compare operator.
+	bool operator !=(const CL_DomNode &other) const;
+
 	/// \brief Merges any adjacent Text nodes.
 	/** <p>Puts all Text nodes in the full depth of the sub-tree underneath this node, including
 	    attribute nodes, into a "normal" form where only structure (e.g., elements, comments,

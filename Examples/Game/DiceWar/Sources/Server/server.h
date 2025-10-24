@@ -32,11 +32,11 @@ private:
 
 	CL_NetGameServer network_server;
 
-	CL_AutoPtr<ServerLoginEvents> login_events;
-	CL_AutoPtr<ServerLobbyEvents> lobby_events;
-	CL_AutoPtr<ServerGameEvents> game_events;
+	std::auto_ptr<ServerLoginEvents> login_events;
+	std::auto_ptr<ServerLobbyEvents> lobby_events;
+	std::auto_ptr<ServerGameEvents> game_events;
 
-	CL_AutoPtr<ServerLobbyModel> lobby_model;
+	std::auto_ptr<ServerLobbyModel> lobby_model;
 
 	CL_SlotContainer slots;
 };

@@ -123,7 +123,7 @@ public:
 	/// \brief Is Null
 	///
 	/// \return true = null
-	bool is_null();
+	bool is_null() const;
 
 	/// \brief Retrieves the provider.
 	CL_GUIWindowManagerProvider *get_provider() const;
@@ -145,6 +145,7 @@ public:
 	void create_window(
 		CL_GUITopLevelWindow *handle,
 		CL_GUITopLevelWindow *owner,
+		CL_GUIComponent *component,
 		CL_GUITopLevelDescription description);
 
 	/// \brief Destroy window

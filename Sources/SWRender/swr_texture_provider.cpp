@@ -110,14 +110,12 @@ void CL_SWRenderTextureProvider::set_subimage(
 	if (level != 0)
 		throw CL_Exception("Unsupported mipmap level specified for GDI target");
 
-	int pitch = 4;
 	CL_PixelBuffer temp_source(src_rect.get_width(), src_rect.get_height(), cl_argb8);
 	source_image.convert(temp_source, CL_Rect(0, 0, temp_source.get_width(), temp_source.get_height()), src_rect);
 
 	int dest_buffer_width = image.get_width();
 	int dest_buffer_height = image.get_height();
 	int src_buffer_width = temp_source.get_width();
-	int src_buffer_height = temp_source.get_height();
 	unsigned int *dest_data = static_cast<unsigned int *>(image.get_data());
 	const unsigned int *src_data = static_cast<const unsigned int *>(temp_source.get_data());
 

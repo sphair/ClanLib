@@ -55,6 +55,7 @@ public:
 		sysmenu = true;
 		drop_shadow = false;
 		tool_window = false;
+		dialog_window = false;
 		fullscreen = false;
 		fullscreen_monitor = 0;
 		flipping_buffers = 2;
@@ -91,6 +92,7 @@ public:
 	bool visible;
 	bool drop_shadow;
 	bool tool_window;
+	bool dialog_window;
 	bool fullscreen;
 	int fullscreen_monitor;
 	bool allow_resize;
@@ -105,7 +107,7 @@ public:
 #ifdef WIN32
 	HWND handle;
 #endif
-	std::map<CL_String, CL_UnknownSharedPtr> data_objects;
+	std::map<CL_String, CL_SharedPtr<CL_DisplayWindowDescriptionData> > data_objects;
 	int depth_size;
 	int stencil_size;
 /// \}

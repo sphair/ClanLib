@@ -202,7 +202,7 @@ void App::update_light(CL_GraphicContext &gc)
 
 	CL_Vec4f light_specular(0.5f, 0.5f, 0.5f, 1.0f);
 	CL_Vec4f light_diffuse(0.5f, 0.5f, 0.5f, 1.0f);
-	CL_Vec4f light_ambient(0.3f, 0.3f, 0.3f, 1.0f);
+	CL_Vec4f light_ambient( 0.3f, 0.3f, 0.3f, 1.0f);
 
 	scene.gs->shader_texture.SetLight(light_vector, light_specular, light_diffuse, light_ambient );
 }

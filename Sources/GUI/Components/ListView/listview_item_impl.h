@@ -47,38 +47,23 @@ public:
 	}
 
 	CL_WeakPtr<CL_ListViewItem_Impl> parent;
-
 	CL_SharedPtr<CL_ListViewItem_Impl> next_sibling;
-
 	CL_WeakPtr<CL_ListViewItem_Impl> prev_sibling;
-
 	CL_SharedPtr<CL_ListViewItem_Impl> first_child;
-
 	CL_WeakPtr<CL_ListViewItem_Impl> last_child;
-
 	bool open;
-
 	bool editable;
-
 	bool selected;
-
 	std::vector<CL_ListViewColumnData> column_data;
-
 	int icon;
 	int id;
 	std::vector<int> overlay_icons;
-
 	CL_ListViewItem_Impl *get_root_parent();
-
 	CL_Callback_v0 func_item_added;
-
 	CL_Callback_v1<CL_ListViewItem> func_item_modified;
-
 	CL_Callback_v1<CL_ListViewItem> func_item_deleted;
-
 	CL_Callback_v1<CL_Rect> func_render_icon;
-
-	CL_UnknownSharedPtr userdata;
+	CL_SharedPtr<CL_ListViewItemUserData> userdata;
 };
 
 

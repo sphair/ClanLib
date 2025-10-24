@@ -130,13 +130,10 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 		{
 			msg.set_consumed();
-			CL_GraphicContext &gc = menubar->get_gc();
 
 			std::vector<CL_TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
 			{
-				CL_TopMenu &topmenu = menus[index];
-
 				CL_Rect item_rect = get_menu_item_rect(index);
 
 				if (item_rect.contains(e.mouse_pos))
@@ -154,13 +151,10 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		else if (e.type == CL_InputEvent::pointer_moved )
 		{
 			msg.set_consumed();
-			CL_GraphicContext &gc = menubar->get_gc();
 
 			std::vector<CL_TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
 			{
-				CL_TopMenu &topmenu = menus[index];
-
 				CL_Rect item_rect = get_menu_item_rect(index);
 
 				if (item_rect.contains(e.mouse_pos))

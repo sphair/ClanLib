@@ -28,22 +28,20 @@
 
 #pragma once
 
-#include "API/Core/System/autoptr.h"
 #include "API/Network/Socket/tcp_listen.h"
 #include "API/Core/System/keep_alive.h"
+#include "API/Core/System/uniqueptr.h"
 
 class CL_NetGameServer_Impl : public CL_KeepAliveObject
 {
 public:
-	CL_Event get_wakeup_event() { return event_arrived; }
 	void process();
 
-	CL_AutoPtr<CL_TCPListen> tcp_listen;
+	CL_UniquePtr<CL_TCPListen> tcp_listen;
 	CL_Thread listen_thread;
 
 	CL_Mutex mutex;
 	CL_Event stop_event;
-	CL_Event event_arrived;
 	std::vector<CL_NetGameConnection *> connections;
 	std::vector<CL_NetGameNetworkEvent> events;
 

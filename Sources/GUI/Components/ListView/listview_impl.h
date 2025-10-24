@@ -67,7 +67,8 @@ public:
 	CL_ListView_Impl()
 	  : display_mode(listview_mode_details), listview(0), layout(0), renderer(0), scrollbar(0),
 		  header(0), lineedit(0), multiple_selection(false), select_whole_row(false),
-		  context_menu(CL_PopupMenu::create_null_object()), just_launched_lineedit(false)
+		  context_menu(CL_PopupMenu::create_null_object()), just_launched_lineedit(false),
+		  show_detail_icon(true), show_detail_opener(true)
 	{
 		CL_SharedPtr<CL_ListViewItem_Impl> item_impl(new CL_ListViewItem_Impl());
 		document_item = CL_ListViewItem(item_impl);
@@ -129,7 +130,7 @@ public:
 
 	CL_ListViewItem find(CL_ListViewItem &item, const CL_StringRef &col_id, const CL_StringRef &str, bool recursive);
 
-	CL_ListViewItem find(CL_ListViewItem &item, const CL_UnknownSharedPtr userdata, bool recursive);
+	CL_ListViewItem find(CL_ListViewItem &item, const CL_SharedPtr<CL_ListViewItemUserData> userdata, bool recursive);
 
 	CL_ListViewItem find(CL_ListViewItem &it, int id, bool recursive);
 
@@ -185,6 +186,9 @@ public:
 	bool select_whole_row;
 	bool just_launched_lineedit;
 
+	bool show_detail_icon;
+	bool show_detail_opener;
+
 private:
 	// void update_shown_items();
 
@@ -202,8 +206,4 @@ private:
 		const CL_Rect &cell_content_rect,
 		CL_ListViewItem item,
 		int offset_x);
-
 };
-
-
-

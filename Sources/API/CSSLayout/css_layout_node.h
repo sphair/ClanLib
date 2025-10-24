@@ -30,7 +30,7 @@
 
 #include "api_csslayout.h"
 #include "css_layout_user_data.h"
-#include <memory>
+#include "../Core/System/uniqueptr.h"
 
 class CL_CSSLayoutText;
 class CL_CSSLayoutElement;
@@ -58,8 +58,8 @@ public:
 
 	CL_CSSLayoutUserData *get_user_data();
 	const CL_CSSLayoutUserData *get_user_data() const;
-	void set_user_data(CL_CSSLayoutUserData *data) { set_user_data(std::auto_ptr<CL_CSSLayoutUserData>(data)); }
-	void set_user_data(std::auto_ptr<CL_CSSLayoutUserData> data);
+	void set_user_data(CL_CSSLayoutUserData *data) { CL_UniquePtr<CL_CSSLayoutUserData> cmd(data); set_user_data(cmd); }
+	void set_user_data(CL_UniquePtr<CL_CSSLayoutUserData> &data);
 
 	CL_String print_node() const;
 

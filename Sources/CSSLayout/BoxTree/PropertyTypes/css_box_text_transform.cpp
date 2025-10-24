@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_text_transform.h"
+#include "API/CSSLayout/PropertyTypes/css_box_text_transform.h"
 
 CL_CSSBoxTextTransform::CL_CSSBoxTextTransform()
 : type(type_inherit)
@@ -42,5 +42,23 @@ void CL_CSSBoxTextTransform::compute(const CL_CSSBoxTextTransform *parent, CL_CS
 			type = parent->type;
 		else
 			type = type_none;
+	}
+}
+
+CL_String CL_CSSBoxTextTransform::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_capitalize:
+		return "capitalize";
+	case type_uppercase:
+		return "uppercase";
+	case type_lowercase:
+		return "lowercase";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

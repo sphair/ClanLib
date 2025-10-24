@@ -53,8 +53,16 @@ public:
 	void set(const CL_PixelBuffer &new_pixelbuffer)
 	{
 		pixelbuffer = new_pixelbuffer;
-		size = pixelbuffer.get_size();
-		data = static_cast<unsigned int *>(pixelbuffer.get_data());
+		if (!pixelbuffer.is_null())
+		{
+			size = pixelbuffer.get_size();
+			data = static_cast<unsigned int *>(pixelbuffer.get_data());
+		}
+		else
+		{
+			size = CL_Size();
+			data = 0;
+		}
 	}
 };
 /// \}

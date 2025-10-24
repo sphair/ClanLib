@@ -276,7 +276,7 @@ public:
 
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -328,6 +328,10 @@ public:
 	/// \brief Bind attribute to specific location.
 	/** <p>This function must be called before linking.</p>*/
 	void bind_attribute_location(int index, const CL_StringRef &name);
+
+	/// \brief Bind shader out variable a specific color buffer location.
+	/** <p>This function must be called before linking.</p>*/
+	void bind_frag_data_location(int color_number, const CL_StringRef &name);
 
 	/// \brief Link program.
 	/** <p>If the linking fails, get_info_log() will return the link log.</p>*/

@@ -326,7 +326,7 @@ CL_Point GameTerrain::from_screen_point(CL_GraphicContext &gc, const CL_Point &s
 	CL_OpenGL::set_active(gc);
 	
 	float depth;
-	clReadPixels(screen_point.x, screen_point.y, 1, 1, CL_DEPTH_COMPONENT, CL_FLOAT, &depth);
+	glReadPixels(screen_point.x, screen_point.y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
 
 	CL_Mat4f modelview = modelview2;
 	modelview.multiply(CL_Mat4f::translate(-size.width*2.0f, 0.0f, -size.height*2.0f));

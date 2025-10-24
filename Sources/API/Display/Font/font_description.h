@@ -64,8 +64,32 @@ public:
 /// \{
 
 public:
+
+	enum Charset
+	{
+		charset_default,
+		charset_ansi,
+		charset_baltic,
+		charset_chinesebig5,
+		charset_easteurope,
+		charset_gb2312,
+		charset_greek,
+		charset_hangul,
+		charset_mac,
+		charset_oem,
+		charset_russian,
+		charset_shiftjis,
+		charset_symbol,
+		charset_turkish,
+		charset_vietnamese,
+		charset_johab,
+		charset_arabic,
+		charset_hebrew,
+		charset_thai
+	};
+
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -100,11 +124,14 @@ public:
 	/// \brief Returns the font fixed pitch setting
 	bool get_fixed_pitch() const;
 
-	/// \brief Get the font anti-alias setting
+	/// \brief Get the font anti-alias setting (defaults to true)
 	bool get_anti_alias() const;
 
-	/// \brief Returns true if set_anti_alias() was called. (Else, the anti-alias default setting depends on the implementation
-	bool get_anti_alias_set() const;
+	/// \brief Get the font subpixel rendering setting (defaults to true)
+	bool get_subpixel() const;
+
+	/// \biref Get the font charset
+	Charset get_charset() const;
 
 	/// \brief Returns true if the font is identical
 	bool operator==(const CL_FontDescription &other) const;
@@ -150,8 +177,16 @@ public:
 	/// \brief Sets the font fixed pitch setting
 	void set_fixed_pitch(bool setting = true);
 
-	/// \brief Sets the font anti-alias setting
+	/// \brief Sets the font anti-alias setting (defaults to true)
 	void set_anti_alias(bool setting = true);
+
+	/// \brief Sets the font subpixel rendering setting (defaults to true)
+	void set_subpixel(bool setting = true);
+
+	/// \brief Sets the font charset (defaults to charset_default)
+	///
+	/// \param new_charset = The charset. charset_default = Use operating systems default
+	void set_charset(Charset new_charset);
 
 /// \}
 /// \name Implementation

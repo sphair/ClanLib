@@ -43,7 +43,7 @@ class CL_OpenGLPixelBufferProvider : public CL_PixelBufferProvider
 /// \{
 
 public:
-	CL_OpenGLPixelBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLPixelBufferProvider();
 
 	~CL_OpenGLPixelBufferProvider();
 
@@ -59,9 +59,9 @@ public:
 public:
 	void *get_data() { return buffer.get_data(); }
 
-	CLuint get_handle() const { return buffer.get_handle(); }
-	CLenum get_binding() const { return buffer.get_binding(); }
-	CLenum get_target() const { return buffer.get_target(); }
+	GLuint get_handle() const { return buffer.get_handle(); }
+	GLenum get_binding() const { return buffer.get_binding(); }
+	GLenum get_target() const { return buffer.get_target(); }
 
 /// \}
 /// \name Operations
@@ -83,8 +83,8 @@ private:
 	int width;
 	int height;
 	int bytes_per_pixel;
-	CLenum selected_binding;
-	CLenum selected_target;
+	GLenum selected_binding;
+	GLenum selected_target;
 
 /// \}
 };

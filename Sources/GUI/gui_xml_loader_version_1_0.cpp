@@ -45,6 +45,7 @@
 #include "API/GUI/Components/slider.h"
 #include "API/GUI/Components/menubar.h"
 #include "API/GUI/Components/lineedit.h"
+#include "API/GUI/Components/textedit.h"
 #include "API/GUI/Components/statusbar.h"
 #include "API/GUI/Components/toolbar.h"
 #include "API/GUI/Components/frame.h"
@@ -54,7 +55,7 @@
 #include "API/GUI/Components/imageview.h"
 
 #include "gui_xml_loader_version_1_0.h"
-#include "gui_layout_provider_corners.h"
+#include "Layout/gui_layout_provider_corners.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIXMLLoaderVersion_1_0 Construction:
@@ -152,6 +153,13 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		else if (tag == "lineedit")
 		{
 			CL_LineEdit *co = new CL_LineEdit(parent);
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
+			new_comp = co;
+		}
+		else if (tag == "textedit")
+		{
+			CL_TextEdit *co = new CL_TextEdit(parent);
 			if (e.has_attribute("text"))
 				co->set_text(e.get_attribute("text"));
 			new_comp = co;

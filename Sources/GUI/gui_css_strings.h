@@ -49,6 +49,13 @@ namespace CssStr
 		const CL_StringRef type_name = "groupbox";
 	}
 
+	namespace MessageBox
+	{
+		const CL_StringRef type_name = "messagebox";
+		const CL_StringRef button_area_height = "button-area-height";
+		const CL_StringRef part_icon = "icon";
+	}
+
 	namespace Frame
 	{
 		const CL_StringRef type_name = "frame";
@@ -67,6 +74,13 @@ namespace CssStr
 	namespace LineEdit
 	{
 		const CL_StringRef type_name = "lineedit";
+		const CL_StringRef part_selection = "selection";
+		const CL_StringRef part_cursor = "cursor";
+	}
+
+	namespace TextEdit
+	{
+		const CL_StringRef type_name = "textedit";
 		const CL_StringRef part_selection = "selection";
 		const CL_StringRef part_cursor = "cursor";
 	}

@@ -41,10 +41,11 @@ public:
 	CL_CSSDocument2();
 	~CL_CSSDocument2();
 
-	void add_sheet(const CL_String &filename);
+	void add_sheet(const CL_String &filename, const CL_String &base_uri = CL_String());
+	void add_sheet(CL_IODevice &iodevice, const CL_String &base_uri = CL_String());
 	CL_CSSPropertyList2 select(const CL_DomElement &node, const CL_String &pseudo_element = CL_String());
 	CL_CSSPropertyList2 select(CL_CSSSelectNode2 *node, const CL_String &pseudo_element = CL_String());
-	static CL_CSSPropertyList2 get_style_properties(const CL_String &style_string);
+	static CL_CSSPropertyList2 get_style_properties(const CL_String &style_string, const CL_String &base_uri = CL_String());
 
 private:
 	CL_SharedPtr<CL_CSSDocument2_Impl> impl;

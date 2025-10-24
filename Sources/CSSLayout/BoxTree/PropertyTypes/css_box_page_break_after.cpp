@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_page_break_after.h"
+#include "API/CSSLayout/PropertyTypes/css_box_page_break_after.h"
 
 CL_CSSBoxPageBreakAfter::CL_CSSBoxPageBreakAfter()
 : type(type_auto)
@@ -42,5 +42,25 @@ void CL_CSSBoxPageBreakAfter::compute(const CL_CSSBoxPageBreakAfter *parent, CL_
 			type = parent->type;
 		else
 			type = type_auto;
+	}
+}
+
+CL_String CL_CSSBoxPageBreakAfter::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_auto:
+		return "auto";
+	case type_always:
+		return "always";
+	case type_avoid:
+		return "avoid";
+	case type_left:
+		return "left";
+	case type_right:
+		return "right";
+	case type_inherit:
+		return "inherit";
 	}
 }

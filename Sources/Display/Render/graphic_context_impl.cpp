@@ -76,13 +76,13 @@ CL_SharedPtr<CL_PrimitivesArray_Impl> CL_GraphicContext_Impl::create_prim_array(
 void CL_GraphicContext_Impl::free_prim_array(CL_PrimitivesArray_Impl *prim_array)
 {
 	// If the graphic context has been destroyed, then simply delete the prim_array
-	if (prim_array->gc.is_invalid_weak_link())
+	if (prim_array->gc.expired())
 	{
 		delete prim_array;
 	}
 	else
 	{
-		prim_array->gc->free_prim_arrays.push_back(prim_array);
+		prim_array->gc.lock()->free_prim_arrays.push_back(prim_array);
 	}
 }
 

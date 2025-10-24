@@ -64,11 +64,6 @@ public:
 /// \{
 
 public:
-	/// \brief Creates a new worker context for the render window.
-	/** <p>This creates a new render window provider which refers to the same render window as the
-	    spawning provider, but with a new rendering context. The returned pointer refers to a newly
-	    allocated instance, and it is the caller's responsibility to destroy it.</p>*/
-	virtual const CL_RenderWindowProvider * new_worker_context() const = 0;
 
 	/// \brief Flip the render window's frame buffers.
 	virtual void flip_buffers(int interval=-1) const = 0;

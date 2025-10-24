@@ -272,7 +272,7 @@ void CL_HTTPServer_Impl::connection_thread_main(CL_TCPConnection connection)
 			{
 				response = handle_request(url, headers, request_data);
 			}
-			catch (CL_Exception e)
+			catch (const CL_Exception &e)
 			{
 //					write_line(connection, "HTTP/1.1 404 Not Found");
 				write_line(connection, "HTTP/1.1 404 Not Found");

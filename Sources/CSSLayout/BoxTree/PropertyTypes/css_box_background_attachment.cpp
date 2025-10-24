@@ -27,11 +27,12 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_background_attachment.h"
+#include "API/CSSLayout/PropertyTypes/css_box_background_attachment.h"
 
 CL_CSSBoxBackgroundAttachment::CL_CSSBoxBackgroundAttachment()
-: type(type_scroll)
+: type(type_attachments)
 {
+	attachments.push_back(attachment_scroll);
 }
 
 void CL_CSSBoxBackgroundAttachment::compute(const CL_CSSBoxBackgroundAttachment *parent, CL_CSSResourceCache *layout, float em_size, float ex_size)
@@ -39,8 +40,39 @@ void CL_CSSBoxBackgroundAttachment::compute(const CL_CSSBoxBackgroundAttachment 
 	if (type == type_inherit)
 	{
 		if (parent)
+		{
 			type = parent->type;
+		}
 		else
-			type = type_scroll;
+		{
+			type = type_attachments;
+			attachments.clear();
+			attachments.push_back(attachment_scroll);
+		}
 	}
+}
+
+CL_String CL_CSSBoxBackgroundAttachment::to_string() const
+{
+	if (type == type_inherit)
+		return "inherit";
+	CL_String s;
+	for (size_t i = 0; i < attachments.size(); i++)
+	{
+		if (i > 0)
+			s += ", ";
+		switch (attachments[i])
+		{
+		case attachment_scroll:
+			s += "scroll";
+			break;
+		case attachment_fixed:
+			s += "fixed";
+			break;
+		case attachment_local:
+			s += "local";
+			break;
+		}
+	}
+	return s;
 }

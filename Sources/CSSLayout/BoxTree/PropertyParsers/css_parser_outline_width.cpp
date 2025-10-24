@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_outline_width.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserOutlineWidth::get_names()
 {
@@ -37,19 +37,19 @@ std::vector<CL_String> CL_CSSParserOutlineWidth::get_names()
 	return names;
 }
 
-void CL_CSSParserOutlineWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserOutlineWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "thin")
+		if (equals(token.value, "thin"))
 			properties.outline_width.type = CL_CSSBoxOutlineWidth::type_thin;
-		else if (token.value == "medium")
+		else if (equals(token.value, "medium"))
 			properties.outline_width.type = CL_CSSBoxOutlineWidth::type_medium;
-		else if (token.value == "thick")
+		else if (equals(token.value, "thick"))
 			properties.outline_width.type = CL_CSSBoxOutlineWidth::type_thick;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.outline_width.type = CL_CSSBoxOutlineWidth::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
@@ -60,5 +60,9 @@ void CL_CSSParserOutlineWidth::parse(CL_CSSBoxProperties &properties, const CL_S
 			properties.outline_width.type = CL_CSSBoxOutlineWidth::type_length;
 			properties.outline_width.length = length;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["outline-width"] = &properties.outline_width;
 	}
 }

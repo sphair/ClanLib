@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_page_break_inside.h"
+#include "API/CSSLayout/PropertyTypes/css_box_page_break_inside.h"
 
 CL_CSSBoxPageBreakInside::CL_CSSBoxPageBreakInside()
 : type(type_auto)
@@ -42,5 +42,19 @@ void CL_CSSBoxPageBreakInside::compute(const CL_CSSBoxPageBreakInside *parent, C
 			type = parent->type;
 		else
 			type = type_auto;
+	}
+}
+
+CL_String CL_CSSBoxPageBreakInside::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_avoid:
+		return "avoid";
+	case type_auto:
+		return "auto";
+	case type_inherit:
+		return "inherit";
 	}
 }

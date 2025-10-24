@@ -3,7 +3,7 @@ OBJF = ./Sources/app.o \
 ./Sources/program.o \
 ./Sources/precomp.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanSWRender clanGL1
+LIBS=clanApp clanDisplay clanCore clanGL clanSWRender
 
 include ../../Makefile.conf
 

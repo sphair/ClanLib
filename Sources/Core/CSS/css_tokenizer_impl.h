@@ -37,6 +37,7 @@ public:
 	CL_CSSTokenizer_Impl(CL_IODevice &device);
 	CL_CSSTokenizer_Impl(const CL_String &text);
 	void read(CL_CSSToken &out_token);
+	void peek(CL_CSSToken &out_token);
 
 private:
 	void read_atkeyword(CL_CSSToken &out_token);

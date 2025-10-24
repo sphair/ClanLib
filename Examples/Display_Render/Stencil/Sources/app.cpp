@@ -261,7 +261,7 @@ CL_Image App::get_stencil(CL_GraphicContext &gc, CL_Rect rect)
 	std::vector<unsigned char> buffer;
 	buffer.resize(rect_width * rect_height);
 
-	clReadPixels(rect.left, gc.get_height()- rect.bottom, rect_width, rect_height, CL_STENCIL_INDEX, CL_UNSIGNED_BYTE, &buffer[0]);
+	glReadPixels(rect.left, gc.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
 	CL_PixelBuffer pbuf(rect_width, rect_height, cl_abgr8);
 	unsigned int *pdata = (unsigned int *) pbuf.get_data();
 	unsigned char *rdata = &buffer[0];

@@ -55,11 +55,23 @@ void CL_CSSLayoutElement::set_name(const CL_String &name)
 		static_cast<CL_CSSBoxElement*>(impl->box_node)->name = name;
 }
 
+void CL_CSSLayoutElement::set_col_span(int span)
+{
+	if (!is_null())
+		static_cast<CL_CSSBoxElement*>(impl->box_node)->col_span = span;
+}
+
+void CL_CSSLayoutElement::set_row_span(int span)
+{
+	if (!is_null())
+		static_cast<CL_CSSBoxElement*>(impl->box_node)->row_span = span;
+}
+
 void CL_CSSLayoutElement::apply_properties(const CL_CSSPropertyList2 &properties)
 {
 	if (!is_null())
 	{
-		impl->layout_impl->box_tree.apply_properties(static_cast<CL_CSSBoxElement*>(impl->box_node), properties);
+		impl->layout_impl.lock()->box_tree.apply_properties(static_cast<CL_CSSBoxElement*>(impl->box_node), properties);
 
 		// Temp hack to support before and after pseudo elements.
 		// To do: Make a better more official way to create pseudo elements.
@@ -72,9 +84,9 @@ void CL_CSSLayoutElement::apply_properties(const CL_CSSPropertyList2 &properties
 	}
 }
 
-void CL_CSSLayoutElement::apply_properties(const CL_String &style_string)
+void CL_CSSLayoutElement::apply_properties(const CL_String &style_string, const CL_String &base_uri)
 {
-	apply_properties(CL_CSSDocument2::get_style_properties(style_string));
+	apply_properties(CL_CSSDocument2::get_style_properties(style_string, base_uri));
 }
 
 void CL_CSSLayoutElement::insert_before(CL_CSSLayoutNode &new_child, CL_CSSLayoutNode &ref_child)
@@ -121,7 +133,7 @@ CL_Rect CL_CSSLayoutElement::get_content_box()
 {
 	if (!is_null())
 	{
-		return impl->layout_impl->layout_tree.get_content_box(static_cast<CL_CSSBoxElement*>(impl->box_node));
+		return impl->layout_impl.lock()->layout_tree.get_content_box(static_cast<CL_CSSBoxElement*>(impl->box_node));
 	}
 	else
 	{
@@ -133,7 +145,7 @@ CL_CSSLayoutObject CL_CSSLayoutElement::create_object()
 {
 	if (!is_null())
 	{
-		CL_CSSLayoutObject obj = impl->layout_impl->get_layout().create_object();
+		CL_CSSLayoutObject obj = impl->layout_impl.lock()->get_layout().create_object();
 		append_child(obj);
 		return obj;
 	}
@@ -147,7 +159,7 @@ CL_CSSLayoutElement CL_CSSLayoutElement::create_element(const CL_String &name)
 {
 	if (!is_null())
 	{
-		CL_CSSLayoutElement obj = impl->layout_impl->get_layout().create_element(name);
+		CL_CSSLayoutElement obj = impl->layout_impl.lock()->get_layout().create_element(name);
 		append_child(obj);
 		return obj;
 	}
@@ -161,7 +173,7 @@ CL_CSSLayoutText CL_CSSLayoutElement::create_text(const CL_String &text)
 {
 	if (!is_null())
 	{
-		CL_CSSLayoutText obj = impl->layout_impl->get_layout().create_text(text);
+		CL_CSSLayoutText obj = impl->layout_impl.lock()->get_layout().create_text(text);
 		append_child(obj);
 		return obj;
 	}

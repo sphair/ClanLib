@@ -135,7 +135,7 @@ CL_FontProvider_Sprite::~CL_FontProvider_Sprite()
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Sprite Attributes:
 
-CL_FontMetrics CL_FontProvider_Sprite::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_FontProvider_Sprite::get_font_metrics()
 {
 	return font_metrics;
 }
@@ -181,11 +181,18 @@ CL_Size CL_FontProvider_Sprite::get_text_size(CL_GraphicContext &gc, const CL_St
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Sprite Operations:
 
-CL_FontPixelBuffer CL_FontProvider_Sprite::get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color)
+CL_FontPixelBuffer CL_FontProvider_Sprite::get_font_glyph_standard(int glyph, bool anti_alias)
 {
 	// Not supported
 	return CL_FontPixelBuffer();
 }
+
+CL_FontPixelBuffer CL_FontProvider_Sprite::get_font_glyph_subpixel(int glyph)
+{
+	// Not supported
+	return CL_FontPixelBuffer();
+}
+
 
 int CL_FontProvider_Sprite::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
 {
@@ -193,7 +200,7 @@ int CL_FontProvider_Sprite::get_character_index(CL_GraphicContext &gc, const CL_
 	int dest_y = 0;
 	int character_counter = 0;
 
-	CL_FontMetrics fm = get_font_metrics(gc);
+	CL_FontMetrics fm = get_font_metrics();
 	int font_height = fm.get_height();
 	int font_external_leading = fm.get_external_leading();
 

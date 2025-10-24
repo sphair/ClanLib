@@ -67,7 +67,7 @@ CL_ListViewColumnHeader::~CL_ListViewColumnHeader()
 
 void CL_ListViewColumnHeader::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ListViewColumnHeader is null");
 }
 
@@ -98,7 +98,7 @@ CL_ListViewColumnHeader CL_ListViewColumnHeader::get_next_sibling()
 
 CL_ListViewColumnHeader CL_ListViewColumnHeader::get_prev_sibling()
 {
-	return CL_ListViewColumnHeader(impl->prev_sibling);
+	return CL_ListViewColumnHeader(impl->prev_sibling.lock());
 }
 
 /////////////////////////////////////////////////////////////////////////////

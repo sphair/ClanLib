@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_counter_increment.h"
+#include "API/CSSLayout/PropertyTypes/css_box_counter_increment.h"
 
 CL_CSSBoxCounterIncrement::CL_CSSBoxCounterIncrement()
 : type(type_none)
@@ -42,5 +42,19 @@ void CL_CSSBoxCounterIncrement::compute(const CL_CSSBoxCounterIncrement *parent,
 			type = parent->type;
 		else
 			type = type_none;
+	}
+}
+
+CL_String CL_CSSBoxCounterIncrement::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_identifier:
+		return "identifier";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

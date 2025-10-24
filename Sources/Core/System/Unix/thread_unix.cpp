@@ -99,3 +99,4 @@ void *CL_Thread_Unix::thread_main(void *data)
 	runnable->run();
 	return NULL;
 }
+

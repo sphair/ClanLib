@@ -40,10 +40,17 @@ public:
 	template<typename T>
 	void set_component(T *component);
 
+	void set_intrinsic_width(int width);
+	void set_intrinsic_height(int height);
+	void set_intrinsic_ratio(float ratio);
+	void set_no_intrinsic_width();
+	void set_no_intrinsic_height();
+	void set_no_intrinsic_ratio();
+
 private:
 	void set_component_private(CL_CSSReplacedComponent *component);
-
 	CL_CSSLayoutObject(const CL_SharedPtr<CL_CSSLayoutNode_Impl> &impl);
+
 	friend class CL_CSSLayoutNode;
 };
 

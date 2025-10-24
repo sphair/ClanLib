@@ -73,6 +73,11 @@ public:
 			provider->destroy();
 	}
 
+	bool operator<(const CL_Texture_Impl &other) const
+	{
+		return provider < other.provider;
+	}
+
 	CL_TextureProvider *provider;
 	int width, height;
 	float min_lod;
@@ -185,7 +190,7 @@ CL_Texture::CL_Texture(
 {
 	CL_PixelBuffer pb = CL_ImageProviderFactory::load(filename, directory, CL_String());
 	pb = import_desc.process(pb);
-	
+
 	*this = CL_Texture(context, pb.get_width(), pb.get_height());
 
 	set_subimage(CL_Point(0, 0), pb, CL_Rect(pb.get_size()), 0);
@@ -217,9 +222,10 @@ CL_Texture::CL_Texture(
 }
 
 CL_Texture::CL_Texture(
+	CL_GraphicContext &gc,
 	const CL_StringRef &resource_id,
 	CL_ResourceManager *resources,
-	CL_GraphicContext &gc, const CL_ImageImportDescription &import_desc)
+	const CL_ImageImportDescription &import_desc)
 {
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
@@ -246,7 +252,7 @@ CL_Texture::~CL_Texture()
 
 void CL_Texture::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_Texture is null");
 }
 
@@ -348,7 +354,7 @@ CL_CompareFunction CL_Texture::get_compare_function() const
 
 CL_TextureProvider *CL_Texture::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	else
 		return impl->provider;

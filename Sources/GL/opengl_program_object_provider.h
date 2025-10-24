@@ -43,7 +43,7 @@ class CL_OpenGLProgramObjectProvider : public CL_ProgramObjectProvider, CL_Dispo
 /// \{
 
 public:
-	CL_OpenGLProgramObjectProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLProgramObjectProvider();
 	virtual ~CL_OpenGLProgramObjectProvider();
 
 	virtual void destroy();
@@ -103,6 +103,10 @@ public:
 	/** <p>This function must be called before linking.</p>*/
 	virtual void bind_attribute_location(int index, const CL_StringRef &name);
 
+	/// \brief Bind shader out variable a specific color buffer location.
+	/** <p>This function must be called before linking.</p>*/
+	virtual void bind_frag_data_location(int color_number, const CL_StringRef &name);
+
 	/// \brief Link program.
 	/** <p>If the linking fails, get_link_status() will return false and
 	    get_info_log() will return the link log.</p>*/
@@ -138,7 +142,7 @@ private:
 
 	void fetch_uniforms() const;
 
-	CLuint handle;
+	GLuint handle;
 
 	std::vector<CL_ShaderObject> shaders;
 
@@ -146,18 +150,17 @@ private:
 
 	mutable std::vector<CL_ProgramUniform> cached_uniforms;
 
-	CL_OpenGLGraphicContextProvider *gc_provider;
 /// \}
 };
 
 class CL_ProgramObjectStateTracker
 {
 public:
-	CL_ProgramObjectStateTracker(CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_ProgramObjectStateTracker(GLuint handle);
 	~CL_ProgramObjectStateTracker();
 
 private:
-	CLuint last_program_object;
+	GLuint last_program_object;
 };
 
 

@@ -38,7 +38,7 @@
 #endif
 
 #include "API/Core/Text/string_types.h"
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/System/exception.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
@@ -51,23 +51,5 @@
 #define BREAKPOINT asm("int $03");
 #endif
 
-#ifdef __APPLE__
-#if defined __OBJC__
-# import <mach/mach.h>
-# import <mach/mach_error.h>
-# import <AppKit/AppKit.h>
-# import <ApplicationServices/ApplicationServices.h>
-# import <Cocoa/Cocoa.h>
-# import <CoreAudio/CoreAudio.h>
-# import <AudioUnit/AudioUnit.h>
-# import <AudioToolbox/AudioToolbox.h>
-# import <QuickTime/QuickTime.h>
-# import <IOKit/IOKitLib.h>
-# import <IOKit/IOCFPlugIn.h>
-# import <IOKit/hid/IOHIDLib.h>
-# import <IOKit/hid/IOHIDKeys.h>
-# import <Kernel/IOKit/hidsystem/IOHIDUsageTables.h>
-#endif
-#endif
-
+#include <cstring>
 

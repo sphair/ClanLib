@@ -31,13 +31,16 @@
 
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
+#include "API/SWRender/swr_program_object.h"
+#include "API/Core/System/uniqueptr.h"
 #include "vertex_attribute_fetcher.h"
+#include "software_program_standard.h"
 #include <map>
-#include <memory>
 
 class CL_PixelCanvas;
 class CL_PixelCommand;
 class CL_SWRenderDisplayWindowProvider;
+class CL_SWRenderProgramObjectProvider;
 
 class CL_SWRenderGraphicContextProvider : public CL_GraphicContextProvider
 {
@@ -65,8 +68,7 @@ public:
 /// \{
 public:
 	void destroy();
-	CL_GraphicContext create_worker_gc();
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const;
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format, bool clamp) const;
 	CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions);
 	CL_OcclusionQueryProvider *alloc_occlusion_query();
 	CL_ProgramObjectProvider *alloc_program_object();
@@ -94,12 +96,16 @@ public:
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset, int instance_count);
 	void primitives_array_freed(const CL_PrimitivesArrayData * const prim_array);
 	void reset_primitives_array();
 	void draw_pixels(CL_GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color);
 	void draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &pixels);
-	void queue_command(std::auto_ptr<CL_PixelCommand> command);
+	void queue_command(CL_UniquePtr<CL_PixelCommand> &command);
 	void set_clip_rect(const CL_Rect &rect);
 	void reset_clip_rect();
 	void clear(const CL_Colorf &color);
@@ -121,14 +127,15 @@ private:
 
 
 	CL_SWRenderDisplayWindowProvider *window;
-	std::auto_ptr<CL_PixelCanvas> canvas;
+	CL_UniquePtr<CL_PixelCanvas> canvas;
 	std::map<int, CL_Texture> bound_textures;
 	const CL_PrimitivesArrayData * current_prim_array;
-	VertexAttributeFetcherPtr pos_fetcher;
-	VertexAttributeFetcherPtr tex_fetcher;
-	VertexAttributeFetcherPtr color_fetcher;
-	VertexAttributeFetcherPtr tex_index_fetcher;
 	CL_Mat4f modelview_matrix;
+	CL_SWRenderProgramObjectProvider *current_program_provider;
 	bool is_sprite_program;
+	static const int num_attribute_fetchers = 32;
+	VertexAttributeFetcherPtr attribute_fetchers[num_attribute_fetchers];
+	CL_SoftwareProgram_Standard cl_software_program_standard;
+	CL_ProgramObject_SWRender program_object_standard;
 /// \}
 };

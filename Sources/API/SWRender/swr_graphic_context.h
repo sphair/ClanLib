@@ -33,8 +33,8 @@
 
 #include "api_swrender.h"
 #include "../Core/System/sharedptr.h"
+#include "../Core/System/uniqueptr.h"
 #include "../Display/Render/graphic_context.h"
-#include <memory>
 
 class CL_PixelCommand;
 class CL_PixelPipeline;
@@ -58,7 +58,7 @@ public:
 //!Attributes
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -72,8 +72,8 @@ public:
 
 	/// \brief Queues a pixel command in the pipeline
 	template<typename T>
-	void queue_command(T *command) { queue_command(std::auto_ptr<T>(command)); }
-	void queue_command(std::auto_ptr<CL_PixelCommand> command);
+	void queue_command(T *command) { queue_command(std::unique_ptr<T>(command)); }
+	void queue_command(CL_UniquePtr<CL_PixelCommand> &command);
 
 //!Implementation
 private:

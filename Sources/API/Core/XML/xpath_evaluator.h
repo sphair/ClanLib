@@ -60,7 +60,7 @@ public:
 	/// \param context_node = Dom Node
 	///
 	/// \return XPath Object
-	CL_XPathObject evaluate(const CL_StringRef &expression, CL_DomNode context_node);
+	CL_XPathObject evaluate(const CL_StringRef &expression, const CL_DomNode &context_node) const;
 
 /// \}
 /// \name Implementation

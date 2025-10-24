@@ -41,18 +41,18 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_HashFunctions Operations:
 
-cl_uint32 CL_HashFunctions::crc32( const void *data, int size, cl_uint32 running_crc/*=0*/ )
+cl_uint CL_HashFunctions::crc32( const void *data, int size, cl_uint running_crc/*=0*/ )
 {
-	cl_uint32 crc = running_crc;
+	cl_uint crc = running_crc;
 	if (crc == 0)
 		crc = ::crc32(0L, Z_NULL, 0);
 
 	return ::crc32(running_crc, (const Bytef*)data, size);;
 }
 
-cl_uint32 CL_HashFunctions::adler32( const void *data, int size, cl_uint32 running_adler32/*=0*/ )
+cl_uint CL_HashFunctions::adler32( const void *data, int size, cl_uint running_adler32/*=0*/ )
 {
-	cl_uint32 adler = running_adler32;
+	cl_uint adler = running_adler32;
 	if (adler == 0)
 		adler = ::adler32(0L, Z_NULL, 0);
 

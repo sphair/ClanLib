@@ -40,6 +40,69 @@ CL_CSSLayoutObject::CL_CSSLayoutObject(const CL_SharedPtr<CL_CSSLayoutNode_Impl>
 {
 }
 
+void CL_CSSLayoutObject::set_intrinsic_width(int width)
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+	{
+		component->intrinsic_has_width = true;
+		component->intrinsic_width = width;
+	}
+}
+
+void CL_CSSLayoutObject::set_intrinsic_height(int height)
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+	{
+		component->intrinsic_has_height = true;
+		component->intrinsic_height = height;
+	}
+}
+
+void CL_CSSLayoutObject::set_intrinsic_ratio(float ratio)
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+	{
+		component->intrinsic_has_ratio = true;
+		component->intrinsic_ratio = ratio;
+	}
+}
+
+void CL_CSSLayoutObject::set_no_intrinsic_width()
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+		component->intrinsic_has_width = false;
+}
+
+void CL_CSSLayoutObject::set_no_intrinsic_height()
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+		component->intrinsic_has_height = false;
+}
+
+void CL_CSSLayoutObject::set_no_intrinsic_ratio()
+{
+	CL_CSSReplacedComponent *component = 0;
+	if (!is_null())
+		component = static_cast<CL_CSSBoxObject*>(impl->box_node)->get_component();
+	if (component)
+		component->intrinsic_has_ratio = false;
+}
+
 void CL_CSSLayoutObject::set_component_private(CL_CSSReplacedComponent *component)
 {
 	if (!is_null())

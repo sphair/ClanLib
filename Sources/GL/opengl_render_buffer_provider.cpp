@@ -35,8 +35,8 @@
 #include "API/Display/Render/shared_gc_data.h"
 
 
-CL_OpenGLRenderBufferProvider::CL_OpenGLRenderBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
-: gc_provider(gc_provider), handle(0)
+CL_OpenGLRenderBufferProvider::CL_OpenGLRenderBufferProvider()
+: handle(0)
 {
 	CL_SharedGCData::add_disposable(this);
 
@@ -54,14 +54,14 @@ void CL_OpenGLRenderBufferProvider::on_dispose()
 	{
 		if (CL_OpenGL::set_active())
 		{
-			clDeleteRenderbuffers(1, &handle);
+			glDeleteRenderbuffers(1, &handle);
 		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLRenderBufferProvider Attributes:
 
-CLuint CL_OpenGLRenderBufferProvider::get_handle()
+GLuint CL_OpenGLRenderBufferProvider::get_handle()
 {
 	return handle;
 }
@@ -71,20 +71,20 @@ CLuint CL_OpenGLRenderBufferProvider::get_handle()
 
 void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format, int multisample_samples)
 {
-	CL_OpenGL::set_active(gc_provider);
-	CLuint last_render_buffer = 0;
-	clGetIntegerv(CL_RENDERBUFFER_BINDING, (CLint *) &last_render_buffer);
+	CL_OpenGL::set_active();
+	GLuint last_render_buffer = 0;
+	glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint *) &last_render_buffer);
 
-	CLint gl_internal_format;
-	CLenum gl_pixel_format;
+	GLint gl_internal_format;
+	GLenum gl_pixel_format;
 	CL_OpenGL::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
 
 
-	clGenRenderbuffers(1, &handle);
-	clBindRenderbuffer(CL_RENDERBUFFER, handle);
-	clRenderbufferStorageMultisample(CL_RENDERBUFFER, multisample_samples, gl_pixel_format, width, height);
+	glGenRenderbuffers(1, &handle);
+	glBindRenderbuffer(GL_RENDERBUFFER, handle);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, multisample_samples, gl_pixel_format, width, height);
 
-	clBindRenderbuffer(CL_RENDERBUFFER, last_render_buffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, last_render_buffer);
 }
 
 void CL_OpenGLRenderBufferProvider::destroy()

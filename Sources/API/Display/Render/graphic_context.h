@@ -35,12 +35,13 @@
 
 #include "../api_display.h"
 #include "../2D/color.h"
+#include "../Image/texture_format.h"
 #include "../../Core/System/sharedptr.h"
-#include "primitives_array.h"
 #include "../../Core/Math/mat4.h"
 #include "../../Core/IOData/virtual_directory.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Signals/signal_v0.h"
+#include "primitives_array.h"
 #include "frame_buffer.h"
 
 class CL_Size;
@@ -139,7 +140,7 @@ public:
 /// \{
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -214,16 +215,11 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Creates a new additional graphic context (DO NOT USE, This function is broken, and will be removed in the future)
-	///
-	/// <p>This function creates a new graphic context which shares objects
-	///    with the current graphic context.  Since a GC cannot be safely accessed
-	///    from multiple threads simultaneously, this function allows the
-	///    application to create a graphic context for the worker threads.</p>
-	CL_GraphicContext create_worker_gc();
+	/// \brief Return the content of the read buffer into a pixel buffer.
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format = cl_abgr8, bool clamp = true) const;
 
-	/// \brief Return the content of the draw buffer into a pixel buffer.
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect = CL_Rect(0,0,0,0)) const;
+	/// \brief Return the content of the read buffer into a pixel buffer.
+	CL_PixelBuffer get_pixeldata(CL_TextureFormat pixel_format = cl_abgr8, bool clamp = true) const;
 
 	/// \brief Sets the current frame buffer.
 	void set_frame_buffer(const CL_FrameBuffer &write_buffer);
@@ -334,6 +330,30 @@ public:
 	/// \param indices = char
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
 
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = value
+	/// \param instance_count = number of instances drawn
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count);
+
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = short
+	/// \param instance_count = number of instances drawn
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count);
+
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = char
+	/// \param instance_count = number of instances drawn
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count);
+
 	/// \brief Draw primitives elements
 	///
 	/// \param type = Primitives Type
@@ -342,6 +362,16 @@ public:
 	/// \param indices_type = Vertex Attribute Data Type
 	/// \param offset = void
 	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &element_array, CL_VertexAttributeDataType indices_type, void *offset = 0);
+
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param element_array = Element Array Buffer
+	/// \param indices_type = Vertex Attribute Data Type
+	/// \param offset = void
+	/// \param instance_count = number of instances drawn
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &element_array, CL_VertexAttributeDataType indices_type, void *offset, int instance_count);
 
 	/// \brief Reset the primitives arrays.
 	void reset_primitives_array();

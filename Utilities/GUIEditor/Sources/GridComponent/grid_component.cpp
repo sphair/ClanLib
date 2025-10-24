@@ -162,6 +162,11 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 					CL_LineEdit *co = dynamic_cast<CL_LineEdit*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
+				else if (tag == "textedit")
+				{
+					CL_TextEdit *co = dynamic_cast<CL_TextEdit*>(new_comp);
+					co->set_text(e.get_attribute("text"));
+				}
 				else if (tag == "imageview")
 				{
 					CL_ImageView *co = dynamic_cast<CL_ImageView*>(new_comp);

@@ -55,7 +55,7 @@ public:
 //!Attributes
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -64,15 +64,13 @@ public:
 	///
 	/// \param version_major = On Return: Major
 	/// \param version_minor = On Return: Minor
-	/// \param version_release = On Return: Release
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
+	void get_opengl_version(int &version_major, int &version_minor);
 
 	/// \brief Get the opengl shading language version
 	///
 	/// \param version_major = On Return: Major
 	/// \param version_minor = On Return: Minor
-	/// \param version_release = On Return: Release
-	void get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release);
+	void get_opengl_shading_language_version(int &version_major, int &version_minor);
 
 	/// \brief Get the opengl renderer string
 	CL_String get_renderer_string();

@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_cursor.h"
+#include "API/CSSLayout/PropertyTypes/css_box_cursor.h"
 
 CL_CSSBoxCursor::CL_CSSBoxCursor()
 : type(type_inherit)
@@ -50,4 +50,59 @@ void CL_CSSBoxCursor::compute(const CL_CSSBoxCursor *parent, CL_CSSResourceCache
 	}
 
 	// To do: any relative URLs converted to absolute.
+}
+
+CL_String CL_CSSBoxCursor::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_uris:
+		{
+			CL_String s;
+			for (size_t i = 0; i < urls.size(); i++)
+			{
+				if (i > 0)
+					s += ", ";
+				s += cl_format("uri(\"%1\")", urls[i]);
+			}
+			return s;
+		}
+	case type_auto:
+		return "auto";
+	case type_crosshair:
+		return "crosshair";
+	case type_default:
+		return "default";
+	case type_pointer:
+		return "pointer";
+	case type_move:
+		return "move";
+	case type_e_resize:
+		return "e-resize";
+	case type_ne_resize:
+		return "ne-resize";
+	case type_nw_resize:
+		return "nw-resize";
+	case type_n_resize:
+		return "n-resize";
+	case type_se_resize:
+		return "se-resize";
+	case type_sw_resize:
+		return "sw-resize";
+	case type_s_resize:
+		return "s-resize";
+	case type_w_resize:
+		return "w-resize";
+	case type_text:
+		return "text";
+	case type_wait:
+		return "wait";
+	case type_help:
+		return "help";
+	case type_progress:
+		return "progress";
+	case type_inherit:
+		return "inherit";
+	}
 }

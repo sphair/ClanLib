@@ -18,9 +18,16 @@ public:
 
 	bool operator <(const CL_CSSRulesetMatch2 &other) const
 	{
-		if (specificity == other.specificity)
-			return document_order < other.document_order;
+		if (ruleset->origin == other.ruleset->origin)
+		{
+			if (specificity == other.specificity)
+				return document_order < other.document_order;
+			else
+				return specificity < other.specificity;
+		}
 		else
-			return specificity < other.specificity;
+		{
+			return ruleset->origin < other.ruleset->origin;
+		}
 	}
 };

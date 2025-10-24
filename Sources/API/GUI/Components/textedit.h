@@ -46,12 +46,10 @@ class CL_API_GUI CL_TextEdit : public CL_GUIComponent
 /// \{
 
 public:
-
-	/// \brief Constructs a TextEdit
+	/// \brief Constructs a LineEdit
 	///
-	/// \param desc = GUIComponent Description
 	/// \param parent = GUIComponent
-	CL_TextEdit(const CL_GUIComponentDescription &desc, CL_GUIComponent *parent);
+	CL_TextEdit(CL_GUIComponent *parent);
 
 	virtual ~CL_TextEdit();
 
@@ -67,12 +65,138 @@ public:
 	/// If it was not found, an exception is thrown.
 	static CL_TextEdit *get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id);
 
+	/// \brief Is Read only
+	///
+	/// \return true = read_only
+	bool is_read_only() const;
+
+	/// \brief Is Lowercase
+	///
+	/// \return true = lowercase
+	bool is_lowercase() const;
+
+	/// \brief Is Uppercase
+	///
+	/// \return true = uppercase
+	bool is_uppercase() const;
+
+	/// \brief Get Max length
+	///
+	/// \return max_length
+	int get_max_length() const;
+
+	/// \brief Get Text
+	///
+	/// \return text
+	CL_String get_text() const;
+
+	/// \brief Get Selection
+	///
+	/// \return selection
+	CL_String get_selection() const;
+
+	/// \brief Get Selection start
+	///
+	/// \return selection_start
+	int get_selection_start() const;
+
+	/// \brief Get Selection length
+	///
+	/// \return selection_length
+	int get_selection_length() const;
+
+	/// \brief Get Cursor pos
+	///
+	/// \return cursor_pos
+	int get_cursor_pos() const;
+
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
+	virtual CL_Size get_preferred_size() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	void set_select_all_on_focus_gain(bool enable);
+
+	/// \brief Select all
+	void select_all();
+
+	/// \brief Set read only
+	///
+	/// \param enable = bool
+	void set_read_only(bool enable = true);
+
+	/// \brief Set lowercase
+	///
+	/// \param enable = bool
+	void set_lowercase(bool enable = true);
+
+	/// \brief Set uppercase
+	///
+	/// \param enable = bool
+	void set_uppercase(bool enable = true);
+
+	/// \brief Set max length
+	///
+	/// \param length = value
+	void set_max_length(int length);
+
+	/// \brief Set text
+	///
+	/// \param text = String Ref
+	void set_text(const CL_StringRef &text);
+
+	/// \brief Set selection
+	///
+	/// \param pos = value
+	/// \param length = value
+	void set_selection(int pos, int length);
+
+	/// \brief Clear selection
+	void clear_selection();
+
+	/// \brief Set cursor pos
+	///
+	/// \param pos = value
+	void set_cursor_pos(int pos);
+
+	/// \brief Delete selected text
+	void delete_selected_text();
+
+	/// \brief Use mask to restrict accepted input.
+	void set_input_mask(const CL_StringRef &mask);
+
+	/// \brief Set cursor drawing enabled/disabled.
+	void set_cursor_drawing_enabled(bool enable);
+
+/// \}
+/// \name Events
+/// \{
+
+public:
+	CL_Callback_v1<CL_InputEvent &> &func_before_edit_changed();
+
+	CL_Callback_v1<CL_InputEvent &> &func_after_edit_changed();
+
+	/// \brief Func selection changed
+	///
+	/// \return Callback_v0
+	CL_Callback_v0 &func_selection_changed();
+
+	/// \brief Callback invoked after the lineedit gained focus.
+	CL_Callback_v0 &func_focus_gained();
+
+	/// \brief Callback invoked when the lineedit is about to lose focus.
+	CL_Callback_v0 &func_focus_lost();
+
+	/// \brief Func enter pressed
+	///
+	/// \return Callback_v0
+	CL_Callback_v0 &func_enter_pressed();
 
 /// \}
 /// \name Implementation

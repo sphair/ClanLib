@@ -41,7 +41,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Construction:
 
-CL_FontProvider_Freetype::CL_FontProvider_Freetype(CL_GraphicContext &gc) : glyph_cache(gc), font_engine(0)
+CL_FontProvider_Freetype::CL_FontProvider_Freetype() : glyph_cache(), font_engine(0)
 {
 }
 
@@ -53,9 +53,9 @@ CL_FontProvider_Freetype::~CL_FontProvider_Freetype()
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Attributes:
 
-CL_FontMetrics CL_FontProvider_Freetype::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_FontProvider_Freetype::get_font_metrics()
 {
-	return glyph_cache.get_font_metrics(gc);
+	return glyph_cache.get_font_metrics();
 }
 
 CL_Font_TextureGlyph *CL_FontProvider_Freetype::get_glyph(CL_GraphicContext &gc, unsigned int glyph)
@@ -148,6 +148,9 @@ void CL_FontProvider_Freetype::load_font(const CL_StringRef &resource_id, CL_Res
 	if (freetype_element.has_attribute("anti_alias"))
 		desc.set_anti_alias(freetype_element.get_attribute_bool("anti_alias", true));
 
+	if (freetype_element.has_attribute("subpixel"))
+		desc.set_subpixel(freetype_element.get_attribute_bool("subpixel", true));
+
 	load_font(desc, resources->get_directory(resource));
 }
 
@@ -155,15 +158,19 @@ void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc, CL_IODe
 {
 	free_font();
 
-	glyph_cache.anti_alias = true;	// Default, anti_alias enabled
+	if (desc.get_subpixel())
+	{
+		glyph_cache.enable_subpixel = true;
+		glyph_cache.anti_alias = true;	// Implies anti_alias is set
+	}
+	else
+	{
+		glyph_cache.enable_subpixel = false;
+		glyph_cache.anti_alias = desc.get_anti_alias();
+	}
 
 	// Load font from the opened file.
 	font_engine = new CL_FontEngine_Freetype(io_dev, desc.get_height(), desc.get_average_width());
-
-	if (desc.get_anti_alias_set())	// Anti-alias was set
-	{
-		glyph_cache.anti_alias = desc.get_anti_alias();	// Override the default
-	}
 
 	glyph_cache.font_metrics = font_engine->get_metrics();
 }

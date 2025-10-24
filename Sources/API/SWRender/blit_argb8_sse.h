@@ -59,6 +59,7 @@ public:
 #endif
 	static void blend_normal(__m128i &dest, __m128i &src, __m128i &one, __m128i &half);
 	static void blend_premultiplied(__m128i &dest, __m128i &src, __m128i &one, __m128i &half);
+	static void blend_lcd(__m128i &dest, __m128i &src, __m128i &one, __m128i &half, __m128i &color);
 	static void store_pixel(unsigned int &pixel, __m128i &xmm);
 	static void store_pixels(unsigned int *pixels, __m128i &xmm);
 
@@ -97,19 +98,20 @@ inline void CL_BlitARGB8SSE::load_pixel_linear(__m128i &xmm, const unsigned int 
 	__m128i src0, src1, src2, src3;
 	__m128i frac0, frac1, frac2, frac3;
 	__m128i fracx, inv_fracx, fracy, inv_fracy;
+	__m128i half = _mm_set1_epi16(64);
 	fracx = _mm_set1_epi16(ifracx);
 	fracy = _mm_set1_epi16(ifracy);
-	inv_fracx = _mm_set1_epi16(0xffff-ifracx);
-	inv_fracy = _mm_set1_epi16(0xffff-ifracy);
-	frac0 = _mm_srli_epi16(_mm_mulhi_epu16(inv_fracx, inv_fracy), 8);
-	frac1 = _mm_srli_epi16(_mm_mulhi_epu16(fracx, inv_fracy), 8);
-	frac2 = _mm_srli_epi16(_mm_mulhi_epu16(inv_fracx, fracy), 8);
-	frac3 = _mm_srli_epi16(_mm_mulhi_epu16(fracx, fracy), 8);
+	inv_fracx = _mm_set1_epi16(0x80-ifracx);
+	inv_fracy = _mm_set1_epi16(0x80-ifracy);
+	frac0 = _mm_srli_epi16(_mm_mullo_epi16(inv_fracx, inv_fracy), 7);
+	frac1 = _mm_srli_epi16(_mm_mullo_epi16(fracx, inv_fracy), 7);
+	frac2 = _mm_srli_epi16(_mm_mullo_epi16(inv_fracx, fracy), 7);
+	frac3 = _mm_srli_epi16(_mm_mullo_epi16(fracx, fracy), 7);
 	src0 = _mm_mullo_epi16(_mm_unpacklo_epi8(_mm_cvtsi32_si128(pixel1), _mm_setzero_si128()), frac0);
 	src1 = _mm_mullo_epi16(_mm_unpacklo_epi8(_mm_cvtsi32_si128(pixel2), _mm_setzero_si128()), frac1);
 	src2 = _mm_mullo_epi16(_mm_unpacklo_epi8(_mm_cvtsi32_si128(pixel3), _mm_setzero_si128()), frac2);
 	src3 = _mm_mullo_epi16(_mm_unpacklo_epi8(_mm_cvtsi32_si128(pixel4), _mm_setzero_si128()), frac3);
-	xmm = _mm_srli_epi16(_mm_add_epi16(_mm_add_epi16(_mm_add_epi16(src0, src1), src2), src3), 8);
+	xmm = _mm_srli_epi16(_mm_add_epi16(_mm_add_epi16(_mm_add_epi16(_mm_add_epi16(src0, src1), src2), src3), half), 7);
 }
 
 inline void CL_BlitARGB8SSE::set_one(__m128i &xmm)
@@ -203,6 +205,16 @@ inline void CL_BlitARGB8SSE::blend_premultiplied(__m128i &dest, __m128i &src, __
 	dest = _mm_add_epi16(dest, half); // round up
 	dest = _mm_srli_epi16(dest, 8);
 	dest = _mm_add_epi16(dest, src);
+}
+
+inline void CL_BlitARGB8SSE::blend_lcd(__m128i &dest, __m128i &src, __m128i &one, __m128i &half, __m128i &color)
+{
+	__m128i invsrc;
+	invsrc = _mm_sub_epi16(one, _mm_add_epi16(_mm_srli_epi16(src, 7), src));
+
+	dest = _mm_add_epi16(_mm_mullo_epi16(src, color), _mm_mullo_epi16(dest, invsrc));
+	dest = _mm_add_epi16(dest, half); // round up
+	dest = _mm_srli_epi16(dest, 8);
 }
 
 inline void CL_BlitARGB8SSE::store_pixel(unsigned int &pixel, __m128i &xmm)

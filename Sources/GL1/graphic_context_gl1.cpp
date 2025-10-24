@@ -69,7 +69,7 @@ CL_GraphicContext_GL1::~CL_GraphicContext_GL1()
 
 void CL_GraphicContext_GL1::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_GraphicContext_GL1 is null");
 }
 
@@ -139,7 +139,7 @@ void CL_GraphicContext_GL1::reset_back_material()
 	flush_batcher();
 	impl->provider->reset_back_material();
 }
-void CL_GraphicContext_GL1::set_material(CLenum face, const CL_Material_GL1 &material)
+void CL_GraphicContext_GL1::set_material(GLenum face, const CL_Material_GL1 &material)
 {
 	flush_batcher();
 	impl->provider->set_material(face, material);
@@ -169,7 +169,7 @@ void CL_GraphicContext_GL1::reset_color_material()
 	flush_batcher();
 	impl->provider->reset_color_material();
 }
-void CL_GraphicContext_GL1::set_color_material(CLenum face, CL_ColorMaterial_GL1 color)
+void CL_GraphicContext_GL1::set_color_material(GLenum face, CL_ColorMaterial_GL1 color)
 {
 	flush_batcher();
 	impl->provider->set_color_material(color);

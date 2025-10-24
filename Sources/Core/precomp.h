@@ -62,3 +62,6 @@
 #endif
 
 
+#include <cstring>
+
+

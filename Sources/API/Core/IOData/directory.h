@@ -45,25 +45,30 @@ public:
 	/// \brief Create directory.
 	///
 	/// \param dir_name = Directory name for create.
+	/// \param recursive = If true, function will create all directories in the path, otherwise only the last directory
 	/// \return true on success or false on error.
-	static bool create(const CL_String &dir_name);
+	static bool create(const CL_StringRef &dir_name, bool recursive = false);
 
 	/// \brief Remove directory.
 	///
 	/// \param dir_name = Directory name for delete.
 	/// \param delete_files = If true, function will delete files.
-	/// \param delete_sub_directories = If true, function will delete sub directories too.
+	/// \param delete_sub_directories = If true, function will delete subdirectories too.
 	/// \return true on success or false on error.
-	static bool remove(
-		const CL_String &dir_name,
-		bool delete_files = false,
-		bool delete_sub_directories = false);
+	static bool remove(const CL_StringRef &dir_name, bool delete_files = false, bool delete_sub_directories = false);
+
+	/// \brief Rename directory.
+	///
+	/// \param old_name = Old name of the directory to be renamed.
+	/// \param new_name = New directory name.
+	/// \return true on success or false on error.
+	static bool rename(const CL_StringRef &old_name, const CL_StringRef &new_name);
 
 	/// \brief Change current directory.
 	///
-	/// \param path = Directory name to change to.
+	/// \param dir_name = Directory name to change to.
 	/// \return true on success or false on error.
-	static bool set_current(const CL_String &path);
+	static bool set_current(const CL_StringRef &dir_name);
 
 	/// \brief Get current directory.
 	///
@@ -73,36 +78,55 @@ public:
 	/// \brief Returns the current user's roaming application data directory.
 	///
 	/// In Windows, this functions returns special folder directory CSIDL_APPDATA
-	///    appended with the application_name string. A typical path would be
+	///    appended with the "company_name\application_name\version" string. A typical path would be
 	///    "C:\Documents and Settings\username\Application Data\company_name\application_name\version\".\n
-	/// In OS X, this function returns the directory "~/Library/application_name/".\n
-	/// In Linux, this function returns the directory "~/.appdata/application_name/".
+	/// In OS X, this function returns the directory "~/Library/company_name/application_name/version/".\n
+	/// In Linux, this function returns the directory "~/.company_name/application_name/version/".
+	///
+	/// \param company_name = Company name.
+	/// \param application_name = Application name.
+	/// \param version = Application version.
+	/// \param create_dirs_if_missing = If true, function will create all missing directories in the path.
+	///
+	/// \return the current user's roaming application data directory.
 	static CL_String get_appdata(const CL_StringRef &company_name, const CL_StringRef &application_name, const CL_StringRef &version, bool create_dirs_if_missing = true);
 
 	/// \brief Returns the current user's local (nonroaming) application data directory.
 	///
 	/// In Windows, this functions returns special folder directory CSIDL_LOCAL_APPDATA
-	///    appended with the application_name string. A typical path would be
+	///    appended with the "company_name\application_name\version" string. A typical path would be
 	///    "C:\Documents and Settings\username\Local Settings\Application Data\company_name\application_name\version\".\n
-	/// In OS X, this function returns the directory "~/Library/application_name/".\n
-	/// In Linux, this function returns the directory "~/.local_appdata/application_name/".
+	/// In OS X, this function returns the directory "~/Library/company_name/application_name/version/".\n
+	/// In Linux, this function returns the directory "~/.company_name/application_name/version/".
+	///
+	/// \param company_name = Company name.
+	/// \param application_name = Application name.
+	/// \param version = Application version.
+	/// \param create_dirs_if_missing = If true, function will create all missing directories in the path.
+	///
+	/// \return the current user's local (nonroaming) application data directory.
 	static CL_String get_local_appdata(const CL_StringRef &company_name, const CL_StringRef &application_name, const CL_StringRef &version, bool create_dirs_if_missing = true);
 
 	/// \brief Returns the application resource data directory.
 	///
-	/// In Windows, this function returns a "Resources" subdirectory located at the
+	/// In Windows, this function returns a data_dir_name subdirectory located at the
 	///    executable.  If the executable path is "C:\Program Files\My Application\MyApp.exe",
-	///    then it will return the path "C:\Progam Files\My Application\Resources\".\n
-	/// In OS X, this function returns the Resources inside the application bundle.
+	///    then it will return the path "C:\Program Files\My Application\data_dir_name\".\n
+	/// In OS X, this function returns a "Resources" subdirectory inside the application bundle.
 	///    For example, if the application executable path is
 	///    "/Applications/MyApplication.app/Contents/MacOS/MyApplication", then it will return
-	///    "/Applications/MyApplication.app/Contents/Resources/".  If the executable is not in
+	///    "/Applications/MyApplication.app/Contents/Resources/". If the executable is not in
 	///    an application bundle, it will use the same behavior as in Windows; that is, it will
-	///    return a "Resources" subdirectory next to the executable.\n
+	///    return a data_dir_name subdirectory next to the executable.\n
 	/// In Linux, this function will return the directory "../share/application_name/"
 	///    relative to the executable, so if it is located in "/usr/bin" it will return
 	///    "/usr/share/application_name/"
-	static CL_String get_resourcedata(const CL_StringRef &application_name);
+	///
+	/// \param application_name = Application name.
+	/// \param data_dir_name = Data directory name.
+	///
+	/// \return the application resource data directory.
+	static CL_String get_resourcedata(const CL_StringRef &application_name, const CL_StringRef &data_dir_name = "Resources");
 /// \}
 };
 

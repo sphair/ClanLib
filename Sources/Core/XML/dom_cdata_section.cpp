@@ -41,7 +41,7 @@ CL_DomCDATASection::CL_DomCDATASection()
 CL_DomCDATASection::CL_DomCDATASection(CL_DomDocument &doc, const CL_DomString &data)
 : CL_DomText(doc, CDATA_SECTION_NODE)
 {
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	impl->get_tree_node()->set_node_value(doc_impl, data);
 }
 

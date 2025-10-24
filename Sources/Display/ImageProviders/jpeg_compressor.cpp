@@ -62,7 +62,7 @@ class CL_JPEGCompressor_Impl
 public:
 	CL_JPEGCompressor_Impl()
 	: quality(95), size(0, 0), in_color_space(CL_JPEGCompressor::rgb), in_components(3),
-	  out_color_space(CL_JPEGCompressor::rgb), out_components(3)
+	  out_color_space(CL_JPEGCompressor::ycbcr), out_components(3)
 	{
 		memset(&cinfo, 0, sizeof(jpeg_compress_struct));
 		memset(&dest, 0, sizeof(jpeg_destination_mgr));

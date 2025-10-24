@@ -68,7 +68,7 @@ public:
 	/// \brief Is Null
 	///
 	/// \return true = null
-	bool is_null();
+	bool is_null() const;
 
 	/// \brief Retrieves the provider.
 	CL_GUILayoutProvider *get_provider() const;

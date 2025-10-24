@@ -36,7 +36,7 @@
 #include "../api_core.h"
 #include "mat2.h"
 #include "mat4.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 
 template<typename Type>
 class CL_Mat2;
@@ -99,28 +99,28 @@ public:
 	}
 
 	/// \brief Constructs a 3x3 matrix (copied from 9, 64 bit integers)
-	CL_Mat3(const cl_int64 *init_matrix)
+	CL_Mat3(const cl_long *init_matrix)
 	{
 		for (int i=0; i<9; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 3x3 matrix (copied from 9, 32 bit integers)
-	CL_Mat3(const cl_int32 *init_matrix)
+	CL_Mat3(const cl_int *init_matrix)
 	{
 		for (int i=0; i<9; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 3x3 matrix (copied from 9, 16 bit integers)
-	CL_Mat3(const cl_int16 *init_matrix)
+	CL_Mat3(const cl_short *init_matrix)
 	{
 		for (int i=0; i<9; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 3x3 matrix (copied from 9, 8 bit integers)
-	CL_Mat3(const cl_int8 *init_matrix)
+	CL_Mat3(const cl_char *init_matrix)
 	{
 		for (int i=0; i<9; i++)
 			matrix[i] = (Type) init_matrix[i];

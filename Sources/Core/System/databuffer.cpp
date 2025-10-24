@@ -28,7 +28,6 @@
 
 #include "Core/precomp.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/System/memory_pool.h"
 #include <string.h>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,22 +36,18 @@
 class CL_DataBuffer_Impl
 {
 public:
-	CL_DataBuffer_Impl() : pool(0), data(0), size(0), allocated_size(0)
+	CL_DataBuffer_Impl() : data(0), size(0), allocated_size(0)
 	{
 	}
 
 	~CL_DataBuffer_Impl()
 	{
-		cl_delete(pool, data, size);
+		delete[] data;
 	}
 
 public:
-	CL_MemoryPool *pool;
-
 	char *data;
-
 	int size;
-
 	int allocated_size;
 };
 
@@ -60,29 +55,26 @@ public:
 // CL_DataBuffer Construction:
 
 CL_DataBuffer::CL_DataBuffer()
-: impl(cl_new((CL_MemoryPool *) 0) CL_DataBuffer_Impl, (CL_MemoryPool *) 0)
+: impl(new CL_DataBuffer_Impl())
 {
 }
 
-CL_DataBuffer::CL_DataBuffer(int new_size, CL_MemoryPool *pool)
-: impl(cl_new(pool) CL_DataBuffer_Impl, pool)
+CL_DataBuffer::CL_DataBuffer(int new_size)
+: impl(new CL_DataBuffer_Impl())
 {
-	impl->pool = pool;
 	set_size(new_size);
 }
 
-CL_DataBuffer::CL_DataBuffer(const void *new_data, int new_size, CL_MemoryPool *pool)
-: impl(cl_new(pool) CL_DataBuffer_Impl, pool)
+CL_DataBuffer::CL_DataBuffer(const void *new_data, int new_size)
+: impl(new CL_DataBuffer_Impl())
 {
-	impl->pool = pool;
 	set_size(new_size);
 	memcpy(impl->data, new_data, new_size);
 }
 
-CL_DataBuffer::CL_DataBuffer(const CL_DataBuffer &new_data, int pos, int size, CL_MemoryPool *pool)
-: impl(cl_new(pool) CL_DataBuffer_Impl, pool)
+CL_DataBuffer::CL_DataBuffer(const CL_DataBuffer &new_data, int pos, int size)
+: impl(new CL_DataBuffer_Impl())
 {
-	impl->pool = pool;
 	if (size == -1)
 		size = new_data.get_size();
 	set_size(size);
@@ -150,9 +142,9 @@ void CL_DataBuffer::set_size(int new_size)
 	if (new_size > impl->allocated_size)
 	{
 		char *old_data = impl->data;
-		impl->data = cl_new(impl->pool) char[new_size];
+		impl->data = new char[new_size];
 		memcpy(impl->data, old_data, impl->size);
-		cl_delete(impl->pool, old_data, impl->size);
+		delete[] old_data;
 		memset(impl->data+impl->size, 0, new_size-impl->size);
 		impl->size = new_size;
 		impl->allocated_size = new_size;
@@ -168,9 +160,9 @@ void CL_DataBuffer::set_capacity(int new_capacity)
 	if (new_capacity > impl->allocated_size)
 	{
 		char *old_data = impl->data;
-		impl->data = cl_new(impl->pool) char[new_capacity];
+		impl->data = new char[new_capacity];
 		memcpy(impl->data, old_data, impl->size);
-		cl_delete(impl->pool, old_data, impl->size);
+		delete[] old_data;
 		memset(impl->data+impl->size, 0, new_capacity-impl->size);
 		impl->allocated_size = new_capacity;
 	}
@@ -178,7 +170,7 @@ void CL_DataBuffer::set_capacity(int new_capacity)
 
 bool CL_DataBuffer::is_null() const
 {
-	return impl.is_null();
+	return impl->size == 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -30,7 +30,7 @@
 #include "css_stacking_context.h"
 #include "css_layout_tree_node.h"
 #include "../BoxTree/css_box_element.h"
-#include "../BoxTree/PropertyTypes/css_box_z_index.h"
+#include "API/CSSLayout/PropertyTypes/css_box_z_index.h"
 #include <algorithm>
 
 CL_CSSStackingContext::CL_CSSStackingContext(CL_CSSLayoutTreeNode *layout)
@@ -61,23 +61,26 @@ void CL_CSSStackingContext::push_back(CL_CSSStackingContext *child)
 
 void CL_CSSStackingContext::sort()
 {
-	std::sort(children.begin(), children.end());
+	std::sort(children.begin(), children.end(), SortPred());
+	for (size_t i = 0; i < children.size(); i++)
+		children[i]->sort();
 }
 
-void CL_CSSStackingContext::render(CL_GraphicContext &gc, CL_CSSResourceCache *resource_cache)
+void CL_CSSStackingContext::render(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resource_cache, bool root)
 {
-	for (size_t i = 0; i < children.size(); i++)
+	size_t i;
+	layout->render_layer_background(graphics, resource_cache, root);
+	for (i = 0; i < children.size() && children[i]->level < 0; i++)
+		children[i]->render(graphics, resource_cache);
+	layout->render_layer_non_inline(graphics, resource_cache);
+	layout->render_layer_floats(graphics, resource_cache);
+	layout->render_layer_inline(graphics, resource_cache);
+	layout->render_layer_positioned(graphics, resource_cache);
+
+	while (i < children.size())
 	{
-		if (children[i]->level >= 0)
-			break;
-		children[i]->render(gc, resource_cache);
-	}
-	layout->render(gc, resource_cache);
-	for (size_t i = 0; i < children.size(); i++)
-	{
-		if (children[i]->level >= 0)
-		{
-			children[i]->render(gc, resource_cache);
-		}
+		if (children[i]->level > 0)
+			children[i]->render(graphics, resource_cache);
+		i++;
 	}
 }

@@ -81,7 +81,7 @@ CL_ProgramUniform::~CL_ProgramUniform()
 
 void CL_ProgramUniform::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ProgramUniform is null");
 }
 

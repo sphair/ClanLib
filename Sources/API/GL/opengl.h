@@ -68,14 +68,14 @@ public:
 	/// \brief Get a OpenGL format out of a pixel format.
 	/** <p>The function returns false if pixelformat color depth is not convertible to
 	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
-	static bool to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &format, CLenum &type);
+	static bool to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &format, GLenum &type);
 
 	/// \brief To opengl textureformat
 	///
 	/// \param format = Texture Format
-	/// \param gl_internal_format = CLint
-	/// \param gl_pixel_format = CLenum
-	static void to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format);
+	/// \param gl_internal_format = GLint
+	/// \param gl_pixel_format = GLenum
+	static void to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 	static void set_active(CL_GraphicContext &gc);
@@ -90,10 +90,22 @@ public:
 	/// \return true = Success. false = No OpenGL contexts could be found
 	static bool set_active();
 
-	/// \brief Throw an exception if an OpenGL error was detected ( Using clGetError() )
+	/// \brief Throw an exception if an OpenGL error was detected ( Using glGetError() )
 	///
-	/// Remember to call clGetError() to clear any previous errors
+	/// Remember to call glGetError() to clear any previous errors
 	static void check_error();
+
+	/// \brief Get the opengl version major number
+	static int get_opengl_version_major() {return opengl_version_major;}
+
+	/// \brief Get the opengl version minor number
+	static int get_opengl_version_minor() {return opengl_version_minor;}
+
+	/// \brief Get the glsl version major number
+	static int get_glsl_version_major() {return glsl_version_major;}
+
+	/// \brief Get the glsl version minor number
+	static int get_glsl_version_minor() {return glsl_version_minor;}
 
 /// \}
 
@@ -102,6 +114,11 @@ private:
 	/// 
 	/// This should only be called by the CL_OpenGLGraphicContextProvider destructor
 	static void remove_active(const CL_OpenGLGraphicContextProvider * const gc_provider);
+
+	static int opengl_version_major;
+	static int opengl_version_minor;
+	static int glsl_version_major;
+	static int glsl_version_minor;
 
 	friend class CL_OpenGLGraphicContextProvider;
 

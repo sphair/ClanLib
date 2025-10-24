@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_widows.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserWidows::get_names()
 {
@@ -37,11 +37,11 @@ std::vector<CL_String> CL_CSSParserWidows::get_names()
 	return names;
 }
 
-void CL_CSSParserWidows::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserWidows::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
-	if (token.type == CL_CSSToken::type_ident && pos == tokens.size() && token.value == "inherit")
+	if (token.type == CL_CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
 		properties.widows.type = CL_CSSBoxWidows::type_inherit;
 	}
@@ -53,5 +53,9 @@ void CL_CSSParserWidows::parse(CL_CSSBoxProperties &properties, const CL_String 
 			properties.widows.type = CL_CSSBoxWidows::type_integer;
 			properties.widows.value = value;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["widows"] = &properties.widows;
 	}
 }

@@ -27,8 +27,8 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_outline_width.h"
-#include "css_box_outline_style.h"
+#include "API/CSSLayout/PropertyTypes/css_box_outline_width.h"
+#include "API/CSSLayout/PropertyTypes/css_box_outline_style.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxOutlineWidth::CL_CSSBoxOutlineWidth()
@@ -80,5 +80,23 @@ void CL_CSSBoxOutlineWidth::compute(const CL_CSSBoxOutlineWidth *parent, CL_CSSR
 	if (type == type_length)
 	{
 		length = layout->compute_length(length, em_size, ex_size);
+	}
+}
+
+CL_String CL_CSSBoxOutlineWidth::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_thin:
+		return "thin";
+	case type_medium:
+		return "medium";
+	case type_thick:
+		return "thick";
+	case type_length:
+		return length.to_string();
+	case type_inherit:
+		return "inherit";
 	}
 }

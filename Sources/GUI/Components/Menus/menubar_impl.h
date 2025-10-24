@@ -28,8 +28,9 @@
 */
 
 #pragma once
-#include <memory>
 
+#include "API/Core/System/uniqueptr.h"
+#include <memory>
 
 struct CL_TopMenu
 {
@@ -77,7 +78,7 @@ public:
 	int item_padding_right;
 	int item_border_right;
 
-	std::auto_ptr<CL_MenuModalLoop> menu_loop;
+	CL_UniquePtr<CL_MenuModalLoop> menu_loop;
 };
 
 

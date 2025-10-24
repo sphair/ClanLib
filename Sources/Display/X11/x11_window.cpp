@@ -78,7 +78,7 @@ CL_X11Window::~CL_X11Window()
 	CL_DisplayMessageQueue_X11::message_queue.remove_client(this);
 	CL_DisplayMessageQueue_X11::message_queue.set_mouse_capture(this, false);
 
-	if (!ic.impl.is_null())
+	if (ic.impl)
 		ic.impl->dispose();
 
 	get_keyboard()->dispose();
@@ -593,8 +593,6 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindow
 	{
 		win_height = 128; 
 	}
-
-	bool client_area = desc.get_position_client_area();
 
 	Window parent = RootWindow(disp, current_screen);
 

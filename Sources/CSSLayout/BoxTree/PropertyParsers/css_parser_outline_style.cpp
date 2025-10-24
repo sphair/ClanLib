@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_outline_style.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserOutlineStyle::get_names()
 {
@@ -37,33 +37,37 @@ std::vector<CL_String> CL_CSSParserOutlineStyle::get_names()
 	return names;
 }
 
-void CL_CSSParserOutlineStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserOutlineStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "none")
+		if (equals(token.value, "none"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_none;
-		else if (token.value == "hidden")
+		else if (equals(token.value, "hidden"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_hidden;
-		else if (token.value == "dotted")
+		else if (equals(token.value, "dotted"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_dotted;
-		else if (token.value == "dashed")
+		else if (equals(token.value, "dashed"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_dashed;
-		else if (token.value == "solid")
+		else if (equals(token.value, "solid"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_solid;
-		else if (token.value == "double")
+		else if (equals(token.value, "double"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_double;
-		else if (token.value == "groove")
+		else if (equals(token.value, "groove"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_groove;
-		else if (token.value == "ridge")
+		else if (equals(token.value, "ridge"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_ridge;
-		else if (token.value == "inset")
+		else if (equals(token.value, "inset"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_inset;
-		else if (token.value == "outset")
+		else if (equals(token.value, "outset"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_outset;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.outline_style.type = CL_CSSBoxOutlineStyle::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["outline-style"] = &properties.outline_style;
 	}
 }

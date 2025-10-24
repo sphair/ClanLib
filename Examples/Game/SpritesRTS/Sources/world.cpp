@@ -41,7 +41,7 @@ World::World(CL_DisplayWindow &display_window) : window(display_window), quit(fa
 	// Setup resources
 	resources = CL_ResourceManager("resources.xml");
 
-	background = CL_Texture("background", &resources, gc);
+	background = CL_Texture(gc, "background", &resources);
 	
 	// Receive mouse clicks
 	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);

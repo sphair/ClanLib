@@ -72,11 +72,11 @@ private:
 
 	Client *client;
 
-	CL_AutoPtr<GameTerrain> terrain;
+	std::auto_ptr<GameTerrain> terrain;
 
-	CL_AutoPtr<ModelCollada> army_model;
+	std::auto_ptr<ModelCollada> army_model;
 
-	CL_AutoPtr<MapSelection> map_selection;
+	std::auto_ptr<MapSelection> map_selection;
 
 	CL_Sprite sprite_waiting_for_turn;
 	CL_Font font_large;

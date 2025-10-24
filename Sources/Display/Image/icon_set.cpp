@@ -29,7 +29,7 @@
 #include "Display/precomp.h"
 #include "API/Display/Image/icon_set.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice_memory.h"
 
@@ -43,45 +43,45 @@ public:
 
 	struct IconHeader
 	{
-		cl_uint16 idReserved;
-		cl_uint16 idType; // 1 = ICO, 2 = CUR
-		cl_uint16 idCount;
+		cl_ushort idReserved;
+		cl_ushort idType; // 1 = ICO, 2 = CUR
+		cl_ushort idCount;
 	};
 
 	struct IconDirectoryEntry
 	{
-		cl_uint8 bWidth;
-		cl_uint8 bHeight;
-		cl_uint8 bColorCount;
-		cl_uint8 bReserved;
+		cl_uchar bWidth;
+		cl_uchar bHeight;
+		cl_uchar bColorCount;
+		cl_uchar bReserved;
 		union
 		{
-			cl_uint16 wPlanes;   // ICO format
-			cl_int16 XHotspot;   // CUR format
+			cl_ushort wPlanes;   // ICO format
+			cl_short XHotspot;   // CUR format
 		};
 		union
 		{
-			cl_uint16 wBitCount; // ICO format
-			cl_int16 YHotspot;   // CUR format
+			cl_ushort wBitCount; // ICO format
+			cl_short YHotspot;   // CUR format
 		};
-		cl_uint32 dwBytesInRes;
-		cl_uint32 dwImageOffset;
-		/** cl_uint16 nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
+		cl_uint dwBytesInRes;
+		cl_uint dwImageOffset;
+		/** cl_ushort nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
 	};
 
 	struct IconBitmapInfoHeader
 	{
-        cl_uint32 biSize;
-        cl_int32 biWidth;
-        cl_int32 biHeight;
-        cl_uint16 biPlanes;
-        cl_uint16 biBitCount;
-        cl_uint32 biCompression;
-        cl_uint32 biSizeImage;
-        cl_int32 biXPelsPerMeter;
-        cl_int32 biYPelsPerMeter;
-        cl_uint32 biClrUsed;
-        cl_uint32 biClrImportant;
+        cl_uint biSize;
+        cl_int biWidth;
+        cl_int biHeight;
+        cl_ushort biPlanes;
+        cl_ushort biBitCount;
+        cl_uint biCompression;
+        cl_uint biSizeImage;
+        cl_int biXPelsPerMeter;
+        cl_int biYPelsPerMeter;
+        cl_uint biClrUsed;
+        cl_uint biClrImportant;
 	};
 
 	enum IconBitmapInfoCompressionType
@@ -175,9 +175,7 @@ CL_PixelBuffer CL_IconSet_Impl::create_bitmap_data(const CL_PixelBuffer &image)
 {
 	// Convert pixel buffer to DIB compatible format:
 
-	CL_PixelBuffer bmp_image(image.get_width(), image.get_height(), cl_argb8);
-
-	image.convert(bmp_image, CL_Rect(0, 0, bmp_image.get_width(), bmp_image.get_height()));
+	CL_PixelBuffer bmp_image = image.to_format(cl_argb8);
 
 	// Note that the APIs use pre-multiplied alpha, which means that the red,
 	// green and blue channel values in the bitmap must be pre-multiplied with

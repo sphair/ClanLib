@@ -85,7 +85,7 @@ public:
 	/// \brief void func_setup_framebuffer(CL_FrameBuffer &fb)
 	CL_Callback_v1<CL_FrameBuffer &> &func_setup_framebuffer();
 
-	/// \brief void func_input_intercept(const CL_InputEvent &input_event, const CL_InputState &input_state)
+	/// \brief void func_input_intercept(CL_InputEvent &input_event, CL_InputState &input_state)
 	CL_Callback_v2<CL_InputEvent &, CL_InputState &> &func_input_intercept();
 /// \}
 

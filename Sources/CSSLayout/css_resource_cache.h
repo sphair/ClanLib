@@ -36,7 +36,6 @@ class CL_CSSBoxNode;
 class CL_CSSBoxProperties;
 class CL_CSSBoxLength;
 class CL_CSSLayoutTreeNode;
-class CL_CSSBlockLayout;
 class CL_CSSInlineLayout;
 class CL_CSSLayoutCursor;
 class CL_CSSBlockFormattingContext;
@@ -47,9 +46,10 @@ public:
 	CL_CSSResourceCache();
 	~CL_CSSResourceCache();
 
+	CL_Callback_2<CL_Image, CL_GraphicContext &, const CL_String &> cb_get_image;
+
 	CL_CSSBoxLength compute_length(const CL_CSSBoxLength &length, float em_size, float ex_size);
 	std::vector<CL_String> get_default_quotes();
-	CL_String get_default_font();
 	CL_Colorf get_default_color();
 	CL_CSSBoxLength get_font_table_size(int size);
 	CL_CSSBoxLength get_font_table_smaller(float em_size);
@@ -59,6 +59,12 @@ public:
 	CL_Image &get_image(CL_GraphicContext &gc, const CL_String &url);
 
 private:
+#ifdef WIN32
+	int enum_font_families_callback(const LOGFONTW *fontinfo, const TEXTMETRICW *textmetrics, DWORD font_type);
+	static int CALLBACK static_enum_font_families_callback(const LOGFONTW *fontinfo, const TEXTMETRICW *textmetrics, DWORD font_type, LPARAM lparam);
+#endif
+
 	std::map<CL_String, CL_Font> font_cache;
 	std::map<CL_String, CL_Image> image_cache;
+	std::map<CL_String, bool> font_families;
 };

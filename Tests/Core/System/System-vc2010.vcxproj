@@ -132,8 +132,6 @@
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_datetime.cpp" />
     <ClCompile Include="test_interlock.cpp" />
-    <ClCompile Include="test_sharedptr.cpp" />
-    <ClCompile Include="test_weakptr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h" />

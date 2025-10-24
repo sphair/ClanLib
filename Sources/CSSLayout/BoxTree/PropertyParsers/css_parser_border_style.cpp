@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_style.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderStyle::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserBorderStyle::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderStyle border_styles[4];
 	int count;
@@ -47,47 +47,47 @@ void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_St
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident)
 		{
-			if (token.value == "none")
+			if (equals(token.value, "none"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_none;
 			}
-			else if (token.value == "hidden")
+			else if (equals(token.value, "hidden"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_hidden;
 			}
-			else if (token.value == "dotted")
+			else if (equals(token.value, "dotted"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_dotted;
 			}
-			else if (token.value == "dashed")
+			else if (equals(token.value, "dashed"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_dashed;
 			}
-			else if (token.value == "solid")
+			else if (equals(token.value, "solid"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_solid;
 			}
-			else if (token.value == "double")
+			else if (equals(token.value, "double"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_double;
 			}
-			else if (token.value == "groove")
+			else if (equals(token.value, "groove"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_groove;
 			}
-			else if (token.value == "ridge")
+			else if (equals(token.value, "ridge"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_ridge;
 			}
-			else if (token.value == "inset")
+			else if (equals(token.value, "inset"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_inset;
 			}
-			else if (token.value == "outset")
+			else if (equals(token.value, "outset"))
 			{
 				border_styles[count].type = CL_CSSBoxBorderStyle::type_outset;
 			}
-			else if (token.value == "inherit")
+			else if (equals(token.value, "inherit"))
 			{
 				if (count == 0 && pos == tokens.size())
 				{
@@ -96,10 +96,15 @@ void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_St
 					properties.border_style_right.type = CL_CSSBoxBorderStyle::type_inherit;
 					properties.border_style_bottom.type = CL_CSSBoxBorderStyle::type_inherit;
 				}
+				else
+				{
+					debug_parse_error(name, tokens);
+				}
 				return;
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -109,6 +114,7 @@ void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_St
 		}
 		else
 		{
+			debug_parse_error(name, tokens);
 			return;
 		}
 	}
@@ -144,5 +150,13 @@ void CL_CSSParserBorderStyle::parse(CL_CSSBoxProperties &properties, const CL_St
 		default:
 			break;
 		}
+	}
+
+	if (out_change_set)
+	{
+		(*out_change_set)["border-left-style"] = &properties.border_style_left;
+		(*out_change_set)["border-right-style"] = &properties.border_style_right;
+		(*out_change_set)["border-top-style"] = &properties.border_style_top;
+		(*out_change_set)["border-bottom-style"] = &properties.border_style_bottom;
 	}
 }

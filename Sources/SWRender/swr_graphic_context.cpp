@@ -71,7 +71,7 @@ CL_GraphicContext_SWRender::~CL_GraphicContext_SWRender()
 
 void CL_GraphicContext_SWRender::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_GraphicContext_SWRender is null");
 }
 
@@ -88,7 +88,7 @@ void CL_GraphicContext_SWRender::draw_pixels_bicubic(int x, int y, int zoom_numb
 	impl->provider->draw_pixels_bicubic(x, y, zoom_number, zoom_denominator, pixels);
 }
 
-void CL_GraphicContext_SWRender::queue_command(std::auto_ptr<CL_PixelCommand> command)
+void CL_GraphicContext_SWRender::queue_command(CL_UniquePtr<CL_PixelCommand> &command)
 {
 	impl->provider->queue_command(command);
 }

@@ -82,7 +82,7 @@ int ExampleText::start(const std::vector<CL_String> &args)
 
 	CL_GraphicContext gc = window.get_gc();
 
-	CL_TextureGroup texture_group(gc, CL_Size(512, 512));
+	CL_TextureGroup texture_group(CL_Size(512, 512));
 
 	CL_FontDescription font_desc;
 	font_desc.set_typeface_name("Tahoma");

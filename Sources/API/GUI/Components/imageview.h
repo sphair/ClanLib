@@ -74,6 +74,7 @@ public:
 /// \name Operations
 /// \{
 public:
+
 	/// \brief Set image
 	///
 	/// \param image = Sprite

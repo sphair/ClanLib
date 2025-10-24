@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_font_family.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserFontFamily::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserFontFamily::get_names()
 	return names;
 }
 
-void CL_CSSParserFontFamily::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserFontFamily::parse(CL_CSSBoxProperties &properties, const CL_String &propname, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxFontFamily family;
 	family.type = CL_CSSBoxFontFamily::type_names;
@@ -45,38 +45,48 @@ void CL_CSSParserFontFamily::parse(CL_CSSBoxProperties &properties, const CL_Str
 	size_t pos = 0;
 	CL_CSSToken token;
 	token = next_token(pos, tokens);
+
+	if (equals(token.value, "inherit") && tokens.size() == 1)
+	{
+		properties.font_family.type = CL_CSSBoxFontFamily::type_inherit;
+		return;
+	}
+
 	while (true)
 	{
 		if (token.type != CL_CSSToken::type_ident && token.type != CL_CSSToken::type_string)
+		{
+			debug_parse_error(propname, tokens);
 			return;
+		}
 
 		CL_CSSBoxFontFamilyName name;
-		if (token.value == "serif")
+		if (equals(token.value, "serif"))
 		{
 			name.type = CL_CSSBoxFontFamilyName::type_serif;
 		}
-		else if (token.value == "sans-serif")
+		else if (equals(token.value, "sans-serif"))
 		{
 			name.type = CL_CSSBoxFontFamilyName::type_sans_serif;
 		}
-		else if (token.value == "cursive")
+		else if (equals(token.value, "cursive"))
 		{
 			name.type = CL_CSSBoxFontFamilyName::type_cursive;
 		}
-		else if (token.value == "fantasy")
+		else if (equals(token.value, "fantasy"))
 		{
 			name.type = CL_CSSBoxFontFamilyName::type_fantasy;
 		}
-		else if (token.value == "monospace")
+		else if (equals(token.value, "monospace"))
 		{
 			name.type = CL_CSSBoxFontFamilyName::type_monospace;
 		}
-		else if (token.value == "default")
+		else if (equals(token.value, "default"))
 		{
 			// reserved for future use
 			return;
 		}
-		else if (token.value == "initial")
+		else if (equals(token.value, "initial"))
 		{
 			// reserved for future use
 			return;
@@ -118,10 +128,17 @@ void CL_CSSParserFontFamily::parse(CL_CSSBoxProperties &properties, const CL_Str
 				break;
 			token = next_token(pos, tokens);
 			if (token.type != CL_CSSToken::type_delim || token.value != ",")
+			{
+				debug_parse_error(propname, tokens);
 				return;
+			}
 			token = next_token(pos, tokens);
 		}
 	}
 
 	properties.font_family = family;
+	if (out_change_set)
+	{
+		(*out_change_set)["font-family"] = &properties.font_family;
+	}
 }

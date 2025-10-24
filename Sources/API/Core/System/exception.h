@@ -48,7 +48,7 @@ public:
 	CL_Exception(const CL_String &message);
 
 	/// \brief Destructs an exception object
-	~CL_Exception() throw() {}
+	virtual ~CL_Exception() throw() {}
 
 /// \}
 /// \name Attributes
@@ -66,18 +66,18 @@ public:
 public:
 	/// \brief Returns the call stack present when the exception object was created.
 	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-	std::vector<CL_String> get_stack_trace();
+	std::vector<CL_String> get_stack_trace() const;
 
 	/// \brief Returns the message and call stack present when the exception object was created, formatted using newlines.
 	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/
-	CL_String get_message_and_stack_trace();
+	CL_String get_message_and_stack_trace() const;
 
 /// \}
 /// \name Implementation
 /// \{
 private:
 	enum { max_frames = 32 };
-	void *frames[max_frames];
+	mutable void *frames[max_frames];
 	int num_frames;
 	mutable CL_String8 buffer;
 /// \}

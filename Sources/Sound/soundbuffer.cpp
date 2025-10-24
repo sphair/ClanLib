@@ -56,8 +56,8 @@ CL_SoundBuffer::CL_SoundBuffer(
 	CL_Resource resource = manager->get_resource(res_id);
 
 	CL_ResourceDataSession resource_data_session("sample", resource);
-	CL_SharedPtr<CL_ResourceData_Sample> data(resource.get_data("sample"));
-	if (data.is_null())
+	CL_SharedPtr<CL_ResourceData_Sample> data = cl_dynamic_pointer_cast<CL_ResourceData_Sample>(resource.get_data("sample"));
+	if (!data)
 	{
 		data = CL_SharedPtr<CL_ResourceData_Sample>(new CL_ResourceData_Sample(resource));
 		resource.set_data("sample", data);
@@ -111,7 +111,7 @@ CL_SoundBuffer::~CL_SoundBuffer()
 
 CL_SoundProvider *CL_SoundBuffer::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	return impl->provider;
 }
@@ -119,7 +119,7 @@ CL_SoundProvider *CL_SoundBuffer::get_provider() const
 
 void CL_SoundBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_SoundBuffer is null");
 }
 

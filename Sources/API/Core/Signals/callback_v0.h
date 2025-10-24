@@ -229,7 +229,7 @@ public:
 
 	bool is_null() const
 	{
-		return impl.is_null();
+		return !impl;
 	}
 
 private:

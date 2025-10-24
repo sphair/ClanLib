@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 
 class CL_IODevice;
 
@@ -48,13 +48,13 @@ public:
 /// \{
 
 public:
-	cl_int32 signature; // 0x07064b50
+	cl_int signature; // 0x07064b50
 
-	cl_int32 number_of_disk_with_zip64_end_of_central_directory;
+	cl_int number_of_disk_with_zip64_end_of_central_directory;
 
-	cl_int64 relative_offset_of_zip64_end_of_central_directory;
+	cl_long relative_offset_of_zip64_end_of_central_directory;
 
-	cl_int32 total_number_of_disks;
+	cl_int total_number_of_disks;
 
 
 /// \}

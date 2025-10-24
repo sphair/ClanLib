@@ -12,7 +12,7 @@
 ServerGame::ServerGame(Server *server, int id, int max_players)
 : server(server), active_player(0), id(id), current_turn(0), max_turns(20), max_players(max_players)
 {
-	players = new ServerGamePlayerCollection(server, this);
+	players.reset(new ServerGamePlayerCollection(server, this));
 }
 
 ServerGame::~ServerGame()

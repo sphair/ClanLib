@@ -127,12 +127,9 @@ public:
 public:
 	/// \brief Destroys graphic context provider.
 	virtual void destroy() = 0;
-
-	/// \brief Creates a new additional graphic context for the window. (DO NOT USE, This function is broken, and will be removed in the future)
-	virtual CL_GraphicContext create_worker_gc() = 0;
-
+	
 	/// \brief Return the content of the draw buffer into a pixel buffer.
-	virtual CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const = 0;
+	virtual CL_PixelBuffer get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format, bool clamp) const = 0;
 
 	/// \brief Allocate texture provider for this gc.
 	virtual CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions) = 0;
@@ -230,6 +227,30 @@ public:
 	/// \param indices = char
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices) = 0;
 
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = value
+	/// \param instance_count = number of instances drawn
+	virtual void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count) = 0;
+
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = short
+	/// \param instance_count = number of instances drawn
+	virtual void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count) = 0;
+
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = char
+	/// \param instance_count = number of instances drawn
+	virtual void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count) = 0;
+
 	/// \brief Draw primitives elements
 	///
 	/// \param type = Primitives Type
@@ -238,6 +259,15 @@ public:
 	/// \param indices_type = Vertex Attribute Data Type
 	/// \param offset = void
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset) = 0;
+
+	/// \brief Draw primitives elements instanced
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param array_provider = Element Array Buffer Provider
+	/// \param indices_type = Vertex Attribute Data Type
+	/// \param offset = void
+	virtual void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset, int instance_count) = 0;
 
 	/// \brief Called when a primitives array is being recycled.
 	virtual void primitives_array_freed(const CL_PrimitivesArrayData * const prim_array) = 0;

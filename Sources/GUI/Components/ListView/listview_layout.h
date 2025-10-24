@@ -129,6 +129,8 @@ public:
 	/// \brief Force an update of the shown items vector at the next get_shown_items() call.
 	void invalidate();
 
+	virtual void set_show_detail_icon(bool enable) { }
+	virtual void set_show_detail_opener(bool enable) { }
 
 /// \}
 /// \name Implementation

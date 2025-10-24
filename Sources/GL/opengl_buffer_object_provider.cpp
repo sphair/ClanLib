@@ -36,13 +36,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLBufferObjectProvider Construction:
 
-CL_OpenGLBufferObjectProvider::CL_OpenGLBufferObjectProvider(CL_OpenGLGraphicContextProvider *gc_provider)
-: gc_provider(gc_provider), handle(0), data_ptr(0)
+CL_OpenGLBufferObjectProvider::CL_OpenGLBufferObjectProvider()
+: handle(0), data_ptr(0)
 {
 	CL_SharedGCData::add_disposable(this);
-	CL_OpenGL::set_active(gc_provider);
+	CL_OpenGL::set_active();
 
-	clGenBuffers(1, &handle);
+	glGenBuffers(1, &handle);
 }
 
 CL_OpenGLBufferObjectProvider::~CL_OpenGLBufferObjectProvider()
@@ -57,25 +57,25 @@ void CL_OpenGLBufferObjectProvider::on_dispose()
 	{
 		if (CL_OpenGL::set_active())
 		{
-			clDeleteBuffers(1, &handle);
+			glDeleteBuffers(1, &handle);
 		}
 	}
 }
 
-void CL_OpenGLBufferObjectProvider::create(const void *data, int size, CL_BufferUsage usage, CLenum new_binding, CLenum new_target)
+void CL_OpenGLBufferObjectProvider::create(const void *data, int size, CL_BufferUsage usage, GLenum new_binding, GLenum new_target)
 {
 	throw_if_disposed();
 
 	binding = new_binding;
 	target = new_target;
 
-	CL_OpenGL::set_active(gc_provider);
+	CL_OpenGL::set_active();
 
-	CLint last_buffer = 0;
-	clGetIntegerv(binding, &last_buffer);
-	clBindBuffer(target, handle);
-	clBufferData(target, size, data, to_enum(usage));
-	clBindBuffer(target, last_buffer);
+	GLint last_buffer = 0;
+	glGetIntegerv(binding, &last_buffer);
+	glBindBuffer(target, handle);
+	glBufferData(target, size, data, to_enum(usage));
+	glBindBuffer(target, last_buffer);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -94,78 +94,78 @@ void *CL_OpenGLBufferObjectProvider::get_data()
 void CL_OpenGLBufferObjectProvider::lock(CL_BufferAccess access)
 {
 	throw_if_disposed();
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(binding, &last_buffer);
-	clBindBuffer(target, handle);
-	data_ptr = (void *) clMapBuffer(target, to_enum(access));
-	clBindBuffer(target, last_buffer);
+	CL_OpenGL::set_active();
+	GLint last_buffer = 0;
+	glGetIntegerv(binding, &last_buffer);
+	glBindBuffer(target, handle);
+	data_ptr = (void *) glMapBuffer(target, to_enum(access));
+	glBindBuffer(target, last_buffer);
 }
 
 void CL_OpenGLBufferObjectProvider::unlock()
 {
 	throw_if_disposed();
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(binding, &last_buffer);
-	clBindBuffer(target, handle);
-	clUnmapBuffer(target);
-	clBindBuffer(target, last_buffer);
+	CL_OpenGL::set_active();
+	GLint last_buffer = 0;
+	glGetIntegerv(binding, &last_buffer);
+	glBindBuffer(target, handle);
+	glUnmapBuffer(target);
+	glBindBuffer(target, last_buffer);
 	data_ptr = 0;
 }
 
 void CL_OpenGLBufferObjectProvider::upload_data(int offset, const void *data, int size)
 {
 	throw_if_disposed();
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(binding, &last_buffer);
-	clBindBuffer(target, handle);
-	clBufferSubData(target, offset, size, data);
-	clBindBuffer(target, last_buffer);
+	CL_OpenGL::set_active();
+	GLint last_buffer = 0;
+	glGetIntegerv(binding, &last_buffer);
+	glBindBuffer(target, handle);
+	glBufferSubData(target, offset, size, data);
+	glBindBuffer(target, last_buffer);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLBufferObjectProvider Implementation:
 
-CLenum CL_OpenGLBufferObjectProvider::to_enum(CL_BufferUsage usage) const
+GLenum CL_OpenGLBufferObjectProvider::to_enum(CL_BufferUsage usage) const
 {
 	switch (usage)
 	{
 	case cl_usage_stream_draw:
-		return CL_STREAM_DRAW;
+		return GL_STREAM_DRAW;
 	case cl_usage_stream_read:
-		return CL_STREAM_READ;
+		return GL_STREAM_READ;
 	case cl_usage_stream_copy:
-		return CL_STREAM_COPY;
+		return GL_STREAM_COPY;
 	case cl_usage_static_draw:
-		return CL_STATIC_DRAW;
+		return GL_STATIC_DRAW;
 	case cl_usage_static_read:
-		return CL_STATIC_READ;
+		return GL_STATIC_READ;
 	case cl_usage_static_copy:
-		return CL_STATIC_COPY;
+		return GL_STATIC_COPY;
 	case cl_usage_dynamic_draw:
-		return CL_DYNAMIC_DRAW;
+		return GL_DYNAMIC_DRAW;
 	case cl_usage_dynamic_read:
-		return CL_DYNAMIC_READ;
+		return GL_DYNAMIC_READ;
 	case cl_usage_dynamic_copy:
-		return CL_DYNAMIC_COPY;
+		return GL_DYNAMIC_COPY;
 	default:
-		return CL_STATIC_DRAW;
+		return GL_STATIC_DRAW;
 	}
 }
 
-CLenum CL_OpenGLBufferObjectProvider::to_enum(CL_BufferAccess access) const
+GLenum CL_OpenGLBufferObjectProvider::to_enum(CL_BufferAccess access) const
 {
 	switch (access)
 	{
 	case cl_access_read_only:
-		return CL_READ_ONLY;
+		return GL_READ_ONLY;
 	case cl_access_write_only:
-		return CL_WRITE_ONLY;
+		return GL_WRITE_ONLY;
 	case cl_access_read_write:
-		return CL_READ_WRITE;
+		return GL_READ_WRITE;
 	default:
-		return CL_READ_WRITE;
+		return GL_READ_WRITE;
 	}
 };

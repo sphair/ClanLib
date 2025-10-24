@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_list_style_position.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserListStylePosition::get_names()
 {
@@ -37,17 +37,21 @@ std::vector<CL_String> CL_CSSParserListStylePosition::get_names()
 	return names;
 }
 
-void CL_CSSParserListStylePosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserListStylePosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "inside")
+		if (equals(token.value, "inside"))
 			properties.list_style_position.type = CL_CSSBoxListStylePosition::type_inside;
-		else if (token.value == "outside")
+		else if (equals(token.value, "outside"))
 			properties.list_style_position.type = CL_CSSBoxListStylePosition::type_outside;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.list_style_position.type = CL_CSSBoxListStylePosition::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["list-style-position"] = &properties.list_style_position;
 	}
 }

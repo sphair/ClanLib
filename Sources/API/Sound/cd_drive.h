@@ -64,7 +64,7 @@ public:
 	static std::vector<CL_CDDrive> &get_drives();
 
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;

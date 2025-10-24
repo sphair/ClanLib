@@ -230,6 +230,27 @@ public:
 	/// \param background = Colorf
 	void set_selection_colors(const CL_Colorf &foreground, const CL_Colorf &background);
 
+	/// \brief Shows the cursor caret
+	void show_cursor();
+
+	/// \brief Hides the cursor caret
+	void hide_cursor();
+
+	/// \brief Sets the cursor position
+	///
+	/// \param pos = Index of cursor
+	void set_cursor_pos(CL_String::size_type pos);
+
+	/// \brief Toggles whether the cursor caret is shown as a solid box or a line
+	///
+	/// \param enable = Shows the cursor as a solid box if set to true
+	void set_cursor_overwrite_mode(bool enable);
+
+	/// \brief Sets the cursor color
+	///
+	/// \param color = Color of cursor
+	void set_cursor_color(const CL_Colorf &color);
+
 	/// \brief Get Combined text
 	///
 	/// \return combined_text

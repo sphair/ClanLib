@@ -33,6 +33,6 @@ private:
 
 	Client *client;
 
-	CL_AutoPtr<LobbyPlayerCollection> player_collection;
-	CL_AutoPtr<LobbyGameCollection> game_collection;
+	std::auto_ptr<LobbyPlayerCollection> player_collection;
+	std::auto_ptr<LobbyGameCollection> game_collection;
 };

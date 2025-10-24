@@ -9,7 +9,7 @@
 ServerLobbyGame::ServerLobbyGame(Server *server, ServerLobbyPlayer *owner, int id)
 : server(server), id(id), max_players(6), state(lobby)
 {
-	player_collection = new ServerLobbyGamePlayerCollection(server, this, owner);
+	player_collection.reset(new ServerLobbyGamePlayerCollection(server, this, owner));
 }
 
 ServerLobbyGame::~ServerLobbyGame()

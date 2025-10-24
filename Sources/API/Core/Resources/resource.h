@@ -40,6 +40,12 @@ class CL_DomElement;
 class CL_ResourceManager;
 class CL_Resource_Impl;
 
+class CL_ResourceData
+{
+public:
+	virtual ~CL_ResourceData() { }
+};
+
 /// \brief Resource Manager resource.
 ///
 /// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
@@ -71,7 +77,7 @@ public:
 	CL_ResourceManager get_manager();
 
 	/// \brief Returns the object stored in the given data name.
-	CL_UnknownSharedPtr get_data(const CL_String &data_name);
+	CL_SharedPtr<CL_ResourceData> get_data(const CL_String &data_name);
 
 	/// \brief Returns the number of CL_ResourceDataSession objects using this resource.
 	int get_data_session_count(const CL_String &data_name);
@@ -85,7 +91,7 @@ public:
 	bool operator ==(const CL_Resource &other) const;
 
 	/// \brief Store object in resource.
-	void set_data(const CL_String &data_name, const CL_UnknownSharedPtr &ptr);
+	void set_data(const CL_String &data_name, const CL_SharedPtr<CL_ResourceData> &ptr);
 
 	/// \brief Remove object stored with the given data name.
 	void clear_data(const CL_String &data_name);

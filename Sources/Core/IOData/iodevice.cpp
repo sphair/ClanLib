@@ -55,7 +55,7 @@ CL_IODevice::~CL_IODevice()
 
 void CL_IODevice::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_IODevice is null");
 }
 
@@ -146,9 +146,9 @@ void CL_IODevice::set_little_endian_mode()
 	impl->little_endian_mode = true;
 }
 
-void CL_IODevice::write_int64(cl_int64 data)
+void CL_IODevice::write_int64(cl_long data)
 {
-	cl_int64 final = data;
+	cl_long final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -157,12 +157,12 @@ void CL_IODevice::write_int64(cl_int64 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_int64));
+	write(&final, sizeof(cl_long));
 }
 
-void CL_IODevice::write_uint64(cl_uint64 data)
+void CL_IODevice::write_uint64(cl_ulong data)
 {
-	cl_uint64 final = data;
+	cl_ulong final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -171,12 +171,12 @@ void CL_IODevice::write_uint64(cl_uint64 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_uint64));
+	write(&final, sizeof(cl_ulong));
 }
 
-void CL_IODevice::write_int32(cl_int32 data)
+void CL_IODevice::write_int32(cl_int data)
 {
-	cl_int32 final = data;
+	cl_int final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -185,12 +185,12 @@ void CL_IODevice::write_int32(cl_int32 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_int32));
+	write(&final, sizeof(cl_int));
 }
 
-void CL_IODevice::write_uint32(cl_uint32 data)
+void CL_IODevice::write_uint32(cl_uint data)
 {
-	cl_uint32 final = data;
+	cl_uint final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -199,12 +199,12 @@ void CL_IODevice::write_uint32(cl_uint32 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_uint32));
+	write(&final, sizeof(cl_uint));
 }
 
-void CL_IODevice::write_int16(cl_int16 data)
+void CL_IODevice::write_int16(cl_short data)
 {
-	cl_int16 final = data;
+	cl_short final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -213,12 +213,12 @@ void CL_IODevice::write_int16(cl_int16 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_int16));
+	write(&final, sizeof(cl_short));
 }
 
-void CL_IODevice::write_uint16(cl_uint16 data)
+void CL_IODevice::write_uint16(cl_ushort data)
 {
-	cl_uint16 final = data;
+	cl_ushort final = data;
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(final);
@@ -227,17 +227,17 @@ void CL_IODevice::write_uint16(cl_uint16 data)
 	{
 		SWAP_IF_LITTLE(final);
 	}
-	write(&final, sizeof(cl_uint16));
+	write(&final, sizeof(cl_ushort));
 }
 
-void CL_IODevice::write_int8(cl_int8 data)
+void CL_IODevice::write_int8(cl_char data)
 {
-	write(&data, sizeof(cl_int8));
+	write(&data, sizeof(cl_char));
 }
 
-void CL_IODevice::write_uint8(cl_uint8 data)
+void CL_IODevice::write_uint8(cl_uchar data)
 {
-	write(&data, sizeof(cl_uint8));
+	write(&data, sizeof(cl_uchar));
 }
 
 void CL_IODevice::write_float(float data)
@@ -276,10 +276,10 @@ void CL_IODevice::write_string_text(const CL_StringRef8 &str)
 #endif
 }
 
-cl_int64 CL_IODevice::read_int64()
+cl_long CL_IODevice::read_int64()
 {
-	cl_int64 answer;
-	if (read(&answer, sizeof(cl_int64)) != sizeof(cl_int64)) throw CL_Exception("CL_IODevice_Datafile::read_int64() failed");
+	cl_long answer;
+	if (read(&answer, sizeof(cl_long)) != sizeof(cl_long)) throw CL_Exception("CL_IODevice_Datafile::read_int64() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -291,10 +291,10 @@ cl_int64 CL_IODevice::read_int64()
 	return answer;
 }
 
-cl_uint64 CL_IODevice::read_uint64()
+cl_ulong CL_IODevice::read_uint64()
 {
-	cl_uint64 answer;
-	if (read(&answer, sizeof(cl_uint64)) != sizeof(cl_uint64)) throw CL_Exception("CL_IODevice_Datafile::read_uint64() failed");
+	cl_ulong answer;
+	if (read(&answer, sizeof(cl_ulong)) != sizeof(cl_ulong)) throw CL_Exception("CL_IODevice_Datafile::read_uint64() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -306,10 +306,10 @@ cl_uint64 CL_IODevice::read_uint64()
 	return answer;
 }
 
-cl_int32 CL_IODevice::read_int32()
+cl_int CL_IODevice::read_int32()
 {
-	cl_int32 answer;
-	if (read(&answer, sizeof(cl_int32)) != sizeof(cl_int32)) throw CL_Exception("CL_IODevice_Datafile::read_int32() failed");
+	cl_int answer;
+	if (read(&answer, sizeof(cl_int)) != sizeof(cl_int)) throw CL_Exception("CL_IODevice_Datafile::read_int32() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -321,10 +321,10 @@ cl_int32 CL_IODevice::read_int32()
 	return answer;
 }
 
-cl_uint32 CL_IODevice::read_uint32()
+cl_uint CL_IODevice::read_uint32()
 {
-	cl_uint32 answer;
-	if (read(&answer, sizeof(cl_uint32)) != sizeof(cl_uint32)) throw CL_Exception("CL_IODevice_Datafile::read_uint32() failed");
+	cl_uint answer;
+	if (read(&answer, sizeof(cl_uint)) != sizeof(cl_uint)) throw CL_Exception("CL_IODevice_Datafile::read_uint32() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -336,10 +336,10 @@ cl_uint32 CL_IODevice::read_uint32()
 	return answer;
 }
 
-cl_int16 CL_IODevice::read_int16()
+cl_short CL_IODevice::read_int16()
 {
-	cl_int16 answer;
-	if (read(&answer, sizeof(cl_int16)) != sizeof(cl_int16)) throw CL_Exception("CL_IODevice_Datafile::read_int16() failed");
+	cl_short answer;
+	if (read(&answer, sizeof(cl_short)) != sizeof(cl_short)) throw CL_Exception("CL_IODevice_Datafile::read_int16() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -351,10 +351,10 @@ cl_int16 CL_IODevice::read_int16()
 	return answer;
 }
 
-cl_uint16 CL_IODevice::read_uint16()
+cl_ushort CL_IODevice::read_uint16()
 {
-	cl_uint16 answer;
-	if (read(&answer, sizeof(cl_uint16)) != sizeof(cl_uint16)) throw CL_Exception("CL_IODevice_Datafile::read_uint16() failed");
+	cl_ushort answer;
+	if (read(&answer, sizeof(cl_ushort)) != sizeof(cl_ushort)) throw CL_Exception("CL_IODevice_Datafile::read_uint16() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -366,10 +366,10 @@ cl_uint16 CL_IODevice::read_uint16()
 	return answer;
 }
 
-cl_int8 CL_IODevice::read_int8()
+cl_char CL_IODevice::read_int8()
 {
-	cl_int8 answer;
-	if (read(&answer, sizeof(cl_int8)) != sizeof(cl_int8)) throw CL_Exception("CL_IODevice_Datafile::read_int8() failed");
+	cl_char answer;
+	if (read(&answer, sizeof(cl_char)) != sizeof(cl_char)) throw CL_Exception("CL_IODevice_Datafile::read_int8() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);
@@ -381,10 +381,10 @@ cl_int8 CL_IODevice::read_int8()
 	return answer;
 }
 
-cl_uint8 CL_IODevice::read_uint8()
+cl_uchar CL_IODevice::read_uint8()
 {
-	cl_uint8 answer;
-	if (read(&answer, sizeof(cl_uint8)) != sizeof(cl_uint8)) throw CL_Exception("CL_IODevice_Datafile::read_uint8() failed");
+	cl_uchar answer;
+	if (read(&answer, sizeof(cl_uchar)) != sizeof(cl_uchar)) throw CL_Exception("CL_IODevice_Datafile::read_uint8() failed");
 	if (impl->little_endian_mode)
 	{
 		SWAP_IF_BIG(answer);

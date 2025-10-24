@@ -54,22 +54,17 @@ CL_Sprite::CL_Sprite()
 {
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext &gc)
-: impl(new CL_Sprite_Impl(gc))
-{
-}
-
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc)
 {
 	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
 	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
 	CL_VirtualFileSystem vfs(path);
 	CL_VirtualDirectory dir = vfs.get_root_directory();
-	*this = CL_Sprite(gc, filename, dir, import_desc );
+	*this = CL_Sprite(gc, filename, dir, import_desc);
 }
 
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc)
-: impl(new CL_Sprite_Impl(gc))
+: impl(new CL_Sprite_Impl())
 {
 	CL_SpriteDescription desc;
 	desc.add_frame(filename, dir, import_desc );
@@ -79,7 +74,7 @@ CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_Vir
 }
 
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc )
-: impl(new CL_Sprite_Impl(gc))
+: impl(new CL_Sprite_Impl())
 {
 	CL_SpriteDescription desc;
 	desc.add_frame(file, image_type, import_desc );
@@ -88,7 +83,7 @@ CL_Sprite::CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &
 }
 
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc)
-: impl(new CL_Sprite_Impl(gc))
+: impl(new CL_Sprite_Impl())
 {
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
@@ -100,7 +95,7 @@ CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_
 }
 
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &description)
-: impl(new CL_Sprite_Impl(gc))
+: impl(new CL_Sprite_Impl())
 {
 	impl->create_textures(gc, description);
 	restart();
@@ -115,7 +110,7 @@ CL_Sprite::~CL_Sprite()
 
 void CL_Sprite::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_Sprite is null");
 }
 
@@ -277,6 +272,9 @@ void CL_Sprite::set_image_data(const CL_Sprite &image_source)
 
 void CL_Sprite::clone(const CL_Sprite &source)
 {
+	if(!impl)
+		impl = CL_SharedPtr<CL_Sprite_Impl>(new CL_Sprite_Impl());
+
 	impl->angle = source.impl->angle;
 	impl->angle_pitch = source.impl->angle_pitch;
 	impl->angle_yaw = source.impl->angle_yaw;
@@ -394,7 +392,6 @@ void CL_Sprite::set_angle(CL_Angle angle)
 		degrees = fmod(degrees, 360.0f) + 360.0f;
 
 	impl->angle = CL_Angle(degrees, cl_degrees);
-
 }
 
 void CL_Sprite::set_angle_pitch(CL_Angle angle)
@@ -434,7 +431,6 @@ void CL_Sprite::rotate(CL_Angle angle)
 		degrees = fmod(degrees, 360.0f) + 360.0f;
 
 	impl->angle = CL_Angle(degrees, cl_degrees);
-
 }
 
 void CL_Sprite::rotate_pitch(CL_Angle angle)
@@ -484,17 +480,11 @@ void CL_Sprite::set_scale(float x, float y)
 void CL_Sprite::set_alpha(float alpha)
 {
 	impl->color.a = alpha;
-
-	for (int i=0; i<6; i++)
-		impl->prim_color[i] = CL_Vec4f(impl->color.r,impl->color.g,impl->color.b,impl->color.a);
 }
 
 void CL_Sprite::set_color(const CL_Colorf &color)
 {
 	impl->color = color;
-
-	for (int i=0; i<6; i++)
-		impl->prim_color[i] = CL_Vec4f(color.r,color.g,color.b,color.a);
 }
 
 void CL_Sprite::set_linear_filter(bool linear_filter)

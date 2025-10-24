@@ -103,7 +103,6 @@ void CL_ListViewRenderer::render(
 	}
 
 	// 3. Draw items
-	unsigned int it_size = items.size();
 	std::vector<ListViewShownItem>::iterator it;
 	for (it = items.begin(); it != items.end(); ++it)
 	{

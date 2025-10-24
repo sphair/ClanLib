@@ -54,9 +54,10 @@ public:
 	float position_z;
 	float position_w;
 	PerlinDimension dimension;
+	bool is_normals_set;
 
 private:
-	void checkbox_moveballs_changed();
+	void checkbox_normals_changed();
 	void update_all_slider_text();
 	void slider_amplitude_changed();
 	void slider_width_changed();
@@ -68,7 +69,7 @@ private:
 	void slider_length_y_changed();
 	void slider_position_z_changed();
 	void slider_position_w_changed();
-
+	void checkbox_normal_changed();
 	void set_value(CL_Slider *slider, float value, float max_value);
 	CL_Label *create_slider_label(CL_Slider *slider);
 	void on_format_selected(int value, CL_ComboBox *combo);
@@ -77,6 +78,7 @@ private:
 	CL_Slider *create_slider(int xpos, int ypos);
 	float get_value(CL_Slider *slider, float max_value);
 
+	CL_CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
 	CL_ComboBox *create_dimension_combo_box(int xpos, int ypos, CL_PopupMenu &menu, int selected_item);
 	void make_dimension_menu(CL_PopupMenu &menu);
 	CL_ComboBox *create_format_combo_box(int xpos, int ypos, CL_PopupMenu &menu, int selected_item);
@@ -111,6 +113,8 @@ private:
 	CL_Label *label_dimension;
 	CL_ComboBox *combo_dimension;
 	CL_PopupMenu combo_dimension_menu;
+
+	CL_CheckBox *checkbox_normals;
 
 };
 

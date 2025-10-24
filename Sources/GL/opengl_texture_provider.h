@@ -42,15 +42,15 @@ class CL_OpenGLTextureProvider : public CL_TextureProvider, CL_DisposableObject
 /// \name Construction
 /// \{
 public:
-	CL_OpenGLTextureProvider(CL_OpenGLGraphicContextProvider *gc_provider, CL_TextureDimensions texture_dimensions);
+	CL_OpenGLTextureProvider(CL_TextureDimensions texture_dimensions);
 	~CL_OpenGLTextureProvider();
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	CLuint get_handle() const { return handle; }
-	CLuint get_texture_type() const { return texture_type; }
+	GLuint get_handle() const { return handle; }
+	GLuint get_texture_type() const { return texture_type; }
 /// \}
 
 /// \name Operations
@@ -132,37 +132,38 @@ public:
 /// \{
 private:
 	void on_dispose();
-	void set_texture_image2d(CLuint target, CL_PixelBuffer &image, int level);
-	void set_texture_image3d(CLuint target, CL_PixelBuffer &image, int image_depth, int level);
-	CLenum to_enum(CL_TextureFilter filter);
-	CLenum to_enum(CL_TextureWrapMode mode);
-	CLenum to_enum(CL_CompareFunction func);
-	CLenum to_enum(CL_TextureCompareMode mode);
+	void set_texture_image2d(GLuint target, CL_PixelBuffer &image, int level);
+	void set_texture_image3d(GLuint target, CL_PixelBuffer &image, int image_depth, int level);
+	GLenum to_enum(CL_TextureFilter filter);
+	GLenum to_enum(CL_TextureWrapMode mode);
+	GLenum to_enum(CL_CompareFunction func);
+	GLenum to_enum(CL_TextureCompareMode mode);
+    static int get_next_power_of_two(int value);
 
 	int width, height, depth;
 
 	/// \brief OpenGL texture handle.
-	CLuint handle;
+	GLuint handle;
 
-	CLuint texture_type;
+	GLuint texture_type;
 /// \}
 };
 
 class CL_TextureStateTracker
 {
 public:
-	CL_TextureStateTracker(CLuint texture_type, CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_TextureStateTracker(GLuint texture_type, GLuint handle);
 	~CL_TextureStateTracker();
 
 private:
-	CLboolean last_is_enabled_texture1d;
-	CLboolean last_is_enabled_texture2d;
-	CLboolean last_is_enabled_texture3d;
-	CLboolean last_is_enabled_texture_cube_map;
-	CLuint last_bound_texture1d;
-	CLuint last_bound_texture2d;
-	CLuint last_bound_texture3d;
-	CLuint last_bound_texture_cube_map;
+	GLboolean last_is_enabled_texture1d;
+	GLboolean last_is_enabled_texture2d;
+	GLboolean last_is_enabled_texture3d;
+	GLboolean last_is_enabled_texture_cube_map;
+	GLuint last_bound_texture1d;
+	GLuint last_bound_texture2d;
+	GLuint last_bound_texture3d;
+	GLuint last_bound_texture_cube_map;
 };
 
 

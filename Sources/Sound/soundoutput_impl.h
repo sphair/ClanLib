@@ -108,6 +108,12 @@ protected:
 
 	/// \brief Waits until output source isn't full anymore.
 	virtual void wait() = 0;
+    
+    /// \brief Called by the mixer thread when it starts
+    virtual void mixer_thread_starting() { }
+    
+    /// \brief Called by the mixer thread when it stops
+    virtual void mixer_thread_stopping() { }
 
 	/// \brief Starts a thread and call mix_fragment() and wait() continueously.
 	void start_mixer_thread();

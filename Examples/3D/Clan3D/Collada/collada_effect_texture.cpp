@@ -104,7 +104,7 @@ void CL_Collada_Effect_Texture_Impl::load_texture(CL_DomElement &profile_element
 
 bool CL_Collada_Effect_Texture::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 CL_String &CL_Collada_Effect_Texture::get_sid()

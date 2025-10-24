@@ -30,8 +30,11 @@
 #include "Display/precomp.h"
 #include "font_provider_system.h"
 
-#ifdef WIN32
+#ifdef USE_MS_FONT_RENDERER
 #include "FontEngine/font_engine_win32.h"
+#endif
+#ifdef __APPLE__
+#include "FontEngine/font_engine_cocoa.h"
 #endif
 //#else
 #include "FontEngine/font_engine_freetype.h"
@@ -68,7 +71,7 @@ std::map<CL_String, CL_String > CL_FontProvider_System::font_register_cache;
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_System Construction:
 
-CL_FontProvider_System::CL_FontProvider_System(CL_GraphicContext &gc) : glyph_cache(gc), font_engine(0)
+CL_FontProvider_System::CL_FontProvider_System() : glyph_cache(), font_engine(0)
 {
 }
 
@@ -80,9 +83,9 @@ CL_FontProvider_System::~CL_FontProvider_System()
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_System Attributes:
 
-CL_FontMetrics CL_FontProvider_System::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_FontProvider_System::get_font_metrics()
 {
-	return glyph_cache.get_font_metrics(gc);
+	return glyph_cache.get_font_metrics();
 }
 
 CL_Font_TextureGlyph *CL_FontProvider_System::get_glyph(CL_GraphicContext &gc, unsigned int glyph)
@@ -146,61 +149,60 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 {
 	free_font();
 
-	if (desc.get_anti_alias_set())	// Anti-alias was set
+	if (desc.get_subpixel())
 	{
-		glyph_cache.anti_alias = desc.get_anti_alias();	// Override the default
+		glyph_cache.enable_subpixel = true;
+		glyph_cache.anti_alias = true;	// Implies anti_alias is set
 	}
 	else
 	{
-#ifdef WIN32
-		glyph_cache.anti_alias = abs(desc.get_height()) >= 16;
-#else
-		glyph_cache.anti_alias = true;	// Default, anti_alias enabled (may be modified by WIN32 later)
-#endif
+		glyph_cache.enable_subpixel = false;
+		glyph_cache.anti_alias = desc.get_anti_alias();
 	}
 
-#ifdef WIN32
-	// Seems the MS implementation does anti-aliasing really poorly (no subpixel rendering support
-	// in GetGlyphOutline), so we use FreeType to render our anti-aliased text. -- mbn 17. April 2010
-/*	if (glyph_cache.anti_alias)
-	{
-		HFONT handle = CreateFont(
-			desc.get_height(), desc.get_average_width(),
-			(int) (desc.get_escapement() * 10 + 0.5),
-			(int) (desc.get_orientation() * 10 + 0.5),
-			desc.get_weight(),
-			desc.get_italic() ? TRUE : FALSE,
-			desc.get_underline() ? TRUE : FALSE,
-			desc.get_strikeout() ? TRUE : FALSE,
-			DEFAULT_CHARSET,
-			OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS,
-			DEFAULT_QUALITY,
-			(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
-			desc.get_typeface_name().c_str());
-		if (handle == 0)
-			throw CL_Exception("CreateFont failed");
+#ifdef USE_MS_FONT_RENDERER
 
-		HDC dc = GetDC(0);
-		HGDIOBJ old_font = SelectObject(dc, handle);
-		DWORD font_file_size = GetFontData(dc, 0, 0, 0, 0);
-		CL_DataBuffer font_file(font_file_size);
-		DWORD result = GetFontData(dc, 0, 0, font_file.get_data(), font_file.get_size());
-		SelectObject(dc, old_font);
-		ReleaseDC(0, dc);
-		DeleteObject(handle);
-		if (result == GDI_ERROR)
-			throw CL_Exception("GetFontData failed");
-
-		CL_IODevice_Memory font_iodevice(font_file);
-		font_engine = new CL_FontEngine_Freetype(font_iodevice, desc.get_height(), desc.get_average_width());
-	}
-	else*/
-	{
-		font_engine = new CL_FontEngine_Win32(desc);
-	}
-
+	font_engine = new CL_FontEngine_Win32(desc);
 	glyph_cache.font_metrics = font_engine->get_metrics();
+
+#elif defined(WIN32)
+
+	HFONT handle = CreateFont(
+		desc.get_height(), desc.get_average_width(),
+		(int) (desc.get_escapement() * 10 + 0.5),
+		(int) (desc.get_orientation() * 10 + 0.5),
+		desc.get_weight(),
+		desc.get_italic() ? TRUE : FALSE,
+		desc.get_underline() ? TRUE : FALSE,
+		desc.get_strikeout() ? TRUE : FALSE,
+		DEFAULT_CHARSET,
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
+		CL_StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
+	if (handle == 0)
+		throw CL_Exception("CreateFont failed");
+
+	HDC dc = GetDC(0);
+	HGDIOBJ old_font = SelectObject(dc, handle);
+	DWORD font_file_size = GetFontData(dc, 0, 0, 0, 0);
+	CL_DataBuffer font_file(font_file_size);
+	DWORD result = GetFontData(dc, 0, 0, font_file.get_data(), font_file.get_size());
+	SelectObject(dc, old_font);
+	ReleaseDC(0, dc);
+	DeleteObject(handle);
+	if (result == GDI_ERROR)
+		throw CL_Exception("GetFontData failed");
+
+	CL_IODevice_Memory font_iodevice(font_file);
+	font_engine = new CL_FontEngine_Freetype(font_iodevice, desc.get_height(), desc.get_average_width());
+	glyph_cache.font_metrics = font_engine->get_metrics();
+    
+#elif defined(__APPLE__)
+    
+    font_engine = new CL_FontEngine_Cocoa(desc);
+    glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
 
@@ -214,7 +216,7 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 	{
 		io_dev = CL_File(font_file_path, CL_File::open_existing, CL_File::access_read);
 	}
-	catch(const CL_Exception&)
+	catch(CL_Exception error)
 	{
 		throw CL_Exception(cl_format("Cannot open font file: \"%1\"", font_file_path));
 	}
@@ -255,21 +257,6 @@ CL_FontDescription CL_FontProvider_System::get_registered_font(const CL_FontDesc
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();
 
-	// Attempt to convert the point sizes (to match WIN32 with FreeType)
-	if (average_width==0)	// Unset width
-	{
-		if (height <0)
-		{
-			average_width = -height;
-			average_width = (average_width * 80) / 96;
-		}
-		else
-		{
-			// I do not know why this formula works,  but it seems to obtain the best result
-			average_width = ( height * 80 * 80 ) / (96 * 96);
-		}
-	}
-
 	CL_FontDescription new_desc;
 	new_desc.clone(desc);
 	new_desc.set_average_width(average_width);
@@ -284,10 +271,12 @@ CL_FontDescription CL_FontProvider_System::get_registered_font(const CL_FontDesc
 	}
 	else
 	{
+#if !defined(__APPLE__)
         // Obtain the best matching font file from fontconfig.
 		CL_FontConfig &fc = CL_FontConfig::instance();
 		CL_String font_file_path = fc.match_font(new_desc);
 		new_desc.set_typeface_name(font_file_path);
+#endif
 	}
 	return new_desc;
 }

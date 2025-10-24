@@ -32,14 +32,14 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/mat4.h"
 #include "API/Core/Signals/slot.h"
+#include "API/Core/System/uniqueptr.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/frame_buffer.h"
 #include "API/Display/Render/blend_mode.h"
-#include <memory>
+#include "API/Display/2D/color.h"
 
 class CL_PixelPipeline;
 class CL_PixelCommand;
-class CL_SoftwareProgram;
 class CL_ProgramObject_SWRender;
 
 class CL_PixelCanvas
@@ -56,28 +56,16 @@ public:
 	void set_clip_rect(const CL_Rect &new_clip_rect);
 	void reset_clip_rect();
 
-	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
+	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, const CL_Colorf &const_color);
 
 	void set_framebuffer(const CL_FrameBuffer &buffer);
 	void reset_framebuffer();
 
-	void set_program_object(CL_ProgramObject_SWRender &program);
-	void reset_program_object();
-
 	void clear(const CL_Colorf &color);
 	void draw_pixels(const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &primary_color);
 	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &pixels);
-	void draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler);
-	void draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler);
-	void draw_line(const CL_Vec2f points[2], const CL_Vec4f primcolor[2], const CL_Vec2f texcoords[2], int sampler);
-	void queue_command(std::auto_ptr<CL_PixelCommand> command);
+	void queue_command(CL_UniquePtr<CL_PixelCommand> &command);
 
-	const CL_Mat4f &get_modelview() const { return modelview; }
-	const CL_Mat4f &get_projection() const { return projection; }
-	void set_modelview(const CL_Mat4f &new_modelview);
-	void set_projection(const CL_Mat4f &new_projection);
-
-	CL_Vec2f transform(const CL_Vec4f &vertex) const;
 	void set_sampler(int index, const CL_PixelBuffer &new_sampler);
 	void reset_sampler(int index);
 
@@ -86,11 +74,6 @@ public:
 
 private:
 	void modified_framebuffer();
-
-	CL_Mat4f modelview;
-	CL_Mat4f projection;
-	mutable CL_Mat4f modelview_projection;
-	mutable bool modelview_projection_invalid;
 
 	CL_PixelBuffer primary_colorbuffer0;
 	CL_PixelBufferData colorbuffer0;
@@ -105,8 +88,7 @@ private:
 	CL_BlendFunc cur_blend_dest;
 	CL_BlendFunc cur_blend_src_alpha;
 	CL_BlendFunc cur_blend_dest_alpha;
+	CL_Colorf cur_blend_color;
 
-	CL_SoftwareProgram *current_program;
-
-	std::auto_ptr<CL_PixelPipeline> pipeline;
+	CL_UniquePtr<CL_PixelPipeline> pipeline;
 };

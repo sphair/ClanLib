@@ -63,6 +63,6 @@ float CL_Collada_Effect_FloatParam::get_float()
 
 bool CL_Collada_Effect_FloatParam::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 

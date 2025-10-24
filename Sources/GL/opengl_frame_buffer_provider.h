@@ -52,11 +52,13 @@ public:
 /// \{
 
 public:
-	CLuint get_handle();
+	GLuint get_handle();
 
 	CL_Size get_size() const;
 
 	CL_FrameBufferBindTarget get_bind_target() const;
+
+	CL_OpenGLGraphicContextProvider *get_gc_provider() { return gc_provider; }
 
 /// \}
 /// \name Operations
@@ -102,15 +104,15 @@ private:
 	void on_dispose();
 	static CL_String get_error_message(int error_code);
 
-	CLuint decode_texture_subtype(CL_TextureSubtype subtype);
-	void detach_object(CLenum opengl_attachment, const CL_Texture &texture);
-	void detach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
+	GLuint decode_texture_subtype(CL_TextureSubtype subtype);
+	void detach_object(GLenum opengl_attachment, const CL_Texture &texture);
+	void detach_object(GLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
 
 	// Returns true if the object was replaced
-	bool attach_object(CLenum opengl_attachment, const CL_Texture &texture, int level, int zoffset, CLuint texture_target);
-	bool attach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
+	bool attach_object(GLenum opengl_attachment, const CL_Texture &texture, int level, int zoffset, GLuint texture_target);
+	bool attach_object(GLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
 
-	int decode_internal_attachment_offset(CLenum opengl_attachment);
+	int decode_internal_attachment_offset(GLenum opengl_attachment);
 
 	static const int depth_attachment_offset = 0;
 	static const int stencil_attachment_offset = 1;
@@ -123,7 +125,7 @@ private:
 	CL_RenderBuffer attached_renderbuffers[num_attachment_offsets];
 
 	int count_color_attachments;
-	CLuint handle;
+	GLuint handle;
 
 	CL_FrameBufferBindTarget bind_target;
 
@@ -134,12 +136,12 @@ private:
 class CL_FrameBufferStateTracker
 {
 public:
-	CL_FrameBufferStateTracker(CL_FrameBufferBindTarget target, CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_FrameBufferStateTracker(CL_FrameBufferBindTarget target, GLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
 	~CL_FrameBufferStateTracker();
 
 private:
 	CL_FrameBufferBindTarget bind_target;
-	CLint last_bound;
+	GLint last_bound;
 	bool handle_and_bound_equal;
 };
 

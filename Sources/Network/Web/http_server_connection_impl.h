@@ -64,7 +64,7 @@ public:
 
 	bool writing_header;
 
-	cl_int64 written_content_length;
+	cl_long written_content_length;
 
 
 /// \}

@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_color.h"
+#include "API/CSSLayout/PropertyTypes/css_box_color.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxColor::CL_CSSBoxColor()
@@ -49,5 +49,17 @@ void CL_CSSBoxColor::compute(const CL_CSSBoxColor *parent, CL_CSSResourceCache *
 			type = type_color;
 			color = layout->get_default_color();
 		}
+	}
+}
+
+CL_String CL_CSSBoxColor::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_color:
+		return cl_format("rgba(%1,%2,%3,%4)", (int)(color.r * 255.0f + 0.5f), (int)(color.g * 255.0f + 0.5f), (int)(color.b * 255.0f + 0.5f), (int)(color.a * 255.0f + 0.5f));
+	case type_inherit:
+		return "inherit";
 	}
 }

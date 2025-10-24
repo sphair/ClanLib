@@ -39,6 +39,7 @@ public:
 	virtual ~CL_FontEngine() { }
 	virtual CL_FontMetrics get_metrics() = 0;
 
-	virtual CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color) = 0;
+	virtual CL_FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) = 0;
+	virtual CL_FontPixelBuffer get_font_glyph_subpixel(int glyph) = 0;
 
 };

@@ -136,6 +136,11 @@ CL_DomElement GridObject::to_element(CL_DomDocument &doc)
 		CL_LineEdit *co = dynamic_cast<CL_LineEdit*>(comp);
 		e.set_attribute("text", co->get_text());
 	}
+	else if (comp->get_type_name() == "textedit")
+	{
+		CL_TextEdit *co = dynamic_cast<CL_TextEdit*>(comp);
+		e.set_attribute("text", co->get_text());
+	}
 	else if (comp->get_type_name() == "menubar")
 	{
 		// CL_MenuBar *co = dynamic_cast<CL_MenuBar*>(comp);

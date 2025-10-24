@@ -148,9 +148,9 @@ CL_ListViewColumnHeader CL_ListViewHeader::create_column(const CL_StringRef &col
 
 CL_ListViewColumnHeader CL_ListViewHeader::append(CL_ListViewColumnHeader column)
 {
-	if (!impl->first_column.is_null())
+	if (impl->first_column)
 	{
-		impl->last_column->next_sibling = column.impl;
+		impl->last_column.lock()->next_sibling = column.impl;
 		column.impl->prev_sibling = impl->last_column;
 		impl->last_column = column.impl;
 	}
@@ -161,28 +161,28 @@ CL_ListViewColumnHeader CL_ListViewHeader::append(CL_ListViewColumnHeader column
 	}
 
 	if (!impl->func_column_added.is_null())
-		impl->func_column_added.invoke(CL_ListViewColumnHeader(impl->last_column));
+		impl->func_column_added.invoke(CL_ListViewColumnHeader(impl->last_column.lock()));
 
-	return CL_ListViewColumnHeader(impl->last_column);
+	return CL_ListViewColumnHeader(impl->last_column.lock());
 }
 
 CL_ListViewColumnHeader CL_ListViewHeader::remove(const CL_StringRef &column_id)
 {
 	CL_SharedPtr<CL_ListViewColumnHeader_Impl> cur = impl->first_column;
-	while (!cur.is_null())
+	while (cur)
 	{
 		if (cur->column_id == column_id)
 		{
 			CL_ListViewColumnHeader column(cur);
 			if (!impl->func_column_removed.is_null())
 				impl->func_column_removed.invoke(column);
-			if (!cur->prev_sibling.is_null())
-				cur->prev_sibling->next_sibling = cur->next_sibling;
-			if (!cur->next_sibling.is_null())
+			if (!cur->prev_sibling.expired())
+				cur->prev_sibling.lock()->next_sibling = cur->next_sibling;
+			if (cur->next_sibling)
 				cur->next_sibling->prev_sibling = cur->prev_sibling;
 			if (impl->first_column == cur)
 				impl->first_column = cur->next_sibling;
-			if (impl->last_column == cur)
+			if (impl->last_column.lock() == cur)
 				impl->last_column = cur->prev_sibling;
 
 			return column;
@@ -346,7 +346,6 @@ void CL_ListViewHeader_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &upd
 	
 	// draw listview column headers and backgrounds
 	text_height = font.get_text_size(gc, "l").height;
-	int xpos = 0;
 	CL_ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{

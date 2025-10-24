@@ -60,7 +60,7 @@ public:
 /// \}
 
 private:
-	cl_uint32 find_subchunk(const char *chunk, CL_IODevice &source, cl_uint32 file_offset, cl_uint32 max_offset );
+	cl_uint find_subchunk(const char *chunk, CL_IODevice &source, cl_uint file_offset, cl_uint max_offset );
 
 };
 

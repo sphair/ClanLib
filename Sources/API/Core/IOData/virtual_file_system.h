@@ -72,7 +72,7 @@ public:
 
 public:
 	/// \brief Returns true if the file system is null.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Returns the root directory for the file system.
 	CL_VirtualDirectory get_root_directory();

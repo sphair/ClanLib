@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_letter_spacing.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserLetterSpacing::get_names()
 {
@@ -37,15 +37,15 @@ std::vector<CL_String> CL_CSSParserLetterSpacing::get_names()
 	return names;
 }
 
-void CL_CSSParserLetterSpacing::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserLetterSpacing::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "normal")
+		if (equals(token.value, "normal"))
 			properties.letter_spacing.type = CL_CSSBoxLetterSpacing::type_normal;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.letter_spacing.type = CL_CSSBoxLetterSpacing::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
@@ -56,5 +56,23 @@ void CL_CSSParserLetterSpacing::parse(CL_CSSBoxProperties &properties, const CL_
 			properties.letter_spacing.type = CL_CSSBoxLetterSpacing::type_length;
 			properties.letter_spacing.length = length;
 		}
+	}
+	else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+	{
+		token = next_token(pos, tokens);
+		if (is_length(token) && pos == tokens.size())
+		{
+			CL_CSSBoxLength length;
+			if (parse_length(token, length))
+			{
+				length.value = -length.value;
+				properties.letter_spacing.type = CL_CSSBoxLetterSpacing::type_length;
+				properties.letter_spacing.length = length;
+			}
+		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["letter-spacing"] = &properties.letter_spacing;
 	}
 }

@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_page_break_before.h"
+#include "API/CSSLayout/PropertyTypes/css_box_page_break_before.h"
 
 CL_CSSBoxPageBreakBefore::CL_CSSBoxPageBreakBefore()
 : type(type_auto)
@@ -42,5 +42,25 @@ void CL_CSSBoxPageBreakBefore::compute(const CL_CSSBoxPageBreakBefore *parent, C
 			type = parent->type;
 		else
 			type = type_auto;
+	}
+}
+
+CL_String CL_CSSBoxPageBreakBefore::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_auto:
+		return "auto";
+	case type_always:
+		return "always";
+	case type_avoid:
+		return "avoid";
+	case type_left:
+		return "left";
+	case type_right:
+		return "right";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -70,16 +70,16 @@ public:
 		operator_double_slash,
 		operator_plus,
 		operator_minus,
-		operator_or,
-		operator_and,
-		operator_compare_equal,
-		operator_compare_not_equal,
-		operator_less,
-		operator_less_equal,
-		operator_greater,
-		operator_greater_equal,
 		operator_assign,
-		operator_parenthesis_end,
+		operator_greater_equal,
+		operator_greater,
+		operator_less_equal,
+		operator_less,
+		operator_compare_not_equal,
+		operator_compare_equal,
+		operator_and,
+		operator_or,
+		operator_parenthesis_end
 	};
 
 	struct Value

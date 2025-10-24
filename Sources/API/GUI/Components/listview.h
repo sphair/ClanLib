@@ -116,7 +116,10 @@ public:
 	/// \brief Returns a container class holding the selected items in a linked list structure.
 	CL_ListViewSelection get_selected_items() const;
 
-	/// \brief Returns the currently selected item in single selection mode. If multiple items are selected, the item selected first (chronological order) is returned.
+	/// \brief Returns the currently selected item in single selection mode. 
+	///
+	/// If multiple items are selected, the item selected first (chronological order) is returned.
+	/// If no element is selected, an empty CL_ListViewItem is returned.
 	CL_ListViewItem get_selected_item();
 
 	/// \brief Returns the preferred size of the component, as defined in its CSS file.
@@ -159,6 +162,12 @@ public:
 	/// \param mode = List View Display Mode
 	void set_display_mode(CL_ListViewDisplayMode mode);
 
+	/// \brief Set if icons are shown in the detail display mode
+	void show_detail_icon(bool enable = true);
+
+	/// \brief Set if node opener is shown in the detail display mode
+	void show_detail_opener(bool enable = true);
+
 	/// \brief Remove all items.
 	void clear();
 
@@ -178,7 +187,7 @@ public:
 	CL_ListViewItem find(int id, bool recursive=true);
 
 	/// \brief Returns a CL_ListViewItem with the userdata 'ptr', or a NULL item if none found.
-	CL_ListViewItem find(CL_UnknownSharedPtr userdata, bool recursive=true);
+	CL_ListViewItem find(CL_SharedPtr<CL_ListViewItemUserData> userdata, bool recursive=true);
 
 /// \}
 /// \name Events

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_width.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderWidth::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserBorderWidth::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderWidth border_widths[4];
 	int count;
@@ -47,19 +47,19 @@ void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_St
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident)
 		{
-			if (token.value == "thin")
+			if (equals(token.value, "thin"))
 			{
 				border_widths[count].type = CL_CSSBoxBorderWidth::type_thin;
 			}
-			else if (token.value == "medium")
+			else if (equals(token.value, "medium"))
 			{
 				border_widths[count].type = CL_CSSBoxBorderWidth::type_medium;
 			}
-			else if (token.value == "thick")
+			else if (equals(token.value, "thick"))
 			{
 				border_widths[count].type = CL_CSSBoxBorderWidth::type_thick;
 			}
-			else if (token.value == "inherit" && count == 0 && pos == tokens.size())
+			else if (equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
 				properties.border_width_left.type = CL_CSSBoxBorderWidth::type_inherit;
 				properties.border_width_top.type = CL_CSSBoxBorderWidth::type_inherit;
@@ -69,6 +69,7 @@ void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_St
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -82,6 +83,7 @@ void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_St
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -91,6 +93,7 @@ void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_St
 		}
 		else
 		{
+			debug_parse_error(name, tokens);
 			return;
 		}
 	}
@@ -126,5 +129,12 @@ void CL_CSSParserBorderWidth::parse(CL_CSSBoxProperties &properties, const CL_St
 		default:
 			break;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["border-left-width"] = &properties.border_width_left;
+		(*out_change_set)["border-right-width"] = &properties.border_width_right;
+		(*out_change_set)["border-top-width"] = &properties.border_width_top;
+		(*out_change_set)["border-bottom-width"] = &properties.border_width_bottom;
 	}
 }

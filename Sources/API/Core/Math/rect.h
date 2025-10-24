@@ -359,7 +359,7 @@ public:
 		return *this;
 	}
 
-	/// \brief Calculates the union of two rectangles. 
+	/// \brief Calculates the intersection of two rectangles. 
 	/// 
 	/// <p>Rect values become: max left, max top, min right, min bottom.</p>
 	///

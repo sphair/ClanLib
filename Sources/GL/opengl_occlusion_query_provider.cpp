@@ -54,7 +54,7 @@ void CL_OpenGLOcclusionQueryProvider::on_dispose()
 	{
 		if (CL_OpenGL::set_active())
 		{
-			clDeleteQueries(1, &handle);
+			glDeleteQueries(1, &handle);
 		}
 	}
 }
@@ -66,15 +66,15 @@ bool CL_OpenGLOcclusionQueryProvider::is_result_ready() const
 {
 	CL_OpenGL::set_active(gc_provider);
 	int available;
-	clGetQueryObjectiv(handle, CL_QUERY_RESULT_AVAILABLE, &available);
+	glGetQueryObjectiv(handle, GL_QUERY_RESULT_AVAILABLE, &available);
 	return (available != 0);
 }
 
-CLint CL_OpenGLOcclusionQueryProvider::get_result() const
+GLint CL_OpenGLOcclusionQueryProvider::get_result() const
 {
 	CL_OpenGL::set_active(gc_provider);
-	CLint result;
-	clGetQueryObjectiv(handle, CL_QUERY_RESULT, &result);
+	GLint result;
+	glGetQueryObjectiv(handle, GL_QUERY_RESULT, &result);
 	return result;
 }
 
@@ -87,11 +87,11 @@ void CL_OpenGLOcclusionQueryProvider::create()
 
 	if (handle)
 	{
-		clDeleteQueries(1, &handle);
+		glDeleteQueries(1, &handle);
 		handle = 0;
 	}
 
-	clGenQueries(1, &handle);
+	glGenQueries(1, &handle);
 }
 
 void CL_OpenGLOcclusionQueryProvider::destroy()
@@ -102,13 +102,13 @@ void CL_OpenGLOcclusionQueryProvider::destroy()
 void CL_OpenGLOcclusionQueryProvider::begin()
 {
 	CL_OpenGL::set_active(gc_provider);
-	clBeginQuery(CL_SAMPLES_PASSED, handle);
+	glBeginQuery(GL_SAMPLES_PASSED, handle);
 }
 
 void CL_OpenGLOcclusionQueryProvider::end()
 {
 	CL_OpenGL::set_active(gc_provider);
-	clEndQuery(CL_SAMPLES_PASSED);
+	glEndQuery(GL_SAMPLES_PASSED);
 }
 
 

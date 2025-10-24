@@ -29,6 +29,26 @@
 #pragma once
 
 #include "css_intrinsic_values.h"
+
+class CL_CSSUsedWidth
+{
+public:
+	CL_CSSUsedWidth() : value(0.0f), expanding(false) { }
+
+	CL_CSSUsedValue value;
+	bool expanding;
+};
+
+class CL_CSSUsedHeight
+{
+public:
+	CL_CSSUsedHeight() : value(0.0f), use_content(true) { }
+
+	CL_CSSUsedValue value;
+	bool use_content;
+};
+/*
+
 #include "css_containing_block.h"
 
 class CL_CSSBoxProperties;
@@ -95,3 +115,4 @@ private:
 	CL_CSSUsedValue get_margin_width(const CL_CSSBoxMarginWidth &margin_width);
 	CL_CSSUsedValue get_padding_width(const CL_CSSBoxPaddingWidth &padding_width);
 };
+*/

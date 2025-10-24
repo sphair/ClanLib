@@ -36,8 +36,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLVertexArrayBufferProvider Construction:
 
-CL_OpenGLVertexArrayBufferProvider::CL_OpenGLVertexArrayBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
-: buffer(gc_provider)
+CL_OpenGLVertexArrayBufferProvider::CL_OpenGLVertexArrayBufferProvider()
 {
 }
 
@@ -52,6 +51,6 @@ void CL_OpenGLVertexArrayBufferProvider::create(int size, CL_BufferUsage usage)
 
 void CL_OpenGLVertexArrayBufferProvider::create(void *data, int size, CL_BufferUsage usage)
 {
-	buffer.create(data, size, usage, CL_ARRAY_BUFFER_BINDING, CL_ARRAY_BUFFER);
+	buffer.create(data, size, usage, GL_ARRAY_BUFFER_BINDING, GL_ARRAY_BUFFER);
 }
 

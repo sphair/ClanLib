@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_counter_reset.h"
+#include "API/CSSLayout/PropertyTypes/css_box_counter_reset.h"
 
 CL_CSSBoxCounterReset::CL_CSSBoxCounterReset()
 : type(type_none)
@@ -42,5 +42,19 @@ void CL_CSSBoxCounterReset::compute(const CL_CSSBoxCounterReset *parent, CL_CSSR
 			type = parent->type;
 		else
 			type = type_none;
+	}
+}
+
+CL_String CL_CSSBoxCounterReset::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_identifier:
+		return "identifier";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

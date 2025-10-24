@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_list_style.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserListStyle::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserListStyle::get_names()
 	return names;
 }
 
-void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxListStyleType list_style_type;
 	CL_CSSBoxListStylePosition list_style_position;
@@ -50,7 +50,7 @@ void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_Stri
 	while (pos != tokens.size())
 	{
 		CL_CSSToken token = next_token(pos, tokens);
-		if (token.type == CL_CSSToken::type_ident && token.value == "inherit" && tokens.size() == 1)
+		if (token.type == CL_CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 		{
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_inherit;
 			properties.list_style_position.type = CL_CSSBoxListStylePosition::type_inherit;
@@ -59,77 +59,77 @@ void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_Stri
 		}
 		else if (token.type == CL_CSSToken::type_ident)
 		{
-			if (!type_specified && token.value == "disc")
+			if (!type_specified && equals(token.value, "disc"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_disc;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "circle")
+			else if (!type_specified && equals(token.value, "circle"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_circle;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "square")
+			else if (!type_specified && equals(token.value, "square"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_square;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "decimal")
+			else if (!type_specified && equals(token.value, "decimal"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_decimal;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "decimal-leading-zero")
+			else if (!type_specified && equals(token.value, "decimal-leading-zero"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_decimal_leading_zero;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "lower-roman")
+			else if (!type_specified && equals(token.value, "lower-roman"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_lower_roman;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "upper-roman")
+			else if (!type_specified && equals(token.value, "upper-roman"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_upper_roman;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "lower-greek")
+			else if (!type_specified && equals(token.value, "lower-greek"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_lower_greek;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "lower-latin")
+			else if (!type_specified && equals(token.value, "lower-latin"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_lower_latin;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "upper-latin")
+			else if (!type_specified && equals(token.value, "upper-latin"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_upper_latin;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "armenian")
+			else if (!type_specified && equals(token.value, "armenian"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_armenian;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "georgian")
+			else if (!type_specified && equals(token.value, "georgian"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_georgian;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "lower-alpha")
+			else if (!type_specified && equals(token.value, "lower-alpha"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_lower_alpha;
 				type_specified = true;
 			}
-			else if (!type_specified && token.value == "upper-alpha")
+			else if (!type_specified && equals(token.value, "upper-alpha"))
 			{
 				list_style_type.type = CL_CSSBoxListStyleType::type_upper_alpha;
 				type_specified = true;
 			}
-			else if (token.value == "none")
+			else if (equals(token.value, "none"))
 			{
 				if (!type_specified && !image_specified) // This copies Firefox' behavior - unclear in the standard if it is correct or not.
 				{
@@ -143,21 +143,23 @@ void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_Stri
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
-			else if (!position_specified && token.value == "inside")
+			else if (!position_specified && equals(token.value, "inside"))
 			{
 				list_style_position.type = CL_CSSBoxListStylePosition::type_inside;
 				position_specified = true;
 			}
-			else if (!position_specified && token.value == "outside")
+			else if (!position_specified && equals(token.value, "outside"))
 			{
 				list_style_position.type = CL_CSSBoxListStylePosition::type_outside;
 				position_specified = true;
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -169,6 +171,7 @@ void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_Stri
 		}
 		else
 		{
+			debug_parse_error(name, tokens);
 			return;
 		}
 	}
@@ -176,4 +179,10 @@ void CL_CSSParserListStyle::parse(CL_CSSBoxProperties &properties, const CL_Stri
 	properties.list_style_type = list_style_type;
 	properties.list_style_position = list_style_position;
 	properties.list_style_image = list_style_image;
+	if (out_change_set)
+	{
+		(*out_change_set)["list-style-type"] = &properties.list_style_type;
+		(*out_change_set)["list-style-position"] = &properties.list_style_position;
+		(*out_change_set)["list-style-image"] = &properties.list_style_image;
+	}
 }

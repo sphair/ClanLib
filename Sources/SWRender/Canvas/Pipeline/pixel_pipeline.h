@@ -32,6 +32,7 @@
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/interlocked_variable.h"
+#include "API/Core/System/uniqueptr.h"
 
 #include "API/SWRender/pixel_command.h"
 #include <memory>
@@ -44,8 +45,8 @@ public:
 	CL_PixelPipeline();
 	~CL_PixelPipeline();
 
-	void queue(CL_PixelCommand *command) { queue(std::auto_ptr<CL_PixelCommand>(command)); } 
-	void queue(std::auto_ptr<CL_PixelCommand> command);
+	void queue(CL_PixelCommand *command) { CL_UniquePtr<CL_PixelCommand> cmd(command); queue(cmd); } 
+	void queue(CL_UniquePtr<CL_PixelCommand> &command);
 
 	void wait_for_workers();
 

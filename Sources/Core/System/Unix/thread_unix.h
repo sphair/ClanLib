@@ -48,13 +48,11 @@ public:
 
 	~CL_Thread_Unix();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -79,5 +77,4 @@ private:
 	bool handle_valid;
 /// \}
 };
-
 

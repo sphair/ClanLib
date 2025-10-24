@@ -28,7 +28,6 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_block_formatting_context.h"
-#include "css_block_layout.h"
 #include "css_layout_cursor.h"
 
 CL_CSSBlockFormattingContext::CL_CSSBlockFormattingContext(CL_CSSBlockFormattingContext *parent)
@@ -138,17 +137,29 @@ CL_Rect CL_CSSBlockFormattingContext::place_right(CL_Rect box, int width)
 	return box;
 }
 
-CL_Rect CL_CSSBlockFormattingContext::float_left(CL_Rect box, int width, CL_CSSLayoutTreeNode *layout)
+CL_Rect CL_CSSBlockFormattingContext::place_right_shrink_to_fit(CL_Rect box, int width)
+{
+	return place_left(box, width);
+}
+
+CL_Rect CL_CSSBlockFormattingContext::float_left(CL_Rect box, int width)
 {
 	box = place_left(box, width);
-	left_floats.push_back(CL_CSSFloat(box, layout));
+	left_floats.push_back(CL_CSSFloat(box, CL_CSSFloat::type_left));
 	return box;
 }
 
-CL_Rect CL_CSSBlockFormattingContext::float_right(CL_Rect box, int width, CL_CSSLayoutTreeNode *layout)
+CL_Rect CL_CSSBlockFormattingContext::float_right(CL_Rect box, int width)
 {
 	box = place_right(box, width);
-	right_floats.push_back(CL_CSSFloat(box, layout));
+	right_floats.push_back(CL_CSSFloat(box, CL_CSSFloat::type_right));
+	return box;
+}
+
+CL_Rect CL_CSSBlockFormattingContext::float_right_shrink_to_fit(CL_Rect box, int width)
+{
+	box = place_left(box, width);
+	left_floats.push_back(CL_CSSFloat(box, CL_CSSFloat::type_right));
 	return box;
 }
 
@@ -191,9 +202,9 @@ CL_Rect CL_CSSBlockFormattingContext::find_line_box(int left, int right, int y, 
 		CL_Rect left_box = find_relevant_left_box(box);
 		CL_Rect right_box = find_relevant_right_box(box, right);
 		if (!is_null(left_box))
-			box.left = left_box.right;
+			box.left = cl_max(box.left, left_box.right);
 		if (!is_null(right_box))
-			box.right = right_box.left;
+			box.right = cl_min(box.right, right_box.left);
 		if (box.get_width() >= minimum_width || (is_null(left_box) && is_null(right_box)))
 			return box;
 
@@ -211,26 +222,25 @@ int CL_CSSBlockFormattingContext::find_left_clearance() const
 {
 	int y = 0;
 	for (size_t i = 0; i < left_floats.size(); i++)
-		y = cl_max(y, left_floats[i].box.bottom);
+	{
+		if (left_floats[i].type == CL_CSSFloat::type_left)
+			y = cl_max(y, left_floats[i].box.bottom);
+	}
 	return y;
 }
 
 int CL_CSSBlockFormattingContext::find_right_clearance() const
 {
 	int y = 0;
+	for (size_t i = 0; i < left_floats.size(); i++)
+	{
+		if (left_floats[i].type == CL_CSSFloat::type_right)
+			y = cl_max(y, left_floats[i].box.bottom);
+	}
 	for (size_t i = 0; i < right_floats.size(); i++)
-		y = cl_max(y, right_floats[i].box.bottom);
+	{
+		if (right_floats[i].type == CL_CSSFloat::type_right)
+			y = cl_max(y, right_floats[i].box.bottom);
+	}
 	return y;
 }
-/*
-int CSSBlockFormattingContext::find_available_width(const CSSLayoutCursor &cursor) const
-{
-	int y = cursor.y + cursor.margin_y;
-	CL_Rect box(cursor.x, y, cursor.x+cursor.width, y+1);
-	CL_Rect left_box = find_relevant_left_box(box);
-	CL_Rect right_box = find_relevant_right_box(box, cursor.x+cursor.width);
-	int left = cl_max(cursor.x, left_box.right);
-	int right = cl_min(cursor.x+cursor.width, right_box.left);
-	return right-left;
-}
-*/

@@ -29,7 +29,7 @@
 #pragma once
 
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 
 class CL_SHA1_Impl
 {
@@ -69,17 +69,17 @@ public:
 private:
 	void process_chunk();
 
-	void to_hex(char *buffer, cl_uint32 value, bool uppercase);
+	void to_hex(char *buffer, cl_uint value, bool uppercase);
 
 	unsigned int leftrotate_uint32(unsigned int value, int shift);
 
-	cl_uint32 h0, h1, h2, h3, h4;
+	cl_uint h0, h1, h2, h3, h4;
 
 	unsigned char chunk[64];
 
 	int chunk_filled;
 
-	cl_uint64 length_message;
+	cl_ulong length_message;
 
 	bool calculated;
 /// \}

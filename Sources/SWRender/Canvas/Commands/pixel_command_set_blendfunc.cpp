@@ -30,8 +30,8 @@
 #include "pixel_command_set_blendfunc.h"
 #include "API/SWRender/pixel_thread_context.h"
 
-CL_PixelCommandSetBlendFunc::CL_PixelCommandSetBlendFunc(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha)
-: src(src), dest(dest), src_alpha(src_alpha), dest_alpha(dest_alpha)
+CL_PixelCommandSetBlendFunc::CL_PixelCommandSetBlendFunc(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, CL_Colorf const_color)
+: src(src), dest(dest), src_alpha(src_alpha), dest_alpha(dest_alpha), const_color(const_color)
 {
 }
 
@@ -41,4 +41,5 @@ void CL_PixelCommandSetBlendFunc::run(CL_PixelThreadContext *context)
 	context->cur_blend_dest = dest;
 	context->cur_blend_src_alpha = src_alpha;
 	context->cur_blend_dest_alpha = dest_alpha;
+	context->cur_blend_color = const_color;
 }

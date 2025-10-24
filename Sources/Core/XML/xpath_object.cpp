@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Thomas Gottschalk Larsen
 */
 
 #include "Core/precomp.h"
@@ -55,6 +56,36 @@ CL_XPathObject::CL_XPathObject()
 : impl(new CL_XPathObject_Impl)
 {
 	impl->type = CL_XPathObject::type_null;
+}
+
+CL_XPathObject::CL_XPathObject(bool value)
+: impl(new CL_XPathObject_Impl)
+{
+	set_boolean(value);
+}
+
+CL_XPathObject::CL_XPathObject(double value)
+: impl(new CL_XPathObject_Impl)
+{
+	set_number(value);
+}
+
+CL_XPathObject::CL_XPathObject(size_t value)
+: impl(new CL_XPathObject_Impl)
+{
+	set_number(value);
+}
+
+CL_XPathObject::CL_XPathObject(const CL_StringRef &value)
+: impl(new CL_XPathObject_Impl)
+{
+	set_string(value);
+}
+
+CL_XPathObject::CL_XPathObject(const std::vector<CL_DomNode> &value)
+: impl(new CL_XPathObject_Impl)
+{
+	set_node_set(value);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -141,7 +141,7 @@ CL_DomNode_Generic *CL_DomDocument_Generic::allocate_dom_node()
 
 void CL_DomDocument_Generic::free_dom_node(CL_DomNode_Generic *node)
 {
-	if (!node->owner_document.is_null())
+	if (!node->owner_document.expired())
 		free_dom_nodes.push_back(node);
 	else
 		delete node;
@@ -167,7 +167,7 @@ CL_DomNamedNodeMap_Generic *CL_DomDocument_Generic::allocate_named_node_map()
 
 void CL_DomDocument_Generic::free_named_node_map(CL_DomNamedNodeMap_Generic *map)
 {
-	if (!map->owner_document.is_null())
+	if (!map->owner_document.expired())
 		free_named_node_maps.push_back(map);
 	else
 		delete map;

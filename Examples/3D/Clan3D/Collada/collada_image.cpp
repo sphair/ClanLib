@@ -62,7 +62,7 @@ void CL_Collada_Image_Impl::load_image(CL_DomElement &image_element)
 
 bool CL_Collada_Image::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 CL_String &CL_Collada_Image::get_filename()

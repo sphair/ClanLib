@@ -46,10 +46,12 @@
 #include "API/Core/System/system.h"
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/Text/string_help.h"
 #if defined UNICODE && !defined _UNICODE
 #define _UNICODE
 #endif
 #include <tchar.h>
+#include <cstdlib>
 
 // Win32 implementation of CL_System functions:
 
@@ -58,7 +60,7 @@ unsigned int CL_System::get_time()
 	return (unsigned int) (get_microseconds() / 1000);
 }
 
-cl_uint64 CL_System::get_microseconds()
+cl_ulong CL_System::get_microseconds()
 {
 	static LARGE_INTEGER perf_counter;
 	static double perf_frequency;
@@ -74,24 +76,22 @@ cl_uint64 CL_System::get_microseconds()
 
 	QueryPerformanceCounter(&perf_counter);
 	double quad_part = (double) perf_counter.QuadPart;
-	return (cl_uint64) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
+	return (cl_ulong) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
 }
 
 CL_String CL_System::get_exe_path()
 {
-	// Get path to executable:
-	TCHAR szDllName[_MAX_PATH];
-	TCHAR szDrive[_MAX_DRIVE];
-	TCHAR szDir[_MAX_DIR];
-	TCHAR szFilename[256];
-	TCHAR szExt[256];
-	GetModuleFileName(0, szDllName, _MAX_PATH);
+	TCHAR exe_filename[_MAX_PATH];
+	DWORD len = GetModuleFileName(NULL, exe_filename, _MAX_PATH);
+	if (len == 0 || len == _MAX_PATH)
+		throw CL_Exception("GetModuleFileName failed!");
+
+	TCHAR drive[_MAX_DRIVE], dir[_MAX_DIR];
 #ifdef _CRT_INSECURE_DEPRECATE
-	_tsplitpath_s(szDllName, szDrive, _MAX_DRIVE, szDir, _MAX_DIR, szFilename, 256, szExt, 256);
+	_tsplitpath_s(exe_filename, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
 #else
-	_tsplitpath(szDllName, szDrive, szDir, szFilename, szExt);
+	_tsplitpath(exe_filename, drive, dir, NULL, NULL);
 #endif
 
-	return CL_String(szDrive) + CL_String(szDir); 
+	return CL_StringHelp::ucs2_to_utf8(drive) + CL_StringHelp::ucs2_to_utf8(dir);
 }
-

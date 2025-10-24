@@ -32,6 +32,8 @@
 #include "API/Core/System/weakptr.h"
 #include "API/Core/Signals/callback_2.h"
 #include "API/GUI/gui_component.h"
+#include "API/CSSLayout/css_layout.h"
+#include "API/CSSLayout/css_layout_element.h"
 #include <vector>
 #include <map>
 #include "API/Core/Math/rect.h"
@@ -109,6 +111,8 @@ public:
 	bool blocks_default_action_when_focused;
 	bool is_selected_in_group;
 	CL_String group_name;
+	CL_CSSLayout css_layout;
+	CL_CSSLayoutElement css_element;
 
 /// \}
 /// \name Operations
@@ -123,6 +127,7 @@ public:
 /// \{
 
 private:
+	CL_Image on_css_layout_get_image(CL_GraphicContext &gc, const CL_String &url);
 /// \}
 };
 

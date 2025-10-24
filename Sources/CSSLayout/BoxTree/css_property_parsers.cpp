@@ -36,6 +36,9 @@
 #include "PropertyParsers/css_parser_background_image.h"
 #include "PropertyParsers/css_parser_background_position.h"
 #include "PropertyParsers/css_parser_background_repeat.h"
+#include "PropertyParsers/css_parser_background_clip.h"
+#include "PropertyParsers/css_parser_background_origin.h"
+#include "PropertyParsers/css_parser_background_size.h"
 #include "PropertyParsers/css_parser_border.h"
 #include "PropertyParsers/css_parser_border_collapse.h"
 #include "PropertyParsers/css_parser_border_color.h"
@@ -46,11 +49,18 @@
 #include "PropertyParsers/css_parser_border_spacing.h"
 #include "PropertyParsers/css_parser_border_style.h"
 #include "PropertyParsers/css_parser_border_width.h"
+#include "PropertyParsers/css_parser_border_radius.h"
+#include "PropertyParsers/css_parser_border_radius_corner.h"
+#include "PropertyParsers/css_parser_border_image.h"
+#include "PropertyParsers/css_parser_border_image_outset.h"
+#include "PropertyParsers/css_parser_border_image_repeat.h"
+#include "PropertyParsers/css_parser_border_image_slice.h"
+#include "PropertyParsers/css_parser_border_image_source.h"
+#include "PropertyParsers/css_parser_border_image_width.h"
+#include "PropertyParsers/css_parser_decoration_break.h"
+#include "PropertyParsers/css_parser_shadow.h"
 #include "PropertyParsers/css_parser_bottom.h"
 #include "PropertyParsers/css_parser_caption_side.h"
-#include "PropertyParsers/css_parser_clan_background_border_ltrb.h"
-#include "PropertyParsers/css_parser_clan_total_width.h"
-#include "PropertyParsers/css_parser_clan_total_height.h"
 #include "PropertyParsers/css_parser_clear.h"
 #include "PropertyParsers/css_parser_clip.h"
 #include "PropertyParsers/css_parser_color.h"
@@ -119,6 +129,9 @@ CL_CSSPropertyParsers::CL_CSSPropertyParsers()
 	add(new CL_CSSParserBackgroundImage());
 	add(new CL_CSSParserBackgroundPosition());
 	add(new CL_CSSParserBackgroundRepeat());
+	add(new CL_CSSParserBackgroundClip());
+	add(new CL_CSSParserBackgroundOrigin());
+	add(new CL_CSSParserBackgroundSize());
 	add(new CL_CSSParserBorder());
 	add(new CL_CSSParserBorderCollapse());
 	add(new CL_CSSParserBorderColor());
@@ -129,11 +142,18 @@ CL_CSSPropertyParsers::CL_CSSPropertyParsers()
 	add(new CL_CSSParserBorderSpacing());
 	add(new CL_CSSParserBorderStyle());
 	add(new CL_CSSParserBorderWidth());
+	add(new CL_CSSParserBorderRadius());
+	add(new CL_CSSParserBorderRadiusCorner());
+	add(new CL_CSSParserBorderImage());
+	add(new CL_CSSParserBorderImageOutset());
+	add(new CL_CSSParserBorderImageRepeat());
+	add(new CL_CSSParserBorderImageSlice());
+	add(new CL_CSSParserBorderImageSource());
+	add(new CL_CSSParserBorderImageWidth());
+	add(new CL_CSSParserDecorationBreak());
+	add(new CL_CSSParserShadow());
 	add(new CL_CSSParserBottom());
 	add(new CL_CSSParserCaptionSide());
-	add(new CL_CSSParserClanBackgroundBorderLTRB());
-	add(new CL_CSSParserClanTotalWidth());
-	add(new CL_CSSParserClanTotalHeight());
 	add(new CL_CSSParserClear());
 	add(new CL_CSSParserClip());
 	add(new CL_CSSParserColor());
@@ -201,11 +221,12 @@ CL_CSSPropertyParsers::~CL_CSSPropertyParsers()
 		delete parsers[i];
 }
 
-void CL_CSSPropertyParsers::parse(CL_CSSBoxProperties &properties, const CL_CSSProperty2 &property)
+void CL_CSSPropertyParsers::parse(CL_CSSBoxProperties &properties, const CL_CSSProperty2 &property, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
-	std::map<CL_String, CL_CSSPropertyParser *>::iterator it = name_to_parser.find(property.get_name());
+	CL_String name = CL_StringHelp::text_to_lower(property.get_name());
+	std::map<CL_String, CL_CSSPropertyParser *>::iterator it = name_to_parser.find(name);
 	if (it != name_to_parser.end())
-		it->second->parse(properties, property.get_name(), property.get_value_tokens());
+		it->second->parse(properties, property.get_name(), property.get_value_tokens(), out_change_set);
 }
 
 void CL_CSSPropertyParsers::add(CL_CSSPropertyParser *parser)

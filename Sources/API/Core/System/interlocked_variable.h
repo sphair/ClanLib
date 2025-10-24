@@ -37,7 +37,7 @@
 #ifdef WIN32
 #include <windows.h>
 #else
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 #endif
 
 // __sync_val_compare_and_swap was not introduced until gcc 4.1
@@ -103,13 +103,13 @@ private:
 
 #else
 	CL_InterlockedVariable()
-	: val((cl_int32*)CL_System::aligned_alloc(sizeof(cl_int32), 4))
+	: val((cl_int*)CL_System::aligned_alloc(sizeof(cl_int), 4))
 	{
 		set(0);
 	}
 
 	CL_InterlockedVariable(const CL_InterlockedVariable &src)
-	: val((cl_int32*)CL_System::aligned_alloc(sizeof(cl_int32), 4))
+	: val((cl_int*)CL_System::aligned_alloc(sizeof(cl_int), 4))
 	{
 		set(src.get());
 	}
@@ -151,7 +151,7 @@ private:
 	}
 
 private:
-	volatile cl_int32 *val;
+	volatile cl_int *val;
 
 #endif
 };

@@ -117,7 +117,7 @@ void CL_InputContext_Impl::process_messages()
 	for (pos = 0; pos < size; pos++)
 	{
 		CL_InputEvent event = cur_events[pos].first;
-		if (cur_events[pos].second.is_null())
+		if (cur_events[pos].second.expired())
 			continue;
 		event.device = CL_InputDevice(cur_events[pos].second);
 

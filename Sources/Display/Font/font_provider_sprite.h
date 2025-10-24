@@ -68,10 +68,19 @@ public:
 
 public:
 	/// \brief Returns information about the current font.
-	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	virtual CL_FontMetrics get_font_metrics();
 	CL_FontMetrics get_metrics();
 
-	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color);
+	/// \brief Constructs a pixel buffer from a Freetype glyph.
+	///
+	/// \param glyph The glyph
+	/// \param anti_alias If anti_aliasing should be used
+	CL_FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+
+	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
+	///
+	/// \param glyph The glyph
+	CL_FontPixelBuffer get_font_glyph_subpixel(int glyph);
 
 /// \}
 /// \name Operations

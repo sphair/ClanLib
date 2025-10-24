@@ -518,6 +518,6 @@ void CL_ResourceManager::set_directory(const CL_VirtualDirectory &directory)
 /////////////////////////////////////////////////////////////////////////////
 // CL_ResourceManager Implementation:
 
-CL_ResourceManager::CL_ResourceManager(CL_WeakPtr<CL_ResourceManager_Impl> &impl) : impl(impl.to_sharedptr())
+CL_ResourceManager::CL_ResourceManager(CL_WeakPtr<CL_ResourceManager_Impl> &impl) : impl(impl.lock())
 {
 }

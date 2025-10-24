@@ -149,9 +149,10 @@ public:
 		CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	CL_Texture(
+		CL_GraphicContext &gc,
 		const CL_StringRef &resource_id,
 		CL_ResourceManager *resources,
-		CL_GraphicContext &gc, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
+		const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a texture from an implementation
 	///
@@ -187,7 +188,7 @@ public:
 /// \{
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;

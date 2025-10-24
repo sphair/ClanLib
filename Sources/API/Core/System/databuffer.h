@@ -36,7 +36,6 @@
 #include "../api_core.h"
 #include "sharedptr.h"
 
-class CL_MemoryPool;
 class CL_DataBuffer_Impl;
 
 /// \brief General purpose data buffer.
@@ -51,11 +50,11 @@ public:
 	/// \brief Constructs a data buffer of 0 size.
 	CL_DataBuffer();
 
-	CL_DataBuffer(int size, CL_MemoryPool *pool = 0);
+	CL_DataBuffer(int size);
 
-	CL_DataBuffer(const void *data, int size, CL_MemoryPool *pool = 0);
+	CL_DataBuffer(const void *data, int size);
 
-	CL_DataBuffer(const CL_DataBuffer &data, int pos, int size = -1, CL_MemoryPool *pool = 0);
+	CL_DataBuffer(const CL_DataBuffer &data, int pos, int size = -1);
 
 	~CL_DataBuffer();
 

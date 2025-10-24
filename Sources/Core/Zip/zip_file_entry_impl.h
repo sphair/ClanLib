@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
 #include "zip_file_header.h"
 
@@ -54,7 +54,7 @@ public:
 	Type type;
 
 	/// \brief Offset to zip data in zip file (type_file).
-	// cl_int64 offset;
+	// cl_long offset;
 
 	/// \brief Filename of file, if added from file (type_added_file).
 	CL_String filename;

@@ -42,15 +42,25 @@ public:
 	~CL_FontEngine_Win32();
 
 	CL_FontMetrics get_metrics();
-	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color);
+
+	/// \brief Constructs a pixel buffer from a Freetype glyph.
+	///
+	/// \param glyph The glyph
+	/// \param anti_alias If anti_aliasing should be used
+	CL_FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
+
+	/// \brief Constructs a pixel buffer using subpixel rendering from a Freetype glyph.
+	///
+	/// \param glyph The glyph
+	CL_FontPixelBuffer get_font_glyph_subpixel(int glyph);
 
 private:
-	CL_FontPixelBuffer get_font_glyph_lcd(int glyph, const CL_Colorf &color);
-	CL_FontPixelBuffer get_font_glyph_gray8(int glyph, const CL_Colorf &color);
-	CL_FontPixelBuffer get_font_glyph_mono(int glyph, const CL_Colorf &color);
+	CL_FontPixelBuffer get_font_glyph_lcd(int glyph);
+	CL_FontPixelBuffer get_font_glyph_gray8(int glyph);
+	CL_FontPixelBuffer get_font_glyph_mono(int glyph);
 	bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, CL_DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
 	CL_FontPixelBuffer get_empty_font_glyph(int glyph);
-
+	int decode_charset(CL_FontDescription::Charset selected_charset);
 	HFONT handle;
 	TEXTMETRIC metrics;
 };

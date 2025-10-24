@@ -35,8 +35,8 @@
 
 CL_OpenGLWindowDescription::CL_OpenGLWindowDescription()
 {
-	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (impl_gl.is_null())
+	impl_gl = cl_dynamic_pointer_cast<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
+	if (!impl_gl)
 	{
 		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
 		set_data("OpenGL", impl_gl);
@@ -50,8 +50,8 @@ CL_OpenGLWindowDescription::~CL_OpenGLWindowDescription()
 CL_OpenGLWindowDescription::CL_OpenGLWindowDescription(const CL_DisplayWindowDescription &desc)
 {
 	CL_DisplayWindowDescription::operator=(desc);
-	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (impl_gl.is_null())
+	impl_gl = cl_dynamic_pointer_cast<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
+	if (!impl_gl)
 	{
 		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
 		set_data("OpenGL", impl_gl);
@@ -61,8 +61,8 @@ CL_OpenGLWindowDescription::CL_OpenGLWindowDescription(const CL_DisplayWindowDes
 CL_OpenGLWindowDescription &CL_OpenGLWindowDescription::operator=(CL_DisplayWindowDescription &desc)
 {
 	CL_DisplayWindowDescription::operator=(desc);
-	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (impl_gl.is_null())
+	impl_gl = cl_dynamic_pointer_cast<CL_OpenGLWindowDescription_Impl>(get_data("OpenGL"));
+	if (!impl_gl)
 	{
 		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
 		set_data("OpenGL", impl_gl);
@@ -113,6 +113,44 @@ int CL_OpenGLWindowDescription::get_multisampling() const
 	return impl_gl->multisampling;
 }
 
+int CL_OpenGLWindowDescription::get_version_major() const
+{
+	return impl_gl->version_major;
+}
+
+int CL_OpenGLWindowDescription::get_version_minor() const
+{
+	return impl_gl->version_minor;
+}
+
+bool CL_OpenGLWindowDescription::get_allow_lower_versions() const
+{
+	return impl_gl->allow_lower_versions;
+}
+
+bool CL_OpenGLWindowDescription::get_debug() const
+{
+	return impl_gl->debug_flag;
+}
+bool CL_OpenGLWindowDescription::get_forward_compatible() const
+{
+	return impl_gl->forward_compatible_flag;
+}
+bool CL_OpenGLWindowDescription::get_core_profile() const
+{
+	return impl_gl->core_profile_flag;
+}
+bool CL_OpenGLWindowDescription::get_compatibility_profile() const
+{
+	return impl_gl->compatibility_profile_flag;
+}
+
+int CL_OpenGLWindowDescription::get_layer_plane() const
+{
+	return impl_gl->layer_plane;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowDescription operations:
 
@@ -154,6 +192,36 @@ void CL_OpenGLWindowDescription::set_alpha_size(int value)
 void CL_OpenGLWindowDescription::set_multisampling(int value)
 {
 	impl_gl->multisampling = value;
+}
+
+void CL_OpenGLWindowDescription::set_version(int major, int minor, bool allow_lower_versions)
+{
+	impl_gl->version_major = major;
+	impl_gl->version_minor = minor;
+	impl_gl->allow_lower_versions = allow_lower_versions;
+	
+}
+
+void CL_OpenGLWindowDescription::set_debug(bool enable)
+{
+	impl_gl->debug_flag = enable;
+}
+void CL_OpenGLWindowDescription::set_forward_compatible(bool enable)
+{
+	impl_gl->forward_compatible_flag = enable;
+}
+void CL_OpenGLWindowDescription::set_core_profile(bool enable)
+{
+	impl_gl->core_profile_flag = enable;
+}
+void CL_OpenGLWindowDescription::set_compatibility_profile(bool enable)
+{
+	impl_gl->compatibility_profile_flag = enable;
+}
+
+void CL_OpenGLWindowDescription::set_layer_plane(int value)
+{
+	impl_gl->layer_plane = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////

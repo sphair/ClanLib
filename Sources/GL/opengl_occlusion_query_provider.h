@@ -52,7 +52,7 @@ public:
 /// \{
 
 public:
-	CLint get_result() const;
+	GLint get_result() const;
 	bool is_result_ready() const;
 
 
@@ -74,7 +74,7 @@ public:
 private:
 	void on_dispose();
 	/// \brief OpenGL occlusion query handle.
-	CLuint handle;
+	GLuint handle;
 
 	CL_OpenGLGraphicContextProvider *gc_provider;
 /// \}

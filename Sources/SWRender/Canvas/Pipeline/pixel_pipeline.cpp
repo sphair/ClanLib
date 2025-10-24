@@ -101,7 +101,7 @@ CL_PixelPipeline::~CL_PixelPipeline()
 #endif
 }
 
-void CL_PixelPipeline::queue(std::auto_ptr<CL_PixelCommand> command)
+void CL_PixelPipeline::queue(CL_UniquePtr<CL_PixelCommand> &command)
 {
 	wait_for_space();
 	delete command_queue[local_writer_index];

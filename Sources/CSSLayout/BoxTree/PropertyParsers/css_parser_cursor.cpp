@@ -36,6 +36,6 @@ std::vector<CL_String> CL_CSSParserCursor::get_names()
 	return names;
 }
 
-void CL_CSSParserCursor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserCursor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 }

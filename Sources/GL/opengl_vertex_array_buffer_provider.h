@@ -44,7 +44,7 @@ class CL_OpenGLVertexArrayBufferProvider : public CL_VertexArrayBufferProvider
 /// \{
 
 public:
-	CL_OpenGLVertexArrayBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLVertexArrayBufferProvider();
 
 	~CL_OpenGLVertexArrayBufferProvider();
 
@@ -62,7 +62,7 @@ public:
 public:
 	void *get_data() { return buffer.get_data(); }
 
-	CLuint get_handle() const { return buffer.get_handle(); }
+	GLuint get_handle() const { return buffer.get_handle(); }
 
 
 /// \}

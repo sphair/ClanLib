@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_background_position.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBackgroundPosition::get_names()
 {
@@ -37,166 +37,280 @@ std::vector<CL_String> CL_CSSParserBackgroundPosition::get_names()
 	return names;
 }
 
-void CL_CSSParserBackgroundPosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBackgroundPosition::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
-	CL_CSSBoxBackgroundPosition position;
-	bool x_specified = false;
-	bool y_specified = false;
-	bool center_specified = false;
-
 	size_t pos = 0;
-	while (pos != tokens.size())
+	CL_CSSToken token = next_token(pos, tokens);
+
+	if (token.type == CL_CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 	{
-		CL_CSSToken token = next_token(pos, tokens);
-		if (token.type == CL_CSSToken::type_ident && token.value == "inherit" && tokens.size() == 1)
+		properties.background_position.type = CL_CSSBoxBackgroundPosition::type_inherit;
+		if (out_change_set)
 		{
-			properties.background_position.type = CL_CSSBoxBackgroundPosition::type_inherit;
+			(*out_change_set)["background-position"] = &properties.background_position;
 		}
-		else if (token.type == CL_CSSToken::type_ident)
+		return;
+	}
+
+	CL_CSSBoxBackgroundPosition position;
+	position.type = CL_CSSBoxBackgroundPosition::type_value;
+	position.positions.clear();
+	bool done = false;
+	while (!done)
+	{
+		CL_CSSBoxBackgroundPosition::Position bg_pos;
+		bool x_specified = false;
+		bool y_specified = false;
+		bool center_specified = false;
+
+		while (true)
 		{
-			if (!y_specified && token.value == "top")
+			if (token.type == CL_CSSToken::type_ident)
 			{
-				position.type_y = CL_CSSBoxBackgroundPosition::type2_top;
-				y_specified = true;
-
-				if (center_specified)
+				if (!y_specified && equals(token.value, "top"))
 				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-					x_specified = true;
-					center_specified = false;
-				}
-			}
-			else if (!y_specified && token.value == "bottom")
-			{
-				position.type_y = CL_CSSBoxBackgroundPosition::type2_bottom;
-				y_specified = true;
-
-				if (center_specified)
-				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-					x_specified = true;
-					center_specified = false;
-				}
-			}
-			else if (!x_specified && token.value == "left")
-			{
-				position.type_x = CL_CSSBoxBackgroundPosition::type1_left;
-				x_specified = true;
-
-				if (center_specified)
-				{
-					position.type_y = CL_CSSBoxBackgroundPosition::type2_center;
+					bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_top;
 					y_specified = true;
-					center_specified = false;
+
+					if (center_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!y_specified && equals(token.value, "bottom"))
+				{
+					bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_bottom;
+					y_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!x_specified && equals(token.value, "left"))
+				{
+					bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_left;
+					x_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_center;
+						y_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (!x_specified && equals(token.value, "right"))
+				{
+					bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_right;
+					x_specified = true;
+
+					if (center_specified)
+					{
+						bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_center;
+						y_specified = true;
+						center_specified = false;
+					}
+				}
+				else if (equals(token.value, "center"))
+				{
+					if (center_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+						center_specified = false;
+					}
+
+					if (x_specified && !y_specified)
+					{
+						bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_center;
+						y_specified = true;
+					}
+					else if (y_specified && !x_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+					}
+					else if (!x_specified && !y_specified)
+					{
+						center_specified = true;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
 				}
 			}
-			else if (!x_specified && token.value == "right")
+			else if (is_length(token))
 			{
-				position.type_x = CL_CSSBoxBackgroundPosition::type1_right;
-				x_specified = true;
+				CL_CSSBoxLength length;
+				if (parse_length(token, length))
+				{
+					if (center_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+						center_specified = false;
+					}
 
-				if (center_specified)
-				{
-					position.type_y = CL_CSSBoxBackgroundPosition::type2_center;
-					y_specified = true;
-					center_specified = false;
-				}
-			}
-			else if (token.value == "center")
-			{
-				if (center_specified)
-				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-					x_specified = true;
-					center_specified = false;
-				}
-
-				if (x_specified && !y_specified)
-				{
-					position.type_y = CL_CSSBoxBackgroundPosition::type2_center;
-					y_specified = true;
-				}
-				else if (y_specified && !x_specified)
-				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-					x_specified = true;
-				}
-				else if (!x_specified && !y_specified)
-				{
-					center_specified = true;
+					if (!x_specified && !y_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_length;
+						bg_pos.length_x = length;
+						x_specified = true;
+					}
+					else if (x_specified && !y_specified)
+					{
+						bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_length;
+						bg_pos.length_y = length;
+						y_specified = true;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
-		}
-		else if (is_length(token) && pos == tokens.size())
-		{
-			CL_CSSBoxLength length;
-			if (parse_length(token, length))
+			else if (token.type == CL_CSSToken::type_percentage)
 			{
 				if (center_specified)
 				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (!x_specified && !y_specified)
 				{
-					position.type_x = CL_CSSBoxBackgroundPosition::type1_length;
-					position.length_x = length;
+					bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_percentage;
+					bg_pos.percentage_x = CL_StringHelp::text_to_float(token.value);
 					x_specified = true;
 				}
 				else if (x_specified && !y_specified)
 				{
-					position.type_y = CL_CSSBoxBackgroundPosition::type2_length;
-					position.length_y = length;
+					bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_percentage;
+					bg_pos.percentage_y = CL_StringHelp::text_to_float(token.value);
 					y_specified = true;
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+			else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+			{
+				token = next_token(pos, tokens);
+				if (is_length(token))
+				{
+					CL_CSSBoxLength length;
+					if (parse_length(token, length))
+					{
+						length.value = -length.value;
+						if (center_specified)
+						{
+							bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+							x_specified = true;
+							center_specified = false;
+						}
+
+						if (!x_specified && !y_specified)
+						{
+							bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_length;
+							bg_pos.length_x = length;
+							x_specified = true;
+						}
+						else if (x_specified && !y_specified)
+						{
+							bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_length;
+							bg_pos.length_y = length;
+							y_specified = true;
+						}
+						else
+						{
+							debug_parse_error(name, tokens);
+							return;
+						}
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
+				}
+				else if (token.type == CL_CSSToken::type_percentage)
+				{
+					if (center_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+						x_specified = true;
+						center_specified = false;
+					}
+
+					if (!x_specified && !y_specified)
+					{
+						bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_percentage;
+						bg_pos.percentage_x = -CL_StringHelp::text_to_float(token.value);
+						x_specified = true;
+					}
+					else if (x_specified && !y_specified)
+					{
+						bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_percentage;
+						bg_pos.percentage_y = -CL_StringHelp::text_to_float(token.value);
+						y_specified = true;
+					}
+					else
+					{
+						debug_parse_error(name, tokens);
+						return;
+					}
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
-		}
-		else if (token.type == CL_CSSToken::type_percentage && pos == tokens.size())
-		{
-			if (center_specified)
-			{
-				position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-				x_specified = true;
-				center_specified = false;
-			}
 
-			if (!x_specified && !y_specified)
+			if (pos == tokens.size())
 			{
-				position.type_x = CL_CSSBoxBackgroundPosition::type1_percentage;
-				position.percentage_x = CL_StringHelp::text_to_float(token.value);
-				x_specified = true;
-			}
-			else if (x_specified && !y_specified)
-			{
-				position.type_y = CL_CSSBoxBackgroundPosition::type2_percentage;
-				position.percentage_y = CL_StringHelp::text_to_float(token.value);
-				y_specified = true;
+				done = true;
+				break;
 			}
 			else
 			{
-				return;
+				token = next_token(pos, tokens);
+				if (token.type == CL_CSSToken::type_delim && token.value == ",")
+					break;
 			}
 		}
+
+		if (!x_specified)
+			bg_pos.type_x = CL_CSSBoxBackgroundPosition::type1_center;
+		else if (!y_specified)
+			bg_pos.type_y = CL_CSSBoxBackgroundPosition::type2_center;
+
+		position.positions.push_back(bg_pos);
 	}
 
-	position.type = CL_CSSBoxBackgroundPosition::type_value;
-	if (!x_specified)
-		position.type_x = CL_CSSBoxBackgroundPosition::type1_center;
-	else if (!y_specified)
-		position.type_y = CL_CSSBoxBackgroundPosition::type2_center;
 	properties.background_position = position;
+	if (out_change_set)
+	{
+		(*out_change_set)["background-position"] = &properties.background_position;
+	}
 }

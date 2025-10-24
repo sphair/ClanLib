@@ -61,7 +61,7 @@ private:
 	CL_DisplayWindow *window_ptr;
 	CL_GUIWindowManagerTexture wm;
 
-	CL_AutoPtr<Panel> panel;
+	std::auto_ptr<Panel> panel;
 
 	CL_Sprite sprite_grid_normal;
 	CL_Sprite sprite_grid_outline;

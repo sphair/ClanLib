@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_page_break_after.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserPageBreakAfter::get_names()
 {
@@ -37,23 +37,27 @@ std::vector<CL_String> CL_CSSParserPageBreakAfter::get_names()
 	return names;
 }
 
-void CL_CSSParserPageBreakAfter::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserPageBreakAfter::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "auto")
+		if (equals(token.value, "auto"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_auto;
-		else if (token.value == "always")
+		else if (equals(token.value, "always"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_always;
-		else if (token.value == "avoid")
+		else if (equals(token.value, "avoid"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_avoid;
-		else if (token.value == "left")
+		else if (equals(token.value, "left"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_left;
-		else if (token.value == "right")
+		else if (equals(token.value, "right"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_right;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.page_break_after.type = CL_CSSBoxPageBreakAfter::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["page-break-after"] = &properties.page_break_after;
 	}
 }

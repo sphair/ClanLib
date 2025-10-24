@@ -62,13 +62,13 @@ CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_St
 		if (textures[i].key == key)
 		{
 			// Texture is no longer valid
-			if (textures[i].texture_impl.is_invalid_weak_link())
+			if (textures[i].texture_impl.expired())
 			{
 				// Remove from the cache
 				unload_texture(filename, virtual_directory, import_desc);
 				break;
 			}
-			CL_SharedPtr<CL_Texture_Impl> texture_impl = textures[i].texture_impl.to_sharedptr();
+			CL_SharedPtr<CL_Texture_Impl> texture_impl = textures[i].texture_impl.lock();
 			return CL_Texture(texture_impl);
 		}
 	}
@@ -91,7 +91,7 @@ bool CL_SharedGCData_Impl::add_texture(CL_Texture &texture, const CL_String &fil
 		if (it->key == key)
 		{
 			// Texture is no longer valid
-			if (it->texture_impl.is_invalid_weak_link())
+			if (it->texture_impl.expired())
 			{
 				// Remove from the cache
 				unload_texture(filename, virtual_directory, import_desc);

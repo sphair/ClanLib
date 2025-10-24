@@ -34,5 +34,5 @@ class CL_CSSParserListStyleImage : public CL_CSSPropertyParser
 {
 public:
 	std::vector<CL_String> get_names();
-	void parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens);
+	void parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set);
 };

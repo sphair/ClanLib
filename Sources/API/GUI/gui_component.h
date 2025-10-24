@@ -59,6 +59,8 @@ class CL_GUIManager;
 class CL_GUITheme;
 class CL_ResourceManager;
 class CL_GUIConsumedKeys;
+class CL_CSSLayout;
+class CL_CSSLayoutElement;
 class CL_GUIComponent_Impl;
 
 typedef CL_DisplayWindowDescription CL_GUITopLevelDescription;
@@ -307,6 +309,12 @@ public:
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	bool get_constant_repaint() const;
 
+	/// \brief Gets the css layout
+	CL_CSSLayout get_css_layout();
+
+	/// \brief Gets the css element for this component
+	CL_CSSLayoutElement get_css_element();
+
 /// \}
 /// \name Events
 /// \{
@@ -526,6 +534,9 @@ public:
 
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
+
+	/// \brief Loads a layout from file.
+	void load_css_layout(const CL_String &xml_filename, const CL_String &css_filename);
 
 /// \}
 /// \name Implementation

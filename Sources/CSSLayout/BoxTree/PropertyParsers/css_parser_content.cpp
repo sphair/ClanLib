@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_content.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserContent::get_names()
 {
@@ -37,29 +37,29 @@ std::vector<CL_String> CL_CSSParserContent::get_names()
 	return names;
 }
 
-void CL_CSSParserContent::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserContent::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "none")
+		if (equals(token.value, "none"))
 		{
 			properties.content.type = CL_CSSBoxContent::type_none;
 		}
-		else if (token.value == "normal")
+		else if (equals(token.value, "normal"))
 		{
 			properties.content.type = CL_CSSBoxContent::type_normal;
 		}
-		else if (token.value == "open-quote")
+		else if (equals(token.value, "open-quote"))
 		{
 			properties.content.type = CL_CSSBoxContent::type_open_quote;
 		}
-		else if (token.value == "close-quote")
+		else if (equals(token.value, "close-quote"))
 		{
 			properties.content.type = CL_CSSBoxContent::type_close_quote;
 		}
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 		{
 			properties.content.type = CL_CSSBoxContent::type_inherit;
 		}
@@ -76,17 +76,21 @@ void CL_CSSParserContent::parse(CL_CSSBoxProperties &properties, const CL_String
 	}
 	else if (token.type == CL_CSSToken::type_function)
 	{
-		if (token.value == "counter")
+		if (equals(token.value, "counter"))
 		{
 			//properties.content.type = CSSBoxContent::type_counter;
 		}
-		else if (token.value == "counters")
+		else if (equals(token.value, "counters"))
 		{
 			//properties.content.type = CSSBoxContent::type_counters;
 		}
-		else if (token.value == "attr")
+		else if (equals(token.value, "attr"))
 		{
 			//properties.content.type = CSSBoxContent::type_attr;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["content"] = &properties.content;
 	}
 }

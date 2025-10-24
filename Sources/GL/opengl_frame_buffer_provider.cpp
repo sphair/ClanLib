@@ -51,15 +51,15 @@ CL_OpenGLFrameBufferProvider::CL_OpenGLFrameBufferProvider(CL_OpenGLGraphicConte
 
 	CL_OpenGL::set_active(gc_provider);
 
-	if(clGenFramebuffers == 0)
+	if(glGenFramebuffers == 0)
 		throw CL_Exception("Framebuffer not supported on your graphics card.");
 
-	clGenFramebuffers(1, &handle);
+	glGenFramebuffers(1, &handle);
 
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 	// Default to no draw buffers  (the user may only want a depth buffer)
-	clDrawBuffer(CL_NONE);
-	clReadBuffer(CL_NONE);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 
 }
 
@@ -73,10 +73,10 @@ void CL_OpenGLFrameBufferProvider::on_dispose()
 {
 	if (handle)
 	{
-		if (CL_OpenGL::set_active())
-		{
-			clDeleteFramebuffers(1, &handle);
-		}
+		// Note: set_active must be called with gc_provider here since it belongs to the OpenGL context and not the shared list
+		// To do: Improve infrastructure in clanGL so we will know if gc_provider has already been destroyed and in that case do nothing.
+		CL_OpenGL::set_active(gc_provider);
+		glDeleteFramebuffers(1, &handle);
 	}
 
 	// Detach all textures and renderbuffers
@@ -93,7 +93,7 @@ void CL_OpenGLFrameBufferProvider::on_dispose()
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLFrameBufferProvider Attributes:
 
-CLuint CL_OpenGLFrameBufferProvider::get_handle()
+GLuint CL_OpenGLFrameBufferProvider::get_handle()
 {
 	return handle;
 }
@@ -161,14 +161,14 @@ void CL_OpenGLFrameBufferProvider::destroy()
 void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	bool replaced_object = attach_object(CL_COLOR_ATTACHMENT0+attachment_index, render_buffer);
+	bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0+attachment_index, render_buffer);
 
 	if (!replaced_object)
 	{
 		if (!count_color_attachments)
 		{
-			clDrawBuffer(CL_COLOR_ATTACHMENT0);
-			clReadBuffer(CL_COLOR_ATTACHMENT0);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			glReadBuffer(GL_COLOR_ATTACHMENT0);
 		}
 		count_color_attachments++;
 	}
@@ -177,27 +177,27 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 void CL_OpenGLFrameBufferProvider::detach_color_buffer(int attachment_index, const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_COLOR_ATTACHMENT0+attachment_index, render_buffer);
+	detach_object(GL_COLOR_ATTACHMENT0+attachment_index, render_buffer);
 
 	count_color_attachments--;
 	if (!count_color_attachments)
 	{
-		clDrawBuffer(CL_NONE);
-		clReadBuffer(CL_NONE);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 	}
 }
 
 void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	bool replaced_object = attach_object(CL_COLOR_ATTACHMENT0+attachment_index, texture, level, zoffset, 0);
+	bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0+attachment_index, texture, level, zoffset, 0);
 
 	if (!replaced_object)
 	{
 		if (!count_color_attachments)
 		{
-			clDrawBuffer(CL_COLOR_ATTACHMENT0);
-			clReadBuffer(CL_COLOR_ATTACHMENT0);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			glReadBuffer(GL_COLOR_ATTACHMENT0);
 		}
 		count_color_attachments++;
 	}
@@ -206,14 +206,14 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	bool replaced_object = attach_object(CL_COLOR_ATTACHMENT0+attachment_index, texture, level, zoffset, decode_texture_subtype(subtype));
+	bool replaced_object = attach_object(GL_COLOR_ATTACHMENT0+attachment_index, texture, level, zoffset, decode_texture_subtype(subtype));
 
 	if (!replaced_object)
 	{
 		if (!count_color_attachments)
 		{
-			clDrawBuffer(CL_COLOR_ATTACHMENT0);
-			clReadBuffer(CL_COLOR_ATTACHMENT0);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			glReadBuffer(GL_COLOR_ATTACHMENT0);
 		}
 		count_color_attachments++;
 	}
@@ -222,104 +222,104 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 void CL_OpenGLFrameBufferProvider::detach_color_buffer(int attachment_index, const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_COLOR_ATTACHMENT0+attachment_index, texture);
+	detach_object(GL_COLOR_ATTACHMENT0+attachment_index, texture);
 
 	count_color_attachments--;
 	if (!count_color_attachments)
 	{
-		clDrawBuffer(CL_NONE);
-		clReadBuffer(CL_NONE);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 	}
 }
 
 void CL_OpenGLFrameBufferProvider::attach_stencil_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_STENCIL_ATTACHMENT, render_buffer);
+	attach_object(GL_STENCIL_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::detach_stencil_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_STENCIL_ATTACHMENT, render_buffer);
+	detach_object(GL_STENCIL_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_STENCIL_ATTACHMENT, texture, level, zoffset, 0);
+	attach_object(GL_STENCIL_ATTACHMENT, texture, level, zoffset, 0);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_STENCIL_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
+	attach_object(GL_STENCIL_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
 }
 
 void CL_OpenGLFrameBufferProvider::detach_stencil_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_STENCIL_ATTACHMENT, texture);
+	detach_object(GL_STENCIL_ATTACHMENT, texture);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_ATTACHMENT, render_buffer);
+	attach_object(GL_DEPTH_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::detach_depth_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_DEPTH_ATTACHMENT, render_buffer);
+	detach_object(GL_DEPTH_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_ATTACHMENT, texture, level, zoffset, 0);
+	attach_object(GL_DEPTH_ATTACHMENT, texture, level, zoffset, 0);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
+	attach_object(GL_DEPTH_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
 }
 
 void CL_OpenGLFrameBufferProvider::detach_depth_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_DEPTH_ATTACHMENT, texture);
+	detach_object(GL_DEPTH_ATTACHMENT, texture);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
+	attach_object(GL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
+	detach_object(GL_DEPTH_STENCIL_ATTACHMENT, render_buffer);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_STENCIL_ATTACHMENT, texture, level, zoffset, 0);
+	attach_object(GL_DEPTH_STENCIL_ATTACHMENT, texture, level, zoffset, 0);
 }
 
 void CL_OpenGLFrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	attach_object(CL_DEPTH_STENCIL_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
+	attach_object(GL_DEPTH_STENCIL_ATTACHMENT, texture, level, zoffset, decode_texture_subtype(subtype));
 }
 
 void CL_OpenGLFrameBufferProvider::detach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset)
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	detach_object(CL_DEPTH_STENCIL_ATTACHMENT, texture);
+	detach_object(GL_DEPTH_STENCIL_ATTACHMENT, texture);
 }
 
 void CL_OpenGLFrameBufferProvider::set_bind_target( CL_FrameBufferBindTarget target )
@@ -332,8 +332,8 @@ void CL_OpenGLFrameBufferProvider::check_framebuffer_complete()
 {
 	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
 
-	int error_code = clCheckFramebufferStatus(CL_FRAMEBUFFER);
-	if (error_code != CL_FRAMEBUFFER_COMPLETE)
+	int error_code = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (error_code != GL_FRAMEBUFFER_COMPLETE)
 		throw CL_Exception(cl_format("FrameBuffer is : %1", get_error_message(error_code)));
 
 }
@@ -345,49 +345,49 @@ CL_String CL_OpenGLFrameBufferProvider::get_error_message(int error_code)
 {
 	switch (error_code)
 	{
-	case CL_FRAMEBUFFER_COMPLETE:
+	case GL_FRAMEBUFFER_COMPLETE:
 		return "FRAMEBUFFER_COMPLETE";
-	case CL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
 		return "FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-	case CL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
 		return "FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-	case CL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
 		return "FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
-	case CL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
 		return "FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
-	case CL_FRAMEBUFFER_UNSUPPORTED:
+	case GL_FRAMEBUFFER_UNSUPPORTED:
 		return "FRAMEBUFFER_UNSUPPORTED";
 	default:
 		return cl_format("Error code: %1", error_code);
 	}
 }
 
-CL_FrameBufferStateTracker::CL_FrameBufferStateTracker(CL_FrameBufferBindTarget target, CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider)
+CL_FrameBufferStateTracker::CL_FrameBufferStateTracker(CL_FrameBufferBindTarget target, GLuint handle, CL_OpenGLGraphicContextProvider *gc_provider)
 : bind_target(target), last_bound(0), handle_and_bound_equal(false)
 {
 	CL_OpenGL::set_active(gc_provider);
 	if (bind_target == cl_framebuffer_draw)
 	{
-		clGetIntegerv(CL_DRAW_FRAMEBUFFER_BINDING, &last_bound);
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &last_bound);
 		if (last_bound == handle)
 		{
 			handle_and_bound_equal = true;
 		}
 		else
 		{
-			clBindFramebuffer(CL_DRAW_FRAMEBUFFER, handle);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle);
 		}
 	}
 	else
 	{
-		clGetIntegerv(CL_READ_FRAMEBUFFER_BINDING, &last_bound);
+		glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &last_bound);
 		if (last_bound == handle)
 		{
 			handle_and_bound_equal = true;
 		}
 		else
 		{
-			clBindFramebuffer(CL_READ_FRAMEBUFFER, handle);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, handle);
 		}
 	}
 }
@@ -397,31 +397,31 @@ CL_FrameBufferStateTracker::~CL_FrameBufferStateTracker()
 	if (!handle_and_bound_equal)
 	{
 		if (bind_target == cl_framebuffer_draw)
-			clBindFramebuffer(CL_DRAW_FRAMEBUFFER, last_bound);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, last_bound);
 		else
-			clBindFramebuffer(CL_READ_FRAMEBUFFER, last_bound);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, last_bound);
 	}
 }
 
-int CL_OpenGLFrameBufferProvider::decode_internal_attachment_offset(CLenum opengl_attachment)
+int CL_OpenGLFrameBufferProvider::decode_internal_attachment_offset(GLenum opengl_attachment)
 {
 	int internal_attachment_offset = 0;
 
-	if (opengl_attachment == CL_STENCIL_ATTACHMENT)
+	if (opengl_attachment == GL_STENCIL_ATTACHMENT)
 	{
 		internal_attachment_offset = stencil_attachment_offset;
 	}
-	else if (opengl_attachment == CL_DEPTH_ATTACHMENT)
+	else if (opengl_attachment == GL_DEPTH_ATTACHMENT)
 	{
 		internal_attachment_offset = depth_attachment_offset;
 	}
-	else if (opengl_attachment == CL_DEPTH_STENCIL_ATTACHMENT)
+	else if (opengl_attachment == GL_DEPTH_STENCIL_ATTACHMENT)
 	{
 		internal_attachment_offset = depth_stencil_attachment_offset;
 	}
-	else if ( (opengl_attachment >= CL_COLOR_ATTACHMENT0) && (opengl_attachment < (CL_COLOR_ATTACHMENT0+max_color_attachments)) )
+	else if ( (opengl_attachment >= GL_COLOR_ATTACHMENT0) && (opengl_attachment < (GL_COLOR_ATTACHMENT0+max_color_attachments)) )
 	{
-		internal_attachment_offset = color_attachment_offset + (opengl_attachment - CL_COLOR_ATTACHMENT0);
+		internal_attachment_offset = color_attachment_offset + (opengl_attachment - GL_COLOR_ATTACHMENT0);
 	}
 	else
 	{
@@ -431,7 +431,7 @@ int CL_OpenGLFrameBufferProvider::decode_internal_attachment_offset(CLenum openg
 }
 
 
-bool CL_OpenGLFrameBufferProvider::attach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer)
+bool CL_OpenGLFrameBufferProvider::attach_object(GLenum opengl_attachment, const CL_RenderBuffer &render_buffer)
 {
 	int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
@@ -458,17 +458,17 @@ bool CL_OpenGLFrameBufferProvider::attach_object(CLenum opengl_attachment, const
 
 	CL_FrameBufferStateTracker tracker_draw(bind_target, handle, gc_provider);
 
-	CLenum target = CL_DRAW_FRAMEBUFFER;
+	GLenum target = GL_DRAW_FRAMEBUFFER;
 	if (bind_target == cl_framebuffer_read)
-		target = CL_READ_FRAMEBUFFER;
+		target = GL_READ_FRAMEBUFFER;
 
-	CLuint render_buffer_handle = gl_render_buffer->get_handle();
+	GLuint render_buffer_handle = gl_render_buffer->get_handle();
 
-	clFramebufferRenderbuffer(target, opengl_attachment, CL_RENDERBUFFER, render_buffer_handle);
+	glFramebufferRenderbuffer(target, opengl_attachment, GL_RENDERBUFFER, render_buffer_handle);
 	return is_replaced_object;
 }
 
-bool CL_OpenGLFrameBufferProvider::attach_object(CLenum opengl_attachment, const CL_Texture &texture, int level, int zoffset, CLuint texture_target)
+bool CL_OpenGLFrameBufferProvider::attach_object(GLenum opengl_attachment, const CL_Texture &texture, int level, int zoffset, GLuint texture_target)
 {
 	int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
@@ -493,98 +493,98 @@ bool CL_OpenGLFrameBufferProvider::attach_object(CLenum opengl_attachment, const
 	if (!gl_texture_provider)
 			throw CL_Exception("Invalid texture");
 
-	CLuint texture_type = gl_texture_provider->get_texture_type();
-	CLuint texture_handle = gl_texture_provider->get_handle();
+	GLuint texture_type = gl_texture_provider->get_texture_type();
+	GLuint texture_handle = gl_texture_provider->get_handle();
 
-	CLenum target = CL_DRAW_FRAMEBUFFER;
+	GLenum target = GL_DRAW_FRAMEBUFFER;
 	if (bind_target == cl_framebuffer_read)
-		target = CL_READ_FRAMEBUFFER;
+		target = GL_READ_FRAMEBUFFER;
 
 	if (!texture_target)
 		texture_target = texture_type;
 
-	if (texture_type == CL_TEXTURE_1D)
+	if (texture_type == GL_TEXTURE_1D)
 	{
-		clFramebufferTexture1D(target, opengl_attachment, texture_target, texture_handle, level);
+		glFramebufferTexture1D(target, opengl_attachment, texture_target, texture_handle, level);
 	}
-	else if (texture_type == CL_TEXTURE_2D)
+	else if (texture_type == GL_TEXTURE_2D)
 	{
-		clFramebufferTexture2D(target, opengl_attachment, texture_target, texture_handle, level);
+		glFramebufferTexture2D(target, opengl_attachment, texture_target, texture_handle, level);
 	}
-	else if (texture_type == CL_TEXTURE_3D)
+	else if (texture_type == GL_TEXTURE_3D)
 	{
-		clFramebufferTexture3D(target, opengl_attachment, texture_target, texture_handle, level, zoffset);
+		glFramebufferTexture3D(target, opengl_attachment, texture_target, texture_handle, level, zoffset);
 	}
 	return is_replaced_object;
 }
 
-void CL_OpenGLFrameBufferProvider::detach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer)
+void CL_OpenGLFrameBufferProvider::detach_object(GLenum opengl_attachment, const CL_RenderBuffer &render_buffer)
 {
 	int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
-	CLenum target = CL_DRAW_FRAMEBUFFER;
+	GLenum target = GL_DRAW_FRAMEBUFFER;
 	if (bind_target == cl_framebuffer_read)
-		target = CL_READ_FRAMEBUFFER;
+		target = GL_READ_FRAMEBUFFER;
 
-	clFramebufferRenderbuffer(target, opengl_attachment, CL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(target, opengl_attachment, GL_RENDERBUFFER, 0);
 
 	attached_renderbuffers[internal_attachment_offset] = CL_RenderBuffer();
 }
 
-void CL_OpenGLFrameBufferProvider::detach_object(CLenum opengl_attachment, const CL_Texture &texture)
+void CL_OpenGLFrameBufferProvider::detach_object(GLenum opengl_attachment, const CL_Texture &texture)
 {
 	int internal_attachment_offset = decode_internal_attachment_offset(opengl_attachment);
 
-	CLenum target = CL_DRAW_FRAMEBUFFER;
+	GLenum target = GL_DRAW_FRAMEBUFFER;
 	if (bind_target == cl_framebuffer_read)
-		target = CL_READ_FRAMEBUFFER;
+		target = GL_READ_FRAMEBUFFER;
 
 	CL_OpenGLTextureProvider *gl_texture_provider = dynamic_cast<CL_OpenGLTextureProvider*>(texture.get_provider());
 
 	if (!gl_texture_provider)
 			throw CL_Exception("Invalid texture");
 
-	CLuint texture_type = gl_texture_provider->get_texture_type();
-	CLuint texture_handle = 0;
+	GLuint texture_type = gl_texture_provider->get_texture_type();
+	GLuint texture_handle = 0;
 
-	if (texture_type == CL_TEXTURE_1D)
+	if (texture_type == GL_TEXTURE_1D)
 	{
-		clFramebufferTexture1D(target, opengl_attachment, texture_type, texture_handle, 0);
+		glFramebufferTexture1D(target, opengl_attachment, texture_type, texture_handle, 0);
 	}
-	else if (texture_type == CL_TEXTURE_2D)
+	else if (texture_type == GL_TEXTURE_2D)
 	{
-		clFramebufferTexture2D(target, opengl_attachment, texture_type, texture_handle, 0);
+		glFramebufferTexture2D(target, opengl_attachment, texture_type, texture_handle, 0);
 	}
-	else if (texture_type == CL_TEXTURE_3D)
+	else if (texture_type == GL_TEXTURE_3D)
 	{
-		clFramebufferTexture3D(target, opengl_attachment, texture_type, texture_handle, 0, 0);
+		glFramebufferTexture3D(target, opengl_attachment, texture_type, texture_handle, 0, 0);
 	}
 
 	attached_textures[internal_attachment_offset] = CL_Texture();
 }
 
-CLuint CL_OpenGLFrameBufferProvider::decode_texture_subtype(CL_TextureSubtype subtype)
+GLuint CL_OpenGLFrameBufferProvider::decode_texture_subtype(CL_TextureSubtype subtype)
 {
-	CLuint texture_target;
+	GLuint texture_target;
 	switch (subtype)
 	{
 		case cl_subtype_cube_map_positive_x:
-			texture_target = CL_TEXTURE_CUBE_MAP_POSITIVE_X;
+			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 			break;
 		case cl_subtype_cube_map_negative_x:
-			texture_target = CL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
 			break;
 		case cl_subtype_cube_map_positive_y:
-			texture_target = CL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
 			break;
 		case cl_subtype_cube_map_negative_y:
-			texture_target = CL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
 			break;
 		case cl_subtype_cube_map_positive_z:
-			texture_target = CL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+			texture_target = GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 			break;
 		case cl_subtype_cube_map_negative_z:
-			texture_target = CL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+			texture_target = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
 			break;
 		default:
 			texture_target = 0;

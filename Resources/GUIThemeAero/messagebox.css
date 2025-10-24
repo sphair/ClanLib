@@ -1,0 +1,54 @@
+
+messagebox
+{
+	bg-image:MessageBox;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:44;
+	bg-image-sizing:stretch; 
+
+	padding-left:11;
+	padding-right:11;
+	padding-top:11;
+	padding-bottom:10;
+	
+	preferred-width:300;
+	preferred-height:70;
+
+	icon_text_gap:7;
+}
+
+messagebox button
+{
+	preferred-width:66;
+	preferred-height:21;
+}
+
+messagebox.warning icon
+{
+	bg-image:MessageBoxIconWarning;
+	preferred-width:34;
+	preferred-height:34;
+}
+
+messagebox.info icon
+{
+	bg-image:MessageBoxIconInfo;
+	preferred-width:34;
+	preferred-height:34;
+}
+
+messagebox.error icon
+{
+	bg-image:MessageBoxIconError;
+	preferred-width:34;
+	preferred-height:34;
+}
+
+messagebox.question icon
+{
+	bg-image:MessageBoxIconQuestion;
+	preferred-width:34;
+	preferred-height:34;
+}

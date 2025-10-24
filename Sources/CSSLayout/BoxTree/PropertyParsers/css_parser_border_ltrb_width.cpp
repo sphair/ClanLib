@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_ltrb_width.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderLTRBWidth::get_names()
 {
@@ -40,16 +40,16 @@ std::vector<CL_String> CL_CSSParserBorderLTRBWidth::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderLTRBWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderLTRBWidth::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderWidth *width = 0;
-	if (name == "border-top-width")
+	if (equals(name, "border-top-width"))
 		width = &properties.border_width_top;
-	else if (name == "border-right-width")
+	else if (equals(name, "border-right-width"))
 		width = &properties.border_width_right;
-	else if (name == "border-bottom-width")
+	else if (equals(name, "border-bottom-width"))
 		width = &properties.border_width_bottom;
-	else if (name == "border-left-width")
+	else if (equals(name, "border-left-width"))
 		width = &properties.border_width_left;
 
 	if (width)
@@ -58,13 +58,13 @@ void CL_CSSParserBorderLTRBWidth::parse(CL_CSSBoxProperties &properties, const C
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 		{
-			if (token.value == "thin")
+			if (equals(token.value, "thin"))
 				width->type = CL_CSSBoxBorderWidth::type_thin;
-			else if (token.value == "medium")
+			else if (equals(token.value, "medium"))
 				width->type = CL_CSSBoxBorderWidth::type_medium;
-			else if (token.value == "thick")
+			else if (equals(token.value, "thick"))
 				width->type = CL_CSSBoxBorderWidth::type_thick;
-			else if (token.value == "inherit")
+			else if (equals(token.value, "inherit"))
 				width->type = CL_CSSBoxBorderWidth::type_inherit;
 		}
 		else if (is_length(token) && pos == tokens.size())
@@ -75,6 +75,11 @@ void CL_CSSParserBorderLTRBWidth::parse(CL_CSSBoxProperties &properties, const C
 				width->type = CL_CSSBoxBorderWidth::type_length;
 				width->length = length;
 			}
+		}
+
+		if (out_change_set)
+		{
+			(*out_change_set)[name] = width;
 		}
 	}
 }

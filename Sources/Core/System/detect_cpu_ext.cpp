@@ -30,6 +30,18 @@
 #include "Core/precomp.h"
 #include "API/Core/System/system.h"
 
+#ifdef CL_ARM_PLATFORM
+bool CL_System::detect_cpu_extension(CL_CPU_ExtensionPPC ext)
+{
+	throw ("Congratulations, you've just been selected to code this feature!");
+}
+
+bool CL_System::detect_cpu_extension(CL_CPU_ExtensionX86 ext)
+{
+    return false;
+}
+#else
+
 #if (defined(WIN32) || defined(_WIN32) || defined(_WIN64)) && !defined __MINGW32__
 #include <intrin.h>
 #endif
@@ -142,3 +154,4 @@ bool CL_System::detect_cpu_extension(CL_CPU_ExtensionX86 ext)
 	return false;
 }
 
+#endif

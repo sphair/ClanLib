@@ -212,13 +212,8 @@ public:
 	/// \brief Set text
 	///
 	/// \param number = value
-	void set_text(float number);
-
-	/// \brief Set text
-	///
-	/// \param number = value
-	/// \param num_decimal_places = number of decimal places (usually 6)
-	void set_text(float number, int num_decimal_places);
+	/// \param num_decimal_places = number of decimal places
+	void set_text(float number, int num_decimal_places = 6);
 
 	/// \brief Set selection
 	///

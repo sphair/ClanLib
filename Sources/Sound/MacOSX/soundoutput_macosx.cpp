@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Sean Heber - implemented ring buffer
 */
 
 #include "Sound/precomp.h"
@@ -32,89 +31,56 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/System/system.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_SoundOutput_MacOSX construction:
-
 CL_SoundOutput_MacOSX::CL_SoundOutput_MacOSX(int frequency, int latency)
-:   CL_SoundOutput_Impl(frequency, latency), playing(false)
+: CL_SoundOutput_Impl(frequency, latency), frequency(frequency), latency(latency), fragment_size(0), next_fragment(0), read_cursor(0), fragments_available(0)
 {
-	UInt32 size;
-	OSStatus result;
-	
-	// Find default output device:
-	device = kAudioDeviceUnknown;
-	size = sizeof(AudioDeviceID);
-	result = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &size, &device);
-	if (result != noErr)
-		return;
-
-	// Get buffer size for device:
-	device_buffer_size = 0;
-	size = sizeof(UInt32);
-	result = AudioDeviceGetProperty(device, 0, false, kAudioDevicePropertyBufferSize, &size, &device_buffer_size);
-	if (result != noErr)
-		return;
-
-	// Get device format description:
-	size = sizeof(AudioStreamBasicDescription);
-	memset(&device_format, 0, size);
-	result = AudioDeviceGetProperty(device, 0, false, kAudioDevicePropertyStreamFormat, &size, &device_format);
-	if (result != noErr)
-		return;
-/*
-	printf("sampleRate %g\n", device_format.mSampleRate);
-	printf("mFormatFlags %08X\n", device_format.mFormatFlags);
-	printf("mBytesPerPacket %d\n", device_format.mBytesPerPacket);
-	printf("mFramesPerPacket %d\n", device_format.mFramesPerPacket);
-	printf("mChannelsPerFrame %d\n", device_format.mChannelsPerFrame);
-	printf("mBytesPerFrame %d\n", device_format.mBytesPerFrame);
-	printf("mBitsPerChannel %d\n", device_format.mBitsPerChannel);
-*/
-	if (device_format.mFormatID != kAudioFormatLinearPCM)
-		return;
-
-	mixing_frequency = int(device_format.mSampleRate);
-
-	// configure the fragment ring buffer
-	fragment_buffer.resize(10);		// <--- this number affects audio lag (must be >= 2!)
-	fragment_insert_position = 0;
-	fragment_play_position = 1;
-	int frag_size = get_fragment_size();
-	for (unsigned int i=0; i<fragment_buffer.size(); i++ )
-	{
-		fragment_buffer[i] = new float[frag_size*2];
-		bzero(fragment_buffer[i],sizeof(float)*frag_size*2);
-	}
-
-	result = AudioDeviceAddIOProc(device, &CL_SoundOutput_MacOSX::audio_handler, this);
-	if (result != noErr)
-		return;
-	
-	result = AudioDeviceStart(device, &CL_SoundOutput_MacOSX::audio_handler);
-	if (result != noErr)
-		return;
-
-	playing = true;
-	start_mixer_thread();
+    fragment_size = frequency * latency / fragment_buffer_count / 1000;
+    fragment_size = (fragment_size + 3) & ~3; // Force to be a multiple of 4
+    fragments_available = fragment_buffer_count;
+    fragment_data = CL_DataBuffer(fragment_size * sizeof(short) * 2 * fragment_buffer_count);
+        
+    start_mixer_thread();
 }
-	
+
 CL_SoundOutput_MacOSX::~CL_SoundOutput_MacOSX()
 {
 	stop_mixer_thread();
-	if (playing)
-	{
-		AudioDeviceStop(device, &CL_SoundOutput_MacOSX::audio_handler);
-		AudioDeviceRemoveIOProc(device, &CL_SoundOutput_MacOSX::audio_handler);
-		playing = false;
-	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_SoundOutput_MacOSX attributes:
+void CL_SoundOutput_MacOSX::mixer_thread_starting()
+{
+    audio_format.mSampleRate = frequency;
+    audio_format.mFormatID = kAudioFormatLinearPCM;
+    audio_format.mFormatFlags = kAudioFormatFlagsCanonical;
+    audio_format.mBytesPerPacket = 2 * sizeof(short);
+    audio_format.mFramesPerPacket = 1;
+    audio_format.mBytesPerFrame = 2 * sizeof(short);
+    audio_format.mChannelsPerFrame = 2;
+    audio_format.mBitsPerChannel = sizeof(short) * 8;
+    audio_format.mReserved = 0;
 
+    OSStatus result = AudioQueueNewOutput(&audio_format, &CL_SoundOutput_MacOSX::static_audio_queue_callback, this, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, 0, &audio_queue);
+    if (result != 0)
+        throw CL_Exception("AudioQueueNewOutput failed");
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_SoundOutput_MacOSX operations:
+    for (int i = 0; i < fragment_buffer_count; i++)
+    {
+        result = AudioQueueAllocateBuffer(audio_queue, fragment_size * sizeof(short) * 2, &audio_buffers[i]);
+        if (result != 0)
+            throw CL_Exception("AudioQueueAllocateBuffer failed");
+        audio_queue_callback(audio_queue, audio_buffers[i]);
+    }
+    
+    result = AudioQueueStart(audio_queue, 0);
+    if (result != 0)
+        throw CL_Exception("AudioQueueStart failed");
+}
+
+void CL_SoundOutput_MacOSX::mixer_thread_stopping()
+{
+    AudioQueueStop(audio_queue, true);
+    AudioQueueDispose(audio_queue, true);
+}
 
 void CL_SoundOutput_MacOSX::silence()
 {
@@ -122,59 +88,59 @@ void CL_SoundOutput_MacOSX::silence()
 
 int CL_SoundOutput_MacOSX::get_fragment_size()
 {
-	int frag_size = device_buffer_size / device_format.mBytesPerFrame;
-	return frag_size;
+    return fragment_size;
 }
 
-void CL_SoundOutput_MacOSX::write_fragment(float *data)
+void CL_SoundOutput_MacOSX::write_fragment(float *dataf)
 {
-	int frag_size = get_fragment_size();
-	float *frag_data = fragment_buffer[fragment_insert_position];
-
-	for (int i=0; i<frag_size*2; i++)
-		frag_data[i] = data[i];
-
-	fragment_insert_position++;
-	if (fragment_insert_position == fragment_buffer.size() )
-		fragment_insert_position = 0;
+    if (fragments_available == 0)
+        wait();
+    
+    short *databuf = reinterpret_cast<short*>(fragment_data.get_data()) + next_fragment * fragment_size * 2;
+    for (int i = 0; i < fragment_size * 2; i++)
+    {
+        databuf[i] = (short)(dataf[i]*32767);
+    }
+    
+    next_fragment++;
+    if (next_fragment == fragment_buffer_count)
+        next_fragment = 0;
+    fragments_available--;
 }
 
 void CL_SoundOutput_MacOSX::wait()
 {
-	while (true)
-	{
-		// note: this equality is perhaps dangerous due to threading issue
-		// see note down in audio_handler below for why.
-		bool buffer_is_full = fragment_insert_position == fragment_play_position;
-		if (!buffer_is_full) break;
-		CL_System::sleep(10);
-	}
+    while (fragments_available == 0)
+    {
+        CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, true);
+    }
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_SoundOutput_MacOSX implementation:
-
-OSStatus CL_SoundOutput_MacOSX::audio_handler(
-	AudioDeviceID in_device,
-	const AudioTimeStamp *in_now,
-	const AudioBufferList *in_input_data,
-	const AudioTimeStamp *in_input_time,
-	AudioBufferList *out_output_data,
-	const AudioTimeStamp *in_output_time,
-	void *user_data)
+void CL_SoundOutput_MacOSX::audio_queue_callback(AudioQueueRef queue, AudioQueueBufferRef buffer)
 {
-	CL_SoundOutput_MacOSX *self = (CL_SoundOutput_MacOSX *) user_data;
-	float *data = (float *) out_output_data->mBuffers[0].mData;
-	
-	bcopy(self->fragment_buffer[self->fragment_play_position], data, sizeof(float)*self->get_fragment_size()*2);
+    if (fragments_available != fragment_buffer_count)
+    {
+        short *databuf = reinterpret_cast<short*>(fragment_data.get_data()) + read_cursor * fragment_size * 2;
+        memcpy(buffer->mAudioData, databuf, fragment_size * sizeof(short) * 2);
+        buffer->mAudioDataByteSize = fragment_size * sizeof(short) * 2;
+        fragments_available++;
+        read_cursor++;
+        if (read_cursor == fragment_buffer_count)
+            read_cursor = 0;
+    }
+    else
+    {
+        memset(buffer->mAudioData, 0, fragment_size * sizeof(short) * 2);
+        buffer->mAudioDataByteSize = fragment_size * sizeof(short) * 2;
+    }
 
-	// this is sort of dangerous in that there's no mutex here and the value is compared
-	// in another thread above (see above), but I found a mutex introduces a slight lag
-	// and sometimes that appears to be problematic (mostly when cpu is pegged) - I guess
-	// we shall see if it is an issue or not...
-	self->fragment_play_position++;
-	if (self->fragment_play_position == self->fragment_buffer.size())
-		self->fragment_play_position = 0;
+    OSStatus result = AudioQueueEnqueueBuffer(queue, buffer, 0, 0);
+    if (result != 0)
+        throw CL_Exception("AudioQueueEnqueueBuffer failed");
+}
 
-	return noErr;
+void CL_SoundOutput_MacOSX::static_audio_queue_callback(void *userdata, AudioQueueRef queue, AudioQueueBufferRef buffer)
+{
+    CL_SoundOutput_MacOSX *self = reinterpret_cast<CL_SoundOutput_MacOSX *>(userdata);
+    self->audio_queue_callback(queue, buffer);
 }

@@ -71,11 +71,6 @@ CL_GL1ProcAddress *CL_RenderWindowProvider_GLX_PBuffer::get_proc_address(const C
 	return NULL;
 }
 
-const CL_RenderWindowProvider * CL_RenderWindowProvider_GLX_PBuffer::new_worker_context() const
-{
-	throw CL_Exception("Pixel buffer worker threads are not implemented");
-}
-
 CL_PBuffer_GL1_Impl::CL_PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
 , pbuffer(0), pbuffer_context(0), disp(0), pbuffer_gc_provider(0), glx(NULL)
 {

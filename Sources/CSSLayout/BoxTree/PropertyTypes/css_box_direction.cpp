@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_direction.h"
+#include "API/CSSLayout/PropertyTypes/css_box_direction.h"
 
 CL_CSSBoxDirection::CL_CSSBoxDirection()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxDirection::compute(const CL_CSSBoxDirection *parent, CL_CSSResourc
 			type = parent->type;
 		else
 			type = type_ltr;
+	}
+}
+
+CL_String CL_CSSBoxDirection::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_ltr:
+		return "ltr";
+	case type_rtl:
+		return "rtl";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -40,7 +40,7 @@ class CL_OpenGLRenderBufferProvider : public CL_RenderBufferProvider, CL_Disposa
 /// \{
 
 public:
-	CL_OpenGLRenderBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLRenderBufferProvider();
 
 	~CL_OpenGLRenderBufferProvider();
 
@@ -50,7 +50,7 @@ public:
 /// \{
 
 public:
-	CLuint get_handle();
+	GLuint get_handle();
 
 
 /// \}
@@ -71,9 +71,8 @@ public:
 
 private:
 	void on_dispose();
-	CL_OpenGLGraphicContextProvider *gc_provider;
 
-	CLuint handle;
+	GLuint handle;
 /// \}
 };
 

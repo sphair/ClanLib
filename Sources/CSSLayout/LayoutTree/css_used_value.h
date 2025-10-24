@@ -30,3 +30,6 @@
 
 typedef float CL_CSSUsedValue;
 typedef int CL_CSSActualValue;
+
+inline CL_CSSActualValue cl_used_to_actual(CL_CSSUsedValue v) { return (CL_CSSActualValue)(v >= 0.0f ? v+0.1f : v-0.1f); }
+inline CL_CSSActualValue cl_actual_to_used(CL_CSSActualValue v) { return (CL_CSSUsedValue)v; }

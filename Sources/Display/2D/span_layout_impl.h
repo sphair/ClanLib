@@ -63,6 +63,11 @@ public:
 
 	void set_component_geometry();
 
+	bool cursor_visible;
+	CL_String::size_type cursor_pos;
+	bool cursor_overwrite_mode;
+	CL_Colorf cursor_color;
+
 private:
 	struct TextBlock
 	{

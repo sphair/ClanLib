@@ -69,7 +69,7 @@ public:
 
 public:
 	/// \brief The number of nodes in the map.
-	int get_length() const;
+	unsigned long get_length() const;
 
 /// \}
 /// \name Operations

@@ -29,8 +29,10 @@
 
 #pragma once
 
-
+#ifndef __APPLE__
 #include "fontconfig/fontconfig.h"
+#endif
+
 #include "API/Core/IOData/virtual_directory.h"
 
 class CL_FontDescription;
@@ -67,7 +69,9 @@ public:
 /// \{
 
 private:
+#ifndef __APPLE__
 	FcConfig * fc_config;
+#endif
 /// \}
 };
 

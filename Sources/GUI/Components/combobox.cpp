@@ -64,6 +64,7 @@ public:
 	void on_resized();
 	void on_style_changed();
 	void on_lineedit_message(CL_GUIMessage &msg);
+	void on_lineedit_enter_pressed();
 	void on_btn_arrow_clicked();
 	void on_lineedit_text_edited(CL_InputEvent &event);
 	bool on_lineedit_unhandled_event(CL_InputEvent &event);
@@ -76,6 +77,7 @@ public:
 	CL_Callback_v0 func_dropdown_closed;
 	CL_Callback_v0 func_before_edit_changed;
 	CL_Callback_v0 func_after_edit_changed;
+	CL_Callback_v0 func_enter_pressed;
 	CL_Callback_v1<int> func_item_selected;
 	CL_Callback_v1<int> func_selection_changed;
 	CL_Callback_1<bool, CL_InputEvent> func_lineedit_unhandled_event;
@@ -95,6 +97,10 @@ public:
 	int item_height;
 	int minimum_width;
 	CL_Rect opener_rect;
+
+	class NoLoopHack : public CL_GUIMessageData
+	{
+	};
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -228,6 +234,11 @@ CL_Callback_v0 &CL_ComboBox::func_dropdown_closed()
 	return impl->func_dropdown_closed;
 }
 
+CL_Callback_v0 &CL_ComboBox::func_enter_pressed()
+{
+	return impl->func_enter_pressed;
+}
+
 CL_Callback_v0 &CL_ComboBox::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
@@ -316,18 +327,24 @@ void CL_ComboBox_Impl::on_process_message(CL_GUIMessage &msg)
 				}
 				msg.set_consumed();
 			}
+			else if (e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN || e.id == CL_KEY_NUMPAD_ENTER)
+			{
+				if (!func_enter_pressed.is_null())
+					func_enter_pressed.invoke();
+				msg.set_consumed();
+			}
 			else if (editable && 
 				!msg.is_consumed() &&
 				e.id != CL_KEY_TAB && 
 				e.id != CL_KEY_ENTER && 
 				e.id != CL_KEY_NUMPAD_ENTER &&
 				e.id != CL_KEY_ESCAPE &&
-				msg.get_data("No Loop Hack").is_null())
+				!msg.get_data("No Loop Hack"))
 			{
 				CL_GUIMessage_Input input_msg;
 				input_msg.set_target(lineedit);
 				input_msg.set_event(e);
-				input_msg.set_data("No Loop Hack", CL_SharedPtr<int>(new int(1337)));
+				input_msg.set_data("No Loop Hack", CL_SharedPtr<NoLoopHack>(new NoLoopHack()));
 				component->get_gui_manager().dispatch_message(input_msg);
 				msg.set_consumed();
 			}
@@ -426,9 +443,8 @@ void CL_ComboBox_Impl::create_components()
 	lineedit = new CL_LineEdit(component);
 	lineedit->set_focus_policy(CL_GUIComponent::focus_parent);
 	
-	CL_GraphicContext &gc = component->get_gc();
-
 	lineedit->func_after_edit_changed().set(this, &CL_ComboBox_Impl::on_lineedit_text_edited);
+	lineedit->func_enter_pressed().set(this, &CL_ComboBox_Impl::on_lineedit_enter_pressed);
 	lineedit->func_filter_message().set(this, &CL_ComboBox_Impl::on_lineedit_message);
 }
 
@@ -436,7 +452,6 @@ void CL_ComboBox_Impl::on_btn_arrow_clicked()
 {
 	popup_menu.set_maximum_height(dropdown_height_items*item_height); 
 	CL_Rect g = component->get_geometry().get_size();
-	int old_width = popup_menu.get_minimum_width();
 	if (minimum_width != -1)
 		popup_menu.set_minimum_width(minimum_width);
 	else
@@ -445,25 +460,14 @@ void CL_ComboBox_Impl::on_btn_arrow_clicked()
 	popup_menu.start(component, component->component_to_screen_coords(g.get_bottom_left()));
 }
 
+void CL_ComboBox_Impl::on_lineedit_enter_pressed()
+{
+	if (!func_enter_pressed.is_null())
+		func_enter_pressed.invoke();
+}
+
 void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent &event)
 {
-/*  What is this supposed to do?? - Harry 2009-07-29
-
-	CL_String text = lineedit->get_text();	
-	int index = popup_menu.find_item(text);
-	selected_item = index;
-	if (selected_item != -1 && event.id != CL_KEY_BACKSPACE && 
-		event.id != CL_KEY_DELETE && 
-		event.id != CL_KEY_LEFT && 
-		event.id != CL_KEY_RIGHT)
-	{
-		CL_StringRef str = popup_menu.get_item_at(index).get_text();
-		CL_String old_lineedit_text = lineedit->get_text();
-		int selection_length = str.length() - old_lineedit_text.length();
-		lineedit->set_text(str);
-		lineedit->set_selection(old_lineedit_text.length(), selection_length);
-	}
-*/
 	if (!func_after_edit_changed.is_null())
 		func_after_edit_changed.invoke();
 }

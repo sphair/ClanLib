@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_font_size.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserFontSize::get_names()
 {
@@ -37,31 +37,31 @@ std::vector<CL_String> CL_CSSParserFontSize::get_names()
 	return names;
 }
 
-void CL_CSSParserFontSize::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserFontSize::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "xx-small")
+		if (equals(token.value, "xx-small"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_xx_small;
-		else if (token.value == "x-small")
+		else if (equals(token.value, "x-small"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_x_small;
-		else if (token.value == "small")
+		else if (equals(token.value, "small"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_small;
-		else if (token.value == "medium")
+		else if (equals(token.value, "medium"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_medium;
-		else if (token.value == "large")
+		else if (equals(token.value, "large"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_large;
-		else if (token.value == "x-large")
+		else if (equals(token.value, "x-large"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_x_large;
-		else if (token.value == "xx-large")
+		else if (equals(token.value, "xx-large"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_xx_large;
-		else if (token.value == "smaller")
+		else if (equals(token.value, "smaller"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_smaller;
-		else if (token.value == "larger")
+		else if (equals(token.value, "larger"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_larger;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.font_size.type = CL_CSSBoxFontSize::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
@@ -77,5 +77,9 @@ void CL_CSSParserFontSize::parse(CL_CSSBoxProperties &properties, const CL_Strin
 	{
 		properties.font_size.type = CL_CSSBoxFontSize::type_percentage;
 		properties.font_size.percentage = CL_StringHelp::text_to_float(token.value);
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["font-size"] = &properties.font_size;
 	}
 }

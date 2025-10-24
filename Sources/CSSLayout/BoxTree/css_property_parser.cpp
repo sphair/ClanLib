@@ -28,7 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_property_parser.h"
-#include "css_box_length.h"
+#include "API/CSSLayout/css_box_length.h"
+#include "API/Core/Text/console.h"
 
 CL_CSSToken CL_CSSPropertyParser::next_token(size_t &pos, const std::vector<CL_CSSToken> &tokens, bool skip_whitespace)
 {
@@ -62,42 +63,42 @@ bool CL_CSSPropertyParser::parse_length(const CL_CSSToken &token, CL_CSSBoxLengt
 {
 	if (token.type == CL_CSSToken::type_dimension)
 	{
-		if (token.dimension == "px")
+		if (equals(token.dimension, "px"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_px);
 			return true;
 		}
-		else if (token.dimension == "em")
+		else if (equals(token.dimension, "em"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_em);
 			return true;
 		}
-		else if (token.dimension == "pt")
+		else if (equals(token.dimension, "pt"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_pt);
 			return true;
 		}
-		else if (token.dimension == "mm")
+		else if (equals(token.dimension, "mm"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_mm);
 			return true;
 		}
-		else if (token.dimension == "cm")
+		else if (equals(token.dimension, "cm"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_cm);
 			return true;
 		}
-		else if (token.dimension == "in")
+		else if (equals(token.dimension, "in"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_in);
 			return true;
 		}
-		else if (token.dimension == "pc")
+		else if (equals(token.dimension, "pc"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_pc);
 			return true;
 		}
-		else if (token.dimension == "ex")
+		else if (equals(token.dimension, "ex"))
 		{
 			out_length = CL_CSSBoxLength(CL_StringHelp::text_to_float(token.value), CL_CSSBoxLength::type_ex);
 			return true;
@@ -137,9 +138,16 @@ bool CL_CSSPropertyParser::parse_color(const std::vector<CL_CSSToken> &tokens, s
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident)
 	{
+		if (equals(token.value, "transparent"))
+		{
+			out_color = CL_Colorf::transparent;
+			in_out_pos = pos;
+			return true;
+		}
+
 		for (int i = 0; colors[i].name != 0; i++)
 		{
-			if (token.value == colors[i].name)
+			if (equals(token.value, colors[i].name))
 			{
 				out_color = CL_Colorf(
 					(colors[i].color>>16)/255.0f,
@@ -152,7 +160,7 @@ bool CL_CSSPropertyParser::parse_color(const std::vector<CL_CSSToken> &tokens, s
 			}
 		}
 	}
-	else if (token.type == CL_CSSToken::type_function && token.value == "rgb")
+	else if (token.type == CL_CSSToken::type_function && equals(token.value, "rgb"))
 	{
 		int color[3] = { 0, 0, 0 };
 		for (int channel = 0; channel < 3; channel++)
@@ -192,7 +200,7 @@ bool CL_CSSPropertyParser::parse_color(const std::vector<CL_CSSToken> &tokens, s
 			return true;
 		}
 	}
-	else if (token.type == CL_CSSToken::type_function && token.value == "rgba")
+	else if (token.type == CL_CSSToken::type_function && equals(token.value, "rgba"))
 	{
 		int color[4] = { 0, 0, 0, 0 };
 		for (int channel = 0; channel < 4; channel++)
@@ -366,3 +374,48 @@ CL_CSSPropertyParser::ColorType CL_CSSPropertyParser::colors[] =
 	"gray",   0x808080,
 	0, 0
 };
+
+bool CL_CSSPropertyParser::equals(const CL_String &s1, const CL_String &s2)
+{
+	return CL_StringHelp::compare(s1, s2, true) == 0;
+}
+
+void CL_CSSPropertyParser::debug_parse_error(const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+{
+	CL_String s = cl_format("Parse error for %1:", name);
+	for (size_t i = 0; i < tokens.size(); i++)
+	{
+		switch (tokens[i].type)
+		{
+		case CL_CSSToken::type_null: s += " null"; break;
+		case CL_CSSToken::type_ident: s += cl_format(" ident(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_atkeyword: s += cl_format(" atkeyword(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_string: s += cl_format(" string(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_invalid: s += cl_format(" invalid(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_hash: s += cl_format(" hash(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_number: s += cl_format(" number(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_percentage: s += cl_format(" percentage(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_dimension: s += cl_format(" dimension(%1,%2)", tokens[i].value, tokens[i].dimension); break;
+		case CL_CSSToken::type_uri: s += cl_format(" uri(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_unicode_range: s += cl_format(" unicode-range(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_cdo: s += " cdo"; break;
+		case CL_CSSToken::type_cdc: s += " cdc"; break;
+		case CL_CSSToken::type_colon: s += " :"; break;
+		case CL_CSSToken::type_semi_colon: s += " ;"; break;
+		case CL_CSSToken::type_curly_brace_begin: s += " {"; break;
+		case CL_CSSToken::type_curly_brace_end: s += " }"; break;
+		case CL_CSSToken::type_bracket_begin: s += " ("; break;
+		case CL_CSSToken::type_bracket_end: s += " )"; break;
+		case CL_CSSToken::type_square_bracket_begin: s += " ["; break;
+		case CL_CSSToken::type_square_bracket_end: s += " ]"; break;
+		case CL_CSSToken::type_whitespace: s += " whitespace"; break;
+		case CL_CSSToken::type_comment: s += " comment"; break;
+		case CL_CSSToken::type_function: s += cl_format(" function(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_includes: s += cl_format(" includes(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_dashmatch: s += cl_format(" dashmatch(%1)", tokens[i].value); break;
+		case CL_CSSToken::type_delim: s += cl_format(" delim(%1)", tokens[i].value); break;
+		default: break;
+		}
+	}
+	CL_Console::write_line(s);
+}

@@ -43,7 +43,7 @@ CL_CSSLayoutNode::CL_CSSLayoutNode()
 
 bool CL_CSSLayoutNode::is_null() const
 {
-	return impl.is_null() || impl->is_disposed();
+	return !impl || impl->is_disposed();
 }
 
 bool CL_CSSLayoutNode::is_text() const
@@ -147,7 +147,7 @@ CL_String CL_CSSLayoutNode::print_node() const
 		return impl->print_node(impl->box_node);
 }
 
-void CL_CSSLayoutNode::set_user_data(std::auto_ptr<CL_CSSLayoutUserData> data)
+void CL_CSSLayoutNode::set_user_data(CL_UniquePtr<CL_CSSLayoutUserData> &data)
 {
 	if (!is_null())
 		impl->box_node->set_user_data(data);
@@ -197,7 +197,7 @@ void CL_CSSLayoutNode_Impl::on_dispose()
 
 CL_CSSLayoutNode CL_CSSLayoutNode_Impl::get_node(CL_CSSBoxNode *box_node) const
 {
-	return layout_impl->get_node(box_node);
+	return layout_impl.lock()->get_node(box_node);
 }
 
 
@@ -211,7 +211,10 @@ CL_String CL_CSSLayoutNode_Impl::print_node(CL_CSSBoxNode *node, int indent)
 
 	if (element)
 	{
-		output_string += cl_format("%1 { display: %2; float: %3; width: %4 }\r\n", element->name, to_string(element->computed_properties.display), to_string(element->computed_properties.float_box), to_string(element->computed_properties.width));
+		//if (element->computed_properties.font_family.names.empty())
+			output_string += cl_format("%1 { display: %2; float: %3; width: %4 }\r\n", element->name, to_string(element->computed_properties.display), to_string(element->computed_properties.float_box), to_string(element->computed_properties.width));
+		//else
+		//	output_string += cl_format("%1 { font-family: %2 }\r\n", element->name, element->computed_properties.font_family.names[0].name);
 	}
 	else if (text)
 	{

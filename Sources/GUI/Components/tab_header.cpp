@@ -147,8 +147,6 @@ void CL_TabHeader_Impl::update_handle_rects()
 	{
 		int tab_width = tabs[i].part.get_preferred_width();
 
-		int text_size = tabs[i].part.get_text_size(gc, tabs[i].label).width;
-
 		// Apply padding-left, padding-right css values:
 		CL_Rect render_rect = tabs[i].part.get_render_box(tabs[i].part.get_text_size(gc, tabs[i].label));
 

@@ -40,43 +40,14 @@
 #include "Commands/pixel_command_sprite.h"
 #include "Commands/pixel_command_triangle.h"
 #include "../swr_frame_buffer_provider.h"
-#include "API/SWRender/swr_program_object.h"
-
-class CL_SoftwareProgram_Standard : public CL_SoftwareProgram
-{
-public:
-	CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler);
-	CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler);
-	CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler);
-};
-
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_triangle(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler)
-{
-	return new(pipeline) CL_PixelCommandTriangle(init_points, init_primcolor, init_texcoords, init_sampler);
-}
-
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_sprite(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler)
-{
-	return new(pipeline) CL_PixelCommandSprite(init_points, init_primcolor[0], init_texcoords, init_sampler);
-}
-
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_line(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler)
-{
-	return new(pipeline) CL_PixelCommandLine(init_points, init_primcolor, init_texcoords, init_sampler);
-}
-
-static CL_SoftwareProgram_Standard cl_software_program_standard;
 
 CL_PixelCanvas::CL_PixelCanvas(const CL_Size &size)
-: modelview(CL_Mat4f::identity()), projection(CL_Mat4f::identity()),
-  modelview_projection(CL_Mat4f::identity()), modelview_projection_invalid(false),
-  primary_colorbuffer0(size.width, size.height, cl_argb8),
+: primary_colorbuffer0(size.width, size.height, cl_argb8),
   framebuffer_set(false), cliprect_set(false),
   cur_blend_src(cl_blend_src_alpha),
   cur_blend_dest(cl_blend_one_minus_src_alpha),
   cur_blend_src_alpha(cl_blend_one), 
-  cur_blend_dest_alpha(cl_blend_one_minus_src_alpha),
-  current_program(&cl_software_program_standard)
+  cur_blend_dest_alpha(cl_blend_one_minus_src_alpha)
 {
 	pipeline.reset(new CL_PixelPipeline());
 
@@ -127,15 +98,16 @@ void CL_PixelCanvas::reset_clip_rect()
 	pipeline->queue(new(pipeline.get()) CL_PixelCommandSetClipRect(clip_rect));
 }
 
-void CL_PixelCanvas::set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha)
+void CL_PixelCanvas::set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, const CL_Colorf &const_color)
 {
-	if (cur_blend_src != src || cur_blend_dest != dest || cur_blend_src_alpha != src_alpha || cur_blend_dest_alpha != dest_alpha)
+	if (cur_blend_src != src || cur_blend_dest != dest || cur_blend_src_alpha != src_alpha || cur_blend_dest_alpha != dest_alpha || cur_blend_color != const_color)
 	{
 		cur_blend_src = src;
 		cur_blend_dest = dest;
 		cur_blend_src_alpha = src_alpha;
 		cur_blend_dest_alpha = dest_alpha;
-		pipeline->queue(new(pipeline.get()) CL_PixelCommandSetBlendFunc(cur_blend_src, cur_blend_dest, cur_blend_src_alpha, cur_blend_dest_alpha));
+		cur_blend_color = const_color;
+		pipeline->queue(new(pipeline.get()) CL_PixelCommandSetBlendFunc(cur_blend_src, cur_blend_dest, cur_blend_src_alpha, cur_blend_dest_alpha, cur_blend_color));
 	}
 }
 
@@ -216,48 +188,9 @@ void CL_PixelCanvas::draw_pixels_bicubic(int x, int y, int zoom_number, int zoom
 	}
 }
 
-void CL_PixelCanvas::draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler)
-{
-	pipeline->queue(current_program->draw_triangle(pipeline.get(), points, primcolor, texcoords, sampler));
-}
-
-void CL_PixelCanvas::draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler)
-{
-	pipeline->queue(current_program->draw_sprite(pipeline.get(), points, primcolor, texcoords, sampler));
-}
-
-void CL_PixelCanvas::draw_line(const CL_Vec2f points[2], const CL_Vec4f primcolor[2], const CL_Vec2f texcoords[2], int sampler)
-{
-	pipeline->queue(current_program->draw_line(pipeline.get(), points, primcolor, texcoords, sampler));
-}
-
-void CL_PixelCanvas::queue_command(std::auto_ptr<CL_PixelCommand> command)
+void CL_PixelCanvas::queue_command(CL_UniquePtr<CL_PixelCommand> &command)
 {
 	pipeline->queue(command);
-}
-
-void CL_PixelCanvas::set_modelview(const CL_Mat4f &new_modelview)
-{
-	modelview = new_modelview;
-	modelview_projection_invalid = true;
-}
-
-void CL_PixelCanvas::set_projection(const CL_Mat4f &new_projection)
-{
-	projection = new_projection;
-	modelview_projection_invalid = true;
-}
-
-CL_Vec2f CL_PixelCanvas::transform(const CL_Vec4f &vertex) const
-{
-	if (modelview_projection_invalid)
-	{
-		modelview_projection = projection * modelview;
-		modelview_projection_invalid = false;
-	}
-
-	CL_Vec4f v = modelview_projection * vertex;
-	return CL_Vec2f(v.x, v.y);
 }
 
 void CL_PixelCanvas::set_sampler(int index, const CL_PixelBuffer &new_sampler)
@@ -289,14 +222,4 @@ void CL_PixelCanvas::modified_framebuffer()
 		set_clip_rect(rect);
 	else
 		pipeline->queue(new(pipeline.get()) CL_PixelCommandSetClipRect(clip_rect));
-}
-
-void CL_PixelCanvas::set_program_object(CL_ProgramObject_SWRender &program)
-{
-	current_program = program.get_program();
-}
-
-void CL_PixelCanvas::reset_program_object()
-{
-	current_program = &cl_software_program_standard;
 }

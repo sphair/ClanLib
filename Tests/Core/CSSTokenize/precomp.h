@@ -7,3 +7,4 @@
 #include <ClanLib/swrender.h>
 #include <ClanLib/gui.h>
 #include <ClanLib/csslayout.h>
+#include <ClanLib/network.h>

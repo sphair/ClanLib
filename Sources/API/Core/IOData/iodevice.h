@@ -33,7 +33,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "datatypes.h"
+#include "../System/cl_platform.h"
 #include "../System/sharedptr.h"
 
 class CL_IODeviceProvider;
@@ -42,8 +42,8 @@ class CL_IODevice_Impl;
 /// \brief I/O Device interface.
 ///
 /// This class can store basic datatypes and retain portability (using the specified endian mode)\n
-///    The supported datatypes are: cl_int64, cl_int32, cl_int16 and cl_int8\n
-///    The CL_String datatype is supported - Using Size(cl_int32), Charactor Data (CL_StringRef8 characters) 
+///    The supported datatypes are: cl_long, cl_int, cl_short and cl_char\n
+///    The CL_String datatype is supported - Using Size(cl_int), Charactor Data (CL_StringRef8 characters) 
 /// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE CL_IODevice
 {
@@ -85,7 +85,7 @@ public:
 
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -176,42 +176,42 @@ public:
 	/// \brief Writes a signed 64 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int64(cl_int64 data);
+	void write_int64(cl_long data);
 
 	/// \brief Writes an unsigned 64 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint64(cl_uint64 data);
+	void write_uint64(cl_ulong data);
 
 	/// \brief Writes a signed 32 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int32(cl_int32 data);
+	void write_int32(cl_int data);
 
 	/// \brief Writes an unsigned 32 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint32(cl_uint32 data);
+	void write_uint32(cl_uint data);
 
 	/// \brief Writes a signed 16 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int16(cl_int16 data);
+	void write_int16(cl_short data);
 
 	/// \brief Writes an unsigned 16 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint16(cl_uint16 data);
+	void write_uint16(cl_ushort data);
 
 	/// \brief Writes a signed 8 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_int8(cl_int8 data);
+	void write_int8(cl_char data);
 
 	/// \brief Writes an unsigned 8 bit integer to output source.
 	///
 	/// \param data Integer to write
-	void write_uint8(cl_uint8 data);
+	void write_uint8(cl_uchar data);
 
 	/// \brief  Writes a float to output source.
 	///
@@ -246,35 +246,35 @@ public:
 
 	/// \brief Reads a signed 64 bit integer from input source.
 	/** \return The integer read.*/
-	cl_int64 read_int64();
+	cl_long read_int64();
 
 	/// \brief Reads an unsigned 64 bit integer from input source.
 	/** \return The integer read.*/
-	cl_uint64 read_uint64();
+	cl_ulong read_uint64();
 
 	/// \brief Reads a signed 32 bit integer from input source.
 	/** \return The integer read.*/
-	cl_int32 read_int32();
+	cl_int read_int32();
 
 	/// \brief Reads an unsigned 32 bit integer from input source.
 	/** \return The integer read.*/
-	cl_uint32 read_uint32();
+	cl_uint read_uint32();
 
 	/// \brief Reads a signed 16 bit integer from input source.
 	/** \return The integer read.*/
-	cl_int16 read_int16();
+	cl_short read_int16();
 
 	/// \brief Reads an unsigned 16 bit integer from input source.
 	/** \return The integer read.*/
-	cl_uint16 read_uint16();
+	cl_ushort read_uint16();
 
 	/// \brief Reads a signed 8 bit integer from input source.
 	/** \return The integer read.*/
-	cl_int8 read_int8();
+	cl_char read_int8();
 
 	/// \brief Reads an unsigned 8 bit integer from input source.
 	/** \return The integer read.*/
-	cl_uint8 read_uint8();
+	cl_uchar read_uint8();
 
 	/// \brief Reads a float from input source.
 	/** Warning, this is not portable

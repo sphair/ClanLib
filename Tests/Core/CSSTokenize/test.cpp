@@ -37,6 +37,8 @@ int TestApp::main(const std::vector<CL_String> &args)
 	CL_SetupCore setup_core;
 	CL_SetupDisplay setup_display;
 	CL_SetupSWRender setup_swrender;
+	CL_SetupNetwork setup_network;
+	CL_ConsoleWindow console("Debug Output", 160, 50);
 
 	try
 	{

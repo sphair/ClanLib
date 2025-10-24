@@ -29,7 +29,9 @@
 
 #include "GL/precomp.h"
 #include "opengl_target_provider.h"
-#ifdef WIN32
+#if defined(__APPLE__)
+#include "AGL/opengl_window_provider_agl.h"
+#elif defined(WIN32)
 #include "WGL/opengl_window_provider_wgl.h"
 #else
 #include "GLX/opengl_window_provider_glx.h"
@@ -59,7 +61,9 @@ void CL_OpenGLTargetProvider::destroy()
 
 CL_DisplayWindowProvider *CL_OpenGLTargetProvider::alloc_display_window()
 {
-#ifdef WIN32
+#if defined(__APPLE__)
+	return cl_alloc_display_window_agl();//new CL_OpenGLWindowProvider_AGL;    
+#elif defined(WIN32)
 	return new CL_OpenGLWindowProvider_WGL;
 #else
 	return new CL_OpenGLWindowProvider_GLX;

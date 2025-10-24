@@ -32,7 +32,9 @@
 #include "span_layout_impl.h"
 
 CL_SpanLayout_Impl::CL_SpanLayout_Impl()
-: sel_start(0), sel_end(0), sel_foreground(CL_Colorf::white), sel_background(CL_Colorf::darkslateblue), alignment(cl_left)
+: cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(CL_Colorf::black),
+  sel_start(0), sel_end(0), sel_foreground(CL_Colorf::white), sel_background(CL_Colorf::darkslateblue),
+  alignment(cl_left)
 {
 }
 
@@ -100,6 +102,25 @@ void CL_SpanLayout_Impl::draw_layout(CL_GraphicContext &gc)
 			}
 
 		}
+
+		if (line_index + 1 == lines.size() && !line.segments.empty())
+		{
+			LineSegment &segment = line.segments.back();
+			if (cursor_visible && segment.end <= cursor_pos)
+			{
+				switch(segment.type)
+				{
+				case object_text:
+					{
+						int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, segment.end - segment.start)).width;
+						int cursor_width = 1;
+						CL_Draw::fill(gc, cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+					}
+					break;
+				}
+			}
+		}
+
 		y += line.height;
 	}
 }
@@ -113,31 +134,44 @@ void CL_SpanLayout_Impl::draw_layout_text(CL_GraphicContext &gc, Line &line, Lin
 {
 	CL_StringRef segment_text = text.substr(segment.start, segment.end - segment.start);
 
-	int s1 = cl_max(0, (int)sel_start - (int)segment.start);
-	int s2 = cl_max(0, (int)sel_end - (int)segment.start);
 	int length = (int)segment_text.length();
-	if (s1 > length)
-		s1 = length;
-	if (s2 > length)
-		s2 = length;
+	int s1 = cl_clamp((int)sel_start - (int)segment.start, 0, length);
+	int s2 = cl_clamp((int)sel_end - (int)segment.start, 0, length);
 
 	if (s1 != s2)
 	{
 		int xx = x + segment.x_position;
+		int xx0 = xx + segment.font.get_text_size(gc, segment_text.substr(0, s1)).width;
+		int xx1 = xx0 + segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
+		int sel_width = segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
+
+		CL_Draw::fill(gc, xx0, y + line.ascender-segment.ascender, xx1, y+line.ascender+segment.descender, sel_background);
+
+		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
+		{
+			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
+			CL_Draw::fill(gc, cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+		}
+
 		if (s1 > 0)
 		{
 			segment.font.draw_text(gc, xx, y + line.ascender, segment_text.substr(0, s1), segment.color);
-			xx += segment.font.get_text_size(gc, segment_text.substr(0, s1)).width;
 		}
-		int sel_width = segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
-		CL_Draw::fill(gc, xx, y + line.ascender-segment.ascender, xx+sel_width, y+line.ascender+segment.descender, sel_background);
-		segment.font.draw_text(gc, xx, y+line.ascender, segment_text.substr(s1, s2 - s1), sel_foreground);
+		segment.font.draw_text(gc, xx0, y+line.ascender, segment_text.substr(s1, s2 - s1), sel_foreground);
 		xx += sel_width;
 		if (s2 < length)
-			segment.font.draw_text(gc, xx, y + line.ascender, segment_text.substr(s2), segment.color);
+			segment.font.draw_text(gc, xx1, y + line.ascender, segment_text.substr(s2), segment.color);
 	}
 	else
 	{
+		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
+		{
+			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
+			CL_Draw::fill(gc, cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+		}
+
 		segment.font.draw_text(gc, x + segment.x_position, y + line.ascender, segment_text, segment.color);
 	}
 }
@@ -301,7 +335,7 @@ CL_SpanLayout_Impl::TextSizeResult CL_SpanLayout_Impl::find_text_size(CL_Graphic
 	if (layout_cache.object_index != object_index)
 	{
 		layout_cache.object_index = object_index;
-		layout_cache.metrics = font.get_font_metrics(gc);
+		layout_cache.metrics = font.get_font_metrics();
 	}
 
 	TextSizeResult result;
@@ -344,7 +378,7 @@ CL_SpanLayout_Impl::TextSizeResult CL_SpanLayout_Impl::find_text_size(CL_Graphic
 			{
 				layout_cache.object_index = object_index;
 				font = objects[object_index].font;
-				layout_cache.metrics = font.get_font_metrics(gc);
+				layout_cache.metrics = font.get_font_metrics();
 			}
 		}
 	}

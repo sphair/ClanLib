@@ -44,6 +44,7 @@ int App::start(const std::vector<CL_String> &args)
 	desc.set_multisampling(0);
 	desc.set_allow_resize(false);
 	desc.set_depth_size(16);
+	desc.set_version(3, 2, false);
 
 	CL_DisplayWindow window(desc);
 

@@ -60,10 +60,6 @@ public:
 	{
 		wglMakeCurrent(pbuffer_dc, wgl_context);
 	}
-	virtual const CL_RenderWindowProvider * new_worker_context() const
-	{
-		throw CL_Exception("Pixel buffer worker threads are not implemented");
-	}
 
 private:
 	HDC pbuffer_dc;

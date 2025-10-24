@@ -34,7 +34,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 #include "mat3.h"
 #include "mat4.h"
 
@@ -98,28 +98,28 @@ public:
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 64 bit integers)
-	CL_Mat2(const cl_int64 *init_matrix)
+	CL_Mat2(const cl_long *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 32 bit integers)
-	CL_Mat2(const cl_int32 *init_matrix)
+	CL_Mat2(const cl_int *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 16 bit integers)
-	CL_Mat2(const cl_int16 *init_matrix)
+	CL_Mat2(const cl_short *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];
 	}
 
 	/// \brief Constructs a 2x2 matrix (copied from 4, 8 bit integers)
-	CL_Mat2(const cl_int8 *init_matrix)
+	CL_Mat2(const cl_char *init_matrix)
 	{
 		for (int i=0; i<4; i++)
 			matrix[i] = (Type) init_matrix[i];

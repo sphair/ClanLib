@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_page_break_inside.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserPageBreakInside::get_names()
 {
@@ -37,17 +37,21 @@ std::vector<CL_String> CL_CSSParserPageBreakInside::get_names()
 	return names;
 }
 
-void CL_CSSParserPageBreakInside::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserPageBreakInside::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "auto")
+		if (equals(token.value, "auto"))
 			properties.page_break_inside.type = CL_CSSBoxPageBreakInside::type_auto;
-		else if (token.value == "avoid")
+		else if (equals(token.value, "avoid"))
 			properties.page_break_inside.type = CL_CSSBoxPageBreakInside::type_avoid;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.page_break_inside.type = CL_CSSBoxPageBreakInside::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["page-break-inside"] = &properties.page_break_inside;
 	}
 }

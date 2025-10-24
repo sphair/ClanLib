@@ -130,19 +130,19 @@ void CL_GL1CreationHelper::set_multisampling_pixel_format(const CL_GL1WindowDesc
 			std::vector<int> int_attributes;
 
 			int_attributes.push_back(WGL_DRAW_TO_WINDOW);
-			int_attributes.push_back(CL_TRUE);
+			int_attributes.push_back(GL_TRUE);
 			int_attributes.push_back(WGL_ACCELERATION);
 			int_attributes.push_back(WGL_FULL_ACCELERATION);
 
 			if (gldesc.get_doublebuffer())
 			{
 				int_attributes.push_back(WGL_DOUBLE_BUFFER);
-				int_attributes.push_back(CL_TRUE);
+				int_attributes.push_back(GL_TRUE);
 			}
 			if (gldesc.get_stereo())
 			{
 				int_attributes.push_back(WGL_STEREO);
-				int_attributes.push_back(CL_TRUE);
+				int_attributes.push_back(GL_TRUE);
 			}
 
 			int_attributes.push_back(WGL_COLOR_BITS);
@@ -158,7 +158,7 @@ void CL_GL1CreationHelper::set_multisampling_pixel_format(const CL_GL1WindowDesc
 			int_attributes.push_back(gldesc.get_stencil_size());
 
 			int_attributes.push_back(WGL_SAMPLE_BUFFERS);
-			int_attributes.push_back(CL_TRUE);
+			int_attributes.push_back(GL_TRUE);
 			int_attributes.push_back(WGL_SAMPLES);
 			int_attributes.push_back(gldesc.get_multisampling());
 

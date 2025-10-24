@@ -28,31 +28,108 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/dom_select_node.h"
+#include "API/Core/XML/dom_named_node_map.h"
+#include "API/Core/XML/dom_attr.h"
 
 CL_DomSelectNode::CL_DomSelectNode(const CL_DomElement &element)
-: dom_element(element)
+: dom_element(element), pos(element)
 {
-	name = element.get_tag_name();
-	id = element.get_attribute("id");
-	std::vector<CL_String> classes = CL_StringHelp::split_text(element.get_attribute("class"), " ");
-	for (size_t i = 0; i < classes.size(); i++)
-		element_classes.push_back(classes[i]);
 }
 
-CL_CSSSelectNode2 *CL_DomSelectNode::get_parent()
+bool CL_DomSelectNode::parent()
 {
-	CL_DomElement parent_node = dom_element.get_parent_node().to_element();
-	if (!parent_node.is_null())
-		return new CL_DomSelectNode(parent_node);
+	CL_DomNode parent_node = pos.get_parent_node();
+	if (parent_node.is_element())
+	{
+		pos = parent_node.to_element();
+		return true;
+	}
 	else
-		return 0;
+	{
+		return false;
+	}
 }
 
-CL_CSSSelectNode2 *CL_DomSelectNode::get_prev_sibling()
+bool CL_DomSelectNode::prev_sibling()
 {
-	CL_DomElement prev_node = dom_element.get_previous_sibling().to_element();
-	if (!prev_node.is_null())
-		return new CL_DomSelectNode(prev_node);
+	CL_DomNode prev_node = pos.get_previous_sibling();
+	while (!prev_node.is_null() && !prev_node.is_element())
+		prev_node = prev_node.get_previous_sibling();
+
+	if (prev_node.is_element())
+	{
+		pos = prev_node.to_element();
+		return true;
+	}
 	else
-		return 0;
+	{
+		return false;
+	}
+}
+
+CL_String CL_DomSelectNode::name()
+{
+	return pos.get_tag_name();
+}
+
+CL_String CL_DomSelectNode::lang()
+{
+	return pos.get_attribute("lang");
+}
+
+CL_String CL_DomSelectNode::id()
+{
+	return pos.get_attribute("id");
+}
+
+std::vector<CL_String> CL_DomSelectNode::element_classes()
+{
+	return CL_StringHelp::split_text(pos.get_attribute("class"), " ");
+}
+
+std::vector<CL_String> CL_DomSelectNode::pseudo_classes()
+{
+	std::vector<CL_String> classes;
+	if (pos.get_previous_sibling().is_null())
+		classes.push_back("first-child");
+	if (pos.get_tag_name() == "a" || pos.get_tag_name() == "A")
+		classes.push_back("link");
+	return classes;
+}
+
+CL_String CL_DomSelectNode::get_attribute_value(const CL_String &name, bool &out_found)
+{
+	if (pos.has_attribute(name)) // To do: need a case insensitive version of this for HTML
+	{
+		out_found = true;
+		return pos.get_attribute(name);
+	}
+	else
+	{
+		out_found = false;
+		return CL_String();
+	}
+}
+
+int CL_DomSelectNode::child_index()
+{
+	int index = 0;
+	CL_DomNode cur = pos;
+	while (!cur.is_null())
+	{
+		index++;
+		cur = cur.get_previous_sibling();
+	}
+	return index;
+}
+
+void CL_DomSelectNode::push()
+{
+	saved_elements.push_back(pos);
+}
+
+void CL_DomSelectNode::pop()
+{
+	pos = saved_elements.back();
+	saved_elements.pop_back();
 }

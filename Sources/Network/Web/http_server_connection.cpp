@@ -50,32 +50,32 @@ public:
 
 //! Attributes:
 public:
-	int get_size() const { return impl->connection.get_size(); }
+	int get_size() const { return impl.lock()->connection.get_size(); }
 	
-	int get_position() const { return impl->connection.get_position(); }
+	int get_position() const { return impl.lock()->connection.get_position(); }
 
 //! Operations:
 public:
 	int send(const void *data, int len, bool send_all)
 	{
-		impl->performed_write = true;
-		return impl->connection.send(data, len, send_all);
+		impl.lock()->performed_write = true;
+		return impl.lock()->connection.send(data, len, send_all);
 	}
 
 	int receive(void *data, int len, bool receive_all)
 	{
-		impl->performed_read = true;
-		return impl->connection.receive(data, len, receive_all);
+		impl.lock()->performed_read = true;
+		return impl.lock()->connection.receive(data, len, receive_all);
 	}
 
 	int peek(void *data, int len)
 	{
-		return impl->connection.peek(data, len);
+		return impl.lock()->connection.peek(data, len);
 	}
 
 	bool seek(int position, CL_IODevice::SeekMode mode)
 	{
-		return impl->connection.seek(position, mode);
+		return impl.lock()->connection.seek(position, mode);
 	}
 
 	CL_IODeviceProvider *duplicate()
@@ -110,7 +110,7 @@ CL_HTTPServerConnection::~CL_HTTPServerConnection()
 
 void CL_HTTPServerConnection::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_HTTPServerConnection is null");
 }
 

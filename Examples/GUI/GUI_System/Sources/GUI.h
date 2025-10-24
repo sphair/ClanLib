@@ -55,7 +55,7 @@ private:
 private:
 	CL_GUIManager gui_manager;
 	CL_ResourceManager resources_internal;
-	CL_AutoPtr<GUI_System> gui_system;
+	CL_UniquePtr<GUI_System> gui_system;
 
 	Theme::gui_theme current_theme;
 };

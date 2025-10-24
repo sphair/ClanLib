@@ -30,69 +30,68 @@
 #include "API/Core/Text/string16.h"
 #include "API/Core/Text/string_types.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/System/memory_pool.h"
 
 #ifndef WIN32
 #include <cstring>
 #endif
 
 CL_String16::CL_String16()
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 }
 
 CL_String16::CL_String16(const std::wstring &source)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(source.data(), source.length());
 }
 
 CL_String16::CL_String16(const CL_String16 &source)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(source);
 }
 
 CL_String16::CL_String16(const CL_StringData16 &source)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(source);
 }
 
 CL_String16::CL_String16(const char *c_str)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(c_str);
 }
 
 CL_String16::CL_String16(const char *c_str, size_type length)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(c_str, length);
 }
 
 CL_String16::CL_String16(const wchar_t *wc_str)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(wc_str);
 }
 
 CL_String16::CL_String16(const wchar_t *wc_str, size_type length)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(wc_str, length);
 }
 
 CL_String16::CL_String16(size_type n, wchar_t c)
-: pool(0), data_capacity(local_string_length)
+: data_capacity(local_string_length)
 {
 	init();
 	append(n, c);
@@ -108,10 +107,7 @@ CL_String16::~CL_String16()
 {
 	if (data_capacity > local_string_length)
 	{
-		if (pool)
-			pool->free(this->data_ptr);
-		else
-			delete[] this->data_ptr;
+		delete[] this->data_ptr;
 	}
 }
 
@@ -137,10 +133,7 @@ void CL_String16::reserve(size_type size)
 
 	wchar_t *old_data = this->data_ptr;
 
-	if (pool)
-		this->data_ptr = (wchar_t *) pool->alloc((size + 1) * sizeof(wchar_t));
-	else
-		this->data_ptr = new wchar_t[size+1];
+	this->data_ptr = new wchar_t[size+1];
 
 	memcpy(this->data_ptr, old_data, this->data_length * sizeof(wchar_t));
 	this->data_ptr[this->data_length] = 0;
@@ -148,10 +141,7 @@ void CL_String16::reserve(size_type size)
 
 	if (old_data != local_string)
 	{
-		if (pool)
-			pool->free(old_data);
-		else
-			delete[] old_data;
+		delete[] old_data;
 	}
 }
 

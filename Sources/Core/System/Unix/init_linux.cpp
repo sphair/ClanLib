@@ -77,11 +77,11 @@ unsigned int CL_System::get_time()
 	return (unsigned int) (get_microseconds() / 1000);
 }
 
-cl_uint64 CL_System::get_microseconds()
+cl_ulong CL_System::get_microseconds()
 {
 	timeval tv;
 	gettimeofday(&tv, NULL);
-	return (cl_uint64) tv.tv_sec*(cl_uint64) 1000000 + (cl_uint64) tv.tv_usec;
+	return (cl_ulong) tv.tv_sec*(cl_ulong) 1000000 + (cl_ulong) tv.tv_usec;
 }
 
 CL_String CL_System::get_exe_path()

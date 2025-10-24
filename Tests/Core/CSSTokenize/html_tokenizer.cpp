@@ -131,7 +131,7 @@ size_t HTMLTokenizer::read_name(size_t p, CL_String &out_string)
 			if (!is_tag_name_continued(p2))
 				break;
 		}
-		out_string = data.substr(p, p2-p);
+		out_string = CL_StringHelp::text_to_lower(data.substr(p, p2-p));
 		return p2;
 	}
 	else
@@ -289,7 +289,7 @@ size_t HTMLTokenizer::read_style_value(size_t p, size_t pvalue, HTMLToken &token
 			CL_String name;
 			size_t p2 = read_name(i+2, name);
 			size_t p3 = read_whitespace(p2);
-			if (compare(name, "script") && is_tag_end(p3))
+			if (compare(name, "style") && is_tag_end(p3))
 			{
 				token.type = HTMLToken::type_style_tag;
 				token.value = data.substr(pvalue, i-pvalue);
@@ -622,10 +622,8 @@ HTMLTokenizer::HTMLEscape HTMLTokenizer::escapes[] =
 
 void HTMLTokenizer::unescape(CL_String &text)
 {
-	size_t eaten = 0;
 	for (size_t i = 0; i < text.length(); i++)
 	{
-		text[i-eaten] = text[i];
 		if (text[i] == '&')
 		{
 			size_t j;
@@ -634,17 +632,22 @@ void HTMLTokenizer::unescape(CL_String &text)
 			if (j < length)
 				j++;
 			CL_StringRef escape = text.substr(i, j-i);
-			for (size_t k = 0; escapes[k].name != 0; k++)
+			if (escape.size() > 3 && escape[1] == '#')
 			{
-				if (escape == escapes[k].name)
+				unsigned int v = CL_StringHelp::text_to_uint(escape.substr(2, escape.length()-3));
+				text = text.substr(0, i) + CL_StringHelp::wchar_to_utf8(v) + text.substr(j);
+			}
+			else
+			{
+				for (size_t k = 0; escapes[k].name != 0; k++)
 				{
-					eaten += escape.length()-1;
-					i += escape.length()-1;
-					text[i-eaten] = escapes[k].cdata;
-					break;
+					if (escape == escapes[k].name)
+					{
+						text = text.substr(0, i) + CL_StringHelp::wchar_to_utf8(escapes[k].cdata) + text.substr(j);
+						break;
+					}
 				}
 			}
 		}
 	}
-	text.resize(text.length()-eaten);
 }

@@ -63,11 +63,6 @@ public:
 	/// \brief Process events
 	void process_events();
 
-	/// \brief Get Event arrived
-	///
-	/// \return event_arrived
-	CL_Event &get_event_arrived();
-
 	/// \brief Send event
 	///
 	/// \param game_event = Net Game Event

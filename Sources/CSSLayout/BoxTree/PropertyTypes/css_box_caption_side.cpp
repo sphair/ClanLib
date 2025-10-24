@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_caption_side.h"
+#include "API/CSSLayout/PropertyTypes/css_box_caption_side.h"
 
 CL_CSSBoxCaptionSide::CL_CSSBoxCaptionSide()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxCaptionSide::compute(const CL_CSSBoxCaptionSide *parent, CL_CSSRes
 			type = parent->type;
 		else
 			type = type_top;
+	}
+}
+
+CL_String CL_CSSBoxCaptionSide::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_top:
+		return "top";
+	case type_bottom:
+		return "bottom";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -338,7 +338,7 @@ public:
 
 	/// \brief Block until a key is pressed in the console window.
 	///
-	/// This function does not do anything on Linux
+	/// This function does not do anything on Linux.
 	static void wait_for_key();
 
 /// \}

@@ -44,7 +44,7 @@ private:
 	struct HTMLEscape
 	{
 		CL_String::char_type *name;
-		wchar_t cdata_that_needs_fixed_because_of_utf_8_issues;
+		wchar_t cdata;
 	};
 	static HTMLEscape escapes[];
 

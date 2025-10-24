@@ -72,11 +72,6 @@ public:
 	/// \brief Constructs a Sprite
 	///
 	/// \param gc = Graphic Context
-	CL_Sprite(CL_GraphicContext &gc);
-
-	/// \brief Constructs a Sprite
-	///
-	/// \param gc = Graphic Context
 	/// \param fullname = String Ref
 	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
@@ -114,7 +109,7 @@ public:
 /// \{
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -196,7 +191,6 @@ public:
 
 	/// \brief Returns true if animation has looped in the last update cycle
 	bool is_looping() const;
-
 /// \}
 
 /// \name Operators
@@ -219,7 +213,7 @@ public:
 	{
 		return impl < other.impl;
 	}
-	/// \}
+/// \}
 	
 /// \name Operations
 /// \{
@@ -358,7 +352,6 @@ public:
 /// \name Signals
 /// \{
 public:
-
 	/// \brief Sig animation finished
 	///
 	/// \return Signal_v0

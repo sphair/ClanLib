@@ -137,8 +137,13 @@ bool CL_SqliteReaderProvider::retrieve_row()
 				finished = true;
 				return false;
 			case SQLITE_ERROR:
-				finished = true;
-				throw CL_Exception("Database Error!");
+				{
+					finished = true;
+					sqlite3_reset(vm);
+					const char *err = sqlite3_errmsg(connection->db);
+					CL_StringRef8 error = (err == 0) ? "Unknown database error!" : err;
+					throw CL_Exception(CL_StringHelp::local8_to_text(error));
+				}
 			case SQLITE_MISUSE:
 				finished = true;
 				throw CL_Exception("Database Misuse!");

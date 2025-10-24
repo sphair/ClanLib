@@ -40,13 +40,12 @@
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/Components/window.h"
 #include "API/Display/2D/draw.h"
+#include "API/Display/2D/image.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/CSSLayout/css_layout.h"
-#include "API/CSSLayout/css_layout_element.h"
 #include "../gui_component_impl.h"
 #include "../gui_manager_impl.h"
 #include "../gui_css_strings.h"
@@ -98,8 +97,6 @@ public:
 	CL_GUIThemePart part_framebottom;
 	CL_GUIThemePart part_buttonclose;
 	CL_GUIThemePartProperty prop_text_color;
-
-	CL_CSSLayout css_layout;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,9 +120,6 @@ CL_Window::CL_Window(CL_GUIComponent *owner, const CL_GUITopLevelDescription &de
 
 	set_type_name(CssStr::Window::type_name);
 
-	if(get_gui_manager().has_layout(this))
-		set_layout(get_gui_manager().create_layout(this));
-
 	impl->create_parts();
 }
 
@@ -146,9 +140,6 @@ CL_Window::CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &de
 	func_resized().set(impl.get(), &CL_Window_Impl::on_resized);
 
 	set_type_name(CssStr::Window::type_name);
-
-	if(get_gui_manager().has_layout(this))
-		set_layout(get_gui_manager().create_layout(this));
 
 	impl->create_parts();
 }
@@ -185,12 +176,12 @@ bool CL_Window::is_minimized() const
 	const CL_GUIComponent *root_component = get_top_level_component();
 
 	std::vector<CL_GUITopLevelWindow>::size_type pos, size;
-	size = CL_GUIComponent::impl->gui_manager->root_components.size();
+	size = CL_GUIComponent::impl->gui_manager.lock()->root_components.size();
 	for (pos = 0; pos < size; pos++)
 	{
-		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
+		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager.lock()->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager.is_minimized(cur);
+			return CL_GUIComponent::impl->gui_manager.lock()->window_manager.is_minimized(cur);
 	}
 
 	return false;
@@ -201,12 +192,12 @@ bool CL_Window::is_maximized() const
 	const CL_GUIComponent *root_component = get_top_level_component();
 
 	std::vector<CL_GUITopLevelWindow>::size_type pos, size;
-	size = CL_GUIComponent::impl->gui_manager->root_components.size();
+	size = CL_GUIComponent::impl->gui_manager.lock()->root_components.size();
 	for (pos = 0; pos < size; pos++)
 	{
-		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
+		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager.lock()->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager.is_maximized(cur);
+			return CL_GUIComponent::impl->gui_manager.lock()->window_manager.is_maximized(cur);
 	}
 
 	return false;
@@ -230,19 +221,13 @@ void CL_Window::bring_to_front()
 	const CL_GUIComponent *root_component = get_top_level_component();
 
 	std::vector<CL_GUITopLevelWindow>::size_type pos, size;
-	size = CL_GUIComponent::impl->gui_manager->root_components.size();
+	size = CL_GUIComponent::impl->gui_manager.lock()->root_components.size();
 	for (pos = 0; pos < size; pos++)
 	{
-		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
+		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager.lock()->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager.bring_to_front(cur);
+			return CL_GUIComponent::impl->gui_manager.lock()->window_manager.bring_to_front(cur);
 	}
-}
-
-void CL_Window::set_layout(CL_CSSLayout layout)
-{
-	impl->css_layout = layout;
-	impl->create_parts();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -273,15 +258,6 @@ void CL_Window_Impl::create_parts()
 
 	font = part_component.get_font();
 	text_color = part_component.get_property(prop_text_color);
-
-	if (!css_layout.is_null())
-	{
-		CL_GraphicContext gc = window->get_gc();
-		css_layout.layout(gc, window->get_size());
-
-		part_buttonclose_rect = css_layout.find_element("close").get_content_box();
-		part_caption_rect = css_layout.find_element("caption").get_content_box();
-	}
 }
 
 void CL_Window_Impl::on_style_changed()
@@ -417,9 +393,6 @@ void CL_Window_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect
 	{
 		part_component.render_box(gc, rect, update_rect);
 	}
-
-	if (!css_layout.is_null())
-		css_layout.render(gc);
 }
 
 void CL_Window_Impl::check_move_window(CL_GUIMessage &msg)
@@ -461,11 +434,11 @@ void CL_Window_Impl::check_move_window(CL_GUIMessage &msg)
 			const CL_GUIComponent *root_component = window->get_top_level_component();
 
 			std::vector<CL_GUITopLevelWindow>::size_type pos, size;
-			size = window->CL_GUIComponent::impl->gui_manager->root_components.size();
+			size = window->CL_GUIComponent::impl->gui_manager.lock()->root_components.size();
 
 			for (pos = 0; pos < size; pos++)
 			{
-				CL_GUITopLevelWindow *cur = window->CL_GUIComponent::impl->gui_manager->root_components[pos];
+				CL_GUITopLevelWindow *cur = window->CL_GUIComponent::impl->gui_manager.lock()->root_components[pos];
 				if (cur->component == root_component)
 				{
 					CL_Rect geometry = window->get_window_geometry();

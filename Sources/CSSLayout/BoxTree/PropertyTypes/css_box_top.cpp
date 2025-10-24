@@ -27,9 +27,25 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_top.h"
+#include "API/CSSLayout/PropertyTypes/css_box_top.h"
 
 CL_CSSBoxTop::CL_CSSBoxTop()
 : type(type_auto), percentage(0.0f)
 {
+}
+
+CL_String CL_CSSBoxTop::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_auto:
+		return "auto";
+	case type_inherit:
+		return "inherit";
+	}
 }

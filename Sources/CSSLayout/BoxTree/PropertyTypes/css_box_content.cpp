@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_content.h"
+#include "API/CSSLayout/PropertyTypes/css_box_content.h"
 
 CL_CSSBoxContent::CL_CSSBoxContent()
 : type(type_normal)
@@ -61,4 +61,34 @@ void CL_CSSBoxContent::compute(const CL_CSSBoxContent *parent, CL_CSSResourceCac
 		type = type_normal;
 	}
 */
+}
+
+CL_String CL_CSSBoxContent::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_none:
+		return "none";
+	case type_string:
+		return "string";
+	case type_uri:
+		return "uri";
+	case type_counter:
+		return "counter";
+	case type_attr:
+		return "attr";
+	case type_open_quote:
+		return "open-quote";
+	case type_close_quote:
+		return "close-quote";
+	case type_no_open_quote:
+		return "no-open-quote";
+	case type_no_close_quote:
+		return "no-close-quote";
+	case type_inherit:
+		return "inherit";
+	}
 }

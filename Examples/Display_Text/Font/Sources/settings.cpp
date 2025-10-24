@@ -77,28 +77,29 @@ void App::draw_font_info()
 	small_font.draw_text(gc, offset_x, offset_y, cl_format("Weight : %1", font_desc.get_weight()),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Italic : %1", font_desc.get_italic()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Italic : %1", font_desc.get_italic() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Underline : %1", font_desc.get_underline()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Underline : %1", font_desc.get_underline() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Strikeout : %1", font_desc.get_strikeout()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Strikeout : %1", font_desc.get_strikeout() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Fixed Pitch : %1", font_desc.get_fixed_pitch()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Fixed Pitch : %1", font_desc.get_fixed_pitch() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	if (font_desc.get_anti_alias_set())
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("SubPixel Rendering : %1", font_desc.get_subpixel() ? "true" : "false"),  CL_Colorf::white);
+	offset_y += gap;
+
+	if (font_desc.get_subpixel())
 	{
-		small_font.draw_text(gc, offset_x, offset_y, cl_format("Anti Alias : %1", font_desc.get_anti_alias()),  CL_Colorf::white);
-	}else
-	{
-		small_font.draw_text(gc, offset_x, offset_y, "Anti Alias : Not Applicable",  CL_Colorf::white);
+		small_font.draw_text(gc, offset_x, offset_y, "Anti Alias : Not Applicable (Subpixel set)",  CL_Colorf::white);
 	}
-	offset_y += gap;
-
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Anti Alias Set : %1", font_desc.get_anti_alias_set()),  CL_Colorf::white);
+	else
+	{
+		small_font.draw_text(gc, offset_x, offset_y, cl_format("Anti Alias : %1", font_desc.get_anti_alias() ? "true" : "false"),  CL_Colorf::white);
+	}
 	offset_y += gap;
 
 	small_font.draw_text(gc, offset_x - 10, offset_y, "Example Text Size:", CL_Colorf::yellow);
@@ -111,8 +112,9 @@ void App::draw_font_info()
 	offset_y += gap;
 
 	small_font.draw_text(gc, offset_x - 10, offset_y, "Frames per second:", CL_Colorf::yellow);
+	offset_y += gap;
 	CL_String fps = cl_format("%1", last_fps);
-	small_font.draw_text(gc, offset_x + 110, offset_y, fps, CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, fps, CL_Colorf::white);
 	offset_y += gap;
 
 	offset_x = 620;
@@ -126,6 +128,7 @@ void App::draw_font_info()
 
 	small_font.draw_text(gc, offset_x, offset_y, cl_format("Ascender : %1", font_metrics.get_ascent()),  CL_Colorf::white);
 	offset_y += gap;
+	offset_y += gap;	// Allow long font names
 
 	small_font.draw_text(gc, offset_x, offset_y, cl_format("Descender : %1", font_metrics.get_descent()),  CL_Colorf::white);
 	offset_y += gap;
@@ -166,16 +169,16 @@ void App::draw_font_info()
 	small_font.draw_text(gc, offset_x, offset_y, cl_format("Word Break Char : %1", font_metrics.get_word_break_char()),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Italic : %1", font_metrics.is_italic()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Italic : %1", font_metrics.is_italic() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Underlined : %1", font_metrics.is_underlined()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Underlined : %1", font_metrics.is_underlined() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Struck Out : %1", font_metrics.is_struck_out()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Struck Out : %1", font_metrics.is_struck_out() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 
-	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Fixed Pitch : %1", font_metrics.is_fixed_pitch()),  CL_Colorf::white);
+	small_font.draw_text(gc, offset_x, offset_y, cl_format("Is Fixed Pitch : %1", font_metrics.is_fixed_pitch() ? "true" : "false"),  CL_Colorf::white);
 	offset_y += gap;
 }
 
@@ -245,6 +248,12 @@ void App::on_checkbox_state_underline(CL_CheckBox *checkbox)
 void App::on_checkbox_state_italic(CL_CheckBox *checkbox)
 {
 	font_desc.set_italic(checkbox->is_checked());
+	select_font();
+}
+
+void App::on_checkbox_state_subpixel(CL_CheckBox *checkbox)
+{
+	font_desc.set_subpixel(checkbox->is_checked());
 	select_font();
 }
 

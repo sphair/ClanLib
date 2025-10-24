@@ -29,7 +29,7 @@
 #pragma once
 
 #include "css_box_node.h"
-#include "css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 class CL_CSSBoxElement : public CL_CSSBoxNode
 {
@@ -39,6 +39,8 @@ public:
 	CL_String name;
 	CL_CSSBoxProperties properties;
 	CL_CSSBoxProperties computed_properties;
+	int col_span;
+	int row_span;
 
 	bool has_block_level_children() const;
 	bool is_block_level() const;
@@ -49,4 +51,14 @@ public:
 	bool is_inline_table() const;
 	bool is_table_row() const;
 	bool is_table_cell() const;
+	bool is_table_row_group() const;
+	bool is_table_header_group() const;
+	bool is_table_footer_group() const;
+	bool is_table_column() const;
+	bool is_table_column_group() const;
+	bool is_table_caption() const;
+	bool is_absolute() const;
+	bool is_fixed() const;
+	bool is_display_none() const;
+	bool is_overflow_visible() const;
 };

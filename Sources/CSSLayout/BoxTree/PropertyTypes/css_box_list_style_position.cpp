@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_list_style_position.h"
+#include "API/CSSLayout/PropertyTypes/css_box_list_style_position.h"
 
 CL_CSSBoxListStylePosition::CL_CSSBoxListStylePosition()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxListStylePosition::compute(const CL_CSSBoxListStylePosition *paren
 			type = parent->type;
 		else
 			type = type_outside;
+	}
+}
+
+CL_String CL_CSSBoxListStylePosition::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_inside:
+		return "inside";
+	case type_outside:
+		return "outside";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -50,8 +50,9 @@ typedef int (*ptr_glXSwapIntervalMESA)(int interval);
 typedef GLXContext (*ptr_glXCreateContextAttribs)(Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
 class CL_OpenGLWindowProvider_GLX;
+class CL_OpenGLWindowDescription;
 
-#define CL_USE_DLOPEN		// Using dlopen for linux by default
+#define GL_USE_DLOPEN		// Using dlopen for linux by default
 
 class CL_GL_GLXFunctions
 {
@@ -152,7 +153,6 @@ public:
 	virtual int get_viewport_height() const;
 	virtual void flip_buffers(int interval) const;
 	virtual void make_current() const;
-	virtual const CL_RenderWindowProvider * new_worker_context() const;
 	CL_ProcAddress *get_proc_address(const CL_String8& function_name) const;
 
 	GLXContext get_context() const {return glx_context;}
@@ -279,7 +279,7 @@ public:
 
 	void process_messages();
 
-	GLXContext create_context();
+	GLXContext create_context(const CL_OpenGLWindowDescription &gl_desc);
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
@@ -300,10 +300,11 @@ public:
 
 private:
 
-	GLXContext create_context_glx_1_3(GLXContext shared_context);
-	GLXContext create_context_glx_1_2(GLXContext shared_context);
+	GLXContext create_context_glx_1_3(const CL_OpenGLWindowDescription &gl_desc, GLXContext shared_context);
+	GLXContext create_context_glx_1_2(const CL_OpenGLWindowDescription &gl_desc, GLXContext shared_context);
 	void create_glx_1_3(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc, Display *disp);
 	void create_glx_1_2(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc, Display *disp);
+	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const CL_OpenGLWindowDescription &gldesc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
 
 	void on_window_resized();
 
@@ -326,7 +327,7 @@ private:
 
 	GLXFBConfig fbconfig;
 
-#ifdef CL_USE_DLOPEN
+#ifdef GL_USE_DLOPEN
 	void *opengl_lib_handle;
 #endif
 	bool glx_1_3;

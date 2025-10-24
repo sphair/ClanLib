@@ -50,8 +50,6 @@ WorkspaceGenerator_MSVC8::ConfigurationType WorkspaceGenerator_MSVC8::types[] =
 WorkspaceGenerator_MSVC8::WorkspaceGenerator_MSVC8()
 {
 	is_enable_sse2 = true;	// Set by set_platforms()
-	is_debug_optimize = false;	// Set by set_platforms()
-	is_whole_program_optimize = false;	// Set by set_platforms()
 }
 
 void WorkspaceGenerator_MSVC8::enable_configurations(bool include_mtdll, bool include_dll)
@@ -77,12 +75,10 @@ void WorkspaceGenerator_MSVC8::set_target_version(int version)
 	target_version = version;
 }
 
-void WorkspaceGenerator_MSVC8::set_platforms(bool include_win32, bool include_x64, bool include_sse2, bool include_intrinsics, bool enable_debug_optimise, bool enable_whole_program_optimize)
+void WorkspaceGenerator_MSVC8::set_platforms(bool include_win32, bool include_x64, bool include_sse2, bool include_intrinsics)
 {
-	is_debug_optimize = enable_debug_optimise;
 	is_enable_sse2 = include_sse2;
 	is_enable_intrinsics = include_intrinsics;
-	is_whole_program_optimize = enable_whole_program_optimize;
 	include_platform_win32 = include_win32;
 	include_platform_x64 = include_x64;
 }
@@ -263,15 +259,15 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 			{
 			case runtime_dll_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_dll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_dll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			}
 		}
@@ -281,27 +277,27 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 			{
 			case runtime_static_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_static_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mt_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mt_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_debug:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_debug_optimize));
+					vc80proj.configurations.push_back(create_debug_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			case runtime_dll_release:
 				if(include_platform_win32)
-					vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mtdll_config("Win32", project.name, types[i], has_precomp, precomp_header, is_enable_sse2));
 				if(include_platform_x64)
-					vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false, is_whole_program_optimize));
+					vc80proj.configurations.push_back(create_release_mtdll_config("x64", project.name, types[i], has_precomp, precomp_header, false));
 				break;
 			}
 		}
@@ -619,26 +615,17 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
 		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
+		"Sheets\\MTDebugRuntime.vsprops;"
+		"Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDebugRuntime.props");
-
-	if (is_debug_optimize)
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuildOptimized.props");
-	}
-	else
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
-	}
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 
 	if (is_enable_sse2)
 	{
@@ -657,7 +644,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -675,12 +662,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
 	}
 
-	if (is_whole_program_optimize)
-	{
-		shared.config->inherited_property_sheets += ";Sheets\\ReleaseWholeProgramOptimization.vsprops";
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseWholeProgramOptimization.props");
-	}
-
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
 
 	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
@@ -692,26 +673,17 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
 		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
+		"Sheets\\MTDLLDebugRuntime.vsprops;"
+		"Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
-
-	if (is_debug_optimize)
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuildOptimized.props");
-	}
-	else
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
-	}
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 
 	if (is_enable_sse2)
 	{
@@ -730,7 +702,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
@@ -759,26 +731,17 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->inherited_property_sheets +=
 		"Sheets\\" + platform + "Platform.vsprops;"
-		"Sheets\\MTDLLDebugRuntime.vsprops;";
-
-	shared.config->inherited_property_sheets += is_debug_optimize ?	"Sheets\\DebugBuildOptimized.vsprops" : "Sheets\\DebugBuild.vsprops";
+		"Sheets\\MTDLLDebugRuntime.vsprops;"
+		"Sheets\\DebugBuild.vsprops";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
-
-	if (is_debug_optimize)
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuildOptimized.props");
-	}
-	else
-	{
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
-	}
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
 
 	if (is_enable_sse2)
 	{
@@ -798,7 +761,7 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 	const std::string &project_name,
 	const ConfigurationType &config,
 	bool has_precomp,
-	const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize)
+	const std::string &precomp_header, bool is_enable_sse2)
 {
 	SharedConfig shared = create_shared_config(platform, project_name, config, has_precomp, precomp_header);
 	shared.config->configuration_type = "2";
@@ -815,12 +778,6 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 	{
 		shared.config->inherited_property_sheets += ";Sheets\\SSE2Build.vsprops";
 		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\SSE2Build.props");
-	}
-
-	if (is_whole_program_optimize)
-	{
-		shared.config->inherited_property_sheets += ";Sheets\\ReleaseWholeProgramOptimization.vsprops";
-		shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseWholeProgramOptimization.props");
 	}
 
 	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
@@ -1145,7 +1102,6 @@ void MSVC8_PropertySheet::write(OutputWriter &output, int indent)
 		output.write_line(indent, "    </ClCompile>");
 		output.write_line(indent, "    <Lib>");
 		output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
-		output.write_line(indent, "    <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>");	// Can the set when the "whole program optimisation" is disabled?
 		output.write_line(indent, "    </Lib>");
 		output.write_line(indent, "  </ItemDefinitionGroup>");
 		output.write_line(indent, "</Project>");
@@ -1461,7 +1417,6 @@ void MSVC8_VCResourceCompilerTool::write_settings(OutputWriter &output, int inde
 MSVC8_VCLibrarianTool::MSVC8_VCLibrarianTool()
 {
 	name = "VCLibrarianTool";
-	additional_options.set("/LTCG");	// Can the set when the "whole program optimisation" is disabled?
 }
 
 void MSVC8_VCLibrarianTool::write_settings(OutputWriter &output, int indent) const

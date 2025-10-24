@@ -222,6 +222,6 @@ CL_Collada_Effect_FloatParam &CL_Collada_Effect::get_index_of_refraction()
 
 bool CL_Collada_Effect::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 

@@ -175,8 +175,8 @@ void CL_DisplayMessageQueue_X11::set_mouse_capture(CL_X11Window *window, bool st
 
 CL_SharedPtr<CL_DisplayMessageQueue_X11::ThreadData> CL_DisplayMessageQueue_X11::get_thread_data()
 {
-	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_X11::thread_data"));
-	if (data.is_null())
+	CL_SharedPtr<ThreadData> data = cl_dynamic_pointer_cast<ThreadData>(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_X11::thread_data"));
+	if (!data)
 	{
 		data = CL_SharedPtr<ThreadData>(new ThreadData);
 		CL_ThreadLocalStorage::set_variable("CL_DisplayMessageQueue_X11::thread_data", data);
@@ -261,7 +261,7 @@ int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_Soc
 	FD_ZERO(&efds);
 
 
-	for (int message_index=0; message_index < num_messages; ++message_index)
+	for (message_index=0; message_index < num_messages; ++message_index)
 	{
 		int handle = all_events[message_index].handle;
 
@@ -305,7 +305,7 @@ int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_Soc
 	if (result > 0)
 	{
 		// find the flagged sockets
-		for (int message_index=0; message_index < num_messages; ++message_index)
+		for (message_index=0; message_index < num_messages; ++message_index)
 		{
 			int handle = all_events[message_index].handle;
 			switch (all_events[message_index].type)

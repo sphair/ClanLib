@@ -124,9 +124,6 @@ public:
 	CL_Rect get_cursor_rect();
 	CL_Rect get_selection_rect();
 	bool input_mask_accepts_input(int cursor_pos, const CL_StringRef &str);
-	void set_selection_start(int start);
-	void set_selection_length(int length);
-	void set_text_selection(int start, int length);
 
 	CL_GUIThemePart::VerticalTextPosition vertical_text_align;
 	CL_Timer scroll_timer;
@@ -153,7 +150,6 @@ public:
 	} undo_info;
 
 	bool select_all_on_focus_gain;
+
+	static const CL_StringRef numeric_mode_characters;
 };
-
-
-

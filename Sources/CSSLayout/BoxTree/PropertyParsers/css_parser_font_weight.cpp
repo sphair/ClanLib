@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_font_weight.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserFontWeight::get_names()
 {
@@ -37,21 +37,21 @@ std::vector<CL_String> CL_CSSParserFontWeight::get_names()
 	return names;
 }
 
-void CL_CSSParserFontWeight::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserFontWeight::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "normal")
+		if (equals(token.value, "normal"))
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_normal;
-		else if (token.value == "bold")
+		else if (equals(token.value, "bold"))
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_bold;
-		else if (token.value == "bolder")
+		else if (equals(token.value, "bolder"))
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_bolder;
-		else if (token.value == "lighter")
+		else if (equals(token.value, "lighter"))
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_lighter;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_inherit;
 	}
 	else if (token.type == CL_CSSToken::type_number && pos == tokens.size())
@@ -74,5 +74,9 @@ void CL_CSSParserFontWeight::parse(CL_CSSBoxProperties &properties, const CL_Str
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_800;
 		else if (token.value == "900")
 			properties.font_weight.type = CL_CSSBoxFontWeight::type_900;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["font-weight"] = &properties.font_weight;
 	}
 }

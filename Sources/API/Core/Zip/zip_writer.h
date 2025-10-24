@@ -34,7 +34,7 @@
 #include "../api_core.h"
 #include "../Text/string_types.h"
 #include "../System/sharedptr.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 #include <vector>
 
 class CL_IODevice;
@@ -65,7 +65,7 @@ public:
 	void begin_file(const CL_StringRef &filename, bool compress);
 
 	/// \brief Writes some file data to the zip file.
-	void write_file_data(const void *data, cl_int64 size);
+	void write_file_data(const void *data, cl_long size);
 
 	/// \brief Ends the file entry.
 	void end_file();

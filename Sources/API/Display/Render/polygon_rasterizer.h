@@ -103,12 +103,9 @@ public:
 	/// \brief Returns the polygon cull clipping mode.
 	CL_CullMode get_face_cull_mode() const;
 
-	/// \brief Returns the filling mode for front-facing polygons.
-	CL_FillMode get_face_fill_mode_front() const;
-
-	/// \brief Returns the filling mode for back-facing polygons.
-	CL_FillMode get_face_fill_mode_back() const;
-
+	/// \brief Returns the filling mode for polygons.
+	CL_FillMode get_face_fill_mode() const;
+	
 	/// \brief Returns the offsetting factor.
 	float get_offset_factor() const;
 
@@ -141,12 +138,9 @@ public:
 	/// \brief Sets the polygon cull clipping mode.
 	void set_face_cull_mode(CL_CullMode value);
 
-	/// \brief Sets the filling mode for front-facing polygons.
-	void set_face_fill_mode_front(CL_FillMode value);
-
-	/// \brief Sets the filling mode for back-facing polygons.
-	void set_face_fill_mode_back(CL_FillMode value);
-
+	/// \brief Sets the filling mode for polygons.
+	void set_face_fill_mode(CL_FillMode value);
+	
 	/// \brief Sets which side is the front side of a face.
 	void set_front_face(CL_FaceSide value);
 

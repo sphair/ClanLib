@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_margin.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserMargin::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserMargin::get_names()
 	return names;
 }
 
-void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxMarginWidth margin_widths[4];
 	int count;
@@ -45,11 +45,11 @@ void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String 
 	for (count = 0; count < 4; count++)
 	{
 		CL_CSSToken token = next_token(pos, tokens);
-		if (token.type == CL_CSSToken::type_ident && token.value == "auto")
+		if (token.type == CL_CSSToken::type_ident && equals(token.value, "auto"))
 		{
 			margin_widths[count].type = CL_CSSBoxMarginWidth::type_auto;
 		}
-		else if (token.type == CL_CSSToken::type_ident && token.value == "inherit" && count == 0 && pos == tokens.size())
+		else if (token.type == CL_CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
 			properties.margin_width_left.type = CL_CSSBoxMarginWidth::type_inherit;
 			properties.margin_width_top.type = CL_CSSBoxMarginWidth::type_inherit;
@@ -57,7 +57,7 @@ void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String 
 			properties.margin_width_bottom.type = CL_CSSBoxMarginWidth::type_inherit;
 			return;
 		}
-		else if (token.type == CL_CSSToken::type_number && token.value == "0")
+		else if (token.type == CL_CSSToken::type_number && equals(token.value, "0"))
 		{
 			margin_widths[count].type = CL_CSSBoxMarginWidth::type_length;
 			margin_widths[count].length = CL_CSSBoxLength(0.0f, CL_CSSBoxLength::type_px);
@@ -72,6 +72,7 @@ void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String 
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -80,12 +81,42 @@ void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String 
 			margin_widths[count].type = CL_CSSBoxMarginWidth::type_percentage;
 			margin_widths[count].percentage = CL_StringHelp::text_to_float(token.value);
 		}
+		else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token))
+			{
+				CL_CSSBoxLength length;
+				if (parse_length(token, length))
+				{
+					length.value = -length.value;
+					margin_widths[count].type = CL_CSSBoxMarginWidth::type_length;
+					margin_widths[count].length = length;
+				}
+				else
+				{
+					debug_parse_error(name, tokens);
+					return;
+				}
+			}
+			else if (token.type == CL_CSSToken::type_percentage)
+			{
+				margin_widths[count].type = CL_CSSBoxMarginWidth::type_percentage;
+				margin_widths[count].percentage = -CL_StringHelp::text_to_float(token.value);
+			}
+			else
+			{
+				debug_parse_error(name, tokens);
+				return;
+			}
+		}
 		else if (token.type == CL_CSSToken::type_null)
 		{
 			break;
 		}
 		else
 		{
+			debug_parse_error(name, tokens);
 			return;
 		}
 	}
@@ -121,5 +152,12 @@ void CL_CSSParserMargin::parse(CL_CSSBoxProperties &properties, const CL_String 
 		default:
 			break;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["margin-left"] = &properties.margin_width_left;
+		(*out_change_set)["margin-right"] = &properties.margin_width_right;
+		(*out_change_set)["margin-top"] = &properties.margin_width_top;
+		(*out_change_set)["margin-bottom"] = &properties.margin_width_bottom;
 	}
 }

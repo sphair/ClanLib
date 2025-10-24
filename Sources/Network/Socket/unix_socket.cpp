@@ -140,6 +140,7 @@ void CL_UnixSocket::set_nodelay(bool enable)
 
 void CL_UnixSocket::set_keep_alive(bool enable, int timeout, int interval)
 {
+#ifndef __APPLE__
 	int value = enable ? 1 : 0;
 	int result = setsockopt(handle, SOL_SOCKET, SO_KEEPALIVE, (const char *) &value, sizeof(int));
 	throw_if_failed(result);
@@ -149,6 +150,7 @@ void CL_UnixSocket::set_keep_alive(bool enable, int timeout, int interval)
 		setsockopt(handle, SOL_TCP, TCP_KEEPIDLE, (const char *) &timeout, sizeof(int));
 		setsockopt(handle, SOL_TCP, TCP_KEEPINTVL, (const char *) &interval, sizeof(int));
 	}
+#endif
 }
 
 void CL_UnixSocket::bind(const CL_SocketName &socketname, bool reuse_address)

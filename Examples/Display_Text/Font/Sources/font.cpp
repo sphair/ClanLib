@@ -126,9 +126,17 @@ int App::start(const std::vector<CL_String> &args)
 	checkbox3.set_text("Italic");
 
 	CL_CheckBox checkbox4(&gui_window);
+	checkbox4.set_checked(true);
 	checkbox4.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
 	checkbox4.func_state_changed().set(this, &App::on_checkbox_state_antialias, &checkbox4);
 	checkbox4.set_text("Anti Alias");
+	offset_y += gap;
+
+	CL_CheckBox checkbox5(&gui_window);
+	checkbox5.set_checked(true);
+	checkbox5.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
+	checkbox5.func_state_changed().set(this, &App::on_checkbox_state_subpixel, &checkbox5);
+	checkbox5.set_text("SubPixel Rendering");
 	offset_y += gap;
 
 	CL_PushButton button_weight_light(&gui_window);
@@ -242,7 +250,7 @@ void App::select_font()
 	switch (selected_fontclass)
 	{
 		case font_freetype:
-			selected_font = CL_Font_Freetype(gc, font_desc);
+			selected_font = CL_Font_Freetype(font_desc);
 			break;
 		case font_system:
 			selected_font = CL_Font_System(gc, font_desc);
@@ -255,7 +263,7 @@ void App::select_font()
 			break;
 	}
 
-	font_metrics = selected_font.get_font_metrics(gc);
+	font_metrics = selected_font.get_font_metrics();
 	font_size = selected_font.get_text_size(gc, font_text);
 }
 

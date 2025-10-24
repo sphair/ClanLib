@@ -154,9 +154,9 @@ void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUICompone
 
 	try
 	{
-		window_manager.create_window(top_level_window, owner_window, desc);
+		window_manager.create_window(top_level_window, owner_window, component, desc);
 	}
-	catch (const CL_Exception&)
+	catch (const CL_Exception &e)
 	{
 		delete top_level_window;
 		throw;
@@ -173,13 +173,13 @@ void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUICompone
 
 void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 {
-	if (mouse_capture_component && mouse_capture_component->impl == component_impl)
+	if (mouse_capture_component && mouse_capture_component->impl.get() == component_impl)
 	{
 		window_manager.capture_mouse(get_toplevel_window(mouse_capture_component), false);
 		mouse_capture_component = 0;
 	}
 
-	if (mouse_over_component && mouse_over_component->impl == component_impl)
+	if (mouse_over_component && mouse_over_component->impl.get() == component_impl)
 		mouse_over_component = 0;
 
 	std::vector<CL_GUITopLevelWindow>::size_type index, size;
@@ -197,7 +197,7 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 
 			if (cur->owner)
 			{
-				if (cur->owner->impl == component_impl)
+				if (cur->owner->impl.get() == component_impl)
 				{
 					// Found owned component
 					delete (cur->component);
@@ -217,11 +217,11 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 		CL_GUITopLevelWindow *cur = root_components[index];
 
 		// Clear focus pointer if needed:
-		if (cur->focused_component && cur->focused_component->impl == component_impl)
+		if (cur->focused_component && cur->focused_component->impl.get() == component_impl)
 			cur->focused_component = 0;
 
 		// Remove display window if needed:
-		if (cur->component->impl == component_impl)
+		if (cur->component->impl.get() == component_impl)
 		{
 			window_manager.destroy_window(cur);
 			root_components.erase(root_components.begin() + index);
@@ -878,7 +878,7 @@ CL_GUITopLevelWindow_Alive::CL_GUITopLevelWindow_Alive(CL_GUITopLevelWindow *win
 
 bool CL_GUITopLevelWindow_Alive::is_null() const
 {
-	return window_alive.is_null();
+	return window_alive.expired();
 }
 
 

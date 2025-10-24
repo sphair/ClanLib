@@ -300,7 +300,7 @@ void GameView::render_map(CL_GraphicContext &gc)
 
 	CL_Draw::fill(gc, 0.0f, 0.0f, (float)client_area.right - client_area.left, (float)client_area.bottom - client_area.top, CL_Colorf::black);
 
-	if (!terrain)
+	if (!terrain.get())
 	{
 		font_large.draw_text(gc, 300, 200, "Loading Map...");
 		return;

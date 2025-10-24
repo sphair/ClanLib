@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_caption_side.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserCaptionSide::get_names()
 {
@@ -37,17 +37,21 @@ std::vector<CL_String> CL_CSSParserCaptionSide::get_names()
 	return names;
 }
 
-void CL_CSSParserCaptionSide::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserCaptionSide::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "top")
+		if (equals(token.value, "top"))
 			properties.caption_side.type = CL_CSSBoxCaptionSide::type_top;
-		else if (token.value == "bottom")
+		else if (equals(token.value, "bottom"))
 			properties.caption_side.type = CL_CSSBoxCaptionSide::type_bottom;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.caption_side.type = CL_CSSBoxCaptionSide::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["caption-side"] = &properties.caption_side;
 	}
 }

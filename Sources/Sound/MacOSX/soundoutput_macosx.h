@@ -24,90 +24,52 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../soundoutput_impl.h"
-
-#include <CoreServices/CoreServices.h>
-#include <CoreAudio/AudioHardware.h>
+#include "API/Core/System/databuffer.h"
+#include <AudioToolbox/AudioToolbox.h>
 
 class CL_SoundOutput_MacOSX : public CL_SoundOutput_Impl
 {
-/// \name Construction
-/// \{
-
 public:
-	CL_SoundOutput_MacOSX(int mixing_frequency, int mixing_latency=50);
-
+	CL_SoundOutput_MacOSX(int mixing_frequency, int mixing_latency);
 	~CL_SoundOutput_MacOSX();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
+    
 	/// \brief Called when we have no samples to play - and wants to tell the soundcard
 	/// \brief about this possible event.
 	virtual void silence();
-
+    
 	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
 	virtual int get_fragment_size();
-
+    
 	/// \brief Writes a fragment to the soundcard.
 	virtual void write_fragment(float *data);
-
+    
 	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();
 
-
-/// \}
-/// \name Implementation
-/// \{
-
+    /// \brief Called by the mixer thread when it starts
+    virtual void mixer_thread_starting();
+    
+    /// \brief Called by the mixer thread when it stops
+    virtual void mixer_thread_stopping();
+    
 private:
-	// Callback handler for CoreAudio HAL.
-	static OSStatus audio_handler(
-		AudioDeviceID in_device,
-		const AudioTimeStamp *in_now,
-		const AudioBufferList *in_input_data,
-		const AudioTimeStamp *in_input_time,
-		AudioBufferList *out_output_data,
-		const AudioTimeStamp *in_output_time,
-		void *user_data);
-
-	// Device ID for the output we are using.
-	AudioDeviceID device;
-
-	// Buffer size returned by kAudioDevicePropertyBufferSize
-	UInt32 device_buffer_size;
-
-	// Format description for the device.
-	AudioStreamBasicDescription device_format;
-
-	// True if CoreAudio HAL successfully was put to play audio.
-	bool playing;
-
-	// Ring buffer for audio fragments
-	std::vector<float*> fragment_buffer;
-	unsigned int fragment_insert_position;
-	unsigned int fragment_play_position;
-/// \}
+    void audio_queue_callback(AudioQueueRef queue, AudioQueueBufferRef buffer);
+    static void static_audio_queue_callback(void *userdata, AudioQueueRef queue, AudioQueueBufferRef buffer);
+    
+    static const int fragment_buffer_count = 4;
+    int frequency, latency;
+    int fragment_size;
+    int next_fragment, read_cursor;
+    int fragments_available;
+    CL_DataBuffer fragment_data;
+    
+    AudioStreamBasicDescription audio_format;
+    AudioQueueRef audio_queue;
+    AudioQueueBufferRef audio_buffers[fragment_buffer_count];
+    
 };
-
-

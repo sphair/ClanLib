@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_clip.h"
+#include "API/CSSLayout/PropertyTypes/css_box_clip.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxClip::CL_CSSBoxClip()
@@ -71,5 +71,19 @@ void CL_CSSBoxClip::compute(const CL_CSSBoxClip *parent, CL_CSSResourceCache *la
 		// To do: Should we also compute the values of 'auto' here or should we postpone this to actual rendering?
 		// If we do it now, we have to ensure rounding issues doesn't cause too much clipping when we map from
 		// computed values to actual values.
+	}
+}
+
+CL_String CL_CSSBoxClip::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_rect:
+		return cl_format("rect(%1,%2,%3,%4)", top.to_string(), right.to_string(), bottom.to_string(), left.to_string());
+	case type_auto:
+		return "auto";
+	case type_inherit:
+		return "inherit";
 	}
 }

@@ -69,7 +69,7 @@ int CL_ToolBarItem::get_id() const
 
 void CL_ToolBarItem::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ToolBarItem is null");
 }
 

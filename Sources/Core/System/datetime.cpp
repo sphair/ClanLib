@@ -40,7 +40,7 @@
 
 
 #ifndef WIN32
-const cl_int64 CL_DateTime::ticks_from_1601_to_1900 = 94354848000000000LL;
+const cl_long CL_DateTime::ticks_from_1601_to_1900 = 94354848000000000LL;
 #endif
 
 CL_DateTime::CL_DateTime()
@@ -83,17 +83,17 @@ CL_DateTime CL_DateTime::get_current_utc_time()
 	unix_ticks = time(&unix_ticks);
 	if (unix_ticks == -1)
 		throw CL_Exception("Failed to get current UTC time");
-	cl_int64 ticks = ticks_from_1601_to_1900 + ((cl_int64) unix_ticks) * 10000000;
+	cl_long ticks = ticks_from_1601_to_1900 + ((cl_long) unix_ticks) * 10000000;
 	return CL_DateTime::get_utc_time_from_ticks(ticks);
 #endif
 }
 
-CL_DateTime CL_DateTime::get_local_time_from_ticks(cl_int64 ticks)
+CL_DateTime CL_DateTime::get_local_time_from_ticks(cl_long ticks)
 {
 	return get_utc_time_from_ticks(ticks).to_local();
 }
 
-CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
+CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_long ticks)
 {
 	CL_DateTime datetime;
 	datetime.timezone = utc_timezone;
@@ -115,7 +115,7 @@ CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
 		result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
 			throw CL_Exception("SystemTimeToFileTime failed");
-		cl_int64 new_ticks = (((cl_int64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
+		cl_long new_ticks = (((cl_long)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		datetime.nanoseconds += (ticks - new_ticks)*100;
 	#else
 		tm tm_utc;
@@ -135,7 +135,7 @@ CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
 	return datetime;
 }
 
-cl_int64 CL_DateTime::to_ticks() const
+cl_long CL_DateTime::to_ticks() const
 {
 	throw_if_null();
 	if (timezone == local_timezone)
@@ -157,11 +157,11 @@ cl_int64 CL_DateTime::to_ticks() const
 		BOOL result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
 			throw CL_Exception("SystemTimeToFileTime failed");
-		cl_int64 ticks = (((cl_int64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
+		cl_long ticks = (((cl_long)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		ticks += (nanoseconds % 1000000)/100;
 		return ticks;
 	#else
-		cl_int64 ticks;
+		cl_long ticks;
 	
 		ticks = year - 1601;
 		ticks *= 365;	// Days in a year
@@ -821,43 +821,43 @@ CL_String CL_DateTime::to_string() const
 
 bool CL_DateTime::operator <(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a < b;
 }
 
 bool CL_DateTime::operator <=(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a <= b;
 }
 
 bool CL_DateTime::operator >(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a > b;
 }
 
 bool CL_DateTime::operator >=(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a >= b;
 }
 
 bool CL_DateTime::operator ==(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a == b;
 }
 
 bool CL_DateTime::operator !=(const CL_DateTime &other) const
 {
-	cl_int64 a = is_null() ? 0 : to_ticks();
-	cl_int64 b = other.is_null() ? 0 : other.to_ticks();
+	cl_long a = is_null() ? 0 : to_ticks();
+	cl_long b = other.is_null() ? 0 : other.to_ticks();
 	return a != b;
 }
 

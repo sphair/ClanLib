@@ -119,12 +119,12 @@ int CL_GUIManager::get_exit_code() const
 {
 	return impl->exit_code;
 }
-
+/*
 CL_UnknownSharedPtr CL_GUIManager::get_userdata()
 {
 	return impl->userdata;
 }
-
+*/
 CL_Font CL_GUIManager::get_registered_font(const CL_FontDescription &desc)
 {
 	return impl->get_registered_font(desc);
@@ -153,7 +153,7 @@ CL_Signal_v1<CL_GUIMessage &> &CL_GUIManager::sig_filter_message()
 	return impl->sig_filter_message;
 }
 
-CL_Callback_1<int, bool> &CL_GUIManager::func_exec_handler()
+CL_Callback_0<int> &CL_GUIManager::func_exec_handler()
 {
 	return impl->func_exec_handler;
 }
@@ -254,37 +254,26 @@ void CL_GUIManager::process_messages(int timeout)
 	impl->window_manager.complete_painting();
 }
 
-int CL_GUIManager::exec(bool loop_until_complete)
+int CL_GUIManager::exec()
 {
 	if (!impl->func_exec_handler.is_null())
-		return impl->func_exec_handler.invoke(loop_until_complete);
+		return impl->func_exec_handler.invoke();
 
 	while (!impl->exit_flag)
 	{
 		impl->exit_code = 0;
 
-		if (loop_until_complete)	// Check for a modal dialog code
-		{
-			if (!impl->func_exec_handler.is_null())
-				impl->func_exec_handler.invoke(loop_until_complete);
-		}
+		if (!impl->func_exec_handler.is_null())
+			impl->func_exec_handler.invoke();
 
 		int timeout = -1;
-		if (impl->is_constant_repaint_enabled() || !loop_until_complete)
+		if (impl->is_constant_repaint_enabled())
 		{
 			timeout = 0;
 		}
 
 		process_messages(timeout);
 
-		// The user wants the exits now
-		if (!loop_until_complete)
-		{
-			if (!impl->exit_flag)	// Return now, only if the exist flag is not set
-			{
-				return 0;
-			}
-		}
 	}
 	impl->exit_flag = false;
 	return impl->exit_code;
@@ -335,12 +324,12 @@ void CL_GUIManager::render_windows()
 		cur->component->paint(CL_Rect(CL_Point(0,0), geometry.get_size()));
 	}
 }
-
+/*
 void CL_GUIManager::set_userdata(CL_UnknownSharedPtr ptr)
 {
 	impl->userdata = ptr;
 }
-
+*/
 void CL_GUIManager::register_font(const CL_Font &font, const CL_FontDescription &desc)
 {
 	impl->register_font(font, desc);

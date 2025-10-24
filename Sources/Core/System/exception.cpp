@@ -55,12 +55,12 @@ const char* CL_Exception::what() const throw()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Exception Operations:
 
-std::vector<CL_String> CL_Exception::get_stack_trace()
+std::vector<CL_String> CL_Exception::get_stack_trace() const
 {
 	return CL_System::get_stack_frames_text(frames, num_frames);
 }
 
-CL_String CL_Exception::get_message_and_stack_trace()
+CL_String CL_Exception::get_message_and_stack_trace() const
 {
 	std::vector<CL_String> stack_trace = get_stack_trace();
 	CL_String text = message;

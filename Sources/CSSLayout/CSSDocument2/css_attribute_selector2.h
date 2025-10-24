@@ -38,7 +38,8 @@ public:
 		type_set,
 		type_exact_value,
 		type_space_separated_value,
-		type_hyphen_separated_value
+		type_hyphen_separated_value,
+		type_lang_value
 	};
 	Type type;
 	CL_String name;

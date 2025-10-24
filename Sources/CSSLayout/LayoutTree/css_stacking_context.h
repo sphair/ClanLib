@@ -30,6 +30,7 @@
 
 class CL_CSSLayoutTreeNode;
 class CL_CSSResourceCache;
+class CL_CSSLayoutGraphics;
 
 class CL_CSSStackingContext
 {
@@ -37,9 +38,10 @@ public:
 	CL_CSSStackingContext(CL_CSSLayoutTreeNode *layout);
 	~CL_CSSStackingContext();
 	bool operator <(const CL_CSSStackingContext &other) const;
+	int get_level() const { return level; }
 	void push_back(CL_CSSStackingContext *child);
 	void sort();
-	void render(CL_GraphicContext &gc, CL_CSSResourceCache *resource_cache);
+	void render(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resource_cache, bool root = false);
 
 private:
 	int level;
@@ -47,4 +49,12 @@ private:
 	std::vector<CL_CSSStackingContext *> children;
 	int tree_order;
 	int next_child_tree_order;
+
+	struct SortPred
+	{
+		bool operator()(CL_CSSStackingContext *a, CL_CSSStackingContext *b)
+		{
+			return (*a) < (*b);
+		}
+	};
 };

@@ -276,6 +276,12 @@ public:
 		const CL_String &filename,
 		const CL_String &extension,
 		PathType path_type = path_type_file);
+
+	/// \brief Concatenates two strings into one adding a trailing slash to first string if missing.
+	/// \param part1 First part of path
+	/// \param part2 Second part of path
+	/// \param path_type The path type (of path)
+	static CL_String combine(const CL_String &part1, const CL_String &part2, PathType path_type = path_type_file);
 /// \}
 };
 

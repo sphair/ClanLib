@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "html_page.h"
+
 class CL_CSSLayout;
 class CL_CSSBoxElement;
 
@@ -41,10 +43,25 @@ private:
 	void on_resized();
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_scroll();
+	CL_Image on_layout_get_image(CL_GraphicContext &gc, const CL_String &uri);
 
-	void load_html(const CL_String &html_filename, const CL_String &css_filename);
+	void load_html(const CL_String &html_filename, const CL_String &css_filename, const HTMLUrl &document_url);
 	bool is_end_tag_forbidden(const CL_String &name);
 
+	class Image
+	{
+	public:
+		Image(CL_Image image) : image(image) { }
+		int get_intrinsic_width() const { return image.get_width(); }
+		int get_intrinsic_height() const { return image.get_height(); }
+		float get_intrinsic_ratio() const { return image.get_height()/(float)image.get_width(); }
+		void set_geometry(const CL_Rect &new_geometry) { geometry = new_geometry; }
+
+		CL_Image image;
+		CL_Rect geometry;
+	};
+
+	HTMLPage page;
 	CL_CSSLayout layout;
 	CL_Size last_layout_size;
 	CL_CSSDocument2 css_document;
@@ -53,4 +70,6 @@ private:
 	CL_Rect client_box;
 	CL_Rect scrollbar_box;
 	CL_Rect view_box;
+	std::map<CL_String, CL_Image> image_cache;
+	std::vector<Image *> replaced_images;
 };

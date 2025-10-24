@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/System/databuffer.h"
 
 class CL_IODevice;
@@ -49,39 +49,39 @@ public:
 /// \{
 
 public:
-	cl_int32 signature; // 0x02014b50
+	cl_int signature; // 0x02014b50
 
-	cl_int16 version_made_by;
+	cl_short version_made_by;
 
-	cl_int16 version_needed_to_extract;
+	cl_short version_needed_to_extract;
 
-	cl_int16 general_purpose_bit_flag;
+	cl_short general_purpose_bit_flag;
 
-	cl_int16 compression_method;
+	cl_short compression_method;
 
-	cl_int16 last_mod_file_time;
+	cl_short last_mod_file_time;
 
-	cl_int16 last_mod_file_date;
+	cl_short last_mod_file_date;
 
-	cl_uint32 crc32;
+	cl_uint crc32;
 
-	cl_int32 compressed_size;
+	cl_int compressed_size;
 
-	cl_int32 uncompressed_size;
+	cl_int uncompressed_size;
 
-	cl_int16 file_name_length;
+	cl_short file_name_length;
 
-	cl_int16 extra_field_length;
+	cl_short extra_field_length;
 
-	cl_int16 file_comment_length;
+	cl_short file_comment_length;
 
-	cl_int16 disk_number_start;
+	cl_short disk_number_start;
 
-	cl_int16 internal_file_attributes;
+	cl_short internal_file_attributes;
 
-	cl_int32 external_file_attributes;
+	cl_int external_file_attributes;
 
-	cl_int32 relative_offset_of_local_header;
+	cl_int relative_offset_of_local_header;
 
 	CL_String filename;
 

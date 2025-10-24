@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_display.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserDisplay::get_names()
 {
@@ -37,45 +37,49 @@ std::vector<CL_String> CL_CSSParserDisplay::get_names()
 	return names;
 }
 
-void CL_CSSParserDisplay::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserDisplay::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "inline")
+		if (equals(token.value, "inline"))
 			properties.display.type = CL_CSSBoxDisplay::type_inline;
-		else if (token.value == "block")
+		else if (equals(token.value, "block"))
 			properties.display.type = CL_CSSBoxDisplay::type_block;
-		else if (token.value == "list-item")
+		else if (equals(token.value, "list-item"))
 			properties.display.type = CL_CSSBoxDisplay::type_list_item;
-		else if (token.value == "run-in")
+		else if (equals(token.value, "run-in"))
 			properties.display.type = CL_CSSBoxDisplay::type_run_in;
-		else if (token.value == "inline-block")
+		else if (equals(token.value, "inline-block"))
 			properties.display.type = CL_CSSBoxDisplay::type_inline_block;
-		else if (token.value == "table")
+		else if (equals(token.value, "table"))
 			properties.display.type = CL_CSSBoxDisplay::type_table;
-		else if (token.value == "inline-table")
+		else if (equals(token.value, "inline-table"))
 			properties.display.type = CL_CSSBoxDisplay::type_inline_table;
-		else if (token.value == "table-row-group")
+		else if (equals(token.value, "table-row-group"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_row_group;
-		else if (token.value == "table-header-group")
+		else if (equals(token.value, "table-header-group"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_header_group;
-		else if (token.value == "table-footer-group")
+		else if (equals(token.value, "table-footer-group"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_footer_group;
-		else if (token.value == "table-row")
+		else if (equals(token.value, "table-row"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_row;
-		else if (token.value == "table-column-group")
+		else if (equals(token.value, "table-column-group"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_column_group;
-		else if (token.value == "table-column")
+		else if (equals(token.value, "table-column"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_column;
-		else if (token.value == "table-cell")
+		else if (equals(token.value, "table-cell"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_cell;
-		else if (token.value == "table-caption")
+		else if (equals(token.value, "table-caption"))
 			properties.display.type = CL_CSSBoxDisplay::type_table_caption;
-		else if (token.value == "none")
+		else if (equals(token.value, "none"))
 			properties.display.type = CL_CSSBoxDisplay::type_none;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.display.type = CL_CSSBoxDisplay::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["display"] = &properties.bottom;
 	}
 }

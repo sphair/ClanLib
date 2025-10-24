@@ -110,7 +110,7 @@ public:
 /// \{
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -144,8 +144,8 @@ public:
 
 	/// \brief Return the height of the image.
 	int get_height() const;
-
 /// \}
+
 /// \name Operators
 /// \{
 public:

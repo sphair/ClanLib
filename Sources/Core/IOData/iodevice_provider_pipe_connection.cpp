@@ -197,7 +197,7 @@ int CL_IODeviceProvider_PipeConnection::peek(void *data, int len)
 			memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 			return peeked_data.get_size();
 		}
-		catch (const CL_Exception&)
+		catch (const CL_Exception& e)
 		{
 			peeked_data.set_size(old_size);
 			throw;

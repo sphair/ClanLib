@@ -52,7 +52,7 @@ CL_RectPacker::~CL_RectPacker()
 
 void CL_RectPacker::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_RectPacker is null");
 }
 

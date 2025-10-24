@@ -38,11 +38,11 @@
 
 class CL_ResourceManager_Impl;
 
-struct CL_ResourceData
+struct CL_ResourceCacheEntry
 {
 	CL_String name;
 
-	CL_UnknownSharedPtr data;
+	CL_SharedPtr<CL_ResourceData> data;
 
 	int reference_count;
 };
@@ -55,7 +55,7 @@ public:
 
 	CL_DomElement element;
 
-	std::vector<CL_ResourceData> cache_objects;
+	std::vector<CL_ResourceCacheEntry> cache_objects;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -99,18 +99,18 @@ CL_ResourceManager CL_Resource::get_manager()
 	return CL_ResourceManager(impl->resource_manager);
 }
 
-CL_UnknownSharedPtr CL_Resource::get_data(const CL_String &name)
+CL_SharedPtr<CL_ResourceData> CL_Resource::get_data(const CL_String &name)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 		if (impl->cache_objects[i].name == name)
 			return impl->cache_objects[i].data;
-	return CL_UnknownSharedPtr();
+	return CL_SharedPtr<CL_ResourceData>();
 }
 
 int CL_Resource::get_data_session_count(const CL_String &data_name)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
 		if (impl->cache_objects[i].name == data_name)
@@ -129,9 +129,9 @@ bool CL_Resource::operator ==(const CL_Resource &other) const
 	return impl == other.impl;
 }
 
-void CL_Resource::set_data(const CL_String &name, const CL_UnknownSharedPtr &ptr)
+void CL_Resource::set_data(const CL_String &name, const CL_SharedPtr<CL_ResourceData> &ptr)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
 		if (impl->cache_objects[i].name == name)
@@ -141,7 +141,7 @@ void CL_Resource::set_data(const CL_String &name, const CL_UnknownSharedPtr &ptr
 		}
 	}
 
-	CL_ResourceData data;
+	CL_ResourceCacheEntry data;
 	data.name = name;
 	data.data = ptr;
 	data.reference_count = 0;
@@ -150,7 +150,7 @@ void CL_Resource::set_data(const CL_String &name, const CL_UnknownSharedPtr &ptr
 
 void CL_Resource::clear_data(const CL_String &data_name)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
 		if (impl->cache_objects[i].name == data_name)
@@ -163,7 +163,7 @@ void CL_Resource::clear_data(const CL_String &data_name)
 
 int CL_Resource::add_data_session(const CL_String &data_name)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
 		if (impl->cache_objects[i].name == data_name)
@@ -172,7 +172,7 @@ int CL_Resource::add_data_session(const CL_String &data_name)
 		}
 	}
 
-	CL_ResourceData data;
+	CL_ResourceCacheEntry data;
 	data.name = data_name;
 	data.reference_count = 1;
 	impl->cache_objects.push_back(data);
@@ -181,7 +181,7 @@ int CL_Resource::add_data_session(const CL_String &data_name)
 
 int CL_Resource::remove_data_session(const CL_String &data_name)
 {
-	std::vector<CL_ResourceData>::size_type i;
+	std::vector<CL_ResourceCacheEntry>::size_type i;
 	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
 		if (impl->cache_objects[i].name == data_name)

@@ -83,7 +83,7 @@ class CL_Sprite_Impl
 /// \name Construction
 /// \{
 public:
-	CL_Sprite_Impl(CL_GraphicContext &gc);
+	CL_Sprite_Impl();
 
 	virtual ~CL_Sprite_Impl();
 
@@ -147,11 +147,6 @@ public:
 	std::vector<SpriteFrame> frames;
 
 	CL_TextureGroup texture_group;
-
-	CL_PrimitivesArray *prim_array;
-	CL_Vec3f prim_dest[6];
-	CL_Vec4f prim_color[6];
-	CL_Vec2f prim_src[6];
 
 /// \}
 /// \name Operations

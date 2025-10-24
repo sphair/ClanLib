@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_text_transform.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserTextTransform::get_names()
 {
@@ -37,21 +37,25 @@ std::vector<CL_String> CL_CSSParserTextTransform::get_names()
 	return names;
 }
 
-void CL_CSSParserTextTransform::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserTextTransform::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "capitalize")
+		if (equals(token.value, "capitalize"))
 			properties.text_transform.type = CL_CSSBoxTextTransform::type_capitalize;
-		else if (token.value == "uppercase")
+		else if (equals(token.value, "uppercase"))
 			properties.text_transform.type = CL_CSSBoxTextTransform::type_uppercase;
-		else if (token.value == "lowercase")
+		else if (equals(token.value, "lowercase"))
 			properties.text_transform.type = CL_CSSBoxTextTransform::type_lowercase;
-		else if (token.value == "none")
+		else if (equals(token.value, "none"))
 			properties.text_transform.type = CL_CSSBoxTextTransform::type_none;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.text_transform.type = CL_CSSBoxTextTransform::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["text-transform"] = &properties.text_transform;
 	}
 }

@@ -27,11 +27,12 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_background_image.h"
+#include "API/CSSLayout/PropertyTypes/css_box_background_image.h"
 
 CL_CSSBoxBackgroundImage::CL_CSSBoxBackgroundImage()
-: type(type_none)
+: type(type_images)
 {
+	images.push_back(Image(image_type_none));
 }
 
 void CL_CSSBoxBackgroundImage::compute(const CL_CSSBoxBackgroundImage *parent, CL_CSSResourceCache *layout, float em_size, float ex_size)
@@ -41,11 +42,36 @@ void CL_CSSBoxBackgroundImage::compute(const CL_CSSBoxBackgroundImage *parent, C
 		if (parent)
 		{
 			type = parent->type;
-			url = parent->url;
+			images = parent->images;
 		}
 		else
 		{
-			type = type_none;
+			type = type_images;
+			images.clear();
+			images.push_back(Image(image_type_none));
 		}
 	}
+}
+
+CL_String CL_CSSBoxBackgroundImage::to_string() const
+{
+	if (type == type_inherit)
+		return "inherit";
+
+	CL_String s;
+	for (size_t i = 0; i < images.size(); i++)
+	{
+		if (i > 0)
+			s += ", ";
+		switch (images[i].type)
+		{
+		case image_type_uri:
+			s += cl_format("uri(\"%1\")", images[i].url);
+			break;
+		case image_type_none:
+			s += "none";
+			break;
+		}
+	}
+	return s;
 }

@@ -30,12 +30,13 @@
 #include "css_box_tree.h"
 #include "css_box_element.h"
 #include "css_box_text.h"
+#include "css_box_node_walker.h"
 #include "css_whitespace_eraser.h"
 #include "API/CSSLayout/css_property2.h"
 #include "API/CSSLayout/css_property_list2.h"
 
 CL_CSSBoxTree::CL_CSSBoxTree()
-: root_element(0), selection_start(0), selection_end(0), selection_start_text_offset(0), selection_end_text_offset(0)
+: root_element(0), html_body_element(0), selection_start(0), selection_end(0), selection_start_text_offset(0), selection_end_text_offset(0)
 {
 }
 
@@ -48,6 +49,11 @@ void CL_CSSBoxTree::set_root_element(CL_CSSBoxElement *new_root_element)
 {
 	clear();
 	root_element = new_root_element;
+}
+
+void CL_CSSBoxTree::set_html_body_element(CL_CSSBoxElement *new_html_body_element)
+{
+	html_body_element = new_html_body_element;
 }
 
 void CL_CSSBoxTree::create(const CL_DomNode &node)
@@ -66,9 +72,10 @@ void CL_CSSBoxTree::prepare(CL_CSSResourceCache *resource_cache)
 {
 	clean();
 	compute_element(root_element, resource_cache);
+	propagate_html_body();
 	convert_run_in_blocks(root_element);
 	CL_CSSWhitespaceEraser::remove_whitespace(root_element);
-	create_anonymous_blocks(root_element, resource_cache);
+	filter_table(resource_cache);
 }
 
 void CL_CSSBoxTree::clean(CL_CSSBoxNode *node)
@@ -177,58 +184,23 @@ void CL_CSSBoxTree::compute_element(CL_CSSBoxElement *element, CL_CSSResourceCac
 	}
 }
 
-void CL_CSSBoxTree::create_anonymous_blocks(CL_CSSBoxElement *element, CL_CSSResourceCache *resource_cache)
+void CL_CSSBoxTree::propagate_html_body()
 {
-	if (element->is_table() || element->is_inline_table())
+	if (html_body_element && root_element != html_body_element)
 	{
-		filter_table(element, resource_cache);
-	}
-	else if (element->is_block_level() && element->has_block_level_children())
-	{
-		CL_CSSBoxNode *cur = element->get_first_child();
-		CL_CSSBoxElement *anonymous = 0;
-		while (cur)
+		if (root_element->computed_properties.background_image.images[0].type == CL_CSSBoxBackgroundImage::image_type_none &&
+			root_element->computed_properties.background_color.color.a == 0.0f)
 		{
-			CL_CSSBoxElement *child_element = dynamic_cast<CL_CSSBoxElement*>(cur);
-			CL_CSSBoxText *child_text = dynamic_cast<CL_CSSBoxText*>(cur);
-			if (child_text)
-			{
-				if (!anonymous)
-				{
-					anonymous = new CL_CSSBoxElement();
-					anonymous->properties.display.type = CL_CSSBoxDisplay::type_block;
-					anonymous->name = "anonymous";
-					element->insert(anonymous, cur);
-					compute_element(anonymous, resource_cache);
-				}
-				cur->remove();
-				anonymous->push_back(cur);
-				cur = anonymous;
-			}
-			else if (child_element)
-			{
-				if (child_element->is_block_level())
-				{
-					anonymous = 0;
-					create_anonymous_blocks(child_element, resource_cache);
-				}
-				else
-				{
-					if (!anonymous)
-					{
-						anonymous = new CL_CSSBoxElement();
-						anonymous->properties.display.type = CL_CSSBoxDisplay::type_block;
-						anonymous->name = "anonymous";
-						element->insert(anonymous, cur);
-						compute_element(anonymous, resource_cache);
-					}
-					cur->remove();
-					anonymous->push_back(cur);
-					cur = anonymous;
-				}
-			}
-
-			cur = cur->get_next_sibling();
+			root_element->computed_properties.background_color = html_body_element->computed_properties.background_color;
+			root_element->computed_properties.background_image = html_body_element->computed_properties.background_image;
+			root_element->computed_properties.background_repeat = html_body_element->computed_properties.background_repeat;
+			root_element->computed_properties.background_attachment = html_body_element->computed_properties.background_attachment;
+			root_element->computed_properties.background_position = html_body_element->computed_properties.background_position;
+			root_element->computed_properties.background_origin = html_body_element->computed_properties.background_origin;
+			root_element->computed_properties.background_clip = html_body_element->computed_properties.background_clip;
+			root_element->computed_properties.background_size = html_body_element->computed_properties.background_size;
+			html_body_element->computed_properties.background_color = CL_CSSBoxBackgroundColor();
+			html_body_element->computed_properties.background_image = CL_CSSBoxBackgroundImage();
 		}
 	}
 }
@@ -304,95 +276,300 @@ void CL_CSSBoxTree::convert_run_in_blocks(CL_CSSBoxElement *element)
 	}
 }
 
-void CL_CSSBoxTree::filter_table(CL_CSSBoxElement *element, CL_CSSResourceCache *resource_cache)
+void CL_CSSBoxTree::filter_table(CL_CSSResourceCache *resource_cache)
 {
-	CL_CSSBoxNode *cur = element->get_first_child();
-	while (cur)
+/*
+	// Remove irrelevant boxes:
+	if (parent.display.type == CL_CSSBoxDisplay::type_table_column)
 	{
-		CL_CSSBoxElement *child_element = dynamic_cast<CL_CSSBoxElement*>(cur);
-		if (child_element && child_element->is_table_row())
+		cur.display.type = CL_CSSBoxDisplay::type_none;
+	}
+	else if (parent.display.type == CL_CSSBoxDisplay::type_table_column_group &&
+		cur.display.type != CL_CSSBoxDisplay::type_table_column)
+	{
+		cur.display.type = CL_CSSBoxDisplay::type_none;
+	}
+	else if (cur.is_text() &&
+		cur.only_contains_whitespace() &&
+		cur.prev_sibling().is_null_or_proper_table_descendant() &&
+		cur.next_sibling().is_null_or_proper_table_descendant())
+	{
+		cur.display.type = CL_CSSBoxDisplay::type_none;
+	}
+	// To do: If a box B is an anonymous inline containing only white space, and is between two immediate
+	// siblings each of which is either an internal table box or a 'table-caption' box then B is treated
+	// as if it had 'display: none'. 
+*/
+
+	// Generate missing child wrappers:
+
+	CL_CSSBoxNodeWalker walker(root_element->get_first_child(), true);
+	while (walker.is_node())
+	{
+		if (walker.is_element())
 		{
-			CL_CSSBoxNode *cur_cell = cur->get_first_child();
-			while (cur_cell)
+			CL_CSSBoxElement *cur = walker.get_element();
+			CL_CSSBoxElement *parent = static_cast<CL_CSSBoxElement *>(walker.get_element()->get_parent());
+
+			if ((parent->computed_properties.display.type == CL_CSSBoxDisplay::type_table ||
+				parent->computed_properties.display.type == CL_CSSBoxDisplay::type_inline_table) &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_caption &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row_group &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_header_group &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_footer_group &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row)
 			{
-				CL_CSSBoxElement *cell_element = dynamic_cast<CL_CSSBoxElement*>(cur_cell);
-				if (cell_element && cell_element->is_table_cell())
+				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are not proper table children
+
+				CL_CSSBoxElement *anonymous = new CL_CSSBoxElement();
+				anonymous->properties.display.type = CL_CSSBoxDisplay::type_table_row;
+				anonymous->name = "anonymous";
+				parent->insert(anonymous, cur);
+				cur->remove();
+				anonymous->push_back(cur);
+
+				CL_CSSBoxNode *next = anonymous->get_next_sibling();
+				while (next)
 				{
-					create_anonymous_blocks(cell_element, resource_cache);
-					cur_cell = cur_cell->get_next_sibling();
+					cur = dynamic_cast<CL_CSSBoxElement*>(next);
+					if (cur &&
+						cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_caption &&
+						cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row_group &&
+						cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_header_group &&
+						cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_footer_group &&
+						cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row)
+					{
+						next = next->get_next_sibling();
+						cur->remove();
+						anonymous->push_back(cur);
+					}
+					else
+					{
+						break;
+					}
 				}
-				else
-				{
-					CL_CSSBoxNode *d = cur_cell;
-					cur_cell = cur_cell->get_next_sibling();
-					d->remove();
-				}
+
+				compute_element(anonymous, resource_cache);
 			}
-			cur = cur->get_next_sibling();
+			if ((parent->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row_group ||
+				parent->computed_properties.display.type == CL_CSSBoxDisplay::type_table_header_group ||
+				parent->computed_properties.display.type == CL_CSSBoxDisplay::type_table_footer_group) &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row)
+			{
+				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are not 'table-row' boxes
+
+				CL_CSSBoxElement *anonymous = new CL_CSSBoxElement();
+				anonymous->properties.display.type = CL_CSSBoxDisplay::type_table_row;
+				anonymous->name = "anonymous";
+				parent->insert(anonymous, cur);
+				cur->remove();
+				anonymous->push_back(cur);
+
+				CL_CSSBoxNode *next = anonymous->get_next_sibling();
+				while (next)
+				{
+					cur = dynamic_cast<CL_CSSBoxElement*>(next);
+					if (cur && cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row)
+					{
+						next = next->get_next_sibling();
+						cur->remove();
+						anonymous->push_back(cur);
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				compute_element(anonymous, resource_cache);
+			}
+			if (parent->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row &&
+				cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_cell)
+			{
+				// generate an anonymous 'table-cell' box around C and all consecutive siblings of C that are not 'table-cell' boxes
+
+				CL_CSSBoxElement *anonymous = new CL_CSSBoxElement();
+				anonymous->properties.display.type = CL_CSSBoxDisplay::type_table_row;
+				anonymous->name = "anonymous";
+				parent->insert(anonymous, cur);
+				cur->remove();
+				anonymous->push_back(cur);
+
+				CL_CSSBoxNode *next = anonymous->get_next_sibling();
+				while (next)
+				{
+					cur = dynamic_cast<CL_CSSBoxElement*>(next);
+					if (cur && cur->computed_properties.display.type != CL_CSSBoxDisplay::type_table_cell)
+					{
+						next = next->get_next_sibling();
+						cur->remove();
+						anonymous->push_back(cur);
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				compute_element(anonymous, resource_cache);
+			}
 		}
-		else
+		walker.next(true);
+	}
+
+	// Generate missing parents:
+
+	walker = CL_CSSBoxNodeWalker(root_element->get_first_child(), true);
+	while (walker.is_node())
+	{
+		if (walker.is_element())
 		{
-			CL_CSSBoxNode *d = cur;
-			cur = cur->get_next_sibling();
-			d->remove();
+			CL_CSSBoxElement *cur = walker.get_element();
+			CL_CSSBoxElement *parent = static_cast<CL_CSSBoxElement *>(walker.get_element()->get_parent());
+
+			if (cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_cell && parent->computed_properties.display.type != CL_CSSBoxDisplay::type_table_row)
+			{
+				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are 'table-cell' boxes
+
+				CL_CSSBoxElement *anonymous = new CL_CSSBoxElement();
+				anonymous->properties.display.type = CL_CSSBoxDisplay::type_table_row;
+				anonymous->name = "anonymous";
+				parent->insert(anonymous, cur);
+				cur->remove();
+				anonymous->push_back(cur);
+
+				CL_CSSBoxNode *next = anonymous->get_next_sibling();
+				while (next)
+				{
+					cur = dynamic_cast<CL_CSSBoxElement*>(next);
+					if (cur && cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_cell)
+					{
+						next = next->get_next_sibling();
+						cur->remove();
+						anonymous->push_back(cur);
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				compute_element(anonymous, resource_cache);
+			}
+
+			bool table_row_misparented =
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row && 
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_table &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_inline_table;
+
+			bool table_column_misparented = 
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_column &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_table_column_group &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_table &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_inline_table;
+
+			bool table_group_column_caption_misparented =
+				(cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row_group ||
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_header_group ||
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_footer_group ||
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_column_group ||
+				cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_caption) &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_table &&
+				parent->computed_properties.display.type != CL_CSSBoxDisplay::type_inline_table;
+
+			if (table_row_misparented || table_column_misparented || table_group_column_caption_misparented)
+			{
+				// generate an anonymous 'table' or 'inline-table' box T around C and all consecutive siblings of C that are proper table children
+				// If C's parent is an 'inline' box, then T must be an 'inline-table' box; otherwise it must be a 'table' box
+
+				CL_CSSBoxElement *anonymous = new CL_CSSBoxElement();
+				anonymous->properties.display.type = parent->is_block_level() ? CL_CSSBoxDisplay::type_table : CL_CSSBoxDisplay::type_inline_table;
+				anonymous->name = "anonymous";
+				parent->insert(anonymous, cur);
+				cur->remove();
+				anonymous->push_back(cur);
+
+				CL_CSSBoxNode *next = anonymous->get_next_sibling();
+				while (next)
+				{
+					cur = dynamic_cast<CL_CSSBoxElement*>(next);
+					if (cur &&
+						(cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_caption ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row_group ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_header_group ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_footer_group ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_row ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_column ||
+						cur->computed_properties.display.type == CL_CSSBoxDisplay::type_table_column_group))
+					{
+						next = next->get_next_sibling();
+						cur->remove();
+						anonymous->push_back(cur);
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				compute_element(anonymous, resource_cache);
+			}
 		}
+		walker.next(true);
 	}
 }
 
 void CL_CSSBoxTree::set_selection(CL_CSSBoxNode *start, size_t start_text_offset, CL_CSSBoxNode *end, size_t end_text_offset)
 {
-	apply_selection(selection_start, selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, true);
+	apply_selection(selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, true);
 
 	selection_start = start;
 	selection_start_text_offset = start_text_offset;
 	selection_end = end;
 	selection_end_text_offset = end_text_offset;
 
-	apply_selection(selection_start, selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, false);
+	apply_selection(selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, false);
 }
 
-void CL_CSSBoxTree::apply_selection(CL_CSSBoxNode *node, CL_CSSBoxNode *start, size_t start_offset, CL_CSSBoxNode *end, size_t end_offset, bool clear, bool in_selection)
+void CL_CSSBoxTree::apply_selection(CL_CSSBoxNode *start, size_t start_offset, CL_CSSBoxNode *end, size_t end_offset, bool clear)
 {
-	if (node == start)
-		in_selection = true;
-
-	CL_CSSBoxText *text = dynamic_cast<CL_CSSBoxText*>(node);
-	if (text)
+	if (start && end)
 	{
-		if (clear)
+		CL_CSSBoxNodeWalker walker(start, true);
+		do
 		{
-			text->selection_start = 0;
-			text->processed_selection_start = 0;
-			text->selection_end = 0;
-			text->processed_selection_end = 0;
-		}
-		else if (in_selection)
-		{
-			text->selection_start = 0;
-			text->processed_selection_start = 0;
-			text->selection_end = text->text.length();
-			text->processed_selection_end = text->processed_text.length();
-
-			if (text == start)
+			if (walker.is_text())
 			{
-				text->selection_start = start_offset;
-				text->processed_selection_start = start_offset;
-			}
-			else if (text == end)
-			{
-				text->selection_end = end_offset;
-				text->processed_selection_end = end_offset;
-			}
-		}
-	}
+				CL_CSSBoxText *text = walker.get_text();
+				if (clear)
+				{
+					text->selection_start = 0;
+					text->processed_selection_start = 0;
+					text->selection_end = 0;
+					text->processed_selection_end = 0;
+				}
+				else
+				{
+					text->selection_start = 0;
+					text->processed_selection_start = 0;
+					text->selection_end = text->text.length();
+					text->processed_selection_end = text->processed_text.length();
 
-	CL_CSSBoxNode *cur = node->get_first_child();
-	while (cur)
-	{
-		apply_selection(cur, start, start_offset, end, end_offset, clear, in_selection);
-		cur = cur->get_next_sibling();
-	}
+					if (text == start)
+					{
+						text->selection_start = start_offset;
+						text->processed_selection_start = start_offset;
+					}
+					if (text == end)
+					{
+						text->selection_end = end_offset;
+						text->processed_selection_end = end_offset;
+					}
+				}
+			}
 
-	if (node == end)
-		in_selection = false;
+			if (walker.get() == end)
+				break;
+		} while (walker.next());
+	}
 }

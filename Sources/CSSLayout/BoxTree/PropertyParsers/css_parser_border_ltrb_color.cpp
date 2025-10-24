@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_ltrb_color.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderLTRBColor::get_names()
 {
@@ -40,16 +40,16 @@ std::vector<CL_String> CL_CSSParserBorderLTRBColor::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderLTRBColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderLTRBColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderColor *border_color = 0;
-	if (name == "border-top-color")
+	if (equals(name, "border-top-color"))
 		border_color = &properties.border_color_top;
-	else if (name == "border-right-color")
+	else if (equals(name, "border-right-color"))
 		border_color = &properties.border_color_right;
-	else if (name == "border-bottom-color")
+	else if (equals(name, "border-bottom-color"))
 		border_color = &properties.border_color_bottom;
-	else if (name == "border-left-color")
+	else if (equals(name, "border-left-color"))
 		border_color = &properties.border_color_left;
 
 	if (border_color)
@@ -66,15 +66,16 @@ void CL_CSSParserBorderLTRBColor::parse(CL_CSSBoxProperties &properties, const C
 			CL_CSSToken token = next_token(pos, tokens);
 			if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 			{
-				if (token.value == "transparent")
-				{
-					border_color->type = CL_CSSBoxBorderColor::type_transparent;
-				}
-				else if (token.value == "inherit")
+				if (equals(token.value, "inherit"))
 				{
 					border_color->type = CL_CSSBoxBorderColor::type_inherit;
 				}
 			}
 		}
+	}
+
+	if (out_change_set)
+	{
+		(*out_change_set)[name] = border_color;
 	}
 }

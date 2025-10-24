@@ -18,7 +18,7 @@ public:
 	ServerLobbyGame(Server *server, ServerLobbyPlayer *owner, int id);
 	~ServerLobbyGame();
 
-	ServerLobbyGamePlayerCollection *get_player_collection() { return player_collection; }
+	ServerLobbyGamePlayerCollection *get_player_collection() { return player_collection.get(); }
 
 	State get_state() { return state; }
 	void set_state(State state);
@@ -42,7 +42,7 @@ private:
 
 	State state;
 
-	CL_AutoPtr<ServerLobbyGamePlayerCollection> player_collection;
+	std::auto_ptr<ServerLobbyGamePlayerCollection> player_collection;
 
 	int id;
 	CL_String name;

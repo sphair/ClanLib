@@ -31,17 +31,24 @@
 class CL_CSSReplacedComponent
 {
 public:
+	CL_CSSReplacedComponent() : intrinsic_width(0), intrinsic_height(0), intrinsic_ratio(0.0f), intrinsic_has_width(false), intrinsic_has_height(false), intrinsic_has_ratio(false) { }
 	virtual ~CL_CSSReplacedComponent() { }
-
-	/// \brief Get Size
-	///
-	/// \return size
-	virtual CL_Size get_size() const = 0;
 
 	/// \brief Set geometry
 	///
 	/// \param geometry = Rect
 	virtual void set_geometry(const CL_Rect &geometry) = 0;
+
+private:
+	int intrinsic_width;
+	int intrinsic_height;
+	float intrinsic_ratio;
+	bool intrinsic_has_width;
+	bool intrinsic_has_height;
+	bool intrinsic_has_ratio;
+
+	friend class CL_CSSLayoutObject;
+	friend class CL_CSSReplacedLayout;
 };
 
 /// \brief Span Component Binder (templated class)
@@ -58,14 +65,6 @@ public:
 	CL_CSSReplacedComponentBinder(T *component)
 	: component(component)
 	{
-	}
-
-	/// \brief Get Size
-	///
-	/// \return size
-	CL_Size get_size() const
-	{
-		return component->get_size();
 	}
 
 	/// \brief Set geometry

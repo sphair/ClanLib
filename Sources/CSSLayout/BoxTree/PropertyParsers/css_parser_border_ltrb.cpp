@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_ltrb.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderLTRB::get_names()
 {
@@ -40,30 +40,30 @@ std::vector<CL_String> CL_CSSParserBorderLTRB::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderWidth *width_prop = 0;
 	CL_CSSBoxBorderStyle *style_prop = 0;
 	CL_CSSBoxBorderColor *color_prop = 0;
-	if (name == "border-top-width")
+	if (equals(name, "border-top"))
 	{
 		width_prop = &properties.border_width_top;
 		style_prop = &properties.border_style_top;
 		color_prop = &properties.border_color_top;
 	}
-	else if (name == "border-right-width")
+	else if (equals(name, "border-right"))
 	{
 		width_prop = &properties.border_width_right;
 		style_prop = &properties.border_style_right;
 		color_prop = &properties.border_color_right;
 	}
-	else if (name == "border-bottom-width")
+	else if (equals(name, "border-bottom"))
 	{
 		width_prop = &properties.border_width_bottom;
 		style_prop = &properties.border_style_bottom;
 		color_prop = &properties.border_color_bottom;
 	}
-	else if (name == "border-left-width")
+	else if (equals(name, "border-left"))
 	{
 		width_prop = &properties.border_width_left;
 		style_prop = &properties.border_style_left;
@@ -71,6 +71,7 @@ void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_Str
 	}
 	else
 	{
+		debug_parse_error(name, tokens);
 		return;
 	}
 
@@ -97,85 +98,81 @@ void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_Str
 			CL_CSSToken token = next_token(pos, tokens);
 			if (token.type == CL_CSSToken::type_ident)
 			{
-				if (token.value == "inherit" && tokens.size() == 1)
+				if (equals(token.value, "inherit") && tokens.size() == 1)
 				{
 					width_prop->type = CL_CSSBoxBorderWidth::type_inherit;
 					style_prop->type = CL_CSSBoxBorderStyle::type_inherit;
 					color_prop->type = CL_CSSBoxBorderColor::type_inherit;
 					return;
 				}
-				else if (!width_specified && token.value == "thin")
+				else if (!width_specified && equals(token.value, "thin"))
 				{
 					border_width.type = CL_CSSBoxBorderWidth::type_thin;
 					width_specified = true;
 				}
-				else if (!width_specified && token.value == "medium")
+				else if (!width_specified && equals(token.value, "medium"))
 				{
 					border_width.type = CL_CSSBoxBorderWidth::type_medium;
 					width_specified = true;
 				}
-				else if (!width_specified && token.value == "thick")
+				else if (!width_specified && equals(token.value, "thick"))
 				{
 					border_width.type = CL_CSSBoxBorderWidth::type_thick;
 					width_specified = true;
 				}
-				else if (!style_specified && token.value == "none")
+				else if (!style_specified && equals(token.value, "none"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_none;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "hidden")
+				else if (!style_specified && equals(token.value, "hidden"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_hidden;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "dotted")
+				else if (!style_specified && equals(token.value, "dotted"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_dotted;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "dashed")
+				else if (!style_specified && equals(token.value, "dashed"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_dashed;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "solid")
+				else if (!style_specified && equals(token.value, "solid"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_solid;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "double")
+				else if (!style_specified && equals(token.value, "double"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_double;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "groove")
+				else if (!style_specified && equals(token.value, "groove"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_groove;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "ridge")
+				else if (!style_specified && equals(token.value, "ridge"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_ridge;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "inset")
+				else if (!style_specified && equals(token.value, "inset"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_inset;
 					style_specified = true;
 				}
-				else if (!style_specified && token.value == "outset")
+				else if (!style_specified && equals(token.value, "outset"))
 				{
 					border_style.type = CL_CSSBoxBorderStyle::type_outset;
 					style_specified = true;
 				}
-				else if (!color_specified && token.value == "transparent")
-				{
-					border_color.type = CL_CSSBoxBorderColor::type_transparent;
-					color_specified = true;
-				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
@@ -190,11 +187,13 @@ void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_Str
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -203,4 +202,21 @@ void CL_CSSParserBorderLTRB::parse(CL_CSSBoxProperties &properties, const CL_Str
 	*width_prop = border_width;
 	*style_prop = border_style;
 	*color_prop = border_color;
+	if (out_change_set)
+	{
+		if (width_specified)
+		{
+			(*out_change_set)[name + "-width"] = width_prop;
+		}
+
+		if (style_specified)
+		{
+			(*out_change_set)[name + "-style"] = style_prop;
+		}
+
+		if (color_specified)
+		{
+			(*out_change_set)[name + "-color"] = color_prop;
+		}
+	}
 }

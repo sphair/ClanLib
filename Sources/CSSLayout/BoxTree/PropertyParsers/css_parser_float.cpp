@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_float.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserFloat::get_names()
 {
@@ -37,19 +37,23 @@ std::vector<CL_String> CL_CSSParserFloat::get_names()
 	return names;
 }
 
-void CL_CSSParserFloat::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserFloat::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "left")
+		if (equals(token.value, "left"))
 			properties.float_box.type = CL_CSSBoxFloat::type_left;
-		else if (token.value == "right")
+		else if (equals(token.value, "right"))
 			properties.float_box.type = CL_CSSBoxFloat::type_right;
-		else if (token.value == "none")
+		else if (equals(token.value, "none"))
 			properties.float_box.type = CL_CSSBoxFloat::type_none;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.float_box.type = CL_CSSBoxFloat::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["float"] = &properties.float_box;
 	}
 }

@@ -126,9 +126,9 @@ void CL_ListViewSelection::remove(const CL_ListViewItem &item)
 	{
 		if (it.impl->item.impl == item.impl)
 		{
-			if (it.impl->prev)
+			if (!it.impl->prev.expired())
 			{
-				it.impl->prev->next = it.impl->next;
+				it.impl->prev.lock()->next = it.impl->next;
 			}
 			if (it.impl->next)
 			{
@@ -179,13 +179,13 @@ CL_ListViewSelectedItem::CL_ListViewSelectedItem(const CL_ListViewItem &item)
 
 void CL_ListViewSelectedItem::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ListViewSelectedItem is null");
 }
 
 bool CL_ListViewSelectedItem::is_item() const
 {
-	return !impl.is_null();
+	return impl ? true : false;
 }
 
 CL_ListViewItem CL_ListViewSelectedItem::get_item()
@@ -195,7 +195,7 @@ CL_ListViewItem CL_ListViewSelectedItem::get_item()
 
 CL_ListViewSelectedItem CL_ListViewSelectedItem::prev()
 {
-	return CL_ListViewSelectedItem(impl->prev);
+	return CL_ListViewSelectedItem(impl->prev.lock());
 }
 
 CL_ListViewSelectedItem CL_ListViewSelectedItem::get_next_sibling()

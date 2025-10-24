@@ -28,7 +28,9 @@
 
 #pragma once
 
-class CL_OpenGLWindowDescription_Impl
+#include "API/Display/Window/display_window_description.h"
+
+class CL_OpenGLWindowDescription_Impl : public CL_DisplayWindowDescriptionData
 {
 /// \name Construction
 /// \{
@@ -44,8 +46,16 @@ public:
 		blue_size = 4;
 		alpha_size = 4;
 		multisampling = 0;
-	}
+		version_major = 3;
+		version_minor = 0;
+		allow_lower_versions = true;
+		debug_flag = false;
+		forward_compatible_flag = false;
+		core_profile_flag = true;
+		compatibility_profile_flag = false;
+		layer_plane = 0;
 
+	}
 
 /// \}
 /// \name Attributes
@@ -60,6 +70,17 @@ public:
 	int blue_size;
 	int alpha_size;
 	int multisampling;
+
+	int version_major;
+	int version_minor;
+	bool allow_lower_versions;
+
+	bool debug_flag;
+	bool forward_compatible_flag;
+	bool core_profile_flag;
+	bool compatibility_profile_flag;
+	int layer_plane;
+
 /// \}
 };
 

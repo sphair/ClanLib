@@ -75,7 +75,7 @@ void CL_DomCharacterData::append_data(const CL_DomString &arg)
 {
 	if (impl)
 	{
-		CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl->owner_document.get());
+		CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		CL_DomString value = impl->get_tree_node()->get_node_value();
 		CL_StringRef s = doc->string_allocator.alloc(value.length() + arg.length());
 		memcpy(s.data(), value.data(), value.length() * sizeof(CL_DomString::char_type));
@@ -89,7 +89,7 @@ void CL_DomCharacterData::insert_data(unsigned long offset, const CL_DomString &
 {
 	if (impl)
 	{
-		CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl->owner_document.get());
+		CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl->owner_document.lock().get());
 		CL_DomString value = impl->get_tree_node()->get_node_value();
 		if (offset > value.length())
 			offset = value.length();

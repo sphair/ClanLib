@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_font_size.h"
+#include "API/CSSLayout/PropertyTypes/css_box_font_size.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxFontSize::CL_CSSBoxFontSize()
@@ -101,4 +101,36 @@ void CL_CSSBoxFontSize::compute(const CL_CSSBoxFontSize *parent, CL_CSSResourceC
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxFontSize::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_xx_small:
+		return "xx-small";
+	case type_x_small:
+		return "x-small";
+	case type_small:
+		return "small";
+	case type_medium:
+		return "medium";
+	case type_large:
+		return "large";
+	case type_x_large:
+		return "x-large";
+	case type_xx_large:
+		return "xx-large";
+	case type_larger:
+		return "larger";
+	case type_smaller:
+		return "smaller";
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_inherit:
+		return "inherit";
+	}
 }

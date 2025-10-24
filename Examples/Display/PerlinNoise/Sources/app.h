@@ -42,6 +42,7 @@ private:
 	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
 	void set_user_projection(CL_GraphicContext &gc, CL_Sizef &area_size, Options *options);
+	CL_PixelBuffer convert_to_normalmap(CL_PixelBuffer &input);
 private:
 	bool quit;
 

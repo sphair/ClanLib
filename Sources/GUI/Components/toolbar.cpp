@@ -333,7 +333,7 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 
 					if (items[index].is_toggling() && single_select_mode)
 					{
-						unselect_all(items[index].impl);
+						unselect_all(items[index].impl.get());
 
 						if (!func_item_selected.is_null())
 							func_item_selected.invoke(items[index]);

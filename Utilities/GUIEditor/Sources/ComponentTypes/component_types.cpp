@@ -54,6 +54,7 @@ void ComponentTypes::initialize()
 	types.push_back(new RadioButtonComponentType("radiobutton", "RadioButton", next_id++, "ComponentIconRadioButton"));
 	types.push_back(new LabelComponentType("label", "Label", next_id++, "ComponentIconLabel"));
 	types.push_back(new ComponentTypeTemplate<CL_LineEdit>("lineedit", "LineEdit", next_id++, "ComponentIconLineEdit"));
+	types.push_back(new ComponentTypeTemplate<CL_TextEdit>("textedit", "TextEdit", next_id++, "ComponentIconLineEdit"));
 	types.push_back(new ComponentTypeTemplate<CL_ComboBox>("combobox", "ComboBox", next_id++, "ComponentIconComboBox"));
 	types.push_back(new ListViewComponentType("listview", "ListView", next_id++, "ComponentIconListView"));
 	types.push_back(new ComponentTypeTemplate<CL_MenuBar>("menubar", "MenuBar", next_id++, "ComponentIconMenuBar"));

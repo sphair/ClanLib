@@ -368,11 +368,8 @@ CL_Rect CL_PopupMenuWindow::get_item_rect(int index)
 	int count = menu.get_item_count();
 	int row_height = part_item_row.get_preferred_height();
 	int separator_height = part_separator.get_preferred_height();
-	int icon_width = part_item_icon.get_preferred_width();
 
 	CL_PopupMenuItem item = menu.get_item_at(index);
-
-	CL_GraphicContext &gc = get_gc();
 
 	CL_Rect content_area = part_component.get_content_box(get_geometry().get_size());
 	int w = content_area.get_width();

@@ -79,7 +79,7 @@ public:
 	/// \brief Is Null
 	///
 	/// \return true = null
-	bool is_null();
+	bool is_null() const;
 
 	/// \brief Retrieves the font provider.
 	CL_FontProvider *get_provider() const;
@@ -122,6 +122,41 @@ public:
 	/// \param color = The text color
 	void draw_text(CL_GraphicContext &gc, const CL_Pointf &position, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
 
+	/// \brief Print text on gc adding elipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(CL_GraphicContext &gc, int x, int y, CL_Rect content_box, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
+
+	/// \brief Print text on gc adding elipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(CL_GraphicContext &gc, float x, float y, CL_Rectf content_box, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
+
+	/// \brief Print text on gc adding elipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param position = Dest position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(CL_GraphicContext &gc, const CL_Pointf &position, CL_Rectf content_box, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
+
 	/// \brief Calculate size of text string.
 	///
 	/// Multiline text (seperated by /n) is supported\n
@@ -131,7 +166,7 @@ public:
 	CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
 
 	/// \brief Retrieves font metrics description for the selected font.
-	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics();
 
 	/// \brief Get the character index at a specified point
 	///

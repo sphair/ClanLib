@@ -59,7 +59,7 @@ private:
 	CL_ResourceManager resources_internal;
 	App *app;
 	CL_Font fps_font;
-	CL_AutoPtr<GUI_Direct> gui_direct;
+	CL_UniquePtr<GUI_Direct> gui_direct;
 
 	Theme::gui_theme current_theme;
 

@@ -62,7 +62,7 @@ CL_Cursor::CL_Cursor(const CL_DisplayWindow &window, const CL_SpriteDescription 
 
 void CL_Cursor::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_Cursor is null");
 }
 

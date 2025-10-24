@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_position.h"
+#include "API/CSSLayout/PropertyTypes/css_box_position.h"
 
 CL_CSSBoxPosition::CL_CSSBoxPosition()
 : type(type_static)
@@ -42,5 +42,23 @@ void CL_CSSBoxPosition::compute(const CL_CSSBoxPosition *parent, CL_CSSResourceC
 			type = parent->type;
 		else
 			type = type_static;
+	}
+}
+
+CL_String CL_CSSBoxPosition::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_static:
+		return "static";
+	case type_relative:
+		return "relative";
+	case type_absolute:
+		return "absolute";
+	case type_fixed:
+		return "fixed";
+	case type_inherit:
+		return "inherit";
 	}
 }

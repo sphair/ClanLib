@@ -115,6 +115,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_FontDescription font_desc;
 		font_desc.set_typeface_name("tahoma");
 		font_desc.set_height(64);
+		font_desc.set_subpixel(false);
 		CL_Font font_large(gc, font_desc);
 
 		font_desc.set_height(30);

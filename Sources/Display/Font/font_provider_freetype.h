@@ -40,19 +40,16 @@ class CL_FontProvider_Freetype : public CL_FontProvider
 {
 /// \name Construction
 /// \{
-
 public:
-
-	CL_FontProvider_Freetype(CL_GraphicContext &gc);
+	CL_FontProvider_Freetype();
 	virtual ~CL_FontProvider_Freetype();
 
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns information about the current font.
-	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics();
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	CL_Font_TextureGlyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
@@ -60,7 +57,6 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Print text on gc.
 	void draw_text(CL_GraphicContext &gc, float xpos, float ypos, const CL_StringRef &text, const CL_Colorf &color);
@@ -86,16 +82,11 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	void free_font();
 
 	CL_FontEngine_Freetype *font_engine;
 
 	CL_GlyphCache glyph_cache;
-
 /// \}
 };
-
-
-

@@ -27,8 +27,8 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_vertical_align.h"
-#include "css_box_line_height.h"
+#include "API/CSSLayout/PropertyTypes/css_box_vertical_align.h"
+#include "API/CSSLayout/PropertyTypes/css_box_line_height.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxVerticalAlign::CL_CSSBoxVerticalAlign()
@@ -73,4 +73,34 @@ void CL_CSSBoxVerticalAlign::compute(const CL_CSSBoxVerticalAlign *parent, CL_CS
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxVerticalAlign::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_baseline:
+		return "baseline";
+	case type_sub:
+		return "sub";
+	case type_super:
+		return "super";
+	case type_top:
+		return "top";
+	case type_text_top:
+		return "text-top";
+	case type_middle:
+		return "middle";
+	case type_bottom:
+		return "bottom";
+	case type_text_bottom:
+		return "text-bottom";
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_length:
+		return length.to_string();
+	case type_inherit:
+		return "inherit";
+	}
 }

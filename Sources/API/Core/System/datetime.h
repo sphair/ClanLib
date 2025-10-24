@@ -34,7 +34,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 
 /// \brief Date/Time class.
 ///
@@ -62,10 +62,10 @@ public:
 	static CL_DateTime get_current_utc_time();
 
 	/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in the local time zone.
-	static CL_DateTime get_local_time_from_ticks(cl_int64 ticks);
+	static CL_DateTime get_local_time_from_ticks(cl_long ticks);
 
 	/// \brief Converts a time tick value (number of 100-nanosecond intervals since January 1, 1601 UTC) to a date time in UTC.
-	static CL_DateTime get_utc_time_from_ticks(cl_int64 ticks);
+	static CL_DateTime get_utc_time_from_ticks(cl_long ticks);
 
 	static CL_DateTime from_short_date_string(const CL_String &value);
 
@@ -120,7 +120,7 @@ public:
 	CL_DateTime to_local() const;
 
 	/// \brief Converts the date to the number of 100-nanosecond intervals since January 1, 1601 UTC.
-	cl_int64 to_ticks() const;
+	cl_long to_ticks() const;
 
 	/// \brief Mon Mar 3 2007
 	CL_String to_long_date_string() const;
@@ -163,7 +163,7 @@ private:
 	unsigned int nanoseconds;
 
 	TimeZone timezone;
-	static const cl_int64 ticks_from_1601_to_1900;
+	static const cl_long ticks_from_1601_to_1900;
 /// \}
 };
 /// \}

@@ -111,7 +111,7 @@ void CL_Collada_Mesh_Impl::load_triangles(CL_DomElement &mesh_element, std::vect
 
 bool CL_Collada_Mesh::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 void CL_Collada_Mesh::create_vertices(CL_Vec3f *destination, int stride, const CL_String &semantic, std::vector<CL_Collada_Triangles> &surface_list)

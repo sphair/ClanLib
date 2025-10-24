@@ -56,7 +56,7 @@ CL_PrimitivesArray::~CL_PrimitivesArray()
 
 void CL_PrimitivesArray::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("is null");
 }
 

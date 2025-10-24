@@ -56,13 +56,13 @@ CL_SoundBuffer_Session::~CL_SoundBuffer_Session()
 
 void CL_SoundBuffer_Session::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_SoundBuffer_Session is null");
 }
 
 int CL_SoundBuffer_Session::get_position() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		return impl->provider_session->get_position();
@@ -75,7 +75,7 @@ int CL_SoundBuffer_Session::get_position() const
 
 float CL_SoundBuffer_Session::get_position_relative() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		int position = impl->provider_session->get_position();
@@ -91,7 +91,7 @@ float CL_SoundBuffer_Session::get_position_relative() const
 
 int CL_SoundBuffer_Session::get_length() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		return impl->provider_session->get_num_samples();
@@ -104,7 +104,7 @@ int CL_SoundBuffer_Session::get_length() const
 
 int CL_SoundBuffer_Session::get_frequency() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		return impl->frequency;
 	}
@@ -116,7 +116,7 @@ int CL_SoundBuffer_Session::get_frequency() const
 
 float CL_SoundBuffer_Session::get_volume() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		return impl->volume;
@@ -129,7 +129,7 @@ float CL_SoundBuffer_Session::get_volume() const
 
 float CL_SoundBuffer_Session::get_pan() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		return impl->pan;
@@ -142,7 +142,7 @@ float CL_SoundBuffer_Session::get_pan() const
 
 bool CL_SoundBuffer_Session::get_looping() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		return impl->looping;
 	}
@@ -154,7 +154,7 @@ bool CL_SoundBuffer_Session::get_looping() const
 
 bool CL_SoundBuffer_Session::is_playing()
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		return impl->playing;
@@ -170,7 +170,7 @@ bool CL_SoundBuffer_Session::is_playing()
 
 bool CL_SoundBuffer_Session::set_position(int new_pos)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		if (impl->provider_session->set_position(new_pos))
@@ -188,7 +188,7 @@ bool CL_SoundBuffer_Session::set_position(int new_pos)
 
 bool CL_SoundBuffer_Session::set_end_position(int new_pos)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		if (impl->provider_session->set_end_position(new_pos))
@@ -206,7 +206,7 @@ bool CL_SoundBuffer_Session::set_end_position(int new_pos)
 
 bool CL_SoundBuffer_Session::set_position_relative(float new_pos)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		int length = get_length();
 		return set_position((int) (new_pos * length));
@@ -219,25 +219,25 @@ bool CL_SoundBuffer_Session::set_position_relative(float new_pos)
 
 void CL_SoundBuffer_Session::set_volume(float new_volume)
 {
-	if (!impl.is_null())
+	if (impl)
 		impl->volume = new_volume;
 }
 
 void CL_SoundBuffer_Session::set_frequency(int new_frequency)
 {
-	if (!impl.is_null())
+	if (impl)
 		impl->frequency = new_frequency;
 }
 
 void CL_SoundBuffer_Session::set_pan(float new_pan)
 {
-	if (!impl.is_null())
+	if (impl)
 		impl->pan = new_pan;
 }
 
 void CL_SoundBuffer_Session::play()
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		if (impl->playing) return;
@@ -252,7 +252,7 @@ void CL_SoundBuffer_Session::play()
 
 void CL_SoundBuffer_Session::stop()
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		if (!impl->playing) return;
@@ -266,7 +266,7 @@ void CL_SoundBuffer_Session::stop()
 
 void CL_SoundBuffer_Session::set_looping(bool loop)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->looping = loop;
@@ -276,7 +276,7 @@ void CL_SoundBuffer_Session::set_looping(bool loop)
 
 void CL_SoundBuffer_Session::add_filter(CL_SoundFilter &filter)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->filters.push_back(filter);
@@ -285,7 +285,7 @@ void CL_SoundBuffer_Session::add_filter(CL_SoundFilter &filter)
 
 void CL_SoundBuffer_Session::remove_filter(CL_SoundFilter &filter)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		for (std::vector<CL_SoundFilter>::size_type i=0; i<impl->filters.size(); i++)

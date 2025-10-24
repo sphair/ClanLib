@@ -30,6 +30,7 @@
 
 
 #include "API/Core/System/sharedptr.h"
+#include "API/Core/System/thread_local_storage.h"
 #include <map>
 
 class CL_ThreadLocalStorage_Impl
@@ -49,7 +50,7 @@ private:
 /// \{
 
 public:
-	CL_UnknownSharedPtr get_variable(const CL_StringRef &name);
+	CL_SharedPtr<CL_ThreadLocalStorageData> get_variable(const CL_StringRef &name);
 
 
 /// \}
@@ -57,7 +58,7 @@ public:
 /// \{
 
 public:
-	void set_variable(const CL_StringRef &name, CL_UnknownSharedPtr ptr);
+	void set_variable(const CL_StringRef &name, CL_SharedPtr<CL_ThreadLocalStorageData> ptr);
 
 	void add_reference();
 
@@ -71,7 +72,7 @@ public:
 protected:
 	int reference_count;
 
-	std::map<CL_String, CL_UnknownSharedPtr> data;
+	std::map<CL_String, CL_SharedPtr<CL_ThreadLocalStorageData> > data;
 /// \}
 };
 

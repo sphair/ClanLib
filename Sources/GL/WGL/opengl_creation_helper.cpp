@@ -130,19 +130,19 @@ void CL_OpenGLCreationHelper::set_multisampling_pixel_format(const CL_OpenGLWind
 			std::vector<int> int_attributes;
 
 			int_attributes.push_back(WGL_DRAW_TO_WINDOW);
-			int_attributes.push_back(CL_TRUE);
+			int_attributes.push_back(GL_TRUE);
 			int_attributes.push_back(WGL_ACCELERATION);
 			int_attributes.push_back(WGL_FULL_ACCELERATION);
 
 			if (gldesc.get_doublebuffer())
 			{
 				int_attributes.push_back(WGL_DOUBLE_BUFFER);
-				int_attributes.push_back(CL_TRUE);
+				int_attributes.push_back(GL_TRUE);
 			}
 			if (gldesc.get_stereo())
 			{
 				int_attributes.push_back(WGL_STEREO);
-				int_attributes.push_back(CL_TRUE);
+				int_attributes.push_back(GL_TRUE);
 			}
 
 			int_attributes.push_back(WGL_COLOR_BITS);
@@ -158,7 +158,7 @@ void CL_OpenGLCreationHelper::set_multisampling_pixel_format(const CL_OpenGLWind
 			int_attributes.push_back(gldesc.get_stencil_size());
 
 			int_attributes.push_back(WGL_SAMPLE_BUFFERS);
-			int_attributes.push_back(CL_TRUE);
+			int_attributes.push_back(GL_TRUE);
 			int_attributes.push_back(WGL_SAMPLES);
 			int_attributes.push_back(gldesc.get_multisampling());
 
@@ -177,7 +177,7 @@ void CL_OpenGLCreationHelper::set_multisampling_pixel_format(const CL_OpenGLWind
 	}
 }
 
-HGLRC CL_OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version)
+HGLRC CL_OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const CL_OpenGLWindowDescription &gldesc)
 {
 	set_active();
 	ptr_wglCreateContextAttribsARB wglCreateContextAttribsARB = (ptr_wglCreateContextAttribsARB) wglGetProcAddress("wglCreateContextAttribsARB");
@@ -192,12 +192,25 @@ HGLRC CL_OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int m
 		int_attributes.push_back(major_version);
 		int_attributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
 		int_attributes.push_back(minor_version);
-		//int_attributes.push_back(WGL_CONTEXT_LAYER_PLANE_ARB);
-		//int_attributes.push_back(layer_plane);
-		//int_attributes.push_back(WGL_CONTEXT_FLAGS_ARB);
-		//int_attributes.push_back(flags);
-		//int_attributes.push_back(WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB);
-		//int_attributes.push_back(forward_compatible_bit);
+
+		int_attributes.push_back(0x2093);	// WGL_CONTEXT_LAYER_PLANE_ARB
+		int_attributes.push_back(gldesc.get_layer_plane());
+		int_attributes.push_back(0x2094);	// WGL_CONTEXT_FLAGS_ARB
+		int flags = 0;
+		if (gldesc.get_debug())
+			flags |= 0x1;	// WGL_CONTEXT_DEBUG_BIT_ARB
+		if (gldesc.get_forward_compatible())	// WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+			flags |= 0x2;	
+		int_attributes.push_back(flags);
+
+		int_attributes.push_back(0x9126);	// WGL_CONTEXT_PROFILE_MASK_ARB
+		flags = 0;
+		if (gldesc.get_core_profile())
+			flags |= 0x1;	// WGL_CONTEXT_CORE_PROFILE_BIT_ARB
+		if (gldesc.get_compatibility_profile())	// WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
+			flags |= 0x2;	
+		int_attributes.push_back(flags);
+
 		int_attributes.push_back(0);
 
 		opengl3_context = wglCreateContextAttribsARB(hdc, share_context, &int_attributes[0]);

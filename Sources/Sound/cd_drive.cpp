@@ -52,7 +52,7 @@ std::vector<CL_CDDrive> &CL_CDDrive::get_drives()
 
 void CL_CDDrive::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_CDDrive is null");
 }
 

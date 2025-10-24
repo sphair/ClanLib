@@ -44,6 +44,7 @@ public:
 	void clear();
 	void create(const CL_DomNode &node);
 	void set_root_element(CL_CSSBoxElement *new_root_element);
+	void set_html_body_element(CL_CSSBoxElement *new_html_body_element);
 	void prepare(CL_CSSResourceCache *resource_cache);
 	void apply_properties(CL_CSSBoxElement *node, const CL_CSSPropertyList2 &properties);
 	void set_selection(CL_CSSBoxNode *start, size_t start_text_offset, CL_CSSBoxNode *end, size_t end_text_offset);
@@ -51,6 +52,8 @@ public:
 	CL_CSSDocument2 css;
 	CL_CSSBoxElement *get_root_element() { return root_element; }
 	const CL_CSSBoxElement *get_root_element() const { return root_element; }
+	CL_CSSBoxElement *get_html_body_element() { return html_body_element; }
+	const CL_CSSBoxElement *get_html_body_element() const { return html_body_element; }
 
 private:
 	void clean(CL_CSSBoxNode *node = 0);
@@ -58,12 +61,14 @@ private:
 	void create_pseudo_element(CL_CSSBoxElement *box_element, const CL_DomElement &dom_element, const CL_String &pseudo_element);
 	CL_CSSBoxProperties get_css_properties(const CL_DomElement &element, const CL_String &pseudo_element = CL_String());
 	void compute_element(CL_CSSBoxElement *element, CL_CSSResourceCache *resource_cache);
+	void propagate_html_body();
 	void create_anonymous_blocks(CL_CSSBoxElement *element, CL_CSSResourceCache *resource_cache);
-	void filter_table(CL_CSSBoxElement * element, CL_CSSResourceCache *resource_cache);
+	void filter_table(CL_CSSResourceCache *resource_cache);
 	void convert_run_in_blocks(CL_CSSBoxElement *element);
-	void apply_selection(CL_CSSBoxNode *node, CL_CSSBoxNode *start, size_t start_offset, CL_CSSBoxNode *end, size_t end_offset, bool clear, bool in_selection = false);
+	void apply_selection(CL_CSSBoxNode *start, size_t start_offset, CL_CSSBoxNode *end, size_t end_offset, bool clear);
 
 	CL_CSSBoxElement *root_element;
+	CL_CSSBoxElement *html_body_element;
 	CL_CSSPropertyParsers property_parsers;
 	CL_CSSBoxNode *selection_start;
 	CL_CSSBoxNode *selection_end;

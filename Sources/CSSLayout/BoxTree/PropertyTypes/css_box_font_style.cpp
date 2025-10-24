@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_font_style.h"
+#include "API/CSSLayout/PropertyTypes/css_box_font_style.h"
 
 CL_CSSBoxFontStyle::CL_CSSBoxFontStyle()
 : type(type_inherit)
@@ -42,5 +42,21 @@ void CL_CSSBoxFontStyle::compute(const CL_CSSBoxFontStyle *parent, CL_CSSResourc
 			type = parent->type;
 		else
 			type = type_normal;
+	}
+}
+
+CL_String CL_CSSBoxFontStyle::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_italic:
+		return "italic";
+	case type_oblique:
+		return "oblique";
+	case type_inherit:
+		return "inherit";
 	}
 }

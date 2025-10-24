@@ -42,7 +42,7 @@
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/gui_theme.h"
 #include "gui_font_cache.h"
-#include "gui_theme_layout_manager.h"
+#include "Theme/gui_theme_layout_manager.h"
 #include <vector>
 #include <map>
 
@@ -120,7 +120,7 @@ public:
 
 	std::vector<CL_GUITopLevelWindow *> root_components;
 	CL_Signal_v1<CL_GUIMessage &> sig_filter_message;
-	CL_Callback_1<int, bool> func_exec_handler;
+	CL_Callback_0<int> func_exec_handler;
 	CL_CSSDocument css_document;
 	CL_GUIThemeLayoutManager layout_manager;
 
@@ -131,7 +131,7 @@ public:
 	bool exit_flag;
 	int exit_code;
 	CL_AcceleratorTable accel_table;
-	CL_UnknownSharedPtr userdata;
+	//CL_UnknownSharedPtr userdata;
 	CL_GUIWindowManagerSite wm_site;
 	CL_Callback_v1<CL_GUITopLevelWindow *> func_focus_lost;
 	CL_Callback_v1<CL_GUITopLevelWindow *> func_focus_gained;

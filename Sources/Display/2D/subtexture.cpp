@@ -73,7 +73,7 @@ CL_Subtexture::~CL_Subtexture()
 
 void CL_Subtexture::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_Subtexture is null");
 }
 

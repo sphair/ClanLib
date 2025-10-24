@@ -34,9 +34,22 @@ class CL_API_CSSLAYOUT CL_DomSelectNode : public CL_CSSSelectNode2
 {
 public:
 	CL_DomSelectNode(const CL_DomElement &element);
-	CL_CSSSelectNode2 *get_parent();
-	CL_CSSSelectNode2 *get_prev_sibling();
+	bool parent();
+	bool prev_sibling();
+	void push();
+	void pop();
+
+	CL_String name();
+	CL_String lang();
+	CL_String id();
+	std::vector<CL_String> element_classes();
+	std::vector<CL_String> pseudo_classes();
+	CL_String get_attribute_value(const CL_String &name, bool &out_found);
+	int child_index();
 
 private:
 	CL_DomElement dom_element;
+	CL_DomElement pos;
+	bool is_modified;
+	std::vector<CL_DomElement> saved_elements;
 };

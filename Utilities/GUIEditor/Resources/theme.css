@@ -96,10 +96,31 @@ lineedit.properties
 
 lineedit.properties:disabled
 {
-    text-color:gray;
-    bg-color:#f4f4f4;
+	text-color:gray;
+	bg-color:#f4f4f4;
 }
 
+textedit.properties
+{
+	bg-image:;
+	bg-color:white;
+	preferred-height:22;
+
+	padding-left:4;
+	padding-right:16;
+	
+	border-color:gray;
+	border-left:1;
+	border-bottom:1;
+	border-right:1;
+	border-top:1;
+}
+
+textedit.properties:disabled
+{
+	text-color:gray;
+	bg-color:#f4f4f4;
+}
 
 checkbox.properties
 {

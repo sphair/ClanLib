@@ -67,7 +67,7 @@ void Client::request_end_turn()
 
 void Client::exec()
 {
-	CL_AutoPtr<LoginView> dlg_connect(new LoginView(this));
+	std::auto_ptr<LoginView> dlg_connect(new LoginView(this));
 	while (true)
 	{
 		if (dlg_connect->exec() == 0)

@@ -29,22 +29,18 @@
 #include "Core/precomp.h"
 #include "API/Core/IOData/directory.h"
 #include "API/Core/IOData/directory_scanner.h"
-#include "API/Core/Text/string_format.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/System/system.h"
 
 #ifdef __MINGW32__
 #define _WIN32_IE 0x0500
-#endif
-#if defined(WIN32)
-#include <shlobj.h>
-#if defined(_MSC_VER)
-#pragma comment(lib, "shell32.lib")
-#endif
 #endif
 
 #ifndef WIN32
 #include <unistd.h>
 #include <cstdio>
+#include <pwd.h>
 
 #ifndef PATH_MAX
 #define PATH_MAX	256	// TODO: Fixme - Paths should not have a limit
@@ -54,17 +50,15 @@
 #define MAX_PATH PATH_MAX
 #endif
 #else
-#include <direct.h>
-#ifndef chdir
-#define _chdir chdir
-#endif
+#include <shlobj.h>
+
 #ifndef MAX_PATH
-#define _MAX_PATH MAX_PATH
+#define MAX_PATH _MAX_PATH
 #endif
-#if defined UNICODE && !defined _UNICODE
-#define _UNICODE
+
+#ifdef _MSC_VER
+#pragma comment(lib, "shell32.lib")
 #endif
-#include <tchar.h>
 #endif
 
 #ifdef __BORLANDC__
@@ -74,160 +68,114 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <cstdlib>
-
 /////////////////////////////////////////////////////////////////////////////
 // Operations
 
-bool CL_Directory::create(const CL_String &dir_name)
+bool CL_Directory::create(const CL_StringRef &dir_name, bool recursive)
 {
 	if (dir_name.empty())
 		return false;
 
-	// this will be a full path
-	CL_String full_path; // calculate the full path
+	CL_String full_path = CL_PathHelp::add_trailing_slash(dir_name);
 
-	#ifdef WIN32
-		DWORD buff_len = ::GetFullPathName(CL_StringHelp::utf8_to_ucs2(dir_name).c_str(), 0, 0, 0);
-
-		if (buff_len == 0)
-			// can't calculate, return bad status
-			return false;
-		else
+	if (recursive)
+	{
+		for (CL_String::size_type pos = full_path.find_first_of("\\/"); pos != CL_String::npos; pos = full_path.find_first_of("\\/", pos + 1))
 		{
-			std::vector<TCHAR> buffer_vector;
-			buffer_vector.resize(buff_len + 1);
-			TCHAR *buffer = &(buffer_vector[0]);
-			TCHAR *buffer_ptr_to_filename = 0;
-			// Obtaining full path
-			buff_len = ::GetFullPathName(CL_StringHelp::utf8_to_ucs2(dir_name).c_str(), buff_len, buffer, &buffer_ptr_to_filename);
-			if (buff_len == 0)
-				// can't obtain full path, return bad status
-				return false;
-			else
-				// ok, save it
-				full_path = buffer;
-		}
-	#else
-		// TODO: add here Linux version of GetFullPathName
-		full_path = dir_name;
-	#endif
-
+			CL_String path = full_path.substr(0, pos);
 #ifdef WIN32
-		return ::CreateDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str(), NULL) != 0;
+			BOOL result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(path).c_str(), NULL);
+			if (!result)
+				return false;
 #else
-		return ::mkdir(full_path.c_str(), 0755) == 0;
+			int result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+			if (result)
+				return false;
 #endif
+		}
+	}
+	else
+	{
+#ifdef WIN32
+		BOOL result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str(), NULL);
+		if (!result)
+			return false;
+#else
+		int result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+		if (result)
+			return false;
+#endif
+	}
+	return true;
 }
 
-bool CL_Directory::remove(const CL_String &dir_name, bool delete_files, bool delete_sub_directories)
+bool CL_Directory::remove(const CL_StringRef &dir_name, bool delete_files, bool delete_sub_directories)
 {
 	if (dir_name.empty())
 		return false;
 
-	// this will be a full path
-	CL_String full_path;
+	CL_String full_path = CL_PathHelp::add_trailing_slash(dir_name);
 
-	// calculate the full path
-	#ifdef WIN32
-		DWORD buff_len = ::GetFullPathName(CL_StringHelp::utf8_to_ucs2(dir_name).c_str(), 0, 0, 0);
-
-		if (buff_len == 0)
-			// can't calculate, return bad status
-			return false;
-		else
-		{
-			std::vector<TCHAR> buffer_vector;
-			buffer_vector.resize(buff_len + 1);
-			TCHAR *buffer = &(buffer_vector[0]);
-			TCHAR *buffer_ptr_to_filename = 0;
-			// Obtaining full path
-			buff_len = ::GetFullPathName(CL_StringHelp::utf8_to_ucs2(dir_name).c_str(), buff_len, buffer, &buffer_ptr_to_filename);
-			if (buff_len == 0)
-				// can't obtaing full path, return bad status
-				return false;
-			else
-				// ok, save it
-				full_path = buffer;
-		}
-	#else
-		// TODO: add here Linux version of GetFullPathName
-		full_path = dir_name;
-	#endif
-
-	// This scope needed for deleting directiory at end of function,
-	// because scanner lock current dir :(
+	if (delete_files || delete_sub_directories)
 	{
 		CL_DirectoryScanner scanner;
 
 		if (!scanner.scan(full_path))
-			// can't even start scaning
 			return false;
 
-		// FIXME: probably bug in directory_scanner, it return ""
-		// for first file :(
-		if (scanner.next())
-		while(true)
+		bool scan_successful = scanner.next();
+		while (scan_successful)
 		{
-			// If found sub_directory, try remove it,
-			// also checking for "." and "..", because they are unremovable
-			if (scanner.is_directory() && delete_sub_directories &&
-				scanner.get_name() != "." && scanner.get_name() != "..")
+			// if found subdirectory, try remove it, also checking for "." and "..", because they are unremovable
+			if (scanner.is_directory() && delete_sub_directories && scanner.get_name() != "." && scanner.get_name() != "..")
 			{
-				// FIXME: directory_scanner lock directory, so it can't be
-				// removed, this is workaround
+				// FIXME: directory scanner locks directory, so it can't be removed, this is workaround
 				CL_String sub_dir_path = scanner.get_pathname();
-				bool scann_successfull = scanner.next();
+				scan_successful = scanner.next();
 
-				// delete files in sub_directory
-				if (!CL_Directory::remove(sub_dir_path.c_str(),
-							  delete_files,
-							  delete_sub_directories))
+				// delete files in subdirectory
+				if (!CL_Directory::remove(sub_dir_path, delete_files, delete_sub_directories))
 					return false;
-
-				if (!scann_successfull)
-					break;
-				else
-					continue;
+			}
+			else if (!scanner.is_directory() && delete_files)
+			{
+#ifdef WIN32
+				if (DeleteFile(CL_StringHelp::utf8_to_ucs2(scanner.get_pathname()).c_str()) == 0)
+					return false;
+#else
+				if (::remove(scanner.get_pathname().c_str()) != 0)
+					return false;
+#endif
+				scan_successful = scanner.next();
 			}
 			else
 			{
-				// Check for deleting file (or whatever is not directory),
-				// if this is allowed
-				if (delete_files && !scanner.is_directory())
-				{
-					// delete a file
-					#ifdef WIN32
-						if (::DeleteFile(CL_StringHelp::utf8_to_ucs2(scanner.get_pathname()).c_str()) == 0)
-							return false;
-					#else
-						if (::remove(scanner.get_pathname().c_str()) != 0)
-							return false;
-					#endif
-					if (!scanner.next())
-						break;
-				}
-				// This is for "." and ".."
-				else
-				{
-					if (!scanner.next())
-						break;
-				}
+				scan_successful = scanner.next();
 			}
 		}
 	}
-	// Finaly remove the directory (or sub_directory if in recursion)
-	#ifdef WIN32
-		return ::RemoveDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str()) != 0;
-	#else
-		return ::rmdir(full_path.c_str()) == 0;
-	#endif
+
+	// finally remove the directory (or subdirectory if in recursion)
+#ifdef WIN32
+	return RemoveDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str()) != 0;
+#else
+	return rmdir(full_path.c_str()) == 0;
+#endif
 }
 
-bool CL_Directory::set_current(const CL_String &dir_name)
+bool CL_Directory::rename(const CL_StringRef &old_name, const CL_StringRef &new_name)
 {
 #ifdef WIN32
-	return SetCurrentDirectory(CL_StringHelp::utf8_to_ucs2(dir_name).c_str()) == TRUE;
+	return MoveFile(CL_StringHelp::utf8_to_ucs2(old_name).c_str(), CL_StringHelp::utf8_to_ucs2(new_name).c_str()) != 0;
+#else
+	return ::rename(old_name.c_str(), new_name.c_str()) == 0;
+#endif
+}
+
+bool CL_Directory::set_current(const CL_StringRef &dir_name)
+{
+#ifdef WIN32
+	return SetCurrentDirectory(CL_StringHelp::utf8_to_ucs2(dir_name).c_str()) != 0;
 #else
 	return chdir(dir_name.c_str()) == 0;
 #endif
@@ -236,139 +184,101 @@ bool CL_Directory::set_current(const CL_String &dir_name)
 CL_String CL_Directory::get_current()
 {
 #ifdef WIN32
-	TCHAR cwd_buffer[MAX_PATH];
-#ifdef _CRT_INSECURE_DEPRECATE
-	if (_tgetcwd(cwd_buffer, MAX_PATH) == NULL)
-		throw CL_Exception("Working dir is more than legal length !");
-#else
-	if (_tgetcwd(cwd_buffer, MAX_PATH) == NULL)
-		throw CL_Exception("Working dir is more than legal length !");
-#endif
+	DWORD len = GetCurrentDirectory(0, NULL);
+	if (len == 0)
+		throw CL_Exception("GetCurrentDirectory failed!");
+
+	std::vector<TCHAR> path(len);
+	if (GetCurrentDirectory(len, &path[0]) == 0)
+		throw CL_Exception("GetCurrentDirectory failed!");
+	return CL_StringHelp::ucs2_to_utf8(&path[0]);
 #else
 	char cwd_buffer[MAX_PATH];
 	if (getcwd(cwd_buffer, MAX_PATH) == NULL)
 		throw CL_Exception("Working dir is more than legal length !");
-#endif
 	return cwd_buffer;
+#endif
 }
 
 CL_String CL_Directory::get_appdata(const CL_StringRef &company_name, const CL_StringRef &application_name, const CL_StringRef &version, bool create_dirs_if_missing)
 {
+	CL_String configuration_path;
+
 #if defined(WIN32)
 	TCHAR app_data[MAX_PATH];
-	if (FAILED(SHGetFolderPath(0, CSIDL_APPDATA, 0, SHGFP_TYPE_DEFAULT, app_data)))
+	if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 		throw CL_Exception("SHGetFolderPath failed!");
-	CL_String configuration_path = cl_format("%1\\%2\\%3\\%4\\", app_data, company_name, application_name, version);
-	if (create_dirs_if_missing)
-	{
-		CL_String::size_type prevPos = 0;
-		while (true)
-		{
-			CL_String::size_type pos = configuration_path.find_first_of("\\/", prevPos);
-			if (pos == CL_String::npos)
-				break;
-
-			CL_StringRef folder = configuration_path.substr(0, pos);
-			CreateDirectory(CL_StringHelp::utf8_to_ucs2(folder).c_str(), 0);
-
-			prevPos = pos + 1;
-		}
-	}
-	return configuration_path;
+	configuration_path = CL_PathHelp::add_trailing_slash(CL_StringHelp::ucs2_to_utf8(app_data));
 #elif defined(__APPLE__)
 	throw CL_Exception("Congratulations, you got the task to implement CL_Directory::get_appdata on this platform.");
 #else
-	const char *home_dir = getenv("HOME");
-	if (home_dir == NULL)
-		throw CL_Exception("Cannot object $HOME environment variable");
-
-	if (!create_dirs_if_missing)
-	{
-		return cl_format("%1/.%2/%3/%4/", home_dir, company_name, application_name, version);
-	}
-
-	struct stat stFileInfo;
-	CL_String name( cl_format("%1/.%2", home_dir, company_name) );
-
-	if (stat(name.c_str(), &stFileInfo))
-	{
-		if (::mkdir(name.c_str(), 0755))
-			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
-	}
-
-	name = cl_format("%1/%2", name, application_name);
-	if (stat(name.c_str(), &stFileInfo))
-	{
-		if (::mkdir(name.c_str(), 0755))
-			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
-	}
-
-	name = cl_format("%1/%2", name, version);
-	if (stat(name.c_str(), &stFileInfo))
-	{
-		if (::mkdir(name.c_str(), 0755))
-			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
-	}
-
-	name = cl_format("%1/", name);
-	return name;
+	struct passwd *pwd = getpwuid(getuid());
+	if (pwd == NULL || pwd->pw_dir == NULL)
+		throw CL_Exception("getpwuid failed!");
+	configuration_path = CL_PathHelp::add_trailing_slash(pwd->pw_dir) + ".";
 #endif
+
+	if (!company_name.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(company_name);
+	if (!application_name.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(application_name);
+	if (!version.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(version);
+
+	if (create_dirs_if_missing)
+		create(configuration_path, true);
+
+	return configuration_path;
 }
 
 CL_String CL_Directory::get_local_appdata(const CL_StringRef &company_name, const CL_StringRef &application_name, const CL_StringRef &version, bool create_dirs_if_missing)
 {
+	CL_String configuration_path;
+
 #if defined(WIN32)
 	TCHAR app_data[MAX_PATH];
-	if (FAILED(SHGetFolderPath(0, CSIDL_LOCAL_APPDATA, 0, SHGFP_TYPE_DEFAULT, app_data)))
+	if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, app_data)))
 		throw CL_Exception("SHGetFolderPath failed!");
-	CL_String configuration_path = cl_format("%1\\%2\\%3\\%4\\", app_data, company_name, application_name, version);
-	if (create_dirs_if_missing)
-	{
-		CL_String::size_type prevPos = 0;
-		while (true)
-		{
-			CL_String::size_type pos = configuration_path.find_first_of("\\/", prevPos);
-			if (pos == CL_String::npos)
-				break;
-
-			CL_StringRef folder = configuration_path.substr(0, pos);
-			CreateDirectory(CL_StringHelp::utf8_to_ucs2(folder).c_str(), 0);
-
-			prevPos = pos + 1;
-		}
-	}
-	return configuration_path;
+	configuration_path = CL_PathHelp::add_trailing_slash(CL_StringHelp::ucs2_to_utf8(app_data));
 #elif defined(__APPLE__)
 	throw CL_Exception("Congratulations, you got the task to implement CL_Directory::get_local_appdata on this platform.");
 #else
 	return get_appdata(company_name, application_name, version, create_dirs_if_missing);
 #endif
+
+	if (!company_name.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(company_name);
+	if (!application_name.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(application_name);
+	if (!version.empty())
+		configuration_path += CL_PathHelp::add_trailing_slash(version);
+
+	if (create_dirs_if_missing)
+		create(configuration_path, true);
+
+	return configuration_path;
 }
 
-CL_String CL_Directory::get_resourcedata(const CL_StringRef &application_name)
+CL_String CL_Directory::get_resourcedata(const CL_StringRef &application_name, const CL_StringRef &data_dir_name)
 {
 #if defined(WIN32)
-	TCHAR exe_filename[MAX_PATH];
-	DWORD result = GetModuleFileName(0, exe_filename, MAX_PATH);
-	if (result == 0 || result == MAX_PATH)
-		throw CL_Exception("GetModuleFileName failed!");
-	TCHAR drive[MAX_PATH], dir[MAX_PATH], filename[MAX_PATH], extension[MAX_PATH];
-	#ifdef _CRT_INSECURE_DEPRECATE
-		_tsplitpath_s(exe_filename, drive, MAX_PATH, dir, MAX_PATH, filename, MAX_PATH, extension, MAX_PATH);
-	#else
-		_tsplitpath(exe_filename, drive, dir, filename, extension);
-	#endif
-	return cl_format("%1%2Resources\\", drive, dir);
+	CL_String exe_path = CL_System::get_exe_path();
+	if (!data_dir_name.empty())
+		exe_path += data_dir_name + '\\';
+	return exe_path;
 #elif defined(__APPLE__)
 	throw CL_Exception("Congratulations, you got the task to implement CL_Directory::get_resourcedata on this platform.");
 #else
-	//TODO: 
-	/// In Linux, this function will return the directory "../share/application_name/"
-	///    relative to the executable, so if it is located in "/usr/bin" it will return
-	///    "/usr/share/application_name/"
-	/// (Assuming that is correct!)
+	CL_String exe_path = CL_System::get_exe_path();
+	if (exe_path.length() > 1)
+	{
+		CL_String::size_type pos = exe_path.rfind('/', exe_path.length() - 2);
+		if (pos != CL_String::npos)
+			return exe_path.substr(0, pos + 1) + "share/" + application_name + '/';
+	}
 
-	return "Resources/";
+	if (!data_dir_name.empty())
+		exe_path += data_dir_name + '/';
+	return exe_path;
 #endif
 }
-

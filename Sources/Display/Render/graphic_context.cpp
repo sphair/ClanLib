@@ -72,7 +72,7 @@ CL_GraphicContext::~CL_GraphicContext()
 
 void CL_GraphicContext::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_GraphicContext is null");
 }
 
@@ -154,7 +154,7 @@ CL_Size CL_GraphicContext::get_max_texture_size() const
 
 CL_GraphicContextProvider *CL_GraphicContext::get_provider()
 {
-	if (!impl.is_null())
+	if (impl)
 		return impl->provider;
 	else
 		return 0;
@@ -162,7 +162,7 @@ CL_GraphicContextProvider *CL_GraphicContext::get_provider()
 
 const CL_GraphicContextProvider * const CL_GraphicContext::get_provider() const
 {
-	if (!impl.is_null())
+	if (impl)
 		return impl->provider;
 	else
 		return 0;
@@ -171,14 +171,14 @@ const CL_GraphicContextProvider * const CL_GraphicContext::get_provider() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext Operations:
 
-CL_GraphicContext CL_GraphicContext::create_worker_gc()
+CL_PixelBuffer CL_GraphicContext::get_pixeldata(const CL_Rect &rect, CL_TextureFormat pixel_format, bool clamp) const
 {
-	return impl->provider->create_worker_gc();
+	return impl->provider->get_pixeldata(rect, pixel_format, clamp);
 }
 
-CL_PixelBuffer CL_GraphicContext::get_pixeldata(const CL_Rect &rect) const
+CL_PixelBuffer CL_GraphicContext::get_pixeldata(CL_TextureFormat pixel_format, bool clamp) const
 {
-	return impl->provider->get_pixeldata(rect);
+	return impl->provider->get_pixeldata(CL_Rect(0,0,0,0), pixel_format, clamp);
 }
 
 void CL_GraphicContext::set_texture(int unit_index, const CL_Texture &texture)
@@ -342,13 +342,13 @@ void CL_GraphicContext::draw_primitives(CL_PrimitivesType type, int num_vertices
 		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
-	impl->provider->draw_primitives(type, num_vertices, prim_array.impl);
+	impl->provider->draw_primitives(type, num_vertices, prim_array.impl.get());
 }
 
 void CL_GraphicContext::set_primitives_array(const CL_PrimitivesArray &prim_array)
 {
 	impl->flush_batcher(*this);
-	impl->provider->set_primitives_array(prim_array.impl);
+	impl->provider->set_primitives_array(prim_array.impl.get());
 }
 
 void CL_GraphicContext::draw_primitives_array(CL_PrimitivesType type, int num_vertices)
@@ -417,6 +417,39 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 	impl->provider->draw_primitives_elements(type, count, indices);
 }
 
+void CL_GraphicContext::draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count)
+{
+	impl->flush_batcher(*this);
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+	impl->provider->draw_primitives_elements_instanced(type, count, indices, instance_count);
+}
+
+void CL_GraphicContext::draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count)
+{
+	impl->flush_batcher(*this);
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+	impl->provider->draw_primitives_elements_instanced(type, count, indices, instance_count);
+}
+
+void CL_GraphicContext::draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count)
+{
+	impl->flush_batcher(*this);
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+	impl->provider->draw_primitives_elements_instanced(type, count, indices, instance_count);
+}
+
 void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &elements_array, CL_VertexAttributeDataType indices_type, void *offset)
 {
 	impl->flush_batcher(*this);
@@ -426,6 +459,17 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_elements(type, count, elements_array.get_provider(), indices_type, offset);
+}
+
+void CL_GraphicContext::draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &elements_array, CL_VertexAttributeDataType indices_type, void *offset, int instance_count)
+{
+	impl->flush_batcher(*this);
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+	impl->provider->draw_primitives_elements_instanced(type, count, elements_array.get_provider(), indices_type, offset, instance_count);
 }
 
 void CL_GraphicContext::reset_primitives_array()

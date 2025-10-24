@@ -161,7 +161,7 @@ CL_Collada_Effect_Texture &CL_Collada_Effect_ColorTexture::get_texture()
 
 bool CL_Collada_Effect_ColorTexture::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
 

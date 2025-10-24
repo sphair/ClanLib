@@ -44,8 +44,6 @@ std::vector<CL_ClanImageStretch::ImagePart> CL_ClanImageStretch::calc_stretch_im
 {
 	int src_width = sprite.get_width();
 	int src_height = sprite.get_height();
-	int dest_width = dest.get_width();
-	int dest_height = dest.get_height();
 
 	int src_grid_x[4];
 	int src_grid_y[4];

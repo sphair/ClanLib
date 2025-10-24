@@ -30,7 +30,7 @@
 #include "soundoutput_oss.h"
 #include <API/Core/System/exception.h>
 #include "API/Core/System/system.h"
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/Text/logger.h"
 #include <unistd.h>
 #include <fcntl.h>
@@ -159,9 +159,9 @@ void CL_SoundOutput_OSS::write_fragment(float *data)
 {
 
 	// OSS Cannot handle floats (why!)
-	std::vector<cl_int16> buffer;
+	std::vector<cl_short> buffer;
 	buffer.resize(frag_size);
-	cl_int16 *bptr = &buffer[0];
+	cl_short *bptr = &buffer[0];
 	for (int cnt=0; cnt<frag_size; cnt++)
 	{
 		*(bptr++) = (int) ( *(data++) * 32767.0f );

@@ -30,7 +30,7 @@
 #include "hsv_sprite_batch.h"
 
 HSVSpriteBatch::HSVSpriteBatch(CL_GraphicContext &gc)
-: fill_position(0), texture_group(gc, CL_Size(256, 256)), program(create_shader_program(gc))
+: fill_position(0), texture_group(CL_Size(256, 256)), program(create_shader_program(gc))
 {
 }
 

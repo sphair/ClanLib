@@ -185,8 +185,8 @@ void CL_DisplayMessageQueue_Win32::remove_client(CL_Win32Window *window)
 
 CL_SharedPtr<CL_DisplayMessageQueue_Win32::ThreadData> CL_DisplayMessageQueue_Win32::get_thread_data()
 {
-	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_Win32::thread_data"));
-	if (data.is_null())
+	CL_SharedPtr<ThreadData> data = cl_dynamic_pointer_cast<ThreadData>(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_Win32::thread_data"));
+	if (!data)
 	{
 		data = CL_SharedPtr<ThreadData>(new ThreadData);
 		CL_ThreadLocalStorage::set_variable("CL_DisplayMessageQueue_Win32::thread_data", data);

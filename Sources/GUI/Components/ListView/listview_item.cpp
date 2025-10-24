@@ -67,13 +67,13 @@ CL_ListViewItem::~CL_ListViewItem()
 
 void CL_ListViewItem::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ListViewItem is null");
 }
 
 bool CL_ListViewItem::is_item() const
 {
-	return !impl.is_null();
+	return impl ? true : false;
 }
 
 CL_ListViewColumnData CL_ListViewItem::get_column(const CL_StringRef &column_id)
@@ -90,7 +90,7 @@ CL_ListViewColumnData CL_ListViewItem::get_column(const CL_StringRef &column_id)
 
 CL_ListViewItem CL_ListViewItem::get_parent()
 {
-	return CL_ListViewItem(impl->parent);
+	return CL_ListViewItem(impl->parent.lock());
 }
 
 CL_ListViewItem CL_ListViewItem::get_next_sibling()
@@ -104,7 +104,7 @@ CL_ListViewItem CL_ListViewItem::get_next_sibling()
 CL_ListViewItem CL_ListViewItem::get_prev_sibling()
 {
 	if (impl)
-		return CL_ListViewItem(impl->prev_sibling);
+		return CL_ListViewItem(impl->prev_sibling.lock());
 
 	return CL_ListViewItem();
 }
@@ -119,7 +119,7 @@ CL_ListViewItem CL_ListViewItem::get_first_child()
 CL_ListViewItem CL_ListViewItem::get_last_child()
 {
 	if (impl)
-		return CL_ListViewItem(impl->last_child);
+		return CL_ListViewItem(impl->last_child.lock());
 	return CL_ListViewItem();
 }
 
@@ -140,7 +140,7 @@ bool CL_ListViewItem::is_selected() const
 
 bool CL_ListViewItem::has_children() const
 {
-	return !impl->first_child.is_null();
+	return impl->first_child ? true : false;;
 }
 
 int CL_ListViewItem::get_parent_count()
@@ -196,7 +196,7 @@ std::vector<int> CL_ListViewItem::get_overlay_icons()
 	return impl->overlay_icons;
 }
 
-CL_UnknownSharedPtr CL_ListViewItem::get_userdata() const
+CL_SharedPtr<CL_ListViewItemUserData> CL_ListViewItem::get_userdata() const
 {
 	return impl->userdata;
 }
@@ -221,9 +221,9 @@ CL_ListViewItem CL_ListViewItem::append_child(CL_ListViewItem &item)
 	{
 		item.impl->parent = impl;
 
-		if (!impl->last_child.is_null())
+		if (!impl->last_child.expired())
 		{
-			impl->last_child->next_sibling = item.impl;
+			impl->last_child.lock()->next_sibling = item.impl;
 			item.impl->prev_sibling = impl->last_child;
 			impl->last_child = item.impl;		
 		}
@@ -269,7 +269,7 @@ CL_ListViewItem CL_ListViewItem::remove()
 
 		if (parent.impl->first_child)
 		{
-			if (parent.impl->first_child->next_sibling.is_null())
+			if (!parent.impl->first_child->next_sibling)
 				parent.impl->last_child = parent.impl->first_child;
 		}
 		else
@@ -362,7 +362,7 @@ void CL_ListViewItem::remove_overlay_icon(int icon_index)
 	}
 }
 
-void CL_ListViewItem::set_userdata(CL_UnknownSharedPtr ptr)
+void CL_ListViewItem::set_userdata(CL_SharedPtr<CL_ListViewItemUserData> ptr)
 {
 	impl->userdata = ptr;
 }
@@ -397,9 +397,9 @@ CL_ListViewItem_Impl *CL_ListViewItem_Impl::get_root_parent()
 
 	while (item)
 	{
-		if (item->parent.is_null())
+		if (item->parent.expired())
 			return item;
-		item = item->parent;
+		item = item->parent.lock().get();
 	}
 
 	return 0;

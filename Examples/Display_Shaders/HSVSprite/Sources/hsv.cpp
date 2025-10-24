@@ -40,6 +40,7 @@ int HSV::start(const std::vector<CL_String> &args)
 {
 	CL_DisplayWindow window("ClanLib HSV Sprite", 1024, 768);
 	CL_Slot slot = window.sig_window_close().connect(this, &HSV::on_close);
+	CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &HSV::on_input_up);
 	CL_GraphicContext gc = window.get_gc();
 	CL_InputContext ic = window.get_ic();
 
@@ -51,16 +52,22 @@ int HSV::start(const std::vector<CL_String> &args)
 	HSVSprite *cars[] = { &car1, &car2 };
 
 	unsigned int last_fps_update = CL_System::get_time();
+	unsigned int last_time = last_fps_update;
+
 	int fps = 0;
 	CL_String fps_text;
 
 	float hue_offset = 0.0;
 	while (!quit)
 	{
+		unsigned int current_time = CL_System::get_time();
+		float time_delta_ms = static_cast<float> (current_time - last_time);
+		last_time = current_time;
+
 		if (ic.get_keyboard().get_keycode(CL_KEY_LEFT))
-			hue_offset += 0.005f;
+			hue_offset += 0.0005f * time_delta_ms;
 		else if (ic.get_keyboard().get_keycode(CL_KEY_RIGHT))
-			hue_offset -= 0.005f;
+			hue_offset -= 0.0005f * time_delta_ms;
 		if (hue_offset < -1.0f)
 			hue_offset += 1.0f;
 		if (hue_offset > 1.0f)
@@ -92,6 +99,7 @@ int HSV::start(const std::vector<CL_String> &args)
 
 		CL_Size fps_size = font.get_text_size(gc, fps_text);
 		font.draw_text(gc, gc.get_width()-10-fps_size.width, 16, fps_text);
+		font.draw_text(gc, 32, 730, "Use cursor keys left and right");
 
 		window.flip(0);
 		CL_KeepAlive::process();
@@ -104,3 +112,13 @@ void HSV::on_close()
 {
 	quit = true;
 }
+
+void HSV::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
+{
+	if(key.id == CL_KEY_ESCAPE)
+	{
+		quit = true;
+	}
+}
+
+

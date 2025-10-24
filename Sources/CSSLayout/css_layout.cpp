@@ -36,6 +36,7 @@
 #include "BoxTree/css_box_text.h"
 #include "BoxTree/css_box_object.h"
 #include "LayoutTree/css_layout_hit_test_result.h"
+#include "LayoutTree/css_layout_graphics.h"
 #include "css_layout_impl.h"
 #include "css_layout_node_impl.h"
 
@@ -47,21 +48,26 @@ CL_CSSLayout::CL_CSSLayout()
 
 bool CL_CSSLayout::is_null() const
 {
-	return impl.is_null() || impl->box_tree.get_root_element() == 0;
+	return !impl || impl->box_tree.get_root_element() == 0;
 }
 
-void CL_CSSLayout::layout(CL_GraphicContext &gc, const CL_Size &viewport)
+void CL_CSSLayout::layout(CL_GraphicContext &gc, const CL_Rect &viewport)
 {
 	impl->throw_if_disposed();
+
+	CL_CSSLayoutGraphics graphics(gc, &impl->resource_cache, impl->viewport);
 	impl->box_tree.prepare(&impl->resource_cache);
 	impl->layout_tree.create(impl->box_tree.get_root_element());
-	impl->layout_tree.layout(gc, &impl->resource_cache, viewport);
+	impl->layout_tree.layout(&graphics, &impl->resource_cache, viewport.get_size());
+	impl->viewport = viewport;
 }
 
-void CL_CSSLayout::render(CL_GraphicContext &gc)
+void CL_CSSLayout::render_impl(CL_GraphicContext &gc, CL_UniquePtr<ClipWrapper> wrapper)
 {
 	impl->throw_if_disposed();
-	impl->layout_tree.render(gc, &impl->resource_cache);
+
+	CL_CSSLayoutGraphics graphics(gc, &impl->resource_cache, impl->viewport, wrapper.get());
+	impl->layout_tree.render(&graphics, &impl->resource_cache);
 }
 
 void CL_CSSLayout::clear_selection()
@@ -86,7 +92,8 @@ void CL_CSSLayout::set_selection(CL_CSSLayoutNode start, size_t start_text_offse
 CL_CSSHitTestResult CL_CSSLayout::hit_test(CL_GraphicContext &gc, const CL_Point &pos)
 {
 	impl->throw_if_disposed();
-	CL_CSSLayoutHitTestResult result = impl->layout_tree.hit_test(pos);
+	CL_CSSLayoutGraphics graphics(gc, &impl->resource_cache, impl->viewport);
+	CL_CSSLayoutHitTestResult result = impl->layout_tree.hit_test(&graphics, &impl->resource_cache, pos);
 	if (result.node)
 	{
 		CL_CSSHitTestResult result2;
@@ -112,6 +119,7 @@ CL_CSSHitTestResult CL_CSSLayout::hit_test(CL_GraphicContext &gc, const CL_Point
 			break;
 		}
 		result2.node = impl->get_node(result.node);
+		result2.text_offset = result.text_offset;
 		return result2;
 	}
 	else
@@ -161,6 +169,30 @@ CL_CSSLayoutElement CL_CSSLayout::get_root_element()
 	}
 }
 
+void CL_CSSLayout::set_html_body_element(CL_CSSLayoutElement element)
+{
+	impl->throw_if_disposed();
+	impl->clear();
+	if (!element.is_null() && element.get_parent().is_null())
+		impl->box_tree.set_html_body_element(static_cast<CL_CSSBoxElement*>(element.impl->box_node));
+}
+
+CL_CSSLayoutElement CL_CSSLayout::get_html_body_element()
+{
+	impl->throw_if_disposed();
+	CL_CSSBoxElement *html_body = impl->box_tree.get_html_body_element();
+	if (html_body)
+	{
+		CL_SharedPtr<CL_CSSLayoutNode_Impl> node_impl = impl->alloc_node_impl();
+		node_impl->box_node = html_body;
+		return CL_CSSLayoutNode(node_impl).to_element();
+	}
+	else
+	{
+		return CL_CSSLayoutElement();
+	}
+}
+
 CL_CSSLayoutObject CL_CSSLayout::create_object()
 {
 	impl->throw_if_disposed();
@@ -193,32 +225,30 @@ CL_CSSLayoutElement CL_CSSLayout::find_element(const CL_String &name)
 {
 	if (!get_root_element().is_null())
 	{
-		std::vector<CL_CSSLayoutElement> stack;
+		std::vector<CL_CSSLayoutNode> stack;
 		stack.push_back(get_root_element());
 		while (!stack.empty())
 		{
-			if (stack.back().get_name() == name)
-				return stack.back();
+			if (stack.back().is_element() && stack.back().to_element().get_name() == name)
+				return stack.back().to_element();
 
 			CL_CSSLayoutNode next = stack.back().get_first_child();
-			if (next.is_element())
+			if (!next.is_null())
 			{
-				stack.push_back(next.to_element());
+				stack.push_back(next);
 			}
 			else
 			{
 				while (!stack.empty())
 				{
 					next = stack.back().get_next_sibling();
-					while (!next.is_null() && !next.is_element())
-						next = stack.back().get_next_sibling();
 					if (next.is_null())
 					{
 						stack.pop_back();
 					}
 					else
 					{
-						stack.back() = next.to_element();
+						stack.back() = next;
 						break;
 					}
 				}
@@ -230,6 +260,11 @@ CL_CSSLayoutElement CL_CSSLayout::find_element(const CL_String &name)
 	{
 		return CL_CSSLayoutElement();
 	}
+}
+
+CL_Callback_2<CL_Image, CL_GraphicContext &, const CL_String &> &CL_CSSLayout::func_get_image()
+{
+	return impl->resource_cache.cb_get_image;
 }
 
 CL_CSSLayout::CL_CSSLayout(CL_SharedPtr<CL_CSSLayout_Impl> impl)
@@ -257,12 +292,12 @@ CL_SharedPtr<CL_CSSLayoutNode_Impl> CL_CSSLayout_Impl::alloc_node_impl() const
 		node_impl = free_node_impls.back();
 		free_node_impls.pop_back();
 	}
-	return CL_SharedPtr<CL_CSSLayoutNode_Impl>(node_impl, (CL_CSSLayout_Impl*)this, &CL_CSSLayout_Impl::free_node_impl);
+	return CL_SharedPtr<CL_CSSLayoutNode_Impl>(node_impl, NodeImplDeleter(this));
 }
 
 void CL_CSSLayout_Impl::free_node_impl(CL_CSSLayoutNode_Impl *node_impl)
 {
-	if (!node_impl->layout_impl.is_null())
+	if (!node_impl->layout_impl.expired())
 		free_node_impls.push_back(node_impl);
 	else
 		delete node_impl;
@@ -296,5 +331,5 @@ CL_CSSLayoutNode CL_CSSLayout_Impl::get_node(CL_CSSBoxNode *box_node) const
 CL_CSSLayout CL_CSSLayout_Impl::get_layout()
 {
 	throw_if_disposed();
-	return CL_CSSLayout(self);
+	return CL_CSSLayout(CL_SharedPtr<CL_CSSLayout_Impl>(self));
 }

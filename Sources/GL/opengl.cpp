@@ -43,38 +43,39 @@
 #include <map>
 
 #ifdef __APPLE__
-#include <AGL/agl.h>
-#include <OpenGL/gl.h>
+#include "AGL/opengl_window_provider_agl.h"
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
 #else
 #include <GL/gl.h>
 #endif
 
-#ifndef WIN32
-#ifdef __APPLE__
-#include <AGL/agl.h>
-#include <Carbon/Carbon.h>
-#else
+#if !defined(WIN32) && !defined(__APPLE__)
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
-#endif
 #endif
 
 CL_GLFunctions *CL_OpenGL::functions = 0;
 
+int CL_OpenGL::opengl_version_major = 0;
+int CL_OpenGL::opengl_version_minor = 0;
+int CL_OpenGL::glsl_version_major = 0;
+int CL_OpenGL::glsl_version_minor = 0;
+
 void CL_OpenGL::check_error()
 {
-	CLenum last_error = clGetError();
-	if (last_error != CL_NO_ERROR)
+	GLenum last_error = glGetError();
+	if (last_error != GL_NO_ERROR)
 	{
 		switch (last_error)
 		{
-			case CL_INVALID_ENUM:
+			case GL_INVALID_ENUM:
 				throw CL_Exception("CL_INVALID_ENUM - An unacceptable value is specified for an enumerated argument.");
-			case CL_INVALID_VALUE:
+			case GL_INVALID_VALUE:
 				throw CL_Exception("CL_INVALID_VALUE - A numeric argument is out of range.");
-			case CL_INVALID_OPERATION:
+			case GL_INVALID_OPERATION:
 				throw CL_Exception("CL_INVALID_OPERATION - The specified operation is not allowed in the current state");
-			case CL_OUT_OF_MEMORY:
+			case GL_OUT_OF_MEMORY:
 				throw CL_Exception("CL_OUT_OF_MEMORY - There is not enough memory left to execute the command");
 			default:
 				throw CL_Exception(cl_format("Unknown OpenGL Error - %1", last_error));
@@ -163,129 +164,177 @@ int CL_OpenGL::get_textureformat_bits(CL_TextureFormat format)
 }
 
 
-void CL_OpenGL::to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format)
+void CL_OpenGL::to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
 {
+#ifdef __APPLE__
+    
+    // OpenGL ES 2 only supports a very limited set of formats
+    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
+    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
+	switch (format)
+	{
+		case cl_rgb: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8ui: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgba: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8ui: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		default:
+			throw CL_Exception("Unsupported CL_TextureFormat");
+    }
+    
+    
+#else
+    
 	switch (format)
 	{
 	// base internal format
-		case cl_depth_component: gl_internal_format = CL_DEPTH_COMPONENT; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_stencil: gl_internal_format = CL_DEPTH_STENCIL; gl_pixel_format = CL_DEPTH_STENCIL; break;
-		case cl_red: gl_internal_format = CL_RED; gl_pixel_format = CL_RED; break;
-		case cl_green: gl_internal_format = CL_GREEN; gl_pixel_format = CL_GREEN; break;
-		case cl_blue: gl_internal_format = CL_BLUE; gl_pixel_format = CL_BLUE; break;
-		case cl_rg: gl_internal_format = CL_RG; gl_pixel_format = CL_RG; break;
-		case cl_rgb: gl_internal_format = CL_RGB; gl_pixel_format = CL_RGB; break;
-		case cl_rgba: gl_internal_format = CL_RGBA; gl_pixel_format = CL_RGBA; break;
-		case cl_bgr: gl_internal_format = CL_BGR; gl_pixel_format = CL_BGR; break;
-		case cl_bgra: gl_internal_format = CL_BGRA; gl_pixel_format = CL_BGRA; break;
-		case cl_red_integer: gl_internal_format = CL_RED_INTEGER; gl_pixel_format = CL_RED_INTEGER; break;
-		case cl_green_integer: gl_internal_format = CL_GREEN_INTEGER; gl_pixel_format = CL_GREEN_INTEGER; break;
-		case cl_blue_integer: gl_internal_format = CL_BLUE_INTEGER; gl_pixel_format = CL_BLUE_INTEGER; break;
-		case cl_rg_integer: gl_internal_format = CL_RG_INTEGER; gl_pixel_format = CL_RG_INTEGER; break;
-		case cl_rgb_integer: gl_internal_format = CL_RGB_INTEGER; gl_pixel_format = CL_RGB_INTEGER; break;
-		case cl_rgba_integer: gl_internal_format = CL_RGBA_INTEGER; gl_pixel_format = CL_RGBA_INTEGER; break;
-		case cl_bgr_integer: gl_internal_format = CL_BGR_INTEGER; gl_pixel_format = CL_BGR_INTEGER; break;
-		case cl_bgra_integer: gl_internal_format = CL_BGRA_INTEGER; gl_pixel_format = CL_BGRA_INTEGER; break;
+		case cl_depth_component: gl_internal_format = GL_DEPTH_COMPONENT; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_stencil: gl_internal_format = GL_DEPTH_STENCIL; gl_pixel_format = GL_DEPTH_STENCIL; break;
+		case cl_red: gl_internal_format = GL_RED; gl_pixel_format = GL_RED; break;
+		case cl_green: gl_internal_format = GL_GREEN; gl_pixel_format = GL_GREEN; break;
+		case cl_blue: gl_internal_format = GL_BLUE; gl_pixel_format = GL_BLUE; break;
+		case cl_rg: gl_internal_format = GL_RG; gl_pixel_format = GL_RG; break;
+		case cl_rgb: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgba: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_bgr: gl_internal_format = GL_BGR; gl_pixel_format = GL_BGR; break;
+		case cl_bgra: gl_internal_format = GL_BGRA; gl_pixel_format = GL_BGRA; break;
+		case cl_red_integer: gl_internal_format = GL_RED_INTEGER; gl_pixel_format = GL_RED_INTEGER; break;
+		case cl_green_integer: gl_internal_format = GL_GREEN_INTEGER; gl_pixel_format = GL_GREEN_INTEGER; break;
+		case cl_blue_integer: gl_internal_format = GL_BLUE_INTEGER; gl_pixel_format = GL_BLUE_INTEGER; break;
+		case cl_rg_integer: gl_internal_format = GL_RG_INTEGER; gl_pixel_format = GL_RG_INTEGER; break;
+		case cl_rgb_integer: gl_internal_format = GL_RGB_INTEGER; gl_pixel_format = GL_RGB_INTEGER; break;
+		case cl_rgba_integer: gl_internal_format = GL_RGBA_INTEGER; gl_pixel_format = GL_RGBA_INTEGER; break;
+		case cl_bgr_integer: gl_internal_format = GL_BGR_INTEGER; gl_pixel_format = GL_BGR_INTEGER; break;
+		case cl_bgra_integer: gl_internal_format = GL_BGRA_INTEGER; gl_pixel_format = GL_BGRA_INTEGER; break;
 
 		// TODO: Should this really be here?
-		case cl_stencil_index: gl_internal_format = CL_STENCIL_INDEX; gl_pixel_format = CL_STENCIL_INDEX; break;
+		case cl_stencil_index: gl_internal_format = GL_STENCIL_INDEX; gl_pixel_format = GL_STENCIL_INDEX; break;
 
 	// sized internal format
 
 		// TODO: Should this really be here?
-		case cl_stencil_index1: gl_internal_format = CL_STENCIL_INDEX1; gl_pixel_format = CL_STENCIL_INDEX; break;
-		case cl_stencil_index4: gl_internal_format = CL_STENCIL_INDEX4; gl_pixel_format = CL_STENCIL_INDEX; break;
-		case cl_stencil_index8: gl_internal_format = CL_STENCIL_INDEX8; gl_pixel_format = CL_STENCIL_INDEX; break;
-		case cl_stencil_index16: gl_internal_format = CL_STENCIL_INDEX16; gl_pixel_format = CL_STENCIL_INDEX; break;
+		case cl_stencil_index1: gl_internal_format = GL_STENCIL_INDEX1; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index4: gl_internal_format = GL_STENCIL_INDEX4; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index8: gl_internal_format = GL_STENCIL_INDEX8; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index16: gl_internal_format = GL_STENCIL_INDEX16; gl_pixel_format = GL_STENCIL_INDEX; break;
 
-		case cl_r8: gl_internal_format = CL_R8; gl_pixel_format = CL_RED; break;
-		case cl_r8_snorm: gl_internal_format = CL_R8_SNORM; gl_pixel_format = CL_RED; break;
-		case cl_r16: gl_internal_format = CL_R16; gl_pixel_format = CL_RED; break;
-		case cl_r16_snorm: gl_internal_format = CL_R16_SNORM; gl_pixel_format = CL_RED; break;
-		case cl_rg8: gl_internal_format = CL_RG8; gl_pixel_format = CL_RG; break;
-		case cl_rg8_snorm: gl_internal_format = CL_RG8_SNORM; gl_pixel_format = CL_RG; break;
-		case cl_rg16: gl_internal_format = CL_RG16; gl_pixel_format = CL_RG; break;
-		case cl_rg16_snorm: gl_internal_format = CL_RG16_SNORM; gl_pixel_format = CL_RG; break;
-		case cl_r3_g3_b2: gl_internal_format = CL_R3_G3_B2; gl_pixel_format = CL_RGB; break;
-		case cl_rgb4: gl_internal_format = CL_RGB4; gl_pixel_format = CL_RGB; break;
-		case cl_rgb5: gl_internal_format = CL_RGB5; gl_pixel_format = CL_RGB; break;
-		case cl_rgb8: gl_internal_format = CL_RGB8; gl_pixel_format = CL_RGB; break;
-		case cl_rgb10: gl_internal_format = CL_RGB10; gl_pixel_format = CL_RGB; break;
-		case cl_rgb12: gl_internal_format = CL_RGB12; gl_pixel_format = CL_RGB; break;
-		case cl_rgb16: gl_internal_format = CL_RGB16; gl_pixel_format = CL_RGB; break;
-		case cl_rgb16_snorm: gl_internal_format = CL_RGB16_SNORM; gl_pixel_format = CL_RGB; break;
-		case cl_rgba2: gl_internal_format = CL_RGBA2; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba4: gl_internal_format = CL_RGBA4; gl_pixel_format = CL_RGBA; break;
-		case cl_rgb5_a1: gl_internal_format = CL_RGB5_A1; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba8: gl_internal_format = CL_RGBA8; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba8_snorm: gl_internal_format = CL_RGBA8_SNORM; gl_pixel_format = CL_RGBA; break;
-		case cl_rgb10_a2: gl_internal_format = CL_RGB10_A2; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba12: gl_internal_format = CL_RGBA12; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba16: gl_internal_format = CL_RGBA16; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba16_snorm: gl_internal_format = CL_RGBA16_SNORM; gl_pixel_format = CL_RGBA; break;
-		case cl_srgb8: gl_internal_format = CL_SRGB8; gl_pixel_format = CL_RGB; break;
-		case cl_srgb8_alpha8: gl_internal_format = CL_SRGB8_ALPHA8; gl_pixel_format = CL_RGBA; break;
-		case cl_r16f: gl_internal_format = CL_R16F; gl_pixel_format = CL_RED; break;
-		case cl_rg16f: gl_internal_format = CL_RG16F; gl_pixel_format = CL_RG; break;
-		case cl_rgb16f: gl_internal_format = CL_RGB16F; gl_pixel_format = CL_RGB; break;
-		case cl_rgba16f: gl_internal_format = CL_RGBA16F; gl_pixel_format = CL_RGBA; break;
-		case cl_r32f: gl_internal_format = CL_R32F; gl_pixel_format = CL_RED; break;
-		case cl_rg32f: gl_internal_format = CL_RG32F; gl_pixel_format = CL_RG; break;
-		case cl_rgb32f: gl_internal_format = CL_RGB32F; gl_pixel_format = CL_RGB; break;
-		case cl_rgba32f: gl_internal_format = CL_RGBA32F; gl_pixel_format = CL_RGBA; break;
-		case cl_r11f_g11f_b10f: gl_internal_format = CL_R11F_G11F_B10F; gl_pixel_format = CL_RGB; break;
-		case cl_rgb9_e5: gl_internal_format = CL_RGB9_E5; gl_pixel_format = CL_RGB; break;
-		case cl_r8i: gl_internal_format = CL_R8I; gl_pixel_format = CL_RED; break;
-		case cl_r8ui: gl_internal_format = CL_R8UI; gl_pixel_format = CL_RED; break;
-		case cl_r16i: gl_internal_format = CL_R16I; gl_pixel_format = CL_RED; break;
-		case cl_r16ui: gl_internal_format = CL_R16UI; gl_pixel_format = CL_RED; break;
-		case cl_r32i: gl_internal_format = CL_R32I; gl_pixel_format = CL_RED; break;
-		case cl_r32ui: gl_internal_format = CL_R32UI; gl_pixel_format = CL_RED; break;
-		case cl_rg8i: gl_internal_format = CL_RG8I; gl_pixel_format = CL_RG; break;
-		case cl_rg8ui: gl_internal_format = CL_RG8UI; gl_pixel_format = CL_RG; break;
-		case cl_rg16i: gl_internal_format = CL_RG16I; gl_pixel_format = CL_RG; break;
-		case cl_rg16ui: gl_internal_format = CL_RG16UI; gl_pixel_format = CL_RG; break;
-		case cl_rg32i: gl_internal_format = CL_RG32I; gl_pixel_format = CL_RG; break;
-		case cl_rg32ui: gl_internal_format = CL_RG32UI; gl_pixel_format = CL_RG; break;
-		case cl_rgb8i: gl_internal_format = CL_RGB8I; gl_pixel_format = CL_RGB; break;
-		case cl_rgb8ui: gl_internal_format = CL_RGB8UI; gl_pixel_format = CL_RGB; break;
-		case cl_rgb16i: gl_internal_format = CL_RGB16I; gl_pixel_format = CL_RGB; break;
-		case cl_rgb16ui: gl_internal_format = CL_RGB16UI; gl_pixel_format = CL_RGB; break;
-		case cl_rgb32i: gl_internal_format = CL_RGB32I; gl_pixel_format = CL_RGB; break;
-		case cl_rgb32ui: gl_internal_format = CL_RGB32UI; gl_pixel_format = CL_RGB; break;
-		case cl_rgba8i: gl_internal_format = CL_RGBA8I; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba8ui: gl_internal_format = CL_RGBA8UI; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba16i: gl_internal_format = CL_RGBA16I; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba16ui: gl_internal_format = CL_RGBA16UI; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba32i: gl_internal_format = CL_RGBA32I; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba32ui: gl_internal_format = CL_RGBA32UI; gl_pixel_format = CL_RGBA; break;
-		case cl_depth_component16: gl_internal_format = CL_DEPTH_COMPONENT16; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_component24: gl_internal_format = CL_DEPTH_COMPONENT24; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_component32: gl_internal_format = CL_DEPTH_COMPONENT32; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_component32f: gl_internal_format = CL_DEPTH_COMPONENT32F; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth24_stencil8: gl_internal_format = CL_DEPTH24_STENCIL8; gl_pixel_format = CL_DEPTH_STENCIL; break;
-		case cl_depth32f_stencil8: gl_internal_format = CL_DEPTH32F_STENCIL8; gl_pixel_format = CL_DEPTH_STENCIL; break;
+		case cl_r8: gl_internal_format = GL_R8; gl_pixel_format = GL_RED; break;
+		case cl_r8_snorm: gl_internal_format = GL_R8_SNORM; gl_pixel_format = GL_RED; break;
+		case cl_r16: gl_internal_format = GL_R16; gl_pixel_format = GL_RED; break;
+		case cl_r16_snorm: gl_internal_format = GL_R16_SNORM; gl_pixel_format = GL_RED; break;
+		case cl_rg8: gl_internal_format = GL_RG8; gl_pixel_format = GL_RG; break;
+		case cl_rg8_snorm: gl_internal_format = GL_RG8_SNORM; gl_pixel_format = GL_RG; break;
+		case cl_rg16: gl_internal_format = GL_RG16; gl_pixel_format = GL_RG; break;
+		case cl_rg16_snorm: gl_internal_format = GL_RG16_SNORM; gl_pixel_format = GL_RG; break;
+		case cl_r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
+		case cl_rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
+		case cl_rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_RGB; break;
+		case cl_rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
+		case cl_rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
+		case cl_rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
+		case cl_rgb16_snorm: gl_internal_format = GL_RGB16_SNORM; gl_pixel_format = GL_RGB; break;
+		case cl_rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
+		case cl_rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8_snorm: gl_internal_format = GL_RGBA8_SNORM; gl_pixel_format = GL_RGBA; break;
+		case cl_rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba16_snorm: gl_internal_format = GL_RGBA16_SNORM; gl_pixel_format = GL_RGBA; break;
+		case cl_srgb8: gl_internal_format = GL_SRGB8; gl_pixel_format = GL_RGB; break;
+		case cl_srgb8_alpha8: gl_internal_format = GL_SRGB8_ALPHA8; gl_pixel_format = GL_RGBA; break;
+		case cl_r16f: gl_internal_format = GL_R16F; gl_pixel_format = GL_RED; break;
+		case cl_rg16f: gl_internal_format = GL_RG16F; gl_pixel_format = GL_RG; break;
+		case cl_rgb16f: gl_internal_format = GL_RGB16F; gl_pixel_format = GL_RGB; break;
+		case cl_rgba16f: gl_internal_format = GL_RGBA16F; gl_pixel_format = GL_RGBA; break;
+		case cl_r32f: gl_internal_format = GL_R32F; gl_pixel_format = GL_RED; break;
+		case cl_rg32f: gl_internal_format = GL_RG32F; gl_pixel_format = GL_RG; break;
+		case cl_rgb32f: gl_internal_format = GL_RGB32F; gl_pixel_format = GL_RGB; break;
+		case cl_rgba32f: gl_internal_format = GL_RGBA32F; gl_pixel_format = GL_RGBA; break;
+		case cl_r11f_g11f_b10f: gl_internal_format = GL_R11F_G11F_B10F; gl_pixel_format = GL_RGB; break;
+		case cl_rgb9_e5: gl_internal_format = GL_RGB9_E5; gl_pixel_format = GL_RGB; break;
+		case cl_r8i: gl_internal_format = GL_R8I; gl_pixel_format = GL_RED; break;
+		case cl_r8ui: gl_internal_format = GL_R8UI; gl_pixel_format = GL_RED; break;
+		case cl_r16i: gl_internal_format = GL_R16I; gl_pixel_format = GL_RED; break;
+		case cl_r16ui: gl_internal_format = GL_R16UI; gl_pixel_format = GL_RED; break;
+		case cl_r32i: gl_internal_format = GL_R32I; gl_pixel_format = GL_RED; break;
+		case cl_r32ui: gl_internal_format = GL_R32UI; gl_pixel_format = GL_RED; break;
+		case cl_rg8i: gl_internal_format = GL_RG8I; gl_pixel_format = GL_RG; break;
+		case cl_rg8ui: gl_internal_format = GL_RG8UI; gl_pixel_format = GL_RG; break;
+		case cl_rg16i: gl_internal_format = GL_RG16I; gl_pixel_format = GL_RG; break;
+		case cl_rg16ui: gl_internal_format = GL_RG16UI; gl_pixel_format = GL_RG; break;
+		case cl_rg32i: gl_internal_format = GL_RG32I; gl_pixel_format = GL_RG; break;
+		case cl_rg32ui: gl_internal_format = GL_RG32UI; gl_pixel_format = GL_RG; break;
+		case cl_rgb8i: gl_internal_format = GL_RGB8I; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8ui: gl_internal_format = GL_RGB8UI; gl_pixel_format = GL_RGB; break;
+		case cl_rgb16i: gl_internal_format = GL_RGB16I; gl_pixel_format = GL_RGB; break;
+		case cl_rgb16ui: gl_internal_format = GL_RGB16UI; gl_pixel_format = GL_RGB; break;
+		case cl_rgb32i: gl_internal_format = GL_RGB32I; gl_pixel_format = GL_RGB; break;
+		case cl_rgb32ui: gl_internal_format = GL_RGB32UI; gl_pixel_format = GL_RGB; break;
+		case cl_rgba8i: gl_internal_format = GL_RGBA8I; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8ui: gl_internal_format = GL_RGBA8UI; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba16i: gl_internal_format = GL_RGBA16I; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba16ui: gl_internal_format = GL_RGBA16UI; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba32i: gl_internal_format = GL_RGBA32I; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba32ui: gl_internal_format = GL_RGBA32UI; gl_pixel_format = GL_RGBA; break;
+		case cl_depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_component32f: gl_internal_format = GL_DEPTH_COMPONENT32F; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth24_stencil8: gl_internal_format = GL_DEPTH24_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+		case cl_depth32f_stencil8: gl_internal_format = GL_DEPTH32F_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
 
-		case cl_compressed_red: gl_internal_format = CL_COMPRESSED_RED; gl_pixel_format = CL_RED; break;
-		case cl_compressed_rg: gl_internal_format = CL_COMPRESSED_RG; gl_pixel_format = CL_RG; break;
-		case cl_compressed_rgb: gl_internal_format = CL_COMPRESSED_RGB; gl_pixel_format = CL_RGB; break;
-		case cl_compressed_rgba: gl_internal_format = CL_COMPRESSED_RGBA; gl_pixel_format = CL_RGBA; break;
-		case cl_compressed_srgb: gl_internal_format = CL_COMPRESSED_SRGB; gl_pixel_format = CL_RGB; break;
-		case cl_compressed_srgb_alpha: gl_internal_format = CL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = CL_RGBA; break;
-		case cl_compressed_red_rgtc1: gl_internal_format = CL_COMPRESSED_RED_RGTC1; gl_pixel_format = CL_RED; break;
-		case cl_compressed_signed_red_rgtc1: gl_internal_format = CL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = CL_RED; break;
-		case cl_compressed_rg_rgtc2: gl_internal_format = CL_COMPRESSED_RG_RGTC2; gl_pixel_format = CL_RG; break;
-		case cl_compressed_signed_rg_rgtc2: gl_internal_format = CL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = CL_RG; break;
+		case cl_compressed_red: gl_internal_format = GL_COMPRESSED_RED; gl_pixel_format = GL_RED; break;
+		case cl_compressed_rg: gl_internal_format = GL_COMPRESSED_RG; gl_pixel_format = GL_RG; break;
+		case cl_compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_compressed_srgb: gl_internal_format = GL_COMPRESSED_SRGB; gl_pixel_format = GL_RGB; break;
+		case cl_compressed_srgb_alpha: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = GL_RGBA; break;
+		case cl_compressed_red_rgtc1: gl_internal_format = GL_COMPRESSED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		case cl_compressed_signed_red_rgtc1: gl_internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		case cl_compressed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+		case cl_compressed_signed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = GL_RG; break;
 		default:
 			throw CL_Exception("Unknown CL_TextureFormat");
 	}
-
+#endif
 }
 
-bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &format, CLenum &type)
+bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &format, GLenum &type)
 {
 	bool valid = false;
 
+#ifdef __APPLE__
+    
+    // OpenGL ES 2 only supports a very limited set of formats
+    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
+    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
+	switch (texture_format)
+	{
+		case cl_abgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_bgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+        default:
+            break;
+    }
+    
+    
+#else
+    
 	//TODO: We should really use CL_Endian::is_system_big()
 
 	//TODO: All the formats in this switch are not supported - Maybe they can be
@@ -295,22 +344,22 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_rgba8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_INT_8_8_8_8;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_rgb8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_BGR;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
 			break;
 		}
 		case cl_bgr8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_RGB;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
 			break;
 		}
 		case cl_a1_rgb5: break;
@@ -318,8 +367,8 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_abgr8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_INT_8_8_8_8_REV;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8_REV;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_color_index: break;
@@ -349,29 +398,29 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_r8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_RED;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
 			break;
 		}
 		case cl_r8_snorm:
 		{
 			valid = true;
-			type = CL_BYTE;
-			format = CL_RED;
+			type = GL_BYTE;
+			format = GL_RED;
 			break;
 		}
 		case cl_r16:
 		{
 			valid = true;
-			type = CL_UNSIGNED_SHORT;
-			format = CL_RED;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
 			break;
 		}
 		case cl_r16_snorm:
 		{
 			valid = true;
-			type = CL_SHORT;
-			format = CL_RED;
+			type = GL_SHORT;
+			format = GL_RED;
 			break;
 		}
 		case cl_rg8: break;
@@ -381,8 +430,8 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_r3_g3_b2:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE_3_3_2;
-			format = CL_RGB;
+			type = GL_UNSIGNED_BYTE_3_3_2;
+			format = GL_RGB;
 			break;
 		}
 		case cl_rgb4: break;
@@ -390,8 +439,8 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_rgb8_snorm:
 		{
 			valid = true;
-			type = CL_BYTE;
-			format = CL_BGR;
+			type = GL_BYTE;
+			format = GL_BGR;
 			break;
 		}
 		case cl_rgb10: break;
@@ -402,15 +451,15 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_rgba4:
 		{
 			valid = true;
-			type = CL_UNSIGNED_SHORT_4_4_4_4;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_4_4_4_4;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_rgb5_a1:
 		{
 			valid = true;
-			type = CL_UNSIGNED_SHORT_5_5_5_1;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_5_5_5_1;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_rgba8_snorm: break;
@@ -421,43 +470,49 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_srgb8:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_BGR;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
 			break;
 		}
 		case cl_srgb8_alpha8: break;
 		case cl_r16f:
 		{
 			valid = true;
-			type = CL_HALF_FLOAT;
-			format = CL_RED;
+			type = GL_HALF_FLOAT;
+			format = GL_RED;
 			break;
 		}
 		case cl_rg16f: break;
 		case cl_rgb16f: break;
-		case cl_rgba16f: break;
+		case cl_rgba16f:
+		{
+			valid = true;
+			type = GL_HALF_FLOAT;
+			format = GL_BGRA;
+			break;
+		}
 
 		case cl_r32f:
 		{
 			valid = true;
-			type = CL_FLOAT;
-			format = CL_RED;
+			type = GL_FLOAT;
+			format = GL_RED;
 			break;
 		}
 		case cl_rg32f: break;
 		case cl_rgb32f:
 		{
 			valid = true;
-			type = CL_FLOAT;
-			format = CL_BGR;
+			type = GL_FLOAT;
+			format = GL_RGB;
 			break;
 		}
 		
 		case cl_rgba32f:
 		{
 			valid = true;
-			type = CL_FLOAT;
-			format = CL_BGRA;
+			type = GL_FLOAT;
+			format = GL_RGBA;
 			break;
 		}
 		
@@ -466,43 +521,43 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_r8i:
 		{
 			valid = true;
-			type = CL_BYTE;
-			format = CL_RED;
+			type = GL_BYTE;
+			format = GL_RED;
 			break;
 		}
 		case cl_r8ui:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_RED;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
 			break;
 		}
 		case cl_r16i:
 		{
 			valid = true;
-			type = CL_SHORT;
-			format = CL_RED;
+			type = GL_SHORT;
+			format = GL_RED;
 			break;
 		}
 		case cl_r16ui:
 		{
 			valid = true;
-			type = CL_UNSIGNED_SHORT;
-			format = CL_RED;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
 			break;
 		}
 		case cl_r32i:
 		{
 			valid = true;
-			type = CL_INT;
-			format = CL_RED;
+			type = GL_INT;
+			format = GL_RED;
 			break;
 		}
 		case cl_r32ui:
 		{
 			valid = true;
-			type = CL_UNSIGNED_INT;
-			format = CL_RED;
+			type = GL_UNSIGNED_INT;
+			format = GL_RED;
 			break;
 		}
 		case cl_rg8i: break;
@@ -514,15 +569,15 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_rgb8i:
 		{
 			valid = true;
-			type = CL_BYTE;
-			format = CL_BGR;
+			type = GL_BYTE;
+			format = GL_BGR;
 			break;
 		}
 		case cl_rgb8ui:
 		{
 			valid = true;
-			type = CL_UNSIGNED_BYTE;
-			format = CL_BGR;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
 			break;
 		}
 		case cl_rgb16i: break;
@@ -532,15 +587,15 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_rgba8i:
 		{
 			valid = true;
-			type = CL_UNSIGNED_INT_8_8_8_8;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_rgba8ui:
 		{
 			valid = true;
-			type = CL_UNSIGNED_INT_8_8_8_8;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
 			break;
 		}
 		case cl_rgba16i: break;
@@ -567,9 +622,11 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 
 //	if (valid)
 //	{
-//		CLint gl_internal_format;
+//		GLint gl_internal_format;
 //		to_opengl_textureformat(texture_format, gl_internal_format, format);
 //	}
+    
+#endif
 
 	return valid;
 }
@@ -579,6 +636,8 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 
 #if defined(_MSC_VER)
 #define cl_tls_variable _declspec(thread)
+#elif defined(__APPLE__) // To do: change check to only apply to iOS/ARM target
+#define cl_tls_variable
 #else
 #define cl_tls_variable __thread
 #endif
@@ -635,10 +694,17 @@ bool CL_OpenGL::set_active()
 void CL_OpenGL::set_active(const CL_OpenGLGraphicContextProvider * const gc_provider)
 {
 	// Don't do anything if the supplied graphic context is already active.
+//#ifndef __APPLE__ // temp hack to see if iOS changes the current context behind our back
 	if (gc_provider != cl_active_opengl_gc)
+//#endif
 	{
 		if (gc_provider)
 		{
+			opengl_version_major = gc_provider->get_opengl_version_major();
+			opengl_version_minor = gc_provider->get_opengl_version_minor();
+			glsl_version_major = gc_provider->get_glsl_version_major();
+			glsl_version_minor = gc_provider->get_glsl_version_minor();
+
 			// Make render context associated with graphic context current.
 			gc_provider->get_render_window().make_current();
 
@@ -665,7 +731,7 @@ void CL_OpenGL::set_active(const CL_OpenGLGraphicContextProvider * const gc_prov
 #		if defined(WIN32)
 			wglMakeCurrent(NULL, NULL);
 #		elif defined(__APPLE__)
-			aglMakeCurrent(AGL_NONE, NULL);
+            cl_agl_make_none_current();
 #		else
 			//Note: glX may not even be available. Also glXGetCurrentDisplay() may fail
 			// Hopefully this will not matter!
@@ -988,8 +1054,13 @@ CL_GLFunctions *cl_setup_binds()
 	functions->primitiveRestartIndex = (CL_GLFunctions::ptr_glPrimitiveRestartIndex) cl_get_proc_address_extension("glPrimitiveRestartIndex");
 	functions->getInteger64i_v = (CL_GLFunctions::ptr_glGetInteger64i_v) cl_get_proc_address_extension("glGetInteger64i_v");
 	functions->getBufferParameteri64v = (CL_GLFunctions::ptr_glGetBufferParameteri64v) cl_get_proc_address_extension("glGetBufferParameteri64v");
-	functions->programParameteri = (CL_GLFunctions::ptr_glProgramParameteri) cl_get_proc_address_extension("glProgramParameteri");
 	functions->framebufferTexture = (CL_GLFunctions::ptr_glFramebufferTexture) cl_get_proc_address_extension("glFramebufferTexture");
+	functions->vertexAttribDivisor = (CL_GLFunctions::ptr_glVertexAttribDivisor) cl_get_proc_address_extension("glVertexAttribDivisor");
+	functions->minSampleShading = (CL_GLFunctions::ptr_glMinSampleShading) cl_get_proc_address_extension("glMinSampleShading");
+	functions->blendEquationi = (CL_GLFunctions::ptr_glBlendEquationi) cl_get_proc_address_extension("glBlendEquationi");
+	functions->blendEquationSeparatei = (CL_GLFunctions::ptr_glBlendEquationSeparatei) cl_get_proc_address_extension("glBlendEquationSeparatei");
+	functions->blendFunci = (CL_GLFunctions::ptr_glBlendFunci) cl_get_proc_address_extension("glBlendFunci");
+	functions->blendFuncSeparatei = (CL_GLFunctions::ptr_glBlendFuncSeparatei) cl_get_proc_address_extension("glBlendFuncSeparatei");
 	functions->isRenderbuffer = (CL_GLFunctions::ptr_glIsRenderbuffer) cl_get_proc_address_extension("glIsRenderbuffer");
 	functions->bindRenderbuffer = (CL_GLFunctions::ptr_glBindRenderbuffer) cl_get_proc_address_extension("glBindRenderbuffer");
 	functions->deleteRenderbuffers = (CL_GLFunctions::ptr_glDeleteRenderbuffers) cl_get_proc_address_extension("glDeleteRenderbuffers");
@@ -1040,11 +1111,17 @@ CL_GLFunctions *cl_setup_binds()
 	functions->texImage3DMultisample = (CL_GLFunctions::ptr_glTexImage3DMultisample) cl_get_proc_address_extension("glTexImage3DMultisample");
 	functions->getMultisamplefv = (CL_GLFunctions::ptr_glGetMultisamplefv) cl_get_proc_address_extension("glGetMultisamplefv");
 	functions->sampleMaski = (CL_GLFunctions::ptr_glSampleMaski) cl_get_proc_address_extension("glSampleMaski");
-	functions->blendEquationi = (CL_GLFunctions::ptr_glBlendEquationi) cl_get_proc_address_extension("glBlendEquationi");
-	functions->blendEquationSeparatei = (CL_GLFunctions::ptr_glBlendEquationSeparatei) cl_get_proc_address_extension("glBlendEquationSeparatei");
-	functions->blendFunci = (CL_GLFunctions::ptr_glBlendFunci) cl_get_proc_address_extension("glBlendFunci");
-	functions->blendFuncSeparatei = (CL_GLFunctions::ptr_glBlendFuncSeparatei) cl_get_proc_address_extension("glBlendFuncSeparatei");
-	functions->minSampleShading = (CL_GLFunctions::ptr_glMinSampleShading) cl_get_proc_address_extension("glMinSampleShading");
+	functions->blendEquationiARB = (CL_GLFunctions::ptr_glBlendEquationiARB) cl_get_proc_address_extension("glBlendEquationiARB");
+	functions->blendEquationSeparateiARB = (CL_GLFunctions::ptr_glBlendEquationSeparateiARB) cl_get_proc_address_extension("glBlendEquationSeparateiARB");
+	functions->blendFunciARB = (CL_GLFunctions::ptr_glBlendFunciARB) cl_get_proc_address_extension("glBlendFunciARB");
+	functions->blendFuncSeparateiARB = (CL_GLFunctions::ptr_glBlendFuncSeparateiARB) cl_get_proc_address_extension("glBlendFuncSeparateiARB");
+	functions->minSampleShadingARB = (CL_GLFunctions::ptr_glMinSampleShadingARB) cl_get_proc_address_extension("glMinSampleShadingARB");
+	functions->namedStringARB = (CL_GLFunctions::ptr_glNamedStringARB) cl_get_proc_address_extension("glNamedStringARB");
+	functions->deleteNamedStringARB = (CL_GLFunctions::ptr_glDeleteNamedStringARB) cl_get_proc_address_extension("glDeleteNamedStringARB");
+	functions->compileShaderIncludeARB = (CL_GLFunctions::ptr_glCompileShaderIncludeARB) cl_get_proc_address_extension("glCompileShaderIncludeARB");
+	functions->isNamedStringARB = (CL_GLFunctions::ptr_glIsNamedStringARB) cl_get_proc_address_extension("glIsNamedStringARB");
+	functions->getNamedStringARB = (CL_GLFunctions::ptr_glGetNamedStringARB) cl_get_proc_address_extension("glGetNamedStringARB");
+	functions->getNamedStringivARB = (CL_GLFunctions::ptr_glGetNamedStringivARB) cl_get_proc_address_extension("glGetNamedStringivARB");
 	functions->bindFragDataLocationIndexed = (CL_GLFunctions::ptr_glBindFragDataLocationIndexed) cl_get_proc_address_extension("glBindFragDataLocationIndexed");
 	functions->getFragDataIndex = (CL_GLFunctions::ptr_glGetFragDataIndex) cl_get_proc_address_extension("glGetFragDataIndex");
 	functions->genSamplers = (CL_GLFunctions::ptr_glGenSamplers) cl_get_proc_address_extension("glGenSamplers");
@@ -1060,7 +1137,7 @@ CL_GLFunctions *cl_setup_binds()
 	functions->getSamplerParameteriv = (CL_GLFunctions::ptr_glGetSamplerParameteriv) cl_get_proc_address_extension("glGetSamplerParameteriv");
 	functions->getSamplerParameterIiv = (CL_GLFunctions::ptr_glGetSamplerParameterIiv) cl_get_proc_address_extension("glGetSamplerParameterIiv");
 	functions->getSamplerParameterfv = (CL_GLFunctions::ptr_glGetSamplerParameterfv) cl_get_proc_address_extension("glGetSamplerParameterfv");
-	functions->getSamplerParameterIfv = (CL_GLFunctions::ptr_glGetSamplerParameterIfv) cl_get_proc_address_extension("glGetSamplerParameterIfv");
+	functions->getSamplerParameterIuiv = (CL_GLFunctions::ptr_glGetSamplerParameterIuiv) cl_get_proc_address_extension("glGetSamplerParameterIuiv");
 	functions->queryCounter = (CL_GLFunctions::ptr_glQueryCounter) cl_get_proc_address_extension("glQueryCounter");
 	functions->getQueryObjecti64v = (CL_GLFunctions::ptr_glGetQueryObjecti64v) cl_get_proc_address_extension("glGetQueryObjecti64v");
 	functions->getQueryObjectui64v = (CL_GLFunctions::ptr_glGetQueryObjectui64v) cl_get_proc_address_extension("glGetQueryObjectui64v");
@@ -1122,23 +1199,6 @@ CL_GLFunctions *cl_setup_binds()
 	functions->uniformMatrix4x2dv = (CL_GLFunctions::ptr_glUniformMatrix4x2dv) cl_get_proc_address_extension("glUniformMatrix4x2dv");
 	functions->uniformMatrix4x3dv = (CL_GLFunctions::ptr_glUniformMatrix4x3dv) cl_get_proc_address_extension("glUniformMatrix4x3dv");
 	functions->getUniformdv = (CL_GLFunctions::ptr_glGetUniformdv) cl_get_proc_address_extension("glGetUniformdv");
-	functions->programUniform1dEXT = (CL_GLFunctions::ptr_glProgramUniform1dEXT) cl_get_proc_address_extension("glProgramUniform1dEXT");
-	functions->programUniform2dEXT = (CL_GLFunctions::ptr_glProgramUniform2dEXT) cl_get_proc_address_extension("glProgramUniform2dEXT");
-	functions->programUniform3dEXT = (CL_GLFunctions::ptr_glProgramUniform3dEXT) cl_get_proc_address_extension("glProgramUniform3dEXT");
-	functions->programUniform4dEXT = (CL_GLFunctions::ptr_glProgramUniform4dEXT) cl_get_proc_address_extension("glProgramUniform4dEXT");
-	functions->programUniform1dvEXT = (CL_GLFunctions::ptr_glProgramUniform1dvEXT) cl_get_proc_address_extension("glProgramUniform1dvEXT");
-	functions->programUniform2dvEXT = (CL_GLFunctions::ptr_glProgramUniform2dvEXT) cl_get_proc_address_extension("glProgramUniform2dvEXT");
-	functions->programUniform3dvEXT = (CL_GLFunctions::ptr_glProgramUniform3dvEXT) cl_get_proc_address_extension("glProgramUniform3dvEXT");
-	functions->programUniform4dvEXT = (CL_GLFunctions::ptr_glProgramUniform4dvEXT) cl_get_proc_address_extension("glProgramUniform4dvEXT");
-	functions->programUniformMatrix2dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix2dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix2dvEXT");
-	functions->programUniformMatrix3dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix3dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix3dvEXT");
-	functions->programUniformMatrix4dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix4dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix4dvEXT");
-	functions->programUniformMatrix2x3dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix2x3dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix2x3dvEXT");
-	functions->programUniformMatrix2x4dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix2x4dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix2x4dvEXT");
-	functions->programUniformMatrix3x2dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix3x2dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix3x2dvEXT");
-	functions->programUniformMatrix3x4dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix3x4dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix3x4dvEXT");
-	functions->programUniformMatrix4x2dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix4x2dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix4x2dvEXT");
-	functions->programUniformMatrix4x3dvEXT = (CL_GLFunctions::ptr_glProgramUniformMatrix4x3dvEXT) cl_get_proc_address_extension("glProgramUniformMatrix4x3dvEXT");
 	functions->getSubroutineUniformLocation = (CL_GLFunctions::ptr_glGetSubroutineUniformLocation) cl_get_proc_address_extension("glGetSubroutineUniformLocation");
 	functions->getSubroutineIndex = (CL_GLFunctions::ptr_glGetSubroutineIndex) cl_get_proc_address_extension("glGetSubroutineIndex");
 	functions->getActiveSubroutineUniformiv = (CL_GLFunctions::ptr_glGetActiveSubroutineUniformiv) cl_get_proc_address_extension("glGetActiveSubroutineUniformiv");
@@ -1160,8 +1220,187 @@ CL_GLFunctions *cl_setup_binds()
 	functions->beginQueryIndexed = (CL_GLFunctions::ptr_glBeginQueryIndexed) cl_get_proc_address_extension("glBeginQueryIndexed");
 	functions->endQueryIndexed = (CL_GLFunctions::ptr_glEndQueryIndexed) cl_get_proc_address_extension("glEndQueryIndexed");
 	functions->getQueryIndexediv = (CL_GLFunctions::ptr_glGetQueryIndexediv) cl_get_proc_address_extension("glGetQueryIndexediv");
+	functions->releaseShaderCompiler = (CL_GLFunctions::ptr_glReleaseShaderCompiler) cl_get_proc_address_extension("glReleaseShaderCompiler");
+	functions->shaderBinary = (CL_GLFunctions::ptr_glShaderBinary) cl_get_proc_address_extension("glShaderBinary");
+	functions->getShaderPrecisionFormat = (CL_GLFunctions::ptr_glGetShaderPrecisionFormat) cl_get_proc_address_extension("glGetShaderPrecisionFormat");
+	functions->depthRangef = (CL_GLFunctions::ptr_glDepthRangef) cl_get_proc_address_extension("glDepthRangef");
+	functions->clearDepthf = (CL_GLFunctions::ptr_glClearDepthf) cl_get_proc_address_extension("glClearDepthf");
+	functions->getProgramBinary = (CL_GLFunctions::ptr_glGetProgramBinary) cl_get_proc_address_extension("glGetProgramBinary");
+	functions->programBinary = (CL_GLFunctions::ptr_glProgramBinary) cl_get_proc_address_extension("glProgramBinary");
+	functions->programParameteri = (CL_GLFunctions::ptr_glProgramParameteri) cl_get_proc_address_extension("glProgramParameteri");
+	functions->useProgramStages = (CL_GLFunctions::ptr_glUseProgramStages) cl_get_proc_address_extension("glUseProgramStages");
+	functions->activeShaderProgram = (CL_GLFunctions::ptr_glActiveShaderProgram) cl_get_proc_address_extension("glActiveShaderProgram");
+	functions->createShaderProgramv = (CL_GLFunctions::ptr_glCreateShaderProgramv) cl_get_proc_address_extension("glCreateShaderProgramv");
+	functions->bindProgramPipeline = (CL_GLFunctions::ptr_glBindProgramPipeline) cl_get_proc_address_extension("glBindProgramPipeline");
+	functions->deleteProgramPipelines = (CL_GLFunctions::ptr_glDeleteProgramPipelines) cl_get_proc_address_extension("glDeleteProgramPipelines");
+	functions->genProgramPipelines = (CL_GLFunctions::ptr_glGenProgramPipelines) cl_get_proc_address_extension("glGenProgramPipelines");
+	functions->isProgramPipeline = (CL_GLFunctions::ptr_glIsProgramPipeline) cl_get_proc_address_extension("glIsProgramPipeline");
+	functions->getProgramPipelineiv = (CL_GLFunctions::ptr_glGetProgramPipelineiv) cl_get_proc_address_extension("glGetProgramPipelineiv");
+	functions->programUniform1i = (CL_GLFunctions::ptr_glProgramUniform1i) cl_get_proc_address_extension("glProgramUniform1i");
+	functions->programUniform1iv = (CL_GLFunctions::ptr_glProgramUniform1iv) cl_get_proc_address_extension("glProgramUniform1iv");
+	functions->programUniform1f = (CL_GLFunctions::ptr_glProgramUniform1f) cl_get_proc_address_extension("glProgramUniform1f");
+	functions->programUniform1fv = (CL_GLFunctions::ptr_glProgramUniform1fv) cl_get_proc_address_extension("glProgramUniform1fv");
+	functions->programUniform1d = (CL_GLFunctions::ptr_glProgramUniform1d) cl_get_proc_address_extension("glProgramUniform1d");
+	functions->programUniform1dv = (CL_GLFunctions::ptr_glProgramUniform1dv) cl_get_proc_address_extension("glProgramUniform1dv");
+	functions->programUniform1ui = (CL_GLFunctions::ptr_glProgramUniform1ui) cl_get_proc_address_extension("glProgramUniform1ui");
+	functions->programUniform1uiv = (CL_GLFunctions::ptr_glProgramUniform1uiv) cl_get_proc_address_extension("glProgramUniform1uiv");
+	functions->programUniform2i = (CL_GLFunctions::ptr_glProgramUniform2i) cl_get_proc_address_extension("glProgramUniform2i");
+	functions->programUniform2iv = (CL_GLFunctions::ptr_glProgramUniform2iv) cl_get_proc_address_extension("glProgramUniform2iv");
+	functions->programUniform2f = (CL_GLFunctions::ptr_glProgramUniform2f) cl_get_proc_address_extension("glProgramUniform2f");
+	functions->programUniform2fv = (CL_GLFunctions::ptr_glProgramUniform2fv) cl_get_proc_address_extension("glProgramUniform2fv");
+	functions->programUniform2d = (CL_GLFunctions::ptr_glProgramUniform2d) cl_get_proc_address_extension("glProgramUniform2d");
+	functions->programUniform2dv = (CL_GLFunctions::ptr_glProgramUniform2dv) cl_get_proc_address_extension("glProgramUniform2dv");
+	functions->programUniform2ui = (CL_GLFunctions::ptr_glProgramUniform2ui) cl_get_proc_address_extension("glProgramUniform2ui");
+	functions->programUniform2uiv = (CL_GLFunctions::ptr_glProgramUniform2uiv) cl_get_proc_address_extension("glProgramUniform2uiv");
+	functions->programUniform3i = (CL_GLFunctions::ptr_glProgramUniform3i) cl_get_proc_address_extension("glProgramUniform3i");
+	functions->programUniform3iv = (CL_GLFunctions::ptr_glProgramUniform3iv) cl_get_proc_address_extension("glProgramUniform3iv");
+	functions->programUniform3f = (CL_GLFunctions::ptr_glProgramUniform3f) cl_get_proc_address_extension("glProgramUniform3f");
+	functions->programUniform3fv = (CL_GLFunctions::ptr_glProgramUniform3fv) cl_get_proc_address_extension("glProgramUniform3fv");
+	functions->programUniform3d = (CL_GLFunctions::ptr_glProgramUniform3d) cl_get_proc_address_extension("glProgramUniform3d");
+	functions->programUniform3dv = (CL_GLFunctions::ptr_glProgramUniform3dv) cl_get_proc_address_extension("glProgramUniform3dv");
+	functions->programUniform3ui = (CL_GLFunctions::ptr_glProgramUniform3ui) cl_get_proc_address_extension("glProgramUniform3ui");
+	functions->programUniform3uiv = (CL_GLFunctions::ptr_glProgramUniform3uiv) cl_get_proc_address_extension("glProgramUniform3uiv");
+	functions->programUniform4i = (CL_GLFunctions::ptr_glProgramUniform4i) cl_get_proc_address_extension("glProgramUniform4i");
+	functions->programUniform4iv = (CL_GLFunctions::ptr_glProgramUniform4iv) cl_get_proc_address_extension("glProgramUniform4iv");
+	functions->programUniform4f = (CL_GLFunctions::ptr_glProgramUniform4f) cl_get_proc_address_extension("glProgramUniform4f");
+	functions->programUniform4fv = (CL_GLFunctions::ptr_glProgramUniform4fv) cl_get_proc_address_extension("glProgramUniform4fv");
+	functions->programUniform4d = (CL_GLFunctions::ptr_glProgramUniform4d) cl_get_proc_address_extension("glProgramUniform4d");
+	functions->programUniform4dv = (CL_GLFunctions::ptr_glProgramUniform4dv) cl_get_proc_address_extension("glProgramUniform4dv");
+	functions->programUniform4ui = (CL_GLFunctions::ptr_glProgramUniform4ui) cl_get_proc_address_extension("glProgramUniform4ui");
+	functions->programUniform4uiv = (CL_GLFunctions::ptr_glProgramUniform4uiv) cl_get_proc_address_extension("glProgramUniform4uiv");
+	functions->programUniformMatrix2fv = (CL_GLFunctions::ptr_glProgramUniformMatrix2fv) cl_get_proc_address_extension("glProgramUniformMatrix2fv");
+	functions->programUniformMatrix3fv = (CL_GLFunctions::ptr_glProgramUniformMatrix3fv) cl_get_proc_address_extension("glProgramUniformMatrix3fv");
+	functions->programUniformMatrix4fv = (CL_GLFunctions::ptr_glProgramUniformMatrix4fv) cl_get_proc_address_extension("glProgramUniformMatrix4fv");
+	functions->programUniformMatrix2dv = (CL_GLFunctions::ptr_glProgramUniformMatrix2dv) cl_get_proc_address_extension("glProgramUniformMatrix2dv");
+	functions->programUniformMatrix3dv = (CL_GLFunctions::ptr_glProgramUniformMatrix3dv) cl_get_proc_address_extension("glProgramUniformMatrix3dv");
+	functions->programUniformMatrix4dv = (CL_GLFunctions::ptr_glProgramUniformMatrix4dv) cl_get_proc_address_extension("glProgramUniformMatrix4dv");
+	functions->programUniformMatrix2x3fv = (CL_GLFunctions::ptr_glProgramUniformMatrix2x3fv) cl_get_proc_address_extension("glProgramUniformMatrix2x3fv");
+	functions->programUniformMatrix3x2fv = (CL_GLFunctions::ptr_glProgramUniformMatrix3x2fv) cl_get_proc_address_extension("glProgramUniformMatrix3x2fv");
+	functions->programUniformMatrix2x4fv = (CL_GLFunctions::ptr_glProgramUniformMatrix2x4fv) cl_get_proc_address_extension("glProgramUniformMatrix2x4fv");
+	functions->programUniformMatrix4x2fv = (CL_GLFunctions::ptr_glProgramUniformMatrix4x2fv) cl_get_proc_address_extension("glProgramUniformMatrix4x2fv");
+	functions->programUniformMatrix3x4fv = (CL_GLFunctions::ptr_glProgramUniformMatrix3x4fv) cl_get_proc_address_extension("glProgramUniformMatrix3x4fv");
+	functions->programUniformMatrix4x3fv = (CL_GLFunctions::ptr_glProgramUniformMatrix4x3fv) cl_get_proc_address_extension("glProgramUniformMatrix4x3fv");
+	functions->programUniformMatrix2x3dv = (CL_GLFunctions::ptr_glProgramUniformMatrix2x3dv) cl_get_proc_address_extension("glProgramUniformMatrix2x3dv");
+	functions->programUniformMatrix3x2dv = (CL_GLFunctions::ptr_glProgramUniformMatrix3x2dv) cl_get_proc_address_extension("glProgramUniformMatrix3x2dv");
+	functions->programUniformMatrix2x4dv = (CL_GLFunctions::ptr_glProgramUniformMatrix2x4dv) cl_get_proc_address_extension("glProgramUniformMatrix2x4dv");
+	functions->programUniformMatrix4x2dv = (CL_GLFunctions::ptr_glProgramUniformMatrix4x2dv) cl_get_proc_address_extension("glProgramUniformMatrix4x2dv");
+	functions->programUniformMatrix3x4dv = (CL_GLFunctions::ptr_glProgramUniformMatrix3x4dv) cl_get_proc_address_extension("glProgramUniformMatrix3x4dv");
+	functions->programUniformMatrix4x3dv = (CL_GLFunctions::ptr_glProgramUniformMatrix4x3dv) cl_get_proc_address_extension("glProgramUniformMatrix4x3dv");
+	functions->validateProgramPipeline = (CL_GLFunctions::ptr_glValidateProgramPipeline) cl_get_proc_address_extension("glValidateProgramPipeline");
+	functions->getProgramPipelineInfoLog = (CL_GLFunctions::ptr_glGetProgramPipelineInfoLog) cl_get_proc_address_extension("glGetProgramPipelineInfoLog");
+	functions->vertexAttribL1d = (CL_GLFunctions::ptr_glVertexAttribL1d) cl_get_proc_address_extension("glVertexAttribL1d");
+	functions->vertexAttribL2d = (CL_GLFunctions::ptr_glVertexAttribL2d) cl_get_proc_address_extension("glVertexAttribL2d");
+	functions->vertexAttribL3d = (CL_GLFunctions::ptr_glVertexAttribL3d) cl_get_proc_address_extension("glVertexAttribL3d");
+	functions->vertexAttribL4d = (CL_GLFunctions::ptr_glVertexAttribL4d) cl_get_proc_address_extension("glVertexAttribL4d");
+	functions->vertexAttribL1dv = (CL_GLFunctions::ptr_glVertexAttribL1dv) cl_get_proc_address_extension("glVertexAttribL1dv");
+	functions->vertexAttribL2dv = (CL_GLFunctions::ptr_glVertexAttribL2dv) cl_get_proc_address_extension("glVertexAttribL2dv");
+	functions->vertexAttribL3dv = (CL_GLFunctions::ptr_glVertexAttribL3dv) cl_get_proc_address_extension("glVertexAttribL3dv");
+	functions->vertexAttribL4dv = (CL_GLFunctions::ptr_glVertexAttribL4dv) cl_get_proc_address_extension("glVertexAttribL4dv");
+	functions->vertexAttribLPointer = (CL_GLFunctions::ptr_glVertexAttribLPointer) cl_get_proc_address_extension("glVertexAttribLPointer");
+	functions->getVertexAttribLdv = (CL_GLFunctions::ptr_glGetVertexAttribLdv) cl_get_proc_address_extension("glGetVertexAttribLdv");
+	functions->viewportArrayv = (CL_GLFunctions::ptr_glViewportArrayv) cl_get_proc_address_extension("glViewportArrayv");
+	functions->viewportIndexedf = (CL_GLFunctions::ptr_glViewportIndexedf) cl_get_proc_address_extension("glViewportIndexedf");
+	functions->viewportIndexedfv = (CL_GLFunctions::ptr_glViewportIndexedfv) cl_get_proc_address_extension("glViewportIndexedfv");
+	functions->scissorArrayv = (CL_GLFunctions::ptr_glScissorArrayv) cl_get_proc_address_extension("glScissorArrayv");
+	functions->scissorIndexed = (CL_GLFunctions::ptr_glScissorIndexed) cl_get_proc_address_extension("glScissorIndexed");
+	functions->scissorIndexedv = (CL_GLFunctions::ptr_glScissorIndexedv) cl_get_proc_address_extension("glScissorIndexedv");
+	functions->depthRangeArrayv = (CL_GLFunctions::ptr_glDepthRangeArrayv) cl_get_proc_address_extension("glDepthRangeArrayv");
+	functions->depthRangeIndexed = (CL_GLFunctions::ptr_glDepthRangeIndexed) cl_get_proc_address_extension("glDepthRangeIndexed");
+	functions->getFloati_v = (CL_GLFunctions::ptr_glGetFloati_v) cl_get_proc_address_extension("glGetFloati_v");
+	functions->getDoublei_v = (CL_GLFunctions::ptr_glGetDoublei_v) cl_get_proc_address_extension("glGetDoublei_v");
+	functions->createSyncFromCLeventARB = (CL_GLFunctions::ptr_glCreateSyncFromCLeventARB) cl_get_proc_address_extension("glCreateSyncFromCLeventARB");
+	functions->debugMessageControlARB = (CL_GLFunctions::ptr_glDebugMessageControlARB) cl_get_proc_address_extension("glDebugMessageControlARB");
+	functions->debugMessageInsertARB = (CL_GLFunctions::ptr_glDebugMessageInsertARB) cl_get_proc_address_extension("glDebugMessageInsertARB");
+	functions->debugMessageCallbackARB = (CL_GLFunctions::ptr_glDebugMessageCallbackARB) cl_get_proc_address_extension("glDebugMessageCallbackARB");
+	functions->getDebugMessageLogARB = (CL_GLFunctions::ptr_glGetDebugMessageLogARB) cl_get_proc_address_extension("glGetDebugMessageLogARB");
+	functions->getGraphicsResetStatusARB = (CL_GLFunctions::ptr_glGetGraphicsResetStatusARB) cl_get_proc_address_extension("glGetGraphicsResetStatusARB");
+	functions->getnMapdvARB = (CL_GLFunctions::ptr_glGetnMapdvARB) cl_get_proc_address_extension("glGetnMapdvARB");
+	functions->getnMapfvARB = (CL_GLFunctions::ptr_glGetnMapfvARB) cl_get_proc_address_extension("glGetnMapfvARB");
+	functions->getnMapivARB = (CL_GLFunctions::ptr_glGetnMapivARB) cl_get_proc_address_extension("glGetnMapivARB");
+	functions->getnPixelMapfvARB = (CL_GLFunctions::ptr_glGetnPixelMapfvARB) cl_get_proc_address_extension("glGetnPixelMapfvARB");
+	functions->getnPixelMapuivARB = (CL_GLFunctions::ptr_glGetnPixelMapuivARB) cl_get_proc_address_extension("glGetnPixelMapuivARB");
+	functions->getnPixelMapusvARB = (CL_GLFunctions::ptr_glGetnPixelMapusvARB) cl_get_proc_address_extension("glGetnPixelMapusvARB");
+	functions->getnPolygonStippleARB = (CL_GLFunctions::ptr_glGetnPolygonStippleARB) cl_get_proc_address_extension("glGetnPolygonStippleARB");
+	functions->getnColorTableARB = (CL_GLFunctions::ptr_glGetnColorTableARB) cl_get_proc_address_extension("glGetnColorTableARB");
+	functions->getnConvolutionFilterARB = (CL_GLFunctions::ptr_glGetnConvolutionFilterARB) cl_get_proc_address_extension("glGetnConvolutionFilterARB");
+	functions->getnSeparableFilterARB = (CL_GLFunctions::ptr_glGetnSeparableFilterARB) cl_get_proc_address_extension("glGetnSeparableFilterARB");
+	functions->getnHistogramARB = (CL_GLFunctions::ptr_glGetnHistogramARB) cl_get_proc_address_extension("glGetnHistogramARB");
+	functions->getnMinmaxARB = (CL_GLFunctions::ptr_glGetnMinmaxARB) cl_get_proc_address_extension("glGetnMinmaxARB");
+	functions->getnTexImageARB = (CL_GLFunctions::ptr_glGetnTexImageARB) cl_get_proc_address_extension("glGetnTexImageARB");
+	functions->readnPixelsARB = (CL_GLFunctions::ptr_glReadnPixelsARB) cl_get_proc_address_extension("glReadnPixelsARB");
+	functions->getnCompressedTexImageARB = (CL_GLFunctions::ptr_glGetnCompressedTexImageARB) cl_get_proc_address_extension("glGetnCompressedTexImageARB");
+	functions->getnUniformfvARB = (CL_GLFunctions::ptr_glGetnUniformfvARB) cl_get_proc_address_extension("glGetnUniformfvARB");
+	functions->getnUniformivARB = (CL_GLFunctions::ptr_glGetnUniformivARB) cl_get_proc_address_extension("glGetnUniformivARB");
+	functions->getnUniformuivARB = (CL_GLFunctions::ptr_glGetnUniformuivARB) cl_get_proc_address_extension("glGetnUniformuivARB");
+	functions->getnUniformdvARB = (CL_GLFunctions::ptr_glGetnUniformdvARB) cl_get_proc_address_extension("glGetnUniformdvARB");
+
 
 #ifdef WIN32	// Only win32 static links opengl
+
+	// We require the real address of static links, so undef these...
+#undef glBindTexture
+#undef glBlendFunc
+#undef glClear
+#undef glClearColor
+#undef glClearDepth
+#undef glClearStencil
+#undef glColorMask
+#undef glCopyTexImage1D
+#undef glCopyTexImage2D
+#undef glCopyTexSubImage1D
+#undef glCopyTexSubImage2D
+#undef glCullFace
+#undef glDeleteTextures
+#undef glDepthFunc
+#undef glDepthMask
+#undef glDepthRange
+#undef glDisable
+#undef glDrawArrays
+#undef glDrawBuffer
+#undef glDrawElements
+#undef glEnable
+#undef glFinish
+#undef glFlush
+#undef glFrontFace
+#undef glGenTextures
+#undef glGetBooleanv
+#undef glGetDoublev
+#undef glGetError
+#undef glGetFloatv
+#undef glGetIntegerv
+#undef glGetPointerv
+#undef glGetString
+#undef glGetTexImage
+#undef glGetTexLevelParameterfv
+#undef glGetTexLevelParameteriv
+#undef glGetTexParameterfv
+#undef glGetTexParameteriv
+#undef glHint
+#undef glIsEnabled
+#undef glIsTexture
+#undef glLineWidth
+#undef glLogicOp
+#undef glPixelStoref
+#undef glPixelStorei
+#undef glPointSize
+#undef glPolygonMode
+#undef glPolygonOffset
+#undef glReadBuffer
+#undef glReadPixels
+#undef glScissor
+#undef glStencilFunc
+#undef glStencilMask
+#undef glStencilOp
+#undef glTexImage1D
+#undef glTexImage2D
+#undef glTexParameterf
+#undef glTexParameterfv
+#undef glTexParameteri
+#undef glTexParameteriv
+#undef glTexSubImage1D
+#undef glTexSubImage2D
+#undef glViewport
+	
 	if (!functions->bindTexture) functions->bindTexture = (CL_GLFunctions::ptr_glBindTexture) &glBindTexture;
 	if (!functions->blendFunc) functions->blendFunc = (CL_GLFunctions::ptr_glBlendFunc) &glBlendFunc;
 	if (!functions->clear) functions->clear = (CL_GLFunctions::ptr_glClear) &glClear;
@@ -1228,137 +1467,31 @@ CL_GLFunctions *cl_setup_binds()
 #endif
 
 #ifdef __APPLE__
-	// *** NOTE - Some of these should be commented out, as they are legacy if (!functions) functions that are not in the OpenGL 3 spec
+	// We require the real address of static links, so undef these...
 
-	if (!functions->drawRangeElements) functions->drawRangeElements = (CL_GLFunctions::ptr_glDrawRangeElementsEXT) &glDrawRangeElements;
-	if (!functions->texImage3D) functions->texImage3D = (CL_GLFunctions::ptr_glTexImage3DEXT) &glTexImage3D;
-	if (!functions->texSubImage3D) functions->texSubImage3D = (CL_GLFunctions::ptr_glTexSubImage3DEXT) &glTexSubImage3D;
-	if (!functions->copyTexSubImage3D) functions->copyTexSubImage3D = (CL_GLFunctions::ptr_glCopyTexSubImage3DEXT) &glCopyTexSubImage3D;
-	if (!functions->colorTable) functions->colorTable = (CL_GLFunctions::ptr_glColorTableSGI) &glColorTable;
-	if (!functions->copyColorTable) functions->copyColorTable = (CL_GLFunctions::ptr_glCopyColorTableSGI) &glCopyColorTable;
-	if (!functions->colorTableParameteriv) functions->colorTableParameteriv = (CL_GLFunctions::ptr_glColorTableParameterivSGI) &glColorTableParameteriv;
-	if (!functions->colorTableParameterfv) functions->colorTableParameterfv = (CL_GLFunctions::ptr_glColorTableParameterfvSGI) &glColorTableParameterfv;
-	if (!functions->getColorTable) functions->getColorTable = (CL_GLFunctions::ptr_glGetColorTableSGI) &glGetColorTable;
-	if (!functions->getColorTableParameteriv) functions->getColorTableParameteriv = (CL_GLFunctions::ptr_glGetColorTableParameterivSGI) &glGetColorTableParameteriv;
-	if (!functions->getColorTableParameterfv) functions->getColorTableParameterfv = (CL_GLFunctions::ptr_glGetColorTableParameterfvSGI) &glGetColorTableParameterfv;
-	if (!functions->colorSubTable) functions->colorSubTable = (CL_GLFunctions::ptr_glColorSubTableEXT) &glColorSubTable;
-	if (!functions->copyColorSubTable) functions->copyColorSubTable = (CL_GLFunctions::ptr_glCopyColorSubTableEXT) &glCopyColorSubTable;
-	if (!functions->convolutionFilter1D) functions->convolutionFilter1D = (CL_GLFunctions::ptr_glConvolutionFilter1DEXT) &glConvolutionFilter1D;
-	if (!functions->convolutionFilter2D) functions->convolutionFilter2D = (CL_GLFunctions::ptr_glConvolutionFilter2DEXT) &glConvolutionFilter2D;
-	if (!functions->copyConvolutionFilter1D) functions->copyConvolutionFilter1D = (CL_GLFunctions::ptr_glCopyConvolutionFilter1DEXT) &glCopyConvolutionFilter1D;
-	if (!functions->copyConvolutionFilter2D) functions->copyConvolutionFilter2D = (CL_GLFunctions::ptr_glCopyConvolutionFilter2DEXT) &glCopyConvolutionFilter2D;
-	if (!functions->getConvolutionFilter) functions->getConvolutionFilter = (CL_GLFunctions::ptr_glGetConvolutionFilterEXT) &glGetConvolutionFilter;
-	if (!functions->separableFilter2D) functions->separableFilter2D = (CL_GLFunctions::ptr_glSeparableFilter2DEXT) &glSeparableFilter2D;
-	if (!functions->getSeparableFilter) functions->getSeparableFilter = (CL_GLFunctions::ptr_glGetSeparableFilterEXT) &glGetSeparableFilter;
-	if (!functions->convolutionParameteri) functions->convolutionParameteri = (CL_GLFunctions::ptr_glConvolutionParameteriEXT) &glConvolutionParameteri;
-	if (!functions->convolutionParameteriv) functions->convolutionParameteriv = (CL_GLFunctions::ptr_glConvolutionParameterivEXT) &glConvolutionParameteriv;
-	if (!functions->convolutionParameterf) functions->convolutionParameterf = (CL_GLFunctions::ptr_glConvolutionParameterfEXT) &glConvolutionParameterf;
-	if (!functions->convolutionParameterfv) functions->convolutionParameterfv = (CL_GLFunctions::ptr_glConvolutionParameterfvEXT) &glConvolutionParameterfv;
-	if (!functions->getConvolutionParameteriv) functions->getConvolutionParameteriv = (CL_GLFunctions::ptr_glGetConvolutionParameterivEXT) &glGetConvolutionParameteriv;
-	if (!functions->getConvolutionParameterfv) functions->getConvolutionParameterfv = (CL_GLFunctions::ptr_glGetConvolutionParameterfvEXT) &glGetConvolutionParameterfv;
-	if (!functions->histogram) functions->histogram = (CL_GLFunctions::ptr_glHistogramEXT) &glHistogram;
-	if (!functions->resetHistogram) functions->resetHistogram = (CL_GLFunctions::ptr_glResetHistogramEXT) &glResetHistogram;
-	if (!functions->getHistogram) functions->getHistogram = (CL_GLFunctions::ptr_glGetHistogramEXT) &glGetHistogram;
-	if (!functions->getHistogramParameteriv) functions->getHistogramParameteriv = (CL_GLFunctions::ptr_glGetHistogramParameterivEXT) &glGetHistogramParameteriv;
-	if (!functions->getHistogramParameterfv) functions->getHistogramParameterfv = (CL_GLFunctions::ptr_glGetHistogramParameterfvEXT) &glGetHistogramParameterfv;
-	if (!functions->minmax) functions->minmax = (CL_GLFunctions::ptr_glMinmaxEXT) &glMinmax;
-	if (!functions->resetMinmax) functions->resetMinmax = (CL_GLFunctions::ptr_glResetMinmaxEXT) &glResetMinmax;
-	if (!functions->getMinmax) functions->getMinmax = (CL_GLFunctions::ptr_glGetMinmaxEXT) &glGetMinmax;
-	if (!functions->getMinmaxParameteriv) functions->getMinmaxParameteriv = (CL_GLFunctions::ptr_glGetMinmaxParameterivEXT) &glGetMinmaxParameteriv;
-	if (!functions->getMinmaxParameterfv) functions->getMinmaxParameterfv = (CL_GLFunctions::ptr_glGetMinmaxParameterfvEXT) &glGetMinmaxParameterfv;
-	if (!functions->blendColor) functions->blendColor = (CL_GLFunctions::ptr_glBlendColorEXT) &glBlendColor;
-	if (!functions->blendEquation) functions->blendEquation = (CL_GLFunctions::ptr_glBlendEquationEXT) &glBlendEquation;
-	if (!functions->activeTexture) functions->activeTexture = (CL_GLFunctions::ptr_glActiveTextureARB) &glActiveTexture;
-	if (!functions->clientActiveTexture) functions->clientActiveTexture = (CL_GLFunctions::ptr_glClientActiveTextureARB) &glClientActiveTexture;
-	if (!functions->multiTexCoord1d) functions->multiTexCoord1d = (CL_GLFunctions::ptr_glMultiTexCoord1dARB) &glMultiTexCoord1d;
-	if (!functions->multiTexCoord1dv) functions->multiTexCoord1dv = (CL_GLFunctions::ptr_glMultiTexCoord1dvARB) &glMultiTexCoord1dv;
-	if (!functions->multiTexCoord1f) functions->multiTexCoord1f = (CL_GLFunctions::ptr_glMultiTexCoord1fARB) &glMultiTexCoord1f;
-	if (!functions->multiTexCoord1fv) functions->multiTexCoord1fv = (CL_GLFunctions::ptr_glMultiTexCoord1fvARB) &glMultiTexCoord1fv;
-	if (!functions->multiTexCoord1i) functions->multiTexCoord1i = (CL_GLFunctions::ptr_glMultiTexCoord1iARB) &glMultiTexCoord1i;
-	if (!functions->multiTexCoord1iv) functions->multiTexCoord1iv = (CL_GLFunctions::ptr_glMultiTexCoord1ivARB) &glMultiTexCoord1iv;
-	if (!functions->multiTexCoord1s) functions->multiTexCoord1s = (CL_GLFunctions::ptr_glMultiTexCoord1sARB) &glMultiTexCoord1s;
-	if (!functions->multiTexCoord1sv) functions->multiTexCoord1sv = (CL_GLFunctions::ptr_glMultiTexCoord1svARB) &glMultiTexCoord1sv;
-	if (!functions->multiTexCoord2d) functions->multiTexCoord2d = (CL_GLFunctions::ptr_glMultiTexCoord2dARB) &glMultiTexCoord2d;
-	if (!functions->multiTexCoord2dv) functions->multiTexCoord2dv = (CL_GLFunctions::ptr_glMultiTexCoord2dvARB) &glMultiTexCoord2dv;
-	if (!functions->multiTexCoord2f) functions->multiTexCoord2f = (CL_GLFunctions::ptr_glMultiTexCoord2fARB) &glMultiTexCoord2f;
-	if (!functions->multiTexCoord2fv) functions->multiTexCoord2fv = (CL_GLFunctions::ptr_glMultiTexCoord2fvARB) &glMultiTexCoord2fv;
-	if (!functions->multiTexCoord2i) functions->multiTexCoord2i = (CL_GLFunctions::ptr_glMultiTexCoord2iARB) &glMultiTexCoord2i;
-	if (!functions->multiTexCoord2iv) functions->multiTexCoord2iv = (CL_GLFunctions::ptr_glMultiTexCoord2ivARB) &glMultiTexCoord2iv;
-	if (!functions->multiTexCoord2s) functions->multiTexCoord2s = (CL_GLFunctions::ptr_glMultiTexCoord2sARB) &glMultiTexCoord2s;
-	if (!functions->multiTexCoord2sv) functions->multiTexCoord2sv = (CL_GLFunctions::ptr_glMultiTexCoord2svARB) &glMultiTexCoord2sv;
-	if (!functions->multiTexCoord3d) functions->multiTexCoord3d = (CL_GLFunctions::ptr_glMultiTexCoord3dARB) &glMultiTexCoord3d;
-	if (!functions->multiTexCoord3dv) functions->multiTexCoord3dv = (CL_GLFunctions::ptr_glMultiTexCoord3dvARB) &glMultiTexCoord3dv;
-	if (!functions->multiTexCoord3f) functions->multiTexCoord3f = (CL_GLFunctions::ptr_glMultiTexCoord3fARB) &glMultiTexCoord3f;
-	if (!functions->multiTexCoord3fv) functions->multiTexCoord3fv = (CL_GLFunctions::ptr_glMultiTexCoord3fvARB) &glMultiTexCoord3fv;
-	if (!functions->multiTexCoord3i) functions->multiTexCoord3i = (CL_GLFunctions::ptr_glMultiTexCoord3iARB) &glMultiTexCoord3i;
-	if (!functions->multiTexCoord3iv) functions->multiTexCoord3iv = (CL_GLFunctions::ptr_glMultiTexCoord3ivARB) &glMultiTexCoord3iv;
-	if (!functions->multiTexCoord3s) functions->multiTexCoord3s = (CL_GLFunctions::ptr_glMultiTexCoord3sARB) &glMultiTexCoord3s;
-	if (!functions->multiTexCoord3sv) functions->multiTexCoord3sv = (CL_GLFunctions::ptr_glMultiTexCoord3svARB) &glMultiTexCoord3sv;
-	if (!functions->multiTexCoord4d) functions->multiTexCoord4d = (CL_GLFunctions::ptr_glMultiTexCoord4dARB) &glMultiTexCoord4d;
-	if (!functions->multiTexCoord4dv) functions->multiTexCoord4dv = (CL_GLFunctions::ptr_glMultiTexCoord4dvARB) &glMultiTexCoord4dv;
-	if (!functions->multiTexCoord4f) functions->multiTexCoord4f = (CL_GLFunctions::ptr_glMultiTexCoord4fARB) &glMultiTexCoord4f;
-	if (!functions->multiTexCoord4fv) functions->multiTexCoord4fv = (CL_GLFunctions::ptr_glMultiTexCoord4fvARB) &glMultiTexCoord4fv;
-	if (!functions->multiTexCoord4i) functions->multiTexCoord4i = (CL_GLFunctions::ptr_glMultiTexCoord4iARB) &glMultiTexCoord4i;
-	if (!functions->multiTexCoord4iv) functions->multiTexCoord4iv = (CL_GLFunctions::ptr_glMultiTexCoord4ivARB) &glMultiTexCoord4iv;
-	if (!functions->multiTexCoord4s) functions->multiTexCoord4s = (CL_GLFunctions::ptr_glMultiTexCoord4sARB) &glMultiTexCoord4s;
-	if (!functions->multiTexCoord4sv) functions->multiTexCoord4sv = (CL_GLFunctions::ptr_glMultiTexCoord4svARB) &glMultiTexCoord4sv;
-	if (!functions->compressedTexImage1D) functions->compressedTexImage1D = (CL_GLFunctions::ptr_glCompressedTexImage1DARB) &glCompressedTexImage1D;
-	if (!functions->compressedTexImage2D) functions->compressedTexImage2D = (CL_GLFunctions::ptr_glCompressedTexImage2DARB) &glCompressedTexImage2D;
-	if (!functions->compressedTexImage3D) functions->compressedTexImage3D = (CL_GLFunctions::ptr_glCompressedTexImage3DARB) &glCompressedTexImage3D;
-	if (!functions->compressedTexSubImage1D) functions->compressedTexSubImage1D = (CL_GLFunctions::ptr_glCompressedTexSubImage1DARB) &glCompressedTexSubImage1D;
-	if (!functions->compressedTexSubImage2D) functions->compressedTexSubImage2D = (CL_GLFunctions::ptr_glCompressedTexSubImage2DARB) &glCompressedTexSubImage2D;
-	if (!functions->compressedTexSubImage3D) functions->compressedTexSubImage3D = (CL_GLFunctions::ptr_glCompressedTexSubImage3DARB) &glCompressedTexSubImage3D;
-	if (!functions->getCompressedTexImage) functions->getCompressedTexImage = (CL_GLFunctions::ptr_glGetCompressedTexImageARB) &glGetCompressedTexImage;
-	if (!functions->sampleCoverage) functions->sampleCoverage = (CL_GLFunctions::ptr_glSampleCoverageARB) &glSampleCoverage;
-	if (!functions->glLoadTransposeMatrixd) functions->glLoadTransposeMatrixd = (CL_GLFunctions::ptr_glLoadTransposeMatrixdARB) &glLoadTransposeMatrixd;
-	if (!functions->glLoadTransposeMatrixf) functions->glLoadTransposeMatrixf = (CL_GLFunctions::ptr_glLoadTransposeMatrixfARB) &glLoadTransposeMatrixf;
-	if (!functions->glMultTransposeMatrixd) functions->glMultTransposeMatrixd = (CL_GLFunctions::ptr_glMultTransposeMatrixdARB) &glMultTransposeMatrixd;
-	if (!functions->glMultTransposeMatrixf) functions->glMultTransposeMatrixf = (CL_GLFunctions::ptr_glMultTransposeMatrixfARB) &glMultTransposeMatrixf;
-	if (!functions->fogCoordd) functions->fogCoordd = (CL_GLFunctions::ptr_glFogCoorddEXT) &glFogCoordd;
-	if (!functions->fogCoorddv) functions->fogCoorddv = (CL_GLFunctions::ptr_glFogCoorddvEXT) &glFogCoorddv;
-	if (!functions->fogCoordf) functions->fogCoordf = (CL_GLFunctions::ptr_glFogCoordfEXT) &glFogCoordf;
-	if (!functions->fogCoordfv) functions->fogCoordfv = (CL_GLFunctions::ptr_glFogCoordfvEXT) &glFogCoordfv;
-	if (!functions->fogCoordPointer) functions->fogCoordPointer = (CL_GLFunctions::ptr_glFogCoordPointerEXT) &glFogCoordPointer;
-	if (!functions->multiDrawArrays) functions->multiDrawArrays = (CL_GLFunctions::ptr_glMultiDrawArraysEXT) &glMultiDrawArrays;
-	if (!functions->multiDrawElementsEXT) functions->multiDrawElementsEXT = (CL_GLFunctions::ptr_glMultiDrawElementsEXT) &glMultiDrawElements;
-	if (!functions->pointParameterf) functions->pointParameterf = (CL_GLFunctions::ptr_glPointParameterfARB) &glPointParameterf;
-	if (!functions->pointParameterfv) functions->pointParameterfv = (CL_GLFunctions::ptr_glPointParameterfvARB) &glPointParameterfv;
-	if (!functions->secondaryColor3b) functions->secondaryColor3b = (CL_GLFunctions::ptr_glSecondaryColor3bEXT) &glSecondaryColor3b;
-	if (!functions->secondaryColor3bv) functions->secondaryColor3bv = (CL_GLFunctions::ptr_glSecondaryColor3bvEXT) &glSecondaryColor3bv;
-	if (!functions->secondaryColor3d) functions->secondaryColor3d = (CL_GLFunctions::ptr_glSecondaryColor3dEXT) &glSecondaryColor3d;
-	if (!functions->secondaryColor3dv) functions->secondaryColor3dv = (CL_GLFunctions::ptr_glSecondaryColor3dvEXT) &glSecondaryColor3dv;
-	if (!functions->secondaryColor3f) functions->secondaryColor3f = (CL_GLFunctions::ptr_glSecondaryColor3fEXT) &glSecondaryColor3f;
-	if (!functions->secondaryColor3fv) functions->secondaryColor3fv = (CL_GLFunctions::ptr_glSecondaryColor3fvEXT) &glSecondaryColor3fv;
-	if (!functions->secondaryColor3i) functions->secondaryColor3i = (CL_GLFunctions::ptr_glSecondaryColor3iEXT) &glSecondaryColor3i;
-	if (!functions->secondaryColor3iv) functions->secondaryColor3iv = (CL_GLFunctions::ptr_glSecondaryColor3ivEXT) &glSecondaryColor3iv;
-	if (!functions->secondaryColor3s) functions->secondaryColor3s = (CL_GLFunctions::ptr_glSecondaryColor3sEXT) &glSecondaryColor3s;
-	if (!functions->secondaryColor3sv) functions->secondaryColor3sv = (CL_GLFunctions::ptr_glSecondaryColor3svEXT) &glSecondaryColor3sv;
-	if (!functions->secondaryColor3ub) functions->secondaryColor3ub = (CL_GLFunctions::ptr_glSecondaryColor3ubEXT) &glSecondaryColor3ub;
-	if (!functions->secondaryColor3ubv) functions->secondaryColor3ubv = (CL_GLFunctions::ptr_glSecondaryColor3ubvEXT) &glSecondaryColor3ubv;
-	if (!functions->secondaryColor3ui) functions->secondaryColor3ui = (CL_GLFunctions::ptr_glSecondaryColor3uiEXT) &glSecondaryColor3ui;
-	if (!functions->secondaryColor3uiv) functions->secondaryColor3uiv = (CL_GLFunctions::ptr_glSecondaryColor3uivEXT) &glSecondaryColor3uiv;
-	if (!functions->secondaryColor3us) functions->secondaryColor3us = (CL_GLFunctions::ptr_glSecondaryColor3usEXT) &glSecondaryColor3us;
-	if (!functions->secondaryColor3usv) functions->secondaryColor3usv = (CL_GLFunctions::ptr_glSecondaryColor3usvEXT) &glSecondaryColor3usv;
-	if (!functions->secondaryColorPointer) functions->secondaryColorPointer = (CL_GLFunctions::ptr_glSecondaryColorPointerEXT) &glSecondaryColorPointer;
-	if (!functions->blendFuncSeparate) functions->blendFuncSeparate = (CL_GLFunctions::ptr_glBlendFuncSeparateEXT) &glBlendFuncSeparate;
-	if (!functions->windowPos2d) functions->windowPos2d = &glWindowPos2d;
-	if (!functions->windowPos2dv) functions->windowPos2dv = &glWindowPos2dv;
-	if (!functions->windowPos2f) functions->windowPos2f = &glWindowPos2f;
-	if (!functions->windowPos2fv) functions->windowPos2fv = &glWindowPos2fv;
-	if (!functions->windowPos2i) functions->windowPos2i = &glWindowPos2i;
-	if (!functions->windowPos2iv) functions->windowPos2iv = &glWindowPos2iv;
-	if (!functions->windowPos2s) functions->windowPos2s = &glWindowPos2s;
-	if (!functions->windowPos2sv) functions->windowPos2sv = &glWindowPos2sv;
-	if (!functions->windowPos3d) functions->windowPos3d = &glWindowPos3d;
-	if (!functions->windowPos3dv) functions->windowPos3dv = &glWindowPos3dv;
-	if (!functions->windowPos3f) functions->windowPos3f = &glWindowPos3f;
-	if (!functions->windowPos3fv) functions->windowPos3fv = &glWindowPos3fv;
-	if (!functions->windowPos3i) functions->windowPos3i = &glWindowPos3i;
-	if (!functions->windowPos3iv) functions->windowPos3iv = &glWindowPos3iv;
-	if (!functions->windowPos3s) functions->windowPos3s = &glWindowPos3s;
-	if (!functions->windowPos3sv) functions->windowPos3sv = &glWindowPos3sv;
+#undef glBlendColor
+#undef glBlendEquation
+#undef glActiveTexture
+#undef glCompressedTexImage2D
+#undef glCompressedTexSubImage2D
+#undef glSampleCoverage
+#undef glBlendFuncSeparate
+
+	if (!functions->blendColor) functions->blendColor = (CL_GLFunctions::ptr_glBlendColor) &glBlendColor;
+	if (!functions->blendEquation) functions->blendEquation = (CL_GLFunctions::ptr_glBlendEquation) &glBlendEquation;
+	if (!functions->activeTexture) functions->activeTexture = (CL_GLFunctions::ptr_glActiveTexture) &glActiveTexture;
+	if (!functions->compressedTexImage2D) functions->compressedTexImage2D = (CL_GLFunctions::ptr_glCompressedTexImage2D) &glCompressedTexImage2D;
+	if (!functions->compressedTexSubImage2D) functions->compressedTexSubImage2D = (CL_GLFunctions::ptr_glCompressedTexSubImage2D) &glCompressedTexSubImage2D;
+	if (!functions->sampleCoverage) functions->sampleCoverage = (CL_GLFunctions::ptr_glSampleCoverage) &glSampleCoverage;
+	if (!functions->blendFuncSeparate) functions->blendFuncSeparate = (CL_GLFunctions::ptr_glBlendFuncSeparate) &glBlendFuncSeparate;
+
+    // The following functions exist in the bundle but they are not implemented by Apple:
+    
+    functions->pointParameterf = 0;
+    functions->pointParameterfv = 0;
+    functions->pointSize = 0;
+    
 #endif
 
 	return functions;
 }
-

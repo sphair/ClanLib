@@ -630,7 +630,6 @@ void CL_Slider_Impl::update_part_positions()
 
 void CL_Slider_Impl::on_resized()
 {
-	CL_GraphicContext &gc = slider->get_gc();
 	update_part_positions();
 }
 

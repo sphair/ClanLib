@@ -41,7 +41,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_Sprite_Impl construction:
 
-CL_Sprite_Impl::CL_Sprite_Impl(CL_GraphicContext &gc) :
+CL_Sprite_Impl::CL_Sprite_Impl() :
 	angle(CL_Angle(0.0f, cl_radians)),
 	angle_pitch(CL_Angle(0.0f, cl_radians)),
 	angle_yaw(CL_Angle(0.0f, cl_radians)),
@@ -64,11 +64,8 @@ CL_Sprite_Impl::CL_Sprite_Impl(CL_GraphicContext &gc) :
 	play_loop(true),
 	play_backward(false),
 	play_pingpong(false),
-	show_on_finish(CL_Sprite::show_blank),
-	texture_group(gc, CL_Size(1,1))
+	show_on_finish(CL_Sprite::show_blank)
 {
-	for (int i=0; i<6; i++)
-		prim_color[i] = CL_Vec4f(color.r,color.g,color.b,color.a);
 }
 
 CL_Sprite_Impl::~CL_Sprite_Impl()
@@ -571,7 +568,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 	std::vector<CL_SpriteDescriptionFrame>::const_iterator it_frames;
 
 	// Calculate estimated texture group size
-	if (texture_group.get_texture_sizes().width <=1)
+	if (texture_group.is_null())
 	{
 		// *** This algorithm may not work! ***
 		int max_width = 1;
@@ -636,8 +633,23 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 		// Only create group if an object will definately fit into it
 		if ( (group_width >= min_width) && (group_height >= min_height) && (num_objects > 1) )
 		{
-			texture_group = CL_TextureGroup(gc, CL_Size(group_width, group_height));
+			texture_group = CL_TextureGroup(CL_Size(group_width, group_height));
 		}
+	}
+
+	int texture_group_width;
+	int texture_group_height;
+
+	if (texture_group.is_null())
+	{
+		texture_group_width = -1;
+		texture_group_height = -1;
+	}
+	else
+	{
+		CL_Size size = texture_group.get_texture_sizes();
+		texture_group_width = size.width;
+		texture_group_height = size.height;
 	}
 
 	for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
@@ -647,8 +659,9 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 		if(description_frame.type == CL_SpriteDescriptionFrame::type_pixelbuffer)
 		{
 			CL_PixelBuffer image = description_frame.pixelbuffer;
-			if (description_frame.rect.get_width() <= texture_group.get_texture_sizes().width &&
-				description_frame.rect.get_height() <= texture_group.get_texture_sizes().height)
+			if (texture_group_width >0 &&
+				description_frame.rect.get_width() <= texture_group_width &&
+				description_frame.rect.get_height() <= texture_group_height)
 			{
 				CL_Subtexture subtexture = texture_group.add(gc, description_frame.rect.get_size());
 				subtexture.get_texture().set_subimage(subtexture.get_geometry().get_top_left(), image, description_frame.rect);

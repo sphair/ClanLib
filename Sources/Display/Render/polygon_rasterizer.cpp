@@ -43,8 +43,7 @@ public:
 		is_line_offset(false),
 		is_polygon_offset(false),
 		face_cull_mode(cl_cull_back),
-		face_fill_mode_front(cl_fill_polygon),
-		face_fill_mode_back(cl_fill_polygon),
+		face_fill_mode(cl_fill_polygon),
 		front_face_side(cl_face_side_counter_clockwise),
 		offset_factor(0.0f),
 		offset_units(0.0f)
@@ -60,8 +59,7 @@ public:
 
 	CL_CullMode face_cull_mode;
 
-	CL_FillMode face_fill_mode_front;
-	CL_FillMode face_fill_mode_back;
+	CL_FillMode face_fill_mode;
 	CL_FaceSide front_face_side;
 
 	float offset_factor;
@@ -116,14 +114,9 @@ CL_CullMode CL_PolygonRasterizer::get_face_cull_mode() const
 	return impl->face_cull_mode;
 }
 
-CL_FillMode CL_PolygonRasterizer::get_face_fill_mode_front() const
+CL_FillMode CL_PolygonRasterizer::get_face_fill_mode() const
 {
-	return impl->face_fill_mode_front;
-}
-
-CL_FillMode CL_PolygonRasterizer::get_face_fill_mode_back() const
-{
-	return impl->face_fill_mode_back;
+	return impl->face_fill_mode;
 }
 
 float CL_PolygonRasterizer::get_offset_factor() const
@@ -174,14 +167,9 @@ void CL_PolygonRasterizer::set_face_cull_mode(CL_CullMode value)
 	impl->face_cull_mode = value;
 }
 
-void CL_PolygonRasterizer::set_face_fill_mode_front(CL_FillMode value)
+void CL_PolygonRasterizer::set_face_fill_mode(CL_FillMode value)
 {
-	impl->face_fill_mode_front = value;
-}
-
-void CL_PolygonRasterizer::set_face_fill_mode_back(CL_FillMode value)
-{
-	impl->face_fill_mode_back = value;
+	impl->face_fill_mode = value;
 }
 
 void CL_PolygonRasterizer::set_front_face(CL_FaceSide value)

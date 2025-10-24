@@ -29,10 +29,10 @@
 
 #pragma once
 
+#include "API/Core/System/uniqueptr.h"
 #include "API/GUI/Components/popupmenu.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "GUI/Components/Menus/menu_modal_loop.h"
-#include <memory>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenu_Impl Class:
@@ -50,5 +50,5 @@ public:
 	int joiner_width;
 	CL_Callback_v0 func_close;
 
-	std::auto_ptr<CL_MenuModalLoop> menu_ptr;
+	CL_UniquePtr<CL_MenuModalLoop> menu_ptr;
 };

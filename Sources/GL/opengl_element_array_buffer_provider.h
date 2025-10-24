@@ -43,7 +43,7 @@ class CL_OpenGLElementArrayBufferProvider : public CL_ElementArrayBufferProvider
 /// \{
 
 public:
-	CL_OpenGLElementArrayBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_OpenGLElementArrayBufferProvider();
 
 	~CL_OpenGLElementArrayBufferProvider();
 
@@ -61,7 +61,7 @@ public:
 public:
 	void *get_data() { return buffer.get_data(); }
 
-	CLuint get_handle() const { return buffer.get_handle(); }
+	GLuint get_handle() const { return buffer.get_handle(); }
 
 
 /// \}

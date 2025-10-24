@@ -38,6 +38,7 @@ public:
 
 private:
 	void on_close();
+	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 
 	bool quit;
 };

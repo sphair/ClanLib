@@ -52,7 +52,8 @@ public:
 		bool italic=false,
 		bool underline=false,
 		bool struck_out=false,
-		bool fixed_pitch=false);
+		bool fixed_pitch=false
+		);
 
 	~CL_FontMetrics_Impl();
 
@@ -86,7 +87,6 @@ public:
 	bool underlined;
 	bool struck_out;
 	bool fixed_pitch;
-
 
 /// \}
 /// \name Operations

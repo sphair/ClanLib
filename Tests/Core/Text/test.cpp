@@ -70,6 +70,8 @@ int TestApp::main(const std::vector<CL_String> &args)
 		str = "hello!";
 		CL_Console::write_line(" - %1", test_stringref());
 		
+		test_string();
+
 		CL_Console::write_line("All Tests Complete");
 		console.display_close_message();
 	}

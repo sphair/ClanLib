@@ -32,10 +32,11 @@
 #pragma once
 
 #include "../api_core.h"
+#include "../System/cl_platform.h"
 #include <cmath>
 
 #ifndef CL_PI
-#define CL_PI 3.141592653589793238462643383279f
+#define CL_PI CL_M_PI_F
 #endif
 
 template<typename T> inline T cl_pow2(T value) { return value*value; }

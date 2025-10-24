@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_direction.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserDirection::get_names()
 {
@@ -37,17 +37,21 @@ std::vector<CL_String> CL_CSSParserDirection::get_names()
 	return names;
 }
 
-void CL_CSSParserDirection::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserDirection::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "ltr")
+		if (equals(token.value, "ltr"))
 			properties.direction.type = CL_CSSBoxDirection::type_ltr;
-		else if (token.value == "rtl")
+		else if (equals(token.value, "rtl"))
 			properties.direction.type = CL_CSSBoxDirection::type_rtl;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.direction.type = CL_CSSBoxDirection::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["ltr"] = &properties.direction;
 	}
 }

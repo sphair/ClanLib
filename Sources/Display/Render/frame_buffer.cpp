@@ -69,7 +69,7 @@ CL_FrameBuffer::CL_FrameBuffer(CL_GraphicContext &context)
 
 void CL_FrameBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_FrameBuffer is null");
 }
 

@@ -115,16 +115,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeSSE2"), 0, REG_DWORD,
 			(LPBYTE) &include_sse2, sizeof(DWORD));
 
-		DWORD enable_debug_optimize = (page_target.enable_debug_optimize ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("DebugOptimize"), 0, REG_DWORD,
-			(LPBYTE) &enable_debug_optimize, sizeof(DWORD));
-
-		DWORD enable_whole_program_optimize = (page_target.enable_whole_program_optimize ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("WholeProgramOptimize"), 0, REG_DWORD,
-			(LPBYTE) &enable_whole_program_optimize, sizeof(DWORD));
-
 		DWORD include_intrinsics = (page_target.include_intrinsics ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeIntrinsics"), 0, REG_DWORD,
@@ -149,7 +139,7 @@ BOOL Wizard::finish()
 	{
 		WorkspaceGenerator_MSVC8 generator8;
 		generator8.set_target_version(page_target.target_version);
-		generator8.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+		generator8.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics);
 		generator8.enable_configurations(page_target.include_mtdll, page_target.include_dll);
 		generator8.write(workspace);
 	}
@@ -157,7 +147,7 @@ BOOL Wizard::finish()
 	{
 		WorkspaceGenerator_MSVC8 generator10;
 		generator10.set_target_version(page_target.target_version);
-		generator10.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+		generator10.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics);
 		generator10.enable_configurations(page_target.include_mtdll, page_target.include_dll);
 		generator10.write(workspace);
 	}

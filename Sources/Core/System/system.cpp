@@ -30,7 +30,6 @@
 #include "Core/precomp.h"
 #include "API/Core/System/system.h"
 #include "API/Core/System/mutex.h"
-#include "API/Core/System/memory_pool.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 
@@ -137,6 +136,8 @@ int CL_System::capture_stack_trace(int frames_to_skip, int max_frames, void **ou
 		*out_hash = 0;
 
 	return (backtrace(out_frames, max_frames));
+#else
+    return 0;
 #endif
 }
 
@@ -253,6 +254,8 @@ std::vector<CL_String> CL_System::get_stack_frames_text(void **frames, int num_f
 
 	free (strings);
 	return backtrace_text;
+#else
+    return std::vector<CL_String>();
 #endif
 }
 
@@ -332,225 +335,4 @@ int CL_System::get_num_cores()
 	return (cpus < 1)?-1 : static_cast<int>(cpus);
 
 #endif	// WIN32
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Temporary memory pool management:
-
-class CL_ThreadTempStackPool : public CL_MemoryPool
-{
-public:
-	CL_ThreadTempStackPool()
-	: ref_count(0)
-	{
-		last_block = (AllocLink *) data;
-		last_block->prev = 0;
-		last_block->next = 0;
-		last_block->flags = alloc_flag_free;
-	}
-
-	~CL_ThreadTempStackPool()
-	{
-	}
-
-	void *alloc(size_t size)
-	{
-		size = (size + 3) / 4;
-		size *= 4;
-		if (size > 16*1024)
-			return new char[size];
-
-		// to do: insert 0xfd (guard bytes) before and after allocated memory.
-
-		char *p_begin = ((char *) last_block) + sizeof(AllocLink);
-		char *p_end = p_begin + size;
-		if (p_end + sizeof(AllocLink) > data + capacity)
-		{
-#if defined(WIN32) && defined(_DEBUG)
-			DebugBreak();
-#endif
-			throw CL_Exception("Thread temporary memory pool exhausted");
-		}
-
-#ifdef _DEBUG
-		memset(p_begin, 0xcd, size);
-#endif
-
-		AllocLink *link = last_block;
-#ifdef _DEBUG
-		link->guard1 = 0xdeadbeef;
-		link->guard2 = 0xdeadbeef;
-#endif
-		last_block = (AllocLink *) p_end;
-		link->next = last_block;
-		link->flags = alloc_flag_used;
-		last_block->prev = link;
-		last_block->next = 0;
-		last_block->flags = alloc_flag_free;
-		return p_begin;
-	}
-
-	void free(void *ptr)
-	{
-		if (ptr < data || ptr >= (void *) (data+capacity))
-		{
-			delete[] ((char *) ptr);
-			return;
-		}
-
-		char *p_begin = (char *) ptr;
-		AllocLink *link = (AllocLink *) (p_begin - sizeof(AllocLink));
-		link->flags = alloc_flag_free;
-
-#ifdef _DEBUG
-		_ASSERT(link->guard1 == 0xdeadbeef);
-		_ASSERT(link->guard2 == 0xdeadbeef);
-
-		char *p_end = (char *) link->next;
-		memset(p_begin, 0xdd, p_end - p_begin);
-#endif
-
-		if (link->next == last_block)
-		{
-			while (link->prev && link->prev->flags == alloc_flag_free)
-			{
-				link = link->prev;
-			}
-			link->next = 0;
-			last_block = link;
-		}
-	}
-
-	int add_reference()
-	{
-		return ++ref_count;
-	}
-
-	int release_reference()
-	{
-		--ref_count;
-		if (ref_count == 0)
-		{
-			delete this;
-			return 0;
-		}
-		else
-		{
-			return ref_count;
-		}
-	}
-
-	enum
-	{
-		alloc_flag_used = 1,
-		alloc_flag_free = 2
-	};
-
-	struct AllocLink
-	{
-#ifdef _DEBUG
-		unsigned int guard1;
-#endif
-		AllocLink *prev;
-		AllocLink *next;
-		unsigned int flags;
-#ifdef _DEBUG
-		unsigned int guard2;
-#endif
-	};
-
-	int ref_count;
-	enum { capacity = 1024*1024 };
-	char data[capacity];
-	AllocLink *last_block;
-};
-
-#ifdef WIN32
-	static DWORD cl_temp_pool_tls_index = TLS_OUT_OF_INDEXES;
-	CL_Mutex cl_temp_pool_tls_mutex;
-	class CL_TempPoolTLSCleanUpHandler
-	{
-	public:
-		~CL_TempPoolTLSCleanUpHandler()
-		{
-			if (cl_temp_pool_tls_index != TLS_OUT_OF_INDEXES)
-			{
-				TlsFree(cl_temp_pool_tls_index);
-				cl_temp_pool_tls_index = TLS_OUT_OF_INDEXES;
-			}
-		}
-	} cl_temp_pool_tls_cleanup;
-#elif defined(__APPLE__)
-	static bool cl_temp_pool_tls_index_created = false;
-	static pthread_key_t cl_temp_pool_tls_index;
-	CL_Mutex cl_temp_pool_tls_mutex;
-#else
-	__thread CL_ThreadTempStackPool *cl_tls_temp_pool = 0;
-#endif
-
-void CL_System::alloc_thread_temp_pool()
-{
-#ifdef WIN32
-	if (cl_temp_pool_tls_index == TLS_OUT_OF_INDEXES)
-	{
-		CL_MutexSection mutex_lock(&cl_temp_pool_tls_mutex);
-		cl_temp_pool_tls_index = TlsAlloc();
-	}
-
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) TlsGetValue(cl_temp_pool_tls_index);
-	if (cl_temp_pool == 0)
-	{
-		cl_temp_pool = new CL_ThreadTempStackPool;
-		TlsSetValue(cl_temp_pool_tls_index, cl_temp_pool);
-	}
-	cl_temp_pool->add_reference();
-#elif defined(__APPLE__)
-	if (!cl_temp_pool_tls_index_created)
-	{
-		CL_MutexSection mutex_lock(&cl_temp_pool_tls_mutex);
-		pthread_key_create(&cl_temp_pool_tls_index, 0);
-		cl_temp_pool_tls_index_created = true;
-	}
-	
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) pthread_getspecific(cl_temp_pool_tls_index);
-	if (cl_temp_pool == 0)
-	{
-		cl_temp_pool = new CL_ThreadTempStackPool;
-		pthread_setspecific(cl_temp_pool_tls_index, cl_temp_pool);
-	}
-	cl_temp_pool->add_reference();
-#else
-	if (cl_tls_temp_pool == 0)
-		cl_tls_temp_pool = new CL_ThreadTempStackPool;
-	cl_tls_temp_pool->add_reference();
-#endif
-}
-
-void CL_System::free_thread_temp_pool()
-{
-#ifdef WIN32
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) TlsGetValue(cl_temp_pool_tls_index);
-	if (cl_temp_pool && cl_temp_pool->release_reference() == 0)
-		TlsSetValue(cl_temp_pool_tls_index, 0);
-#elif defined(__APPLE__)
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) pthread_getspecific(cl_temp_pool_tls_index);
-	if (cl_temp_pool && cl_temp_pool->release_reference() == 0)
-		pthread_setspecific(cl_temp_pool_tls_index, 0);
-#else
-	if (cl_tls_temp_pool && cl_tls_temp_pool->release_reference() == 0)
-		cl_tls_temp_pool = 0;
-#endif
-}
-
-CL_MemoryPool *CL_MemoryPool::get_temp_pool()
-{
-#ifdef WIN32
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) TlsGetValue(cl_temp_pool_tls_index);
-	return cl_temp_pool;
-#elif defined(__APPLE__)
-	CL_ThreadTempStackPool *cl_temp_pool = (CL_ThreadTempStackPool *) pthread_getspecific(cl_temp_pool_tls_index);
-	return cl_temp_pool;
-#else
-	return cl_tls_temp_pool;
-#endif
 }

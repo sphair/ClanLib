@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 
 class CL_IODevice;
 
@@ -48,25 +48,25 @@ public:
 /// \{
 
 public:
-	cl_int32 signature; // 0x06064b50
+	cl_int signature; // 0x06064b50
 
-	cl_int64 size_of_record;
+	cl_long size_of_record;
 
-	cl_int16 version_made_by;
+	cl_short version_made_by;
 
-	cl_int16 version_needed_to_extract;
+	cl_short version_needed_to_extract;
 
-	cl_int32 number_of_this_disk;
+	cl_int number_of_this_disk;
 
-	cl_int32 number_of_disk_with_central_directory_start;
+	cl_int number_of_disk_with_central_directory_start;
 
-	cl_int64 number_of_entries_on_this_disk;
+	cl_long number_of_entries_on_this_disk;
 
-	cl_int64 number_of_entries_in_central_directory;
+	cl_long number_of_entries_in_central_directory;
 
-	cl_int64 size_of_central_directory;
+	cl_long size_of_central_directory;
 
-	cl_int64 offset_to_start_of_central_directory;
+	cl_long offset_to_start_of_central_directory;
 
 	CL_String extensible_data_sector;
 

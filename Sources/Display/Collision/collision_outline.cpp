@@ -126,8 +126,8 @@ CL_CollisionOutline::CL_CollisionOutline(
 	if (resource.get_type() != "collisionoutline")
 		throw CL_Exception(cl_format("Resource '%1' is not of type 'collisionoutline'", resource_id));
 	CL_ResourceDataSession("collisionoutline", resource);
-	CL_SharedPtr<CL_ResourceData_CollisionOutline> data(resource.get_data("collisionoutline"));
-	if (data.is_null())
+	CL_SharedPtr<CL_ResourceData_CollisionOutline> data = cl_dynamic_pointer_cast<CL_ResourceData_CollisionOutline>(resource.get_data("collisionoutline"));
+	if (!data)
 	{
 		data = CL_SharedPtr<CL_ResourceData_CollisionOutline>(new CL_ResourceData_CollisionOutline(resource));
 		resource.set_data("collisionoutline", data);
@@ -269,7 +269,7 @@ void CL_CollisionOutline::load(CL_IODevice &file)
 	impl->width = provider->get_width();
 	impl->height = provider->get_height();
 
-	provider.disconnect();
+	provider = CL_SharedPtr<CL_OutlineProviderFile>();
 
 	impl->calculate_radius();
 	impl->calculate_sub_circles();

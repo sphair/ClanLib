@@ -235,6 +235,20 @@ void CL_ListView::set_display_mode(CL_ListViewDisplayMode mode)
 	impl->layout->invalidate();
 
 	impl->renderer->set_display_mode(mode);
+	impl->layout->set_show_detail_icon(impl->show_detail_icon);
+	impl->layout->set_show_detail_opener(impl->show_detail_opener);
+}
+
+void CL_ListView::show_detail_icon(bool enable)
+{
+	impl->show_detail_icon = enable;
+	impl->layout->set_show_detail_icon(impl->show_detail_icon);
+}
+
+void CL_ListView::show_detail_opener(bool enable)
+{
+	impl->show_detail_opener = enable;
+	impl->layout->set_show_detail_opener(impl->show_detail_opener);
 }
 
 void CL_ListView::clear()
@@ -280,7 +294,7 @@ CL_ListViewItem CL_ListView::find(const CL_StringRef &col_id, const CL_StringRef
 	return impl->find(it, col_id, str, recursive);
 }
 
-CL_ListViewItem CL_ListView::find(CL_UnknownSharedPtr userdata, bool recursive)
+CL_ListViewItem CL_ListView::find(CL_SharedPtr<CL_ListViewItemUserData> userdata, bool recursive)
 {
 	CL_ListViewItem it = impl->document_item.get_first_child();
 	return impl->find(it, userdata, recursive);
@@ -616,7 +630,6 @@ void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inpu
 {
 	listview->set_focus();
 
-	bool update_items = false;
 	CL_Point pos = input_event.mouse_pos;
 	pos_mouse_drag_start = pos;
 
@@ -686,7 +699,6 @@ void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inpu
 
 void CL_ListView_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
 {
-	bool update_items = false;
 	CL_Point pos = input_event.mouse_pos;
 
 	listview->capture_mouse(false);
@@ -942,7 +954,7 @@ CL_ListViewItem CL_ListView_Impl::find(CL_ListViewItem &it, int id, bool recursi
 	return CL_ListViewItem();
 }
 
-CL_ListViewItem CL_ListView_Impl::find(CL_ListViewItem &it, CL_UnknownSharedPtr userdata, bool recursive)
+CL_ListViewItem CL_ListView_Impl::find(CL_ListViewItem &it, CL_SharedPtr<CL_ListViewItemUserData> userdata, bool recursive)
 {
 	while (it.is_item())
 	{

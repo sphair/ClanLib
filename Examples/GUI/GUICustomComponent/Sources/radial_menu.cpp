@@ -195,12 +195,12 @@ void RadialMenu::create_parts()
 	normal_text_color = part_component.get_property(prop_text_color);
 	normal_font = part_component.get_font();
 	normal_text_distance = CL_StringHelp::text_to_float(part_component.get_property(prop_text_distance));
-	normal_font_height = normal_font.get_font_metrics(gc).get_height();
+	normal_font_height = normal_font.get_font_metrics().get_height();
 
 	selected_text_color = part_selected_item.get_property(prop_text_color);
 	selected_font = part_selected_item.get_font();
 	selected_text_distance = CL_StringHelp::text_to_float(part_selected_item.get_property(prop_text_distance));
-	selected_font_height = selected_font.get_font_metrics(gc).get_height();
+	selected_font_height = selected_font.get_font_metrics().get_height();
 
 	CL_String pointer_image_name = part_component.get_property(prop_pointer_image);
 	image_pointer = CL_Sprite(gc, pointer_image_name, &resources);

@@ -32,10 +32,19 @@
 #include "API/Core/System/event.h"
 #include <algorithm>
 
+class CL_KeepAliveObject_Impl
+{
+public:
+    void *thread_id;
+    CL_Event wakeup_event;
+};
+
 void cl_alloc_tls_keep_alive_slot();
 void cl_set_keep_alive_vector(std::vector<CL_KeepAliveObject *> *v);
 std::vector<CL_KeepAliveObject *> *cl_get_keep_alive_vector();
 CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > cl_keepalive_func_event_wait;
+CL_Callback_0<void *> cl_keepalive_func_thread_id;
+CL_Callback_v1<void *> cl_keepalive_func_awake_thread;
 
 void CL_KeepAlive::process(int timeout)
 {
@@ -44,7 +53,7 @@ void CL_KeepAlive::process(int timeout)
 	std::vector<CL_Event> events;
 	for (std::vector<CL_KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
 	{
-		events.push_back(objects[i]->get_wakeup_event());
+		events.push_back(objects[i]->impl->wakeup_event);
 	}
 		
 	int time_start = CL_System::get_time();
@@ -82,6 +91,7 @@ void CL_KeepAlive::process(int timeout)
 		// Process the event
 		if ( ((unsigned int) wakeup_reason) < events.size())	// (Note, wakeup_reason is >=0)
 		{
+            objects[wakeup_reason]->impl->wakeup_event.reset();
 			objects[wakeup_reason]->process();
 		}
 	}
@@ -90,6 +100,16 @@ void CL_KeepAlive::process(int timeout)
 CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > &CL_KeepAlive::func_event_wait()
 {
 	return cl_keepalive_func_event_wait;
+}
+
+CL_Callback_0<void *> &CL_KeepAlive::func_thread_id()
+{
+    return cl_keepalive_func_thread_id;
+}
+
+CL_Callback_v1<void *> &CL_KeepAlive::func_awake_thread()
+{
+    return cl_keepalive_func_awake_thread;
 }
 
 std::vector<CL_KeepAliveObject *> CL_KeepAlive::get_objects()
@@ -102,7 +122,11 @@ std::vector<CL_KeepAliveObject *> CL_KeepAlive::get_objects()
 }
 
 CL_KeepAliveObject::CL_KeepAliveObject()
+: impl(new CL_KeepAliveObject_Impl())
 {
+    if (!CL_KeepAlive::func_thread_id().is_null())
+        impl->thread_id = CL_KeepAlive::func_thread_id().invoke();
+    
 	std::vector<CL_KeepAliveObject*> *tls_objects = cl_get_keep_alive_vector();
 	if (!tls_objects)
 	{
@@ -121,6 +145,13 @@ CL_KeepAliveObject::~CL_KeepAliveObject()
 		delete tls_objects;
 		cl_set_keep_alive_vector(0);
 	}
+}
+
+void CL_KeepAliveObject::set_wakeup_event()
+{
+    impl->wakeup_event.set();
+    if (!CL_KeepAlive::func_awake_thread().is_null())
+        CL_KeepAlive::func_awake_thread().invoke(impl->thread_id);
 }
 
 #ifdef WIN32

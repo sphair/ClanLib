@@ -47,6 +47,8 @@ private:
 	void on_button_edit_resource();
 	void on_button_create_collision_data();
 
+	ResourceItem *get_selected_resource_item();
+
 	void load_resource_file(const CL_String &file);
 
 	void show_resource(ResourceItem *resource_item);

@@ -42,7 +42,7 @@ CL_DomEntityReference::CL_DomEntityReference()
 CL_DomEntityReference::CL_DomEntityReference(CL_DomDocument &doc, const CL_DomString &name)
 : CL_DomNode(doc, ENTITY_REFERENCE_NODE)
 {
-	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
 	impl->get_tree_node()->set_node_name(doc_impl, name);
 }
 

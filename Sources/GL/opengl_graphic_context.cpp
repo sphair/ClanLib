@@ -70,18 +70,18 @@ CL_GraphicContext_GL::~CL_GraphicContext_GL()
 
 void CL_GraphicContext_GL::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_GraphicContext_GL is null");
 }
 
-void CL_GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+void CL_GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor)
 {
-	impl->provider->get_opengl_version(version_major, version_minor, version_release);
+	impl->provider->get_opengl_version(version_major, version_minor);
 }
 
-void CL_GraphicContext_GL::get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release)
+void CL_GraphicContext_GL::get_opengl_shading_language_version(int &version_major, int &version_minor)
 {
-	impl->provider->get_opengl_shading_language_version(version_major, version_minor, version_release);
+	impl->provider->get_opengl_shading_language_version(version_major, version_minor);
 }
 
 CL_String CL_GraphicContext_GL::get_renderer_string()

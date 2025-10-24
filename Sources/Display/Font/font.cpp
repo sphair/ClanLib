@@ -33,6 +33,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_system.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/utf8_reader.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font_Impl Class:
@@ -94,14 +95,14 @@ CL_Font::~CL_Font()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font Attributes:
 
-bool CL_Font::is_null()
+bool CL_Font::is_null() const
 {
-	return impl.is_null();
+	return !impl;
 }
 
 CL_FontProvider *CL_Font::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	return impl->provider;
 }
@@ -111,9 +112,9 @@ CL_FontProvider *CL_Font::get_provider() const
 
 void CL_Font::draw_text(CL_GraphicContext &gc, float dest_x, float dest_y, const CL_StringRef &text, const CL_Colorf &color)
 {
-	if (!impl.is_null())
+	if (impl)
 	{
-		CL_FontMetrics fm = get_font_metrics(gc);
+		CL_FontMetrics fm = get_font_metrics();
 		int line_spacing = fm.get_height() + fm.get_external_leading();
 		std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
 		for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
@@ -134,13 +135,81 @@ void CL_Font::draw_text(CL_GraphicContext &gc, const CL_Pointf &position, const 
 	draw_text(gc, position.x, position.y, text, color);
 }
 
+void CL_Font::draw_text_ellipsis(CL_GraphicContext &gc, float dest_x, float dest_y, CL_Rectf content_box, const CL_StringRef &text, const CL_Colorf &color)
+{
+	if (impl)
+	{
+		CL_FontMetrics fm = get_font_metrics();
+		int ascent = fm.get_ascent();
+		int descent = fm.get_descent();
+		int line_spacing = fm.get_height() + fm.get_external_leading();
+		std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
+		for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
+		{
+			if (i == 0 || (dest_y - ascent >= content_box.top && dest_y + descent < content_box.bottom))
+			{
+				CL_Size size = get_text_size(gc, lines[i]);
+				if (dest_x + size.width <= content_box.right)
+				{
+					draw_text(gc, dest_x, dest_y, lines[i], color);
+				}
+				else
+				{
+					CL_Size ellipsis = get_text_size(gc, "...");
+
+					int seek_start = 0;
+					int seek_end = lines[i].size();
+					int seek_center = (seek_start + seek_end) / 2;
+
+					CL_UTF8_Reader utf8_reader(lines[i]);
+					while (true)
+					{
+						utf8_reader.set_position(seek_center);
+						utf8_reader.move_to_leadbyte();
+						if (seek_center != utf8_reader.get_position())
+							utf8_reader.next();
+						seek_center = utf8_reader.get_position();
+
+						utf8_reader.set_position(seek_start);
+						utf8_reader.next();
+						if (utf8_reader.get_position() == seek_end)
+							break;
+
+						CL_Size text_size = get_text_size(gc, lines[i].substr(0, seek_center));
+
+						if (dest_x + text_size.width + ellipsis.width >= content_box.right)
+							seek_end = seek_center;
+						else
+							seek_start = seek_center;
+						seek_center = (seek_start+seek_end)/2;
+					}
+
+					draw_text(gc, dest_x, dest_y, lines[i].substr(0, seek_center) + "...", color);
+				}
+
+				dest_y += line_spacing;
+			}
+		}
+	}
+}
+
+void CL_Font::draw_text_ellipsis(CL_GraphicContext &gc, int dest_x, int dest_y, CL_Rect content_box, const CL_StringRef &text, const CL_Colorf &color)
+{
+	draw_text_ellipsis(gc, (float) dest_x, (float) dest_y, CL_Rectf(content_box.left, content_box.top, content_box.right, content_box.bottom), text, color);
+}
+
+void CL_Font::draw_text_ellipsis(CL_GraphicContext &gc, const CL_Pointf &position, CL_Rectf content_box, const CL_StringRef &text, const CL_Colorf &color)
+{
+	draw_text_ellipsis(gc, position.x, position.y, content_box, text, color);
+}
+
 CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 {
 	CL_Size total_size;
 
-	if (!impl.is_null())
+	if (impl)
 	{
-		CL_FontMetrics fm = get_font_metrics(gc);
+		CL_FontMetrics fm = get_font_metrics();
 		int line_spacing = fm.get_external_leading();
 		std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
 		for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
@@ -163,16 +232,16 @@ CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 	return total_size;
 }
 
-CL_FontMetrics CL_Font::get_font_metrics(CL_GraphicContext &gc)
+CL_FontMetrics CL_Font::get_font_metrics()
 {
-	if (!impl.is_null())
-		return get_provider()->get_font_metrics(gc);
+	if (impl)
+		return get_provider()->get_font_metrics();
 	return CL_FontMetrics();
 }
 
 int CL_Font::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
 {
-	if (!impl.is_null())
+	if (impl)
 		return get_provider()->get_character_index(gc, text, point);
 	return 0;
 }

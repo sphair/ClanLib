@@ -1,0 +1,92 @@
+textedit
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	
+	border-color:gray;
+	border-left:1;
+	border-bottom:1;
+	border-right:1;
+	border-top:1;
+    
+    padding-top:3;
+	padding-left:6;
+	padding-right:6;
+	padding-bottom:3;
+
+	text-color:black;
+}
+
+textedit:normal
+{
+	bg-image:; 
+    bg-color: white;
+}
+
+textedit:hot
+{
+	bg-image:;
+    bg-color: white;
+}
+
+textedit:disabled
+{
+	bg-image:; 
+	text-color:gray;
+    border-color:#afafaf;
+}
+
+textedit cursor
+{
+	preferred-width:1;
+
+	bg-color: black;
+
+	blink-time-on:1000;
+	blink-time-off:1000;
+	bg-image:;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+textedit cursor:blink_on
+{
+	bg-color: black;
+}
+
+textedit cursor:blink_off
+{
+	bg-color: white;
+}
+
+textedit selection
+{
+    text-color: white;
+	expand-top:-2;
+	expand-bottom:-1;
+	bg-image:;
+	bg-color: #316ac5;
+
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+textedit selection:disabled
+{
+	bg-image:;
+	bg-color: #7a96df;
+}
+
+textedit selection:unfocused
+{
+	bg-image:;
+	bg-color: #7a96df;
+}

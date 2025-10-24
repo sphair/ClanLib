@@ -31,13 +31,14 @@
 class CL_CSSToken;
 class CL_CSSBoxProperties;
 class CL_CSSBoxLength;
+class CL_CSSBoxProperty;
 
 class CL_CSSPropertyParser
 {
 public:
 	virtual ~CL_CSSPropertyParser() { }
 	virtual std::vector<CL_String> get_names() = 0;
-	virtual void parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens) = 0;
+	virtual void parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set) = 0;
 
 protected:
 	CL_CSSToken next_token(size_t &pos, const std::vector<CL_CSSToken> &tokens, bool skip_whitespace = true);
@@ -45,11 +46,13 @@ protected:
 	bool parse_length(const CL_CSSToken &token, CL_CSSBoxLength &out_length);
 	bool parse_integer(const CL_String &value, int &out_int);
 	bool parse_color(const std::vector<CL_CSSToken> &tokens, size_t &in_out_pos, CL_Colorf &out_color);
+	static bool equals(const CL_String &s1, const CL_String &s2);
+	void debug_parse_error(const CL_String &name, const std::vector<CL_CSSToken> &tokens);
 
 private:
 	struct ColorType
 	{
-		CL_String::char_type *name;
+		const CL_String::char_type *name;
 		int color;
 	};
 	static ColorType colors[];

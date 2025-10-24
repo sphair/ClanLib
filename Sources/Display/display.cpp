@@ -49,6 +49,6 @@ CL_DisplayTarget CL_Display::get_current_target()
 
 void CL_Display::set_current_target(const CL_DisplayTarget &target, bool only_set_if_null)
 {
-	if (only_set_if_null == false || _cl_current_target.is_null())
+	if (only_set_if_null == false || _cl_current_target.expired())
 		_cl_current_target = target.impl;
 }

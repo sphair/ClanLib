@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_text_decoration.h"
+#include "API/CSSLayout/PropertyTypes/css_box_text_decoration.h"
 
 CL_CSSBoxTextDecoration::CL_CSSBoxTextDecoration()
 : type(type_inherit_special), underline(false), overline(false), line_through(false), blink(false)
@@ -50,5 +50,44 @@ void CL_CSSBoxTextDecoration::compute(const CL_CSSBoxTextDecoration *parent, CL_
 		{
 			type = type_none;
 		}
+	}
+}
+
+CL_String CL_CSSBoxTextDecoration::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_none:
+		return "none";
+	case type_values:
+		{
+			CL_String s;
+			if (underline)
+				s += "underline";
+			if (overline)
+			{
+				if (!s.empty())
+					s += " ";
+				s += "overline";
+			}
+			if (line_through)
+			{
+				if (!s.empty())
+					s += " ";
+				s += "line-through";
+			}
+			if (blink)
+			{
+				if (!s.empty())
+					s += " ";
+				s += "blink";
+			}
+			return s;
+		}
+	case type_inherit:
+		return "inherit";
+	case type_inherit_special:
+		return "-clan-inherit-special";
 	}
 }

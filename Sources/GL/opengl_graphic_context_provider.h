@@ -68,12 +68,25 @@ public:
 public:
 	int get_max_attributes();
 	CL_Size get_max_texture_size() const;
+
+	/// \brief Get the opengl version major number
+	int get_opengl_version_major() const {return opengl_version_major;}
+
+	/// \brief Get the opengl version minor number
+	int get_opengl_version_minor() const {return opengl_version_minor;}
+
+	/// \brief Get the glsl version major number
+	int get_glsl_version_major() const {return shader_version_major;}
+
+	/// \brief Get the glsl version minor number
+	int get_glsl_version_minor() const {return shader_version_minor;}
+
 	const CL_Mat4f &get_modelview() const { return modelview; }
 	const CL_RenderWindowProvider & get_render_window() const { return *render_window; }
 	int get_width() const;
 	int get_height() const;
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
-	void get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release);
+	void get_opengl_version(int &version_major, int &version_minor);
+	void get_opengl_shading_language_version(int &version_major, int &version_minor);
 	CL_String get_renderer_string();
 	CL_String get_vendor_string();
 	std::vector<CL_String> get_extensions();
@@ -83,7 +96,6 @@ public:
 /// \{
 public:
 	void destroy();
-	CL_GraphicContext create_worker_gc();
 	CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions);
 	CL_OcclusionQueryProvider *alloc_occlusion_query();
 	CL_ProgramObjectProvider *alloc_program_object();
@@ -93,7 +105,7 @@ public:
 	CL_PixelBufferProvider *alloc_pixel_buffer();
 	CL_VertexArrayBufferProvider *alloc_vertex_array_buffer();
 	CL_ElementArrayBufferProvider *alloc_element_array_buffer();
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const;
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format, bool clamp) const;
 	void set_texture(int unit_index, const CL_Texture &texture);
 	void reset_texture(int unit_index, const CL_Texture &texture);
 	void set_frame_buffer(const CL_FrameBuffer &write_buffer, const CL_FrameBuffer &read_buffer);
@@ -109,7 +121,11 @@ public:
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset, int instance_count);
 	void primitives_array_freed(const CL_PrimitivesArrayData * const prim_array);
 	void reset_primitives_array();
 	void draw_pixels(CL_GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color);
@@ -135,18 +151,19 @@ public:
 /// \{
 private:
 	void set_current_program_object_matricies();
+	void draw_primitives_legacy(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArrayData * const prim_array);
 	void check_opengl_version();
 
-	CLenum to_enum(enum CL_DrawBuffer buf);
-	CLenum to_enum(enum CL_CompareFunction func);
-	CLenum to_enum(enum CL_StencilOp op);
-	CLenum to_enum(enum CL_CullMode mode);
-	CLenum to_enum(enum CL_FillMode mode);
-	CLenum to_enum(enum CL_BlendFunc func);
-	CLenum to_enum(enum CL_BlendEquation eq);
-	CLenum to_enum(enum CL_VertexAttributeDataType value);
-	CLenum to_enum(enum CL_PrimitivesType value);
-	CLenum to_enum(enum CL_LogicOp op);
+	GLenum to_enum(enum CL_DrawBuffer buf);
+	GLenum to_enum(enum CL_CompareFunction func);
+	GLenum to_enum(enum CL_StencilOp op);
+	GLenum to_enum(enum CL_CullMode mode);
+	GLenum to_enum(enum CL_FillMode mode);
+	GLenum to_enum(enum CL_BlendFunc func);
+	GLenum to_enum(enum CL_BlendEquation eq);
+	GLenum to_enum(enum CL_VertexAttributeDataType value);
+	GLenum to_enum(enum CL_PrimitivesType value);
+	GLenum to_enum(enum CL_LogicOp op);
 
 	/// \brief OpenGL render window.
 	const CL_RenderWindowProvider * const render_window;
@@ -189,5 +206,12 @@ private:
 	bool normal_matrix_valid;	// Calculated by set_current_program_object_matricies()
 	CL_Mat3f normal_matrix;
 
+	int opengl_version_major;
+	int opengl_version_minor;
+
+	int shader_version_major;
+	int shader_version_minor;
+
+	bool use_glsl_1_50;	// Available with OpenGL 3.2 and above
 /// \}
 };

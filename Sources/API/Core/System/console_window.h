@@ -43,7 +43,6 @@ class CL_API_CORE CL_ConsoleWindow
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Console Window constructor.
 	///
@@ -58,24 +57,24 @@ public:
 	/// \brief Console Window destructor.
 	~CL_ConsoleWindow();
 
-
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Waits until user hits a key.
+	///
+	/// This function does not do anything on Linux.
 	void wait_for_key();
 
 	/// \brief Displays 'press any key to close this console window',
 	/// \brief and waits until user hits a key.
+	///
+	/// This function does not do anything on Linux.
 	void display_close_message();
-
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_ConsoleWindow_Generic *impl;
 /// \}

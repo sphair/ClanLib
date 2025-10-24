@@ -175,6 +175,11 @@ void PropertyComponent::on_selection_changed()
 			CL_LineEdit *co = dynamic_cast<CL_LineEdit*>(comp);
 			//add_property(new PropertyItemLineEdit("Text",co->get_text()));
 		}
+		else if (type == "textedit")
+		{
+			CL_TextEdit *co = dynamic_cast<CL_TextEdit*>(comp);
+			//add_property(new PropertyItemLineEdit("Text",co->get_text()));
+		}
 		else if (type == "checkbox")
 		{
 			CL_CheckBox *co = dynamic_cast<CL_CheckBox*>(comp);

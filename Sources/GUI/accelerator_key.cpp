@@ -107,7 +107,7 @@ int CL_AcceleratorKey::get_id() const
 
 void CL_AcceleratorKey::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_AcceleratorKey is null");
 }
 

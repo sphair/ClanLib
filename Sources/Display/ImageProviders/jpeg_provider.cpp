@@ -34,8 +34,10 @@
 #include "API/Display/ImageProviders/jpeg_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
-#include "jpeg_provider_impl.h"
+#include "JPEGLoader/jpeg_loader.h"
+#ifndef __APPLE__
 #include "API/Display/ImageProviders/jpeg_compressor.h"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_JPEGProvider construction:
@@ -44,15 +46,13 @@ CL_PixelBuffer CL_JPEGProvider::load(
 	const CL_String &filename,
 	const CL_VirtualDirectory &directory)
 {
-	CL_JPEGProvider_Impl jpeg(filename, directory);
-	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.sized_format, jpeg.palette, jpeg.get_data());
+	return CL_JPEGLoader::load(directory.open_file_read(filename));
 }
 
 CL_PixelBuffer CL_JPEGProvider::load(
 	CL_IODevice &file)
 {
-	CL_JPEGProvider_Impl jpeg(file);
-	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.sized_format, jpeg.palette, jpeg.get_data());
+	return CL_JPEGLoader::load(file);
 }
 
 CL_PixelBuffer CL_JPEGProvider::load(
@@ -81,6 +81,9 @@ void CL_JPEGProvider::save(
 	CL_IODevice &file,
 	int quality)
 {
+#ifdef __APPLE__
+    throw CL_Exception("CL_JPEGProvider::save not supported yet");
+#else
 	if (buffer.get_format() != cl_bgr8)
 	{
 		CL_PixelBuffer newbuf(
@@ -106,6 +109,7 @@ void CL_JPEGProvider::save(
 	}
 
 	cp.finish();
+#endif
 }
 
 void CL_JPEGProvider::save(

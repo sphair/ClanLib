@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan22Core.la
+lib_LTLIBRARIES = libclan23Core.la
 
-libclan22Core_la_SOURCES = \
+libclan23Core_la_SOURCES = \
 core_global.cpp \
 core_iostream.cpp \
 CSS/css_document.cpp \
@@ -16,6 +16,7 @@ IOData/directory.cpp \
 IOData/directory_scanner.cpp \
 IOData/endianess.cpp \
 IOData/file.cpp \
+IOData/html_url.cpp \
 IOData/file_help.cpp \
 IOData/iodevice.cpp \
 IOData/iodevice_memory.cpp \
@@ -101,7 +102,6 @@ System/runnable.cpp \
 System/service.cpp \
 System/service_impl.cpp \
 System/setup_core.cpp \
-System/static_memory_pool.cpp \
 System/system.cpp \
 System/thread.cpp \
 System/timer.cpp \
@@ -144,18 +144,19 @@ XML/dom_text.cpp \
 XML/xml_tokenizer.cpp \
 XML/xml_writer.cpp \
 XML/xpath_evaluator.cpp \
+XML/xpath_exception.cpp \
 XML/xpath_evaluator_impl.cpp \
 XML/xpath_object.cpp
 
 if WIN32
-libclan22Core_la_SOURCES += \
+libclan23Core_la_SOURCES += \
 IOData/Win32/directory_scanner_win32.cpp \
 System/Win32/event_provider_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/service_win32.cpp \
 System/Win32/thread_win32.cpp
 else
-libclan22Core_la_SOURCES += \
+libclan23Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
 System/Unix/init_linux.cpp \
@@ -164,12 +165,12 @@ System/Unix/thread_unix.cpp
 endif
 
 # FIXME: Hardcoding these here might not be a good idea
-libclan22Core_la_LIBADD = @LIBPTHREAD@
+libclan23Core_la_LIBADD = @LIBPTHREAD@
 
-libclan22Core_la_LDFLAGS = \
+libclan23Core_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCore)
 
-libclan22Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
+libclan23Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
 
 # EOF #

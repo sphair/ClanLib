@@ -27,12 +27,13 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_background_position.h"
+#include "API/CSSLayout/PropertyTypes/css_box_background_position.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxBackgroundPosition::CL_CSSBoxBackgroundPosition()
-: type(type_value), type_x(type1_percentage), type_y(type2_percentage), percentage_x(0.0f), percentage_y(0.0f)
+: type(type_value)
 {
+	positions.push_back(Position());
 }
 
 void CL_CSSBoxBackgroundPosition::compute(const CL_CSSBoxBackgroundPosition *parent, CL_CSSResourceCache *layout, float em_size, float ex_size)
@@ -42,64 +43,111 @@ void CL_CSSBoxBackgroundPosition::compute(const CL_CSSBoxBackgroundPosition *par
 		if (parent)
 		{
 			type = parent->type;
-			type_x = parent->type_x;
-			type_y = parent->type_y;
-			length_x = parent->length_x;
-			length_y = parent->length_y;
-			percentage_x = parent->percentage_x;
-			percentage_y = parent->percentage_y;
+			positions = parent->positions;
 		}
 		else
 		{
 			type = type_value;
-			type_x = type1_percentage;
-			percentage_x = 0.0f;
-			type_y = type2_percentage;
-			percentage_y = 0.0f;
+			positions.clear();
+			positions.push_back(Position());
 		}
 	}
 
-	switch (type_x)
+	for (size_t i = 0; i < positions.size(); i++)
 	{
-	case type1_left:
-		type_x = type1_percentage;
-		percentage_x = 0.0f;
-		break;
+		switch (positions[i].type_x)
+		{
+		case type1_left:
+			positions[i].type_x = type1_percentage;
+			positions[i].percentage_x = 0.0f;
+			break;
 
-	case type1_center:
-		type_x = type1_percentage;
-		percentage_x = 50.0f;
-		break;
+		case type1_center:
+			positions[i].type_x = type1_percentage;
+			positions[i].percentage_x = 50.0f;
+			break;
 
-	case type1_right:
-		type_x = type1_percentage;
-		percentage_x = 100.0f;
-		break;
+		case type1_right:
+			positions[i].type_x = type1_percentage;
+			positions[i].percentage_x = 100.0f;
+			break;
 
-	case type1_length:
-		length_x = layout->compute_length(length_x, em_size, ex_size);
-		break;
+		case type1_length:
+			positions[i].length_x = layout->compute_length(positions[i].length_x, em_size, ex_size);
+			break;
+		}
+
+		switch (positions[i].type_y)
+		{
+		case type2_top:
+			positions[i].type_y = type2_percentage;
+			positions[i].percentage_y = 0.0f;
+			break;
+
+		case type2_center:
+			positions[i].type_y = type2_percentage;
+			positions[i].percentage_y = 50.0f;
+			break;
+
+		case type2_bottom:
+			positions[i].type_y = type2_percentage;
+			positions[i].percentage_y = 100.0f;
+			break;
+
+		case type1_length:
+			positions[i].length_y = layout->compute_length(positions[i].length_y, em_size, ex_size);
+			break;
+		}
 	}
+}
 
-	switch (type_y)
+CL_String CL_CSSBoxBackgroundPosition::to_string() const
+{
+	if (type == type_inherit)
+		return "inherit";
+
+	CL_String s;
+	for (size_t i = 0; i < positions.size(); i++)
 	{
-	case type2_top:
-		type_y = type2_percentage;
-		percentage_y = 0.0f;
-		break;
-
-	case type2_center:
-		type_y = type2_percentage;
-		percentage_y = 50.0f;
-		break;
-
-	case type2_bottom:
-		type_y = type2_percentage;
-		percentage_y = 100.0f;
-		break;
-
-	case type1_length:
-		length_y = layout->compute_length(length_y, em_size, ex_size);
-		break;
+		if (i > 0)
+			s += ", ";
+		switch (positions[i].type_x)
+		{
+		case type1_left:
+			s += "left";
+			break;
+		case type1_center:
+			s += "center";
+			break;
+		case type1_right:
+			s += "right";
+			break;
+		case type1_percentage:
+			s += CL_StringHelp::float_to_text(positions[i].percentage_x) + "%";
+			break;
+		case type1_length:
+			s += positions[i].length_x.to_string();
+			break;
+		}
+		s += " ";
+		switch (positions[i].type_y)
+		{
+		case type2_top:
+			s += "top";
+			break;
+		case type2_center:
+			s += "center";
+			break;
+		case type2_bottom:
+			s += "bottom";
+			break;
+		case type2_percentage:
+			s += CL_StringHelp::float_to_text(positions[i].percentage_y) + "%";
+			break;
+		case type2_length:
+			s += positions[i].length_y.to_string();
+			break;
+		}
 	}
+	return s;
 }

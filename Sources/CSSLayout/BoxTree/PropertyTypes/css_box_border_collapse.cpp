@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_border_collapse.h"
+#include "API/CSSLayout/PropertyTypes/css_box_border_collapse.h"
 
 CL_CSSBoxBorderCollapse::CL_CSSBoxBorderCollapse()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxBorderCollapse::compute(const CL_CSSBoxBorderCollapse *parent, CL_
 			type = parent->type;
 		else
 			type = type_separate;
+	}
+}
+
+CL_String CL_CSSBoxBorderCollapse::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_collapse:
+		return "collapse";
+	case type_separate:
+		return "separate";
+	case type_inherit:
+		return "inherit";
 	}
 }

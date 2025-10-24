@@ -35,7 +35,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextureGroup_Impl construction:
 
-CL_TextureGroup_Impl::CL_TextureGroup_Impl(CL_GraphicContext &context, const CL_Size &texture_sizes)
+CL_TextureGroup_Impl::CL_TextureGroup_Impl(const CL_Size &texture_sizes)
 : initial_texture_size(texture_sizes), active_root(NULL), next_id(0)
 {
 }

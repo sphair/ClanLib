@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_font_weight.h"
+#include "API/CSSLayout/PropertyTypes/css_box_font_weight.h"
 
 CL_CSSBoxFontWeight::CL_CSSBoxFontWeight()
 : type(type_inherit)
@@ -45,4 +45,40 @@ void CL_CSSBoxFontWeight::compute(const CL_CSSBoxFontWeight *parent, CL_CSSResou
 	}
 
 	// CSS 2.1 does not specify how the computed value of font-weight is represented internally or externally. 
+}
+
+CL_String CL_CSSBoxFontWeight::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_bold:
+		return "bold";
+	case type_bolder:
+		return "bolder";
+	case type_lighter:
+		return "lighter";
+	case type_100:
+		return "100";
+	case type_200:
+		return "200";
+	case type_300:
+		return "300";
+	case type_400:
+		return "400";
+	case type_500:
+		return "500";
+	case type_600:
+		return "600";
+	case type_700:
+		return "700";
+	case type_800:
+		return "800";
+	case type_900:
+		return "900";
+	case type_inherit:
+		return "inherit";
+	}
 }

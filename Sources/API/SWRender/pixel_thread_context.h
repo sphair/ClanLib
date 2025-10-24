@@ -34,6 +34,7 @@
 #include "api_swrender.h"
 #include "pixel_buffer_data.h"
 #include "../Display/Render/blend_mode.h"
+#include "../Display/2D/color.h"
 #include "api_swrender.h"
 
 /// \brief Thread specific rendering data for pixel commands
@@ -61,6 +62,7 @@ public:
 	CL_BlendFunc cur_blend_dest;
 	CL_BlendFunc cur_blend_src_alpha;
 	CL_BlendFunc cur_blend_dest_alpha;
+	CL_Colorf cur_blend_color;
 };
 
 /// \}

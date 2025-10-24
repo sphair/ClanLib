@@ -41,6 +41,7 @@ public:
 	CL_RenderBatch3D();
 	void draw_sprite(CL_GraphicContext &gc, const CL_Surface_DrawParams1 *params, const CL_Texture &texture);
 	void draw_image(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest, const CL_Colorf &color, const CL_Texture &texture);
+	void draw_glyph_subpixel(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest, const CL_Colorf &color, const CL_Texture &texture);
 	void fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
 
 public:
@@ -55,7 +56,7 @@ private:
 		CL_Vec1f texindex;
 	};
 
-	int set_batcher_active(CL_GraphicContext &gc, const CL_Texture &texture);
+	int set_batcher_active(CL_GraphicContext &gc, const CL_Texture &texture, bool glyph_program = false, const CL_Colorf &constant_color = CL_Colorf::black);
 	int set_batcher_active(CL_GraphicContext &gc);
 	void flush(CL_GraphicContext &gc);
 	void modelview_changed(const CL_Mat4f &modelview);
@@ -70,4 +71,6 @@ private:
 	CL_Texture current_textures[4];
 	int num_current_textures;
 	CL_Sizef tex_sizes[4];
+	bool use_glyph_program;
+	CL_Colorf constant_color;
 };

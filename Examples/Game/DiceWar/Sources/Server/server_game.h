@@ -42,7 +42,7 @@ private:
 
 	Server *server;
 
-	CL_AutoPtr<ServerGamePlayerCollection> players;
+	std::auto_ptr<ServerGamePlayerCollection> players;
 
 	ServerGamePlayer *active_player;
 

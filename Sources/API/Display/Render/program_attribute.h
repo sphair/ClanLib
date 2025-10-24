@@ -55,7 +55,8 @@ public:
 	/// \param name = String Ref
 	/// \param size = value
 	/// \param type = value
-	CL_ProgramAttribute(const CL_StringRef &name, int size, int type);
+	/// \param location = value
+	CL_ProgramAttribute(const CL_StringRef &name, int size, int type, int location);
 
 	~CL_ProgramAttribute();
 
@@ -65,7 +66,7 @@ public:
 
 public:
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -78,6 +79,9 @@ public:
 
 	/// \brief Get attribute OpenGL type.
 	int get_type() const;
+
+	/// \brief Get attribute location.
+	int get_location() const;
 
 /// \}
 /// \name Operations

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_white_space.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserWhiteSpace::get_names()
 {
@@ -37,23 +37,27 @@ std::vector<CL_String> CL_CSSParserWhiteSpace::get_names()
 	return names;
 }
 
-void CL_CSSParserWhiteSpace::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserWhiteSpace::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "normal")
+		if (equals(token.value, "normal"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_normal;
-		else if (token.value == "pre")
+		else if (equals(token.value, "pre"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_pre;
-		else if (token.value == "nowrap")
+		else if (equals(token.value, "nowrap"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_nowrap;
-		else if (token.value == "pre-wrap")
+		else if (equals(token.value, "pre-wrap"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_pre_wrap;
-		else if (token.value == "pre-line")
+		else if (equals(token.value, "pre-line"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_pre_line;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.white_space.type = CL_CSSBoxWhiteSpace::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["white-space"] = &properties.white_space;
 	}
 }

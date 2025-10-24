@@ -31,7 +31,7 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Display/Collision/collision_outline.h"
 
-class CL_ResourceData_CollisionOutline
+class CL_ResourceData_CollisionOutline : public CL_ResourceData
 {
 /// \name Construction
 /// \{

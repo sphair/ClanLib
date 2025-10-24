@@ -39,7 +39,7 @@ public:
 	~CL_OpenGLCreationHelper();
 
 	void set_multisampling_pixel_format(const CL_OpenGLWindowDescription &gldesc);
-	HGLRC create_opengl3_context(HGLRC share_context, int major_version, int minor_version);
+	HGLRC create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const CL_OpenGLWindowDescription &gldesc);
 	HGLRC create_opengl2_context(HGLRC share_context);
 
 private:

@@ -37,6 +37,12 @@
 class CL_ListViewColumnData;
 class CL_ListViewItem_Impl;
 
+class CL_ListViewItemUserData
+{
+public:
+	virtual ~CL_ListViewItemUserData() { }
+};
+
 /// \brief ListView item.
 ///
 /// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
@@ -58,7 +64,7 @@ public:
 public:
 
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -147,7 +153,7 @@ public:
 	/// \brief Get Userdata
 	///
 	/// \return userdata
-	CL_UnknownSharedPtr get_userdata() const;
+	CL_SharedPtr<CL_ListViewItemUserData> get_userdata() const;
 
 	bool operator==(CL_ListViewItem &other) const;
 
@@ -211,7 +217,7 @@ public:
 	/// \brief Set userdata
 	///
 	/// \param ptr = Unknown Shared Ptr
-	void set_userdata(CL_UnknownSharedPtr ptr);
+	void set_userdata(CL_SharedPtr<CL_ListViewItemUserData> ptr);
 
 /// \}
 /// \name Events

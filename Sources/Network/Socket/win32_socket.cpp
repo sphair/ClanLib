@@ -105,13 +105,12 @@ void CL_Win32Socket::close_handles()
 
 void CL_Win32Socket::disconnect_graceful(int timeout)
 {
-	shutdown(handle, SD_BOTH);
-	while (WaitForSingleObject(receive_handle, 0) == WAIT_TIMEOUT)
+	if (handle != INVALID_SOCKET)
 	{
-		if (WaitForSingleObject(event_handle, timeout) == WAIT_TIMEOUT)
-			break;
-		else
-			process_events();
+		linger linger_value;
+		linger_value.l_onoff = 1;
+		linger_value.l_linger = (timeout + 500) / 1000;
+		setsockopt(handle, SOL_SOCKET, SO_LINGER, (const char *) &linger_value, sizeof(linger));
 	}
 	close_handles();
 }

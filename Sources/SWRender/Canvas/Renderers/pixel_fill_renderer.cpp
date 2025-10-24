@@ -60,7 +60,6 @@ void CL_PixelFillRenderer::set_blend_function(CL_BlendFunc src, CL_BlendFunc des
 void CL_PixelFillRenderer::clear(const CL_Colorf &color)
 {
 	int dest_buffer_width = colorbuffer0.size.width;
-	int dest_buffer_height = colorbuffer0.size.height;
 	unsigned char *dest_data = (unsigned char *) colorbuffer0.data;
 
 	CL_Color c = color;
@@ -103,7 +102,6 @@ void CL_PixelFillRenderer::clear(const CL_Colorf &color)
 void CL_PixelFillRenderer::fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color)
 {
 	int dest_buffer_width = colorbuffer0.size.width;
-	int dest_buffer_height = colorbuffer0.size.height;
 	unsigned int *dest_data = colorbuffer0.data;
 
 	int start_x = cl_max(dest.left, clip_rect.left);
@@ -113,9 +111,6 @@ void CL_PixelFillRenderer::fill_rect(const CL_Rect &dest, const CL_Colorf &prima
 	if (start_x < end_x && start_y < end_y)
 	{
 		int dest_y = find_first_line_for_core(start_y, core, num_cores);
-
-		int delta_x = start_x-dest.left;
-		int delta_y = dest_y-dest.top;
 
 		unsigned int *dest_line = dest_data+dest_y*dest_buffer_width+start_x;
 

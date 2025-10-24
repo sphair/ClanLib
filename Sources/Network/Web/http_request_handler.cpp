@@ -58,7 +58,7 @@ CL_HTTPRequestHandlerProvider *CL_HTTPRequestHandler::get_provider() const
 
 void CL_HTTPRequestHandler::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_HTTPRequestHandler is null");
 }
 
@@ -70,14 +70,14 @@ bool CL_HTTPRequestHandler::is_handling_request(
 	const CL_StringRef8 &url,
 	const CL_StringRef8 &headers)
 {
-	if (!impl.is_null() && impl->provider)
+	if (impl && impl->provider)
 		return impl->provider->is_handling_request(type, url, headers);
 	return false;
 }
 
 void CL_HTTPRequestHandler::handle_request(CL_HTTPServerConnection &connection)
 {
-	if (!impl.is_null() && impl->provider)
+	if (impl && impl->provider)
 		return impl->provider->handle_request(connection);
 }
 

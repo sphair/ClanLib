@@ -106,7 +106,7 @@ void CL_XMLTokenizer::next(CL_XMLToken *out_token)
 	while (!out_token->attributes.empty())
 		out_token->attributes.pop_back();
 
-	if (impl != 0)
+	if (impl)
 	{
 		if (impl->next_text_node(out_token))
 			return;

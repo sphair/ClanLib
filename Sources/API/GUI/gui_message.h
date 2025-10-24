@@ -38,6 +38,12 @@
 class CL_GUIComponent;
 class CL_GUIMessage_Impl;
 
+class CL_GUIMessageData
+{
+public:
+	virtual ~CL_GUIMessageData() { }
+};
+
 /// \brief GUI message.
 ///
 /// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
@@ -64,7 +70,7 @@ public:
 	bool is_type(const CL_StringRef &type) const;
 
 	/// \brief Returns the stored data object for a given data name.
-	CL_UnknownSharedPtr get_data(const CL_StringRef &data_name) const;
+	CL_SharedPtr<CL_GUIMessageData> get_data(const CL_StringRef &data_name) const;
 
 	/// \brief Returns the target destination of the message.
 	CL_GUIComponent *get_target() const;
@@ -81,7 +87,7 @@ public:
 	void set_type(const CL_StringRef &type);
 
 	/// \brief Stores an object in the given data name slot.
-	void set_data(const CL_StringRef &data_name, const CL_UnknownSharedPtr &ptr);
+	void set_data(const CL_StringRef &data_name, const CL_SharedPtr<CL_GUIMessageData> &ptr);
 
 	/// \brief Sets the target destination.
 	void set_target(CL_GUIComponent *target);

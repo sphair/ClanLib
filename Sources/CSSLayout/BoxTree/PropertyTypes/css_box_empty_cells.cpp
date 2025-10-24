@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_empty_cells.h"
+#include "API/CSSLayout/PropertyTypes/css_box_empty_cells.h"
 
 CL_CSSBoxEmptyCells::CL_CSSBoxEmptyCells()
 : type(type_inherit)
@@ -42,5 +42,19 @@ void CL_CSSBoxEmptyCells::compute(const CL_CSSBoxEmptyCells *parent, CL_CSSResou
 			type = parent->type;
 		else
 			type = type_show;
+	}
+}
+
+CL_String CL_CSSBoxEmptyCells::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_show:
+		return "show";
+	case type_hide:
+		return "hide";
+	case type_inherit:
+		return "inherit";
 	}
 }

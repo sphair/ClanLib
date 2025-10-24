@@ -198,7 +198,7 @@ CL_Signal_v0 &CL_DisplayWindow::sig_window_moved()
 
 void CL_DisplayWindow::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_DisplayWindow is null");
 }
 

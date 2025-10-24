@@ -30,9 +30,7 @@ void Server::exec()
 
 	while (true)
 	{
-		// Wait till we receive any network events
-		CL_Event::wait(network_server.get_event_arrived());
-		network_server.process_events();
+		CL_KeepAlive::process(10);
 	}
 
 	network_server.stop();

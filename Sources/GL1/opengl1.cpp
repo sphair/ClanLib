@@ -43,7 +43,7 @@
 
 #ifdef __APPLE__
 #include <AGL/agl.h>
-#include <OpenGL/gl.h>
+#include <OpenGLES/ES2/gl.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -131,7 +131,7 @@ int CL_GL1::get_textureformat_bits(CL_TextureFormat format)
 	return count;
 }
 
-void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format)
+void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
 {
 	switch (format)
 	{
@@ -143,25 +143,25 @@ void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal
 		case cl_stencil_index: gl_internal_format = GL_STENCIL_INDEX; gl_pixel_format = GL_STENCIL_INDEX; break;
 
 	// sized internal format
-		case cl_r3_g3_b2: gl_internal_format = CL_R3_G3_B2; gl_pixel_format = CL_RGB; break;
-		case cl_rgb4: gl_internal_format = CL_RGB4; gl_pixel_format = CL_RGB; break;
-		case cl_rgb5: gl_internal_format = CL_RGB5; gl_pixel_format = CL_RGB; break;
-		case cl_rgb8: gl_internal_format = CL_RGB8; gl_pixel_format = CL_RGB; break;
-		case cl_rgb10: gl_internal_format = CL_RGB10; gl_pixel_format = CL_RGB; break;
-		case cl_rgb12: gl_internal_format = CL_RGB12; gl_pixel_format = CL_RGB; break;
-		case cl_rgb16: gl_internal_format = CL_RGB16; gl_pixel_format = CL_RGB; break;
-		case cl_rgba2: gl_internal_format = CL_RGBA2; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba4: gl_internal_format = CL_RGBA4; gl_pixel_format = CL_RGBA; break;
-		case cl_rgb5_a1: gl_internal_format = CL_RGB5_A1; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba8: gl_internal_format = CL_RGBA8; gl_pixel_format = CL_RGBA; break;
-		case cl_rgb10_a2: gl_internal_format = CL_RGB10_A2; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba12: gl_internal_format = CL_RGBA12; gl_pixel_format = CL_RGBA; break;
-		case cl_rgba16: gl_internal_format = CL_RGBA16; gl_pixel_format = CL_RGBA; break;
-		case cl_depth_component16: gl_internal_format = CL_DEPTH_COMPONENT16; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_component24: gl_internal_format = CL_DEPTH_COMPONENT24; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_depth_component32: gl_internal_format = CL_DEPTH_COMPONENT32; gl_pixel_format = CL_DEPTH_COMPONENT; break;
-		case cl_compressed_rgb: gl_internal_format = CL_COMPRESSED_RGB; gl_pixel_format = CL_RGB; break;
-		case cl_compressed_rgba: gl_internal_format = CL_COMPRESSED_RGBA; gl_pixel_format = CL_RGBA; break;
+		case cl_r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
+		case cl_rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
+		case cl_rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_RGB; break;
+		case cl_rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
+		case cl_rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
+		case cl_rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
+		case cl_rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
+		case cl_rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
+		case cl_rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
+		case cl_depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case cl_compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
 		default:
 			throw CL_Exception("Unknown CL_TextureFormat");
 	}
@@ -169,45 +169,45 @@ void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal
 }
 
 
-bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format, CLenum &type)
+bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, GLenum &format, GLenum &type)
 {
 /*
 	// Types:
-	CL_UNSIGNED_BYTE
-	CL_BITMAP
-	CL_BYTE
-	CL_UNSIGNED_SHORT
-	CL_SHORT
-	CL_UNSIGNED_INT
-	CL_INT
-	CL_FLOAT
-	CL_UNSIGNED_BYTE_3_3_2
-	CL_UNSIGNED_BYTE_2_3_3_REV
-	CL_UNSIGNED_SHORT_5_6_5
-	CL_UNSIGNED_SHORT_5_6_5_REV
-	CL_UNSIGNED_SHORT_4_4_4_4
-	CL_UNSIGNED_SHORT_4_4_4_4_REV
-	CL_UNSIGNED_SHORT_5_5_5_1
-	CL_UNSIGNED_SHORT_1_5_5_5_REV
-	CL_UNSIGNED_INT_8_8_8_8
-	CL_UNSIGNED_INT_8_8_8_8_REV
-	CL_UNSIGNED_INT_10_10_10_2
-	CL_UNSIGNED_INT_2_10_10_10_REV
+	GL_UNSIGNED_BYTE
+	GL_BITMAP
+	GL_BYTE
+	GL_UNSIGNED_SHORT
+	GL_SHORT
+	GL_UNSIGNED_INT
+	GL_INT
+	GL_FLOAT
+	GL_UNSIGNED_BYTE_3_3_2
+	GL_UNSIGNED_BYTE_2_3_3_REV
+	GL_UNSIGNED_SHORT_5_6_5
+	GL_UNSIGNED_SHORT_5_6_5_REV
+	GL_UNSIGNED_SHORT_4_4_4_4
+	GL_UNSIGNED_SHORT_4_4_4_4_REV
+	GL_UNSIGNED_SHORT_5_5_5_1
+	GL_UNSIGNED_SHORT_1_5_5_5_REV
+	GL_UNSIGNED_INT_8_8_8_8
+	GL_UNSIGNED_INT_8_8_8_8_REV
+	GL_UNSIGNED_INT_10_10_10_2
+	GL_UNSIGNED_INT_2_10_10_10_REV
 
 	// Formats:
-	CL_COLOR_INDEX
-	CL_STENCIL_INDEX
-	CL_DEPTH_COMPONENT
-	CL_RED
-	CL_GREEN
-	CL_BLUE
-	CL_ALPHA
-	CL_RGB
-	CL_RGBA
-	CL_BGR
-	CL_BGRA
-	CL_LUMINANCE
-	CL_LUMINANCE_ALPHA
+	GL_COLOR_INDEX
+	GL_STENCIL_INDEX
+	GL_DEPTH_COMPONENT
+	GL_RED
+	GL_GREEN
+	GL_BLUE
+	GL_ALPHA
+	GL_RGB
+	GL_RGBA
+	GL_BGR
+	GL_BGRA
+	GL_LUMINANCE
+	GL_LUMINANCE_ALPHA
 */
 
 	// indexed modes and colorkey requires special conversion to alpha and
@@ -223,14 +223,14 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 	{
 		if (rm == (0x7u << 5) && gm == (0x7u << 2) && bm == (0x3u))
 		{
-			type = CL_UNSIGNED_BYTE_3_3_2;
-			format = CL_RGB;
+			type = GL_UNSIGNED_BYTE_3_3_2;
+			format = GL_RGB;
 			return true;
 		}
 		if (rm == (0x7u) && gm == (0x7u << 3) && bm == (0x3u << 6))
 		{
-			type = CL_UNSIGNED_BYTE_2_3_3_REV;
-			format = CL_RGB;
+			type = GL_UNSIGNED_BYTE_2_3_3_REV;
+			format = GL_RGB;
 			return true;
 		}
 	}
@@ -238,38 +238,38 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 	{
 		if (rm == (0x1fu << 11) && gm == (0x3fu << 5) && bm == (0x1fu))
 		{
-			type = CL_UNSIGNED_SHORT_5_6_5;
-			format = CL_RGB;
+			type = GL_UNSIGNED_SHORT_5_6_5;
+			format = GL_RGB;
 			return true;
 		}
 		if (rm == (0x1fu) && gm == (0x3fu << 5) && bm == (0x1fu << 11))
 		{
-			type = CL_UNSIGNED_SHORT_5_6_5_REV;
-			format = CL_RGB;
+			type = GL_UNSIGNED_SHORT_5_6_5_REV;
+			format = GL_RGB;
 			return true;
 		}
 		if (rm == (0x0fu << 12) && gm == (0x0fu << 8) && bm == (0x0fu << 4) && am == (0x0fu))
 		{
-			type = CL_UNSIGNED_SHORT_4_4_4_4;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_4_4_4_4;
+			format = GL_RGBA;
 			return true;
 		}
 		if (rm == (0x0fu) && gm == (0x0fu << 4) && bm == (0x0fu << 8) && am == (0x0fu << 12))
 		{
-			type = CL_UNSIGNED_SHORT_4_4_4_4_REV;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_4_4_4_4_REV;
+			format = GL_RGBA;
 			return true;
 		}
 		if (rm == (0x1fu << 11) && gm == (0x1fu << 6) && bm == (0x1fu << 1) && am == (0x01u))
 		{
-			type = CL_UNSIGNED_SHORT_5_5_5_1;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_5_5_5_1;
+			format = GL_RGBA;
 			return true;
 		}
 		if (rm == (0x1fu) && gm == (0x1fu << 5) && bm == (0x1fu << 10) && am == (0x01u << 15))
 		{
-			type = CL_UNSIGNED_SHORT_1_5_5_5_REV;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_SHORT_1_5_5_5_REV;
+			format = GL_RGBA;
 			return true;
 		}
 	}
@@ -277,25 +277,25 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 	{
 		if (rm == (0xfful << 24) && gm == (0xfful << 16) && bm == (0xfful << 8) && am == (0xfful))
 		{
-			type = CL_UNSIGNED_INT_8_8_8_8;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
 			return true;
 		}
 		if (rm == (0xfful) && gm == (0xfful << 8) && bm == (0xfful << 16) && am == (0xfful << 24))
 		{
-			type = CL_UNSIGNED_INT_8_8_8_8_REV;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_8_8_8_8_REV;
+			format = GL_RGBA;
 			return true;
 		}
 		if (rm == (0x3fful << 22) && gm == (0x3fful << 12) && bm == (0x3fful << 2) && am == (0x03ul))
 		{
-			type = CL_UNSIGNED_INT_10_10_10_2;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_10_10_10_2;
+			format = GL_RGBA;
 		}
 		if (rm == (0x3fful) && gm == (0x3fful << 10) && bm == (0x3fful << 20) && am == (0x03ul << 30))
 		{
-			type = CL_UNSIGNED_INT_2_10_10_10_REV;
-			format = CL_RGBA;
+			type = GL_UNSIGNED_INT_2_10_10_10_REV;
+			format = GL_RGBA;
 		}
 	}
 
@@ -303,13 +303,13 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 
 	if (pbuffer.get_format() == cl_color_index)
 	{
-		format = CL_COLOR_INDEX;
+		format = GL_COLOR_INDEX;
 		if (pbuffer.get_bytes_per_pixel() == 1)
-			type = CL_UNSIGNED_BYTE;
+			type = GL_UNSIGNED_BYTE;
 		else if (pbuffer.get_bytes_per_pixel() == 2)
-			type = CL_UNSIGNED_SHORT;
+			type = GL_UNSIGNED_SHORT;
 		else if (pbuffer.get_bytes_per_pixel() == 4)
-			type = CL_UNSIGNED_INT;
+			type = GL_UNSIGNED_INT;
 		else
 			return false;
 	}
@@ -325,14 +325,14 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 			bmb = CL_PixelFormat::get_mask_bits(bm),
 			amb = CL_PixelFormat::get_mask_bits(am);
 
-		typedef std::map<int, CLenum> BitsToTypeMap;
+		typedef std::map<int, GLenum> BitsToTypeMap;
 		static BitsToTypeMap bits_to_type;
 		if (bits_to_type.empty())
 		{
 			// initialize it only once
-			bits_to_type[8] = CL_UNSIGNED_BYTE;
-			bits_to_type[16] = CL_UNSIGNED_SHORT;
-			bits_to_type[32] = CL_UNSIGNED_INT;
+			bits_to_type[8] = GL_UNSIGNED_BYTE;
+			bits_to_type[16] = GL_UNSIGNED_SHORT;
+			bits_to_type[32] = GL_UNSIGNED_INT;
 		}
 
 		if (rm && gm && bm && am)
@@ -351,13 +351,13 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 			type = bits_to_type[bits];
 
 			if (!big && rms == 0*bits && gms == 1*bits && bms == 2*bits && ams == 3*bits)
-				format = CL_RGBA;
+				format = GL_RGBA;
 			else if (!big && ams == 0*bits && bms == 1*bits && gms == 2*bits && rms == 3*bits)
-				format = CL_ABGR;
+				format = GL_ABGR;
 			else if (big && rms == 3*bits && gms == 2*bits && bms == 1*bits && ams == 0*bits)
-				format = CL_RGBA;
+				format = GL_RGBA;
 			else if (big && ams == 3*bits && bms == 2*bits && gms == 1*bits && rms == 0*bits)
-				format = CL_ABGR;
+				format = GL_ABGR;
 			else
 				return false;
 		}
@@ -377,19 +377,19 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 			type = bits_to_type[bits];
 
 			if (!big && rms == 0*bits && gms == 1*bits && bms == 2*bits)
-				format = CL_RGB;
+				format = GL_RGB;
 			else if (!big && bms == 0*bits && gms == 1*bits && rms == 2*bits)
-				format = CL_BGR;
+				format = GL_BGR;
 			else if (big && rms == 2*bits && gms == 1*bits && bms == 0*bits)
-				format = CL_RGB;
+				format = GL_RGB;
 			else if (big && bms == 2*bits && gms == 1*bits && rms == 0*bits)
-				format = CL_BGR;
+				format = GL_BGR;
 			else
 				return false;
 		}
 		else if (rm && !gm && !bm && !am)
 		{
-			format = CL_RED;
+			format = GL_RED;
 			if (rms != 0 || !bits_to_type.count(rmb))
 				return false;
 			if ((pbuffer.get_bytes_per_pixel() * 8) != rmb)
@@ -398,7 +398,7 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 		}
 		else if (!rm && gm && !bm && !am)
 		{
-			format = CL_GREEN;
+			format = GL_GREEN;
 			if (gms != 0 || !bits_to_type.count(gmb))
 				return false;
 			if ((pbuffer.get_bytes_per_pixel() * 8) != gmb)
@@ -407,7 +407,7 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 		}
 		else if (!rm && !gm && bm && !am)
 		{
-			format = CL_BLUE;
+			format = GL_BLUE;
 			if (bms != 0 || !bits_to_type.count(bmb))
 				return false;
 			if ((pbuffer.get_bytes_per_pixel() * 8) != bmb)
@@ -416,7 +416,7 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format
 		}
 		else if (!rm && !gm && !bm && am)
 		{
-			format = CL_ALPHA;
+			format = GL_ALPHA;
 			if (ams != 0 || !bits_to_type.count(amb))
 				return false;
 			if ((pbuffer.get_bytes_per_pixel() * 8) != amb)

@@ -125,7 +125,7 @@ void CL_SHA1_Impl::add(const void *_data, int size)
 			chunk_filled = 0;
 		}
 	}
-	length_message += size * (cl_uint64) 8;
+	length_message += size * (cl_ulong) 8;
 }
 
 void CL_SHA1_Impl::calculate()
@@ -185,15 +185,15 @@ void CL_SHA1_Impl::process_chunk()
 	for (i = 16; i < 80; i++)
 		w[i] = leftrotate_uint32(w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16], 1);
 		
-	cl_uint32 a = h0;
-	cl_uint32 b = h1;
-	cl_uint32 c = h2;
-	cl_uint32 d = h3;
-	cl_uint32 e = h4;
+	cl_uint a = h0;
+	cl_uint b = h1;
+	cl_uint c = h2;
+	cl_uint d = h3;
+	cl_uint e = h4;
 	
 	for (i = 0; i < 80; i++)
 	{
-		cl_uint32 f, k;
+		cl_uint f, k;
 		if (i < 20)
 		{
 			f = (b & c) | ((~b) & d);
@@ -215,7 +215,7 @@ void CL_SHA1_Impl::process_chunk()
 			k = 0xCA62C1D6;
 		}
 		
-		cl_uint32 temp = leftrotate_uint32(a, 5) + f + e + k + w[i];
+		cl_uint temp = leftrotate_uint32(a, 5) + f + e + k + w[i];
 		e = d;
 		d = c;
 		c = leftrotate_uint32(b, 30);
@@ -230,20 +230,20 @@ void CL_SHA1_Impl::process_chunk()
 	h4 += e;
 }
 
-void CL_SHA1_Impl::to_hex(char *buffer, cl_uint32 value, bool uppercase)
+void CL_SHA1_Impl::to_hex(char *buffer, cl_uint value, bool uppercase)
 {
-	cl_uint32 values[4];
+	cl_uint values[4];
 	values[0] = ((value & 0xff000000) >> 24);
 	values[1] = ((value & 0x00ff0000) >> 16);
 	values[2] = ((value & 0x0000ff00) >> 8);
 	values[3] = (value & 0x000000ff);
 	
-	cl_uint32 low = '0';
-	cl_uint32 high = uppercase ? 'A' : 'a';
+	cl_uint low = '0';
+	cl_uint high = uppercase ? 'A' : 'a';
 	for (int i = 0; i < 4; i++)
 	{
-		cl_uint32 a = ((values[i] & 0xf0) >> 4);
-		cl_uint32 b = (values[i] & 0x0f);
+		cl_uint a = ((values[i] & 0xf0) >> 4);
+		cl_uint b = (values[i] & 0x0f);
 		buffer[i*2+0] = (a < 10) ? (low + a) : (high + a - 10);
 		buffer[i*2+1] = (b < 10) ? (low + b) : (high + b - 10);
 	}

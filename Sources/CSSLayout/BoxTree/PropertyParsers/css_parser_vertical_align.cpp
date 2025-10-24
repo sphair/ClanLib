@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_vertical_align.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserVerticalAlign::get_names()
 {
@@ -37,29 +37,29 @@ std::vector<CL_String> CL_CSSParserVerticalAlign::get_names()
 	return names;
 }
 
-void CL_CSSParserVerticalAlign::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserVerticalAlign::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "baseline")
+		if (equals(token.value, "baseline"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_baseline;
-		else if (token.value == "sub")
+		else if (equals(token.value, "sub"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_sub;
-		else if (token.value == "super")
+		else if (equals(token.value, "super"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_super;
-		else if (token.value == "top")
+		else if (equals(token.value, "top"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_top;
-		else if (token.value == "text-top")
+		else if (equals(token.value, "text-top"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_text_top;
-		else if (token.value == "middle")
+		else if (equals(token.value, "middle"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_middle;
-		else if (token.value == "bottom")
+		else if (equals(token.value, "bottom"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_bottom;
-		else if (token.value == "text-bottom")
+		else if (equals(token.value, "text-bottom"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_text_bottom;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
@@ -75,5 +75,28 @@ void CL_CSSParserVerticalAlign::parse(CL_CSSBoxProperties &properties, const CL_
 	{
 		properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_percentage;
 		properties.vertical_align.percentage = CL_StringHelp::text_to_float(token.value);
+	}
+	else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+	{
+		token = next_token(pos, tokens);
+		if (is_length(token) && pos == tokens.size())
+		{
+			CL_CSSBoxLength length;
+			if (parse_length(token, length))
+			{
+				length.value = -length.value;
+				properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_length;
+				properties.vertical_align.length = length;
+			}
+		}
+		else if (token.type == CL_CSSToken::type_percentage && pos == tokens.size())
+		{
+			properties.vertical_align.type = CL_CSSBoxVerticalAlign::type_percentage;
+			properties.vertical_align.percentage = -CL_StringHelp::text_to_float(token.value);
+		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["vertical-align"] = &properties.vertical_align;
 	}
 }

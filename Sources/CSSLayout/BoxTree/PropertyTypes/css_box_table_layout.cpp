@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_table_layout.h"
+#include "API/CSSLayout/PropertyTypes/css_box_table_layout.h"
 
 CL_CSSBoxTableLayout::CL_CSSBoxTableLayout()
 : type(type_auto)
@@ -42,5 +42,19 @@ void CL_CSSBoxTableLayout::compute(const CL_CSSBoxTableLayout *parent, CL_CSSRes
 			type = parent->type;
 		else
 			type = type_auto;
+	}
+}
+
+CL_String CL_CSSBoxTableLayout::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_auto:
+		return "auto";
+	case type_fixed:
+		return "fixed";
+	case type_inherit:
+		return "inherit";
 	}
 }

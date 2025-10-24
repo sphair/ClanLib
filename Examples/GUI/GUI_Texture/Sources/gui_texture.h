@@ -61,19 +61,19 @@ private:
 	CL_DisplayWindow *window_ptr;
 	CL_GUIWindowManagerTexture wm;
 
-	CL_AutoPtr<ScrollBar> scrollbar;
-	CL_AutoPtr<PushButton> pushbutton;
-	CL_AutoPtr<LineEdit> lineedit;
-	CL_AutoPtr<CheckBox> checkbox;
-	CL_AutoPtr<Slider> slider;
-	CL_AutoPtr<RadioButton> radiobutton;
-	CL_AutoPtr<ProgressBar> progressbar;
-	CL_AutoPtr<TabPage> tabpage;
-	CL_AutoPtr<MenuBar> menubar;
-	CL_AutoPtr<Spin> spin;
-	CL_AutoPtr<ComboBox> combobox;
-	CL_AutoPtr<ListView> listview;
-	CL_AutoPtr<Theme> window_theme;
+	CL_UniquePtr<ScrollBar> scrollbar;
+	CL_UniquePtr<PushButton> pushbutton;
+	CL_UniquePtr<LineEdit> lineedit;
+	CL_UniquePtr<CheckBox> checkbox;
+	CL_UniquePtr<Slider> slider;
+	CL_UniquePtr<RadioButton> radiobutton;
+	CL_UniquePtr<ProgressBar> progressbar;
+	CL_UniquePtr<TabPage> tabpage;
+	CL_UniquePtr<MenuBar> menubar;
+	CL_UniquePtr<Spin> spin;
+	CL_UniquePtr<ComboBox> combobox;
+	CL_UniquePtr<ListView> listview;
+	CL_UniquePtr<Theme> window_theme;
 
 };
 

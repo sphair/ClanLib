@@ -63,6 +63,9 @@ public:
 public:
 	virtual void create_parts();
 
+	virtual void set_show_detail_icon(bool enable) { show_detail_icon = enable; invalidate(); }
+	virtual void set_show_detail_opener(bool enable) { show_detail_opener = enable; invalidate(); }
+
 /// \}
 /// \name Callbacks
 /// \{
@@ -100,6 +103,8 @@ public:
 	CL_GUIThemePartProperty prop_lineedit_offset_top;
 	CL_GUIThemePartProperty prop_lineedit_offset_right;
 	CL_GUIThemePartProperty prop_lineedit_offset_bottom;
+	bool show_detail_icon;
+	bool show_detail_opener;
 /// \}
 };
 

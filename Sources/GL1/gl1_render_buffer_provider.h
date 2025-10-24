@@ -49,7 +49,7 @@ public:
 /// \{
 
 public:
-	CLuint get_handle();
+	GLuint get_handle();
 
 
 /// \}

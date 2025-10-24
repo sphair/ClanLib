@@ -63,8 +63,8 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	sprite_grid_outline = CL_Sprite(gc, "sprite_grid_outline", &resources);
 	image_grid_normal = CL_Image(gc, "image_grid_normal", &resources);
 	image_grid_outline = CL_Image(gc, "image_grid_outline", &resources);
-	texture_grid_normal = CL_Texture("texture_grid_normal", &resources, gc);
-	texture_grid_outline = CL_Texture("texture_grid_outline", &resources, gc);
+	texture_grid_normal = CL_Texture(gc, "texture_grid_normal", &resources);
+	texture_grid_outline = CL_Texture(gc, "texture_grid_outline", &resources);
 
 	display_image_size = CL_Size(64, 64);
 	display_image_geometry = CL_Rect(320, 40, CL_Size(512, 512));
@@ -78,7 +78,7 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	display_framebuffer = CL_FrameBuffer(gc);
 	display_framebuffer.attach_color_buffer(0, display_image);
 
-	font_texture_group = CL_TextureGroup(gc, CL_Size(512, 512));
+	font_texture_group = CL_TextureGroup(CL_Size(512, 512));
 	font = CL_Font_System(gc, "Tahoma", 32);
 	font.set_texture_group(font_texture_group);
 	font_small = CL_Font_System(gc, "Tahoma", 16);

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Thomas Gottschalk Larsen
 */
 
 #include "Core/precomp.h"
@@ -32,18 +33,25 @@
 #include "API/Core/XML/dom_node.h"
 #include "API/Core/XML/dom_named_node_map.h"
 #include "API/Core/XML/dom_element.h"
+#include "API/Core/XML/xpath_exception.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Math/cl_math.h"
 #include "xpath_evaluator_impl.h"
 #include "xpath_token.h"
 #include "xpath_location_step.h"
+#include <cmath>
+#include <limits>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_XPathEvaluator_Impl Operations:
 
+
 CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 	const CL_StringRef &expression,
-	CL_DomNode context_node,
-	CL_XPathToken prev_token)
+	const CL_XPathNodeSet &context,
+	CL_XPathNodeSet::size_type context_node_index,
+	CL_XPathToken prev_token) const
 {
 	std::vector<Operator> operator_stack;
 	std::vector<Operand> operand_stack;
@@ -76,7 +84,7 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 				(cur_token.value.oper == CL_XPathToken::operator_slash ||
 				cur_token.value.oper == CL_XPathToken::operator_double_slash)))
 		{
-			prev_token = read_location_path(expression, cur_token, context_node, operand_stack);
+			prev_token = read_location_path(expression, cur_token, context, context_node_index, operand_stack);
 			continue;
 		}
 
@@ -84,74 +92,75 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 
 		if (cur_token.type == CL_XPathToken::type_literal)
 		{
-			CL_XPathObject obj;
-			obj.set_string(cur_token.value.str);
-			operand_stack.push_back(obj);
+			operand_stack.push_back(CL_XPathObject(cur_token.value.str));
 		}
 		else if (cur_token.type == CL_XPathToken::type_variable_reference)
 		{
-			CL_XPathObject obj = get_variable(cur_token.value.str);
-			operand_stack.push_back(obj);
+			operand_stack.push_back(CL_XPathObject(get_variable(cur_token.value.str)));
 		}
 		else if (cur_token.type == CL_XPathToken::type_number)
 		{
-			CL_XPathObject obj;
-			obj.set_number(CL_StringHelp::text_to_int(cur_token.value.str));
-			operand_stack.push_back(obj);
+			operand_stack.push_back(CL_XPathObject(CL_StringHelp::text_to_double(cur_token.value.str)));
 		}
 		else if (cur_token.type == CL_XPathToken::type_function_name)
 		{
+			CL_String function_name = cur_token.value.str;
 			cur_token = read_token(expression, cur_token);
 			if (cur_token.type != CL_XPathToken::type_operator ||
 				cur_token.value.oper != CL_XPathToken::operator_parenthesis_begin)
 			{
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Expected '(' after function name", expression, cur_token);
 			}
 
 			std::vector<CL_XPathObject> parameters;
 			while (true)
 			{
-				CL_XPathEvaluateResult result = evaluate(expression, context_node, cur_token);
-				parameters.push_back(result.result);
+				CL_XPathEvaluateResult result = evaluate(expression, context, context_node_index, cur_token);
+				if (!result.result.is_null())
+					parameters.push_back(result.result);
 
 				cur_token = result.next_token;
 				if (cur_token.type == CL_XPathToken::type_operator &&
 					cur_token.value.oper == CL_XPathToken::operator_parenthesis_end)
 					break;
 				if (cur_token.type != CL_XPathToken::type_comma)
-					throw CL_Exception("Syntax error in xpath expression");
-				cur_token = read_token(expression, cur_token);
+					throw CL_XPathException("Expected ',' or ')' in function call", expression, cur_token);
 			}
-			cur_token = read_token(expression, cur_token);
 
-			CL_XPathObject obj = call_function(cur_token.value.str, parameters);
+			CL_XPathObject obj = call_function(context, context_node_index, function_name, parameters);
 			operand_stack.push_back(obj);
 		}
 		else if (cur_token.type == CL_XPathToken::type_bracket_begin)
 		{
 			if (operand_stack.empty())
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Missing operand before predicate", expression, cur_token);
+
 			Operand cur_operand = operand_stack.back();
 			operand_stack.pop_back();
 			if (cur_operand.get_type() != CL_XPathObject::type_node_set)
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Expected node-set operand before '['", expression, cur_token);
 
-			std::vector<CL_DomNode> nodes = cur_operand.get_node_set();
-			std::vector<CL_DomNode> filtered_nodes;
-			std::vector<CL_DomNode>::size_type index, size;
-			size = nodes.size();
-			for (index = 0; index < size; index++)
+			CL_XPathToken end_token = cur_token;
+			while (end_token.type != CL_XPathToken::type_bracket_end && end_token.type != CL_XPathToken::type_none)
+				end_token = read_token(expression, end_token);
+
+			if (end_token.type == CL_XPathToken::type_none)
+				throw CL_XPathException("Missing matching ']' in expression", expression, cur_token);
+
+			CL_XPathLocationStep::Predicate predicate;
+			predicate.pos = cur_token.pos + cur_token.length;
+			predicate.length = end_token.pos - predicate.pos;
+
+			CL_XPathNodeSet filtered_nodes;
+			CL_XPathNodeSet nodes = cur_operand.get_node_set();
+			for (CL_XPathNodeSet::size_type node_index = 0, num_nodes = nodes.size(); node_index < num_nodes; node_index++)
 			{
-				CL_XPathEvaluateResult result = evaluate(expression, nodes[index], cur_token);
-				if (result.result.get_boolean())
-					filtered_nodes.push_back(nodes[index]);
-				if (index + 1 == size)
-					cur_token = result.next_token;
+				if (confirm_step_predicate(nodes, node_index, predicate, expression))
+					filtered_nodes.push_back(nodes[node_index]);
 			}
-			cur_token = read_token(expression, cur_token);
-			CL_XPathObject obj;
-			obj.set_node_set(filtered_nodes);
-			operand_stack.push_back(obj);
+
+			cur_token = end_token;
+			operand_stack.push_back(CL_XPathObject(filtered_nodes));
 		}
 		else if (cur_token.type == CL_XPathToken::type_operator)
 		{
@@ -168,18 +177,14 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 			}
 
 			if (previous < cur_operator)
-			{
 				do_npr(operator_stack, operand_stack);
+
+			if (cur_operator != CL_XPathToken::operator_parenthesis_end)
 				operator_stack.push_back(cur_operator);
-			}
-			else
-			{
-				operator_stack.push_back(cur_operator);
-			}
 		}
 		else
 		{
-			throw CL_Exception("Syntax error in xpath expression");
+			throw CL_XPathException("Unexpected token", expression, cur_token);
 		}
 
 		prev_token = cur_token;
@@ -187,82 +192,86 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 
 	while (do_npr(operator_stack, operand_stack));
 
-	if (operand_stack.empty()) 
-		throw CL_Exception("Syntax error in xpath expression");
+	// Allow empty expression between parenthesis (for supporting functions that take no parameters)
+	if (operand_stack.empty() &&
+			!(prev_token.type == CL_XPathToken::type_operator &&
+			prev_token.value.oper == CL_XPathToken::operator_parenthesis_begin &&
+			cur_token.type == CL_XPathToken::type_operator &&
+			cur_token.value.oper == CL_XPathToken::operator_parenthesis_end))
+	{
+		throw CL_XPathException("Expected operand", expression, cur_token);
+	}
 
 	CL_XPathEvaluateResult result;
-	result.result = operand_stack.back();
+	result.result = operand_stack.empty() ? CL_XPathObject() : operand_stack.back();
 	result.next_token = cur_token;
 	return result;
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::call_function(const CL_StringRef &name, std::vector<CL_XPathObject> parameters)
+
+CL_XPathObject CL_XPathEvaluator_Impl::call_function(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const CL_StringRef &name, const std::vector<CL_XPathObject> &parameters) const
 {
 	if (name == "last")
-		return function_last(parameters);
+		return function_last(context, context_node_index, parameters);
 	else if (name == "position")
-		return function_position(parameters);
+		return function_position(context, context_node_index, parameters);
 	else if (name == "count")
-		return function_count(parameters);
+		return function_count(context, context_node_index, parameters);
 	else if (name == "id")
-		return function_id(parameters);
+		return function_id(context, context_node_index, parameters);
 	else if (name == "local-name")
-		return function_local_name(parameters);
+		return function_local_name(context, context_node_index, parameters);
 	else if (name == "namespace-uri")
-		return function_namespace_uri(parameters);
+		return function_namespace_uri(context, context_node_index, parameters);
 	else if (name == "name")
-		return function_name(parameters);
+		return function_name(context, context_node_index, parameters);
 	else if (name == "string")
-		return function_string(parameters);
+		return function_string(context, context_node_index, parameters);
 	else if (name == "concat")
-		return function_concat(parameters);
+		return function_concat(context, context_node_index, parameters);
 	else if (name == "starts-with")
-		return function_starts_with(parameters);
+		return function_starts_with(context, context_node_index, parameters);
 	else if (name == "contains")
-		return function_contains(parameters);
+		return function_contains(context, context_node_index, parameters);
 	else if (name == "substring-before")
-		return function_substring_before(parameters);
+		return function_substring_before(context, context_node_index, parameters);
 	else if (name == "substring-after")
-		return function_substring_after(parameters);
+		return function_substring_after(context, context_node_index, parameters);
 	else if (name == "substring")
-		return function_substring(parameters);
+		return function_substring(context, context_node_index, parameters);
 	else if (name == "string-length")
-		return function_string_length(parameters);
+		return function_string_length(context, context_node_index, parameters);
 	else if (name == "normalize-space")
-		return function_normalize_space(parameters);
+		return function_normalize_space(context, context_node_index, parameters);
 	else if (name == "translate")
-		return function_translate(parameters);
+		return function_translate(context, context_node_index, parameters);
 	else if (name == "boolean")
-		return function_boolean(parameters);
+		return function_boolean(context, context_node_index, parameters);
 	else if (name == "not")
-		return function_not(parameters);
+		return function_not(context, context_node_index, parameters);
 	else if (name == "true")
-		return function_true(parameters);
+		return function_true(context, context_node_index, parameters);
 	else if (name == "false")
-		return function_false(parameters);
+		return function_false(context, context_node_index, parameters);
 	else if (name == "lang")
-		return function_lang(parameters);
+		return function_lang(context, context_node_index, parameters);
 	else if (name == "number")
-		return function_number(parameters);
+		return function_number(context, context_node_index, parameters);
 	else if (name == "sum")
-		return function_sum(parameters);
+		return function_sum(context, context_node_index, parameters);
 	else if (name == "floor")
-		return function_floor(parameters);
+		return function_floor(context, context_node_index, parameters);
 	else if (name == "ceiling")
-		return function_ceiling(parameters);
+		return function_ceiling(context, context_node_index, parameters);
 	else if (name == "round")
-		return function_round(parameters);
+		return function_round(context, context_node_index, parameters);
 
-	CL_XPathObject obj;
-	obj.set_null();
-	return obj;
+	throw CL_Exception(cl_format("Unknown function '%1'", name));
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::get_variable(const CL_StringRef &name)
+CL_XPathObject CL_XPathEvaluator_Impl::get_variable(const CL_StringRef &name) const
 {
-	CL_XPathObject obj;
-	obj.set_string(name);
-	return obj;
+	return CL_XPathObject(name);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -270,7 +279,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::get_variable(const CL_StringRef &name)
 
 bool CL_XPathEvaluator_Impl::do_npr(
 	std::vector<CL_XPathEvaluator_Impl::Operator> &operator_stack,
-	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack)
+	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack) const
 {
 	if (operator_stack.empty()) 
 		return false;
@@ -297,7 +306,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(b.get_boolean() && a.get_boolean());
+		result.set_boolean(boolean(b).get_boolean() && boolean(a).get_boolean());
 		operand_stack.push_back(result);
 		break;
 
@@ -312,7 +321,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(b.get_boolean() || a.get_boolean());
+		result.set_boolean(boolean(b).get_boolean() || boolean(a).get_boolean());
 		operand_stack.push_back(result);
 		break;
 
@@ -327,7 +336,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_number((int) b.get_number() % (int) a.get_number());
+		result.set_number(static_cast<int>(number(b).get_number()) % static_cast<int>(number(a).get_number()));
 		operand_stack.push_back(result);
 		break;
 	case CL_XPathToken::operator_div:
@@ -341,7 +350,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_number(b.get_number() / a.get_number());
+		result.set_number(number(b).get_number() / number(a).get_number());
 		operand_stack.push_back(result);
 		break;
 	case CL_XPathToken::operator_multiply:
@@ -355,10 +364,9 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_number(a.get_number() * b.get_number());
+		result.set_number(number(a).get_number() * number(b).get_number());
 		operand_stack.push_back(result);
 		break;
-/*
 	case CL_XPathToken::operator_union:
 		if (operand_stack.empty()) 
 			return false;
@@ -375,14 +383,29 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		if (b.get_type() != CL_XPathObject::type_node_set)
 			return false;
 
-		// todo: produce union of two node sets
+		{
+			CL_XPathNodeSet nodeset_a = a.get_node_set();
+			CL_XPathNodeSet nodeset_b = b.get_node_set();
+			for (CL_XPathNodeSet::const_iterator ita = nodeset_a.begin(), itaEnd = nodeset_a.end(); ita != itaEnd; ++ita)
+			{
+				bool found = false;
+				for (CL_XPathNodeSet::const_iterator itb = nodeset_b.begin(), itbEnd = nodeset_b.end(); itb != itbEnd; ++itb)
+				{
+					if (*ita == *itb)
+					{
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+					nodeset_b.push_back(*ita);
+			}
+
+			result.set_node_set(nodeset_b);
+			operand_stack.push_back(result);
+		}
 		break;
 
-	case CL_XPathToken::operator_slash:
-		break;
-	case CL_XPathToken::operator_double_slash:
-		break;
-*/
 	case CL_XPathToken::operator_plus:
 		if (operand_stack.empty()) 
 			return false;
@@ -394,7 +417,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_number(a.get_number() + b.get_number());
+		result.set_number(number(a).get_number() + number(b).get_number());
 		operand_stack.push_back(result);
 		break;
 
@@ -409,24 +432,10 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_number(b.get_number() - a.get_number());
+		result.set_number(number(b).get_number() - number(a).get_number());
 		operand_stack.push_back(result);
 		break;
-/*
-	case CL_XPathToken::operator_assign:
-		if (operand_stack.empty()) 
-			return false;
-		a = operand_stack.back();
-		operand_stack.pop_back();
 
-		if (operand_stack.empty()) 
-			return false;
-		b = operand_stack.back();
-		operand_stack.pop_back();
-
-		operand_stack.push_back(a);
-		break;
-*/
 	case CL_XPathToken::operator_compare_equal:
 		if (operand_stack.empty()) 
 			return false;
@@ -438,7 +447,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) == 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
 	case CL_XPathToken::operator_compare_not_equal:
@@ -452,10 +461,9 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) != 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
-
 	case CL_XPathToken::operator_less:
 		if (operand_stack.empty()) 
 			return false;
@@ -467,7 +475,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) < 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
 	case CL_XPathToken::operator_less_equal:
@@ -481,7 +489,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) <= 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
 
@@ -496,7 +504,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) > 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
 
@@ -511,7 +519,7 @@ bool CL_XPathEvaluator_Impl::do_npr(
 		b = operand_stack.back();
 		operand_stack.pop_back();
 
-		result.set_boolean(compare(b, a) >= 0);
+		result.set_boolean(compare_operands(b, a, oper));
 		operand_stack.push_back(result);
 		break;
 	default:	// Added to stop compiler warnings for "operator_xxx" not handled in switch
@@ -521,224 +529,353 @@ bool CL_XPathEvaluator_Impl::do_npr(
 	return true;
 }
 
-int CL_XPathEvaluator_Impl::compare(Operand &a, Operand b)
+template<>
+bool CL_XPathEvaluator_Impl::compare(const CL_String &value1, const CL_String &value2, Operator oper) const
+{
+	switch(oper)
+	{
+	case CL_XPathToken::operator_compare_equal:
+		if (value1.compare(value2) == 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_compare_not_equal:
+		if (value1.compare(value2) != 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_less_equal:
+		if (value1.compare(value2) <= 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_less:
+		if (value1.compare(value2) < 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater_equal:
+		if (value1.compare(value2) >= 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater:
+		if (value1.compare(value2) > 0)
+			return true;
+		break;
+	}
+	return false;
+}
+
+template<>
+bool CL_XPathEvaluator_Impl::compare(const CL_StringRef &value1, const CL_StringRef &value2, Operator oper) const
+{
+	switch(oper)
+	{
+	case CL_XPathToken::operator_compare_equal:
+		if (value1.compare(value2) == 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_compare_not_equal:
+		if (value1.compare(value2) != 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_less_equal:
+		if (value1.compare(value2) <= 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_less:
+		if (value1.compare(value2) < 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater_equal:
+		if (value1.compare(value2) >= 0)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater:
+		if (value1.compare(value2) > 0)
+			return true;
+		break;
+	}
+	return false;
+}
+
+template<typename T>
+bool CL_XPathEvaluator_Impl::compare(const T &value1, const T &value2, Operator oper) const
+{
+	switch(oper)
+	{
+	case CL_XPathToken::operator_compare_equal:
+		if (value1 == value2)
+			return true;
+		break;
+	case CL_XPathToken::operator_compare_not_equal:
+		if (value1 != value2)
+			return true;
+		break;
+	case CL_XPathToken::operator_less_equal:
+		if (value1 <= value2)
+			return true;
+		break;
+	case CL_XPathToken::operator_less:
+		if (value1 < value2)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater_equal:
+		if (value1 >= value2)
+			return true;
+		break;
+	case CL_XPathToken::operator_greater:
+		if (value1 > value2)
+			return true;
+		break;
+	}
+	return false;
+}
+
+bool CL_XPathEvaluator_Impl::compare_operands(const Operand &a, const Operand &b, Operator oper) const
 {
 	if (a.get_type() == CL_XPathObject::type_node_set)
 	{
-		return compare_node_set(a, b);
+		return compare_node_set(a, b, oper);
 	}
 	else if (a.get_type() == CL_XPathObject::type_number)
 	{
-		return compare_number(a, b);
+		return compare_number(a, b, oper);
 	}
 	else if (a.get_type() == CL_XPathObject::type_boolean)
 	{
-		return compare_boolean(a, b);
+		return compare_boolean(a, b, oper);
 	}
 	else if (a.get_type() == CL_XPathObject::type_string)
 	{
-		return compare_string(a, b);
+		return compare_string(a, b, oper);
 	}
 	else
 	{
-		throw CL_Exception("Error in xpath evaluator");
+		throw CL_XPathException("Unknown operand type in compare operation");
 	}
 }
 
-int CL_XPathEvaluator_Impl::compare_node_set(Operand &a, Operand b)
+bool CL_XPathEvaluator_Impl::compare_node_set(const Operand &a, const Operand &b, Operator oper) const
 {
-	std::vector<CL_DomNode> nodeset1 = a.get_node_set();
+	CL_XPathNodeSet nodeset1 = a.get_node_set();
 	if (b.get_type() == CL_XPathObject::type_node_set)
 	{
-		std::vector<CL_DomNode> nodeset2 = b.get_node_set();
-		for (std::vector<CL_DomNode>::size_type i = 0; i < nodeset1.size(); i++)
+		CL_XPathNodeSet nodeset2 = b.get_node_set();
+		for (CL_XPathNodeSet::const_iterator it1 = nodeset1.begin(); it1 != nodeset1.end(); ++it1)
 		{
-			CL_String s1 = nodeset1[i].get_node_value();
-			if (nodeset1[i].is_element())
-				s1 = nodeset1[i].to_element().get_text();
-			for (std::vector<CL_DomNode>::size_type j = 0; j < nodeset2.size(); j++)
+			CL_String value1 = string(*it1);
+			for (CL_XPathNodeSet::const_iterator it2 = nodeset2.begin(); it2 != nodeset2.end(); ++it2)
 			{
-				CL_String s2 = nodeset1[i].get_node_value();
-				if (nodeset1[i].is_element())
-					s2 = nodeset1[i].to_element().get_text();
-
+				CL_String value2 = string(*it2);
+				if (compare(value1, value2, oper))
+					return true;
 			}
 		}
-		return -2;
+		return false;
 	}
 	else if (b.get_type() == CL_XPathObject::type_number)
 	{
-		double number2 = b.get_number();
-		for (std::vector<CL_DomNode>::size_type i = 0; i < nodeset1.size(); i++)
+		double value2 = b.get_number();
+		for (CL_XPathNodeSet::const_iterator it = nodeset1.begin(), itEnd = nodeset1.end(); it != itEnd; ++it)
 		{
-			CL_String s1 = nodeset1[i].get_node_value();
-			if (nodeset1[i].is_element())
-				s1 = nodeset1[i].to_element().get_text();
 			try
 			{
-				double number1 = CL_StringHelp::text_to_double(s1);
-				if (number1 == number2)
-					return 0;
+				double value1 = CL_StringHelp::text_to_double(string(*it));
+				if (compare(value1, value2, oper))
+					return true;
 			}
-			catch (const CL_Exception&)
+			catch(CL_Exception&)
 			{
 			}
 		}
-		return -2;
+		return false;
 	}
 	else if (b.get_type() == CL_XPathObject::type_boolean)
 	{
-		bool boolean2 = b.get_boolean();
-		bool boolean1 = !nodeset1.empty();
-		if (boolean1 < boolean2)
-			return -1;
-		else if (boolean2 > boolean1)
-			return 1;
-		else
-			return 0;
-	}
-	else if (b.get_type() == CL_XPathObject::type_string)
-	{
-		CL_String s2 = b.get_string();
-		for (std::vector<CL_DomNode>::size_type i = 0; i < nodeset1.size(); i++)
+		bool value2 = b.get_boolean();
+		for (CL_XPathNodeSet::const_iterator it = nodeset1.begin(), itEnd = nodeset1.end(); it != itEnd; ++it)
 		{
-			CL_String s1 = nodeset1[i].get_node_value();
-			if (nodeset1[i].is_element())
-				s1 = nodeset1[i].to_element().get_text();
-			if (s1 == s2)
-				return 0;
+			bool value1 = boolean(*it);
+			if (compare(value1, value2, oper))
+				return true;
 		}
-		return -2;
-	}
-	else
-	{
-		throw CL_Exception("Error in xpath evaluator");
-	}
-}
 
-int CL_XPathEvaluator_Impl::compare_boolean(Operand &a, Operand b)
-{
-	bool boolean1 = a.get_boolean();
-	if (b.get_type() == CL_XPathObject::type_node_set)
-	{
-		return -compare_node_set(b, a);
-	}
-	else if (b.get_type() == CL_XPathObject::type_number)
-	{
-		bool boolean2 = b.get_number() != 0.0;
-		if (boolean1 < boolean2)
-			return -1;
-		else if (boolean2 > boolean1)
-			return 1;
-		else
-			return 0;
-	}
-	else if (b.get_type() == CL_XPathObject::type_boolean)
-	{
-		bool boolean2 = b.get_boolean();
-		if (boolean1 < boolean2)
-			return -1;
-		else if (boolean2 > boolean1)
-			return 1;
-		else
-			return 0;
+		return false;
 	}
 	else if (b.get_type() == CL_XPathObject::type_string)
 	{
-		bool boolean2 = !b.get_string().empty();
-		if (boolean1 < boolean2)
-			return -1;
-		else if (boolean2 > boolean1)
-			return 1;
-		else
-			return 0;
+		CL_String value2 = b.get_string();
+		for (CL_XPathNodeSet::const_iterator it = nodeset1.begin(), itEnd = nodeset1.end(); it != itEnd; ++it)
+		{
+			CL_String value1 = string(*it);
+			if (compare(value1, value2, oper))
+				return true;
+		}
+		return false;
 	}
 	else
 	{
-		throw CL_Exception("Error in xpath evaluator");
+		throw CL_XPathException("Unknown operand type in compare operation");
 	}
 }
 
-int CL_XPathEvaluator_Impl::compare_number(Operand &a, Operand b)
+bool CL_XPathEvaluator_Impl::compare_boolean(const Operand &a, const Operand &b, Operator oper) const
 {
-	double number1 = a.get_number();
+	bool value1 = a.get_boolean();
 	if (b.get_type() == CL_XPathObject::type_node_set)
 	{
-		return -compare_node_set(b, a);
-	}
-	else if (b.get_type() == CL_XPathObject::type_boolean)
-	{
-		return -compare_boolean(b, a);
+		switch (oper)
+		{
+			case CL_XPathToken::operator_compare_equal:
+			case CL_XPathToken::operator_compare_not_equal:
+				if (compare_node_set(b, a, oper))
+					return true;
+				break;
+			case CL_XPathToken::operator_less_equal:
+				if (compare_node_set(b, a, CL_XPathToken::operator_greater_equal))
+					return true;
+				break;
+			case CL_XPathToken::operator_less:
+				if (compare_node_set(b, a, CL_XPathToken::operator_greater))
+					return true;
+				break;
+			case CL_XPathToken::operator_greater_equal:
+				if (compare_node_set(b, a, CL_XPathToken::operator_less_equal))
+					return true;
+				break;
+			case CL_XPathToken::operator_greater:
+				if (compare_node_set(b, a, CL_XPathToken::operator_less))
+					return true;
+				break;
+		}
+		return false;
 	}
 	else if (b.get_type() == CL_XPathObject::type_number)
 	{
-		double number2 = b.get_number();
-		if (number1 < number2)
-			return -1;
-		else if (number1 > number2)
-			return 1;
-		else
-			return 0;
+		return compare(value1, boolean(b).get_boolean(), oper);
+	}
+	else if (b.get_type() == CL_XPathObject::type_boolean)
+	{
+		return compare(value1, b.get_boolean(), oper);
 	}
 	else if (b.get_type() == CL_XPathObject::type_string)
 	{
+		return compare(value1, !b.get_string().empty(), oper);
+	}
+	else
+	{
+		throw CL_XPathException("Unknown operand type in compare operation");
+	}
+}
+
+bool CL_XPathEvaluator_Impl::compare_number(const Operand &a, const Operand &b, Operator oper) const
+{
+	double value1 = a.get_number();
+	if (b.get_type() == CL_XPathObject::type_node_set)
+	{
+		switch (oper)
+		{
+		case CL_XPathToken::operator_compare_equal:
+		case CL_XPathToken::operator_compare_not_equal:
+			if (compare_node_set(b, a, oper))
+				return true;
+			break;
+		case CL_XPathToken::operator_less_equal:
+			if (compare_node_set(b, a, CL_XPathToken::operator_greater_equal))
+				return true;
+			break;
+		case CL_XPathToken::operator_less:
+			if (compare_node_set(b, a, CL_XPathToken::operator_greater))
+				return true;
+			break;
+		case CL_XPathToken::operator_greater_equal:
+			if (compare_node_set(b, a, CL_XPathToken::operator_less_equal))
+				return true;
+			break;
+		case CL_XPathToken::operator_greater:
+			if (compare_node_set(b, a, CL_XPathToken::operator_less))
+				return true;
+			break;
+		}
+		return false;
+	}
+	else if (b.get_type() == CL_XPathObject::type_boolean)
+	{
+		return compare(boolean(a).get_boolean(), b.get_boolean(), oper);
+	}
+	else if (b.get_type() == CL_XPathObject::type_number)
+	{
+		return compare(value1, b.get_number(), oper);
+	}
+	else if (b.get_type() == CL_XPathObject::type_string)
+	{
+		bool result = false;
 		try
 		{
-			double number2 = CL_StringHelp::text_to_double(b.get_string());
-			if (number1 < number2)
-				return -1;
-			else if (number1 > number2)
-				return 1;
-			else
-				return 0;
+			result = compare(value1, number(b).get_number(), oper);
 		}
-		catch (const CL_Exception&)
+		catch (CL_Exception&)
 		{
-			return -2;
 		}
+		return false;
 	}
 	else
 	{
-		throw CL_Exception("Error in xpath evaluator");
+		throw CL_XPathException("Unknown operand type in compare operation");
 	}
 }
 
-int CL_XPathEvaluator_Impl::compare_string(Operand &a, Operand b)
+bool CL_XPathEvaluator_Impl::compare_string(const Operand &a, const Operand &b, Operator oper) const
 {
-	CL_String string1 = a.get_string();
 	if (b.get_type() == CL_XPathObject::type_node_set)
 	{
-		return -compare_node_set(b, a);
+		switch (oper)
+		{
+		case CL_XPathToken::operator_compare_equal:
+		case CL_XPathToken::operator_compare_not_equal:
+			if (compare_node_set(b, a, oper))
+				return true;
+			break;
+		case CL_XPathToken::operator_less_equal:
+			if (compare_node_set(b, a, CL_XPathToken::operator_greater_equal))
+				return true;
+			break;
+		case CL_XPathToken::operator_less:
+			if (compare_node_set(b, a, CL_XPathToken::operator_greater))
+				return true;
+			break;
+		case CL_XPathToken::operator_greater_equal:
+			if (compare_node_set(b, a, CL_XPathToken::operator_less_equal))
+				return true;
+			break;
+		case CL_XPathToken::operator_greater:
+			if (compare_node_set(b, a, CL_XPathToken::operator_less))
+				return true;
+			break;
+		}
+		return false;
 	}
 	else if (b.get_type() == CL_XPathObject::type_number)
 	{
-		return -compare_number(b, a);
+		return compare(a.get_number(), number(b).get_number(), oper);
 	}
 	else if (b.get_type() == CL_XPathObject::type_boolean)
 	{
-		return -compare_boolean(b, a);
+		return compare(boolean(a).get_boolean(), b.get_boolean(), oper);
 	}
 	else if (b.get_type() == CL_XPathObject::type_string)
 	{
-		CL_String string2 = b.get_string();
-		if (string1 < string2)
-			return -1;
-		else if (string1 > string2)
-			return 1;
-		else
-			return 0;
+		return compare(a.get_string(), b.get_string(), oper);
 	}
 	else
 	{
-		throw CL_Exception("Error in xpath evaluator");
+		throw CL_XPathException("Unknown operand type in compare operation");
 	}
 }
 
 CL_XPathToken CL_XPathEvaluator_Impl::read_location_path(
 	const CL_StringRef &expression,
 	CL_XPathToken cur_token,
-	CL_DomNode &context_node,
-	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack)
+	const CL_XPathNodeSet &context,
+	CL_XPathNodeSet::size_type context_node_index,
+	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack) const
 {
 /*
 	[1] LocationPath               ::= RelativeLocationPath | AbsoluteLocationPath	
@@ -746,10 +883,10 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_path(
 	[3] RelativeLocationPath       ::= Step | RelativeLocationPath '/' Step | AbbreviatedRelativeLocationPath
 */
 
-	if (cur_token.type == CL_XPathToken::type_operator && cur_token.value.oper == CL_XPathToken::operator_slash)
+	if (cur_token.type == CL_XPathToken::type_operator && (cur_token.value.oper == CL_XPathToken::operator_slash || cur_token.value.oper == CL_XPathToken::operator_double_slash))
 	{
 		// Find root node:
-		CL_DomNode root_node = context_node;
+		CL_DomNode root_node = context[context_node_index];
 		while (true)
 		{
 			CL_DomNode parent = root_node.get_parent_node();
@@ -759,38 +896,45 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_path(
 				break;
 		}
 
-		CL_XPathToken next_token = read_token(expression, cur_token);
-		if (next_token.type == CL_XPathToken::type_axis_name ||
-			next_token.type == CL_XPathToken::type_name_test ||
-			next_token.type == CL_XPathToken::type_at_sign ||
-			next_token.type == CL_XPathToken::type_dot ||
-			next_token.type == CL_XPathToken::type_double_dot ||
-			(next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash))
+		CL_XPathNodeSet nodeset(1, root_node);
+
+		if (cur_token.value.oper == CL_XPathToken::operator_double_slash)
 		{
-			cur_token = next_token;
-			return read_location_steps(expression, cur_token, root_node, operand_stack);
+			return read_location_steps(expression, cur_token, nodeset, 0, operand_stack);
 		}
 		else
 		{
-			std::vector<CL_DomNode> nodeset;
-			nodeset.push_back(root_node);
-			CL_XPathObject object;
-			object.set_node_set(nodeset);
-			operand_stack.push_back(object);
-			return cur_token;
+			CL_XPathToken next_token = read_token(expression, cur_token);
+			if (next_token.type == CL_XPathToken::type_axis_name ||
+				next_token.type == CL_XPathToken::type_name_test ||
+				next_token.type == CL_XPathToken::type_node_type ||
+				next_token.type == CL_XPathToken::type_at_sign ||
+				next_token.type == CL_XPathToken::type_dot ||
+				next_token.type == CL_XPathToken::type_double_dot ||
+				(next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash))
+			{
+				cur_token = next_token;
+				return read_location_steps(expression, cur_token, nodeset, 0, operand_stack);
+			}
+			else
+			{
+				operand_stack.push_back(CL_XPathObject(nodeset));
+				return cur_token;
+			}
 		}
 	}
 	else
 	{
-		return read_location_steps(expression, cur_token, context_node, operand_stack);
+		return read_location_steps(expression, cur_token, context, context_node_index, operand_stack);
 	}
 }
 
 CL_XPathToken CL_XPathEvaluator_Impl::read_location_steps(
 	const CL_StringRef &expression,
 	CL_XPathToken cur_token,
-	CL_DomNode &context_node,
-	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack)
+	const CL_XPathNodeSet &context,
+	CL_XPathNodeSet::size_type context_node_index,
+	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack) const
 {
 	std::vector<CL_XPathLocationStep> steps;
 	while (true)
@@ -800,31 +944,14 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_steps(
 		steps.push_back(step);
 
 		CL_XPathToken next_token = read_token(expression, cur_token);
-		if (next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_slash)
+		if ((next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_slash) ||
+			(cur_token.type == CL_XPathToken::type_operator && cur_token.value.oper == CL_XPathToken::operator_double_slash))
 		{
-			next_token = read_token(expression, next_token);
+			if (next_token.value.oper == CL_XPathToken::operator_slash)
+				next_token = read_token(expression, next_token);
 			if (next_token.type == CL_XPathToken::type_axis_name ||
 				next_token.type == CL_XPathToken::type_name_test ||
-				next_token.type == CL_XPathToken::type_at_sign ||
-				next_token.type == CL_XPathToken::type_dot ||
-				next_token.type == CL_XPathToken::type_double_dot)
-			{
-				cur_token = next_token;
-			}
-			else
-			{
-				break;
-			}
-		}
-		else if (next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash)
-		{
-			cur_token = next_token;
-			step.axis = "descendant-or-self";
-			step.test_type = CL_XPathLocationStep::type_none;
-			steps.push_back(step);
-			next_token = read_token(expression, next_token);
-			if (next_token.type == CL_XPathToken::type_axis_name ||
-				next_token.type == CL_XPathToken::type_name_test ||
+				next_token.type == CL_XPathToken::type_node_type ||
 				next_token.type == CL_XPathToken::type_at_sign ||
 				next_token.type == CL_XPathToken::type_dot ||
 				next_token.type == CL_XPathToken::type_double_dot)
@@ -842,18 +969,16 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_steps(
 		}
 	}
 
-	std::vector<CL_DomNode> nodeset;
-	evaluate_location_step(context_node, steps, 0, expression, nodeset);
-	CL_XPathObject object;
-	object.set_node_set(nodeset);
-	operand_stack.push_back(object);
+	CL_XPathNodeSet nodeset;
+	evaluate_location_step(context, context_node_index, steps, 0, expression, nodeset);
+	operand_stack.push_back(CL_XPathObject(nodeset));
 	return cur_token;
 }
 
 CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 	const CL_StringRef &expression,
 	CL_XPathToken cur_token,
-	CL_XPathLocationStep &step)
+	CL_XPathLocationStep &step) const
 {
 /*
 	Location Steps
@@ -880,12 +1005,20 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 	if (cur_token.type == CL_XPathToken::type_dot)
 	{
 		step.axis = "self";
-		step.test_type = CL_XPathLocationStep::type_none;
+		step.test_type = CL_XPathLocationStep::type_node;
+		step.node_type = CL_XPathToken::node_type_node;
 	}
 	else if (cur_token.type == CL_XPathToken::type_double_dot)
 	{
 		step.axis = "parent";
-		step.test_type = CL_XPathLocationStep::type_none;
+		step.test_type = CL_XPathLocationStep::type_node;
+		step.node_type = CL_XPathToken::node_type_node;
+	}
+	else if (cur_token.type == CL_XPathToken::type_operator && cur_token.value.oper == CL_XPathToken::operator_double_slash)
+	{
+		step.axis = "descendant-or-self";
+		step.test_type = CL_XPathLocationStep::type_node;
+		step.node_type = CL_XPathToken::node_type_node;
 	}
 	else
 	{
@@ -895,7 +1028,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 			step.axis = cur_token.value.str;
 			cur_token = read_token(expression, cur_token);
 			if (cur_token.type != CL_XPathToken::type_double_colon)
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Expected '::' after axis name", expression, cur_token);
 			cur_token = read_token(expression, cur_token);
 		}
 		else if (cur_token.type == CL_XPathToken::type_at_sign) // Abbreviated axis specifier
@@ -920,7 +1053,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 			step.node_type = cur_token.value.node_type;
 			cur_token = read_token(expression, cur_token);
 			if (cur_token.type != CL_XPathToken::type_operator || cur_token.value.oper != CL_XPathToken::operator_parenthesis_begin)
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Expected '(' after node-type test", expression, cur_token);
 			cur_token = read_token(expression, cur_token);
 			if (cur_token.type == CL_XPathToken::type_literal && step.node_type == CL_XPathToken::node_type_processing_instruction)
 			{
@@ -928,11 +1061,11 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 				cur_token = read_token(expression, cur_token);
 			}
 			if (cur_token.type != CL_XPathToken::type_operator || cur_token.value.oper != CL_XPathToken::operator_parenthesis_end)
-				throw CL_Exception("Syntax error in xpath expression");
+				throw CL_XPathException("Expected ')' after node-type test", expression, cur_token);
 		}
 		else
 		{
-			throw CL_Exception("Syntax error in xpath expression");
+			throw CL_XPathException("Unknown node test type", expression, cur_token);
 		}
 
 		CL_XPathToken next_token = read_token(expression, cur_token);
@@ -949,7 +1082,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_step(
 	return cur_token;
 }
 
-CL_XPathToken CL_XPathEvaluator_Impl::skip_predicate_expression(const CL_StringRef &expression, const CL_XPathToken &previous_token)
+CL_XPathToken CL_XPathEvaluator_Impl::skip_predicate_expression(const CL_StringRef &expression, const CL_XPathToken &previous_token) const
 {
 	int bracket_count = 1;
 	CL_XPathToken cur_token = previous_token;
@@ -974,257 +1107,284 @@ CL_XPathToken CL_XPathEvaluator_Impl::skip_predicate_expression(const CL_StringR
 	return cur_token;
 }
 
-void CL_XPathEvaluator_Impl::evaluate_location_step(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodeset)
+void CL_XPathEvaluator_Impl::evaluate_location_step(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	if (step_index < steps.size())
 	{
 		if (steps[step_index].axis == "ancestor")
-			select_nodes_ancestor(context_node, steps, step_index, expression, nodeset);
+			select_nodes_ancestor(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "ancestor-or-self")
-			select_nodes_ancestor_or_self(context_node, steps, step_index, expression, nodeset);
+			select_nodes_ancestor_or_self(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "attribute")
-			select_nodes_attribute(context_node, steps, step_index, expression, nodeset);
+			select_nodes_attribute(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "child")
-			select_nodes_child(context_node, steps, step_index, expression, nodeset);
+			select_nodes_child(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "descendant")
-			select_nodes_descendant(context_node, steps, step_index, expression, nodeset);
+			select_nodes_descendant(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "descendant-or-self")
-			select_nodes_descendant_or_self(context_node, steps, step_index, expression, nodeset);
+			select_nodes_descendant_or_self(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "following")
-			select_nodes_following(context_node, steps, step_index, expression, nodeset);
+			select_nodes_following(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "follwing-sibling")
-			select_nodes_following_sibling(context_node, steps, step_index, expression, nodeset);
+			select_nodes_following_sibling(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "namespace")
-			select_nodes_namespace(context_node, steps, step_index, expression, nodeset);
+			select_nodes_namespace(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "parent")
-			select_nodes_parent(context_node, steps, step_index, expression, nodeset);
+			select_nodes_parent(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "preceding")
-			select_nodes_preceding(context_node, steps, step_index, expression, nodeset);
+			select_nodes_preceding(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "preceding-sibling")
-			select_nodes_preceding_sibling(context_node, steps, step_index, expression, nodeset);
+			select_nodes_preceding_sibling(context, context_node_index, steps, step_index, expression, nodes);
 		else if (steps[step_index].axis == "self")
-			select_nodes_self(context_node, steps, step_index, expression, nodeset);
+			select_nodes_self(context, context_node_index, steps, step_index, expression, nodes);
 		else
-			throw CL_Exception("Syntax error in xpath expression");
+			throw CL_XPathException(cl_format("Unknown location step axis", steps[step_index].axis), expression);
 	}
 	else
 	{
-		nodeset.push_back(context_node);
+		nodes.push_back(context[context_node_index]);
 	}
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	CL_DomNode parent = context_node.get_parent_node();
-	int node_index = 1;
+	CL_XPathNodeSet nodeset;
+	CL_DomNode parent = context[context_node_index].get_parent_node();
 	while (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
-			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(parent, steps[step_index], expression))
+			nodeset.push_back(parent);
+
 		parent = parent.get_parent_node();
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode parent = context_node.get_parent_node();
-	if (!context_node.is_null())
-	{
-		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
-			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
-	}
+	CL_XPathNodeSet nodeset;
+	CL_DomNode parent = context[context_node_index];
 	while (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
-			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(parent, steps[step_index], expression))
+			nodeset.push_back(parent);
+
 		parent = parent.get_parent_node();
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNamedNodeMap attributes = context_node.get_attributes();
-	int num_attributes = attributes.get_length();
-	for (int i = 0; i < num_attributes; i++)
+	CL_XPathNodeSet nodeset;
+	CL_DomNamedNodeMap attributes = context[context_node_index].get_attributes();
+	unsigned long num_attributes = attributes.get_length();
+	for (unsigned long idx = 0; idx < num_attributes; idx++)
 	{
-		if (confirm_step_requirements(attributes.item(i), node_index, steps[step_index], expression))
-			evaluate_location_step(attributes.item(i), steps, step_index+1, expression, nodes);
+		const CL_DomNode &node = attributes.item(idx);
+		if (confirm_step_requirements(node, steps[step_index], expression))
+			nodeset.push_back(node);
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_child(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_child(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode cur_node = context_node.get_first_child();
+	CL_XPathNodeSet nodeset;
+	CL_DomNode cur_node = context[context_node_index].get_first_child();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			nodeset.push_back(cur_node);
 		cur_node = cur_node.get_next_sibling();
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode cur_node = context_node;
-	while (true)
-	{
-		CL_DomNode next = cur_node.get_first_child();
-		if (next.is_null())
-		{
-			next = cur_node.get_next_sibling();
-			while (next.is_null())
-			{
-				cur_node = cur_node.get_parent_node();
-				if (cur_node.is_null() || cur_node == context_node)
-					break;
-				next = cur_node.get_next_sibling();
-			}
-			if (next.is_null() || cur_node == context_node)
-				break;
-		}
-		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
-	}
-}
+	CL_XPathNodeSet parentNodes;
+	CL_XPathNodeSet nodeset;
 
-void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
-{
-	int node_index = 1;
-	if (!context_node.is_null())
-	{
-		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
-			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
-	}
-	CL_DomNode cur_node = context_node;
-	while (true)
-	{
-		CL_DomNode next = cur_node.get_first_child();
-		if (next.is_null())
-		{
-			next = cur_node.get_next_sibling();
-			while (next.is_null())
-			{
-				cur_node = cur_node.get_parent_node();
-				if (cur_node.is_null() || cur_node == context_node)
-					break;
-				next = cur_node.get_next_sibling();
-			}
-			if (next.is_null() || cur_node == context_node)
-				break;
-		}
-		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
-	}
-}
-
-void CL_XPathEvaluator_Impl::select_nodes_following(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
-{
-	int node_index = 1;
-	CL_DomNode cur_node = context_node;
-	while (true)
-	{
-		CL_DomNode next = cur_node.get_first_child();
-		if (next.is_null())
-		{
-			next = cur_node.get_next_sibling();
-			while (next.is_null())
-			{
-				cur_node = cur_node.get_parent_node();
-				if (cur_node.is_null())
-					break;
-				next = cur_node.get_next_sibling();
-			}
-			if (next.is_null())
-				break;
-		}
-		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
-	}
-}
-
-void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
-{
-	int node_index = 1;
-	CL_DomNode cur_node = context_node.get_next_sibling();
+	CL_DomNode cur_node = context[context_node_index].get_first_child();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			nodeset.push_back(cur_node);
+
+		parentNodes.push_back(cur_node);
+		cur_node = cur_node.get_first_child();
+		while (cur_node.is_null())
+		{
+			if (parentNodes.empty())
+				break;
+			cur_node = parentNodes.back();
+			parentNodes.pop_back();
+			cur_node = cur_node.get_next_sibling();
+		}
+	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
+}
+
+void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+{
+	CL_XPathNodeSet parentNodes;
+	CL_XPathNodeSet nodeset;
+
+	CL_DomNode cur_node = context[context_node_index];
+	while (!cur_node.is_null())
+	{
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			nodeset.push_back(cur_node);
+
+		parentNodes.push_back(cur_node);
+		cur_node = cur_node.get_first_child();
+		while (cur_node.is_null())
+		{
+			if (parentNodes.empty())
+				break;
+			cur_node = parentNodes.back();
+			parentNodes.pop_back();
+			cur_node = cur_node.get_next_sibling();
+		}
+	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
+}
+
+void CL_XPathEvaluator_Impl::select_nodes_following(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+{
+	CL_XPathNodeSet nodeset;
+
+	CL_DomNode cur_node;
+	CL_DomNode next_node = context[context_node_index];
+	while (!next_node.is_null())
+	{
+		cur_node = next_node;
+		next_node = cur_node.get_next_sibling();
+		if (next_node.is_null())
+		{
+			next_node = cur_node.get_parent_node();
+		}
+		else
+		{
+			cur_node = next_node;
+			if (confirm_step_requirements(cur_node, steps[step_index], expression))
+				nodeset.push_back(cur_node);
+
+			next_node = cur_node.get_first_child();
+			while (!next_node.is_null())
+			{
+				cur_node = next_node;
+				if (confirm_step_requirements(cur_node, steps[step_index], expression))
+					nodeset.push_back(cur_node);
+
+				next_node = cur_node.get_first_child();
+			}
+			next_node = cur_node.get_parent_node();
+		}
+	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
+}
+
+void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+{
+	CL_XPathNodeSet nodeset;
+	CL_DomNode cur_node = context[context_node_index].get_next_sibling();
+	while (!cur_node.is_null())
+	{
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			nodeset.push_back(cur_node);
 		cur_node = cur_node.get_next_sibling();
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_namespace(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_namespace(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode parent = context_node.get_parent_node();
+	CL_XPathNodeSet nodeset;
+	CL_DomNode parent = context[context_node_index].get_parent_node();
 	if (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
-			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(parent, steps[step_index], expression))
+			nodeset.push_back(parent);
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode cur_node = context_node;
-	while (true)
+	CL_XPathNodeSet nodeset;
+
+	CL_DomNode cur_node;
+	CL_DomNode next_node = context[context_node_index];
+	while (!next_node.is_null())
 	{
-		CL_DomNode prev = cur_node.get_last_child();
-		if (prev.is_null())
+		cur_node = next_node;
+		next_node = cur_node.get_previous_sibling();
+		if (next_node.is_null())
 		{
-			prev = cur_node.get_previous_sibling();
-			while (prev.is_null())
-			{
-				cur_node = cur_node.get_parent_node();
-				if (cur_node.is_null())
-					break;
-				prev = cur_node.get_previous_sibling();
-			}
-			if (prev.is_null())
-				break;
+			next_node = cur_node.get_parent_node();
 		}
-		cur_node = prev;
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
+		else
+		{
+			cur_node = next_node;
+			if (confirm_step_requirements(cur_node, steps[step_index], expression))
+				nodeset.push_back(cur_node);
+
+			next_node = cur_node.get_last_child();
+			while (!next_node.is_null())
+			{
+				cur_node = next_node;
+				if (confirm_step_requirements(cur_node, steps[step_index], expression))
+					nodeset.push_back(cur_node);
+
+				next_node = cur_node.get_last_child();
+			}
+			next_node = cur_node.get_parent_node();
+		}
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	CL_DomNode cur_node = context_node.get_previous_sibling();
+	CL_XPathNodeSet nodeset;
+	CL_DomNode cur_node = context[context_node_index].get_previous_sibling();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
-			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			nodeset.push_back(cur_node);
 		cur_node = cur_node.get_previous_sibling();
 	}
+
+	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &nodes)
+void CL_XPathEvaluator_Impl::select_nodes_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
-	int node_index = 1;
-	if (!context_node.is_null())
+	CL_DomNode cur_node = context[context_node_index];
+	if (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
-			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
+		if (confirm_step_requirements(cur_node, steps[step_index], expression))
+			evaluate_location_step_predicates(CL_XPathNodeSet(1, cur_node), steps, step_index, expression, nodes);
 	}
 }
 
-bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, int &node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression)
+bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, const CL_XPathLocationStep &step, const CL_StringRef &expression) const
 {
 	bool test_passed = false;
 	switch (step.test_type)
@@ -1234,85 +1394,80 @@ bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, i
 		test_passed = true;
 		break;
 	case CL_XPathLocationStep::type_name:
-		test_passed = node.get_node_name() == step.test_str;
+		test_passed = step.test_str == "*" || node.get_node_name() == step.test_str;
 		break;
 	case CL_XPathLocationStep::type_node:
-		switch (node.get_node_type())
+		if (step.node_type != CL_XPathToken::node_type_node)
 		{
-		case CL_DomNode::COMMENT_NODE:
-			test_passed = step.node_type == CL_XPathToken::node_type_comment || step.node_type == CL_XPathToken::node_type_node;
-			break;
-		case CL_DomNode::TEXT_NODE:
-			test_passed = step.node_type == CL_XPathToken::node_type_text || step.node_type == CL_XPathToken::node_type_node;
-			break;
-		case CL_DomNode::PROCESSING_INSTRUCTION_NODE:
-			if (step.node_type == CL_XPathToken::node_type_processing_instruction)
+			switch (node.get_node_type())
 			{
-				test_passed = true;
+			case CL_DomNode::COMMENT_NODE:
+				test_passed = step.node_type == CL_XPathToken::node_type_comment;
+				break;
+			case CL_DomNode::TEXT_NODE:
+				test_passed = step.node_type == CL_XPathToken::node_type_text;
+				break;
+			case CL_DomNode::PROCESSING_INSTRUCTION_NODE:
+				test_passed = step.node_type == CL_XPathToken::node_type_processing_instruction;
+				break;
+			default:
+				break;
 			}
-			else if (step.node_type == CL_XPathToken::node_type_node)
-			{
-				test_passed = true;
-			}
-			break;
-		case CL_DomNode::NULL_NODE:
-		case CL_DomNode::ELEMENT_NODE:
-		case CL_DomNode::ATTRIBUTE_NODE:
-		case CL_DomNode::CDATA_SECTION_NODE:
-		case CL_DomNode::ENTITY_REFERENCE_NODE:
-		case CL_DomNode::ENTITY_NODE:
-		case CL_DomNode::DOCUMENT_NODE:
-		case CL_DomNode::DOCUMENT_TYPE_NODE:
-		case CL_DomNode::DOCUMENT_FRAGMENT_NODE:
-		case CL_DomNode::NOTATION_NODE:
-			test_passed = step.node_type == CL_XPathToken::node_type_node;
-			break;
-		default:
-			break;
+		}
+		else
+		{
+			test_passed = true;
 		}
 	}
 
-	if (test_passed)
-	{
-		int cur_node_index = node_index;
-		node_index++;
-		for (std::vector<CL_XPathLocationStep::Predicate>::size_type predicate_index = 0; predicate_index < step.predicates.size(); predicate_index++)
-		{
-			const CL_XPathLocationStep::Predicate &predicate = step.predicates[predicate_index];
+	return test_passed;
+}
 
-			CL_XPathEvaluateResult result = evaluate(expression.substr(predicate.pos, predicate.length), node, CL_XPathToken());
-			bool include_in_nodeset = false;
-			switch (result.result.get_type())
-			{
-			case CL_XPathObject::type_null:
-				break;
-			case CL_XPathObject::type_node_set:
-				include_in_nodeset = !result.result.get_node_set().empty();
-				break;
-			case CL_XPathObject::type_boolean:
-				include_in_nodeset = result.result.get_boolean();
-				break;
-			case CL_XPathObject::type_number:
-				include_in_nodeset = result.result.get_number() == cur_node_index;
-				break;
-			case CL_XPathObject::type_string:
-				include_in_nodeset = !result.result.get_string().empty();
-				break;
-			}
-			if (!include_in_nodeset)
-				return false;
-		}
-		return true;
-	}
-	else
+bool CL_XPathEvaluator_Impl::confirm_step_predicate(CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const CL_XPathLocationStep::Predicate &predicate, const CL_StringRef &expression) const
+{
+	CL_XPathEvaluateResult result = evaluate(expression.substr(predicate.pos, predicate.length), context, context_node_index, CL_XPathToken());
+	bool include_in_nodeset = false;
+	switch (result.result.get_type())
 	{
-		return false;
+	case CL_XPathObject::type_null:
+		break;
+	case CL_XPathObject::type_node_set:
+		include_in_nodeset = !result.result.get_node_set().empty();
+		break;
+	case CL_XPathObject::type_boolean:
+		include_in_nodeset = result.result.get_boolean();
+		break;
+	case CL_XPathObject::type_number:
+		include_in_nodeset = result.result.get_number() == context_node_index+1;
+		break;
+	case CL_XPathObject::type_string:
+		include_in_nodeset = !result.result.get_string().empty();
+		break;
 	}
+	return include_in_nodeset;
+}
+
+void CL_XPathEvaluator_Impl::evaluate_location_step_predicates(const CL_XPathNodeSet &context, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+{
+	CL_XPathNodeSet nodeset = context;
+	for (std::vector<CL_XPathLocationStep::Predicate>::const_iterator pit = steps[step_index].predicates.begin(), pEnd = steps[step_index].predicates.end(); pit != pEnd; ++pit)
+	{
+		CL_XPathNodeSet filtered_nodes;
+		for (CL_XPathNodeSet::size_type node_index = 0, num_nodes = nodeset.size(); node_index < num_nodes; node_index++)
+		{
+			if (confirm_step_predicate(nodeset, node_index, *pit, expression))
+				filtered_nodes.push_back(nodeset[node_index]);
+		}
+		nodeset = filtered_nodes;
+	}
+
+	for (CL_XPathNodeSet::size_type node_index = 0, num_nodes = nodeset.size(); node_index < num_nodes; node_index++)
+		evaluate_location_step(nodeset, node_index, steps, step_index+1, expression, nodes);
 }
 
 CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 	const CL_StringRef &expression,
-	const CL_XPathToken &previous_token)
+	const CL_XPathToken &previous_token) const
 {
 	CL_StringRef::size_type pos = previous_token.pos + previous_token.length;
 	pos = expression.find_first_not_of(" \t\r\n", pos);
@@ -1386,7 +1541,6 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 			return token;
 		}
 		break;
-
 	case '/':
 		token.type = CL_XPathToken::type_operator;
 		if (second_char == '/')
@@ -1413,15 +1567,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 		return token;
 	case '=':
 		token.type = CL_XPathToken::type_operator;
-		/*if (second_char == '=')
-		{*/
-			token.value.oper = CL_XPathToken::operator_compare_equal;
-		/*	token.length = 2;
-		}
-		else
-		{
-			token.value.oper = CL_XPathToken::operator_assign;
-		}*/
+		token.value.oper = CL_XPathToken::operator_compare_equal;
 		return token;
 	case '!':
 		token.type = CL_XPathToken::type_operator;
@@ -1483,7 +1629,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 		token.type = CL_XPathToken::type_literal;
 		pos = expression.find_first_of('"', token.pos + 1);
 		if (pos == CL_StringRef::npos)
-			throw CL_Exception("Missing ending quotation sign in XPath expression");
+			throw CL_XPathException("Expected ending quotation sign", expression, token);
 		token.length = pos - token.pos + 1;
 		token.value.str = expression.substr(token.pos + 1, token.length - 2);
 		return token;
@@ -1491,7 +1637,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 		token.type = CL_XPathToken::type_literal;
 		pos = expression.find_first_of('\'', token.pos + 1);
 		if (pos == CL_StringRef::npos)
-			throw CL_Exception("Missing ending quotation sign in XPath expression");
+			throw CL_XPathException("Expected ending quotation sign", expression, token);
 		token.length = pos - token.pos + 1;
 		token.value.str = expression.substr(token.pos + 1, token.length - 2);
 		return token;
@@ -1545,7 +1691,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 	token.value.str = expression.substr(token.pos, token.length);
 
 	if (token.length == 0)
-		throw CL_Exception("Syntax error in xpath expression");
+		throw CL_XPathException("Invalid token", expression, token);
 
 	// Find the next two token chars:
 
@@ -1659,146 +1805,428 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_token(
 		token.length = pos - token.pos;
 		token.value.str = expression.substr(token.pos, token.length);
 		if (token.length == 0)
-			throw CL_Exception("Syntax error in xpath expression");
+			throw CL_XPathException("Invalid token", expression, token);
 	}
 
 	token.type = CL_XPathToken::type_name_test;
 	return token;
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_last(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_last(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	return CL_XPathObject(context.size());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_position(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_position(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	return CL_XPathObject(context_node_index+1);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_count(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_count(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 1 || parameters.front().get_type() != CL_XPathObject::type_node_set)
+		throw CL_XPathException("Function count(node-set) expects a node-set parameter");
+
+	CL_XPathObject obj = parameters.front();
+	return CL_XPathObject(obj.get_node_set().size());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_id(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_id(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function id(object) expects an object parameter");
+
+	CL_XPathObject obj = parameters[0];
+	std::vector<CL_String> strings;
+	if (obj.get_type() == CL_XPathObject::type_node_set)
+	{
+		CL_XPathNodeSet nodeset = obj.get_node_set();
+		for (CL_XPathNodeSet::const_iterator it = nodeset.begin(), itEnd = nodeset.end(); it != itEnd; ++it)
+		{
+			CL_String str = CL_StringHelp::trim(string(*it));
+			CL_String::size_type pos = str.find_first_not_of(" \r\n\t", 0);
+			CL_String::size_type end_pos = CL_String::npos;
+			while (pos != CL_String::npos)
+			{
+				end_pos = str.find_first_of(" \r\n\t", pos);
+				strings.push_back(str.substr(pos, end_pos - pos));
+				pos = str.find_first_not_of(" \r\n\t", end_pos);
+			}
+		}
+	}
+	else
+	{
+		CL_String str = string(obj).get_string();
+		CL_String::size_type pos = str.find_first_not_of(" \r\n\t", 0);
+		CL_String::size_type end_pos = CL_String::npos;
+		while (pos != CL_String::npos)
+		{
+			end_pos = str.find_first_of(" \r\n\t", pos);
+			strings.push_back(str.substr(pos, end_pos - pos));
+			pos = str.find_first_not_of(" \r\n\t", end_pos);
+		}
+	}
+
+	CL_DomNode root_node = context[context_node_index];
+	while (!root_node.get_parent_node().is_null())
+		root_node = root_node.get_parent_node();
+
+	CL_XPathNodeSet filtered_nodes;
+	for (std::vector<CL_String>::const_iterator it = strings.begin(), itEnd = strings.end(); it != itEnd; ++it)
+	{
+		CL_XPathNodeSet parent_nodes;
+		CL_DomNode cur_node = root_node;
+		while (!cur_node.is_null())
+		{
+			if (cur_node.has_attributes())
+			{
+				CL_DomNamedNodeMap attributes = cur_node.get_attributes();
+				if (attributes.get_named_item("ID").get_node_value() == *it)
+				{
+					filtered_nodes.push_back(cur_node);
+					break;
+				}
+			}
+			parent_nodes.push_back(cur_node);
+			cur_node = cur_node.get_first_child();
+			while (cur_node.is_null())
+			{
+				if (parent_nodes.empty())
+					break;
+				cur_node = parent_nodes.back();
+				parent_nodes.pop_back();
+				cur_node = cur_node.get_next_sibling();
+			}
+		}
+	}
+
+	return CL_XPathObject(filtered_nodes);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_local_name(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_local_name(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_XPathNodeSet nodeset;
+	if (!parameters.empty())
+	{
+		CL_XPathObject obj = parameters.front();
+		if (obj.get_type() != CL_XPathObject::type_node_set)
+			throw CL_XPathException("Function local-name(node-set) expects a node-set parameter");
+		CL_XPathNodeSet nodeset2 = obj.get_node_set();
+		nodeset.insert(nodeset.end(), nodeset2.begin(), nodeset2.end());
+	}
+	else
+	{
+		nodeset.push_back(context[context_node_index]);
+	}
+
+	if (nodeset.empty())
+		return CL_XPathObject("");
+	else
+		return CL_XPathObject(nodeset.front().get_local_name());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_namespace_uri(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_namespace_uri(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_XPathNodeSet nodeset;
+	if (!parameters.empty())
+	{
+		CL_XPathObject obj = parameters.front();
+		if (obj.get_type() != CL_XPathObject::type_node_set)
+			throw CL_XPathException("Function namespace-uri(node-set) expects a node-set parameter");
+		CL_XPathNodeSet nodeset2 = obj.get_node_set();
+		nodeset.insert(nodeset.end(), nodeset2.begin(), nodeset2.end());
+	}
+	else
+	{
+		nodeset.push_back(context[context_node_index]);
+	}
+
+	if (nodeset.empty())
+		return CL_XPathObject("");
+	else
+		return CL_XPathObject(nodeset.front().get_namespace_uri());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_name(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_name(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_XPathNodeSet nodeset;
+	if (!parameters.empty())
+	{
+		CL_XPathObject obj = parameters[0];
+		if (obj.get_type() != CL_XPathObject::type_node_set)
+			throw CL_XPathException("Function name(node-set) expects a node-set parameter");
+		CL_XPathNodeSet nodeset2 = obj.get_node_set();
+		nodeset.insert(nodeset.end(), nodeset2.begin(), nodeset2.end());
+	}
+	else
+	{
+		nodeset.push_back(context[context_node_index]);
+	}
+
+	if (nodeset.empty())
+		return CL_XPathObject("");
+	else
+		return CL_XPathObject(nodeset.front().get_node_name());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_string(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_string(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_XPathObject obj;
+	if (parameters.empty())
+	{
+		CL_XPathNodeSet nodeset(1, context[context_node_index]);
+		obj = CL_XPathObject(nodeset);
+	}
+	else
+	{
+		obj = parameters.front();
+	}
+
+	return string(obj);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_concat(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_concat(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() < 2)
+		throw CL_XPathException("Function concat(string, string, string*) expects 2 or more string parameters");
+
+	CL_String result;
+	for (std::vector<CL_XPathObject>::const_iterator it = parameters.begin(), itEnd = parameters.end(); it != itEnd; ++it)
+	{
+		CL_XPathObject obj = *it;
+		if (obj.get_type() != CL_XPathObject::type_string)
+			obj = string(obj);
+		result.append(obj.get_string());
+	}
+	return CL_XPathObject(result);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_starts_with(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_starts_with(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 2)
+		throw CL_XPathException("Function starts-with(string, string) expects 2 string parameters");
+
+	CL_XPathObject p1 = string(parameters[0]);
+	CL_XPathObject p2 = string(parameters[1]);
+	return CL_XPathObject(p1.get_string().find(p2.get_string()) == 0);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_contains(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_contains(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 2)
+		throw CL_XPathException("Function contains(string, string) expects 2 string parameters");
+
+	CL_XPathObject p1 = string(parameters[0]);
+	CL_XPathObject p2 = string(parameters[1]);
+	return CL_XPathObject(p1.get_string().find(p2.get_string()) != CL_String::npos);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_substring_before(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_substring_before(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 2)
+		throw CL_XPathException("Function substring-before(string, string) expects 2 string parameters");
+
+	CL_XPathObject p1 = string(parameters[0]);
+	CL_XPathObject p2 = string(parameters[1]);
+
+	CL_String::size_type pos = p1.get_string().find_first_of(p2.get_string());
+	if (pos != CL_String::npos)
+		return CL_XPathObject(p1.get_string().substr(0, pos));
+	else
+		return CL_XPathObject("");
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_substring_after(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_substring_after(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 2)
+		throw CL_XPathException("Function substring_after(string, string) expects 2 string parameters");
+
+	CL_String p1 = string(parameters[0]).get_string();
+	CL_String p2 = string(parameters[1]).get_string();
+
+	CL_String::size_type pos = p1.find_first_of(p2);
+	if (pos != CL_String::npos)
+		return CL_XPathObject(p1.substr(pos+1));
+	else
+		return CL_XPathObject("");
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_substring(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_substring(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() < 2)
+		throw CL_XPathException("Function substring(string, number, number?) expects 2 or 3 parameters");
+
+	CL_String str = string(parameters[0]).get_string();
+	CL_String::size_type pos = cl_max(0, static_cast<CL_String::size_type>(number(parameters[1]).get_number()+0.5)-1);
+	CL_String::size_type num = CL_String::npos;
+	if (parameters.size() == 3)
+		num = cl_max(0, static_cast<CL_String::size_type>(number(parameters[2]).get_number() + 0.5));
+
+	return CL_XPathObject(str.substr(pos, num));
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_string_length(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_string_length(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_String str;
+	if (parameters.empty())
+		str = string(context[context_node_index]);
+	else
+		str = string(parameters.front()).get_string();
+
+	return CL_XPathObject( (size_t) str.length());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_normalize_space(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_normalize_space(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	CL_String src, dst;
+	if (parameters.empty())
+		src = CL_StringHelp::trim(string(context[context_node_index]));
+	else
+		src = CL_StringHelp::trim(string(parameters.front()).get_string());
+
+	CL_String::size_type pos = 0, end_pos = 0;
+	while (pos != CL_String::npos)
+	{
+		end_pos = src.find_first_of(" \r\n\t", pos);
+		if (end_pos != CL_String::npos)
+			dst.append(src.substr(pos, end_pos - pos) + " ");
+		else
+			break;
+		pos = src.find_first_not_of(" \r\n\t", end_pos);
+	}
+	dst.append(src.substr(pos));
+
+	return CL_XPathObject(dst);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_translate(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_translate(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.size() != 3)
+		throw CL_XPathException("Function translate(string, string, string) expects 3 string parameters");
+
+	CL_String str = string(parameters[0]).get_string();
+	CL_String search = string(parameters[1]).get_string();
+	CL_String replace = string(parameters[2]).get_string();
+
+	CL_String::size_type num_searches = search.length();
+	for (CL_String::size_type search_idx = 0; search_idx < num_searches; ++search_idx)
+	{
+		CL_String::size_type real_search_idx = search.find_first_of(search[search_idx]);
+		CL_String::char_type c = search[real_search_idx];
+
+		for (CL_String::size_type str_idx = 0; str_idx < str.length(); str_idx++)
+		{
+			if (str[str_idx] == c) 
+			{
+				if(real_search_idx < replace.length())
+				{
+					str[str_idx] = replace[real_search_idx];
+				}
+				else
+				{
+					str = str.erase(str_idx--, 1);
+				}
+			}
+		}
+	}
+	return CL_XPathObject(str);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_boolean(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_boolean(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function boolean(object) expects an object parameter");
+
+	return boolean(parameters[0]);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_not(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_not(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function not(boolean) expects a boolean parameter");
+
+	return CL_XPathObject(!boolean(parameters[0]).get_boolean());
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_true(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_true(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	return CL_XPathObject(true);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_false(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_false(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	return CL_XPathObject(false);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_lang(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_lang(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function lang(string) expects a string parameter");
+
+	bool found = false;
+	CL_String search = string(parameters[0]).get_string();
+	CL_DomNode cur_node = context[context_node_index];
+	while (!found && !cur_node.is_null())
+	{
+		if (cur_node.has_attributes())
+		{
+			CL_DomNode lang_attribute = cur_node.get_attributes().get_named_item("xml:lang");
+			if (!lang_attribute.is_null())
+			{
+				CL_String lang = lang_attribute.get_node_value();
+				if (CL_StringHelp::compare(search, lang, true) == 0 || CL_StringHelp::compare(search, lang.substr(0, lang.find_first_of('-')), true) == 0)
+					found = true;
+			}
+		}
+		cur_node = cur_node.get_parent_node();
+	}
+
+	return found;
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_number(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_number(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function number(object) expects 1 object parameter");
+
+	return number(parameters[0]);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_sum(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_sum(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty() || parameters[0].get_type() != CL_XPathObject::type_node_set)
+		throw CL_XPathException("Function sum(node-set) expects a node-set parameter");
+
+	double result = 0.0;
+	CL_XPathNodeSet nodeset = parameters[0].get_node_set();
+	for (CL_XPathNodeSet::const_iterator it = nodeset.begin(), itEnd = nodeset.end(); it != itEnd; ++it)
+		result += number(*it);
+
+	return CL_XPathObject(result);
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_floor(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_floor(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function floor(number) expects a number parameter");
+
+	return CL_XPathObject(floor(number(parameters[0]).get_number()));
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_ceiling(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_ceiling(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function ceiling(number) expects a number parameter.");
+
+	return CL_XPathObject(ceil(number(parameters[0]).get_number()));
 }
 
-CL_XPathObject CL_XPathEvaluator_Impl::function_round(const std::vector<CL_XPathObject> &parameters)
+CL_XPathObject CL_XPathEvaluator_Impl::function_round(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
 {
-	return CL_XPathObject();
+	if (parameters.empty())
+		throw CL_XPathException("Function round(number) expects a number parameter.");
+
+	return CL_XPathObject(floor(number(parameters[0]).get_number()+0.5));
 }
 
 inline bool CL_XPathEvaluator_Impl::is_letter(const CL_StringRef::char_type &c)
@@ -2189,3 +2617,129 @@ inline bool CL_XPathEvaluator_Impl::is_extender(const CL_StringRef::char_type &c
 	return ((unsigned char) c == 0xb7);
 }
 
+inline CL_XPathObject CL_XPathEvaluator_Impl::boolean(const CL_XPathObject &object)
+{
+	switch(object.get_type())
+	{
+	case CL_XPathObject::type_null:
+		return CL_XPathObject(false);
+	case CL_XPathObject::type_node_set:
+		return CL_XPathObject(!object.get_node_set().empty());
+	case CL_XPathObject::type_boolean:
+		return object;
+	case CL_XPathObject::type_number:
+		{
+			double number = object.get_number();
+			bool NaN = (std::numeric_limits<double>::has_quiet_NaN && number == std::numeric_limits<double>::quiet_NaN()) ||
+				(std::numeric_limits<double>::has_signaling_NaN && number == std::numeric_limits<double>::signaling_NaN());
+			return CL_XPathObject(!NaN && number != 0.0);
+		}
+	case CL_XPathObject::type_string:
+		return CL_XPathObject(object.get_string().length() != 0);
+	}
+	return CL_XPathObject(false);
+}
+
+
+bool CL_XPathEvaluator_Impl::boolean(const CL_DomNode &node)
+{
+	return !string(node).empty();
+}
+
+inline CL_XPathObject CL_XPathEvaluator_Impl::number(CL_XPathObject object)
+{
+	double result = std::numeric_limits<double>::has_quiet_NaN ? std::numeric_limits<double>::quiet_NaN() : 0.0;
+	switch(object.get_type())
+	{
+	case CL_XPathObject::type_null:
+		return CL_XPathObject(result);
+
+	case CL_XPathObject::type_boolean:
+		return CL_XPathObject(object.get_boolean() ? 1.0 : 0.0);
+
+	case CL_XPathObject::type_number:
+		return object;
+
+	case CL_XPathObject::type_node_set:
+		object = string(object);
+
+	case CL_XPathObject::type_string:
+		{
+			try
+			{
+				result = CL_StringHelp::text_to_double(object.get_string());
+			}
+			catch (CL_Exception&)
+			{
+			}
+		}
+	}
+	return CL_XPathObject(result);
+}
+
+double CL_XPathEvaluator_Impl::number(const CL_DomNode &node)
+{
+	double result = std::numeric_limits<double>::has_quiet_NaN ? std::numeric_limits<double>::quiet_NaN() : 0.0;
+	try
+	{
+		result = CL_StringHelp::text_to_double(string(node));
+	}
+	catch (CL_Exception&)
+	{
+	}
+	return result;
+}
+
+inline CL_XPathObject CL_XPathEvaluator_Impl::string(const CL_XPathObject &object)
+{
+	switch(object.get_type())
+	{
+	case CL_XPathObject::type_node_set:
+		{
+			CL_String result;
+			CL_XPathNodeSet nodeset = object.get_node_set();
+			for (CL_XPathNodeSet::const_iterator it = nodeset.begin(), itEnd = nodeset.end(); it != itEnd; ++it)
+				result.append(string(*it));
+
+			return CL_XPathObject(result);
+		}
+
+	case CL_XPathObject::type_boolean:
+		return CL_XPathObject(object.get_boolean() ? "true" : "false");
+
+	case CL_XPathObject::type_number:
+		{
+			CL_String value;
+			double number = object.get_number();
+
+			if (std::numeric_limits<double>::has_infinity && std::abs(object.get_number()) == std::numeric_limits<double>::infinity())
+				value = "Infinity";
+			else if (std::numeric_limits<double>::has_quiet_NaN && object.get_number() == std::numeric_limits<double>::quiet_NaN())
+				value = "NaN";
+			else if (std::numeric_limits<double>::has_signaling_NaN && object.get_number() == std::numeric_limits<double>::signaling_NaN())
+				value = "NaN";
+			else
+				value = CL_StringHelp::double_to_text(std::abs(object.get_number()));
+
+			if (number < 0.0)
+				value = "-" + value;
+
+			return CL_XPathObject(value);
+		}
+
+	case CL_XPathObject::type_string:
+		return object;
+
+	case CL_XPathObject::type_null:
+	default:
+		return CL_XPathObject("");
+	}
+}
+
+CL_String CL_XPathEvaluator_Impl::string(const CL_DomNode &node)
+{
+	CL_String s = node.get_node_value();
+	if (node.is_element())
+		s = node.to_element().get_text();
+	return s;
+}

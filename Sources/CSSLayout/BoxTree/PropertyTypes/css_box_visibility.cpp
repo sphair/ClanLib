@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_visibility.h"
+#include "API/CSSLayout/PropertyTypes/css_box_visibility.h"
 
 CL_CSSBoxVisibility::CL_CSSBoxVisibility()
 : type(type_inherit)
@@ -42,5 +42,21 @@ void CL_CSSBoxVisibility::compute(const CL_CSSBoxVisibility *parent, CL_CSSResou
 			type = parent->type;
 		else
 			type = type_visible;
+	}
+}
+
+CL_String CL_CSSBoxVisibility::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_visible:
+		return "visible";
+	case type_hidden:
+		return "hidden";
+	case type_collapse:
+		return "collapse";
+	case type_inherit:
+		return "inherit";
 	}
 }

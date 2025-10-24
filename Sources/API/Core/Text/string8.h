@@ -35,8 +35,6 @@
 #include "../api_core.h"
 #include "string_data8.h"
 
-class CL_MemoryPool;
-
 /// \brief String container template.
 ///
 ///  Basic string container.  Extends StringData with operations that work on string data.
@@ -442,7 +440,6 @@ private:
 	/// \brief Init
 	void init();
 
-	CL_MemoryPool *pool;
 	size_type data_capacity;
 	enum { local_string_length = 63 };
 	char local_string[local_string_length + 1];

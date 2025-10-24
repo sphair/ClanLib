@@ -30,8 +30,7 @@ void Client::exec()
 
 	while (!quit)
 	{
-		CL_Event::wait(network_client.get_event_arrived());
-		network_client.process_events();
+		CL_KeepAlive::process(10);
 	}
 }
 

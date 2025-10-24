@@ -66,7 +66,7 @@ int Example::start(const std::vector<CL_String> &args)
 	CL_Font font(gc_1, "tahoma", 64);
 	CL_String example_text("This is an example ClanLib application that uses 2 windows. Try resizing and moving the windows. Press a key to flash selected window. ");
 	CL_Size text_size = font.get_text_size(gc_1, example_text);	
-	CL_FontMetrics font_metrics = font.get_font_metrics(gc_1);
+	CL_FontMetrics font_metrics = font.get_font_metrics();
 	int font_yoffset = (int)( font_metrics.get_ascent() - font_metrics.get_internal_leading() ) / 2;
 	int font_xoffset = 0;
 

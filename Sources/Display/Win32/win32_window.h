@@ -41,7 +41,7 @@
 #include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "API/Core/Signals/callback_v0.h"
 #include "API/Core/System/thread.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -177,7 +177,7 @@ private:
 
 	static BOOL CALLBACK enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
 
-	CL_PixelBuffer get_argb8888_from_png(cl_uint8 *data, size_t size) const;
+	CL_PixelBuffer get_argb8888_from_png(cl_uchar *data, size_t size) const;
 	CL_PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 	CL_PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 

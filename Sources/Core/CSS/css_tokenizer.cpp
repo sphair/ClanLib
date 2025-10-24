@@ -41,10 +41,32 @@ CL_CSSTokenizer::CL_CSSTokenizer(const CL_String &text)
 {
 }
 
-void CL_CSSTokenizer::read(CL_CSSToken &token, bool eat_whitespace)
+void CL_CSSTokenizer::read(CL_CSSToken &token, bool eat_whitespace, bool eat_comments)
 {
 	do
 	{
 		impl->read(token);
-	} while(eat_whitespace && token.type == CL_CSSToken::type_whitespace);
+		if (eat_comments && (token.type == CL_CSSToken::type_whitespace || token.type == CL_CSSToken::type_comment))
+		{
+			if (token.type == CL_CSSToken::type_comment)
+			{
+				token.type = CL_CSSToken::type_whitespace;
+				token.value = " ";
+			}
+			CL_CSSToken next_token;
+			while (true)
+			{
+				impl->peek(next_token);
+				if (next_token.type != CL_CSSToken::type_whitespace && next_token.type != CL_CSSToken::type_comment)
+					break;
+				impl->read(next_token);
+				if (next_token.type == CL_CSSToken::type_comment)
+				{
+					next_token.type = CL_CSSToken::type_whitespace;
+					next_token.value = " ";
+				}
+				token.value += next_token.value;
+			}
+		}
+	} while((eat_whitespace && token.type == CL_CSSToken::type_whitespace));
 }

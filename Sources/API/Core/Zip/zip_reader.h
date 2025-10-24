@@ -34,7 +34,7 @@
 #include "../api_core.h"
 #include "../Text/string_types.h"
 #include "../System/sharedptr.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 #include <vector>
 
 class CL_IODevice;
@@ -74,16 +74,16 @@ public:
 	bool has_data_descriptor() const;
 
 	/// \brief Returns the compressed size of the file entry.
-	cl_int64 get_compressed_size() const;
+	cl_long get_compressed_size() const;
 
 	/// \brief Returns the uncompressed size of the file entry.
-	cl_int64 get_uncompressed_size() const;
+	cl_long get_uncompressed_size() const;
 
 	/// \brief Informs the zip reader what the data descriptor contains.
-	void set_data_descriptor_data(cl_int64 compressed_size, cl_int64 uncompressed_size, cl_uint32 crc32);
+	void set_data_descriptor_data(cl_long compressed_size, cl_long uncompressed_size, cl_uint crc32);
 
 	/// \brief Reads some file data from the zip file.
-	cl_int64 read_file_data(void *data, cl_int64 size, bool read_all = true);
+	cl_long read_file_data(void *data, cl_long size, bool read_all = true);
 
 /// \}
 /// \name Implementation

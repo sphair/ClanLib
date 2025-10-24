@@ -80,7 +80,7 @@ CL_VertexArrayBuffer::~CL_VertexArrayBuffer()
 
 void CL_VertexArrayBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_VertexArrayBuffer is null");
 }
 

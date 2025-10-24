@@ -56,7 +56,6 @@ public:
 	virtual int get_viewport_height() const;
 	virtual void flip_buffers(int interval) const;
 	virtual void make_current() const;
-	virtual const CL_RenderWindowProvider * new_worker_context() const;
 	CL_GL1ProcAddress *get_proc_address(const CL_String8& function_name) const;
 
 private:

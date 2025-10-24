@@ -36,7 +36,7 @@
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
-#include "../IOData/datatypes.h"
+#include "../System/cl_platform.h"
 #include <vector>
 
 /// (Internal ClanLib Class)
@@ -61,7 +61,7 @@ public:
 	static unsigned int get_time();
 
 	/// \brief Get the current time microseconds.
-	static cl_uint64 get_microseconds();
+	static cl_ulong get_microseconds();
 
     enum CL_CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, sse5 };
     enum CL_CPU_ExtensionPPC { altivec };
@@ -172,10 +172,6 @@ public:
 	{
 		memory->~T();
 	}
-
-	static void alloc_thread_temp_pool();
-
-	static void free_thread_temp_pool();
 
 
 /// \}

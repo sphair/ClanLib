@@ -30,7 +30,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/IOData/datatypes.h"
+#include "API/Core/System/cl_platform.h"
 #include "pixel_buffer_impl.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/virtual_file_system.h"
@@ -99,7 +99,7 @@ CL_PixelBuffer::~CL_PixelBuffer()
 
 void CL_PixelBuffer::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_PixelBuffer is null");
 }
 
@@ -258,8 +258,8 @@ CL_PixelBuffer CL_PixelBuffer::copy(const CL_Rect &rect) const
 	int new_height = rect.get_height();
 
 	CL_PixelBuffer pbuf(new_width, new_height, get_format(), *get_palette(), 0);
-	cl_uint8 *dst_data = (cl_uint8 *)pbuf.get_data();
-	cl_uint8 *src_data = (cl_uint8 *)get_data() + (rect.top*impl->width + rect.left)*get_bytes_per_pixel();
+	cl_uchar *dst_data = (cl_uchar *)pbuf.get_data();
+	cl_uchar *src_data = (cl_uchar *)get_data() + (rect.top*impl->width + rect.left)*get_bytes_per_pixel();
 
 	int byte_width = new_width * get_bytes_per_pixel();
 	int src_pitch = get_pitch();
@@ -275,7 +275,12 @@ CL_PixelBuffer CL_PixelBuffer::copy(const CL_Rect &rect) const
 
 CL_PixelBuffer::operator bool() const
 {
-	return !impl.is_null();
+	// Silly fix for gcc
+	if (impl)
+	{
+		return true;
+	}
+	return false;
 }
 
 void CL_PixelBuffer::convert(CL_PixelBuffer &target) const
@@ -354,30 +359,59 @@ void CL_PixelBuffer::premultiply_alpha()
 	if (impl->provider)
 		throw CL_Exception("GPU Provider currently does not support this function");
 
-	if (get_format() != cl_rgba8)
+	if (get_alpha_mask())
 	{
-		throw CL_Exception("The image is not rgba8");
-	}
-
-	int w = get_width();
-	int h = get_height();
-	cl_uint32 *p = (cl_uint32 *) get_data();
-	for (int y = 0; y < h; y++)
-	{
-		int index = y * w;
-		cl_uint32 *line = p + index;
-		for (int x = 0; x < w; x++)
+		if (get_format() == cl_rgba8)
 		{
-			cl_uint32 r = ((line[x] >> 24) & 0xff);
-			cl_uint32 g = ((line[x] >> 16) & 0xff);
-			cl_uint32 b = ((line[x] >> 8) & 0xff);
-			cl_uint32 a = (line[x] & 0xff);
+			int w = get_width();
+			int h = get_height();
+			cl_uint *p = (cl_uint *) get_data();
+			for (int y = 0; y < h; y++)
+			{
+				int index = y * w;
+				cl_uint *line = p + index;
+				for (int x = 0; x < w; x++)
+				{
+					cl_uint r = ((line[x] >> 24) & 0xff);
+					cl_uint g = ((line[x] >> 16) & 0xff);
+					cl_uint b = ((line[x] >> 8) & 0xff);
+					cl_uint a = (line[x] & 0xff);
 
-			r = r * a / 255;
-			g = g * a / 255;
-			b = b * a / 255;
+					r = r * a / 255;
+					g = g * a / 255;
+					b = b * a / 255;
 
-			line[x] = (r << 24) + (g << 16) + (b << 8) + a;
+					line[x] = (r << 24) + (g << 16) + (b << 8) + a;
+				}
+			}
+		}
+		else if (get_format() == cl_argb8)
+		{
+			int w = get_width();
+			int h = get_height();
+			cl_uint *p = (cl_uint *) get_data();
+			for (int y = 0; y < h; y++)
+			{
+				int index = y * w;
+				cl_uint *line = p + index;
+				for (int x = 0; x < w; x++)
+				{
+					cl_uint a = ((line[x] >> 24) & 0xff);
+					cl_uint r = ((line[x] >> 16) & 0xff);
+					cl_uint g = ((line[x] >> 8) & 0xff);
+					cl_uint b = (line[x] & 0xff);
+
+					r = r * a / 255;
+					g = g * a / 255;
+					b = b * a / 255;
+
+					line[x] = (a << 24) + (r << 16) + (g << 8) + b;
+				}
+			}
+		}
+		else
+		{
+			throw CL_Exception("The image is not rgba8");
 		}
 	}
 }

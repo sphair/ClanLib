@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_ltrb_style.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderLTRBStyle::get_names()
 {
@@ -40,16 +40,16 @@ std::vector<CL_String> CL_CSSParserBorderLTRBStyle::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderLTRBStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderLTRBStyle::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderStyle *style = 0;
-	if (name == "border-top-style")
+	if (equals(name, "border-top-style"))
 		style = &properties.border_style_top;
-	else if (name == "border-right-style")
+	else if (equals(name, "border-right-style"))
 		style = &properties.border_style_right;
-	else if (name == "border-bottom-style")
+	else if (equals(name, "border-bottom-style"))
 		style = &properties.border_style_bottom;
-	else if (name == "border-left-style")
+	else if (equals(name, "border-left-style"))
 		style = &properties.border_style_left;
 
 	if (style)
@@ -58,28 +58,33 @@ void CL_CSSParserBorderLTRBStyle::parse(CL_CSSBoxProperties &properties, const C
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 		{
-			if (token.value == "none")
+			if (equals(token.value, "none"))
 				style->type = CL_CSSBoxBorderStyle::type_none;
-			else if (token.value == "hidden")
+			else if (equals(token.value, "hidden"))
 				style->type = CL_CSSBoxBorderStyle::type_hidden;
-			else if (token.value == "dotted")
+			else if (equals(token.value, "dotted"))
 				style->type = CL_CSSBoxBorderStyle::type_dotted;
-			else if (token.value == "dashed")
+			else if (equals(token.value, "dashed"))
 				style->type = CL_CSSBoxBorderStyle::type_dashed;
-			else if (token.value == "solid")
+			else if (equals(token.value, "solid"))
 				style->type = CL_CSSBoxBorderStyle::type_solid;
-			else if (token.value == "double")
+			else if (equals(token.value, "double"))
 				style->type = CL_CSSBoxBorderStyle::type_double;
-			else if (token.value == "groove")
+			else if (equals(token.value, "groove"))
 				style->type = CL_CSSBoxBorderStyle::type_groove;
-			else if (token.value == "ridge")
+			else if (equals(token.value, "ridge"))
 				style->type = CL_CSSBoxBorderStyle::type_ridge;
-			else if (token.value == "inset")
+			else if (equals(token.value, "inset"))
 				style->type = CL_CSSBoxBorderStyle::type_inset;
-			else if (token.value == "outset")
+			else if (equals(token.value, "outset"))
 				style->type = CL_CSSBoxBorderStyle::type_outset;
-			else if (token.value == "inherit")
+			else if (equals(token.value, "inherit"))
 				style->type = CL_CSSBoxBorderStyle::type_inherit;
+		}
+
+		if (out_change_set)
+		{
+			(*out_change_set)[name] = style;
 		}
 	}
 }

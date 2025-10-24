@@ -52,6 +52,7 @@ private:
 	void on_button_clicked_typeface_ttf(CL_PushButton *button);
 	void on_checkbox_state_underline(CL_CheckBox *checkbox);
 	void on_checkbox_state_italic(CL_CheckBox *checkbox);
+	void on_checkbox_state_subpixel(CL_CheckBox *checkbox);
 	void on_checkbox_state_strikeout(CL_CheckBox *checkbox);
 	void on_checkbox_state_antialias(CL_CheckBox *checkbox);
 	void on_button_clicked_weight_light(CL_PushButton *button);

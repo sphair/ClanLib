@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_line_height.h"
+#include "API/CSSLayout/PropertyTypes/css_box_line_height.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxLineHeight::CL_CSSBoxLineHeight()
@@ -55,9 +55,27 @@ void CL_CSSBoxLineHeight::compute(const CL_CSSBoxLineHeight *parent, CL_CSSResou
 	if (type == type_percentage)
 	{
 		type = type_length;
-		length = CL_CSSBoxLength(percentage, CL_CSSBoxLength::type_em);
+		length = CL_CSSBoxLength(percentage / 100.0f, CL_CSSBoxLength::type_em);
 	}
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxLineHeight::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_normal:
+		return "normal";
+	case type_number:
+		return CL_StringHelp::float_to_text(number);
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_inherit:
+		return "inherit";
+	}
 }

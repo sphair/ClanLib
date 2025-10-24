@@ -58,11 +58,6 @@ void CL_NetGameClient::disconnect()
 	impl->events.clear();
 }
 
-CL_Event &CL_NetGameClient::get_event_arrived()
-{
-	return impl->event_arrived;
-}
-
 void CL_NetGameClient::process_events()
 {
 	impl->process();
@@ -70,7 +65,7 @@ void CL_NetGameClient::process_events()
 
 void CL_NetGameClient::send_event(const CL_NetGameEvent &game_event)
 {
-	if (impl->connection != 0)
+	if (impl->connection.get() != 0)
 		impl->connection->send_event(game_event);
 }
 
@@ -93,13 +88,12 @@ void CL_NetGameClient::add_network_event(const CL_NetGameNetworkEvent &e)
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->events.push_back(e);
-	impl->event_arrived.set();
+	impl->set_wakeup_event();
 }
 
 void CL_NetGameClient_Impl::process()
 {
 	CL_MutexSection mutex_lock(&mutex);
-	event_arrived.reset();
 	std::vector<CL_NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();

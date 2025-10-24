@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_min_width.h"
+#include "API/CSSLayout/PropertyTypes/css_box_min_width.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxMinWidth::CL_CSSBoxMinWidth()
@@ -54,4 +54,18 @@ void CL_CSSBoxMinWidth::compute(const CL_CSSBoxMinWidth *parent, CL_CSSResourceC
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
+}
+
+CL_String CL_CSSBoxMinWidth::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_inherit:
+		return "inherit";
+	}
 }

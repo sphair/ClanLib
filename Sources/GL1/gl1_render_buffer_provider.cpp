@@ -47,7 +47,7 @@ CL_GL1RenderBufferProvider::~CL_GL1RenderBufferProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1RenderBufferProvider Attributes:
 
-CLuint CL_GL1RenderBufferProvider::get_handle()
+GLuint CL_GL1RenderBufferProvider::get_handle()
 {
 	return 0;
 }

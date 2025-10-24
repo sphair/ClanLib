@@ -207,9 +207,9 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 	CL_File output(filename, CL_File::create_always, CL_File::access_read_write);
 
 	std::vector<int> local_header_offsets;
-	std::vector<cl_uint32> crc32_codes;
+	std::vector<cl_uint> crc32_codes;
 
-	cl_int16 dos_date = 0, dos_time = 0;
+	cl_short dos_date = 0, dos_time = 0;
 	CL_ZipArchive_Impl::calc_time_and_date(dos_date, dos_time);
 
 	std::vector<CL_ZipFileEntry>::iterator it;
@@ -224,7 +224,7 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 		CL_DataBuffer data(input.get_size());
 		input.read(data.get_data(), data.get_size());
 
-		cl_uint32 crc32 = CL_ZipArchive_Impl::calc_crc32(data.get_data(), data.get_size());
+		cl_uint crc32 = CL_ZipArchive_Impl::calc_crc32(data.get_data(), data.get_size());
 		crc32_codes.push_back(crc32);
 
 		// 1. local file header
@@ -364,7 +364,7 @@ void CL_ZipArchive::load(CL_IODevice &input)
 	if (zip64) input.seek(int(zip64_end_of_directory.offset_to_start_of_central_directory), CL_IODevice::seek_set);
 	else input.seek(int(end_of_directory.offset_to_start_of_central_directory), CL_IODevice::seek_set);
 
-	cl_int64 num_entries = end_of_directory.number_of_entries_in_central_directory;
+	cl_long num_entries = end_of_directory.number_of_entries_in_central_directory;
 	if (zip64) num_entries = zip64_end_of_directory.number_of_entries_in_central_directory;
 
 	for (int i=0; i<num_entries; i++)
@@ -378,14 +378,14 @@ void CL_ZipArchive::load(CL_IODevice &input)
 /////////////////////////////////////////////////////////////////////////////
 // CL_ZipArchive implementation:
 
-void CL_ZipArchive_Impl::calc_time_and_date(cl_int16 &out_date, cl_int16 &out_time)
+void CL_ZipArchive_Impl::calc_time_and_date(cl_short &out_date, cl_short &out_time)
 {
-	cl_uint32 day_of_month = 0;
-	cl_uint32 month = 0;
-	cl_uint32 year_from_1980 = 0;
-	cl_uint32 hour = 0;
-	cl_uint32 min = 0;
-	cl_uint32 sec = 0;
+	cl_uint day_of_month = 0;
+	cl_uint month = 0;
+	cl_uint year_from_1980 = 0;
+	cl_uint hour = 0;
+	cl_uint min = 0;
+	cl_uint sec = 0;
 
 #if _MSC_VER >= 1400
 	time_t t = time(0);
@@ -411,16 +411,16 @@ void CL_ZipArchive_Impl::calc_time_and_date(cl_int16 &out_date, cl_int16 &out_ti
 	mutex_lock.unlock();
 #endif
 
-	out_date = (cl_int16) (day_of_month + (month << 5) + (year_from_1980 << 9));
-	out_time = (cl_int16) (sec/2 + (min << 5) + (hour << 11));
+	out_date = (cl_short) (day_of_month + (month << 5) + (year_from_1980 << 9));
+	out_time = (cl_short) (sec/2 + (min << 5) + (hour << 11));
 }
 
-cl_uint32 CL_ZipArchive_Impl::calc_crc32(const void *data, cl_int64 size, cl_uint32 crc, bool last_block)
+cl_uint CL_ZipArchive_Impl::calc_crc32(const void *data, cl_long size, cl_uint crc, bool last_block)
 {
 	const char *d = (const char *) data;
-	for (cl_uint32 data_index = 0; data_index < size; data_index++)
+	for (cl_uint data_index = 0; data_index < size; data_index++)
 	{
-		cl_uint8 table_index = ((crc ^ d[data_index]) & 0xff);
+		cl_uchar table_index = ((crc ^ d[data_index]) & 0xff);
 		crc = ((crc >> 8) & 0x00ffffff) ^ crc32_table[table_index];
 	}
 	if (last_block)
@@ -429,7 +429,7 @@ cl_uint32 CL_ZipArchive_Impl::calc_crc32(const void *data, cl_int64 size, cl_uin
 		return crc;
 }
 
-cl_uint32 CL_ZipArchive_Impl::crc32_table[256] =
+cl_uint CL_ZipArchive_Impl::crc32_table[256] =
 {
    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
    0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,

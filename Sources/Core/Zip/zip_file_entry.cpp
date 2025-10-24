@@ -62,12 +62,12 @@ CL_StringRef CL_ZipFileEntry::get_archive_filename() const
 	return impl->record.filename;
 }
 
-cl_int64 CL_ZipFileEntry::get_uncompressed_size()
+cl_long CL_ZipFileEntry::get_uncompressed_size()
 {
 	return impl->record.uncompressed_size;
 }
 	
-cl_int64 CL_ZipFileEntry::get_compressed_size()
+cl_long CL_ZipFileEntry::get_compressed_size()
 {
 	return impl->record.compressed_size;
 }

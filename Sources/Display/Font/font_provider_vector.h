@@ -64,7 +64,7 @@ public:
 
 public:
 	/// \brief Returns information about the current font.
-	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	virtual CL_FontMetrics get_font_metrics();
 
 
 /// \}

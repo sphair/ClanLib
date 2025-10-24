@@ -7,6 +7,8 @@
 class CL_CSSRuleset2
 {
 public:
+	CL_CSSRuleset2(int origin) : origin(origin) { }
 	std::vector<CL_CSSSelectorChain2> selectors;
 	std::vector<CL_CSSProperty2> properties;
+	int origin;
 };

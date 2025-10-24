@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_border_color.h"
+#include "API/CSSLayout/PropertyTypes/css_box_border_color.h"
 
 CL_CSSBoxBorderColor::CL_CSSBoxBorderColor()
 : type(type_get_from_color_property)
@@ -53,5 +53,19 @@ void CL_CSSBoxBorderColor::compute(const CL_CSSBoxBorderColor *parent, CL_CSSRes
 	{
 		type = type_color;
 		color = color_property_color;
+	}
+}
+
+CL_String CL_CSSBoxBorderColor::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_color:
+		return cl_format("rgba(%1,%2,%3,%4)", (int)(color.r * 255.0f + 0.5f), (int)(color.g * 255.0f + 0.5f), (int)(color.b * 255.0f + 0.5f), (int)(color.a * 255.0f + 0.5f));
+	case type_inherit:
+		return "inherit";
+	case type_get_from_color_property:
+		return "-clan-from-color-property";
 	}
 }

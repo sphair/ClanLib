@@ -53,7 +53,6 @@ public:
 	virtual int get_viewport_height() const;
 	virtual void flip_buffers(int interval) const;
 	virtual void make_current() const;
-	virtual const CL_RenderWindowProvider * new_worker_context() const;
 
 	CL_GL1WindowProvider_WGL &get_window();
 

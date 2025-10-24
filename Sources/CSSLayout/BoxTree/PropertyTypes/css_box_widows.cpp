@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_widows.h"
+#include "API/CSSLayout/PropertyTypes/css_box_widows.h"
 
 CL_CSSBoxWidows::CL_CSSBoxWidows()
 : type(type_inherit), value(0)
@@ -48,5 +48,17 @@ void CL_CSSBoxWidows::compute(const CL_CSSBoxWidows *parent, CL_CSSResourceCache
 			type = type_integer;
 			value = 2;
 		}
+	}
+}
+
+CL_String CL_CSSBoxWidows::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_integer:
+		return CL_StringHelp::int_to_text(value);
+	case type_inherit:
+		return "inherit";
 	}
 }

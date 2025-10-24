@@ -39,23 +39,36 @@ int HSV::start(const std::vector<CL_String> &args)
 {
 	CL_DisplayWindow window("ClanLib HSV Example", 1024, 768);
 	CL_Slot slot = window.sig_window_close().connect(this, &HSV::on_close);
+	CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &HSV::on_input_up);
+
 	CL_GraphicContext gc = window.get_gc();
 	CL_InputContext ic = window.get_ic();
 	CL_ProgramObject program = create_shader_program(gc);
 	CL_Texture texture = create_texture(gc);
+
+	CL_Font font(gc, "tahoma", 24);
+
+	unsigned int last_time = CL_System::get_time();
+
 	float hue_offset = 0.0;
 	while (!quit)
 	{
+		unsigned int current_time = CL_System::get_time();
+		float time_delta_ms = static_cast<float> (current_time - last_time);
+		last_time = current_time;
+
 		if (ic.get_keyboard().get_keycode(CL_KEY_LEFT))
-			hue_offset += 0.005f;
+			hue_offset += 0.0005f * time_delta_ms;
 		else if (ic.get_keyboard().get_keycode(CL_KEY_RIGHT))
-			hue_offset -= 0.005f;
+			hue_offset -= 0.0005f * time_delta_ms;
 		if (hue_offset < -1.0f)
 			hue_offset += 1.0f;
 		if (hue_offset > 1.0f)
 			hue_offset -= 1.0f;
 
 		render_texture(gc, program, texture, hue_offset);
+
+		font.draw_text(gc, 32, 700, "Use cursor keys left and right");
 		window.flip();
 		CL_KeepAlive::process(10);
 	}
@@ -66,6 +79,14 @@ int HSV::start(const std::vector<CL_String> &args)
 void HSV::on_close()
 {
 	quit = true;
+}
+
+void HSV::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
+{
+	if(key.id == CL_KEY_ESCAPE)
+	{
+		quit = true;
+	}
 }
 
 CL_ProgramObject HSV::create_shader_program(CL_GraphicContext &gc)
@@ -114,7 +135,9 @@ void HSV::render_texture(CL_GraphicContext &gc, CL_ProgramObject &program, CL_Te
 	primarray.set_attribute(1, CL_Vec1f(hue_offset));
 	primarray.set_attributes(2, tex1_coords);
 
+	gc.set_texture(0, texture);
 	gc.set_program_object(program, cl_program_matrix_modelview_projection);
 	gc.draw_primitives(cl_triangles, 6, primarray);
 	gc.reset_program_object();
+	gc.reset_texture(0);
 }

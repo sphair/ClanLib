@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_list_style_type.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserListStyleType::get_names()
 {
@@ -37,43 +37,47 @@ std::vector<CL_String> CL_CSSParserListStyleType::get_names()
 	return names;
 }
 
-void CL_CSSParserListStyleType::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserListStyleType::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "disc")
+		if (equals(token.value, "disc"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_disc;
-		else if (token.value == "circle")
+		else if (equals(token.value, "circle"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_circle;
-		else if (token.value == "square")
+		else if (equals(token.value, "square"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_square;
-		else if (token.value == "decimal")
+		else if (equals(token.value, "decimal"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_decimal;
-		else if (token.value == "decimal-leading-zero")
+		else if (equals(token.value, "decimal-leading-zero"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_decimal_leading_zero;
-		else if (token.value == "lower-roman")
+		else if (equals(token.value, "lower-roman"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_lower_roman;
-		else if (token.value == "upper-roman")
+		else if (equals(token.value, "upper-roman"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_upper_roman;
-		else if (token.value == "lower-greek")
+		else if (equals(token.value, "lower-greek"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_lower_greek;
-		else if (token.value == "lower-latin")
+		else if (equals(token.value, "lower-latin"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_lower_latin;
-		else if (token.value == "upper-latin")
+		else if (equals(token.value, "upper-latin"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_upper_latin;
-		else if (token.value == "armenian")
+		else if (equals(token.value, "armenian"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_armenian;
-		else if (token.value == "georgian")
+		else if (equals(token.value, "georgian"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_georgian;
-		else if (token.value == "lower-alpha")
+		else if (equals(token.value, "lower-alpha"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_lower_alpha;
-		else if (token.value == "upper-alpha")
+		else if (equals(token.value, "upper-alpha"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_upper_alpha;
-		else if (token.value == "none")
+		else if (equals(token.value, "none"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_none;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.list_style_type.type = CL_CSSBoxListStyleType::type_inherit;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["list-style-type"] = &properties.list_style_type;
 	}
 }

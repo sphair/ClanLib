@@ -73,7 +73,7 @@ CL_OcclusionQuery::CL_OcclusionQuery()
 
 void CL_OcclusionQuery::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_OcclusionQuery is null");
 }
 

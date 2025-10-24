@@ -66,7 +66,7 @@ void CL_Font_Sprite::set_font_metrics(const CL_FontMetrics &metrics)
 
 void CL_Font_Sprite::draw_text(CL_GraphicContext &gc, float xpos, float ypos, float scale_x, float scale_y, const CL_StringRef &text, const CL_Colorf &color)
 {
-	CL_FontMetrics fm = get_font_metrics(gc);
+	CL_FontMetrics fm = get_font_metrics();
 	float line_spacing = scale_y * ((float) (fm.get_height() + fm.get_external_leading()));
 	std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
 	for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)

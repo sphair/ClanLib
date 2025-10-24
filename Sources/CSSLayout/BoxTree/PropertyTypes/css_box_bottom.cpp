@@ -27,8 +27,8 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_bottom.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/PropertyTypes/css_box_bottom.h"
+#include "API/CSSLayout/css_box_properties.h"
 #include "../../css_resource_cache.h"
 
 CL_CSSBoxBottom::CL_CSSBoxBottom()
@@ -50,8 +50,6 @@ void CL_CSSBoxBottom::compute(CL_CSSBoxTop &top, CL_CSSBoxBottom &bottom, const 
 		{
 			top.type = CL_CSSBoxTop::type_auto;
 		}
-		if (top.type == CL_CSSBoxTop::type_length)
-			top.length = layout->compute_length(top.length, em_size, ex_size);
 	}
 
 	if (bottom.type == type_inherit)
@@ -66,9 +64,12 @@ void CL_CSSBoxBottom::compute(CL_CSSBoxTop &top, CL_CSSBoxBottom &bottom, const 
 		{
 			bottom.type = type_auto;
 		}
-		if (bottom.type == type_length)
-			bottom.length = layout->compute_length(bottom.length, em_size, ex_size);
 	}
+
+	if (top.type == CL_CSSBoxTop::type_length)
+		top.length = layout->compute_length(top.length, em_size, ex_size);
+	if (bottom.type == type_length)
+		bottom.length = layout->compute_length(bottom.length, em_size, ex_size);
 
 	if (position.type == CL_CSSBoxPosition::type_static)
 	{
@@ -112,5 +113,21 @@ void CL_CSSBoxBottom::compute(CL_CSSBoxTop &top, CL_CSSBoxBottom &bottom, const 
 				top.percentage = -bottom.percentage;
 			}
 		}
+	}
+}
+
+CL_String CL_CSSBoxBottom::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_length:
+		return length.to_string();
+	case type_percentage:
+		return CL_StringHelp::float_to_text(percentage) + "%";
+	case type_auto:
+		return "auto";
+	case type_inherit:
+		return "inherit";
 	}
 }

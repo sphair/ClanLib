@@ -35,6 +35,7 @@
 #include "api_swrender.h"
 #include "../Core/Math/vec2.h"
 #include "../Core/Math/vec4.h"
+#include "../Core/Math/mat4.h"
 
 class CL_PixelPipeline;
 class CL_PixelCommand;
@@ -48,9 +49,15 @@ class CL_SoftwareProgram
 public:
 	virtual ~CL_SoftwareProgram() { }
 
-	virtual CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler) = 0;
-	virtual CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler) = 0;
-	virtual CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler) = 0;
+	virtual int get_attribute_count() const = 0;
+	virtual int get_attribute_index(const CL_StringRef &name) const = 0;
+	virtual CL_Vec4f get_attribute_default(int index) { return CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f); }
+	virtual void set_uniform(const CL_StringRef &name, const CL_Vec4f &vec) = 0;
+	virtual void set_uniform_matrix(const CL_StringRef &name, const CL_Mat4f &mat) = 0;
+
+	virtual CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
+	virtual CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
+	virtual CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
 };
 
 /// \}

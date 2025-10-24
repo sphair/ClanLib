@@ -38,6 +38,7 @@ public:
 
 private:
 	void on_close();
+	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	CL_ProgramObject create_shader_program(CL_GraphicContext &gc);
 	CL_Texture create_texture(CL_GraphicContext &gc);
 	void render_texture(CL_GraphicContext &gc, CL_ProgramObject &program, CL_Texture &texture, float hue_offset);

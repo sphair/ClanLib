@@ -53,6 +53,5 @@ CL_SoundOutput CL_Sound::get_current_output()
 
 void CL_Sound::select_output(const CL_SoundOutput &output)
 {
-	if (cl_current_output.is_null())
-		cl_current_output = output.impl;
+	cl_current_output = output.impl;
 }

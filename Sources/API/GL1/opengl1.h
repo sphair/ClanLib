@@ -69,14 +69,14 @@ public:
 	/// \brief Get a OpenGL format out of a pixel format.
 	/** <p>The function returns false if pixelformat color depth is not convertible to
 	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
-	static bool to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format, CLenum &type);
+	static bool to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, GLenum &format, GLenum &type);
 
 	/// \brief To opengl textureformat
 	///
 	/// \param format = Texture Format
-	/// \param gl_internal_format = CLint
-	/// \param gl_pixel_format = CLenum
-	static void to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format);
+	/// \param gl_internal_format = GLint
+	/// \param gl_pixel_format = GLenum
+	static void to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 	static void set_active(CL_GraphicContext &gc);

@@ -32,17 +32,22 @@ class CL_CSSStackingContext;
 class CL_CSSResourceCache;
 class CL_CSSBlockFormattingContext;
 
+#include "css_used_value.h"
+
 class CL_CSSLayoutCursor
 {
 public:
 	CL_CSSLayoutCursor();
-	void add_margin(float margin_y);
+	void add_margin(CL_CSSUsedValue margin_y);
 	void apply_margin();
-	void apply_written_width(float x);
+	CL_CSSActualValue get_total_margin() const;
 
-	float x;
-	float y;
-	float margin_y;
-	float max_written_width;
+	CL_CSSActualValue x;
+	CL_CSSActualValue y;
+	CL_CSSUsedValue relative_x;
+	CL_CSSUsedValue relative_y;
 	CL_CSSResourceCache *resources;
+private:
+	CL_CSSUsedValue margin_y;
+	CL_CSSUsedValue negative_margin_y;
 };

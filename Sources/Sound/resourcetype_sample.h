@@ -30,11 +30,13 @@
 
 #pragma once
 
+#include "API/Core/Resources/resource.h"
+
 class CL_SoundBuffer;
 class CL_InputSourceProvider;
 class CL_OutputSourceProvider;
 
-class CL_ResourceData_Sample
+class CL_ResourceData_Sample : public CL_ResourceData
 {
 /// \name Construction
 /// \{

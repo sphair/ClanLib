@@ -28,9 +28,10 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_box_element.h"
-#include "css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 CL_CSSBoxElement::CL_CSSBoxElement()
+: col_span(1), row_span(1)
 {
 }
 
@@ -87,7 +88,8 @@ bool CL_CSSBoxElement::is_shrink_to_fit() const
 		computed_properties.display.type == CL_CSSBoxDisplay::type_inline_table ||
 		computed_properties.display.type == CL_CSSBoxDisplay::type_table ||
 		/*computed_properties.display.type == CL_CSSBoxDisplay::type_table_cell ||*/
-		computed_properties.float_box.type != CL_CSSBoxFloat::type_none)
+		computed_properties.float_box.type != CL_CSSBoxFloat::type_none ||
+		is_absolute() || is_fixed())
 	{
 		return computed_properties.width.type == CL_CSSBoxWidth::type_auto;
 	}
@@ -120,4 +122,54 @@ bool CL_CSSBoxElement::is_table_row() const
 bool CL_CSSBoxElement::is_table_cell() const
 {
 	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_cell;
+}
+
+bool CL_CSSBoxElement::is_table_row_group() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_row_group;
+}
+
+bool CL_CSSBoxElement::is_table_header_group() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_header_group;
+}
+
+bool CL_CSSBoxElement::is_table_footer_group() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_footer_group;
+}
+
+bool CL_CSSBoxElement::is_table_column() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_column;
+}
+
+bool CL_CSSBoxElement::is_table_column_group() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_column_group;
+}
+
+bool CL_CSSBoxElement::is_table_caption() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_table_caption;
+}
+
+bool CL_CSSBoxElement::is_absolute() const
+{
+	return computed_properties.position.type == CL_CSSBoxPosition::type_absolute;
+}
+
+bool CL_CSSBoxElement::is_fixed() const
+{
+	return computed_properties.position.type == CL_CSSBoxPosition::type_fixed;
+}
+
+bool CL_CSSBoxElement::is_display_none() const
+{
+	return computed_properties.display.type == CL_CSSBoxDisplay::type_none;
+}
+
+bool CL_CSSBoxElement::is_overflow_visible() const
+{
+	return computed_properties.overflow.type == CL_CSSBoxOverflow::type_visible;
 }

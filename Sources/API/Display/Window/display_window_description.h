@@ -36,11 +36,20 @@
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
 #include "../../Core/System/sharedptr.h"
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 class CL_Size;
 class CL_Rect;
 class CL_DisplayWindow;
 class CL_DisplayWindowDescription_Impl;
+
+class CL_DisplayWindowDescriptionData
+{
+public:
+	virtual ~CL_DisplayWindowDescriptionData() { }
+};
 
 /// \brief Display window description class.
 ///
@@ -137,6 +146,9 @@ public:
 	/// \brief Returns true if the window is a tool window.
 	bool is_tool_window() const;
 
+	/// \brief Returns true if the window is a dialog window.
+	bool is_dialog() const;
+
 	/// \brief Returns true if the window is initially visible.
 	bool is_visible() const;
 
@@ -157,7 +169,7 @@ public:
 	bool get_tablet_context() const;
 
 	/// \brief Returns the object stored in the given data name.
-	CL_UnknownSharedPtr get_data(const CL_String &data_name) const;
+	CL_SharedPtr<CL_DisplayWindowDescriptionData> get_data(const CL_String &data_name) const;
 
 	/// \brief Returns the minimum required depth buffer.
 	int get_depth_size() const;
@@ -201,6 +213,9 @@ public:
 
 	/// \brief Flags the window to be a tool window to the windowing system.
 	void set_tool_window(bool value = true);
+
+	/// \brief Flags the window to be a dialog window to the windowing system.
+	void set_dialog_window(bool value = true);
 
 	/// \brief Enables a drop shadow effect on the window.
 	void set_drop_shadow(bool value = true);
@@ -262,7 +277,7 @@ public:
 #endif
 
 	/// \brief Store object in description.
-	void set_data(const CL_String &data_name, const CL_UnknownSharedPtr &ptr);
+	void set_data(const CL_String &data_name, const CL_SharedPtr<CL_DisplayWindowDescriptionData> &ptr);
 
 	/// \brief Sets the minimum required depth buffer.
 	/** <p>If this value is zero, the smallest available depth buffer is preferred. Otherwise,

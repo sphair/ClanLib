@@ -33,6 +33,7 @@
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <X11/Xlib.h>
+#include "API/Core/System/thread_local_storage.h"
 
 class CL_Event;
 
@@ -84,8 +85,10 @@ public:
 private:
 	void process_message();
 
-	struct ThreadData
+	class ThreadData : public CL_ThreadLocalStorageData
 	{
+	public:
+		ThreadData() {}
 		std::vector<CL_X11Window *> windows;
 	};
 

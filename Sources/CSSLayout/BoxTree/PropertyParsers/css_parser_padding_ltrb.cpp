@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_padding_ltrb.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserPaddingLTRB::get_names()
 {
@@ -40,16 +40,16 @@ std::vector<CL_String> CL_CSSParserPaddingLTRB::get_names()
 	return names;
 }
 
-void CL_CSSParserPaddingLTRB::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserPaddingLTRB::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxPaddingWidth *width = 0;
-	if (name == "padding-top")
+	if (equals(name, "padding-top"))
 		width = &properties.padding_width_top;
-	else if (name == "padding-right")
+	else if (equals(name, "padding-right"))
 		width = &properties.padding_width_right;
-	else if (name == "padding-bottom")
+	else if (equals(name, "padding-bottom"))
 		width = &properties.padding_width_bottom;
-	else if (name == "padding-left")
+	else if (equals(name, "padding-left"))
 		width = &properties.padding_width_left;
 
 	if (width)
@@ -58,7 +58,7 @@ void CL_CSSParserPaddingLTRB::parse(CL_CSSBoxProperties &properties, const CL_St
 		CL_CSSToken token = next_token(pos, tokens);
 		if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 		{
-			if (token.value == "inherit")
+			if (equals(token.value, "inherit"))
 				width->type = CL_CSSBoxPaddingWidth::type_inherit;
 		}
 		else if (is_length(token) && pos == tokens.size())
@@ -74,6 +74,29 @@ void CL_CSSParserPaddingLTRB::parse(CL_CSSBoxProperties &properties, const CL_St
 		{
 			width->type = CL_CSSBoxPaddingWidth::type_percentage;
 			width->percentage = CL_StringHelp::text_to_float(token.value);
+		}
+		else if (token.type == CL_CSSToken::type_delim && token.value == "-")
+		{
+			token = next_token(pos, tokens);
+			if (is_length(token) && pos == tokens.size())
+			{
+				CL_CSSBoxLength length;
+				if (parse_length(token, length))
+				{
+					length.value = -length.value;
+					width->type = CL_CSSBoxPaddingWidth::type_length;
+					width->length = length;
+				}
+			}
+			else if (token.type == CL_CSSToken::type_percentage && pos == tokens.size())
+			{
+				width->type = CL_CSSBoxPaddingWidth::type_percentage;
+				width->percentage = -CL_StringHelp::text_to_float(token.value);
+			}
+		}
+		if (out_change_set)
+		{
+			(*out_change_set)[name] = width;
 		}
 	}
 }

@@ -4,6 +4,7 @@
 @import "pushbutton.css";
 @import "listview.css";
 @import "lineedit.css";
+@import "textedit.css";
 @import "radiobutton.css";
 @import "slider.css";
 @import "label.css";
@@ -21,3 +22,4 @@
 @import "progressbar.css";
 @import "groupbox.css";
 @import "tooltip.css";
+@import "messagebox.css";

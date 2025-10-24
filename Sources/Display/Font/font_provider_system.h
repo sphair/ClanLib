@@ -35,8 +35,11 @@
 #include "API/Display/2D/texture_group.h"
 #include <list>
 #include <map>
-
 #include "glyph_cache.h"
+
+#ifdef WIN32
+#define USE_MS_FONT_RENDERER
+#endif
 
 class CL_FontEngine_Freetype;
 class CL_FontEngine_Win32;
@@ -47,19 +50,16 @@ class CL_FontProvider_System : public CL_FontProvider
 {
 /// \name Construction
 /// \{
-
 public:
-
-	CL_FontProvider_System(CL_GraphicContext &gc);
+	CL_FontProvider_System();
 	virtual ~CL_FontProvider_System();
 
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns information about the current font.
-	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics();
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
 	CL_Font_TextureGlyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
@@ -67,7 +67,6 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	void insert_glyph(CL_GraphicContext &gc, CL_Font_System_Position &position, CL_PixelBuffer &pixel_buffer);
 	void insert_glyph(CL_GraphicContext &gc, const CL_StringRef &text);
@@ -99,7 +98,6 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 #ifndef WIN32
 	/// \brief Get the registered font or the best font match if not found

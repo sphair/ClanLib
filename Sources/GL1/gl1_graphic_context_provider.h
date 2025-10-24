@@ -68,7 +68,6 @@ public:
 	/** <p>The pointer to the rendering window provider will be owned by this graphic
 	    context provider object, and will be deleted upon its destruction.</p>*/
 	CL_GL1GraphicContextProvider(const CL_RenderWindowProvider * const render_window);
-
 	~CL_GL1GraphicContextProvider();
 
 /// \}
@@ -76,15 +75,10 @@ public:
 /// \{
 public:
 	int get_max_attributes();
-
 	CL_Size get_max_texture_size() const;
-
 	const CL_Mat4f &get_modelview() const { return modelview; }
-
 	const CL_RenderWindowProvider & get_render_window() const { return *render_window; }
-
 	int get_width() const;
-
 	int get_height() const;
 
 	// GL1 Only
@@ -98,91 +92,51 @@ public:
 /// \{
 public:
 	void destroy();
-
-	CL_GraphicContext create_worker_gc();
-
 	CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions);
-
 	CL_OcclusionQueryProvider *alloc_occlusion_query();
-
 	CL_ProgramObjectProvider *alloc_program_object();
-
 	CL_ShaderObjectProvider *alloc_shader_object();
-
 	CL_FrameBufferProvider *alloc_frame_buffer();
-
 	CL_RenderBufferProvider *alloc_render_buffer();
-
 	CL_VertexArrayBufferProvider *alloc_vertex_array_buffer();
-
 	CL_ElementArrayBufferProvider *alloc_element_array_buffer();
-
 	CL_PixelBufferProvider *alloc_pixel_buffer();
-
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const;
-
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format, bool clamp) const;
 	void set_texture(int unit_index, const CL_Texture &texture);
-
 	void reset_texture(int unit_index, const CL_Texture &texture);
-
 	void set_frame_buffer(const CL_FrameBuffer &w_buffer, const CL_FrameBuffer &r_buffer);
-
 	void reset_frame_buffer();
-
 	void set_program_object(CL_StandardProgram standard_program);
-
 	void set_program_object(const CL_ProgramObject &program, int program_matrix_flags);
-
 	void reset_program_object();
-
 	void set_buffer_control(const CL_BufferControl &buffer_control);
-
 	void draw_primitives(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArrayData * const prim_array);
-
 	void set_primitives_array(const CL_PrimitivesArrayData * const prim_array);
-
 	void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices);
-
 	void draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count);
-
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
-
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
-
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
-
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned int *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned short *indices, int instance_count);
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, unsigned char *indices, int instance_count);
 	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset);
-
+	void draw_primitives_elements_instanced(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset, int instance_count);
 	void primitives_array_freed(const CL_PrimitivesArrayData * const prim_array);
-
 	void reset_primitives_array();
-
 	void draw_pixels(CL_GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color);
-
 	void set_clip_rect(const CL_Rect &rect);
-
 	void reset_clip_rect();
-
 	void clear(const CL_Colorf &color);
-
 	void clear_depth(float value);
-
 	void clear_stencil(int value);
-
 	void set_map_mode(CL_MapMode mode);
-
 	void set_viewport(const CL_Rectf &viewport);
-
 	void set_projection(const CL_Mat4f &matrix);
-
 	void set_modelview(const CL_Mat4f &matrix);
-
 	void set_blend_mode(const CL_BlendMode &blendmode);
-
 	void set_pen(const CL_Pen &pen);
-
 	void set_polygon_rasterizer(const CL_PolygonRasterizer &raster);
-
 	void on_window_resized();
 
 	/// \brief Get OpenGL extension specific function address.
@@ -199,13 +153,13 @@ public:
 	void set_back_material(const CL_Material_GL1 &material);
 	void reset_front_material();
 	void reset_back_material();
-	void set_material(CLenum face, const CL_Material_GL1 &material);
+	void set_material(GLenum face, const CL_Material_GL1 &material);
 	void reset_material();
 	void set_color_material(CL_ColorMaterial_GL1 color);
 	void set_color_material_front(CL_ColorMaterial_GL1 color);
 	void set_color_material_back(CL_ColorMaterial_GL1 color);
 	void reset_color_material();
-	void set_color_material(CLenum face, CL_ColorMaterial_GL1 color);
+	void set_color_material(GLenum face, CL_ColorMaterial_GL1 color);
 	void set_light(int light_index, const CL_LightSource_GL1 &light);
 	void reset_light(int light_index);
 	void set_texture_unit(int unit_index, const CL_TextureUnit_GL1 &unit);
@@ -223,24 +177,24 @@ private:
 	void reset_primitive_texture( int texture_index);
 	void reset_primitive_texture_all();
 
-	CLenum to_enum(enum CL_DrawBuffer buf);
-	CLenum to_enum(enum CL_CompareFunction func);
-	CLenum to_enum(enum CL_StencilOp op);
-	CLenum to_enum(enum CL_CullMode mode);
-	CLenum to_enum(enum CL_FillMode mode);
-	CLenum to_enum(enum CL_BlendFunc func);
-	CLenum to_enum(enum CL_BlendEquation eq);
-	CLenum to_enum(enum CL_VertexAttributeDataType value);
-	CLenum to_enum(enum CL_PrimitivesType value);
-	CLenum to_enum(enum CL_LogicOp op);
+	GLenum to_enum(enum CL_DrawBuffer buf);
+	GLenum to_enum(enum CL_CompareFunction func);
+	GLenum to_enum(enum CL_StencilOp op);
+	GLenum to_enum(enum CL_CullMode mode);
+	GLenum to_enum(enum CL_FillMode mode);
+	GLenum to_enum(enum CL_BlendFunc func);
+	GLenum to_enum(enum CL_BlendEquation eq);
+	GLenum to_enum(enum CL_VertexAttributeDataType value);
+	GLenum to_enum(enum CL_PrimitivesType value);
+	GLenum to_enum(enum CL_LogicOp op);
 
 	// GL1 Only
-	CLenum to_enum(enum CL_TextureUnitMode value);
-	CLenum to_enum(enum CL_TextureUnitRGBMode value);
-	CLenum to_enum(enum CL_TextureUnitAlphaMode value);
-	CLenum to_enum(enum CL_TextureUnitAlphaOperand value);
-	CLenum to_enum(enum CL_TextureUnitRGBOperand value);
-	CLenum to_enum(enum CL_TextureUnitSource value);
+	GLenum to_enum(enum CL_TextureUnitMode value);
+	GLenum to_enum(enum CL_TextureUnitRGBMode value);
+	GLenum to_enum(enum CL_TextureUnitAlphaMode value);
+	GLenum to_enum(enum CL_TextureUnitAlphaOperand value);
+	GLenum to_enum(enum CL_TextureUnitRGBOperand value);
+	GLenum to_enum(enum CL_TextureUnitSource value);
 
 	/// \brief OpenGL render window.
 	const CL_RenderWindowProvider * const render_window;

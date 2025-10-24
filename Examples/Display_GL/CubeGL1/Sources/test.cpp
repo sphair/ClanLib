@@ -133,7 +133,7 @@ int Test::start(const std::vector<CL_String> &args)
 	light2.set_position(CL_Vec4f(5.0f, 2.0f, -30.0f, 1.0f));
 	gc.set_light(2, light2);
 
-	cl1Enable(CL_NORMALIZE);
+	cl1Enable(GL_NORMALIZE);
 
 	while (!quit)
 	{

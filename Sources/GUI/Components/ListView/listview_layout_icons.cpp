@@ -262,7 +262,7 @@ void CL_ListViewLayoutIcons::update_shown_items_grid(CL_Font &font, CL_ListViewI
 		text_rect.left = rect_cell_content.get_center().x - text_size.width/2;
 		text_rect.top = rect_cell_content.bottom - text_size.height;
 		text_rect.set_size(text_size);
-		si.descent = font.get_font_metrics(gc).get_descent();
+		si.descent = font.get_font_metrics().get_descent();
 		si.rect_text.push_back(text_rect);
 
 		shown_items.push_back(si);

@@ -54,7 +54,7 @@ public:
 /// \{
 public:
 	/// \brief Reads the next CSS token
-	void read(CL_CSSToken &out_token, bool eat_whitespace);
+	void read(CL_CSSToken &out_token, bool eat_whitespace, bool eat_comments = true);
 /// \}
 
 /// \name Implementation

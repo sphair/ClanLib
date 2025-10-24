@@ -30,7 +30,7 @@
 #include "css_whitespace_eraser.h"
 #include "css_box_element.h"
 #include "css_box_text.h"
-#include "css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 void CL_CSSWhitespaceEraser::remove_whitespace(CL_CSSBoxElement *root_element)
 {

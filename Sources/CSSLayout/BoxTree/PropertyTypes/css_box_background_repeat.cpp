@@ -27,11 +27,13 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_background_repeat.h"
+#include "API/CSSLayout/PropertyTypes/css_box_background_repeat.h"
 
 CL_CSSBoxBackgroundRepeat::CL_CSSBoxBackgroundRepeat()
-: type(type_repeat)
+: type(type_repeat_style)
 {
+	repeat_x.push_back(style_repeat);
+	repeat_y.push_back(style_repeat);
 }
 
 void CL_CSSBoxBackgroundRepeat::compute(const CL_CSSBoxBackgroundRepeat *parent, CL_CSSResourceCache *layout, float em_size, float ex_size)
@@ -39,8 +41,48 @@ void CL_CSSBoxBackgroundRepeat::compute(const CL_CSSBoxBackgroundRepeat *parent,
 	if (type == type_inherit)
 	{
 		if (parent)
+		{
 			type = parent->type;
+			repeat_x = parent->repeat_x;
+			repeat_y = parent->repeat_y;
+		}
 		else
-			type = type_repeat;
+		{
+			type = type_repeat_style;
+			repeat_x.clear();
+			repeat_y.clear();
+			repeat_x.push_back(style_repeat);
+			repeat_y.push_back(style_repeat);
+		}
 	}
+}
+
+CL_String CL_CSSBoxBackgroundRepeat::to_string() const
+{
+	if (type == type_inherit)
+		return "inherit";
+
+	CL_String s;
+	for (size_t i = 0; i < repeat_x.size(); i++)
+	{
+		if (i > 0)
+			s += ", ";
+		switch (repeat_x[i])
+		{
+		case style_no_repeat:
+			s += "no-repeat";
+			break;
+		case style_repeat:
+			s += "repeat";
+			break;
+		case style_round:
+			s += "round";
+			break;
+		case style_space:
+			s += "space";
+			break;
+		}
+	}
+	return s;
+
 }

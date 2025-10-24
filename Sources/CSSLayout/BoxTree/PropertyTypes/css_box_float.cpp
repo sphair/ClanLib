@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_float.h"
+#include "API/CSSLayout/PropertyTypes/css_box_float.h"
 
 CL_CSSBoxFloat::CL_CSSBoxFloat()
 : type(type_none)
@@ -42,5 +42,21 @@ void CL_CSSBoxFloat::compute(const CL_CSSBoxFloat *parent, CL_CSSResourceCache *
 			type = parent->type;
 		else
 			type = type_none;
+	}
+}
+
+CL_String CL_CSSBoxFloat::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_left:
+		return "left";
+	case type_right:
+		return "right";
+	case type_none:
+		return "none";
+	case type_inherit:
+		return "inherit";
 	}
 }

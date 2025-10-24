@@ -28,20 +28,81 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_resource_cache.h"
-#include "BoxTree/css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
+#include "LayoutTree/css_used_value.h"
 
 CL_CSSResourceCache::CL_CSSResourceCache()
 {
+#ifdef WIN32
+	HDC screen_dc = GetDC(0);
+	LOGFONT logfont = { 0 };
+	logfont.lfFaceName[0] = 0;
+	logfont.lfCharSet = DEFAULT_CHARSET;
+	logfont.lfPitchAndFamily = DEFAULT_PITCH;
+	BOOL result = EnumFontFamiliesEx(screen_dc, &logfont, &static_enum_font_families_callback, (LPARAM)this, 0);
+	ReleaseDC(0, screen_dc);
+#endif
 }
 
 CL_CSSResourceCache::~CL_CSSResourceCache()
 {
 }
 
+#ifdef WIN32
+int CL_CSSResourceCache::enum_font_families_callback(const LOGFONTW *fontinfo, const TEXTMETRICW *textmetrics, DWORD font_type)
+{
+	CL_String name = CL_StringHelp::ucs2_to_utf8(fontinfo->lfFaceName);
+	CL_String search_name = CL_StringHelp::text_to_lower(name);
+	font_families[search_name] = true;
+	return 1;
+}
+
+int CL_CSSResourceCache::static_enum_font_families_callback(const LOGFONTW *fontinfo, const TEXTMETRICW *textmetrics, DWORD font_type, LPARAM lparam)
+{
+	return reinterpret_cast<CL_CSSResourceCache*>(lparam)->enum_font_families_callback(fontinfo, textmetrics, font_type);
+}
+#endif
+
 CL_Font &CL_CSSResourceCache::get_font(CL_GraphicContext &gc, const CL_CSSBoxProperties &properties)
 {
-	int font_size = (int)(properties.font_size.length.value+0.5f);
-	CL_String font_name = properties.font_family.names[0].name;
+	int font_size = cl_used_to_actual(properties.font_size.length.value);
+	CL_String font_name;
+	for (size_t i = 0; i < properties.font_family.names.size(); i++)
+	{
+		bool matched = false;
+		CL_String search_name;
+		switch (properties.font_family.names[i].type)
+		{
+		case CL_CSSBoxFontFamilyName::type_family_name:
+			search_name = CL_StringHelp::text_to_lower(properties.font_family.names[i].name);
+			if (font_families.find(search_name) != font_families.end())
+			{
+				font_name = properties.font_family.names[i].name;
+				matched = true;
+			}
+			break;
+		default:
+		case CL_CSSBoxFontFamilyName::type_serif:
+		case CL_CSSBoxFontFamilyName::type_cursive:
+		case CL_CSSBoxFontFamilyName::type_fantasy:
+			font_name = "Times New Roman"; // Ugliest font on the planet.
+			matched = true;
+			break;
+		case CL_CSSBoxFontFamilyName::type_sans_serif:
+			font_name = "Arial";
+			matched = true;
+			break;
+		case CL_CSSBoxFontFamilyName::type_monospace:
+			font_name = "Courier New";
+			matched = true;
+			break;
+		}
+		if (matched)
+			break;
+	}
+	if (font_name.empty())
+		font_name = "Times New Roman";
+
 	int font_weight = 400;
 	switch (properties.font_weight.type)
 	{
@@ -91,13 +152,9 @@ CL_Image &CL_CSSResourceCache::get_image(CL_GraphicContext &gc, const CL_String 
 	if (it == image_cache.end())
 	{
 		CL_Image image;
-		try
-		{
-			image = CL_Image(gc, url);
-		}
-		catch (const CL_Exception &)
-		{
-		}
+		if (!cb_get_image.is_null())
+			image = cb_get_image.invoke(gc, url);
+
 		image_cache[url] = image;
 		return image_cache[url];
 	}
@@ -176,11 +233,6 @@ std::vector<CL_String> CL_CSSResourceCache::get_default_quotes()
 	return values;
 }
 
-CL_String CL_CSSResourceCache::get_default_font()
-{
-	return "Times New Roman";
-}
-
 CL_Colorf CL_CSSResourceCache::get_default_color()
 {
 	return CL_Colorf::black;
@@ -188,6 +240,7 @@ CL_Colorf CL_CSSResourceCache::get_default_color()
 
 CL_CSSBoxLength CL_CSSResourceCache::get_font_table_size(int size)
 {
+	// To do: Return 13px for Monospace font type (so defaults match Firefox)
 	return CL_CSSBoxLength(16.0f, CL_CSSBoxLength::type_px);
 }
 

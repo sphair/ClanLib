@@ -50,4 +50,5 @@
 #define BREAKPOINT asm("int $03");
 #endif
 
+#include <cstring>
 

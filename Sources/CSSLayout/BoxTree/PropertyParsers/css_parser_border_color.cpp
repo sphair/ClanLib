@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_color.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBorderColor::get_names()
 {
@@ -37,7 +37,7 @@ std::vector<CL_String> CL_CSSParserBorderColor::get_names()
 	return names;
 }
 
-void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	CL_CSSBoxBorderColor border_colors[4];
 	int count;
@@ -55,11 +55,7 @@ void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_St
 			CL_CSSToken token = next_token(pos, tokens);
 			if (token.type == CL_CSSToken::type_ident)
 			{
-				if (token.value == "transparent")
-				{
-					border_colors[count].type = CL_CSSBoxBorderColor::type_transparent;
-				}
-				else if (token.value == "inherit")
+				if (equals(token.value, "inherit"))
 				{
 					if (count == 0 && pos == tokens.size())
 					{
@@ -68,10 +64,15 @@ void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_St
 						properties.border_color_right.type = CL_CSSBoxBorderColor::type_inherit;
 						properties.border_color_bottom.type = CL_CSSBoxBorderColor::type_inherit;
 					}
+					else
+					{
+						debug_parse_error(name, tokens);
+					}
 					return;
 				}
 				else
 				{
+					debug_parse_error(name, tokens);
 					return;
 				}
 			}
@@ -81,6 +82,7 @@ void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_St
 			}
 			else
 			{
+				debug_parse_error(name, tokens);
 				return;
 			}
 		}
@@ -117,5 +119,12 @@ void CL_CSSParserBorderColor::parse(CL_CSSBoxProperties &properties, const CL_St
 		default:
 			break;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["border-left-color"] = &properties.border_color_left;
+		(*out_change_set)["border-right-color"] = &properties.border_color_right;
+		(*out_change_set)["border-top-color"] = &properties.border_color_top;
+		(*out_change_set)["border-bottom-color"] = &properties.border_color_bottom;
 	}
 }

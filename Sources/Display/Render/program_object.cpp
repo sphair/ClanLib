@@ -370,7 +370,7 @@ CL_ProgramObject::~CL_ProgramObject()
 
 void CL_ProgramObject::throw_if_null() const
 {
-	if (impl.is_null())
+	if (!impl)
 		throw CL_Exception("CL_ProgramObject is null");
 }
 
@@ -381,7 +381,7 @@ unsigned int CL_ProgramObject::get_handle() const
 
 CL_ProgramObjectProvider *CL_ProgramObject::get_provider() const
 {
-	if (impl.is_null())
+	if (!impl)
 		return 0;
 	return impl->provider;
 }
@@ -452,6 +452,11 @@ void CL_ProgramObject::detach(const CL_ShaderObject &obj)
 void CL_ProgramObject::bind_attribute_location(int index, const CL_StringRef &name)
 {
 	impl->provider->bind_attribute_location(index, name);
+}
+
+void CL_ProgramObject::bind_frag_data_location(int color_number, const CL_StringRef &name)
+{
+	impl->provider->bind_frag_data_location(color_number, name);
 }
 
 bool CL_ProgramObject::link()

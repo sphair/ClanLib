@@ -27,11 +27,12 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_box_background_color.h"
+#include "API/CSSLayout/PropertyTypes/css_box_background_color.h"
 
 CL_CSSBoxBackgroundColor::CL_CSSBoxBackgroundColor()
-: type(type_transparent)
+: type(type_color)
 {
+	color = CL_Colorf::transparent;
 }
 
 void CL_CSSBoxBackgroundColor::compute(const CL_CSSBoxBackgroundColor *parent, CL_CSSResourceCache *layout, float em_size, float ex_size)
@@ -45,7 +46,16 @@ void CL_CSSBoxBackgroundColor::compute(const CL_CSSBoxBackgroundColor *parent, C
 		}
 		else
 		{
-			type = type_transparent;
+			type = type_color;
+			color = CL_Colorf::transparent;
 		}
 	}
+}
+
+CL_String CL_CSSBoxBackgroundColor::to_string() const
+{
+	if (type == type_inherit)
+		return "inherit";
+	else
+		return cl_format("rgba(%1,%2,%3,%4", (int)(color.r * 255.0f + 0.5f), (int)(color.g * 255.0f + 0.5f), (int)(color.b * 255.0f + 0.5f), (int)(color.a * 255.0f + 0.5f));
 }

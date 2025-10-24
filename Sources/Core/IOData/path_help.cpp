@@ -61,11 +61,11 @@ CL_String CL_PathHelp::make_absolute(
 		{
 			// make base_path absolute using current drive and directory
 #ifdef WIN32
-			WCHAR absolute_base[MAX_PATH];
-			memset(absolute_base, 0, sizeof(WCHAR) * MAX_PATH);
-			if (_wfullpath(absolute_base, CL_StringHelp::utf8_to_ucs2(base).c_str(), MAX_PATH) == 0)
+			TCHAR absolute_base[MAX_PATH];
+			memset(absolute_base, 0, sizeof(TCHAR) * MAX_PATH);
+			if (_tfullpath(absolute_base, CL_StringHelp::utf8_to_ucs2(base).c_str(), MAX_PATH) == 0)
 				throw CL_Exception(cl_format("Unable to make base path absolute: %1", base_path));
-			base = CL_StringHelp::ucs2_to_utf8(absolute_base);
+			base = absolute_base;
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
@@ -104,9 +104,9 @@ CL_String CL_PathHelp::make_absolute(
 					drive = relative_location[0] - 'a' + 1;
 				else
 					throw CL_Exception(cl_format("Invalid drive: %1", relative_location));
-				WCHAR working_dir[MAX_PATH];
-				memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-				if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
+				TCHAR working_dir[MAX_PATH];
+				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
+				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
 					throw CL_Exception(cl_format("Unable to get current working directory for %1!", relative_location));
 
 				return add_trailing_slash(working_dir, path_type) + relative.substr(relative_location.length());
@@ -154,21 +154,21 @@ CL_String CL_PathHelp::make_relative(
 					drive = base_location[0] - 'a' + 1;
 				else
 					throw CL_Exception(cl_format("Invalid drive: %1", base_location));
-				WCHAR working_dir[MAX_PATH];
-				memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-				if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
+				TCHAR working_dir[MAX_PATH];
+				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
+				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
 					throw CL_Exception(cl_format("Unable to get current working directory for %1!", base_location));
 
-				base = add_trailing_slash(CL_StringHelp::ucs2_to_utf8(working_dir), path_type) + base;
+				base = add_trailing_slash(working_dir, path_type) + base;
 			}
 			else if (base_location.empty())
 			{
-				WCHAR working_dir[MAX_PATH];
-				memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
+				TCHAR working_dir[MAX_PATH];
+				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
 					throw CL_Exception(cl_format("Unable to get current working directory for %1!", base_location));
 
-				base = add_trailing_slash(CL_StringHelp::ucs2_to_utf8(working_dir), path_type) + base;
+				base = add_trailing_slash(working_dir, path_type) + base;
 			}
 			else
 			{
@@ -194,21 +194,21 @@ CL_String CL_PathHelp::make_relative(
 					drive = absolute_location[0] - 'a' + 1;
 				else
 					throw CL_Exception(cl_format("Invalid drive: %1", absolute_location));
-				WCHAR working_dir[MAX_PATH];
-				memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
-				if (_wgetdcwd(drive, working_dir, MAX_PATH) == 0)
+				TCHAR working_dir[MAX_PATH];
+				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
+				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
 					throw CL_Exception(cl_format("Unable to get current working directory for %1!", absolute_location));
 
-				absolute = add_trailing_slash(CL_StringHelp::ucs2_to_utf8(working_dir), path_type) + absolute;
+				absolute = add_trailing_slash(working_dir, path_type) + absolute;
 			}
 			else if (absolute_location.empty())
 			{
-				WCHAR working_dir[MAX_PATH];
-				memset(working_dir, 0, sizeof(WCHAR)*MAX_PATH);
+				TCHAR working_dir[MAX_PATH];
+				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
 					throw CL_Exception(cl_format("Unable to get current working directory for %1!", absolute_location));
 
-				absolute = add_trailing_slash(CL_StringHelp::ucs2_to_utf8(working_dir), path_type) + absolute;
+				absolute = add_trailing_slash(working_dir, path_type) + absolute;
 			}
 			else
 			{
@@ -715,3 +715,10 @@ CL_String CL_PathHelp::get_fullname(
 	return fullname;
 }
 
+CL_String CL_PathHelp::combine(const CL_String &part1, const CL_String &part2, PathType path_type)
+{
+	if (!part1.empty())
+		return add_trailing_slash(part1, path_type) + part2;
+	else
+		return part2;
+}

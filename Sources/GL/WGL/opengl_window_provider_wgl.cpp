@@ -80,12 +80,7 @@ namespace
 		{
 			wglMakeCurrent(window.get_device_context(), wgl_context);
 		}
-		virtual const CL_RenderWindowProvider * new_worker_context() const
-		{
-			HGLRC new_gl_context = wglCreateContext(window.get_device_context());
-			wglShareLists(window.get_opengl_context(), new_gl_context);
-			return new RenderWindowProvider_WGL(window, new_gl_context, true);
-		}
+
 	private:
 		CL_OpenGLWindowProvider_WGL & window;
 		HGLRC wgl_context;
@@ -278,9 +273,54 @@ void CL_OpenGLWindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const C
 
 		CL_OpenGLCreationHelper helper(hwnd, device_context);
 		helper.set_multisampling_pixel_format(gldesc);
-		opengl_context = helper.create_opengl3_context(share_context, 3, 0);
-		if (!opengl_context)
-			opengl_context = helper.create_opengl2_context(share_context);
+
+		int gl_major = gldesc.get_version_major();
+		int gl_minor = gldesc.get_version_minor();
+		if (gldesc.get_allow_lower_versions() == false)
+		{
+			opengl_context = helper.create_opengl3_context(share_context, gl_major, gl_minor, gldesc);
+			if (!opengl_context)
+				throw CL_Exception(cl_format("This application requires OpenGL %1.%2 or above. Try updating your drivers, or upgrade to a newer graphics card.",  gl_major, gl_minor));
+		}
+		else
+		{
+			static const char opengl_version_list[] = 
+			{
+				// Clanlib supported version pairs
+				4,1,
+				4,0,
+				3,3,
+				3,2,
+				3,1,
+				3,0,
+				0,0,	// End of list
+			};
+
+			const char *opengl_version_list_ptr = opengl_version_list;
+			do
+			{
+				int major = *(opengl_version_list_ptr++);
+				if (major == 0)
+					break;
+					
+				int minor = *(opengl_version_list_ptr++);
+
+				// Find the appropriate version in the list
+				if (major > gl_major)
+					continue;
+
+				if (major == gl_major)
+				{
+					if (minor > gl_minor)
+						continue;	
+				}
+
+				opengl_context = helper.create_opengl3_context(share_context, major, minor, gldesc);
+			}while(!opengl_context);
+
+			if (!opengl_context)
+				opengl_context = helper.create_opengl2_context(share_context);
+		}
 
 		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_WGL(*this, opengl_context, false)));
 		CL_SharedGCData::get_gc_providers().push_back(gc.get_provider());
@@ -395,24 +435,23 @@ void CL_OpenGLWindowProvider_WGL::bring_to_front()
 void CL_OpenGLWindowProvider_WGL::flip(int interval)
 {
 	CL_OpenGL::set_active(get_gc());
-	clFlush();
+	glFlush();
 
 	if (shadow_window)
 	{
 		int width = get_viewport().get_width();
 		int height = get_viewport().get_height();
 
-		//clReadBuffer(CL_BACK);
-
-		clDrawBuffer(CL_BACK);
-		clReadBuffer(CL_FRONT);
+		//glReadBuffer(GL_BACK);
+		glDrawBuffer(GL_BACK);
+		glReadBuffer(GL_FRONT);
 
 		CL_PixelBuffer pixelbuffer(width, height, cl_rgba8);
-		clReadPixels(
+		glReadPixels(
 			0, 0,
 			width, height,
-			CL_RGBA,
-			CL_UNSIGNED_INT_8_8_8_8,
+			GL_RGBA,
+			GL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer);
@@ -449,64 +488,63 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 		return;
 
 	CL_OpenGL::set_active(gc);
-	clFlush();
+	glFlush();
 
 	if (shadow_window)
 	{
-		//clReadBuffer(CL_BACK);
-
-		clDrawBuffer(CL_BACK);
-		clReadBuffer(CL_FRONT);
+		//glReadBuffer(GL_BACK);
+		glDrawBuffer(GL_BACK);
+		glReadBuffer(GL_FRONT);
 
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = CL_Rect(0,0, width, height);
 
 		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
-		clReadPixels(
+		glReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
-			CL_RGBA,
-			CL_UNSIGNED_INT_8_8_8_8,
+			GL_RGBA,
+			GL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer);
 	}
 	else
 	{
-		CLboolean isdoublebuffered = CL_TRUE;
-		clGetBooleanv(CL_DOUBLEBUFFER, &isdoublebuffered);
+		GLboolean isdoublebuffered = GL_TRUE;
+		glGetBooleanv(GL_DOUBLEBUFFER, &isdoublebuffered);
 		if (isdoublebuffered)
 		{
 
-			CLint read_last_bound;
-			CLint draw_last_bound;
+			GLint read_last_bound;
+			GLint draw_last_bound;
 
-			clGetIntegerv(CL_READ_FRAMEBUFFER_BINDING, &read_last_bound);
-			clGetIntegerv(CL_DRAW_FRAMEBUFFER_BINDING, &draw_last_bound);
+			glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &read_last_bound);
+			glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &draw_last_bound);
 
-			clBindFramebuffer(CL_READ_FRAMEBUFFER, 0);
-		    clBindFramebuffer(CL_DRAW_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+		    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-			clReadBuffer(CL_BACK);
-			clDrawBuffer(CL_FRONT);
+			glReadBuffer(GL_BACK);
+			glDrawBuffer(GL_FRONT);
 
-			clBlitFramebuffer( 
+			glBlitFramebuffer( 
 				rect.left, height - rect.bottom,
 				rect.right, height - rect.top,
 				rect.left, height - rect.bottom,
 				rect.right, height - rect.top,
-				CL_COLOR_BUFFER_BIT, CL_LINEAR);
+				GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-			clDrawBuffer(CL_BACK);
-			clReadBuffer(CL_FRONT);
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_FRONT);
 
 			if (read_last_bound)
-				clBindFramebuffer(CL_READ_FRAMEBUFFER, read_last_bound);
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, read_last_bound);
 
 			if (draw_last_bound)
-				clBindFramebuffer(CL_DRAW_FRAMEBUFFER, draw_last_bound);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, draw_last_bound);
 
-			clFlush();
+			glFlush();
 
 		}
 	}

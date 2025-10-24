@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="System"
 	ProjectGUID="{9DE49AD8-388F-47E1-8C4E-2AB61F6E55C5}"
 	TargetFrameworkVersion="131072"
@@ -47,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="c:\include"
+				AdditionalIncludeDirectories="&quot;D:\Udvikling\VC++\Libraries\ClanLib\Include&quot;"
 				PreprocessorDefinitions="_DEBUG,__STL_DEBUG,WIN32,_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -78,7 +78,7 @@
 				OutputFile=".\Debug/System.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="c:\lib"
+				AdditionalLibraryDirectories="&quot;D:\Udvikling\VC++\Libraries\ClanLib\Lib\Win32&quot;;&quot;D:\Udvikling\VC++\Libraries\ClanLib-2.3\Lib\Win32&quot;"
 				IgnoreDefaultLibraryNames="libcmt"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/System.pdb"
@@ -141,6 +141,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="&quot;D:\Udvikling\VC++\Libraries\ClanLib\Include&quot;"
 				PreprocessorDefinitions="WIN32,NDEBUG,_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -171,6 +172,7 @@
 				OutputFile=".\Release/System.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;D:\Udvikling\VC++\Libraries\ClanLib\Lib\Win32&quot;;&quot;D:\Udvikling\VC++\Libraries\ClanLib-2.3\Lib\Win32&quot;"
 				ProgramDatabaseFile=".\Release/System.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"

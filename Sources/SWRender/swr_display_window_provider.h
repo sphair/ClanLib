@@ -145,6 +145,7 @@ private:
 	CL_X11Window window;
 #endif
 #endif
+
 	CL_DisplayWindowSite *site;
 	CL_GraphicContext gc;
 

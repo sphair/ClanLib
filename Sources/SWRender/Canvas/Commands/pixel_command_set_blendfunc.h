@@ -30,11 +30,12 @@
 
 #include "API/SWRender/pixel_command.h"
 #include "API/Display/Render/blend_mode.h"
+#include "API/Display/2D/color.h"
 
 class CL_PixelCommandSetBlendFunc : public CL_PixelCommand
 {
 public:
-	CL_PixelCommandSetBlendFunc(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
+	CL_PixelCommandSetBlendFunc(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, CL_Colorf const_color);
 	void run(CL_PixelThreadContext *context);
 
 private:
@@ -42,4 +43,5 @@ private:
 	CL_BlendFunc dest;
 	CL_BlendFunc src_alpha;
 	CL_BlendFunc dest_alpha;
+	CL_Colorf const_color;
 };

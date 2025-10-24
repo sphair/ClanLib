@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_background_repeat.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserBackgroundRepeat::get_names()
 {
@@ -37,23 +37,123 @@ std::vector<CL_String> CL_CSSParserBackgroundRepeat::get_names()
 	return names;
 }
 
-void CL_CSSParserBackgroundRepeat::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserBackgroundRepeat::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
-	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
+
+	if (token.type == CL_CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		if (token.value == "repeat")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_repeat;
-		else if (token.value == "repeat-x")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_repeat_x;
-		else if (token.value == "repeat-y")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_repeat_y;
-		else if (token.value == "no-repeat")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_no_repeat;
-		else if (token.value == "-clan-stretch")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_clan_stretch;
-		else if (token.value == "inherit")
-			properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_inherit;
+		properties.background_repeat.type = CL_CSSBoxBackgroundRepeat::type_inherit;
+	}
+	else
+	{
+		CL_CSSBoxBackgroundRepeat background_repeat;
+		background_repeat.type = CL_CSSBoxBackgroundRepeat::type_repeat_style;
+		background_repeat.repeat_x.clear();
+		background_repeat.repeat_y.clear();
+		while (true)
+		{
+			if (token.type != CL_CSSToken::type_ident)
+				return;
+
+			CL_CSSBoxBackgroundRepeat::RepeatStyle repeat_x, repeat_y;
+			bool single_style = false;
+
+			if (equals(token.value, "repeat"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_repeat;
+			}
+			else if (equals(token.value, "repeat-x"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_repeat;
+				repeat_y = CL_CSSBoxBackgroundRepeat::style_no_repeat;
+				single_style = true;
+			}
+			else if (equals(token.value, "repeat-y"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_no_repeat;
+				repeat_y = CL_CSSBoxBackgroundRepeat::style_repeat;
+				single_style = true;
+			}
+			else if (equals(token.value, "no-repeat"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_no_repeat;
+			}
+			else if (equals(token.value, "space"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_space;
+			}
+			else if (equals(token.value, "round"))
+			{
+				repeat_x = CL_CSSBoxBackgroundRepeat::style_round;
+			}
+			else
+			{
+				return;
+			}
+
+			if (pos == tokens.size())
+			{
+				if (!single_style)
+					repeat_y = repeat_x;
+				background_repeat.repeat_x.push_back(repeat_x);
+				background_repeat.repeat_y.push_back(repeat_y);
+				break;
+			}
+
+			token = next_token(pos, tokens);
+			if (token.type == CL_CSSToken::type_delim && token.value == ",")
+			{
+				if (!single_style)
+					repeat_y = repeat_x;
+				background_repeat.repeat_x.push_back(repeat_x);
+				background_repeat.repeat_y.push_back(repeat_y);
+			}
+			else if (token.type == CL_CSSToken::type_ident && !single_style)
+			{
+				if (equals(token.value, "repeat"))
+				{
+					repeat_y = CL_CSSBoxBackgroundRepeat::style_repeat;
+				}
+				else if (equals(token.value, "no-repeat"))
+				{
+					repeat_y = CL_CSSBoxBackgroundRepeat::style_no_repeat;
+				}
+				else if (equals(token.value, "space"))
+				{
+					repeat_y = CL_CSSBoxBackgroundRepeat::style_space;
+				}
+				else if (equals(token.value, "round"))
+				{
+					repeat_y = CL_CSSBoxBackgroundRepeat::style_round;
+				}
+				else
+				{
+					return;
+				}
+
+				background_repeat.repeat_x.push_back(repeat_x);
+				background_repeat.repeat_y.push_back(repeat_y);
+
+				if (pos == tokens.size())
+					break;
+
+				if (token.type != CL_CSSToken::type_delim || token.value != ",")
+					return;
+			}
+			else
+			{
+				return;
+			}
+
+			token = next_token(pos, tokens);
+		}
+
+		properties.background_repeat = background_repeat;
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["background-repeat"] = &properties.background_repeat;
 	}
 }

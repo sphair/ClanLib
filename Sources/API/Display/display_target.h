@@ -66,7 +66,7 @@ public:
 	CL_DisplayTargetProvider *get_provider();
 
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return impl.is_null(); }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;

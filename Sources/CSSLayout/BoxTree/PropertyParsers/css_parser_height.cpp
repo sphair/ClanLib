@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_height.h"
-#include "../css_box_properties.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 std::vector<CL_String> CL_CSSParserHeight::get_names()
 {
@@ -37,16 +37,18 @@ std::vector<CL_String> CL_CSSParserHeight::get_names()
 	return names;
 }
 
-void CL_CSSParserHeight::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens)
+void CL_CSSParserHeight::parse(CL_CSSBoxProperties &properties, const CL_String &name, const std::vector<CL_CSSToken> &tokens, std::map<CL_String, CL_CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CL_CSSToken token = next_token(pos, tokens);
 	if (token.type == CL_CSSToken::type_ident && pos == tokens.size())
 	{
-		if (token.value == "auto")
+		if (equals(token.value, "auto"))
 			properties.height.type = CL_CSSBoxHeight::type_auto;
-		else if (token.value == "inherit")
+		else if (equals(token.value, "inherit"))
 			properties.height.type = CL_CSSBoxHeight::type_inherit;
+		else if (equals(token.value, "-clan-expanding"))
+			properties.height.type = CL_CSSBoxHeight::type_clan_expanding;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
@@ -65,5 +67,9 @@ void CL_CSSParserHeight::parse(CL_CSSBoxProperties &properties, const CL_String 
 			properties.height.type = CL_CSSBoxHeight::type_percentage;
 			properties.height.percentage = v;
 		}
+	}
+	if (out_change_set)
+	{
+		(*out_change_set)["height"] = &properties.height;
 	}
 }

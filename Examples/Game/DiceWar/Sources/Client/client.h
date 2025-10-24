@@ -38,10 +38,10 @@ public:
 	CL_GUIManager *get_gui();
 
 	LobbyView *get_lobby_view() { return lobby_view; }
-	LobbyModel *get_lobby_model() { return lobby_model; }
+	LobbyModel *get_lobby_model() { return lobby_model.get(); }
 
 	GameView *get_game_view() { return game_view; }
-	GameModel *get_game_model() { return game_model; }
+	GameModel *get_game_model() { return game_model.get(); }
 
 	CL_NetGameClient *get_network_client() { return &network_client; }
 
@@ -74,12 +74,12 @@ private:
 	GameView *game_view;
 	LobbyView *lobby_view;
 
-	CL_AutoPtr<ClientGUI> gui;
-	CL_AutoPtr<GameModel> game_model;
-	CL_AutoPtr<GameEvents> game_events;
-	CL_AutoPtr<LobbyModel> lobby_model;
-	CL_AutoPtr<LobbyEvents> lobby_events;
-	CL_AutoPtr<LoginEvents> login_events;
+	std::auto_ptr<ClientGUI> gui;
+	std::auto_ptr<GameModel> game_model;
+	std::auto_ptr<GameEvents> game_events;
+	std::auto_ptr<LobbyModel> lobby_model;
+	std::auto_ptr<LobbyEvents> lobby_events;
+	std::auto_ptr<LoginEvents> login_events;
 
 	CL_SlotContainer slots;
 };

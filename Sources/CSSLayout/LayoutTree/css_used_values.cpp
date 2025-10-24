@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_used_values.h"
-#include "../BoxTree/css_box_properties.h"
-
+#include "API/CSSLayout/css_box_properties.h"
+#ifdef REMARKED
 CL_CSSUsedValues::CL_CSSUsedValues()
 : replaced(false), width(0.0f), height(0.0f), undetermined_width(true), undetermined_height(true),
   min_width(0.0f), preferred_width(0.0f), min_width_calculated(false), preferred_width_calculated(false)
@@ -481,3 +481,4 @@ bool CL_CSSUsedValues::is_absolute(const CL_CSSBoxProperties &properties)
 {
 	return properties.position.type == CL_CSSBoxPosition::type_absolute;
 }
+#endif

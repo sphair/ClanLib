@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,2,12)
-#define CL_VERSION_STRING "2.2.12"
+#define CL_CURRENT_VERSION	CL_VERSION(2,3,0)
+#define CL_VERSION_STRING "2.3.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -50,7 +50,13 @@
 #endif
 
 #ifdef WIN32
-#include <windows.h>  // this is a temporary workaround. Fix mutex and others :)
+#include <windows.h> 
+#endif
+
+#include "Core/System/cl_platform.h"
+
+#ifdef WIN32
+#include "Core/System/comptr.h"
 #endif
 
 #include "Core/Text/string_types.h"
@@ -68,11 +74,6 @@
 #include "Core/System/datetime.h"
 #include "Core/System/disposable_object.h"
 #include "Core/System/event.h"
-
-#ifdef WIN32
-#include "Core/System/comptr.h"
-#endif
-
 #include "Core/System/event_provider.h"
 #include "Core/System/exception.h"
 #include "Core/System/mutex.h"
@@ -81,14 +82,11 @@
 #include "Core/System/setup_core.h"
 #include "Core/System/thread.h"
 #include "Core/System/thread_local_storage.h"
-#include "Core/System/autoptr.h"
+#include "Core/System/uniqueptr.h"
 #include "Core/System/weakptr.h"
 #include "Core/System/sharedptr.h"
 #include "Core/System/system.h"
 #include "Core/System/command_line.h"
-#include "Core/System/memory_pool.h"
-#include "Core/System/static_memory_pool.h"
-#include "Core/System/fixed_memory_pool.h"
 #include "Core/System/keep_alive.h"
 #include "Core/System/timer.h"
 #include "Core/System/registry_key.h"
@@ -155,10 +153,10 @@
 #include "Core/IOData/file_help.h"
 #include "Core/IOData/path_help.h"
 #include "Core/IOData/iodevice.h"
+#include "Core/IOData/iodevice_provider.h"
 #include "Core/IOData/pipe_connection.h"
 #include "Core/IOData/pipe_listen.h"
 #include "Core/IOData/security_descriptor.h"
-#include "Core/IOData/datatypes.h"
 #include "Core/IOData/directory.h"
 #include "Core/IOData/security_identifier.h"
 #include "Core/IOData/cl_endian.h"
@@ -168,6 +166,7 @@
 #include "Core/IOData/virtual_file_source.h"
 #include "Core/IOData/iodevice_memory.h"
 #include "Core/IOData/virtual_directory_listing.h"
+#include "Core/IOData/html_url.h"
 #include "Core/Zip/zip_archive.h"
 #include "Core/Zip/zip_writer.h"
 #include "Core/Zip/zip_reader.h"

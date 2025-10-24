@@ -40,11 +40,31 @@ public:
 	void run(CL_PixelThreadContext *context);
 
 private:
+	struct Scanline
+	{
+		Scanline() : dest(0), src(0), src_width(0), src_height(0), x1(0.0f), x2(0.0f), tx1(0.0f), tx2(0.0f), ty1(0.0f), ty2(0.0f), startx(0), endx(0) { }
+
+		unsigned int *dest;
+		unsigned int *src;
+		unsigned int src_width;
+		unsigned int src_height;
+		float x1, x2;
+		float w1, w2;
+		float tx1, tx2;
+		float ty1, ty2;
+		int startx, endx;
+	};
+
 	void render_sprite(CL_PixelThreadContext *context);
 	void render_sprite_scale(CL_PixelThreadContext *context, const CL_Rect &box);
+	void render_sprite_scale_linear(CL_PixelThreadContext *context, const CL_Rect &box);
 	void render_sprite_noscale(CL_PixelThreadContext *context, const CL_Rect &box);
 	void render_sprite_noscale_white(CL_PixelThreadContext *context, const CL_Rect &box);
+	void render_glyph_scale(CL_PixelThreadContext *context, const CL_Rect &box);
+	void render_glyph_noscale(CL_PixelThreadContext *context, const CL_Rect &box);
 	CL_Rect get_dest_rect(CL_PixelThreadContext *context) const;
+
+	void render_linear_scanline(Scanline *d);
 
 	CL_Vec2f points[3];
 	CL_Vec4f primcolor;

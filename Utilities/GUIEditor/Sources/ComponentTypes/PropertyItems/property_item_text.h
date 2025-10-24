@@ -50,6 +50,7 @@ public:
 
 		CL_PushButton *button = dynamic_cast<CL_PushButton*>(comp);
 		CL_LineEdit *lineedit = dynamic_cast<CL_LineEdit*>(comp);
+		CL_TextEdit *textedit = dynamic_cast<CL_TextEdit*>(comp);
 		CL_CheckBox *checkbox = dynamic_cast<CL_CheckBox*>(comp);
 		CL_RadioButton *radiobutton = dynamic_cast<CL_RadioButton*>(comp);
 		CL_Label *label = dynamic_cast<CL_Label*>(comp);
@@ -59,6 +60,8 @@ public:
 			button->set_text(value);
 		if (lineedit)
 			lineedit->set_text(value);
+		if (textedit)
+			textedit->set_text(value);
 		if (checkbox)
 			checkbox->set_text(value);
 		if (radiobutton)
@@ -75,6 +78,7 @@ public:
 
 		CL_PushButton *button = dynamic_cast<CL_PushButton*>(comp);
 		CL_LineEdit *lineedit = dynamic_cast<CL_LineEdit*>(comp);
+		CL_TextEdit *textedit = dynamic_cast<CL_TextEdit*>(comp);
 		CL_CheckBox *checkbox = dynamic_cast<CL_CheckBox*>(comp);
 		CL_RadioButton *radiobutton = dynamic_cast<CL_RadioButton*>(comp);
 		CL_Label *label = dynamic_cast<CL_Label*>(comp);
@@ -84,6 +88,8 @@ public:
 			return button->get_text();
 		else if (lineedit)
 			return lineedit->get_text();
+        else if (textedit)
+			return textedit->get_text();
 		else if (checkbox)
 			return checkbox->get_text();
 		else if (radiobutton)

@@ -82,6 +82,7 @@ int App::start(const std::vector<CL_String> &args)
 	float last_position_z = 0.0f;
 	float last_position_w = 0.0f;
 	PerlinDimension last_dimension = perlin_2d;
+	bool last_is_normals_set = false;
 
 	while (!quit)
 	{
@@ -95,6 +96,12 @@ int App::start(const std::vector<CL_String> &args)
 			changed_flag = true;
 			last_dimension = options->dimension;
 		}
+		if (last_is_normals_set != options->is_normals_set)
+		{
+			changed_flag = true;
+			last_is_normals_set = options->is_normals_set;
+		}
+
 		if (last_sized_format != options->sized_format)
 		{
 			changed_flag = true;
@@ -176,6 +183,10 @@ int App::start(const std::vector<CL_String> &args)
 					pbuff = noise.create_noise4d(last_start_x, last_start_x + last_length_x, last_start_y, last_start_y + last_length_y, last_position_z, last_position_w);
 					break;
 			}
+
+			if (last_is_normals_set)
+				pbuff = convert_to_normalmap(pbuff);
+
 			noise_image = CL_Image(gc, pbuff, pbuff.get_size());
 
 		}
@@ -206,3 +217,123 @@ void App::on_window_close()
 	quit = true;
 }
 
+CL_PixelBuffer App::convert_to_normalmap(CL_PixelBuffer &input)
+{
+	if (input.get_format() != cl_rgb8)
+		return input;
+	int width = input.get_width();
+	int height = input.get_height();
+
+	CL_PixelBuffer output(width, height, cl_rgb8);
+
+	int in_pitch = input.get_pitch();
+	int out_pitch = output.get_pitch();
+	int in_bpp = input.get_bytes_per_pixel();
+	int out_bpp = output.get_bytes_per_pixel();
+
+	int pixel_tl;
+	int pixel_t;
+	int pixel_tr;
+	int pixel_r;
+	int pixel_br;
+	int pixel_b;
+	int pixel_bl;
+	int pixel_l;
+
+	int xpos_left;
+	int xpos_center;
+	int xpos_right;
+	int ypos_top;
+	int ypos_center;
+	int ypos_bottom;
+
+	for (int ypos = 0; ypos < height; ypos++)
+	{
+		unsigned char *in_ptr = (unsigned char *) input.get_data();
+		unsigned char *out_ptr = (unsigned char *) output.get_data();
+
+
+		for (int xpos = 0; xpos < width; xpos++)
+		{
+			// Wrap the coordinates
+			if (xpos != 0)
+			{
+				xpos_left = xpos - 1;
+			}else
+			{
+				xpos_left = width - 1;
+			}
+
+			if (ypos != 0)
+			{
+				ypos_top = ypos - 1;
+			}else
+			{
+				ypos_top = height - 1;
+			}
+
+			if (xpos != (width-1))
+			{
+				xpos_right = xpos + 1;
+			}else
+			{
+				xpos_right = 0;
+			}
+
+			if (ypos != (height-1))
+			{
+				ypos_bottom = ypos + 1;
+			}else
+			{
+				ypos_bottom = 0;
+			}
+			xpos_center = xpos;
+			ypos_center = ypos;
+
+			// Adjust the positions 
+			xpos_left *= in_bpp;
+			xpos_center *= in_bpp;
+			xpos_right *= in_bpp;
+
+			ypos_top *= in_pitch;
+			ypos_center *= in_pitch;
+			ypos_bottom *= in_pitch;
+
+			// Get the pixels
+			pixel_tl = in_ptr[ xpos_left + ypos_top ];
+			pixel_l = in_ptr[ xpos_left + ypos_center ];
+			pixel_bl = in_ptr[ xpos_left + ypos_bottom ];
+			pixel_b = in_ptr[ xpos_center + ypos_bottom ];
+			pixel_br = in_ptr[ xpos_right + ypos_bottom ];
+			pixel_r = in_ptr[ xpos_right + ypos_center ];
+			pixel_tr = in_ptr[ xpos_right + ypos_top ];
+			pixel_t = in_ptr[ xpos_center + ypos_top ];
+		
+			// Compute dx using Sobel:
+			//           -1 0 1 
+			//           -2 0 2
+			//           -1 0 1
+			int dX = pixel_tr + 2 * pixel_r + pixel_br - pixel_tl - 2 * pixel_l - pixel_bl;
+
+			// Compute dy using Sobel:
+			//           -1 -2 -1 
+			//            0  0  0
+			//            1  2  1
+			int dY = pixel_bl + 2 * pixel_b + pixel_br - pixel_tl - 2 * pixel_t - pixel_tr;
+	
+			const float strength = 1.0f * 256.0f;
+			CL_Vec3f vector(dX, dY, strength);
+			vector.normalize();
+
+			// Stored as BGR
+			out_ptr[(xpos * out_bpp + ypos * out_pitch) + 2] = (int) (vector.x * 127.0f + 127.0f);
+			out_ptr[(xpos * out_bpp + ypos * out_pitch) + 1] = (int) (vector.y * 127.0f + 127.0f);
+			out_ptr[(xpos * out_bpp + ypos * out_pitch) + 0] = (int) (vector.z * 127.0f + 127.0f);
+
+
+		}
+	}
+
+	return output;
+
+}

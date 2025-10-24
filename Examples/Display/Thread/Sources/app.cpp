@@ -318,7 +318,7 @@ void App::worker_thread()
 			worker_thread_complete = true;
 		}
 	}
-	catch(CL_Exception &exception)
+	catch(CL_Exception &)
 	{
 		crashed_flag = true;
 	}

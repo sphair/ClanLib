@@ -23,6 +23,7 @@ public:
 				if (!links[i].element_id.empty())
 					b++;
 				c += links[i].element_classes.size();
+				c += links[i].pseudo_classes.size();
 				c += links[i].attribute_selectors.size();
 				if (links[i].type == CL_CSSSelectorLink2::type_simple_selector)
 					d++;
