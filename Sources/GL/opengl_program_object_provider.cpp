@@ -37,6 +37,8 @@
 #include "API/Core/Text/string_types.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Display/Render/shared_gc_data.h"
+#include "opengl_graphic_context_provider.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLProgramObjectProvider Construction:
@@ -44,16 +46,33 @@
 CL_OpenGLProgramObjectProvider::CL_OpenGLProgramObjectProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : handle(0), gc_provider(gc_provider)
 {
+	CL_SharedGCData::add_disposable(this);
 	CL_OpenGL::set_active(gc_provider);
 	handle = clCreateProgram();
 }
 
 CL_OpenGLProgramObjectProvider::~CL_OpenGLProgramObjectProvider()
 {
-	CL_OpenGL::set_active(gc_provider);
-	clDeleteProgram(handle);
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
 }
 
+void CL_OpenGLProgramObjectProvider::on_dispose()
+{
+	if (handle)
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteProgram(handle);
+			}
+		}
+	}
+}
 void CL_OpenGLProgramObjectProvider::destroy()
 {
 	delete this;
@@ -236,7 +255,7 @@ void CL_OpenGLProgramObjectProvider::set_uniform4i(const CL_StringRef &name, int
 {
 	CL_ProgramObjectStateTracker state_tracker(handle, gc_provider);
 	int loc = get_uniform_location(name);
-	if (loc != -1)
+	if (loc == -1)
 		return;
 
 	clUniform4i(loc, p1, p2, p3, p4);	

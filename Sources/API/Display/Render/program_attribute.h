@@ -30,28 +30,11 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#ifdef CL_API_DLL
-#ifdef CL_GL_EXPORT
-#define CL_API_GL __declspec(dllexport)
-#else
-#define CL_API_GL __declspec(dllimport)
-#endif
-#else
-#define CL_API_GL
-#endif
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
-#include "../../Core/System/sharedptr.h"
-#include "../../Core/Text/string_types.h"
 
 #include "../api_display.h"
+#include "../../Core/System/sharedptr.h"
+#include "../../Core/Text/string_types.h"
 
 class CL_ProgramAttribute_Impl;
 
@@ -71,10 +54,14 @@ public:
 	/// \param type OpenGL attribute type.
 	CL_ProgramAttribute();
 
+	/// \brief Constructs a ProgramAttribute
+	///
+	/// \param name = String Ref
+	/// \param size = value
+	/// \param type = value
 	CL_ProgramAttribute(const CL_StringRef &name, int size, int type);
 
 	~CL_ProgramAttribute();
-
 
 /// \}
 /// \name Attributes
@@ -90,13 +77,11 @@ public:
 	/// \brief Get attribute OpenGL type.
 	int get_type() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -106,6 +91,5 @@ private:
 	CL_SharedPtr<CL_ProgramAttribute_Impl> impl;
 /// \}
 };
-
 
 /// \}

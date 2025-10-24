@@ -193,11 +193,11 @@ CL_GlyphOutline *CL_FreetypeFont::load_glyph_outline(int c)
 		CL_GlyphContour *contour = new CL_GlyphContour; // deleted by CL_GlyphOutline
 		
 		// debug: dump contents of points array to terminal
-		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
-		{
-			FT_Vector pos = ft_outline.points[i];
+//		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
+//		{
+//			FT_Vector pos = ft_outline.points[i];
 //			cl_write_console_line(cl_format(cl_text("dump points[%1]: (%2,%3) \t type: %4"), i, pos.x, pos.y, ft_outline.tags[i]));
-		}
+//		}
 		
 		std::vector<TaggedPoint> points = get_contour_points(cont, &ft_outline);
 		points.push_back(points.front()); // just to simplify, it's removed later.
@@ -241,7 +241,6 @@ CL_GlyphOutline *CL_FreetypeFont::load_glyph_outline(int c)
 CL_FontPixelBuffer CL_FreetypeFont::create_pixelbuffer(int glyph, bool anti_alias, const CL_Colorf &color)
 {
 	CL_FontPixelBuffer font_buffer;
-
 	FT_GlyphSlot slot = face->glyph;
 	FT_UInt glyph_index;
 
@@ -253,15 +252,14 @@ CL_FontPixelBuffer CL_FreetypeFont::create_pixelbuffer(int glyph, bool anti_alia
 	// Use FT_RENDER_MODE_NORMAL for 8bit anti-aliased bitmaps. Use FT_RENDER_MODE_MONO for 1-bit bitmaps
 	if (anti_alias)
 	{
-		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_NORMAL );
+		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_LIGHT );
 		if (error) return font_buffer;
 
 		error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL);
 	}
 	else
 	{
-		// Force hinting for 8bit bitmaps, in my opinion, it looks a lot better
-		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_MONO |FT_LOAD_FORCE_AUTOHINT);
+		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_MONO | FT_LOAD_NO_HINTING);
 		if (error) return font_buffer;
 
 		error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_MONO);
@@ -374,8 +372,6 @@ TagStruct CL_FreetypeFont::get_tag_struct(int cont, int index, FT_Outline *ft_ou
 {
 	TagStruct tags;
 
-	//FT_Tag tag = FT_CURVE_TAG(ft_outline->tags[index]);
-
 	int prev_index = get_index_of_prev_contour_point(cont, index, ft_outline);
 	int next_index = get_index_of_next_contour_point(cont, index, ft_outline);
 
@@ -424,8 +420,11 @@ int CL_FreetypeFont::get_index_of_prev_contour_point(int cont, int index, FT_Out
 
 std::vector<TaggedPoint> CL_FreetypeFont::get_contour_points(int cont, FT_Outline *ft_outline)
 {
-	int start = ft_outline->contours[cont-1]+1;
-	if( cont == 0 ) start = 0;
+	int start = 0;
+	if (cont != 0)
+	{
+		start = ft_outline->contours[cont-1]+1;
+	}
 
 	std::vector<TaggedPoint> points;
 
@@ -435,9 +434,10 @@ std::vector<TaggedPoint> CL_FreetypeFont::get_contour_points(int cont, FT_Outlin
 		
 		TaggedPoint tp;
 		tp.pos = FT_Vector_to_CL_Pointf(ft_outline->points[i]);
-		tp.tag = ft_outline->tags[i];
+		tp.tag = tags.current;
+
 		points.push_back(tp);
-		
+
 		if( tags.current == 0 && tags.next == 0 )
 		{
 			TaggedPoint tp_middle;

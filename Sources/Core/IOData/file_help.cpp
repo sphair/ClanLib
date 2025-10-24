@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #include "Core/precomp.h"
@@ -31,6 +32,10 @@
 #include "API/Core/IOData/file.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/System/exception.h"
+
+#ifndef WIN32
+#include <sys/stat.h>
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FileHelp Operations:
@@ -49,10 +54,7 @@ void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool cop
 			CL_File input_file(to, CL_File::open_existing);
 			throw CL_Exception(cl_text("Destination file already exists"));
 		}
-
-		catch (CL_Exception error)
-		{
-			
+		catch (CL_Exception error) {
 		}
 	}
 
@@ -90,3 +92,24 @@ void CL_FileHelp::delete_file(const CL_String &filename)
 #endif
 }
 
+bool CL_FileHelp::file_exists(const CL_String &filename)
+{
+#ifdef WIN32
+	HANDLE file = CreateFile(
+		filename.c_str(),	/* lpFileName */
+		0,					/* dwDesiredAccess */
+		FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,	/* dwShareMode */
+		0,					/* lpSecurityAttributes */
+		OPEN_EXISTING,		/* dwCreationDisposition */
+		0,					/* dwFlagsAndAttributes */
+		0);					/* hTemplateFile */
+	
+	if (file != INVALID_HANDLE_VALUE) CloseHandle(file);
+	return file != INVALID_HANDLE_VALUE;
+	
+//	return (GetFileAttributes(filename.c_str()) != INVALID_FILE_ATTRIBUTES);
+#else
+	struct stat stFileInfo;
+	return (stat(filename.c_str(), &stFileInfo) == 0);
+#endif
+}

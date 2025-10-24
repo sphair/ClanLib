@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef CL_API_DLL
 	#ifdef CL_DISPLAY_EXPORT
 		#define CL_API_DISPLAY __declspec(dllexport)
@@ -45,5 +40,4 @@
 	#define CL_API_DISPLAY
 	#define CL_API_DISPLAY_STATIC
 #endif
-
 

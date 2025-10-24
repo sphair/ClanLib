@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -62,10 +56,12 @@ public:
 	/// \brief Constructs a DOM NamedNodeMap handle.
 	CL_DomNamedNodeMap();
 
+	/// \brief Constructs a DomNamedNodeMap
+	///
+	/// \param copy = Dom Named Node Map
 	CL_DomNamedNodeMap(const CL_DomNamedNodeMap &copy);
 
 	~CL_DomNamedNodeMap();
-
 
 /// \}
 /// \name Attributes
@@ -74,7 +70,6 @@ public:
 public:
 	/// \brief The number of nodes in the map.
 	int get_length() const;
-
 
 /// \}
 /// \name Operations
@@ -121,12 +116,15 @@ public:
 	/** <p>If index is greater than or equal to the number of nodes in the map, this returns null.</p>*/
 	CL_DomNode item(unsigned long index) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 protected:
+
+	/// \brief Constructs a DomNamedNodeMap
+	///
+	/// \param CL_DomNamedNodeMap_Generic = Shared Ptr
 	CL_DomNamedNodeMap(const CL_SharedPtr<CL_DomNamedNodeMap_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNamedNodeMap_Generic> impl;
@@ -136,6 +134,5 @@ protected:
 	friend class CL_DomNode;
 /// \}
 };
-
 
 /// \}

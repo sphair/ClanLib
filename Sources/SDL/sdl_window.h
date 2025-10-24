@@ -34,7 +34,6 @@
 #include <map>
 #include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
-#include "API/Display/Window/timer.h"
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Signals/callback_v0.h"
@@ -47,13 +46,11 @@ class CL_InputDeviceProvider_SDLKeyboard;
 class CL_InputDeviceProvider_SDLMouse;
 class CL_InputDeviceProvider_SDLJoystick;
 class CL_DisplayMessageQueue_SDL;
-class CL_TimerProvider;
 class CL_DisplayWindowSite;
 class CL_DisplayWindowDescription;
 class CL_PixelBuffer;
 class CL_DataBuffer;
 class CL_CursorProvider_SDL;
-class CL_TimerProvider_SDL;
 
 class CL_API_DISPLAY CL_SDLWindow
 {
@@ -82,6 +79,8 @@ public:
 	CL_Point client_to_screen(const CL_Point &client);
 	CL_Point screen_to_client(const CL_Point &screen);
 	void show_system_cursor();
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
 	void set_cursor(CL_CursorProvider_SDL *cursor);
 	void set_cursor(enum CL_StandardCursor type);
 	void hide_system_cursor();
@@ -98,13 +97,11 @@ public:
 	void hide();
 	void bring_to_front();
 	void capture_mouse(bool capture);
-	void set_timer(CL_TimerProvider *timer);
-	void kill_timer(CL_TimerProvider *timer);
 	void set_clipboard_text(const CL_StringRef &text);
 	CL_String get_clipboard_text() const;
 	void set_clipboard_image(const CL_PixelBuffer &image);
 	static CL_PixelBuffer create_bitmap_data(const CL_PixelBuffer &image);
-	void invalidate_rect(const CL_Rect &rect);
+	void request_repaint(const CL_Rect &rect);
 
 	bool has_messages();
 	bool get_message(SDL_Event &clan_event);
@@ -114,8 +111,6 @@ public:
 private:
 	void destroy();
 	void set_windowed();
-	bool check_timers(void);
-	void process_timer_events();
 	void received_keyboard_input(SDL_Event &event);
 
 	CL_DisplayWindowSite *site;
@@ -127,7 +122,6 @@ private:
 	CL_InputDeviceProvider_SDLMouse *mouse;
 	CL_InputDeviceProvider_SDLJoystick *joystick;
 	CL_DisplayMessageQueue_SDL *message_queue;
-	std::list<CL_TimerProvider_SDL *> timer_list;
 	CL_Callback_v0 callback_on_resized;
 	CL_InputContext ic;
 	CL_Size minimum_size;

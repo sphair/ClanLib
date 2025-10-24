@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 
@@ -48,15 +46,14 @@ class CL_API_NETWORK CL_HTTPRequestHandlerProvider
 public:
 	virtual ~CL_HTTPRequestHandlerProvider() { return; }
 
+	/// \brief Destroy
 	virtual void destroy() = 0;
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -68,8 +65,10 @@ public:
 		const CL_StringRef8 &url,
 		const CL_StringRef8 &headers) = 0;
 
+	/// \brief Handle request
+	///
+	/// \param connection = HTTPServer Connection
 	virtual void handle_request(CL_HTTPServerConnection &connection) = 0;
-
 
 /// \}
 /// \name Implementation
@@ -78,6 +77,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

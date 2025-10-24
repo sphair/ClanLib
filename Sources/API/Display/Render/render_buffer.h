@@ -30,13 +30,12 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
-#include "../../GL/opengl_wrap.h"
+
+#include "texture.h"
 
 class CL_RenderBuffer;
 class CL_GraphicContext;
@@ -55,8 +54,13 @@ public:
 	/// \brief Constructs a render buffer.
 	CL_RenderBuffer();
 
-	CL_RenderBuffer(CL_GraphicContext context, int width, int height, int format = CL_RGBA);
-
+	/// \brief Constructs a RenderBuffer
+	///
+	/// \param context = Graphic Context
+	/// \param width = value
+	/// \param height = value
+	/// \param internal_format = Texture Format
+	CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format = cl_rgba);
 
 /// \}
 /// \name Attributes
@@ -66,6 +70,9 @@ public:
 	/// \brief Returns true if this is a null render buffer.
 	bool is_null() const;
 
+	/// \brief Get Provider
+	///
+	/// \return provider
 	CL_RenderBufferProvider *get_provider() const;
 
 /// \}
@@ -73,7 +80,6 @@ public:
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -83,6 +89,5 @@ private:
 	CL_SharedPtr<CL_RenderBuffer_Impl> impl;
 /// \}
 };
-
 
 /// \}

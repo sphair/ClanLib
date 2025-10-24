@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "dom_node_generic.h"
 #include "API/Core/Text/string_allocator.h"
 #include "API/Core/System/block_allocator.h"

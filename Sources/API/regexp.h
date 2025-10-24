@@ -31,11 +31,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
@@ -51,52 +46,107 @@
 	#if !defined (UNICODE)
 		#if defined (CL_DLL)
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-dll.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-dll.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-dll.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-dll-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-dll-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-dll-debug.lib")
+				#endif
 			#endif
 		#elif defined (_DLL)
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-static-mtdll.lib")
-				#pragma comment(lib, "pcre-static-mtdll.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mtdll.lib")
+					#pragma comment(lib, "pcre-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mtdll.lib")
+					#pragma comment(lib, "pcre-static-mtdll.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-static-mtdll-debug.lib")
-				#pragma comment(lib, "pcre-static-mtdll-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "pcre-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mtdll-debug.lib")
+					#pragma comment(lib, "pcre-static-mtdll-debug.lib")
+				#endif
 			#endif
 		#else
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-static-mt.lib")
-				#pragma comment(lib, "pcre-static-mt.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mt.lib")
+					#pragma comment(lib, "pcre-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mt.lib")
+					#pragma comment(lib, "pcre-static-mt.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-static-mt-debug.lib")
-				#pragma comment(lib, "pcre-static-mt-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mt-debug.lib")
+					#pragma comment(lib, "pcre-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mt-debug.lib")
+					#pragma comment(lib, "pcre-static-mt-debug.lib")
+				#endif
 			#endif
 		#endif
 	#else
 		#if defined (CL_DLL)
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-dll-uc.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-dll-uc.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-x64-dll-uc.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-dll-uc-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-dll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-dll-uc-debug.lib")
+				#endif
 			#endif
 		#elif defined (_DLL)
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-static-mtdll-uc.lib")
-				#pragma comment(lib, "pcre-static-mtdll.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mtdll-uc.lib")
+					#pragma comment(lib, "pcre-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mtdll-uc.lib")
+					#pragma comment(lib, "pcre-static-mtdll.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-static-mtdll-uc-debug.lib")
-				#pragma comment(lib, "pcre-static-mtdll-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mtdll-uc-debug.lib")
+					#pragma comment(lib, "pcre-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mtdll-uc-debug.lib")
+					#pragma comment(lib, "pcre-static-mtdll-debug.lib")
+				#endif
 			#endif
 		#else
 			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanRegExp-static-mt-uc.lib")
-				#pragma comment(lib, "pcre-static-mt.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mt-uc.lib")
+					#pragma comment(lib, "pcre-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mt-uc.lib")
+					#pragma comment(lib, "pcre-static-mt.lib")
+				#endif
 			#else
-				#pragma comment(lib, "clanRegExp-static-mt-uc-debug.lib")
-				#pragma comment(lib, "pcre-static-mt-debug.lib")
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanRegExp-x64-static-mt-uc-debug.lib")
+					#pragma comment(lib, "pcre-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanRegExp-static-mt-uc-debug.lib")
+					#pragma comment(lib, "pcre-static-mt-debug.lib")
+				#endif
 			#endif
 		#endif
 	#endif
 #endif
-
 

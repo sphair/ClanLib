@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_sound.h"
 #include "../soundprovider.h"
@@ -59,7 +53,6 @@ public:
 
 	virtual ~CL_SoundProvider_Recorder();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -74,7 +67,6 @@ public:
 	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -83,6 +75,5 @@ private:
 	CL_SoundProvider_Recorder_Generic *impl;
 /// \}
 };
-
 
 /// \}

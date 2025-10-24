@@ -51,6 +51,8 @@ private:
 	void show_display_image();
 	void draw_reference_images();
 	void display_modelview_matrix(const char *matrix_name, float xpos, float ypos, const CL_Mat4f &matrix);
+	void draw_texture(CL_GraphicContext &gc, CL_Texture &texture, CL_Rect &source, CL_Rectf &dest);
+	void draw_texture(CL_GraphicContext &gc, CL_Texture &texture, int xpos, int ypos);
 
 private:
 	CL_GUIManager gui;
@@ -67,6 +69,8 @@ private:
 	CL_Sprite sprite_grid_outline;
 	CL_Image image_grid_normal;
 	CL_Image image_grid_outline;
+	CL_Texture texture_grid_normal;
+	CL_Texture texture_grid_outline;
 
 	CL_Texture display_image;
 	CL_FrameBuffer display_framebuffer;
@@ -75,8 +79,8 @@ private:
 	CL_Size display_image_size;
 	CL_Rect display_image_geometry;
 
-	CL_Font_Texture font;
-	CL_Font_Texture font_small;
+	CL_Font_System font;
+	CL_Font_System font_small;
 
 	CL_TextureGroup font_texture_group;
 

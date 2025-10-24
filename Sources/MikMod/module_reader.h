@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 /*
  * The following structure is the ClanLib file reader driver for MikMod.
  * In fact MikMod core functions expect an MREADER struct, so the first
@@ -45,7 +40,12 @@
  * with an MFILEREADER struct casted an into a plain MREADER.
  */
 
-
+#ifdef _M_X64
+#ifndef __x86_64
+#endif
+// Required for mikmod.h (64 bit)
+#define __x86_64	1
+#endif
 
 #include <mikmod.h>
 

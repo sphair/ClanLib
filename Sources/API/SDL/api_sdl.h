@@ -29,7 +29,6 @@
 
 #pragma once
 
-
 #if _MSC_VER > 1000
 #pragma once
 #endif
@@ -46,5 +45,4 @@
 	#define CL_API_SDL
 	#define CL_API_SDL_STATIC
 #endif
-
 

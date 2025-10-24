@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "string_format.h"
@@ -52,7 +50,6 @@ public:
 
 	virtual ~CL_Logger();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -63,7 +60,6 @@ public:
 
 	/// \brief Logger mutex object.
 	static CL_Mutex mutex;
-
 
 /// \}
 /// \name Operations
@@ -78,7 +74,6 @@ public:
 
 	/// \brief Log text.
 	virtual void log(const CL_StringRef &type, const CL_StringRef &text);
-
 
 /// \}
 /// \name Implementation
@@ -120,6 +115,5 @@ void cl_log_event(const CL_StringRef &type, const CL_StringRef &format, Arg1 arg
 template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
 void cl_log_event(const CL_StringRef &type, const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 { CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); cl_log_event(type, f.get_result()); }
-
 
 /// \}

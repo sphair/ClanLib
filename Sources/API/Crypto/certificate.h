@@ -28,10 +28,8 @@
 
 #pragma once
 
-
 /// \addtogroup clanCrypto_System clanCrypto System
 /// \{
-
 
 #include <prio.h>
 #include <certt.h>
@@ -47,12 +45,17 @@ class CL_Certificate
 public:
 	CL_Certificate();
 
+	/// \brief Constructs a Certificate
+	///
+	/// \param cert = CERTCertificate
 	CL_Certificate(CERTCertificate *cert);
 
+	/// \brief Constructs a Certificate
+	///
+	/// \param copy = Certificate
 	CL_Certificate(const CL_Certificate &copy);
 
 	~CL_Certificate();
-
 
 /// \}
 /// \name Attributes
@@ -61,14 +64,12 @@ public:
 public:
 	CERTCertificate *cert;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 	CL_Certificate &operator =(const CL_Certificate &copy);
-
 
 /// \}
 /// \name Implementation
@@ -77,6 +78,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

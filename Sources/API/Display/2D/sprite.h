@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 /// \addtogroup clanDisplay_2D clanDisplay 2D
@@ -71,10 +72,48 @@ public:
 	/// \param sprite_description Sprite description used to construct sprite.
 	/// \param gc Graphic context to use.
 	CL_Sprite();
-	CL_Sprite(CL_GraphicContext gc, const CL_StringRef &filename);
-	CL_Sprite(CL_GraphicContext gc, const CL_StringRef &filename, CL_VirtualDirectory dir);
-	CL_Sprite(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
-	CL_Sprite(CL_GraphicContext gc, const CL_SpriteDescription &description);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	CL_Sprite(CL_GraphicContext &gc);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	/// \param fullname = String Ref
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	/// \param filename = String Ref
+	/// \param dir = Virtual Directory
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	/// \param file = IODevice
+	/// \param image_type = String
+	CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param gc = Graphic Context
+	/// \param description = Sprite Description
+	CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &description);
+
+	/// \brief Constructs a Sprite
+	///
+	/// \param copy = Sprite
 	CL_Sprite(const CL_Sprite &copy);
 	virtual ~CL_Sprite();
 /// \}
@@ -183,9 +222,13 @@ public:
 	/// \brief Copy assignment operator.
 	CL_Sprite &operator =(const CL_Sprite &copy);
 
-	/// \brief Sets the image data from another sprite.
+	/// \brief Sets the image data from another sprite, sharing animation state.
 	/** Use this to change the look of your sprite.*/
 	void set_image_data(const CL_Sprite &image_source);
+
+	/// \brief Copies all information from another sprite into this, not sharing animation state.
+	/** This will not share animation state afterwards, like sprite1 = sprite2 would do. */
+	void clone(const CL_Sprite &source);
 
 	/// \brief Draw sprite on graphic context.
 	///
@@ -194,17 +237,17 @@ public:
 	/// \param src Source rectangle to draw. Use this is draw only part of the sprite.
 	/// \param dest Rectangle to draw sprite in.
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		float x,
 		float y);
 
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Rectf &src,
 		const CL_Rectf &dest);
 
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Rectf &dest);
 
 	/// \brief Call this function to update the animation.
@@ -244,6 +287,10 @@ public:
 	/// \brief Sets the color.
 	/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
 	void set_color(const CL_Colorf &color);
+
+	/// \brief Set color
+	///
+	/// \param c = Color
 	void set_color(const CL_Color& c) {CL_Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color);}
 
 	/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
@@ -295,6 +342,10 @@ public:
 /// \name Signals
 /// \{
 public:
+
+	/// \brief Sig animation finished
+	///
+	/// \return Signal_v0
 	CL_Signal_v0 &sig_animation_finished();
 /// \}
 
@@ -305,6 +356,5 @@ private:
 	CL_ResourceDataSession resource_data_session;
 /// \}
 };
-
 
 /// \}

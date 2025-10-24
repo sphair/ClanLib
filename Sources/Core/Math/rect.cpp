@@ -32,8 +32,6 @@
 #include "Core/precomp.h"
 #include "API/Core/Math/rect.h"
 
-#include <cmath>
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_Rectx<Type> Attributes:
 

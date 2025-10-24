@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "logger.h"
@@ -52,13 +50,11 @@ public:
 
 	~CL_FileLogger();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -68,7 +64,6 @@ public:
 	/// \brief Log text to file.
 	void log(const CL_StringRef &type, const CL_StringRef &text);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -77,6 +72,5 @@ private:
 	CL_File *file;
 /// \}
 };
-
 
 /// \}

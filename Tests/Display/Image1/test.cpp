@@ -46,7 +46,7 @@ public:
 			CL_Image image_bottom_right(gc, "image_bottom_right", &resources);
 			CL_Image image_black(gc, "image_black", &resources);
 
-			CL_Font small_font = CL_Font_Texture(gc, cl_text("Tahoma"), 12);
+			CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
 
 			//CL_Console::write_line("Color: %1,%2,%3,%4", image_resources.get_color().r, image_resources.get_color().g, image_resources.get_color().b, image_resources.get_color().a);
 			//CL_Console::write_line("Scale: %1,%2", image_resources.get_scale_x(), image_resources.get_scale_y());

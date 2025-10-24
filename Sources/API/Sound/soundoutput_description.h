@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 
@@ -53,10 +47,12 @@ public:
 	/// \brief Constructs a sound output description.
 	CL_SoundOutput_Description();
 
+	/// \brief Constructs a SoundOutput Description
+	///
+	/// \param copy = Sound Output_ Description
 	CL_SoundOutput_Description(const CL_SoundOutput_Description &copy);
 
 	~CL_SoundOutput_Description();
-
 
 /// \}
 /// \name Attributes
@@ -68,7 +64,6 @@ public:
 
 	/// \brief Returns the mixing latency in milliseconds.
 	int get_mixing_latency() const;
-
 
 /// \}
 /// \name Operations
@@ -84,7 +79,6 @@ public:
 	/// \brief Sets the mixing latency in milliseconds.
 	void set_mixing_latency(int latency);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -93,6 +87,5 @@ private:
 	CL_SoundOutput_Description_Generic *impl;
 /// \}
 };
-
 
 /// \}

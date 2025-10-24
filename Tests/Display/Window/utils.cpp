@@ -149,4 +149,3 @@ CL_Rect get_window_frame_size()
 #endif
 	return border_size;
 }
-

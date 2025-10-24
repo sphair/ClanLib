@@ -92,6 +92,12 @@ bool CL_Clipboard_X11::is_clipboard_text_available() const
 	return false;
 }
 
+bool CL_Clipboard_X11::is_clipboard_image_available() const
+{
+	return false;
+//	throw Exception("CL_Clipboard_X11::is_clipboard_image_available() not implemented");
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Clipboard_X11 operations:
 

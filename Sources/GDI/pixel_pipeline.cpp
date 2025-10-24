@@ -28,16 +28,12 @@
 
 #include "GDI/precomp.h"
 #include "API/Display/2D/color.h"
+#include "API/Core/Math/cl_math.h"
 #include "pixel_pipeline.h"
 #include "software_fragment_shader.h"
 #include "draw_image.h"
 #include "gdi_frame_buffer_provider.h"
-
-
-#define alpha_component(a) (((a)&0xff000000)>>24)
-#define red_component(a) (((a)&0x00ff0000)>>16)
-#define green_component(a) (((a)&0x0000ff00)>>8)
-#define blue_component(a) ((a)&0x000000ff)
+#include "rasterizer.h"
 
 CL_PixelPipeline::CL_PixelPipeline(const CL_Size &size)
 : modelview(CL_Mat4f::identity()), projection(CL_Mat4f::identity()),
@@ -328,7 +324,11 @@ void CL_PixelPipeline::wait_for_workers()
 	}
 
 	if (active_cores == 1)
-		process_vertices(0, active_cores);
+	{
+		CL_Rasterizer rasterizer;
+		rasterizer.set_core(0, active_cores);
+		process_vertices(rasterizer, 0, active_cores);
+	}
 	
 	// Wait until all workers are done.
 	while (!fragment_buffer.readers_finished())
@@ -342,6 +342,8 @@ void CL_PixelPipeline::worker_main(int core)
 {
 //	SetThreadIdealProcessor(GetCurrentThread(), core);
 //	SetThreadAffinityMask(GetCurrentThread(), 1 << core);
+	CL_Rasterizer rasterizer;
+	rasterizer.set_core(core, active_cores);
 
 	while (true)
 	{
@@ -349,11 +351,11 @@ void CL_PixelPipeline::worker_main(int core)
 		if (wakeup_reason != 0)
 			break;
 		fragment_buffer.get_reader_event(core).reset();
-		process_vertices(core, active_cores);
+		process_vertices(rasterizer, core, active_cores);
 	}
 }
 
-void CL_PixelPipeline::process_vertices(int core, int num_cores)
+void CL_PixelPipeline::process_vertices(CL_Rasterizer &rasterizer, int core, int num_cores)
 {
 	while (true)
 	{
@@ -395,184 +397,31 @@ void CL_PixelPipeline::process_vertices(int core, int num_cores)
 			}
 			else
 			{
-				Triangle t = triangulate(i, i+1, i+2, vertices[i].sampler);
-				render_band(t.b1, core, num_cores);
-				render_band(t.b2, core, num_cores);
+				rasterizer.set_colorbuffer0(colorbuffer0.data, colorbuffer0.size.width, colorbuffer0.size.height);
+				rasterizer.set_clip_rect(clip_rect);
+
+				for (int j=0; j<3; j++)
+				{
+					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[0] = vertices[i+j].position.x;
+					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[1] = vertices[i+j].position.y;
+					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[2] = vertices[i+j].varying[0];
+					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[3] = vertices[i+j].varying[1];
+					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[0] = vertices[i+j].varying[2];
+					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[1] = vertices[i+j].varying[3];
+					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[2] = vertices[i+j].varying[4];
+					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[3] = vertices[i+j].varying[5];
+				}
+
+				rasterizer.set_sampler0(samplers[vertices[i].sampler].data, samplers[vertices[i].sampler].size.width, samplers[vertices[i].sampler].size.height);
+				rasterizer.render_triangle();
+
+				//Triangle t = triangulate(i, i+1, i+2, vertices[i].sampler);
+				//render_band(t.b1, core, num_cores);
+				//render_band(t.b2, core, num_cores);
 			}
 		}
 
 		fragment_buffer.finish_reader_fragment(core);
-	}
-}
-
-CL_PixelPipeline::Triangle CL_PixelPipeline::triangulate(unsigned short v1, unsigned short v2, unsigned short v3, unsigned char sampler) const
-{
-	unsigned short vertices[3] = { v1, v2, v3 };
-	sort_triangle_vertices(vertices);
-
-	Line l1(vertices[0], vertices[2]);
-	Line l2(vertices[0], vertices[1]);
-	Line l3(vertices[1], vertices[2]);
-
-	int y_start = (int)l1.get_v1(this)->position.y;
-	int y_middle = (int)l2.get_v2(this)->position.y;
-	int y_end = (int)l3.get_v2(this)->position.y;
-	
-	Triangle triangle;
-	triangle.b1.sampler = sampler;
-	triangle.b2.sampler = sampler;
-	triangle.b1.y1 = y_start;
-	triangle.b1.y2 = y_middle;
-	triangle.b2.y1 = y_middle;
-	triangle.b2.y2 = y_end;
-	if (l1.calc_x(this, l2.get_v2(this)->position.y) < l2.get_v2(this)->position.x)
-	{
-		triangle.b1.left = l1;
-		triangle.b1.right = l2;
-		triangle.b2.left = l1;
-		triangle.b2.right = l3;
-	}
-	else
-	{
-		triangle.b1.left = l2;
-		triangle.b1.right = l1;
-		triangle.b2.left = l3;
-		triangle.b2.right = l1;
-	}
-	
-	return triangle;
-}
-
-void CL_PixelPipeline::sort_triangle_vertices(unsigned short *in_out_vertices) const
-{
-	const ShadedVertex *v[3] = { &vertices[in_out_vertices[0]], &vertices[in_out_vertices[1]], &vertices[in_out_vertices[2]] };
-	int order[3] = { 0, 1, 2 };
-
-	// Sort destination points by Y axis:
-	if (v[order[1]]->position.y < v[order[0]]->position.y)
-	{
-		int tmp = order[0];
-		order[0] = order[1];
-		order[1] = tmp;
-	}
-	if (v[order[2]]->position.y < v[order[0]]->position.y)
-	{
-		int tmp = order[0];
-		order[0] = order[2];
-		order[2] = tmp;
-	}
-	if (v[order[2]]->position.y < v[order[1]]->position.y)
-	{
-		int tmp = order[1];
-		order[1] = order[2];
-		order[2] = tmp;
-	}
-
-	// Sort destination points by X axis:
-	if (v[order[0]]->position.y == v[order[1]]->position.y && v[order[1]]->position.x < v[order[0]]->position.x)
-	{
-		int tmp = order[0];
-		order[0] = order[1];
-		order[1] = tmp;
-	}
-	if (v[order[1]]->position.y == v[order[2]]->position.y && v[order[2]]->position.x < v[order[1]]->position.x)
-	{
-		int tmp = order[1];
-		order[1] = order[2];
-		order[2] = tmp;
-	}
-
-	unsigned short v_tmp[3] = { in_out_vertices[0], in_out_vertices[1], in_out_vertices[2] };
-	in_out_vertices[0] = v_tmp[order[0]];
-	in_out_vertices[1] = v_tmp[order[1]];
-	in_out_vertices[2] = v_tmp[order[2]];
-}
-
-void CL_PixelPipeline::render_band(const PolygonBand &band, int core, int num_cores)
-{
-	const ShadedVertex *v1_left = band.left.get_v1(this);
-	const ShadedVertex *v2_left = band.left.get_v2(this);
-	const ShadedVertex *v1_right = band.right.get_v1(this);
-	const ShadedVertex *v2_right = band.right.get_v2(this);
-
-	int y_start = find_first_line_for_core(cl_max(band.y1, clip_rect.top), core, num_cores);
-	int y_end = cl_min(band.y2, clip_rect.bottom);
-
-	float dy_left = v2_left->position.y - v1_left->position.y;
-	float dy_right = v2_right->position.y - v1_right->position.y;
-
-	float dx_left[num_varying+1];
-	float dx_right[num_varying+1];
-	float line_left[num_varying+1];
-	float line_right[num_varying+1];
-
-	dx_left[num_varying] = v2_left->position.x - v1_left->position.x;
-	dx_right[num_varying] = v2_right->position.x - v1_right->position.x;
-	for (int v=0; v<num_varying; v++)
-	{
-		dx_left[v] = v2_left->varying[v] - v1_left->varying[v];
-		dx_right[v] = v2_right->varying[v] - v1_right->varying[v];
-	}
-
-	for (int v=0; v<num_varying+1; v++)
-	{
-		dx_left[v] /= dy_left;
-		dx_right[v] /= dy_right;
-	}
-
-	line_left[num_varying] = v1_left->position.x;
-	line_right[num_varying] = v1_right->position.x;
-	for (int v=0; v<num_varying; v++)
-	{
-		line_left[v] = v1_left->varying[v];
-		line_right[v] = v1_right->varying[v];
-	}
-
-	float y_fragment = y_start+0.5f;
-	float y_start_delta_left = y_fragment-v1_left->position.y;
-	float y_start_delta_right = y_fragment-v1_right->position.y;
-
-	for (int v=0; v<num_varying+1; v++)
-	{
-		line_left[v] += dx_left[v]*y_start_delta_left;
-		line_right[v] += dx_right[v]*y_start_delta_right;
-
-		dx_left[v] *= num_cores;
-		dx_right[v] *= num_cores;
-	}
-
-	CL_SoftwareFragmentShader shader;
-	shader.sampler0_size = samplers[band.sampler].size;
-	shader.sampler0_data = samplers[band.sampler].data;
-	shader.colorbuffer0_line = colorbuffer0.data+colorbuffer0.size.width*y_start;
-	int pitch = colorbuffer0.size.width*num_cores;
-
-	for (int y = y_start; y < y_end; y += num_cores)
-	{
-		int x_min = (int)line_left[num_varying];
-		int x_max = (int)line_right[num_varying];
-		shader.x_offset = 0.5f-(line_left[num_varying]-x_min);
-		shader.x_start = x_min > clip_rect.left ? x_min : clip_rect.left; // max(x_min, clip_rect.left);
-		shader.x_end = x_max < clip_rect.right ? x_max : clip_rect.right;// min(x_max, clip_rect.right);
-
-		if (shader.x_end > shader.x_start)
-		{
-			float dx = line_right[num_varying]-line_left[num_varying];
-			for (int v=0; v<num_varying; v++)
-			{
-				shader.dx_varying[v] = (line_right[v]-line_left[v])/dx;
-				shader.cur_varying[v] = line_left[v]+(shader.x_start+shader.x_offset-x_min)*shader.dx_varying[v];
-			}
-
-			shader.shade_and_blend();
-		}
-
-		shader.colorbuffer0_line += pitch;
-		for (int v=0; v<num_varying+1; v++)
-		{
-			line_left[v] += dx_left[v];
-			line_right[v] += dx_right[v];
-		}
 	}
 }
 
@@ -633,6 +482,11 @@ void CL_PixelPipeline::fill_rect(const CL_Rect &dest, const CL_Colorf &primary_c
 			{
 				for (int x = 0; x < line_length; x++)
 				{
+					#define alpha_component(a) (((a)&0xff000000)>>24)
+					#define red_component(a) (((a)&0x00ff0000)>>16)
+					#define green_component(a) (((a)&0x0000ff00)>>8)
+					#define blue_component(a) ((a)&0x000000ff)
+
 					unsigned int dest_color = dest_line[x];
 					unsigned int dred = red_component(dest_color);
 					unsigned int dgreen = green_component(dest_color);

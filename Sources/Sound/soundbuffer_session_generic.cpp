@@ -41,7 +41,7 @@
 CL_SoundBuffer_Session_Generic::CL_SoundBuffer_Session_Generic(
 	CL_SharedPtr<CL_SoundBuffer_Generic> soundbuffer,
 	bool looping,
-	CL_SoundOutput_Generic *output)
+	CL_SharedPtr<CL_SoundOutput_Generic> output)
 :
 	soundbuffer(soundbuffer), provider_session(0), output(output), volume(1.0f),
 	pan(0.0f), looping(looping), playing(false)
@@ -62,9 +62,6 @@ CL_SoundBuffer_Session_Generic::CL_SoundBuffer_Session_Generic(
 	
 CL_SoundBuffer_Session_Generic::~CL_SoundBuffer_Session_Generic()
 {
-	for (std::vector<CL_SoundFilter *>::size_type i=0; i<filters.size(); i++)
-		if (delete_filters[i]) delete filters[i];
-		
 	if (soundbuffer && provider_session)
 	{
 		soundbuffer->provider->end_session(provider_session);
@@ -127,7 +124,7 @@ bool CL_SoundBuffer_Session_Generic::mix_to(int **sample_data, int **temp_data, 
 	// Run filters on data:
 	for (std::vector<CL_SoundFilter *>::size_type index_filter = 0; index_filter < filters.size(); index_filter++)
 	{
-		filters[index_filter]->filter(temp_data, num_samples, num_buffer_channels);
+		filters[index_filter].filter(temp_data, num_samples, num_buffer_channels);
 	}
 
 	// Calculate volume on each channel:

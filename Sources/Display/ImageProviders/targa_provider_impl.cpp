@@ -53,14 +53,18 @@ struct CL_TargaProvider_Impl::TGA_Header
 } tga_header;
 
 CL_TargaProvider_Impl::CL_TargaProvider_Impl(
-	const CL_String name,
-	CL_VirtualDirectory directory)
+	CL_IODevice &datafile)
 {
 	image = NULL;
 
-	CL_IODevice input_source = directory.open_file(name, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
-	input_source.set_little_endian_mode();
-	read_tga(input_source);
+	bool little_endian = datafile.is_little_endian();
+	if (!little_endian)
+		datafile.set_little_endian_mode();
+
+	read_tga(datafile);
+
+	if (!little_endian)
+		datafile.set_big_endian_mode();
 }
 
 CL_TargaProvider_Impl::~CL_TargaProvider_Impl()

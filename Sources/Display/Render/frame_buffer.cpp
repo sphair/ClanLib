@@ -58,7 +58,7 @@ CL_FrameBuffer::CL_FrameBuffer()
 {
 }
 
-CL_FrameBuffer::CL_FrameBuffer(CL_GraphicContext context)
+CL_FrameBuffer::CL_FrameBuffer(CL_GraphicContext &context)
 : impl(new CL_FrameBuffer_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
@@ -128,4 +128,5 @@ void CL_FrameBuffer::detach_depth_buffer()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FrameBuffer Implementation:
+
 

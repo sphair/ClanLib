@@ -55,8 +55,8 @@ int App::main(const std::vector<CL_String> &args)
 		CL_GUIThemeDefault theme;
 		theme.set_resources(resources);
 
-		gui.set_window_manager(&wm); 
-		gui.set_theme(&theme);
+		gui.set_window_manager(wm); 
+		gui.set_theme(theme);
 		gui.set_css_document("Resources/theme.css");
 
 		CL_Rect viewport = display_window.get_viewport();

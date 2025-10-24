@@ -78,6 +78,9 @@ public:
 	/// \brief Returns the value of a property as an integer.
 	int get_property_int(const CL_GUIThemePartProperty &property) const;
 
+	/// \brief Get Component
+	///
+	/// \return component
 	CL_GUIComponent *get_component() const;
 
 	/// \brief Returns the position of the content box for a given render box.
@@ -129,6 +132,11 @@ public:
 	/// \brief Sets a part state. Returns true if the state was modified, false if it was already in wanted state.
 	bool set_state(const CL_StringRef &name, bool flag);
 
+	/// \brief Render box
+	///
+	/// \param gc = Graphic Context
+	/// \param rect = Rect
+	/// \param clip_rect = Rect
 	void render_box(CL_GraphicContext &gc, const CL_Rect &rect, const CL_Rect &clip_rect);
 
 	CL_Rect render_text(

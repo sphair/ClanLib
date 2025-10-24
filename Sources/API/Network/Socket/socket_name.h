@@ -29,13 +29,7 @@
 /// \addtogroup clanNetwork_Socket clanNetwork Socket
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -56,12 +50,21 @@ public:
 	    If no port is specified, it will default to port 0.</p>*/
 	CL_SocketName();
 
+	/// \brief Constructs a SocketName
+	///
+	/// \param port = String
 	CL_SocketName(const CL_String &port);
 
+	/// \brief Constructs a SocketName
+	///
+	/// \param address = String
+	/// \param port = String
 	CL_SocketName(const CL_String &address, const CL_String &port);
 
+	/// \brief Constructs a SocketName
+	///
+	/// \param copy = Socket Name
 	CL_SocketName(const CL_SocketName &copy);
-
 
 /// \}
 /// \name Attributes
@@ -88,7 +91,6 @@ public:
 	    purposes (eg. if you use a std::map<CL_SocketName, CL_Socket>), and sorts
 	    the address based on lowest IP number address.</p>*/
 	bool operator > (const CL_SocketName &other_instance) const;
-
 
 /// \}
 /// \name Operations
@@ -125,7 +127,6 @@ public:
 	/// \brief Get the socket name from a C sockets sockaddr structure.
 	void from_sockaddr(int domain, struct sockaddr *addr, int len);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -134,6 +135,5 @@ private:
 	CL_SharedPtr<CL_SocketName_Impl> impl;
 /// \}
 };
-
 
 /// \}

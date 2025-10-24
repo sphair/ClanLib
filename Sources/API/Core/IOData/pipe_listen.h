@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -49,10 +47,13 @@ class CL_API_CORE CL_PipeListen
 /// \{
 
 public:
+
+	/// \brief Constructs a PipeListen
+	///
+	/// \param name = String
 	CL_PipeListen(const CL_String &name);
 
 	~CL_PipeListen();
-
 
 /// \}
 /// \name Attributes
@@ -63,9 +64,12 @@ public:
 	/// \brief Returns the OS handle for the pipe.
 	HANDLE get_handle() const;
 #else
+
+	/// \brief Get Handle
+	///
+	/// \return handle
 	int get_handle() const;
 #endif
-
 
 /// \}
 /// \name Operations
@@ -84,7 +88,6 @@ public:
 	/// \brief Block until a connection is established.
 	CL_PipeConnection accept();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -93,6 +96,5 @@ private:
 	CL_SharedPtr<CL_PipeListen_Impl> impl;
 /// \}
 };
-
 
 /// \}

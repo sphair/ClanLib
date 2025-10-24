@@ -29,9 +29,7 @@
 /// \addtogroup clanDatabase_System clanDatabase System
 /// \{
 
-
 #pragma once
-
 
 #include "api_database.h"
 #include "db_command.h"
@@ -53,6 +51,9 @@ public:
 	/// \brief Constructs a database connection.
 	CL_DBConnection();
 
+	/// \brief Constructs a DBConnection
+	///
+	/// \param provider = DBConnection Provider
 	CL_DBConnection(CL_DBConnectionProvider *provider);
 
 	~CL_DBConnection();
@@ -92,6 +93,5 @@ private:
 	friend class CL_DBCommand;
 /// \}
 };
-
 
 /// \}

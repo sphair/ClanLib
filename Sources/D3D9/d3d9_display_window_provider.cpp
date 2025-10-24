@@ -34,7 +34,6 @@
 #include "d3d9_target_provider.h"
 #include "d3d9_graphic_context_provider.h"
 #include "Display/Win32/cursor_provider_win32.h"
-#include "Display/Win32/timer_provider_win32.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D9DisplayWindowProvider Construction:
@@ -82,12 +81,12 @@ bool CL_D3D9DisplayWindowProvider::is_visible() const
 	return win32_window.is_visible();
 }
 
-CL_GraphicContext CL_D3D9DisplayWindowProvider::get_gc() const
+CL_GraphicContext& CL_D3D9DisplayWindowProvider::get_gc()
 {
 	return gc;
 }
 
-CL_InputContext CL_D3D9DisplayWindowProvider::get_ic() const
+CL_InputContext& CL_D3D9DisplayWindowProvider::get_ic()
 {
 	return win32_window.get_ic();
 }
@@ -102,13 +101,23 @@ bool CL_D3D9DisplayWindowProvider::is_clipboard_text_available() const
 	return win32_window.is_clipboard_text_available();
 }
 
+bool CL_D3D9DisplayWindowProvider::is_clipboard_image_available() const
+{
+	return win32_window.is_clipboard_image_available();
+}
+
+CL_String CL_D3D9DisplayWindowProvider::get_clipboard_text() const
+{
+	return win32_window.get_clipboard_text();
+}
+
+CL_PixelBuffer CL_D3D9DisplayWindowProvider::get_clipboard_image() const
+{
+	return win32_window.get_clipboard_image();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D9DisplayWindowProvider Operations:
-
-CL_TimerProvider *CL_D3D9DisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
-{
-	return new CL_TimerProvider_Win32(disp_window);
-}
 
 CL_Point CL_D3D9DisplayWindowProvider::client_to_screen(const CL_Point &client)
 {
@@ -254,29 +263,14 @@ void CL_D3D9DisplayWindowProvider::update(const CL_Rect &rect)
 	throw CL_Exception(cl_text("Not implemented yet."));
 }
 
-void CL_D3D9DisplayWindowProvider::set_timer(CL_TimerProvider *timer)
-{
-	win32_window.set_timer(timer);
-}
-
-void CL_D3D9DisplayWindowProvider::kill_timer(CL_TimerProvider *timer)
-{
-	win32_window.kill_timer(timer);
-}
-
 void CL_D3D9DisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)
 {
 	win32_window.set_clipboard_text(text);
 }
 
-CL_String CL_D3D9DisplayWindowProvider::get_clipboard_text() const
+void CL_D3D9DisplayWindowProvider::request_repaint(const CL_Rect &rect)
 {
-	return win32_window.get_clipboard_text();
-}
-
-void CL_D3D9DisplayWindowProvider::invalidate_rect(const CL_Rect &rect)
-{
-	win32_window.invalidate_rect(rect);
+	win32_window.request_repaint(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -288,3 +282,17 @@ void CL_D3D9DisplayWindowProvider::on_window_resized()
 		((CL_D3D9GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
+void CL_D3D9DisplayWindowProvider::set_clipboard_image( const CL_PixelBuffer &buf )
+{
+	win32_window.set_clipboard_image(buf);
+}
+
+void CL_D3D9DisplayWindowProvider::set_large_icon(const CL_PixelBuffer &image)
+{
+	win32_window.set_large_icon(image);
+}
+
+void CL_D3D9DisplayWindowProvider::set_small_icon(const CL_PixelBuffer &image)
+{
+	win32_window.set_small_icon(image);
+}

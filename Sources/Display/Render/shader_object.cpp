@@ -28,6 +28,8 @@
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_types.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -120,9 +122,14 @@ CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, const CL_StringRef 
 	return shader_object;
 }
 
-CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &filename, CL_VirtualDirectory &directory)
+CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &filename, const CL_VirtualDirectory &directory)
 {
-	CL_IODevice file = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
+	CL_IODevice file = directory.open_file_read(filename);
+	return CL_ShaderObject::load(gc, shader_type, file);
+}
+
+CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, CL_ShaderType shader_type, CL_IODevice &file)
+{
 	int size = file.get_size();
 	CL_String8 source(size, 0);
 	file.read(&source[0], size);
@@ -130,7 +137,15 @@ CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, CL_ShaderType shade
 	return CL_ShaderObject(gc, shader_type, CL_StringHelp::local8_to_text(source));
 }
 
-CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &filename, CL_VirtualDirectory &directory)
+CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_ShaderObject::load(gc, shader_type, filename, vfs.get_root_directory());
+}
+
+CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &filename, const CL_VirtualDirectory &directory)
 {
 	CL_ShaderObject shader_object = CL_ShaderObject::load(gc, shader_type, filename, directory);
 
@@ -138,6 +153,24 @@ CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_Shad
 		throw CL_Exception(cl_format(cl_text("Unable to compiler shader program %1: %2"), filename, shader_object.get_info_log()));
 
 	return shader_object;
+}
+
+CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_ShaderType shader_type, CL_IODevice &file)
+{
+	CL_ShaderObject shader_object = CL_ShaderObject::load(gc, shader_type, file);
+
+	if(!shader_object.compile())
+		throw CL_Exception(cl_format(cl_text("Unable to compiler shader program : %1"), shader_object.get_info_log()));
+
+	return shader_object;
+}
+
+CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_ShaderType shader_type, const CL_StringRef &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_ShaderObject::load_and_compile(gc, shader_type, filename, vfs.get_root_directory());
 }
 
 CL_ShaderObject::~CL_ShaderObject()

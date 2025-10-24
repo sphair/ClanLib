@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -55,12 +49,17 @@ class CL_API_CORE CL_XMLTokenizer
 public:
 	CL_XMLTokenizer();
 
+	/// \brief Constructs a XMLTokenizer
+	///
+	/// \param copy = XMLTokenizer
 	CL_XMLTokenizer(const CL_XMLTokenizer &copy);
 
+	/// \brief Constructs a XMLTokenizer
+	///
+	/// \param input = IODevice
 	CL_XMLTokenizer(CL_IODevice &input);
 
 	virtual ~CL_XMLTokenizer();
-
 
 /// \}
 /// \name Attributes
@@ -73,7 +72,6 @@ public:
 	/// \brief If enabled, will eat any whitespace between tags.
 	void set_eat_whitespace(bool enable);
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -82,8 +80,10 @@ public:
 	/// \brief Returns the next token available in input stream.
 	CL_XMLToken next();
 
+	/// \brief Next
+	///
+	/// \param out_token = XMLToken
 	void next(CL_XMLToken *out_token);
-
 
 /// \}
 /// \name Implementation
@@ -93,6 +93,5 @@ private:
 	CL_SharedPtr<CL_XMLTokenizer_Generic> impl;
 /// \}
 };
-
 
 /// \}

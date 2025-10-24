@@ -123,7 +123,7 @@ CL_ComponentAnchorPoint HolderComponent::get_anchor_br()
 void HolderComponent::set_selected(bool value)
 {
 	impl->selected = value;
-	invalidate_rect();
+	request_repaint();
 }
 
 void HolderComponent::set_anchor_tl(CL_ComponentAnchorPoint ap)
@@ -360,7 +360,7 @@ void HolderComponent_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &updat
 	CL_Rect geom = component->get_geometry().get_size();
 
 	CL_Rect child_geom = component->get_first_child()->get_geometry();
-	child_geom.expand(CL_Rect(2,2,1,1)); 
+	child_geom.expand(2,2,1,1); 
 
 	if (selected)
 	{
@@ -434,7 +434,7 @@ void HolderComponent_Impl::on_mouse_up_left(const CL_GUIMessage &msg, CL_InputEv
 	moving = false;
 	resizing = false;
 	component->capture_mouse(false);
-	component->invalidate_rect();
+	component->request_repaint();
 }
 
 void HolderComponent_Impl::on_mouse_move(const CL_GUIMessage &msg, CL_InputEvent &event)
@@ -522,7 +522,7 @@ void HolderComponent_Impl::save_geometry(CL_DomElement &e, CL_GUIComponent *comp
 {
 	CL_Rect holder_g = comp->get_parent_component()->get_geometry();
 	CL_Rect g = component->get_geometry();
-	g.shrink(CL_Rect(4,4,4,4));
+	g.shrink(4,4,4,4);
 
 	CL_TempString left = CL_StringHelp::int_to_text(g.left);
 	CL_TempString right = CL_StringHelp::int_to_text(g.right);
@@ -543,7 +543,7 @@ void HolderComponent_Impl::save_anchors(CL_DomElement &e, CL_GUIComponent *comp)
 	}
 
 	CL_Rect g = component->get_geometry();
-	g.shrink(CL_Rect(4,4,4,4));
+	g.shrink(4,4,4,4);
 
 	CL_Point tl = g.get_top_left();
 	CL_Point br = g.get_bottom_right();

@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>NetGame Engine - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<h2>
+<img src="gfx/overview.png"/>NetGame Engine
+</h2>
+
+<p>The network library in ClanLib sports a simple event based networking
+engine usually referred to as the NetGame engine. In all its simplicity the
+engine assist in routing simple messages from a client to a server and
+back.</p>
+
+<p>The API consists of the following classes:</p>
+
+<ul>
+	<li><span class="code">CL_NetGameServer</span></li>
+	<li><span class="code">CL_NetGameClient</span></li>
+	<li><span class="code">CL_NetGameConnection</span></li>
+	<li><span class="code">CL_NetGameEvent</span></li>
+	<li><span class="code">CL_NetGameEventDispatcher</span></li>
+</ul>
+
+<h3>Client and Server Connections</h3>
+
+<p>On the server side, the game must construct an instance of <span
+class="code">CL_NetGameServer</span>. Then for each port that the server
+should listen on, it must call <span
+class="code">CL_NetGameServer::start(port)</span>.</p>
+
+<p>The class also features three important signals:</p>
+<ul>
+	<li>Client connected</li>
+	<li>Client disconnected</li>
+	<li>Event received</li>
+</ul>
+
+<p><span class="code">CL_NetGameServer</span> is a <span
+class="code">CL_KeepAlive</span> based class, which means that during calls
+to <span class="code">CL_DisplayMessageQueue::process()</span> the class
+will emit those three signals for each client that has
+connected/disconnected since last call, and for each game event that arrived
+since last.</p>
+
+<p>It is also possible to call <span class="code">process_events()</span> on
+the <span class="code">CL_NetGameServer</span> or <span
+class="code">CL_NetGameClient</span> objects directly to cause the signals
+to be emitted. Generally, in client applications the signals are processed automatically because the main render loop
+already calls the <span
+class="code">CL_DisplayMessageQueue::process()</span> function, but for
+servers that to not use clanDisplay the <span
+class="code">process_events()</span> function can be called directly.</p>
+
+<p>The <span class="code">CL_NetGameClient</span> class is similar in design, except
+that there is only one connection (to the server), and therefore the
+connect/disconnect signals do not include any <span
+class="code">CL_NetGameConnection</span> objects.</p>
+
+<h3>NetGame Events</h3>
+
+<p>The class <span class="code">CL_NetGameEvent</span> represents a game
+event message that is either sent or received. Each event consists of two
+things: an event name and list of event parameters. The name is what
+identifies what the event is about, while each of the parameters can one of
+the following types:</p>
+
+<ul>
+	<li>null</li>
+	<li>int</li>
+	<li>string</li>
+	<li>bool</li>
+	<li>float</li>
+</ul>
+
+<p>Lets say that the client wants to send a log on message to the server. We
+want to pass a username and a password as the arguments, so we do like
+this:</p>
+
+<pre>
+CL_NetGameClient client;
+client.connect("example.net", "5555");
+
+CL_NetGameEvent event("logon", "Mr. Jones", "the secret of all secrets");
+client.send_event(event);
+</pre>
+
+<p>The constructor for <span class="code">CL_NetGameEvent</span> exist in 6
+versions, allowing you to pass anything from 0 to 5 parameters in a single
+line. The types of the paramters are automatically deducted from the C++
+type you pass for each parameter. If you need to pass more parameters than
+this, then you need to use the <span class="code">add_argument(const
+CL_NetGameEventValue &amp;value)</span> function on <span
+class="code">CL_NetGameEvent</span>.
+
+<p>On the server, this game event will be emitted via the <span
+class="code">sig_event_received</span>, and might be handled like this:</p>
+
+<pre>
+void on_event_received(CL_NetGameConnection *connection, const CL_NetGameEvent &amp;event)
+{
+	MyConnectionData *data = get_connection_data(connection);
+	if (event.get_name() == "logon")
+	{
+		if (data->logged_in)
+		{
+			CL_NetGameEvent response("error", "You are already logged in!");
+			connection->send_event(response);
+		}
+		else
+		{
+			data->username = event.get_argument(0);
+			CL_String password = event.get_argument(1);
+			data->logged_in = true;
+		
+			CL_NetGameEvent response("motd", cl_format("Welcome %1! Please enjoy your stay!", username));
+			connection->send_event(response);
+		}
+	}
+}
+</pre>
+
+<p>An example of a NetGame based server can be found <a href="netgame-server.html">here</a>.
+
+<h3>Example Events</h3>
+
+<p>To illustrate how a game can be built using this system, the following
+listing shows what events are used in the DiceWar example while the game
+itself is running:</p>
+
+<h4>DiceWar Game Server to Client</h4>
+
+<table>
+<tr>
+<th>NetGame Event</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>game-is-starting()</td>
+<td>The game is starting, client does initialization</td>
+</tr>
+<tr>
+<td>game-has-started()</td>
+<td>The game has started -> ready to play!</td>
+</tr>
+<tr>
+<td>game-player-joined-game(int player_id, string player_name, int visual_id)</td>
+<td>A new player has joined the active game</td>
+</tr>
+<tr>
+<td>game-player-left-game(int player_id)</td>
+<td>A player has left the active game</td>
+</tr>
+<tr>
+<td>game-set-maparea-ownership(int map_area_id, int player_id)</td>
+<td>A map area has a new player ownership</td>
+</tr>
+<tr>
+<td>game-set-maparea-army-strength(int map_area_id, int army_strength)</td>
+<td>A map area has a new army strength</td>
+</tr>
+<tr>
+<td>game-invalid-attack()</td>
+<td>An attack was invalid</td>
+</tr>
+<tr>
+<td>game-attacked-area(int map_area_from_id, int map_area_to_id)</td>
+<td>A map area was attacked (marks start of an attack)</td>
+</tr>
+<tr>
+<td>game-attack-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)</td>
+<td>The result of an attack</td>
+</tr>
+<tr>
+<td>game-defense-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7,
+dice_result8)</td>
+<td>The result of an attack also marks the end of an attack</td>
+</tr>
+<tr>
+<td>game-attack-done()</td>
+<td>An attack was completed (on all clients)</td>
+</tr>
+<tr>
+<td>game-player-turn-started(int player_id)</td>
+<td>A player started his turn</td>
+</tr>
+<tr>
+<td>game-over(string title, string message)</td>
+<td>The game is over</td>
+</tr>
+<tr>
+<td>game-player-message(int player_id, string message)</td>
+<td>A player sent a game message</td>
+</tr>
+<tr>
+<td>game-system-message(string message)</td>
+<td>The system sent an system message</td>
+</tr>
+</table>
+
+<h4>DiceWar Game Client to Server</h4>
+
+<table>
+<tr>
+<th>NetGame Event</th>
+<th>Description</th>
+<th>Responses</th>
+</tr>
+<tr>
+<td>game-attack-area(int map_area_from_id, int map_area_to_id)</td>
+<td>Attack an area</td>
+<td>game-attacked-area<br>game-attack-dice-result<br>game-defense-dice-result<br>
+game-set-maparea-ownership<br>game-set-maparea-army-strength<br>game-attack-done<br>game-invalid-attack</td>
+</tr>
+<tr>
+<td>game-end-turn()</td>
+<td>End player turn</td>
+<td>game-player-turn-started</td>
+</tr>
+<tr>
+<td>game-battle-view-over()</td>
+<td>Notify battle view is done</td>
+<td>None</td>
+</tr>
+<tr>
+<td>game-add-message(string message)</td>
+<td>Send a chat message to game chat</td>
+<td>game-player-message</td>
+</tr>
+</table>
+
+<h4>World of Warcraft Events</h4>
+
+<p>Although World of Warcraft do not use ClanLib or the NetGame system, it
+does base it communication on sending events. So to illustrate that even
+very large scale games can be run almost entirely using such events, here's
+the list of events reverse engineered out of World of Warcraft:</p>
+
+<ul>
+<li><a href="http://www.wowwiki.com/Events_From_Disassembly">http://www.wowwiki.com/Events_From_Disassembly</a></li>
+</ul>
+
+<h3>Dispatching Game Events to C++ Functions</h3>
+
+<p>To do: write about how CL_NetGameEventDispatched is used to dispatch game
+events.</p>
+
+</div>
+
+</body>
+</html>

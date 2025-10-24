@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../Window/input_device.h"
@@ -52,7 +50,6 @@ public:
 
 	/// \brief Destroys the input device provider.
 	virtual void destroy() = 0;
-
 
 /// \}
 /// \name Attributes
@@ -128,7 +125,6 @@ public:
 	/// \return true when the device event has occurred
 	virtual bool poll(bool peek_only) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -136,6 +132,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

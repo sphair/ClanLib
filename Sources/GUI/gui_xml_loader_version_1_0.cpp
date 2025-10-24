@@ -53,11 +53,12 @@
 #include "API/GUI/Components/imageview.h"
 
 #include "gui_xml_loader_version_1_0.h"
+#include "gui_layout_provider_corners.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIXMLLoaderVersion_1_0 Construction:
 
-CL_GUIXMLLoaderVersion_1_0::CL_GUIXMLLoaderVersion_1_0(CL_GUIComponent *component, CL_GUILayout *layout)
+CL_GUIXMLLoaderVersion_1_0::CL_GUIXMLLoaderVersion_1_0(CL_GUIComponent *component, CL_GUILayout &layout)
 : create_custom_callback(0), dialog_width(200), dialog_height(140)
 {
 	this->component = component;
@@ -81,9 +82,9 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomDocument &doc)
 	CL_DomElement doc_element = doc.get_document_element();
 	load(doc_element, component);
 
-	layout->set_preferred_size(CL_Size(dialog_width, dialog_height));
+	layout.set_preferred_size(CL_Size(dialog_width, dialog_height));
 	CL_Rect win_geom = component->get_window_geometry();
-	component->set_window_geometry(CL_Rect(win_geom.left, win_geom.top, win_geom.left + dialog_width, win_geom.top + dialog_height), true); // set client area to specified size.
+	component->set_geometry(CL_Rect(win_geom.left, win_geom.top, win_geom.left + dialog_width, win_geom.top + dialog_height)); // set client area to specified size.
 }
 
 void CL_GUIXMLLoaderVersion_1_0::set_create_custom_callback(CL_Callback_2<CL_GUIComponent*, CL_GUIComponent*, CL_String> *callback)
@@ -177,7 +178,7 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 					CL_TempString label = tab_child.get_attribute(cl_text("label"), "Error: NO LABEL!");
 					int id = CL_StringHelp::text_to_int(tab_child.get_attribute(cl_text("id"), "0"));
 					CL_TabPage *tab_page = co->add_page(label, id);
-					CL_GUILayout *tabpage_layout = new CL_GUILayoutCorners();
+					CL_GUILayoutCorners tabpage_layout;
 					tab_page->set_layout(tabpage_layout);
 					load(tab_child, tab_page);
 				}
@@ -221,7 +222,8 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 			if (e.has_attribute(cl_text("text")))
 				co->set_header_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
-			co->set_layout(new CL_GUILayoutCorners());
+			CL_GUILayoutCorners layout_corners;
+			co->set_layout(layout_corners);
 			load(e, co);
 		}
 		else if (tag == cl_text("dialog"))
@@ -254,11 +256,12 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 			g.bottom = CL_StringHelp::text_to_int(split[3]);
 			new_comp->set_geometry(g);
 
-			CL_GUILayout *parent_layout = parent->get_layout();
-			if (parent_layout != 0)
+			CL_GUILayout parent_layout = parent->get_layout();
+			if (!parent_layout.is_null())
 			{
-				CL_GUILayoutCorners *corner_layout = dynamic_cast<CL_GUILayoutCorners*>(parent_layout);
-				if (corner_layout)
+				parent_layout.get_provider();
+				CL_GUILayoutProvider_Corners *corner_provider_layout = dynamic_cast<CL_GUILayoutProvider_Corners*>(parent_layout.get_provider());
+				if (corner_provider_layout)
 				{
 					int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_x")));
 					int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_y")));
@@ -267,7 +270,7 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 					CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_tl")));
 					CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_br")));
 
-					corner_layout->add_component(new_comp, ap_tl, dist_tl_x, dist_tl_y, ap_br, dist_rb_x, dist_rb_y);
+					corner_provider_layout->add_component(new_comp, ap_tl, dist_tl_x, dist_tl_y, ap_br, dist_rb_x, dist_rb_y);
 				}
 			}
 		}
@@ -275,8 +278,9 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		e = e.get_next_sibling().to_element();
 	}
 
-	if (parent->get_layout())
+	CL_GUILayout parent_layout = parent->get_layout();
+	if (!parent_layout.is_null())
 	{
-		parent->get_layout()->set_geometry(parent->get_geometry());
+		parent_layout.set_geometry(parent->get_size());
 	}
 }

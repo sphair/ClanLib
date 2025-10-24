@@ -29,6 +29,7 @@
 #include "Display/precomp.h"
 #include "API/Display/Render/primitives_array_builder.h"
 #include "API/Display/Render/primitives_array.h"
+#include "API/Core/Math/angle.h"
 #include "primitives_array_impl.h"
 
 class CL_PrimitivesArrayBlock

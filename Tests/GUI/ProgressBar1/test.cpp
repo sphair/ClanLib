@@ -22,18 +22,18 @@ public:
 			CL_GUIManager gui; 
  
 			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("theme.css");
  
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
 			win_desc.set_title("The Amazing ProgressBar");
-    
-			CL_Window root(CL_Rect(200,200,600,600), &gui, win_desc);
+			win_desc.set_position(CL_Rect(200,200,600,600), false);
+			CL_Window root(&gui, win_desc);
 			root.func_close().set(this, &App::on_close, &root);
 
 			CL_PushButton button1(&root);
@@ -78,13 +78,13 @@ public:
 		int new_value = rand() % 100;
 
 		progress1->set_position(new_value);
-		progress1->invalidate_rect();
+		progress1->request_repaint();
 
 		progress2->set_position(100 - new_value);
-		progress2->invalidate_rect();
+		progress2->request_repaint();
 
 		progress3->step_position();
-		progress3->invalidate_rect();
+		progress3->request_repaint();
 	}
 
 	void on_close(CL_Window *win)

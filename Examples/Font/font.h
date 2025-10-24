@@ -34,15 +34,12 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/gui.h>
 
-static const int TextureFont_Height = 32;
-extern CL_Font_Texture_Position TextureFont_Positions[];
-
 enum FontClass
 {
-	native,
-	freetype,
-	texture,
-	vector
+	font_freetype,
+	font_system,
+	font_vector,
+	font_sprite
 };
 
 // This is the Application class (That is instantiated by the Program Class)
@@ -52,13 +49,12 @@ public:
 	int start(const std::vector<CL_String> &args);
 
 private:
-	void on_button_clicked_class_native(CL_PushButton *button);
 	void on_button_clicked_class_freetype(CL_PushButton *button);
-	void on_button_clicked_class_texture(CL_PushButton *button);
+	void on_button_clicked_class_system(CL_PushButton *button);
 	void on_button_clicked_class_vector(CL_PushButton *button);
+	void on_button_clicked_class_sprite(CL_PushButton *button);
 	void on_button_clicked_typeface_tahoma(CL_PushButton *button);
 	void on_button_clicked_typeface_sans(CL_PushButton *button);
-	void on_button_clicked_typeface_texture(CL_PushButton *button);
 	void on_button_clicked_typeface_ttf(CL_PushButton *button);
 	void on_checkbox_state_underline(CL_CheckBox *checkbox);
 	void on_checkbox_state_italic(CL_CheckBox *checkbox);
@@ -79,6 +75,7 @@ private:
 	void select_font();
 	void draw_font_example();
 	void draw_font_info();
+
 private:
 	bool quit;
 	CL_DisplayWindow *window_ptr;
@@ -87,17 +84,16 @@ private:
 	CL_LineEdit *lineedit_text_ptr;
 	CL_PushButton *button_typeface_tahoma_ptr;
 	CL_PushButton *button_typeface_sans_ptr;
-	CL_PushButton *button_typeface_texture_ptr;
 	CL_String font_text;
 	CL_FontMetrics font_metrics;
 	CL_FontDescription font_desc;
 	CL_Size font_size;
-	CL_Font_Texture small_font;
+	CL_Font small_font;
 	CL_Font selected_font;
 	FontClass selected_fontclass;
-	bool texture_typeface_flag;
 	float last_fps;
 	CL_PixelBuffer pb_font;
+	CL_ResourceManager app_resources;
 };
 
 

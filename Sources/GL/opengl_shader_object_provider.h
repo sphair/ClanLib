@@ -33,10 +33,11 @@
 #include "API/Display/TargetProviders/shader_object_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
+#include "API/Core/System/disposable_object.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLShaderObjectProvider : public CL_ShaderObjectProvider
+class CL_OpenGLShaderObjectProvider : public CL_ShaderObjectProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -90,6 +91,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	CLenum shadertype_to_opengl(CL_ShaderType type);
 
 	CL_OpenGLGraphicContextProvider *gc_provider;

@@ -33,11 +33,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
@@ -60,6 +55,7 @@
 #include "GUI/gui_window_manager.h"
 #include "GUI/gui_window_manager_system.h"
 #include "GUI/gui_window_manager_texture.h"
+#include "GUI/gui_window_manager_texture_window.h"
 #include "GUI/gui_theme.h"
 #include "GUI/gui_theme_default.h"
 #include "GUI/gui_theme_part.h"
@@ -91,6 +87,9 @@
 #include "GUI/Components/tooltip.h"
 #include "GUI/Components/slider.h"
 #include "GUI/Components/window.h"
+#include "GUI/Providers/gui_theme_provider.h"
+#include "GUI/Providers/gui_layout_provider.h"
+#include "GUI/Providers/gui_window_manager_provider.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
@@ -187,5 +186,4 @@
 		#endif
 	#endif
 #endif
-
 

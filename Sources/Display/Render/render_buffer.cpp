@@ -51,12 +51,12 @@ CL_RenderBuffer::CL_RenderBuffer()
 {
 }
 
-CL_RenderBuffer::CL_RenderBuffer(CL_GraphicContext context, int width, int height, int format)
+CL_RenderBuffer::CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format)
 : impl(new CL_RenderBuffer_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
 	impl->provider = gc_provider->alloc_render_buffer();
-	impl->provider->create(width, height, format);
+	impl->provider->create(width, height, internal_format);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,4 +78,5 @@ CL_RenderBufferProvider *CL_RenderBuffer::get_provider() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RenderBuffer Implementation:
+
 

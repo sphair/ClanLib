@@ -24,23 +24,18 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanSound_Filters clanSound Filters
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_sound.h"
 #include "../soundfilter.h"
 
-class CL_FadeFilter_Generic;
+class CL_FadeFilterProvider;
 
 /// \brief Fade Filter Class
 ///
@@ -57,7 +52,6 @@ public:
 	/// \brief Fade Filter Destructor
 	virtual ~CL_FadeFilter();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -66,37 +60,27 @@ public:
 	/// \brief Returns the current volume of the fade filter, from 0.0f (no volume) to 1.0f (full volume).
 	float get_volume() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Retrieves the provider.
+	CL_FadeFilterProvider *get_provider() const;
+
 	/// \brief Sets the volume instant.
 	void set_volume(float new_volume);
 
 	/// \brief Fade to volume, from 0.0f (no volume) to 1.0f (full volume).
 	void fade_to_volume(float new_volume, int duration = 1000);
 
-
-/// \}
-/// \name Overridables
-/// \{
-
-protected:
-	virtual void filter(int **sample_data, int num_samples, int channels);
-
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_FadeFilter(const CL_FadeFilter &copy) { return; } // disallow copy construction.
-
-	CL_FadeFilter_Generic *impl;
 /// \}
 };
-
 
 /// \}

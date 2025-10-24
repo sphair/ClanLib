@@ -40,7 +40,7 @@
 
 #ifndef WIN32
 #include <unistd.h>
-#include <stdio.h>
+#include <cstdio>
 
 #ifndef PATH_MAX
 #define PATH_MAX	256	// TODO: Fixme - Paths should not have a limit

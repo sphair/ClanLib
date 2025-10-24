@@ -29,6 +29,7 @@
 #include "Network/precomp.h"
 #include "API/Network/NetGame/event.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 
 CL_NetGameEvent::CL_NetGameEvent(const CL_String &name)
 : name(name)
@@ -98,16 +99,47 @@ CL_String CL_NetGameEvent::to_string() const
 
 	for(unsigned int i = 0; i < arguments.size(); ++i)
 	{
-		if(arguments[i].is_string())
-			event_info += "\"" + arguments[i].get_value() + "\"";
-		else
-			event_info += arguments[i].get_value();
-
-		if(i < arguments.size() - 1)
+		if(i > 0)
 			event_info += ",";
+
+		event_info += to_string(arguments[i]);
 	}
 
 	event_info += ")";
 
 	return event_info;
+}
+
+CL_String CL_NetGameEvent::to_string(const CL_NetGameEventValue &v) const
+{
+	switch (v.get_type())
+	{
+	case CL_NetGameEventValue::null:
+		return "null";
+	case CL_NetGameEventValue::integer:
+		return CL_StringHelp::int_to_text(v.to_integer());
+	case CL_NetGameEventValue::uinteger:
+		return CL_StringHelp::uint_to_text(v.to_uinteger());
+	case CL_NetGameEventValue::string:
+		return "\"" + v.to_string() + "\"";
+	case CL_NetGameEventValue::boolean:
+		return v.to_boolean() ? "true" : "false";
+	case CL_NetGameEventValue::number:
+		return CL_StringHelp::float_to_text(v.to_number());
+	case CL_NetGameEventValue::complex:
+		{
+			CL_String str;
+			str += "[";
+			for (unsigned int j = 0; j < v.get_member_count(); j++)
+			{
+				if(j > 0)
+					str += ",";
+				str += to_string(v.get_member(j));
+			}
+			str += "]";
+			return str;
+		}
+	default:
+		return "??" + CL_StringHelp::int_to_text(v.get_type());
+	}
 }

@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 TabPage::TabPage(GUI *gui) :
-	CL_Window(CL_Rect(32 + 256*3, 256*1 + 180*2 + 32, CL_Size(256, 180)), &gui->get_gui_manager(), CL_GUITopLevelDescription("Tab Page")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Tab Page", CL_Rect(32 + 256*3, 256*1 + 180*2 + 32, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	set_draggable(true);

@@ -34,6 +34,8 @@
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
+#include "../Core/Signals/callback_0.h"
+#include "../Core/Signals/callback_1.h"
 #include "../Core/Signals/callback_v0.h"
 #include "../Core/Signals/callback_v1.h"
 #include "../Core/Signals/callback_v2.h"
@@ -41,14 +43,16 @@
 #include "../Core/Signals/callback_2.h"
 #include "../Core/IOData/virtual_directory.h"
 #include "../Display/Window/display_window_description.h"
-#include "../Display/Window/timer.h"
+#include "../Display/Window/display_window.h"
+#include "../Display/Render/graphic_context.h"
+#include "../Display/Window/input_context.h"
 #include "gui_layout.h"
 #include <vector>
-#include "../Display/Window/display_window.h"
 
 class CL_DomDocument;
 class CL_GraphicContext;
 class CL_InputContext;
+class CL_InputEvent;
 class CL_Cursor;
 class CL_GUIMessage;
 class CL_GUIManager;
@@ -70,9 +74,18 @@ public:
 	/// \brief Creates a GUI component.
 	CL_GUIComponent(CL_GUIComponent *parent);
 
-	CL_GUIComponent(const CL_Rect &position, CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary=false);
+	/// \brief Constructs a GUIComponent
+	///
+	/// \param manager = GUIManager
+	/// \param description = GUITop Level Description
+	/// \param temporary = bool
+	CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary=false);
 
-	CL_GUIComponent(const CL_Rect &position, CL_GUIComponent *owner, CL_GUITopLevelDescription description);
+	/// \brief Constructs a GUIComponent
+	///
+	/// \param owner = GUIComponent
+	/// \param description = GUITop Level Description
+	CL_GUIComponent(CL_GUIComponent *owner, CL_GUITopLevelDescription description);
 
 	virtual ~CL_GUIComponent();
 
@@ -137,18 +150,24 @@ public:
 	CL_GUIManager get_gui_manager() const;
 
 	/// \brief Returns the theme used by this component.
-	CL_GUITheme *get_theme() const;
+	CL_GUITheme get_theme() const;
 
 	/// \brief Returns the parent component.
 	/** <p>Only child components has a parent.</p>*/
 	const CL_GUIComponent *get_parent_component() const;
 
+	/// \brief Get Parent component
+	///
+	/// \return parent_component
 	CL_GUIComponent *get_parent_component();
 
 	/// \brief Return the component owning this component.
 	/** <p>Only top-level components has an owner.</p>*/
 	const CL_GUIComponent *get_owner_component() const;
 
+	/// \brief Get Owner component
+	///
+	/// \return owner_component
 	CL_GUIComponent *get_owner_component();
 
 	/// \brief Returns a list of the child components.
@@ -157,11 +176,17 @@ public:
 	/// \brief Returns the first child component.
 	const CL_GUIComponent *get_first_child() const;
 
+	/// \brief Get First child
+	///
+	/// \return first_child
 	CL_GUIComponent *get_first_child();
 
 	/// \brief Returns the last child component.
 	const CL_GUIComponent *get_last_child() const;
 
+	/// \brief Get Last child
+	///
+	/// \return last_child
 	CL_GUIComponent *get_last_child();
 
 	/// \brief Find child component with the specified component ID name.
@@ -173,23 +198,32 @@ public:
 	/// \brief Returns the previous sibling component.
 	const CL_GUIComponent *get_previous_sibling() const;
 
+	/// \brief Get Previous sibling
+	///
+	/// \return previous_sibling
 	CL_GUIComponent *get_previous_sibling();
 
 	/// \brief Returns the next sibling component.
 	const CL_GUIComponent *get_next_sibling() const;
 
+	/// \brief Get Next sibling
+	///
+	/// \return next_sibling
 	CL_GUIComponent *get_next_sibling();
 
 	/// \brief Returns the top level component this CL_GUIComponent is a child of.
 	const CL_GUIComponent *get_top_level_component() const;
 
+	/// \brief Get Top level component
+	///
+	/// \return top_level_component
 	CL_GUIComponent *get_top_level_component();
 
 	/// \brief Return the graphic context for the component.
-	CL_GraphicContext get_gc() const;
+	CL_GraphicContext& get_gc();
 
 	/// \brief Return the input context for the component.
-	CL_InputContext get_ic() const;
+	CL_InputContext& get_ic();
 
 	/// \brief Return true if the component, and all its parents are enabled.
 	bool is_enabled() const;
@@ -211,7 +245,7 @@ public:
 	    The index of a component not in the loop is -1</p>*/
 	int get_tab_order() const;
 
-	/// \brief Return the component under 'point', in window coordinates.
+	/// \brief Return the component under 'point', in local viewport coordinates.
 	CL_GUIComponent *get_component_at(const CL_Point &point);
 
 	/// \brief Returns the preferred size of a render box.
@@ -226,8 +260,14 @@ public:
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	CL_Point window_to_component_coords(const CL_Point &window_point) const;
 
+	/// \brief Convert the top-level window client coordinates to component coordinates.
+	CL_Rect window_to_component_coords(const CL_Rect &window_rect) const;
+
 	/// \brief Convert the component coordinates to top-level window client coordinates.
 	CL_Point component_to_window_coords(const CL_Point &component_point) const;
+
+	/// \brief Convert the component coordinates to top-level window client coordinates.
+	CL_Rect component_to_window_coords(const CL_Rect &component_rect) const;
 
 	/// \brief Convert the screen coordinates to component coordinates.
 	CL_Point screen_to_component_coords(const CL_Point &screen_point) const;
@@ -235,8 +275,8 @@ public:
 	/// \brief Convert the component coordinates to screen coordinates.
 	CL_Point component_to_screen_coords(const CL_Point &component_point) const;
 
-	/// \brief Returns the layout manager set for this component. Returns 0 if none set.
-	CL_GUILayout *get_layout() const;
+	/// \brief Returns the layout manager set for this component. Check CL_GUILayout.is_null() if none set.
+	CL_GUILayout get_layout() const;
 
 	/// \brief Returns the display window in which this component is hosted.
 	CL_DisplayWindow get_display_window() const;
@@ -260,6 +300,42 @@ public:
 	/// \brief void func_process_message(const CL_GUIMessage &message)
 	CL_Callback_v1<CL_GUIMessage &> &func_process_message();
 
+	/// \brief bool func_close()
+	CL_Callback_0<bool> &func_close();
+
+	/// \brief bool func_activated()
+	CL_Callback_0<bool> &func_activated();
+
+	/// \brief bool func_deactivated()
+	CL_Callback_0<bool> &func_deactivated();
+
+	/// \brief bool func_focus_lost()
+	CL_Callback_0<bool> &func_focus_lost();
+
+	/// \brief bool func_focus_gained()
+	CL_Callback_0<bool> &func_focus_gained();
+
+	/// \brief bool func_pointer_enter()
+	CL_Callback_0<bool> &func_pointer_enter();
+
+	/// \brief bool func_pointer_exit()
+	CL_Callback_0<bool> &func_pointer_exit();
+
+	/// \brief bool func_input(const CL_InputEvent &input_event)
+	CL_Callback_1<bool, const CL_InputEvent &> func_input();
+
+	/// \brief bool func_input_pressed(const CL_InputEvent &input_event)
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_pressed();
+
+	/// \brief bool func_input_released(const CL_InputEvent &input_event)
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_released();
+
+	/// \brief bool func_input_doubleclick(const CL_InputEvent &input_event)
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_doubleclick();
+
+	/// \brief bool func_input_pointer_moved(const CL_InputEvent &input_event)
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_pointer_moved();
+
 	/// \brief void func_style_changed()
 	CL_Callback_v0 &func_style_changed();
 
@@ -269,10 +345,11 @@ public:
 	/// \brief Callback invoked when the component is resized, i.e. when set_geometry is called.
 	CL_Callback_v0 &func_resized();
 
+	/// \brief void func_constrain_resize(CL_Rect &geometry)
 	CL_Callback_v1<CL_Rect &> &func_constrain_resize();
 
 	/// \brief Callback invoked when loading a custom component from XML.
-	/** The type of the component to create is passed as a paramter to the function.
+	/** The type of the component to create is passed as a parameter to the function.
 	    The callback function should create the desired component and return it, or return 0, if no component is created.
 	    Example definition: CL_GUIComponent *Foo::on_create_custom_component(CL_GUIComponent *parent, CL_String type);*/
 	virtual CL_Callback_2<CL_GUIComponent*, CL_GUIComponent*, CL_String> &func_create_custom_component();
@@ -289,6 +366,9 @@ public:
 	    or area specified and makes the changes visible.</p>*/
 	void paint();
 
+	/// \brief Paint
+	///
+	/// \param clip_rect = Rect
 	void paint(const CL_Rect &clip_rect);
 
 	/// \brief Run component in modal mode.
@@ -307,10 +387,10 @@ public:
 	void send_message(CL_GUIMessage &message);
 
 	/// \brief Set component position and size.
-	void set_geometry(const CL_Rect &geometry);
+	void set_geometry(CL_Rect geometry);
 
 	/// \brief Set component window position and size
-	void set_window_geometry(const CL_Rect &geometry, bool client_area=false);
+	void set_window_geometry(CL_Rect geometry);
 
 	/// \brief Sets the component type name. (csstype.cssclass#cssid)
 	void set_type_name(const CL_StringRef &name); 
@@ -353,20 +433,35 @@ public:
 	/// \brief Create child components from a GUI definition file.
 	void create_components(const CL_DomDocument &gui_xml);
 
-	void create_components(const CL_StringRef &filename, CL_VirtualDirectory dir = CL_VirtualDirectory());
+	/// \brief Create components
+	///
+	/// \param fullname = String Ref
+	void create_components(const CL_StringRef &fullname);
+
+	/// \brief Create components
+	///
+	/// \param file = IODevice
+	void create_components(CL_IODevice &file);
+
+	/// \brief Create components
+	///
+	/// \param filename = String Ref
+	/// \param dir = Virtual Directory
+	void create_components(const CL_StringRef &filename, const CL_VirtualDirectory &dir);
 
 	// Request an asynchronous redraw of the specified area.
-	void invalidate_rect();
+	void request_repaint();
 
-	void invalidate_rect(CL_Rect rect);
-
-	CL_Timer create_timer();
+	/// \brief Request repaint
+	///
+	/// \param rect = Rect
+	void request_repaint(CL_Rect rect);
 
 	/// \brief Set a clipping rectangle.
-	void set_cliprect(const CL_Rect &rect);
+	void set_cliprect(CL_GraphicContext &gc, const CL_Rect &rect);
 
 	/// \brief Reset the clipping rectangle.
-	void reset_cliprect();
+	void reset_cliprect(CL_GraphicContext &gc);
 
 	/// \brief Deletes all child components.
 	void delete_child_components();
@@ -375,11 +470,14 @@ public:
 	void set_parent_component(CL_GUIComponent *new_parent);
 
 	/// \brief Set a layout on the component.
-	void set_layout(CL_GUILayout *layout);
+	void set_layout(CL_GUILayout &layout);
 
 	/// \brief Sets the current cursor icon.
 	void set_cursor(const CL_Cursor &cursor);
 
+	/// \brief Set cursor
+	///
+	/// \param CL_StandardCursor = enum
 	void set_cursor(enum CL_StandardCursor type);
 
 	/// \brief Makes this component handle focus switching of its child components when the tab key is pressed.
@@ -410,6 +508,9 @@ public:
 	/** <p>If multiple components are set as 'cancel' handlers, the first child with the property will receive the keypress message.</p>*/
 	void set_cancel(bool value);
 
+	/// \brief Set consumed keys
+	///
+	/// \param keys = GUIConsumed Keys
 	void set_consumed_keys(CL_GUIConsumedKeys &keys);
 
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
@@ -421,9 +522,15 @@ public:
 private:
 	CL_SharedPtr<CL_GUIComponent_Impl> impl;
 
+	/// \brief Constructs a GUIComponent
+	///
+	/// \param other = GUIComponent
 	CL_GUIComponent(CL_GUIComponent &other);
 
 	CL_GUIComponent &operator =(const CL_GUIComponent &other);
+
+	CL_GraphicContext dummy_gc;
+	CL_InputContext dummy_ic;
 
 	friend class CL_GUIManager;
 

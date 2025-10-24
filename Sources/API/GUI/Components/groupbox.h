@@ -31,9 +31,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -50,10 +48,13 @@ class CL_API_GUI CL_GroupBox : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a GroupBox
+	///
+	/// \param parent = GUIComponent
 	CL_GroupBox(CL_GUIComponent *parent);
 
 	virtual ~CL_GroupBox();
-
 
 /// \}
 /// \name Attributes
@@ -61,13 +62,11 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -77,6 +76,5 @@ private:
 	CL_SharedPtr<CL_GroupBox_Impl> impl;
 /// \}
 };
-
 
 /// \}

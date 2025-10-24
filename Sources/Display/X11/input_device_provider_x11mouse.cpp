@@ -174,8 +174,15 @@ void CL_InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 	key.mouse_pos = mouse_pos;
 	key.id = id;
 	if (event.type == ButtonPress)
+	{
 		key.type = CL_InputEvent::pressed;
-	else	key.type = CL_InputEvent::released;
+		key_states[id] = 1;
+	}
+	else
+	{
+		key.type = CL_InputEvent::released;
+		key_states[id] = 0;
+	}
 
 	// Emit message:
 	sig_provider_event->invoke(key);

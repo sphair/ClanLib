@@ -19,18 +19,18 @@ public:
 			CL_GUIManager gui;
 
 			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(&wm); 
+			gui.set_window_manager(wm); 
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
  
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
 			win_desc.set_title("ListView test app.");
-     
-			CL_Window window(CL_Rect(200, 200, 840, 680), &gui, win_desc);			
+			win_desc.set_position(CL_Rect(200, 200, 840, 680), false);
+			CL_Window window(&gui, win_desc);			
 			window.func_close().set(this, &App::on_close, &window); 
      	  
 			CL_GraphicContext gc = window.get_gc();

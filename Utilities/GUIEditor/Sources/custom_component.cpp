@@ -96,7 +96,7 @@ void CustomComponent_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &updat
 	gc.reset_texture(0);
 	CL_Draw::gradient_fill(gc, g, CL_Gradient(CL_Colorf::lightgray, CL_Colorf::floralwhite));
 	CL_Draw::box(gc, g, CL_Colorf::gray);
-	g.shrink(CL_Rect(2,2,2,2));
+	g.shrink(2,2,2,2);
 	CL_Draw::box(gc, g, CL_Colorf::lightskyblue);
 }
 

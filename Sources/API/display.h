@@ -33,11 +33,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
@@ -63,10 +58,19 @@
 #include "Display/Collision/outline_provider.h"
 #include "Display/Collision/outline_provider_bitmap.h"
 #include "Display/Collision/outline_provider_file.h"
+#include "Display/Font/font.h"
+#include "Display/Font/font_description.h"
+#include "Display/Font/font_system.h"
+#include "Display/Font/font_sprite.h"
+#include "Display/Font/font_metrics.h"
+#include "Display/Font/font_freetype.h"
+#include "Display/Font/font_vector.h"
 #include "Display/Image/palette.h"
 #include "Display/Image/pixel_buffer.h"
 #include "Display/Image/pixel_format.h"
 #include "Display/Image/pixel_format_type.h"
+#include "Display/ImageProviders/jpeg_compressor.h"
+#include "Display/ImageProviders/jpeg_decompressor.h"
 #include "Display/ImageProviders/jpeg_provider.h"
 #include "Display/ImageProviders/pcx_provider.h"
 #include "Display/ImageProviders/png_provider.h"
@@ -78,15 +82,8 @@
 #include "Display/Render/buffer_control.h"
 #include "Display/Render/compare_function.h"
 #include "Display/Render/element_array_buffer.h"
-#include "Display/Font/font.h"
-#include "Display/Font/font_texture.h"
-#include "Display/Font/font_native.h"
-#include "Display/Font/font_metrics.h"
-#include "Display/Font/font_freetype.h"
-#include "Display/Font/vector_font.h"
 #include "Display/Render/frame_buffer.h"
 #include "Display/Render/graphic_context.h"
-#include "Display/Render/render_batcher.h"
 #include "Display/Render/occlusion_query.h"
 #include "Display/Render/pen.h"
 #include "Display/Render/polygon_rasterizer.h"
@@ -95,6 +92,7 @@
 #include "Display/Render/program_attribute.h"
 #include "Display/Render/program_object.h"
 #include "Display/Render/program_uniform.h"
+#include "Display/Render/render_batcher.h"
 #include "Display/Render/render_buffer.h"
 #include "Display/Render/shader_object.h"
 #include "Display/Render/texture.h"
@@ -103,16 +101,18 @@
 #include "Display/TargetProviders/display_message_queue_provider.h"
 #include "Display/TargetProviders/display_target_provider.h"
 #include "Display/TargetProviders/display_window_provider.h"
+#include "Display/TargetProviders/element_array_buffer_provider.h"
 #include "Display/TargetProviders/font_provider.h"
 #include "Display/TargetProviders/frame_buffer_provider.h"
-#include "Display/TargetProviders/render_buffer_provider.h"
 #include "Display/TargetProviders/graphic_context_provider.h"
 #include "Display/TargetProviders/input_device_provider.h"
+#include "Display/TargetProviders/occlusion_query_provider.h"
+#include "Display/TargetProviders/program_object_provider.h"
+#include "Display/TargetProviders/render_buffer_provider.h"
 #include "Display/TargetProviders/render_window_provider.h"
+#include "Display/TargetProviders/shader_object_provider.h"
 #include "Display/TargetProviders/texture_provider.h"
 #include "Display/TargetProviders/vertex_array_buffer_provider.h"
-#include "Display/TargetProviders/element_array_buffer_provider.h"
-#include "Display/TargetProviders/timer_provider.h"
 #include "Display/Window/cursor.h"
 #include "Display/Window/display_message_queue.h"
 #include "Display/Window/display_window.h"
@@ -124,7 +124,6 @@
 #include "Display/Window/input_event.h"
 #include "Display/Window/input_state.h"
 #include "Display/Window/keys.h"
-#include "Display/Window/timer.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
@@ -281,5 +280,4 @@
 		#endif
 	#endif
 #endif
-
 

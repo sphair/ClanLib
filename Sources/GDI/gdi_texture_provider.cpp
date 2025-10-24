@@ -53,21 +53,21 @@ void CL_GDITextureProvider::destroy()
 	delete this;
 }
 
-void CL_GDITextureProvider::create(int width, int height, int format, int depth)
+void CL_GDITextureProvider::create(int width, int height, CL_TextureFormat internal_format, int depth)
 {
 	if (depth != 1)
 		throw CL_Exception(cl_text("Unsupported depth specified for GDI target"));
 	image = CL_PixelBuffer(width, height, width*4, CL_PixelFormat::argb8888);
 }
 
-CL_PixelBuffer CL_GDITextureProvider::get_pixeldata(CL_PixelFormat &format, int level)
+CL_PixelBuffer CL_GDITextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const
 {
 	if (level != 0)
 		throw CL_Exception(cl_text("Unsupported mipmap level specified for GDI target"));
 	return image.to_format(format);
 }
 
-void CL_GDITextureProvider::set_image(CL_PixelBuffer &new_image, int level, int format)
+void CL_GDITextureProvider::set_image(CL_PixelBuffer &new_image, int level, CL_TextureFormat internal_format)
 {
 	if (level != 0)
 		throw CL_Exception(cl_text("Unsupported mipmap level specified for GDI target"));
@@ -82,14 +82,14 @@ void CL_GDITextureProvider::set_cube_map(
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
 	int level,
-	int format)
+	CL_TextureFormat internal_format)
 {
 	throw CL_Exception(cl_text("Cube texture maps not supported by GDI target"));
 }
 
 void CL_GDITextureProvider::set_compressed_image(
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	int width,
 	int height,
 	CL_DataBuffer &image)
@@ -135,7 +135,7 @@ void CL_GDITextureProvider::copy_image_from(
 	int width,
 	int height,
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	CL_GraphicContextProvider *gc)
 {
 	throw CL_Exception(cl_text("copy_image_from not supported yet by GDI target"));

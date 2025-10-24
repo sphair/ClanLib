@@ -29,9 +29,7 @@
 /// \addtogroup clanSqlite_System clanSqlite System
 /// \{
 
-
 #pragma once
-
 
 #include "api_sqlite.h"
 #include "../Database/db_connection.h"
@@ -45,10 +43,13 @@ class CL_API_SQLITE CL_SqliteConnection : public CL_DBConnection
 /// \{
 
 public:
+
+	/// \brief Constructs a SqliteConnection
+	///
+	/// \param db_filename = String
 	CL_SqliteConnection(const CL_String &db_filename);
 
 	~CL_SqliteConnection();
-
 
 /// \}
 /// \name Attributes
@@ -56,13 +57,11 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -71,6 +70,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

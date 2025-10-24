@@ -40,17 +40,17 @@ void App::draw_font_info()
 	offset_y += gap;
 	switch (selected_fontclass)
 	{
-		case native:
-			small_font.draw_text(gc, offset_x, offset_y, cl_format("Native (Pixel buffer based)", font_desc.get_typeface_name()),  CL_Colorf::white);
+		case font_freetype:
+			small_font.draw_text(gc, offset_x, offset_y, cl_format("Freetype (CL_Texture based)", font_desc.get_typeface_name()),  CL_Colorf::white);
 			break;
-		case freetype:
-			small_font.draw_text(gc, offset_x, offset_y, cl_format("Freetype (Pixel buffer based)", font_desc.get_typeface_name()),  CL_Colorf::white);
+		case font_system:
+			small_font.draw_text(gc, offset_x, offset_y, cl_format("System (CL_Texture based)", font_desc.get_typeface_name()),  CL_Colorf::white);
 			break;
-		case texture:
-			small_font.draw_text(gc, offset_x, offset_y, cl_format("Texture (Texture based)", font_desc.get_typeface_name()),  CL_Colorf::white);
-			break;
-		case vector:
+		case font_vector:
 			small_font.draw_text(gc, offset_x, offset_y, cl_format("Vector (Triangle based)", font_desc.get_typeface_name()),  CL_Colorf::white);
+			break;
+		case font_sprite:
+			small_font.draw_text(gc, offset_x, offset_y, cl_format("Sprite (CL_Sprite based)", font_desc.get_typeface_name()),  CL_Colorf::white);
 			break;
 	}
 	offset_y += gap;
@@ -185,39 +185,33 @@ void App::on_lineedit_changed(CL_InputEvent e)
 	font_size = selected_font.get_text_size(gc, font_text);
 }
 
-void App::on_button_clicked_class_native(CL_PushButton *button)
-{
-	if (!button_typeface_sans_ptr->is_enabled())
-	{
-		font_desc.set_typeface_name("Tahoma");
-		button_typeface_sans_ptr->set_enabled();
-		button_typeface_tahoma_ptr->set_enabled();
-	}
-	button_typeface_texture_ptr->set_enabled(false);
-	selected_fontclass = native;
-	select_font();
-}
-
 void App::on_button_clicked_class_freetype(CL_PushButton *button)
 {
-	selected_fontclass = freetype;
-	font_desc.set_typeface_name("../DiceWar/Resources/accid___.ttf");
+	selected_fontclass = font_freetype;
+	font_desc.set_typeface_name("../DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf");
 	button_typeface_sans_ptr->set_enabled(false);
 	button_typeface_tahoma_ptr->set_enabled(false);
-	button_typeface_texture_ptr->set_enabled(false);
 	select_font();
 }
 
 void App::on_button_clicked_class_vector(CL_PushButton *button)
 {
-	selected_fontclass = vector;
-	font_desc.set_typeface_name("../DiceWar/Resources/accid___.ttf");
+	selected_fontclass = font_vector;
+	font_desc.set_typeface_name("../DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf");
 	button_typeface_sans_ptr->set_enabled(false);
 	button_typeface_tahoma_ptr->set_enabled(false);
-	button_typeface_texture_ptr->set_enabled(false);
 	select_font();
 }
-void App::on_button_clicked_class_texture(CL_PushButton *button)
+
+void App::on_button_clicked_class_sprite(CL_PushButton *button)
+{
+	selected_fontclass = font_sprite;
+	font_desc.set_typeface_name("(Resources)");
+	button_typeface_sans_ptr->set_enabled(false);
+	button_typeface_tahoma_ptr->set_enabled(false);
+	select_font();
+}
+void App::on_button_clicked_class_system(CL_PushButton *button)
 {
 	if (!button_typeface_sans_ptr->is_enabled())
 	{
@@ -225,28 +219,19 @@ void App::on_button_clicked_class_texture(CL_PushButton *button)
 		button_typeface_sans_ptr->set_enabled();
 		button_typeface_tahoma_ptr->set_enabled();
 	}
-	button_typeface_texture_ptr->set_enabled(true);
-	selected_fontclass = texture;
+	selected_fontclass = font_system;
 	select_font();
 }
 
 void App::on_button_clicked_typeface_tahoma(CL_PushButton *button)
 {
-	texture_typeface_flag = false;
 	font_desc.set_typeface_name("Tahoma");
 	select_font();
 }
 
 void App::on_button_clicked_typeface_sans(CL_PushButton *button)
 {
-	texture_typeface_flag = false;
 	font_desc.set_typeface_name("Microsoft Sans Serif");
-	select_font();
-}
-
-void App::on_button_clicked_typeface_texture(CL_PushButton *button)
-{
-	texture_typeface_flag = true;
 	select_font();
 }
 

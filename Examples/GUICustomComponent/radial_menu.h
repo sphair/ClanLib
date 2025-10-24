@@ -49,16 +49,15 @@ private:
 
 	CL_Sprite image_pointer;
 
-	CL_Font font_normal;
-	CL_Colorf text_color_normal;
-	float font_normal_height;
+	CL_Font normal_font;
+	CL_Colorf normal_text_color;
+	float normal_font_height;
+	float normal_text_distance;
 
-	CL_Font font_selected;
-	CL_Colorf text_color_selected;
-	float font_selected_height;
-
-	float text_distance;
-	float text_distance_selected;
+	CL_Font selected_font;
+	CL_Colorf selected_text_color;
+	float selected_font_height;
+	float selected_text_distance;
 
 	int selected_index;
 	CL_Angle selected_angle;

@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -54,7 +52,6 @@ public:
 
 	virtual ~CL_EarClipResult();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -67,13 +64,11 @@ public:
 	/** Memory  is preallocated for all triangles at creation. Use the returned reference to modify the triangles.*/
 	CL_EarClipTriangulator_Triangle &get_triangle(int index);
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -83,6 +78,5 @@ private:
 	CL_SharedPtr<CL_EarClipResult_Impl> impl;
 /// \}
 };
-
 
 /// \}

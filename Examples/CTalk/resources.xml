@@ -1,96 +1,69 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <resources>
-	<section name="Dialogs">
-		<components name="connect">
-			<label
-				name="label_title"
-				x="20"
-				y="20"
-				width="500"
-				height="500"
-				text="Welcome to the CTalk IRC Client." />
-
-			<label
-				name="label_server"
-				x="20"
-				y="65"
-				width="100"
-				height="17"
-				text="Server:" />
-			
-			<inputbox
-				name="inputbox_server"
-				x="20"
-				y="80"
-				width="300"
-				height="17"
-				tab_id="0" />
-				
-			<label
-				name="label_fullname"
-				x="20"
-				y="105"
-				width="100"
-				height="17"
-				text="Full name:" />
-
-			<inputbox
-				name="inputbox_fullname"
-				x="20"
-				y="120"
-				width="300"
-				height="17"
-				tab_id="1" />
-
-			<label
-				name="label_username"
-				x="20"
-				y="145"
-				width="100"
-				height="17"
-				text="Nick:" />
-				
-			<inputbox
-				name="inputbox_username"
-				x="20"
-				y="160"
-				width="300"
-				height="17"
-				tab_id="2" />
-				
-			<label
-				name="label_password"
-				x="20"
-				y="185"
-				width="100"
-				height="17"
-				text="Password:" />
-
-			<inputbox
-				name="inputbox_password"
-				x="20"
-				y="200"
-				width="300"
-				height="17"
-				tab_id="3" />
-				
-			<button
-				name="button_ok"
-				x="25"
-				y="245"
-				width="50"
-				height="20"
-				tab_id="4"
-				text="Ok" />
-				
-			<button
-				name="button_cancel"
-				x="80"
-				y="245"
-				width="50"
-				height="20"
-				tab_id="5"
-				text="Cancel" />
-		</components>
-	</section>
+  <image name="Ribbon">
+    <image file="Resources/ribbon_background.png" />
+  </image>
+  <image name="RibbonTab">
+    <image file="Resources/ribbon_tab.png" />
+  </image>
+  <image name="RibbonSection">
+    <image file="Resources/ribbon_section.png" />
+  </image>
+  <image name="ChatView">
+    <image file="Resources/chatview_background.png" />
+  </image>
+  <image name="ChatViewBlack">
+    <image file="Resources/chatview_black_background.png" />
+  </image>
+  <image name="ChatUsers">
+    <image file="Resources/chatusers_background.png" />
+  </image>
+  <image name="ChatUsersBlack">
+    <image file="Resources/chatusers_black_background.png" />
+  </image>
+  <image name="ChatInput">
+    <image file="Resources/chatinput_background.png" />
+  </image>
+  <image name="ChatInputBlack">
+    <image file="Resources/chatinput_black_background.png" />
+  </image>
+  <image name="ChannelTopic">
+    <image file="Resources/channeltopic_background.png" />
+  </image>
+  <image name="ChannelTopicBlack">
+    <image file="Resources/channeltopic_black_background.png" />
+  </image>
+  <image name="Workspace">
+    <image file="Resources/workspace_background.png" />
+  </image>
+  <image name="WorkspaceTab">
+    <image file="Resources/workspace_tab.png" />
+  </image>
+  <image name="PreferencesLabelArea">
+    <image file="Resources/preferences_labelarea.png" />
+  </image>
+  <image name="PreferencesPageArea">
+    <image file="Resources/preferences_pagearea.png" />
+  </image>
+  <image name="PreferencesLabel">
+    <image file="Resources/preferences_label.png" />
+  </image>
+  <image name="ScrollbarBlackVertThumbNormal">
+    <image file="Resources/scrollbar_black_vert_thumb_normal.png"/>
+  </image>
+  <image name="ScrollbarBlackVertTrackNormal">
+    <image file="Resources/scrollbar_black_vert_track_normal.png"/>
+  </image>
+  <image name="ScrollbarBlackVertButtonUpNormal">
+    <image file="Resources/scrollbar_black_vert_button_up_normal_withglyph.png"/>
+  </image>
+  <image name="ScrollbarBlackVertButtonDownNormal">
+    <image file="Resources/scrollbar_black_vert_button_down_normal_withglyph.png"/>
+  </image>
+  <image name="ScrollbarBlackVertThumbGribberNormal">
+    <image file="Resources/scrollbar_black_vert_thumb_gripper_normal.png"/>
+  </image>
+  <image name="ListviewBlackColumnHeaderNormal">
+    <image file="Resources/listview_black_column_header_normal.png"/>
+  </image>
 </resources>

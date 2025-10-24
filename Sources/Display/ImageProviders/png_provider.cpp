@@ -24,32 +24,95 @@
 **  File Author(s):
 **
 **    (if your name is missing here, please add it)
+**    Harry Storbacka
 */
 
 #include "Display/precomp.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/png_provider.h"
 #include "png_provider_impl.h"
-#include <errno.h>
-#include <stdio.h>
+#include <cerrno>
+#include <cstdio>
+
+
+class CustomIOFunctions
+{
+public:
+	static void read(png_structp png_ptr, png_bytep data, png_size_t length);
+	static void write(png_structp png_ptr, png_bytep data, png_size_t length);
+	static void flush(png_structp png_ptr);
+};
+
+void CustomIOFunctions::read( png_structp png_ptr, png_bytep data, png_size_t length )
+{
+	CL_IODevice *iodev = (CL_IODevice*)png_ptr->io_ptr;
+	iodev->read(data, length);
+}
+
+void CustomIOFunctions::write( png_structp png_ptr, png_bytep data, png_size_t length )
+{
+	CL_IODevice *iodev = (CL_IODevice*)png_ptr->io_ptr;
+	iodev->write(data, length);
+}
+
+void CustomIOFunctions::flush( png_structp png_ptr )
+{
+	// CL_IODevice doesn't have a flush().
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PNGProvider construction:
 
 CL_PixelBuffer CL_PNGProvider::load(
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 {
 	CL_PNGProvider_Impl png(filename, directory);
+	return CL_PixelBuffer(png.width, png.height, png.pitch, png.format, png.palette, png.get_data());
+}
+
+CL_PixelBuffer CL_PNGProvider::load(
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	return CL_PNGProvider::load(filename, dir);
+}
+
+CL_PixelBuffer CL_PNGProvider::load(CL_IODevice &iodev)
+{
+	CL_PNGProvider_Impl png(iodev);
 	return CL_PixelBuffer(png.width, png.height, png.pitch, png.format, png.palette, png.get_data());
 }
 
 void CL_PNGProvider::save(
 	CL_PixelBuffer buffer,
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	CL_VirtualDirectory &directory)
+{
+	CL_IODevice file = directory.open_file(filename, CL_File::create_always);
+	save(buffer, file);
+}
+
+void CL_PNGProvider::save(
+	CL_PixelBuffer buffer,
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	CL_PNGProvider::save(buffer, filename, dir);
+
+}
+
+void CL_PNGProvider::save(CL_PixelBuffer buffer, CL_IODevice &iodev)
 {
 	if (buffer.get_format() != CL_PixelFormat::abgr8888)
 	{
@@ -62,28 +125,14 @@ void CL_PNGProvider::save(
 		buffer = newbuf;
 	}
 
-	FILE *fp = 0;
-#ifdef _CRT_INSECURE_DEPRECATE
-	errno_t result = fopen_s(&fp, CL_StringHelp::text_to_local8(filename).c_str(), "wb");
-	if (result != 0)
-	{
-		char buffer[128];
-		strerror_s(buffer, 128, result);
-		throw CL_Exception(CL_StringHelp::local8_to_text(buffer));
-	}
-#else
-	fp = fopen(CL_StringHelp::text_to_local8(filename).c_str(), "wb");
-	if (fp == NULL)
-		throw CL_Exception(CL_StringHelp::local8_to_text(strerror(errno)));
-#endif
-	
 	png_structp png_ptr;
 	png_infop info_ptr;
 
 	png_ptr  = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	info_ptr = png_create_info_struct(png_ptr);
 
-	png_init_io(png_ptr, fp);
+	png_set_read_fn(png_ptr, &iodev, &CustomIOFunctions::read);
+	png_set_write_fn(png_ptr, &iodev, &CustomIOFunctions::write, CustomIOFunctions::flush);
 
 	#ifndef PNG_COLOR_TYPE_RGBA
 	#define PNG_COLOR_TYPE_RGBA PNG_COLOR_TYPE_RGB_ALPHA
@@ -121,6 +170,7 @@ void CL_PNGProvider::save(
 
 	delete[] image;
 	delete[] row_pointers;
-
-	fclose(fp);
 }
+
+
+

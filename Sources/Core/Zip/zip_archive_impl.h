@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/Zip/zip_file_entry.h"
 #include "API/Core/IOData/iodevice.h"
 #include "zip_flags.h"

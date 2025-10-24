@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_Signals clanCore Signals
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "slot.h"
 #include "signals_impl.h"

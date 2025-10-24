@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include "../api_network.h"
 
 /// \brief URL helper functions.
@@ -59,5 +58,4 @@ public:
 	static CL_StringRef get_query(const CL_StringRef &url);
 /// \}
 };
-
 

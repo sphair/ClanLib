@@ -6,25 +6,12 @@ IRC/dcc_download.cpp \
 IRC/dcc_download_generic.cpp \
 IRC/irc_connection.cpp \
 IRC/irc_connection_generic.cpp \
-NetObjects/netobject_client.cpp \
-NetObjects/netobject_client_generic.cpp \
-NetObjects/netobject_controller.cpp \
-NetObjects/netobject_controller_generic.cpp \
-NetObjects/netobject_server.cpp \
-NetObjects/netobject_server_generic.cpp \
 NetGame/client.cpp \
 NetGame/connection.cpp \
 NetGame/event.cpp \
 NetGame/event_value.cpp \
 NetGame/network_data.cpp \
 NetGame/server.cpp \
-NetSession/netcomputer.cpp \
-NetSession/netcomputer_impl.cpp \
-NetSession/netgroup.cpp \
-NetSession/netsession.cpp \
-NetSession/netsession_impl.cpp \
-NetSession/netstream.cpp \
-NetSession/packets.cpp \
 Web/http_client_connection.cpp \
 Web/http_request_handler.cpp \
 Web/http_request_handler_impl.cpp \
@@ -42,17 +29,19 @@ Socket/dns_resolver.cpp \
 Socket/dns_resolver_impl.cpp \
 Socket/dns_resource_record.cpp \
 Socket/iodevice_provider_tcp_connection.cpp \
+Socket/socket_error.cpp \
 Socket/socket_name.cpp \
 Socket/tcp_connection.cpp \
 Socket/tcp_listen.cpp \
 Socket/tcp_listen_impl.cpp \
-Socket/socket_error.cpp \
 Socket/udp_socket.cpp \
-Socket/udp_socket_impl.cpp
+Socket/udp_socket_impl.cpp \
+Socket/unix_socket.cpp
 
 if WIN32
 libclanNetwork_la_SOURCES += \
 Socket/event_provider_win32socket.cpp \
+Socket/win32_socket.cpp \
 setupnetwork_win32.cpp
 else
 libclanNetwork_la_SOURCES += \

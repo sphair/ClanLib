@@ -68,5 +68,4 @@ private:
 	CL_Texture current_textures[4];
 	int num_current_textures;
 	CL_Sizef tex_sizes[4];
-	static const CL_Pointf texel_center;
 };

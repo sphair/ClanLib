@@ -62,133 +62,58 @@ int CL_Service_Win32::main(int argc, char **argv)
 
 	if (argc == 2 && args[1] == cl_text("-debug"))
 	{
-		debug_mode = true;
-		SetConsoleCtrlHandler(&CL_Service_Win32::control_handler, TRUE);
-
-		service_start(args);
-		while (true)
-		{
-			int wakeup_reason = CL_Event::wait(stop_event, reload_event);
-			if (wakeup_reason == 1)
-				service_reload();
-			else
-				break;
-		}
-		service_stop();
-		return 0;
+		return run_debug(args);
 	}
 	else if (argc == 2 && args[1] == cl_text("-install"))
 	{
-		TCHAR exe_filename[MAX_PATH];
-		BOOL result = GetModuleFileName(0, exe_filename, 1024);
-		if (result == FALSE)
-		{
-			CL_Console::write_line(cl_text("Could not get install service. Unable to retrieve executable path."));
-			return 1;
-		}
-
-		SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
-		if (handle_manager == 0)
-		{
-			CL_Console::write_line(cl_text("Could not get install service. Failed to open service control manager."));
-			return 2;
-		}
-
-		SC_HANDLE handle_service = CreateService(
-			handle_manager, service_name.c_str(), service_name.c_str(),
-			SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_DEMAND_START,
-			SERVICE_ERROR_NORMAL, exe_filename, 0, 0, 0, 0, 0);
-		if (handle_service == 0)
-		{
-			CloseServiceHandle(handle_manager);
-			CL_Console::write_line(cl_text("Could not create service in service control manager."));
-			return 3;
-		}
-
-		CloseServiceHandle(handle_service);
-		CloseServiceHandle(handle_manager);
-
-		CL_Console::write_line(cl_text("%1 installed."), service_name);
-		return 0;
+		return run_install();
 	}
 	else if (argc == 2 && args[1] == cl_text("-uninstall"))
 	{
-		SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
-		if (handle_manager == 0)
-		{
-			CL_Console::write_line(cl_text("Could not get uninstall service. Failed to open service control manager."));
-			return 1;
-		}
-
-		SC_HANDLE handle_service = OpenService(
-			handle_manager, service_name.c_str(), SERVICE_ALL_ACCESS);
-		if (handle_service == 0)
-		{
-			CloseServiceHandle(handle_manager);
-			CL_Console::write_line(cl_text("Could not open service in service control manager."));
-			return 2;
-		}
-
-		SERVICE_STATUS service_status;
-		memset(&service_status, 0, sizeof(SERVICE_STATUS));
-		if (ControlService(handle_service, SERVICE_CONTROL_STOP, &service_status))
-		{
-			CL_Console::write(cl_text("Stopping %1.."), service_name);
-			Sleep(1000);
-			while (QueryServiceStatus(handle_service, &service_status))
-			{
-				if (service_status.dwCurrentState == SERVICE_STOP_PENDING)
-				{
-					CL_Console::write(cl_text("."));
-					Sleep(1000);
-				}
-				else
-				{
-					break;
-				}
-			}
-			CL_Console::write_line(cl_text(""));
-			if (service_status.dwCurrentState == SERVICE_STOPPED)
-				CL_Console::write_line(cl_text("%1 stopped."), service_name);
-			else
-				CL_Console::write_line(cl_text("%1 failed to stop."), service_name);
-		}
-
-		if (DeleteService(handle_service))
-			CL_Console::write_line(cl_text("%1 removed."), service_name);
-		else
-			CL_Console::write_line(cl_text("Unable to uninstall service. DeleteService failed."));
-
-		CloseServiceHandle(handle_service);
-		CloseServiceHandle(handle_manager);
-		return 0;
+		return run_uninstall();
 	}
 	else
 	{
-		CL_Console::write_line(cl_text("Service parameters:"));
-		CL_Console::write_line(cl_text("  -install            - Install service"));
-		CL_Console::write_line(cl_text("  -uninstall          - Remove the service"));
-		CL_Console::write_line(cl_text("  -debug              - Run service as a console application"));
-		CL_Console::write_line(cl_text(""));
-		CL_Console::write_line(cl_text("StartServiceCtrlDispatcher being called."));
-		CL_Console::write_line(cl_text("This may take several seconds. Please wait."));
-
-		SERVICE_TABLE_ENTRY dispatch_table[] =
-		{
-			{ (LPTSTR) service_name.c_str(), (LPSERVICE_MAIN_FUNCTION) &CL_Service_Win32::service_thread_main },
-			{ 0, 0 }
-		};
-
-		BOOL start_service = StartServiceCtrlDispatcher(dispatch_table);
-		if (start_service == FALSE)
-			return 0;
-
-		return 0;
+		print_help();
+		return run_service();
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Service_Win32 Implementation:
+
+int CL_Service_Win32::run_debug(std::vector<CL_String> args)
+{
+	debug_mode = true;
+	SetConsoleCtrlHandler(&CL_Service_Win32::control_handler, TRUE);
+
+	service_start(args);
+	while (true)
+	{
+		int wakeup_reason = CL_Event::wait(stop_event, reload_event);
+		if (wakeup_reason == 1)
+			service_reload();
+		else
+			break;
+	}
+	service_stop();
+	return 0;
+}
+
+int CL_Service_Win32::run_service()
+{
+	SERVICE_TABLE_ENTRY dispatch_table[] =
+	{
+		{ (LPTSTR) service_name.c_str(), (LPSERVICE_MAIN_FUNCTION) &CL_Service_Win32::service_thread_main },
+		{ 0, 0 }
+	};
+
+	BOOL start_service = StartServiceCtrlDispatcher(dispatch_table);
+	if (start_service == FALSE)
+		return 0;
+
+	return 0;
+}
 
 void CL_Service_Win32::service_thread_main(DWORD argc, LPTSTR *argv)
 {
@@ -285,4 +210,103 @@ VOID WINAPI CL_Service_Win32::service_ctrl(DWORD ctrl_code)
 	{
 		instance_win32->report_status(instance_win32->service_status.dwCurrentState, NO_ERROR, 0);
 	}
+}
+
+int CL_Service_Win32::run_install()
+{
+	TCHAR exe_filename[MAX_PATH];
+	BOOL result = GetModuleFileName(0, exe_filename, 1024);
+	if (result == FALSE)
+	{
+		CL_Console::write_line(cl_text("Could not install service. Unable to retrieve executable path."));
+		return 1;
+	}
+
+	SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
+	if (handle_manager == 0)
+	{
+		CL_Console::write_line(cl_text("Could not install service. Failed to open service control manager."));
+		return 2;
+	}
+
+	SC_HANDLE handle_service = CreateService(
+		handle_manager, service_name.c_str(), service_name.c_str(),
+		SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_DEMAND_START,
+		SERVICE_ERROR_NORMAL, exe_filename, 0, 0, 0, 0, 0);
+	if (handle_service == 0)
+	{
+		CloseServiceHandle(handle_manager);
+		CL_Console::write_line(cl_text("Could not create service in service control manager."));
+		return 3;
+	}
+
+	CloseServiceHandle(handle_service);
+	CloseServiceHandle(handle_manager);
+
+	CL_Console::write_line(cl_text("%1 installed."), service_name);
+	return 0;
+}
+
+int CL_Service_Win32::run_uninstall()
+{
+	SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
+	if (handle_manager == 0)
+	{
+		CL_Console::write_line(cl_text("Could not uninstall service. Failed to open service control manager."));
+		return 1;
+	}
+
+	SC_HANDLE handle_service = OpenService(
+		handle_manager, service_name.c_str(), SERVICE_ALL_ACCESS);
+	if (handle_service == 0)
+	{
+		CloseServiceHandle(handle_manager);
+		CL_Console::write_line(cl_text("Could not open service in service control manager."));
+		return 2;
+	}
+
+	SERVICE_STATUS service_status;
+	memset(&service_status, 0, sizeof(SERVICE_STATUS));
+	if (ControlService(handle_service, SERVICE_CONTROL_STOP, &service_status))
+	{
+		CL_Console::write(cl_text("Stopping %1.."), service_name);
+		Sleep(1000);
+		while (QueryServiceStatus(handle_service, &service_status))
+		{
+			if (service_status.dwCurrentState == SERVICE_STOP_PENDING)
+			{
+				CL_Console::write(cl_text("."));
+				Sleep(1000);
+			}
+			else
+			{
+				break;
+			}
+		}
+		CL_Console::write_line(cl_text(""));
+		if (service_status.dwCurrentState == SERVICE_STOPPED)
+			CL_Console::write_line(cl_text("%1 stopped."), service_name);
+		else
+			CL_Console::write_line(cl_text("%1 failed to stop."), service_name);
+	}
+
+	if (DeleteService(handle_service))
+		CL_Console::write_line(cl_text("%1 removed."), service_name);
+	else
+		CL_Console::write_line(cl_text("Unable to uninstall service. DeleteService failed."));
+
+	CloseServiceHandle(handle_service);
+	CloseServiceHandle(handle_manager);
+	return 0;
+}
+
+void CL_Service_Win32::print_help()
+{
+	CL_Console::write_line(cl_text("Service parameters:"));
+	CL_Console::write_line(cl_text("  -install            - Install service"));
+	CL_Console::write_line(cl_text("  -uninstall          - Remove the service"));
+	CL_Console::write_line(cl_text("  -debug              - Run service as a console application"));
+	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line(cl_text("StartServiceCtrlDispatcher being called."));
+	CL_Console::write_line(cl_text("This may take several seconds. Please wait."));
 }

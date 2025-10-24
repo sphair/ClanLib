@@ -28,51 +28,10 @@
 
 #pragma once
 
-
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/mutex.h"
-
-class CL_WSAEventSelectHandler
-{
-/// \name Construction
-/// \{
-
-public:
-	CL_WSAEventSelectHandler();
-
-	~CL_WSAEventSelectHandler();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	SOCKET socket_handle;
-
-	HANDLE wsa_handle;
-
-	HANDLE read_handle;
-
-	HANDLE write_handle;
-
-	HANDLE exception_handle;
-
-	static CL_Mutex mutex;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	void start_select(SOCKET socket_handle);
-
-	void stop_select();
-
-	void update_events();
-/// \}
-};
+#include "API/Core/System/interlocked_variable.h"
+#include "win32_socket.h"
 
 class CL_EventProvider_Win32Socket : public CL_EventProvider
 {
@@ -87,8 +46,7 @@ public:
 		socket_event_exception
 	};
 
-	CL_EventProvider_Win32Socket(CL_WSAEventSelectHandler *handler, SocketEventType type);
-
+	CL_EventProvider_Win32Socket(CL_Win32Socket *socket, SocketEventType type);
 	~CL_EventProvider_Win32Socket();
 
 
@@ -98,9 +56,7 @@ public:
 
 public:
 	EventType get_event_type(int index) { return type_native; }
-
 	HANDLE get_event_handle(int index);
-
 	int get_num_event_handles();
 
 
@@ -110,17 +66,14 @@ public:
 
 public:
 	virtual bool check_before_wait();
-
 	virtual bool check_after_wait(int index);
 
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
-	CL_WSAEventSelectHandler *handler;
-
+	CL_Win32Socket *socket;
 	SocketEventType type;
 /// \}
 };

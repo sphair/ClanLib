@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 ListView::ListView(GUI *gui) :
-	CL_Window(CL_Rect(32, 256*1 + 180*1 + 32, CL_Size(256*2, 180*2)), &gui->get_gui_manager(), CL_GUITopLevelDescription("List View & Toolbar")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("List View & Toolbar", CL_Rect(32, 256*1 + 180*1 + 32, CL_Size(256*2, 180*2)), false)),
 	gui(gui)
 {
 	set_draggable(true);

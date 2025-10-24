@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/Math/delauney_triangulator.h"
 
 class CL_DelauneyTriangulator_Generic

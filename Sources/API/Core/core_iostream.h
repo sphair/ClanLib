@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include <iosfwd>
 #include <iostream>
 
@@ -87,7 +86,4 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Vec4<T>& vec)
 	  << vec.w << "]";
 	return s;
 }
-
-
-
 

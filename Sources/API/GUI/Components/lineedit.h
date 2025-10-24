@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -52,10 +50,13 @@ class CL_API_GUI CL_LineEdit : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a LineEdit
+	///
+	/// \param parent = GUIComponent
 	CL_LineEdit(CL_GUIComponent *parent);
 
 	virtual ~CL_LineEdit();
-
 
 /// \}
 /// \name Attributes
@@ -69,18 +70,39 @@ public:
 		align_right
 	};
 
+	/// \brief Get Alignment
+	///
+	/// \return alignment
 	Alignment get_alignment() const;
 
+	/// \brief Is Read only
+	///
+	/// \return true = read_only
 	bool is_read_only() const;
 
+	/// \brief Is Lowercase
+	///
+	/// \return true = lowercase
 	bool is_lowercase() const;
 
+	/// \brief Is Uppercase
+	///
+	/// \return true = uppercase
 	bool is_uppercase() const;
 
+	/// \brief Is Password mode
+	///
+	/// \return true = password_mode
 	bool is_password_mode() const;
 
+	/// \brief Get Max length
+	///
+	/// \return max_length
 	int get_max_length() const;
 
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 
 	/// \brief Returns the text converted to integer.
@@ -89,54 +111,116 @@ public:
 	/// \brief Returns the text converted to float.
 	float get_text_float() const;
 
+	/// \brief Get Selection
+	///
+	/// \return selection
 	CL_String get_selection() const;
 
+	/// \brief Get Selection start
+	///
+	/// \return selection_start
 	int get_selection_start() const;
 
+	/// \brief Get Selection length
+	///
+	/// \return selection_length
 	int get_selection_length() const;
 
+	/// \brief Get Cursor pos
+	///
+	/// \return cursor_pos
 	int get_cursor_pos() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
 
 	/// \brief Returns the size (pixels) of the text in the lineedit, or of the string given as parameter.
-	CL_Size get_text_size() const;
-	CL_Size get_text_size(const CL_String &str) const;
+	CL_Size get_text_size();
 
+	/// \brief Get text size
+	///
+	/// \param str = String
+	///
+	/// \return Size
+	CL_Size get_text_size(const CL_String &str);
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Select all
 	void select_all();
 
+	/// \brief Set alignment
+	///
+	/// \param alignment = Alignment
 	void set_alignment(Alignment alignment);
 
+	/// \brief Set read only
+	///
+	/// \param enable = bool
 	void set_read_only(bool enable = true);
 
+	/// \brief Set lowercase
+	///
+	/// \param enable = bool
 	void set_lowercase(bool enable = true);
 
+	/// \brief Set uppercase
+	///
+	/// \param enable = bool
 	void set_uppercase(bool enable = true);
 
+	/// \brief Set password mode
+	///
+	/// \param enable = bool
 	void set_password_mode(bool enable = true);
 
+	/// \brief Set numeric mode
+	///
+	/// \param enable = bool
+	/// \param decimals = bool
 	void set_numeric_mode(bool enable = true, bool decimals = false);
 
+	/// \brief Set max length
+	///
+	/// \param length = value
 	void set_max_length(int length);
 
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Set text
+	///
+	/// \param number = value
 	void set_text(int number);
 
+	/// \brief Set text
+	///
+	/// \param number = value
 	void set_text(float number);
 
+	/// \brief Set selection
+	///
+	/// \param pos = value
+	/// \param length = value
 	void set_selection(int pos, int length);
 
+	/// \brief Clear selection
 	void clear_selection();
 
+	/// \brief Set cursor pos
+	///
+	/// \param pos = value
 	void set_cursor_pos(int pos);
 
+	/// \brief Delete selected text
 	void delete_selected_text();
 
 	/// \brief Resize the components width so that its whole text becomes visible.
@@ -145,6 +229,9 @@ public:
 	/// \brief Use mask to restrict accepted input.
 	void set_input_mask(const CL_StringRef &mask);
 
+	/// \brief Set decimal character
+	///
+	/// \param decimal_char = String Ref
 	void set_decimal_character(const CL_StringRef &decimal_char);
 
 /// \}
@@ -156,6 +243,9 @@ public:
 
 	CL_Callback_v1<CL_InputEvent> &func_after_edit_changed();
 
+	/// \brief Func selection changed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_selection_changed();
 
 	/// \brief Callback invoked after the lineedit gained focus.
@@ -164,13 +254,15 @@ public:
 	/// \brief Callback invoked when the lineedit is about to lose focus.
 	CL_Callback_v0 &func_focus_lost();
 
+	/// \brief Func enter pressed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_enter_pressed();
 
 	/// \brief Callback invoked when a event not processed by lineedit occurs.
 	/** This includes keys such as Enter, Escape, UP and DOWN.
       * The callback should return true if the event was processsed, else false. */
 	CL_Callback_1<bool, CL_InputEvent> &func_unhandled_event();
-
 
 /// \}
 /// \name Implementation
@@ -180,6 +272,5 @@ private:
 	CL_SharedPtr<CL_LineEdit_Impl> impl;
 /// \}
 };
-
 
 /// \}

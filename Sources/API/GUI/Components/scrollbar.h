@@ -47,6 +47,10 @@ class CL_API_GUI CL_ScrollBar : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a ScrollBar
+	///
+	/// \param parent = GUIComponent
 	CL_ScrollBar(CL_GUIComponent *parent);
 
 	virtual ~CL_ScrollBar();
@@ -55,20 +59,45 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Is Vertical
+	///
+	/// \return true = vertical
 	bool is_vertical() const;
 
+	/// \brief Is Horizontal
+	///
+	/// \return true = horizontal
 	bool is_horizontal() const;
 
+	/// \brief Get Min
+	///
+	/// \return min
 	int get_min() const;
 
+	/// \brief Get Max
+	///
+	/// \return max
 	int get_max() const;
 
+	/// \brief Get Line step
+	///
+	/// \return line_step
 	int get_line_step() const;
 
+	/// \brief Get Page step
+	///
+	/// \return page_step
 	int get_page_step() const;
 
+	/// \brief Get Position
+	///
+	/// \return position
 	int get_position() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
 
 	/// \brief Returns the preferred width of the scrollbar.
@@ -81,18 +110,39 @@ public:
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Set vertical
 	void set_vertical();
 
+	/// \brief Set horizontal
 	void set_horizontal();
 
+	/// \brief Set min
+	///
+	/// \param scroll_min = value
 	void set_min(int scroll_min);
 
+	/// \brief Set max
+	///
+	/// \param scroll_max = value
 	void set_max(int scroll_max);
 
+	/// \brief Set line step
+	///
+	/// \param step = value
 	void set_line_step(int step);
 
+	/// \brief Set page step
+	///
+	/// \param step = value
 	void set_page_step(int step);
 
+	/// \brief Set ranges
+	///
+	/// \param scroll_min = value
+	/// \param scroll_max = value
+	/// \param line_step = value
+	/// \param page_step = value
 	void set_ranges(int scroll_min, int scroll_max, int line_step, int page_step);
 
 	/// \brief Calculate the scrollbar range and page_step size for scrolling in pixels.
@@ -102,6 +152,9 @@ public:
 	     be moved to show all the data.</p>*/
 	void calculate_ranges(int view_size, int total_size);
 
+	/// \brief Set position
+	///
+	/// \param pos = value
 	void set_position(int pos);
 
 /// \}

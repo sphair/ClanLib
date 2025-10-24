@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "iodevice.h"
@@ -54,8 +48,10 @@ public:
 	/// \brief Constructs a memory I/O device.
 	CL_IODevice_Memory();
 
+	/// \brief Constructs a IODevice Memory
+	///
+	/// \param data = Data Buffer
 	CL_IODevice_Memory(CL_DataBuffer &data);
-
 
 /// \}
 /// \name Attributes
@@ -65,15 +61,16 @@ public:
 	/// \brief Retrieves the data buffer for the memory device.
 	const CL_DataBuffer &get_data() const;
 
+	/// \brief Get Data
+	///
+	/// \return data
 	CL_DataBuffer &get_data();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -82,6 +79,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

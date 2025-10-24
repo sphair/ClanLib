@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -52,7 +50,6 @@ class CL_API_DISPLAY CL_DisplayTargetProvider
 public:
 	virtual ~CL_DisplayTargetProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -60,7 +57,6 @@ public:
 public:
 	/// \brief Return a pointer to the message queue shared by all CL_DisplayWindow's.
 	virtual CL_DisplayMessageQueue_Provider *get_message_queue() const = 0;
-
 
 /// \}
 /// \name Operations
@@ -73,7 +69,6 @@ public:
 	/// \brief Allocates a display window provider.
 	virtual CL_DisplayWindowProvider *alloc_display_window() = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -81,6 +76,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

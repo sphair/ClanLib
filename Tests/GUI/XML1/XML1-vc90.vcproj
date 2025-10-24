@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="Button1-vc80"
+	Name="XML1"
 	ProjectGUID="{855231D4-578D-4FD2-B5E0-042C6E81627A}"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
@@ -193,7 +193,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\..\..\Resources\GUIThemeDefault\pushbutton.css"
+				RelativePath=".\dialog.xml"
 				>
 			</File>
 			<File

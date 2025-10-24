@@ -35,7 +35,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextureGroup_Impl construction:
 
-CL_TextureGroup_Impl::CL_TextureGroup_Impl(CL_GraphicContext context, const CL_Size &texture_sizes)
+CL_TextureGroup_Impl::CL_TextureGroup_Impl(CL_GraphicContext &context, const CL_Size &texture_sizes)
 : initial_texture_size(texture_sizes), active_root(NULL), next_id(0)
 {
 }
@@ -93,7 +93,7 @@ std::vector<CL_Texture> CL_TextureGroup_Impl::get_textures() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextureGroup_Impl operations:
 
-CL_Subtexture CL_TextureGroup_Impl::add_new_node(CL_GraphicContext context, const CL_Size &texture_size)
+CL_Subtexture CL_TextureGroup_Impl::add_new_node(CL_GraphicContext &context, const CL_Size &texture_size)
 {
 
 	// Try inserting in current active texture
@@ -146,7 +146,7 @@ CL_Subtexture CL_TextureGroup_Impl::add_new_node(CL_GraphicContext context, cons
 	return CL_Subtexture(active_root->texture, node->image_rect);
 }
 
-CL_TextureGroup_Impl::RootNode *CL_TextureGroup_Impl::add_new_root(CL_GraphicContext context, const CL_Size &texture_size)
+CL_TextureGroup_Impl::RootNode *CL_TextureGroup_Impl::add_new_root(CL_GraphicContext &context, const CL_Size &texture_size)
 {
 	CL_Rect rect(CL_Point(0, 0), texture_size);
 	Node node(rect);

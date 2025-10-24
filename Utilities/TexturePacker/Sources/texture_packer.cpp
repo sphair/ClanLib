@@ -105,7 +105,7 @@ CL_TextureGroup *TexturePacker::pack(const CL_Size &texture_size, int border_siz
 				sprite_item->packed_sub_textures.push_back(sub_texture);
 
 				CL_Texture texture = frames[index].texture;
-				CL_PixelBuffer &pb = texture.get_pixeldata();
+				const CL_PixelBuffer &pb = texture.get_pixeldata();
 				CL_PixelBuffer new_pb;
 				add_border(pb, new_pb, border_size);
 				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb);
@@ -128,7 +128,7 @@ CL_TextureGroup *TexturePacker::pack(const CL_Size &texture_size, int border_siz
 				image_item->packed_sub_textures.push_back(sub_texture);
 
 				CL_Texture texture = frames[index].texture;
-				CL_PixelBuffer &pb = texture.get_pixeldata();
+				const CL_PixelBuffer &pb = texture.get_pixeldata();
 				CL_PixelBuffer new_pb;
 				add_border(pb, new_pb, border_size);
 				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb);
@@ -227,7 +227,7 @@ void TexturePacker::process_resource(CL_Resource &item_resource, std::vector<CL_
 	}
 }
 
-void TexturePacker::add_border(CL_PixelBuffer &pb, CL_PixelBuffer &new_pb, int border_size)
+void TexturePacker::add_border(const CL_PixelBuffer &pb, CL_PixelBuffer &new_pb, int border_size)
 {
 	if (border_size <=0)
 	{

@@ -25,22 +25,20 @@
 **
 **    Harry Storbacka
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
 
-
 #include "api_gui.h"
-#include "../Core/System/sharedptr.h"
 #include "gui_theme.h"
 
 class CL_GUIThemePart;
 class CL_GraphicContext;
-class CL_GUIThemeDefault_Impl;
+class CL_GUIThemeProvider_Default;
 
 /// \brief Default GUI theme.
 ///
@@ -54,61 +52,30 @@ public:
 	/// \brief Constructs a default GUI theme.
 	CL_GUIThemeDefault();
 
-	virtual ~CL_GUIThemeDefault();
-
+	~CL_GUIThemeDefault();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Allows the theme to alter GUI part properties.
-	/** <p>When a component queries a theme part for a property, the property
-	    is searched in the CSS document and then passed to get_property.  If
-	    the theme does not wish to alter the value of the property, it simply
-	    returns the css_value parameter.  The string returned by this function
-	    is the result of CL_GUIThemePart::get_property.</p>*/
-	virtual CL_StringRef get_property(
-		const CL_GUIThemePart &part,
-		const CL_StringRef &name,
-		const CL_StringRef &css_value);
 
-	/// \brief Returns the resource manager associated with the theme.
-	virtual CL_ResourceManager get_resources() const;
+	/// \brief Retrieves the gui theme provider.
+	CL_GUIThemeProvider_Default *get_provider() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Sets the resource manager to be used to retrieve resources.
-	virtual void set_resources(CL_ResourceManager resources);
-
-	/// \brief Renders a background box for the given theme part.
-	virtual void render_box(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_Rect &rect, const CL_Rect &clip_rect);
-
-	/// \brief Notifies the theme that a component has been destroyed.
-	/** <p>This notification allows a theme to clean up cached theme part
-	    resources used by the component.</p>*/
-	virtual void component_destroyed(CL_GUIComponent *component);
-
-	/// \brief Draw text on theme part.
-	CL_Rect render_text(
-		CL_GraphicContext &gc,
-		CL_GUIThemePart &part,
-		CL_Font &font,
-		const CL_StringRef &text, 
-		const CL_Rect &content_rect,
-		const CL_Rect &clip_rect);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_SharedPtr<CL_GUIThemeDefault_Impl> impl;
+
 /// \}
 };
-
 
 /// \}

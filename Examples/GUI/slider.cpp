@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 Slider::Slider(GUI *gui) : 
-	CL_Window(CL_Rect(256 + 32, 32, CL_Size(256, 256)), &gui->get_gui_manager(), CL_GUITopLevelDescription("Slider")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Slider", CL_Rect(256 + 32, 32, CL_Size(256, 256)), false)),
 	gui(gui)
 {
 	set_draggable(true);

@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
@@ -55,8 +49,12 @@ class CL_API_CORE CL_ZipWriter
 /// \{
 
 public:
-	CL_ZipWriter(CL_IODevice &output, bool storeFilenamesAsUTF8 = false);
 
+	/// \brief Constructs a ZipWriter
+	///
+	/// \param output = IODevice
+	/// \param storeFilenamesAsUTF8 = bool
+	CL_ZipWriter(CL_IODevice &output, bool storeFilenamesAsUTF8 = false);
 
 /// \}
 /// \name Operations
@@ -75,7 +73,6 @@ public:
 	/// \brief Writes the table of contents part of the zip file.
 	void write_toc();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -84,6 +81,5 @@ private:
 	CL_SharedPtr<CL_ZipWriter_Impl> impl;
 /// \}
 };
-
 
 /// \}

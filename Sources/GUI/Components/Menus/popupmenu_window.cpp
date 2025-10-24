@@ -55,20 +55,20 @@ CL_GUITopLevelDescription CL_PopupMenuWindow::create_toplevel_description()
 	window_desc.set_tool_window(true);
 	window_desc.set_visible(false);
 	window_desc.set_drop_shadow(true);
+	window_desc.set_position(CL_Rect(0,0,32,32), false);
 	return window_desc;
 }
 
-
 CL_PopupMenuWindow::CL_PopupMenuWindow(const CL_PopupMenu &menu, const CL_Point &position, CL_GUIComponent *owner, CL_GUIManager *manager)
-: CL_GUIComponent(CL_Rect(0,0,32,32), manager, create_toplevel_description(), true),
+: CL_GUIComponent(manager, create_toplevel_description(), true),
   menu(menu), selected(-1), keyboard_selected(false), mouse_pressed(false),
   child_popup(0), owner_popup(0)
 {
 	set_type_name(CssStr::PopupMenuWindow::type_name);
 	set_class_name(menu.get_class_name());
 
-	prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
-	prop_text_color_disabled = CL_GUIThemePartProperty(CssStr::text_color_disabled, cl_text("gray"));
+	prop_icon_column_width = CL_GUIThemePartProperty(cl_text("icon-column-width"), cl_text("30"));
+
 	create_parts();
 
 	CL_Point screen_pos = owner->component_to_screen_coords(position);
@@ -92,17 +92,18 @@ void CL_PopupMenuWindow::create_parts()
 	part_item_row = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_item_row);
 	part_item_icon = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_item_icon);
 	part_item_label = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_item_label);
+	part_item_check = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_item_check);
 	part_separator = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_separator);
 	part_submenu_arrow = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_submenu_arrow);
 	part_item_accel_label = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_item_accel_label);
 	part_menubar_joiner = CL_GUIThemePart(this, CssStr::PopupMenuWindow::part_menubar_joiner);
 
+	icon_column_width = part_component.get_property_int(prop_icon_column_width);
+	icon_size = part_item_icon.get_preferred_size();
+	check_size = part_item_check.get_preferred_size();
+
 	func_process_message().set(this, &CL_PopupMenuWindow::on_process_message);
 	func_render().set(this, &CL_PopupMenuWindow::on_render);
-
-	font = part_component.get_font();
-	text_color = part_component.get_property(prop_text_color);
-	text_color_disabled = part_component.get_property(prop_text_color_disabled);
 }
 
 void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
@@ -141,7 +142,7 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 				if (selected >= menu.item_count())
 					selected = 0;
 				keyboard_selected = true;
-				invalidate_rect();
+				request_repaint();
 			}
 			else if (input_event.id == CL_KEY_UP)
 			{
@@ -155,7 +156,7 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 				if (selected < 0)
 					selected = menu.item_count()-1;
 				keyboard_selected = true;
-				invalidate_rect();
+				request_repaint();
 			}
 			if (input_event.id == CL_KEY_LEFT)
 			{
@@ -224,6 +225,11 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 					if (pmi.is_null() || pmi.is_disabled() || pmi.is_separator() || pmi.has_submenu())
 						return;
 
+					if (pmi.is_checkable())
+					{
+						pmi.set_checked(!pmi.is_checked());
+					}
+
 					root_popup_win->set_clicked_item(pmi);
 					exit_with_code(pmi.get_id());
 				}
@@ -263,7 +269,7 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 				{
 					selected = line;
 					keyboard_selected = false;
-					invalidate_rect();
+					request_repaint();
 
 					delete child_popup;
 					child_popup = 0;
@@ -295,7 +301,7 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 				{
 					selected = -1;
 					keyboard_selected = false;
-					invalidate_rect();
+					request_repaint();
 				}
 			}
 		}
@@ -306,7 +312,7 @@ void CL_PopupMenuWindow::on_process_message(CL_GUIMessage &msg)
 		if (!keyboard_selected)
 		{
 			selected = false;
-			invalidate_rect();
+			request_repaint();
 		}
 	}
 }
@@ -355,6 +361,12 @@ void CL_PopupMenuWindow::on_render(CL_GraphicContext &gc, const CL_Rect &update_
 			part_item_icon.set_state(CssStr::selected, is_selected);
 			part_item_label.set_state(CssStr::selected, is_selected);
 
+			part_item_row.set_state(CssStr::disabled, item.is_disabled());
+			part_item_icon.set_state(CssStr::disabled, item.is_disabled());
+			part_item_check.set_state(CssStr::disabled, item.is_disabled());
+			part_item_label.set_state(CssStr::disabled, item.is_disabled());
+			part_item_accel_label.set_state(CssStr::disabled, item.is_disabled());
+
 			row_height = part_item_row.get_preferred_height();
 
 			// row rect
@@ -362,25 +374,32 @@ void CL_PopupMenuWindow::on_render(CL_GraphicContext &gc, const CL_Rect &update_
 			part_item_row.render_box(gc, row_rect, update_rect);
 			CL_Rect row_box = part_item_row.get_content_box(row_rect);
 
-			// icon
-			int icon_width = part_item_icon.get_preferred_width();
-			CL_Rect icon_rect(CL_Point(row_box.left, row_box.top), CL_Size(icon_width, row_box.get_height()));
-			part_item_icon.render_box(gc, icon_rect, update_rect);
-			CL_Rect icon_box = part_item_icon.get_content_box(icon_rect);
+			// icon or check
+			if (item.is_checkable())
+			{
+				if (item.is_checked())
+				{
+					CL_Rect rect(CL_Point(row_box.left, (row_box.top + row_box.bottom)/2 - check_size.height/2), check_size);
+					part_item_check.render_box(gc, rect, update_rect);
+				}
+			}
+			else
+			{
+				CL_Rect rect(CL_Point(row_box.left, (row_box.top + row_box.bottom)/2 - check_size.height/2), check_size);
+				CL_PixelBuffer pbuf_icon = item.get_icon();
+				if (!pbuf_icon.is_null())
+					gc.draw_pixels(rect.left, rect.top, pbuf_icon);
+			}
 
 			// item text
-			CL_Size text_size = font.get_text_size(gc, item.get_text());
+			CL_Size text_size = part_item_label.get_text_size(gc, item.get_text());
 			CL_Size text_full_size = part_item_label.get_render_box(text_size).get_size();
 
-			CL_Rect label_render_rect(icon_rect.right, row_box.top, icon_rect.right + text_full_size.width, row_box.bottom);
+			CL_Rect label_render_rect(row_box.left + icon_column_width, row_box.top, row_box.left + icon_column_width + text_full_size.width, row_box.bottom);
 			CL_Rect label_content_rect = part_item_label.get_content_box(label_render_rect);
 
 			part_item_label.render_box(gc, label_render_rect, update_rect);
-
-			font.draw_text(gc, label_content_rect.left,
-				label_content_rect.top + label_content_rect.get_height()/2 + text_size.height/2 - 2,
-				item.get_text(),
-				item.is_disabled() ? text_color_disabled : text_color);
+			part_item_label.render_text(gc, item.get_text(), label_content_rect, update_rect);
 
 			int center_y = row_box.get_center().y;
 			int arrow_width = part_submenu_arrow.get_preferred_width();
@@ -401,7 +420,7 @@ void CL_PopupMenuWindow::on_render(CL_GraphicContext &gc, const CL_Rect &update_
 			else if (!item.get_accelerator_text().empty())
 			{
 				// accelerator text
-				CL_Size accel_text_size = font.get_text_size(gc, item.get_accelerator_text());
+				CL_Size accel_text_size = part_item_accel_label.get_text_size(gc, item.get_accelerator_text());
 				CL_Size accel_text_full_size = part_item_accel_label.get_render_box(accel_text_size).get_size();
 
 				CL_Rect accel_render_rect(
@@ -412,10 +431,7 @@ void CL_PopupMenuWindow::on_render(CL_GraphicContext &gc, const CL_Rect &update_
 
 				CL_Rect accel_content_rect = part_item_accel_label.get_content_box(accel_render_rect);
 
-				font.draw_text( gc, accel_content_rect.left,
-					label_content_rect.top + label_content_rect.get_height()/2 + text_size.height/2 - 2,
-					item.get_accelerator_text(),
-					item.is_disabled() ? text_color_disabled : text_color);
+				part_item_accel_label.render_text( gc, item.get_accelerator_text(), accel_content_rect, update_rect);
 			}
 		}
 
@@ -425,7 +441,7 @@ void CL_PopupMenuWindow::on_render(CL_GraphicContext &gc, const CL_Rect &update_
 
 CL_Size CL_PopupMenuWindow::calc_desired_size()
 {
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 
 	CL_Size size(0,0);
 	int count = menu.item_count();
@@ -446,10 +462,10 @@ CL_Size CL_PopupMenuWindow::calc_desired_size()
 
 		int icon_width = part_item_icon.get_preferred_width();
 
-		CL_Size text_size = font.get_text_size(gc, item.get_text());
+		CL_Size text_size = part_item_label.get_text_size(gc, item.get_text());
 		CL_Size text_full_size = part_item_label.get_render_box(text_size).get_size();
 
-		CL_Size accel_text_size = font.get_text_size(gc, item.get_accelerator_text());
+		CL_Size accel_text_size = part_item_accel_label.get_text_size(gc, item.get_accelerator_text());
 		CL_Size accel_text_full_size = part_item_accel_label.get_render_box(accel_text_size).get_size();
 
 		int arrow_width = part_submenu_arrow.get_preferred_width();
@@ -481,7 +497,7 @@ CL_Rect CL_PopupMenuWindow::get_item_rect(int index)
 
 	CL_PopupMenuItem item = menu.get_item_at(index);
 
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 
 	CL_Rect content_area = part_component.get_content_box(get_geometry().get_size());
 	int w = content_area.get_width();

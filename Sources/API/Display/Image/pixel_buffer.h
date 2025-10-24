@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -51,6 +45,9 @@ class CL_Color;
 class CL_Colorf;
 class CL_PixelBuffer;
 class CL_PixelBuffer_Impl;
+class CL_ResourceManager;
+class CL_VirtualDirectory;
+class CL_IODevice;
 
 /// \brief Pixel data reference class.
 ///
@@ -71,12 +68,29 @@ public:
 	/// \param data Data pointer to pixel data.
 	CL_PixelBufferRef();
 
+	/// \brief Constructs a PixelBufferRef
+	///
+	/// \param buffer = Pixel Buffer
 	CL_PixelBufferRef(const CL_PixelBuffer &buffer);
 
+	/// \brief Constructs a PixelBufferRef
+	///
+	/// \param width = value
+	/// \param height = value
+	/// \param pitch = value
+	/// \param format = Pixel Format
+	/// \param data = void
 	CL_PixelBufferRef(int width, int height, int pitch, const CL_PixelFormat &format, const void *data);
 
+	/// \brief Constructs a PixelBufferRef
+	///
+	/// \param width = value
+	/// \param height = value
+	/// \param pitch = value
+	/// \param format = Pixel Format
+	/// \param palette = Palette
+	/// \param data = void
 	CL_PixelBufferRef(int width, int height, int pitch, const CL_PixelFormat &format, const CL_Palette *palette, const void *data);
-
 
 /// \}
 /// \name Attributes
@@ -106,12 +120,17 @@ public:
 
 	const void *get_data() const { return data; }
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Get subimage
+	///
+	/// \param rect = Rect
+	///
+	/// \return Pixel Buffer Ref
 	CL_PixelBufferRef get_subimage(const CL_Rect &rect) const;
 
 	/// \brief Create a copy of the pixelbuffer that doesn't share data with the original pixel buffer.
@@ -169,16 +188,53 @@ public:
 	/// \param data Data pointer to pixel data. If null, will construct a memory pixel buffer with the given dimensions.
 	CL_PixelBuffer();
 
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param other = Pixel Buffer Ref
 	CL_PixelBuffer(const CL_PixelBufferRef &other);
 
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param width = value
+	/// \param height = value
+	/// \param pitch = value
+	/// \param format = Pixel Format
+	/// \param data = void
 	CL_PixelBuffer(int width, int height, int pitch, const CL_PixelFormat &format, const void *data = 0);
 
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param width = value
+	/// \param height = value
+	/// \param pitch = value
+	/// \param format = Pixel Format
+	/// \param palette = Palette
+	/// \param data = void
 	CL_PixelBuffer(int width, int height, int pitch, const CL_PixelFormat &format, const CL_Palette &palette, const void *data = 0);
 
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param copy = Pixel Buffer
 	CL_PixelBuffer(const CL_PixelBuffer &copy);
 
-	virtual ~CL_PixelBuffer();
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param fullname = String Ref
+	CL_PixelBuffer(const CL_StringRef &fullname);
 
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param filename = String Ref
+	/// \param dir = Virtual Directory
+	CL_PixelBuffer(const CL_StringRef &filename, const CL_VirtualDirectory &dir);
+
+	/// \brief Constructs a PixelBuffer
+	///
+	/// \param file = IODevice
+	/// \param image_type = String
+	CL_PixelBuffer(CL_IODevice &file, const CL_String &image_type);
+
+	virtual ~CL_PixelBuffer();
 
 /// \}
 /// \name Attributes
@@ -219,7 +275,6 @@ public:
 
 	/// \brief Returns a new pixel buffer, copying the area specified by rect.
 	CL_PixelBufferRef get_subimage(const CL_Rect &rect) const;
-
 
 /// \}
 /// \name Operations
@@ -264,7 +319,6 @@ public:
 	/// \brief Draw a pixel at (x, y) using the specified color.
 	void draw_pixel(int x, int y, const CL_Colorf &color);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -273,6 +327,5 @@ private:
 	CL_SharedPtr<CL_PixelBuffer_Impl> impl;
 /// \}
 };
-
 
 /// \}

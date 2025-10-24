@@ -29,17 +29,10 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../Text/string_types.h"
 
 typedef CL_StringRef CL_DomString;
-
 
 /// \}

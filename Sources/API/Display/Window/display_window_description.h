@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
@@ -63,10 +57,18 @@ public:
 	/// \brief Constructs a window description with default values and a title.
 	CL_DisplayWindowDescription(const CL_String &title);
 
+	/// \brief Constructs a window description with default values, a title and a position.
+	CL_DisplayWindowDescription(const CL_String &title, const CL_Rect &position, bool client_area);
+
+	/// \brief Constructs a window description with default values and a position.
+	CL_DisplayWindowDescription(const CL_Rect &position, bool client_area);
+
+	/// \brief Constructs a DisplayWindowDescription
+	///
+	/// \param copy = Display Window Description
 	CL_DisplayWindowDescription(const CL_DisplayWindowDescription &copy);
 
 	virtual ~CL_DisplayWindowDescription();
-
 
 /// \}
 /// \name Attributes
@@ -238,6 +240,5 @@ private:
 	CL_SharedPtr<CL_DisplayWindowDescription_Impl> impl;
 /// \}
 };
-
 
 /// \}

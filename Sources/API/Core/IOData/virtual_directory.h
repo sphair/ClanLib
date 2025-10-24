@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -63,7 +61,6 @@ public:
 	CL_VirtualDirectory(const CL_VirtualFileSystem &file_system, const CL_String &base_path);
 
 	~CL_VirtualDirectory();
-
 
 /// \}
 /// \name Attributes
@@ -116,6 +113,10 @@ public:
 		unsigned int share = CL_File::share_all,
 		unsigned int flags = 0);
 
+	/// \brief Open a file read only, avoiding potential "const" problems
+	CL_IODevice open_file_read(
+		const CL_String &filename) const;
+
 	/// \brief Convert a relative path to an absolute one.
 	/** If CL_VirtualFileSystem was not set, this function uses CL_PathHelp::path_type_file
 	    If CL_VirtualFileSystem is set, this function uses CL_PathHelp::path_type_virtual
@@ -154,7 +155,6 @@ public:
 	    param: mount_point = The mount point to unmount*/
 	void unmount(const CL_String &mount_point);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -163,6 +163,5 @@ private:
 	CL_SharedPtr<CL_VirtualDirectory_Impl> impl;
 /// \}
 };
-
 
 /// \}

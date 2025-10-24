@@ -25,11 +25,13 @@
 **
 **    Kenneth Gangstoe
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "Display/precomp.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
@@ -52,22 +54,40 @@ CL_Sprite::CL_Sprite()
 {
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext gc, const CL_StringRef &filename)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc)
+: impl(new CL_Sprite_Impl(gc))
 {
-	*this = CL_Sprite(gc, filename, CL_VirtualDirectory());
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext gc, const CL_StringRef &filename, CL_VirtualDirectory dir)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	*this = CL_Sprite(gc, filename, dir);
+}
+
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir)
 : impl(new CL_Sprite_Impl(gc))
 {
 	CL_SpriteDescription desc;
 	desc.add_frame(filename, dir);
-	impl->create_textures(desc);
+	impl->create_textures(gc, desc);
 
 	restart();
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type )
+: impl(new CL_Sprite_Impl(gc))
+{
+	CL_SpriteDescription desc;
+	desc.add_frame(file, image_type);
+	impl->create_textures(gc, desc);
+	restart();
+}
+
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
 : impl(new CL_Sprite_Impl(gc))
 {
 	CL_Resource resource = resources->get_resource(resource_id);
@@ -84,13 +104,13 @@ CL_Sprite::CL_Sprite(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_R
 		resource.set_data(cl_text("sprite"), data);
 	}
 
-	impl->init(resource_id, resources, data);
+	impl->init(gc, resource_id, resources, data);
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext gc, const CL_SpriteDescription &description)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &description)
 : impl(new CL_Sprite_Impl(gc))
 {
-	impl->create_textures(description);
+	impl->create_textures(gc, description);
 	restart();
 }
 
@@ -257,19 +277,44 @@ void CL_Sprite::set_image_data(const CL_Sprite &image_source)
 	restart();
 }
 
-void CL_Sprite::draw(CL_GraphicContext gc, float x, float y)
+void CL_Sprite::clone(const CL_Sprite &source)
+{
+	impl->angle = source.impl->angle;
+	impl->angle_pitch = source.impl->angle_pitch;
+	impl->angle_yaw = source.impl->angle_yaw;
+	impl->base_angle = source.impl->base_angle;
+	impl->scale_x = source.impl->scale_x;
+	impl->scale_y = source.impl->scale_y;
+	impl->color = source.impl->color;
+	impl->linear_filter = source.impl->linear_filter;
+	impl->translation_hotspot = source.impl->translation_hotspot;
+	impl->rotation_hotspot = source.impl->rotation_hotspot;
+	impl->translation_origin = source.impl->translation_origin;
+	impl->rotation_origin = source.impl->rotation_origin;
+	impl->id = source.impl->id;
+	impl->play_loop = source.impl->play_loop;
+	impl->play_backward = source.impl->play_backward;
+	impl->play_pingpong = source.impl->play_pingpong;
+	impl->show_on_finish = source.impl->show_on_finish;
+	impl->texture_group = source.impl->texture_group;
+	impl->frames = source.impl->frames;
+
+	restart();
+}
+
+void CL_Sprite::draw(CL_GraphicContext &gc, float x, float y)
 {
 	if(impl->is_visible())
 		impl->draw(gc, x, y);
 }
 
-void CL_Sprite::draw(CL_GraphicContext gc, const CL_Rectf &src, const CL_Rectf &dest)
+void CL_Sprite::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest)
 {
 	if(impl->is_visible())
 		impl->draw(gc, src, dest);
 }
 
-void CL_Sprite::draw(CL_GraphicContext gc, const CL_Rectf &dest)
+void CL_Sprite::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 {
 	if(impl->is_visible())
 		impl->draw(gc, dest);

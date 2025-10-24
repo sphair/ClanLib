@@ -32,6 +32,7 @@
 
 #include "../opengl_window_provider.h"
 #include "Display/X11/x11_window.h"
+#include "API/Display/Image/pixel_buffer.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -40,7 +41,6 @@
 #include <X11/extensions/xf86vmode.h>
 #include <X11/extensions/XInput.h>
 
-#include <GL/glu.h>
 #include <GL/glx.h>
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
@@ -79,6 +79,12 @@ public:
 
 	bool is_clipboard_text_available() const { return x11_window.is_clipboard_text_available(); }
 
+	bool is_clipboard_image_available() const { return x11_window.is_clipboard_image_available(); }
+
+	CL_String get_clipboard_text() const { return x11_window.get_clipboard_text(); }
+
+	CL_PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
+
 	/// \brief Returns the X11 display handle.
 	Display *get_display() { return x11_window.get_display(); }
 
@@ -88,9 +94,9 @@ public:
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }
 
-	CL_GraphicContext get_gc() const { return gc; }
+	CL_GraphicContext& get_gc() { return gc; }
 
-	CL_InputContext get_ic() const { return x11_window.get_ic(); }
+	CL_InputContext& get_ic() { return x11_window.get_ic(); }
 
 	CL_GraphicContext gc;
 
@@ -151,27 +157,20 @@ public:
 
 	void process_messages();
 
-	/// \brief Set the window timer
-	void set_timer(CL_TimerProvider *timer) { x11_window.set_timer(timer); }
-
-	/// \brief Stop the window timer
-	void kill_timer(CL_TimerProvider *timer) { x11_window.kill_timer(timer); }
-
 	GLXContext create_context();
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
 	bool has_messages() { return x11_window.has_messages(); }
 
-	/// \brief Stores text in the clipboard.
 	void set_clipboard_text(const CL_StringRef &text) { x11_window.set_clipboard_text(text); }
 
-	/// \brief Returns the text stored in the clipboard.
-	CL_String get_clipboard_text() const { return x11_window.get_clipboard_text(); }
+	void set_clipboard_image(const CL_PixelBuffer &buf) { x11_window.set_clipboard_image(buf); }
 
-	void invalidate_rect(const CL_Rect &rect) { x11_window.invalidate_rect(rect); }
+	void request_repaint(const CL_Rect &rect) { x11_window.request_repaint(rect); }
 
-	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
 
 /// \}
 /// \name Implementation
@@ -196,6 +195,9 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
+
+	int last_set_interval;	// Set to -1 when not set
+
 /// \}
 };
 

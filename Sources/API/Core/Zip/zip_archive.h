@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -60,14 +54,22 @@ public:
 	/// \param filename .zip archive to load.
 	CL_ZipArchive();
 
+	/// \brief Constructs a ZipArchive
+	///
+	/// \param input = IODevice
 	CL_ZipArchive(CL_IODevice &input);
 
+	/// \brief Constructs a ZipArchive
+	///
+	/// \param filename = String Ref
 	CL_ZipArchive(const CL_StringRef &filename);
 
+	/// \brief Constructs a ZipArchive
+	///
+	/// \param copy = Zip Archive
 	CL_ZipArchive(const CL_ZipArchive &copy);
 
 	~CL_ZipArchive();
-
 
 /// \}
 /// \name Attributes
@@ -78,7 +80,6 @@ public:
 	std::vector<CL_ZipFileEntry> get_file_list();
 
 	std::vector<CL_ZipFileEntry> get_file_list(const CL_StringRef &path);
-
 
 /// \}
 /// \name Operations
@@ -113,13 +114,18 @@ public:
 	/// cause the save operation to fail.</p>
 	void save();
 
+	/// \brief Save
+	///
+	/// \param filename = the filename to save to
 	void save(const CL_StringRef &filename);
 
+	/// \brief Save
+	///
+	/// \param iodev = The file to save to
 	void save(CL_IODevice iodev);
 
 	/// \brief Loads the zip archive from a input device (done automatically at construction).
 	void load(CL_IODevice &input);
-
 
 /// \}
 /// \name Implementation
@@ -129,6 +135,5 @@ private:
 	CL_SharedPtr<CL_ZipArchive_Impl> impl;
 /// \}
 };
-
 
 /// \}

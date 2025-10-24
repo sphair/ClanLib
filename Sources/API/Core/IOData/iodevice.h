@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "datatypes.h"
@@ -70,7 +64,6 @@ public:
 		seek_end
 	};
 
-
 /// \}
 /// \name Construction
 /// \{
@@ -79,16 +72,21 @@ public:
 	/// \brief Constructs an I/O device.
 	CL_IODevice();
 
+	/// \brief Constructs a IODevice
+	///
+	/// \param provider = IODevice Provider
 	CL_IODevice(CL_IODeviceProvider *provider);
 
 	~CL_IODevice();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+	/// \brief Returns true if the iodevice is null.
+	bool is_null() const;
+	
 	/// \brief Returns the size of data stream.
 	/** <p>Returns -1 if the size is unknown.</p>
 	    \return The size (-1 if size is unknown)*/
@@ -102,7 +100,6 @@ public:
 	/// \brief Returns true if the input source is in little endian mode.
 	/** \return true if little endian*/
 	bool is_little_endian() const;
-
 
 /// \}
 /// \name Operations
@@ -284,7 +281,6 @@ public:
 	/// \brief Create a new CL_IODevice referencing the same resource.
 	CL_IODevice duplicate();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -293,6 +289,5 @@ protected:
 	CL_SharedPtr<CL_IODevice_Impl> impl;
 /// \}
 };
-
 
 /// \}

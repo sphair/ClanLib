@@ -69,11 +69,11 @@ int App::start(const std::vector<CL_String> &args)
 
 		// Display the stack trace (if available)
 		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
+		size_t size = stacktrace.size();
 		if (size > 0)
 		{
 			CL_Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
+			for (size_t cnt=0; cnt < size; cnt++)
 			{
 				CL_Console::write_line(stacktrace[cnt]);
 			}

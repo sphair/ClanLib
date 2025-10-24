@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "iodevice.h"
@@ -47,7 +45,6 @@ class CL_API_CORE CL_IODeviceProvider
 public:
 	virtual ~CL_IODeviceProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -60,7 +57,6 @@ public:
 	/// \brief Returns the position in the data stream.
 	/** <p>Returns -1 if the position is unknown.</p>*/
 	virtual int get_position() const { return -1; }
-
 
 /// \}
 /// \name Operations
@@ -82,7 +78,6 @@ public:
 	/// \brief Seek in data stream.
 	virtual bool seek(int position, CL_IODevice::SeekMode mode) { return false; }
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +85,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

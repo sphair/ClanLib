@@ -13,7 +13,7 @@ ClientGUI::ClientGUI(Client *client)
 //	desc.set_multisampling(4);
 	display_window = CL_DisplayWindow(desc);
 
-	CL_Font_Native::register_font("Resources\\accid___.ttf", "Accidental Presidency");
+	CL_Font_System::register_font("Resources\\bitstream_vera_sans\\VeraBd.ttf", "VeraBd");
 
 	slot_quit = display_window.sig_window_close().connect(this, &ClientGUI::on_window_close);
 
@@ -22,8 +22,8 @@ ClientGUI::ClientGUI(Client *client)
 	theme->set_resources(resources);
 	window_manager = new CL_GUIWindowManagerTexture(display_window);
 	gui = new CL_GUIManager;
-	gui->set_window_manager(window_manager);
-	gui->set_theme(theme);
+	gui->set_window_manager(*window_manager);
+	gui->set_theme(*theme);
 	gui->set_css_document("Resources/GUITheme/theme.css");
 }
 

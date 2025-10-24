@@ -78,17 +78,19 @@ CL_DisplayWindow::CL_DisplayWindow(CL_DisplayWindowProvider *provider)
 	impl->provider = provider;
 }
 
-CL_DisplayWindow::CL_DisplayWindow(CL_WeakPtr<CL_DisplayWindow_Impl> impl)
-: impl(impl.to_sharedptr())
-{
-}
-
 CL_DisplayWindow::~CL_DisplayWindow()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindow Attributes:
+
+#ifdef WIN32
+HWND CL_DisplayWindow::get_hwnd() const
+{
+	return impl->provider->get_hwnd();
+}
+#endif
 
 CL_Rect CL_DisplayWindow::get_geometry() const
 {
@@ -105,12 +107,12 @@ bool CL_DisplayWindow::has_focus() const
 	return impl->provider->has_focus();
 }
 
-CL_GraphicContext CL_DisplayWindow::get_gc() const
+CL_GraphicContext& CL_DisplayWindow::get_gc() const
 {
 	return impl->provider->get_gc();
 }
 
-CL_InputContext CL_DisplayWindow::get_ic() const
+CL_InputContext& CL_DisplayWindow::get_ic() const
 {
 	return impl->provider->get_ic();
 }
@@ -140,6 +142,16 @@ CL_Signal_v0 &CL_DisplayWindow::sig_window_close()
 	return impl->sig_window_close;
 }
 
+CL_Signal_v0 &CL_DisplayWindow::sig_window_minimized()
+{
+	return impl->sig_window_minimized;
+}
+
+CL_Signal_v0 &CL_DisplayWindow::sig_window_maximized()
+{
+	return impl->sig_window_maximized;
+}
+
 CL_Callback_v1<CL_Rect &> &CL_DisplayWindow::func_window_resize()
 {
 	return impl->func_window_resize;
@@ -165,6 +177,11 @@ bool CL_DisplayWindow::is_visible() const
 	return impl->provider->is_visible();
 }
 
+bool CL_DisplayWindow::is_fullscreen() const
+{
+	return impl->provider->is_fullscreen();
+}
+
 CL_DisplayWindowProvider *CL_DisplayWindow::get_provider() const
 {
 	return impl->provider;
@@ -173,6 +190,21 @@ CL_DisplayWindowProvider *CL_DisplayWindow::get_provider() const
 bool CL_DisplayWindow::is_clipboard_text_available() const
 {
 	return impl->provider->is_clipboard_text_available();
+}
+
+bool CL_DisplayWindow::is_clipboard_image_available() const
+{
+	return impl->provider->is_clipboard_image_available();
+}
+
+CL_String CL_DisplayWindow::get_clipboard_text() const
+{
+	return impl->provider->get_clipboard_text();
+}
+
+CL_PixelBuffer CL_DisplayWindow::get_clipboard_image() const
+{
+	return impl->provider->get_clipboard_image();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -193,9 +225,9 @@ void CL_DisplayWindow::capture_mouse(bool capture)
 	impl->provider->capture_mouse(capture);
 }
 
-void CL_DisplayWindow::invalidate_rect(const CL_Rect &rect)
+void CL_DisplayWindow::request_repaint(const CL_Rect &rect)
 {
-	impl->provider->invalidate_rect(rect);
+	impl->provider->request_repaint(rect);
 }
 
 void CL_DisplayWindow::set_title(const CL_StringRef &title)
@@ -311,9 +343,19 @@ void CL_DisplayWindow::set_clipboard_text(const CL_StringRef &text)
 	impl->provider->set_clipboard_text(text);
 }
 
-CL_String CL_DisplayWindow::get_clipboard_text() const
+void CL_DisplayWindow::set_clipboard_image( const CL_PixelBuffer &buf )
 {
-	return impl->provider->get_clipboard_text();
+	impl->provider->set_clipboard_image(buf);
+}
+
+void CL_DisplayWindow::set_large_icon(const CL_PixelBuffer &image)
+{
+	impl->provider->set_large_icon(image);
+}
+
+void CL_DisplayWindow::set_small_icon(const CL_PixelBuffer &image)
+{
+	impl->provider->set_small_icon(image);
 }
 
 /////////////////////////////////////////////////////////////////////////////

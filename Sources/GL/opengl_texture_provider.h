@@ -32,43 +32,34 @@
 
 #include "API/Display/TargetProviders/texture_provider.h"
 #include "API/Display/Render/compare_function.h"
+#include "API/Core/System/disposable_object.h"
 #include "API/GL/opengl.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLTextureProvider : public CL_TextureProvider
+class CL_OpenGLTextureProvider : public CL_TextureProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_OpenGLTextureProvider(CL_OpenGLGraphicContextProvider *gc_provider, CL_TextureDimensions texture_dimensions);
-
 	~CL_OpenGLTextureProvider();
-
-
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
 	CLuint get_handle() const { return handle; }
-
 	CLuint get_texture_type() const { return texture_type; }
-
-
 /// \}
+
 /// \name Operations
 /// \{
-
 public:
-	void create(int width, int height, int format, int depth);
-
+	void create(int width, int height, CL_TextureFormat internal_format, int depth);
 	void destroy();
-
-	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level);
-
-	void set_image(CL_PixelBuffer &image, int level, int format);
+	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const;
+	void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
 
 	void set_cube_map(
 		CL_PixelBuffer &cube_map_positive_x,
@@ -78,11 +69,11 @@ public:
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
 		int level,
-		int format);
+		CL_TextureFormat internal_format);
 
 	void set_compressed_image(
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		int width,
 		int height,
 		CL_DataBuffer &image);
@@ -99,7 +90,7 @@ public:
 		int width,
 		int height,
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		CL_GraphicContextProvider *gc);
 
 	void copy_subimage_from(
@@ -113,15 +104,10 @@ public:
 		CL_GraphicContextProvider *gc);
 
 	void set_min_lod(double min_lod);
-
 	void set_max_lod(double max_lod);
-
 	void set_lod_bias(double lod_bias);
-
 	void set_base_level(int base_level);
-
 	void set_max_level(int max_level);
-
 	void set_generate_mipmap(bool generate_mipmap);
 
 	void set_wrap_mode(
@@ -137,33 +123,23 @@ public:
 		CL_TextureWrapMode wrap_s);
 
 	void set_min_filter(CL_TextureFilter filter);
-
 	void set_mag_filter(CL_TextureFilter filter);
-
 	void set_depth_mode(CL_TextureDepthMode depth_mode);
-
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);
-
-
 /// \}
+
 /// \name Implementation
 /// \{
-
 private:
-	void set_texture_image2d(CLuint target, CL_PixelBuffer &image, int level, int internalformat);
-
+	void on_dispose();
+	void set_texture_image2d(CLuint target, CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
 	CLenum to_enum(CL_TextureFilter filter);
-
 	CLenum to_enum(CL_TextureWrapMode mode);
-
 	CLenum to_enum(CL_CompareFunction func);
-
 	CLenum to_enum(CL_TextureCompareMode mode);
-
 	CLenum to_enum(CL_TextureDepthMode mode);
 
 	CL_OpenGLGraphicContextProvider *gc_provider;
-
 	int width, height, depth;
 
 	/// \brief OpenGL texture handle.

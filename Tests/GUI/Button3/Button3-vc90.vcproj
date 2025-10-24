@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="Button3"
+	Name="UXTheme"
 	ProjectGUID="{1FAC95A5-4B62-4621-859A-F43EB1A3BE1E}"
 	RootNamespace="Button3"
 	Keyword="Win32Proj"

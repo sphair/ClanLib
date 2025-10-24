@@ -48,6 +48,11 @@ class CL_API_GUI CL_GUIThemePartProperty
 public:
 	/// \brief Constructs a GUI theme part property.
 	CL_GUIThemePartProperty();
+
+	/// \brief Constructs a GUIThemePartProperty
+	///
+	/// \param property_name = String Ref
+	/// \param default_value = String Ref
 	CL_GUIThemePartProperty(const CL_StringRef &property_name, const CL_StringRef &default_value = CL_StringRef());
 	~CL_GUIThemePartProperty();
 

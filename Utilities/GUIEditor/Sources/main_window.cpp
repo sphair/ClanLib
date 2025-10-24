@@ -14,7 +14,7 @@
 enum MainToolbarID { main_toolbar_new, main_toolbar_open, main_toolbar_save };
 
 MainWindow::MainWindow(Application *application)
-: CL_Window(get_startup_geometry(), application->get_gui(), get_startup_description()),
+: CL_Window(application->get_gui(), get_startup_description()),
   application(application), document(0), grid_component(0), property_component(0)
 {
 	set_id_name("editor");
@@ -40,16 +40,12 @@ MainWindow::~MainWindow()
 	delete document;
 }
 
-CL_Rect MainWindow::get_startup_geometry()
-{
-	return CL_Rect(200, 200, 1024, 768);
-}
-
 CL_GUITopLevelDescription MainWindow::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title(cl_text("ClanLib GUI Editor"));
 	desc.set_allow_resize(true);
+	desc.set_position(CL_Rect(200, 200, 1024, 768), false);
 	return desc;
 }
 
@@ -239,10 +235,7 @@ void MainWindow::on_mode_toolbar_clicked( CL_ToolBarItem item )
 	}
 }
 
-
-
-
-
-
-
-
+void MainWindow::load(const CL_StringRef &filename)
+{
+	grid_component->load(filename);
+}

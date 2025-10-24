@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Socket clanNetwork Socket
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -54,13 +52,11 @@ public:
 
 	~CL_DNSResolver();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -83,7 +79,6 @@ public:
 		int timeout,
 		const CL_String &dns_server_name);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -92,6 +87,5 @@ private:
 	CL_SharedPtr<CL_DNSResolver_Impl> impl;
 /// \}
 };
-
 
 /// \}

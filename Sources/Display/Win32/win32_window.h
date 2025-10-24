@@ -25,21 +25,21 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 #pragma once
-
 
 #include <list>
 #include <map>
 #include <dinput.h>
 #include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
-#include "API/Display/Window/timer.h"
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/Math/point.h"
-#include "API/Core/Signals/callback_v0.h"
 #include "API/Core/Math/rect.h"
+#include "API/Core/IOData/datatypes.h"
+#include "API/Core/Signals/callback_v0.h"
 
 #if DIRECTINPUT_HEADER_VERSION < 0x0800
 #error Found DirectX headers older than 8.0. Please download a newer directx, and make sure its FIRST in the include path and library path (Tools->Options->Directories in MSVC).
@@ -49,13 +49,12 @@ class CL_InputDeviceProvider_Win32Keyboard;
 class CL_InputDeviceProvider_Win32Mouse;
 class CL_InputDeviceProvider_Win32Tablet;
 class CL_DisplayMessageQueue_Win32;
-class CL_TimerProvider;
 class CL_DisplayWindowSite;
 class CL_DisplayWindowDescription;
 class CL_PixelBuffer;
 class CL_DataBuffer;
 class CL_CursorProvider_Win32;
-class CL_TimerProvider_Win32;
+class CL_InputEvent;
 
 class CL_API_DISPLAY CL_Win32Window
 {
@@ -76,44 +75,60 @@ public:
 	CL_InputContext &get_ic() { return ic; }
 	const CL_InputContext &get_ic() const { return ic; }
 	bool is_clipboard_text_available() const;
+	bool is_clipboard_image_available() const;
 	bool is_painting() const { return paintstruct.hdc != 0; }
 	const PAINTSTRUCT &get_paint_data() const { return paintstruct; }
 	bool is_layered() const { return layered; }
 
 public:
 	void create(CL_DisplayWindowSite *site, const CL_DisplayWindowDescription &description);
+
 	CL_Point client_to_screen(const CL_Point &client);
 	CL_Point screen_to_client(const CL_Point &screen);
+
 	void show_system_cursor();
 	void set_cursor(CL_CursorProvider_Win32 *cursor);
 	void set_cursor(enum CL_StandardCursor type);
 	void hide_system_cursor();
+
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
+
 	void set_title(const CL_StringRef &new_title);
+	void set_enabled(bool enable);
+
 	void set_position(const CL_Rect &pos, bool client_area);
 	void set_size(int width, int height, bool client_area);
 	void set_minimum_size(int width, int height, bool client_area);
 	void set_maximum_size(int width, int height, bool client_area);
-	void set_enabled(bool enable);
 	void minimize();
 	void restore();
 	void maximize();
+
 	void show(bool activate);
 	void hide();
+
 	void bring_to_front();
+
 	void capture_mouse(bool capture);
-	void set_timer(CL_TimerProvider *timer);
-	void kill_timer(CL_TimerProvider *timer);
+
 	void set_clipboard_text(const CL_StringRef &text);
 	CL_String get_clipboard_text() const;
+	CL_PixelBuffer get_clipboard_image() const;
 	void set_clipboard_image(const CL_PixelBuffer &image);
 	static CL_PixelBuffer create_bitmap_data(const CL_PixelBuffer &image);
+
 	static HBITMAP create_bitmap(HDC hdc, CL_PixelBuffer image);
 	HICON create_icon(const CL_PixelBuffer &image) const;
-	void invalidate_rect(const CL_Rect &rect);
+
+	void request_repaint(const CL_Rect &rect);
+
+	void set_modifier_keys(CL_InputEvent &key);
 
 private:
 	void create_direct_input();
 	void destroy_direct_input();
+
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,
 		UINT uMsg,
@@ -131,13 +146,23 @@ private:
 	void received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_joystick_input();
-	void received_timer(unsigned int id);
+
 	void setup_tablet();
+
 	static BOOL CALLBACK enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
+
+	CL_PixelBuffer get_argb8888_from_png(cl_uint8 *data, size_t size) const;
+	CL_PixelBuffer get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+	void flip_pixelbuffer_vertical(CL_PixelBuffer &pbuf) const;
+	void add_png_to_clipboard(const CL_PixelBuffer &image);
+	void add_dib_to_clipboard(const CL_PixelBuffer &image);
+	void register_clipboard_formats();
 
 	HWND hwnd;
 	bool destroy_hwnd;
 	HCURSOR current_cursor;
+	HICON large_icon;
+	HICON small_icon;
 	bool cursor_set, cursor_hidden;
 	CL_DisplayWindowSite *site;
 	LPDIRECTINPUT8 directinput;
@@ -145,21 +170,19 @@ private:
 	CL_InputDeviceProvider_Win32Mouse *mouse;
 	CL_SharedPtr<CL_InputDeviceProvider_Win32Tablet> tablet;
 	CL_DisplayMessageQueue_Win32 *message_queue;
-	std::list<CL_TimerProvider *> timer_list;
 	CL_Point mouse_pos;
 	std::map<int,int> repeat_count;
-	bool alt_down, shift_down, ctrl_down;
 	CL_Callback_v0 callback_on_resized;
 	CL_InputContext ic;
 	PAINTSTRUCT paintstruct;
 	CL_Size minimum_size;
 	CL_Size maximum_size;
 	bool layered;
+	UINT png_clipboard_format;
+	CL_String class_name;
 
 	friend class CL_InputDeviceProvider_DirectInput;
 	friend class CL_InputDeviceProvider_Win32Keyboard;
 	friend class CL_InputDeviceProvider_Win32Mouse;
 	friend class CL_InputDeviceProvider_Win32Tablet;
 };
-
-

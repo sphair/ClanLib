@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -75,6 +69,10 @@ public:
 	/// \brief Constructs a DOM Document.
 	CL_DomDocument();
 
+	/// \brief Constructs a DomDocument
+	///
+	/// \param input = IODevice
+	/// \param eat_whitespace = bool
 	CL_DomDocument(CL_IODevice &input, bool eat_whitespace = true);
 
 	CL_DomDocument(
@@ -82,10 +80,12 @@ public:
 		const CL_DomString &qualified_name,
 		const CL_DomDocumentType &doctype);
 
+	/// \brief Constructs a DomDocument
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomDocument(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocument();
-
 
 /// \}
 /// \name Attributes
@@ -105,7 +105,6 @@ public:
 	/** <p>This is a convenience attribute that allows direct access to the child node that is
 	    the root element of the document. For HTML documents, this is the element with the tag name "HTML".</p>*/
 	CL_DomElement get_document_element();
-
 
 /// \}
 /// \name Operations
@@ -216,7 +215,6 @@ public:
 	/// \brief Removes all nodes from the DOM document.
 	void clear_all();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -224,6 +222,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

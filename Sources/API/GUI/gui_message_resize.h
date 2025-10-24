@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -52,21 +50,26 @@ public:
 	/// \brief Constructs an input GUI message.
 	CL_GUIMessage_Resize();
 
+	/// \brief Constructs a GUIMessage Resize
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_Resize(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_Resize();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Type name
+	///
+	/// \return type_name
 	static CL_StringRef get_type_name();
 
 	/// \brief Retrieves the geometry contained in this Message.
 	CL_Rect get_geometry() const;
-
 
 /// \}
 /// \name Operations
@@ -76,7 +79,6 @@ public:
 	/// \brief Sets the geometry contained in this Message.
 	void set_geometry(const CL_Rect &);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -84,6 +86,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

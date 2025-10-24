@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Font clanDisplay Font
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
@@ -58,10 +52,16 @@ public:
 	/// \brief Constructs a font description with default values.
 	CL_FontDescription();
 
+	/// \brief Constructs a FontDescription
+	///
+	/// \param copy = Font Description
 	CL_FontDescription(const CL_FontDescription &copy);
 
 	virtual ~CL_FontDescription();
 
+	/// \brief Create null object
+	///
+	/// \return Font Description
 	static CL_FontDescription create_null_object();
 
 /// \}
@@ -69,6 +69,10 @@ public:
 /// \{
 
 public:
+
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
 	/// \brief Returns the typeface name
@@ -161,7 +165,6 @@ private:
 	CL_SharedPtr<CL_FontDescription_Impl> impl;
 /// \}
 };
-
 
 /// \}
 

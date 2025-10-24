@@ -19,7 +19,6 @@ GameViewBattle::GameViewBattle(GameView *view, Client *client)
 	func_render().set(this, &GameViewBattle::on_render);
 	func_process_message().set(this, &GameViewBattle::on_message);
 
-	timer_hide = create_timer();
 	timer_hide.func_expired().set(this, &GameViewBattle::on_timer_hide_expired);
 
 	CL_Texture texture_dice(get_gc(), "Resources/dices.png", CL_VirtualDirectory());

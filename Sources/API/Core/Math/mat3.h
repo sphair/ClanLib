@@ -34,10 +34,9 @@
 #pragma once
 
 #include "../api_core.h"
-#include "math.h"
-
 #include "mat2.h"
 #include "mat4.h"
+#include "../IOData/datatypes.h"
 
 template<typename Type>
 class CL_Mat2;
@@ -189,7 +188,6 @@ public:
 public:
 	Type matrix[9];
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -286,7 +284,6 @@ public:
 
 	/// \brief Not-equal operator.
 	bool operator!=(const CL_Mat3<Type> &other) { return !((*this) == other); }
-
 
 /// \}
 /// \name Implementation

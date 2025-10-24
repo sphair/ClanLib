@@ -30,28 +30,12 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#ifdef CL_API_DLL
-#ifdef CL_DISPLAY_EXPORT
-#define CL_API_DISPLAY __declspec(dllexport)
-#else
-#define CL_API_DISPLAY __declspec(dllimport)
-#endif
-#else
-#define CL_API_DISPLAY
-#endif
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
-#include <vector>
-
+#include "../api_display.h"
 #include "outline_provider.h"
 #include "outline_accuracy.h"
+#include <vector>
 
 class CL_OutlineProviderBitmap_Generic;
 class CL_PixelBufferRef;
@@ -73,7 +57,6 @@ class CL_API_DISPLAY CL_OutlineProviderBitmap : public CL_OutlineProvider
 	CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit=128, bool get_insides=true);
 	~CL_OutlineProviderBitmap();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -87,16 +70,21 @@ class CL_API_DISPLAY CL_OutlineProviderBitmap : public CL_OutlineProvider
 
 	/// \brief return the height of the image used as basis for outline creation.
 	virtual int get_height();
+/// \}
+/// \name Operations
+/// \{
 
+public:
+	/// \brief Destroys the provider.
+	virtual void destroy();
 
 /// \}
 /// \name Implementation
 /// \{
 
  private:
-	CL_OutlineProviderBitmap_Generic *impl;
+ 	CL_SharedPtr<CL_OutlineProviderBitmap_Generic> impl;
 /// \}
 };
-
 
 /// \}

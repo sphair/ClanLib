@@ -29,6 +29,8 @@
 #include "GL/precomp.h"
 #include "opengl_occlusion_query_provider.h"
 #include "API/GL/opengl_wrap.h"
+#include "API/Display/Render/shared_gc_data.h"
+#include "opengl_graphic_context_provider.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLOcclusionQueryProvider Construction:
@@ -36,18 +38,32 @@
 CL_OpenGLOcclusionQueryProvider::CL_OpenGLOcclusionQueryProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : handle(0), gc_provider(gc_provider)
 {
+	CL_SharedGCData::add_disposable(this);
 	create();
 }
 
 CL_OpenGLOcclusionQueryProvider::~CL_OpenGLOcclusionQueryProvider()
 {
-	if (handle)
-	{
-		CL_OpenGL::set_active(gc_provider);
-		clDeleteQueries(1, &handle);
-	}
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
 }
 
+void CL_OpenGLOcclusionQueryProvider::on_dispose()
+{
+	if (handle)
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteQueries(1, &handle);
+			}
+		}
+	}
+}
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLOcclusionQueryProvider Attributes:
 

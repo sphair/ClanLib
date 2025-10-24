@@ -95,7 +95,7 @@ public:
 		float *out_interspacing_y);
 
 	void draw_glyphs(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		float x,
 		float y,
 		int *glyphs,
@@ -107,6 +107,7 @@ public:
 
 	CL_Sizef get_glyphs_size(int *glyphs, int length);
 
+	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
 
 /// \}
 /// \name Implementation
@@ -125,6 +126,7 @@ private:
 
 /// \}
 };
+
 
 
 

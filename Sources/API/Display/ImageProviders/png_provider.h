@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
@@ -60,15 +54,31 @@ public:
 	/// \param directory Directory that file name is relative to.
 	static CL_PixelBuffer load(
 		const CL_String &filename,
-		CL_VirtualDirectory directory = CL_VirtualDirectory());
+		const CL_VirtualDirectory &directory);
+
+	static CL_PixelBuffer load(
+		const CL_String &fullname);
+
+	/// \brief Load
+	///
+	/// \param dev = IODevice
+	///
+	/// \return Pixel Buffer
+	static CL_PixelBuffer load(CL_IODevice &dev);
 
 	/// \brief Called to save a given PixelBuffer to a file
 	static void save(
 		CL_PixelBuffer buffer,
 		const CL_String &filename,
-		CL_VirtualDirectory directory = CL_VirtualDirectory());
-/// \}
-};
+		CL_VirtualDirectory &directory);
 
+	static void save(
+		CL_PixelBuffer buffer,
+		const CL_String &fullname);
+
+	/// \brief Save the given PixelBuffer to an output device.
+	static void save(CL_PixelBuffer buffer, CL_IODevice &iodev);
+	/// \}
+};
 
 /// \}

@@ -9,19 +9,36 @@ popupmenu
 	bg-image:PopupMenu;
 	padding-top:2;
 	padding-bottom:2;
+	icon-column-width:30;
 }
 
 popupmenu row
 {
 	preferred-width:140;
 	preferred-height:20;
+	padding-left:2;
 	bg-image:;
 }
 
 popupmenu icon
 {
-	preferred-width:30;
+	preferred-width:20;
+	preferred-height:20;
 	bg-image:;
+}
+
+popupmenu check
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuChecked;
+}
+
+popupmenu check:disabled
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuCheckedDisabled;
 }
 
 popupmenu label
@@ -30,10 +47,32 @@ popupmenu label
 	bg-image:;
 }
 
+popupmenu label:selected
+{
+	preferred-width:70;
+	preferred-height:20;
+	bg-image:;
+}
+
+popupmenu label:disabled
+{
+	preferred-width:70;
+	preferred-height:20;
+	bg-image:;
+	text-color:darkgray;
+}
+
 popupmenu accel_label
 {
 	padding-left:20;
 	bg-image:;
+}
+
+popupmenu accel_label:disabled
+{
+	padding-left:20;
+	bg-image:;
+	text-color:darkgray;
 }
 
 popupmenu row:selected
@@ -44,13 +83,6 @@ popupmenu row:selected
 	bg-image-sizing-bottom:4;
 	bg-image-sizing:stretch; 
 	bg-image:PopupMenuSelected;
-}
-
-popupmenu label:selected
-{
-	preferred-width:70;
-	preferred-height:20;
-	bg-image:;
 }
 
 popupmenu separator

@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 
@@ -51,26 +49,37 @@ public:
 
 	~CL_ListViewColumnData();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 
+	/// \brief Get Column id
+	///
+	/// \return column_id
 	CL_StringRef get_column_id() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Set column id
+	///
+	/// \param column_id = String Ref
 	void set_column_id(const CL_StringRef &column_id);
-
 
 /// \}
 /// \name Implementation
@@ -80,6 +89,5 @@ private:
 	CL_SharedPtr<CL_ListViewColumnData_Impl> impl;
 /// \}
 };
-
 
 /// \}

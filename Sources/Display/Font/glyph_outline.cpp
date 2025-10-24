@@ -31,7 +31,7 @@
 #include "glyph_outline.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/draw.h"
-#include "API/Display/Font/vector_font.h"
+#include "API/Display/Font/font_vector.h"
 #include <vector>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -237,11 +237,14 @@ void CL_GlyphOutline::generate_contour_prim_array()
 			index++;
 		}
 
+		if (index == 0)
+			throw CL_Exception(cl_text("A glyph outline contour does not contain any points"));
+
 		prim_array_outline->vertex[subarray_index][index] = CL_Vec2f(points.front().x, -points.front().y);
 	}
 }
 
-void CL_GlyphOutline::draw_debug_outline(CL_GraphicContext gc)
+void CL_GlyphOutline::draw_debug_outline(CL_GraphicContext &gc)
 {
 	for( unsigned int out=0; out<joined_outlines.size(); ++out )
 	{

@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -81,13 +75,18 @@ public:
 	/// \brief Constructs a DOM Document Fragment handle.
 	CL_DomDocumentFragment();
 
+	/// \brief Constructs a DomDocumentFragment
+	///
+	/// \param doc = Dom Document
 	CL_DomDocumentFragment(CL_DomDocument &doc);
 
+	/// \brief Constructs a DomDocumentFragment
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomDocumentFragment(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocumentFragment();
 /// \}
 };
-
 
 /// \}

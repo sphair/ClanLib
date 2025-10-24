@@ -106,7 +106,7 @@ void CL_OpenGLCreationHelper::set_multisampling_pixel_format(const CL_OpenGLWind
 	if (gldesc.is_layered())
 	{
 		pfd.cAlphaBits = 8;
-		pfd.dwFlags |= PFD_DRAW_TO_BITMAP | PFD_DOUBLEBUFFER_DONTCARE;
+		pfd.dwFlags |= PFD_DOUBLEBUFFER_DONTCARE; // | PFD_DRAW_TO_BITMAP
 	}
 
 	if (gldesc.get_multisampling() < 1)

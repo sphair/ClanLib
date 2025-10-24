@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "listview_item.h"
@@ -50,24 +48,41 @@ class CL_API_GUI CL_ListViewSelectedItem
 public:
 	CL_ListViewSelectedItem();
 
+	/// \brief Constructs a ListViewSelectedItem
+	///
+	/// \param item = List View Item
 	CL_ListViewSelectedItem(const CL_ListViewItem &item);
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
+	/// \brief Is Item
+	///
+	/// \return true = item
 	bool is_item() const;
 
+	/// \brief Get Item
+	///
+	/// \return item
 	CL_ListViewItem get_item();
 
+	/// \brief Prev
+	///
+	/// \return List View Selected Item
 	CL_ListViewSelectedItem prev();
 
+	/// \brief Get Next sibling
+	///
+	/// \return next_sibling
 	CL_ListViewSelectedItem get_next_sibling();
-
 
 /// \}
 /// \name Operations
@@ -75,12 +90,15 @@ public:
 
 public:
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a ListViewSelectedItem
+	///
+	/// \param CL_ListViewSelectedItem_Impl = Shared Ptr
 	CL_ListViewSelectedItem(const CL_SharedPtr<CL_ListViewSelectedItem_Impl> &impl);
 
 	CL_SharedPtr<CL_ListViewSelectedItem_Impl> impl;
@@ -100,28 +118,40 @@ class CL_API_GUI CL_ListViewSelection
 public:
 	CL_ListViewSelection();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get First
+	///
+	/// \return first
 	CL_ListViewSelectedItem get_first();
 
+	/// \brief Get Last
+	///
+	/// \return last
 	CL_ListViewSelectedItem get_last();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Append
+	///
+	/// \param item = List View Item
 	void append(const CL_ListViewItem &item);
 
+	/// \brief Remove
+	///
+	/// \param item = List View Item
 	void remove(const CL_ListViewItem &item);
 
+	/// \brief Clear
 	void clear();
-
 
 /// \}
 /// \name Implementation
@@ -131,6 +161,5 @@ private:
 	CL_SharedPtr<CL_ListViewSelection_Impl> impl;
 /// \}
 };
-
 
 /// \}

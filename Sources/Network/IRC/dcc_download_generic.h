@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Network/Socket/tcp_connection.h"
 #include "API/Network/IRC/dcc_download.h"
 #include "API/Core/System/thread.h"

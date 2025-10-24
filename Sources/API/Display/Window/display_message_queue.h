@@ -29,7 +29,6 @@
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-
 #ifndef display_message_queue
 #define display_message_queue
 
@@ -52,15 +51,122 @@ public:
 	///
 	/// \return The index of the event that got flagged, -1 if the wait timed out and -2 if a message is available.
 	static int wait(int count, CL_Event const * const * events, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param vector = std
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(const std::vector<CL_Event *> &events, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param vector = std
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(const std::vector<CL_Event> &events, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param timeout = value
+	///
+	/// \return int
 	static int wait(CL_Event &event1, int timeout = -1);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param event4 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param event4 = Event
+	/// \param event5 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param event4 = Event
+	/// \param event5 = Event
+	/// \param event6 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param event4 = Event
+	/// \param event5 = Event
+	/// \param event6 = Event
+	/// \param event7 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, int timeout = -1, bool wait_all = false);
+
+	/// \brief Wait
+	///
+	/// \param event1 = Event
+	/// \param event2 = Event
+	/// \param event3 = Event
+	/// \param event4 = Event
+	/// \param event5 = Event
+	/// \param event6 = Event
+	/// \param event7 = Event
+	/// \param event8 = Event
+	/// \param timeout = value
+	/// \param wait_all = bool
+	///
+	/// \return int
 	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, CL_Event &event8, int timeout = -1, bool wait_all = false);
 
 	/// \brief Make thread sleep until a message arrives on the queue.
@@ -87,7 +193,6 @@ public:
 private:
 /// \}
 };
-
 
 #endif
 /// \}

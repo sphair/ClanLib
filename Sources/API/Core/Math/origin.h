@@ -30,7 +30,6 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
 
 #include "../api_core.h"

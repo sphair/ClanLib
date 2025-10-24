@@ -31,10 +31,11 @@
 
 #include "API/Display/TargetProviders/element_array_buffer_provider.h"
 #include "API/GL/opengl.h"
+#include "API/Core/System/disposable_object.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLElementArrayBufferProvider : public CL_ElementArrayBufferProvider
+class CL_OpenGLElementArrayBufferProvider : public CL_ElementArrayBufferProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -78,6 +79,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	CLenum to_enum(CL_BufferUsage usage) const;
 
 	CLenum to_enum(CL_BufferAccess access) const;

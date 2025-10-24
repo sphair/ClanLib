@@ -32,11 +32,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
 #endif
@@ -60,6 +55,7 @@
 #include "Sound/SoundProviders/soundprovider_wave.h"
 #include "Sound/SoundProviders/soundprovider_raw.h"
 #include "Sound/SoundProviders/soundprovider_recorder.h"
+#include "Sound/SoundProviders/soundfilter_provider.h"
 
 #include "Sound/SoundFilters/echofilter.h"
 #include "Sound/SoundFilters/inverse_echofilter.h"
@@ -172,5 +168,4 @@
 		#endif
 	#endif
 #endif
-
 

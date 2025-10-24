@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Socket clanNetwork Socket
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/IOData/iodevice.h"
@@ -50,53 +48,87 @@ class CL_API_NETWORK CL_TCPConnection : public CL_IODevice
 public:
 	CL_TCPConnection();
 
+	/// \brief Constructs a TCPConnection
+	///
+	/// \param remote = Socket Name
 	CL_TCPConnection(const CL_SocketName &remote);
 
+	/// \brief Constructs a TCPConnection
+	///
+	/// \param remote = Socket Name
+	/// \param local = Socket Name
 	CL_TCPConnection(const CL_SocketName &remote, const CL_SocketName &local);
 
+	/// \brief Constructs a TCPConnection
+	///
+	/// \param socket = value
+	/// \param close_socket = bool
 	CL_TCPConnection(int socket, bool close_socket);
 
 	~CL_TCPConnection();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Handle
+	///
+	/// \return handle
 	int get_handle() const;
 
+	/// \brief Get Local name
+	///
+	/// \return local_name
 	CL_SocketName get_local_name() const;
 
+	/// \brief Get Remote name
+	///
+	/// \return remote_name
 	CL_SocketName get_remote_name() const;
 
+	/// \brief Get Read event
+	///
+	/// \return read_event
 	CL_Event get_read_event();
 
+	/// \brief Get Write event
+	///
+	/// \return write_event
 	CL_Event get_write_event();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	bool connect(const CL_SocketName &remote);
 
-	bool connect(const CL_SocketName &remote, const CL_SocketName &local);
+	/// \brief Connect
+	///
+	/// \param remote = Socket Name
+	void connect(const CL_SocketName &remote);
 
+	/// \brief Connect
+	///
+	/// \param remote = Socket Name
+	/// \param local = Socket Name
+	void connect(const CL_SocketName &remote, const CL_SocketName &local);
+
+	/// \brief Set handle
+	///
+	/// \param socket = value
+	/// \param close_socket = bool
 	void set_handle(int socket, bool close_socket);
 
 	/// \brief Performs a graceful shutdown, ensuring all data is sent before the connection is closed
 	void disconnect_graceful();
 
-	/// \brief Performs an abortive shutdown, closing the connection immidiately
+	/// \brief Performs an abortive shutdown, closing the connection immediately
 	void disconnect_abortive();
 
 	/// \brief Disables or enables buffering data before it is sent
 	void set_nodelay(bool enable = true);
-
-	void flush();
-
 
 /// \}
 /// \name Implementation
@@ -105,6 +137,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

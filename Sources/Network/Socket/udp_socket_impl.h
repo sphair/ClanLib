@@ -33,8 +33,10 @@
 
 #ifdef WIN32
 #include "event_provider_win32socket.h"
+#include "win32_socket.h"
 #else
 #include "event_provider_unixsocket.h"
+#include "unix_socket.h"
 #endif
 
 class CL_SocketName;
@@ -47,11 +49,8 @@ class CL_UDPSocket_Impl
 
 public:
 	CL_UDPSocket_Impl();
-
 	CL_UDPSocket_Impl(const CL_SocketName &local_name, bool force_bind);
-
 	CL_UDPSocket_Impl(int socket, bool close_socket);
-
 	~CL_UDPSocket_Impl();
 
 
@@ -61,11 +60,8 @@ public:
 
 public:
 	int get_handle() const;
-
 	CL_SocketName get_local_name() const;
-
 	CL_Event get_read_event();
-
 	CL_Event get_write_event();
 
 
@@ -74,14 +70,10 @@ public:
 /// \{
 
 public:
-	bool bind(const CL_SocketName &local_name, bool force_bind = true);
-
+	void bind(const CL_SocketName &local_name, bool force_bind = true);
 	void set_handle(int socket, bool close_socket);
-
 	int send(const void *data, int len, const CL_SocketName &to);
-
 	int receive(void *data, int len, CL_SocketName &out_from);
-
 	int peek(void *data, int len, CL_SocketName &out_from);
 
 
@@ -90,17 +82,13 @@ public:
 /// \{
 
 private:
-	void close_handle();
-
-	int handle;
-
-	bool close_socket;
-
 #ifdef WIN32
-	CL_WSAEventSelectHandler wsa_event_handler;
+	CL_Win32Socket socket;
+#else
+	CL_UnixSocket socket;
 #endif
-	CL_Event read_event;
 
+	CL_Event read_event;
 	CL_Event write_event;
 /// \}
 };

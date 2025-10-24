@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Font clanDisplay Font
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -54,14 +52,20 @@ public:
 	/// \brief Constructs a font.
 	CL_Font();
 
-	// \brief Constructs standard font - Currently this defaults to CL_Font_Texture
-	CL_Font( CL_GraphicContext context, const CL_StringRef &typeface_name, int height);
+	// \brief Constructs standard font - Currently this defaults to CL_Font_System
+	CL_Font( CL_GraphicContext &context, const CL_StringRef &typeface_name, int height);
 
-	// \brief Constructs standard font - Currently this defaults to CL_Font_Texture
-	CL_Font( CL_GraphicContext context, const CL_FontDescription &desc);
+	// \brief Constructs standard font - Currently this defaults to CL_Font_System
+	CL_Font( CL_GraphicContext &context, const CL_FontDescription &desc);
 
+	/// \brief Constructs a Font
+	///
+	/// \param provider = Font Provider
 	CL_Font(CL_FontProvider *provider);
 
+	/// \brief Constructs a Font
+	///
+	/// \param copy = Font
 	CL_Font(const CL_Font &copy);
 
 	virtual ~CL_Font();
@@ -71,10 +75,14 @@ public:
 /// \{
 
 public:
+
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null();
 
 	/// \brief Retrieves the font provider.
-	CL_FontProvider *get_provider();
+	CL_FontProvider *get_provider() const;
 
 /// \}
 /// \name Operations
@@ -93,6 +101,14 @@ public:
 
 	/// \brief Retrieves font metrics description for the selected font.
 	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+
+	/// \brief Get the character index at a specified point
+	///
+	/// \param gc = The Graphic Context
+	/// \param text = The string
+	/// \param point = The point
+	/// \return The character index. -1 = Not at specified point
+	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
 
 /// \}
 /// \name Implementation
@@ -132,7 +148,6 @@ public:
 	    pos_y += pixelbuffer.increment.y;*/
 	CL_Point increment;
 };
-
 
 /// \}
 

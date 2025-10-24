@@ -34,6 +34,7 @@
 #include "API/Display/Render/texture.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
+#include "API/Display/Render/shared_gc_data.h"
 #include "opengl_frame_buffer_provider.h"
 #include "opengl_render_buffer_provider.h"
 #include "opengl_texture_provider.h"
@@ -44,6 +45,10 @@
 CL_OpenGLFrameBufferProvider::CL_OpenGLFrameBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : CL_FrameBufferProvider(), gc_provider(gc_provider)
 {
+	handles[0] = 0;
+	handles[1] = 0;
+	CL_SharedGCData::add_disposable(this);
+
 	CL_OpenGL::set_active(gc_provider);
 
 	if(clGenFramebuffers == 0)
@@ -54,10 +59,26 @@ CL_OpenGLFrameBufferProvider::CL_OpenGLFrameBufferProvider(CL_OpenGLGraphicConte
 
 CL_OpenGLFrameBufferProvider::~CL_OpenGLFrameBufferProvider()
 {
-	CL_OpenGL::set_active(gc_provider);
-	clDeleteFramebuffers(2, handles);
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
 }
 
+void CL_OpenGLFrameBufferProvider::on_dispose()
+{
+	if (handles[0])
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteFramebuffers(2, handles);
+			}
+		}
+	}
+}
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLFrameBufferProvider Attributes:
 

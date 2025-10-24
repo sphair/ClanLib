@@ -3,7 +3,6 @@ lib_LTLIBRARIES = libclanGDI.la
 libclanGDI_la_SOURCES = \
 fragment_buffer.cpp \
 fragment_buffer.h \
-interlocked_variable.h \
 gdi_display_window_provider.cpp \
 gdi_display_window_provider.h \
 gdi_element_array_buffer_provider.cpp \
@@ -38,10 +37,14 @@ precomp.cpp \
 precomp.h \
 setup_gdi.cpp \
 software_fragment_shader.h \
+rasterizer.cpp \
+rasterizer.h \
 vertex_attribute_fetcher.h
 
 libclanGDI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+
+libclanGDI_la_CXXFLAGS=$(clanGDI_CXXFLAGS)
 
 # EOF #
 

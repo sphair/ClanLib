@@ -58,11 +58,11 @@ public:
 public:
 	void destroy();
 
-	void create(int width, int height, int format, int depth);
+	void create(int width, int height, CL_TextureFormat internal_format, int depth);
 
-	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level);
+	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const;
 
-	void set_image(CL_PixelBuffer &image, int level, int format);
+	void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
 
 	void set_cube_map(
 		CL_PixelBuffer &cube_map_positive_x,
@@ -72,11 +72,11 @@ public:
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
 		int level,
-		int format);
+		CL_TextureFormat internal_format);
 
 	void set_compressed_image(
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		int width,
 		int height,
 		CL_DataBuffer &image);
@@ -93,7 +93,7 @@ public:
 		int width,
 		int height,
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		CL_GraphicContextProvider *gc);
 
 	void copy_subimage_from(

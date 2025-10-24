@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include <vector>
@@ -46,10 +44,13 @@ class CL_API_CORE CL_TempStringFormat
 /// \{
 
 public:
+
+	/// \brief Constructs a TempStringFormat
+	///
+	/// \param format_string = String Ref
 	CL_TempStringFormat(const CL_StringRef &format_string);
 
 	~CL_TempStringFormat();
-
 
 /// \}
 /// \name Attributes
@@ -58,28 +59,55 @@ public:
 public:
 	const CL_TempString &get_result() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set arg
+	///
+	/// \param index = value
+	/// \param text = String Ref
 	void set_arg(int index, const CL_StringRef &text);
 
+	/// \brief Set arg
+	///
+	/// \param index = value
+	/// \param value = value
+	/// \param min_length = value
 	void set_arg(int index, int value, int min_length = 0);
 
+	/// \brief Set arg
+	///
+	/// \param index = value
+	/// \param value = value
+	/// \param min_length = value
 	void set_arg(int index, unsigned int value, int min_length = 0);
 
+	/// \brief Set arg
+	///
+	/// \param index = value
+	/// \param value = value
 	void set_arg(int index, float value);
 
+	/// \brief Set arg
+	///
+	/// \param index = value
+	/// \param value = value
 	void set_arg(int index, double value);
-
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Create arg
+	///
+	/// \param index = value
+	/// \param start = value
+	/// \param length = value
 	void create_arg(int index, int start, int length);
 
 	CL_TempString string;
@@ -123,6 +151,5 @@ CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 a
 template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
 CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 { CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); return f.get_result(); }
-
 
 /// \}

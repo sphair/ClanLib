@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -52,30 +50,53 @@ class CL_ToolBarItem
 public:
 	CL_ToolBarItem();
 
+	/// \brief Constructs a ToolBarItem
+	///
+	/// \param id = value
 	CL_ToolBarItem(int id);
 
+	/// \brief Constructs a ToolBarItem
+	///
+	/// \param CL_ToolBarItem_Impl = Shared Ptr
 	CL_ToolBarItem(const CL_SharedPtr<CL_ToolBarItem_Impl> &impl);
 
 	virtual ~CL_ToolBarItem();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 
+	/// \brief Get Id
+	///
+	/// \return id
 	int get_id() const;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
+	/// \brief Is Disabled
+	///
+	/// \return true = disabled
 	bool is_disabled() const;
 
+	/// \brief Is Toggling
+	///
+	/// \return true = toggling
 	bool is_toggling() const;
 
+	/// \brief Is Pressed
+	///
+	/// \return true = pressed
 	bool is_pressed() const;
-
 
 /// \}
 /// \name Events
@@ -83,23 +104,35 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set id
+	///
+	/// \param id = value
 	void set_id(int id);
 
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Set icon
+	///
+	/// \param image = Sprite
+	/// \param frame = value
 	void set_icon(const CL_Sprite &image, int frame = 0);
 
 	/// \brief Controls if buttons stay down when pressed.
 	void set_toggling(bool toggling);
 
+	/// \brief Set pressed
+	///
+	/// \param value = bool
 	void set_pressed(bool value);
-
 
 /// \}
 /// \name Implementation
@@ -112,6 +145,5 @@ private:
 	friend class CL_ToolBar_Impl;
 /// \}
 };
-
 
 /// \}

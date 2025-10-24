@@ -31,13 +31,7 @@
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
@@ -82,7 +76,6 @@ public:
 	///
 	/// \param hexstr The colors rgba components as a hexadecimal string of the format "#rrggbbaa", where the '#' and "aa" parts are optional.
 	CL_Color(const CL_StringRef &hexstr);
-
 
 /// \}
 /// \name Attributes
@@ -137,7 +130,6 @@ public:
 	/// \brief Color != Color operator (deep compare)
 	bool operator!=(const CL_Color &c) const
 	{ return (color != c.color); }
-
 
 /// \}
 /// \name Statics
@@ -608,7 +600,6 @@ public:
 	/// \brief Returns the names of static colors defined.
 	static std::vector<CL_String8> &get_names();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -625,7 +616,6 @@ public:
 
 	/// \brief Set blue color component, in the range 0-255.
 	void set_blue(unsigned int value) { color = (color & 0xffffff00) | value; }
-
 
 	/// \brief Set alpha color component, in the range 0-1.
 	void set_alpha_d(float value) { set_alpha((unsigned int) (value*255)); }
@@ -726,7 +716,6 @@ public:
 		*this = (CL_Colord)CL_Color::find_color(hexstr);
 	}
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -734,11 +723,25 @@ public:
 public:
 	double r, g, b, a;
 
+	/// \brief Get Red
+	///
+	/// \return red
 	double get_red() const { return r; }
-	double get_green() const { return g; }
-	double get_blue() const { return b; }
-	double get_alpha() const { return a; }
 
+	/// \brief Get Green
+	///
+	/// \return green
+	double get_green() const { return g; }
+
+	/// \brief Get Blue
+	///
+	/// \return blue
+	double get_blue() const { return b; }
+
+	/// \brief Get Alpha
+	///
+	/// \return alpha
+	double get_alpha() const { return a; }
 
 /// \}
 /// \name Operations
@@ -783,7 +786,6 @@ public:
 	{
 		return CL_Color(*this);
 	}
-
 
 /// \}
 /// \name Statics
@@ -1310,8 +1312,6 @@ public:
 		*this = (CL_Colorf)CL_Color::find_color(hexstr);
 	}
 
-
-
 /// \}
 /// \name Attributes
 /// \{
@@ -1319,11 +1319,25 @@ public:
 public:
 	float r, g, b, a;
 
+	/// \brief Get Red
+	///
+	/// \return red
 	float get_red() const { return r; }
-	float get_green() const { return g; }
-	float get_blue() const { return b; }
-	float get_alpha() const { return a; }
 
+	/// \brief Get Green
+	///
+	/// \return green
+	float get_green() const { return g; }
+
+	/// \brief Get Blue
+	///
+	/// \return blue
+	float get_blue() const { return b; }
+
+	/// \brief Get Alpha
+	///
+	/// \return alpha
+	float get_alpha() const { return a; }
 
 /// \}
 /// \name Operations
@@ -1351,7 +1365,6 @@ public:
 	/// \brief Set blue color component, in the range 0-1.
 	void set_blue(float value) { b = value; }
 
-
 	/// \brief Color == Color operator (deep compare)
 	bool operator==(const CL_Colorf &c) const
 	{
@@ -1369,7 +1382,6 @@ public:
 	{
 		return CL_Color(*this);
 	}
-
 
 /// \}
 /// \name Statics
@@ -1831,7 +1843,5 @@ public:
 	static CL_Colorf gray90;
 /// \}
 };
-
-
 
 /// \}

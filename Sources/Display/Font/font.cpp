@@ -31,7 +31,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
-#include "API/Display/Font/font_texture.h"
+#include "API/Display/Font/font_system.h"
 #include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -58,21 +58,21 @@ CL_Font::CL_Font()
 {
 }
 
-CL_Font::CL_Font( CL_GraphicContext context, const CL_StringRef &typeface_name, int height)
+CL_Font::CL_Font( CL_GraphicContext &context, const CL_StringRef &typeface_name, int height)
 : impl(new CL_Font_Impl)
 {
 	CL_FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
 
-	CL_Font_Texture new_font(context, typeface_name, height);
+	CL_Font_System new_font(context, typeface_name, height);
 	*this = new_font;
 }
 
-CL_Font::CL_Font( CL_GraphicContext context,const CL_FontDescription &desc)
+CL_Font::CL_Font( CL_GraphicContext &context,const CL_FontDescription &desc)
 : impl(new CL_Font_Impl)
 {
-	CL_Font_Texture new_font(context, desc);
+	CL_Font_System new_font(context, desc);
 	*this = new_font;
 }
 
@@ -99,7 +99,7 @@ bool CL_Font::is_null()
 	return impl.is_null();
 }
 
-CL_FontProvider *CL_Font::get_provider()
+CL_FontProvider *CL_Font::get_provider() const
 {
 	if (impl.is_null())
 		return 0;
@@ -138,6 +138,14 @@ CL_FontMetrics CL_Font::get_font_metrics(CL_GraphicContext &gc)
 	return CL_FontMetrics();
 }
 
+int CL_Font::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
+{
+	if (!impl.is_null())
+		return get_provider()->get_character_index(gc, text, point);
+	return 0;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font Implementation:
+
 

@@ -24,14 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 
@@ -42,7 +41,6 @@ class CL_API_CORE CL_FileHelp
 {
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Copy a file.
 	///
@@ -55,9 +53,12 @@ public:
 	///
 	/// \param filename File to delete
 	static void delete_file(const CL_String &filename);
+
+	/// \brief Check if a file exists.
+	///
+	/// \param filename File to check for existance
+	static bool file_exists(const CL_String &filename);
 /// \}
 };
-
-
 
 /// \}

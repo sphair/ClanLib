@@ -25,15 +25,18 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "Display/precomp.h"
 #include "API/Core/System/mutex.h"
+#include "API/Core/System/disposable_object.h"
 #include "API/Display/Render/shared_gc_data.h"
+#include <algorithm>
 
+#include "shared_gc_data_impl.h"
 
-CL_SharedGCData::CL_SharedGCData()
-: reference_count(0)
+CL_SharedGCData::CL_SharedGCData(): impl(new CL_SharedGCData_Impl)
 {
 }
 
@@ -44,57 +47,35 @@ CL_SharedGCData::~CL_SharedGCData()
 CL_Signal_v0 &CL_SharedGCData::func_gc_destruction_imminent()
 {
 	CL_SharedGCData *self = get_instance();
-	return self->sig_destruction_imminent;
+	return self->impl->func_gc_destruction_imminent();
 }
 
 CL_Texture CL_SharedGCData::load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
 {
 	CL_SharedGCData *self = get_instance();
-
-	CL_String key = virtual_directory.get_name() + filename;
-
-	std::vector<SharedTextureMap>::size_type i;
-	for (i=0; i<self->textures.size(); i++)
-	{
-		if (self->textures[i].key == key)
-			return self->textures[i].texture;
-	}
-
-	CL_Texture texture = CL_Texture(gc, filename, virtual_directory, false);
-	self->textures.push_back(SharedTextureMap(key, texture));
-	return texture;
+	return self->impl->load_texture(gc, filename, virtual_directory);
 }
 
 void CL_SharedGCData::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
 {
 	CL_SharedGCData *self = get_instance();
-
-	CL_String key = virtual_directory.get_name() + filename;
-
-	std::vector<SharedTextureMap>::iterator it;
-	for (it=self->textures.begin(); it<self->textures.end(); ++it)
-	{
-		if ((*it).key == key)
-		{
-			self->textures.erase(it);
-			break;
-		}
-	}
+	self->impl->unload_texture(filename, virtual_directory);
 }
 
 void CL_SharedGCData::unload_all_textures()
 {
 	CL_SharedGCData *self = get_instance();
-	self->textures.clear();
+	self->impl->unload_all_textures();
 }
+
 
 #ifdef WIN32
 	static DWORD cl_sharedgc_tls_index = TLS_OUT_OF_INDEXES;
 	CL_Mutex cl_sharedgc_tls_mutex;
-	class CL_SharedGCDataTLSCleanUpHandler
+	class CL_SharedGCData_ImplTLSCleanUpHandler
 	{
 	public:
-		~CL_SharedGCDataTLSCleanUpHandler()
+		~CL_SharedGCData_ImplTLSCleanUpHandler()
 		{
 			if (cl_sharedgc_tls_index != TLS_OUT_OF_INDEXES)
 			{
@@ -111,6 +92,7 @@ void CL_SharedGCData::unload_all_textures()
 	__thread CL_SharedGCData *cl_tls_sharedgc = 0;
 #endif
 
+
 void CL_SharedGCData::add_ref()
 {
 #ifdef WIN32
@@ -126,7 +108,7 @@ void CL_SharedGCData::add_ref()
 		cl_sharedgc = new CL_SharedGCData;
 		TlsSetValue(cl_sharedgc_tls_index, cl_sharedgc);
 	}
-	cl_sharedgc->reference_count++;
+	cl_sharedgc->impl->reference_count++;
 #elif defined(__APPLE__)
 	if (!cl_sharedgc_tls_index_created)
 	{
@@ -141,11 +123,11 @@ void CL_SharedGCData::add_ref()
 		cl_sharedgc = new CL_SharedGCData;
 		pthread_setspecific(cl_sharedgc_tls_index, cl_sharedgc);
 	}
-	cl_sharedgc->reference_count++;
+	cl_sharedgc->impl->reference_count++;
 #else
 	if (cl_tls_sharedgc == 0)
 		cl_tls_sharedgc = new CL_SharedGCData;
-	cl_tls_sharedgc->reference_count++;
+	cl_tls_sharedgc->impl->reference_count++;
 #endif
 }
 
@@ -153,26 +135,26 @@ void CL_SharedGCData::release_ref()
 {
 #ifdef WIN32
 	CL_SharedGCData *cl_sharedgc = (CL_SharedGCData *) TlsGetValue(cl_sharedgc_tls_index);
-	if (cl_sharedgc && --cl_sharedgc->reference_count == 0)
+	if (cl_sharedgc && --cl_sharedgc->impl->reference_count == 0)
 	{
-		cl_sharedgc->sig_destruction_imminent.invoke();
+		cl_sharedgc->func_gc_destruction_imminent().invoke();
 		cl_sharedgc->unload_all_textures(); // Need to do this here because we have a vector of graphic contexts, and if the vector gets cleared on destruction before the texture map is cleared - bad things happen.
 		delete cl_sharedgc;
 		TlsSetValue(cl_sharedgc_tls_index, 0);
 	}
 #elif defined(__APPLE__)
 	CL_SharedGCData *cl_sharedgc = (CL_SharedGCData *) pthread_getspecific(cl_sharedgc_tls_index);
-	if (cl_sharedgc && --cl_sharedgc->reference_count == 0)
+	if (cl_sharedgc && --cl_sharedgc->impl->reference_count == 0)
 	{
-		cl_sharedgc->sig_destruction_imminent.invoke();
+		cl_sharedgc->func_gc_destruction_imminent().invoke();
 		cl_sharedgc->unload_all_textures();
 		delete cl_sharedgc;
 		pthread_setspecific(cl_sharedgc_tls_index, 0);
 	}
 #else
-	if (cl_tls_sharedgc && --cl_tls_sharedgc->reference_count == 0)
+	if (cl_tls_sharedgc && --cl_tls_sharedgc->impl->reference_count == 0)
 	{
-		cl_tls_sharedgc->sig_destruction_imminent.invoke();
+		cl_tls_sharedgc->func_gc_destruction_imminent().invoke();
 		cl_tls_sharedgc->unload_all_textures();
 		delete cl_tls_sharedgc;
 		cl_tls_sharedgc = 0;
@@ -193,9 +175,27 @@ CL_SharedGCData *CL_SharedGCData::get_instance()
 #endif
 }
 
-
 std::vector<CL_GraphicContextProvider*> &CL_SharedGCData::get_gc_providers()
 {
 	CL_SharedGCData *self = get_instance();
-	return self->graphic_context_providers;
+	return self->impl->get_gc_providers();
+}
+
+void CL_SharedGCData::dispose_objects()
+{
+	CL_SharedGCData *self = get_instance();
+	self->impl->dispose_objects();
+}
+
+void CL_SharedGCData::add_disposable(CL_DisposableObject *disposable)
+{
+	CL_SharedGCData *self = get_instance();
+	self->impl->add_disposable(disposable);
+}
+
+void CL_SharedGCData::remove_disposable(CL_DisposableObject *disposable)
+{
+	CL_SharedGCData *self = get_instance();
+	if (self)
+		self->impl->remove_disposable(disposable);
 }

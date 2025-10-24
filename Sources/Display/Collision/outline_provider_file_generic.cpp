@@ -39,11 +39,9 @@
 // CL_OutlineProviderFile_Generic construction:
 
 CL_OutlineProviderFile_Generic::CL_OutlineProviderFile_Generic(
-	const CL_StringRef &filename,
-	CL_VirtualDirectory directory)
-: directory(directory)
+	CL_IODevice &file)
 {
-	load(filename);
+	load(file);
 }
 
 CL_OutlineProviderFile_Generic::~CL_OutlineProviderFile_Generic()
@@ -53,18 +51,16 @@ CL_OutlineProviderFile_Generic::~CL_OutlineProviderFile_Generic()
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderFile_Generic operations:
 
-void CL_OutlineProviderFile_Generic::load(const CL_StringRef &filename)
+void CL_OutlineProviderFile_Generic::load(CL_IODevice &input_source)
 {
-	CL_IODevice input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
-
 	// file type & version identifiers
 	int type = input_source.read_uint32();
 	unsigned char version = input_source.read_uint8();
 
 	if( type != 0x16082004  )
-		throw CL_Exception(cl_format(cl_text("File is not a collision outline file: '%1'"), filename) );
+		throw CL_Exception(cl_text("File is not a collision outline file") );
 	if( version != 1 )
-		throw CL_Exception(cl_format(cl_text("Unsupported version of outline format: %1 in file '%2'. Supported versions: 1."), version, filename) );
+		throw CL_Exception(cl_format(cl_text("Unsupported version of outline format: %1. Supported versions: 1."), version) );
 
 	// read in width and height
 	width = input_source.read_int32();

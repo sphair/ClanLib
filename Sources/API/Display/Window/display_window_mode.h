@@ -60,8 +60,17 @@ class CL_API_DISPLAY CL_DisplayWindowMode
 /** \name Construction */
 //@{
 public:
+
+	/// \brief Constructs a DisplayWindowMode
+	///
+	/// \param res = Size
+	/// \param bpp = value
+	/// \param refresh_rate = value
 	CL_DisplayWindowMode(const CL_Size &res, int bpp, int refresh_rate);
 
+	/// \brief Constructs a DisplayWindowMode
+	///
+	/// \param copy = Display Window Mode
 	CL_DisplayWindowMode(const CL_DisplayWindowMode &copy);
 
 	virtual ~CL_DisplayWindowMode();

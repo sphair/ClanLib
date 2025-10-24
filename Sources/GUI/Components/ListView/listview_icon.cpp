@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Math/cl_math.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"

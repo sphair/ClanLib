@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/Resources/resource.h"
 #include "API/Display/Collision/collision_outline.h"
 

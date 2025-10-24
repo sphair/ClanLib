@@ -116,8 +116,6 @@ public:
 /// \{
 
 public:
-	void add_ref();
-	void release_ref();
 	void send_data(const CL_String8 &data);
 
 	CL_Event get_wakeup_event();
@@ -129,6 +127,8 @@ public:
 
 private:
 	void thread_main();
+	void queue_received_item(const CL_String8 &line);
+	CL_String8 pop_received_item(bool &result);
 
 	CL_String server, port;
 	bool signal_error;

@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -52,44 +50,95 @@ class CL_API_GUI CL_ListViewHeader : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a ListViewHeader
+	///
+	/// \param parent = GUIComponent
 	CL_ListViewHeader(CL_GUIComponent *parent);
 
 	~CL_ListViewHeader();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get First column
+	///
+	/// \return first_column
 	CL_ListViewColumnHeader get_first_column();
 
+	/// \brief Get column
+	///
+	/// \param column_id = String Ref
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader get_column(const CL_StringRef &column_id);
 
+	/// \brief Get Visible
+	///
+	/// \return visible
 	bool get_visible() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Create column
+	///
+	/// \param column_id = String Ref
+	/// \param caption = String Ref
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader create_column(const CL_StringRef &column_id, const CL_StringRef &caption);
 
+	/// \brief Append
+	///
+	/// \param column = List View Column Header
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader append(CL_ListViewColumnHeader column);
 
+	/// \brief Remove
+	///
+	/// \param column_id = String Ref
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader remove(const CL_StringRef &column_id);
 
+	/// \brief Insert after
+	///
+	/// \param column_id = String Ref
+	/// \param new_column = List View Column Header
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader insert_after(const CL_StringRef &column_id, CL_ListViewColumnHeader new_column);
 
+	/// \brief Insert before
+	///
+	/// \param column_id = String Ref
+	/// \param new_column = List View Column Header
+	///
+	/// \return List View Column Header
 	CL_ListViewColumnHeader insert_before(const CL_StringRef &column_id, CL_ListViewColumnHeader new_column);
 
+	/// \brief Set visible
+	///
+	/// \param visible = bool
 	void set_visible(bool visible);
 
+	/// \brief Set display mode
+	///
+	/// \param mode = List View Display Mode
 	void set_display_mode(CL_ListViewDisplayMode mode);
-
 
 /// \}
 /// \name Events
@@ -102,14 +151,21 @@ public:
 
 	CL_Callback_v1<CL_ListViewColumnHeader> &func_column_size_changed();
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a ListViewHeader
+	///
+	/// \param geometry = Rect
+	/// \param parent = GUIComponent
 	CL_ListViewHeader(const CL_Rect &geometry, CL_GUIComponent *parent);
 
+	/// \brief Update geometry
+	///
+	/// \param parent_content_rect = Rect
 	void update_geometry(const CL_Rect &parent_content_rect);
 
 	CL_SharedPtr<CL_ListViewHeader_Impl> impl;
@@ -118,6 +174,5 @@ private:
 	friend class CL_ListView_Impl;
 /// \}
 };
-
 
 /// \}

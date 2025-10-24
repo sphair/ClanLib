@@ -39,6 +39,10 @@ class CL_NetGameNetworkEvent;
 class CL_NetGameConnectionSite
 {
 public:
+
+	/// \brief Add network event
+	///
+	/// \param e = Net Game Network Event
 	virtual void add_network_event(const CL_NetGameNetworkEvent &e) = 0;
 };
 

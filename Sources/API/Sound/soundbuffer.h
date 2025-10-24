@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
@@ -86,14 +80,16 @@ public:
 		bool delete_provider = false);
 
 	CL_SoundBuffer(
-		const CL_String &filename,
+		const CL_String &fullname,
 		bool streamed = false,
 		const CL_String &format = cl_text(""));
 
+	/// \brief Constructs a SoundBuffer
+	///
+	/// \param copy = Sound Buffer
 	CL_SoundBuffer(const CL_SoundBuffer &copy);
 
 	virtual ~CL_SoundBuffer();
-
 
 /// \}
 /// \name Attributes
@@ -111,7 +107,6 @@ public:
 
 	/// \brief Returns true if an instance of this soundbuffer is playing
 	bool is_playing() const;
-
 
 /// \}
 /// \name Operations
@@ -137,11 +132,10 @@ public:
 	/// \brief Adds the sound filter to the sound buffer.
 	///
 	/// \param filter Sound filter to pass sound through.
-	/// \param delete_filter If true, the filter will be deleted when the sound output is destroyed.
-	void add_filter(CL_SoundFilter *filter, bool delete_filter = false);
+	void add_filter(CL_SoundFilter &filter);
 
 	/// \brief Remove the sound filter from the sound buffer.
-	void remove_filter(CL_SoundFilter *filter);
+	void remove_filter(CL_SoundFilter &filter);
 
 	/// \brief Stops any sessions playing this soundbuffer
 	void stop();
@@ -160,7 +154,6 @@ public:
 	/// \return The playback session.
 	CL_SoundBuffer_Session prepare(bool looping = false, CL_SoundOutput *output = 0);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -171,6 +164,5 @@ private:
 	CL_ResourceDataSession resource_data_session;
 /// \}
 };
-
 
 /// \}

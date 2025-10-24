@@ -47,9 +47,9 @@ CL_SDLRenderBufferProvider::~CL_SDLRenderBufferProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SDLRenderBufferProvider Operations:
 
-void CL_SDLRenderBufferProvider::create(int width, int height, int format)
+void CL_SDLRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format)
 {
-	texture.create(width, height, format, 1);
+	texture.create(width, height, internal_format, 1);
 }
 
 void CL_SDLRenderBufferProvider::destroy()

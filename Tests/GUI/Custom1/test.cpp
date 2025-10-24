@@ -8,7 +8,7 @@
 class CustomComponent : public CL_GUIComponent
 {
 public:
-	CustomComponent(const CL_Rect &position, CL_GUIManager *gui_manager, CL_Colorf color) : CL_GUIComponent(position, gui_manager, CL_GUITopLevelDescription())
+	CustomComponent(const CL_Rect &position, CL_GUIManager *gui_manager, CL_Colorf color) : CL_GUIComponent(gui_manager, CL_GUITopLevelDescription(position, false))
 	{
 		this->color = color;
 
@@ -47,8 +47,8 @@ public:
 			theme.set_resources(resources);
 
 			CL_GUIManager gui;
-			gui.set_window_manager(&wm);
-			gui.set_theme(&theme); 
+			gui.set_window_manager(wm);
+			gui.set_theme(theme); 
 			gui.set_css_document("../../../Resources/GUIThemeAero/theme.css");
 
 			CustomComponent comp1(CL_Rect(10, 10, 400, 200), &gui, CL_Colorf::beige);

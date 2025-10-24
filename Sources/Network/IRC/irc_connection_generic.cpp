@@ -48,6 +48,7 @@ CL_IRCConnection_Generic::CL_IRCConnection_Generic(const CL_String &server, cons
 
 CL_IRCConnection_Generic::~CL_IRCConnection_Generic()
 {
+	event_quit.set();
 	thread.join();
 }
 
@@ -58,21 +59,11 @@ CL_IRCConnection_Generic::~CL_IRCConnection_Generic()
 /////////////////////////////////////////////////////////////////////////////
 // CL_IRCConnection_Generic operations:
 
-void CL_IRCConnection_Generic::add_ref()
-{
-	ref_count++;
-}
-
-void CL_IRCConnection_Generic::release_ref()
-{
-	ref_count--;
-	if (ref_count == 0) delete this;
-}
-
 void CL_IRCConnection_Generic::send_data(const CL_String8 &data)
 {
 	CL_MutexSection mutex_lock(&mutex);
 	send_queue.push(data);
+	mutex_lock.unlock();
 	event_send.set();
 }
 
@@ -83,11 +74,12 @@ CL_Event CL_IRCConnection_Generic::get_wakeup_event()
 
 void CL_IRCConnection_Generic::process()
 {
-	CL_MutexSection mutex_lock(&mutex);
-	while (!received_queue.empty())
+	while (true)
 	{
-		CL_String8 line = received_queue.front();
-		received_queue.pop();
+		bool received = false;
+		CL_String8 line = pop_received_item(received);
+		if (!received)
+			break;
 		
 		// Parse line:
 		CL_String8 prefix, command;
@@ -304,7 +296,6 @@ void CL_IRCConnection_Generic::process()
 		sig_socket_error.invoke(error_message);
 		signal_error = false;
 	}
-	event_messages_available.reset();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -314,9 +305,8 @@ void CL_IRCConnection_Generic::thread_main()
 {
 	try
 	{
-		bool result = connection.connect(CL_SocketName(server, port));
-		if (result == false)
-			throw CL_Exception(cl_text("Connection failed!"));
+		connection.connect(CL_SocketName(server, port));
+		connection.set_nodelay(true);
 
 		CL_String8 last_line;
 
@@ -358,9 +348,7 @@ void CL_IRCConnection_Generic::thread_main()
 						last_line.append(buffer+start, i-start+1);
 						start = i+1;
 
-		 				CL_MutexSection mutex_lock(&mutex);
-						received_queue.push(last_line);
-						event_messages_available.set();
+						queue_received_item(last_line);
 				
 						last_line = CL_String8();
 					}
@@ -368,10 +356,43 @@ void CL_IRCConnection_Generic::thread_main()
 				last_line.append(buffer+start, received-start);
 			}
 		}
+
+		connection.disconnect_graceful();
 	}
 	catch (CL_Exception error)
 	{
+		connection.disconnect_abortive();
 		signal_error = true;
 		error_message = error.message;
 	}
+}
+
+void CL_IRCConnection_Generic::queue_received_item(const CL_String8 &line)
+{
+	CL_MutexSection mutex_lock(&mutex);
+	received_queue.push(line);
+	mutex_lock.unlock();
+	event_messages_available.set();
+}
+
+CL_String8 CL_IRCConnection_Generic::pop_received_item(bool &result)
+{
+	CL_MutexSection mutex_lock(&mutex);
+	if (received_queue.empty())
+	{
+		event_messages_available.reset();
+
+		result = false;
+		return CL_String8();
+	}
+	else
+	{
+		CL_String8 line = received_queue.front();
+		received_queue.pop();
+		mutex_lock.unlock();
+
+		result = true;
+		return line;
+	}
+
 }

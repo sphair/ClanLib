@@ -81,7 +81,7 @@ private:
 
 	std::list<FontBlowUp *> blowups;
 
-	CL_Font_Texture fnt_clansoft;
+	CL_Font fnt_clansoft;
 	
 	CL_DisplayWindow game_display_window;
 

@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 
@@ -52,7 +50,6 @@ public:
 
 	~CL_ListViewColumnHeader();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -65,34 +62,63 @@ public:
 		align_center
 	};
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
+	/// \brief Get Column id
+	///
+	/// \return column_id
 	CL_StringRef get_column_id() const;
 
+	/// \brief Get Caption
+	///
+	/// \return caption
 	CL_StringRef get_caption() const;
 
+	/// \brief Get Width
+	///
+	/// \return width
 	int get_width();
 
 	CL_ListViewColumnHeader::TextAlignment get_alignment();
 
+	/// \brief Get Next sibling
+	///
+	/// \return next_sibling
 	CL_ListViewColumnHeader get_next_sibling();
 
+	/// \brief Get Prev sibling
+	///
+	/// \return prev_sibling
 	CL_ListViewColumnHeader get_prev_sibling();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set alignment
+	///
+	/// \param TextAlignment = List View Column Header
 	void set_alignment(CL_ListViewColumnHeader::TextAlignment align);
 
+	/// \brief Set width
+	///
+	/// \param width = value
 	void set_width(int width);
 
+	/// \brief Set caption
+	///
+	/// \param str = String Ref
 	void set_caption(const CL_StringRef &str);
 
+	/// \brief Set column id
+	///
+	/// \param str = String Ref
 	void set_column_id(const CL_StringRef &str);
-
 
 /// \}
 /// \name Events
@@ -101,16 +127,25 @@ public:
 public:
 	CL_Callback_v1<CL_ListViewColumnHeader> &func_size_changed();
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a ListViewColumnHeader
+	///
+	/// \param CL_ListViewColumnHeader_Impl = Shared Ptr
 	CL_ListViewColumnHeader(const CL_SharedPtr<CL_ListViewColumnHeader_Impl> &impl);
 
+	/// \brief Set rect
+	///
+	/// \param rect = Rect
 	void set_rect(const CL_Rect &rect);
 
+	/// \brief Set gui theme part
+	///
+	/// \param part = GUITheme Part
 	void set_gui_theme_part(const CL_GUIThemePart &part);
 
 	CL_SharedPtr<CL_ListViewColumnHeader_Impl> impl;
@@ -121,6 +156,5 @@ private:
 	friend class CL_ListViewHeader_Impl;
 /// \}
 };
-
 
 /// \}

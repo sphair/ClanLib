@@ -30,6 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Math/mat3.h"
 #include "API/Core/Math/angle.h"
+#include "API/Core/Math/cl_math.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Mat3 construction:

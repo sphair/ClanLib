@@ -16,7 +16,8 @@
 #include "../Lib/map_area.h"
 
 GameView::GameView(Client *client)
-: CL_GUIComponent(start_position(), client->get_gui(), toplevel_description(client)), client(client),
+: CL_GUIComponent(client->get_gui(), get_toplevel_description()), 
+  client(client),
   view_angle_x(180.0f), view_angle_y(0.0f), view_angle_z(45.0f), view_distance(500.0f),
   camera_drag_in_progress(false)
 {
@@ -48,18 +49,14 @@ GameView::~GameView()
 {
 }
 
-CL_GUITopLevelDescription GameView::toplevel_description(Client *client)
+CL_GUITopLevelDescription GameView::get_toplevel_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title("DiceWar Game");
 	desc.set_allow_resize(true);
 	desc.set_depth_size(16);
+	desc.set_position(CL_Rect(0, 0, 1024, 768), false);
 	return desc;
-}
-
-CL_Rect GameView::start_position()
-{
-	return CL_Rect(0, 0, 1024, 768);
 }
 
 void GameView::load_map()
@@ -180,12 +177,12 @@ void GameView::on_message(CL_GUIMessage &message)
 		if (e.id == CL_MOUSE_LEFT && e.type == CL_InputEvent::pressed)
 		{
 			on_message_mouse_left_pressed();
-			invalidate_rect();
+			request_repaint();
 		}
 		else if (e.id == CL_KEY_SPACE && e.type == CL_InputEvent::pressed)
 		{
 			end_turn();
-			invalidate_rect();
+			request_repaint();
 		}
 		else if (e.id == CL_KEY_ESCAPE && e.type == CL_InputEvent::pressed)
 		{

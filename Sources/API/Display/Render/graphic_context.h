@@ -60,6 +60,7 @@ class CL_ProgramObject;
 class CL_ElementArrayBuffer;
 class CL_Angle;
 class CL_RenderBatcher;
+class CL_FontProvider_Freetype;
 
 /// \brief Primitive types.
 ///
@@ -88,6 +89,9 @@ enum CL_MapMode
 	cl_user_projection
 };
 
+/// \brief Standard Program
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CL_StandardProgram
 {
 	cl_program_color_only,
@@ -107,6 +111,9 @@ public:
 	/// \brief Constructs a graphic context.
 	CL_GraphicContext();
 
+	/// \brief Constructs a GraphicContext
+	///
+	/// \param provider = Graphic Context Provider
 	CL_GraphicContext(CL_GraphicContextProvider *provider);
 
 	~CL_GraphicContext();
@@ -220,14 +227,41 @@ public:
 	/// \brief Draws primitives from the current assigned primitives array.
 	void draw_primitives_array(CL_PrimitivesType type, int num_vertices);
 
+	/// \brief Draw primitives array
+	///
+	/// \param type = Primitives Type
+	/// \param offset = value
+	/// \param num_vertices = value
 	void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices);
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = value
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = short
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = char
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param element_array = Element Array Buffer
+	/// \param indices_type = Vertex Attribute Data Type
+	/// \param offset = void
 	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &element_array, CL_VertexAttributeDataType indices_type, void *offset = 0);
 
 	/// \brief Reset the primitives arrays.
@@ -236,6 +270,14 @@ public:
 	/// \brief Draw pixel buffer on gc.
 	void draw_pixels(float x, float y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color = CL_Colorf::white);
 
+	/// \brief Draw pixels
+	///
+	/// \param x = value
+	/// \param y = value
+	/// \param zoom_x = value
+	/// \param zoom_y = value
+	/// \param pixel_buffer = Pixel Buffer Ref
+	/// \param color = Colorf
 	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color = CL_Colorf::white);
 
 	/// \brief Clears the whole context using the specified color.
@@ -260,6 +302,7 @@ public:
 	    rectangle.</p>*/
 	void push_cliprect(const CL_Rect &rect);
 
+	/// \brief Push cliprect
 	void push_cliprect();
 
 	/// \brief Pop current clipping rectangle from the stack.
@@ -354,12 +397,12 @@ private:
 	friend class CL_Image;
 	friend class CL_FontProvider_Texture;
 	friend class CL_Draw;
+	friend class CL_FontProvider_Freetype;
 /// \}
 };
 
 #ifndef cl_pixelcenter_constant
-#define cl_pixelcenter_constant 0.375
+#define cl_pixelcenter_constant 0.375f
 #endif
-
 
 /// \}

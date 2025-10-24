@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 /// \brief Compare functions.
 ///
@@ -48,6 +46,5 @@ enum CL_CompareFunction
 	cl_comparefunc_always,
 	cl_comparefunc_never
 };
-
 
 /// \}

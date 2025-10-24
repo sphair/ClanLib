@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 ProgressBar::ProgressBar(GUI *gui) :
-	CL_Window(CL_Rect(32 + 256*2, 256*1 + 180*2 + 32, CL_Size(256, 180)), &gui->get_gui_manager(), CL_GUITopLevelDescription("Progress Bar")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Progress Bar", CL_Rect(32 + 256*2, 256*1 + 180*2 + 32, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	set_draggable(true);

@@ -83,7 +83,7 @@ void CL_TabPage_Impl::on_process_message(CL_GUIMessage &msg)
 
 void CL_TabPage_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect rect = component->get_geometry().get_size();
+	CL_Rect rect = component->get_size();
 	part_background.render_box(gc, rect, update_rect);
 }
 

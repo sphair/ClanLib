@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "gui_window_manager.h"
@@ -53,21 +51,40 @@ class CL_GUIWindowManagerTextureWindow
 public:
 	CL_GUIWindowManagerTextureWindow();
 
+	/// \brief Constructs a GUIWindowManagerTextureWindow
+	///
+	/// \param window = GUITop Level Window
+	/// \param sub_texture = Subtexture
+	/// \param geometry = Rect
 	CL_GUIWindowManagerTextureWindow(CL_GUITopLevelWindow *window, const CL_Subtexture &sub_texture, const CL_Rect &geometry);
 
 	~CL_GUIWindowManagerTextureWindow();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Texture
+	///
+	/// \return texture
 	CL_Subtexture get_texture() const;
 
+	/// \brief Get Geometry
+	///
+	/// \return geometry
 	CL_Rect get_geometry() const;
 
+	/// \brief Get Window
+	///
+	/// \return window
 	CL_GUITopLevelWindow *get_window() const;
+
+	/// \brief Get Toplevel component
+	///
+	/// \return toplevel_component
+	CL_GUIComponent *get_toplevel_component() const;
 
 /// \}
 /// \name Implementation
@@ -77,6 +94,5 @@ private:
 	CL_SharedPtr<CL_GUIWindowManagerTextureWindow_Impl> impl;
 /// \}
 };
-
 
 /// \}

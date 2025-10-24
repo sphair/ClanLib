@@ -35,7 +35,7 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/Display/Window/timer.h"
+#include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/listview.h"
@@ -158,7 +158,7 @@ void CL_ListView::set_select_whole_row(bool value)
 	impl->cancel_edit();
 
 	impl->select_whole_row = value;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ListView::set_multi_select(bool value)
@@ -214,7 +214,7 @@ void CL_ListView::clear()
 
 	clear_selection();
 	impl->document_item.remove_children();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ListView::clear_selection()
@@ -222,7 +222,7 @@ void CL_ListView::clear_selection()
 	impl->cancel_edit();
 
 	impl->selection.clear();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ListView::set_selected(CL_ListViewItem &item, bool selected)
@@ -242,7 +242,7 @@ void CL_ListView::set_selected(CL_ListViewItem &item, bool selected)
 	if (!impl->func_selection_changed.is_null())
 		impl->func_selection_changed.invoke(impl->selection);
 
-	invalidate_rect();
+	request_repaint();
 }
 
 CL_ListViewItem CL_ListView::find(const CL_StringRef &col_id, const CL_StringRef &str, bool recursive)
@@ -359,7 +359,7 @@ void CL_ListView_Impl::on_process_message(CL_GUIMessage &msg)
 			else
 				cancel_edit();
 		}
-		listview->invalidate_rect();
+		listview->request_repaint();
 	}
 }
 
@@ -525,7 +525,7 @@ void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inpu
 	if (edited_item.is_item())
 	{
 		edited_item.impl->selected = true;
-		listview->invalidate_rect();
+		listview->request_repaint();
 		edited_item = CL_ListViewItem();
 	}
 
@@ -539,7 +539,7 @@ void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inpu
 	{
 		si.item.set_open(!si.item.is_open());
 		layout->invalidate();
-		listview->invalidate_rect();
+		listview->request_repaint();
 		update_scrollbar();
 	}
 
@@ -578,7 +578,7 @@ void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inpu
 				update_scrollbar();
 			}
 		}
-		listview->invalidate_rect();
+		listview->request_repaint();
 	}
 
 	listview->capture_mouse(true);
@@ -630,7 +630,7 @@ void CL_ListView_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &
 		if (si.mouse_over != mouse_over)
 		{
 			si.mouse_over = mouse_over;
-			listview->invalidate_rect();
+			listview->request_repaint();
 		}
 	}
 }
@@ -638,13 +638,13 @@ void CL_ListView_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &
 void CL_ListView_Impl::on_mouse_enter()
 {
 	part_component.set_state(CssStr::hot, true);
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 void CL_ListView_Impl::on_mouse_leave()
 {
 	part_component.set_state(CssStr::hot, false);
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 void CL_ListView_Impl::on_column_added(CL_ListViewColumnHeader col)
@@ -666,14 +666,14 @@ void CL_ListView_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	part_component.render_box(gc, rect.get_size(), update_rect);
 	part_columns_bg.render_box(gc, rect_columns, update_rect);
 
-	listview->set_cliprect(rect_columns_content);
+	listview->set_cliprect(gc, rect_columns_content);
 
 	std::vector<ListViewShownItem> &items = layout->get_shown_items();
 	std::vector<ListViewColumn> &columns = layout->get_columns();
 	std::vector<ListViewRow> &rows = layout->get_rows();
 	renderer->render(columns, rows, items, update_rect);
 
-	listview->reset_cliprect();
+	listview->reset_cliprect(gc);
 }
 
 void CL_ListView_Impl::create_components()
@@ -769,21 +769,21 @@ void CL_ListView_Impl::on_scroll()
 
 	layout->set_scroll_offset(CL_Point(0,scrollbar->get_position()));
 	layout->invalidate();
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 void CL_ListView_Impl::on_item_added()
 {
 	layout->invalidate();
 	update_scrollbar();
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 void CL_ListView_Impl::on_item_modified(CL_ListViewItem item)
 {
 	layout->invalidate();
 	// update_scrollbar();
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 
@@ -795,7 +795,7 @@ void CL_ListView_Impl::on_item_deleted(CL_ListViewItem item)
 		selection.remove(item);
 	layout->invalidate();
 	update_scrollbar();
-	listview->invalidate_rect();
+	listview->request_repaint();
 }
 
 
@@ -893,8 +893,8 @@ void CL_ListView_Impl::edit_item(ListViewShownItem &si)
 
 	lineedit->set_visible();
 
-	lineedit->invalidate_rect();
-	listview->invalidate_rect();
+	lineedit->request_repaint();
+	listview->request_repaint();
 }
 
 void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
@@ -924,7 +924,7 @@ void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
 
 			lineedit->set_text(cl_text(""));
 			lineedit->set_visible(false);
-			lineedit->invalidate_rect();
+			lineedit->request_repaint();
 			listview->set_focus();
 			layout->invalidate();
 		}
@@ -952,7 +952,7 @@ void CL_ListView_Impl::on_style_changed()
 	layout->create_parts();
 	layout->invalidate();
 	update_scrollbar();
-	listview->invalidate_rect();
+	listview->request_repaint();
 	cancel_edit();
 }
 
@@ -964,7 +964,7 @@ void CL_ListView_Impl::cancel_edit()
 		edited_item = CL_ListViewItem();
 		lineedit->set_text(cl_text(""));
 		lineedit->set_visible(false);
-		listview->invalidate_rect();
+		listview->request_repaint();
 	}
 }
 

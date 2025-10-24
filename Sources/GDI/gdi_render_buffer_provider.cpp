@@ -46,7 +46,7 @@ CL_GDIRenderBufferProvider::~CL_GDIRenderBufferProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDIRenderBufferProvider Operations:
 
-void CL_GDIRenderBufferProvider::create(int width, int height, int format)
+void CL_GDIRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format)
 {
 	buffer = CL_PixelBuffer(width, height, width*4, CL_PixelFormat::argb8888);
 }

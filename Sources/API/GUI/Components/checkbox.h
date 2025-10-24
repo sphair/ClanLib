@@ -46,6 +46,10 @@ class CL_API_GUI CL_CheckBox : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a CheckBox
+	///
+	/// \param parent = GUIComponent
 	CL_CheckBox(CL_GUIComponent *parent);
 
 	virtual ~CL_CheckBox();
@@ -54,35 +58,75 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Is Indeterminated
+	///
+	/// \return true = indeterminated
 	bool is_indeterminated() const;
 
+	/// \brief Is Checked
+	///
+	/// \return true = checked
 	bool is_checked() const;
 
+	/// \brief Is 3state
+	///
+	/// \return true = 3state
 	bool is_3state() const;
 
 	const CL_String &get_text() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Set indeterminated
 	void set_indeterminated();
 
+	/// \brief Set checked
+	///
+	/// \param enable = bool
 	void set_checked(bool enable);
 
+	/// \brief Set 3state
+	///
+	/// \param enable = bool
 	void set_3state(bool enable);
 
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
 /// \}
 /// \name Events
 /// \{
 public:
+
+	/// \brief Func checked
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_checked();
+
+	/// \brief Func unchecked
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_unchecked();
+
+	/// \brief Func indeterminated
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_indeterminated();
+
+	/// \brief Func state changed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_state_changed();
 
 /// \}
@@ -92,6 +136,5 @@ private:
 	CL_SharedPtr<CL_CheckBox_Impl> impl;
 /// \}
 };
-
 
 /// \}

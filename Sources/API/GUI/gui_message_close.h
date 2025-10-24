@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -49,25 +47,29 @@ public:
 	/// \brief Constructs a window close GUI message.
 	CL_GUIMessage_Close();
 
+	/// \brief Constructs a GUIMessage Close
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_Close(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_Close();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	static CL_StringRef get_type_name();
 
+	/// \brief Get Type name
+	///
+	/// \return type_name
+	static CL_StringRef get_type_name();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -76,6 +78,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

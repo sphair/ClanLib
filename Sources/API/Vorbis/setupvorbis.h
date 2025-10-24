@@ -30,13 +30,7 @@
 /// \addtogroup clanVorbis_System clanVorbis System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 /// \brief ClanVorbis initialization functions
 ///
@@ -54,7 +48,6 @@ public:
 
 	~CL_SetupVorbis();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -67,6 +60,5 @@ public:
 	static void deinit();
 /// \}
 };
-
 
 /// \}

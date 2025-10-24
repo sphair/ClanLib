@@ -32,11 +32,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef WIN32
 #pragma warning( disable : 4786)
 #endif
@@ -71,15 +66,6 @@
 #include "Network/IRC/irc_connection.h"
 #include "Network/IRC/irc_numerics.h"
 #include "Network/IRC/dcc_download.h"
-
-#include "Network/NetSession/netsession.h"
-#include "Network/NetSession/netcomputer.h"
-#include "Network/NetSession/netgroup.h"
-#include "Network/NetSession/netstream.h"
-
-#include "Network/NetObjects/netobject_client.h"
-#include "Network/NetObjects/netobject_controller.h"
-#include "Network/NetObjects/netobject_server.h"
 
 #include "Network/NetGame/client.h"
 #include "Network/NetGame/connection.h"
@@ -194,5 +180,4 @@
 		#endif
 	#endif
 #endif
-
 

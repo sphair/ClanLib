@@ -33,6 +33,7 @@
 #include "opengl_graphic_context_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Display/Render/shared_gc_data.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLShaderObjectProvider Construction:
@@ -40,6 +41,7 @@
 CL_OpenGLShaderObjectProvider::CL_OpenGLShaderObjectProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : gc_provider(gc_provider), handle(0)
 {
+	CL_SharedGCData::add_disposable(this);
 }
 
 void CL_OpenGLShaderObjectProvider::create(
@@ -96,10 +98,26 @@ void CL_OpenGLShaderObjectProvider::create(
 
 CL_OpenGLShaderObjectProvider::~CL_OpenGLShaderObjectProvider()
 {
-	CL_OpenGL::set_active(gc_provider);
-	clDeleteShader(handle);
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
 }
 
+void CL_OpenGLShaderObjectProvider::on_dispose()
+{
+	if (handle)
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteShader(handle);
+			}
+		}
+	}
+}
 void CL_OpenGLShaderObjectProvider::destroy()
 {
 	delete this;

@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../Render/frame_buffer.h"
@@ -52,16 +50,20 @@ class CL_API_DISPLAY CL_FrameBufferProvider
 public:
 	virtual ~CL_FrameBufferProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get attachment size
+	///
+	/// \param buffer_id = value
+	///
+	/// \return Size
 	virtual CL_Size get_attachment_size(int buffer_id) const = 0;
 
 	virtual std::vector<int> get_attachment_indexes() const = 0;
-
 
 /// \}
 /// \name Operations
@@ -71,25 +73,60 @@ public:
 	/// \brief Destroys the provider.
 	virtual void destroy() = 0;
 
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param render_buffer = Render Buffer
 	virtual void attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer) = 0;
 
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param level = value
+	/// \param zoffset = value
 	virtual void attach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0) = 0;
 
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param subtype = Texture Subtype
+	/// \param level = value
+	/// \param zoffset = value
 	virtual void attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0) = 0;
 
+	/// \brief Detach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param level = value
+	/// \param zoffset = value
 	virtual void detach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0) = 0;
 
+	/// \brief Attach stencil buffer
+	///
+	/// \param render_buffer = Render Buffer
 	virtual void attach_stencil_buffer(const CL_RenderBuffer &render_buffer) = 0;
 
+	/// \brief Detach stencil buffer
 	virtual void detach_stencil_buffer() = 0;
 
+	/// \brief Attach depth buffer
+	///
+	/// \param render_buffer = Render Buffer
 	virtual void attach_depth_buffer(const CL_RenderBuffer &render_buffer) = 0;
 
+	/// \brief Attach depth buffer
+	///
+	/// \param texture = Texture
+	/// \param subtype = Texture Subtype
+	/// \param level = value
+	/// \param zoffset = value
 	virtual void attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0) = 0;
 
+	/// \brief Detach depth buffer
 	virtual void detach_depth_buffer() = 0;
-
-
 
 /// \}
 /// \name Implementation
@@ -98,6 +135,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

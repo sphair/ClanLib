@@ -29,9 +29,7 @@
 /// \addtogroup clanDatabase_System clanDatabase System
 /// \{
 
-
 #pragma once
-
 
 #include "api_database.h"
 
@@ -57,6 +55,9 @@ public:
 	/// \brief Constructs a database transaction
 	CL_DBTransaction();
 
+	/// \brief Constructs a DBTransaction
+	///
+	/// \param CL_DBTransaction_Impl = Shared Ptr
 	CL_DBTransaction(const CL_SharedPtr<CL_DBTransaction_Impl> &impl);
 
 	~CL_DBTransaction();
@@ -87,6 +88,5 @@ private:
 	friend class CL_DBConnection;
 /// \}
 };
-
 
 /// \}

@@ -32,6 +32,7 @@
 #include "API/Display/Render/texture.h"
 #include "API/Display/2D/subtexture.h"
 #include "API/Core/Math/rect.h"
+#include "gui_manager_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerTextureWindow_Impl class:
@@ -80,6 +81,14 @@ CL_GUITopLevelWindow *CL_GUIWindowManagerTextureWindow::get_window() const
 {
 	return impl->window;
 }
+
+CL_GUIComponent *CL_GUIWindowManagerTextureWindow::get_toplevel_component() const
+{
+	if (!impl->window)
+		return NULL;
+	return impl->window->component;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerTextureWindow implementation:

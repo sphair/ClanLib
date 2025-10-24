@@ -77,6 +77,11 @@ CL_InputDeviceProvider_LinuxJoystick::~CL_InputDeviceProvider_LinuxJoystick()
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_LinuxJoystick attributes:
 
+int CL_InputDeviceProvider_LinuxJoystick::get_fd() const
+{
+	return fd;
+}
+
 int CL_InputDeviceProvider_LinuxJoystick::get_x() const
 {
 	return 0;

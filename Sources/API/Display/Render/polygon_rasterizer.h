@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -82,7 +80,6 @@ public:
 
 	virtual ~CL_PolygonRasterizer();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -120,7 +117,6 @@ public:
 
 	/// \brief Returns the side considered the front of a face.
 	CL_FaceSide get_front_face() const;
-
 
 /// \}
 /// \name Operations
@@ -160,7 +156,6 @@ public:
 	/// \brief Sets the offset units.
 	void set_offset_units(float value);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -169,6 +164,5 @@ private:
 	CL_SharedPtr<CL_PolygonRasterizer_Impl> impl;
 /// \}
 };
-
 
 /// \}

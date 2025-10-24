@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -56,10 +50,12 @@ public:
 	/// \brief Constructs a DOM Entity handle.
 	CL_DomEntity();
 
+	/// \brief Constructs a DomEntity
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomEntity(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomEntity();
-
 
 /// \}
 /// \name Attributes
@@ -78,7 +74,6 @@ public:
 	/** <p>For parsed entities, this is null.</p>*/
 	CL_DomString get_notation_name() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -86,6 +81,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

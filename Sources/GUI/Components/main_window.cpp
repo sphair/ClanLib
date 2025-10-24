@@ -68,8 +68,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_MainWindow Construction:
 
-CL_MainWindow::CL_MainWindow(const CL_Rect &geometry, CL_GUIManager *owner, const CL_GUITopLevelDescription &description)
-: CL_GUIComponent(geometry, owner, description), impl(new CL_MainWindow_Impl)
+CL_MainWindow::CL_MainWindow(CL_GUIManager *owner, const CL_GUITopLevelDescription &description)
+: CL_GUIComponent(owner, description), impl(new CL_MainWindow_Impl)
 {
 	impl->window = this;
 	impl->title = description.get_title();
@@ -92,8 +92,8 @@ CL_MainWindow::CL_MainWindow(const CL_Rect &geometry, CL_GUIManager *owner, cons
 	impl->statusbar->set_geometry(statusbar_rect);
 }
 
-CL_MainWindow::CL_MainWindow(const CL_Rect &geometry, CL_GUIComponent *owner, const CL_GUITopLevelDescription &description)
-: CL_GUIComponent(geometry, owner, description), impl(new CL_MainWindow_Impl)
+CL_MainWindow::CL_MainWindow(CL_GUIComponent *owner, const CL_GUITopLevelDescription &description)
+: CL_GUIComponent( owner, description), impl(new CL_MainWindow_Impl)
 {
 	set_type_name(cl_text("mainwindow"));
 
@@ -104,7 +104,6 @@ CL_MainWindow::CL_MainWindow(const CL_Rect &geometry, CL_GUIComponent *owner, co
 	func_process_message().set(impl.get(), &CL_MainWindow_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_MainWindow_Impl::on_render);
 
-	
 	impl->menubar = new CL_MenuBar(this);
 	impl->statusbar = new CL_StatusBar(this);
 

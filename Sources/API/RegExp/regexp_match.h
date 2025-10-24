@@ -29,9 +29,7 @@
 /// \addtogroup clanRegExp_Regular_Expressions clanRegExp Regular Expressions
 /// \{
 
-
 #pragma once
-
 
 #include "../Core/System/sharedptr.h"
 #include "api_regexp.h"
@@ -49,10 +47,12 @@ class CL_API_REGEXP CL_RegExpMatch
 public:
 	CL_RegExpMatch();
 
+	/// \brief Constructs a RegExpMatch
+	///
+	/// \param other = Reg Exp Match
 	CL_RegExpMatch(const CL_RegExpMatch &other);
 
 	~CL_RegExpMatch();
-
 
 /// \}
 /// \name Attributes
@@ -61,26 +61,67 @@ public:
 public:
 	const int *get_vector() const;
 
+	/// \brief Get Vector
+	///
+	/// \return vector
 	int *get_vector();
 
+	/// \brief Get Vector size
+	///
+	/// \return vector_size
 	int get_vector_size() const;
 
+	/// \brief Get capture
+	///
+	/// \param subject = char
+	/// \param capture = value
+	///
+	/// \return String Ref8
 	CL_StringRef8 get_capture(const char *subject, int capture) const;
 
+	/// \brief Get capture
+	///
+	/// \param subject = String Ref8
+	/// \param capture = value
+	///
+	/// \return String Ref8
 	CL_StringRef8 get_capture(const CL_StringRef8 &subject, int capture) const;
 
+	/// \brief Get capture pos
+	///
+	/// \param capture = value
+	///
+	/// \return int
 	int get_capture_pos(int capture) const;
 
+	/// \brief Get capture length
+	///
+	/// \param capture = value
+	///
+	/// \return int
 	int get_capture_length(int capture) const;
 
+	/// \brief Get capture end
+	///
+	/// \param capture = value
+	///
+	/// \return int
 	int get_capture_end(int capture) const;
 
+	/// \brief Get Captures count
+	///
+	/// \return captures_count
 	int get_captures_count() const;
 
+	/// \brief Is Partial
+	///
+	/// \return true = partial
 	bool is_partial() const;
 
+	/// \brief Is Match
+	///
+	/// \return true = match
 	bool is_match() const;
-
 
 /// \}
 /// \name Operations
@@ -89,12 +130,20 @@ public:
 public:
 	CL_RegExpMatch &operator =(const CL_RegExpMatch &other);
 
+	/// \brief Set vector size
+	///
+	/// \param size = value
 	void set_vector_size(int size);
 
+	/// \brief Set captures count
+	///
+	/// \param count = value
 	void set_captures_count(int count);
 
+	/// \brief Set partial match
+	///
+	/// \param partial = bool
 	void set_partial_match(bool partial);
-
 
 /// \}
 /// \name Implementation
@@ -104,6 +153,5 @@ private:
 	CL_SharedPtr<CL_RegExpMatch_Impl> impl;
 /// \}
 };
-
 
 /// \}

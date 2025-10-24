@@ -38,7 +38,15 @@
 class CL_PopupMenuItem_Impl
 {
 public:
-	CL_PopupMenuItem_Impl() : id(-1), submenu(CL_PopupMenu::create_null_object()), disabled(false), separator(false) { }
+	CL_PopupMenuItem_Impl() :
+	  id(-1),
+	  submenu(CL_PopupMenu::create_null_object()),
+	  disabled(false),
+	  separator(false),
+	  checkable(false),
+	  is_checked(false)
+	{
+	}
 
 	CL_PopupMenu submenu;
 	CL_String text;
@@ -47,6 +55,8 @@ public:
 	int id;
 	bool disabled;
 	bool separator;
+	bool checkable;
+	bool is_checked;
 	CL_Callback_v0 func_clicked;
 };
 
@@ -111,6 +121,21 @@ CL_StringRef CL_PopupMenuItem::get_accelerator_text() const
 	return impl->accelerator_text;
 }
 
+bool CL_PopupMenuItem::is_checkable() const
+{
+	return impl->checkable;
+}
+
+bool CL_PopupMenuItem::is_checked() const
+{
+	return impl->is_checked;
+}
+
+CL_PixelBuffer CL_PopupMenuItem::get_icon() const
+{
+	return impl->image;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenuItem Events:
 
@@ -160,6 +185,16 @@ void CL_PopupMenuItem::set_enabled(bool enabled)
 void CL_PopupMenuItem::set_separator(bool separator)
 {
 	impl->separator = separator;
+}
+
+void CL_PopupMenuItem::set_checkable( bool checkable )
+{
+	impl->checkable = checkable;
+}
+
+void CL_PopupMenuItem::set_checked( bool checked )
+{
+	impl->is_checked = checked;
 }
 
 /////////////////////////////////////////////////////////////////////////////

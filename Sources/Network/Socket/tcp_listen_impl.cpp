@@ -34,72 +34,25 @@
 #include "API/Network/Socket/tcp_connection.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_format.h"
-#ifdef WIN32
-typedef int socklen_t;
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_TCPListen_Impl Construction:
 
 CL_TCPListen_Impl::CL_TCPListen_Impl(const CL_SocketName &name, int queue_size, bool force_bind)
-: handle(-1)
 {
-	int result = -1;
-	handle = socket(AF_INET, SOCK_STREAM, 0);
-	if (handle == -1)
-		throw CL_Exception(cl_format(cl_text("Unable to create socket - %1"), CL_SocketError::get_last_error_message()));
-
+	socket.create_tcp();
 #ifdef WIN32
-	wsa_event_handler.start_select(handle);
-	accept_event = CL_Event(
-		new CL_EventProvider_Win32Socket(
-			&wsa_event_handler,
-			CL_EventProvider_Win32Socket::socket_event_read));
+	accept_event = CL_Event(new CL_EventProvider_Win32Socket(&socket, CL_EventProvider_Win32Socket::socket_event_read));
 #else
-	accept_event = CL_Event(
-		new CL_EventProvider_UnixSocket(handle, CL_EventProvider::type_fd_read));
-
-#ifdef SO_NOSIGPIPE
-	int value = 1;
-	result = setsockopt(handle, SOL_SOCKET, SO_NOSIGPIPE, (const char *) &value, sizeof(int));
-#endif
+	accept_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_read));
 #endif
 
-	if (force_bind)
-	{
-		int value = 1;
-		result = setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, (const char *) &value, sizeof(int));
-		if (result == -1)
-			throw CL_Exception(cl_format(cl_text("Unable to force bind socket - %1"), CL_SocketError::get_last_error_message()));
-	}
-
-	sockaddr_in addr;
-	name.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
-	result = bind(handle, (sockaddr *) &addr, sizeof(sockaddr_in));
-	if (result == -1)
-	{
-		close_handle();
-		
-		if (!name.get_address().empty())
-			throw CL_Exception(cl_format(cl_text("Unable to bind socket on device %1 port %2 - %3"), name.get_address(), name.get_port(), CL_SocketError::get_last_error_message()));
-		else
-			throw CL_Exception(cl_format(cl_text("Unable to bind socket on port %1 - %2"), name.get_port(), CL_SocketError::get_last_error_message()));
-	}
-
-	result = listen(handle, queue_size);
-	if (result == -1)
-	{
-		close_handle();
-		throw CL_Exception(cl_format(cl_text("Unable to set socket into listen state - %1"), CL_SocketError::get_last_error_message()));
-	}
+	socket.bind(name, force_bind);
+	socket.listen(queue_size);
 }
 
 CL_TCPListen_Impl::~CL_TCPListen_Impl()
 {
-	close_handle();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -110,28 +63,9 @@ CL_TCPListen_Impl::~CL_TCPListen_Impl()
 
 CL_TCPConnection CL_TCPListen_Impl::accept()
 {
-	sockaddr_in new_addr;
-	memset(&new_addr, 0, sizeof(sockaddr_in));
-	socklen_t size = sizeof(sockaddr_in);
-	int new_handle = ::accept(handle, (sockaddr *) &new_addr, &size);
-	if (new_handle == -1)
-		throw CL_Exception(cl_format(cl_text("Socket accept failed - %1"), CL_SocketError::get_last_error_message()));
-
-	return CL_TCPConnection(new_handle, true);
+	CL_SocketName socketname;
+	return CL_TCPConnection(socket.accept(socketname), true);
 }
-	
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_TCPListen_Impl Implementation:
-
-void CL_TCPListen_Impl::close_handle()
-{
-#ifdef WIN32
-	if (handle != -1)
-		closesocket(handle);
-	wsa_event_handler.stop_select();
-#else
-	if (handle != -1)
-		close(handle);
-#endif
-	handle = -1;
-}

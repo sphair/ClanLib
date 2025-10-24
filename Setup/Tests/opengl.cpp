@@ -31,7 +31,6 @@
 */
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 // todo: add headers needed here.
 
 int main(int, char**)

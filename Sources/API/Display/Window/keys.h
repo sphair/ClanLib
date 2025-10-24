@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 // Keyboard & mouse platform independence support.
 
@@ -447,6 +441,5 @@
 #define CL_KEY_ENTER CL_KEY_RETURN
 #define CL_KEY_LAPPLE CL_KEY_LWIN
 #define CL_KEY_RAPPLE CL_KEY_RWIN
-
 
 /// \}

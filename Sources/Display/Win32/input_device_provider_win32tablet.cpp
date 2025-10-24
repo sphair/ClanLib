@@ -322,10 +322,7 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = 0;
 		e.repeat_count = 0;
-		e.alt = window->alt_down;
-		e.ctrl = window->ctrl_down;
-		e.shift = window->shift_down;
-
+		window->set_modifier_keys(e);
 		sig_provider_event->invoke(e);
 		return TRUE;
 	}
@@ -340,10 +337,7 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = 0;
 		e.repeat_count = 0;
-		e.alt = window->alt_down;
-		e.ctrl = window->ctrl_down;
-		e.shift = window->shift_down;
-
+		window->set_modifier_keys(e);
 		sig_provider_event->invoke(e);
 		return TRUE;
 	}
@@ -356,10 +350,7 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = get_axis(2);
 		e.repeat_count = 0;
-		e.alt = window->alt_down;
-		e.ctrl = window->ctrl_down;
-		e.shift = window->shift_down;
-
+		window->set_modifier_keys(e);
 		sig_provider_event->invoke(e);
 		return TRUE;
 	}

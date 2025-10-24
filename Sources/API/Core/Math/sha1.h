@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -51,7 +49,6 @@ public:
 	/// \brief Constructs a SHA-1 hash generator.
 	CL_SHA1();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -60,8 +57,10 @@ public:
 	/// \brief Returns the calculated hash.
 	CL_String8 get_hash(bool uppercase = false);
 
+	/// \brief Get hash
+	///
+	/// \param out_hash = where to write to
 	void get_hash(unsigned char out_hash[20]);
-
 
 /// \}
 /// \name Operations
@@ -74,11 +73,13 @@ public:
 	/// \brief Adds data to be hashed.
 	void add(const void *data, int size);
 
+	/// \brief Add
+	///
+	/// \param data = Data Buffer
 	void add(const CL_DataBuffer &data);
 
 	/// \brief Finalize hash calculation.
 	void calculate();
-
 
 /// \}
 /// \name Implementation
@@ -88,6 +89,5 @@ private:
 	CL_SharedPtr<CL_SHA1_Impl> impl;
 /// \}
 };
-
 
 /// \}

@@ -35,7 +35,7 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/Display/Window/timer.h"
+#include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/slider.h"
@@ -144,8 +144,6 @@ CL_Slider::CL_Slider(CL_GUIComponent *parent)
 	func_resized().set(impl.get(), &CL_Slider_Impl::on_resized);
 	func_enablemode_changed().set(impl.get(), &CL_Slider_Impl::on_enablemode_changed);
 	impl->create_parts();
-
-	impl->mouse_down_timer = create_timer();
 }
 
 CL_Slider::~CL_Slider()
@@ -208,7 +206,7 @@ void CL_Slider::set_vertical(bool enable)
 	impl->vertical = enable;
 	impl->create_parts();
 	impl->update_part_positions();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_horizontal(bool enable)
@@ -219,13 +217,13 @@ void CL_Slider::set_horizontal(bool enable)
 void CL_Slider::set_min(int slider_min)
 {
 	impl->slider_min = slider_min;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_max(int slider_max)
 {
 	impl->slider_max = slider_max;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_tick_count(int count)
@@ -234,7 +232,7 @@ void CL_Slider::set_tick_count(int count)
 		throw CL_Exception(cl_text("CL_Slider::set_tick_count: tick count in slider can not be < 2."));
 
 	impl->tick_count = count;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_ranges(int slider_min, int slider_max, unsigned int tick_count, int page_step)
@@ -246,14 +244,14 @@ void CL_Slider::set_ranges(int slider_min, int slider_max, unsigned int tick_cou
 	impl->slider_max = slider_max;
 	impl->tick_count = tick_count;
 	impl->page_step = page_step;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_position(int pos)
 {
 	impl->position = pos;
 	impl->update_part_positions();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Slider::set_page_step(int steps)
@@ -328,7 +326,7 @@ void CL_Slider_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &in
 		part_thumb.set_state(CssStr::hot, thumb_hot );
 		part_thumb.set_state(CssStr::normal, !thumb_hot);
 	}
-	slider->invalidate_rect();
+	slider->request_repaint();
 
 	if (mouse_down_mode == mouse_down_thumb_drag)
 	{
@@ -352,7 +350,7 @@ void CL_Slider_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &in
 			if (position < slider_min) position = slider_min;
 			if (position > slider_max) position = slider_max;
 		}
-		slider->invalidate_rect();
+		slider->request_repaint();
 	}
 
 	if (position != original_slider_position)
@@ -399,7 +397,7 @@ void CL_Slider_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputE
 
 	mouse_down_timer.start(100,false);
 
-	slider->invalidate_rect();
+	slider->request_repaint();
 	slider->capture_mouse(true);
 
 	if (position != original_position)
@@ -419,7 +417,7 @@ void CL_Slider_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEve
 
 	mouse_down_mode = mouse_down_none;
 
-	slider->invalidate_rect();
+	slider->request_repaint();
 	slider->capture_mouse(false);
 }
 
@@ -429,7 +427,7 @@ void CL_Slider_Impl::on_mouse_leave()
 	part_thumb.set_state(CssStr::hot, false);
 	part_component.set_state(CssStr::normal, true);
 	part_thumb.set_state(CssStr::normal, true);
-	slider->invalidate_rect();
+	slider->request_repaint();
 }
 
 void CL_Slider_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
@@ -451,9 +449,16 @@ void CL_Slider_Impl::create_parts()
 	part_track = CL_GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
 	part_thumb = CL_GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
 
-	part_component.set_state(CssStr::normal, true);
-	part_track.set_state(CssStr::normal, true);
-	part_thumb.set_state(CssStr::normal, true);
+	bool enabled = slider->is_enabled();
+
+	part_component.set_state(CssStr::normal, enabled);
+	part_track.set_state(CssStr::normal, enabled);
+	part_thumb.set_state(CssStr::normal, enabled);
+
+	part_component.set_state(CssStr::disabled, !enabled);
+	part_track.set_state(CssStr::disabled, !enabled);
+	part_thumb.set_state(CssStr::disabled, !enabled);
+
 }
 
 void CL_Slider_Impl::update_part_positions()
@@ -551,18 +556,27 @@ void CL_Slider_Impl::on_timer_expired()
 	if (position < slider_min) position = slider_min;
 	if (position > slider_max) position = slider_max;
 
-	slider->invalidate_rect();
+	slider->request_repaint();
 }
 
 void CL_Slider_Impl::on_resized()
 {
-	CL_GraphicContext gc = slider->get_gc();
+	CL_GraphicContext &gc = slider->get_gc();
 	update_part_positions();
 }
 
 void CL_Slider_Impl::on_enablemode_changed()
 {
-	part_component.set_state(CssStr::disabled, !slider->is_enabled());
-	part_component.set_state(CssStr::normal, slider->is_enabled());
-	slider->invalidate_rect();
+	bool enabled = slider->is_enabled();
+
+	part_component.set_state(CssStr::normal, enabled);
+	part_track.set_state(CssStr::normal, enabled);
+	part_thumb.set_state(CssStr::normal, enabled);
+
+	part_component.set_state(CssStr::disabled, !enabled);
+	part_track.set_state(CssStr::disabled, !enabled);
+	part_thumb.set_state(CssStr::disabled, !enabled);
+	slider->request_repaint();
 }
+
+

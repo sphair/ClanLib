@@ -28,9 +28,7 @@
 
 //! clanGUI="System"
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -56,7 +54,6 @@ public:
 		key_space,
 	};
 
-
 /// \}
 /// \name Construction
 /// \{
@@ -67,14 +64,18 @@ public:
 
 	~CL_GUIConsumedKeys();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	bool is_consumed(ConsumedKey key);
 
+	/// \brief Is consumed
+	///
+	/// \param key = Consumed Key
+	///
+	/// \return bool
+	bool is_consumed(ConsumedKey key);
 
 /// \}
 /// \name Operations
@@ -84,7 +85,6 @@ public:
 	/// \brief Sets a part state.
 	void set_consumed(ConsumedKey key, bool consumed=true);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -93,5 +93,4 @@ private:
 	CL_SharedPtr<CL_GUIConsumedKeys_Impl> impl;
 /// \}
 };
-
 

@@ -29,16 +29,17 @@
 /// \addtogroup clanGUI_Framework clanGUI Framework
 /// \{
 
-
 #pragma once
-
 
 #include "../Core/System/sharedptr.h"
 #include "gui_layout.h"
 
 class CL_GUIComponent;
-class CL_GUILayoutCorners_Impl;
+class CL_GUILayoutProvider_Corners;
 
+/// \brief Component Anchor Point
+///
+/// \xmlonly !group=GUI/Framework! !header=gui.h! \endxmlonly
 enum CL_ComponentAnchorPoint
 {
 	cl_anchor_top_left,
@@ -61,15 +62,13 @@ public:
 
 	virtual ~CL_GUILayoutCorners();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Returns the size of the dialog, as set in the editor.
-	CL_Size get_preferred_size() const;
-
+	/// \brief Retrieves the provider.
+	CL_GUILayoutProvider_Corners *get_provider() const;
 
 /// \}
 /// \name Operations
@@ -81,21 +80,17 @@ public:
 		CL_ComponentAnchorPoint ap_tl, int dist_tl_x, int dist_tl_y,
 		CL_ComponentAnchorPoint ap_br, int dist_br_x, int dist_br_y);
 
+	/// \brief Remove component
+	///
+	/// \param component = GUIComponent
 	void remove_component(CL_GUIComponent *component);
-
-	void set_geometry(const CL_Rect &geometry);
-
-	void set_preferred_size(const CL_Size &size);
-
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_SharedPtr<CL_GUILayoutCorners_Impl> impl;
 /// \}
 };
-
 
 /// \}

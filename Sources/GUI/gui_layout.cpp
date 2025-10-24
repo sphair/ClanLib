@@ -24,16 +24,47 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
 #include "API/GUI/gui_layout.h"
+#include "API/GUI/Providers/gui_layout_provider.h"
+#include "API/Core/Math/size.h"
+
+class CL_GUILayout_Impl
+{
+public:
+	CL_GUILayout_Impl()
+	: provider(0)
+	{
+	}
+
+	~CL_GUILayout_Impl()
+	{
+		if (provider)
+			provider->destroy();
+	}
+
+	CL_GUILayoutProvider *provider;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayout Construction:
 
 CL_GUILayout::CL_GUILayout()
 {
+}
+
+CL_GUILayout::CL_GUILayout(CL_GUILayoutProvider *provider)
+: impl(new CL_GUILayout_Impl)
+{
+	impl->provider = provider;
+}
+
+CL_GUILayout::CL_GUILayout(const CL_GUILayout &copy)
+{
+	impl = copy.impl;
 }
 
 CL_GUILayout::~CL_GUILayout()
@@ -43,11 +74,35 @@ CL_GUILayout::~CL_GUILayout()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayout Attributes:
+bool CL_GUILayout::is_null()
+{
+	return impl.is_null();
+}
 
+CL_GUILayoutProvider *CL_GUILayout::get_provider() const
+{
+	if (impl.is_null())
+		return 0;
+	return impl->provider;
+}
+
+CL_Size CL_GUILayout::get_preferred_size() const
+{
+	return impl->provider->get_preferred_size();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayout Operations:
 
+void CL_GUILayout::set_geometry(const CL_Rect &pos)
+{
+	impl->provider->set_geometry(pos);
+}
+
+void CL_GUILayout::set_preferred_size(const CL_Size &size)
+{
+	impl->provider->set_preferred_size(size);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayout Implementation:

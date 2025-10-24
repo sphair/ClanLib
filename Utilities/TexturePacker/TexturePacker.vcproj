@@ -180,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\main.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Sources\main_window.cpp"
 				>
 			</File>
@@ -239,11 +235,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\..\Resources\GUIThemeDefault\resources.xml"
+				RelativePath=".\resources.xml"
 				>
 			</File>
 			<File
-				RelativePath=".\resources.xml"
+				RelativePath="..\..\Resources\GUIThemeDefault\resources.xml"
 				>
 			</File>
 		</Filter>

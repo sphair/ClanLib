@@ -33,7 +33,7 @@
 #include "API/Core/System/memory_pool.h"
 
 #ifndef WIN32
-#include <string.h>
+#include <cstring>
 #endif
 
 template<typename CharType, typename ReferenceClass, typename StdString>

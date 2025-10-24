@@ -40,8 +40,6 @@ input_device_provider_sdlkeyboard.h \
 input_device_provider_sdlmouse.h \
 cursor_provider_sdl.cpp \
 cursor_provider_sdl.h \
-timer_provider_sdl.h \
-timer_provider_sdl.cpp \
 vertex_attribute_fetcher.h \
 setup_sdl.cpp 
 

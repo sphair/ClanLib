@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../../Core/IOData/virtual_directory.h"
 #include "../api_sound.h"
@@ -59,7 +53,6 @@ public:
 	/// \brief Unregisters a sound provider type in the CL_SoundProviderFactory.
 	virtual ~CL_SoundProviderType();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -71,7 +64,6 @@ public:
 		CL_VirtualDirectory directory,
 		bool streamed) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -79,6 +71,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

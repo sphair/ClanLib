@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "input_device.h"
@@ -83,13 +81,11 @@ public:
 
 	~CL_InputEvent();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -129,7 +125,6 @@ public:
 	bool shift;
 	bool ctrl;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -138,6 +133,5 @@ private:
 	CL_SharedPtr<CL_InputEvent_Impl> impl;
 /// \}
 };
-
 
 /// \}

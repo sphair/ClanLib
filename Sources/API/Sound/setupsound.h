@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_System clanSound System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 
@@ -55,7 +49,6 @@ public:
 
 	~CL_SetupSound();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -68,6 +61,5 @@ public:
 	static void deinit();
 /// \}
 };
-
 
 /// \}

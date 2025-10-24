@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -52,13 +50,11 @@ class CL_API_CORE CL_VirtualFileSource
 public:
 	virtual ~CL_VirtualFileSource() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -87,7 +83,6 @@ public:
 	/// \brief Return the path of this file source.
 	virtual CL_String get_path() const = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -95,6 +90,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

@@ -30,6 +30,7 @@
 #include "opengl_element_array_buffer_provider.h"
 #include "opengl_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
+#include "API/Display/Render/shared_gc_data.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLElementArrayBufferProvider Construction:
@@ -37,14 +38,32 @@
 CL_OpenGLElementArrayBufferProvider::CL_OpenGLElementArrayBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : gc_provider(gc_provider), handle(0), data_ptr(0)
 {
+	CL_SharedGCData::add_disposable(this);
 	CL_OpenGL::set_active(gc_provider);
 	clGenBuffers(1, &handle);
 }
 
 CL_OpenGLElementArrayBufferProvider::~CL_OpenGLElementArrayBufferProvider()
 {
-	CL_OpenGL::set_active(gc_provider);
-	clDeleteBuffers(1, &handle);
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
+}
+
+void CL_OpenGLElementArrayBufferProvider::on_dispose()
+{
+	if (handle)
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteBuffers(1, &handle);
+			}
+		}
+	}
 }
 
 void CL_OpenGLElementArrayBufferProvider::create(int size, CL_BufferUsage usage)

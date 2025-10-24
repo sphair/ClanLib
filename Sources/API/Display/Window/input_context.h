@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -56,10 +50,12 @@ public:
 	/// \brief Constructs an input context.
 	CL_InputContext();
 
+	/// \brief Constructs a InputContext
+	///
+	/// \param copy = Input Context
 	CL_InputContext(const CL_InputContext &copy);
 
 	~CL_InputContext();
-
 
 /// \}
 /// \name Attributes
@@ -92,7 +88,6 @@ public:
 
 	/// \brief Returns the input device with the given devicename
 	CL_InputDevice &get_device(const CL_StringRef &device_name);
-
 
 /// \}
 /// \name Operations
@@ -127,7 +122,6 @@ public:
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -136,6 +130,5 @@ private:
 	CL_SharedPtr<CL_InputContext_Impl> impl;
 /// \}
 };
-
 
 /// \}

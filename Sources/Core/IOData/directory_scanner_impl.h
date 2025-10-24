@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/Text/string_types.h"
 
 class CL_DirectoryScanner_Impl

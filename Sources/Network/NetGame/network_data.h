@@ -31,6 +31,9 @@
 #include "API/Network/NetGame/event.h"
 #include "API/Network/Socket/tcp_connection.h"
 
+class CL_DomDocument;
+class CL_DomElement;
+
 class CL_NetGameNetworkData
 {
 public:
@@ -38,5 +41,8 @@ public:
 	static void send_data(CL_TCPConnection connection, const CL_NetGameEvent &e);
 
 private:
+	static CL_NetGameEventValue create_event_value(CL_DomElement &value_element);
+	static CL_DomElement create_event_value_element(CL_DomDocument &doc, const CL_NetGameEventValue &value);
+
 	enum { packet_limit = 32000 };
 };

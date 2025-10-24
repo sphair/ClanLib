@@ -20,7 +20,7 @@ public:
 			CL_GUIWindowManagerSystem wm;
 
 			CL_GUIManager gui;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_ResourceManager resources("resources.xml");
 			CL_ResourceManager resources2("../../../Resources/GUIThemeLuna/resources.xml");
@@ -28,12 +28,12 @@ public:
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			WindowsTheme windows_theme(&theme);
-			gui.set_theme(&windows_theme);
+
+			CL_GUITheme windows_theme( new WindowsTheme(&theme) );
+			gui.set_theme(windows_theme);
 			gui.set_css_document("theme.css");
 
-			CL_GUITopLevelDescription window_desc;
-			CL_Window window(CL_Rect(200, 200, 640, 480), &gui, window_desc);
+			CL_Window window(&gui, CL_GUITopLevelDescription(CL_Rect(200, 200, 640, 480), false));
 			window.set_id_name("mainmenu");
 			window.func_close().set(this, &App::on_close, &window);
 

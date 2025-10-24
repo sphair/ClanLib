@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -54,10 +52,12 @@ class CL_API_CORE CL_StringAllocator
 public:
 	CL_StringAllocator();
 
+	/// \brief Constructs a StringAllocator
+	///
+	/// \param source = String Allocator
 	CL_StringAllocator(const CL_StringAllocator &source);
 
 	~CL_StringAllocator();
-
 
 /// \}
 /// \name Operations
@@ -66,30 +66,65 @@ public:
 public:
 	CL_StringAllocator &operator =(const CL_StringAllocator &source);
 
+	/// \brief Alloc
+	///
+	/// \param str = String Ref8
+	///
+	/// \return String Ref8
 	CL_StringRef8 alloc(const CL_StringRef8 &str);
 
+	/// \brief Alloc
+	///
+	/// \param str = char
+	///
+	/// \return String Ref8
 	CL_StringRef8 alloc(const char *str);
 
 	CL_StringRef8 alloc(
 		const char *str,
 		CL_StringRef8::size_type length);
 
+	/// \brief Alloc
+	///
+	/// \param str = String Ref16
+	///
+	/// \return String Ref16
 	CL_StringRef16 alloc(const CL_StringRef16 &str);
 
+	/// \brief Alloc
+	///
+	/// \param str = wchar_t
+	///
+	/// \return String Ref16
 	CL_StringRef16 alloc(const wchar_t *str);
 
 	CL_StringRef16 alloc(
 		const wchar_t *str,
 		CL_StringRef16::size_type length);
 
+	/// \brief Alloc
+	///
+	/// \param length = value
+	///
+	/// \return String Ref
 	CL_StringRef alloc(unsigned int length);
 
+	/// \brief Alloc8
+	///
+	/// \param length = value
+	///
+	/// \return String Ref8
 	CL_StringRef8 alloc8(unsigned int length);
 
+	/// \brief Alloc16
+	///
+	/// \param length = value
+	///
+	/// \return String Ref16
 	CL_StringRef16 alloc16(unsigned int length);
 
+	/// \brief Clear
 	void clear();
-
 
 /// \}
 /// \name Implementation
@@ -99,6 +134,5 @@ private:
 	CL_SharedPtr<CL_StringAllocator_Impl> impl;
 /// \}
 };
-
 
 /// \}

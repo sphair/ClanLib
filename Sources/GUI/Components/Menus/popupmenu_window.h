@@ -66,22 +66,22 @@ private:
 	int selected;
 	bool keyboard_selected;
 	bool mouse_pressed;
+	int icon_column_width;
+	CL_Size icon_size;
+	CL_Size check_size;
 
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_item_row;
 	CL_GUIThemePart part_item_icon;
 	CL_GUIThemePart part_item_label;
+	CL_GUIThemePart part_item_check;
 	CL_GUIThemePart part_item_accel_label;
 	CL_GUIThemePart part_separator;
 	CL_GUIThemePart part_submenu_arrow;
 	CL_GUIThemePart part_menubar_joiner;
-	CL_GUIThemePartProperty prop_text_color;
-	CL_GUIThemePartProperty prop_text_color_disabled;
+	CL_GUIThemePartProperty prop_icon_column_width;
 
 	CL_PopupMenuWindow *child_popup;
 	CL_PopupMenuWindow *owner_popup;
-	CL_Font font;
-	CL_Colorf text_color;
-	CL_Colorf text_color_disabled;
 	CL_PopupMenuItem clicked_item;
 };

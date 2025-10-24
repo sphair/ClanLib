@@ -28,10 +28,8 @@
 
 #pragma once
 
-
 /// \addtogroup clanCrypto_System clanCrypto System
 /// \{
-
 
 #include <prio.h>
 #include <certt.h>
@@ -47,6 +45,14 @@ class PK11PasswordHandler
 {
 public:
 	virtual ~PK11PasswordHandler() { return; }
+
+	/// \brief Get password
+	///
+	/// \param slot = PK11 Slot Info
+	/// \param retry = bool
+	/// \param out_password = String
+	///
+	/// \return bool
 	virtual bool get_password(PK11SlotInfo *slot, bool retry, CL_String &out_password)=0;
 };
 
@@ -57,6 +63,14 @@ class PK11PasswordHandler_Password : public PK11PasswordHandler
 {
 public:
 	PK11PasswordHandler_Password(const CL_String &password) : password(password) { return; }
+
+	/// \brief Get password
+	///
+	/// \param slot = PK11 Slot Info
+	/// \param retry = bool
+	/// \param out_password = String
+	///
+	/// \return bool
 	virtual bool get_password(PK11SlotInfo *slot, bool retry, CL_String &out_password)
 	{
 		if (retry)
@@ -76,17 +90,20 @@ class CL_CryptoSetup
 /// \{
 
 public:
+
+	/// \brief Constructs a CryptoSetup
+	///
+	/// \param config_dir = String
+	/// \param read_write = bool
 	CL_CryptoSetup(const CL_String &config_dir, bool read_write = false);
 
 	~CL_CryptoSetup();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -111,7 +128,6 @@ public:
 		const CL_Certificate &cert,
 		PK11PasswordHandler *pw_handler);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -119,9 +135,15 @@ public:
 private:
 	static CL_CryptoSetup *instance;
 
+	/// \brief Pk11 password func
+	///
+	/// \param slot = PK11 Slot Info
+	/// \param retry = PRBool
+	/// \param arg = void
+	///
+	/// \return char
 	static char *pk11_password_func(PK11SlotInfo *slot, PRBool retry, void *arg);
 /// \}
 };
-
 
 /// \}

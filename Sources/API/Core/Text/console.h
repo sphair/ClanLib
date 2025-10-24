@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #pragma once
-
 
 // 'kbhit' was declared deprecated
 #ifdef WIN32
@@ -79,6 +77,11 @@ public:
 	}
 
 	template <class Arg1>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
 	static void write(const CL_StringRef &format, Arg1 arg1)
 	{
 		CL_TempStringFormat f(format);
@@ -87,6 +90,12 @@ public:
 	}
 
 	template <class Arg1, class Arg2>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
 	{
 		CL_TempStringFormat f(format);
@@ -96,6 +105,13 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
 		CL_TempStringFormat f(format);
@@ -106,6 +122,14 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
 		CL_TempStringFormat f(format);
@@ -117,6 +141,15 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
 	{
 		CL_TempStringFormat f(format);
@@ -129,6 +162,16 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
+	/// \param arg6 = Arg6
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
 	{
 		CL_TempStringFormat f(format);
@@ -142,6 +185,17 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
+
+	/// \brief Write
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
+	/// \param arg6 = Arg6
+	/// \param arg7 = Arg7
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 	{
 		CL_TempStringFormat f(format);
@@ -167,6 +221,11 @@ public:
 	}
 
 	template <class Arg1>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
 	static void write_line(const CL_StringRef &format, Arg1 arg1)
 	{
 		CL_TempStringFormat f(format);
@@ -175,6 +234,12 @@ public:
 	}
 
 	template <class Arg1, class Arg2>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
 	{
 		CL_TempStringFormat f(format);
@@ -184,6 +249,13 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
 		CL_TempStringFormat f(format);
@@ -194,6 +266,14 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
 		CL_TempStringFormat f(format);
@@ -205,6 +285,15 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
 	{
 		CL_TempStringFormat f(format);
@@ -217,6 +306,16 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
+	/// \param arg6 = Arg6
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
 	{
 		CL_TempStringFormat f(format);
@@ -230,6 +329,17 @@ public:
 	}
 
 	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
+
+	/// \brief Write line
+	///
+	/// \param format = String Ref
+	/// \param arg1 = Arg1
+	/// \param arg2 = Arg2
+	/// \param arg3 = Arg3
+	/// \param arg4 = Arg4
+	/// \param arg5 = Arg5
+	/// \param arg6 = Arg6
+	/// \param arg7 = Arg7
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 	{
 		CL_TempStringFormat f(format);
@@ -263,6 +373,5 @@ public:
 */	}
 /// \}
 };
-
 
 /// \}

@@ -99,7 +99,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_Sprite sprite(gc, "test", &resources);
 		//sprite.set_linear_filter(true);
 
-		CL_Font small_font = CL_Font_Texture(gc, cl_text("Tahoma"), 12);
+		CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
 
 		float test_base_angle = 0.0f;
 		float test_angle = 0.0f;

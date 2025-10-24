@@ -55,7 +55,7 @@ CL_ElementArrayBuffer::CL_ElementArrayBuffer()
 {
 }
 
-CL_ElementArrayBuffer::CL_ElementArrayBuffer(CL_GraphicContext gc, int size, CL_BufferUsage usage)
+CL_ElementArrayBuffer::CL_ElementArrayBuffer(CL_GraphicContext &gc, int size, CL_BufferUsage usage)
 : impl(new CL_ElementArrayBuffer_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = gc.get_provider();
@@ -63,7 +63,7 @@ CL_ElementArrayBuffer::CL_ElementArrayBuffer(CL_GraphicContext gc, int size, CL_
 	impl->provider->create(size, usage);
 }
 
-CL_ElementArrayBuffer::CL_ElementArrayBuffer(CL_GraphicContext gc, void *data, int size, CL_BufferUsage usage)
+CL_ElementArrayBuffer::CL_ElementArrayBuffer(CL_GraphicContext &gc, void *data, int size, CL_BufferUsage usage)
 : impl(new CL_ElementArrayBuffer_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = gc.get_provider();

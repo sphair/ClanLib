@@ -39,7 +39,7 @@
 #include "size.h"
 #include "point.h"
 #include "origin.h"
-#include "math.h"
+#include "cl_math.h"
 
 /// \brief 2D (left,top,right,bottom) rectangle structure.
 ///
@@ -253,25 +253,67 @@ public:
 	/// \brief Shrink the rectangle
 	///
 	/// \return reference to this object
-	CL_Rectx<Type> &shrink(const CL_Rectx<Type> &r)
+	CL_Rectx<Type> &shrink(const Type &left, const Type &top, const Type &right, const Type &bottom)
 	{
-		left += r.left; top += r.top; right -= r.right; bottom -= r.bottom;
+		this->left += left; this->top += top; this->right -= right; this->bottom -= bottom;
+		return *this;
+	};
+
+	/// \brief Shrink the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &shrink(const Type &left_right, const Type &top_bottom)
+	{
+		this->left += left_right; this->top += top_bottom; this->right -= left_right; this->bottom -= top_bottom;
+		return *this;
+	};
+
+	/// \brief Shrink the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &shrink(const Type &shrink)
+	{
+		this->left += shrink; this->top += shrink; this->right -= shrink; this->bottom -= shrink;
 		return *this;
 	};
 
 	/// \brief Expand the rectangle
 	///
 	/// \return reference to this object
-	CL_Rectx<Type> &expand(const CL_Rectx<Type> &r)
+	CL_Rectx<Type> &expand(const Type &left, const Type &top, const Type &right, const Type &bottom)
 	{
-		left -= r.left; top -= r.top; right += r.right; bottom += r.bottom;
+		this->left -= left; this->top -= top; this->right += right; this->bottom += bottom;
+		return *this;
+	};
+
+	/// \brief Expand the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &expand(const Type &left_and_right, const Type &top_and_bottom)
+	{
+		this->left -= left_and_right;
+		this->right += left_and_right;
+		this->top -= top_and_bottom;
+		this->bottom += top_and_bottom;
+		return *this;
+	};
+
+	/// \brief Expand the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &expand(const Type &expand)
+	{
+		this->left -= expand;
+		this->right += expand;
+		this->top -= expand;
+		this->bottom += expand;
 		return *this;
 	};
 
 	/// \brief Translate the rect
 	///
 	/// \return reference to this object
-	CL_Rectx<Type> &translate(const CL_Point &p)
+	CL_Rectx<Type> &translate(const CL_Vec2<Type> &p)
 	{
 		left += p.x; top += p.y; right += p.x; bottom += p.y;
 		return *this;
@@ -305,7 +347,9 @@ public:
 		return *this;
 	}
 
-	/// \brief Calculates the union of two rectangles.
+	/// \brief Calculates the union of two rectangles. 
+	/// 
+	/// <p>Rect values become: max left, max top, min right, min bottom.</p>
 	///
 	/// \return reference to this object
 	CL_Rectx<Type> &overlap(const CL_Rectx<Type> &rect)
@@ -319,8 +363,10 @@ public:
 		return *this;
 	}
 
-	/// \brief Calculates the bounding rectangle of the rectangles.
-	///
+	/// \brief Calculates the bounding rectangle of the rectangles. 
+	/// 
+	/// <p>Rect values become: min left, min top, max right, max bottom.</p>
+	/// 
 	/// \return reference to this object
 	CL_Rectx<Type> &bounding_rect(const CL_Rectx<Type> &rect)
 	{
@@ -432,6 +478,7 @@ class CL_Rectf : public CL_Rectx<float>
 {
 public:
 	CL_Rectf() : CL_Rectx<float>() {}
+	CL_Rectf(const CL_Sizex<int> &s) : CL_Rectx<float>(s) {}
 	CL_Rectf(const CL_Sizex<float> &s) : CL_Rectx<float>(s) {}
 	CL_Rectf(float new_left, float new_top, float new_right, float new_bottom) : CL_Rectx<float>(new_left, new_top, new_right, new_bottom) {}
 	CL_Rectf(const CL_Pointx<float> &p, const CL_Sizex<float> &size) : CL_Rectx<float>(p, size) {}
@@ -448,6 +495,8 @@ class CL_Rectd : public CL_Rectx<double>
 {
 public:
 	CL_Rectd() : CL_Rectx<double>() {}
+	CL_Rectd(const CL_Sizex<int> &s) : CL_Rectx<double>(s) {}
+	CL_Rectd(const CL_Sizex<float> &s) : CL_Rectx<double>(s) {}
 	CL_Rectd(const CL_Sizex<double> &s) : CL_Rectx<double>(s) {}
 	CL_Rectd(double new_left, double new_top, double new_right, double new_bottom) : CL_Rectx<double>(new_left, new_top, new_right, new_bottom) {}
 	CL_Rectd(const CL_Pointx<double> &p, const CL_Sizex<double> &size) : CL_Rectx<double>(p, size) {}

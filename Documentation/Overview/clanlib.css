@@ -104,9 +104,10 @@ table
 
 td
 {
+	vertical-align: text-top;
 	font-family: "verdana", sans-serif;
 	font-size: small;
-	border-width: 0px 1px 0px 1px;
+	border-width: 1px 1px 1px 1px;
 	border-style: dotted;
 	padding: 5px 10px 0px 10px;
 }
@@ -115,7 +116,7 @@ th
 {
 	font-family: "verdana", sans-serif;
 	font-size: small;
-	border-width: 0px 1px 1px 1px;
+	border-width: 1px 1px 1px 1px;
 	border-style: dotted;
 	padding: 5px 10px 7px 10px;
 }

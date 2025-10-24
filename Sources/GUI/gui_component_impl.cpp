@@ -37,7 +37,7 @@
 // CL_GUIComponent_Impl Construction:
 
 CL_GUIComponent_Impl::CL_GUIComponent_Impl(const CL_SharedPtr<CL_GUIManager_Impl> &init_gui_manager, CL_GUIComponent *parent_or_owner, bool toplevel)
-: gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), layout(0),
+: gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(CL_GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
   visible(true), activated(false), click_through(false), is_tab_order_controller(false), 
   component_tab_index(-1), tab_order_controller_current_index(-1), tab_order_controller_last_index(-1),
@@ -89,8 +89,6 @@ CL_GUIComponent_Impl::~CL_GUIComponent_Impl()
 		parent->impl->last_child = prev_sibling;
 
 	gui_manager_impl->remove_component(this);
-
-	delete layout;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -98,6 +96,38 @@ CL_GUIComponent_Impl::~CL_GUIComponent_Impl()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIComponent_Impl Operations:
+
+void CL_GUIComponent_Impl::set_geometry(CL_Rect new_geometry, bool client_area)
+{
+	if (parent == 0)
+	{
+		CL_GUITopLevelWindow *handle = gui_manager->get_toplevel_window(component);
+		gui_manager->window_manager.set_geometry(handle, new_geometry, client_area);
+		new_geometry = gui_manager->window_manager.get_geometry(handle, true);
+	}
+
+	// Check for resize
+	if ((geometry.get_width() != new_geometry.get_width()) || (geometry.get_height() != new_geometry.get_height()) )
+	{
+		geometry = new_geometry;
+		geometry_updated();
+	}
+	else
+	{
+		geometry = new_geometry;
+	}
+}
+
+void CL_GUIComponent_Impl::geometry_updated()
+{
+	if (!layout.is_null())
+		layout.set_geometry(geometry.get_size());
+
+	if (!func_resized.is_null())
+		func_resized.invoke();
+
+	component->request_repaint();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIComponent_Impl Implementation:

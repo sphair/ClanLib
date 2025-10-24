@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
@@ -60,7 +54,6 @@ public:
 	/// \brief Unregisters a provider type in the CL_ImageProviderFactory.
 	virtual ~CL_ImageProviderType();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -69,14 +62,20 @@ public:
 	/// \brief Called to load an image with this provider type.
 	virtual CL_PixelBuffer load(
 		const CL_String &filename,
-		CL_VirtualDirectory directory)=0;
+		const CL_VirtualDirectory &directory)=0;
+
+	virtual CL_PixelBuffer load(
+		CL_IODevice &file)=0;
 
 	/// \brief Called to save a given PixelBuffer to a file
 	virtual void save(
 		CL_PixelBuffer buffer,
 		const CL_String &filename,
-		CL_VirtualDirectory directory)=0;
+		CL_VirtualDirectory &directory)=0;
 
+	virtual void save(
+		CL_PixelBuffer buffer,
+		CL_IODevice &file)=0;
 
 /// \}
 /// \name Implementation
@@ -85,6 +84,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

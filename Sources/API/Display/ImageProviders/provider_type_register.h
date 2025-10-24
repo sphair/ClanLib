@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/IOData/virtual_directory.h"
@@ -57,7 +51,6 @@ public:
 	{
 	}
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -66,20 +59,33 @@ public:
 	/// \brief Called to load an image with this provider type.
 	virtual CL_PixelBuffer load(
 		const CL_String &filename,
-		CL_VirtualDirectory directory = CL_VirtualDirectory())
+		const CL_VirtualDirectory &directory)
 	{
 		return ProviderClass::load(filename, directory);
+	}
+
+	virtual CL_PixelBuffer load(
+		CL_IODevice &file)
+	{
+		return ProviderClass::load(file);
 	}
 
 	virtual void save(
 		CL_PixelBuffer buffer,
 		const CL_String &filename,
-		CL_VirtualDirectory directory = CL_VirtualDirectory())
+		CL_VirtualDirectory &directory)
 	{
 		ProviderClass::save(buffer, filename, directory);
 	}
+
+	virtual void save(
+		CL_PixelBuffer buffer,
+		CL_IODevice &file)
+	{
+		ProviderClass::save(buffer, file);
+	}
+
 /// \}
 };
-
 
 /// \}

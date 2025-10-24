@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Socket clanNetwork Socket
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -50,28 +48,42 @@ class CL_API_NETWORK CL_TCPListen
 /// \{
 
 public:
+
+	/// \brief Constructs a TCPListen
+	///
+	/// \param name = Socket Name
+	/// \param queue_size = value
+	/// \param force_bind = bool
 	CL_TCPListen(const CL_SocketName &name, int queue_size = 5, bool force_bind = true);
 
 	~CL_TCPListen();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Accept event
+	///
+	/// \return accept_event
 	CL_Event get_accept_event() const;
 
+	/// \brief Get Handle
+	///
+	/// \return handle
 	int get_handle() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	CL_TCPConnection accept();
 
+	/// \brief Accept
+	///
+	/// \return TCPConnection
+	CL_TCPConnection accept();
 
 /// \}
 /// \name Implementation
@@ -81,6 +93,5 @@ private:
 	CL_SharedPtr<CL_TCPListen_Impl> impl;
 /// \}
 };
-
 
 /// \}

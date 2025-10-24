@@ -61,8 +61,7 @@ private:
 
 	CL_PushButton *button_quit;
 
-	static CL_GUITopLevelDescription toplevel_description(Client *client);
-	static CL_Rect start_position();
+	static CL_GUITopLevelDescription get_toplevel_description();
 
 	friend class LobbyViewCreateGame;
 };

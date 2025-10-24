@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <vector>
 #include "API/Core/System/mutex.h"
 
@@ -63,9 +58,7 @@ public:
 
 	float pan;
 
-	std::vector<CL_SoundFilter *> filters;
-
-	std::vector<bool> delete_filters;
+	std::vector<CL_SoundFilter> filters;
 
 	mutable CL_Mutex mutex;
 

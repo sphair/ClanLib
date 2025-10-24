@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -59,10 +53,12 @@ public:
 	/// \brief Constructs a DOM Notation handle.
 	CL_DomNotation();
 
+	/// \brief Constructs a DomNotation
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomNotation(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomNotation();
-
 
 /// \}
 /// \name Attributes
@@ -77,7 +73,6 @@ public:
 	/** <p>If the system identifier was not specified, this is null.</p>*/
 	CL_DomString get_system_id() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -85,6 +80,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

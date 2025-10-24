@@ -80,9 +80,9 @@ CL_Event CL_UDPSocket::get_write_event()
 /////////////////////////////////////////////////////////////////////////////
 // CL_UDPSocket Operations:
 
-bool CL_UDPSocket::bind(const CL_SocketName &local_name, bool force_bind)
+void CL_UDPSocket::bind(const CL_SocketName &local_name, bool force_bind)
 {
-	return impl->bind(local_name, force_bind);
+	impl->bind(local_name, force_bind);
 }
 
 void CL_UDPSocket::set_handle(int socket, bool close_socket)

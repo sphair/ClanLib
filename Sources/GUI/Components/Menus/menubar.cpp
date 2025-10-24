@@ -101,7 +101,7 @@ CL_Rect CL_MenuBar::get_menu_rect(int our_index)
 	CL_Rect component_content = impl->part_component.get_content_box(rect);
 	
 	int x = 4;
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 	std::vector<CL_TopMenu>::size_type index;
 	for (index = 0; index < impl->menus.size(); index++)
 	{
@@ -157,7 +157,7 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 		{
 			msg.set_consumed();
-			CL_GraphicContext gc = menubar->get_gc();
+			CL_GraphicContext &gc = menubar->get_gc();
 			CL_Rect rect(CL_Point(0,0), menubar->get_geometry().get_size());
 			CL_Rect component_content = part_component.get_content_box(rect);
 			int x = 4;
@@ -176,10 +176,10 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 				{
 					selected_index = index;
 					hot_index = -1;
-					menubar->invalidate_rect();
+					menubar->request_repaint();
 
 					//TODO: If this required, should be exec handling be handled by the main window manager
-					if (menubar->get_gui_manager().get_window_manager()->get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
+					if (menubar->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
 					{
 						CL_MenuModalLoop menu_modal_loop(menubar, menubar, index);
 						menu_modal_loop.exec();
@@ -199,7 +199,7 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		else if (e.type == CL_InputEvent::pointer_moved )
 		{
 			msg.set_consumed();
-			CL_GraphicContext gc = menubar->get_gc();
+			CL_GraphicContext &gc = menubar->get_gc();
 			CL_Rect rect(CL_Point(0,0), menubar->get_geometry().get_size());
 			CL_Rect component_content = part_component.get_content_box(rect);
 			int x = 4;
@@ -219,7 +219,7 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 					if (selected_index != index && index != hot_index)
 					{
 						hot_index = index;
-						menubar->invalidate_rect();
+						menubar->request_repaint();
 					}
 					break;
 				}
@@ -235,7 +235,7 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			msg.set_consumed();
 			hot_index = -1;
-			menubar->invalidate_rect();
+			menubar->request_repaint();
 		}
 	}
 }

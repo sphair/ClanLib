@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_sound.h"
 #include <map>
@@ -57,7 +51,6 @@ public:
 	/// \brief Map of the class factories for each sound provider type.
 	static std::map<CL_String, CL_SoundProviderType *> types;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -77,6 +70,5 @@ public:
 		CL_VirtualDirectory directory);
 /// \}
 };
-
 
 /// \}

@@ -32,7 +32,7 @@
 #include "API/Core/Math/bezier_curve.h"
 #include "glyph_contour.h"
 
-#include <float.h>
+#include <cfloat>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GlyphContour Construction:

@@ -7,6 +7,7 @@ DIST_SUBDIRS = \
   Database       \
   Display        \
   GL             \
+  GL1            \
   GUI            \
   GDI            \
   MikMod         \

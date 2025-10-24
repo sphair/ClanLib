@@ -30,7 +30,6 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
 
 #include "../api_core.h"
@@ -116,7 +115,6 @@ public:
 	/// \brief Quad != Quad operator.
 	bool operator!=(const CL_Quadx<Type> &quad) const
 	{ return (p != quad.p || q != quad.q || r != quad.r || s != quad.s); }
-
 
 /// \}
 /// \name Attributes
@@ -231,6 +229,5 @@ public:
 	CL_Quadd(const CL_Rect &rect) : CL_Quadx<double>(rect) {}
 	CL_Quadd(const CL_Quadx<double> &quad) : CL_Quadx<double>(quad) {}
 };
-
 
 /// \}

@@ -25,11 +25,13 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "Core/precomp.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
@@ -37,7 +39,7 @@
 #include "API/Core/CSS/css_property.h"
 #include "API/Core/CSS/css_selector.h"
 #include "css_document_impl.h"
-#include <string.h>
+#include <cstring>
 
 #ifndef WIN32
 #define stricmp strcasecmp
@@ -51,6 +53,50 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CSSDocument_Impl Operations:
+
+void CL_CSSDocument_Impl::load(const CL_String &filename, const CL_VirtualDirectory &directory)
+{
+	CL_String path = CL_PathHelp::get_fullpath(filename, CL_PathHelp::path_type_file);
+
+	// Load document into a buffer:
+
+	CL_IODevice input = directory.open_file_read(filename);
+
+	int size = input.get_size();
+	if (size < 0)
+		throw CL_Exception(cl_text("IODevice does not support get_size()"));
+	CL_DataBuffer data(size);
+	int bytes_read = input.read(data.get_data(), data.get_size());
+	data.set_size(bytes_read);
+
+	// Start parsing:
+
+	unsigned char *data_ptr = (unsigned char *) data.get_data();
+	whitespace_comments(data_ptr, bytes_read);
+
+	int pos = 0;
+	while (pos < bytes_read)
+	{
+		unsigned char ch = data_ptr[pos];
+		switch (ch)
+		{
+		case ' ':
+		case '\t':
+		case '\r':
+		case '\n':
+			pos++;
+			break;
+
+		case '@': // import
+			pos = load_import(data_ptr, pos, bytes_read, directory, path);
+			break;
+
+		default: // ruleset
+			pos = load_ruleset(data_ptr, pos, bytes_read);
+			break;
+		}
+	}
+}
 
 void CL_CSSDocument_Impl::load(const CL_StringRef &path, CL_IODevice &input)
 {
@@ -90,6 +136,28 @@ void CL_CSSDocument_Impl::load(const CL_StringRef &path, CL_IODevice &input)
 			break;
 		}
 	}
+}
+
+int CL_CSSDocument_Impl::load_import(unsigned char *data, int pos, int length, const CL_VirtualDirectory &directory, const CL_String &last_path)
+{
+	int block_start = 0, block_end = 0;
+	pos = load_keyword("@import", data, pos, length);
+	block_start = load_until("\"", data, pos, length)+1;
+	block_end = load_until("\"", data, block_start, length);
+
+	CL_String8 import_utf8((char *) data+block_start, block_end-block_start);
+	CL_String import_text = CL_StringHelp::trim(CL_StringHelp::utf8_to_text(import_utf8));
+
+	CL_CSSImport import;
+	import.set_value(import_text);
+	imports.push_back(import);
+
+	// Create the file fullname using the previous filename path
+	CL_String fullname = CL_PathHelp::get_fullname(last_path, import_text, CL_PathHelp::path_type_file);
+	fullname = CL_PathHelp::normalize(fullname, CL_PathHelp::path_type_file);
+	load(fullname, directory);
+
+	return load_until(";", data, block_end+1, length)+1;
 }
 
 int CL_CSSDocument_Impl::load_import(unsigned char *data, int pos, int length, const CL_StringRef &path)

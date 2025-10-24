@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -66,12 +60,17 @@ public:
 		const CL_DomString &public_id,
 		const CL_DomString &system_id);
 
+	/// \brief Constructs a DomDocumentType
+	///
+	/// \param doc = Dom Document
 	CL_DomDocumentType(CL_DomDocument &doc);
 
+	/// \brief Constructs a DomDocumentType
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomDocumentType(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocumentType();
-
 
 /// \}
 /// \name Attributes
@@ -100,7 +99,6 @@ public:
 	    used to build the document.</p>*/
 	CL_DomString get_internal_subset() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -108,6 +106,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

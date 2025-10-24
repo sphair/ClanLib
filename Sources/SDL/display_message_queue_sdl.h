@@ -33,7 +33,6 @@
 #include "API/Display/TargetProviders/display_message_queue_provider.h"
 #include "API/Display/Window/display_window_message.h"
 #include "API/Display/api_display.h"
-#include "API/Display/Window/timer.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <SDL/SDL.h>

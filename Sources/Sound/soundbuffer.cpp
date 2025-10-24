@@ -37,6 +37,7 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
 #include "soundbuffer_generic.h"
 #include "soundbuffer_session_generic.h"
 #include "resourcetype_sample.h"
@@ -73,12 +74,15 @@ CL_SoundBuffer::CL_SoundBuffer(
 }
 
 CL_SoundBuffer::CL_SoundBuffer(
-	const CL_String &filename,
+	const CL_String &fullname,
 	bool streamed,
 	const CL_String &sound_format)
 : impl(new CL_SoundBuffer_Generic)
 {
-	CL_VirtualFileSystem vfs(cl_text("."));
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+
 	impl->provider = CL_SoundProviderFactory::load(
 		filename,
 		streamed,
@@ -143,23 +147,20 @@ void CL_SoundBuffer::set_pan(float new_pan)
 	impl->pan = new_pan;
 }
 
-void CL_SoundBuffer::add_filter(CL_SoundFilter *filter, bool delete_filter)
+void CL_SoundBuffer::add_filter(CL_SoundFilter &filter)
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->filters.push_back(filter);
-	impl->delete_filters.push_back(delete_filter);
 }
 
-void CL_SoundBuffer::remove_filter(CL_SoundFilter *filter)
+void CL_SoundBuffer::remove_filter(CL_SoundFilter &filter)
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	for (unsigned int i=0; i<impl->filters.size(); i++)
 	{
 		if (impl->filters[i] == filter)
 		{
-			if (impl->delete_filters[i]) delete impl->filters[i];
 			impl->filters.erase(impl->filters.begin()+i);
-			impl->delete_filters.erase(impl->delete_filters.begin()+i);
 			break;
 		}
 	}
@@ -179,7 +180,8 @@ CL_SoundBuffer_Session CL_SoundBuffer::play(bool looping, CL_SoundOutput *output
 
 CL_SoundBuffer_Session CL_SoundBuffer::prepare(bool looping, CL_SoundOutput *output)
 {
-	if (output == 0) output = CL_Sound::get_current_output();
+	CL_SoundOutput current_output = CL_Sound::get_current_output();
+	if (output == 0) output = &current_output;
 
 	CL_MutexSection mutex_lock(&impl->mutex);
 	return CL_SoundBuffer_Session(

@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/databuffer.h"
@@ -59,24 +57,48 @@ public:
 		type_computer
 	};
 
+	/// \brief Constructs a SecurityIdentifier
+	///
+	/// \param name = String
 	CL_SecurityIdentifier(const CL_String &name);
 
+	/// \brief Constructs a SecurityIdentifier
+	///
+	/// \param name = String
+	/// \param type = Type
 	CL_SecurityIdentifier(const CL_String &name, Type type);
 
 #ifdef WIN32
+
+	/// \brief Constructs a SecurityIdentifier
+	///
+	/// \param sid = PSID
 	CL_SecurityIdentifier(const PSID sid);
 #else
+
+	/// \brief Constructs a SecurityIdentifier
+	///
+	/// \param sid = value
+	/// \param type = Type
 	CL_SecurityIdentifier(unsigned int sid, Type type);
 #endif
 
+	/// \brief Constructs a SecurityIdentifier
+	///
+	/// \param copy = Security Identifier
 	CL_SecurityIdentifier(const CL_SecurityIdentifier &copy);
 
 	~CL_SecurityIdentifier();
 
+	/// \brief Get Thread user
+	///
+	/// \return thread_user
 	static CL_SecurityIdentifier get_thread_user();
 
+	/// \brief Get Thread group
+	///
+	/// \return thread_group
 	static CL_SecurityIdentifier get_thread_group();
-
 
 /// \}
 /// \name Attributes
@@ -92,14 +114,12 @@ public:
 	/// \brief Get security identifier type.
 	Type get_type() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 	CL_SecurityIdentifier &operator =(const CL_SecurityIdentifier &copy);
-
 
 /// \}
 /// \name Implementation
@@ -115,6 +135,5 @@ private:
 	Type type;
 /// \}
 };
-
 
 /// \}

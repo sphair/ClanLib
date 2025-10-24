@@ -43,8 +43,7 @@
 #pragma hdrstop
 #endif
 
-#include "init_win32.h"
-// #include "API/Core/System/keep_alive.h"
+#include "API/Core/System/system.h"
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
 #include <tchar.h>

@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -51,18 +49,23 @@ class CL_API_NETWORK CL_HTTPRequestHandler
 public:
 	CL_HTTPRequestHandler();
 
+	/// \brief Constructs a HTTPRequestHandler
+	///
+	/// \param provider = HTTPRequest Handler Provider
 	CL_HTTPRequestHandler(CL_HTTPRequestHandlerProvider *provider);
 
 	~CL_HTTPRequestHandler();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	CL_HTTPRequestHandlerProvider *get_provider() const;
 
+	/// \brief Get Provider
+	///
+	/// \return provider
+	CL_HTTPRequestHandlerProvider *get_provider() const;
 
 /// \}
 /// \name Operations
@@ -74,8 +77,10 @@ public:
 		const CL_StringRef8 &url,
 		const CL_StringRef8 &headers);
 
+	/// \brief Handle request
+	///
+	/// \param connection = HTTPServer Connection
 	void handle_request(CL_HTTPServerConnection &connection);
-
 
 /// \}
 /// \name Implementation
@@ -89,6 +94,5 @@ private:
 	friend class CL_HTTPServer_Impl;
 /// \}
 };
-
 
 /// \}

@@ -62,90 +62,11 @@ int CL_Service_Unix::main(int argc, char **argv)
 
 	if (argc >= 3 && args[1] == cl_text("-daemon"))
 	{
-		try
-		{
-			CL_File file(args[2], CL_File::create_always);
-
-			struct sigaction action;
-			memset(&action, 0, sizeof(struct sigaction));
-			action.sa_handler = &CL_Service_Unix::sig_term;
-			sigaction(SIGTERM, &action, 0);
-			memset(&action, 0, sizeof(struct sigaction));
-			action.sa_handler = &CL_Service_Unix::sig_hup;
-			sigaction(SIGHUP, &action, 0);
-
-			int pid = fork();
-			if (pid)
-			{
-				CL_String8 str_pid = CL_StringHelp::int_to_local8(pid);
-				file.write(str_pid.c_str(), str_pid.length());
-				file.write("\n", 1);
-				return pid;
-			}
-			else
-			{
-				file.close();
-				close(0);
-				close(1);
-				close(2);
-
-				// Starting service in seperate thread to avoid
-				// signals sent to this pid causing EINTR errors
-				// randomly in the service itself.
-				CL_Thread thread;
-				thread.start(this, &CL_Service_Unix::service_thread_main, args);
-				while (true)
-				{
-					try
-					{
-						if (stop_event.wait())
-							break;
-					}
-					catch (CL_Exception e)
-					{
-					}
-				}
-				thread.join();
-				return 0;
-			}
-		}
-		catch (CL_Exception e)
-		{
-			std::cout << "Unhandled exception: " << e.message.c_str() << std::endl;
-		}
-		return 1;
+		return run_daemon(args);
 	}
 	else if (argc == 2 && args[1] == cl_text("-debug"))
 	{
-		struct sigaction action;
-		memset(&action, 0, sizeof(struct sigaction));
-		action.sa_handler = &CL_Service_Unix::sig_term;
-		sigaction(SIGTERM, &action, 0);
-		memset(&action, 0, sizeof(struct sigaction));
-		action.sa_handler = &CL_Service_Unix::sig_hup;
-		sigaction(SIGHUP, &action, 0);
-		memset(&action, 0, sizeof(struct sigaction));
-		action.sa_handler = &CL_Service_Unix::sig_term;
-		sigaction(SIGINT, &action, 0);
-		
-		// Starting service in seperate thread to avoid
-		// signals sent to this pid causing EINTR errors
-		// randomly in the service itself.
-		CL_Thread thread;
-		thread.start(this, &CL_Service_Unix::service_thread_main, args);
-		while (true)
-		{
-			try
-			{
-				if (stop_event.wait())
-					break;
-			}
-			catch (CL_Exception e)
-			{
-			}
-		}
-		thread.join();
-		return 0;
+		return run_debug(args);
 	}
 	else
 	{
@@ -191,3 +112,91 @@ void CL_Service_Unix::sig_hup(int signal_code)
 	}
 }
 
+int CL_Service_Unix::run_daemon(std::vector<CL_String> args)
+{
+	try
+	{
+		CL_File file(args[2], CL_File::create_always);
+
+		struct sigaction action;
+		memset(&action, 0, sizeof(struct sigaction));
+		action.sa_handler = &CL_Service_Unix::sig_term;
+		sigaction(SIGTERM, &action, 0);
+		memset(&action, 0, sizeof(struct sigaction));
+		action.sa_handler = &CL_Service_Unix::sig_hup;
+		sigaction(SIGHUP, &action, 0);
+
+		int pid = fork();
+		if (pid)
+		{
+			CL_String8 str_pid = CL_StringHelp::int_to_local8(pid);
+			file.write(str_pid.c_str(), str_pid.length());
+			file.write("\n", 1);
+			return pid;
+		}
+		else
+		{
+			file.close();
+			close(0);
+			close(1);
+			close(2);
+
+			// Starting service in seperate thread to avoid
+			// signals sent to this pid causing EINTR errors
+			// randomly in the service itself.
+			CL_Thread thread;
+			thread.start(this, &CL_Service_Unix::service_thread_main, args);
+			while (true)
+			{
+				try
+				{
+					if (stop_event.wait())
+						break;
+				}
+				catch (CL_Exception e)
+				{
+				}
+			}
+			thread.join();
+			return 0;
+		}
+	}
+	catch (CL_Exception e)
+	{
+		std::cout << "Unhandled exception: " << e.message.c_str() << std::endl;
+	}
+	return 1;
+}
+
+int CL_Service_Unix::run_debug(std::vector<CL_String> args)
+{
+	struct sigaction action;
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = &CL_Service_Unix::sig_term;
+	sigaction(SIGTERM, &action, 0);
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = &CL_Service_Unix::sig_hup;
+	sigaction(SIGHUP, &action, 0);
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = &CL_Service_Unix::sig_term;
+	sigaction(SIGINT, &action, 0);
+
+	// Starting service in separate thread to avoid
+	// signals sent to this pid causing EINTR errors
+	// randomly in the service itself.
+	CL_Thread thread;
+	thread.start(this, &CL_Service_Unix::service_thread_main, args);
+	while (true)
+	{
+		try
+		{
+			if (stop_event.wait())
+				break;
+		}
+		catch (CL_Exception e)
+		{
+		}
+	}
+	thread.join();
+	return 0;
+}

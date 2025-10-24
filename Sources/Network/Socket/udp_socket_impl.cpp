@@ -44,88 +44,37 @@ typedef int socklen_t;
 // CL_UDPSocket_Impl Construction:
 
 CL_UDPSocket_Impl::CL_UDPSocket_Impl()
-: handle(-1), close_socket(false)
 {
-	handle = socket(AF_INET, SOCK_DGRAM, 0);
-	if (handle == -1)
-		throw CL_Exception(cl_format(cl_text("Unable to create socket - %1"), CL_SocketError::get_last_error_message()));
-
-	close_socket = true;
+	socket.create_udp();
 #ifdef WIN32
-	wsa_event_handler.start_select(handle);
-	read_event = CL_Event(
-		new CL_EventProvider_Win32Socket(
-			&wsa_event_handler,
-			CL_EventProvider_Win32Socket::socket_event_read));
-	write_event = CL_Event(
-		new CL_EventProvider_Win32Socket(
-			&wsa_event_handler,
-			CL_EventProvider_Win32Socket::socket_event_write));
+	read_event = CL_Event(new CL_EventProvider_Win32Socket(&socket, CL_EventProvider_Win32Socket::socket_event_read));
+	write_event = CL_Event(new CL_EventProvider_Win32Socket(&socket, CL_EventProvider_Win32Socket::socket_event_write));
 #else
-	read_event = CL_Event(
-		new CL_EventProvider_UnixSocket(handle, CL_EventProvider::type_fd_read));
-	write_event = CL_Event(
-		new CL_EventProvider_UnixSocket(handle, CL_EventProvider::type_fd_write));
+	read_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_read));
+	write_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_write));
 #endif
 }
 
 CL_UDPSocket_Impl::CL_UDPSocket_Impl(const CL_SocketName &local_name, bool force_bind)
-: handle(-1), close_socket(false)
 {
-	handle = socket(AF_INET, SOCK_DGRAM, 0);
-	if (handle == -1)
-		throw CL_Exception(cl_format(cl_text("Unable to create socket - %1"), CL_SocketError::get_last_error_message()));
-
-	close_socket = true;
+	socket.create_udp();
 #ifdef WIN32
-	wsa_event_handler.start_select(handle);
-	read_event = CL_Event(
-		new CL_EventProvider_Win32Socket(
-			&wsa_event_handler,
-			CL_EventProvider_Win32Socket::socket_event_read));
-	write_event = CL_Event(
-		new CL_EventProvider_Win32Socket(
-			&wsa_event_handler,
-			CL_EventProvider_Win32Socket::socket_event_write));
+	read_event = CL_Event(new CL_EventProvider_Win32Socket(&socket, CL_EventProvider_Win32Socket::socket_event_read));
+	write_event = CL_Event(new CL_EventProvider_Win32Socket(&socket, CL_EventProvider_Win32Socket::socket_event_write));
 #else
-	read_event = CL_Event(
-		new CL_EventProvider_UnixSocket(handle, CL_EventProvider::type_fd_read));
-	write_event = CL_Event(
-		new CL_EventProvider_UnixSocket(handle, CL_EventProvider::type_fd_write));
+	read_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_read));
+	write_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_write));
 #endif
-
-	int result = -1;
-
-	if (force_bind)
-	{
-		int value = 1;
-		result = setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, (const char *) &value, sizeof(int));
-		if (result == -1)
-			throw CL_Exception(cl_format(cl_text("Unable to force bind socket - %1"), CL_SocketError::get_last_error_message()));
-	}
-
-	sockaddr_in addr;
-	local_name.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
-	result = ::bind(handle, (sockaddr *) &addr, sizeof(sockaddr_in));
-	if (result == -1)
-	{
-		close_handle();
-		
-		if (!local_name.get_address().empty())
-			throw CL_Exception(cl_format(cl_text("Unable to bind socket on device %1 port %2 - %3"), local_name.get_address(), local_name.get_port(), CL_SocketError::get_last_error_message()));
-		else
-			throw CL_Exception(cl_format(cl_text("Unable to bind socket on port %1 - %2"), local_name.get_port(), CL_SocketError::get_last_error_message()));
-	}
+	bind(local_name, force_bind);
 }
 
 CL_UDPSocket_Impl::CL_UDPSocket_Impl(int handle, bool close_socket)
-: handle(handle), close_socket(close_socket)
 {
+	set_handle(handle, close_socket);
 }
 
 CL_UDPSocket_Impl::~CL_UDPSocket_Impl()
 {
-	close_handle();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -133,7 +82,7 @@ CL_UDPSocket_Impl::~CL_UDPSocket_Impl()
 
 int CL_UDPSocket_Impl::get_handle() const
 {
-	return handle;
+	return socket.get_handle();
 }
 
 CL_SocketName CL_UDPSocket_Impl::get_local_name() const
@@ -154,87 +103,34 @@ CL_Event CL_UDPSocket_Impl::get_write_event()
 /////////////////////////////////////////////////////////////////////////////
 // CL_UDPSocket_Impl Operations:
 
-bool CL_UDPSocket_Impl::bind(const CL_SocketName &local_name, bool force_bind)
+void CL_UDPSocket_Impl::bind(const CL_SocketName &local_name, bool force_bind)
 {
-	int result = -1;
-
-	if (force_bind)
-	{
-		int value = 1;
-		result = setsockopt(handle, SOL_SOCKET, SO_REUSEADDR, (const char *) &value, sizeof(int));
-		if (result == -1)
-			throw CL_Exception(cl_format(cl_text("Unable to force bind socket - %1"), CL_SocketError::get_last_error_message()));
-	}
-
-	sockaddr_in addr;
-	local_name.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
-	result = ::bind(handle, (sockaddr *) &addr, sizeof(sockaddr_in));
-	if (result == -1)
-		return false;
-
-	return true;
+	socket.bind(local_name, force_bind);
 }
 
 void CL_UDPSocket_Impl::set_handle(int sock, bool close_sock)
 {
-	handle = sock;
-	close_socket = close_sock;
+	socket.set_handle(sock, close_sock);
+#ifndef WIN32
+	read_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_read));
+	write_event = CL_Event(new CL_EventProvider_UnixSocket(socket.get_handle(), CL_EventProvider::type_fd_write));
+#endif
 }
 
 int CL_UDPSocket_Impl::send(const void *data, int len, const CL_SocketName &to)
 {
-	sockaddr_in addr;
-	to.to_sockaddr(AF_INET, (sockaddr *) &addr, sizeof(sockaddr_in));
-
-	int result = ::sendto(handle, (const char*) data, len, 0, (sockaddr *) &addr, sizeof(sockaddr_in));
-	if (result < 0)
-		throw CL_Exception(cl_format(cl_text("Socket send failed - %1"), CL_SocketError::get_last_error_message()));
-
-	return result;
+	return socket.send_to(data, len, to);
 }
 
 int CL_UDPSocket_Impl::receive(void *data, int len, CL_SocketName &out_from)
 {
-	sockaddr_in addr;
-	memset(&addr, 0, sizeof(sockaddr_in));
-	addr.sin_family = AF_INET;
-	socklen_t addr_len = sizeof(sockaddr_in);
-	int result = ::recvfrom(handle, (char *) data, len, 0, (sockaddr *) &addr, &addr_len);
-	if (result < 0)
-		throw CL_Exception(cl_format(cl_text("Socket recvfrom failed - %1"), CL_SocketError::get_last_error_message()));
-
-	out_from.from_sockaddr(AF_INET, (sockaddr *) &addr, addr_len);
-	return result;
+	return socket.receive_from(data, len, out_from);
 }
 
 int CL_UDPSocket_Impl::peek(void *data, int len, CL_SocketName &out_from)
 {
-	sockaddr_in addr;
-	memset(&addr, 0, sizeof(sockaddr_in));
-	addr.sin_family = AF_INET;
-	socklen_t addr_len = sizeof(sockaddr_in);
-	int result = ::recvfrom(handle, (char *) data, len, MSG_PEEK, (sockaddr *) &addr, &addr_len);
-	if (result < 0)
-		throw CL_Exception(cl_format(cl_text("Socket recvfrom failed - %1"), CL_SocketError::get_last_error_message()));
-
-	out_from.from_sockaddr(AF_INET, (sockaddr *) &addr, addr_len);
-	return result;
+	return socket.peek_from(data, len, out_from);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_UDPSocket_Impl Implementation:
-
-void CL_UDPSocket_Impl::close_handle()
-{
-	if (close_socket)
-	{
-#ifdef WIN32
-		wsa_event_handler.stop_select();
-		closesocket(handle);
-#else
-		close(handle);
-#endif
-		close_socket = false;
-	}
-	handle = -1;
-}

@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef CL_API_DLL
 	#ifdef CL_SQLITE_EXPORT
 		#define CL_API_SQLITE __declspec(dllexport)
@@ -45,5 +40,4 @@
 	#define CL_API_SQLITE
 	#define CL_API_SQLITE_STATIC
 #endif
-
 

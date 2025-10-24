@@ -29,17 +29,9 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Sound/soundprovider_session.h"
-#ifdef __APPLE__
-#include <mikmod/mikmod.h>
-#else
-#include <mikmod.h>
-#endif
+
+#include "module_reader.h"
 
 class CL_SoundProvider_MikMod_Generic;
 class CL_IODevice;

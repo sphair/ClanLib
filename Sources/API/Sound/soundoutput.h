@@ -29,16 +29,12 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/Text/string_types.h"
+#include "../Core/System/sharedptr.h"
+#include "../Core/System/weakptr.h"
 
 class CL_SoundFilter;
 class CL_SoundBuffer;
@@ -59,14 +55,23 @@ public:
 	/// \brief Constructs a sound output object.
 	CL_SoundOutput();
 
+	/// \brief Constructs a SoundOutput
+	///
+	/// \param mixing_frequency = value
+	/// \param latency = value
 	CL_SoundOutput(int mixing_frequency, int latency = 50);
 
+	/// \brief Constructs a SoundOutput
+	///
+	/// \param desc = Sound Output_ Description
 	CL_SoundOutput(const CL_SoundOutput_Description &desc);
 
+	/// \brief Constructs a SoundOutput
+	///
+	/// \param copy = Sound Output
 	CL_SoundOutput(const CL_SoundOutput &copy);
 
 	virtual ~CL_SoundOutput();
-
 
 /// \}
 /// \name Attributes
@@ -88,15 +93,11 @@ public:
 	/// \brief Returns the main panning position of the sound output.
 	float get_global_pan() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Copy assignment operator.
-	CL_SoundOutput &operator =(const CL_SoundOutput &copy);
-
 	/// \brief Stops all sample playbacks on the sound output.
 	void stop_all();
 
@@ -109,23 +110,27 @@ public:
 	/// \brief Adds the sound filter to the sound output.
 	///
 	/// \param filter Sound filter to pass sound through.
-	/// \param delete_filter If true, the filter will be deleted when the sound output is destroyed.
-	void add_filter(CL_SoundFilter *filter, bool delete_filter = false);
+	void add_filter(CL_SoundFilter &filter);
 
 	/// \brief Remove the sound filter from the session.
-	void remove_filter(CL_SoundFilter *filter);
-
+	void remove_filter(CL_SoundFilter &filter);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_SoundOutput_Generic *impl;
+
+	/// \brief Constructs a SoundOutput
+	///
+	/// \param CL_SoundOutput_Generic = Weak Ptr
+	CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Generic> impl);
+
+	CL_SharedPtr<CL_SoundOutput_Generic> impl;
 
 	friend class CL_SoundBuffer;
+	friend class CL_Sound;
 /// \}
 };
-
 
 /// \}

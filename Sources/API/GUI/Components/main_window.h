@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -53,44 +51,67 @@ class CL_API_GUI CL_MainWindow : public CL_GUIComponent
 /// \{
 
 public:
-	CL_MainWindow(const CL_Rect &geometry, CL_GUIManager *manager, const CL_GUITopLevelDescription &description);
 
-	CL_MainWindow(const CL_Rect &geometry, CL_GUIComponent *owner, const CL_GUITopLevelDescription &description);
+	/// \brief Constructs a MainWindow
+	///
+	/// \param manager = GUIManager
+	/// \param description = GUITop Level Description
+	CL_MainWindow(CL_GUIManager *manager, const CL_GUITopLevelDescription &description);
+
+	/// \brief Constructs a MainWindow
+	///
+	/// \param owner = GUIComponent
+	/// \param description = GUITop Level Description
+	CL_MainWindow(CL_GUIComponent *owner, const CL_GUITopLevelDescription &description);
 
 	virtual ~CL_MainWindow();
-
 
 /// \}
 /// \name Events
 /// \{
 
 public:
+
+	/// \brief Func close
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_close();
 
 	CL_Callback_v1<CL_Rect&> &func_resize();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Title
+	///
+	/// \return title
 	CL_StringRef get_title() const;
 
+	/// \brief Get Menubar
+	///
+	/// \return menubar
 	CL_MenuBar *get_menubar() const;
 
+	/// \brief Get Statusbar
+	///
+	/// \return statusbar
 	CL_StatusBar *get_statusbar() const;
 
 	std::vector<CL_ToolBar *> get_toolbars() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	void set_title(const CL_StringRef &str);
 
+	/// \brief Set title
+	///
+	/// \param str = String Ref
+	void set_title(const CL_StringRef &str);
 
 /// \}
 /// \name Implementation
@@ -100,6 +121,5 @@ private:
 	CL_SharedPtr<CL_MainWindow_Impl> impl;
 /// \}
 };
-
 
 /// \}

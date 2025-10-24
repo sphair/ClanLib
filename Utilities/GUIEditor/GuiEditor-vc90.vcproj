@@ -22,7 +22,7 @@
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -179,7 +179,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\application.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\callback_data.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\callback_data.h"
 				>
 			</File>
 			<File
@@ -187,7 +195,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\callback_info.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\component_type.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\component_type.h"
 				>
 			</File>
 			<File
@@ -195,7 +211,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\custom_component.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\dialog_component.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\dialog_component.h"
 				>
 			</File>
 			<File
@@ -203,7 +227,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\dialog_container.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\dialog_document.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\dialog_document.h"
 				>
 			</File>
 			<File
@@ -211,7 +243,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\grid_component.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\holder_component.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\holder_component.h"
 				>
 			</File>
 			<File
@@ -220,6 +260,10 @@
 			</File>
 			<File
 				RelativePath=".\Sources\main_window.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\main_window.h"
 				>
 			</File>
 			<File
@@ -243,85 +287,19 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Sources\property_component.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\property_component_tab_order.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\selection.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\source_generator_dialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\system_dialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\view_border.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\Sources\application.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\callback_data.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\callback_info.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\component_type.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\custom_component.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\dialog_component.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\dialog_container.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\dialog_document.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\grid_component.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\holder_component.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\main_window.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Sources\precomp.h"
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\property_component.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\property_component.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_tab_order.cpp"
 				>
 			</File>
 			<File
@@ -333,7 +311,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\selection.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\selection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\source_generator_dialog.cpp"
 				>
 			</File>
 			<File
@@ -341,7 +327,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\system_dialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\system_dialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\view_border.cpp"
 				>
 			</File>
 			<File

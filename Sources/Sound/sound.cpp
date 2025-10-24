@@ -29,28 +29,30 @@
 #include "Sound/precomp.h"
 #include "API/Sound/sound.h"
 #include "API/Sound/soundoutput.h"
+#include "API/Core/System/weakptr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput accessors:
 
-static CL_SoundOutput *cl_current_output = 0;
+static CL_WeakPtr<CL_SoundOutput_Generic> cl_current_output;
 
 const CL_String8 &CL_Sound::get_name()
 {
-	return get_current_output()->get_name();
+	return get_current_output().get_name();
 }
 
 int CL_Sound::get_mixing_frequency()
 {
-	return get_current_output()->get_mixing_frequency();
+	return get_current_output().get_mixing_frequency();
 }
 
-CL_SoundOutput *CL_Sound::get_current_output()
+CL_SoundOutput CL_Sound::get_current_output()
 {
-	return cl_current_output;
+	return CL_SoundOutput(cl_current_output);
 }
 
-void CL_Sound::select_output(CL_SoundOutput *output)
+void CL_Sound::select_output(const CL_SoundOutput &output)
 {
-	cl_current_output = output;
+	if (cl_current_output.is_null())
+		cl_current_output = output.impl;
 }

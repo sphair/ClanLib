@@ -31,7 +31,6 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/line_ray.h"
 #include "API/Core/Math/angle.h"
-#include <cmath>
 
 // Explicit instantiate the versions we use:
 

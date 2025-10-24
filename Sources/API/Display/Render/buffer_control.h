@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -75,6 +69,29 @@ enum CL_DrawBuffer
 	cl_buffer_aux3
 };
 
+/// \brief Logic Op
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
+enum CL_LogicOp
+{
+	cl_logic_op_clear,
+	cl_logic_op_and, 
+	cl_logic_op_and_reverse,
+	cl_logic_op_copy,
+	cl_logic_op_and_inverted,
+	cl_logic_op_noop,
+	cl_logic_op_xor,
+	cl_logic_op_or,
+	cl_logic_op_nor,
+	cl_logic_op_equiv,
+	cl_logic_op_invert,
+	cl_logic_op_or_reverse,
+	cl_logic_op_copy_inverted,
+	cl_logic_op_or_inverted,
+	cl_logic_op_nand,
+	cl_logic_op_set
+};
+
 class CL_BufferControl_Impl;
 
 /// \brief Container class for states related to reading, writing and tests performed on buffers.
@@ -90,7 +107,6 @@ public:
 	CL_BufferControl();
 
 	virtual ~CL_BufferControl();
-
 
 /// \}
 /// \name Attributes
@@ -157,6 +173,11 @@ public:
 	/// \brief Returns the used draw buffer.
 	CL_DrawBuffer get_draw_buffer() const;
 
+	/// \brief Returns true if logic operations are enabled.
+	bool is_logic_op_enabled() const;
+
+	/// \brief Returns the set logic operations.
+	CL_LogicOp get_logic_op() const;
 
 /// \}
 /// \name Operations
@@ -199,11 +220,22 @@ public:
 	/// \brief Enable/disable writing to the color buffer
 	void enable_color_write(bool enabled);
 
+	/// \brief Enable color write
+	///
+	/// \param red = bool
+	/// \param green = bool
+	/// \param blue = bool
+	/// \param alpha = bool
 	void enable_color_write(bool red, bool green, bool blue, bool alpha);
 
 	/// \brief Set used draw buffer.
 	void set_draw_buffer(CL_DrawBuffer buffer);
 
+	/// \brief Enable/disable logic op.
+	void enable_logic_op(bool enabled);
+
+	/// \brief Set logic operation.
+	void set_logic_op(CL_LogicOp op);
 
 /// \}
 /// \name Implementation
@@ -213,6 +245,5 @@ private:
 	CL_SharedPtr<CL_BufferControl_Impl> impl;
 /// \}
 };
-
 
 /// \}

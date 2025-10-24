@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../Render/element_array_buffer.h"
 
@@ -49,11 +47,15 @@ public:
 	/// \brief Constructs a element array buffer.
 	virtual void create(int size, CL_BufferUsage usage) = 0;
 
+	/// \brief Create
+	///
+	/// \param data = void
+	/// \param size = value
+	/// \param usage = Buffer Usage
 	virtual void create(void *data, int size, CL_BufferUsage usage) = 0;
 
 	/// \brief Destroys the element array buffer provider.
 	virtual void destroy()=0;
-
 
 /// \}
 /// \name Attributes
@@ -62,7 +64,6 @@ public:
 public:
 	/// \brief Retrieves a pointer to the mapped buffer.
 	virtual void *get_data() = 0;
-
 
 /// \}
 /// \name Operations
@@ -78,7 +79,6 @@ public:
 	/// \brief Uploads data to element array buffer.
 	virtual void upload_data(int offset, void *data, int size) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -86,6 +86,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

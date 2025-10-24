@@ -58,7 +58,7 @@ CL_RoundedRect_Impl::~CL_RoundedRect_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // CL_RoundedRect_Impl operations:
 
-void CL_RoundedRect_Impl::draw(CL_GraphicContext gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin)
+void CL_RoundedRect_Impl::draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin)
 {
 	if( outline_needs_update )
 		calculate_outline_points();
@@ -76,7 +76,7 @@ void CL_RoundedRect_Impl::draw(CL_GraphicContext gc, const CL_Pointf &position, 
 	gc.pop_modelview();
 }
 
-void CL_RoundedRect_Impl::draw(CL_GraphicContext gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin)
+void CL_RoundedRect_Impl::draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin)
 {
 	//TODO: gradient parameter is not used
 
@@ -97,7 +97,7 @@ void CL_RoundedRect_Impl::draw(CL_GraphicContext gc, const CL_Pointf &position, 
 }
 
 
-void CL_RoundedRect_Impl::fill(CL_GraphicContext gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin)
+void CL_RoundedRect_Impl::fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin)
 {
 	if( outline_needs_update )
 		calculate_outline_points();
@@ -120,7 +120,7 @@ void CL_RoundedRect_Impl::fill(CL_GraphicContext gc, const CL_Pointf &position, 
 	gc.pop_modelview();
 }
 
-void CL_RoundedRect_Impl::fill(CL_GraphicContext gc, const CL_Pointf &position, const CL_Gradient &new_gradient, CL_Origin origin)
+void CL_RoundedRect_Impl::fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &new_gradient, CL_Origin origin)
 {
 	if( outline_needs_update )
 		calculate_outline_points();

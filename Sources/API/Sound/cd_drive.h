@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_CD_Audio clanSound CD Audio
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
@@ -57,10 +51,12 @@ public:
 	/// \brief Constructs a CD drive object.
 	CL_CDDrive();
 
+	/// \brief Constructs a CDDrive
+	///
+	/// \param copy = CDDrive
 	CL_CDDrive(const CL_CDDrive &copy);
 
 	virtual ~CL_CDDrive();
-
 
 /// \}
 /// \name Attributes
@@ -87,7 +83,6 @@ public:
 
 	/// \brief Returns the current frame on the track.
 	int get_cur_frame();
-
 
 /// \}
 /// \name Operations
@@ -118,7 +113,6 @@ public:
 	/// \brief Resume the playback.
 	void resume();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -127,6 +121,5 @@ private:
 	CL_SharedPtr<CL_CDDrive_Generic> impl;
 /// \}
 };
-
 
 /// \}

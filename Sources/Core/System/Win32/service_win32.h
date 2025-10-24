@@ -39,7 +39,6 @@ class CL_Service_Win32 : public CL_Service_Impl
 
 public:
 	CL_Service_Win32(CL_Service *service, const CL_String &service_name);
-
 	virtual ~CL_Service_Win32();
 
 
@@ -57,6 +56,11 @@ public:
 public:
 	int main(int argc, char **argv);
 
+	int run_debug(std::vector<CL_String> args);
+	int run_service();
+	int run_install();
+	int run_uninstall();
+	void print_help();
 
 /// \}
 /// \name Implementation
@@ -64,9 +68,7 @@ public:
 
 private:
 	static void WINAPI service_thread_main(DWORD argc, LPTSTR *argv);
-
 	static BOOL WINAPI control_handler(DWORD ctrl_type);
-
 	static VOID WINAPI service_ctrl(DWORD ctrl_code);
 
 	BOOL report_status(
@@ -75,15 +77,10 @@ private:
 		DWORD wait_hint);
 
 	CL_Event stop_event;
-
 	CL_Event reload_event;
-
 	bool debug_mode;
-
 	int check_point;
-
 	SERVICE_STATUS_HANDLE handle_service_status;
-
 	SERVICE_STATUS service_status;
 /// \}
 };

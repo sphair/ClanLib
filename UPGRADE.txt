@@ -1,8 +1,29 @@
-This file describes breaking changes between versions. 
+I cThis file describes breaking changes between versions. 
 
-28-04-2009: 2.0.1 Released
-- Changes in Collision API if you use CL_Contour. CL_Contour no longer exposes
-  internal variables - use getter functions instead.
+2.0.3
+- Display: CL_Font_Texture has been renamed to CL_Font_System
+- Display: CL_Font_Freetype has been changed to use CL_TextureGroup, therefore CL_GraphicContext is required by it's constructor
+- Display: CL_Font_Native has been removed (The pixel buffer based font)
+- Display: CL_Texture and CL_RenderBuffer now use the CL_TextureFormat enum's (they used to use OpenGL defines). Example before: CL_RGB8 Now: cl_rgb8
+- Display: CL_Texture no longer has the bool make_texture_nearest_power_of_two parameter in constructor.
+- Display: Numerous functions the pass CL_GraphicContext have been modified to pass by reference instead of by object.
+- Display/Core: The CL_Timer implementation no longer require any knowledge of the windowing system message queue, and therefore no longer requires any CL_DisplayWindow for creation. As a consequence of this change, CL_Timer has been moved to <ClanLib/Core/System/timer.h> and now uses the CL_KeepAlive system to invoke the timer callback. Also, the CL_GUIComponent::create_timer() function no longer exists since it is no longer required. To create a timer object, simply construct the CL_Timer object and start using it.
+- Sound: CL_SoundFilter's are now passed as objects, instead of passing by address.
+- GUI: CL_GUIManager::set_named_font is now called register_font, get_named_font is named get_registered_font
+- GUI: CL_GUIComponent now uses the CL_GUILayout as objects, instead of passing by address.
+- GUI: CL_GUIManager and CL_Component now uses the CL_GUITheme and CL_GUIWindowManager as objects, instead of passing by address.
+- GUI: CL_Window, CL_GUIComponent, CL_MainWindow no longer has a "CL_Rect geometry" parameter in constructor - use the CL_GUITopLevelDescription to set wanted geometry, either using set_position on it, or using the new convenience constructors including position.
+- GUI: For toplevel-components, CL_GUIComponent::get_geometry() now returns CL_Rect(screenx,screeny,screenx+width,screeny+height) instead of earlier CL_Rect(0,0,width,height).
+- GUI: CL_GUIComponent::invalidate_rect was renamed to request_repaint
+- GUI: CL_GUIComponent::set_cliprect() now requires a gc parameter
+- Core: API/Core/Math/math.h was renamed to cl_math.h
+- Core: CL_Rect::shrink and expand now takes 4 parameters instead of a CL_Rect.
 
-22-04-2009: 2.0.0 Released
+2.0.2 Released 18 may 2009
+- No breaking changes
 
+2.0.1 Released 28 april 2009
+- Changes in Collision API if you use CL_Contour. CL_Contour no longer exposes internal variables - use getter functions instead.
+
+2.0.0 Released 22 april 2009
+- Huge rewrite from ClanLib 1.0

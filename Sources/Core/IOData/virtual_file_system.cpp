@@ -189,7 +189,7 @@ CL_IODevice CL_VirtualFileSystem::open_file(const CL_String &filename_rel,
 	CL_File::OpenMode mode,
 	unsigned int access,
 	unsigned int share,
-	unsigned int flags)
+	unsigned int flags) const
 {
 	CL_String filename = CL_PathHelp::make_absolute(
 		cl_text("/"),
@@ -260,6 +260,30 @@ void CL_VirtualFileSystem::unmount(const CL_String &mount_point)
 			index--;
 		}
 	}
+}
+
+bool CL_VirtualFileSystem::has_directory(const CL_String &directory)
+{
+	CL_VirtualDirectoryListing list = get_directory_listing(CL_PathHelp::get_basepath(directory, CL_PathHelp::path_type_virtual));
+	while (list.next())
+	{
+		if (directory == list.get_filename() && list.is_directory())
+			return true;
+	}
+
+	return false;
+}
+
+bool CL_VirtualFileSystem::has_file(const CL_String &filename)
+{
+	CL_VirtualDirectoryListing list = get_directory_listing(CL_PathHelp::get_basepath(filename, CL_PathHelp::path_type_virtual));
+	while (list.next())
+	{
+		if (filename == list.get_filename() && !list.is_directory())
+			return true;
+	}
+
+	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -25,10 +25,14 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/Collision/outline_provider_file.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "outline_provider_file_generic.h"
@@ -36,14 +40,28 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderFile Construction:
 
-CL_OutlineProviderFile::CL_OutlineProviderFile(const CL_StringRef &filename, CL_VirtualDirectory directory)
+CL_OutlineProviderFile::CL_OutlineProviderFile(CL_IODevice &file)
 {
-	impl = new CL_OutlineProviderFile_Generic( filename, directory );
+	impl = CL_SharedPtr<CL_OutlineProviderFile_Generic> (new CL_OutlineProviderFile_Generic( file ));
+}
+
+CL_OutlineProviderFile::CL_OutlineProviderFile(const CL_StringRef &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_IODevice file = vfs.get_root_directory().open_file_read(filename);
+	impl = CL_SharedPtr<CL_OutlineProviderFile_Generic> (new CL_OutlineProviderFile_Generic( file ));
+}
+
+CL_OutlineProviderFile::CL_OutlineProviderFile(const CL_StringRef &filename, const CL_VirtualDirectory &directory)
+{
+	CL_IODevice file = directory.open_file_read(filename);
+	impl = CL_SharedPtr<CL_OutlineProviderFile_Generic> (new CL_OutlineProviderFile_Generic( file ));
 }
 
 CL_OutlineProviderFile::~CL_OutlineProviderFile()
 {
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,4 +80,9 @@ int CL_OutlineProviderFile::get_width()
 int CL_OutlineProviderFile::get_height()
 {
 	return impl->height;
+}
+
+void CL_OutlineProviderFile::destroy()
+{
+	delete this;
 }

@@ -132,12 +132,12 @@ void CL_TabHeader::add_page(CL_TabPage *tab_page, const CL_StringRef &label)
 
 	impl->update_handle_rects();
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_TabHeader_Impl::update_handle_rects()
 {
-	CL_GraphicContext gc = component->get_gc();
+	CL_GraphicContext &gc = component->get_gc();
 
 	int last_tab_end_x = first_tab_x_offset;
 
@@ -176,7 +176,7 @@ void CL_TabHeader::del_page(CL_TabPage *tab_page)
 		}
 	}
 	impl->update_handle_rects();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_TabHeader::page_renamed(CL_TabPage *tab_page)
@@ -192,7 +192,7 @@ void CL_TabHeader::page_renamed(CL_TabPage *tab_page)
 	}
 
 	impl->update_handle_rects();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_TabHeader::select_page(int index)
@@ -233,7 +233,7 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 						(*it).part.set_state(CssStr::selected, true);
 						(*it).part.set_state(CssStr::normal, false);
 
-						component->invalidate_rect();
+						component->request_repaint();
 						if (!func_page_selected.is_null())
 							func_page_selected.invoke((*it).tab_page);
 					}
@@ -251,13 +251,13 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 							return;
 						(*it).part.set_state(CssStr::hot, true);
 						(*it).part.set_state(CssStr::normal, false);
-						component->invalidate_rect();
+						component->request_repaint();
 					}
 					else if ((*it).part.get_state(CssStr::hot))
 					{
 						(*it).part.set_state(CssStr::hot, false);
 						(*it).part.set_state(CssStr::normal, true);						
-						component->invalidate_rect();
+						component->request_repaint();
 					}
 				}
 			}
@@ -273,7 +273,7 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 					(*it).part.set_state(CssStr::hot, false);
 					(*it).part.set_state(CssStr::normal, true);
 				}
-				component->invalidate_rect();
+				component->request_repaint();
 			}
 		}
 

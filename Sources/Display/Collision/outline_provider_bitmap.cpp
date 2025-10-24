@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
@@ -40,12 +41,11 @@
 
 CL_OutlineProviderBitmap::CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit, bool get_insides)
 {
-	impl = new CL_OutlineProviderBitmap_Generic( pbuf, alpha_limit, get_insides);
+	impl = CL_SharedPtr<CL_OutlineProviderBitmap_Generic> (new CL_OutlineProviderBitmap_Generic( pbuf, alpha_limit, get_insides));
 }
 
 CL_OutlineProviderBitmap::~CL_OutlineProviderBitmap()
 {
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -66,3 +66,7 @@ int CL_OutlineProviderBitmap::get_height()
 	return impl->height;
 }
 
+void CL_OutlineProviderBitmap::destroy()
+{
+	delete this;
+}

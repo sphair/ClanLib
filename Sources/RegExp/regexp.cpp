@@ -30,6 +30,9 @@
 #include "API/RegExp/regexp.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/System/exception.h"
+
+#define PCRE_STATIC
+
 #ifdef __APPLE__
 #include "PCRE/pcre.h"
 #else

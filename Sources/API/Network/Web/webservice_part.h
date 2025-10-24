@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -49,44 +47,80 @@ class CL_API_NETWORK CL_WebservicePart
 /// \{
 
 public:
+
+	/// \brief Constructs a WebservicePart
+	///
+	/// \param part_element = Dom Element
 	CL_WebservicePart(const CL_DomElement &part_element);
 
 	~CL_WebservicePart();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_String get_name() const;
 
+	/// \brief Get Target namespace
+	///
+	/// \return target_namespace
 	CL_String get_target_namespace() const;
 
+	/// \brief Get Element
+	///
+	/// \return element
 	CL_DomElement get_element() const;
 
+	/// \brief Get Value string
+	///
+	/// \return value_string
 	CL_String get_value_string() const;
 
+	/// \brief Get Value int
+	///
+	/// \return value_int
 	int get_value_int() const;
 
+	/// \brief Get Value double
+	///
+	/// \return value_double
 	double get_value_double() const;
 
+	/// \brief Get Value base64
+	///
+	/// \return value_base64
 	CL_DataBuffer get_value_base64() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set value string
+	///
+	/// \param value = String Ref
 	void set_value_string(const CL_StringRef &value);
 
+	/// \brief Set value int
+	///
+	/// \param value = value
 	void set_value_int(int value);
 
+	/// \brief Set value double
+	///
+	/// \param value = value
 	void set_value_double(double value);
 
+	/// \brief Set value base64
+	///
+	/// \param value = Data Buffer
 	void set_value_base64(const CL_DataBuffer &value);
-
 
 /// \}
 /// \name Implementation
@@ -96,6 +130,5 @@ private:
 	CL_SharedPtr<CL_WebservicePart_Impl> impl;
 /// \}
 };
-
 
 /// \}

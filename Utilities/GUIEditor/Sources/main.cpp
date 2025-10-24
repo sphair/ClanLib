@@ -14,13 +14,17 @@ public:
 	{
 		CL_SetupCore setup_core;
 		CL_SetupDisplay setup_display;
-		CL_SetupGL setup_gl;
-		//CL_SetupGDI setup_gdi;
+		//CL_SetupGL setup_gl;
+		CL_SetupGDI setup_gdi;
 
 		try
 		{
 			Application app;
-			app.run();
+
+			if(args.size() > 1)
+				app.run(args[1]);
+			else
+				app.run();
 		}
 		catch (CL_Exception e)
 		{

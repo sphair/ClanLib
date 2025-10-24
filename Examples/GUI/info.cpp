@@ -50,7 +50,7 @@ void Info::set(int new_xpos, int new_ypos, const CL_String &new_name)
 	name = new_name;
 	activated_time = 0;
 	activated_flag = false;
-	invalidate_rect();
+	request_repaint();
 
 	set_geometry(CL_Rect(new_xpos, new_ypos, CL_Size(120, 16)));
 }
@@ -58,7 +58,7 @@ void Info::set(int new_xpos, int new_ypos, const CL_String &new_name)
 void Info::set_comment(CL_String &new_comment)
 {
 	comment = new_comment;
-	invalidate_rect();
+	request_repaint();
 }
 
 void Info::draw(CL_GraphicContext &gc)
@@ -72,7 +72,7 @@ void Info::draw(CL_GraphicContext &gc)
 
 	//CL_Draw::fill(gc, CL_Rect(draw_xpos, draw_ypos, CL_Size(get_width(), get_height())), CL_Colorf(CL_Colorf::red));
 
-	CL_Font_Texture font = gui->get_font();
+	CL_Font font = gui->get_font();
 
 	CL_FontMetrics metrics = font.get_font_metrics(gc);
 	draw_ypos += (int) metrics.get_ascent();
@@ -104,7 +104,7 @@ void Info::activate()
 {
 	activated_time = CL_System::get_time();
 	activated_flag = true;
-	invalidate_rect();
+	request_repaint();
 }
 
 void Info::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)

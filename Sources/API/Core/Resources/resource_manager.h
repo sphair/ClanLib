@@ -53,12 +53,26 @@ public:
 	/// \brief Construct a resource manager.
 	CL_ResourceManager();
 
+	/// \brief Constructs a ResourceManager
+	///
+	/// \param filename = String
 	CL_ResourceManager(const CL_String &filename);
 
+	/// \brief Constructs a ResourceManager
+	///
+	/// \param filename = String
+	/// \param directory = Virtual Directory
 	CL_ResourceManager(const CL_String &filename, CL_VirtualDirectory directory);
 
+	/// \brief Constructs a ResourceManager
+	///
+	/// \param file = IODevice
+	/// \param directory = Virtual Directory
 	CL_ResourceManager(CL_IODevice file, CL_VirtualDirectory directory = CL_VirtualDirectory());
 
+	/// \brief Constructs a ResourceManager
+	///
+	/// \param other = Resource Manager
 	CL_ResourceManager(const CL_ResourceManager &other);
 
 	~CL_ResourceManager();
@@ -134,21 +148,40 @@ public:
 	/// \brief Save resource XML tree to file.
 	void save(const CL_String &filename);
 
+	/// \brief Save
+	///
+	/// \param filename = the filename to save
+	/// \param directory = Virtual Directory
 	void save(const CL_String &filename, CL_VirtualDirectory directory);
 
+	/// \brief Save
+	///
+	/// \param file = IODevice
 	void save(CL_IODevice file);
 
 	/// \brief Load resource XML tree from file.
 	void load(const CL_String &filename);
 
+	/// \brief Load
+	///
+	/// \param filename = the filename to save
+	/// \param directory = Virtual Directory
 	void load(const CL_String &filename, CL_VirtualDirectory directory);
 
+	/// \brief Load
+	///
+	/// \param file = the file to load
+	/// \param directory = Virtual Directory
 	void load(CL_IODevice file, CL_VirtualDirectory directory = CL_VirtualDirectory());
 
 /// \}
 /// \name Implementation
 /// \{
 private:
+
+	/// \brief Constructs a ResourceManager
+	///
+	/// \param CL_ResourceManager_Impl = Weak Ptr
 	CL_ResourceManager(CL_WeakPtr<CL_ResourceManager_Impl> &impl);
 
 	CL_SharedPtr<CL_ResourceManager_Impl> impl;

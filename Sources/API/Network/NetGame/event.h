@@ -39,23 +39,85 @@
 class CL_NetGameEvent
 {
 public:
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
 	CL_NetGameEvent(const CL_String &name);
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
+	/// \param arg1 = Net Game Event Value
 	CL_NetGameEvent(const CL_String &name, const CL_NetGameEventValue &arg1);
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
+	/// \param arg1 = Net Game Event Value
+	/// \param arg2 = Net Game Event Value
 	CL_NetGameEvent(const CL_String &name, const CL_NetGameEventValue &arg1, const CL_NetGameEventValue &arg2);
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
+	/// \param arg1 = Net Game Event Value
+	/// \param arg2 = Net Game Event Value
+	/// \param arg3 = Net Game Event Value
 	CL_NetGameEvent(const CL_String &name, const CL_NetGameEventValue &arg1, const CL_NetGameEventValue &arg2, const CL_NetGameEventValue &arg3);
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
+	/// \param arg1 = Net Game Event Value
+	/// \param arg2 = Net Game Event Value
+	/// \param arg3 = Net Game Event Value
+	/// \param arg4 = Net Game Event Value
 	CL_NetGameEvent(const CL_String &name, const CL_NetGameEventValue &arg1, const CL_NetGameEventValue &arg2, const CL_NetGameEventValue &arg3, const CL_NetGameEventValue &arg4);
+
+	/// \brief Constructs a NetGameEvent
+	///
+	/// \param name = String
+	/// \param arg1 = Net Game Event Value
+	/// \param arg2 = Net Game Event Value
+	/// \param arg3 = Net Game Event Value
+	/// \param arg4 = Net Game Event Value
+	/// \param arg5 = Net Game Event Value
 	CL_NetGameEvent(const CL_String &name, const CL_NetGameEventValue &arg1, const CL_NetGameEventValue &arg2, const CL_NetGameEventValue &arg3, const CL_NetGameEventValue &arg4, const CL_NetGameEventValue &arg5);
 
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_String get_name() const { return name; };
 
 	unsigned int get_argument_count() const;
+
+	/// \brief Get argument
+	///
+	/// \param index = value
+	///
+	/// \return Net Game Event Value
 	CL_NetGameEventValue get_argument(unsigned int index) const;
 
+	/// \brief Add argument
+	///
+	/// \param value = Net Game Event Value
 	void add_argument(const CL_NetGameEventValue &value);
 
+	/// \brief To string
+	///
+	/// \return String
 	CL_String to_string() const;
 
 private:
+
+	/// \brief To string
+	///
+	/// \param v = Net Game Event Value
+	///
+	/// \return String
+	CL_String to_string(const CL_NetGameEventValue &v) const;
+
 	CL_String name;
 	std::vector<CL_NetGameEventValue> arguments;
 };

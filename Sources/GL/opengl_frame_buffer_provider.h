@@ -33,8 +33,9 @@
 #include "opengl_graphic_context_provider.h"
 
 #include "API/Display/TargetProviders/frame_buffer_provider.h"
+#include "API/Core/System/disposable_object.h"
 
-class CL_API_DISPLAY CL_OpenGLFrameBufferProvider : public CL_FrameBufferProvider
+class CL_API_DISPLAY CL_OpenGLFrameBufferProvider : public CL_FrameBufferProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -90,6 +91,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	static CL_String get_error_message(int error_code);
 
 	CL_Size sizes[16];

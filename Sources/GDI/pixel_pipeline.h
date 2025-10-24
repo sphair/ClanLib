@@ -37,6 +37,8 @@
 #include "API/Display/Render/frame_buffer.h"
 #include "fragment_buffer.h"
 
+class CL_Rasterizer;
+
 class CL_PixelPipeline
 {
 public:
@@ -128,51 +130,12 @@ private:
 	CL_Event event_stop;
 	std::vector<CL_Thread> worker_threads;
 
-	struct Line
-	{
-		Line() { }
-		Line(unsigned short v1, unsigned short v2) : v1(v1), v2(v2) { }
-
-		unsigned short v1, v2;
-		
-		const ShadedVertex *get_v1(const CL_PixelPipeline *pipeline) const { return &pipeline->vertices[v1]; }
-		const ShadedVertex *get_v2(const CL_PixelPipeline *pipeline) const { return &pipeline->vertices[v2]; }
-		float calc_x(const CL_PixelPipeline *pipeline, float y) const
-		{
-			const ShadedVertex *v1 = get_v1(pipeline);
-			const ShadedVertex *v2 = get_v2(pipeline);
-			float dx = v2->position.x - v1->position.x;
-			float dy = v2->position.y - v2->position.y;
-			if (dy != 0.0f)
-				return v1->position.x + dx * (y-v1->position.y)/dy;
-			else
-				return v1->position.x;
-		}
-	};
-
-	struct PolygonBand
-	{
-		int y1, y2;
-		Line left, right;
-		unsigned char sampler;
-	};
-	
-	struct Triangle
-	{
-		PolygonBand b1;
-		PolygonBand b2;
-	};
-
 	static int get_num_cores();
 	void wait_for_workers();
 	void worker_main(int core);
 
-	void process_vertices(int core, int num_cores);
+	void process_vertices(CL_Rasterizer &rasterizer, int core, int num_cores);
 
-	Triangle triangulate(unsigned short v1, unsigned short v2, unsigned short v3, unsigned char sampler) const;
-	void sort_triangle_vertices(unsigned short *vertices) const;
-	
-	void render_band(const PolygonBand &band, int core, int num_cores);
 	int find_first_line_for_core(int y_start, int core, int num_cores);
 
 	void fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color, int core, int num_cores);

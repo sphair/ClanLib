@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -49,37 +47,63 @@ class CL_API_GUI CL_MenuBar : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a MenuBar
+	///
+	/// \param parent = GUIComponent
 	CL_MenuBar(CL_GUIComponent *parent);
 
 	virtual ~CL_MenuBar();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
 
+	/// \brief Get menu
+	///
+	/// \param index = value
+	///
+	/// \return Popup Menu
 	CL_PopupMenu get_menu(int index) const;
 
 	/// \brief Get the menu at the specific point (component coordinates).
 	int get_index(const CL_Point &p);
 
+	/// \brief Get menu rect
+	///
+	/// \param index = value
+	///
+	/// \return Rect
 	CL_Rect get_menu_rect(int index);
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Clear
 	void clear();
 
+	/// \brief Add menu
+	///
+	/// \param name = String Ref
+	/// \param popup_menu = Popup Menu
+	///
+	/// \return int
 	int add_menu(const CL_StringRef &name, CL_PopupMenu popup_menu);
 
+	/// \brief Remove menu
+	///
+	/// \param index = value
 	void remove_menu(int index);
-
 
 /// \}
 /// \name Implementation
@@ -91,6 +115,5 @@ private:
 	friend class CL_MenuModalLoop;
 /// \}
 };
-
 
 /// \}

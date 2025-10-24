@@ -44,13 +44,12 @@ private:
 	void on_keyboard_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
 
-	void update_text(CL_GraphicContext &gc, CL_FrameBuffer &fb_text, CL_Font_Texture &font, std::vector<CL_SpanLayout> &layout);
+	void update_text(CL_GraphicContext &gc, CL_FrameBuffer &fb_text, CL_Font &font, std::vector<CL_SpanLayout> &layout);
 	void draw_text(CL_GraphicContext &gc, CL_Texture &texture, CL_Angle angle);
 
 	bool quit;
 	float last_fps;
 	static const int text_window_size = 1024;
-
 };
 
 int ExampleText::start(const std::vector<CL_String> &args)
@@ -83,11 +82,11 @@ int ExampleText::start(const std::vector<CL_String> &args)
 		font_desc.set_typeface_name("Tahoma");
 		font_desc.set_anti_alias(true);
 		font_desc.set_height(32);
-		CL_Font_Texture font_normal(gc, font_desc);
+		CL_Font_System font_normal(gc, font_desc);
 
 		font_desc.set_weight(800);
 		font_desc.set_height(40);
-		CL_Font_Texture font_bold(gc, font_desc);
+		CL_Font_System font_bold(gc, font_desc);
 
 		// Share the font texture
 		font_normal.set_texture_group(texture_group);
@@ -114,7 +113,7 @@ int ExampleText::start(const std::vector<CL_String> &args)
 			num_lines++;
 		}
 
-		// Extent layout vector
+		// Extend layout vector
 		layout.resize(num_lines);
 
 		int ypos = 60;
@@ -216,11 +215,11 @@ void ExampleText::draw_text(CL_GraphicContext &gc, CL_Texture &texture, CL_Angle
 	gc.reset_texture(0);
 }
 
-void ExampleText::update_text(CL_GraphicContext &gc, CL_FrameBuffer &fb_text, CL_Font_Texture &font, std::vector<CL_SpanLayout> &layout)
+void ExampleText::update_text(CL_GraphicContext &gc, CL_FrameBuffer &fb_text, CL_Font &font, std::vector<CL_SpanLayout> &layout)
 {
 	gc.set_frame_buffer(fb_text);
 
-	CL_Draw::fill(gc, 0, 0, text_window_size, text_window_size, CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	CL_Draw::fill(gc, 0.0f, 0.0f, (float)text_window_size, (float)text_window_size, CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
 	CL_String text(cl_format("Frames per second = %1", last_fps));
 	font.draw_text(gc, 20, 20, text, CL_Colorf::white);
@@ -232,7 +231,6 @@ void ExampleText::update_text(CL_GraphicContext &gc, CL_FrameBuffer &fb_text, CL
 
 	gc.reset_frame_buffer();
 }
-
 
 void ExampleText::on_keyboard_up(const CL_InputEvent &key, const CL_InputState &state)
 {

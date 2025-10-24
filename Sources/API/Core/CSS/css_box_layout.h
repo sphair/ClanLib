@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -62,56 +56,116 @@ public:
 	/// \brief CSS Box Layout destructor
 	~CL_CSSBoxLayout();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	CL_CSSBox get_body_box();
 
+	/// \brief Get Body box
+	///
+	/// \return body_box
+	CL_CSSBox get_body_box();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Create inline box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_inline_box();
 
+	/// \brief Create inline text box
+	///
+	/// \param text = String Ref
+	///
+	/// \return CSSInline Text Box
 	CL_CSSInlineTextBox create_inline_text_box(const CL_StringRef &text);
 
+	/// \brief Create inline object box
+	///
+	/// \param element = Dom Element
+	///
+	/// \return CSSInline Object Box
 	CL_CSSInlineObjectBox create_inline_object_box(const CL_DomElement &element);
 
+	/// \brief Create block box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_block_box();
 
+	/// \brief Create list item box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_list_item_box();
 
+	/// \brief Create run in box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_run_in_box();
 
+	/// \brief Create compact box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_compact_box();
 
+	/// \brief Create marker box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_marker_box();
 
+	/// \brief Create table box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_box();
 
+	/// \brief Create inline table box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_inline_table_box();
 
+	/// \brief Create table row group box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_row_group_box();
 
+	/// \brief Create table header group box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_header_group_box();
 
+	/// \brief Create table footer group box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_footer_group_box();
 
+	/// \brief Create table row box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_row_box();
 
+	/// \brief Create table column group box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_column_group_box();
 
+	/// \brief Create table column box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_column_box();
 
+	/// \brief Create table cell box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_cell_box();
 
+	/// \brief Create table caption box
+	///
+	/// \return CSSBox
 	CL_CSSBox create_table_caption_box();
-
 
 /// \}
 /// \name Implementation
@@ -138,12 +192,15 @@ public:
 
 	~CL_CSSBox();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Box layout
+	///
+	/// \return box_layout
 	CL_CSSBoxLayout get_box_layout();
 
 	enum Type
@@ -169,6 +226,9 @@ public:
 		TABLE_CAPTION_BOX
 	};
 
+	/// \brief Get Type
+	///
+	/// \return type
 	Type get_type() const;
 
 	/// \brief Returns the parent of this box.
@@ -251,14 +311,20 @@ public:
 	/// \brief Returns true if this is a table caption box.
 	bool is_table_caption_box() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief To inline text box
+	///
+	/// \return CSSInline Text Box
 	CL_CSSInlineTextBox to_inline_text_box() const;
 
+	/// \brief To inline object box
+	///
+	/// \return CSSInline Object Box
 	CL_CSSInlineObjectBox to_inline_object_box() const;
 
 	/// \brief Adds the box new_box to the end of the list of children of this box.
@@ -272,7 +338,6 @@ public:
 
 	/// \brief Removes the box from the list of children of this box.
 	CL_CSSBox remove_child(CL_CSSBox child);
-
 
 /// \}
 /// \name Implementation
@@ -297,12 +362,15 @@ public:
 
 	~CL_CSSInlineTextBox();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 /// \}
 };
@@ -321,15 +389,17 @@ public:
 
 	~CL_CSSInlineObjectBox();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Object element
+	///
+	/// \return object_element
 	CL_DomElement get_object_element() const;
 /// \}
 };
-
 
 /// \}

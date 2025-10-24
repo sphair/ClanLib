@@ -72,9 +72,9 @@ int App::start(const std::vector<CL_String> &args)
 			CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 			CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-			CL_ResourceManager resources("../../Resources/GUIThemeLuna/resources.xml");
+			app_resources = CL_ResourceManager("resources.xml");
+			CL_ResourceManager gui_resources("../../Resources/GUIThemeLuna/resources.xml");
 
-			// Load the texture font
 			CL_VirtualFileSystem vfs("./");
 			CL_VirtualDirectory vdir = vfs.get_root_directory();
 
@@ -84,16 +84,17 @@ int App::start(const std::vector<CL_String> &args)
 
 			CL_GUIWindowManagerTexture wm(window);
 			wm_ptr = &wm;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_GUIThemeDefault theme;
-			theme.set_resources(resources);
-			gui.set_theme(&theme); 
+			theme.set_resources(gui_resources);
+			gui.set_theme(theme); 
 			gui.set_css_document("theme.css");
 
 			CL_GUITopLevelDescription gui_desc;
 			gui_desc.set_title("Options");
-			CL_Window gui_window( CL_Rect(10, 10, 250, 400), &gui, gui_desc );
+			gui_desc.set_position(CL_Rect(10, 10, 250, 400), false);
+			CL_Window gui_window(&gui, gui_desc);
 			gui_window_ptr = &gui_window;
 
 			int offset_x = 10;
@@ -102,10 +103,10 @@ int App::start(const std::vector<CL_String> &args)
 			int height = 20;
 			const int gap = 26;
 
-			CL_PushButton button_class_native(&gui_window);
-			button_class_native.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_native.func_clicked().set(this, &App::on_button_clicked_class_native, &button_class_native);
-			button_class_native.set_text("Class: Native");
+			CL_PushButton button_class_system(&gui_window);
+			button_class_system.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_system.func_clicked().set(this, &App::on_button_clicked_class_system, &button_class_system);
+			button_class_system.set_text("Class: System");
 			offset_y += gap;
 
 			CL_PushButton button_class_freetype(&gui_window);
@@ -114,16 +115,16 @@ int App::start(const std::vector<CL_String> &args)
 			button_class_freetype.set_text("Class: Freetype");
 			offset_y += gap;
 
-			CL_PushButton button_class_texture(&gui_window);
-			button_class_texture.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_texture.func_clicked().set(this, &App::on_button_clicked_class_texture, &button_class_texture);
-			button_class_texture.set_text("Class: Texture");
-			offset_y += gap;
-
 			CL_PushButton button_class_vector(&gui_window);
 			button_class_vector.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
 			button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
 			button_class_vector.set_text("Class: Vector");
+			offset_y += gap;
+
+			CL_PushButton button_class_sprite(&gui_window);
+			button_class_sprite.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_sprite.func_clicked().set(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
+			button_class_sprite.set_text("Class: Sprite");
 			offset_y += gap;
 
 			CL_PushButton button_typeface_tahoma(&gui_window);
@@ -138,14 +139,6 @@ int App::start(const std::vector<CL_String> &args)
 			button_typeface_sans.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
 			button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
 			button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
-			offset_y += gap;
-
-			CL_PushButton button_typeface_texture(&gui_window);
-			button_typeface_texture_ptr = &button_typeface_texture;
-			button_typeface_texture.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_typeface_texture.func_clicked().set(this, &App::on_button_clicked_typeface_texture, &button_typeface_texture);
-			button_typeface_texture.set_text("Typeface: Texture");
-			button_typeface_texture.set_enabled(false);
 			offset_y += gap;
 
 			CL_CheckBox checkbox1(&gui_window);
@@ -207,15 +200,14 @@ int App::start(const std::vector<CL_String> &args)
 			lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
 
 			last_fps = 0.0f;
-			texture_typeface_flag = false;
-			selected_fontclass = native;
+			selected_fontclass = font_system;
 			font_desc.set_typeface_name("Microsoft Sans Serif");
 			font_desc.set_height(32);
 			font_desc.set_weight(400);
 			select_font();
 
 			CL_GraphicContext gc = window_ptr->get_gc();
-			small_font = CL_Font_Texture(gc, "Tahoma", 16);
+			small_font = CL_Font(gc, "Tahoma", 16);
 
 			wm.func_repaint().set(this, &App::gui_repaint);
 			do
@@ -223,7 +215,7 @@ int App::start(const std::vector<CL_String> &args)
 				render();
 			}while(!gui.exec(false) && !quit);
 
-			small_font = CL_Font_Texture();
+			small_font = CL_Font();
 			selected_font = CL_Font();
 
 	}
@@ -250,8 +242,6 @@ int App::start(const std::vector<CL_String> &args)
 	}
 	return 0;
 }
-
-
 
 // A key was pressed
 void App::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
@@ -294,7 +284,6 @@ void App::render()
 	last_fps = 1000.0f / (CL_System::get_time()-start_time);
 
 	window_ptr->flip(1);
-
 }
 
 void App::gui_repaint()
@@ -306,27 +295,18 @@ void App::select_font()
 	CL_GraphicContext gc = window_ptr->get_gc();
 	switch (selected_fontclass)
 	{
-		case native:
-			selected_font = CL_Font_Native(gc, font_desc);
+		case font_freetype:
+			selected_font = CL_Font_Freetype(gc, font_desc);
 			break;
-		case freetype:
-			selected_font = CL_Font_Freetype(font_desc);
+		case font_system:
+			selected_font = CL_Font_System(gc, font_desc);
 			break;
-		case texture:
-			if (texture_typeface_flag)
-			{
-				CL_Font_Texture bmfont(gc, &pb_font, TextureFont_Positions);
-				bmfont.load_font(gc, font_desc);
-				selected_font = bmfont;
-			}else
-			{
-				selected_font = CL_Font_Texture(gc, font_desc);
-			}
-			break;
-		case vector:
+		case font_vector:
 			selected_font = CL_Font_Vector(font_desc);
 			break;
-
+		case font_sprite:
+			selected_font = CL_Font_Sprite(gc, "ClanFont", &app_resources);
+			break;
 	}
 
 	font_metrics = selected_font.get_font_metrics(gc);

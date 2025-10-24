@@ -59,6 +59,9 @@ public:
 /// \{
 
 public:
+	/// \brief Get the file descriptor of the joystick
+	int get_fd() const;
+
 	/// \brief Returns the input device type.
 	CL_InputDevice::Type get_type() const { return CL_InputDevice::joystick; }
 

@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -53,25 +51,32 @@ public:
 
 	~CL_HTTPServer();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Bind
+	///
+	/// \param name = Socket Name
 	void bind(const CL_SocketName &name);
 
+	/// \brief Add handler
+	///
+	/// \param handler = HTTPRequest Handler
 	void add_handler(const CL_HTTPRequestHandler &handler);
 
+	/// \brief Remove handler
+	///
+	/// \param handler = HTTPRequest Handler
 	void remove_handler(const CL_HTTPRequestHandler &handler);
-
 
 /// \}
 /// \name Implementation
@@ -81,6 +86,5 @@ private:
 	CL_SharedPtr<CL_HTTPServer_Impl> impl;
 /// \}
 };
-
 
 /// \}

@@ -65,7 +65,7 @@ CL_MenuModalLoop::CL_MenuModalLoop(CL_GUIComponent *owner, CL_MenuBar *menubar, 
 		popup_window->set_focus();
 		menubar_shown_menu_index = show_index;
 		menubar->impl->selected_index = menubar_shown_menu_index;
-		menubar->invalidate_rect();
+		menubar->request_repaint();
 	}
 }
 
@@ -142,7 +142,7 @@ int CL_MenuModalLoop::exec_handler(CL_AcceleratorTable &accel_table, bool loop_u
 		message = gui_manager.get_message();
 		process_message(CL_GUIMessage_Input(message));
 
-		gui_manager.get_window_manager()->update();
+		gui_manager.get_window_manager().update();
 
 	}
 
@@ -157,7 +157,7 @@ int CL_MenuModalLoop::exec_handler(CL_AcceleratorTable &accel_table, bool loop_u
 	if (menubar)
 	{
 		menubar->impl->selected_index = -1;
-		menubar->invalidate_rect();
+		menubar->request_repaint();
 	}
 
 	if (popup_window)
@@ -307,7 +307,7 @@ void CL_MenuModalLoop::menubar_on_mouse_moved(CL_InputEvent input_event)
 //		popup_window->func_render().set(&test, popup_window->func_render());
 		menubar_shown_menu_index = mouse_over_index;
 		menubar->impl->selected_index = menubar_shown_menu_index;
-		menubar->invalidate_rect();
+		menubar->request_repaint();
 	}
 }
 
@@ -392,14 +392,14 @@ void CL_MenuModalLoop::on_menubar_key_pressed(CL_InputEvent &input_event)
 		menubar->impl->selected_index--;
 		if (menubar->impl->selected_index < 0)
 			menubar->impl->selected_index = 0;
-		menubar->invalidate_rect();
+		menubar->request_repaint();
 	}
 	else if (input_event.id == CL_KEY_RIGHT)
 	{
 		menubar->impl->selected_index++;
 		if (menubar->impl->selected_index == menubar->impl->menus.size())
 			menubar->impl->selected_index = menubar->impl->menus.size()-1;
-		menubar->invalidate_rect();
+		menubar->request_repaint();
 	}
 
 	if (old_selected_menu_index != menubar->impl->selected_index)

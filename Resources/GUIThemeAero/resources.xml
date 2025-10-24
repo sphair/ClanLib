@@ -382,6 +382,12 @@
   <image name="PopupMenuSubmenuArrow">
     <image file="Images\popupmenu_submenu_arrow.png" />
   </image>
+  <image name="PopupMenuChecked">
+    <image file="Images\popupmenu_checked.png" />
+  </image>
+  <image name="PopupMenuCheckedDisabled">
+    <image file="Images\popupmenu_checked_disabled.png" />
+  </image>
 
   <image name="ListViewColumnHeaderNormal">
     <image file="Images\listview_column_header_normal.png" />

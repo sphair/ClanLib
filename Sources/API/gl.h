@@ -32,20 +32,17 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
 
 #include "GL/opengl.h"
+#include "GL/opengl_defines.h"
 #include "GL/opengl_target.h"
 #include "GL/opengl_window_description.h"
 #include "GL/opengl_wrap.h"
 #include "GL/setup_gl.h"
+#include "GL/opengl_graphic_context.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
@@ -162,5 +159,4 @@
 		#endif
 	#endif
 #endif
-
 

@@ -32,11 +32,13 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Math/size.h"
 
-#ifndef __APPLE__
 #ifndef WIN32
+#ifndef __APPLE__
+#ifdef HAVE_X11_EXTENSIONS_XF86VMODE_H
 #include <X11/Xlib.h>
 #include <X11/extensions/xf86vmode.h>
 #define V_DBLSCAN       0x020
+#endif
 #endif
 #endif
 
@@ -100,6 +102,7 @@ std::vector<CL_DisplayWindowMode> &CL_DisplayWindowMode::get_display_modes()
 		}
 #else
 #ifndef __APPLE__
+#ifdef HAVE_X11_EXTENSIONS_XF86VMODE_H
 		Display *display = XOpenDisplay(NULL);
 
 		int event_base;
@@ -139,6 +142,7 @@ std::vector<CL_DisplayWindowMode> &CL_DisplayWindowMode::get_display_modes()
 		}
 
 		XCloseDisplay(display);
+#endif
 #endif
 #endif
 	}

@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/Text/string_types.h"
@@ -56,7 +54,17 @@ public:
 	};
 
 public:
+
+	/// \brief Constructs a SpriteDescriptionFrame
+	///
+	/// \param pixelbuffer = Pixel Buffer
+	/// \param rect = Rect
 	CL_SpriteDescriptionFrame(CL_PixelBuffer pixelbuffer, CL_Rect rect) : pixelbuffer(pixelbuffer), rect(rect), type(type_pixelbuffer), delay(1.0) { }
+
+	/// \brief Constructs a SpriteDescriptionFrame
+	///
+	/// \param texture = Texture
+	/// \param rect = Rect
 	CL_SpriteDescriptionFrame(CL_Texture texture, CL_Rect rect) : texture(texture), rect(rect), type(type_texture), delay(1.0) { }
 
 	CL_PixelBuffer pixelbuffer;
@@ -78,7 +86,6 @@ class CL_API_DISPLAY CL_SpriteDescription
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a sprite description.
 	///
@@ -86,26 +93,30 @@ public:
 	/// \param resources Resource manager used to load resource.
 	CL_SpriteDescription();
 
+	/// \brief Constructs a SpriteDescription
+	///
+	/// \param gc = Graphic Context
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
 	CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
+	/// \brief Constructs a SpriteDescription
+	///
+	/// \param copy = Sprite Description
 	CL_SpriteDescription(const CL_SpriteDescription &copy);
 
 	~CL_SpriteDescription();
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns a list over all available frames.
 	const std::vector<CL_SpriteDescriptionFrame> &get_frames() const;
 
-
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Copy assignment operator.
 	CL_SpriteDescription &operator =(const CL_SpriteDescription &copy);
@@ -117,10 +128,33 @@ public:
 	/// \param vfs Virtual File System to load image from.
 	void add_frame(const CL_PixelBuffer &pixelbuffer);
 
+	/// \brief Add frame
+	///
+	/// \param texture = Texture
 	void add_frame(const CL_Texture &texture);
 
-	void add_frame(const CL_StringRef &filename, CL_VirtualDirectory dir = CL_VirtualDirectory());
+	/// \brief Add frame
+	///
+	/// \param fullname = String Ref
+	void add_frame(const CL_StringRef &fullname);
 
+	/// \brief Add frame
+	///
+	/// \param file = IODevice
+	/// \param image_type = String
+	void add_frame(CL_IODevice &file, const CL_String &image_type);
+
+	/// \brief Add frame
+	///
+	/// \param filename = String Ref
+	/// \param dir = Virtual Directory
+	void add_frame(const CL_StringRef &filename, CL_VirtualDirectory &dir);
+
+	/// \brief Add frames
+	///
+	/// \param texture = Texture
+	/// \param frames = Rect
+	/// \param num_frames = value
 	void add_frames(const CL_Texture &texture, CL_Rect *frames, int num_frames);
 
 	/// \brief Adds images formed in a grid.
@@ -155,10 +189,16 @@ public:
 	    completely transparent. Then it finds the width of each frame on
 	    this line by looking for columns that are completely transparency.</p>
 	    \param pixelbuffer Image source.
+	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
 	void add_alphaclipped_frames(
 		const CL_PixelBuffer &pixelbuffer,
+		int xpos = 0, int ypos = 0,
+		double trans_limit = 0.05f);
+
+	void add_alphaclipped_frames(
+		const CL_Texture &texture,
 		int xpos = 0, int ypos = 0,
 		double trans_limit = 0.05f);
 
@@ -168,6 +208,7 @@ public:
 	    from top to bottom. As soon as a non-transarent pixel is discovered,
 	    the clipper finds the bounding box for that region and then moves on.</p>
 	    \param pixelbuffer Image source.
+	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
 	void add_alphaclipped_frames_free(
@@ -175,27 +216,21 @@ public:
 		int xpos = 0, int ypos = 0,
 		double trans_limit = 0.05f);
 
-	/// \brief Adds images separated with palette-colours defining the boundaries.
-	///
-	/// \param pixelbuffer Image source.
-	/// \param xpos, ypos Upper left position where cutting should begin.
-	void add_paletteclipped_frames(
-		const CL_PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0);
+	void add_alphaclipped_frames_free(
+		const CL_Texture &texture,
+		int xpos = 0, int ypos = 0,
+		double trans_limit = 0.05f);
 
 	/// \brief Sets the duration this frame is displayed, in seconds.
 	void set_frame_delay(int frame, double delay);
 
-
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	/// \brief SpriteDescription implementation.
 	CL_SharedPtr<CL_SpriteDescription_Impl> impl;
 /// \}
 };
-
 
 /// \}

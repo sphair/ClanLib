@@ -2,7 +2,7 @@
 #include "radial_menu.h"
 
 GameComponent::GameComponent(const CL_Rect &position, CL_GUIManager* gui_manager)
-: CL_GUIComponent(position, gui_manager, CL_GUITopLevelDescription()),
+: CL_GUIComponent(gui_manager, CL_GUITopLevelDescription(position, false)),
   radial_menu(0)
 {
 	set_constant_repaint(true);

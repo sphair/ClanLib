@@ -34,12 +34,10 @@
 #pragma once
 
 #include "../api_core.h"
-#include "math.h"
-
+#include "cl_math.h"
 #include "vec1.h"
 #include "vec3.h"
 #include "vec4.h"
-
 #include "origin.h"
 
 template<typename Type>
@@ -363,7 +361,6 @@ inline CL_Vec2<double>::CL_Vec2(const CL_Vec2<double> &copy) { x = (double) copy
 
 template<>
 inline CL_Vec2<double>::CL_Vec2(const CL_Vec2<int> &copy) { x = (double) copy.x; y = (double) copy.y; }
-
 
 //////////////////////////////////////////////////////////////////////////
 

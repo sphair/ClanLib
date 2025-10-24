@@ -17,31 +17,38 @@ public:
 			displaywindow_desc.set_size(CL_Size(640, 480), true);
 
 			CL_DisplayWindow displaywindow(displaywindow_desc);
-	
-			CL_ResourceManager resources("../../../Resources/GUIThemeLuna/resources.xml"); 
+
+			CL_ResourceManager resources("../../../Resources/GUIThemeAero/resources.xml"); 
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
 
   			CL_GUIWindowManagerTexture wm(displaywindow);
+  			//CL_GUIWindowManagerSystem wm;
  
 			CL_GUIManager gui;
-			gui.set_window_manager(&wm);
-			gui.set_theme(&theme);
-			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
+			gui.set_window_manager(wm);
+			gui.set_theme(theme);
+			gui.set_css_document("../../../Resources/GUIThemeAero/theme.css");
 
 			CL_GUITopLevelDescription window_desc1;
 			window_desc1.set_title("Window 1");
-			CL_Window window1(CL_Rect(10, 10, 630, 150), &gui, window_desc1);
+			window_desc1.set_position(CL_Rect(10, 10, 630, 100), false);
+			CL_Window window1(&gui, window_desc1);
 
 			CL_GUITopLevelDescription window_desc2;
 			window_desc2.set_title("Window 2");
-			CL_Window window2(CL_Rect(10, 160, 630, 470), &gui, window_desc2);
+			window_desc2.set_position(CL_Rect(10, 160, 630, 470), false);
+			CL_Window window2(&gui, window_desc2);
+
+			CL_PushButton resize(&window2);
+			resize.set_geometry(CL_Rect(window2.get_client_area().get_top_left(), CL_Size(100, 25)));
+			resize.set_text("Resize window");
+			resize.func_clicked().set(this, &App::on_button_resize, &window2);
 
 			CL_Slot slot = displaywindow.sig_window_close().connect(this, &App::on_close, &gui);
 
-			CL_AcceleratorTable accel_table;
-			gui.exec(accel_table);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -56,6 +63,12 @@ public:
 	void on_close(CL_GUIManager *guimanager)
 	{
 		guimanager->exit_with_code(0);
+	}
+
+	void on_button_resize(CL_Window *window)
+	{
+		CL_Rect r = window->get_geometry();
+		window->set_geometry(CL_Rect(r.left, r.top, r.right - 20, r.bottom - 20));
 	}
 };
 

@@ -29,13 +29,7 @@
 /// \addtogroup clanNetwork_Internet_Relay_Chat clanNetwork Internet Relay Chat
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #ifdef _MSC_VER
 #pragma warning (disable:4786)
@@ -92,12 +86,18 @@ public:
 	/// \param port IRC server port. Defaults to "6667".
 	CL_IRCConnection();
 
+	/// \brief Constructs a IRCConnection
+	///
+	/// \param server = String
+	/// \param port = String
 	CL_IRCConnection(const CL_String &server, const CL_String &port = cl_text("6667"));
 
+	/// \brief Constructs a IRCConnection
+	///
+	/// \param copy = IRCConnection
 	CL_IRCConnection(const CL_IRCConnection &copy);
 
 	~CL_IRCConnection();
-
 
 /// \}
 /// \name Attributes
@@ -118,7 +118,6 @@ public:
 
 	/// \brief Returns the real name passed to send_user.
 	const CL_String8 &get_realname() const;
-
 
 /// \}
 /// \name Operations
@@ -178,6 +177,10 @@ public:
 	/// \param keys List of channel keys.
 	void send_join(const CL_String8 &channel, const CL_String8 &key = "");
 
+	/// \brief Send join
+	///
+	/// \param list = std
+	/// \param list = std
 	void send_join(const std::list<CL_String8> &channels, const std::list<CL_String8> &keys);
 
 	/// \brief Send part channel command.
@@ -187,6 +190,10 @@ public:
 	/// \param channels List of channels to leave.
 	void send_part(const CL_String8 &channel, const CL_String8 &reason = "");
 
+	/// \brief Send part
+	///
+	/// \param list = std
+	/// \param reason = String8
 	void send_part(const std::list<CL_String8> &channels, const CL_String8 &reason = "");
 
 	/// \brief Send set mode command.
@@ -204,6 +211,9 @@ public:
 	/// back what the topic is on a given channel.</p>
 	void send_topic(const CL_String8 &channel, const CL_String8 &topic);
 
+	/// \brief Send topic
+	///
+	/// \param channel = String8
 	void send_topic(const CL_String8 &channel);
 
 	/// \brief List nicks on channel(s).
@@ -211,6 +221,9 @@ public:
 	/// \param channel Channel to list.
 	void send_names(const CL_String8 &channel = "");
 
+	/// \brief Send names
+	///
+	/// \param list = std
 	void send_names(const std::list<CL_String8> &channels);
 
 	/// \brief Send list of channels.
@@ -219,6 +232,10 @@ public:
 	/// \param server Server to limit results from.
 	void send_list(const CL_String8 &channel = "", const CL_String8 &server = "");
 
+	/// \brief Send list
+	///
+	/// \param list = std
+	/// \param server = String8
 	void send_list(const std::list<CL_String8> &channels, const CL_String8 &server = "");
 
 	/// \brief Send channel join invitation.
@@ -230,6 +247,11 @@ public:
 	/// \brief Send kick command
 	void send_kick(const CL_String8 &channel, const CL_String8 &user, const CL_String8 &comment = "");
 
+	/// \brief Send kick
+	///
+	/// \param list = std
+	/// \param list = std
+	/// \param comment = String8
 	void send_kick(const std::list<CL_String8> &channels, const std::list<CL_String8> &users, const CL_String8 &comment = "");
 
 	/// \brief Send version command.
@@ -262,6 +284,10 @@ public:
 	/// \param text Message to send.
 	void send_privmsg(const CL_String8 &receiver, const CL_String8 &text);
 
+	/// \brief Send privmsg
+	///
+	/// \param list = std
+	/// \param text = String8
 	void send_privmsg(const std::list<CL_String8> &receivers, const CL_String8 &text);
 
 	/// \brief Send Client To Client Protocol (CTCP) message.
@@ -271,6 +297,11 @@ public:
 	/// \param data CTCP data.
 	void send_privmsg_ctcp(const CL_String8 &receiver, const CL_String8 &command, const CL_String8 &data);
 
+	/// \brief Send privmsg ctcp
+	///
+	/// \param list = std
+	/// \param command = String8
+	/// \param data = String8
 	void send_privmsg_ctcp(std::list<CL_String8> &receivers, const CL_String8 &command, const CL_String8 &data);
 
 	/// \brief Send notice message.
@@ -298,10 +329,21 @@ public:
 	/// \param server Server to query.
 	void send_whois(const CL_String8 &nickmask);
 
+	/// \brief Send whois
+	///
+	/// \param server = String8
+	/// \param nickmask = String8
 	void send_whois(const CL_String8 &server, const CL_String8 &nickmask);
 
+	/// \brief Send whois
+	///
+	/// \param list = std
 	void send_whois(const std::list<CL_String8> &nickmasks);
 
+	/// \brief Send whois
+	///
+	/// \param server = String8
+	/// \param list = std
 	void send_whois(const CL_String8 &server, const std::list<CL_String8> &nickmasks);
 
 	/// \brief Send whowas command.
@@ -337,7 +379,6 @@ public:
 
 	/// \brief Extracts address part of a fully qualified IRC prefix.
 	static CL_String8 extract_address(const CL_String8 &str);
-
 
 /// \}
 /// \name Signals
@@ -395,15 +436,13 @@ public:
 	/// \brief sig_ping(daemon1, daemon2)
 	CL_Signal_v2<const CL_String8 &, const CL_String8 &> &sig_ping();
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_IRCConnection_Generic *impl;
+	CL_SharedPtr<CL_IRCConnection_Generic> impl;
 /// \}
 };
-
 
 /// \}

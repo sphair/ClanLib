@@ -1,9 +1,15 @@
 lib_LTLIBRARIES = libclanSound.la
 
 libclanSound_la_SOURCES = \
-SoundFilters/echofilter_generic.cpp \
-SoundFilters/fadefilter_generic.cpp \
-SoundFilters/inverse_echofilter_generic.cpp \
+SoundFilters/echofilter.cpp \
+SoundFilters/fadefilter.cpp \
+SoundFilters/inverse_echofilter.cpp \
+SoundFilters/echofilter_provider.h \
+SoundFilters/fadefilter_provider.h \
+SoundFilters/inverse_echofilter_provider.h \
+SoundFilters/echofilter_provider.cpp \
+SoundFilters/fadefilter_provider.cpp \
+SoundFilters/inverse_echofilter_provider.cpp \
 SoundProviders/soundprovider_factory.cpp \
 SoundProviders/soundprovider_raw.cpp \
 SoundProviders/soundprovider_raw_session.cpp \

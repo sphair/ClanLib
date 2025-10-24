@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -56,7 +54,6 @@ public:
 
 	~CL_AcceleratorTable();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -67,7 +64,6 @@ public:
 
 	/// \brief Returns a vector containing the accelerator keys defined for this table.
 	std::vector<CL_AcceleratorKey> get_accelerators();
-
 
 /// \}
 /// \name Operations
@@ -81,7 +77,6 @@ public:
 	/** <p>Returns true if the message was processed.</p>*/
 	bool process_message(CL_GUIMessage &msg);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +85,5 @@ private:
 	CL_SharedPtr<CL_AcceleratorTable_Impl> impl;
 /// \}
 };
-
 
 /// \}

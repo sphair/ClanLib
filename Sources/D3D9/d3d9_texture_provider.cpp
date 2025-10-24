@@ -52,16 +52,16 @@ void CL_D3D9TextureProvider::destroy()
 	delete this;
 }
 
-void CL_D3D9TextureProvider::create(int width, int height, int format, int depth)
+void CL_D3D9TextureProvider::create(int width, int height, CL_TextureFormat internal_format, int depth)
 {
 }
 
-CL_PixelBuffer CL_D3D9TextureProvider::get_pixeldata(CL_PixelFormat &format, int level)
+CL_PixelBuffer CL_D3D9TextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const
 {
 	return CL_PixelBuffer();
 }
 
-void CL_D3D9TextureProvider::set_image(CL_PixelBuffer &image, int level, int format)
+void CL_D3D9TextureProvider::set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format)
 {
 }
 
@@ -73,13 +73,13 @@ void CL_D3D9TextureProvider::set_cube_map(
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
 	int level,
-	int format)
+	CL_TextureFormat internal_format)
 {
 }
 
 void CL_D3D9TextureProvider::set_compressed_image(
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	int width,
 	int height,
 	CL_DataBuffer &image)
@@ -100,7 +100,7 @@ void CL_D3D9TextureProvider::copy_image_from(
 	int width,
 	int height,
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	CL_GraphicContextProvider *gc)
 {
 }

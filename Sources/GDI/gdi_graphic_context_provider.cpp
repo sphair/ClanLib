@@ -37,8 +37,6 @@
 #include "gdi_render_buffer_provider.h"
 #include "gdi_shader_object_provider.h"
 #include "gdi_vertex_array_buffer_provider.h"
-//#include "Display/Font/font_provider_win32.h"
-#include "Display/Font/font_cache_native.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 
@@ -100,7 +98,7 @@ CL_GraphicContext CL_GDIGraphicContextProvider::create_worker_gc()
 	return CL_GraphicContext();
 }
 
-CL_PixelBuffer CL_GDIGraphicContextProvider::get_pixeldata(const CL_Rect& rect)
+CL_PixelBuffer CL_GDIGraphicContextProvider::get_pixeldata(const CL_Rect& rect) const
 {
 	return pixel_canvas->to_pixelbuffer().get_subimage(rect);
 }

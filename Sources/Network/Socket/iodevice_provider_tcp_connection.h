@@ -33,8 +33,10 @@
 #include "API/Core/IOData/iodevice_provider.h"
 #ifdef WIN32
 #include "event_provider_win32socket.h"
+#include "win32_socket.h"
 #else
 #include "event_provider_unixsocket.h"
+#include "unix_socket.h"
 #endif
 
 class CL_SocketName;
@@ -47,13 +49,9 @@ class CL_IODeviceProvider_TCPConnection : public CL_IODeviceProvider
 
 public:
 	CL_IODeviceProvider_TCPConnection();
-
 	CL_IODeviceProvider_TCPConnection(const CL_SocketName &remote);
-
 	CL_IODeviceProvider_TCPConnection(const CL_SocketName &remote, const CL_SocketName &local);
-
 	CL_IODeviceProvider_TCPConnection(int handle, bool close_socket);
-
 	~CL_IODeviceProvider_TCPConnection();
 
 
@@ -62,72 +60,44 @@ public:
 /// \{
 
 public:
-	int get_handle() const { return handle; }
-
+	int get_handle() const { return socket.get_handle(); }
 	CL_SocketName get_local_name() const;
-
 	CL_SocketName get_remote_name() const;
-
 	CL_Event get_read_event();
-
 	CL_Event get_write_event();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	bool connect(const CL_SocketName &remote);
-
-	bool connect(const CL_SocketName &remote, const CL_SocketName &local);
-
+	void connect(const CL_SocketName &remote);
+	void connect(const CL_SocketName &remote, const CL_SocketName &local);
 	void set_handle(int socket, bool close_socket);
-
 	void disconnect_graceful();
-
 	void disconnect_abortive();
-
 	void set_nodelay(bool enable);
-
 	int send(const void *data, int len, bool send_all);
-
 	int receive(void *data, int len, bool receive_all);
-
 	int peek(void *data, int len);
-
-	void flush();
-
 	CL_IODeviceProvider *duplicate();
-
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	int connect_blocked(int handle, const void *name, int namelen);
-
-	int recv_blocked(int handle, char *buf, int len, int flags);
-
-	int send_blocked(int handle, const char *buf, int len, int flags);
-
-	static bool is_blocked(int result);
-
-	static CL_String get_error_message();
-
-	int handle;
-
-	bool close_socket;
-
-	bool eof_received;
+	void create_events();
 
 #ifdef WIN32
-	CL_WSAEventSelectHandler wsa_event_handler;
+	CL_Win32Socket socket;
+#else
+	CL_UnixSocket socket;
 #endif
 	CL_Event read_event;
-
 	CL_Event write_event;
+	CL_Event except_event;
+	int timeout;
 /// \}
 };
 

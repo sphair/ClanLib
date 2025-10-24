@@ -34,13 +34,30 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowDescription construction:
 
-CL_DisplayWindowDescription::CL_DisplayWindowDescription() : impl(new CL_DisplayWindowDescription_Impl)
+CL_DisplayWindowDescription::CL_DisplayWindowDescription() 
+: impl(new CL_DisplayWindowDescription_Impl)
 {
 }
 
-CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_String &title) : impl(new CL_DisplayWindowDescription_Impl)
+CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_String &title) 
+: impl(new CL_DisplayWindowDescription_Impl)
 {
 	impl->title = title;
+}
+
+CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_String &title, const CL_Rect &position, bool client_area)
+: impl(new CL_DisplayWindowDescription_Impl)
+{
+	impl->title = title;
+	impl->position = position;
+	impl->position_client_area = client_area;
+}
+
+CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_Rect &position, bool client_area)
+: impl(new CL_DisplayWindowDescription_Impl)
+{
+	impl->position = position;
+	impl->position_client_area = client_area;
 }
 
 CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_DisplayWindowDescription &copy) : impl(copy.impl)

@@ -33,7 +33,7 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/angle.h"
-#include <cmath>
+#include "API/Core/Math/cl_math.h"
 
 template<typename Type>
 CL_Vec2<Type> CL_LineSegment2x<Type>::normal() const

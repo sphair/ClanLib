@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -69,11 +63,13 @@ public:
 	/// \brief Constructs directory scanner for iterating over a directory.
 	CL_DirectoryScanner();
 
+	/// \brief Constructs a DirectoryScanner
+	///
+	/// \param copy = Directory Scanner
 	CL_DirectoryScanner(const CL_DirectoryScanner &copy);
 
 	/// \brief Destructor.
 	~CL_DirectoryScanner();
-
 
 /// \}
 /// \name Attributes
@@ -112,7 +108,6 @@ public:
 	/** \return True if the file is writable.*/
 	bool is_writable();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -137,7 +132,6 @@ public:
 	/** \return false if no more files was found.*/
 	bool next();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -146,6 +140,5 @@ private:
 	CL_SharedPtr<CL_DirectoryScanner_Impl> impl;
 /// \}
 };
-
 
 /// \}

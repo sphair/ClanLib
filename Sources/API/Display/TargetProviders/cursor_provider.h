@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 
@@ -46,13 +44,11 @@ class CL_API_DISPLAY CL_CursorProvider
 public:
 	virtual ~CL_CursorProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -62,7 +58,6 @@ public:
 	/// \brief Destroys the cursor provider.
 	virtual void destroy() = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -70,6 +65,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

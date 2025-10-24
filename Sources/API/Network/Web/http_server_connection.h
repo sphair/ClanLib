@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -51,36 +49,60 @@ class CL_API_NETWORK CL_HTTPServerConnection : public CL_IODevice
 public:
 	CL_HTTPServerConnection();
 
+	/// \brief Constructs a HTTPServerConnection
+	///
+	/// \param CL_HTTPServerConnection_Impl = Shared Ptr
 	CL_HTTPServerConnection(const CL_SharedPtr<CL_HTTPServerConnection_Impl> &impl);
 
 	~CL_HTTPServerConnection();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Request type
+	///
+	/// \return request_type
 	CL_StringRef8 get_request_type();
 
+	/// \brief Get Request url
+	///
+	/// \return request_url
 	CL_StringRef8 get_request_url();
 
+	/// \brief Get Request headers
+	///
+	/// \return request_headers
 	CL_StringRef8 get_request_headers();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Read request data
+	///
+	/// \return Data Buffer
 	CL_DataBuffer read_request_data();
 
+	/// \brief Write response status
+	///
+	/// \param status_code = value
+	/// \param status_text = String Ref8
 	void write_response_status(int status_code, const CL_StringRef8 &status_text = CL_StringRef8());
 
+	/// \brief Write response headers
+	///
+	/// \param headers = String Ref8
 	void write_response_headers(const CL_StringRef8 &headers);
 
+	/// \brief Write response data
+	///
+	/// \param data = Data Buffer
 	void write_response_data(const CL_DataBuffer &data);
-
 
 /// \}
 /// \name Implementation
@@ -90,6 +112,5 @@ private:
 	CL_SharedPtr<CL_HTTPServerConnection_Impl> impl;
 /// \}
 };
-
 
 /// \}

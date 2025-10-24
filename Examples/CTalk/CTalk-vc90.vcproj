@@ -3,26 +3,28 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="CTalk"
-	ProjectGUID="{F1E00ED3-196D-400E-9955-0955074F639C}"
-	TargetFrameworkVersion="0"
+	ProjectGUID="{73EAA586-10CA-4977-8807-B4231EF5502E}"
+	RootNamespace="CTalk"
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
 			Name="Win32"
+		/>
+		<Platform
+			Name="x64"
 		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -38,51 +40,34 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Release/CTalk.tlb"
-				HeaderFileName=""
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				RuntimeTypeInfo="true"
+				Optimization="0"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
+				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="1030"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/CTalk.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				IgnoreDefaultLibraryNames="libcmtd"
-				ProgramDatabaseFile=".\Release/CTalk.pdb"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -96,8 +81,6 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\Release/CTalk.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -110,14 +93,11 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			Name="Debug|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -133,28 +113,19 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="true"
-				SuppressStartupBanner="true"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/CTalk.tlb"
-				HeaderFileName=""
+				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="_DEBUG;__STL_DEBUG;WIN32;_WINDOWS"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precomp.h"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
-				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -162,23 +133,91 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1030"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Debug/CTalk.exe"
 				LinkIncremental="2"
-				SuppressStartupBanner="true"
-				IgnoreDefaultLibraryNames="libcmt"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/CTalk.pdb"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precomp.h"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -192,8 +231,83 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\Debug/CTalk.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|x64"
+			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="."
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precomp.h"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -210,249 +324,331 @@
 	</References>
 	<Files>
 		<Filter
+			Name="Document"
+			>
+			<File
+				RelativePath=".\Document\command.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\command.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\document.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\document.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_connection.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_connection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_connection_queues.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_connection_queues.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_entity.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_entity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_message.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_message.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_raw_string.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_session.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_session.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_text.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\irc_text.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_document.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_document.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_list.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_list.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_map.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Document\xml_settings_map.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Framework"
+			>
+			<File
+				RelativePath=".\Framework\application.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\application.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\mainframe.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\mainframe.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\notification_area_icon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\notification_area_icon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\preferences_page.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\preferences_page.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\preferences_viewer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\preferences_viewer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\ribbon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\ribbon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\view.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\view.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\view_workspace.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\view_workspace.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Views"
+			>
+			<Filter
+				Name="Chat"
+				>
+				<File
+					RelativePath=".\Views\Chat\channel_topic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\channel_topic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chat.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chat.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chatline.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chaturl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chatview.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\chatview.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\dlg_topic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\dlg_topic.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\text_edit.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\Chat\text_edit.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ServerList"
+				>
+				<File
+					RelativePath=".\Views\ServerList\server_general_page.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\ServerList\server_general_page.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\ServerList\server_list_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Views\ServerList\server_list_view.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
 			Name="Resources"
 			>
+			<File
+				RelativePath=".\carambola.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\CTalk.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resources.xml"
+				>
+			</File>
 			<File
 				RelativePath=".\theme.css"
 				>
 			</File>
+			<Filter
+				Name="GUI"
+				>
+				<File
+					RelativePath=".\dlg_topic.gui"
+					>
+				</File>
+				<File
+					RelativePath=".\server_general_page.gui"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
-			RelativePath="application.cpp"
+			RelativePath=".\precomp.cpp"
 			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
 			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="application.h"
-			>
-		</File>
-		<File
-			RelativePath="chat.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="chat.h"
-			>
-		</File>
-		<File
-			RelativePath="chatline.h"
-			>
-		</File>
-		<File
-			RelativePath="chatview.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="chatview.h"
-			>
-		</File>
-		<File
-			RelativePath="dlg_connect.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="dlg_connect.h"
-			>
-		</File>
-		<File
-			RelativePath="document.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="document.h"
-			>
-		</File>
-		<File
-			RelativePath="ircconnection.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="ircconnection.h"
-			>
-		</File>
-		<File
-			RelativePath="mainframe.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="mainframe.h"
-			>
-		</File>
-		<File
-			RelativePath="precomp.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
 					UsePrecompiledHeader="1"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Debug|Win32"
+				Name="Debug|x64"
 				>
 				<Tool
 					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|x64"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
 					UsePrecompiledHeader="1"
 				/>
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath="precomp.h"
+			RelativePath=".\precomp.h"
 			>
 		</File>
 		<File
-			RelativePath="README.txt"
-			>
-		</File>
-		<File
-			RelativePath="resources.xml"
-			>
-		</File>
-		<File
-			RelativePath=".\server_list_view.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\server_list_view.h"
-			>
-		</File>
-		<File
-			RelativePath="view.cpp"
-			>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					PreprocessorDefinitions=""
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="view.h"
+			RelativePath=".\README.txt"
 			>
 		</File>
 	</Files>

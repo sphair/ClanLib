@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
 
 #include "../System/sharedptr.h"
 #include <vector>
@@ -50,7 +48,6 @@ class CL_XPathObject
 public:
 	CL_XPathObject();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -65,34 +62,61 @@ public:
 		type_string
 	};
 
+	/// \brief Get Type
+	///
+	/// \return type
 	Type get_type() const;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
 	std::vector<CL_DomNode> get_node_set() const;
 
+	/// \brief Get Boolean
+	///
+	/// \return boolean
 	bool get_boolean() const;
 
+	/// \brief Get Number
+	///
+	/// \return number
 	double get_number() const;
 
+	/// \brief Get String
+	///
+	/// \return string
 	CL_StringRef get_string() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set null
 	void set_null();
 
+	/// \brief Set node set
+	///
+	/// \param vector = Dom Node
 	void set_node_set(const std::vector<CL_DomNode> &node_set);
 
+	/// \brief Set boolean
+	///
+	/// \param value = bool
 	void set_boolean(bool value);
 
+	/// \brief Set number
+	///
+	/// \param value = value
 	void set_number(double value);
 
+	/// \brief Set string
+	///
+	/// \param str = String Ref
 	void set_string(const CL_StringRef &str);
-
 
 /// \}
 /// \name Implementation
@@ -102,6 +126,5 @@ private:
 	CL_SharedPtr<CL_XPathObject_Impl> impl;
 /// \}
 };
-
 
 /// \}

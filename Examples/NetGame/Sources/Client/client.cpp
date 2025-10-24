@@ -1,4 +1,5 @@
 #include "client.h"
+#include "../custom_type.h"
 
 Client::Client()
 {
@@ -114,8 +115,9 @@ void Client::on_event_game_loadmap(const CL_NetGameEvent &e)
 {
 	CL_String map_name = e.get_argument(0);
 	int max_players = e.get_argument(1);
+	CustomType position = e.get_argument(2);
 
-	cl_log_event("events", "Loading map: %1 with %2 players", map_name, max_players);
+	cl_log_event("events", "Loading map: %1 with %2 players, Position %3,%4,%5", map_name, max_players, position.get_x(), position.get_y(), position.get_z());
 }
 
 // "Game-Start" event was received

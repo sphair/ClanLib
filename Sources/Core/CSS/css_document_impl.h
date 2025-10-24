@@ -61,8 +61,10 @@ public:
 /// \{
 
 public:
+	void load(const CL_String &filename, const CL_VirtualDirectory &directory);
 	void load(const CL_StringRef &path, CL_IODevice &input);
 
+	int load_import(unsigned char *data, int pos, int length, const CL_VirtualDirectory &directory, const CL_String &last_path);
 	int load_import(unsigned char *data, int pos, int length, const CL_StringRef &path);
 
 	int load_ruleset(unsigned char *data, int pos, int length);

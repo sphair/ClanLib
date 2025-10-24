@@ -75,7 +75,7 @@ int App::start(const std::vector<CL_String> &args)
 
 		CL_ResourceManager resources("resources.xml");
 
-		CL_Font small_font = CL_Font_Texture(gc, cl_text("Tahoma"), 12);
+		CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
 
 		int num_windows_created = 0;
 		int start_time = CL_System::get_time();

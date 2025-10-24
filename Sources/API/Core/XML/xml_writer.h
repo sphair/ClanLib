@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -55,12 +49,17 @@ class CL_API_CORE CL_XMLWriter
 public:
 	CL_XMLWriter();
 
+	/// \brief Constructs a XMLWriter
+	///
+	/// \param copy = XMLWriter
 	CL_XMLWriter(const CL_XMLWriter &copy);
 
+	/// \brief Constructs a XMLWriter
+	///
+	/// \param output = IODevice
 	CL_XMLWriter(CL_IODevice &output);
 
 	virtual ~CL_XMLWriter();
-
 
 /// \}
 /// \name Attributes
@@ -73,7 +72,6 @@ public:
 	/// \brief Inserts whitespace between tags if enabled.
 	void set_insert_whitespace(bool enable);
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -81,7 +79,6 @@ public:
 public:
 	/// \brief Write token to file.
 	void write(const CL_XMLToken &token);
-
 
 /// \}
 /// \name Implementation
@@ -91,6 +88,5 @@ private:
 	CL_SharedPtr<CL_XMLWriter_Generic> impl;
 /// \}
 };
-
 
 /// \}

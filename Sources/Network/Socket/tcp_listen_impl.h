@@ -46,9 +46,7 @@ class CL_TCPListen_Impl
 
 public:
 	CL_TCPListen_Impl(const CL_SocketName &name, int queue_size, bool force_bind);
-
 	~CL_TCPListen_Impl();
-
 
 /// \}
 /// \name Attributes
@@ -56,12 +54,11 @@ public:
 
 public:
 #ifdef WIN32
-	CL_WSAEventSelectHandler wsa_event_handler;
+	CL_Win32Socket socket;
+#else
+	CL_UnixSocket socket;
 #endif
 	CL_Event accept_event;
-
-	int handle;
-
 
 /// \}
 /// \name Operations
@@ -70,13 +67,10 @@ public:
 public:
 	CL_TCPConnection accept();
 
-
 /// \}
 /// \name Implementation
 /// \{
-
 private:
-	void close_handle();
 /// \}
 };
 

@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -47,27 +45,35 @@ class CL_API_GUI CL_TabPage : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a TabPage
+	///
+	/// \param parent = GUIComponent
 	CL_TabPage(CL_GUIComponent *parent);
 
 	virtual ~CL_TabPage();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Id
+	///
+	/// \return id
 	int get_id() const;
 
+	/// \brief Get Label
+	///
+	/// \return label
 	CL_String get_label() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -79,6 +85,5 @@ private:
 	friend class CL_Tab_Impl;
 /// \}
 };
-
 
 /// \}

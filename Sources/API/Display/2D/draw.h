@@ -31,13 +31,7 @@
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -62,46 +56,125 @@ class CL_API_DISPLAY CL_Draw
 
 public:
 	/// \brief Draw a point.
-	static void point(CL_GraphicContext gc, float x1, float y1, const CL_Colorf &color);
-	static void point(CL_GraphicContext gc, const CL_Pointf &point, const CL_Colorf &color);
+	static void point(CL_GraphicContext &gc, float x1, float y1, const CL_Colorf &color);
+
+	/// \brief Point
+	///
+	/// \param gc = Graphic Context
+	/// \param point = Pointf
+	/// \param color = Colorf
+	static void point(CL_GraphicContext &gc, const CL_Pointf &point, const CL_Colorf &color);
 
 	/// \brief Draw a line.
-	static void line(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
-	static void line(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
+	static void line(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
+
+	/// \brief Line
+	///
+	/// \param gc = Graphic Context
+	/// \param start = Pointf
+	/// \param end = Pointf
+	/// \param color = Colorf
+	static void line(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
 
 	/// \brief Draw a box / rectangle.
-	static void box(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
-	static void box(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
-	static void box(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Colorf &color);
+	static void box(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
+
+	/// \brief Box
+	///
+	/// \param gc = Graphic Context
+	/// \param start = Pointf
+	/// \param end = Pointf
+	/// \param color = Colorf
+	static void box(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
+
+	/// \brief Box
+	///
+	/// \param gc = Graphic Context
+	/// \param rect = Rectf
+	/// \param color = Colorf
+	static void box(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color);
 
 	/// \brief Draw a filled box / rectangle.
-	static void fill(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
-	static void fill(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
-	static void fill(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Colorf &color);
+	static void fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
+
+	/// \brief Fill
+	///
+	/// \param gc = Graphic Context
+	/// \param start = Pointf
+	/// \param end = Pointf
+	/// \param color = Colorf
+	static void fill(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
+
+	/// \brief Fill
+	///
+	/// \param gc = Graphic Context
+	/// \param rect = Rectf
+	/// \param color = Colorf
+	static void fill(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color);
 
 	/// \brief Draw a textured rectangle.
 	static void texture(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Rectf &rect,
 		const CL_Colorf &color = CL_Colorf::white,
 		const CL_Rectf &texture_unit1_coords = CL_Rectf(0.0, 0.0, 1.0, 1.0));
 
-	static void gradient_fill(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Gradient &color);
-	static void gradient_fill(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Gradient &gradient);
-	static void gradient_fill(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Gradient &gradient);
+	/// \brief Gradient fill
+	///
+	/// \param gc = Graphic Context
+	/// \param x1 = value
+	/// \param y1 = value
+	/// \param x2 = value
+	/// \param y2 = value
+	/// \param color = Gradient
+	static void gradient_fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Gradient &color);
+
+	/// \brief Gradient fill
+	///
+	/// \param gc = Graphic Context
+	/// \param start = Pointf
+	/// \param end = Pointf
+	/// \param gradient = Gradient
+	static void gradient_fill(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Gradient &gradient);
+
+	/// \brief Gradient fill
+	///
+	/// \param gc = Graphic Context
+	/// \param rect = Rectf
+	/// \param gradient = Gradient
+	static void gradient_fill(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Gradient &gradient);
 
 	/// \brief Draw a circle.
-	static void circle(CL_GraphicContext gc, float center_x, float center_y, float radius, const CL_Colorf &color);
-	static void circle(CL_GraphicContext gc, const CL_Pointf &center, float radius, const CL_Colorf &color);
+	static void circle(CL_GraphicContext &gc, float center_x, float center_y, float radius, const CL_Colorf &color);
 
-	static void gradient_circle(CL_GraphicContext gc, const CL_Pointf &center, float radius, const CL_Gradient &gradient);
-	static void gradient_circle(CL_GraphicContext gc, const CL_Pointf &center, const CL_Pointf &centergradient, float radius, const CL_Gradient &gradient);
+	/// \brief Circle
+	///
+	/// \param gc = Graphic Context
+	/// \param center = Pointf
+	/// \param radius = value
+	/// \param color = Colorf
+	static void circle(CL_GraphicContext &gc, const CL_Pointf &center, float radius, const CL_Colorf &color);
+
+	/// \brief Gradient circle
+	///
+	/// \param gc = Graphic Context
+	/// \param center = Pointf
+	/// \param radius = value
+	/// \param gradient = Gradient
+	static void gradient_circle(CL_GraphicContext &gc, const CL_Pointf &center, float radius, const CL_Gradient &gradient);
+
+	/// \brief Gradient circle
+	///
+	/// \param gc = Graphic Context
+	/// \param center = Pointf
+	/// \param centergradient = Pointf
+	/// \param radius = value
+	/// \param gradient = Gradient
+	static void gradient_circle(CL_GraphicContext &gc, const CL_Pointf &center, const CL_Pointf &centergradient, float radius, const CL_Gradient &gradient);
 
 	/// \brief Draw a triangle.
-	static void triangle(CL_GraphicContext gc, const CL_Pointf &a, const CL_Pointf &b, const CL_Pointf &c, const CL_Colorf &color);
+	static void triangle(CL_GraphicContext &gc, const CL_Pointf &a, const CL_Pointf &b, const CL_Pointf &c, const CL_Colorf &color);
 /// \}
 };
-
-
 
 /// \}

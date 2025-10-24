@@ -29,9 +29,7 @@
 /// \addtogroup clanD3D9_Display clanD3D9 Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_d3d9.h"
 #include "../Display/display_target.h"
@@ -52,20 +50,17 @@ public:
 
 	~CL_D3D9Target();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -74,6 +69,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

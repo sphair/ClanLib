@@ -31,102 +31,54 @@
 #include "font_provider_freetype.h"
 #include "freetype_font.h"
 #include "freetype_font_provider.h"
-
+#include "font_provider_freetype.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
-#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "API/Display/2D/subtexture.h"
+#include "API/Display/2D/texture_group.h"
+#include "API/Display/Render/texture.h"
 #include "API/Display/Font/font_metrics.h"
-#include "font_cache_native.h"
+#include "API/Display/2D/draw.h"
+#include "API/Core/Text/string_help.h"
+
+#include "../2D/sprite_render_batch.h"
+#include "../Render/graphic_context_impl.h"
 
 #ifndef WIN32
-#include "Display/X11/font_config.h"
+#include "../X11/font_config.h"
 #endif
-
-std::map<CL_String, CL_String > CL_FontProvider_Freetype::font_register_cache;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Construction:
 
-CL_FontProvider_Freetype::CL_FontProvider_Freetype() : target(target), handle(0)
+CL_FontProvider_Freetype::CL_FontProvider_Freetype(CL_GraphicContext &gc) : handle(0)
 {
-}
+	glyph_list.reserve(256);
 
-void CL_FontProvider_Freetype::load_font( const CL_StringRef &typeface_name, int height)
-{
-	CL_FontDescription desc;
-	desc.set_typeface_name(typeface_name);
-	desc.set_height(height);
-	load_font(desc);
-}
+	// Note, the user can specify a different texture group size using set_texture_group()
+	texture_group = CL_TextureGroup(gc, CL_Size(256,256));
 
-void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc)
-{
-	if (desc.get_anti_alias_set())	// Anti-alias was set
-	{
-		anti_alias = desc.get_anti_alias();	// Override the default
-	}
-	else
-	{
-		anti_alias = true;
-	}
+	// Set default font metrics
+	font_metrics = CL_FontMetrics(
+		0,0, 0, 0,0,0,0,0, 0,0,
+		false, false, false, false);
 
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	// Ensure width and height are positive
-	if (average_width < 0) average_width =-average_width;
-	if (height < 0) height =-height;
-
-	size_height = height;
-
-	// Try opening the font file.
-	CL_IODevice io_dev;
-	try
-	{
-		io_dev = CL_File(desc.get_typeface_name(), CL_File::open_existing, CL_File::access_read);
-	}
-	catch(CL_Exception error)
-	{
-		throw CL_Exception(cl_format("Cannot open font file: \"./%1\"", desc.get_typeface_name()));
-	}
-
-        // Load font from the opened file.
-	CL_FreetypeFontProvider &provider = CL_FreetypeFontProvider::instance();
-
-	if (handle)
-	{
-		delete(handle);
-		handle = NULL;
-	}
-
-	handle = provider.load_font(io_dev, height, average_width);
-
-	unique_name = desc.get_typeface_name() + cl_format(
-		cl_text("%1-%2-%3-%4-%5-%6-%7"),
-		height,
-		average_width,
-		desc.get_escapement(),
-		desc.get_orientation(),
-		desc.get_weight(),
-		(desc.get_italic() ? 1 : 0) |
-		(desc.get_underline() ? 2 : 0) |
-		(desc.get_strikeout() ? 4 : 0) |
-		(desc.get_fixed_pitch() ? 8 : 0),
-		anti_alias ? 1 : 0);
+	anti_alias = false;
 }
 
 CL_FontProvider_Freetype::~CL_FontProvider_Freetype()
 {
-	if (handle)
-	{
-		delete(handle);
-	}
+	free_font();
+
+	for (int cnt = 0; cnt < glyph_list.size(); cnt++)
+		delete glyph_list[cnt];
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -139,243 +91,124 @@ CL_FreetypeFont *CL_FontProvider_Freetype::get_handle()
 
 CL_FontMetrics CL_FontProvider_Freetype::get_font_metrics(CL_GraphicContext &gc)
 {
-	CL_FreetypeFont *vptr = get_handle();
-	if (vptr)
-	{
-		return vptr->get_font_metrics();
-	}
-
-	return CL_FontMetrics(
-		0,0,0,0,0,0,0,0,0,0,
-		false, false, false,false);
+	return font_metrics;
 }
 
-CL_FontDescription CL_FontProvider_Freetype::get_registered_font(const CL_FontDescription &desc, bool font_size_win32)
+CL_Size CL_FontProvider_Freetype::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 {
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
+	int width = 0;
 
-	if (font_size_win32)
+	for (CL_String::size_type p = 0; p < text.length(); p++)
 	{
-		// Attempt to convert the point sizes (to match WIN32 with FreeType)
-		if (average_width==0)	// Unset width
-		{
-			if (height <0)
-			{
-				average_width = -height;
-				average_width = (average_width * 80) / 96;
-			}
-			else
-			{
-				// I do not know why this formula works,  but it seems to obtain the best result
-				average_width = ( height * 80 * 80 ) / (96 * 96);
-			}
-		}
-
-		if (height <0)
-		{
-			height = -height;
-		}
-		else
-		{
-			height = (height * 80) / 96;
-		}
+		CL_Font_Freetype_Glyph *gptr = get_glyph(gc, text[p]);
+		if (gptr == NULL) continue;
+		width += gptr->increment.x;
 	}
-
-	CL_FontDescription new_desc;
-	new_desc.copy(desc);
-	new_desc.set_average_width(average_width);
-	new_desc.set_height(height);
-
-	// Check for a registered font
-	std::map<CL_String, CL_String >::iterator find_it;
-	find_it = font_register_cache.find(desc.get_typeface_name());
-	if (find_it != font_register_cache.end())	// Found the registered font
+	int height;
+	if (width == 0)
 	{
-		new_desc.set_typeface_name(find_it->second);
+		height = 0;
 	}
 	else
 	{
-#ifndef WIN32
-	        // Obtain the best matching font file from fontconfig.
-			CL_FontConfig &fc = CL_FontConfig::instance();
-			CL_String font_file_path = fc.match_font(new_desc);
-			new_desc.set_typeface_name(font_file_path);
-#endif
+		height = size_height;
 	}
-	return new_desc;
+
+	return (CL_Size(width, height));
+}
+
+CL_Font_Freetype_Glyph *CL_FontProvider_Freetype::get_glyph(CL_GraphicContext &gc, unsigned int glyph)
+{
+	std::vector< CL_Font_Freetype_Glyph * >::size_type size = glyph_list.size();
+	for (int cnt=0; cnt<size; cnt++)
+	{
+		if (glyph_list[cnt]->glyph == glyph)
+			return &(*glyph_list[cnt]);
+	}
+
+	// If glyph does not exist and a system font exists, create one automatically
+	if (handle)
+	{
+		insert_glyph(gc, glyph);
+
+		// Search for the glyph again
+		size = glyph_list.size();
+		for (int cnt=0; cnt<size; cnt++)
+		{
+			if (glyph_list[cnt]->glyph == glyph)
+				return &(*glyph_list[cnt]);
+		}
+	}
+
+	return NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Operations:
+
+int CL_FontProvider_Freetype::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
+{
+	int dest_x = 0;
+	int dest_y = 0;
+
+	int character_counter = 0;
+
+	CL_FontMetrics fm = get_font_metrics(gc);
+	int font_height = fm.get_height();
+	int font_external_leading = fm.get_external_leading();
+
+	std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
+	for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+	{
+		int xpos = dest_x;
+		int ypos = dest_y;
+
+		CL_TempString &textline = lines[i];
+		CL_String::size_type string_length = textline.length();
+
+		// Scan the string
+		for (CL_String::size_type p = 0; p < string_length; p++)
+		{
+			CL_Font_Freetype_Glyph *gptr = get_glyph(gc, textline[p]);
+			if (gptr == NULL) continue;
+
+			CL_Rect position(xpos, ypos - font_height, CL_Size(gptr->increment.x, gptr->increment.y + font_height + font_external_leading));
+			if (position.contains(point))
+				return ((int) p) + character_counter;
+		
+			xpos += gptr->increment.x;
+			ypos += gptr->increment.y;
+		}
+
+		dest_y += font_height + font_external_leading;
+
+		character_counter += string_length + 1;		// (Including the '\n')
+
+	}
+	return -1;	// Not found
+}
 
 void CL_FontProvider_Freetype::destroy()
 {
 	delete this;
 }
 
-FontGlyphCache *CL_FontProvider_Freetype::font_cache_load(CL_GraphicContextProvider *gc_provider, const CL_StringRef &text)
+void CL_FontProvider_Freetype::free_font()
 {
-	FontGlyphCache *glyph_cache = cl_fontcache_native.get_glyph_cache(get_unique_name());
-
-	if (text.length() == 0)
-		return glyph_cache;
-
-	FontGlyphRange range(text[0] + 1); // Make sure range does not match first char
-	CL_FontPixelBuffer **glyphs = 0;
-	CL_String::size_type length = text.length();
-	const CL_String::char_type *t = text.data();
-	for (CL_String::size_type p = 0; p < length; p++)
+	if (handle)
 	{
-		unsigned int c = t[p];
-		if (c < range.start || c > range.end)
-		{
-			unsigned int start = (c & 0xffffff00);
-			unsigned int end = start + 255;
-			range = FontGlyphRange(start, end);
-
-			std::map<FontGlyphRange, CL_FontPixelBuffer **>::iterator it = glyph_cache->glyphs.find(range);
-			if (it == glyph_cache->glyphs.end())
-			{
-				glyphs = new CL_FontPixelBuffer*[256];
-				for (int i = 0; i < 256; i++)
-					glyphs[i] = 0;
-				glyph_cache->glyphs[range] = glyphs;
-			}
-			else
-			{
-				glyphs = it->second;
-			}
-		}
-
-		unsigned int glyph_index = c - range.start;
-		if (glyphs[glyph_index] == 0)
-		{
-			// If a font does not have a handle (ie a bitmap font), create an empty one (for simplicity)
-			if (!get_handle())
-			{
-				glyphs[glyph_index] = new CL_FontPixelBuffer();
-			}
-			else
-			{
-				glyphs[glyph_index] = new CL_FontPixelBuffer(get_font_glyph(gc_provider, c, anti_alias, CL_Colorf::white));
-			}
-		}
+		delete(handle);
+		handle = NULL;
 	}
-
-	return glyph_cache;
-}
-void CL_FontProvider_Freetype::draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color)
-{
-	if (text.length() == 0)
-		return;
-
-	CL_GraphicContextProvider *gc_provider = (CL_GraphicContextProvider *) gc.get_provider();
-
-	FontGlyphCache *glyph_cache = font_cache_load(gc_provider, text);
-	if (glyph_cache == 0)
-		return;
-
-	FontGlyphRange range(text[0] + 1); // Make sure range does not match first char
-	CL_FontPixelBuffer **glyphs = 0;
-
-	int pos_x = 0;
-	int pos_y = 0;
-	CL_String::size_type length = text.length();
-	const CL_String::char_type *t = text.data();
-	for (CL_String::size_type p = 0; p < length; p++)
-	{
-		unsigned int c = t[p];
-		if (c < range.start || c > range.end)
-		{
-			unsigned int start = (c & 0xffffff00);
-			unsigned int end = start + 255;
-			range = FontGlyphRange(start, end);
-
-			std::map<FontGlyphRange, CL_FontPixelBuffer **>::iterator it = glyph_cache->glyphs.find(range);
-			if (it == glyph_cache->glyphs.end())
-				continue; // Glyph unknown - ignore it
-
-			glyphs = it->second;
-		}
-
-		unsigned int glyph_index = c - range.start;
-		if (glyphs[glyph_index] == 0)
-			continue; // Glyph unknown - ignore it
-
-		CL_FontPixelBuffer *pixelbuffer = glyphs[glyph_index];
-		if (pixelbuffer->glyph)
-		{
-			if (!pixelbuffer->empty_buffer)
-			{
-
-				gc.draw_pixels(
-					(float)x + pos_x + pixelbuffer->offset.x,
-					(float)y + pos_y + pixelbuffer->offset.y,
-					1.0f, 1.0f, pixelbuffer->buffer, color);
-			}
-
-			pos_x += pixelbuffer->increment.x;
-			pos_y += pixelbuffer->increment.y;
-		}
-	}
-
 }
 
-CL_Size CL_FontProvider_Freetype::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
+CL_FontPixelBuffer CL_FontProvider_Freetype::get_font_glyph(CL_GraphicContext &gc, int glyph, bool anti_alias, const CL_Colorf &color)
 {
-	if (text.length() == 0)
-		return CL_Size(0, 0);
-
-	CL_GraphicContextProvider *gc_provider = (CL_GraphicContextProvider *) gc.get_provider();
-
-	// Ensure that the font exists in the cache
-	FontGlyphCache *glyph_cache = font_cache_load(gc_provider, text);
-	if (glyph_cache == 0)
-		return CL_Size(0, 0);
-
-	FontGlyphRange range(text[0] + 1); // Make sure range does not match first char
-	CL_FontPixelBuffer **glyphs = 0;
-
-	int pos_x = 0;
-	int pos_y = 0;
-
-	// Calculate the font size using the same method as it is drawn
-	CL_String::size_type length = text.length();
-	const CL_String::char_type *t = text.data();
-	for (CL_String::size_type p = 0; p < length; p++)
+	if (!handle)
 	{
-		unsigned int c = t[p];
-		if (c < range.start || c > range.end)
-		{
-			unsigned int start = (c & 0xffffff00);
-			unsigned int end = start + 255;
-			range = FontGlyphRange(start, end);
-
-			std::map<FontGlyphRange, CL_FontPixelBuffer **>::iterator it = glyph_cache->glyphs.find(range);
-			if (it == glyph_cache->glyphs.end())
-				continue; // Glyph unknown - ignore it
-
-			glyphs = it->second;
-		}
-
-		unsigned int glyph_index = c - range.start;
-		if (glyphs[glyph_index] == 0)
-			continue; // Glyph unknown - ignore it
-
-		CL_FontPixelBuffer *pixelbuffer = glyphs[glyph_index];
-		if (pixelbuffer->glyph)
-		{
-			pos_x += pixelbuffer->increment.x;
-			pos_y += pixelbuffer->increment.y;
-		}
+		throw CL_Exception("Must load a system font before importing glyphs");
 	}
 
-	return CL_Size(pos_x, size_height);
-}
-
-CL_FontPixelBuffer CL_FontProvider_Freetype::get_font_glyph(CL_GraphicContextProvider *gc_provider, int glyph, bool anti_alias, const CL_Colorf &color)
-{
 	CL_FontPixelBuffer font_buffer;
 
 	CL_FreetypeFont *vptr = get_handle();
@@ -387,17 +220,121 @@ CL_FontPixelBuffer CL_FontProvider_Freetype::get_font_glyph(CL_GraphicContextPro
 	return font_buffer;
 }
 
-void CL_FontProvider_Freetype::register_font(const CL_StringRef &font_filename, const CL_StringRef &font_typeface)
+void CL_FontProvider_Freetype::insert_glyph(CL_GraphicContext &gc, CL_FontPixelBuffer &pb)
 {
-	std::map<CL_String, CL_String >::iterator find_it;
-	find_it = font_register_cache.find(font_typeface);
-	if (find_it == font_register_cache.end())	// Ensure not already registered
+	// Search for duplicated glyph's, if found silently ignore them
+	std::vector< CL_Font_Freetype_Glyph * >::size_type size = glyph_list.size();
+	for (int cnt=0; cnt<size; cnt++)
 	{
-		font_register_cache[font_typeface] = font_filename;
+		if (glyph_list[cnt]->glyph == pb.glyph)
+			return ;
 	}
+
+	CL_Font_Freetype_Glyph *font_glyph = new(CL_Font_Freetype_Glyph);
+	
+	glyph_list.push_back(font_glyph);
+	font_glyph->glyph = pb.glyph;
+	font_glyph->empty_buffer = pb.empty_buffer;
+	font_glyph->offset = pb.offset;
+	font_glyph->increment = pb.increment;
+
+	if (!pb.empty_buffer)
+	{
+		font_glyph->subtexture = texture_group.add(gc, CL_Size(pb.buffer.get_width(), pb.buffer.get_height()));
+		font_glyph->texture = font_glyph->subtexture.get_texture(); // cached for performance reasons
+		font_glyph->texture.set_subimage(font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, pb.buffer);
+	}
+}
+
+void CL_FontProvider_Freetype::insert_glyph(CL_GraphicContext &gc, int glyph)
+{
+	CL_FontPixelBuffer pb = get_font_glyph(gc, glyph, anti_alias, CL_Colorf::white);
+
+	if (pb.glyph)	// Ignore invalid glyphs
+	{
+		insert_glyph(gc, pb);
+	}
+}
+
+void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc)
+{
+	CL_String path = CL_PathHelp::get_fullpath(desc.get_typeface_name(), CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(desc.get_typeface_name(), CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_IODevice file = vfs.get_root_directory().open_file_read(filename);
+	load_font(desc, file);
+}
+
+void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory)
+{
+	CL_IODevice file = directory.open_file_read(desc.get_typeface_name());
+	load_font(desc, file);
+}
+
+void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc, CL_IODevice &io_dev)
+{
+	free_font();
+
+	anti_alias = true;	// Default, anti_alias enabled
+
+	size_height =  desc.get_height();
+
+	 // Load font from the opened file.
+	CL_FreetypeFontProvider &provider = CL_FreetypeFontProvider::instance();
+	handle = provider.load_font(io_dev, size_height, desc.get_average_width());
+
+	if (desc.get_anti_alias_set())	// Anti-alias was set
+	{
+		anti_alias = desc.get_anti_alias();	// Override the default
+	}
+
+	font_metrics = handle->get_font_metrics();
+}
+
+void CL_FontProvider_Freetype::draw_text(CL_GraphicContext &gc, int xpos, int ypos, const CL_StringRef &text, const CL_Colorf &color) 
+{
+	CL_String::size_type string_length = text.length();
+	if (string_length==0)
+	{
+		return;
+	}
+
+	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
+
+	// Scan the string
+	for (CL_String::size_type p = 0; p < string_length; p++)
+	{
+		CL_Font_Freetype_Glyph *gptr = get_glyph(gc, text[p]);
+		if (gptr == NULL) continue;
+
+		if (!gptr->empty_buffer)
+		{
+			int xp = xpos + gptr->offset.x;
+			int yp = ypos + gptr->offset.y;
+
+			CL_Rect tg = gptr->subtexture.get_geometry();
+			CL_Rectf dest_size((float)xp, (float)yp, (float)xp + tg.get_width(), (float)yp + tg.get_height());
+			batcher->draw_image(gc, tg, dest_size, color, gptr->texture);
+		}
+		xpos += gptr->increment.x;
+		ypos += gptr->increment.y;
+	}
+}
+
+void CL_FontProvider_Freetype::set_texture_group(CL_TextureGroup &new_texture_group)
+{
+	if (new_texture_group.is_null())
+	{
+		throw CL_Exception(cl_text("Specified texture group is not valid"));
+	}
+
+	if (!glyph_list.empty())
+	{
+		throw CL_Exception(cl_text("Cannot specify a new texture group after the font has been used"));
+	}
+
+	texture_group = new_texture_group;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Implementation:
-
-

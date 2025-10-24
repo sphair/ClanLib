@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -52,7 +50,6 @@ public:
 
 	~CL_AccessControlList();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -60,7 +57,6 @@ public:
 public:
 	// Mask defining type of access applying.
 	typedef unsigned int AccessMask;
-
 
 /// \}
 /// \name Operations
@@ -103,7 +99,6 @@ public:
 	/// \brief Remove group access deny entry.
 	void remove_group_denied(const CL_String &name);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -112,6 +107,5 @@ private:
 	CL_SharedPtr<CL_AccessControlList_Impl> impl;
 /// \}
 };
-
 
 /// \}

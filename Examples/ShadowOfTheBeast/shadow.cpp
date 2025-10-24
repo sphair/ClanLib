@@ -25,7 +25,6 @@ public:
 			desc.set_drop_shadow(false);
 			desc.set_fullscreen(true);	// Set to full screen
 			desc.set_title("Shadow of the Beast");
-			desc.set_position(CL_Rect(0,0,640, 480), false);	// Use this resolution (as caption is disabled)
 			CL_DisplayWindow window(desc);
 
 			// Get the graphic context
@@ -94,6 +93,7 @@ public:
 				if (xscroll6<-640) xscroll6+=640;
 
 				//  Paste the images
+				gc.push_scale( (float) gc.get_width() / 640.0f, (float) gc.get_height() / 480.0f );
 				s1.draw(gc, 0, 0);
 				s2.draw(gc, xscroll1, 200);
 				s2.draw(gc, xscroll1+640, 200);
@@ -115,6 +115,7 @@ public:
 				s12.draw(gc, xscroll5b, 140);
 				s11.draw(gc, xscrollb, 0);
 				s13.draw(gc, xscrollb+640, 0);
+				gc.pop_modelview();
 
 				// Flip front and backbuffer. This makes the changes visible:
 				// Using parameter 1 to sync to refresh.

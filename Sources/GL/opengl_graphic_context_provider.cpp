@@ -33,9 +33,6 @@
 
 #include "GL/precomp.h"
 #include "opengl_graphic_context_provider.h"
-#ifdef WIN32
-#include "Display/Font/font_provider_win32.h"
-#endif
 #include "opengl_occlusion_query_provider.h"
 #include "opengl_texture_provider.h"
 #include "opengl_program_object_provider.h"
@@ -44,9 +41,9 @@
 #include "opengl_render_buffer_provider.h"
 #include "opengl_vertex_array_buffer_provider.h"
 #include "opengl_element_array_buffer_provider.h"
-#include "Display/Font/font_cache_native.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Core/Math/cl_math.h"
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
@@ -184,6 +181,17 @@ CL_OpenGLGraphicContextProvider::~CL_OpenGLGraphicContextProvider()
 
 void CL_OpenGLGraphicContextProvider::check_opengl_version()
 {
+	int version_major = 0;
+	int version_minor = 0;
+	int version_release = 0;
+
+	get_opengl_version(version_major, version_minor, version_release);
+	if(version_major < 2)
+		throw CL_Exception(cl_format("This application requires OpenGL 2.0 or above. Your hardware only supports OpenGL %1.%2.%3. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor, version_release));
+}
+
+void CL_OpenGLGraphicContextProvider::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+{
 /*	The GL_VERSION string begins with a version number. The version number uses one of these forms: 
 	major_number.minor_number 
 	major_number.minor_number.release_number 
@@ -195,9 +203,9 @@ void CL_OpenGLGraphicContextProvider::check_opengl_version()
 
 	CL_String version = (char*)clGetString(CL_VERSION);
 
-	int version_major = 0;
-	int version_minor = 0;
-	int version_release = 0;
+	version_major = 0;
+	version_minor = 0;
+	version_release = 0;
 
 	std::vector<CL_TempString> split_version = CL_StringHelp::split_text(version, ".");
 	if(split_version.size() > 0)
@@ -207,8 +215,6 @@ void CL_OpenGLGraphicContextProvider::check_opengl_version()
 	if(split_version.size() > 2)
 		version_release = CL_StringHelp::text_to_int(split_version[2]);
 
-	if(version_major < 2)
-		throw CL_Exception(cl_format("This application requires OpenGL 2.0 or above. Your hardware only supports OpenGL %1.%2.%3. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor, version_release));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -299,7 +305,7 @@ CL_ElementArrayBufferProvider *CL_OpenGLGraphicContextProvider::alloc_element_ar
 	return new CL_OpenGLElementArrayBufferProvider(this);
 }
 
-CL_PixelBuffer CL_OpenGLGraphicContextProvider::get_pixeldata(const CL_Rect& rect)
+CL_PixelBuffer CL_OpenGLGraphicContextProvider::get_pixeldata(const CL_Rect& rect) const 
 {
 	CL_OpenGL::set_active(this);
 
@@ -335,13 +341,7 @@ void CL_OpenGLGraphicContextProvider::set_texture(int unit_index, const CL_Textu
 	else
 	{
 		CL_OpenGLTextureProvider *provider = static_cast<CL_OpenGLTextureProvider *>(texture.get_provider());
-
-		// This causes problems on rombust old NVIDIA cards, it slows the program down to about 1 frame every 5 seconds :)
-		// Try moving it before clBindTexture, in a hope it was that
-		// Cannot test, until I put the old graphics card back in
-		// No, still does not work (on new card)
 		clEnable(provider->get_texture_type());
-
 		clBindTexture(provider->get_texture_type(), provider->get_handle());
 	}
 }
@@ -379,11 +379,11 @@ void CL_OpenGLGraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &buf
 	if (!framebuffer_bound)	
 	{
 		map_mode_before_framebuffer = map_mode;
-	}
 
-	framebuffer_bound = true;
-	if (map_mode != cl_user_projection)
-		set_map_mode(map_mode);
+		framebuffer_bound = true;
+		if (map_mode != cl_user_projection)
+			set_map_mode(map_mode);
+	}
 }
 
 void CL_OpenGLGraphicContextProvider::reset_frame_buffer()
@@ -1057,6 +1057,10 @@ void CL_OpenGLGraphicContextProvider::set_buffer_control(const CL_BufferControl 
 {
 	CL_OpenGL::set_active(this);
 
+	bool r, g, b, a;
+	bc.is_color_write_enabled(r, g, b, a);
+	clColorMask(r,g,b,a);
+
 	if( bc.is_depth_test_enabled() )
 		clEnable(CL_DEPTH_TEST);
 	else
@@ -1065,44 +1069,58 @@ void CL_OpenGLGraphicContextProvider::set_buffer_control(const CL_BufferControl 
 	clDepthFunc(to_enum(bc.get_depth_compare_function()));
 	clDepthMask(bc.is_depth_write_enabled() ? 1 : 0);
 
-	if( bc.is_stencil_test_enabled() )
+	if (bc.is_stencil_test_enabled())
+	{
 		clEnable(CL_STENCIL_TEST);
+
+		if (clStencilFuncSeparate)
+		{
+			clStencilFuncSeparate(CL_FRONT,
+				to_enum(bc.get_stencil_compare_func_front()),
+				bc.get_stencil_compare_reference_front(),
+				bc.get_stencil_compare_mask_front());
+
+			clStencilFuncSeparate(CL_BACK,
+				to_enum(bc.get_stencil_compare_func_back()),
+				bc.get_stencil_compare_reference_back(),
+				bc.get_stencil_compare_mask_back());
+		}
+
+		if (clStencilOpSeparate)
+		{
+			clStencilOpSeparate(CL_FRONT,
+				to_enum(bc.get_stencil_fail_front()),
+				to_enum(bc.get_stencil_pass_depth_fail_front()),
+				to_enum(bc.get_stencil_pass_depth_pass_front()));
+
+			clStencilOpSeparate(CL_BACK,
+				to_enum(bc.get_stencil_fail_back()),
+				to_enum(bc.get_stencil_pass_depth_fail_back()),
+				to_enum(bc.get_stencil_pass_depth_pass_back()));
+		}
+
+		if (clStencilMaskSeparate)
+		{
+			clStencilMaskSeparate( CL_FRONT, bc.get_stencil_write_mask_front() );
+			clStencilMaskSeparate( CL_BACK, bc.get_stencil_write_mask_back() );
+		}
+	}
 	else
+	{
 		clDisable(CL_STENCIL_TEST);
-
-	if (clStencilFuncSeparate)
-	{
-		clStencilFuncSeparate(CL_FRONT,
-			to_enum(bc.get_stencil_compare_func_front()),
-			bc.get_stencil_compare_reference_front(),
-			bc.get_stencil_compare_mask_front());
-
-		clStencilFuncSeparate(CL_BACK,
-			to_enum(bc.get_stencil_compare_func_back()),
-			bc.get_stencil_compare_reference_back(),
-			bc.get_stencil_compare_mask_back());
-	}
-
-	if (clStencilOpSeparate)
-	{
-		clStencilOpSeparate(CL_FRONT,
-			to_enum(bc.get_stencil_fail_front()),
-			to_enum(bc.get_stencil_pass_depth_fail_front()),
-			to_enum(bc.get_stencil_pass_depth_pass_front()));
-
-		clStencilOpSeparate(CL_BACK,
-			to_enum(bc.get_stencil_fail_back()),
-			to_enum(bc.get_stencil_pass_depth_fail_back()),
-			to_enum(bc.get_stencil_pass_depth_pass_back()));
-	}
-
-	if (clStencilMaskSeparate)
-	{
-		clStencilMaskSeparate( CL_FRONT, bc.get_stencil_write_mask_front() );
-		clStencilMaskSeparate( CL_BACK, bc.get_stencil_write_mask_back() );
 	}
 
 	clDrawBuffer( to_enum(bc.get_draw_buffer()) );
+
+	if (bc.is_logic_op_enabled())
+	{
+		clEnable(CL_COLOR_LOGIC_OP);
+		clLogicOp(to_enum(bc.get_logic_op()));
+	}
+	else
+	{
+		clDisable(CL_COLOR_LOGIC_OP);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1261,4 +1279,30 @@ CLenum CL_OpenGLGraphicContextProvider::to_enum(enum CL_PrimitivesType value)
 	case cl_polygon: gl_mode = CL_POLYGON; break;
 	}
 	return gl_mode;
+}
+
+CLenum CL_OpenGLGraphicContextProvider::to_enum(enum CL_LogicOp op)
+{
+	CLenum gl_op = 0;
+	switch (op)
+	{
+		case cl_logic_op_clear: gl_op = CL_CLEAR; break;  
+		case cl_logic_op_and: gl_op = CL_AND; break;
+		case cl_logic_op_and_reverse: gl_op = CL_AND_REVERSE; break;
+		case cl_logic_op_copy: gl_op = CL_COPY; break;
+		case cl_logic_op_and_inverted: gl_op = CL_AND_INVERTED; break;
+		case cl_logic_op_noop: gl_op = CL_NOOP; break;
+		case cl_logic_op_xor: gl_op = CL_XOR; break;
+		case cl_logic_op_or: gl_op = CL_OR; break;
+		case cl_logic_op_nor: gl_op = CL_NOR; break;
+		case cl_logic_op_equiv: gl_op = CL_EQUIV; break;
+		case cl_logic_op_invert: gl_op = CL_INVERT; break;
+		case cl_logic_op_or_reverse: gl_op = CL_OR_REVERSE; break;
+		case cl_logic_op_copy_inverted: gl_op = CL_COPY_INVERTED; break;
+		case cl_logic_op_or_inverted: gl_op = CL_OR_INVERTED; break;
+		case cl_logic_op_nand: gl_op = CL_NAND; break;
+		case cl_logic_op_set: gl_op = CL_SET; break;
+		default: break;
+	}
+	return gl_op;
 }

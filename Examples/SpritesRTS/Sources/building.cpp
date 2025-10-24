@@ -44,7 +44,8 @@ void Building::setAngle(float newAngle)
 void Building::draw()
 {
 	
-	sprite->draw(world->get_gc(), posX, posY);
+	CL_GraphicContext gc = world->get_gc();
+	sprite->draw(gc, posX, posY);
 }
 
 bool Building::update(float timeElapsed)

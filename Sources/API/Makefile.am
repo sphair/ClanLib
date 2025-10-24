@@ -4,8 +4,25 @@ clanGL_includes = \
 	GL/api_gl.h \
 	GL/opengl_wrap.h \
 	GL/opengl.h \
+	GL/opengl_defines.h \
 	GL/opengl_window_description.h \
+	GL/opengl_graphic_context.h \
 	GL/setup_gl.h
+
+clanGL1_includes = \
+	gl1.h \
+	GL1/api_gl1.h \
+	GL1/opengl1_defines.h \
+	GL1/graphic_context_gl1.h \
+	GL1/light_model.h \
+	GL1/light_source.h \
+	GL1/material.h \
+	GL1/opengl1.h \
+	GL1/opengl1_target.h \
+	GL1/opengl1_window_description.h \
+	GL1/opengl1_wrap.h \
+	GL1/setup_gl1.h \
+	GL1/texture_unit.h
 
 clanMikMod_includes = \
 	mikmod.h \
@@ -24,13 +41,6 @@ clanNetwork_includes = \
 	Network/IRC/dcc_download.h \
 	Network/IRC/irc_connection.h \
 	Network/IRC/irc_numerics.h \
-	Network/NetObjects/netobject_client.h \
-	Network/NetObjects/netobject_controller.h \
-	Network/NetObjects/netobject_server.h \
-	Network/NetSession/netcomputer.h \
-	Network/NetSession/netgroup.h \
-	Network/NetSession/netsession.h \
-	Network/NetSession/netstream.h \
 	Network/setupnetwork.h \
 	Network/Socket/dns_packet.h \
 	Network/Socket/dns_resolver.h \
@@ -122,7 +132,10 @@ clanGUI_includes = \
 	GUI/Components/listview_selected_item.h \
 	GUI/Components/listview_icon_list.h \
 	GUI/Components/toolbar_item.h \
-	GUI/Components/listview_icon.h
+	GUI/Components/listview_icon.h \
+	GUI/Providers/gui_theme_provider.h \
+	GUI/Providers/gui_window_manager_provider.h \
+	GUI/Providers/gui_layout_provider.h
 
 clanSound_includes = \
 	sound.h \
@@ -142,6 +155,7 @@ clanSound_includes = \
 	Sound/SoundProviders/soundprovider_raw.h \
 	Sound/SoundProviders/soundprovider_wave.h \
 	Sound/SoundProviders/soundprovider_recorder.h \
+	Sound/SoundProviders/soundfilter_provider.h \
 	Sound/cd_drive.h \
 	Sound/soundoutput.h \
 	Sound/soundoutput_description.h \
@@ -197,7 +211,7 @@ clanCore_includes = \
 	Core/Math/ear_clip_triangulator.h \
 	Core/Math/ear_clip_result.h \
 	Core/Math/line_math.h \
-	Core/Math/math.h \
+	Core/Math/cl_math.h \
 	Core/Math/mat2.h \
 	Core/Math/mat3.h \
 	Core/Math/mat4.h \
@@ -228,6 +242,7 @@ clanCore_includes = \
 	Core/System/setup_core.h \
 	Core/System/sharedptr.h \
 	Core/System/system.h \
+	Core/System/timer.h \
 	Core/System/thread.h \
 	Core/System/keep_alive.h \
 	Core/System/thread_local_storage.h \
@@ -237,6 +252,8 @@ clanCore_includes = \
 	Core/System/static_memory_pool.h \
 	Core/System/fixed_memory_pool.h \
 	Core/System/registry_key.h \
+	Core/System/disposable_object.h \
+	Core/System/interlocked_variable.h \
 	Core/Signals/callback_0.h \
 	Core/Signals/callback_1.h \
 	Core/Signals/callback_2.h \
@@ -345,13 +362,13 @@ clanDisplay_includes = \
 	Display/Image/palette.h \
 	Display/Image/pixel_buffer.h \
 	Display/Image/pixel_format_type.h \
-	Display/Font/font_texture.h \
-	Display/Font/font_native.h \
+	Display/Font/font_system.h \
+	Display/Font/font_sprite.h \
 	Display/Font/font_freetype.h \
 	Display/Font/font.h \
 	Display/Font/font_metrics.h \
 	Display/Font/font_description.h \
-	Display/Font/vector_font.h \
+	Display/Font/font_vector.h \
 	Display/Render/render_batcher.h \
 	Display/Render/frame_buffer.h \
 	Display/Render/buffer_control.h \
@@ -388,7 +405,6 @@ clanDisplay_includes = \
 	Display/TargetProviders/display_message_queue_provider.h \
 	Display/TargetProviders/texture_provider.h \
 	Display/TargetProviders/cursor_provider.h \
-	Display/TargetProviders/timer_provider.h \
 	Display/Window/keys.h \
 	Display/Window/input_device.h \
 	Display/Window/display_window_message.h \
@@ -399,7 +415,6 @@ clanDisplay_includes = \
 	Display/Window/input_state.h \
 	Display/Window/cursor.h \
 	Display/Window/display_message_queue.h \
-	Display/Window/timer.h \
 	Display/Window/display_window_mode.h
 
 clanVorbis_includes = \
@@ -449,6 +464,7 @@ nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 # All available headers are listed here (for 'make dist' and such)
 EXTRA_HEADERS = \
 	$(clanGL_includes) \
+	$(clanGL1_includes) \
 	$(clanCore_includes) \
         $(clanApp_includes) \
 	$(clanDisplay_includes) \

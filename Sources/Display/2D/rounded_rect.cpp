@@ -111,7 +111,7 @@ CL_Sizef CL_RoundedRect::get_rounding_bottom_right() const
 // CL_RoundedRect Operations:
 
 void CL_RoundedRect::draw(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	const CL_Pointf &position,
 	const CL_Colorf &color,
 	CL_Origin origin)
@@ -120,7 +120,7 @@ void CL_RoundedRect::draw(
 }
 
 void CL_RoundedRect::draw(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	const CL_Pointf &position,
 	const CL_Gradient &gradient,
 	CL_Origin origin)
@@ -129,7 +129,7 @@ void CL_RoundedRect::draw(
 }
 
 void CL_RoundedRect::fill(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	const CL_Pointf &position,
 	const CL_Colorf &color,
 	CL_Origin origin)
@@ -138,7 +138,7 @@ void CL_RoundedRect::fill(
 }
 
 void CL_RoundedRect::fill(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	const CL_Pointf &position,
 	const CL_Gradient &gradient,
 	CL_Origin origin)

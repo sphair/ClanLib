@@ -92,7 +92,7 @@ public:
 	void rotate(const CL_Angle &angle);
 
 	void optimize(unsigned char check_distance, float corner_angle);
-	void save(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory()) const;
+	void save(CL_IODevice &file) const;
 
 	bool collide( const CL_CollisionOutline &outline, bool remove_old_collision_info);
 	bool point_inside( const CL_Pointf &point ) const;
@@ -106,6 +106,14 @@ public:
 	void calculate_convex_hulls();
 
 	inline bool line_bounding_box_overlap( const std::vector<CL_Pointf> &rect1, const std::vector<CL_Pointf> &rect2, int i, int j, int i2, int j2 ) const;
+
+/// \}
+
+/// \}
+/// \name Implementation
+/// \{
+	CL_OutlineProvider *provider;
+
 /// \}
 };
 

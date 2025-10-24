@@ -18,18 +18,18 @@ public:
 			CL_GUIManager gui;
 
 			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("theme.css");
 
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
 			win_desc.set_title("Slider test app."); 
-    
-			CL_Window root(CL_Rect(200,200,600,600), &gui, win_desc);			
+			win_desc.set_position(CL_Rect(200,200,600,600), false);
+			CL_Window root(&gui, win_desc);			
 			root.func_close().set(this, &App::on_close, &root); 
      
 			CL_Slider slider1(&root);

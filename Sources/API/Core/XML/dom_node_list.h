@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -61,6 +55,10 @@ public:
 	/// \brief Constructs a DOM NodeList handle.
 	CL_DomNodeList();
 
+	/// \brief Constructs a DomNodeList
+	///
+	/// \param node = Dom Node
+	/// \param tag_name = Dom String
 	CL_DomNodeList(CL_DomNode &node, const CL_DomString &tag_name);
 
 	CL_DomNodeList(
@@ -71,7 +69,6 @@ public:
 
 	~CL_DomNodeList();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -79,7 +76,6 @@ public:
 public:
 	/// \brief The number of nodes in the list.
 	int get_length() const;
-
 
 /// \}
 /// \name Operations
@@ -102,6 +98,5 @@ private:
 	std::vector<CL_DomNode> node_list;
 /// \}
 };
-
 
 /// \}

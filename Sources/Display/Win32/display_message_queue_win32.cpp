@@ -30,6 +30,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/event.h"
+#include "API/Core/Text/string_format.h"
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Display/Window/display_window_message.h"
 #include "display_message_queue_win32.h"
@@ -110,7 +111,10 @@ int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * event
 			if (result == WAIT_TIMEOUT)
 				break;
 			else if (result == WAIT_FAILED)
-				throw CL_Exception(cl_text("WaitForMultipleObjects failed"));
+			{
+				DWORD error_code = GetLastError();
+				throw CL_Exception(cl_format(cl_text("WaitForMultipleObjects failed : %1"), (int) error_code));
+			}
 			else if (result >= WAIT_OBJECT_0 && result < WAIT_OBJECT_0 + num_events+1)
 				index = result - WAIT_OBJECT_0;
 			else if (result >= WAIT_ABANDONED_0 && result < WAIT_ABANDONED_0 + num_events)

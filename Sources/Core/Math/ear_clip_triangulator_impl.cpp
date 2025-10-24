@@ -34,7 +34,7 @@
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Text/string_types.h"
 #include "ear_clip_triangulator_impl.h"
-#include <float.h>
+#include <cfloat>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_EarClipTriangulator_Impl Construction:

@@ -29,13 +29,7 @@
 /// \addtogroup clanNetwork_System clanNetwork System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_network.h"
 
@@ -55,7 +49,6 @@ public:
 
 	~CL_SetupNetwork();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -63,6 +56,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

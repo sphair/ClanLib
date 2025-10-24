@@ -61,12 +61,6 @@ void TestApp::test_timer(void)
 	CL_Timer timer_4;
 	CL_Timer timer_5;
 	CL_Timer timer_6;
-	timer_1 = CL_Timer(window);
-	timer_2 = CL_Timer(window);
-	timer_3 = CL_Timer(window);
-	timer_4 = CL_Timer(window);
-	timer_5 = CL_Timer(window);
-	timer_6 = CL_Timer(window);
 
 	unsigned int start_time = CL_System::get_time();
 
@@ -101,8 +95,8 @@ void TestApp::test_timer(void)
 						stopped_flag = true;
 				}
 		}
-		CL_DisplayMessageQueue::process();
 
+		CL_DisplayMessageQueue::process();
 	}
 
 	if (g_TimerValue1 != 1) fail();
@@ -111,8 +105,6 @@ void TestApp::test_timer(void)
 	if (g_TimerValue4 != 2) fail();
 	if (g_TimerValue5 != 1) fail();
 	if (g_TimerValue6 != 1) fail();
-
-
 }
 
 void TestApp::funx_timer_1()

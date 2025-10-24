@@ -37,6 +37,7 @@
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tooltip.h"
 #include "API/Display/Font/font.h"
+#include "API/Core/System/timer.h"
 #include "../gui_css_strings.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +64,7 @@ public:
 // CL_ToolTip Construction:
 
 CL_ToolTip::CL_ToolTip(CL_GUIManager manager)
-: CL_GUIComponent(CL_Rect(0,0,0,0), &manager, CL_ToolTip_Impl::create_description()), impl(new CL_ToolTip_Impl)
+: CL_GUIComponent(&manager, CL_ToolTip_Impl::create_description()), impl(new CL_ToolTip_Impl)
 {
 	set_type_name(cl_text("tooltip"));
 	impl->tooltip = this;
@@ -76,7 +77,6 @@ CL_ToolTip::CL_ToolTip(CL_GUIManager manager)
 	impl->font = impl->part_component.get_font();
 	impl->text_color = impl->part_component.get_property(impl->prop_text_color);
 
-	impl->timer_show_delayed = create_timer();
 	impl->timer_show_delayed.func_expired().set(impl.get(), &CL_ToolTip_Impl::on_show_delayed);
 }
 
@@ -100,7 +100,7 @@ void CL_ToolTip::set_text(const CL_StringRef &text)
 	impl->text = text;
 	CL_Point top_left = get_geometry().get_top_left();
 
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 	CL_Size text_size = impl->font.get_text_size(gc, impl->text);
 	CL_Rect rect(CL_Point(0,0), text_size);
 	CL_Rect client_rect = impl->part_component.get_render_box(rect);
@@ -111,8 +111,7 @@ void CL_ToolTip::show(const CL_Point &position)
 {
 	if (is_visible())
 		return;
-	CL_Size size = get_geometry().get_size();
-	set_geometry(CL_Rect(position, size));
+	set_geometry(CL_Rect(position, get_size()));
 	set_visible(true, false);
 }
 
@@ -120,8 +119,7 @@ void CL_ToolTip::show_delayed(const CL_Point &position, int delay_time)
 {
 	if (is_visible())
 		return;
-	CL_Size size = get_geometry().get_size();
-	set_geometry(CL_Rect(position, size));
+	set_geometry(CL_Rect(position, get_size()));
 	impl->timer_show_delayed.start(delay_time, false);
 }
 

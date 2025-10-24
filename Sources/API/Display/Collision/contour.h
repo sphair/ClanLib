@@ -33,10 +33,7 @@
 
 #pragma once
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
+#include "../api_display.h"
 #include <vector>
 #include "outline_circle.h"
 
@@ -78,6 +75,9 @@ public:
 	// be inside this one, without causing a collision)
 	bool is_inside_contour() const { return impl->is_inside_contour; }
 
+	/// \brief Set inside contour
+	///
+	/// \param is_inside = bool
 	void set_inside_contour(bool is_inside) { impl->is_inside_contour = is_inside; }
 
 	// Circles encapsulating a part of the outline.

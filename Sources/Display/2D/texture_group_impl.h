@@ -28,10 +28,6 @@
 
 #pragma once
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <list>
 #include "API/Display/Render/texture.h"
 #include "API/Display/2D/texture_group.h"
@@ -71,7 +67,7 @@ public:
 	};
 
 public:
-	CL_TextureGroup_Impl(CL_GraphicContext context, const CL_Size &texture_sizes);
+	CL_TextureGroup_Impl(CL_GraphicContext &context, const CL_Size &texture_sizes);
 	~CL_TextureGroup_Impl();
 
 	int get_subtexture_count() const;
@@ -81,7 +77,7 @@ public:
 
 	std::vector<CL_Texture> get_textures() const;
 
-	CL_Subtexture add_new_node(CL_GraphicContext context, const CL_Size &texture_size);
+	CL_Subtexture add_new_node(CL_GraphicContext &context, const CL_Size &texture_size);
 
 	std::vector<RootNode *> root_nodes;
 
@@ -89,7 +85,7 @@ public:
 	CL_TextureGroup::TextureAllocationPolicy texture_allocation_policy;
 
 private:
-	RootNode *add_new_root(CL_GraphicContext context, const CL_Size &texture_size);
+	RootNode *add_new_root(CL_GraphicContext &context, const CL_Size &texture_size);
 
 	RootNode *active_root;
 	int next_id;

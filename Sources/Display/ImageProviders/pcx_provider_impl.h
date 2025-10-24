@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Display/ImageProviders/pcx_provider.h"
 #include "API/Display/Image/pixel_format.h"
 #include "API/Display/Image/palette.h"
@@ -49,11 +44,9 @@ class CL_PCXProvider_Impl
 public:
 	/// \brief Constructs a image provider that can read pcx files.
 	///
-	/// \param name Name of the pcx file to load.
-	/// \param provider Input source provider that delivers the pcx file.
+	/// \param datafile = Input source provider that delivers the pcx file.
 	CL_PCXProvider_Impl(
-		CL_String name,
-		CL_VirtualDirectory directory);
+		CL_IODevice &datafile);
 
 	/// \brief PCX Provider destructor
 	virtual ~CL_PCXProvider_Impl();
@@ -87,7 +80,6 @@ public:
 private:
 	/// \brief Loads the pcx
 	void read_pcx(
-		CL_String _name,
 		CL_IODevice &_datafile);
 
 	/// \brief Image data.

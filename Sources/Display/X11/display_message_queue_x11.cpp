@@ -67,7 +67,8 @@ int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events,
 
 	if (num_events == 0)
 	{
-		int result = msg_wait_for_multiple_objects(0, 0, timeout);
+		std::vector<CL_SocketMessage_X11> empty_handles;
+		int result = msg_wait_for_multiple_objects(empty_handles, timeout);
 		if (result == 0)
 			return -2;
 		else
@@ -75,7 +76,7 @@ int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events,
 	}
 	else
 	{
-		std::vector<CL_SOCKET_MESSAGE> handles;
+		std::vector<CL_SocketMessage_X11> handles;
 		for (index_events = 0; index_events < count; index_events++)
 		{
 			int num_handles = events[index_events]->get_event_provider()->get_num_event_handles();
@@ -85,7 +86,7 @@ int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events,
 				if (provider == 0)
 					throw CL_Exception(cl_text("CL_EventProvider is a null pointer!"));
 
-				CL_SOCKET_MESSAGE msg;
+				CL_SocketMessage_X11 msg;
 				
 				msg.handle = provider->get_event_handle(i);
 				msg.type = provider->get_event_type(i);
@@ -94,7 +95,7 @@ int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events,
 		}
 		while (true)
 		{
-			int result = msg_wait_for_multiple_objects(handles.size(), &handles[0], timeout);
+			int result = msg_wait_for_multiple_objects(handles, timeout);
 			int index = 0;
 			if (result >= 0 && result < num_events+1)
 				index = result;
@@ -235,122 +236,168 @@ CL_SharedPtr<CL_DisplayMessageQueue_X11::ThreadData> CL_DisplayMessageQueue_X11:
 	return data;
 }
 
-// count: number of objects (Maybe 0)
-// handle_ptr: The handles (count in length). (Maybe NULL)
+// event_handles: The handles
 // timeout: timeout in milliseconds. <0 = No timeout. 0 = Return straight away
 // Returns: 0 to count(-1) --> An event triggered
 // Returns: count -> A new message is available, but not the one that we are waiting for
 // Returns: -1 --> A message available (or timeout)
-int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(int count, CL_SOCKET_MESSAGE *handle_ptr, int timeout)
+int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_SocketMessage_X11> &event_handles, int timeout)
 {
-	unsigned int start_time = 0;
-	if (timeout > 0)
+	bool internal_message_found = has_internal_messages();
+	if (internal_message_found)
 	{
-		start_time = CL_System::get_time();
+		timeout = 0;		// Do not wait, if an internal event is available
 	}
 
-	struct timeval empty_timeout;
-	empty_timeout.tv_sec = 0;
-	empty_timeout.tv_usec = 0;
+	std::vector<CL_SocketMessage_X11> all_events = event_handles;
 
-	while (true)
+	if ( (internal_message_found == false) && (timeout != 0) ) // We do not need to check for window file descriptors, when a message was already found, or when we exit straight away
 	{
-		if (count > 0)
+		// Get the window file descriptors
+		CL_SharedPtr<ThreadData> thread_data = get_thread_data();
+		std::vector<CL_X11Window *>::size_type index, size;
+		size = thread_data->windows.size();
+		for (index = 0; index < size; index++)
 		{
-			bool reads = false;
-			bool writes = false;
-			bool exceptions = false;
-			int highest_fd = -1;
-			fd_set rfds, wfds, efds;
-			FD_ZERO(&rfds);
-			FD_ZERO(&wfds);
-			FD_ZERO(&efds);
+			std::vector<CL_SocketMessage_X11> window_events = thread_data->windows[index]->get_window_socket_messages();
+			std::vector<CL_SocketMessage_X11>::size_type index, window_events_size, current_size;
+			window_events_size = window_events.size();
 
-			for (int i=0; i<count; i++)
+			if (window_events_size)
 			{
-				int handle = handle_ptr[i].handle;
-				switch (handle_ptr[i].type)
+				// Concatenate the events to all_events
+				current_size = all_events.size();
+				all_events.resize( current_size + window_events_size );
+				for(index = 0; index < window_events_size; ++ index)
 				{
-					case CL_EventProvider::type_fd_read:
-						FD_SET(handle, &rfds);
-						if (handle > highest_fd)
-							highest_fd = handle;
-						reads = true;
-						break;
-					case CL_EventProvider::type_fd_write:
-							FD_SET(handle, &wfds);
-					if (handle > highest_fd)
-							highest_fd = handle;
-						writes = true;
-							break;
-					case CL_EventProvider::type_fd_exception:
-					FD_SET(handle, &efds);
-						if (handle > highest_fd)
-							highest_fd = handle;
-						exceptions = true;
-						break;
-				}
-			}
-
-			int result = select(
-				highest_fd+1,
-				reads ? &rfds : 0,
-				writes ? &wfds : 0,
-				exceptions ? &efds : 0,
-				&empty_timeout);
-
-			if (result > 0)
-			{
-				// find the flagged sockets
-				for (int i=0; i<count; i++)
-				{
-					int handle = handle_ptr[i].handle;
-					switch (handle_ptr[i].type)
-					{
-						case CL_EventProvider::type_fd_read:
-							if (FD_ISSET(handle, &rfds))
-								return i;
-							break;
-						case CL_EventProvider::type_fd_write:
-							if (FD_ISSET(handle, &wfds))
-								return i;
-							break;
-						case CL_EventProvider::type_fd_exception:
-							if (FD_ISSET(handle, &efds))
-								return i;
-							break;
-					}
+					all_events[current_size + index] = window_events[index];
 				}
 			}
 		}
+	}
 
+	std::vector<CL_SocketMessage_X11>::size_type message_index, num_messages;
+	num_messages = all_events.size();
+
+	if (num_messages == 0)	// Nothing to wait for - Exit now
+	{
+		if (internal_message_found)
+			return 0;
+		return -1;
+	}
+
+	struct timeval tv;
+	if (timeout >0)
+	{
+		tv.tv_sec = timeout / 1000;
+		tv.tv_usec = (timeout % 1000) * 1000;
+	}
+	else if (timeout == 0)
+	{
+		tv.tv_sec = 0;
+		tv.tv_usec = 0;
+	}
+	else
+	{
+		tv.tv_sec = 0x7FFFFFFF;
+		tv.tv_usec = 0;
+	}
+
+	bool reads = false;
+	bool writes = false;
+	bool exceptions = false;
+	int highest_fd = -1;
+	fd_set rfds, wfds, efds;
+	FD_ZERO(&rfds);
+	FD_ZERO(&wfds);
+	FD_ZERO(&efds);
+
+
+	for (int message_index=0; message_index < num_messages; ++message_index)
+	{
+		int handle = all_events[message_index].handle;
+
+		if (handle > FD_SETSIZE)
+		{
+			throw CL_Exception(cl_text("Invalid file descriptor handle - maybe use poll() instead of select()?"));
+		}
+
+		switch (all_events[message_index].type)
+		{
+			case CL_EventProvider::type_fd_read:
+				FD_SET(handle, &rfds);
+				if (handle > highest_fd)
+					highest_fd = handle;
+				reads = true;
+				break;
+			case CL_EventProvider::type_fd_write:
+				FD_SET(handle, &wfds);
+				if (handle > highest_fd)
+					highest_fd = handle;
+				writes = true;
+				break;
+			case CL_EventProvider::type_fd_exception:
+				FD_SET(handle, &efds);
+				if (handle > highest_fd)
+					highest_fd = handle;
+				exceptions = true;
+				break;
+		}
+	}
+
+	int result = select(
+	highest_fd+1,
+	reads ? &rfds : 0,
+	writes ? &wfds : 0,
+	exceptions ? &efds : 0,
+	&tv);
+
+	int object_id = -1;
+
+	if (result > 0)
+	{
+		// find the flagged sockets
+		for (int message_index=0; message_index < num_messages; ++message_index)
+		{
+			int handle = all_events[message_index].handle;
+			switch (all_events[message_index].type)
+			{
+				case CL_EventProvider::type_fd_read:
+					if (FD_ISSET(handle, &rfds))
+						object_id = message_index;
+					break;
+				case CL_EventProvider::type_fd_write:
+					if (FD_ISSET(handle, &wfds))
+						object_id = message_index;
+					break;
+				case CL_EventProvider::type_fd_exception:
+					if (FD_ISSET(handle, &efds))
+						object_id = message_index;
+					break;
+			}
+			if (object_id >=0)
+				break;
+		}
+	}
+
+	if (timeout != 0)	// Check for messages after the select (to improve responsiveness)
+	{
 		if (has_internal_messages())
 		{
-			break;
-		}
-
-		if (timeout == 0)	// No timeout specified
-		{
-			return -1;
-		}
-
-		if (timeout > 0)
-		{
-			unsigned int time_now = CL_System::get_time();
-			if (time_now < start_time)	// Integer wraparound
+			if (object_id < 0)	// Not set yet
 			{
-				start_time = 0;	// TODO: Fix integer wraparound correctly
-			}
-
-			if ((time_now - start_time) >= timeout)
-			{
-				return -1;
-			}
-
-			sleep(0);	// Let other processes have some cpu cycles
-		}
+				object_id = event_handles.size();	// A new (unknown) message available
+			}		
+		} 
 	}
-	return count;
+
+	if (object_id < 0)
+	{
+		if (internal_message_found)
+			object_id = event_handles.size();	// A new (unknown) message available
+	}
+
+	return object_id;
 }
 
 bool CL_DisplayMessageQueue_X11::has_internal_messages()

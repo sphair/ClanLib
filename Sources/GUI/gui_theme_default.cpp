@@ -25,19 +25,19 @@
 **
 **    Harry Storbacka
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_default.h"
 #include "API/Core/Text/string_help.h"
-#include "gui_theme_default_impl.h"
+#include "gui_theme_provider_default.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIThemeDefault Construction:
 
-CL_GUIThemeDefault::CL_GUIThemeDefault()
-: CL_GUITheme(), impl(new CL_GUIThemeDefault_Impl)
+CL_GUIThemeDefault::CL_GUIThemeDefault() : CL_GUITheme( new CL_GUIThemeProvider_Default())
 {
 }
 
@@ -48,51 +48,13 @@ CL_GUIThemeDefault::~CL_GUIThemeDefault()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIThemeDefault Attributes:
 
-CL_StringRef CL_GUIThemeDefault::get_property(
-	const CL_GUIThemePart &part,
-	const CL_StringRef &name,
-	const CL_StringRef &css_value)
+CL_GUIThemeProvider_Default *CL_GUIThemeDefault::get_provider() const
 {
-	return impl->get_property(part,name,css_value);
-}
-
-CL_ResourceManager CL_GUIThemeDefault::get_resources() const
-{
-	return impl->resources;
+	return static_cast <CL_GUIThemeProvider_Default *> (CL_GUITheme::get_provider());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIThemeDefault Operations:
-
-void CL_GUIThemeDefault::set_resources(CL_ResourceManager resources)
-{
-	impl->resources = resources;
-}
-
-void CL_GUIThemeDefault::render_box(
-	CL_GraphicContext &gc,
-	CL_GUIThemePart &part,
-	const CL_Rect &rect,
-	const CL_Rect &clip_rect)
-{
-	impl->render_box(gc, part,rect,clip_rect);
-}
-
-CL_Rect CL_GUIThemeDefault::render_text(
-   CL_GraphicContext &gc,
-   CL_GUIThemePart &part,
-   CL_Font &font,
-   const CL_StringRef &text,
-   const CL_Rect &content_rect,
-   const CL_Rect &clip_rect)
-{
-	return impl->render_text(gc, part, font, text, content_rect, clip_rect);
-}
-
-void CL_GUIThemeDefault::component_destroyed(CL_GUIComponent *component)
-{
-	impl->component_destroyed(component);
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIThemeDefault Implementation:

@@ -31,7 +31,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include "jpeg_provider_impl.h"
-#include <setjmp.h>
+#include <csetjmp>
 #include <jerror.h>
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_format.h"
@@ -43,10 +43,19 @@
 
 CL_JPEGProvider_Impl::CL_JPEGProvider_Impl(
 	const CL_String &name,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 : directory(directory)
 {
 	filename = name;
+	image = NULL;
+
+	init();
+}
+
+CL_JPEGProvider_Impl::CL_JPEGProvider_Impl(
+	CL_IODevice &iodev)
+{
+	input_source = iodev;
 	image = NULL;
 
 	init();
@@ -98,11 +107,14 @@ void CL_JPEGProvider_Impl::init()
 	
 	memset (&cinfo,0,sizeof(cinfo));
 
-	input_source = directory.open_file(
-		filename,
-		CL_File::open_existing,
-		CL_File::access_read | CL_File::access_write,
-		CL_File::share_all);
+	if (input_source.is_null())
+	{
+		input_source = directory.open_file(
+			filename,
+			CL_File::open_existing,
+			CL_File::access_read | CL_File::access_write,
+			CL_File::share_all);
+	}
 
 	cinfo.err = jpeg_std_error(&jerr);
 	jerr.error_exit = jpeg_local_error_exit;

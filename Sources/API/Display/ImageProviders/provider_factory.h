@@ -24,19 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include <map>
@@ -57,7 +52,6 @@ class CL_API_DISPLAY CL_ImageProviderFactory
 public:
 	/// \brief Map of the class factories for each provider type.
 	static std::map<CL_String, CL_ImageProviderType *> types;
-
 
 /// \}
 /// \name Operations
@@ -83,8 +77,16 @@ public:
 	    <p>The virtual directory will be used as a the source.</p>*/
 	static CL_PixelBuffer load(
 		const CL_String &filename,
-		const CL_String &type = CL_String(),
-		CL_VirtualDirectory directory = CL_VirtualDirectory());
+		const CL_VirtualDirectory &directory,
+		const CL_String &type = CL_String());
+
+	static CL_PixelBuffer load(
+		const CL_String &fullname,
+		const CL_String &type = CL_String());
+
+	static CL_PixelBuffer load(
+		CL_IODevice &file,
+		const CL_String &type);
 
 	/// \brief Saves the given CL_PixelBuffer to the file given by 'filename'.
 	/** <p>If the type is an empty string, it uses the extension of the
@@ -92,10 +94,19 @@ public:
 	static void save(
 		CL_PixelBuffer buffer,
 		const CL_String &filename,
-		const CL_String &type = CL_String(),
-		CL_VirtualDirectory directory = CL_VirtualDirectory());
+		CL_VirtualDirectory &directory,
+		const CL_String &type = CL_String());
+
+	static void save(
+		CL_PixelBuffer buffer,
+		const CL_String &fullname,
+		const CL_String &type = CL_String());
+
+	static void save(
+		CL_PixelBuffer buffer,
+		CL_IODevice &file,
+		const CL_String &type);
 /// \}
 };
-
 
 /// \}

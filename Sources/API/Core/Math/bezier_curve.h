@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -55,7 +53,6 @@ public:
 
 	virtual ~CL_BezierCurve();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -63,7 +60,6 @@ public:
 public:
 	/// \brief Returns the control points of the bezier.
 	std::vector<CL_Pointf> get_control_points() const;
-
 
 /// \}
 /// \name Operations
@@ -81,7 +77,6 @@ public:
 	/// \brief Get a point on the bezier curve.
 	CL_Pointf get_point_relative(float pos_0_to_1) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +85,5 @@ private:
 	CL_SharedPtr<CL_BezierCurve_Impl> impl;
 /// \}
 };
-
 
 /// \}

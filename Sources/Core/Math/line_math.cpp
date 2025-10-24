@@ -29,7 +29,7 @@
 */
 
 #include "Core/precomp.h"
-#include <cmath>
+#include "API/Core/Math/angle.h"
 #include "API/Core/Math/line_math.h"
 
 float CL_LineMath::point_right_of_line( float x, float y, float *line )

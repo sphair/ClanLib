@@ -29,11 +29,10 @@ public:
 
 // Operations:
 public:
-
+	void load(const CL_StringRef &str);
 
 // Implementation:
 private:
-	static CL_Rect get_startup_geometry();
 	static CL_GUITopLevelDescription get_startup_description();
 	void create_components();
 	void populate_menubar();
@@ -47,8 +46,6 @@ private:
 	void on_main_toolbar_clicked(CL_ToolBarItem item);
 	void on_mode_toolbar_clicked(CL_ToolBarItem item);
 	void on_menu_source_generator();
-	CL_String show_save_file_dialog();
-	CL_String show_open_file_dialog();
 	Application *application;
 	DialogDocument *document;
 	Selection selection;

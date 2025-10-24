@@ -318,7 +318,7 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			CL_Rect holder_g = load_geometry(e);
 			CL_Size comp_size = holder_g.get_size();
 
-			holder_g.expand(CL_Rect(4,4,4,4));
+			holder_g.expand(4,4,4,4);
 			holder->set_geometry(holder_g);
 			CL_Rect comp_g(CL_Point(4,4), CL_Size(comp_size.width, comp_size.height));
 			new_comp->set_geometry(comp_g);
@@ -406,8 +406,8 @@ void GridComponent::on_process_message(CL_GUIMessage &msg)
 		{
 			CL_Rect boundary_outer = boundary;
 			CL_Rect boundary_inner = boundary;
-			boundary_outer.expand(CL_Rect(3,3,3,3)); 
-			boundary_inner.shrink(CL_Rect(3,3,3,3)); 
+			boundary_outer.expand(3,3,3,3); 
+			boundary_inner.shrink(3,3,3,3); 
 
 			CL_Rect boundary_resize(boundary.right-8, boundary.bottom-8, boundary.right, boundary.bottom);
 
@@ -468,7 +468,7 @@ void GridComponent::on_process_message(CL_GUIMessage &msg)
 				boundary.bottom = (e.mouse_pos.y / 8) * 8;
 				if (boundary.right < 8) boundary.right = 8; 
 				if (boundary.bottom < 8) boundary.bottom = 8; 
-				invalidate_rect();
+				request_repaint();
 			}
 		}
 
@@ -654,7 +654,7 @@ bool GridComponent::on_filter_message(CL_GUIMessage &msg)
 					}
 					main_window->get_selection()->remove_holder(holder);
 					delete holder;
-					invalidate_rect();
+					request_repaint();
 					return false;
 				}
 			}
@@ -694,7 +694,7 @@ void GridComponent::on_filter_mouse_left_down(CL_GUIMessage &msg, CL_InputEvent 
 
 	holder->on_process_message(msg);
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void GridComponent::on_filter_mouse_left_up(CL_GUIMessage &msg, CL_InputEvent &e)

@@ -46,6 +46,7 @@ class CL_Rectf;
 class CL_Image_Impl;
 class CL_Texture;
 class CL_Subtexture;
+class CL_PixelBuffer;
 
 /// \brief Image class.
 ///
@@ -55,20 +56,46 @@ class CL_API_DISPLAY CL_Image
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs an image.
-	///
-	/// \param filename Filename of image to load.
-	/// \param resource_id Resource name of a image resource.
-	/// \param manager Resource manager used to load resource.
-	/// \param gc Graphic context to use.
+	/// \brief Constructs a null image.
 	CL_Image();
 
+	/// \brief Constructs an image from a texture.
+	///
+	/// \param context = Graphic Context
+	/// \param texture = Texture to get image data from
+	/// \param rect = Position and size in texture to get image data from
 	CL_Image(CL_GraphicContext &context, CL_Texture texture, CL_Rect rect);
 
+	/// \brief Constructs an image from a subtexture.
+	///
+	/// \param context = Graphic Context
+	/// \param sub_texture = Subtexture to get image data from
 	CL_Image(CL_GraphicContext &context, CL_Subtexture &sub_texture);
 
-	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, CL_VirtualDirectory dir = CL_VirtualDirectory());
+	/// \brief Constructs a Image from a pixelbuffer.
+	///
+	/// \param context = Graphic Context
+	/// \param pixelbuffer = Pixelbuffer to get image data from
+	CL_Image(CL_GraphicContext &gc, const CL_PixelBuffer &pixelbuffer);
 
+	/// \brief Constructs a Image
+	///
+	/// \param context = Graphic Context
+	/// \param filename Filename of image to load
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename);
+
+	/// \brief Constructs a Image
+	///
+	/// \param context = Graphic Context
+	/// \param filename Filename of image to load
+	/// \param dir = Virtual directory to load filename from
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, CL_VirtualDirectory &dir);
+
+	/// \brief Constructs a Image
+	///
+	/// \param context = Graphic Context
+	/// \param resource_id Resource name of the image resource
+	/// \param resources Resource manager used to load resource
 	CL_Image(CL_GraphicContext &context, const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
 	virtual ~CL_Image();	
@@ -99,6 +126,9 @@ public:
 	/// \brief Returns translation hot-spot.
 	void get_alignment(CL_Origin &origin, int &x, int &y) const;
 
+	/// \brief Get Size
+	///
+	/// \return size
 	CL_Size get_size() const;
 
 	/// \brief Return the width of the image.
@@ -164,6 +194,10 @@ public:
 	/// \brief Sets the color.
 	/** <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>*/
 	void set_color(const CL_Colorf &color);
+
+	/// \brief Set color
+	///
+	/// \param c = Color
 	void set_color(const CL_Color& c) {CL_Colorf color; color.r = c.get_red() / 255.0f; color.g = c.get_green() / 255.0f; color.b = c.get_blue() / 255.0f; color.a = c.get_alpha() / 255.0f; set_color(color);}
 
 	/// \brief Sets translation hotspot.

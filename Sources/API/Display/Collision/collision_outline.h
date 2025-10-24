@@ -32,29 +32,15 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#ifdef CL_API_DLL
-#ifdef CL_DISPLAY_EXPORT
-#define CL_API_DISPLAY __declspec(dllexport)
-#else
-#define CL_API_DISPLAY __declspec(dllimport)
-#endif
-#else
-#define CL_API_DISPLAY
-#endif
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
+#include "../api_display.h"
 #include <vector>
 #include "contour.h"
 #include "outline_accuracy.h"
 #include "../Render/graphic_context.h"
 #include "../../Core/Resources/resource.h"
+#include "../../Core/Math/cl_math.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
 #include "../../Core/IOData/virtual_directory.h"
@@ -100,6 +86,12 @@ struct CL_CollidingContours
 	float penetration_depth;
 	CL_Pointf contour1_deep_point;
 	CL_Pointf contour2_deep_point;
+
+	/// \brief Constructs a CollidingContours
+	///
+	/// \param c1 = Contour
+	/// \param c2 = Contour
+	/// \param in = bool
 	CL_CollidingContours(const CL_Contour *c1, const CL_Contour *c2, bool in=false) :
 		contour1(c1),
 		contour2(c2),
@@ -113,7 +105,6 @@ struct CL_CollidingContours
 	}
 };
 
-
 /// \brief Collision detection outline.
 ///
 /// <p>A collision outline is used in collision detection</p> 
@@ -122,15 +113,9 @@ class CL_API_DISPLAY CL_CollisionOutline
 {
 /// \name Construction
 /// \{
-
- public:
+public:
 	/// \brief Construct a collision outline.
 	CL_CollisionOutline();
-
-	/// \brief Construct a collision outline.
-	///
-	/// \param other = Construct from
-	CL_CollisionOutline(const CL_CollisionOutline &other);
 
 	/// \brief Construct a collision outline.
 	///
@@ -143,7 +128,26 @@ class CL_API_DISPLAY CL_CollisionOutline
 	///
 	/// \param filename = Load outline from a file. The file can be an image or a precompiled outline.
 	/// \param directory = The virtual directory
-	CL_CollisionOutline(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory(), int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
+	/// \param file_extension = "out" for a precompiled outline, else a bitmap outline
+	CL_CollisionOutline(const CL_StringRef &fullname, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
+
+	/// \brief Constructs a CollisionOutline
+	///
+	/// \param file = IODevice
+	/// \param file_extension = String
+	/// \param alpha_limit = value
+	/// \param accuracy = Outline Accuracy
+	/// \param get_insides = bool
+	CL_CollisionOutline(CL_IODevice &file, const CL_String &file_extension, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
+
+	/// \brief Constructs a CollisionOutline
+	///
+	/// \param filename = String Ref
+	/// \param directory = Virtual Directory
+	/// \param alpha_limit = value
+	/// \param accuracy = Outline Accuracy
+	/// \param get_insides = bool
+	CL_CollisionOutline(const CL_StringRef &filename, const CL_VirtualDirectory &directory, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
 
 	/// \brief Construct a collision outline.
 	///
@@ -160,12 +164,10 @@ class CL_API_DISPLAY CL_CollisionOutline
 
 	~CL_CollisionOutline();
 
-
 /// \}
 /// \name Attributes
 /// \{
-
- public:
+public:
 	/// \brief Returns the contour used as an object bounding box. (an rotated rectangle)
 	const CL_Contour &get_object_bounding_box() const;
 
@@ -177,7 +179,8 @@ class CL_API_DISPLAY CL_CollisionOutline
 	bool get_inside_test() const;
 
 	/// \brief Returns the contours in the outline.
-	std::vector<CL_Contour> &get_contours() const;
+	std::vector<CL_Contour> &get_contours();
+	const std::vector<CL_Contour> &get_contours() const;
 
 	/// \brief Returns the position of the outline.
 	CL_Pointf get_translation() const;
@@ -201,7 +204,7 @@ class CL_API_DISPLAY CL_CollisionOutline
 	void get_rotation_hotspot( CL_Origin &origin, float &x, float &y) const;
 
 	/// \brief Return the info about the collisions. (collision points, normals, pointers to contours, and indexes to lines that intersected)
-	std::vector<CL_CollidingContours> &get_collision_info() const;
+	const std::vector<CL_CollidingContours> &get_collision_info() const;
 
 	/// \brief Fetch the state of the collision testing variables.
 	void get_collision_info_state(bool &points, bool &normals, bool &metadata, bool &pendepth) const;
@@ -209,14 +212,28 @@ class CL_API_DISPLAY CL_CollisionOutline
 	/// \brief Resource owning this outline, if any.
 	CL_Resource resource;
 
-
 /// \}
 /// \name Operations
 /// \{
+public:
+	/// \brief Load the outline from file replacing the current data.
+	///
+	/// Loads precompiled outlines
+	void load(const CL_StringRef &fullname);
 
- public:
-	/// \brief Assignment operator
-	CL_CollisionOutline &operator=(const CL_CollisionOutline &other);
+	/// \brief Load
+	///
+	/// \param filename = The filename
+	/// \param directory = Virtual Directory
+	void load(const CL_StringRef &filename, const CL_VirtualDirectory &directory);
+
+	/// \brief Load
+	///
+	/// \param file = The file
+	void load(CL_IODevice &file);
+
+	/// \brief Copy
+	CL_CollisionOutline &copy(const CL_CollisionOutline &other);
 
 	/// \brief Optimize the outline by removing redundant points.
 	///
@@ -236,7 +253,7 @@ class CL_API_DISPLAY CL_CollisionOutline
 		float x,
 		float y,
 		const CL_Colorf &color,
-		CL_GraphicContext gc);
+		CL_GraphicContext &gc);
 
 	/// \brief Draw the subcircles surrounding the linesegments on graphic context.
 	///
@@ -250,7 +267,7 @@ class CL_API_DISPLAY CL_CollisionOutline
 		float x,
 		float y,
 		const CL_Colorf &color,
-		CL_GraphicContext gc);
+		CL_GraphicContext &gc);
 
 	/// \brief Draw the disc enclosing the entire outline.
 	///
@@ -264,7 +281,7 @@ class CL_API_DISPLAY CL_CollisionOutline
 		float x,
 		float y,
 		const CL_Colorf &color,
-		CL_GraphicContext gc);
+		CL_GraphicContext &gc);
 
 	/// \brief Set the translation hotspot of the outline.
 	void set_alignment( CL_Origin origin, float x=0, float y=0 );
@@ -312,7 +329,18 @@ class CL_API_DISPLAY CL_CollisionOutline
 	///
 	/// \param filename = Name of file.
 	/// \param directory = Visual Directory to use
-	void save(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory()) const;
+	void save(const CL_StringRef &fullname) const;
+
+	/// \brief Save
+	///
+	/// \param filename = The filename
+	/// \param directory = Virtual Directory
+	void save(const CL_StringRef &filename, CL_VirtualDirectory &directory) const;
+
+	/// \brief Save
+	///
+	/// \param file = The file
+	void save(CL_IODevice &file) const;
 
 	/// \brief Returns true if outlines overlap
 	///
@@ -328,15 +356,12 @@ class CL_API_DISPLAY CL_CollisionOutline
 	/// \param point = the point to test.
 	bool point_inside( const CL_Pointf &point ) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
-
- private:
-	CL_CollisionOutline_Generic *impl;
+private:
+	CL_SharedPtr<CL_CollisionOutline_Generic> impl;
 /// \}
 };
-
 
 /// \}

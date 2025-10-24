@@ -28,8 +28,8 @@
 */
 
 #include "Core/precomp.h"
-#include <cmath>
 #include "bezier_curve_impl.h"
+#include "API/Core/Math/angle.h"
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/angle.h"
 

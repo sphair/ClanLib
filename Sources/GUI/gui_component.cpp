@@ -28,6 +28,8 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component_description.h"
@@ -55,6 +57,7 @@
 CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *parent)
 : impl(CL_GUIComponent_Impl::create_from_parent(parent))
 {
+	impl->component = this;
 	impl->type_name = cl_text("component");
 	impl->geometry = CL_Rect(0,0,0,0);
 
@@ -71,34 +74,34 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *parent)
 	}
 }
 
-CL_GUIComponent::CL_GUIComponent(const CL_Rect &position, CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary)
+CL_GUIComponent::CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary)
 : impl(CL_GUIComponent_Impl::create_from_manager(manager))
 {
+	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
-	description.set_position(position, false); 
 	impl->gui_manager->add_component(this, 0, description, temporary);
 	impl->type_name = cl_text("component");
-	impl->geometry = impl->gui_manager->window_manager->get_geometry(impl->gui_manager->get_toplevel_window(this), true);
-	invalidate_rect();
+	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
+	request_repaint();
 }
 
-CL_GUIComponent::CL_GUIComponent(const CL_Rect &position, CL_GUIComponent *owner, CL_GUITopLevelDescription description)
+CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *owner, CL_GUITopLevelDescription description)
 : impl(CL_GUIComponent_Impl::create_from_owner(owner))
 {
+	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
-	description.set_position(position, false); 
 	impl->gui_manager->add_component(this, owner, description, false);
 	impl->type_name = cl_text("component");
-	impl->geometry = impl->gui_manager->window_manager->get_geometry(impl->gui_manager->get_toplevel_window(this), true);
-	invalidate_rect();
+	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
+	request_repaint();
 }
 
 CL_GUIComponent::~CL_GUIComponent()
 {
-	if (impl->gui_manager_impl->theme)
-		impl->gui_manager_impl->theme->component_destroyed(this);
+	if (!impl->gui_manager_impl->theme.is_null())
+		impl->gui_manager_impl->theme.component_destroyed(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,7 +109,28 @@ CL_GUIComponent::~CL_GUIComponent()
 
 CL_Rect CL_GUIComponent::get_geometry() const
 {
-	return impl->geometry;
+	if (impl->parent == 0)
+	{
+		return impl->gui_manager->window_manager.get_geometry(
+			impl->gui_manager->get_toplevel_window(this), true);
+	}
+	else
+	{
+		return impl->geometry;
+	}
+}
+
+CL_Rect CL_GUIComponent::get_window_geometry() const
+{
+	if (impl->parent == 0)
+	{
+		return impl->gui_manager->window_manager.get_geometry(
+			impl->gui_manager->get_toplevel_window(this), false);
+	}
+	else
+	{
+		return impl->geometry;
+	}
 }
 
 int CL_GUIComponent::get_width() const
@@ -127,16 +151,6 @@ CL_Size CL_GUIComponent::get_size() const
 bool CL_GUIComponent::is_clickthrough() const
 {
 	return impl->click_through;
-}
-
-CL_Rect CL_GUIComponent::get_window_geometry() const
-{
-	if (impl->parent == 0)
-	{
-		return impl->gui_manager->window_manager->get_geometry(
-			impl->gui_manager->get_toplevel_window(this), false);
-	}
-	return impl->geometry;
 }
 
 CL_StringRef CL_GUIComponent::get_type_name() const
@@ -192,7 +206,7 @@ CL_GUIConsumedKeys CL_GUIComponent::get_consumed_keys() const
 
 CL_ResourceManager CL_GUIComponent::get_resources() const
 {
-	return get_gui_manager().get_theme()->get_resources();
+	return get_gui_manager().get_theme().get_resources();
 }
 
 CL_GUIManager CL_GUIComponent::get_gui_manager() const
@@ -200,7 +214,7 @@ CL_GUIManager CL_GUIComponent::get_gui_manager() const
 	return CL_GUIManager(impl->gui_manager);
 }
 
-CL_GUITheme *CL_GUIComponent::get_theme() const
+CL_GUITheme CL_GUIComponent::get_theme() const
 {
 	return impl->gui_manager->theme;
 }
@@ -282,7 +296,7 @@ bool CL_GUIComponent::has_child_components() const
 	return (impl->first_child != 0);
 }
 
-CL_GraphicContext CL_GUIComponent::get_gc() const
+CL_GraphicContext& CL_GUIComponent::get_gc()
 {
 	const CL_GUIComponent *root_component = get_top_level_component();
 
@@ -292,12 +306,12 @@ CL_GraphicContext CL_GUIComponent::get_gc() const
 	{
 		CL_GUITopLevelWindow *cur = impl->gui_manager->root_components[pos];
 		if (cur->component == root_component)
-			return impl->gui_manager->window_manager->get_gc(cur);
+			return impl->gui_manager->window_manager.get_gc(cur);
 	}
-	return CL_GraphicContext();
+	return dummy_gc;
 }
 
-CL_InputContext CL_GUIComponent::get_ic() const
+CL_InputContext& CL_GUIComponent::get_ic()
 {
 	const CL_GUIComponent *root_component = get_top_level_component();
 
@@ -307,9 +321,9 @@ CL_InputContext CL_GUIComponent::get_ic() const
 	{
 		CL_GUITopLevelWindow *cur = impl->gui_manager->root_components[pos];
 		if (cur->component == root_component)
-			return impl->gui_manager->window_manager->get_ic(cur);
+			return impl->gui_manager->window_manager.get_ic(cur);
 	}
-	return CL_InputContext();
+	return dummy_ic;
 }
 
 
@@ -346,33 +360,39 @@ CL_GUIComponent *CL_GUIComponent::get_component_at(const CL_Point &point)
 	{
 		return 0;
 	}
-
-	CL_GUIComponent *comp = 0;
-
-	CL_Rect rect = get_geometry();
-
-	if( rect.contains(point) )  
+	else
 	{
-		std::vector<CL_GUIComponent *> children = get_child_components();
-		std::size_t pos, size = children.size();
-
-		for( pos=size; pos>0; pos-- )
+		CL_Rect parent_rect = get_size();
+		if( parent_rect.contains(point) )  
 		{
-			CL_GUIComponent *child = children[pos-1];
-			CL_Rect parent_rect = get_geometry();
-			CL_Point P = point;
-			P.x -= parent_rect.left;
-			P.y -= parent_rect.top;
-			comp = child->get_component_at(P);
-			if( comp != 0 )
-				break;
+			std::vector<CL_GUIComponent *> children = get_child_components();
+			std::size_t pos, size = children.size();
+
+			for( pos=size; pos>0; pos-- )
+			{
+				CL_GUIComponent *child = children[pos-1];
+				if(child->is_visible())
+				{
+					if (child->get_geometry().contains(point))
+					{
+						CL_Point P = point;
+						P.x -= child->get_geometry().left;
+						P.y -= child->get_geometry().top;
+						CL_GUIComponent *comp = child->get_component_at(P);
+						if (comp)
+							return comp;
+						else
+							return child;
+					}
+				}
+			}
+			return this;
 		}
-
-		if( comp == 0 )
-			comp = this;
+		else
+		{
+			return 0;
+		}
 	}
-
-	return comp;
 }
 
 CL_Point CL_GUIComponent::window_to_component_coords(const CL_Point &point) const
@@ -380,7 +400,7 @@ CL_Point CL_GUIComponent::window_to_component_coords(const CL_Point &point) cons
 	CL_Point P = point;
 
 	const CL_GUIComponent *current = this;
-	while (current)
+	while (current->get_parent_component())
 	{
 		CL_Rect g = current->get_geometry();
 		P.x -= g.left;
@@ -391,12 +411,19 @@ CL_Point CL_GUIComponent::window_to_component_coords(const CL_Point &point) cons
 	return P;
 }
 
+CL_Rect CL_GUIComponent::window_to_component_coords(const CL_Rect &rect) const
+{
+	CL_Point tl = window_to_component_coords(rect.get_top_left());
+	CL_Point br = window_to_component_coords(rect.get_bottom_right());
+	return CL_Rect(tl.x, tl.y, br.x, br.y);
+}
+
 CL_Point CL_GUIComponent::component_to_window_coords(const CL_Point &point) const
 {
 	CL_Point P = point;
 
 	const CL_GUIComponent *current = this;
-	while (current)
+	while (current->get_parent_component())
 	{
 		CL_Rect g = current->get_geometry();
 		P.x += g.left;
@@ -407,10 +434,17 @@ CL_Point CL_GUIComponent::component_to_window_coords(const CL_Point &point) cons
 	return P;
 }
 
+CL_Rect CL_GUIComponent::component_to_window_coords(const CL_Rect &rect) const
+{
+	CL_Point tl = component_to_window_coords(rect.get_top_left());
+	CL_Point br = component_to_window_coords(rect.get_bottom_right());
+	return CL_Rect(tl.x, tl.y, br.x, br.y);
+}
+
 CL_Point CL_GUIComponent::screen_to_component_coords(const CL_Point &screen_point) const
 {
 	CL_GUITopLevelWindow *toplevel_window = impl->gui_manager->get_toplevel_window(this);
-	CL_Point client_point = impl->gui_manager->window_manager->screen_to_window(toplevel_window, screen_point, true);
+	CL_Point client_point = impl->gui_manager->window_manager.screen_to_window(toplevel_window, screen_point, true);
 	return window_to_component_coords(client_point);
 }
 
@@ -418,7 +452,7 @@ CL_Point CL_GUIComponent::component_to_screen_coords(const CL_Point &component_p
 {
 	CL_GUITopLevelWindow *toplevel_window = impl->gui_manager->get_toplevel_window(this);
 	CL_Point client_point = component_to_window_coords(component_point);
-	return impl->gui_manager->window_manager->window_to_screen(toplevel_window, client_point, true);
+	return impl->gui_manager->window_manager.window_to_screen(toplevel_window, client_point, true);
 }
 
 CL_GUIComponent *CL_GUIComponent::get_top_level_component()
@@ -477,7 +511,7 @@ int CL_GUIComponent::get_preferred_height() const
 	return get_preferred_size().height;
 }
 
-CL_GUILayout *CL_GUIComponent::get_layout() const
+CL_GUILayout CL_GUIComponent::get_layout() const
 {
 	return impl->layout;
 }
@@ -485,7 +519,7 @@ CL_GUILayout *CL_GUIComponent::get_layout() const
 CL_DisplayWindow CL_GUIComponent::get_display_window() const
 {
 	CL_GUITopLevelWindow *toplevel = impl->gui_manager->get_toplevel_window(this);
-	return impl->gui_manager->window_manager->get_display_window(toplevel);
+	return impl->gui_manager->window_manager.get_display_window(toplevel);
 }
 
 bool CL_GUIComponent::is_tab_order_controller() const
@@ -514,6 +548,66 @@ CL_Callback_v2<CL_GraphicContext &, const CL_Rect &> &CL_GUIComponent::func_rend
 CL_Callback_v1<CL_GUIMessage &> &CL_GUIComponent::func_process_message()
 {
 	return impl->func_process_message;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_close()
+{
+	return impl->func_close;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_activated()
+{
+	return impl->func_activated;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_deactivated()
+{
+	return impl->func_deactivated;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_focus_lost()
+{
+	return impl->func_focus_lost;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_focus_gained()
+{
+	return impl->func_focus_gained;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_pointer_enter()
+{
+	return impl->func_pointer_enter;
+}
+
+CL_Callback_0<bool> &CL_GUIComponent::func_pointer_exit()
+{
+	return impl->func_pointer_exit;
+}
+
+CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input()
+{
+	return impl->func_input;
+}
+
+CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_pressed()
+{
+	return impl->func_input_pressed;
+}
+
+CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_released()
+{
+	return impl->func_input_released;
+}
+
+CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_doubleclick()
+{
+	return impl->func_input_doubleclick;
+}
+
+CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_pointer_moved()
+{
+	return impl->func_input_pointer_moved;
 }
 
 CL_Callback_v0 &CL_GUIComponent::func_style_changed()
@@ -561,7 +655,7 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 	else
 	{
 		CL_GUIThemePart part(this);
-		CL_Rect geometry = get_geometry();
+		CL_Rect geometry = get_size();
 		part.render_box(gc, CL_RectPS(0, 0, geometry.get_width(), geometry.get_height()), clip_rect);
 	}
 
@@ -569,74 +663,48 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 	{
 		if (impl->clip_children)
 		{
-			set_cliprect(get_geometry().get_size());
+			set_cliprect(gc, get_size());
 		}
 
 		CL_GUIComponent *cur = impl->first_child;
 		while (cur)
 		{
-			CL_Rect rect = cur->get_geometry();
-			gc.push_translate((float)rect.left, (float)rect.top);
-			CL_Rect urect = clip_rect;
-			urect.overlap(rect);
-			if (urect.get_width() > 0 && urect.get_height() > 0)
+			CL_Rect cur_geometry = cur->get_geometry();
+
+			CL_Rect update_rect = component_to_window_coords(clip_rect);
+			update_rect.overlap(component_to_window_coords(cur_geometry));
+			if (update_rect.get_width() > 0 && update_rect.get_height() > 0)
 			{
-				CL_Rect child_clip_rect(
-					urect.left - rect.left,
-					urect.top - rect.top,
-					urect.right - rect.left,
-					urect.bottom - rect.top);
+				CL_Rect child_clip_rect = cur->window_to_component_coords(update_rect);
+
+				gc.push_translate((float)cur_geometry.left, (float)cur_geometry.top);
 				cur->render(gc, child_clip_rect, true);
+				gc.pop_modelview();
 			}
-			gc.pop_modelview();
 			cur = cur->impl->next_sibling;
 		}
 
 		if (impl->clip_children)
 		{
-			reset_cliprect();
+			reset_cliprect(gc);
 		}
 	}
 }
 
 void CL_GUIComponent::paint()
 {
-	paint(CL_Rect(CL_Point(0, 0), get_geometry().get_size()));
+	paint(get_size());
 }
 
 void CL_GUIComponent::paint(const CL_Rect &clip_rect)
 {
-	if (impl->parent)
-	{
-		CL_Rect geometry = get_geometry();
-		CL_Rect rect(
-			geometry.left + clip_rect.left,
-			geometry.top + clip_rect.top,
-			geometry.left + clip_rect.right,
-			geometry.top + clip_rect.bottom);
-		impl->parent->paint(rect);
-	}
-	else
-	{
-		CL_GUITopLevelWindow *toplevel_window = 0;
-		std::vector<CL_GUITopLevelWindow>::size_type pos, size;
-		size = impl->gui_manager->root_components.size();
-		for (pos = 0; pos < size; pos++)
-		{
-			CL_GUITopLevelWindow *cur = impl->gui_manager->root_components[pos];
-			if (cur->component == this)
-			{
-				toplevel_window = cur;
-				break;
-			}
-		}
-		if (toplevel_window == 0)
-			return;
+	CL_Rect update_region = component_to_window_coords(clip_rect);
+	CL_GUIComponent *toplevel_component = get_top_level_component();
+	CL_GUITopLevelWindow *toplevel_window = impl->gui_manager->get_toplevel_window(this);
 
-		CL_GraphicContext gc = impl->gui_manager->window_manager->begin_paint(toplevel_window, clip_rect);
-		render(gc, clip_rect, true);
-		impl->gui_manager->window_manager->end_paint(toplevel_window, clip_rect);
-	}
+	CL_GraphicContext gc = impl->gui_manager->window_manager.begin_paint(toplevel_window, update_region);
+	toplevel_component->render(gc, update_region, true);
+	impl->gui_manager->window_manager.end_paint(toplevel_window, update_region);
 }
 
 int CL_GUIComponent::exec()
@@ -666,34 +734,14 @@ void CL_GUIComponent::exit_with_code(int exit_code)
 	get_gui_manager().exit_with_code(exit_code);
 }
 
-void CL_GUIComponent::set_geometry(const CL_Rect &geometry)
+void CL_GUIComponent::set_geometry(CL_Rect geometry)
 {
-	invalidate_rect(impl->geometry.get_size()); // invalidate current geometry.
-
-	impl->geometry = geometry;
-
-	if (impl->layout)
-		impl->layout->set_geometry(geometry);
-
-	if (!impl->func_resized.is_null())
-		impl->func_resized.invoke();
-
-	invalidate_rect(impl->geometry.get_size()); // invalidate new geometry.
+	impl->set_geometry(geometry, true);
 }
 
-void CL_GUIComponent::set_window_geometry(const CL_Rect &geometry, bool client_area)
+void CL_GUIComponent::set_window_geometry(CL_Rect geometry)
 {
-	if (impl->parent == 0)
-	{
-		CL_GUITopLevelWindow *handle = impl->gui_manager->get_toplevel_window(this);
-		impl->gui_manager->window_manager->set_geometry(handle, geometry, client_area);
-		CL_Rect geom = impl->gui_manager->window_manager->get_geometry(handle, true);
-		set_geometry(geom);
-	}
-	else
-	{
-		set_geometry(geometry);
-	}
+	impl->set_geometry(geometry, false);
 }
 
 void CL_GUIComponent::capture_mouse(bool capture)
@@ -761,13 +809,13 @@ void CL_GUIComponent::set_enabled(bool enable)
 void CL_GUIComponent::set_visible(bool visible, bool activate_root_win)
 {
 	if (visible != impl->visible)
-		invalidate_rect();
+		request_repaint();
 
 	impl->visible = visible;
 	if (impl->parent == 0)
 	{
 		CL_GUITopLevelWindow *toplevel_window = impl->gui_manager->get_toplevel_window(this);
-		impl->gui_manager->window_manager->set_visible(toplevel_window, visible, activate_root_win);
+		impl->gui_manager->window_manager.set_visible(toplevel_window, visible, activate_root_win);
 	}
 }
 
@@ -839,87 +887,52 @@ void CL_GUIComponent::create_components(const CL_DomDocument &gui_xml)
 	}
 }
 
-void CL_GUIComponent::create_components(const CL_StringRef &filename, CL_VirtualDirectory dir)
+void CL_GUIComponent::create_components(const CL_StringRef &filename, const CL_VirtualDirectory &dir)
+{
+	CL_IODevice device;
+	device = dir.open_file_read(filename);
+	create_components(device);
+}
+
+void CL_GUIComponent::create_components(CL_IODevice &file)
 {
 	CL_DomDocument doc;
-	CL_IODevice device;
-	device = dir.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
-	doc.load(device); 
+	doc.load(file); 
 	create_components(doc);
 }
 
-void CL_GUIComponent::invalidate_rect(CL_Rect invalidate_rect)
+void CL_GUIComponent::create_components(const CL_StringRef &fullname)
 {
-	CL_Rect rect = get_geometry();
-	CL_Point root_pos(rect.left, rect.top);
-	CL_GUIComponent *parent = get_parent_component();
-
-	while( parent )
-	{
-		rect = parent->get_geometry();
-		root_pos.x += rect.left;
-		root_pos.y += rect.top;
-		if( parent->get_parent_component() )
-			parent = parent->get_parent_component();
-		else
-			break; // gui_manager.invalidate_rect() needs the root parent.
-	}
-
-	invalidate_rect.left += root_pos.x;
-	invalidate_rect.right += root_pos.x;
-	invalidate_rect.top += root_pos.y;
-	invalidate_rect.bottom += root_pos.y;
-
-	if (parent == 0)
-		get_gui_manager().invalidate_rect(invalidate_rect, this);
-	else
-		get_gui_manager().invalidate_rect(invalidate_rect, parent);
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	create_components(filename, vfs.get_root_directory());
 }
 
-void CL_GUIComponent::invalidate_rect()
+
+void CL_GUIComponent::request_repaint(CL_Rect request_repaint)
 {
-	invalidate_rect(CL_Rect(CL_Point(0, 0), get_geometry().get_size()));
+	get_gui_manager().request_repaint(component_to_window_coords(request_repaint), get_top_level_component());
 }
 
-CL_Timer CL_GUIComponent::create_timer()
+void CL_GUIComponent::request_repaint()
 {
-	CL_Timer timer = impl->gui_manager->window_manager->create_timer(impl->gui_manager->get_toplevel_window(get_top_level_component()));
-	return timer;
+	request_repaint(get_size());
 }
 
-void CL_GUIComponent::set_cliprect(const CL_Rect &rect)
+void CL_GUIComponent::set_cliprect(CL_GraphicContext &gc, const CL_Rect &rect)
 {
-	CL_GUIComponent *parent = this;
-	CL_Size size = rect.get_size();
-	CL_Rect R = rect;
-
-	// Is this the correct method of setting the clip rect ?
-/*  
-	Old code here
-	while (parent != 0)
-	{
-		CL_Rect parent_rect = parent->get_geometry();
-		R.top += parent_rect.top;
-		R.left += parent_rect.left;
-		parent = parent->get_parent_component();
-	}
-*/
-	CL_GraphicContext gc = get_gc();
-
-	// Replaced with these 3 lines
-	CL_Mat4f modelview_matrix = gc.get_modelview();
-	R.left += modelview_matrix.matrix[(4*3) + 0];	// Translation X
-	R.top += modelview_matrix.matrix[(4*3) + 1];	// Translation Y
-
-	R.right = R.left + size.width;
-	R.bottom = R.top + size.height;
-
-	gc.push_cliprect(R); 
+	CL_Rect windcliprect = component_to_window_coords(rect);
+	CL_GUIComponent *toplevel = get_top_level_component();
+	CL_GUITopLevelWindow *window = impl->gui_manager_impl->get_toplevel_window(toplevel);
+	impl->gui_manager_impl->window_manager.set_cliprect(window, gc, windcliprect);
 }
 
-void CL_GUIComponent::reset_cliprect()
+void CL_GUIComponent::reset_cliprect(CL_GraphicContext &gc)
 {
-	get_gc().pop_cliprect();
+	CL_GUIComponent *toplevel = get_top_level_component();
+	CL_GUITopLevelWindow *window = impl->gui_manager_impl->get_toplevel_window(toplevel);
+	impl->gui_manager_impl->window_manager.reset_cliprect(window, gc);
 }
 
 void CL_GUIComponent::delete_child_components()
@@ -975,24 +988,21 @@ void CL_GUIComponent::set_parent_component(CL_GUIComponent *new_parent)
 	impl->parent = new_parent;
 }
 
-void CL_GUIComponent::set_layout(CL_GUILayout *layout)
+void CL_GUIComponent::set_layout(CL_GUILayout &layout)
 {
-	if (impl->layout)
-		delete impl->layout;
-
 	impl->layout = layout;
 }
 
 void CL_GUIComponent::set_cursor(const CL_Cursor &cursor)
 {
 	CL_GUITopLevelWindow *toplevel = impl->gui_manager->get_toplevel_window(this);
-	impl->gui_manager->window_manager->set_cursor(toplevel, cursor);
+	impl->gui_manager->window_manager.set_cursor(toplevel, cursor);
 }
 
 void CL_GUIComponent::set_cursor(CL_StandardCursor type)
 {
 	CL_GUITopLevelWindow *toplevel = impl->gui_manager->get_toplevel_window(this);
-	impl->gui_manager->window_manager->set_cursor(toplevel, type);
+	impl->gui_manager->window_manager.set_cursor(toplevel, type);
 }
 
 void CL_GUIComponent::set_clickthrough(bool enabled)
@@ -1202,4 +1212,5 @@ CL_GUIComponent &CL_GUIComponent::operator =(const CL_GUIComponent &other)
 {
 	throw CL_Exception(cl_text("CL_GUIComponent operator = disallowed"));
 }
+
 

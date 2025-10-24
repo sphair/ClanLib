@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -57,10 +51,12 @@ public:
 	/// \brief Constructs a DOM CharacterData handle.
 	CL_DomCharacterData();
 
+	/// \brief Constructs a DomCharacterData
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomCharacterData(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomCharacterData();
-
 
 /// \}
 /// \name Attributes
@@ -70,7 +66,6 @@ public:
 	/// \brief The number of characters that are available through data and the substringData method below.
 	/** <p>This may have the value zero, i.e., CharacterData nodes may be empty.</p>*/
 	unsigned long get_length();
-
 
 /// \}
 /// \name Operations
@@ -106,15 +101,18 @@ public:
 	/// \param arg The DOMString with which the range must be replaced.
 	void replace_data(unsigned long offset, unsigned long count, const CL_DomString &arg);
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 protected:
+
+	/// \brief Constructs a DomCharacterData
+	///
+	/// \param doc = Dom Document
+	/// \param node_type = short
 	CL_DomCharacterData(CL_DomDocument &doc, unsigned short node_type);
 /// \}
 };
-
 
 /// \}

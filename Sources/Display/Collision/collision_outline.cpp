@@ -27,10 +27,14 @@
 **    Magnus Norddahl
 **    James Wynn
 **    Emanuel Greisen
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/Collision/collision_outline.h"
 #include "API/Display/Collision/outline_provider_bitmap.h"
 #include "API/Display/Collision/outline_provider_file.h"
@@ -54,53 +58,60 @@
 // CL_CollisionOutline Construction:
 
 CL_CollisionOutline::CL_CollisionOutline()
- : impl(0)
+ : impl(new CL_CollisionOutline_Generic())
 {
-	impl = new CL_CollisionOutline_Generic();
-}
-
-CL_CollisionOutline::CL_CollisionOutline(const CL_CollisionOutline &other)
- : impl(0)
-{
-	impl = new CL_CollisionOutline_Generic();
-
-	*this = other;
 }
 
 CL_CollisionOutline::CL_CollisionOutline(std::vector<CL_Contour> contours, int width, int height)
- : impl(0)
+ : impl(new CL_CollisionOutline_Generic())
 {
-	impl = new CL_CollisionOutline_Generic();
 	impl->contours = contours;
 	impl->width = width;
 	impl->height = height;
 }
 
+CL_CollisionOutline::CL_CollisionOutline(const CL_StringRef &fullname, int alpha_limit, CL_OutlineAccuracy accuracy, bool get_insides)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	*this = CL_CollisionOutline(filename, dir, alpha_limit, accuracy, get_insides);
+}
+
+CL_CollisionOutline::CL_CollisionOutline(const CL_StringRef &filename, const CL_VirtualDirectory &directory, int alpha_limit, CL_OutlineAccuracy accuracy, bool get_insides)
+{
+	bool precompiled_outline;
+	CL_String file_extension = CL_PathHelp::get_extension(filename);
+
+	CL_IODevice file = directory.open_file_read(filename);
+	*this = CL_CollisionOutline(file, file_extension, alpha_limit, accuracy, get_insides);
+}
+
 CL_CollisionOutline::CL_CollisionOutline(
-	const CL_StringRef &filename,
-	CL_VirtualDirectory directory,
+	CL_IODevice &file, const CL_String &file_extension,
 	int alpha_limit,
 	CL_OutlineAccuracy accuracy,
 	bool get_insides)
- : impl(0)
 {
-	if( CL_PathHelp::get_extension(filename) == cl_text("out"))
+	if( file_extension == cl_text("out") )
 	{
-		impl = new CL_CollisionOutline_Generic( new CL_OutlineProviderFile(filename), accuracy_raw );
+		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderFile(file), accuracy_raw ));
+		impl = new_impl;
 		return;
 	}
 
-	CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename);
+	CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(file, file_extension);
 	
 	if( pbuf.get_format() == CL_PixelFormat::rgba8888 )
 	{
-		impl = new CL_CollisionOutline_Generic(
-			new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy);
+		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy));
+		impl = new_impl;
 	}
 	else
 	{
-		impl = new CL_CollisionOutline_Generic(
-			new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy_raw);
+		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy_raw));
+		impl = new_impl;
 	}
 
 	set_rotation_hotspot(origin_center);
@@ -109,7 +120,6 @@ CL_CollisionOutline::CL_CollisionOutline(
 CL_CollisionOutline::CL_CollisionOutline(
 	const CL_StringRef &resource_id,
 	CL_ResourceManager *manager)
- : impl(0)
 {
 	resource = manager->get_resource(resource_id);
 	if (resource.get_type() != cl_text("collisionoutline"))
@@ -128,17 +138,17 @@ CL_CollisionOutline::CL_CollisionOutline(
 	const CL_PixelBufferRef &pbuf,
 	int alpha_limit,
 	CL_OutlineAccuracy accuracy)
- : impl(0)
+ : impl(new CL_CollisionOutline_Generic())
 {
 	if( pbuf.get_format() == CL_PixelFormat::rgba8888 )
 	{
-		impl = new CL_CollisionOutline_Generic(
-			new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy );
+		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy));
+		impl = new_impl;
 	}
 	else
 	{
-		impl = new CL_CollisionOutline_Generic(
-			new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy_raw );
+		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy_raw));
+		impl = new_impl;
 	}
 	
 	set_rotation_hotspot(origin_center);
@@ -146,13 +156,17 @@ CL_CollisionOutline::CL_CollisionOutline(
 
 CL_CollisionOutline::~CL_CollisionOutline()
 {
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CollisionOutline Attributes:
 
-std::vector<CL_Contour> &CL_CollisionOutline::get_contours() const
+std::vector<CL_Contour> &CL_CollisionOutline::get_contours()
+{
+	return impl->contours;
+}
+
+const std::vector<CL_Contour> &CL_CollisionOutline::get_contours() const
 {
 	return impl->contours;
 }
@@ -206,7 +220,7 @@ unsigned int CL_CollisionOutline::get_height() const
 	return impl->height;
 }
 
-std::vector<CL_CollidingContours> &CL_CollisionOutline::get_collision_info() const
+const std::vector<CL_CollidingContours> &CL_CollisionOutline::get_collision_info() const
 {
 	return impl->collision_info;
 }
@@ -232,13 +246,38 @@ void CL_CollisionOutline::get_collision_info_state(bool &points, bool &normals, 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CollisionOutline Operations:
 
-CL_CollisionOutline &CL_CollisionOutline::operator=(const CL_CollisionOutline &other)
+void CL_CollisionOutline::load(const CL_StringRef &fullname)
 {
-	if( this == &other )
-		return *this;
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	load(filename, vfs.get_root_directory());
+}
 
-	delete impl;
-	impl = new CL_CollisionOutline_Generic();
+void CL_CollisionOutline::load(const CL_StringRef &filename, const CL_VirtualDirectory &directory)
+{
+	CL_IODevice file = directory.open_file_read(filename);
+	load(file);
+}
+
+void CL_CollisionOutline::load(CL_IODevice &file)
+{
+	CL_SharedPtr<CL_OutlineProviderFile> provider(new CL_OutlineProviderFile(file));
+
+	impl->contours = provider->get_contours();
+	impl->width = provider->get_width();
+	impl->height = provider->get_height();
+
+	provider.disconnect();
+
+	impl->calculate_radius();
+	impl->calculate_sub_circles();
+}
+
+CL_CollisionOutline &CL_CollisionOutline::copy(const CL_CollisionOutline &other)
+{
+	if( impl == other.impl )
+		return *this;
 
 	impl->contours = other.get_contours();
 	impl->do_inside_test = other.get_inside_test();
@@ -247,7 +286,6 @@ CL_CollisionOutline &CL_CollisionOutline::operator=(const CL_CollisionOutline &o
 	impl->position = other.get_translation();
 	impl->scale_factor = other.get_scale();
 	impl->angle = other.get_angle();
-	//impl->radius = other.get_radius();
 	impl->minimum_enclosing_disc = other.get_minimum_enclosing_disc();
 
 	bool points, normals, metadata, pendepths;
@@ -256,17 +294,17 @@ CL_CollisionOutline &CL_CollisionOutline::operator=(const CL_CollisionOutline &o
 
 	CL_Origin origin;
 	float x, y;
-	other.get_alignment(origin,x,y);
 
+	other.get_alignment(origin,x,y);
 	impl->translation_origin = origin;
 	impl->translation_offset.x = x;
 	impl->translation_offset.y = y;
 
 	other.get_rotation_hotspot(origin,x,y);
-
 	impl->rotation_origin = origin;
 	impl->rotation_hotspot.x = x;
 	impl->rotation_hotspot.y = y;
+
 	return *this;
 }
 
@@ -279,7 +317,7 @@ void CL_CollisionOutline::draw(
 	float x,
 	float y,
 	const CL_Colorf &color,
-	CL_GraphicContext gc)
+	CL_GraphicContext &gc)
 {
 	// Draw collision outline (Contours are assumed as closed polygons, hence we use line-loop)
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
@@ -314,7 +352,7 @@ void CL_CollisionOutline::draw_sub_circles(
 	float x,
 	float y,
 	const CL_Colorf &color,
-	CL_GraphicContext gc)
+	CL_GraphicContext &gc)
 {
 	// Draw the circles
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
@@ -343,7 +381,7 @@ void CL_CollisionOutline::draw_smallest_enclosing_disc(
 	float x,
 	float y,
 	const CL_Colorf &color,
-	CL_GraphicContext gc)
+	CL_GraphicContext &gc)
 {
 	// Draw the smallest enclosing disc
 	CL_Pointf center = impl->minimum_enclosing_disc.position;
@@ -415,9 +453,25 @@ void CL_CollisionOutline::calculate_convex_hulls()
 	impl->calculate_convex_hulls();
 }
 
-void CL_CollisionOutline::save(const CL_StringRef &filename, CL_VirtualDirectory directory) const
+void CL_CollisionOutline::save(const CL_StringRef &fullname) const
 {
-	impl->save(filename, directory);
+
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	save(filename, dir);
+}
+
+void CL_CollisionOutline::save(const CL_StringRef &filename, CL_VirtualDirectory &directory) const
+{
+	CL_IODevice file = directory.open_file(filename, CL_File::create_always);
+	impl->save(file);
+}
+
+void CL_CollisionOutline::save(CL_IODevice &file) const
+{
+	impl->save(file);
 }
 
 bool CL_CollisionOutline::collide(const CL_CollisionOutline &outline, bool remove_old_collision_info)

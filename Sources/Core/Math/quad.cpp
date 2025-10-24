@@ -30,8 +30,7 @@
 
 #include "Core/precomp.h"
 #include "API/Core/Math/quad.h"
-
-#include <cmath>
+#include "API/Core/Math/rect.h"
 
 template<typename Type>
 Type CL_Quadx<Type>::get_width() const

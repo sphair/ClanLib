@@ -55,7 +55,7 @@ CL_Event CL_TCPListen::get_accept_event() const
 
 int CL_TCPListen::get_handle() const
 {
-	return impl->handle;
+	return impl->socket.get_handle();
 }
 
 /////////////////////////////////////////////////////////////////////////////

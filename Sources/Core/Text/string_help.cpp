@@ -33,10 +33,11 @@
 #ifndef WIN32
 #include <wchar.h>
 #include <wctype.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
 #else
-#include <string.h>
+#include <cstring>
 #include <tchar.h>
 #endif
 
@@ -1022,6 +1023,28 @@ CL_TempString8 CL_StringHelp::ucs2_to_cp437(const CL_StringRef16 &text)
 		output[index] = '_';
 	}
 	return str8;
+}
+
+CL_StringHelp::BOMType CL_StringHelp::detect_bom(const void *data, CL_String::size_type length)
+{
+	const unsigned char utf32_be[] = { 0x00, 0x00, 0xfe, 0xff };
+	const unsigned char utf32_le[] = { 0xff, 0xfe, 0x00, 0x00 };
+	const unsigned char utf16_be[] = { 0xfe, 0xff };
+	const unsigned char utf16_le[] = { 0xff, 0xfe };
+	const unsigned char utf8[] = { 0xef, 0xbb, 0xbf };
+
+	if (length >= 3 && memcmp(data, utf8, 3) == 0)
+		return bom_utf8;
+	else if (length >= 2 && memcmp(data, utf16_le, 2) == 0)
+		return bom_utf16_le;
+	else if (length >= 2 && memcmp(data, utf16_be, 2) == 0)
+		return bom_utf16_be;
+	else if (length >= 4 && memcmp(data, utf32_le, 4) == 0)
+		return bom_utf32_le;
+	else if (length >= 4 && memcmp(data, utf32_be, 4) == 0)
+		return bom_utf32_be;
+	else
+		return bom_none;
 }
 
 /////////////////////////////////////////////////////////////////////////////

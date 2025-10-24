@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -52,19 +50,24 @@ class CL_API_NETWORK CL_HTTPClientConnection
 public:
 	CL_HTTPClientConnection();
 
+	/// \brief Constructs a HTTPClientConnection
+	///
+	/// \param remote = Socket Name
 	CL_HTTPClientConnection(const CL_SocketName &remote);
 
+	/// \brief Constructs a HTTPClientConnection
+	///
+	/// \param remote = Socket Name
+	/// \param local = Socket Name
 	CL_HTTPClientConnection(const CL_SocketName &remote, const CL_SocketName &local);
 
 	~CL_HTTPClientConnection();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -96,7 +99,6 @@ public:
 		const CL_StringRef8 &name,
 		const CL_StringRef8 &header_lines);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -105,6 +107,5 @@ private:
 	CL_SharedPtr<CL_HTTPClientConnection_Impl> impl;
 /// \}
 };
-
 
 /// \}

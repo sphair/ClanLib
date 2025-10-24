@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 
@@ -243,10 +241,20 @@ public:
 
 	static std::vector<CL_StringRef> get_accept_range(const CL_StringRef &header_lines);
 
+	/// \brief Get age
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_age(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_allow(const CL_StringRef &header_lines);
 
+	/// \brief Get authorization
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_authorization(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_cache_control(const CL_StringRef &header_lines);
@@ -257,56 +265,166 @@ public:
 
 	static std::vector<CL_HTTPHeaderContentLanguage> get_content_language(const CL_StringRef &header_lines);
 
+	/// \brief Get content length
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_content_length(const CL_StringRef &header_lines);
 
+	/// \brief Get content location
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_content_location(const CL_StringRef &header_lines);
 
+	/// \brief Get content md5
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_content_md5(const CL_StringRef &header_lines);
 
+	/// \brief Get content range
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return HTTPHeader Content Range
 	static CL_HTTPHeaderContentRange get_content_range(const CL_StringRef &header_lines);
 
+	/// \brief Get content type
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return HTTPHeader Content Type
 	static CL_HTTPHeaderContentType get_content_type(const CL_StringRef &header_lines);
 
+	/// \brief Get date
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_date(const CL_StringRef &header_lines);
 
+	/// \brief Get etag
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_etag(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_expect(const CL_StringRef &header_lines);
 
+	/// \brief Get expires
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_expires(const CL_StringRef &header_lines);
 
+	/// \brief Get from
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_from(const CL_StringRef &header_lines);
 
+	/// \brief Get host
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_host(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_if_match(const CL_StringRef &header_lines);
 
+	/// \brief Get if modified since
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_if_modified_since(const CL_StringRef &header_lines);
 
+	/// \brief Get if none match
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_if_none_match(const CL_StringRef &header_lines);
 
+	/// \brief Get if range
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_if_range(const CL_StringRef &header_lines);
 
+	/// \brief Get if unmodified since
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_if_unmodified_since(const CL_StringRef &header_lines);
 
+	/// \brief Get last modified
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_last_modified(const CL_StringRef &header_lines);
 
+	/// \brief Get location
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_location(const CL_StringRef &header_lines);
 
+	/// \brief Get max forwards
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_max_forwards(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_pragma(const CL_StringRef &header_lines);
 
+	/// \brief Get proxy authenticate
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_proxy_authenticate(const CL_StringRef &header_lines);
 
+	/// \brief Get proxy authorization
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_proxy_authorization(const CL_StringRef &header_lines);
 
 	static std::vector<CL_HTTPHeaderRange> get_range(const CL_StringRef &header_lines, CL_StringRef &out_range_type);
 
+	/// \brief Get referer
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_referer(const CL_StringRef &header_lines);
 
+	/// \brief Get retry after
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_retry_after(const CL_StringRef &header_lines);
 
+	/// \brief Get server
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_server(const CL_StringRef &header_lines);
 
 	static std::vector<CL_HTTPHeaderTE> get_te(const CL_StringRef &header_lines);
@@ -315,19 +433,38 @@ public:
 
 	static std::vector<CL_StringRef> get_transfer_encoding(const CL_StringRef &header_lines);
 
+	/// \brief Get upgrade
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_upgrade(const CL_StringRef &header_lines);
 
+	/// \brief Get user agent
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_user_agent(const CL_StringRef &header_lines);
 
 	static std::vector<CL_StringRef> get_vary(const CL_StringRef &header_lines);
 
 	static std::vector<CL_HTTPHeaderVia> get_via(const CL_StringRef &header_lines);
 
+	/// \brief Get warning
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return HTTPHeader Warning
 	static CL_HTTPHeaderWarning get_warning(const CL_StringRef &header_lines);
 
+	/// \brief Get www authenticate
+	///
+	/// \param header_lines = String Ref
+	///
+	/// \return String Ref
 	static CL_StringRef get_www_authenticate(const CL_StringRef &header_lines);
 /// \}
 };
-
 
 /// \}

@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -53,56 +51,107 @@ class CL_API_GUI CL_ComboBox : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a ComboBox
+	///
+	/// \param parent = GUIComponent
 	CL_ComboBox(CL_GUIComponent *parent);
 
 	virtual ~CL_ComboBox();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Is Editable
+	///
+	/// \return true = editable
 	bool is_editable() const;
 
+	/// \brief Get Dropdown height
+	///
+	/// \return dropdown_height
 	int get_dropdown_height() const;
 
+	/// \brief Get Selected item
+	///
+	/// \return selected_item
 	int get_selected_item() const;
 
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 
+	/// \brief Get item
+	///
+	/// \param index = value
+	///
+	/// \return String Ref
 	CL_StringRef get_item(int index) const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set editable
+	///
+	/// \param enable = bool
 	void set_editable(bool enable = true);
 
+	/// \brief Set dropdown height
+	///
+	/// \param height = value
 	void set_dropdown_height(int height);
 
+	/// \brief Set dropdown minimum width
+	///
+	/// \param min_width = value
 	void set_dropdown_minimum_width(int min_width);
 
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Set selected item
+	///
+	/// \param index = value
 	void set_selected_item(int index);
 
+	/// \brief Set popup menu
+	///
+	/// \param menu = Popup Menu
 	void set_popup_menu(CL_PopupMenu &menu);
-
 
 /// \}
 /// \name Events
 /// \{
 
 public:
+
+	/// \brief Func dropdown opened
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_dropdown_opened();
 
+	/// \brief Func dropdown closed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_dropdown_closed();
 
+	/// \brief Func before edit changed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_before_edit_changed();
 
+	/// \brief Func after edit changed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_after_edit_changed();
 
 	/// \brief Callback invoked when an event not processed by the contained lineedit nor the combobox occurs.
@@ -116,7 +165,6 @@ public:
 
 	CL_Callback_v1<int> &func_selection_changed();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -125,6 +173,5 @@ private:
 	CL_SharedPtr<CL_ComboBox_Impl> impl;
 /// \}
 };
-
 
 /// \}

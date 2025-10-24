@@ -30,14 +30,13 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
 #include "../../Core/Signals/callback_v0.h"
 
+class CL_SpanLayout;
 class CL_Label_Impl;
 
 /// \brief Check box component.
@@ -49,10 +48,13 @@ class CL_API_GUI CL_Label : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a Label
+	///
+	/// \param parent = GUIComponent
 	CL_Label(CL_GUIComponent *parent);
 
 	virtual ~CL_Label();
-
 
 /// \}
 /// \name Attributes
@@ -63,32 +65,51 @@ public:
 	{
 		align_left,
 		align_center,
-		align_right
+		align_right,
+		align_justify
 	};
 
+	/// \brief Get Alignment
+	///
+	/// \return alignment
 	Alignment get_alignment() const;
 
-	const CL_String &get_text() const;
+	/// \brief Get Text
+	///
+	/// \return text
+	CL_String get_text() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
-	void set_alignment(Alignment alignment);
+	/// \brief Set span
+	///
+	/// \param layout = Span Layout
+	void set_span(const CL_SpanLayout &layout);
 
+	/// \brief Set alignment
+	///
+	/// \param alignment = Alignment
+	void set_alignment(Alignment alignment);
 
 /// \}
 /// \name Events
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -98,6 +119,5 @@ private:
 	CL_SharedPtr<CL_Label_Impl> impl;
 /// \}
 };
-
 
 /// \}

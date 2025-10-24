@@ -27,6 +27,8 @@
 */
 
 #include "Core/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/CSS/css_document.h"
 #include "API/Core/CSS/css_selector.h"
 #include "API/Core/CSS/css_ruleset.h"
@@ -177,9 +179,17 @@ void CL_CSSDocument::remove_ruleset(CL_CSSRuleSet ruleset)
 	}
 }
 
-void CL_CSSDocument::load(const CL_StringRef &path, CL_IODevice &input)
+void CL_CSSDocument::load(const CL_String &filename, const CL_VirtualDirectory &directory)
 {
-	impl->load(path, input);
+	impl->load(filename, directory);
+}
+
+void CL_CSSDocument::load(const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_IODevice file = CL_File(path + filename, CL_File::open_existing);
+	impl->load(path, file);
 }
 
 void CL_CSSDocument::save(CL_IODevice &output)

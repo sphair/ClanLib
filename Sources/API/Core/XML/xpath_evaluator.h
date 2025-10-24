@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
 
 #include "../System/sharedptr.h"
 #include "xpath_object.h"
@@ -50,14 +48,19 @@ class CL_XPathEvaluator
 public:
 	CL_XPathEvaluator();
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	CL_XPathObject evaluate(const CL_StringRef &expression, CL_DomNode context_node);
 
+	/// \brief Evaluate
+	///
+	/// \param expression = String Ref
+	/// \param context_node = Dom Node
+	///
+	/// \return XPath Object
+	CL_XPathObject evaluate(const CL_StringRef &expression, CL_DomNode context_node);
 
 /// \}
 /// \name Implementation
@@ -67,6 +70,5 @@ private:
 	CL_SharedPtr<CL_XPathEvaluator_Impl> impl;
 /// \}
 };
-
 
 /// \}

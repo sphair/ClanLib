@@ -60,8 +60,9 @@ static const char *exclude_from_build[] =
 	"cdaudio_linux.cpp",
 	"DirectSound",
 	"GLX",
-	"blit_gl_dynamic.cpp", // not working yet (dv)
 	"setupnetwork_unix.cpp",
+	"unix_socket.cpp",
+	"unix_socket.h",
 	"Mac",
 	"MacOS",
 	"MacOSX",

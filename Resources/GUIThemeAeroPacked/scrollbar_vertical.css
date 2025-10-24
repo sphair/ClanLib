@@ -7,8 +7,8 @@ scrollbar
 
 scrollbar scrolltrack.up
 {
-	bg-image-sizing-left:0;
-	bg-image-sizing-right:0;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
 	bg-image-sizing-top:0;
 	bg-image-sizing-bottom:0;
 	bg-image-sizing:stretch; 

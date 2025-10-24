@@ -27,6 +27,8 @@
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/2D/sprite_description.h"
@@ -109,6 +111,14 @@ CL_Image::CL_Image()
 {
 }
 
+CL_Image::CL_Image(CL_GraphicContext &gc, const CL_PixelBuffer &pb)
+: impl(new CL_Image_Impl(gc))
+{
+	impl->texture = CL_Texture(gc, pb.get_width(), pb.get_height());
+	impl->texture.set_subimage(0, 0, pb);
+	impl->texture_rect = CL_Rect(0, 0, pb.get_width(), pb.get_height());
+}
+
 CL_Image::CL_Image(CL_GraphicContext &gc, CL_Texture texture, CL_Rect rect)
 : impl(new CL_Image_Impl(gc))
 {
@@ -123,10 +133,21 @@ CL_Image::CL_Image(CL_GraphicContext &gc, CL_Subtexture &sub_texture)
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
-CL_Image::CL_Image(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory dir)
+CL_Image::CL_Image(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir)
 : impl(new CL_Image_Impl(gc))
 {
 	impl->texture = CL_SharedGCData::load_texture(gc, filename, dir);
+	impl->texture_rect = impl->texture.get_size();
+}
+
+CL_Image::CL_Image(CL_GraphicContext &gc, const CL_StringRef &fullname)
+: impl(new CL_Image_Impl(gc))
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+
+	impl->texture = CL_SharedGCData::load_texture(gc, filename, vfs.get_root_directory());
 	impl->texture_rect = impl->texture.get_size();
 }
 

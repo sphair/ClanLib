@@ -31,9 +31,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -52,22 +50,38 @@ class CL_API_GUI CL_PushButton : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a PushButton
+	///
+	/// \param parent = GUIComponent
 	CL_PushButton(CL_GUIComponent *parent);
 
 	virtual ~CL_PushButton();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Is Pushed
+	///
+	/// \return true = pushed
 	bool is_pushed() const;
 
+	/// \brief Is Toggle
+	///
+	/// \return true = toggle
 	bool is_toggle() const;
 
+	/// \brief Is Flat
+	///
+	/// \return true = flat
 	bool is_flat() const;
 
+	/// \brief Get Icon
+	///
+	/// \return icon
 	CL_Image get_icon() const;
 
 	enum IconPosition
@@ -75,38 +89,64 @@ public:
 		icon_left, icon_top, icon_right, icon_bottom
 	};
 
+	/// \brief Get Icon position
+	///
+	/// \return icon_position
 	IconPosition get_icon_position() const;
 
 	const CL_String &get_text() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set pushed
+	///
+	/// \param enable = bool
 	void set_pushed(bool enable);
 
+	/// \brief Set toggle
+	///
+	/// \param enable = bool
 	void set_toggle(bool enable);
 
+	/// \brief Set flat
+	///
+	/// \param enable = bool
 	void set_flat(bool enable);
 
+	/// \brief Set icon
+	///
+	/// \param icon = Image
 	void set_icon(const CL_Image &icon);
 
+	/// \brief Set icon position
+	///
+	/// \param pos = Icon Position
 	void set_icon_position(IconPosition pos);
 
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
-
 
 /// \}
 /// \name Events
 /// \{
 
 public:
-	CL_Callback_v0 &func_clicked();
 
+	/// \brief Func clicked
+	///
+	/// \return Callback_v0
+	CL_Callback_v0 &func_clicked();
 
 /// \}
 /// \name Implementation
@@ -116,6 +156,5 @@ private:
 	CL_SharedPtr<CL_PushButton_Impl> impl;
 /// \}
 };
-
 
 /// \}

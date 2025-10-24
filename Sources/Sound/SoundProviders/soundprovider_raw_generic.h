@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 class CL_SoundProvider_Raw_Generic
 {
 /// \name Attributes

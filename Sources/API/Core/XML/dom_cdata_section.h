@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_text.h"
@@ -65,19 +59,24 @@ public:
 	/// \brief Constructs a DOM CDATA Section handle.
 	CL_DomCDATASection();
 
+	/// \brief Constructs a DomCDATASection
+	///
+	/// \param doc = Dom Document
+	/// \param data = Dom String
 	CL_DomCDATASection(CL_DomDocument &doc, const CL_DomString &data);
 
+	/// \brief Constructs a DomCDATASection
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomCDATASection(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomCDATASection();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -86,6 +85,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

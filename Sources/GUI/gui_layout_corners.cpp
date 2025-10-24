@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
@@ -32,36 +33,12 @@
 #include "API/Core/Math/size.h"
 #include "API/Core/Math/rect.h"
 #include <vector>
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_GUILayoutCorners_Impl Class:
-
-struct LayoutData
-{
-	CL_GUIComponent *component;
-	CL_ComponentAnchorPoint anchor_tl, anchor_br;
-	int dist_tl_x, dist_tl_y;
-	int dist_br_x, dist_br_y;
-};
-
-class CL_GUILayoutCorners_Impl
-{
-public:
-	CL_GUILayoutCorners_Impl()
-	{
-	}
-
-	CL_Point get_point(CL_ComponentAnchorPoint ap, int dist_x, int dist_y);
-	std::vector<LayoutData> components;
-	CL_Size preferred_size;
-	CL_Rect rect;
-};
+#include "gui_layout_provider_corners.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayoutCorners Construction:
 
-CL_GUILayoutCorners::CL_GUILayoutCorners()
-: impl(new CL_GUILayoutCorners_Impl)
+CL_GUILayoutCorners::CL_GUILayoutCorners() : CL_GUILayout( new CL_GUILayoutProvider_Corners())
 {
 }
 
@@ -72,9 +49,9 @@ CL_GUILayoutCorners::~CL_GUILayoutCorners()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayoutCorners Attributes:
 
-CL_Size CL_GUILayoutCorners::get_preferred_size() const
+CL_GUILayoutProvider_Corners *CL_GUILayoutCorners::get_provider() const
 {
-	return impl->preferred_size;
+	return static_cast <CL_GUILayoutProvider_Corners *> (CL_GUILayout::get_provider());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -84,66 +61,14 @@ void CL_GUILayoutCorners::add_component( CL_GUIComponent *component,
 	CL_ComponentAnchorPoint ap_tl, int dist_tl_x, int dist_tl_y,
 	CL_ComponentAnchorPoint ap_br, int dist_br_x, int dist_br_y )
 {
-	LayoutData ld;
-	ld.component = component;
-	ld.anchor_tl = ap_tl;
-	ld.anchor_br = ap_br;
-	ld.dist_tl_x = dist_tl_x;
-	ld.dist_tl_y = dist_tl_y;
-	ld.dist_br_x = dist_br_x;
-	ld.dist_br_y = dist_br_y;
-
-	impl->components.push_back(ld);
+	get_provider()->add_component(component, ap_tl, dist_tl_x, dist_tl_y, ap_br, dist_br_x, dist_br_y);
 }
 
 void CL_GUILayoutCorners::remove_component(CL_GUIComponent *component)
 {
-}
-
-void CL_GUILayoutCorners::set_geometry(const CL_Rect &geometry)
-{
-	impl->rect = geometry;
-
-	std::vector<LayoutData>::iterator it;
-	for (it = impl->components.begin(); it != impl->components.end(); ++it)
-	{
-		LayoutData &ld = (*it);
-
-		CL_Point tl = impl->get_point(ld.anchor_tl, ld.dist_tl_x, ld.dist_tl_y);
-		CL_Point br = impl->get_point(ld.anchor_br, ld.dist_br_x, ld.dist_br_y);
-
-		ld.component->set_geometry(CL_Rect(tl.x, tl.y, br.x, br.y));
-	}
-}
-
-void CL_GUILayoutCorners::set_preferred_size(const CL_Size &size)
-{
-	impl->preferred_size = size;
+	get_provider()->remove_component(component);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayoutCorners Implementation:
-
-CL_Point CL_GUILayoutCorners_Impl::get_point(CL_ComponentAnchorPoint ap, int dist_x, int dist_y)
-{
-	if (ap == cl_anchor_top_left)
-	{
-		return CL_Point(dist_x, dist_y);
-	}
-	else if (ap == cl_anchor_top_right)
-	{
-		return CL_Point(rect.get_width()-dist_x, dist_y);
-	}
-	else if (ap == cl_anchor_bottom_left)
-	{
-		return CL_Point(dist_x, rect.get_height()-dist_y);
-	}
-	else if (ap == cl_anchor_bottom_right)
-	{
-		return CL_Point(rect.get_width()-dist_x, rect.get_height()-dist_y);
-	}
-
-	// ap == cl_anchor_relative
-	return CL_Point(rect.get_width()*dist_x, rect.get_height()*dist_y);
-}
 

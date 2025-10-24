@@ -159,7 +159,7 @@ CL_TabPage *CL_Tab::add_page(const CL_StringRef &label, int id)
 
 	tab_page->set_geometry(impl->get_client_rect());
 
-	invalidate_rect();
+	request_repaint();
 
 	if (select_added_page)
 	{
@@ -182,7 +182,7 @@ void CL_Tab::show_page(int index)
 		i++;
 	}
 	impl->tab_header->select_page(index);
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Tab::show_page_by_id(int id)
@@ -204,7 +204,7 @@ void CL_Tab::show_page_by_id(int id)
 	}
 	if (index != -1)
 		impl->tab_header->select_page(index);
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Tab::remove_page_by_id(int id)
@@ -218,7 +218,7 @@ void CL_Tab::remove_page_by_id(int id)
 			break;
 		}
 	}
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Tab::remove_page(int index)
@@ -234,7 +234,7 @@ void CL_Tab::remove_page(int index)
 		}
 		i++;
 	}
-	invalidate_rect();	
+	request_repaint();	
 }
 
 int CL_Tab::get_page_count() const
@@ -255,7 +255,7 @@ void CL_Tab::set_label(int index, const CL_StringRef &new_label)
 		}
 		i++;
 	}
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_Tab::set_label_by_id(int id, const CL_StringRef &new_label)
@@ -269,7 +269,7 @@ void CL_Tab::set_label_by_id(int id, const CL_StringRef &new_label)
 			break;
 		}
 	}
-	invalidate_rect();
+	request_repaint();
 }
 
 
@@ -305,7 +305,7 @@ void CL_Tab_Impl::on_header_page_selected(CL_TabPage *tab_page)
 			(*it)->set_visible(true);
 	}
 
-	tab->invalidate_rect();
+	tab->request_repaint();
 }
 
 CL_Rect CL_Tab_Impl::get_client_rect()
@@ -319,7 +319,6 @@ CL_Rect CL_Tab_Impl::get_client_rect()
 
 void CL_Tab_Impl::on_resized()
 {
-
 	CL_Rect header_rect = tab->get_geometry().get_size();
 	header_rect.bottom = tab_header->get_preferred_height();
 
@@ -332,4 +331,3 @@ void CL_Tab_Impl::on_resized()
 		(*it)->set_geometry(cr);
 	}
 }
-

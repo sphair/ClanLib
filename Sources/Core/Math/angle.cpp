@@ -28,7 +28,7 @@
 
 #include "Core/precomp.h"
 #include "API/Core/Math/angle.h"
-#include "API/Core/Math/math.h"
+#include "API/Core/Math/cl_math.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Angle Construction:
@@ -84,6 +84,17 @@ void CL_Angle::set_degrees(float degrees)
 void CL_Angle::set_radians(float radians)
 {
 	value_rad = radians;
+}
+
+void CL_Angle::normalize()
+{
+	value_rad = fmod(value_rad, CL_PI*2);
+}
+
+void CL_Angle::normalize_180()
+{
+	normalize();
+	value_rad -= CL_PI;
 }
 
 /////////////////////////////////////////////////////////////////////////////

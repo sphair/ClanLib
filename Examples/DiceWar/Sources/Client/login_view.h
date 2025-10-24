@@ -15,8 +15,7 @@ public:
 	CL_String get_player_nick() const { return edit_player_nick->get_text(); }
 
 private:
-	static CL_GUITopLevelDescription toplevel_description(Client *client);
-	static CL_Rect start_position();
+	static CL_GUITopLevelDescription get_toplevel_description();
 
 	void on_button_ok_clicked();
 	void on_button_cancel_clicked();

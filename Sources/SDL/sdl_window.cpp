@@ -40,16 +40,13 @@
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Window/timer.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/TargetProviders/timer_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 
 #include "input_device_provider_sdlkeyboard.h"
 #include "input_device_provider_sdlmouse.h"
 #include "input_device_provider_sdljoystick.h"
 #include "display_message_queue_sdl.h"
-#include "timer_provider_sdl.h"
 
 #include "sdl_window.h"
 
@@ -198,7 +195,7 @@ void CL_SDLWindow::destroy()
 		set_windowed();
 
 		ic.clear();
-		delete joystick;
+		//delete joystick;
 
 		SDL_FreeSurface(screen);
 		screen = NULL;
@@ -253,7 +250,7 @@ void CL_SDLWindow::hide_system_cursor()
 
 void CL_SDLWindow::set_title(const CL_StringRef &new_title)
 {
-	SDL_WM_SetCaption(new_title.c_str(), new_title.c_str());
+	SDL_WM_SetCaption(CL_StringHelp::text_to_local8(new_title).c_str(), CL_StringHelp::text_to_local8(new_title).c_str());
 }
 
 void CL_SDLWindow::set_position(const CL_Rect &pos, bool client_area)
@@ -297,33 +294,6 @@ void CL_SDLWindow::capture_mouse(bool capture)
 {
 }
 
-void CL_SDLWindow::set_timer(CL_TimerProvider *timer)
-{
-	CL_TimerProvider_SDL *xtimer = dynamic_cast<CL_TimerProvider_SDL*>(timer);
-	if (!xtimer)
-		throw CL_Exception(cl_text("Unsupported timer"));
-
-	timer_list.push_back(xtimer);
-}
-
-void CL_SDLWindow::kill_timer(CL_TimerProvider *timer)
-{
-	CL_TimerProvider_SDL *xtimer = dynamic_cast<CL_TimerProvider_SDL*>(timer);
-	if (!xtimer)
-		throw CL_Exception(cl_text("Unsupported timer"));
-
-	std::list<CL_TimerProvider_SDL *>::iterator it;
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		if (*it == xtimer)
-		{
-			timer_list.erase(it);
-			break;
-		}
-	}
-}
-
 void CL_SDLWindow::set_clipboard_text(const CL_StringRef &text)
 {
 }
@@ -342,7 +312,7 @@ void CL_SDLWindow::set_clipboard_image(const CL_PixelBuffer &image)
 {
 }
 
-void CL_SDLWindow::invalidate_rect( const CL_Rect &cl_rect )
+void CL_SDLWindow::request_repaint( const CL_Rect &cl_rect )
 {
 }
 
@@ -372,11 +342,6 @@ bool CL_SDLWindow::has_messages()
 		message_flag = true;
 	}
 
-	if (check_timers())
-	{
-		message_flag = true;
-	}
-
 	if (ic.poll(true))
 	{
 		message_flag = true;
@@ -393,9 +358,6 @@ bool CL_SDLWindow::get_message(SDL_Event &clan_event)
 	bool clan_event_set = false;
 
 	ic.poll(false);		// Check input devices
-
-	// Dispatch all timer events
-	process_timer_events();
 
 	// Dispatch all available events from system:
 	if (SDL_PollEvent(&event))
@@ -457,41 +419,20 @@ bool CL_SDLWindow::get_message(SDL_Event &clan_event)
 	return clan_event_set;
 }
 
-void CL_SDLWindow::process_timer_events()
-{
-	if (timer_list.empty()) return;
-
-	unsigned int current_time = CL_System::get_time();
-	std::list<CL_TimerProvider_SDL *>::iterator it;
-
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end();)
-	{
-		CL_TimerProvider_SDL *xptr = *it;
-		++it;	// Advance iterator now, as the current one may be destroyed
-
-		xptr->process_timer(current_time);
-	}
-}
-
-// Returns: true is a timer event would occur
-bool CL_SDLWindow::check_timers(void)
-{
-	if (timer_list.empty()) return false;
-
-	unsigned int current_time = CL_System::get_time();
-	std::list<CL_TimerProvider_SDL *>::iterator it;
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		if ((*it)->check_timer(current_time))
-			return true;
-	}
-
-	return false;
-}
-
 void CL_SDLWindow::flip()
 {
 	SDL_Flip(screen);
 }
+
+
+void CL_SDLWindow::set_large_icon(const CL_PixelBuffer &image)
+{
+
+}
+
+void CL_SDLWindow::set_small_icon(const CL_PixelBuffer &image)
+{
+
+}
+
+

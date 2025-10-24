@@ -48,8 +48,18 @@ class CL_API_GUI CL_Window : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
-	CL_Window(const CL_Rect &geometry, CL_GUIComponent *owner, const CL_GUITopLevelDescription &description);
-	CL_Window(const CL_Rect &geometry, CL_GUIManager *manager, const CL_GUITopLevelDescription &description);
+
+	/// \brief Constructs a Window
+	///
+	/// \param owner = GUIComponent
+	/// \param description = GUITop Level Description
+	CL_Window(CL_GUIComponent *owner, const CL_GUITopLevelDescription &description);
+
+	/// \brief Constructs a Window
+	///
+	/// \param manager = GUIManager
+	/// \param description = GUITop Level Description
+	CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &description);
 
 	virtual ~CL_Window();
 
@@ -57,8 +67,20 @@ public:
 /// \name Events
 /// \{
 public:
+
+	/// \brief Func close
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_close();
+
+	/// \brief Func activation gained
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_activation_gained();
+
+	/// \brief Func activation lost
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_activation_lost();
 
 /// \}
@@ -80,6 +102,9 @@ public:
 	/// \brief Returns the client area geometry. Client area is the content area when titlebar and borders are excluded.
 	CL_Rect get_client_area() const;
 
+	/// \brief Get Draggable
+	///
+	/// \return draggable
 	bool get_draggable() const;
 
 /// \}

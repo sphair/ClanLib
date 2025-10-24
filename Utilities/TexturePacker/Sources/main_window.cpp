@@ -6,7 +6,7 @@
 #include "texturegroup_component.h"
 
 MainWindow::MainWindow(Application *application)
-: CL_Window(get_startup_geometry(), application->get_gui(), get_startup_description()),
+: CL_Window(application->get_gui(), get_startup_description()),
   application(application)
 {
 	set_id_name("editor");
@@ -27,16 +27,12 @@ MainWindow::~MainWindow()
 	// destructor deletes all child components.
 }
 
-CL_Rect MainWindow::get_startup_geometry()
-{
-	return CL_Rect(200, 200, 1024, 768);
-}
-
 CL_GUITopLevelDescription MainWindow::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title(cl_text("ClanLib Texture Packer"));
 	desc.set_allow_resize(true);
+	desc.set_position(CL_Rect(200, 200, 1024, 768), false);
 	return desc;
 }
 
@@ -171,7 +167,7 @@ void MainWindow::on_button_generate_textures()
 	{
 		CL_TextureGroup *group = packer->pack(texture_size, spin_border->get_value());
 		texturegroup_component->set_texturegroup(group);
-		texturegroup_component->invalidate_rect();
+		texturegroup_component->request_repaint();
 
 		generation_result->set_text(cl_format("Textures generated: %1", group->get_texture_count()));
 	}

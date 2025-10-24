@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/exception.h"
@@ -44,6 +42,10 @@
 class CL_WebserviceException : public CL_Exception
 {
 public:
+
+	/// \brief Constructs a WebserviceException
+	///
+	/// \param message = String
 	CL_WebserviceException(const CL_String &message)
 	: CL_Exception(message), code(0)
 	{
@@ -59,6 +61,5 @@ public:
 
 	CL_DataBuffer data;
 };
-
 
 /// \}

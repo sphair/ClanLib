@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -51,7 +49,6 @@ public:
 	/// \brief Constructs a base64 encoder.
 	CL_Base64Encoder();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -59,7 +56,6 @@ public:
 public:
 	/// \brief Returns the data in encoded form.
 	CL_DataBuffer &get_result();
-
 
 /// \}
 /// \name Operations
@@ -78,10 +74,19 @@ public:
 	/// \brief Base64 encodes data and returns it as an 8 bit string.
 	static CL_String8 encode(const void *data, int size);
 
+	/// \brief Encode
+	///
+	/// \param data = String Ref8
+	///
+	/// \return String8
 	static CL_String8 encode(const CL_StringRef8 &data);
 
+	/// \brief Encode
+	///
+	/// \param data = Data Buffer
+	///
+	/// \return String8
 	static CL_String8 encode(const CL_DataBuffer &data);
-
 
 /// \}
 /// \name Implementation
@@ -91,6 +96,5 @@ private:
 	CL_SharedPtr<CL_Base64Encoder_Impl> impl;
 /// \}
 };
-
 
 /// \}

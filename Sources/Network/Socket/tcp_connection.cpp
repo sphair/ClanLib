@@ -96,16 +96,16 @@ CL_Event CL_TCPConnection::get_write_event()
 /////////////////////////////////////////////////////////////////////////////
 // CL_TCPConnection Operations:
 
-bool CL_TCPConnection::connect(const CL_SocketName &remote)
+void CL_TCPConnection::connect(const CL_SocketName &remote)
 {
 	CL_IODeviceProvider_TCPConnection *provider = dynamic_cast<CL_IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->connect(remote);
+	provider->connect(remote);
 }
 
-bool CL_TCPConnection::connect(const CL_SocketName &remote, const CL_SocketName &local)
+void CL_TCPConnection::connect(const CL_SocketName &remote, const CL_SocketName &local)
 {
 	CL_IODeviceProvider_TCPConnection *provider = dynamic_cast<CL_IODeviceProvider_TCPConnection*>(impl->provider);
-	return provider->connect(remote, local);
+	provider->connect(remote, local);
 }
 	
 void CL_TCPConnection::set_handle(int socket, bool close_socket)
@@ -130,12 +130,6 @@ void CL_TCPConnection::set_nodelay(bool enable)
 {
 	CL_IODeviceProvider_TCPConnection *provider = dynamic_cast<CL_IODeviceProvider_TCPConnection*>(impl->provider);
 	provider->set_nodelay(enable);
-}
-
-void CL_TCPConnection::flush()
-{
-	CL_IODeviceProvider_TCPConnection *provider = dynamic_cast<CL_IODeviceProvider_TCPConnection*>(impl->provider);
-	provider->flush();
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Display/ImageProviders/targa_provider.h"
@@ -48,11 +43,9 @@ class CL_TargaProvider_Impl
 public:
 	/// \brief Constructs a surface provider that can read targa files.
 	///
-	/// \param name Name of the targa file to load.
-	/// \param provider Input source provider that delivers the targa file.
+	/// \param datafile = Input source provider that delivers the targa file.
 	CL_TargaProvider_Impl(
-		const CL_String name,
-		CL_VirtualDirectory directory);
+		CL_IODevice &datafile);
 
 	/// \brief Target Provider Destructor
 	virtual ~CL_TargaProvider_Impl();

@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Socket clanNetwork Socket
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -52,6 +50,9 @@ class CL_API_NETWORK CL_DNSPacket
 public:
 	CL_DNSPacket();
 
+	/// \brief Constructs a DNSPacket
+	///
+	/// \param data = Data Buffer
 	CL_DNSPacket(const CL_DataBuffer &data);
 
 	CL_DNSPacket(
@@ -64,7 +65,6 @@ public:
 
 	~CL_DNSPacket();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -74,8 +74,14 @@ public:
 
 	unsigned short get_query_id() const;
 
+	/// \brief Is Query
+	///
+	/// \return true = query
 	bool is_query() const;
 
+	/// \brief Is Response
+	///
+	/// \return true = response
 	bool is_response() const;
 
 	enum Opcode
@@ -85,14 +91,29 @@ public:
 		opcode_status         = 2
 	};
 
+	/// \brief Get Opcode
+	///
+	/// \return opcode
 	int get_opcode() const;
 
+	/// \brief Is Authoriative answer
+	///
+	/// \return true = authoriative_answer
 	bool is_authoriative_answer() const;
 
+	/// \brief Is Truncated
+	///
+	/// \return true = truncated
 	bool is_truncated() const;
 
+	/// \brief Is Recursion desired
+	///
+	/// \return true = recursion_desired
 	bool is_recursion_desired() const;
 
+	/// \brief Is Recursion available
+	///
+	/// \return true = recursion_available
 	bool is_recursion_available() const;
 
 	enum ResponseCode
@@ -105,38 +126,88 @@ public:
 		response_refused          = 5
 	};
 
+	/// \brief Get Response code
+	///
+	/// \return response_code
 	int get_response_code() const;
 
+	/// \brief Get Question count
+	///
+	/// \return question_count
 	int get_question_count() const;
 
+	/// \brief Get Answer count
+	///
+	/// \return answer_count
 	int get_answer_count() const;
 
+	/// \brief Get Nameserver count
+	///
+	/// \return nameserver_count
 	int get_nameserver_count() const;
 
+	/// \brief Get Additional count
+	///
+	/// \return additional_count
 	int get_additional_count() const;
 
+	/// \brief Get question name
+	///
+	/// \param index = value
+	///
+	/// \return String
 	CL_String get_question_name(int index) const;
 
+	/// \brief Get question type
+	///
+	/// \param index = value
+	///
+	/// \return int
 	int get_question_type(int index) const;
 
+	/// \brief Get question class
+	///
+	/// \param index = value
+	///
+	/// \return int
 	int get_question_class(int index) const;
 
+	/// \brief Get answer
+	///
+	/// \param index = value
+	///
+	/// \return DNSResource Record
 	CL_DNSResourceRecord get_answer(int index) const;
 
+	/// \brief Get nameserver
+	///
+	/// \param index = value
+	///
+	/// \return DNSResource Record
 	CL_DNSResourceRecord get_nameserver(int index) const;
 
+	/// \brief Get additional
+	///
+	/// \param index = value
+	///
+	/// \return DNSResource Record
 	CL_DNSResourceRecord get_additional(int index) const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set data
+	///
+	/// \param data = Data Buffer
 	void set_data(const CL_DataBuffer &data);
 
+	/// \brief Set query id
+	///
+	/// \param query_id = short
 	void set_query_id(unsigned short query_id);
-
 
 /// \}
 /// \name Implementation
@@ -146,6 +217,5 @@ private:
 	CL_SharedPtr<CL_DNSPacket_Impl> impl;
 /// \}
 };
-
 
 /// \}

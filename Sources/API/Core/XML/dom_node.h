@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -80,10 +74,12 @@ class CL_API_CORE CL_DomNode
 public:
 	CL_DomNode();
 
+	/// \brief Constructs a DomNode
+	///
+	/// \param copy = Dom Node
 	CL_DomNode(const CL_DomNode &copy);
 
 	~CL_DomNode();
-
 
 /// \}
 /// \name Attributes
@@ -261,7 +257,6 @@ public:
 	/// \brief Returns true if this node has any children.
 	bool has_child_nodes() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -393,8 +388,16 @@ public:
 /// \{
 
 protected:
+
+	/// \brief Constructs a DomNode
+	///
+	/// \param doc = Dom Document
+	/// \param node_type = short
 	CL_DomNode(CL_DomDocument doc, unsigned short node_type);
 
+	/// \brief Constructs a DomNode
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNode_Generic> impl;
@@ -404,6 +407,5 @@ protected:
 	friend class CL_DomNamedNodeMap;
 /// \}
 };
-
 
 /// \}

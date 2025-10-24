@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Display/2D/sprite.h"
 #include "API/Display/2D/texture_group.h"
 #include "API/Display/2D/subtexture.h"
@@ -84,26 +79,23 @@ struct CL_Surface_DrawParams2
 
 struct CL_Surface_DrawParams1
 {
-	int srcX[4];
-	int srcY[4];
-	float destX[4];
-	float destY[4];
+	CL_Pointf texture_position[4];	// Scaled to the range of 0.0f to 1.0f
+	CL_Pointf dest_position[4];
 	float destZ;
 	CL_Colorf color[4];
-	bool sub_pixel_accuracy;
 };
 
 class CL_Sprite_Impl
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_Sprite_Impl(CL_GraphicContext &gc);
 
 	virtual ~CL_Sprite_Impl();
 
 	void init(
+		CL_GraphicContext &gc,
 		const CL_StringRef &resource_id,
 		CL_ResourceManager *resources,
 		CL_SharedPtr<CL_SpriteData> sprite_data);
@@ -125,11 +117,9 @@ public:
 		float delay;
 	};
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	const SpriteFrame *get_frame(unsigned int index) const;
 	SpriteFrame *get_frame(unsigned int index);
@@ -165,7 +155,6 @@ public:
 
 	std::vector<SpriteFrame> frames;
 
-	CL_GraphicContext gc;
 	CL_TextureGroup texture_group;
 
 	CL_PrimitivesArray *prim_array;
@@ -176,7 +165,6 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Copy assignment operator.
 	CL_Sprite_Impl &operator =(const CL_Sprite_Impl &copy);
@@ -188,14 +176,15 @@ public:
 
 	float calc_time_elapsed();
 
-	void create_textures(const CL_SpriteDescription &description);
+	void create_textures(CL_GraphicContext &gc, const CL_SpriteDescription &description);
 
 	void draw(CL_GraphicContext &gc, float x, float y);
 	void draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest);
 	void draw(CL_GraphicContext &gc, const CL_Rectf &dest);
 
-	void draw(CL_GraphicContext &gc, const CL_Surface_DrawParams1 &params1, const CL_Sizef &tex_size);
-	void draw(CL_GraphicContext &gc, const CL_Surface_DrawParams2 &params2, const CL_Sizef &tex_size);
+	void draw(CL_GraphicContext &gc, const CL_Surface_DrawParams1 &params1);
+	void draw(CL_GraphicContext &gc, const CL_Surface_DrawParams2 &params2);
+
 	void draw_calcs_step1(
 		const CL_Surface_DrawParams2 &params2,
 		CL_Surface_TargetDrawParams1 &t_params1);
@@ -246,11 +235,9 @@ public:
 	#define calc_rotate_y(px,py,rotation_hotspot_x,rotation_hotspot_y,rotate_x_y,rotate_y_y) \
 		(rotation_hotspot_y + (px-rotation_hotspot_x) * rotate_x_y + (py-rotation_hotspot_y) * rotate_y_y)
 
-
 /// \}
 /// \name Signals
 /// \{
-
 public:
 	CL_Signal_v0 sig_animation_finished;
 /// \}

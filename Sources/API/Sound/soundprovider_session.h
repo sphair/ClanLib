@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
@@ -55,10 +49,12 @@ class CL_API_SOUND CL_SoundProvider_Session
 public:
 	CL_SoundProvider_Session();
 
+	/// \brief Constructs a SoundProvider Session
+	///
+	/// \param copy = Sound Provider_ Session
 	CL_SoundProvider_Session(const CL_SoundProvider_Session &copy);
 
 	virtual ~CL_SoundProvider_Session();
-
 
 /// \}
 /// \name Attributes
@@ -81,7 +77,6 @@ public:
 
 	/// \brief Returns the number of channels filled when get_data is called.
 	virtual int get_num_channels() const = 0;
-
 
 /// \}
 /// \name Operations
@@ -118,7 +113,6 @@ public:
 	/// \return Number of samples actually filled with sample data.
 	virtual int get_data(void **data_ptr, int data_requested) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -127,6 +121,5 @@ private:
 	CL_SharedPtr<CL_SoundProvider_Session_Generic> impl;
 /// \}
 };
-
 
 /// \}

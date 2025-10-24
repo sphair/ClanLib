@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -46,25 +44,20 @@ class CL_API_CORE CL_Base64Decoder
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a base64 decoder.
 	CL_Base64Decoder();
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns the decoded data.
 	CL_DataBuffer &get_result();
 
-
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Resets the decoder.
 	void reset();
@@ -75,19 +68,26 @@ public:
 	/// \brief Decode base64 data and return it in a buffer.
 	static CL_DataBuffer decode(const void *data, int size);
 
+	/// \brief Decode
+	///
+	/// \param data = String Ref8
+	///
+	/// \return Data Buffer
 	static CL_DataBuffer decode(const CL_StringRef8 &data);
 
+	/// \brief Decode
+	///
+	/// \param data = Data Buffer
+	///
+	/// \return Data Buffer
 	static CL_DataBuffer decode(const CL_DataBuffer &data);
-
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_Base64Decoder_Impl> impl;
 /// \}
 };
-
 
 /// \}

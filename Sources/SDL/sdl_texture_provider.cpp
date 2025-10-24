@@ -55,7 +55,7 @@ void CL_SDLTextureProvider::destroy()
 	delete this;
 }
 
-void CL_SDLTextureProvider::create(int width, int height, int format, int depth)
+void CL_SDLTextureProvider::create(int width, int height, CL_TextureFormat internal_format, int depth)
 {
 	delete_surface();
 
@@ -83,7 +83,7 @@ void CL_SDLTextureProvider::create(int width, int height, int format, int depth)
 		throw CL_Exception(cl_text("Cannot create surface for SDL target"));
 }
 
-CL_PixelBuffer CL_SDLTextureProvider::get_pixeldata(CL_PixelFormat &format, int level)
+CL_PixelBuffer CL_SDLTextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const
 {
 	if (level != 0)
 		throw CL_Exception(cl_text("Unsupported mipmap level specified for SDL target"));
@@ -92,7 +92,7 @@ CL_PixelBuffer CL_SDLTextureProvider::get_pixeldata(CL_PixelFormat &format, int 
 	return CL_PixelBuffer();
 }
 
-void CL_SDLTextureProvider::set_image(CL_PixelBuffer &new_image, int level, int format)
+void CL_SDLTextureProvider::set_image(CL_PixelBuffer &new_image, int level, CL_TextureFormat internal_format)
 {
 	delete_surface();
 
@@ -123,14 +123,14 @@ void CL_SDLTextureProvider::set_cube_map(
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
 	int level,
-	int format)
+	CL_TextureFormat internal_format)
 {
 	throw CL_Exception(cl_text("Cube texture maps not supported by SDL target"));
 }
 
 void CL_SDLTextureProvider::set_compressed_image(
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	int width,
 	int height,
 	CL_DataBuffer &image)
@@ -183,7 +183,7 @@ void CL_SDLTextureProvider::copy_image_from(
 	int width,
 	int height,
 	int level,
-	int format,
+	CL_TextureFormat internal_format,
 	CL_GraphicContextProvider *gc)
 {
 	throw CL_Exception(cl_text("copy_image_from not supported yet by SDL target"));

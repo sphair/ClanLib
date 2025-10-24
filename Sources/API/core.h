@@ -33,13 +33,9 @@
 
 #pragma once
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,0,2)
-#define CL_VERSION_STRING "2.0.2"
+#define CL_CURRENT_VERSION	CL_VERSION(2,0,3)
+#define CL_VERSION_STRING "2.0.3"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -69,6 +65,7 @@
 #include "Core/System/block_allocator.h"
 #include "Core/System/console_window.h"
 #include "Core/System/datetime.h"
+#include "Core/System/disposable_object.h"
 #include "Core/System/event.h"
 #include "Core/System/event_provider.h"
 #include "Core/System/exception.h"
@@ -87,7 +84,9 @@
 #include "Core/System/static_memory_pool.h"
 #include "Core/System/fixed_memory_pool.h"
 #include "Core/System/keep_alive.h"
+#include "Core/System/timer.h"
 #include "Core/System/registry_key.h"
+#include "Core/System/interlocked_variable.h"
 #include "Core/Signals/callback_0.h"
 #include "Core/Signals/callback_1.h"
 #include "Core/Signals/callback_2.h"
@@ -181,7 +180,7 @@
 #include "Core/Math/ear_clip_triangulator.h"
 #include "Core/Math/ear_clip_result.h"
 #include "Core/Math/line_math.h"
-#include "Core/Math/math.h"
+#include "Core/Math/cl_math.h"
 #include "Core/Math/mat2.h"
 #include "Core/Math/mat3.h"
 #include "Core/Math/mat4.h"

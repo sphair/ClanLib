@@ -38,7 +38,7 @@ CL_TextureGroup::CL_TextureGroup()
 {
 }
 
-CL_TextureGroup::CL_TextureGroup(CL_GraphicContext context, const CL_Size &texture_sizes)
+CL_TextureGroup::CL_TextureGroup(CL_GraphicContext &context, const CL_Size &texture_sizes)
 : impl(new CL_TextureGroup_Impl(context, texture_sizes))
 {
 	set_texture_allocation_policy(create_new_texture);
@@ -89,7 +89,7 @@ std::vector<CL_Texture> CL_TextureGroup::get_textures() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextureGroup Operations:
 
-CL_Subtexture CL_TextureGroup::add(CL_GraphicContext context, const CL_Size &size)
+CL_Subtexture CL_TextureGroup::add(CL_GraphicContext &context, const CL_Size &size)
 {
 	return impl->add_new_node(context, size);
 }

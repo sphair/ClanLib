@@ -19,8 +19,15 @@ class WSDLOperation;
 class WSDLDocument
 {
 public:
+
+	/// \brief Get Document
+	///
+	/// \return document
 	CL_DomDocument get_document();
 
+	/// \brief Get Types
+	///
+	/// \return types
 	WSDLTypes get_types();
 
 	std::vector<WSDLMessage> get_messages();
@@ -45,7 +52,15 @@ public:
 class WSDLSchema
 {
 public:
+
+	/// \brief Get Target namespace
+	///
+	/// \return target_namespace
 	CL_DomString get_target_namespace() const;
+
+	/// \brief Get Element
+	///
+	/// \return element
 	CL_DomElement get_element();
 };
 
@@ -53,6 +68,10 @@ public:
 class WSDLMessage
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
 	std::vector<WSDLPart> get_parts() const;
 };
@@ -61,7 +80,15 @@ public:
 class WSDLPart
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
+
+	/// \brief Get Type
+	///
+	/// \return type
 	CL_DomString get_type() const;
 };
 
@@ -69,6 +96,10 @@ public:
 class WSDLPortType
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
 	std::vector<WSDLOperation> get_operations() const;
 };
@@ -77,16 +108,41 @@ public:
 class WSDLOperation
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
 	std::vector<CL_DomString> get_parameter_order() const;
 
+	/// \brief Get Input name
+	///
+	/// \return input_name
 	CL_DomString get_input_name();
+
+	/// \brief Get Input message
+	///
+	/// \return input_message
 	CL_DomString get_input_message();
 
+	/// \brief Get Output name
+	///
+	/// \return output_name
 	CL_DomString get_output_name();
+
+	/// \brief Get Output message
+	///
+	/// \return output_message
 	CL_DomString get_output_message();
 
+	/// \brief Get Fault name
+	///
+	/// \return fault_name
 	CL_DomString get_fault_name();
+
+	/// \brief Get Fault message
+	///
+	/// \return fault_message
 	CL_DomString get_fault_message();
 };
 
@@ -94,8 +150,20 @@ public:
 class WSDLBinding
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
+
+	/// \brief Get Soap style
+	///
+	/// \return soap_style
 	CL_DomString get_soap_style() const;
+
+	/// \brief Get Soap transport
+	///
+	/// \return soap_transport
 	CL_DomString get_soap_transport() const;
 	std::vector<WSDLBindingOperation> get_operations() const;
 };
@@ -104,21 +172,70 @@ public:
 class WSDLBindingOperation
 {
 public:
+
+	/// \brief Get Soap action
+	///
+	/// \return soap_action
 	CL_DomString get_soap_action() const;
 
+	/// \brief Get Input name
+	///
+	/// \return input_name
 	CL_DomString get_input_name() const;
+
+	/// \brief Get Input soap encoding style
+	///
+	/// \return input_soap_encoding_style
 	CL_DomString get_input_soap_encoding_style() const;
+
+	/// \brief Get Input namespace
+	///
+	/// \return input_namespace
 	CL_DomString get_input_namespace() const;
+
+	/// \brief Get Input use
+	///
+	/// \return input_use
 	CL_DomString get_input_use() const;
 
+	/// \brief Get Output name
+	///
+	/// \return output_name
 	CL_DomString get_output_name() const;
+
+	/// \brief Get Output soap encoding style
+	///
+	/// \return output_soap_encoding_style
 	CL_DomString get_output_soap_encoding_style() const;
+
+	/// \brief Get Output namespace
+	///
+	/// \return output_namespace
 	CL_DomString get_output_namespace() const;
+
+	/// \brief Get Output use
+	///
+	/// \return output_use
 	CL_DomString get_output_use() const;
 
+	/// \brief Get Fault name
+	///
+	/// \return fault_name
 	CL_DomString get_fault_name() const;
+
+	/// \brief Get Fault soap encoding style
+	///
+	/// \return fault_soap_encoding_style
 	CL_DomString get_fault_soap_encoding_style() const;
+
+	/// \brief Get Fault namespace
+	///
+	/// \return fault_namespace
 	CL_DomString get_fault_namespace() const;
+
+	/// \brief Get Fault use
+	///
+	/// \return fault_use
 	CL_DomString get_fault_use() const;
 };
 
@@ -126,6 +243,10 @@ public:
 class WSDLService
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
 	std::vector<WSDLPort> get_ports() const;
 };
@@ -134,8 +255,20 @@ public:
 class WSDLPort
 {
 public:
+
+	/// \brief Get Name
+	///
+	/// \return name
 	CL_DomString get_name() const;
+
+	/// \brief Get Binding
+	///
+	/// \return binding
 	CL_DomString get_binding() const;
+
+	/// \brief Get Soap address location
+	///
+	/// \return soap_address_location
 	CL_DomString get_soap_address_location() const;
 };
 

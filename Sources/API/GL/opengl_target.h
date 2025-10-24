@@ -29,9 +29,7 @@
 /// \addtogroup clanGL_Display clanGL Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_gl.h"
 #include "../Display/display_target.h"
@@ -55,20 +53,17 @@ public:
 
 	~CL_OpenGLTarget();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -77,6 +72,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

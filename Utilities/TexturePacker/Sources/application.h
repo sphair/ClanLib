@@ -17,3 +17,9 @@ private:
 	CL_SharedPtr<CL_GUIWindowManagerSystem> window_manager;
 	CL_SharedPtr<CL_GUIManager> gui;
 };
+
+class Program
+{
+public:
+	static int main(const std::vector<CL_String> &args);
+};

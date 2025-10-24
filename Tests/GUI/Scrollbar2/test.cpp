@@ -23,17 +23,17 @@ public:
 			CL_GUIManager gui; 
  
 			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
  
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_title("The Performing Scrollbar");
-    
-			CL_Window root(CL_Rect(200,200,805,540), &gui, win_desc);
+			win_desc.set_position(CL_Rect(200,200,805,540), false);
+			CL_Window root(&gui, win_desc);
 			root.func_close().set(this, &App::on_close, &root);
 			root.set_constant_repaint(true);
 

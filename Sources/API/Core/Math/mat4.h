@@ -34,8 +34,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "math.h"
-
+#include "../IOData/datatypes.h"
 #include "mat2.h"
 #include "mat3.h"
 
@@ -263,7 +262,6 @@ public:
 	/// \brief Returns the z coordinate for the point (0,0,0) multiplied with this matrix.
 	Type get_origin_z() const { return matrix[14]; }
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -386,7 +384,6 @@ public:
 
 	/// \brief Not-equal operator.
 	bool operator!=(const CL_Mat4<Type> &other) { return !((*this) == other); }
-
 
 /// \}
 /// \name Implementation

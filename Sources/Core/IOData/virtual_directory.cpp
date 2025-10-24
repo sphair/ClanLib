@@ -142,6 +142,15 @@ CL_IODevice CL_VirtualDirectory::open_file(
 		return impl->file_system.open_file(make_path_absolute(filename), mode, access, share, flags);
 }
 
+CL_IODevice CL_VirtualDirectory::open_file_read(
+	const CL_String &filename) const
+{
+	if (impl->file_system.is_null())
+		return CL_File(make_path_absolute(filename), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+	else
+		return impl->file_system.open_file(make_path_absolute(filename), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+}
+
 CL_String CL_VirtualDirectory::make_path_absolute(const CL_String &relative_path) const
 {
 	if (impl->file_system.is_null())

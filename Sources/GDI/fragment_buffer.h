@@ -30,7 +30,7 @@
 
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
-#include "interlocked_variable.h"
+#include "API/Core/System/interlocked_variable.h"
 
 class FragmentBuffer
 {
@@ -56,9 +56,9 @@ public:
 private:
 	int get_free_fragments();
 
-	InterlockedVariable writer_position;
-	InterlockedVariable reader_positions[max_readers];
-	InterlockedVariable fragment_vertices[num_fragments];
+	CL_InterlockedVariable writer_position;
+	CL_InterlockedVariable reader_positions[max_readers];
+	CL_InterlockedVariable fragment_vertices[num_fragments];
 	int num_readers;
 	CL_Event reader_events[max_readers];
 	CL_Event writer_event;

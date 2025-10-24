@@ -44,15 +44,35 @@ class CL_NetGameConnectionSite;
 class CL_NetGameConnection
 {
 public:
+
+	/// \brief Constructs a NetGameConnection
+	///
+	/// \param site = Net Game Connection Site
+	/// \param connection = TCPConnection
 	CL_NetGameConnection(CL_NetGameConnectionSite *site, const CL_TCPConnection &connection);
 	~CL_NetGameConnection();
 
+	/// \brief Set data
+	///
+	/// \param name = String Ref
+	/// \param data = void
 	void set_data(const CL_StringRef &name, void *data);
+
+	/// \brief Get data
+	///
+	/// \param name = String Ref
+	///
+	/// \return void
 	void *get_data(const CL_StringRef &name) const;
 
+	/// \brief Send event
+	///
+	/// \param game_event = Net Game Event
 	void send_event(const CL_NetGameEvent &game_event);
 
 private:
+
+	/// \brief Connection main
 	void connection_main();
 
 	CL_NetGameConnectionSite *site;

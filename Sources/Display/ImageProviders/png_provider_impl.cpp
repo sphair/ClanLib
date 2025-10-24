@@ -37,7 +37,7 @@
 #include <utility>
 
 #ifndef WIN32
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 /*
@@ -52,7 +52,7 @@
 
 CL_PNGProvider_Impl::CL_PNGProvider_Impl(
 	const CL_String &name,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 : directory(directory)
 {
 	trans_col = -1;
@@ -61,6 +61,15 @@ CL_PNGProvider_Impl::CL_PNGProvider_Impl(
 	filename = name;
 	image = NULL;
 
+	init();
+}
+
+CL_PNGProvider_Impl::CL_PNGProvider_Impl(CL_IODevice &iodev)
+{
+	trans_col = -1;
+	m_uses_src_colorkey = false;
+	image = NULL;
+	input_source = iodev;
 	init();
 }
 
@@ -115,7 +124,8 @@ void CL_PNGProvider_Impl::init()
 		throw CL_Exception(png_error);
 	}  
 
-	input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
+	if (input_source.is_null())
+		input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
 
 	// tell libpng from whom it get the fileData
 	png_set_read_fn(png_ptr, this, &CL_PNGProvider_Impl::pngread_file);

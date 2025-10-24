@@ -186,7 +186,7 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 		if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 		{
 			part_checker.set_state(CssStr::pressed, true);
-			radio->invalidate_rect();
+			radio->request_repaint();
 		}
 		else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
 		{
@@ -196,7 +196,7 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 				part_checker.set_state(CssStr::pressed, false);
 				part_checker.set_state(CssStr::checked, true);
 				part_checker.set_state(CssStr::unchecked, false);
-				radio->invalidate_rect();
+				radio->request_repaint();
 				if (!cb.is_null())
 					cb.invoke(radio);
 				if (!func_selected.is_null())
@@ -205,7 +205,7 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 			else
 			{
 				part_checker.set_state(CssStr::pressed, false);
-				radio->invalidate_rect();
+				radio->request_repaint();
 			}
 		}
 	}
@@ -215,12 +215,12 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 		if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
 		{
 			part_checker.set_state(CssStr::hot, true);
-			radio->invalidate_rect();
+			radio->request_repaint();
 		}
 		else
 		{
 			part_checker.set_state(CssStr::hot, false);
-			radio->invalidate_rect();
+			radio->request_repaint();
 		}
 	}
 }
@@ -272,7 +272,7 @@ CL_Callback_v1<CL_RadioButton*> CL_RadioButton_Impl::uncheck_radio_buttons(CL_GU
 
 				rb->impl->part_checker.set_state(CssStr::checked, false);
 				rb->impl->part_checker.set_state(CssStr::unchecked, true);
-				rb->invalidate_rect();
+				rb->request_repaint();
 			}
 		}
 	}
@@ -303,5 +303,5 @@ void CL_RadioButton_Impl::on_enablemode_changed()
 	part_checker.set_state(CssStr::disabled, !radio->is_enabled());
 	part_checker.set_state(CssStr::normal, radio->is_enabled());
 
-	radio->invalidate_rect();
+	radio->request_repaint();
 }

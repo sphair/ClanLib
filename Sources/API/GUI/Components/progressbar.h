@@ -31,9 +31,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -49,52 +47,99 @@ class CL_API_GUI CL_ProgressBar : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a ProgressBar
+	///
+	/// \param parent = GUIComponent
 	CL_ProgressBar(CL_GUIComponent *parent);
 
 	virtual ~CL_ProgressBar();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Min
+	///
+	/// \return min
 	int get_min() const;
 
+	/// \brief Get Max
+	///
+	/// \return max
 	int get_max() const;
 
+	/// \brief Get Step size
+	///
+	/// \return step_size
 	int get_step_size() const;
 
+	/// \brief Get Position
+	///
+	/// \return position
 	int get_position() const;
 
+	/// \brief Is Marquee mode
+	///
+	/// \return true = marquee_mode
 	bool is_marquee_mode() const;
 
+	/// \brief Get Marquee animation speed
+	///
+	/// \return marquee_animation_speed
 	int get_marquee_animation_speed() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set min
+	///
+	/// \param progress_min = value
 	void set_min(int progress_min);
 
+	/// \brief Set max
+	///
+	/// \param progress_max = value
 	void set_max(int progress_max);
 
+	/// \brief Set range
+	///
+	/// \param progress_min = value
+	/// \param progress_max = value
 	void set_range(int progress_min, int progress_max);
 
+	/// \brief Set step size
+	///
+	/// \param size = value
 	void set_step_size(int size);
 
+	/// \brief Set position
+	///
+	/// \param pos = value
 	void set_position(int pos);
 
+	/// \brief Advance position
+	///
+	/// \param pos = value
 	void advance_position(int pos);
 
+	/// \brief Step position
 	void step_position();
 
+	/// \brief Set marquee mode
+	///
+	/// \param enable = bool
 	void set_marquee_mode(bool enable);
 
+	/// \brief Set marquee animation speed
+	///
+	/// \param milliseconds = value
 	void set_marquee_animation_speed(int milliseconds);
-
 
 /// \}
 /// \name Implementation
@@ -104,6 +149,5 @@ private:
 	CL_SharedPtr<CL_ProgressBar_Impl> impl;
 /// \}
 };
-
 
 /// \}

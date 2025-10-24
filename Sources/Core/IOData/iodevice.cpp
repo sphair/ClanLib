@@ -53,6 +53,11 @@ CL_IODevice::~CL_IODevice()
 /////////////////////////////////////////////////////////////////////////////
 // CL_IODevice Attributes:
 
+bool CL_IODevice::is_null() const
+{
+	return impl.is_null();
+}
+
 int CL_IODevice::get_size() const
 {
 	if (impl)

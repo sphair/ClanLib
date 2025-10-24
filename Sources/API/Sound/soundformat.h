@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 
@@ -47,6 +41,5 @@ enum CL_SoundFormat
 	sf_8bit_signed,
 	sf_16bit_signed
 };
-
 
 /// \}

@@ -36,7 +36,6 @@
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
-#include "timer_provider_sdl.h"
 #include "cursor_provider_sdl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,12 +84,12 @@ bool CL_SDLDisplayWindowProvider::is_visible() const
 	return window.is_visible();
 }
 
-CL_GraphicContext CL_SDLDisplayWindowProvider::get_gc() const
+CL_GraphicContext &CL_SDLDisplayWindowProvider::get_gc()
 {
 	return gc;
 }
 
-CL_InputContext CL_SDLDisplayWindowProvider::get_ic() const
+CL_InputContext &CL_SDLDisplayWindowProvider::get_ic()
 {
 	return window.get_ic();
 }
@@ -107,12 +106,24 @@ bool CL_SDLDisplayWindowProvider::is_clipboard_text_available() const
 	return window.is_clipboard_text_available();
 }
 
+CL_PixelBuffer CL_SDLDisplayWindowProvider::get_clipboard_image() const
+{
+	throw CL_Exception(cl_text("Todo: CL_SDLDisplayWindowProvider::get_clipboard_image"));
+
+	return CL_PixelBuffer();
+}
+
+bool CL_SDLDisplayWindowProvider::is_clipboard_image_available() const
+{
+	return false;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SDLDisplayWindowProvider Operations:
 
-CL_TimerProvider *CL_SDLDisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
+void CL_SDLDisplayWindowProvider::set_clipboard_image(const CL_PixelBuffer &buf)
 {
-	return new CL_TimerProvider_SDL(disp_window);
+	throw CL_Exception(cl_text("Todo: CL_SDLDisplayWindowProvider::set_clipboard_image"));
 }
 
 CL_Point CL_SDLDisplayWindowProvider::client_to_screen(const CL_Point &client)
@@ -274,16 +285,6 @@ void CL_SDLDisplayWindowProvider::update(const CL_Rect &rect)
 
 }
 
-void CL_SDLDisplayWindowProvider::set_timer(CL_TimerProvider *timer)
-{
-	window.set_timer(timer);
-}
-
-void CL_SDLDisplayWindowProvider::kill_timer(CL_TimerProvider *timer)
-{
-	window.kill_timer(timer);
-}
-
 void CL_SDLDisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)
 {
 	window.set_clipboard_text(text);
@@ -294,9 +295,19 @@ CL_String CL_SDLDisplayWindowProvider::get_clipboard_text() const
 	return window.get_clipboard_text();
 }
 
-void CL_SDLDisplayWindowProvider::invalidate_rect(const CL_Rect &rect)
+void CL_SDLDisplayWindowProvider::request_repaint(const CL_Rect &rect)
 {
-	window.invalidate_rect(rect);
+	window.request_repaint(rect);
+}
+
+void CL_SDLDisplayWindowProvider::set_large_icon(const CL_PixelBuffer &image)
+{
+	window.set_large_icon(image);
+}
+
+void CL_SDLDisplayWindowProvider::set_small_icon(const CL_PixelBuffer &image)
+{
+	window.set_small_icon(image);
 }
 
 /////////////////////////////////////////////////////////////////////////////

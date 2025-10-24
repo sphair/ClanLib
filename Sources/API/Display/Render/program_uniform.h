@@ -29,16 +29,13 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../../Core/System/sharedptr.h"
 
 #include "../api_display.h"
 
 class CL_ProgramUniform_Impl;
-
 
 /// \brief OpenGL program object uniform variable.
 ///
@@ -56,10 +53,15 @@ public:
 	/// \param type OpenGL uniform type.
 	CL_ProgramUniform();
 
+	/// \brief Constructs a ProgramUniform
+	///
+	/// \param name = String Ref
+	/// \param size = value
+	/// \param type = value
+	/// \param location = value
 	CL_ProgramUniform(const CL_StringRef &name, int size, int type, int location);
 
 	~CL_ProgramUniform();
-
 
 /// \}
 /// \name Attributes
@@ -92,6 +94,5 @@ private:
 	CL_SharedPtr<CL_ProgramUniform_Impl> impl;
 /// \}
 };
-
 
 /// \}

@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <vector>
 #include <list>
 #include "API/Core/Text/string_types.h"
@@ -70,9 +65,7 @@ public:
 
 	float pan;
 
-	std::vector<CL_SoundFilter *> filters;
-
-	std::vector<bool> delete_filters;
+	std::vector<CL_SoundFilter> filters;
 
 	CL_Thread thread;
 
@@ -80,7 +73,7 @@ public:
 
 	std::list< CL_SharedPtr<CL_SoundBuffer_Session_Generic> > sessions;
 
-	CL_Mutex mutex;
+	mutable CL_Mutex mutex;
 
 	int mix_buffer_size;
 
@@ -96,9 +89,6 @@ public:
 /// \{
 
 public:
-	void add_ref();
-
-	void release_ref();
 
 	void play_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session);
 
@@ -136,7 +126,6 @@ private:
 	/// \brief Worker thread for output device. Mixes the audio and sends it to write_fragment.
 	void mixer_thread();
 
-	int ref_count;
 /// \}
 };
 

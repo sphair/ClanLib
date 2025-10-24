@@ -126,10 +126,15 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeSDL"), 0, REG_DWORD,
 			(LPBYTE) &include_sdl, sizeof(DWORD));
 
+		DWORD include_gl1 = (page_target.include_gl1 ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("IncludeGL1"), 0, REG_DWORD,
+			(LPBYTE) &include_gl1, sizeof(DWORD));
+
 		RegCloseKey(hKey);
 	}
 
-	Workspace workspace = create_workspace(page_target.include_sdl);
+	Workspace workspace = create_workspace(page_target.include_sdl, page_target.include_gl1);
 
 	if (page_target.target_version == 600)
 	{
@@ -157,7 +162,7 @@ BOOL Wizard::finish()
 /////////////////////////////////////////////////////////////////////////////
 // Workspace creation:
 
-Workspace Wizard::create_workspace(bool include_target_sdl)
+Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_gl1)
 {
 	Workspace workspace;
 	workspace.input_lib_dir = text_to_local8(page_system.path_input_lib);
@@ -278,6 +283,15 @@ Workspace Wizard::create_workspace(bool include_target_sdl)
 		libs_list_debug,
 		defines_list);
 
+	Project clanGL1(
+		"GL1",
+		"clanGL1",
+		"gl1.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
 	Project clanD3D9(
 		"D3D9",
 		"clanD3D9",
@@ -349,6 +363,9 @@ Workspace Wizard::create_workspace(bool include_target_sdl)
 
 	if (include_target_sdl)
 		workspace.projects.push_back(clanSDL);
+
+	if (include_target_gl1)
+		workspace.projects.push_back(clanGL1);
 
 	workspace.projects.push_back(clanGUI);
 	workspace.projects.push_back(clanVorbis);

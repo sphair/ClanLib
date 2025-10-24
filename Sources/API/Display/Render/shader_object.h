@@ -31,9 +31,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../../Core/System/sharedptr.h"
 #include "../../Core/IOData/virtual_directory.h"
@@ -78,20 +76,93 @@ public:
 	/// \param resources Resource Manager providing resource.
 	CL_ShaderObject(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &source);
 
+	/// \brief Constructs a ShaderObject
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param vector = std
 	CL_ShaderObject(CL_GraphicContext &gc, CL_ShaderType type, const std::vector<CL_StringRef> &sources);
 
+	/// \brief Constructs a ShaderObject
+	///
+	/// \param gc_provider = Graphic Context Provider
+	/// \param type = Shader Type
+	/// \param source = String Ref
 	CL_ShaderObject(CL_GraphicContextProvider *gc_provider, CL_ShaderType type, const CL_StringRef &source);
 
+	/// \brief Constructs a ShaderObject
+	///
+	/// \param gc_provider = Graphic Context Provider
+	/// \param type = Shader Type
+	/// \param vector = std
 	CL_ShaderObject(CL_GraphicContextProvider *gc_provider, CL_ShaderType type, const std::vector<CL_StringRef> &sources);
 
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	///
+	/// \return Shader Object
 	static CL_ShaderObject load(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
-	static CL_ShaderObject load(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &filename, CL_VirtualDirectory &directory);
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param filename = String Ref
+	/// \param directory = Virtual Directory
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &filename, const CL_VirtualDirectory &directory);
 
-	static CL_ShaderObject load_and_compile(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &filename, CL_VirtualDirectory &directory);
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param fullname = String Ref
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &fullname);
+
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param file = IODevice
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load(CL_GraphicContext &gc, CL_ShaderType type, CL_IODevice &file);
+
+	/// \brief Load and compile
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param filename = String Ref
+	/// \param directory = Virtual Directory
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load_and_compile(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &filename, const CL_VirtualDirectory &directory);
+
+	/// \brief Load and compile
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param filename = String Ref
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load_and_compile(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &filename);
+
+	/// \brief Load and compile
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Shader Type
+	/// \param file = IODevice
+	///
+	/// \return Shader Object
+	static CL_ShaderObject load_and_compile(CL_GraphicContext &gc, CL_ShaderType type, CL_IODevice &file);
 
 	virtual ~CL_ShaderObject();
-
 
 /// \}
 /// \name Attributes
@@ -110,7 +181,6 @@ public:
 	/// \brief Get shader source code.
 	CL_String get_shader_source() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -123,7 +193,6 @@ public:
 	/** <p>If the compiling fails, get_info_log() will return the compile log.</p>*/
 	bool compile();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -132,6 +201,5 @@ private:
 	CL_SharedPtr<CL_ShaderObject_Impl> impl;
 /// \}
 };
-
 
 /// \}

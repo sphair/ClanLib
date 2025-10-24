@@ -29,13 +29,7 @@
 /// \addtogroup clanD3D10_System clanD3D10 System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_d3d10.h"
 
@@ -54,6 +48,5 @@ public:
 	~CL_SetupD3D10();
 /// \}
 };
-
 
 /// \}

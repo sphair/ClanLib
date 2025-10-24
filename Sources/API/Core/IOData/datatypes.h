@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #if defined(WIN32) && (defined(__MINGW32__) == 0)
 typedef __int8             cl_int8;
@@ -57,6 +51,5 @@ typedef unsigned int       cl_uint32;
 typedef long long          cl_int64;
 typedef unsigned long long cl_uint64;
 #endif
-
 
 /// \}

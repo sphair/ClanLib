@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -60,7 +54,6 @@ public:
 
 	~CL_CSSRuleSet();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -71,7 +64,6 @@ public:
 
 	/// \brief Returns all CSS properties for this rule set.
 	std::vector<CL_CSSProperty> &get_properties();
-
 
 /// \}
 /// \name Operations
@@ -86,7 +78,6 @@ public:
 	/// \brief Adds a CSS property to the rule set.
 	void add_property(const CL_CSSProperty &property);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -95,6 +86,5 @@ private:
 	CL_SharedPtr<CL_CSSRuleSet_Impl> impl;
 /// \}
 };
-
 
 /// \}

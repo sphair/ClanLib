@@ -51,7 +51,7 @@ class CL_GUIXMLLoaderVersion_1_0
 /// \{
 
 public:
-	CL_GUIXMLLoaderVersion_1_0(CL_GUIComponent *component, CL_GUILayout *layout = 0);
+	CL_GUIXMLLoaderVersion_1_0(CL_GUIComponent *component, CL_GUILayout &layout);
 
 	~CL_GUIXMLLoaderVersion_1_0();
 
@@ -81,7 +81,7 @@ private:
 	void load(CL_DomElement &element, CL_GUIComponent *parent);
 
 	CL_GUIComponent *component;
-	CL_GUILayout *layout;
+	CL_GUILayout layout;
 
 	CL_Callback_2<CL_GUIComponent*, CL_GUIComponent*, CL_String> *create_custom_callback;
 

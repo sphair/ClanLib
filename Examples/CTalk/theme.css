@@ -1,2 +1,298 @@
  
-@import "../../Resources/GUIThemeAeroPacked/theme.css";
+@import "../../Resources/GUIThemeAero/theme.css";
+
+listview row
+{
+	indent-width:0;
+	bg-color:#ffffff;
+}
+
+listview row:alternate
+{
+	indent-width:0;
+	bg-color:#ffffff;
+}
+
+listview cell
+{
+    opener-icon-gap:0;
+}
+
+tab
+{
+    bg-image:;
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+tabheader
+{
+}
+
+tabpage
+{
+	bg-image:;	
+	border-left:0;
+	border-right:0;
+	border-top:0;
+	border-bottom:0;
+}
+
+ribbon
+{
+    bg-image:Ribbon;
+    preferred-width: 271;
+/*    preferred-height: 117;*/
+    preferred-height: 95;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 50;
+    bg-image-sizing-bottom: 8;
+    font-family: Arial;
+    font-size: -11;
+}
+
+ribbontab
+{
+    bg-image:RibbonTab;
+    preferred-width: 40;
+    preferred-height: 23;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-bottom: 8;
+}
+
+ribbonsection
+{
+    bg-image:RibbonSection;
+    preferred-width: 70;
+    preferred-height: 87;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 24;
+    bg-image-sizing-bottom: 16;
+}
+
+workspace
+{
+    bg-image:Workspace;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 54;
+    bg-image-sizing-bottom: 8;
+    font-family: Arial;
+    font-size: -11;
+}
+
+workspacetab
+{
+    bg-image:WorkspaceTab;
+    preferred-width: 40;
+    preferred-height: 27;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-bottom: 8;
+}
+
+chatview
+{
+    bg-image:ChatView;
+    bg-image-sizing-left: 1;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-right: 1;
+    bg-image-sizing-bottom: 1;
+    
+	border-left: 1;
+	border-top: 1;
+	border-right: 1;
+	border-bottom: 1;
+}
+
+chatview.black
+{
+    bg-image:ChatViewBlack;
+}
+
+listview.chatusers
+{
+    bg-image:ChatUsers;
+    bg-image-sizing-left: 1;
+    bg-image-sizing-top: 0;
+    bg-image-sizing-right: 0;
+    bg-image-sizing-bottom: 0;
+}
+
+chatview.black listview.chatusers
+{
+    bg-image:ChatUsersBlack;
+}
+
+chatview.black listview.chatusers columns_bg
+{
+    bg-color:black;
+}
+
+chatview.black listview.chatusers column
+{
+    bg-color:black;
+}
+
+chatview.black listview.chatusers cell
+{
+    bg-color:black;
+    text-color: #ffffff;
+}
+
+lineedit.chatinput
+{
+    bg-image:ChatInput;
+    bg-image-sizing-left: 0;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-right: 0;
+    bg-image-sizing-bottom: 0;
+    
+    font-family: Verdana;
+    font-size: -13;
+}
+
+chatview.black lineedit.chatinput
+{
+    bg-image:ChatInputBlack;
+    text-color: #ffffff;
+}
+
+lineedit.chatinput selection
+{
+    font-family: Verdana;
+    font-size: -13;
+}
+
+chatview.black chat scrollbar scrollthumb.vertical
+{
+    bg-image:ScrollbarBlackVertThumbNormal;
+}
+
+chatview.black chat scrollbar scrollthumbgripper.vertical
+{
+    bg-image:ScrollbarBlackVertThumbGribberNormal;
+}
+
+chatview.black chat scrollbar scrolltrack.up
+{
+    bg-image:ScrollbarBlackVertTrackNormal;
+}
+
+chatview.black chat scrollbar scrolltrack.down
+{
+    bg-image:ScrollbarBlackVertTrackNormal;
+}
+
+chatview.black chat scrollbar scrollbutton.up
+{
+    bg-image:ScrollbarBlackVertButtonUpNormal;
+}
+
+chatview.black chat scrollbar scrollbutton.down
+{
+    bg-image:ScrollbarBlackVertButtonDownNormal;
+}
+
+chatview.black listview listview_header
+{
+    text-color: white;
+}
+
+chatview.black listview listview_header columnheader
+{
+    bg-image:ListviewBlackColumnHeaderNormal;
+}
+
+chat
+{
+	border-left: 0;
+	border-top: 0;
+	border-right:0;
+	border-bottom: 0;
+	
+    nick-border-color: #f2f2f2;
+    timestamp-color: #6495ed;
+    text-color: #000000;
+    channel-color: #228b22;
+    system-color: #5f9ea0;
+    nick-others-color: #000099;
+    nick-color: #990000;
+    url-color: #000080;
+}
+
+chatview.black chat
+{
+	bg-color:#000000;
+    bg-image:;
+    nick-border-color:#121212;
+    timestamp-color:#6495ed;
+    text-color: #ffffff;
+    channel-color: #228b22;
+    system-color: #5f9ea0;
+    nick-others-color: #5c5cbb;
+    nick-color: #d75959;
+    url-color: #97fcff;
+}
+
+channeltopic
+{
+    bg-image:ChannelTopic;
+    bg-image-sizing-left: 0;
+    bg-image-sizing-top: 0;
+    bg-image-sizing-right: 0;
+    bg-image-sizing-bottom: 1;
+    
+    font-family: Verdana;
+    font-size: -11;
+	border-left:5;
+	border-top: 4;
+	border-right:5;
+	border-bottom: 4;
+    text-color: #ffffff;
+}
+
+chatview.black channeltopic
+{
+    bg-image:ChannelTopicBlack;
+}
+
+window.preferences
+{
+	bg-color:#ece9d8;
+}
+
+window.preferences labelarea
+{
+    bg-image:PreferencesLabelArea;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-bottom: 8;
+    preferred-width: 134;
+}
+
+window.preferences label
+{
+    bg-image:PreferencesLabel;
+    bg-image-sizing-left: 5;
+    bg-image-sizing-top: 2;
+    bg-image-sizing-right: 5;
+    bg-image-sizing-bottom: 2;
+}
+
+window.preferences pagearea
+{
+    bg-image:PreferencesPageArea;
+    bg-image-sizing-left: 250;
+    bg-image-sizing-top: 75;
+    bg-image-sizing-right: 215;
+    bg-image-sizing-bottom: 8;
+}

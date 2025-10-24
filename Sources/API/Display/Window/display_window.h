@@ -25,14 +25,13 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -55,7 +54,11 @@ class CL_Point;
 class CL_Cursor;
 class CL_DisplayWindowProvider;
 class CL_DisplayWindow_Impl;
+class CL_PixelBuffer;
 
+/// \brief Standard Cursor
+///
+/// \xmlonly !group=Display/Window! !header=display.h! \endxmlonly
 enum CL_StandardCursor
 {
 	cl_cursor_arrow,
@@ -80,7 +83,6 @@ class CL_API_DISPLAY CL_DisplayWindow
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a window.
 	CL_DisplayWindow();
@@ -118,11 +120,9 @@ public:
 
 	~CL_DisplayWindow();
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns the position and size of the window frame.
 	CL_Rect get_geometry() const;
@@ -137,10 +137,10 @@ public:
 	bool has_focus() const;
 
 	/// \brief Return the graphic context for the window.
-	CL_GraphicContext get_gc() const;
+	CL_GraphicContext& get_gc() const;
 
 	/// \brief Return the input context for the window.
-	CL_InputContext get_ic() const;
+	CL_InputContext& get_ic() const;
 
 	/// \brief Signal emitted when window lost focus.
 	CL_Signal_v0 &sig_lost_focus();
@@ -156,6 +156,12 @@ public:
 
 	/// \brief Signal emitted when window is closed.
 	CL_Signal_v0 &sig_window_close();
+
+	/// \brief Signal emitted when window is minimized.
+	CL_Signal_v0 &sig_window_minimized();
+
+	/// \brief Signal emitted when window is maximized.
+	CL_Signal_v0 &sig_window_maximized();
 
 	/// \brief Callback called when a window is being resized.
 	CL_Callback_v1<CL_Rect &> &func_window_resize();
@@ -178,11 +184,27 @@ public:
 	/// \brief Returns true if text is available in the clipboard.
 	bool is_clipboard_text_available() const;
 
+	/// \brief Returns true if an image is available in the clipboard.
+	bool is_clipboard_image_available() const;
+
+	/// \brief Returns the text stored in the clipboard.
+	CL_String get_clipboard_text() const;
+
+	/// \brief Returns an image stored in the clipboard. 
+	/// <p>Returns a null pixelbuffer if no image is available.</p>
+	CL_PixelBuffer get_clipboard_image() const;
+
+#ifdef WIN32
+
+	/// \brief Get Hwnd
+	///
+	/// \return hwnd
+	HWND get_hwnd() const;
+#endif
 
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Convert from window client coordinates to screen coordinates.
 	CL_Point client_to_screen(const CL_Point &client);
@@ -194,7 +216,7 @@ public:
 	void capture_mouse(bool capture);
 
 	/// \brief Invalidates a region of a screen, causing a repaint.
-	void invalidate_rect(const CL_Rect &rect);
+	void request_repaint(const CL_Rect &rect);
 
 	/// \brief Change window title.
 	void set_title(const CL_StringRef &title);
@@ -211,8 +233,15 @@ public:
 	/// \param y Window y position on desktop.
 	void set_position(int x, int y);
 
+	/// \brief Set enabled
+	///
+	/// \param enable = bool
 	void set_enabled(bool enable);
 
+	/// \brief Set visible
+	///
+	/// \param visible = bool
+	/// \param activate = bool
 	void set_visible(bool visible, bool activate);
 
 	/// \brief Resize window.
@@ -277,6 +306,9 @@ public:
 	/// \brief Sets the current cursor icon.
 	void set_cursor(const CL_Cursor &cursor);
 
+	/// \brief Set cursor
+	///
+	/// \param type = Standard Cursor
 	void set_cursor(CL_StandardCursor type);
 
 	/// \brief Hides the mouse cursor.
@@ -285,22 +317,23 @@ public:
 	/// \brief Stores text in the clipboard.
 	void set_clipboard_text(const CL_StringRef &text);
 
-	/// \brief Returns the text stored in the clipboard.
-	CL_String get_clipboard_text() const;
+	/// \brief Stores an image in the clipboard.
+	void set_clipboard_image(const CL_PixelBuffer &buf);
+
+	/// \brief Sets the large icon used for this window.
+	void set_large_icon(const CL_PixelBuffer &image);
+
+	/// \brief Sets the small icon used for this window.
+	void set_small_icon(const CL_PixelBuffer &image);
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
-	CL_DisplayWindow(CL_WeakPtr<CL_DisplayWindow_Impl> impl);
-
 	CL_SharedPtr<CL_DisplayWindow_Impl> impl;
 
 	friend class CL_Display;
 /// \}
 };
-
-
 
 /// \}

@@ -1,9 +1,7 @@
 lib_LTLIBRARIES = libclanDisplay.la
 
-# FIXME: This needs to be @LIBS@ or @X11LIBS@ or something like that
 if WIN32
 else
-# libclanDisplay_la_LIBADD = -L/usr/X11R6/lib/ -lX11 -lXmu -lGL -lGLU -lpng -ljpeg -lXxf86vm @X_LIBS@
 libclanDisplay_la_LIBADD = -lpng -ljpeg
 endif
 
@@ -23,9 +21,6 @@ libclanDisplay_la_SOURCES = \
 	2D/texture_group.cpp \
 	2D/texture_group_impl.cpp \
 	2D/texture_group_impl.h \
-	Font/vector_font.cpp \
-	Font/font_provider_vector.cpp \
-	Font/font_provider_vector.h \
 	2D/sprite_render_batch.cpp \
 	2D/sprite_render_batch_impl.h \
 	2D/span_layout.cpp \
@@ -64,20 +59,23 @@ libclanDisplay_la_SOURCES = \
 	ImageProviders/targa_provider_impl.cpp \
 	ImageProviders/provider_type.cpp \
 	Font/font.cpp \
-	Font/font_texture.cpp \
-	Font/font_provider_texture.cpp \
-	Font/font_provider_texture.h \
-	Font/font_freetype.cpp \
-	Font/font_provider_freetype.cpp \
-	Font/font_provider_freetype.h \
 	Font/font_description.cpp \
 	Font/font_description_impl.h \
+	Font/font_freetype.cpp \
 	Font/font_metrics.cpp \
 	Font/font_metrics_impl.cpp \
 	Font/font_metrics_impl.h \
-	Font/font_cache_native.cpp \
-	Font/font_cache_native.h \
-	Font/font_native.cpp \
+	Font/font_provider_freetype.cpp \
+	Font/font_provider_freetype.h \
+	Font/font_provider_sprite.cpp \
+	Font/font_provider_sprite.h \
+	Font/font_provider_system.cpp \
+	Font/font_provider_system.h \
+	Font/font_provider_vector.cpp \
+	Font/font_provider_vector.h \
+	Font/font_sprite.cpp \
+	Font/font_system.cpp \
+	Font/font_vector.cpp \
 	Font/freetype_font.cpp \
 	Font/freetype_font.h \
 	Font/freetype_font_provider.cpp \
@@ -104,6 +102,8 @@ libclanDisplay_la_SOURCES = \
 	Render/render_buffer.cpp \
 	Render/shader_object.cpp \
 	Render/texture.cpp \
+	Render/shared_gc_data_impl.cpp \
+	Render/shared_gc_data_impl.h \
 	Render/vertex_array_buffer.cpp \
 	Render/primitives_array_builder.cpp \
 	Render/shared_gc_data.cpp \
@@ -121,10 +121,7 @@ libclanDisplay_la_SOURCES = \
 	Window/input_device_impl.h \
 	Window/input_event.cpp \
 	Window/input_state.cpp \
-	Window/timer.cpp \
 	Window/cursor.cpp \
-	Window/timer_impl.cpp \
-	Window/timer_impl.h \
 	Window/display_window_mode.cpp \
 	display.cpp \
 	display_target.cpp \
@@ -139,8 +136,6 @@ libclanDisplay_la_SOURCES = \
 	X11/display_message_queue_x11.h \
 	X11/cursor_provider_x11.cpp \
 	X11/cursor_provider_x11.h \
-	X11/timer_provider_x11.cpp \
-	X11/timer_provider_x11.h \
 	X11/input_device_x11keyboard.h \
 	X11/input_device_provider_x11mouse.cpp \
 	X11/input_device_provider_x11mouse.h \

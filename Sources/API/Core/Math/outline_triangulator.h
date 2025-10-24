@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -57,13 +51,11 @@ public:
 
 	virtual ~CL_OutlineTriangulator();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -82,7 +74,6 @@ public:
 	/// \brief Converts passed polygons into triangles.
 	void generate();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -91,6 +82,5 @@ private:
 	CL_SharedPtr<CL_OutlineTriangulator_Generic> impl;
 /// \}
 };
-
 
 /// \}

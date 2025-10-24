@@ -41,7 +41,7 @@ class CL_InputSourceProvider;
 class CL_OutlineProviderFile_Generic
 {
 public:
-	CL_OutlineProviderFile_Generic(const CL_StringRef &filename, CL_VirtualDirectory directory);
+	CL_OutlineProviderFile_Generic(CL_IODevice &file);
 	~CL_OutlineProviderFile_Generic();
 
 	std::vector<CL_Contour> contours;
@@ -49,9 +49,7 @@ public:
 	CL_Circlef minimum_enclosing_disc;
 
 private:
-	void load(const CL_StringRef &filename);
-
-	CL_VirtualDirectory directory;
+	void load(CL_IODevice &file);
 };
 
 

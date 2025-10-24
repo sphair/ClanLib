@@ -49,17 +49,44 @@ public:
 	CL_NetGameClient();
 	~CL_NetGameClient();
 
+	/// \brief Connect
+	///
+	/// \param server = String
+	/// \param port = String
 	void connect(const CL_String &server, const CL_String &port);
+
+	/// \brief Disconnect
 	void disconnect();
+
+	/// \brief Process events
 	void process_events();
+
+	/// \brief Get Event arrived
+	///
+	/// \return event_arrived
 	CL_Event &get_event_arrived();
 
+	/// \brief Send event
+	///
+	/// \param game_event = Net Game Event
 	void send_event(const CL_NetGameEvent &game_event);
 	CL_Signal_v1<const CL_NetGameEvent &> &sig_event_received();
+
+	/// \brief Sig connected
+	///
+	/// \return Signal_v0
 	CL_Signal_v0 &sig_connected();
+
+	/// \brief Sig disconnected
+	///
+	/// \return Signal_v0
 	CL_Signal_v0 &sig_disconnected();
 
 private:
+
+	/// \brief Add network event
+	///
+	/// \param e = Net Game Network Event
 	void add_network_event(const CL_NetGameNetworkEvent &e);
 
 	CL_SharedPtr<CL_NetGameClient_Impl> impl;

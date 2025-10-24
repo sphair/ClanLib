@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Font clanDisplay Font
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -70,7 +68,6 @@ public:
 	);
 
 	~CL_FontMetrics();
-
 
 /// \}
 /// \name Attributes
@@ -136,13 +133,11 @@ public:
 	/// \brief Returns true if the font is a mono space font.
 	bool is_fixed_pitch() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -152,6 +147,5 @@ private:
 	CL_SharedPtr<CL_FontMetrics_Impl> impl;
 /// \}
 };
-
 
 /// \}

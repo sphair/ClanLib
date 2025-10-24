@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include "API/Core/System/sharedptr.h"
 
 class CL_VirtualDirectoryListingEntry_Impl;
@@ -44,7 +43,6 @@ class CL_VirtualDirectoryListingEntry
 public:
 	CL_VirtualDirectoryListingEntry();
 	virtual ~CL_VirtualDirectoryListingEntry();
-
 
 /// \}
 /// \name Attributes
@@ -66,7 +64,6 @@ public:
 	/// \brief Returns true if item is readable.
 	bool is_readable();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -78,7 +75,6 @@ public:
 	void set_writable(bool );
 	void set_readable(bool );
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -87,5 +83,4 @@ private:
 	CL_SharedPtr<CL_VirtualDirectoryListingEntry_Impl> impl;
 /// \}
 };
-
 

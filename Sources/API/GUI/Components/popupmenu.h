@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -57,28 +55,55 @@ public:
 
 	virtual ~CL_PopupMenu();
 
+	/// \brief Create null object
+	///
+	/// \return Popup Menu
 	static CL_PopupMenu create_null_object();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
+	/// \brief Get Class name
+	///
+	/// \return class_name
 	CL_String get_class_name() const;
 
+	/// \brief Get item
+	///
+	/// \param id = value
+	///
+	/// \return Popup Menu Item
 	CL_PopupMenuItem get_item(int id);
 
+	/// \brief Get item at
+	///
+	/// \param index = value
+	///
+	/// \return Popup Menu Item
 	CL_PopupMenuItem get_item_at(int index);
 
+	/// \brief Item count
+	///
+	/// \return int
 	int item_count() const;
 
+	/// \brief Get Minimum width
+	///
+	/// \return minimum_width
 	int get_minimum_width() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations
@@ -91,21 +116,47 @@ public:
 	/// Start the popup menu for dialog (not modal)
 	void start(CL_GUIComponent *parent, const CL_Point &pos);
 
+	/// \brief Insert item
+	///
+	/// \param text = String Ref
+	/// \param id = value
+	/// \param index = value
+	///
+	/// \return Popup Menu Item
 	CL_PopupMenuItem insert_item(const CL_StringRef &text, int id = -1, int index = -1);
 
+	/// \brief Insert item accel
+	///
+	/// \param text = String Ref
+	/// \param accel_text = String Ref
+	///
+	/// \return Popup Menu Item
 	CL_PopupMenuItem insert_item_accel(const CL_StringRef &text, const CL_StringRef &accel_text=cl_text(""), int id = -1, int index = -1);
 
+	/// \brief Insert separator
+	///
+	/// \param index = value
+	///
+	/// \return Popup Menu Item
 	CL_PopupMenuItem insert_separator(int index = -1);
 
+	/// \brief Set minimum width
+	///
+	/// \param width_pixels = value
 	void set_minimum_width(int width_pixels);
 
+	/// \brief Set maximum height
+	///
+	/// \param height_pixels = value
 	void set_maximum_height(int height_pixels);
 
+	/// \brief Set class name
+	///
+	/// \param class_name = String Ref
 	void set_class_name(const CL_StringRef &class_name);
 
 	/// \brief Returns the index of the item that matches the start or the string furthest.
 	int find_item(const CL_StringRef &text, bool case_sensitive = false);
-
 
 /// \}
 /// \name Events
@@ -114,7 +165,6 @@ public:
 	CL_Callback_v1<CL_PopupMenuItem> &func_item_selected();
 
 	CL_Callback_v1<CL_InputEvent> &func_keyboard_event();
-
 
 /// \}
 /// \name Implementation
@@ -128,6 +178,5 @@ private:
 	friend class CL_PopupMenuWindow;
 /// \}
 };
-
 
 /// \}

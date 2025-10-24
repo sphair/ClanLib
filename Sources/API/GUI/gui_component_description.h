@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -50,10 +48,13 @@ class CL_API_GUI CL_GUIComponentDescription
 public:
 	CL_GUIComponentDescription();
 
+	/// \brief Constructs a GUIComponentDescription
+	///
+	/// \param copy = GUIComponent Description
+	/// \param default_type_name = String Ref
 	CL_GUIComponentDescription(const CL_GUIComponentDescription &copy, const CL_StringRef &default_type_name);
 
 	virtual ~CL_GUIComponentDescription();
-
 
 /// \}
 /// \name Attributes
@@ -72,7 +73,6 @@ public:
 	/// \brief Controls whether a component can be resized.
 	bool get_allow_resize() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -90,7 +90,6 @@ public:
 	/// \brief Controls whether a component can be resized.
 	void set_allow_resize(bool value);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -101,6 +100,5 @@ private:
 	friend class CL_GUIComponent;
 /// \}
 };
-
 
 /// \}

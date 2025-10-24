@@ -79,6 +79,8 @@ public:
 
 	int get_height() const;
 
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
+
 /// \}
 /// \name Operations
 /// \{
@@ -103,7 +105,7 @@ public:
 
 	CL_ElementArrayBufferProvider *alloc_element_array_buffer();
 
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect);
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const;
 
 	void set_texture(int unit_index, const CL_Texture &texture);
 
@@ -182,6 +184,7 @@ private:
 	CLenum to_enum(enum CL_BlendEquation eq);
 	CLenum to_enum(enum CL_VertexAttributeDataType value);
 	CLenum to_enum(enum CL_PrimitivesType value);
+	CLenum to_enum(enum CL_LogicOp op);
 
 	/// \brief OpenGL render window.
 	const CL_RenderWindowProvider * const render_window;

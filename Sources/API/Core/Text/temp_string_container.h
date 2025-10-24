@@ -29,7 +29,6 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #ifndef _cl_header_temp_string_container_
 #define _cl_header_temp_string_container_
 
@@ -61,24 +60,79 @@ public:
 
 	// These could and maybe should be replaced with "this->function_name()"
 	iterator begin() { return CL_StringContainer<CharType, ReferenceClass, StdString>::begin(); }
+
+	/// \brief End
+	///
+	/// \return iterator
 	iterator end() { return CL_StringContainer<CharType, ReferenceClass, StdString>::end(); }
+
+	/// \brief Size
+	///
+	/// \return size_type
 	size_type size() const { return CL_StringContainer<CharType, ReferenceClass, StdString>::size(); }
+
+	/// \brief Length
+	///
+	/// \return size_type
 	size_type length() const { return CL_StringContainer<CharType, ReferenceClass, StdString>::length(); }
+
+	/// \brief Empty
+	///
+	/// \return bool
 	bool empty() const { return CL_StringContainer<CharType, ReferenceClass, StdString>::empty(); }
 	const CharType *data() const { return CL_StringContainer<CharType, ReferenceClass, StdString>::data(); }
+
+	/// \brief Data
+	///
+	/// \return Char Type
 	CharType *data() { return CL_StringContainer<CharType, ReferenceClass, StdString>::data(); }
 
 #endif
 
 	CL_TempStringContainer();
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param source = Temp String Container
 	CL_TempStringContainer(const CL_TempStringContainer &source);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
 	CL_TempStringContainer(const CL_StringData<CharType, ReferenceClass, StdString> &source);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param c_str = char
 	CL_TempStringContainer(const char *c_str);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param c_str = char
+	/// \param length = size_type
 	CL_TempStringContainer(const char *c_str, size_type length);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param wc_str = wchar_t
 	CL_TempStringContainer(const wchar_t *wc_str);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param wc_str = wchar_t
+	/// \param length = size_type
 	CL_TempStringContainer(const wchar_t *wc_str, size_type length);
+
+	/// \brief Constructs a TempStringContainer
+	///
+	/// \param n = size_type
+	/// \param c = Char Type
 	CL_TempStringContainer(size_type n, CharType c);
 
+	/// \brief ReferenceClass
+	///
+	/// \return operator
 	operator ReferenceClass() const;
 };
 

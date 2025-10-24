@@ -149,9 +149,9 @@ inline CL_StringRef CL_GUIThemePart_Impl::get_property(const CL_GUIThemePart &pa
 	CL_StringRef css_value = get_css_value(name, hash, default_value);
 
 	// Check if theme wants to override the property:
-	CL_GUITheme *theme = component->get_theme();
-	if (theme)
-		return theme->get_property(part, name, css_value);
+	CL_GUITheme theme = component->get_theme();
+	if (!theme.is_null())
+		return theme.get_property(part, name, css_value);
 	else
 		return css_value;
 }
@@ -245,8 +245,8 @@ inline void CL_GUIThemePart_Impl::check_content_shrink_box_is_cached(const CL_GU
 	if (has_cached_content_box_shrink_rect)
 		return;
 
-	CL_GUITheme *theme = component->get_theme();
-	if (!theme)
+	CL_GUITheme theme = component->get_theme();
+	if (theme.is_null())
 		throw CL_Exception(cl_text("CL_GUIThemePart: No theme."));
 
 	has_cached_content_box_shrink_rect = true;

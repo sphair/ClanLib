@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -75,10 +69,12 @@ public:
 		const CL_DomString &tag_name,
 		const CL_DomString &namespace_uri = CL_DomString());
 
+	/// \brief Constructs a DomElement
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomElement(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomElement();
-
 
 /// \}
 /// \name Attributes
@@ -87,7 +83,6 @@ public:
 public:
 	/// \brief Returns the name of the element.
 	CL_DomString get_tag_name() const;
-
 
 /// \}
 /// \name Operations
@@ -105,6 +100,12 @@ public:
 	/// \brief Returns the specified attribute.
 	CL_DomString get_attribute(const CL_DomString &name) const;
 
+	/// \brief Get attribute
+	///
+	/// \param name = Dom String
+	/// \param default_value = Dom String
+	///
+	/// \return Dom String
 	CL_DomString get_attribute(const CL_DomString &name, const CL_DomString &default_value) const;
 
 	/// \brief Returns the specified attribute.
@@ -141,14 +142,29 @@ public:
 		const CL_DomString &namespace_uri,
 		const CL_DomString &local_name);
 
+	/// \brief Get attribute node
+	///
+	/// \param name = Dom String
+	///
+	/// \return Dom Attr
 	CL_DomAttr get_attribute_node(const CL_DomString &name) const;
 
 	CL_DomAttr get_attribute_node_ns(
 		const CL_DomString &namespace_uri,
 		const CL_DomString &local_name) const;
 
+	/// \brief Set attribute node
+	///
+	/// \param attr = Dom Attr
+	///
+	/// \return Dom Attr
 	CL_DomAttr set_attribute_node(const CL_DomAttr &attr);
 
+	/// \brief Set attribute node ns
+	///
+	/// \param attr = Dom Attr
+	///
+	/// \return Dom Attr
 	CL_DomAttr set_attribute_node_ns(const CL_DomAttr &attr);
 
 	/// \brief Returns a NodeList of all descendant elements with a given tag name.
@@ -218,6 +234,5 @@ public:
 	CL_DomElement get_next_sibling_element() const;
 /// \}
 };
-
 
 /// \}

@@ -29,11 +29,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Sound/soundprovider_session.h"
 #include "vorbis/codec.h"
 

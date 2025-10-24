@@ -84,17 +84,14 @@ listview selection:hot
     text-decoration:underline;
 }
 
-listview icon_selection
+listview icon_selection:normal
 {
 	bg-image:ListViewIconSelection;
-	bg-color: #316ac5;
-
-	bg-image:ListViewBorder; 
 
 	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
+	bg-image-sizing-right:4;
 	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:3;
+	bg-image-sizing-bottom:4;
 	bg-image-sizing:stretch; 
 
 	border-top:-3;

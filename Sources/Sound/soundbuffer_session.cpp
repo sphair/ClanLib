@@ -94,6 +94,11 @@ float CL_SoundBuffer_Session::get_pan() const
 	return impl->pan;
 }
 
+bool CL_SoundBuffer_Session::get_looping() const
+{
+	return impl->looping;
+}
+
 bool CL_SoundBuffer_Session::is_playing()
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
@@ -146,7 +151,7 @@ void CL_SoundBuffer_Session::play()
 	if (impl->provider_session->play())
 	{
 		impl->playing = true;
-		CL_SoundOutput_Generic *output = impl->output;
+		CL_SharedPtr<CL_SoundOutput_Generic> output = impl->output;
 		mutex_lock.unlock();
 		output->play_session(impl);
 	}
@@ -156,7 +161,7 @@ void CL_SoundBuffer_Session::stop()
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	if (!impl->playing) return;
-	CL_SoundOutput_Generic *output = impl->output;
+	CL_SharedPtr<CL_SoundOutput_Generic> output = impl->output;
 	mutex_lock.unlock();
 	output->stop_session(impl);
 	mutex_lock.lock();
@@ -171,23 +176,20 @@ void CL_SoundBuffer_Session::set_looping(bool loop)
 	impl->provider_session->set_looping(loop);
 }
 
-void CL_SoundBuffer_Session::add_filter(CL_SoundFilter *filter, bool delete_filter)
+void CL_SoundBuffer_Session::add_filter(CL_SoundFilter &filter)
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->filters.push_back(filter);
-	impl->delete_filters.push_back(delete_filter);
 }
 
-void CL_SoundBuffer_Session::remove_filter(CL_SoundFilter *filter)
+void CL_SoundBuffer_Session::remove_filter(CL_SoundFilter &filter)
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
-	for (std::vector<CL_SoundFilter *>::size_type i=0; i<impl->filters.size(); i++)
+	for (std::vector<CL_SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
 	{
 		if (impl->filters[i] == filter)
 		{
-			if (impl->delete_filters[i]) delete impl->filters[i];
 			impl->filters.erase(impl->filters.begin()+i);
-			impl->delete_filters.erase(impl->delete_filters.begin()+i);
 		}
 	}
 }

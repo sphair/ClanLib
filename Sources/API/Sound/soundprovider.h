@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
@@ -55,10 +49,12 @@ class CL_API_SOUND CL_SoundProvider
 public:
 	CL_SoundProvider();
 
+	/// \brief Constructs a SoundProvider
+	///
+	/// \param copy = Sound Provider
 	CL_SoundProvider(const CL_SoundProvider &copy);
 
 	virtual ~CL_SoundProvider();
-
 
 /// \}
 /// \name Operations
@@ -74,7 +70,6 @@ public:
 	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -83,6 +78,5 @@ private:
 	CL_SharedPtr<CL_SoundProvider_Generic> impl;
 /// \}
 };
-
 
 /// \}

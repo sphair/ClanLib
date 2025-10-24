@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -55,7 +49,6 @@ public:
 	CL_CSSProperty();
 
 	~CL_CSSProperty();
-
 
 /// \}
 /// \name Attributes
@@ -81,7 +74,6 @@ public:
 	/// \brief Returns the priority of the property.
 	Priority get_priority() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -98,7 +90,6 @@ public:
 
 	bool operator ==(const CL_CSSProperty &other) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -107,6 +98,5 @@ private:
 	CL_SharedPtr<CL_CSSProperty_Impl> impl;
 /// \}
 };
-
 
 /// \}

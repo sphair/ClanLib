@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -59,17 +53,18 @@ public:
 	/// \brief Constructs a DOM Implementation handle.
 	CL_DomImplementation();
 
+	/// \brief Constructs a DomImplementation
+	///
+	/// \param doc = Dom Document
 	CL_DomImplementation(CL_DomDocument &doc);
 
 	~CL_DomImplementation();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -99,7 +94,6 @@ public:
 		const CL_DomString &qualified_name,
 		const CL_DomDocumentType &doctype);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -108,6 +102,5 @@ private:
 	CL_SharedPtr<CL_DomImplementation_Generic> impl;
 /// \}
 };
-
 
 /// \}

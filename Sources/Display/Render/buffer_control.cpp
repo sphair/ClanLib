@@ -57,7 +57,8 @@ public:
 		green_write_enabled(true),
 		blue_write_enabled(true),
 		alpha_write_enabled(true),
-		draw_buffer(cl_buffer_back)
+		draw_buffer(cl_buffer_back),
+		logic_op_enabled(false)
 	{
 	}
 
@@ -86,6 +87,9 @@ public:
 	bool red_write_enabled, green_write_enabled, blue_write_enabled, alpha_write_enabled;
 
 	CL_DrawBuffer draw_buffer;
+
+	bool logic_op_enabled;
+	CL_LogicOp logic_op;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -207,6 +211,16 @@ CL_DrawBuffer CL_BufferControl::get_draw_buffer() const
 	return impl->draw_buffer;
 }
 
+bool CL_BufferControl::is_logic_op_enabled() const
+{
+	return impl->logic_op_enabled;
+}
+
+CL_LogicOp CL_BufferControl::get_logic_op() const
+{
+	return impl->logic_op;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_BufferControl Operations:
 
@@ -282,6 +296,16 @@ void CL_BufferControl::set_depth_compare_function(CL_CompareFunction func)
 void CL_BufferControl::set_draw_buffer(CL_DrawBuffer buffer)
 {
 	impl->draw_buffer = buffer;
+}
+
+void CL_BufferControl::enable_logic_op(bool enabled)
+{
+	impl->logic_op_enabled = enabled;
+}
+
+void CL_BufferControl::set_logic_op(CL_LogicOp op)
+{
+	impl->logic_op = op;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -58,7 +52,6 @@ public:
 
 	~CL_CSSImport();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -66,7 +59,6 @@ public:
 public:
 	/// \brief Returns the value of the import directive.
 	CL_String &get_value();
-
 
 /// \}
 /// \name Operations
@@ -78,7 +70,6 @@ public:
 
 	bool operator ==(const CL_CSSImport &other) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -87,6 +78,5 @@ private:
 	CL_SharedPtr<CL_CSSImport_Impl> impl;
 /// \}
 };
-
 
 /// \}

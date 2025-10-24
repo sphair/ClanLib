@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -62,19 +56,24 @@ public:
 	/// \brief Constructs a DOM Entity Reference handle.
 	CL_DomEntityReference();
 
+	/// \brief Constructs a DomEntityReference
+	///
+	/// \param doc = Dom Document
+	/// \param name = Dom String
 	CL_DomEntityReference(CL_DomDocument &doc, const CL_DomString &name);
 
+	/// \brief Constructs a DomEntityReference
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomEntityReference(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomEntityReference();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -83,6 +82,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

@@ -1,5 +1,6 @@
 #include "server.h"
 #include "server_user.h"
+#include "../custom_type.h"
 
 Server::Server()
 : next_user_id(1)
@@ -123,8 +124,14 @@ void Server::on_event_game_requeststart(const CL_NetGameEvent &e, ServerUser *us
 		CL_String map_name = "Map1";
 		int max_players = 6;
 
-		// Broadcast start game to all connected clients
-		network_server.send_event(CL_NetGameEvent("Game-LoadMap", map_name, max_players));
+		CustomType position(143,22,3);
+
+		CL_NetGameEvent loadMapEvent("Game-LoadMap");
+		loadMapEvent.add_argument(map_name);
+		loadMapEvent.add_argument(max_players);
+		loadMapEvent.add_argument(position);
+		network_server.send_event(loadMapEvent);
+
 		network_server.send_event(CL_NetGameEvent("Game-Start"));
 	}
 }

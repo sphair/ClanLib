@@ -29,9 +29,7 @@
 #include "D3D10/precomp.h"
 #include "d3d10_display_window_provider.h"
 #include "API/Core/Math/rect.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Window/input_context.h"
-#include "Display/Win32/timer_provider_win32.h"
+#include "API/Display/Image/pixel_buffer.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10DisplayWindowProvider Construction:
@@ -77,14 +75,14 @@ bool CL_D3D10DisplayWindowProvider::is_visible() const
 	return true;
 }
 
-CL_GraphicContext CL_D3D10DisplayWindowProvider::get_gc() const
+CL_GraphicContext& CL_D3D10DisplayWindowProvider::get_gc()
 {
-	return CL_GraphicContext();
+	return gc;
 }
 
-CL_InputContext CL_D3D10DisplayWindowProvider::get_ic() const
+CL_InputContext& CL_D3D10DisplayWindowProvider::get_ic()
 {
-	return CL_InputContext();
+	return ic;
 }
 
 HWND CL_D3D10DisplayWindowProvider::get_hwnd() const
@@ -97,13 +95,18 @@ bool CL_D3D10DisplayWindowProvider::is_clipboard_text_available() const
 	return false;
 }
 
+bool CL_DisplayWindowProvider::is_clipboard_image_available() const
+{
+	return false;
+}
+
+CL_PixelBuffer CL_D3D10DisplayWindowProvider::get_clipboard_image() const
+{
+	return CL_PixelBuffer();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10DisplayWindowProvider Operations:
-
-CL_TimerProvider *CL_D3D10DisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
-{
-	return new CL_TimerProvider_Win32(disp_window);
-}
 
 CL_Point CL_D3D10DisplayWindowProvider::client_to_screen(const CL_Point &client)
 {
@@ -205,14 +208,6 @@ void CL_D3D10DisplayWindowProvider::update(const CL_Rect &rect)
 {
 }
 
-void CL_D3D10DisplayWindowProvider::set_timer(CL_TimerProvider *timer)
-{
-}
-
-void CL_D3D10DisplayWindowProvider::kill_timer(CL_TimerProvider *timer)
-{
-}
-
 void CL_D3D10DisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)
 {
 }
@@ -222,9 +217,23 @@ CL_String CL_D3D10DisplayWindowProvider::get_clipboard_text() const
 	return CL_String();
 }
 
-void CL_D3D10DisplayWindowProvider::invalidate_rect(const CL_Rect &rect)
+void CL_D3D10DisplayWindowProvider::request_repaint(const CL_Rect &rect)
+{
+}
+
+void CL_D3D10DisplayWindowProvider::set_clipboard_image( const CL_PixelBuffer &buf )
+{
+}
+
+void CL_D3D10DisplayWindowProvider::set_large_icon(const CL_PixelBuffer &image)
+{
+}
+
+void CL_D3D10DisplayWindowProvider::set_small_icon(const CL_PixelBuffer &image)
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10DisplayWindowProvider Implementation:
+
+

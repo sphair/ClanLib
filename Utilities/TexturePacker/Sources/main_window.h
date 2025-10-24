@@ -20,7 +20,6 @@ public:
 
 // Implementation:
 private:
-	CL_Rect get_startup_geometry();
 	CL_GUITopLevelDescription get_startup_description();
 
 	void create_components();

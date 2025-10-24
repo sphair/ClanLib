@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -51,29 +49,51 @@ class CL_API_GUI CL_Tab : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a Tab
+	///
+	/// \param parent = GUIComponent
 	CL_Tab(CL_GUIComponent *parent);
 
 	virtual ~CL_Tab();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get page
+	///
+	/// \param index = value
+	///
+	/// \return Tab Page
 	CL_TabPage *get_page(int index) const;
 
+	/// \brief Get page by id
+	///
+	/// \param id = value
+	///
+	/// \return Tab Page
 	CL_TabPage *get_page_by_id(int id) const;
 
+	/// \brief Get Current page index
+	///
+	/// \return current_page_index
 	int get_current_page_index() const;
 
+	/// \brief Get Current page id
+	///
+	/// \return current_page_id
 	int get_current_page_id() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
 
 	/// \brief returns the number of pages in the tab.
 	int get_page_count() const;
-
 
 /// \}
 /// \name Operations
@@ -103,7 +123,6 @@ public:
 	/// \brief Set the label of the component specified by index.
 	void set_label_by_id(int id, const CL_StringRef &new_label);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -114,6 +133,5 @@ private:
 	friend class CL_GUIXMLLoaderVersion_1_0;
 /// \}
 };
-
 
 /// \}

@@ -29,73 +29,23 @@
 /// \addtogroup clanGL_System clanGL System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_gl.h"
+#include "opengl_defines.h"
 #include <utility>
 #include "../Core/Text/string_types.h"
 #include "../Display/Image/pixel_format.h"
+#include "../Display/Render/texture.h"
 
 class CL_GLFunctions;
 class CL_GraphicContext;
 class CL_OpenGLGraphicContextProvider;
 
+enum CL_TextureFormat;
+
 /// \brief Extension procedure address typedef for OpenGL.
 typedef void (CL_ProcAddress)();
-
-#ifndef __APPLE__
-typedef unsigned int CLenum;
-typedef unsigned char CLboolean;
-typedef unsigned int CLbitfield;
-typedef signed char CLbyte;
-typedef short CLshort;
-typedef int CLint;
-typedef int CLsizei;
-typedef unsigned char CLubyte;
-typedef unsigned short CLushort;
-typedef unsigned int CLuint;
-typedef float CLfloat;
-typedef float CLclampf;
-typedef double CLdouble;
-typedef double CLclampd;
-typedef void CLvoid;
-typedef char CLchar;
-typedef long int CLsizeiptr;
-typedef long int CLintptr;
-#else
-typedef unsigned long CLenum;
-typedef unsigned char CLboolean;
-typedef unsigned long CLbitfield;
-typedef signed char CLbyte;
-typedef short CLshort;
-typedef long CLint;
-typedef long CLsizei;
-typedef unsigned char CLubyte;
-typedef unsigned short CLushort;
-typedef unsigned long CLuint;
-typedef float CLfloat;
-typedef float CLclampf;
-typedef double CLdouble;
-typedef double CLclampd;
-typedef void CLvoid;
-typedef char CLchar;
-#if defined(_WIN64)
-typedef __int64 GLintptr;
-typedef __int64 GLsizeiptr
-#elif defined(__ia64__) || defined(__x86_64__)
-typedef long int GLintptr;
-typedef long int GLsizeiptr;
-#else
-typedef int CLsizeiptr;
-typedef int CLintptr;
-#endif
-#endif
 
 /// \brief OpenGL utility class.
 ///
@@ -122,13 +72,19 @@ public:
 	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
 	static bool to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, CLenum &type);
 
+	/// \brief To opengl textureformat
+	///
+	/// \param format = Texture Format
+	/// \param gl_internal_format = CLint
+	/// \param gl_pixel_format = CLenum
+	static void to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format);
+
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-	static void set_active(const CL_GraphicContext &gc);
+	static void set_active(CL_GraphicContext &gc);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 	static void set_active(const CL_OpenGLGraphicContextProvider * const gc_provider);
 /// \}
 };
-
 
 /// \}

@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -45,6 +43,9 @@ class CL_GraphicContext;
 class CL_FrameBufferProvider;
 class CL_FrameBuffer_Impl;
 
+/// \brief Texture Subtype
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CL_TextureSubtype
 {
 	cl_subtype_cube_map_positive_x,
@@ -67,41 +68,89 @@ public:
 	/// \brief Constructs a frame buffer.
 	CL_FrameBuffer();
 
-	CL_FrameBuffer(CL_GraphicContext context);
+	/// \brief Constructs a FrameBuffer
+	///
+	/// \param context = Graphic Context
+	CL_FrameBuffer(CL_GraphicContext &context);
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Provider
+	///
+	/// \return provider
 	CL_FrameBufferProvider *get_provider() const;
 
+	/// \brief Get attachment size
+	///
+	/// \param buffer_id = value
+	///
+	/// \return Size
 	CL_Size get_attachment_size(int buffer_id) const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param render_buffer = Render Buffer
 	void attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
 
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param level = value
+	/// \param zoffset = value
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
 
+	/// \brief Attach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param subtype = Texture Subtype
+	/// \param level = value
+	/// \param zoffset = value
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
 
+	/// \brief Detach color buffer
+	///
+	/// \param color_buffer = value
+	/// \param texture = Texture
+	/// \param level = value
+	/// \param zoffset = value
 	void detach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
 
+	/// \brief Attach stencil buffer
+	///
+	/// \param render_buffer = Render Buffer
 	void attach_stencil_buffer(const CL_RenderBuffer &render_buffer);
 
+	/// \brief Detach stencil buffer
 	void detach_stencil_buffer();
 
+	/// \brief Attach depth buffer
+	///
+	/// \param render_buffer = Render Buffer
 	void attach_depth_buffer(const CL_RenderBuffer &render_buffer);
 
+	/// \brief Attach depth buffer
+	///
+	/// \param texture = Texture
+	/// \param subtype = Texture Subtype
+	/// \param level = value
+	/// \param zoffset = value
 	void attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
 
+	/// \brief Detach depth buffer
 	void detach_depth_buffer();
-
 
 /// \}
 /// \name Implementation
@@ -111,6 +160,5 @@ private:
 	CL_SharedPtr<CL_FrameBuffer_Impl> impl;
 /// \}
 };
-
 
 /// \}

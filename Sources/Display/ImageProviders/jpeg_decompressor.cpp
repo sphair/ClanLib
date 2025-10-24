@@ -42,7 +42,7 @@
 #define XMD_H
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 extern "C"
 {
 	#undef FAR

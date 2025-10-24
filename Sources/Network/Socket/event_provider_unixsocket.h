@@ -30,6 +30,7 @@
 
 
 #include "API/Core/System/event_provider.h"
+#include "unix_socket.h"
 
 class CL_EventProvider_UnixSocket : public CL_EventProvider
 {

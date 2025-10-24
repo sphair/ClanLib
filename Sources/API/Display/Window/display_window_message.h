@@ -31,7 +31,6 @@
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-
 #pragma once
 
 #include "../api_display.h"
@@ -53,6 +52,9 @@ public:
 
 	~CL_DisplayWindowMessage();
 
+	/// \brief Null
+	///
+	/// \return Display Window Message
 	static CL_DisplayWindowMessage null();
 
 /// \}
@@ -67,6 +69,9 @@ public:
 	/// \return The Databuffer (get_size() returns zero, if the message is not available)
 	CL_DataBuffer get_msg(const CL_StringRef &name) const;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
 
 /// \}
@@ -74,6 +79,10 @@ public:
 /// \{
 
 public:
+
+	/// \brief Set handled message
+	///
+	/// \param handled = bool
 	void set_handled_message(bool handled);
 
 	/// \brief Set the message
@@ -90,7 +99,5 @@ private:
 	CL_SharedPtr<CL_DisplayWindowMessage_Impl> impl;
 /// \}
 };
-
-
 
 /// \}

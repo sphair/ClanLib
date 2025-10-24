@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include "../System/sharedptr.h"
 #include "../Text/string_types.h"
 
@@ -50,7 +49,6 @@ public:
 
 	virtual ~CL_VirtualDirectoryListing();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -71,7 +69,6 @@ public:
 	/// \brief Returns true if item is readable.
 	bool is_readable();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -79,7 +76,6 @@ public:
 public:
 	/// \brief Advance to next item in listing.
 	bool next();
-
 
 /// \}
 /// \name Implementation
@@ -89,7 +85,4 @@ private:
 	CL_SharedPtr<CL_VirtualDirectoryListing_Impl> impl;
 /// \}
 };
-
-
-
 

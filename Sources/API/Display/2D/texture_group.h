@@ -65,7 +65,7 @@ public:
 	CL_TextureGroup();
 
 	/// \brief Constructs a texture group
-	CL_TextureGroup(CL_GraphicContext context, const CL_Size &texture_sizes);
+	CL_TextureGroup(CL_GraphicContext &context, const CL_Size &texture_sizes);
 
 	~CL_TextureGroup();
 
@@ -100,7 +100,7 @@ public:
 /// \{
 public:
 	/// \brief Allocate space for another sub texture.
-	CL_Subtexture add(CL_GraphicContext context, const CL_Size &size);
+	CL_Subtexture add(CL_GraphicContext &context, const CL_Size &size);
 
 	/// \brief Deallocate space, from a previously allocated texture
 	///

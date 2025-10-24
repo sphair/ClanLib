@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_display.h"
 #include "../Core/Text/string_types.h"
@@ -60,7 +54,6 @@ public:
 	/// \brief Returns the currently selected display target.
 	static CL_DisplayTarget get_current_target();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -68,7 +61,6 @@ public:
 public:
 	/// \brief Sets the currently selected display target.
 	static void set_current_target(const CL_DisplayTarget &target, bool only_set_if_null = false);
-
 
 /// \}
 /// \name Signals
@@ -78,7 +70,5 @@ public:
 
 /// \}
 };
-
-
 
 /// \}

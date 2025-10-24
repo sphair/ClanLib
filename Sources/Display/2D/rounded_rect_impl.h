@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/triangle_math.h"
 #include "API/Display/Render/graphic_context.h"
@@ -50,10 +45,10 @@ public:
 	CL_RoundedRect_Impl();
 	~CL_RoundedRect_Impl();
 
-	void draw(CL_GraphicContext gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
-	void draw(CL_GraphicContext gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
-	void fill(CL_GraphicContext gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
-	void fill(CL_GraphicContext gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
+	void draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
+	void draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
+	void fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
+	void fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
 
 	CL_Pointf cp_tl, cp_tr, cp_bl, cp_br;
 	CL_Sizef round_tl, round_tr, round_bl, round_br;
@@ -84,5 +79,6 @@ private:
 
 	CL_Gradient gradient;
 };
+
 
 

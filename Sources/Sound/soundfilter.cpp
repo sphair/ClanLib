@@ -24,20 +24,42 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Sound/precomp.h"
 #include "API/Sound/soundfilter.h"
+#include "API/Sound/SoundProviders/soundfilter_provider.h"
+
+class CL_SoundFilter_Impl
+{
+public:
+	CL_SoundFilter_Impl()
+	: provider(0)
+	{
+	}
+
+	~CL_SoundFilter_Impl()
+	{
+		if (provider)
+			provider->destroy();
+	}
+
+	CL_SoundFilterProvider *provider;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundFilter construction:
 
-CL_SoundFilter::CL_SoundFilter() : impl(0)
+CL_SoundFilter::CL_SoundFilter(CL_SoundFilterProvider *provider)
+: impl(new CL_SoundFilter_Impl)
 {
+	impl->provider = provider;
 }
 
-CL_SoundFilter::CL_SoundFilter(const CL_SoundFilter &copy) : impl(copy.impl)
+CL_SoundFilter::CL_SoundFilter(const CL_SoundFilter &copy)
 {
+	impl = copy.impl;
 }
 
 CL_SoundFilter::~CL_SoundFilter()
@@ -47,10 +69,21 @@ CL_SoundFilter::~CL_SoundFilter()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundFilter operations:
 
-CL_SoundFilter &CL_SoundFilter::operator =(const CL_SoundFilter &copy)
+bool CL_SoundFilter::is_null()
 {
-	impl = copy.impl;
-	return *this;
+	return impl.is_null();
+}
+
+CL_SoundFilterProvider *CL_SoundFilter::get_provider() const
+{
+	if (impl.is_null())
+		return 0;
+	return impl->provider;
+}
+
+void CL_SoundFilter::filter(int **sample_data, int num_samples, int channels)
+{
+	impl->provider->filter(sample_data, num_samples, channels);
 }
 
 /////////////////////////////////////////////////////////////////////////////

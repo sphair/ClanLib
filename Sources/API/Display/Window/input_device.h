@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -68,14 +66,22 @@ public:
 	/// \brief Constructs an input device.
 	CL_InputDevice();
 
+	/// \brief Constructs a InputDevice
+	///
+	/// \param provider = Input Device Provider
 	CL_InputDevice(CL_InputDeviceProvider *provider);
 
+	/// \brief Constructs a InputDevice
+	///
+	/// \param CL_InputDevice_Impl = Weak Ptr
 	CL_InputDevice(CL_WeakPtr<CL_InputDevice_Impl> impl);
 
+	/// \brief Constructs a InputDevice
+	///
+	/// \param copy = Input Device
 	CL_InputDevice(const CL_InputDevice &copy);
 
 	~CL_InputDevice();
-
 
 /// \}
 /// \name Attributes
@@ -150,7 +156,6 @@ public:
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only);
 
-
 /// \}
 /// \name Signals
 /// \{
@@ -187,6 +192,5 @@ private:
 	friend class CL_InputContext_Impl;
 /// \}
 };
-
 
 /// \}

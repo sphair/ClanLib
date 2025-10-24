@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -55,12 +53,18 @@ public:
 	/// \brief Constructs a file system.
 	CL_VirtualFileSystem();
 
+	/// \brief Constructs a VirtualFileSystem
+	///
+	/// \param provider = Virtual File Source
 	CL_VirtualFileSystem(CL_VirtualFileSource *provider);
 
+	/// \brief Constructs a VirtualFileSystem
+	///
+	/// \param path = String
+	/// \param is_zip_file = bool
 	CL_VirtualFileSystem(const CL_String &path, bool is_zip_file = false);
 
 	~CL_VirtualFileSystem();
-
 
 /// \}
 /// \name Attributes
@@ -78,6 +82,12 @@ public:
 
 	/// \brief Return directory listing for path.
 	CL_VirtualDirectoryListing get_directory_listing(const CL_String &path_rel);
+
+	/// \brief Return true if the root of the filesystem contains the specified file.
+	bool has_file(const CL_String &filename);
+
+	/// \brief Return true if the root of the filesystem contains the specified directory.
+	bool has_directory(const CL_String &directory);
 
 	/// \brief Returns the file source for this file system.
 	CL_VirtualFileSource *get_provider();
@@ -106,7 +116,7 @@ public:
 		CL_File::OpenMode mode = CL_File::open_existing,
 		unsigned int access = CL_File::access_read | CL_File::access_write,
 		unsigned int share = CL_File::share_all,
-		unsigned int flags = 0);
+		unsigned int flags = 0) const;
 
 	/// \brief Mounts a file system at mount point.
 	/** This is only available if CL_VirtualFileSystem was set
@@ -131,7 +141,6 @@ public:
 	/** param: mount_point = The mount point to unmount*/
 	void unmount(const CL_String &mount_point);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -148,6 +157,5 @@ private:
 	friend class CL_VirtualDirectory_Impl;
 /// \}
 };
-
 
 /// \}

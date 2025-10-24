@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -51,7 +45,6 @@ class CL_API_DISPLAY CL_OcclusionQueryProvider
 public:
 	virtual ~CL_OcclusionQueryProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -62,7 +55,6 @@ public:
 
 	/// \brief Returns the result of the occlusion query.
 	virtual int get_result() const = 0;
-
 
 /// \}
 /// \name Operations
@@ -81,7 +73,6 @@ public:
 	/// \brief Destroy occlusion query provider.
 	virtual void destroy() = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -89,6 +80,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

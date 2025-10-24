@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 
@@ -111,6 +105,5 @@ public:
 	static CL_String get_resourcedata(const CL_StringRef &application_name);
 /// \}
 };
-
 
 /// \}

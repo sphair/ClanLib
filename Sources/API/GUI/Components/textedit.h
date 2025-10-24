@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -48,10 +46,14 @@ class CL_API_GUI CL_TextEdit : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a TextEdit
+	///
+	/// \param desc = GUIComponent Description
+	/// \param parent = GUIComponent
 	CL_TextEdit(const CL_GUIComponentDescription &desc, CL_GUIComponent *parent);
 
 	virtual ~CL_TextEdit();
-
 
 /// \}
 /// \name Attributes
@@ -59,13 +61,11 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -75,6 +75,5 @@ private:
 	CL_SharedPtr<CL_TextEdit_Impl> impl;
 /// \}
 };
-
 
 /// \}

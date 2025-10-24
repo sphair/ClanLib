@@ -37,12 +37,12 @@ GUI_System::GUI_System(GUI *gui) : gui(gui)
 {
 	CL_GUIManager *gui_manager = &gui->get_gui_manager();
 
-	gui_manager->set_window_manager(&wm);
+	gui_manager->set_window_manager(wm);
 
 	resources_gui = CL_ResourceManager(gui->get_resources_location());
 
 	theme.set_resources(resources_gui);
-	gui_manager->set_theme(&theme); 
+	gui_manager->set_theme(theme); 
 
 	gui_manager->set_css_document(gui->get_theme_location());
 

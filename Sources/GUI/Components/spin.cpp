@@ -33,6 +33,7 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_consumed_keys.h"
@@ -45,7 +46,7 @@
 #include "API/Core/Math/rect.h"
 
 #ifndef WIN32
-#include <limits.h>
+#include <climits>
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -54,7 +55,17 @@
 class CL_Spin_Impl
 {
 public:
-	CL_Spin_Impl() : component(0), lineedit(0), value_i(0), value_d(0.0f), min_value_i(INT_MIN), max_value_i(INT_MAX), min_value_d(-1000.0f), max_value_d(1000.0f), num_decimal_places(2), floating_point_mode(false)
+	CL_Spin_Impl() :
+	  component(0),
+	  lineedit(0),
+	  value_i(0),
+	  value_d(0.0f),
+	  min_value_i(INT_MIN), 
+	  max_value_i(INT_MAX),
+	  min_value_d(-1000.0f),
+	  max_value_d(1000.0f),
+	  num_decimal_places(2),
+	  floating_point_mode(false)
 	{
 	}
 
@@ -63,6 +74,7 @@ public:
 	void on_resized();
 	void on_style_changed();
 	void on_lineedit_modified(CL_InputEvent event);
+	void on_enablemode_changed();
 
 	void create_components();
 	
@@ -110,6 +122,8 @@ CL_Spin::CL_Spin(CL_GUIComponent *parent)
 	func_process_message().set(impl.get(), &CL_Spin_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_Spin_Impl::on_render);
 	func_resized().set(impl.get(), &CL_Spin_Impl::on_resized);
+	func_enablemode_changed().set(impl.get(), &CL_Spin_Impl::on_enablemode_changed);
+
 	impl->create_components();
 }
 
@@ -260,7 +274,7 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 
 					if (!func_value_changed.is_null())
 						func_value_changed.invoke();
-					component->invalidate_rect();
+					component->request_repaint();
 				}
 			}
 			else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
@@ -270,7 +284,7 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 				part_arrow_down.set_state(CssStr::pressed, false);
 				part_arrow_up.set_state(CssStr::pressed, false);
 				part_component.set_state(CssStr::pressed, false);
-				component->invalidate_rect();
+				component->request_repaint();
 			}
 			else if (e.type == CL_InputEvent::pointer_moved)
 			{
@@ -281,13 +295,13 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 				{
 					part_button_down.set_state(CssStr::hot, new_hot_state_arrow_down);
 					part_arrow_down.set_state(CssStr::hot, new_hot_state_arrow_down);
-					component->invalidate_rect();
+					component->request_repaint();
 				}
 				if (part_arrow_up.get_state(CssStr::hot) != new_hot_state_arrow_up)
 				{
 					part_button_up.set_state(CssStr::hot, new_hot_state_arrow_up);
 					part_arrow_up.set_state(CssStr::hot, new_hot_state_arrow_up);
-					component->invalidate_rect();
+					component->request_repaint();
 				}
 			}
 		}
@@ -297,7 +311,7 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 			if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
 			{
 				part_component.set_state(CssStr::hot, true);
-				component->invalidate_rect();
+				component->request_repaint();
 			}
 			else if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_leave)
 			{
@@ -313,7 +327,17 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 				part_arrow_up.set_state(CssStr::hot, false);
 				part_arrow_down.set_state(CssStr::hot, false);
 
-				component->invalidate_rect();
+				component->request_repaint();
+			}
+		}
+		else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
+		{
+			CL_GUIMessage_FocusChange fmsg(msg);
+
+			if (fmsg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
+			{
+				// Give focus to lineedit
+				lineedit->set_focus();
 			}
 		}
 	}
@@ -342,12 +366,21 @@ void CL_Spin_Impl::create_components()
 	part_arrow_down = CL_GUIThemePart(component, CssStr::Spin::part_arrow_down);
 	part_arrow_up = CL_GUIThemePart(component, CssStr::Spin::part_arrow_up);
 
-	part_component.set_state(CssStr::normal, true);
-	part_button_up.set_state(CssStr::normal, true);
-	part_button_down.set_state(CssStr::normal, true);
-	part_arrow_up.set_state(CssStr::normal, true);
-	part_arrow_down.set_state(CssStr::normal, true);
+	bool enabled = component->is_enabled();
+
+	part_component.set_state(CssStr::normal, enabled);
+	part_button_up.set_state(CssStr::normal, enabled);
+	part_button_down.set_state(CssStr::normal, enabled);
+	part_arrow_up.set_state(CssStr::normal, enabled);
+	part_arrow_down.set_state(CssStr::normal, enabled);
+
+	part_component.set_state(CssStr::disabled, !enabled);
+	part_button_up.set_state(CssStr::disabled, !enabled);
+	part_button_down.set_state(CssStr::disabled, !enabled);
+	part_arrow_up.set_state(CssStr::disabled, !enabled);
+	part_arrow_down.set_state(CssStr::disabled, !enabled);
 }
+
 
 void CL_Spin_Impl::on_resized()
 {
@@ -404,8 +437,38 @@ void CL_Spin_Impl::on_lineedit_modified(CL_InputEvent event)
 
 void CL_Spin_Impl::clamp_value()
 {
-	if (value_i > max_value_i) value_i = max_value_i;
-	if (value_i < min_value_i) value_i = min_value_i;
-	if (value_d > max_value_d) value_d = max_value_d;
-	if (value_d < min_value_d) value_d = min_value_d;	
+	bool changed = false;
+	if (value_i > max_value_i) { changed=true; value_i = max_value_i; }
+	if (value_i < min_value_i) { changed=true; value_i = min_value_i; }
+	if (value_d > max_value_d) { changed=true; value_d = max_value_d; }
+	if (value_d < min_value_d) { changed=true; value_d = min_value_d; }
+
+	if (changed)
+	{
+		if (floating_point_mode)
+			lineedit->set_text(value_d);
+		else
+			lineedit->set_text(value_i);
+	}
+}
+
+void CL_Spin_Impl::on_enablemode_changed()
+{
+	bool enabled = component->is_enabled();
+
+	part_component.set_state(CssStr::normal, enabled);
+	part_button_up.set_state(CssStr::normal, enabled);
+	part_button_down.set_state(CssStr::normal, enabled);
+	part_arrow_up.set_state(CssStr::normal, enabled);
+	part_arrow_down.set_state(CssStr::normal, enabled);
+
+	part_component.set_state(CssStr::disabled, !enabled);
+	part_button_up.set_state(CssStr::disabled, !enabled);
+	part_button_down.set_state(CssStr::disabled, !enabled);
+	part_arrow_up.set_state(CssStr::disabled, !enabled);
+	part_arrow_down.set_state(CssStr::disabled, !enabled);
+
+	lineedit->set_enabled(enabled);
+
+	component->request_repaint();
 }

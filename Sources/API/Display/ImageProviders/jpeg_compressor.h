@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
@@ -55,13 +49,11 @@ class CL_API_DISPLAY CL_JPEGCompressor
 public:
 	CL_JPEGCompressor();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -99,26 +91,61 @@ public:
 		marker_com  = 0xfe
 	};
 
+	/// \brief Set output
+	///
+	/// \param output_source = IODevice
 	void set_output(CL_IODevice output_source);
 
+	/// \brief Set quality
+	///
+	/// \param quality = value
 	void set_quality(int quality);
 
+	/// \brief Set size
+	///
+	/// \param width = value
+	/// \param height = value
 	void set_size(int width, int height);
 
+	/// \brief Set color space
+	///
+	/// \param in_color_space = Color Space
+	/// \param in_components = value
+	/// \param out_color_space = Color Space
+	/// \param out_components = value
 	void set_color_space(ColorSpace in_color_space, int in_components, ColorSpace out_color_space, int out_components);
 
+	/// \brief Start
+	///
+	/// \param raw_data = bool
 	void start(bool raw_data = false);
 
+	/// \brief Write marker
+	///
+	/// \param marker = value
+	/// \param const = void
+	/// \param length = value
 	void write_marker(int marker, const void * const data, int length);
 
+	/// \brief Write comment marker
+	///
+	/// \param comment = String Ref
 	void write_comment_marker(const CL_StringRef &comment);
 
+	/// \brief Write scanlines
+	///
+	/// \param data = char
+	/// \param lines = value
 	void write_scanlines(const unsigned char **data, unsigned int lines);
 
+	/// \brief Write raw data
+	///
+	/// \param data = char
+	/// \param lines = value
 	void write_raw_data(const unsigned char ***data, unsigned int lines);
 
+	/// \brief Finish
 	void finish();
-
 
 /// \}
 /// \name Implementation
@@ -128,6 +155,5 @@ private:
 	CL_SharedPtr<CL_JPEGCompressor_Impl> impl;
 /// \}
 };
-
 
 /// \}

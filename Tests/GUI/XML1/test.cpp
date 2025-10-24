@@ -18,7 +18,7 @@ public:
 			CL_GUIWindowManagerSystem wm;
 
 			CL_GUIManager gui;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_ResourceManager resources("resources.xml");
 			CL_ResourceManager resources2("../../../Resources/GUIThemeLuna/resources.xml");
@@ -26,17 +26,18 @@ public:
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("theme.css");
 
 			CL_GUITopLevelDescription window_desc;
 			window_desc.set_allow_resize(true);
-			CL_Window window(CL_RectPS(500, 600, 270, 140), &gui, window_desc);
+			window_desc.set_position(CL_RectPS(500, 600, 270, 140), false);
+			CL_Window window(&gui, window_desc);
 //			window.set_id_name("mainmenu");
 			window.func_close().set(this, &App::on_close, &window);
 
 			CL_GUILayoutCorners layout;
-			window.set_layout(&layout);
+			window.set_layout(layout);
 
 			window.create_components(cl_text("dialog.xml"));
 

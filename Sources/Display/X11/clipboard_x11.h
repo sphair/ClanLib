@@ -48,6 +48,7 @@ public:
 /// \{
 	CL_String get_clipboard_text() const;
 	bool is_clipboard_text_available() const;
+	bool is_clipboard_image_available() const;
 
 public:
 

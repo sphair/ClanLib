@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
@@ -55,10 +49,12 @@ class CL_API_CORE CL_ZipFileEntry
 public:
 	CL_ZipFileEntry();
 
+	/// \brief Constructs a ZipFileEntry
+	///
+	/// \param copy = Zip File Entry
 	CL_ZipFileEntry(const CL_ZipFileEntry &copy);
 
 	~CL_ZipFileEntry();
-
 
 /// \}
 /// \name Attributes
@@ -77,6 +73,9 @@ public:
 	/// \brief Returns the compressed size of file entry.
 	cl_int64 get_compressed_size();
 
+	/// \brief Is Directory
+	///
+	/// \return true = directory
 	bool is_directory() const;
 
 /// \}
@@ -93,6 +92,9 @@ public:
 	/// \brief Sets the filename of the file inside the archive.
 	void set_archive_filename(const CL_StringRef &filename);
 
+	/// \brief Set directory
+	///
+	/// \param is_directory = bool
 	void set_directory(bool is_directory);
 
 /// \}
@@ -107,6 +109,5 @@ private:
 	friend class CL_ZipIODevice_FileEntry;
 /// \}
 };
-
 
 /// \}

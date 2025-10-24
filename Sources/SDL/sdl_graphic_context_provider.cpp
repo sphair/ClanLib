@@ -38,9 +38,10 @@
 #include "sdl_render_buffer_provider.h"
 #include "sdl_shader_object_provider.h"
 #include "sdl_vertex_array_buffer_provider.h"
-#include "Display/Font/font_cache_native.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
+
+#define BUILD_DLL	// Required for the SDL-gfx header file - Remove this line if you get linkage problems
 #include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_rotozoom.h>
 
@@ -112,7 +113,7 @@ CL_GraphicContext CL_SDLGraphicContextProvider::create_worker_gc()
 	return CL_GraphicContext();
 }
 
-CL_PixelBuffer CL_SDLGraphicContextProvider::get_pixeldata(const CL_Rect& rect)
+CL_PixelBuffer CL_SDLGraphicContextProvider::get_pixeldata(const CL_Rect& rect) const
 {
 	return CL_PixelBuffer();
 }

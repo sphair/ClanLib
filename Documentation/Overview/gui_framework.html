@@ -248,13 +248,77 @@ private:
 				break;
 			}
 			// Cause repaint of component:
-			invalidate_rect();
+			request_repaint();
 		}
 	}
 
 	bool above;
 }
 </pre>
+
+<h3>Using clanGUI Compared to clanDisplay Rendering</h3>
+
+<p>One of the things that confuse people the most when it comes to the GUI
+is how the screen is updated. In particular, if you are attempting to port
+an application using clanDisplay to clanGUI, your application typically does
+something along these lines:</p>
+
+<pre>
+CL_GraphicContext gc = displaywindow.get_gc();
+while (!exit)
+{
+	update_game_logic();
+	render_game(gc);
+	displaywindow.flip();
+	CL_DisplayMessageQueue::process();
+}
+</pre>
+
+<p>A common mistake is to assume that if you want to render the GUI, you can
+simply add a call to <span class="code">gui_manager.exec()</span> just
+before the <span class="code">displaywindow.flip()</span> line. <i>This will
+not work.</i> The <span class="code">gui_manager.exec()</span> function will not
+exit until something in the GUI calls <span
+class="code">CL_GUIComponent::exit_with_code()</span>, causing only the GUI to be
+rendered and your game will disappear and hang.</p>
+
+<p>The best way to fix this problem is to get rid of your own <span
+class="code">while(!exit)</span> loop and create your game screen as a <span
+class="code">CL_GUIComponent</span>. Since your game probably wants to constantly
+repaint itself, you can use the <span
+class="code">CL_GUIComponent::set_constant_repaint()</span> function to
+achieve this. Also, depending on how often your game logic is to be run, you
+can either place this in the render callback function or use a <span
+class="code">CL_Timer</span> to call it at desired intervals.</p>
+
+<p>Here's a simple example how how a game component might look like:</p>
+
+<pre>
+class GameWindow : public CL_Window
+{
+public:
+	GameWindow(CL_GUIManager *manager, const CL_DisplayWindowDescription &amp;desc)
+	: CL_Window(desc)
+	{
+		func_render().set(this, &amp;GameWindow::on_render);
+		set_constant_repaint(true);
+		
+		button = new CL_PushButton(this);
+		button->set_geometry(CL_Rect(10, 10, 150, 25));
+		button->set_text("A button on top of my game!");
+	}
+
+private:	
+	void on_render(CL_GraphicContext &amp;gc, const CL_Rect &amp;clip_rect)
+	{
+		update_game_logic();
+		render_game(gc);
+	}
+	
+	CL_PushButton *button;
+};
+</pre>
+
 
 </div>
 

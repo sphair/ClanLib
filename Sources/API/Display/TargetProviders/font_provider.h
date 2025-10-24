@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 
@@ -54,7 +52,6 @@ class CL_API_DISPLAY CL_FontProvider
 public:
 	virtual ~CL_FontProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -62,7 +59,6 @@ public:
 public:
 	/// \brief Returns information about the current font.
 	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc) = 0;
-
 
 /// \}
 /// \name Operations
@@ -78,6 +74,13 @@ public:
 	/// \brief Calculate size of text string.
 	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text) = 0;
 
+	/// \brief Get the character index at a specified point
+	///
+	/// \param gc = The Graphic Context
+	/// \param text = The string
+	/// \param point = The point
+	/// \return The character index. -1 = Not at specified point
+	virtual int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point) = 0;
 
 /// \}
 /// \name Implementation
@@ -86,6 +89,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

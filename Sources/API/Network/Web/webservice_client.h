@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 #include "../../Core/System/sharedptr.h"
@@ -50,10 +48,12 @@ class CL_API_NETWORK CL_WebserviceClient
 public:
 	CL_WebserviceClient();
 
+	/// \brief Constructs a WebserviceClient
+	///
+	/// \param url = String Ref
 	CL_WebserviceClient(const CL_StringRef &url);
 
 	~CL_WebserviceClient();
-
 
 /// \}
 /// \name Operations
@@ -68,8 +68,10 @@ public:
 		const CL_StringRef &soap_action,
 		const CL_WebserviceMessage &input);
 
+	/// \brief Read response
+	///
+	/// \return Webservice Message
 	CL_WebserviceMessage read_response();
-
 
 /// \}
 /// \name Implementation
@@ -79,6 +81,5 @@ private:
 	CL_SharedPtr<CL_WebserviceClient_Impl> impl;
 /// \}
 };
-
 
 /// \}

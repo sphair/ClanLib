@@ -47,7 +47,7 @@
 #include "../opengl_window_description_impl.h"
 #include "../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
-#include "Display/X11/timer_provider_x11.h"
+#include <cstdio>
 
 namespace
 {
@@ -106,7 +106,7 @@ namespace
 
 CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 : x11_window(&CL_OpenGLTargetProvider::message_queue),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL)
+ opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), last_set_interval(-1)
 {
 	x11_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_GLX::on_window_resized);
 }
@@ -125,13 +125,12 @@ CL_OpenGLWindowProvider_GLX::~CL_OpenGLWindowProvider_GLX()
 		// save gc provider pointer so we can delete it later from shared list
 		CL_GraphicContextProvider *destroyed_gc_provider = gc.get_provider();
 
-		// Destroy graphic context before the window is destroyed
-		gc = CL_GraphicContext();
-
 		// Delete context from list of gc's that share textures.
 		if (CL_SharedGCData::get_instance()) // Check that the cache hasn't been destroyed yet
 		{
 			std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
+			if (gc_providers.size() == 1)
+				CL_SharedGCData::dispose_objects();
 			for (std::vector<CL_GraphicContextProvider*>::iterator it=gc_providers.begin(); it != gc_providers.end(); ++it)
 			{
 				if (destroyed_gc_provider == (*it))
@@ -141,6 +140,9 @@ CL_OpenGLWindowProvider_GLX::~CL_OpenGLWindowProvider_GLX()
 				}
 			}
 		}
+
+		// Destroy graphic context before the window is destroyed
+		gc = CL_GraphicContext();
 
 		// Delete the context
 
@@ -165,11 +167,6 @@ CL_OpenGLWindowProvider_GLX::~CL_OpenGLWindowProvider_GLX()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_GLX Operations:
-
-CL_TimerProvider *CL_OpenGLWindowProvider_GLX::alloc_timer(CL_DisplayWindow &disp_window)
-{
-	return new CL_TimerProvider_X11(disp_window);
-}
 
 void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc)
 {
@@ -249,6 +246,8 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 		if (!glXIsDirect(disp, opengl_context))
 			printf("No hardware acceleration available. I hope you got a really fast machine.\n");
 
+		last_set_interval = -1;
+
 	}
 
 	int screen_bpp = 0;
@@ -327,7 +326,6 @@ GLXContext CL_OpenGLWindowProvider_GLX::create_context()
 	return context;
 }
 
-
 void CL_OpenGLWindowProvider_GLX::flip(int interval)
 {
 	CL_GraphicContext gc = get_gc();
@@ -335,16 +333,19 @@ void CL_OpenGLWindowProvider_GLX::flip(int interval)
 
 	if (interval != -1)
 	{
-		if (glXSwapIntervalSGI)
+		if (last_set_interval != interval)
 		{
-			glXSwapIntervalSGI(interval);
-		}else if (glXSwapIntervalMESA)
-		{
-			glXSwapIntervalMESA(interval);
+			last_set_interval = interval;
+			if (glXSwapIntervalSGI)
+			{
+				glXSwapIntervalSGI(interval);
+			}else if (glXSwapIntervalMESA)
+			{
+				glXSwapIntervalMESA(interval);
+			}
 		}
 	}
-	
-	XSync(x11_window.get_display(),False);
+
 	glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
 }
 
@@ -420,6 +421,15 @@ void CL_OpenGLWindowProvider_GLX::set_cursor(CL_CursorProvider *cursor)
 	x11_window.set_cursor(static_cast<CL_CursorProvider_X11 *>(cursor));
 }
 
+void CL_OpenGLWindowProvider_GLX::set_large_icon(const CL_PixelBuffer &image)
+{
+	x11_window.set_large_icon(image);
+}
+
+void CL_OpenGLWindowProvider_GLX::set_small_icon(const CL_PixelBuffer &image)
+{
+	x11_window.set_small_icon(image);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_GLX Implementation:

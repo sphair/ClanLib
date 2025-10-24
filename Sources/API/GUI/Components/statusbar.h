@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -49,18 +47,30 @@ class CL_API_GUI CL_StatusBar : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a StatusBar
+	///
+	/// \param parent = GUIComponent
 	CL_StatusBar(CL_GUIComponent *parent);
 
 	virtual ~CL_StatusBar();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
 
+	/// \brief Func part double clicked
+	///
+	/// \param id = value
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_part_double_clicked(int id);
 
 /// \}
@@ -68,20 +78,47 @@ public:
 /// \{
 
 public:
+
+	/// \brief Set status text
+	///
+	/// \param text = String Ref
 	void set_status_text(const CL_StringRef &text);
 
+	/// \brief Set part text
+	///
+	/// \param id = value
+	/// \param text = String Ref
 	void set_part_text(int id, const CL_StringRef &text);
 
+	/// \brief Set part text
+	///
+	/// \param id = value
+	/// \param icon = Image
+	/// \param text = String Ref
 	void set_part_text(int id, const CL_Image &icon, const CL_StringRef &text);
 
+	/// \brief Add part
+	///
+	/// \param id = value
+	/// \param width = value
+	/// \param component = GUIComponent
 	void add_part(int id, int width, CL_GUIComponent *component = 0);
 
+	/// \brief Show part
+	///
+	/// \param id = value
+	/// \param show = bool
 	void show_part(int id, bool show = true);
 
+	/// \brief Remove part
+	///
+	/// \param id = value
 	void remove_part(int id);
 
+	/// \brief Show size grip
+	///
+	/// \param show = bool
 	void show_size_grip(bool show = true);
-
 
 /// \}
 /// \name Implementation
@@ -91,6 +128,5 @@ private:
 	CL_SharedPtr<CL_StatusBar_Impl> impl;
 /// \}
 };
-
 
 /// \}

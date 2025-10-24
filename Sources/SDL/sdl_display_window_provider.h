@@ -63,9 +63,9 @@ public:
 
 	bool is_visible() const;
 
-	CL_GraphicContext get_gc() const;
+	CL_GraphicContext &get_gc();
 
-	CL_InputContext get_ic() const;
+	CL_InputContext &get_ic();
 
 #ifdef WIN32
 	HWND get_hwnd() const;
@@ -73,7 +73,11 @@ public:
 
 	bool is_clipboard_text_available() const;
 
+	bool is_clipboard_image_available() const;
+
 	SDL_Surface *get_screen() {return window.get_screen(); }
+
+	bool is_fullscreen() const { return false; }
 
 /// \}
 /// \name Operations
@@ -128,17 +132,19 @@ public:
 
 	void update(const CL_Rect &rect);
 
-	void set_timer(CL_TimerProvider *timer);
-
-	void kill_timer(CL_TimerProvider *timer);
-
 	void set_clipboard_text(const CL_StringRef &text);
+
+	void set_clipboard_image(const CL_PixelBuffer &buf);
 
 	CL_String get_clipboard_text() const;
 
-	void invalidate_rect(const CL_Rect &rect);
+	CL_PixelBuffer get_clipboard_image() const;
 
-	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
+	void request_repaint(const CL_Rect &rect);
+
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
+
 /// \}
 /// \name Implementation
 /// \{

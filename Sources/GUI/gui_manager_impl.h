@@ -34,12 +34,13 @@
 #include "API/Core/Signals/callback_v2.h"
 #include "API/Core/CSS/css_document.h"
 #include "API/Core/CSS/css_ruleset.h"
-#include "API/Display/Window/timer.h"
+#include "API/Core/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
+#include "API/GUI/gui_theme.h"
 #include "gui_font_cache.h"
 #include <vector>
 #include <map>
@@ -86,7 +87,7 @@ public:
 	/// \brief Search children for component with is_default() set.
 	CL_GUIComponent *get_default_component(CL_GUIComponent *comp=0);
 
-	CL_Font get_named_font(const CL_FontDescription &desc);
+	CL_Font get_registered_font(const CL_FontDescription &desc);
 
 	std::vector<CL_GUITopLevelWindow *> root_components;
 	std::vector<CL_GUIMessage> message_queue;
@@ -96,8 +97,8 @@ public:
 	CL_CSSDocument css_document;
 	CL_GUIComponent *mouse_capture_component;
 	CL_GUIComponent *mouse_over_component;
-	CL_GUITheme *theme;
-	CL_GUIWindowManager *window_manager;
+	CL_GUITheme theme;
+	CL_GUIWindowManager window_manager;
 	bool exit_flag;
 	int exit_code;
 	CL_AcceleratorTable accel_table;
@@ -127,8 +128,7 @@ public:
 	std::vector<CL_CSSRuleSet> &get_rulesets(const CL_StringRef &element_name) const;
 	void reset_rulesets();
 
-	/// \brief Set the shared user defined GUI font - referenced using the specified name and details
-	void set_named_font(const CL_Font &font, const CL_FontDescription &desc);
+	void register_font(const CL_Font &font, const CL_FontDescription &desc);
 
 	bool is_constant_repaint_enabled() const;
 	bool is_constant_repaint_enabled(CL_GUIComponent *component) const;
@@ -138,6 +138,8 @@ public:
 /// \name Implementation
 /// \{
 private:
+	void deliver_message(CL_GUIMessage &message);
+
 	void on_focus_lost(CL_GUITopLevelWindow *toplevel_window);
 	void on_focus_gained(CL_GUITopLevelWindow *toplevel_window);
 	void on_resize(CL_GUITopLevelWindow *toplevel_window, const CL_Size &new_size);

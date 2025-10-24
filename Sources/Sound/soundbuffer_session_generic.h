@@ -28,15 +28,11 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include <vector>
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/System/mutex.h"
 #include "API/Sound/soundformat.h"
+#include "API/Sound/soundoutput.h"
 
 class CL_SoundFilter;
 class CL_SoundBuffer_Generic;
@@ -52,7 +48,7 @@ public:
 	CL_SoundBuffer_Session_Generic(
 		CL_SharedPtr<CL_SoundBuffer_Generic> soundbuffer,
 		bool looping,
-		CL_SoundOutput_Generic *output);
+		CL_SharedPtr<CL_SoundOutput_Generic> output);
 
 	virtual ~CL_SoundBuffer_Session_Generic();
 
@@ -66,7 +62,7 @@ public:
 
 	CL_SoundProvider_Session *provider_session;
 
-	CL_SoundOutput_Generic *output;
+	CL_SharedPtr<CL_SoundOutput_Generic> output;
 
 	float volume;
 
@@ -76,9 +72,7 @@ public:
 
 	bool playing;
 
-	std::vector<CL_SoundFilter *> filters;
-
-	std::vector<bool> delete_filters;
+	std::vector<CL_SoundFilter> filters;
 
 	mutable CL_Mutex mutex;
 

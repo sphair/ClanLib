@@ -53,7 +53,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_OcclusionQuery Construction:
 
-CL_OcclusionQuery::CL_OcclusionQuery(CL_GraphicContext context)
+CL_OcclusionQuery::CL_OcclusionQuery(CL_GraphicContext &context)
 : impl(new CL_OcclusionQuery_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = context.get_provider();

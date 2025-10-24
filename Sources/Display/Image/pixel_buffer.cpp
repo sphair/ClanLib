@@ -32,6 +32,13 @@
 #include "API/Core/IOData/datatypes.h"
 #include "pixel_buffer_impl.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
+#include "API/Core/Resources/resource.h"
+#include "API/Display/ImageProviders/provider_factory.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PixelBufferRef construction:
@@ -154,15 +161,18 @@ CL_PixelBuffer CL_PixelBufferRef::to_format(const CL_PixelFormat &format) const
 
 CL_PixelBuffer CL_PixelBufferRef::copy() const
 {
-	CL_PixelBuffer pbuf(get_width(), get_height(), get_width()*((format.get_depth()+7)/8), get_format(), *get_palette(), 0);
+	int src_pitch = get_pitch();
+	int dst_pitch = get_width()*((format.get_depth()+7)/8);
+	CL_PixelBuffer pbuf(get_width(), get_height(), dst_pitch, get_format(), *get_palette());
 	cl_uint8 *dst_data = (cl_uint8*)pbuf.get_data();
 	cl_uint8 *src_data = (cl_uint8*)get_data();
 
-	for (int y=0; y<get_height(); y++)
+	int src_height = get_height();
+	for (int y=0; y<src_height; y++)
 	{
-		memcpy((void*)dst_data, (void*)src_data, get_width()*((format.get_depth()+7)/8));
-		dst_data += pbuf.get_pitch();
-		src_data += get_pitch();
+		memcpy(dst_data, src_data, dst_pitch);
+		dst_data += dst_pitch;
+		src_data += src_pitch;
 	}
 
 	return pbuf;
@@ -190,6 +200,25 @@ CL_PixelBuffer::CL_PixelBuffer(const CL_PixelBufferRef &other)
 {
 	if (other.get_palette())
 		impl->palette = *other.get_palette();
+}
+
+CL_PixelBuffer::CL_PixelBuffer(const CL_StringRef &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	*this = CL_PixelBuffer(filename, dir);
+}
+
+CL_PixelBuffer::CL_PixelBuffer(const CL_StringRef &filename, const CL_VirtualDirectory &dir)
+{
+	*this = CL_ImageProviderFactory::load(filename, dir, cl_text(""));
+}
+
+CL_PixelBuffer::CL_PixelBuffer(CL_IODevice &file, const CL_String &image_type )
+{
+	*this = CL_ImageProviderFactory::load(file, image_type);
 }
 
 CL_PixelBuffer::CL_PixelBuffer(const CL_PixelBuffer &copy)

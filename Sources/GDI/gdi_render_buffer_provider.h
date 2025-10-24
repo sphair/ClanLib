@@ -55,7 +55,7 @@ public:
 /// \{
 
 public:
-	void create(int width, int height, int format);
+	void create(int width, int height, CL_TextureFormat internal_format);
 
 	void destroy();
 

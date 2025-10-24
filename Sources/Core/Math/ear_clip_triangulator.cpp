@@ -31,7 +31,6 @@
 #include "API/Core/Math/ear_clip_triangulator.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "ear_clip_triangulator_impl.h"
-#include <cmath>
 #include <algorithm>
 
 /////////////////////////////////////////////////////////////////////////////

@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "pixel_format_type.h"
@@ -60,6 +54,9 @@ public:
 	/// \param colorkey Source color key (pixel value that means transparent).
 	CL_PixelFormat();
 
+	/// \brief Constructs a PixelFormat
+	///
+	/// \param copy = Pixel Format
 	CL_PixelFormat(const CL_PixelFormat &copy);
 
 	CL_PixelFormat(
@@ -71,7 +68,6 @@ public:
 		bool use_colorkey = false,
 		unsigned int colorkey = 0,
 		CL_PixelFormatType type = pixelformat_rgba);
-
 
 /// \}
 /// \name Attributes
@@ -107,7 +103,6 @@ public:
 
 	/// \brief Returns the alpha component color mask.
 	unsigned int get_alpha_mask() const { return alpha_mask; }
-
 
 /// \}
 /// \name Statics
@@ -220,7 +215,6 @@ public:
 	/// \brief Returns the color mask based on bit count and shift.
 	static unsigned int get_bitmask(int bits, int shift);
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -249,7 +243,6 @@ public:
 
 	/// \brief Sets the alpha component color mask.
 	void set_alpha_mask(unsigned int i) { alpha_mask = i; }
-
 
 /// \}
 /// \name Implementation
@@ -281,6 +274,5 @@ private:
 	int depth;
 /// \}
 };
-
 
 /// \}

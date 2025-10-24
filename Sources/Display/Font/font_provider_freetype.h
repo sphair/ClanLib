@@ -26,22 +26,47 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/Font/font_freetype.h"
 #include "API/Display/Font/font_metrics.h"
-
-#include "font_cache_native.h"
-
+#include "API/Display/Render/texture.h"
+#include "API/Display/2D/texture_group.h"
 #include <list>
+#include <map>
 
 class CL_FreetypeFont;
-class CL_GraphicContextProvider;
-class CL_FontPixelBuffer;
 class CL_Colorf;
+
+class CL_Font_Freetype_Glyph
+{
+public:
+	CL_Font_Freetype_Glyph() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
+
+	/// \brief Glyph this pixel buffer refers to.
+	unsigned int glyph;
+
+	/// \brief True when the pixel buffer is empty
+	bool empty_buffer;
+
+	/// \brief The pixel buffer containing the glyph
+	CL_Subtexture subtexture;
+	CL_Texture texture;
+
+	/// \brief Offset to draw the font to buffer
+	/** For example:
+	    x = pos_x + pixelbuffer.offset.x
+	    y = pos_y + pixelbuffer.offset.y*/
+	CL_Point offset;
+
+	/// \brief Increment to draw the next glyph
+	/** For example:
+	    pos_x += pixelbuffer.increment.x;
+	    pos_y += pixelbuffer.increment.y;*/
+	CL_Point increment;
+};
+
 
 class CL_FontProvider_Freetype : public CL_FontProvider
 {
@@ -50,8 +75,7 @@ class CL_FontProvider_Freetype : public CL_FontProvider
 
 public:
 
-	CL_FontProvider_Freetype();
-
+	CL_FontProvider_Freetype(CL_GraphicContext &gc);
 	virtual ~CL_FontProvider_Freetype();
 
 
@@ -63,8 +87,6 @@ public:
 
 	CL_FreetypeFont *get_handle();
 
-	CL_StringRef get_unique_name() const { return unique_name; }
-
 	/// \brief Returns information about the current font.
 	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
 
@@ -74,17 +96,9 @@ public:
 /// \{
 
 public:
-	/// \brief Get the registered font or the best font match if not found
-	///
-	/// \param desc = Description
-	/// \param font_size_win32 = Input font sizes are win32 font sizes, and should be transformed to freetype font sizes
-	///
-	/// \return Updated description
-	static CL_FontDescription get_registered_font(const CL_FontDescription &desc, bool font_size_win32);
-
-	void load_font(const CL_StringRef &typeface_name, int height);
-
 	void load_font(const CL_FontDescription &desc);
+	void load_font(const CL_FontDescription &desc, CL_IODevice &file);
+	void load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
 
 	/// \brief Destroys the font provider.
 	virtual void destroy();
@@ -95,30 +109,37 @@ public:
 	/// \brief Calculate size of text string.
 	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
 
-	CL_FontPixelBuffer get_font_glyph(CL_GraphicContextProvider *gc_provider, int glyph, bool anti_alias, const CL_Colorf &color);
+	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
 
-	/// \brief Registers a font for lookup when creating fonts.
-	static void register_font(const CL_StringRef &font_filename, const CL_StringRef &font_typeface);
+	void set_texture_group(CL_TextureGroup &new_texture_group);
+
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	FontGlyphCache *font_cache_load(CL_GraphicContextProvider *gc_provider, const CL_StringRef &text);
+	/// \brief Get a glyph. Returns NULL if the glyph was not found
+	CL_Font_Freetype_Glyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
+
+	void free_font();
+	void insert_glyph(CL_GraphicContext &gc, int glyph);
+	void insert_glyph(CL_GraphicContext &gc, CL_FontPixelBuffer &pb);
+	CL_FontPixelBuffer get_font_glyph(CL_GraphicContext &gc, int glyph, bool anti_alias, const CL_Colorf &color);
+
+	std::vector<CL_Font_Freetype_Glyph* > glyph_list;
+
+	CL_FreetypeFont *handle;
+
+	// Contains the font height
+	int size_height;
 
 	// Contains the anti alias setting
 	bool anti_alias;
 
-	CL_String unique_name;
+	CL_TextureGroup texture_group;
 
-	CL_GraphicContextProvider *target;
-
-	CL_FreetypeFont *handle;
-
-	int size_height;
-
-	static std::map<CL_String /*font_typeface*/, CL_String /*font_filename*/ > font_register_cache;
+	CL_FontMetrics font_metrics;
 
 /// \}
 };

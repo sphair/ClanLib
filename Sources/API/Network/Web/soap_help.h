@@ -29,9 +29,7 @@
 /// \addtogroup clanNetwork_Web clanNetwork Web
 /// \{
 
-
 #pragma once
-
 
 #include "../api_network.h"
 
@@ -47,7 +45,6 @@ class CL_API_NETWORK CL_SoapHelp
 /// \{
 
 public:
-
 
 /// \}
 /// \name Attributes
@@ -73,7 +70,6 @@ public:
 	/// \brief Namespace for XML
 	/** <p>http://www.w3.org/XML/1998/namespace</p>*/
 	static CL_StringRef xml_ns;
-
 
 /// \}
 /// \name Operations
@@ -140,7 +136,6 @@ public:
 		CL_DomElement &out_body,
 		CL_DomElement &out_fault);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -148,6 +143,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

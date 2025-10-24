@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -77,12 +71,19 @@ public:
 	/// \brief Constructs a DOM Attr handle.
 	CL_DomAttr();
 
+	/// \brief Constructs a DomAttr
+	///
+	/// \param doc = Dom Document
+	/// \param name = Dom String
+	/// \param namespace_uri = Dom String
 	CL_DomAttr(CL_DomDocument doc, const CL_DomString &name, const CL_DomString &namespace_uri = CL_DomString());
 
+	/// \brief Constructs a DomAttr
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomAttr(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomAttr();
-
 
 /// \}
 /// \name Attributes
@@ -115,13 +116,11 @@ public:
 	/// The Element node this attribute is attached to or null if this attribute is not in use.
 	CL_DomElement get_owner_element() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -131,6 +130,5 @@ private:
 	friend class CL_DomElement;
 /// \}
 };
-
 
 /// \}

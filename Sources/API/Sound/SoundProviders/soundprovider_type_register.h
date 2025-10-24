@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "soundprovider_type.h"
 
@@ -54,7 +48,6 @@ public:
 	{
 	}
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -70,6 +63,5 @@ public:
 	}
 /// \}
 };
-
 
 /// \}

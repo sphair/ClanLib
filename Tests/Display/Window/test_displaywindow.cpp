@@ -217,6 +217,4 @@ void TestApp::test_display_window(void)
 
 	if (text != cl_text("Hello World")) fail();
 	CL_Console::write_line(" * Ensure \"Hello World\" is in the clipboard *");
-	
 }
-

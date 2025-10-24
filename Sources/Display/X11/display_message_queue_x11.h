@@ -29,20 +29,21 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/display_message_queue_provider.h"
 #include "API/Display/Window/display_window_message.h"
 #include "API/Display/api_display.h"
-#include "API/Display/Window/timer.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <X11/Xlib.h>
 
-typedef struct _CL_SOCKET_MESSAGE
+class CL_SocketMessage_X11
 {
+public:
+	CL_SocketMessage_X11() {}
+
 	CL_EventProvider::EventType type;
 	int handle;
-} CL_SOCKET_MESSAGE;
+};
 
 class CL_X11Window;
 
@@ -91,7 +92,7 @@ private:
 
 	CL_SharedPtr<ThreadData> get_thread_data();
 	bool has_internal_messages();
-	int msg_wait_for_multiple_objects(int count, CL_SOCKET_MESSAGE *handle_ptr, int timeout);
+	int msg_wait_for_multiple_objects(std::vector<CL_SocketMessage_X11> &event_handles, int timeout);
 
 	bool has_clan_event_peeked;
 	XEvent clan_event_peeked;

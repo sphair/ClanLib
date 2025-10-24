@@ -30,24 +30,9 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#ifdef CL_API_DLL
-#ifdef CL_DISPLAY_EXPORT
-#define CL_API_DISPLAY __declspec(dllexport)
-#else
-#define CL_API_DISPLAY __declspec(dllimport)
-#endif
-#else
-#define CL_API_DISPLAY
-#endif
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
+#include "../api_display.h"
 #include "outline_provider.h"
 #include "../../Core/Text/string_types.h"
 #include "../../Core/IOData/virtual_directory.h"
@@ -67,11 +52,20 @@ class CL_API_DISPLAY CL_OutlineProviderFile : public CL_OutlineProvider
  public:
 	/// \brief Construct a outline provider
 	///
-	/// \param CL_StringRef filename  Name of file to load.
-	/// \param CL_InputSourceProvider *provider  (optional) Use this input source provider as source of data.
-	CL_OutlineProviderFile(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory());
-	~CL_OutlineProviderFile();
+	/// \param file = file to load.
+	CL_OutlineProviderFile(CL_IODevice &file);
 
+	/// \brief Constructs a OutlineProviderFile
+	///
+	/// \param fullname = String Ref
+	CL_OutlineProviderFile(const CL_StringRef &fullname);
+
+	/// \brief Constructs a OutlineProviderFile
+	///
+	/// \param filename = String Ref
+	/// \param directory = Virtual Directory
+	CL_OutlineProviderFile(const CL_StringRef &filename, const CL_VirtualDirectory &directory);
+	~CL_OutlineProviderFile();
 
 /// \}
 /// \name Attributes
@@ -87,15 +81,21 @@ class CL_API_DISPLAY CL_OutlineProviderFile : public CL_OutlineProvider
 	/// \brief Not used for file provider. Returns -1.
 	virtual int get_height();
 
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief Destroys the provider.
+	virtual void destroy();
 
 /// \}
 /// \name Implementation
 /// \{
 
  private:
-	CL_OutlineProviderFile_Generic *impl;
+	CL_SharedPtr<CL_OutlineProviderFile_Generic> impl;
 /// \}
 };
-
 
 /// \}

@@ -30,9 +30,7 @@
 /// \addtogroup clanSDL_Display clanSDL Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_sdl.h"
 #include "../Display/display_target.h"
@@ -53,20 +51,17 @@ public:
 
 	~CL_SDLTarget();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -75,6 +70,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

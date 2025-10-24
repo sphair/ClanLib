@@ -29,7 +29,6 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #ifndef __header_primitives_array_builder__
 #define __header_primitives_array_builder__
 
@@ -46,8 +45,24 @@ class CL_PrimitivesArrayBuilder
 public:
 	CL_PrimitivesArrayBuilder();
 
+	/// \brief Append
+	///
+	/// \param num_vertices = value
+	/// \param prim_array = Primitives Array
 	void append(int num_vertices, const CL_PrimitivesArray &prim_array);
+
+	/// \brief Draw
+	///
+	/// \param gc = Graphic Context
+	/// \param type = Primitives Type
 	void draw(CL_GraphicContext &gc, CL_PrimitivesType type);
+
+	/// \brief Create buffer
+	///
+	/// \param gc = Graphic Context
+	/// \param usage = Buffer Usage
+	///
+	/// \return Vertex Array Buffer
 	CL_VertexArrayBuffer create_buffer(CL_GraphicContext &gc, CL_BufferUsage usage = cl_usage_static_draw);
 
 private:

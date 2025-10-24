@@ -35,7 +35,6 @@
 #include <map>
 #include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
-#include "API/Display/Window/timer.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/display_window_message.h"
 #include "API/Core/System/sharedptr.h"
@@ -48,7 +47,6 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 
-#include <X11/extensions/xf86vmode.h>
 #include <X11/extensions/XInput.h>
 #include <sys/time.h>
 
@@ -56,12 +54,11 @@ class CL_InputDeviceProvider_X11Keyboard;
 class CL_InputDeviceProvider_X11Mouse;
 class CL_InputDeviceProvider_LinuxJoystick;
 class CL_DisplayMessageQueue_X11;
-class CL_TimerProvider;
 class CL_Rect;
 class CL_DisplayWindowSite;
 class CL_DisplayWindowDescription;
 class CL_CursorProvider_X11;
-class CL_TimerProvider_X11;
+class CL_SocketMessage_X11;
 
 class CL_X11Window
 {
@@ -99,7 +96,7 @@ public:
 	/// \brief Handle to X11 window handle.
 	Window get_window() { return window; }
 
-	CL_InputContext get_ic() const { return ic; }
+	CL_InputContext &get_ic() { return ic; }
 
 	CL_InputContext ic;
 
@@ -107,9 +104,15 @@ public:
 
 	bool is_clipboard_text_available() const;
 
+	bool is_clipboard_image_available() const;
+
 	CL_String get_clipboard_text() const;
 
+	CL_PixelBuffer get_clipboard_image() const;
+
 	unsigned char *get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
+
+	const std::vector<CL_SocketMessage_X11> &get_window_socket_messages() const;
 
 /// \}
 /// \name Operations
@@ -125,6 +128,9 @@ public:
 	void create(XVisualInfo *visual, int screen_bpp, CL_DisplayWindowSite *site, const CL_DisplayWindowDescription &description);
 
 	void show_system_cursor();
+
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
 
 	void set_cursor(CL_CursorProvider_X11 *cursor);
 
@@ -161,23 +167,18 @@ public:
 
 	bool get_message(XEvent &clan_event);
 
-	/// \brief Set the window timer
-	void set_timer(CL_TimerProvider *timer);
-
-	/// \brief Stop the window timer
-	void kill_timer(CL_TimerProvider *timer);
-
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
 	bool has_messages();
 
-	void restore_videomode();
+	/// \brief Tell the window manager to fullscreen us (resizing window restores non-fullscreen)
+	void set_fullscreen();
 
-	void set_videomode(int width, int height, int bpp_local, int refresh_rate);
-
-	void invalidate_rect(const CL_Rect &rect);
+	void request_repaint(const CL_Rect &rect);
 
 	void set_clipboard_text(const CL_StringRef &text);
+
+	void set_clipboard_image(const CL_PixelBuffer &buf);
 
 	bool get_xevent( XEvent &event ) const;
 
@@ -193,15 +194,11 @@ public:
 private:
 	void wait_mapped();
 
-	bool check_timers(void);
-
 	CL_Rect get_screen_position() const;
 
 	void setup_swap_interval_pointers();
 
 	void setup_joysticks();
-
-	void process_timer_events();
 
 	// Close the window, freeing any allocated resources
 	void close_window();
@@ -250,11 +247,6 @@ private:
 	Cursor hidden_cursor;
 	Pixmap cursor_bitmap;
 
-	/// \brief Attributes to switch between windowed and fullscreen
-	int dotclock;
-	XF86VidModeModeInfo old_mode;
-	int old_x, old_y;
-
 	CL_InputDeviceProvider_X11Keyboard *keyboard;
 
 	CL_InputDeviceProvider_X11Mouse *mouse;
@@ -262,8 +254,6 @@ private:
 	CL_DisplayWindowSite *site;
 
 	CL_DisplayMessageQueue_X11 *message_queue;
-
-	std::list<CL_TimerProvider_X11 *> timer_list;
 
 	CL_Callback_v0 callback_on_resized;
 
@@ -275,6 +265,8 @@ private:
 	bool resize_enabled;
 
 	CL_Clipboard_X11 clipboard;
+
+	std::vector<CL_SocketMessage_X11> current_window_events;
 /// \}
 };
 

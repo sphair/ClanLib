@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -54,10 +48,9 @@ class CL_API_DISPLAY CL_OcclusionQuery
 
 public:
 	/// \brief Constructs an occlusion query object.
-	CL_OcclusionQuery(CL_GraphicContext context);
+	CL_OcclusionQuery(CL_GraphicContext &context);
 
 	virtual ~CL_OcclusionQuery();
-
 
 /// \}
 /// \name Attributes
@@ -70,7 +63,6 @@ public:
 	/// \brief Returns true if the GPU is ready to return the result.
 	bool is_result_ready();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -82,7 +74,6 @@ public:
 	/// \brief Finish occlusion query.
 	void end();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -91,6 +82,5 @@ private:
 	CL_SharedPtr<CL_OcclusionQuery_Impl> impl;
 /// \}
 };
-
 
 /// \}

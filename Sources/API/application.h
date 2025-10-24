@@ -34,11 +34,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
@@ -140,5 +135,4 @@
 		#endif
 	#endif
 #endif
-
 

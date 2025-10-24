@@ -31,7 +31,6 @@
 
 #include "API/Display/TargetProviders/display_message_queue_provider.h"
 #include "API/Display/api_display.h"
-#include "API/Display/Window/timer.h"
 #include <vector>
 
 class CL_Win32Window;

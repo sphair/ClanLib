@@ -553,12 +553,7 @@ void CL_HTTPClientConnection_Impl::worker_thread_main()
 {
 	try
 	{
-		bool result = connection.connect(remote, local);
-		if (result == false)
-		{
-			stop_event.set();
-			return;
-		}
+		connection.connect(remote, local);
 		connection.set_nodelay(true);
 		created_event.set();
 
@@ -603,9 +598,6 @@ void CL_HTTPClientConnection_Impl::worker_thread_main()
 						break;
 				}
 			}
-
-			// Flush TCP connection
-			connection.flush();
 		}
 	}
 	catch (CL_Exception)

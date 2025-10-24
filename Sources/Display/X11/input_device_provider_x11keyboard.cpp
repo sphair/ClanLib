@@ -33,6 +33,7 @@
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_help.h"
 #include "x11_window.h"
+#include <cstdio>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Keyboard construction:
@@ -150,6 +151,85 @@ void CL_InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &even
 		case XK_Alt_R:
 			alt_down = keydown;
 			break;
+	}
+
+	if (event.state & Mod3Mask)	// Num Lock pressed
+	{
+		switch (key_symbol)
+		{
+			case XK_KP_Home:
+				key_symbol = CL_KEY_NUMPAD7;
+				break;
+			case XK_KP_Up:
+				key_symbol = CL_KEY_NUMPAD8;
+				break;
+			case XK_KP_Page_Up:
+				key_symbol = CL_KEY_NUMPAD9;
+				break;
+			case XK_KP_Left:
+				key_symbol = CL_KEY_NUMPAD4;
+				break;
+			case XK_KP_Begin:
+				key_symbol = CL_KEY_NUMPAD5;
+				break;
+			case XK_KP_Right:
+				key_symbol = CL_KEY_NUMPAD6;
+				break;
+			case XK_KP_End:
+				key_symbol = CL_KEY_NUMPAD1;
+				break;
+			case XK_KP_Down:
+				key_symbol = CL_KEY_NUMPAD2;
+				break;
+			case XK_KP_Page_Down:
+				key_symbol = CL_KEY_NUMPAD3;
+				break;
+			case XK_KP_Insert:
+				key_symbol = CL_KEY_NUMPAD0;
+				break;
+			case XK_KP_Delete:
+				key_symbol = (int) '.';
+				break;
+		}
+	}
+	else
+	{
+		switch (key_symbol)
+		{
+			case XK_KP_Home:
+				key_symbol = CL_KEY_HOME;
+				break;
+			case XK_KP_Up:
+				key_symbol = CL_KEY_UP;
+				break;
+			case XK_KP_Page_Up:
+				key_symbol = CL_KEY_PRIOR;
+				break;
+			case XK_KP_Left:
+				key_symbol = CL_KEY_LEFT;
+				break;
+			case XK_KP_Begin:
+				key_symbol = CL_KEY_CLEAR;
+				break;
+			case XK_KP_Right:
+				key_symbol = CL_KEY_RIGHT;
+				break;
+			case XK_KP_End:
+				key_symbol = CL_KEY_END;
+				break;
+			case XK_KP_Down:
+				key_symbol = CL_KEY_DOWN;
+				break;
+			case XK_KP_Page_Down:
+				key_symbol = CL_KEY_NEXT;
+				break;
+			case XK_KP_Insert:
+				key_symbol = CL_KEY_INSERT;
+				break;
+			case XK_KP_Delete:
+				key_symbol = CL_KEY_DELETE;
+				break;
+		}
 	}
 
 	key.id = key_symbol;

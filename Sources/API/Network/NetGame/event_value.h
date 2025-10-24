@@ -41,43 +41,153 @@ public:
 	{
 		null,
 		integer,
+		uinteger,
 		string,
 		boolean,
-		number
+		number,
+		complex
 	};
 
 	CL_NetGameEventValue();
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = value
 	CL_NetGameEventValue(int value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = value
+	CL_NetGameEventValue(unsigned int value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = value
 	CL_NetGameEventValue(float value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = String
 	CL_NetGameEventValue(const CL_String &value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = String Ref
 	CL_NetGameEventValue(const CL_StringRef &value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param str = char
 	CL_NetGameEventValue(const char *str);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param str = wchar_t
 	CL_NetGameEventValue(const wchar_t *str);
 	explicit CL_NetGameEventValue(bool value);
-	CL_NetGameEventValue(Type type, const CL_String &value);
 
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param type = Type
+	CL_NetGameEventValue(Type type);
+
+	/// \brief Get Type
+	///
+	/// \return type
 	Type get_type() const;
-	const CL_String &get_value() const { return value; }
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
+
+	/// \brief Is Uinteger
+	///
+	/// \return true = uinteger
+	bool is_uinteger() const;
+
+	/// \brief Is Integer
+	///
+	/// \return true = integer
 	bool is_integer() const;
+
+	/// \brief Is Number
+	///
+	/// \return true = number
 	bool is_number() const;
+
+	/// \brief Is String
+	///
+	/// \return true = string
 	bool is_string() const;
+
+	/// \brief Is Boolean
+	///
+	/// \return true = boolean
 	bool is_boolean() const;
 
+	/// \brief Is Complex
+	///
+	/// \return true = complex
+	bool is_complex() const;
+
+	unsigned int get_member_count() const;
+	const CL_NetGameEventValue &get_member(unsigned int index) const;
+
+	/// \brief Add member
+	///
+	/// \param value = Net Game Event Value
+	void add_member(const CL_NetGameEventValue &value);
+
+	/// \brief Set member
+	///
+	/// \param index = value
+	/// \param value = Net Game Event Value
+	void set_member(unsigned int index, const CL_NetGameEventValue &value);
+
+	unsigned int to_uinteger() const;
+
+	/// \brief To integer
+	///
+	/// \return int
 	int to_integer() const;
+
+	/// \brief To number
+	///
+	/// \return float
 	float to_number() const;
+
+	/// \brief To string
+	///
+	/// \return String
 	CL_String to_string() const;
+
+	/// \brief To boolean
+	///
+	/// \return bool
 	bool to_boolean() const;
 
+	inline operator unsigned int() const { return to_uinteger(); }
 	inline operator int() const { return to_integer(); }
 	inline operator float() const { return to_number(); }
 	inline operator CL_String() const { return to_string(); }
 	inline operator bool() const { return to_boolean(); }
 
 private:
+
+	/// \brief Throw if not complex
+	void throw_if_not_complex() const;
+
 	Type type;
-	CL_String value;
+	union
+	{
+		int value_int;
+		unsigned int value_uint;
+		float value_float;
+		bool value_bool;
+	};
+	CL_String value_string;
+	std::vector<CL_NetGameEventValue> value_complex;
 };
 
 /// \}

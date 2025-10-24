@@ -25,14 +25,13 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "gui_component.h"
@@ -42,12 +41,13 @@
 #include <vector>
 
 class CL_GraphicContext;
-class CL_Timer;
 class CL_InputEvent;
 class CL_InputState;
 class CL_Cursor;
 class CL_DisplayWindow;
 class CL_GUITopLevelWindow;
+class CL_GUIWindowManagerProvider;
+class CL_GUIWindowManager_Impl;
 
 /// \brief GUI window manager site.
 ///
@@ -92,103 +92,234 @@ public:
 		cl_wm_type_system,
 		cl_wm_type_texture
 	};
-
-
 /// \}
+
 /// \name Construction
 /// \{
-
 public:
-	virtual ~CL_GUIWindowManager() { }
+	/// \brief Constructs a window manager
+	///
+	/// \param provider = The theme provider
+	CL_GUIWindowManager(CL_GUIWindowManagerProvider *provider);
 
+	/// \brief Constructs a GUIWindowManager
+	///
+	/// \param copy = GUIWindow Manager
+	CL_GUIWindowManager(const CL_GUIWindowManager &copy);
+
+	~CL_GUIWindowManager();
 
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
-	virtual CL_WindowManagerType get_window_manager_type() const = 0;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
+	bool is_null();
+
+	/// \brief Retrieves the provider.
+	CL_GUIWindowManagerProvider *get_provider() const;
+
+	/// \brief Get Window manager type
+	///
+	/// \return window_manager_type
+	CL_WindowManagerType get_window_manager_type() const;
 
 /// \}
 /// \name Operations
 /// \{
-
 public:
-	virtual void set_site(CL_GUIWindowManagerSite *site) = 0;
 
-	virtual void create_window(
+	/// \brief Set site
+	///
+	/// \param site = GUIWindow Manager Site
+	void set_site(CL_GUIWindowManagerSite *site);
+	void create_window(
 		CL_GUITopLevelWindow *handle,
 		CL_GUITopLevelWindow *owner,
 		CL_GUITopLevelDescription description,
-		bool temporary) = 0;
+		bool temporary);
 
-	virtual void destroy_window(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Destroy window
+	///
+	/// \param handle = GUITop Level Window
+	void destroy_window(CL_GUITopLevelWindow *handle);
 
-	virtual void enable_window(CL_GUITopLevelWindow *handle, bool enable) = 0;
+	/// \brief Enable window
+	///
+	/// \param handle = GUITop Level Window
+	/// \param enable = bool
+	void enable_window(CL_GUITopLevelWindow *handle, bool enable);
 
-	virtual bool has_focus(CL_GUITopLevelWindow *handle) const = 0;
+	/// \brief Has focus
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return bool
+	bool has_focus(CL_GUITopLevelWindow *handle) const;
 
-	virtual void set_visible(CL_GUITopLevelWindow *handle, bool visible, bool activate_root_win) = 0;
+	/// \brief Set visible
+	///
+	/// \param handle = GUITop Level Window
+	/// \param visible = bool
+	/// \param activate_root_win = bool
+	void set_visible(CL_GUITopLevelWindow *handle, bool visible, bool activate_root_win);
 
-	virtual void set_geometry(CL_GUITopLevelWindow *handle, const CL_Rect &geometry, bool client_area) = 0;
+	/// \brief Set geometry
+	///
+	/// \param handle = GUITop Level Window
+	/// \param geometry = Rect
+	/// \param client_area = bool
+	void set_geometry(CL_GUITopLevelWindow *handle, const CL_Rect &geometry, bool client_area);
 
-	virtual CL_Rect get_geometry(CL_GUITopLevelWindow *handle, bool client_area) const = 0;
+	/// \brief Get geometry
+	///
+	/// \param handle = GUITop Level Window
+	/// \param client_area = bool
+	///
+	/// \return Rect
+	CL_Rect get_geometry(CL_GUITopLevelWindow *handle, bool client_area) const;
 
-	virtual CL_Point screen_to_window(CL_GUITopLevelWindow *handle, const CL_Point &screen_point, bool client_area) const = 0;
+	/// \brief Screen to window
+	///
+	/// \param handle = GUITop Level Window
+	/// \param screen_point = Point
+	/// \param client_area = bool
+	///
+	/// \return Point
+	CL_Point screen_to_window(CL_GUITopLevelWindow *handle, const CL_Point &screen_point, bool client_area) const;
 
-	virtual CL_Point window_to_screen(CL_GUITopLevelWindow *handle, const CL_Point &window_point, bool client_area) const = 0;
+	/// \brief Window to screen
+	///
+	/// \param handle = GUITop Level Window
+	/// \param window_point = Point
+	/// \param client_area = bool
+	///
+	/// \return Point
+	CL_Point window_to_screen(CL_GUITopLevelWindow *handle, const CL_Point &window_point, bool client_area) const;
 
-	virtual CL_GraphicContext get_gc(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Get gc
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return Graphic Context
+	CL_GraphicContext& get_gc(CL_GUITopLevelWindow *handle) const;
 
-	virtual CL_InputContext get_ic(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Get ic
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return Input Context
+	CL_InputContext& get_ic(CL_GUITopLevelWindow *handle) const;
 
-	virtual CL_GraphicContext begin_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region) = 0;
+	/// \brief Begin paint
+	///
+	/// \param handle = GUITop Level Window
+	/// \param update_region = Rect
+	///
+	/// \return Graphic Context
+	CL_GraphicContext begin_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 
-	virtual void end_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region) = 0;
+	/// \brief Set cliprect
+	///
+	/// \param handle = GUITop Level Window
+	/// \param gc = Graphic Context
+	/// \param rect = Rect
+	void set_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect);
 
-	virtual void invalidate_rect(CL_GUITopLevelWindow *handle, const CL_Rect &update_region) = 0;
+	/// \brief Reset cliprect
+	///
+	/// \param handle = GUITop Level Window
+	/// \param gc = Graphic Context
+	void reset_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc);
 
-	virtual void bring_to_front(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief End paint
+	///
+	/// \param handle = GUITop Level Window
+	/// \param update_region = Rect
+	void end_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 
-	virtual bool is_minimized(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Request repaint
+	///
+	/// \param handle = GUITop Level Window
+	/// \param update_region = Rect
+	void request_repaint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 
-	virtual bool is_maximized(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Bring to front
+	///
+	/// \param handle = GUITop Level Window
+	void bring_to_front(CL_GUITopLevelWindow *handle);
 
-	virtual bool has_message() = 0;
+	/// \brief Is minimized
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return bool
+	bool is_minimized(CL_GUITopLevelWindow *handle) const;
 
-	virtual void process_message() = 0;
+	/// \brief Is maximized
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return bool
+	bool is_maximized(CL_GUITopLevelWindow *handle) const;
 
-	virtual void wait_for_message() = 0;
+	/// \brief Has message
+	///
+	/// \return bool
+	bool has_message();
 
-	virtual CL_Timer create_timer(CL_GUITopLevelWindow *handle) = 0;
+	/// \brief Process message
+	void process_message();
 
-	virtual void capture_mouse(CL_GUITopLevelWindow *handle, bool state) = 0;
+	/// \brief Wait for message
+	void wait_for_message();
 
-	virtual CL_DisplayWindow get_display_window(CL_GUITopLevelWindow *handle) const = 0;
+	/// \brief Capture mouse
+	///
+	/// \param handle = GUITop Level Window
+	/// \param state = bool
+	void capture_mouse(CL_GUITopLevelWindow *handle, bool state);
 
-	virtual void set_cursor(CL_GUITopLevelWindow *handle, const CL_Cursor &cursor) = 0;
+	/// \brief Get display window
+	///
+	/// \param handle = GUITop Level Window
+	///
+	/// \return Display Window
+	CL_DisplayWindow get_display_window(CL_GUITopLevelWindow *handle) const;
 
-	virtual void set_cursor(CL_GUITopLevelWindow *handle, enum CL_StandardCursor type) = 0;
+	/// \brief Set cursor
+	///
+	/// \param handle = GUITop Level Window
+	/// \param cursor = Cursor
+	void set_cursor(CL_GUITopLevelWindow *handle, const CL_Cursor &cursor);
+
+	/// \brief Set cursor
+	///
+	/// \param handle = GUITop Level Window
+	/// \param CL_StandardCursor = enum
+	void set_cursor(CL_GUITopLevelWindow *handle, enum CL_StandardCursor type);
 
 	/// \brief Perform any updates.
 	///
 	/// This is called by CL_GUIManager::exec(), after all messages has been processed
-	virtual void update() = 0;
+	void update();
 
 	/// \brief Initial setup for painting all top level windows
-	virtual void setup_painting() = 0;
+	void setup_painting();
 
 	/// \brief Final completion for painting all top level windows
-	virtual void complete_painting() = 0;
-
+	void complete_painting();
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	CL_SharedPtr<CL_GUIWindowManager_Impl> impl;
 /// \}
 };
-
 
 /// \}

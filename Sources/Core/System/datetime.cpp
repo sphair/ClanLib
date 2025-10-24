@@ -34,8 +34,8 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #ifndef WIN32
-#include <string.h>
-#include <time.h>
+#include <cstring>
+#include <ctime>
 #endif
 
 

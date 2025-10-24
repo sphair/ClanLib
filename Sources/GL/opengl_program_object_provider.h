@@ -33,10 +33,11 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
 #include "API/Display/TargetProviders/program_object_provider.h"
+#include "API/Core/System/disposable_object.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLProgramObjectProvider : public CL_ProgramObjectProvider
+class CL_OpenGLProgramObjectProvider : public CL_ProgramObjectProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -132,6 +133,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	void fetch_attributes() const;
 
 	void fetch_uniforms() const;

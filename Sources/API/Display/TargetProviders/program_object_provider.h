@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include <vector>
 class CL_ProgramAttribute;
@@ -51,8 +49,8 @@ public:
 	{
 	}
 
+	/// \brief Destroy
 	virtual void destroy()=0;
-
 
 /// \}
 /// \name Attributes
@@ -92,7 +90,6 @@ public:
 	/// \brief Returns the location of a named uniform variable.
 	virtual int get_uniform_location(const CL_StringRef &name) const=0;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -120,19 +117,54 @@ public:
 
 	/// \brief Set uniform variable(s).
 	virtual void set_uniform1i(const CL_StringRef &name, int)=0;
+
+	/// \brief Set uniform2i
+	///
+	/// \param name = String Ref
+	/// \param int = value
 	virtual void set_uniform2i(const CL_StringRef &name, int, int)=0;
 	virtual void set_uniform3i(const CL_StringRef &name, int, int, int)=0;
+
+	/// \brief Set uniform4i
+	///
+	/// \param name = String Ref
+	/// \param int = value
+	/// \param int = value
 	virtual void set_uniform4i(const CL_StringRef &name, int, int, int, int)=0;
+
+	/// \brief Set uniformiv
+	///
+	/// \param name = String Ref
+	/// \param size = value
+	/// \param count = value
+	/// \param data = value
 	virtual void set_uniformiv(const CL_StringRef &name, int size, int count, int *data)=0;
 	virtual void set_uniform1f(const CL_StringRef &name, float)=0;
+
+	/// \brief Set uniform2f
+	///
+	/// \param name = String Ref
+	/// \param float = value
 	virtual void set_uniform2f(const CL_StringRef &name, float, float)=0;
 	virtual void set_uniform3f(const CL_StringRef &name, float, float, float)=0;
+
+	/// \brief Set uniform4f
+	///
+	/// \param name = String Ref
+	/// \param float = value
+	/// \param float = value
 	virtual void set_uniform4f(const CL_StringRef &name, float, float, float, float)=0;
+
+	/// \brief Set uniformfv
+	///
+	/// \param name = String Ref
+	/// \param size = value
+	/// \param count = value
+	/// \param data = value
 	virtual void set_uniformfv(const CL_StringRef &name, int size, int count, float *data)=0;
 
 	/// \brief Set uniform matrices.
 	virtual void set_uniform_matrix(const CL_StringRef &name, int size, int count, bool transpose, float *data)=0;
-
 
 /// \}
 /// \name Implementation
@@ -142,6 +174,5 @@ private:
 
 /// \}
 };
-
 
 /// \}

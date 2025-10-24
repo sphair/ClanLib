@@ -30,13 +30,9 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
+#include "../api_display.h"
 
 /// \brief Outline optimization accuracy.
 ///
@@ -49,6 +45,5 @@ enum CL_OutlineAccuracy
 	accuracy_low,
 	accuracy_poor
 };
-
 
 /// \}

@@ -29,13 +29,7 @@
 /// \addtogroup clanGL_System clanGL System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_gl.h"
 
@@ -54,6 +48,5 @@ public:
 	~CL_SetupGL();
 /// \}
 };
-
 
 /// \}

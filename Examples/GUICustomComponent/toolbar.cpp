@@ -1,7 +1,7 @@
 #include "toolbar.h"
 
 Toolbar::Toolbar(const CL_Rect &position, CL_GUIManager* gui_manager)
-: CL_GUIComponent(position, gui_manager, CL_GUITopLevelDescription()), selected_index(-1), clicked_index(-1)
+: CL_GUIComponent(gui_manager, get_toplevel_description(position)), selected_index(-1), clicked_index(-1)
 {
 	set_type_name("toolbar");
 
@@ -15,6 +15,13 @@ Toolbar::Toolbar(const CL_Rect &position, CL_GUIManager* gui_manager)
 Toolbar::~Toolbar()
 {
 	items.clear();
+}
+
+CL_GUITopLevelDescription Toolbar::get_toplevel_description(const CL_Rect &position)
+{
+	CL_GUITopLevelDescription desc;
+	desc.set_position(position, false);
+	return desc;
 }
 
 CL_Size Toolbar::get_preferred_size() const
@@ -47,7 +54,7 @@ void Toolbar::on_mouse_move(CL_InputEvent &input_event)
 		if(icon_rect.contains(input_event.mouse_pos))
 		{
 			selected_index = i;
-			invalidate_rect();
+			request_repaint();
 			return;
 		}
 
@@ -56,13 +63,13 @@ void Toolbar::on_mouse_move(CL_InputEvent &input_event)
 
 	clicked_index = -1;
 	selected_index = -1;
-	invalidate_rect();
+	request_repaint();
 }
 
 void Toolbar::on_mouse_lbutton_down(CL_InputEvent &input_event)
 {
 	clicked_index = selected_index;
-	invalidate_rect();
+	request_repaint();
 }
 
 void Toolbar::on_mouse_lbutton_up(CL_InputEvent &input_event)
@@ -72,7 +79,7 @@ void Toolbar::on_mouse_lbutton_up(CL_InputEvent &input_event)
 			func_selected.invoke(clicked_index);
 
 	clicked_index = -1;
-	invalidate_rect();
+	request_repaint();
 }
 
 void Toolbar::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
@@ -116,12 +123,12 @@ void Toolbar::add_item(CL_Sprite icon, CL_Sprite icon_selected, CL_Sprite icon_c
 {
 	items.push_back(ToolbarItem(icon, icon_selected, icon_clicked));
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void Toolbar::clear_items()
 {
 	selected_index = -1;
 	items.clear();
-	invalidate_rect();
+	request_repaint();
 }

@@ -34,14 +34,16 @@
 
 GUI::GUI(App *app) : app(app), window_ptr(app->get_window())
 {
-	current_theme = new_theme = theme_aero_packed;
+//	current_theme = new_theme = theme_aero_packed;
+	current_theme = new_theme = theme_aero;
 
 	current_manager = manager_texture;
+//	current_manager = manager_system;
 
 	resources_internal = CL_ResourceManager("resources.xml");
 
 	CL_GraphicContext gc = window_ptr->get_gc();
-	font = CL_Font_Texture(gc, "Tahoma", 16);
+	font = CL_Font(gc, "Tahoma", 16);
 
 	reset_manager();
 }
@@ -167,7 +169,6 @@ const char *GUI::get_theme_location()
 		return "../../Resources/GUIThemeLunaPacked/theme.css";
 
 	return "../../Resources/GUIThemeLuna/theme.css";
-
 }
 
 const char *GUI::get_resources_location()
@@ -183,4 +184,3 @@ const char *GUI::get_resources_location()
 
 	return "../../Resources/GUIThemeLuna/resources.xml";
 }
-

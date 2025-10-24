@@ -30,7 +30,6 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #ifndef _cl_header_string_container_
 #define _cl_header_string_container_
 
@@ -64,49 +63,164 @@ public:
 
 	// These could and maybe should be replaced with "this->function_name()"
 	iterator begin() { return CL_StringData<CharType, ReferenceClass, StdString>::begin(); }
+
+	/// \brief End
+	///
+	/// \return iterator
 	iterator end() { return CL_StringData<CharType, ReferenceClass, StdString>::end(); }
+
+	/// \brief Size
+	///
+	/// \return size_type
 	size_type size() const { return CL_StringData<CharType, ReferenceClass, StdString>::size(); }
+
+	/// \brief Length
+	///
+	/// \return size_type
 	size_type length() const { return CL_StringData<CharType, ReferenceClass, StdString>::length(); }
+
+	/// \brief Empty
+	///
+	/// \return bool
 	bool empty() const { return CL_StringData<CharType, ReferenceClass, StdString>::empty(); }
 	const CharType *data() const { return CL_StringData<CharType, ReferenceClass, StdString>::data(); }
+
+	/// \brief Data
+	///
+	/// \return Char Type
 	CharType *data() { return CL_StringData<CharType, ReferenceClass, StdString>::data(); }
 
 #endif
 
 	CL_StringContainer();
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param source = Std String
 	CL_StringContainer(const StdString &source);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param source = String Container
 	CL_StringContainer(const CL_StringContainer &source);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
 	CL_StringContainer(const CL_StringData<CharType, ReferenceClass, StdString> &source);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param c_str = char
 	CL_StringContainer(const char *c_str);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param c_str = char
+	/// \param length = size_type
 	CL_StringContainer(const char *c_str, size_type length);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param wc_str = wchar_t
 	CL_StringContainer(const wchar_t *wc_str);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param wc_str = wchar_t
+	/// \param length = size_type
 	CL_StringContainer(const wchar_t *wc_str, size_type length);
+
+	/// \brief Constructs a StringContainer
+	///
+	/// \param n = size_type
+	/// \param c = Char Type
 	CL_StringContainer(size_type n, CharType c);
 	~CL_StringContainer();
 
+	/// \brief ReferenceClass
+	///
+	/// \return operator
 	operator ReferenceClass() const;
 
 	const CharType *c_str() const;
 
+	/// \brief Max size
+	///
+	/// \return size_type
 	size_type max_size() const { return (size_type) -1; }
+
+	/// \brief Capacity
+	///
+	/// \return size_type
 	size_type capacity() const { return data_capacity; }
 
 //	void swap(CL_StringContainer &other);
 //	static inline swap(CL_StringContainer &s1, CL_StringContainer &s2);
 
+	/// \brief Clear
 	void clear();
+
+	/// \brief Reserve
+	///
+	/// \param size = size_type
 	void reserve(size_type size);
+
+	/// \brief Resize
+	///
+	/// \param n = size_type
 	void resize(size_type n);
+
+	/// \brief Resize
+	///
+	/// \param n = size_type
+	/// \param c = Char Type
 	void resize(size_type n, CharType c);
 
 //	template <class InputIterator>
 //	CL_StringContainer &assign(InputIterator first, InputIterator last);
 	CL_StringContainer &assign(const CL_StringData<CharType, ReferenceClass, StdString> &s);
+
+	/// \brief Assign
+	///
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	/// \param pos = size_type
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &assign(const CL_StringData<CharType, ReferenceClass, StdString> &s, size_type pos, size_type n);
+
+	/// \brief Assign
+	///
+	/// \param s = Char Type
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &assign(const CharType *s, size_type n);
+
+	/// \brief Assign
+	///
+	/// \param s = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &assign(const CharType *s);
+
+	/// \brief Assign
+	///
+	/// \param n = size_type
+	/// \param c = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &assign(size_type n, CharType c);
 
+	/// \brief Insert
+	///
+	/// \param pos = iterator
+	/// \param item = Char Type
+	///
+	/// \return iterator
 	iterator insert(iterator pos, const CharType &item)
 	{
 		size_type insert_pos = (size_type) (pos - begin());
@@ -121,24 +235,121 @@ public:
 
 		return begin() + insert_pos;
 	}
+
+	/// \brief Insert
+	///
+	/// \param pos = iterator
+	/// \param num_copies = size_type
+	/// \param item = Char Type
 	void insert(iterator pos, size_type num_copies, const CharType &item);
+
+	/// \brief Insert
+	///
+	/// \param pos = size_type
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	///
+	/// \return String Container
 	CL_StringContainer &insert(size_type pos, const CL_StringData<CharType, ReferenceClass, StdString> &s);
+
+	/// \brief Insert
+	///
+	/// \param pos = size_type
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	/// \param pos1 = size_type
+	/// \param length = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &insert(size_type pos, const CL_StringData<CharType, ReferenceClass, StdString> &s, size_type pos1, size_type length);
+
+	/// \brief Insert
+	///
+	/// \param pos = size_type
+	/// \param s = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &insert(size_type pos, const CharType *s);
+
+	/// \brief Insert
+	///
+	/// \param pos = size_type
+	/// \param s = Char Type
+	/// \param s_length = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &insert(size_type pos, const CharType *s, size_type s_length);
+
+	/// \brief Insert
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param c = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &insert(size_type pos, size_type n, CharType c);
 
+	/// \brief Append
+	///
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	///
+	/// \return String Container
 	CL_StringContainer &append(const CL_StringData<CharType, ReferenceClass, StdString> &s);
+
+	/// \brief Append
+	///
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	/// \param pos = size_type
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &append(const CL_StringData<CharType, ReferenceClass, StdString> &s, size_type pos, size_type n);
 
 	CL_StringContainer<CharType, ReferenceClass, StdString> &append(const char *s);
+
+	/// \brief Append
+	///
+	/// \param s = char
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &append(const char *s, size_type n);
+
+	/// \brief Append
+	///
+	/// \param s = wchar_t
+	///
+	/// \return String Container
 	CL_StringContainer &append(const wchar_t *s);
+
+	/// \brief Append
+	///
+	/// \param s = wchar_t
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &append(const wchar_t *s, size_type n);
+
+	/// \brief Append
+	///
+	/// \param n = size_type
+	/// \param c = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &append(size_type n, CharType c);
 
+	/// \brief Push back
+	///
+	/// \param c = Char Type
 	void push_back(CharType c);
 
+	/// \brief Erase
+	///
+	/// \param p = iterator
+	///
+	/// \return iterator
 	iterator erase(iterator p)
 	{
 		iterator e = end();
@@ -146,6 +357,13 @@ public:
 			return e;
 		return erase(p, p+1);
 	}
+
+	/// \brief Erase
+	///
+	/// \param first = iterator
+	/// \param last = iterator
+	///
+	/// \return iterator
 	iterator erase(iterator first, iterator last)
 	{
 		size_type pos = (size_type) (first - begin());
@@ -163,18 +381,111 @@ public:
 		return begin() + pos;
 	}
 
+	/// \brief Erase
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &erase(size_type pos = 0, size_type n = CL_StringDataTypes::npos);
 
+	/// \brief Replace
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	///
+	/// \return String Container
 	CL_StringContainer &replace(size_type pos, size_type n, const CL_StringData<CharType, ReferenceClass, StdString> &s);
+
+	/// \brief Replace
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	/// \param pos1 = size_type
+	/// \param n1 = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(size_type pos, size_type n, const CL_StringData<CharType, ReferenceClass, StdString> &s, size_type pos1, size_type n1);
+
+	/// \brief Replace
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param s = Char Type
+	/// \param n1 = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(size_type pos, size_type n, const CharType *s, size_type n1);
+
+	/// \brief Replace
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param s = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(size_type pos, size_type n, const CharType *s);
+
+	/// \brief Replace
+	///
+	/// \param pos = size_type
+	/// \param n = size_type
+	/// \param n1 = size_type
+	/// \param c = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(size_type pos, size_type n, size_type n1, CharType c);
+
+	/// \brief Replace
+	///
+	/// \param first = iterator
+	/// \param last = iterator
+	/// \param CharType = String Data
+	/// \param StdString = Reference Class
+	///
+	/// \return String Container
 	CL_StringContainer &replace(iterator first, iterator last, const CL_StringData<CharType, ReferenceClass, StdString> &s);
+
+	/// \brief Replace
+	///
+	/// \param first = iterator
+	/// \param last = iterator
+	/// \param s = Char Type
+	/// \param n = size_type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(iterator first, iterator last, const CharType *s, size_type n);
+
+	/// \brief Replace
+	///
+	/// \param first = iterator
+	/// \param last = iterator
+	/// \param s = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(iterator first, iterator last, const CharType *s);
+
+	/// \brief Replace
+	///
+	/// \param first = iterator
+	/// \param last = iterator
+	/// \param n = size_type
+	/// \param c = Char Type
+	///
+	/// \return String Container
 	CL_StringContainer &replace(iterator first, iterator last, size_type n, CharType c);
 
+	/// \brief Copy
+	///
+	/// \param buf = Char Type
+	/// \param n = size_type
+	/// \param pos = size_type
+	///
+	/// \return size_type
 	size_type copy(CharType *buf, size_type n, size_type pos = 0) const;
 
 	CL_StringContainer &operator =(const CL_StringContainer &source);
@@ -187,6 +498,8 @@ public:
 	CL_StringContainer &operator +=(CharType c);
 
 protected:
+
+	/// \brief Init
 	void init();
 
 	CL_MemoryPool *pool;

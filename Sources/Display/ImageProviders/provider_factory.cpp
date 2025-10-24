@@ -23,10 +23,13 @@
 **
 **  File Author(s):
 **
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/ImageProviders/provider_type.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -51,7 +54,7 @@ CL_PixelBuffer CL_ImageProviderFactory::try_load(
 {
 	try
 	{
-		return load(filename, type, directory);
+		return load(filename, directory, type);
 	}
 	catch (CL_Exception e)
 	{
@@ -63,8 +66,9 @@ CL_PixelBuffer CL_ImageProviderFactory::try_load(
 
 CL_PixelBuffer CL_ImageProviderFactory::load(
 	const CL_String &filename,
-	const CL_String &type,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory,
+	const CL_String &type
+	)
 {
 	if (type != cl_text(""))
 	{
@@ -83,11 +87,33 @@ CL_PixelBuffer CL_ImageProviderFactory::load(
 	return factory->load(filename, directory);
 }
 
+CL_PixelBuffer CL_ImageProviderFactory::load(
+		CL_IODevice &file,
+		const CL_String &type)
+{
+	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+
+	CL_ImageProviderType *factory = types[type];
+	return factory->load(file);
+}
+
+CL_PixelBuffer CL_ImageProviderFactory::load(
+	const CL_String &fullname,
+	const CL_String &type
+	)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_ImageProviderFactory::load(filename, vfs.get_root_directory(), type);
+}
+
 void CL_ImageProviderFactory::save(
 	CL_PixelBuffer buffer,
 	const CL_String &filename,
-	const CL_String &type_,
-	CL_VirtualDirectory directory)
+	CL_VirtualDirectory &directory,
+	const CL_String &type_
+	)
 {
 	CL_String type = type_;
 
@@ -98,4 +124,30 @@ void CL_ImageProviderFactory::save(
 	
 	CL_ImageProviderType *factory = types[type];
 	factory->save(buffer, filename, directory);
+}
+
+void CL_ImageProviderFactory::save(
+	CL_PixelBuffer buffer,
+	const CL_String &fullname,
+	const CL_String &type
+	)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	return CL_ImageProviderFactory::save(buffer, filename, dir, type);
+}
+
+void CL_ImageProviderFactory::save(
+	CL_PixelBuffer buffer,
+	CL_IODevice &file,
+	const CL_String &type
+	)
+{
+	
+	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+
+	CL_ImageProviderType *factory = types[type];
+	factory->save(buffer, file);
 }

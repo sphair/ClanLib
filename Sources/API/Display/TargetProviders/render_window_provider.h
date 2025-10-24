@@ -29,7 +29,6 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
 #define  header_render_window_provider
 
@@ -48,7 +47,6 @@ class CL_API_DISPLAY CL_RenderWindowProvider
 
 public:
 	virtual ~CL_RenderWindowProvider()  { return; }
-
 
 /// \}
 /// \name Attributes
@@ -89,7 +87,5 @@ private:
 /// \}
 };
 
-
 /// \}
-
 

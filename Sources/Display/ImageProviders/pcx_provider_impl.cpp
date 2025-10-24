@@ -34,14 +34,19 @@
 // CL_PCXProvider_Impl construction:
 
 CL_PCXProvider_Impl::CL_PCXProvider_Impl(
-	CL_String _name, 
-	CL_VirtualDirectory directory)
+	CL_IODevice &datafile)
 {
 	image = NULL;
 
-	CL_IODevice datafile = directory.open_file(_name, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
-	datafile.set_little_endian_mode();
-	read_pcx(_name, datafile);
+	bool little_endian = datafile.is_little_endian();
+	if (!little_endian)
+		datafile.set_little_endian_mode();
+
+	read_pcx(datafile);
+
+	if (!little_endian)
+		datafile.set_big_endian_mode();
+
 }
 
 CL_PCXProvider_Impl::~CL_PCXProvider_Impl()
@@ -54,7 +59,6 @@ CL_PCXProvider_Impl::~CL_PCXProvider_Impl()
 // CL_PCXProvider_Impl implementation:
 
 void CL_PCXProvider_Impl::read_pcx(
-	CL_String _name, 
 	CL_IODevice &_datafile)
 {
 	// Read the file header and initialize the variables

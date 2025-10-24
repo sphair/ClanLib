@@ -30,14 +30,9 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
+#include "../api_display.h"
 #include "contour.h"
 
 /// \brief Collision detection contour.
@@ -54,7 +49,6 @@ class CL_OutlineProvider
 	CL_OutlineProvider() {};
 	virtual ~CL_OutlineProvider() {};
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -69,7 +63,14 @@ class CL_OutlineProvider
 	/// \brief return the height of the image used as basis for outline creation, or -1 when loading a precompiled outline.
 	virtual int get_height()=0;
 /// \}
-};
+/// \name Operations
+/// \{
 
+public:
+	/// \brief Destroys the provider.
+	virtual void destroy() = 0;
+/// \}
+
+};
 
 /// \}

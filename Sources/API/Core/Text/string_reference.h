@@ -29,7 +29,6 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #ifndef _cl_header_string_reference_
 #define _cl_header_string_reference_
 
@@ -61,26 +60,84 @@ public:
 
 	// These could and maybe should be replaced with "this->function_name()"
 	iterator begin() { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::begin(); }
+
+	/// \brief End
+	///
+	/// \return iterator
 	iterator end() { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::end(); }
+
+	/// \brief Size
+	///
+	/// \return size_type
 	size_type size() const { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::size(); }
+
+	/// \brief Length
+	///
+	/// \return size_type
 	size_type length() const { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::length(); }
+
+	/// \brief Empty
+	///
+	/// \return bool
 	bool empty() const { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::empty(); }
 	const CharType *data() const { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::data(); }
+
+	/// \brief Data
+	///
+	/// \return Char Type
 	CharType *data() { return CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString>::data(); }
 
 #endif
 
 	CL_StringReference();
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param source = Std String
 	CL_StringReference(const StdString &source);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param source = String Reference
 	CL_StringReference(const CL_StringReference &source);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param CharType = String Data
+	/// \param CharType = String Reference
+	/// \param StdString = Std String
 	CL_StringReference(const CL_StringData<CharType, CL_StringReference<CharType, StdString>, StdString> &source);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param c_str = char
 	CL_StringReference(const char *c_str);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param c_str = char
+	/// \param length = size_type
+	/// \param null_terminated = bool
 	CL_StringReference(const char *c_str, size_type length, bool null_terminated);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param wc_str = wchar_t
 	CL_StringReference(const wchar_t *wc_str);
+
+	/// \brief Constructs a StringReference
+	///
+	/// \param wc_str = wchar_t
+	/// \param length = size_type
+	/// \param null_terminated = bool
 	CL_StringReference(const wchar_t *wc_str, size_type length, bool null_terminated);
 	~CL_StringReference();
 
 	const CharType *c_str() const;
+
+	/// \brief Set length
+	///
+	/// \param length = size_type
 	void set_length(size_type length);
 
 	CL_StringReference<CharType, StdString> &operator =(const CL_StringReference<CharType, StdString> &source);
@@ -89,7 +146,14 @@ public:
 	CL_StringReference<CharType, StdString> &operator =(const wchar_t *c_str);
 
 protected:
+
+	/// \brief Clear
 	void clear() const;
+
+	/// \brief Create temp
+	///
+	/// \param data = Char Type
+	/// \param length = size_type
 	void create_temp(const CharType *data, size_type length) const;
 
 	mutable bool null_terminated;

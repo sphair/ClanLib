@@ -37,12 +37,14 @@ public:
 
 	bool is_sprite();
 	bool is_image();
+	bool is_texture();
 	bool is_linear();
 	bool is_nearest();
 	bool is_outlined();
 	float get_scale();
 	float get_rotation();
 	float get_translate();
+	float get_texture_translate();
 
 private:
 	void on_slider_changed(CL_Slider *slider);
@@ -52,27 +54,34 @@ private:
 
 private:
 	GUI *gui;
-	CL_AutoPtr<CL_Window> window;
+	CL_Window *window;
 
-	CL_AutoPtr<CL_RadioButton> radiobutton_linear;
-	CL_AutoPtr<CL_RadioButton> radiobutton_nearest;
+	CL_RadioButton *radiobutton_sprite;
+	CL_RadioButton *radiobutton_image;
+	CL_RadioButton *radiobutton_texture;
 
-	CL_AutoPtr<CL_RadioButton> radiobutton_sprite;
-	CL_AutoPtr<CL_RadioButton> radiobutton_image;
-	CL_AutoPtr<CL_CheckBox> checkbox_outline;
+	CL_RadioButton *radiobutton_linear;
+	CL_RadioButton *radiobutton_nearest;
 
-	CL_AutoPtr<CL_Slider> slider_scale;
-	CL_AutoPtr<CL_Spin> spin_scale;
-	CL_AutoPtr<CL_Label> label_scale;
+	CL_CheckBox *checkbox_outline;
 
-	CL_AutoPtr<CL_Slider> slider_rotation;
-	CL_AutoPtr<CL_Spin> spin_rotation;
-	CL_AutoPtr<CL_Label> label_rotation;
+	CL_Slider *slider_scale;
+	CL_Spin *spin_scale;
+	CL_Label *label_scale;
 
-	CL_AutoPtr<CL_Slider> slider_translate;
-	CL_AutoPtr<CL_Spin> spin_translate;
-	CL_AutoPtr<CL_Label> label_translate;
-	CL_AutoPtr<CL_Label> label_translate2;
+	CL_Slider *slider_rotation;
+	CL_Spin *spin_rotation;
+	CL_Label *label_rotation;
+
+	CL_Slider *slider_translate;
+	CL_Spin *spin_translate;
+	CL_Label *label_translate;
+	CL_Label *label_translate2;
+
+	CL_Slider *slider_texture_translate;
+	CL_Spin *spin_texture_translate;
+	CL_Label *label_texture_translate;
+	CL_Label *label_texture_translate2;
 
 };
 

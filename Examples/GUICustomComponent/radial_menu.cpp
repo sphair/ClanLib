@@ -47,7 +47,7 @@ void RadialMenu::clear_items()
 	selected_index = -1;
 	max_angle = CL_Angle::from_degrees(0);
 	items.clear();
-	invalidate_rect();
+	request_repaint();
 }
 
 void RadialMenu::add_item(const CL_String &text)
@@ -56,7 +56,7 @@ void RadialMenu::add_item(const CL_String &text)
 
 	max_angle = CL_Angle::from_degrees((items.size() - 1) * 45.0f + 22.5f);
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void RadialMenu::on_process_message(CL_GUIMessage &msg)
@@ -121,19 +121,19 @@ void RadialMenu::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 
 		if(i == selected_index)
 		{
-			int x = (int)((-cosf(rads)) * text_distance_selected);
-			int y = (int)((-sinf(rads)) * text_distance_selected);
-			int font_center_x = font_selected.get_text_size(gc, items[i].text).width / 2;
-			int font_center_y = (int)font_selected_height / 2;
-			font_selected.draw_text(gc, center_x + x - font_center_x, center_y + y + font_center_y, items[i].text, text_color_selected);
+			int x = (int)((-cosf(rads)) * selected_text_distance);
+			int y = (int)((-sinf(rads)) * selected_text_distance);
+			int font_center_x = selected_font.get_text_size(gc, items[i].text).width / 2;
+			int font_center_y = (int)selected_font_height / 2;
+			selected_font.draw_text(gc, center_x + x - font_center_x, center_y + y + font_center_y, items[i].text, selected_text_color);
 		}
 		else
 		{
-			int x = (int)((-cosf(rads)) * text_distance);
-			int y = (int)((-sinf(rads)) * text_distance);
-			int fontx = font_normal.get_text_size(gc, items[i].text).width / 2;
-			int fonty = (int)font_normal_height / 2;
-			font_normal.draw_text(gc, center_x + x - fontx, center_y + y + fonty, items[i].text, text_color_normal);
+			int x = (int)((-cosf(rads)) * normal_text_distance);
+			int y = (int)((-sinf(rads)) * normal_text_distance);
+			int fontx = normal_font.get_text_size(gc, items[i].text).width / 2;
+			int fonty = (int)normal_font_height / 2;
+			normal_font.draw_text(gc, center_x + x - fontx, center_y + y + fonty, items[i].text, normal_text_color);
 		}
 
 		text_angle += CL_Angle::from_degrees(45.0f);
@@ -154,32 +154,27 @@ void RadialMenu::on_resized()
 
 void RadialMenu::create_parts()
 {
+	CL_GraphicContext gc = get_gc();
+	CL_ResourceManager resources = get_resources();
+
 	part_component = CL_GUIThemePart(this);
 	CL_GUIThemePart part_selected_item(this, "selected");
 
-	CL_GraphicContext gc = get_gc();
-
 	CL_GUIThemePartProperty prop_text_color("text-color");
-	text_color_normal = part_component.get_property(prop_text_color);
-	font_normal = part_component.get_font();
-	CL_FontMetrics font_normal_metrics = font_normal.get_font_metrics(gc);
-	font_normal_height = font_normal_metrics.get_height();
-
-	CL_GUIThemePartProperty prop_text_color_selected("text-color");
-	text_color_selected = part_selected_item.get_property(prop_text_color_selected);
-	font_selected = part_selected_item.get_font();
-	CL_FontMetrics font_selected_metrics = font_selected.get_font_metrics(gc);
-	font_selected_height = font_selected_metrics.get_height();
-
 	CL_GUIThemePartProperty prop_pointer_image("pointer-image");
+	CL_GUIThemePartProperty prop_text_distance("text-distance");
+
+	normal_text_color = part_component.get_property(prop_text_color);
+	normal_font = part_component.get_font();
+	normal_text_distance = CL_StringHelp::text_to_float(part_component.get_property(prop_text_distance));
+	normal_font_height = normal_font.get_font_metrics(gc).get_height();
+
+	selected_text_color = part_selected_item.get_property(prop_text_color);
+	selected_font = part_selected_item.get_font();
+	selected_text_distance = CL_StringHelp::text_to_float(part_selected_item.get_property(prop_text_distance));
+	selected_font_height = selected_font.get_font_metrics(gc).get_height();
+
 	CL_String pointer_image_name = part_component.get_property(prop_pointer_image);
-	CL_ResourceManager resources = get_resources();
 	image_pointer = CL_Sprite(gc, pointer_image_name, &resources);
 	image_pointer.set_alignment(origin_center);
-
-	CL_GUIThemePartProperty prop_text_distance("text-distance");
-	text_distance = CL_StringHelp::text_to_float(part_component.get_property(prop_text_distance));
-
-	CL_GUIThemePartProperty prop_text_distance_selected("text-distance");
-	text_distance_selected = CL_StringHelp::text_to_float(part_selected_item.get_property(prop_text_distance));
 }

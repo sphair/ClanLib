@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../../Core/System/sharedptr.h"
 #include "graphic_context.h"
@@ -53,12 +51,22 @@ public:
 	/// \brief Constructs a element array buffer.
 	CL_ElementArrayBuffer();
 
-	CL_ElementArrayBuffer(CL_GraphicContext gc, int size, CL_BufferUsage usage = cl_usage_static_draw);
+	/// \brief Constructs a ElementArrayBuffer
+	///
+	/// \param gc = Graphic Context
+	/// \param size = value
+	/// \param usage = Buffer Usage
+	CL_ElementArrayBuffer(CL_GraphicContext &gc, int size, CL_BufferUsage usage = cl_usage_static_draw);
 
-	CL_ElementArrayBuffer(CL_GraphicContext gc, void *data, int size, CL_BufferUsage usage = cl_usage_static_draw);
+	/// \brief Constructs a ElementArrayBuffer
+	///
+	/// \param gc = Graphic Context
+	/// \param data = void
+	/// \param size = value
+	/// \param usage = Buffer Usage
+	CL_ElementArrayBuffer(CL_GraphicContext &gc, void *data, int size, CL_BufferUsage usage = cl_usage_static_draw);
 
 	virtual ~CL_ElementArrayBuffer();
-
 
 /// \}
 /// \name Attributes
@@ -68,8 +76,10 @@ public:
 	/// \brief Retrieves a pointer to the mapped buffer.
 	void *get_data();
 
+	/// \brief Get Provider
+	///
+	/// \return provider
 	CL_ElementArrayBufferProvider *get_provider() const;
-
 
 /// \}
 /// \name Operations
@@ -88,7 +98,6 @@ public:
 	/// \brief Uploads data to element array buffer.
 	void upload_data(int offset, void *data, int size);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -97,6 +106,5 @@ private:
 	CL_SharedPtr<CL_ElementArrayBuffer_Impl> impl;
 /// \}
 };
-
 
 /// \}

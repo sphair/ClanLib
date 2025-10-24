@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 // Seems VC8.0 suddenly defines boolean in its Platform SDK
 // Seems VC7.1 also defines that :)
 #if _MSC_VER >= 1301
@@ -43,7 +38,7 @@
 #define XMD_H
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 extern "C"
 {
 	#undef FAR
@@ -66,7 +61,10 @@ public:
 	/// \brief Constructs a surface provider that can read JPEG¤ files.
 	CL_JPEGProvider_Impl(
 		const CL_String &name,
-		CL_VirtualDirectory directory);
+		const CL_VirtualDirectory &directory);
+
+	CL_JPEGProvider_Impl(
+		CL_IODevice &input);
 
 	~CL_JPEGProvider_Impl();
 

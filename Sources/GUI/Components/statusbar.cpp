@@ -134,7 +134,7 @@ CL_Callback_v0 &CL_StatusBar::func_part_double_clicked(int id)
 void CL_StatusBar::set_status_text(const CL_StringRef &text)
 {
 	impl->status_text = text;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_StatusBar::set_part_text(int id, const CL_StringRef &text)
@@ -142,7 +142,7 @@ void CL_StatusBar::set_part_text(int id, const CL_StringRef &text)
 	unsigned int index = impl->find_part(id);
 	impl->statusbar_parts[index].icon = CL_Image();
 	impl->statusbar_parts[index].text = text;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_StatusBar::set_part_text(int id, const CL_Image &icon, const CL_StringRef &text)
@@ -150,7 +150,7 @@ void CL_StatusBar::set_part_text(int id, const CL_Image &icon, const CL_StringRe
 	unsigned int index = impl->find_part(id);
 	impl->statusbar_parts[index].icon = icon;
 	impl->statusbar_parts[index].text = text;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_StatusBar::add_part(int id, int width, CL_GUIComponent *component)
@@ -159,7 +159,7 @@ void CL_StatusBar::add_part(int id, int width, CL_GUIComponent *component)
 	CL_StatusBar_Part status_part(id, width, component);
 	impl->statusbar_parts.push_back(status_part);
 	impl->position_parts();
-	invalidate_rect();
+	request_repaint();
 	if (component)
 		component->set_visible(true, false);
 }
@@ -171,7 +171,7 @@ void CL_StatusBar::show_part(int id, bool show)
 	if (impl->statusbar_parts[index].component)
 		impl->statusbar_parts[index].component->set_visible(show, false);
 	impl->position_parts();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_StatusBar::remove_part(int id)
@@ -181,14 +181,14 @@ void CL_StatusBar::remove_part(int id)
 		impl->statusbar_parts[index].component->set_visible(false);
 	impl->statusbar_parts.erase(impl->statusbar_parts.begin() + index);
 	impl->position_parts();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_StatusBar::show_size_grip(bool show)
 {
 	impl->show_size_grip = show;
 	impl->position_parts();
-	invalidate_rect();
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ void CL_StatusBar_Impl::on_process_message(CL_GUIMessage &msg)
 void CL_StatusBar_Impl::on_resized()
 {
 	position_parts();
-	statusbar->invalidate_rect();
+	statusbar->request_repaint();
 }
 
 void CL_StatusBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)

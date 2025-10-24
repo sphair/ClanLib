@@ -24,22 +24,19 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
+#include "../Core/System/sharedptr.h"
 
-class CL_SoundFilter_Generic;
+class CL_SoundFilter_Impl;
+class CL_SoundFilterProvider;
 
 /// \brief Sound Filter Class
 ///
@@ -50,44 +47,66 @@ class CL_API_SOUND CL_SoundFilter
 /// \{
 
 public:
-	/// \brief Sound filter constructor.
-	CL_SoundFilter();
 
+	/// \brief Constructs a NULL sound filter
+	CL_SoundFilter() {};
+
+	/// \brief Constructs a sound filter
+	///
+	/// \param provider = The provider
+	CL_SoundFilter(CL_SoundFilterProvider *provider);
+
+	/// \brief Constructs a SoundFilter
+	///
+	/// \param copy = Sound Filter
 	CL_SoundFilter(const CL_SoundFilter &copy);
 
-	/// \brief Sound Filter Destructor
-	virtual ~CL_SoundFilter();
+	~CL_SoundFilter();
 
+/// \}
+/// \name Operators
+/// \{
+public:
+	/// \brief Equality operator
+	bool operator==(const CL_SoundFilter &other) const
+	{
+		return impl==other.impl;
+	}
+
+	/// \brief Inequality operator
+	bool operator!=(const CL_SoundFilter &other) const
+	{
+		return impl!=other.impl;
+	}
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Copy assignment operator.
-	CL_SoundFilter &operator =(const CL_SoundFilter &copy);
 
+	/// \brief Is Null
+	///
+	/// \return true = null
+	bool is_null();
 
-/// \}
-/// \name Overridables
-/// \{
+	/// \brief Retrieves the provider.
+	CL_SoundFilterProvider *get_provider() const;
 
 	/// \brief Filter callback.
 	/** <p>All sound data is passed through this function,
 	    which modifies the sample data accordingly to the function of the
 	    filter.</p>
 	    <p>The format of the sample data is always 16 bit stereo. </p>*/
-	virtual void filter(int **sample_data, int num_samples, int channels)=0;
-
+	void filter(int **sample_data, int num_samples, int channels);
 
 /// \}
 /// \name Implementation
 /// \{
 
 public:
-	CL_SoundFilter_Generic *impl;
+	CL_SharedPtr<CL_SoundFilter_Impl> impl;
 /// \}
 };
-
 
 /// \}

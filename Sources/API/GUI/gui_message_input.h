@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -51,21 +49,26 @@ public:
 	/// \brief Constructs an input GUI message.
 	CL_GUIMessage_Input();
 
+	/// \brief Constructs a GUIMessage Input
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_Input(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_Input();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Type name
+	///
+	/// \return type_name
 	static CL_StringRef get_type_name();
 
 	/// \brief Retrieves the input event for this message.
 	CL_InputEvent get_event() const;
-
 
 /// \}
 /// \name Operations
@@ -75,7 +78,6 @@ public:
 	/// \brief Sets the input event.
 	void set_event(const CL_InputEvent &event);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -83,6 +85,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

@@ -30,13 +30,7 @@
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "color.h"
@@ -67,12 +61,15 @@ public:
 	{
 	}
 
+	/// \brief Constructs a Gradient
+	///
+	/// \param first_color = Colorf
+	/// \param second_color = Colorf
 	CL_Gradient(const CL_Colorf &first_color, const CL_Colorf &second_color)
 	: top_left(first_color), top_right(first_color), bottom_left(second_color),
 	  bottom_right(second_color)
 	{
 	}
-
 
 /// \}
 /// \name Attributes
@@ -105,6 +102,5 @@ public:
 	}
 /// \}
 };
-
 
 /// \}

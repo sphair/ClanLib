@@ -255,7 +255,7 @@ void CL_ComboBox_Impl::create_components()
 	lineedit = new CL_LineEdit(component);
 	btn_arrow = new CL_PushButton(component);
 
-	CL_GraphicContext gc = component->get_gc();
+	CL_GraphicContext &gc = component->get_gc();
 	CL_ResourceManager resources = component->get_resources();
 	CL_Image icon(gc, cl_text("ComboBoxDownArrow"), &resources);
 
@@ -276,7 +276,7 @@ void CL_ComboBox_Impl::on_btn_arrow_clicked()
 		popup_menu.set_minimum_width(g.get_width());
 
 	//TODO: If this required, should be exec handling be handled by the main window manager
-	if (component->get_gui_manager().get_window_manager()->get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
+	if (component->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
 	{
 		popup_menu.exec(component, g.get_bottom_left());
 		popup_menu.set_minimum_width(old_width);
@@ -308,10 +308,13 @@ void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent event)
 void CL_ComboBox_Impl::on_popup_item_selected(CL_PopupMenuItem item)
 {
 	if (!item.is_null())
+	{
+		selected_item = item.get_id();
 		component->set_text(item.get_text());
 
-	if (!func_item_selected.is_null())
-		func_item_selected.invoke(item.get_id());
+		if (!func_item_selected.is_null())
+			func_item_selected.invoke(selected_item);
+	}
 }
 
 void CL_ComboBox_Impl::on_lineedit_clicked()

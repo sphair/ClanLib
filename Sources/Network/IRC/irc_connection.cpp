@@ -37,24 +37,21 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_IRCConnection construction:
 
-CL_IRCConnection::CL_IRCConnection() : impl(0)
+CL_IRCConnection::CL_IRCConnection()
 {
 }
 
-CL_IRCConnection::CL_IRCConnection(const CL_String &server, const CL_String &port) :
-	impl(new CL_IRCConnection_Generic(server, port))
+CL_IRCConnection::CL_IRCConnection(const CL_String &server, const CL_String &port)
+: impl(new CL_IRCConnection_Generic(server, port))
 {
-	impl->add_ref();
 }
 
 CL_IRCConnection::CL_IRCConnection(const CL_IRCConnection &copy) : impl(copy.impl)
 {
-	if (impl) impl->add_ref();
 }
 
 CL_IRCConnection::~CL_IRCConnection()
 {
-	if (impl) impl->release_ref();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -90,9 +87,7 @@ const CL_String8 &CL_IRCConnection::get_realname() const
 
 CL_IRCConnection &CL_IRCConnection::operator =(const CL_IRCConnection &copy)
 {
-	if (impl) impl->release_ref();
 	impl = copy.impl;
-	if (impl) impl->add_ref();
 	return *this;
 }
 

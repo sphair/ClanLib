@@ -33,7 +33,7 @@
 
 #include <iomanip>
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 
 #include "command_line_generic.h"
 

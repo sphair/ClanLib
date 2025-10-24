@@ -29,21 +29,21 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
 
 class CL_Angle_Impl;
 
+/// \brief Angle Unit
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum CL_AngleUnit
 {
 	cl_degrees,
 	cl_radians
 };
-
 
 /// \brief Angle class.
 ///
@@ -52,7 +52,6 @@ class CL_API_CORE CL_Angle
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs an NULL Angle object.
 	CL_Angle();
@@ -60,14 +59,23 @@ public:
 	/// \brief Constructs an Angle object.
 	CL_Angle(float value, CL_AngleUnit unit);
 
+	/// \brief From radians
+	///
+	/// \param value = value
+	///
+	/// \return Angle
 	static CL_Angle from_radians(float value);
 
+	/// \brief From degrees
+	///
+	/// \param value = value
+	///
+	/// \return Angle
 	static CL_Angle from_degrees(float value);
 
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns the angle as degrees.
 	float to_degrees() const;
@@ -78,7 +86,6 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Set the angle value in degrees.
 	void set_degrees(float degrees);
@@ -86,10 +93,16 @@ public:
 	/// \brief Set the angle value in radians.
 	void set_radians(float radians);
 
+	/// \brief Converts angle to range [0,360[ degrees.
+	void normalize();
+
+	/// \brief Converts angle to range [-180,180[ degrees.
+	void normalize_180();
+
 /// \}
 /// \name Operators
 /// \{
-
+public:
 	/// \brief += operator.
 	void operator += (const CL_Angle &angle);
 
@@ -141,12 +154,10 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	float value_rad;
 
 /// \}
 };
-
 
 /// \}

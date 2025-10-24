@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>NetGame Engine - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<h2>
+<img src="gfx/overview.png"/>NetGame Server Example
+</h2>
+
+<pre>
+
+class ServerService : public CL_Service
+{
+private:
+	class MyConnectionData
+	{
+	public:
+		MyConnectionData() : logged_in(false) { }
+		
+		CL_String username;
+		bool logged_in;
+	};
+
+public:
+	ServerService()
+	: CL_Service("MyServerService")
+	{
+	}
+	
+	void service_start(std::vector&lt;CL_String&gt; &amp;args)
+	{
+		thread.start(this, &ServerService::gamethread_main);
+	}
+	
+	void service_stop()
+	{
+		stop_event.set();
+		thread.join();
+	}
+	
+	void service_reload()
+	{
+	}
+	
+	void gamethread_main()
+	{
+		CL_SlotContainer slots;
+		slots.connect(netgame_server.sig_client_connected(), this, &amp;ServerService::on_client_connected);
+		slots.connect(netgame_server.sig_client_disconnected(), this, &amp;ServerService::on_client_disconnected);
+		slots.connect(netgame_server.sig_event_received(), this, &amp;ServerService::on_event_received);
+		netgame_server.start("5555");
+		while (true)
+		{
+			CL_Event network_activity = netgame_server.get_event_arrived();
+			
+			// CL_Event::wait returns -1 if it timed out, or the index of the event flagged
+			int wakeup_reason = CL_Event::wait(network_activity, stop_event, 10);
+			
+			if (wakeup_reason == 0)      // network_activity was flagged
+				netgame_server.process_events();
+			else if (wakeup_reason == 1) // stop_event was flagged
+				break;
+
+			// Update the game whenever something happens or every 10 ms
+			update_game();
+		}
+		netgame_server.stop();
+	}
+	
+	void update_game()
+	{
+		// Update your game here, possibly sending out CL_NetGameEvent messages to clients
+	}
+	
+	void on_client_connected(CL_NetGameConnection *connection)
+	{
+		set_connection_data(connection, new MyConnectionData());
+		CL_Console::write_line("A client connected!");
+	}
+	
+	void on_client_disconnected(CL_NetGameConnection *connection)
+	{
+		delete get_connection_data(connection);
+		CL_Console::write_line("A client disconnected!");
+	}
+	
+	void on_event_received(CL_NetGameConnection *connection, const CL_NetGameEvent &amp;event)
+	{
+		MyConnectionData *data = get_connection_data(connection);
+		if (event.get_name() == "logon")
+		{
+			if (data->logged_in)
+			{
+				CL_NetGameEvent response("error", "You are already logged in!");
+				connection->send_event(response);
+			}
+			else
+			{
+				data->username = event.get_argument(0);
+				CL_String password = event.get_argument(1);
+				data->logged_in = true;
+			
+				CL_NetGameEvent response("motd", cl_format("Welcome %1! Please enjoy your stay!", data->username));
+				connection->send_event(response);
+			}
+		}
+	}
+	
+	void set_connection_data(CL_NetGameConnection *connection, MyConnectionData *data)
+	{
+		connection->set_data("MyConnectionData", data);
+	}
+	
+	MyConnectionData *get_connection_data(CL_NetGameConnection *connection)
+	{
+		return reinterpret_cast<MyConnectionData *>(connection->get_data("MyConnectionData"));
+	}
+	
+	CL_NetGameServer netgame_server;
+	CL_Thread thread;
+	CL_Event stop_event;
+};
+
+int main(int argc, char **argv)
+{
+	try
+	{
+		CL_SetupCore setup_core;
+		CL_SetupNetwork setup_network;
+		ServerService service;
+		service.exec(argc, argv);
+	}
+	catch (CL_Exception &amp;e)
+	{
+		CL_Console::write_line("Unhandled Exception: %1", e.message);
+	}
+}
+
+</pre>
+
+</div>
+
+</body>
+</html>

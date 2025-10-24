@@ -26,7 +26,6 @@
 **    Harry Storbacka
 */
 
-
 #include "Display/precomp.h"
 #include "API/Display/Window/display_message_queue.h"
 #include "API/Display/Window/display_window_message.h"
@@ -139,7 +138,6 @@ bool CL_DisplayMessageQueue::has_messages()
 
 void CL_DisplayMessageQueue::process(int timeout)
 {
-
 	int time_start = CL_System::get_time();
 	while (true)
 	{
@@ -163,11 +161,11 @@ void CL_DisplayMessageQueue::process(int timeout)
 		}
 		else if (wakeup_reason == -2)
 		{
-			do
+			while (has_messages())
 			{
 				CL_DisplayWindowMessage message = get_message();
 				dispatch_message(message);
-			}while (has_messages());		// There may be more than one message pending, so we have to process all of them here
+			}
 		}
 		else if (wakeup_reason == -1)
 		{
@@ -177,14 +175,6 @@ void CL_DisplayMessageQueue::process(int timeout)
 		if (time_to_wait == 0)
 			break;
 	}
-
-/*
-	while(has_messages())
-	{
-		CL_DisplayWindowMessage message = get_message();
-		dispatch_message(message);
-	}
-*/
 }
 
 /////////////////////////////////////////////////////////////////////////////

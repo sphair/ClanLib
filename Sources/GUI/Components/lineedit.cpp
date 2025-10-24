@@ -32,13 +32,16 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_consumed_keys.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/lineedit.h"
-#include "API/Display/Window/timer.h"
+#include "API/Core/Math/cl_math.h"
+#include "API/Core/System/timer.h"
+#include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Font/font.h"
@@ -46,7 +49,6 @@
 #include "API/Display/2D/draw.h"
 #include "API/Display/Render/blend_mode.h"
 #include "API/Display/Window/display_window.h"
-#include "API/Core/Text/string_help.h"
 #include "../gui_css_strings.h"
 #include "lineedit_impl.h"
 
@@ -78,10 +80,8 @@ CL_LineEdit::CL_LineEdit(CL_GUIComponent *parent)
 	func_enablemode_changed().set(impl.get(), &CL_LineEdit_Impl::on_enable_changed);
 
 	impl->lineedit = this;
-	impl->timer = create_timer();
 	impl->timer.func_expired().set(impl.get(), &CL_LineEdit_Impl::on_timer_expired);
 
-	impl->scroll_timer = create_timer();
 	impl->scroll_timer.func_expired().set(impl.get(), &CL_LineEdit_Impl::on_scroll_timer_expired);
 	impl->create_parts();
 }
@@ -138,7 +138,6 @@ float CL_LineEdit::get_text_float() const
 	return CL_StringHelp::text_to_float(impl->text);
 }
 
-
 CL_String CL_LineEdit::get_selection() const
 {
 	int start = cl_min(impl->selection_start, impl->selection_start + impl->selection_length);
@@ -160,17 +159,17 @@ int CL_LineEdit::get_cursor_pos() const
 	return impl->cursor_pos;
 }
 
-CL_Size CL_LineEdit::get_text_size() const
+CL_Size CL_LineEdit::get_text_size()
 {
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 	CL_Font font = impl->part_component.get_font();
 	CL_Size text_size = font.get_text_size(gc, impl->text);
 	return text_size;
 }
 
-CL_Size CL_LineEdit::get_text_size(const CL_String &str) const
+CL_Size CL_LineEdit::get_text_size(const CL_String &str)
 {
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 	CL_Font font = impl->part_component.get_font();
 	CL_Size text_size = font.get_text_size(gc, str);
 	return text_size;
@@ -188,7 +187,7 @@ void CL_LineEdit::select_all()
 {
 	impl->selection_start = 0;
 	impl->selection_length = impl->text.size();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::set_read_only(bool enable)
@@ -196,7 +195,7 @@ void CL_LineEdit::set_read_only(bool enable)
 	if (impl->readonly != enable)
 	{
 		impl->readonly = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -205,7 +204,7 @@ void CL_LineEdit::set_alignment(Alignment alignment)
 	if (impl->alignment != alignment)
 	{
 		impl->alignment = alignment;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -214,7 +213,7 @@ void CL_LineEdit::set_lowercase(bool enable)
 	if (impl->lowercase != enable)
 	{
 		impl->lowercase = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -223,7 +222,7 @@ void CL_LineEdit::set_uppercase(bool enable)
 	if (impl->uppercase != enable)
 	{
 		impl->uppercase = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -232,7 +231,7 @@ void CL_LineEdit::set_password_mode(bool enable)
 	if (impl->password_mode != enable)
 	{
 		impl->password_mode = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -250,7 +249,7 @@ void CL_LineEdit::set_max_length(int length)
 			if (!impl->func_after_edit_changed.is_null())
 				impl->func_after_edit_changed.invoke(no_event);
 		}
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -261,7 +260,7 @@ void CL_LineEdit::set_text(const CL_StringRef &text)
 	impl->update_text_clipping();
 	set_cursor_pos(impl->text.size());
 	clear_selection();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::set_text(int number)
@@ -271,7 +270,7 @@ void CL_LineEdit::set_text(int number)
 	impl->update_text_clipping();
 	set_cursor_pos(impl->text.size());
 	clear_selection();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::set_text(float number)
@@ -281,7 +280,7 @@ void CL_LineEdit::set_text(float number)
 	impl->update_text_clipping();
 	set_cursor_pos(impl->text.size());
 	clear_selection();
-	invalidate_rect();
+	request_repaint();
 }
 
 
@@ -289,13 +288,13 @@ void CL_LineEdit::set_selection(int pos, int length)
 {
 	impl->selection_start = pos;
 	impl->selection_length = length;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::clear_selection()
 {
 	set_selection(0,0);
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::delete_selected_text()
@@ -311,19 +310,19 @@ void CL_LineEdit::delete_selected_text()
 	impl->text = impl->text.substr(0, sel_start) +  impl->text.substr(sel_end, impl->text.size());
 	impl->cursor_pos = sel_start;
 	clear_selection();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::set_cursor_pos(int pos)
 {
 	impl->cursor_pos = pos;
 	impl->update_text_clipping();
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_LineEdit::resize_to_fit(int max_width)
 {
-	CL_GraphicContext gc = get_gc();
+	CL_GraphicContext &gc = get_gc();
 	CL_Font font = impl->part_component.get_font();
 
 	CL_Rect g = get_geometry();
@@ -336,7 +335,7 @@ void CL_LineEdit::resize_to_fit(int max_width)
 
 	impl->clip_start_offset = 0;
 
-	invalidate_rect();
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -467,7 +466,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					else
 						lineedit->clear_selection();
 					update_text_clipping();
-					lineedit->invalidate_rect();
+					lineedit->request_repaint();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_END)
@@ -479,7 +478,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					else
 						lineedit->clear_selection();
 					update_text_clipping();
-					lineedit->invalidate_rect();
+					lineedit->request_repaint();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_A && e.ctrl)
@@ -489,7 +488,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					selection_length = text.size();
 					cursor_pos = selection_length;
 					update_text_clipping();
-					lineedit->invalidate_rect();
+					lineedit->request_repaint();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_C && e.ctrl)
@@ -510,6 +509,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					CL_String str = lineedit->get_gui_manager().get_clipboard_text();
 					lineedit->delete_selected_text();
 					insert_text(cursor_pos, str);
+					lineedit->set_cursor_pos(cursor_pos + str.length());
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_SHIFT)
@@ -521,7 +521,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					}
 					msg.set_consumed();
 				}
-				else if (!e.ctrl && !e.alt && !e.str.empty() && e.str[0] >= 32)
+				else if (!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32))
 				{
 					lineedit->delete_selected_text();
 					lineedit->clear_selection();
@@ -597,8 +597,6 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 		}
 		else if (e.device.get_type() == CL_InputDevice::pointer)
 		{
-			lineedit->set_cursor(cl_cursor_ibeam);
-
 			if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 			{
 				if (lineedit->has_focus())
@@ -613,7 +611,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				{
 					lineedit->set_focus();
 				}
-				lineedit->invalidate_rect();
+				lineedit->request_repaint();
 				msg.set_consumed();
 			}
 			if (mouse_selecting && e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
@@ -633,7 +631,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					selection_length = sel_end - selection_start;
 					cursor_pos = sel_end;
 					lineedit->set_focus();
-					lineedit->invalidate_rect();
+					lineedit->request_repaint();
 				}
 				msg.set_consumed();
 			}
@@ -653,7 +651,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					scroll_timer.stop();
 					cursor_pos = get_character_index(e.mouse_pos.x);
 					selection_length = cursor_pos - selection_start;
-					lineedit->invalidate_rect();
+					lineedit->request_repaint();
 				}
 				msg.set_consumed();
 			}
@@ -677,7 +675,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 			part_selection.set_state(CssStr::unfocused, false);
 			cursor_pos = text.length();
 
-			lineedit->invalidate_rect();
+			lineedit->request_repaint();
 
 			if (!func_focus_gained.is_null())
 				func_focus_gained.invoke();
@@ -685,16 +683,28 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 		else if (fmsg.get_focus_type() == CL_GUIMessage_FocusChange::losing_focus)
 		{
 			timer.stop();
-			lineedit->set_cursor(cl_cursor_arrow);
 			lineedit->clear_selection();
 			part_selection.set_state(CssStr::unfocused, true);
 
-			lineedit->invalidate_rect();
+			lineedit->request_repaint();
 
 			if (!func_focus_lost.is_null())
 				func_focus_lost.invoke();
 		}
 	}
+	else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
+	{
+		CL_GUIMessage_Pointer pointer_msg(msg);
+		if (pointer_msg.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
+		{
+			lineedit->set_cursor(cl_cursor_ibeam);
+		}
+		else
+		{
+			lineedit->set_cursor(cl_cursor_arrow);
+		}
+	}
+
 }
 
 void CL_LineEdit_Impl::on_style_changed()
@@ -759,7 +769,7 @@ void CL_LineEdit_Impl::move(int steps, CL_InputEvent &e)
 
 	update_text_clipping();
 
-	lineedit->invalidate_rect();
+	lineedit->request_repaint();
 
 	undo_info.first_text_insert = true;
 }
@@ -776,7 +786,7 @@ void CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
 	text.insert(pos, str);
 
 	update_text_clipping();
-	lineedit->invalidate_rect();
+	lineedit->request_repaint();
 }
 
 void CL_LineEdit_Impl::backspace()
@@ -791,7 +801,7 @@ void CL_LineEdit_Impl::backspace()
 	{
 		lineedit->delete_selected_text();
 		lineedit->clear_selection();
-		lineedit->invalidate_rect();
+		lineedit->request_repaint();
 	}
 	else
 	{
@@ -799,7 +809,7 @@ void CL_LineEdit_Impl::backspace()
 		{
 			text.erase(cursor_pos-1, 1);
 			cursor_pos -= 1;
-			lineedit->invalidate_rect();
+			lineedit->request_repaint();
 		}
 	}
 }
@@ -816,14 +826,14 @@ void CL_LineEdit_Impl::del()
 	{
 		lineedit->delete_selected_text();
 		lineedit->clear_selection();
-		lineedit->invalidate_rect();
+		lineedit->request_repaint();
 	}
 	else
 	{
 		if (cursor_pos < (int)text.size())
 		{
 			text.erase(cursor_pos,1);
-			lineedit->invalidate_rect();
+			lineedit->request_repaint();
 		}
 	}
 }
@@ -835,7 +845,7 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 		return text.size();
 	}
 
-	CL_GraphicContext gc = lineedit->get_gc();
+	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
 
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
@@ -862,7 +872,7 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 void CL_LineEdit_Impl::update_text_clipping()
 {
-	CL_GraphicContext gc = lineedit->get_gc();
+	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
 
 	CL_Size text_size = lineedit->get_text_size(text.substr(clip_start_offset));
@@ -905,7 +915,7 @@ void CL_LineEdit_Impl::update_text_clipping()
 
 CL_Rect CL_LineEdit_Impl::get_cursor_rect()
 {
-	CL_GraphicContext gc = lineedit->get_gc();
+	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
 
 	CL_Rect cursor_rect;
@@ -926,7 +936,7 @@ CL_Rect CL_LineEdit_Impl::get_cursor_rect()
 
 CL_Rect CL_LineEdit_Impl::get_selection_rect()
 {
-	CL_GraphicContext gc = lineedit->get_gc();
+	CL_GraphicContext &gc = lineedit->get_gc();
 
 	// text before selection:
 	CL_Font font = part_component.get_font();
@@ -985,14 +995,14 @@ void CL_LineEdit_Impl::on_timer_expired()
 		timer.start(500);
 
 	cursor_blink_visible = !cursor_blink_visible;
-	lineedit->invalidate_rect();
+	lineedit->request_repaint();
 }
 
 void CL_LineEdit_Impl::on_resized()
 {
 	content_rect = part_component.get_content_box(lineedit->get_geometry().get_size());
 
-	CL_GraphicContext gc = lineedit->get_gc();
+	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
 
 	vertical_text_align = part_component.get_vertical_text_align(gc, font, content_rect);
@@ -1123,7 +1133,7 @@ void CL_LineEdit_Impl::on_enable_changed()
 		cursor_blink_visible = false;
 		timer.stop();
 	}
-	lineedit->invalidate_rect();
+	lineedit->request_repaint();
 }
 
 bool CL_LineEdit_Impl::input_mask_accepts_input(int cursor_pos, const CL_StringRef &str)

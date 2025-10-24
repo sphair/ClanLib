@@ -34,11 +34,13 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
+#include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/Components/label.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/2D/span_layout.h"
 #include "../gui_css_strings.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,19 +54,13 @@ public:
 	}
 
 	void on_process_message(CL_GUIMessage &msg);
-
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
-
 	void on_style_changed();
-
 	void create_parts();
 
 	CL_Label *label;
-
-	CL_String text;
-
+	CL_SpanLayout span;
 	CL_GUIThemePart part_component;
-
 	CL_Label::Alignment alignment;
 };
 
@@ -91,9 +87,9 @@ CL_Label::~CL_Label()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Label Attributes:
 
-const CL_String &CL_Label::get_text() const
+CL_String CL_Label::get_text() const
 {
-	return impl->text;
+	return impl->span.get_combined_text();
 }
 
 CL_Size CL_Label::get_preferred_size() const
@@ -106,8 +102,18 @@ CL_Size CL_Label::get_preferred_size() const
 
 void CL_Label::set_text(const CL_StringRef &text)
 {
-	impl->text = text;
-	invalidate_rect();
+	impl->span = CL_SpanLayout();
+	CL_GUIThemePartProperty prop_text_color(CssStr::text_color, cl_text("black"));
+	CL_Colorf text_color = impl->part_component.get_property(prop_text_color);
+	CL_Font font = impl->part_component.get_font();
+	impl->span.add_text(text, font, text_color);
+	request_repaint();
+}
+
+void CL_Label::set_span(const CL_SpanLayout &layout)
+{
+	impl->span = layout;
+	request_repaint();
 }
 
 CL_Label::Alignment CL_Label::get_alignment() const
@@ -134,13 +140,13 @@ void CL_Label_Impl::on_process_message(CL_GUIMessage &msg)
 		if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
 		{
 			part_component.set_state(CssStr::hot, true);
-			label->invalidate_rect();
+			label->request_repaint();
 		}
 		else
 		{
 			part_component.set_state(CssStr::hot, false);
 			part_component.set_state(CssStr::pressed, false);
-			label->invalidate_rect();
+			label->request_repaint();
 		}
 	}
 }
@@ -150,7 +156,19 @@ void CL_Label_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 	CL_Rect rect = label->get_geometry();
 	part_component.render_box(gc, rect.get_size(), update_rect);
 	CL_Rect content_rect = part_component.get_content_box(rect.get_size());
-	part_component.render_text(gc, text, content_rect, update_rect);
+	switch (alignment)
+	{
+	case CL_Label::align_left: span.set_align(cl_left); break;
+	case CL_Label::align_center: span.set_align(cl_center); break;
+	case CL_Label::align_right: span.set_align(cl_right); break;
+	case CL_Label::align_justify: span.set_align(cl_justify); break;
+	default: break;
+	}
+
+	span.layout(gc, content_rect.get_width());
+	span.set_position(CL_Point(content_rect.left, content_rect.top));
+	span.draw_layout(gc);
+	span.set_component_geometry();
 }
 
 void CL_Label_Impl::create_parts()

@@ -29,7 +29,6 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-
 #ifndef _cl_header_string_types_
 #define _cl_header_string_types_
 

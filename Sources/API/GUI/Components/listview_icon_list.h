@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../../Display/2D/sprite.h"
@@ -52,22 +50,38 @@ public:
 	CL_ListViewIconList();
 	~CL_ListViewIconList();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get icon
+	///
+	/// \param index = value
+	///
+	/// \return List View Icon
 	CL_ListViewIcon get_icon(int index);
 
+	/// \brief Get Color
+	///
+	/// \return color
 	CL_Colorf get_color();
 
+	/// \brief Get Selected color
+	///
+	/// \return selected_color
 	CL_Colorf get_selected_color();
 
+	/// \brief Get Color overlay
+	///
+	/// \return color_overlay
 	CL_Colorf get_color_overlay();
 
+	/// \brief Get Selected color overlay
+	///
+	/// \return selected_color_overlay
 	CL_Colorf get_selected_color_overlay();
-
 
 /// \}
 /// \name Operations
@@ -83,15 +97,25 @@ public:
 	/// \brief Set the icon at the specified index.
 	void set_icon(int index, const CL_ListViewIcon &icon);
 
+	/// \brief Set color
+	///
+	/// \param color = Colorf
 	void set_color(const CL_Colorf &color);
 
+	/// \brief Set selected color
+	///
+	/// \param color = Colorf
 	void set_selected_color(const CL_Colorf &color);
 
+	/// \brief Set color overlay
+	///
+	/// \param color = Colorf
 	void set_color_overlay(const CL_Colorf &color);
 
+	/// \brief Set selected color overlay
+	///
+	/// \param color = Colorf
 	void set_selected_color_overlay(const CL_Colorf &color);
-
-
 
 /// \}
 /// \name Implementation
@@ -101,6 +125,5 @@ private:
 	CL_SharedPtr<CL_ListViewIconList_Impl> impl;
 /// \}
 };
-
 
 /// \}

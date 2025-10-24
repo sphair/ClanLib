@@ -117,6 +117,7 @@ namespace CssStr
 		const CL_StringRef part_item_row = cl_text("row");
 		const CL_StringRef part_item_icon = cl_text("icon");
 		const CL_StringRef part_item_label = cl_text("label");
+		const CL_StringRef part_item_check = cl_text("check");
 		const CL_StringRef part_separator = cl_text("separator");
 		const CL_StringRef part_submenu_arrow = cl_text("submenu_arrow");
 		const CL_StringRef part_item_accel_label = cl_text("accel_label");

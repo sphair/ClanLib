@@ -28,6 +28,8 @@
 
 #include "Display/precomp.h"
 #include <iostream>
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/jpeg_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
@@ -38,16 +40,52 @@
 
 CL_PixelBuffer CL_JPEGProvider::load(
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 {
 	CL_JPEGProvider_Impl jpeg(filename, directory);
 	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.pitch, jpeg.format, jpeg.palette, jpeg.get_data());
 }
 
+CL_PixelBuffer CL_JPEGProvider::load(
+	CL_IODevice &file)
+{
+	CL_JPEGProvider_Impl jpeg(file);
+	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.pitch, jpeg.format, jpeg.palette, jpeg.get_data());
+}
+
+CL_PixelBuffer CL_JPEGProvider::load(
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_JPEGProvider::load(filename, vfs.get_root_directory());
+}
+
+void CL_JPEGProvider::save(
+	CL_PixelBuffer buffer,
+	const CL_String &fullname,
+	int quality)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	return CL_JPEGProvider::save(buffer, filename, dir, quality);
+}
+
+void CL_JPEGProvider::save(
+	CL_PixelBuffer buffer,
+	CL_IODevice &file,
+	int quality)
+{
+	throw CL_Exception(cl_text("CL_JPEGProvider::save() using CL_IODevice is not implemented"));
+}
+
 void CL_JPEGProvider::save(
 	CL_PixelBuffer buffer,
 	const CL_String &filename,
-	CL_VirtualDirectory directory,
+	CL_VirtualDirectory &directory,
 	int quality)
 {
 	if (buffer.get_format() != CL_PixelFormat::bgr888)

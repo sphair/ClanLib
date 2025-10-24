@@ -31,9 +31,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "point.h"
@@ -62,8 +60,25 @@ public:
 	/// \param B = Second point defining the line.
 	static float point_right_of_line( float x, float y, float *line );
 
+	/// \brief Point right of line
+	///
+	/// \param x = value
+	/// \param y = value
+	/// \param line_x1 = value
+	/// \param line_y1 = value
+	/// \param line_x2 = value
+	/// \param line_y2 = value
+	///
+	/// \return float
 	static float point_right_of_line( float x, float y, float line_x1, float line_y1, float line_x2, float line_y2 );
 
+	/// \brief Point right of line
+	///
+	/// \param A = Pointf
+	/// \param B = Pointf
+	/// \param P = Pointf
+	///
+	/// \return float
 	static float point_right_of_line( const CL_Pointf &A, const CL_Pointf &B, const CL_Pointf &P );
 
 	/// \brief Return the midpoint of the line from point A to point B.
@@ -90,6 +105,5 @@ public:
 	/// \param CL_Pointf B point B
 	static float closest_point_relative( const CL_Pointf &P, const CL_Pointf &A, const CL_Pointf &B );
 };
-
 
 /// \}

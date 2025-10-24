@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -46,6 +40,7 @@ class CL_VirtualFileSystem;
 class CL_CSSImport;
 class CL_CSSRuleSet;
 class CL_CSSDocument_Impl;
+class CL_VirtualDirectory;
 
 /// \brief Cascading Style Sheet (CSS) document.
 /** <p>Document class for cascading style sheets (CSS).  Provides access to
@@ -62,7 +57,6 @@ public:
 
 	~CL_CSSDocument();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -73,7 +67,6 @@ public:
 
 	/// \brief Retrieves all CSS rule set descriptions.
 	std::vector<CL_CSSRuleSet> &get_rulesets();
-
 
 /// \}
 /// \name Operations
@@ -100,11 +93,15 @@ public:
 	void remove_ruleset(CL_CSSRuleSet ruleset);
 
 	/// \brief Load CSS document from an input source.
-	void load(const CL_StringRef &path, CL_IODevice &input);
+	void load(const CL_String &filename, const CL_VirtualDirectory &directory);
 
-	/// \brief Save CSS document to an input source.
+	/// \brief Load
+	///
+	/// \param fullname = full filename
+	void load(const CL_String &fullname);
+
+	/// \brief Save CSS document to an ouput source.
 	void save(CL_IODevice &output);
-
 
 /// \}
 /// \name Implementation
@@ -114,6 +111,5 @@ private:
 	CL_SharedPtr<CL_CSSDocument_Impl> impl;
 /// \}
 };
-
 
 /// \}

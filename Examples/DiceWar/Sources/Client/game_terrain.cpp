@@ -172,7 +172,7 @@ GameTerrain::GameTerrain(
 	if (!shader_program.link())
 		throw CL_Exception("Map shader program failed to link: " + shader_program.get_info_log());
 
-	texture_base = CL_Texture(gc, texture_png, CL_VirtualDirectory(), false);
+	texture_base = CL_Texture(gc, texture_png);
 	texture_base.set_min_filter(cl_filter_linear);
 	texture_base.set_mag_filter(cl_filter_linear);
 
@@ -190,7 +190,7 @@ GameTerrain::GameTerrain(
 	texture_areas.set_min_filter(cl_filter_nearest);
 	texture_areas.set_mag_filter(cl_filter_nearest);
 
-	texture_borders = CL_Texture(gc, borders_png, CL_VirtualDirectory(), false);
+	texture_borders = CL_Texture(gc, borders_png);
 	texture_borders.set_min_filter(cl_filter_linear);
 	texture_borders.set_mag_filter(cl_filter_linear);
 }
@@ -202,7 +202,7 @@ void GameTerrain::set_area_colors(CL_GraphicContext &gc, const std::vector<unsig
 	for(unsigned int i=0;i<colors.size();++i)
 		col[i] = colors[i];
 
-	texture_colors = CL_Texture(gc, area_count+1, 1, cl_texture_2d);
+	texture_colors = CL_Texture(gc, area_count+1, 1);
 	texture_colors.set_image(buffer_colors);
 	texture_colors.set_wrap_mode(cl_wrap_clamp_to_edge, cl_wrap_clamp_to_edge);
 	texture_colors.set_min_filter(cl_filter_nearest);

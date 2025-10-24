@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -100,7 +94,6 @@ public:
 
 	virtual ~CL_DelauneyTriangulator();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -111,7 +104,6 @@ public:
 
 	/// \brief Returns the resulting triangles produced from triangulation.
 	const std::vector<CL_DelauneyTriangulator_Triangle> &get_triangles() const;
-
 
 /// \}
 /// \name Operations
@@ -124,7 +116,6 @@ public:
 	/// \brief Converts passed points into triangles.
 	void generate();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -133,6 +124,5 @@ private:
 	CL_SharedPtr<CL_DelauneyTriangulator_Generic> impl;
 /// \}
 };
-
 
 /// \}

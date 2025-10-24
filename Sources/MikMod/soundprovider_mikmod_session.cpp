@@ -28,14 +28,15 @@
 */
 
 #include "Sound/precomp.h"
-#include "soundprovider_mikmod_session.h"
-#include "soundprovider_mikmod_generic.h"
-#include "module_reader.h"
 #include "API/Sound/soundformat.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/System/autoptr.h"
+
+#include "soundprovider_mikmod_session.h"
+#include "soundprovider_mikmod_generic.h"
+#include "module_reader.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod_Session construction:

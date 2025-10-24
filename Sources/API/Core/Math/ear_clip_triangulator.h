@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -77,7 +71,6 @@ public:
 
 	virtual ~CL_EarClipTriangulator();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -92,7 +85,6 @@ public:
 	/// \brief Determine the orientation of the vertices in the triangulator.
 	CL_PolygonOrientation calculate_polygon_orientation();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -101,6 +93,9 @@ public:
 	/// \brief Add the next vertex of the polygon to the triangulator.
 	void add_vertex(float x, float y);
 
+	/// \brief Add vertex
+	///
+	/// \param p = Pointf
 	void add_vertex(const CL_Pointf &p);
 
 	/// \brief Remove all vertices from triangulator.
@@ -118,7 +113,6 @@ public:
 	/// \brief Mark ending of a polygon hole.
 	void end_hole();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -127,6 +121,5 @@ private:
 	CL_SharedPtr<CL_EarClipTriangulator_Impl> impl;
 /// \}
 };
-
 
 /// \}

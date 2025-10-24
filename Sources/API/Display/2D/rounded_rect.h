@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -56,9 +50,13 @@ class CL_RoundedRect
 /// \{
 
 public:
+
+	/// \brief Constructs a RoundedRect
+	///
+	/// \param size = Sizef
+	/// \param rounding_in_pixels = value
 	CL_RoundedRect(CL_Sizef size, float rounding_in_pixels=5.0f);
 	virtual ~CL_RoundedRect();
-
 
 /// \}
 /// \name Attributes
@@ -102,7 +100,6 @@ public:
 	/// \brief Returns the relative offset (0.0-1.0) to the center of the edges connected to the corner.
 	CL_Sizef get_rounding_bottom_right() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -110,26 +107,26 @@ public:
 public:
 	/// \brief Draw the rectangle outline
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Pointf &position,
 		const CL_Colorf &color,
 		CL_Origin origin=origin_top_left);
 
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Pointf &position,
 		const CL_Gradient &gradient,
 		CL_Origin origin=origin_top_left);
 
 	/// \brief Fill the rectangle
 	void fill(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Pointf &position,
 		const CL_Colorf &color,
 		CL_Origin origin=origin_top_left);
 
 	void fill(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Pointf &position,
 		const CL_Gradient &gradient,
 		CL_Origin origin=origin_top_left);
@@ -165,7 +162,6 @@ public:
 	/// \brief Set the relative offset (0.0-1.0) to the center of the edges connected to the corner.
 	void set_rounding_bottom_right(const CL_Sizef &offset);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -174,6 +170,5 @@ private:
 	CL_SharedPtr<CL_RoundedRect_Impl> impl;
 /// \}
 };
-
 
 /// \}

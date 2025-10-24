@@ -99,7 +99,7 @@ CL_Sprite CL_ImageView::get_image() const
 void CL_ImageView::set_image(const CL_Sprite &image)
 {
 	impl->sprite = image;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ImageView::set_image(const CL_PixelBuffer &image)
@@ -113,13 +113,13 @@ void CL_ImageView::set_image(const CL_PixelBuffer &image)
 	CL_SpriteDescription sd;
 	sd.add_frame(image);
 	impl->sprite = CL_Sprite(get_gc(), sd);
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ImageView::set_scale_to_fit()
 {
 	impl->scale_to_fit = true;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_ImageView::set_scale( float x, float y )
@@ -127,7 +127,7 @@ void CL_ImageView::set_scale( float x, float y )
 	impl->scale_x = x;
 	impl->scale_y = y;
 	impl->scale_to_fit = false;
-	invalidate_rect();
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -156,9 +156,9 @@ void CL_ImageView_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_r
 			pos.x -= sprite.get_width()/2;
 			pos.y -= sprite.get_height()/2;
 
-			image->set_cliprect(content);
+			image->set_cliprect(gc, content);
 			sprite.draw(gc, (float)pos.x, (float)pos.y);
-			image->reset_cliprect();
+			image->reset_cliprect(gc);
 		}
 	}
 }

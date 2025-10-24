@@ -31,10 +31,6 @@
 
 #pragma once
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../api_core.h"
 
 template<typename Type>
@@ -70,12 +66,10 @@ public:
 	CL_LineRay3x(const CL_LineRay3x<Type> &copy) { p = copy.p; v = copy.v;}
 	CL_LineRay3x(const CL_Vec3<Type> &point_p, const CL_Vec3<Type> &direction_v) { p = point_p; v = direction_v; }
 
-
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operators
@@ -112,7 +106,6 @@ public:
 	CL_LineRay2x() { }
 	CL_LineRay2x(const CL_LineRay2x<Type> &copy) { p = copy.p; v = copy.v;}
 	CL_LineRay2x(const CL_Vec2<Type> &point_p, const CL_Vec2<Type> &direction_v) { p = point_p; v = direction_v; }
-
 
 /// \name Attributes
 /// \{

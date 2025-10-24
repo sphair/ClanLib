@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Sound/soundprovider_session.h"
 
 class CL_SoundProvider_Raw_Generic;

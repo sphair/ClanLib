@@ -29,9 +29,7 @@
 /// \addtogroup clanGDI_Display clanGDI Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_gdi.h"
 #include "../Display/display_target.h"
@@ -52,20 +50,17 @@ public:
 
 	~CL_GDITarget();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -74,6 +69,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

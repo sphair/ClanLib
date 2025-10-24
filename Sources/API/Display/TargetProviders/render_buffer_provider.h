@@ -30,11 +30,12 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
 
-
 #include "../api_display.h"
+#include "../Render/texture.h"
+
+enum CL_TextureFormat;
 
 /// \brief Interface for implementing a CL_RenderBuffer target.
 ///
@@ -47,13 +48,11 @@ class CL_API_DISPLAY CL_RenderBufferProvider
 public:
 	virtual ~CL_RenderBufferProvider() {}
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -61,11 +60,10 @@ public:
 
 public:
 	/// \brief Create a render buffer image with the specified dimensions.
-	virtual void create(int width, int height, int format) = 0;
+	virtual void create(int width, int height, CL_TextureFormat internal_format) = 0;
 
 	/// \brief Destroys the provider.
 	virtual void destroy() = 0;
-
 
 /// \}
 /// \name Implementation
@@ -74,6 +72,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

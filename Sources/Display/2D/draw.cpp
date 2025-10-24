@@ -40,7 +40,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_Draw operations:
 
-void CL_Draw::point(CL_GraphicContext gc, float x1, float y1, const CL_Colorf &color)
+void CL_Draw::point(CL_GraphicContext &gc, float x1, float y1, const CL_Colorf &color)
 {
 	CL_Vec2f positions[1] =
 	{
@@ -55,12 +55,12 @@ void CL_Draw::point(CL_GraphicContext gc, float x1, float y1, const CL_Colorf &c
 	gc.reset_program_object();
 }
 
-void CL_Draw::point(CL_GraphicContext gc, const CL_Pointf &p, const CL_Colorf &color)
+void CL_Draw::point(CL_GraphicContext &gc, const CL_Pointf &p, const CL_Colorf &color)
 {
 	point(gc, p.x, p.y, color);
 }
 
-void CL_Draw::line(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
+void CL_Draw::line(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
 {
 	CL_Vec2f positions[2] =
 	{
@@ -76,12 +76,12 @@ void CL_Draw::line(CL_GraphicContext gc, float x1, float y1, float x2, float y2,
 	gc.reset_program_object();
 }
 
-void CL_Draw::line(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
+void CL_Draw::line(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
 {
 	line(gc, start.x, start.y, end.x, end.y, color);
 }
 
-void CL_Draw::box(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
+void CL_Draw::box(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
 {
 	CL_Vec2f positions[4] =
 	{
@@ -99,17 +99,17 @@ void CL_Draw::box(CL_GraphicContext gc, float x1, float y1, float x2, float y2, 
 	gc.reset_program_object();
 }
 
-void CL_Draw::box(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
+void CL_Draw::box(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
 {
 	box(gc, start.x, start.y, end.x, end.y, color);
 }
 
-void CL_Draw::box(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Colorf &color)
+void CL_Draw::box(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color)
 {
 	box(gc, rect.left, rect.top, rect.right, rect.bottom, color);
 }
 
-void CL_Draw::fill(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
+void CL_Draw::fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
 {
 	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
 	batcher->fill(gc, x1, y1, x2, y2, color);
@@ -133,18 +133,18 @@ void CL_Draw::fill(CL_GraphicContext gc, float x1, float y1, float x2, float y2,
 */
 }
 
-void CL_Draw::fill(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
+void CL_Draw::fill(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
 {
 	fill(gc, start.x, start.y, end.x, end.y, color);
 }
 
-void CL_Draw::fill(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Colorf &color)
+void CL_Draw::fill(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color)
 {
 	fill(gc, rect.left, rect.top, rect.right, rect.bottom, color);
 }
 
 void CL_Draw::texture(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	const CL_Rectf &rect,
 	const CL_Colorf &color,
 	const CL_Rectf &texture_unit1_coords)
@@ -178,7 +178,7 @@ void CL_Draw::texture(
 	gc.reset_program_object();
 }
 
-void CL_Draw::gradient_fill(CL_GraphicContext gc, float x1, float y1, float x2, float y2, const CL_Gradient &gradient)
+void CL_Draw::gradient_fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Gradient &gradient)
 {
 	CL_Vec2f positions[6] =
 	{
@@ -210,32 +210,32 @@ void CL_Draw::gradient_fill(CL_GraphicContext gc, float x1, float y1, float x2, 
 	gc.reset_program_object();
 }
 
-void CL_Draw::gradient_fill(CL_GraphicContext gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Gradient &gradient)
+void CL_Draw::gradient_fill(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Gradient &gradient)
 {
 	gradient_fill(gc, start.x, start.y, end.x, end.y, gradient);
 }
 
-void CL_Draw::gradient_fill(CL_GraphicContext gc, const CL_Rectf &rect, const CL_Gradient &gradient)
+void CL_Draw::gradient_fill(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Gradient &gradient)
 {
 	gradient_fill(gc, rect.left, rect.top, rect.right, rect.bottom, gradient);
 }
 
-void CL_Draw::circle(CL_GraphicContext gc, float center_x, float center_y, float radius, const CL_Colorf &color)
+void CL_Draw::circle(CL_GraphicContext &gc, float center_x, float center_y, float radius, const CL_Colorf &color)
 {
 	gradient_circle(gc, CL_Pointf(center_x, center_y), CL_Pointf(center_x, center_y), radius, CL_Gradient(color, color));
 }
 
-void CL_Draw::circle(CL_GraphicContext gc, const CL_Pointf &center, float radius, const CL_Colorf &color)
+void CL_Draw::circle(CL_GraphicContext &gc, const CL_Pointf &center, float radius, const CL_Colorf &color)
 {
 	gradient_circle(gc, center, center, radius, CL_Gradient(color, color));
 }
 
-void CL_Draw::gradient_circle(CL_GraphicContext gc, const CL_Pointf &center, float radius, const CL_Gradient &gradient)
+void CL_Draw::gradient_circle(CL_GraphicContext &gc, const CL_Pointf &center, float radius, const CL_Gradient &gradient)
 {
 	gradient_circle(gc, center, center, radius, gradient);
 }
 
-void CL_Draw::gradient_circle(CL_GraphicContext gc, const CL_Pointf &center, const CL_Pointf &centergradient, float radius, const CL_Gradient &gradient)
+void CL_Draw::gradient_circle(CL_GraphicContext &gc, const CL_Pointf &center, const CL_Pointf &centergradient, float radius, const CL_Gradient &gradient)
 {
 	float offset_x = 0;
 	float offset_y = 0;
@@ -308,7 +308,7 @@ void CL_Draw::gradient_circle(CL_GraphicContext gc, const CL_Pointf &center, con
 	}
 }
 
-void CL_Draw::triangle(CL_GraphicContext gc, const CL_Pointf &a, const CL_Pointf &b, const CL_Pointf &c, const CL_Colorf &color)
+void CL_Draw::triangle(CL_GraphicContext &gc, const CL_Pointf &a, const CL_Pointf &b, const CL_Pointf &c, const CL_Colorf &color)
 {
 	CL_Vec2f positions[3] =
 	{

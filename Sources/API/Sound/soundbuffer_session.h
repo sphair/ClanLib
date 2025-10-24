@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
@@ -61,10 +55,12 @@ public:
 	/// \brief Creates a soundbuffer session.
 	CL_SoundBuffer_Session();
 
+	/// \brief Constructs a SoundBuffer Session
+	///
+	/// \param copy = Sound Buffer_ Session
 	CL_SoundBuffer_Session(const CL_SoundBuffer_Session &copy);
 
 	virtual ~CL_SoundBuffer_Session();
-
 
 /// \}
 /// \name Attributes
@@ -98,9 +94,13 @@ public:
 	    and 1 means the soundeffect is only playing in the right speaker.</p>*/
 	float get_pan() const;
 
+	/// \brief Returns whether this session loops
+	///
+	/// \return true if session should loop, false otherwise
+	bool get_looping() const;
+
 	/// \brief Returns true if the session is playing
 	bool is_playing();
-
 
 /// \}
 /// \name Operations
@@ -156,18 +156,20 @@ public:
 	/// \brief Adds the sound filter to the session. See CL_SoundFilter for details.
 	///
 	/// \param filter Sound filter to pass sound through.
-	/// \param delete_filter If true, the filter will be deleted when the session is destroyed
-	void add_filter(CL_SoundFilter *filter, bool delete_filter = false);
+	void add_filter(CL_SoundFilter &filter);
 
 	/// \brief Remove the sound filter from the session. See CL_SoundFilter for details.
-	void remove_filter(CL_SoundFilter *filter);
-
+	void remove_filter(CL_SoundFilter &filter);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a SoundBuffer Session
+	///
+	/// \param CL_SoundBuffer_Session_Generic = Shared Ptr
 	CL_SoundBuffer_Session(const CL_SharedPtr<CL_SoundBuffer_Session_Generic> &impl);
 
 	CL_SharedPtr<CL_SoundBuffer_Session_Generic> impl;
@@ -175,6 +177,5 @@ private:
 	friend class CL_SoundBuffer;
 /// \}
 };
-
 
 /// \}

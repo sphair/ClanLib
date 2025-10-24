@@ -29,14 +29,11 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
 #include "gui_message.h"
-
 
 /// \brief GUI activation change notification message.
 ///
@@ -50,16 +47,22 @@ public:
 	/// \brief Constructs an input GUI message.
 	CL_GUIMessage_ActivationChange();
 
+	/// \brief Constructs a GUIMessage ActivationChange
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_ActivationChange(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_ActivationChange();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Type name
+	///
+	/// \return type_name
 	static CL_StringRef get_type_name();
 
 	enum ActivationType
@@ -71,7 +74,6 @@ public:
 	/// \brief Retrieves the focus type of this message.
 	ActivationType get_activation_type() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -80,7 +82,6 @@ public:
 	/// \brief Sets the activation type for this Message.
 	void set_activation_type(ActivationType activation_type);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -88,6 +89,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

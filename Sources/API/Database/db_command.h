@@ -29,9 +29,7 @@
 /// \addtogroup clanDatabase_System clanDatabase System
 /// \{
 
-
 #pragma once
-
 
 #include "api_database.h"
 
@@ -58,6 +56,9 @@ public:
 	/// \brief Constructs a database command
 	CL_DBCommand();
 
+	/// \brief Constructs a DBCommand
+	///
+	/// \param CL_DBCommand_Impl = Shared Ptr
 	CL_DBCommand(const CL_SharedPtr<CL_DBCommand_Impl> &impl);
 
 	~CL_DBCommand();
@@ -106,6 +107,5 @@ private:
 	friend class CL_DBConnection;
 /// \}
 };
-
 
 /// \}

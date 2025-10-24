@@ -225,7 +225,7 @@ CL_Rect CL_ListViewLayoutIcons::get_lineedit_rect(CL_ListViewItem &item, const C
 
 void CL_ListViewLayoutIcons::update_shown_items_grid(CL_Font &font, CL_ListViewItem doc_item)
 {
-	CL_GraphicContext gc = listview->get_gc(); 
+	CL_GraphicContext &gc = listview->get_gc(); 
 	shown_items.clear();
 	row_counter = 0;
 
@@ -252,7 +252,7 @@ void CL_ListViewLayoutIcons::update_shown_items_grid(CL_Font &font, CL_ListViewI
 		si.item = item;
 		CL_Rect rect_cell(x, y, x+size_cell.width, y+size_cell.height);
 		si.rect_cell.push_back(rect_cell);
-		rect_cell.shrink(rect_cell_shrink); // part_cell.get_content_box(si.rect_cell);
+		rect_cell.shrink(rect_cell_shrink.left, rect_cell_shrink.top, rect_cell_shrink.right, rect_cell_shrink.bottom); // part_cell.get_content_box(si.rect_cell);
 		CL_Rect rect_cell_content = rect_cell;
 		si.rect_icon = get_icon_rect(rect_cell_content, item, rect_cell_content.left);
 

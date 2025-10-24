@@ -30,13 +30,7 @@
 /// \addtogroup clanMikMod_System clanMikMod System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 /// \brief ClanMikMod initialization.
 ///
@@ -54,7 +48,6 @@ public:
 
 	~CL_SetupMikMod();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -67,6 +60,5 @@ public:
 	static void deinit();
 /// \}
 };
-
 
 /// \}

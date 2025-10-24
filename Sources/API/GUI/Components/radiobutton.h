@@ -46,6 +46,10 @@ class CL_API_GUI CL_RadioButton : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a RadioButton
+	///
+	/// \param parent = GUIComponent
 	CL_RadioButton(CL_GUIComponent *parent);
 
 	virtual ~CL_RadioButton();
@@ -54,32 +58,65 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Get Text
+	///
+	/// \return text
 	CL_StringRef get_text() const;
 
+	/// \brief Get Id
+	///
+	/// \return id
 	int get_id() const;
 
+	/// \brief Is Selected
+	///
+	/// \return true = selected
 	bool is_selected() const;
 
+	/// \brief Get Group name
+	///
+	/// \return group_name
 	CL_StringRef get_group_name() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Set id
+	///
+	/// \param id = value
 	void set_id(int id);
 
+	/// \brief Set selected
+	///
+	/// \param selected = bool
 	void set_selected(bool selected);
 
+	/// \brief Set group name
+	///
+	/// \param str = String Ref
 	void set_group_name(const CL_StringRef &str);
 
 /// \}
 /// \name Events
 /// \{
 public:
+
+	/// \brief Func selected
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_selected();
 
+	/// \brief Func unselected
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_unselected();
 
 	/// \brief Callback invoked when any of the radio buttons in the group is selected.

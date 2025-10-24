@@ -36,7 +36,7 @@
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/Display/Window/timer.h"
+#include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/listview_header.h"
@@ -254,7 +254,7 @@ void CL_ListViewHeader_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, C
 		col = col.get_next_sibling();
 	}
 
-	listview_header->invalidate_rect();
+	listview_header->request_repaint();
 	listview_header->capture_mouse(true);
 }
 
@@ -268,7 +268,7 @@ void CL_ListViewHeader_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_
 		col = col.get_next_sibling();
 	}
 
-	listview_header->invalidate_rect();
+	listview_header->request_repaint();
 	listview_header->capture_mouse(false);
 }
 
@@ -300,7 +300,7 @@ void CL_ListViewHeader_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputE
 		current_mouse_in_rect = CL_Rect(0,0,0,0);
 	}
 
-	listview_header->invalidate_rect();
+	listview_header->request_repaint();
 }
 
 void CL_ListViewHeader_Impl::on_mouse_leave()
@@ -314,7 +314,7 @@ void CL_ListViewHeader_Impl::on_mouse_leave()
 		col = col.get_next_sibling();
 	}
 
-	listview_header->invalidate_rect();
+	listview_header->request_repaint();
 }
 
 void CL_ListViewHeader_Impl::on_mouse_enter()

@@ -1,9 +1,49 @@
 Remember when releasing:
-- Change configure.ac - AC_INIT(ClanLib, 2.0.1) and CLANLIB_MICRO_VERSION=1
+- Change configure.ac - AC_INIT(ClanLib, 2.0.x) and CLANLIB_MICRO_VERSION=x
 - Change API/Core.h - CL_VERSION_STRING and CL_CURRENT_VERSION
 
-- CL_Image
-  - Possibility to create from pixelbuffer
+- Change windows to default use unicode:
+  - Modify configure app to make this default
+  - Change all tests/examples to use unicode
+
+- CL_DisplayMessageQueue::process() rename to CL_MessageQueue::process() ?
+  - Should other process_events functions be renamed to just process() ?
+
+- GraphicContext::set_primitives_array() uses CL_PrimitivesArrayData
+  Internally we use some standard settings as follows:
+ 	0: POSITION
+	1: COLOR
+	2: TEXTURE
+	3: SPRITE TEXINDEX
+        4: NORMAL (GL1 target only)
+  Should be values be enum'ed somehow ?
+
+- CL_Texture API issue
+  The copy_image_from() functions contains "CL_GraphicContext *gc = 0"
+  First - gc must not be 0, as "gc->get_provider()" is used (in texture.cpp)
+  Second - Why is CL_GraphicContext required? 
+    For an unknown reason, it is used by the TextureStateTracker (instead of gc_provider from the constructor)
+  Third - Why is TextureStateTracker even required - No states change
+
+- GL1 Texture (NPOT)
+   CL_GL1TextureProvider::set_subimage() copies the image edges into the unused part of the texture, so linear filtering works correctly
+   However: This needs corrected. It should be optimised and currently it does not write to the lower right quadrant
+   Also other GL1 set image functions should contain this fix.
+
+- ClanLib Linux Issues
+  Examples/Sound : Choosing "Choose New Sound", crashes in ClanGUI
+  Unicode build for CTalk
+
+- VFS Issues
+  CL_FontProvider_Vector is not VFS aware
+  JPEG - The saving assumes the i/o source is a file. This should be modified (like how png does it)
+
+X11 / Linux:
+ - Implement icons - http://standards.freedesktop.org/wm-spec/wm-spec-1.3.html#id2507733
+ - "ideally you'd also support _NET_WM_PING, WM_CLIENT_MACHINE and _NET_WM_PID that way a linux user can kill our app like in Windows if it goes unresponsive"
+
+Disposable objects:
+- The gui cache should add itself to the disposable list, instead of using that signal thing it uses now
 
 - Texture Packer:
   - Add UI to select which resource file to pack. 
@@ -37,24 +77,9 @@ Remember when releasing:
   - Tab - redo parts so we won't have to use header_border, and resizing of active tagpage part
   - Frame vs GroupBox - whats the difference - do we need both?
   - Popupmenu separator part is too short
-
-- GUI Exception issues:
-  - In "int CL_MenuModalLoop::exec_handler(CL_AcceleratorTable &accel_table, bool loop_until_complete)"
-    If you call "throw CL_Exception(cl_text("I'm an exception!"));"
-    The destructor CL_GUIComponent::~CL_GUIComponent() crashes.
-
-- GUI CL_ToolBar issues:
-  - You cannot switch between horizontal and Vertical Toolbar
-  - It uses CL_Sprite, not CL_Image
-  - It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
-
-- GUI Set Clip Rect
-  In "void CL_GUIComponent::set_cliprect(const CL_Rect &rect)"
-   The code used to inspect the parent components to obtain the clip rect offset.
-   But because the GUI Texture Window Manager uses an offset into the texture, this rect is incorrect
-   So, this function has been modified to use the translation part of the model view matrix
-   This might be an incorrect and hacky method.
-   Please check and fix :)
+  - ToolBar: You cannot switch between horizontal and Vertical Toolbar
+  - ToolBar: It uses CL_Sprite, not CL_Image
+  - ToolBar: It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
 
 - GUI Modal Window
   There currently is a inconsistancy in the way modal windows are handled (for example, CL_ComboBox_Impl::on_btn_arrow_clicked() )
@@ -81,8 +106,13 @@ Remember when releasing:
 - Logger: If you do "CL_ConsoleLogger logger; logger.enable();" it will have two instances
   of logging!
 
-- ClanMikMod 
-  Fix Mikmod package to compile on 64 bit in windows (works on linux)
+- ClanSound
+   Adjust clanSound, so you that can set the frequency rate of an sample - Thus, make the Methane example sounds play correctly.
+	1) It only supports 2.0 sound (stuuuupid)
+	2) It was designed for DirectSound, then detached from that design. The effect is that it thinks in 'sound buffers' which is bit silly
+	3) It was designed back when .wav was king, but we kinda have .ogg and .mp3s now. The consequence of this is that our ogg sound provider sucks
+	4) The API itself was designed in the 0.6.x age of clanlib, which means it doesnt have Providers or anything like it
+
 
 - Modifying existing display window
   Is this function required: void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc) 

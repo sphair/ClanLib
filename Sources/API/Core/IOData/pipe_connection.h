@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "iodevice.h"
@@ -54,13 +52,22 @@ public:
 	    to avoid situations where strings accidentally becomes a HANDLE parameter
 	    instead of a string reference.  Always set the dummy to true.</p>*/
 #ifdef WIN32
+
+	/// \brief Constructs a PipeConnection
+	///
+	/// \param pipe_handle = HANDLE
+	/// \param dummy = bool
 	CL_PipeConnection(HANDLE pipe_handle, bool dummy);
 #else
+
+	/// \brief Constructs a PipeConnection
+	///
+	/// \param pipe_handle = value
+	/// \param dummy = bool
 	CL_PipeConnection(int pipe_handle, bool dummy);
 #endif
 
 	~CL_PipeConnection();
-
 
 /// \}
 /// \name Attributes
@@ -71,9 +78,12 @@ public:
 	/// \brief Returns the OS handle for the pipe.
 	HANDLE get_handle() const;
 #else
+
+	/// \brief Get Handle
+	///
+	/// \return handle
 	int get_handle() const;
 #endif
-
 
 /// \}
 /// \name Operations
@@ -83,7 +93,6 @@ public:
 	/// \brief Disconnect pipe.
 	void disconnect();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -91,6 +100,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

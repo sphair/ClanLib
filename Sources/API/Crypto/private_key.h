@@ -28,10 +28,8 @@
 
 #pragma once
 
-
 /// \addtogroup clanCrypto_System clanCrypto System
 /// \{
-
 
 #include <prio.h>
 #include <keyt.h>
@@ -47,12 +45,17 @@ class CL_PrivateKey
 public:
 	CL_PrivateKey();
 
+	/// \brief Constructs a PrivateKey
+	///
+	/// \param key = SECKEYPrivate Key
 	CL_PrivateKey(SECKEYPrivateKey *key);
 
+	/// \brief Constructs a PrivateKey
+	///
+	/// \param copy = Private Key
 	CL_PrivateKey(const CL_PrivateKey &copy);
 
 	~CL_PrivateKey();
-
 
 /// \}
 /// \name Attributes
@@ -61,14 +64,12 @@ public:
 public:
 	SECKEYPrivateKey *key;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 	CL_PrivateKey &operator =(const CL_PrivateKey &copy);
-
 
 /// \}
 /// \name Implementation
@@ -77,6 +78,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

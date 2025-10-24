@@ -30,7 +30,6 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
 
 #include "../api_core.h"
@@ -57,7 +56,7 @@ class CL_API_CORE CL_Sizex
 
 public:
 	/// \brief Constructs a size structure.
-	CL_Sizex() { return; }
+	CL_Sizex() : width(0), height(0) { return; }
 
 	/// \brief Constructs a size structure.
 	///
@@ -82,7 +81,6 @@ public:
 
 	/// \brief Size height.
 	Type height;
-
 
 /// \}
 /// \name Operations

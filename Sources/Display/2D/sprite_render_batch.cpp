@@ -30,8 +30,6 @@
 #include "sprite_render_batch.h"
 #include "sprite_impl.h"
 
-const CL_Pointf CL_SpriteRenderBatch::texel_center(0.375f, 0.375f);
-
 CL_SpriteRenderBatch::CL_SpriteRenderBatch()
 : modelview(CL_Mat4f::identity()), origin(0.0f, 0.0f), x_dir(1.0f, 0.0f), y_dir(0.0f, 1.0f), position(0), num_current_textures(0)
 {
@@ -51,15 +49,15 @@ void CL_SpriteRenderBatch::draw_sprite(CL_GraphicContext &gc, const CL_Surface_D
 
 inline void CL_SpriteRenderBatch::to_sprite_vertex(const CL_Surface_DrawParams1 *params, int index, CL_SpriteRenderBatch::SpriteVertex &v, int texindex) const
 {
-	v.position.x = origin.x + x_dir.x * params->destX[index] + y_dir.x * params->destY[index];
-	v.position.y = origin.y + x_dir.y * params->destX[index] + y_dir.y * params->destY[index];
+	v.position.x = origin.x + x_dir.x * params->dest_position[index].x + y_dir.x * params->dest_position[index].y;
+	v.position.y = origin.y + x_dir.y * params->dest_position[index].x + y_dir.y * params->dest_position[index].y;
 	v.position.z = params->destZ;
 	v.color.r = params->color[index].r;
 	v.color.g = params->color[index].g;
 	v.color.b = params->color[index].b;
 	v.color.a = params->color[index].a;
-	v.texcoord.s = (params->srcX[index]+texel_center.x)/tex_sizes[texindex].width;
-	v.texcoord.t = (params->srcY[index]+texel_center.y)/tex_sizes[texindex].height;
+	v.texcoord.s = params->texture_position[index].x;
+	v.texcoord.t = params->texture_position[index].y;
 	v.texindex.x = (float) texindex;
 }
 
@@ -72,10 +70,10 @@ void CL_SpriteRenderBatch::draw_image(CL_GraphicContext &gc, const CL_Rectf &src
 	vertices[position+3].position = to_position(dest.right, dest.top);
 	vertices[position+4].position = to_position(dest.right, dest.bottom);
 	vertices[position+5].position = to_position(dest.left, dest.bottom);
-	float src_left = (src.left+texel_center.x)/tex_sizes[texindex].width;
-	float src_top = (src.top+texel_center.y) / tex_sizes[texindex].height;
-	float src_right = (src.right+texel_center.x)/tex_sizes[texindex].width;
-	float src_bottom = (src.bottom+texel_center.y) / tex_sizes[texindex].height;
+	float src_left = (src.left+cl_pixelcenter_constant)/tex_sizes[texindex].width;
+	float src_top = (src.top+cl_pixelcenter_constant) / tex_sizes[texindex].height;
+	float src_right = (src.right+cl_pixelcenter_constant)/tex_sizes[texindex].width;
+	float src_bottom = (src.bottom+cl_pixelcenter_constant) / tex_sizes[texindex].height;
 	vertices[position+0].texcoord = CL_Vec2f(src_left, src_top);
 	vertices[position+1].texcoord = CL_Vec2f(src_right, src_top);
 	vertices[position+2].texcoord = CL_Vec2f(src_left, src_bottom);

@@ -28,8 +28,6 @@
 
 #include "D3D10/precomp.h"
 #include "d3d10_graphic_context_provider.h"
-#include "Display/Font/font_provider_win32.h"
-#include "Display/Font/font_cache_native.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 
@@ -85,7 +83,7 @@ CL_GraphicContext CL_D3D10GraphicContextProvider::create_worker_gc()
 	return CL_GraphicContext();
 }
 
-CL_PixelBuffer CL_D3D10GraphicContextProvider::get_pixeldata(const CL_Rect& rect)
+CL_PixelBuffer CL_D3D10GraphicContextProvider::get_pixeldata(const CL_Rect& rect) const
 {
 	return CL_PixelBuffer();
 }

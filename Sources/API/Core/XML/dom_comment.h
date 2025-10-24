@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_character_data.h"
@@ -55,19 +49,24 @@ public:
 	/// \brief Constructs a DOM Comment handle.
 	CL_DomComment();
 
+	/// \brief Constructs a DomComment
+	///
+	/// \param doc = Dom Document
+	/// \param data = Dom String
 	CL_DomComment(CL_DomDocument &doc, const CL_DomString &data);
 
+	/// \brief Constructs a DomComment
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomComment(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomComment();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -76,6 +75,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

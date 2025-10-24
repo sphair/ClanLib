@@ -33,17 +33,29 @@ Server::~Server()
 
 void Server::exec(CL_Event &stop_event)
 {
-	network_server.start("4556");
-
-	while (true)
+	try
 	{
-		int wakeup_reason = CL_Event::wait(stop_event, network_server.get_event_arrived());
-		if (wakeup_reason <= 0)
-			break;
-		network_server.process_events();
-	}
+		network_server.start("4558");
 
-	network_server.stop();
+		while (true)
+		{
+			int wakeup_reason = CL_Event::wait(stop_event, network_server.get_event_arrived());
+			if (wakeup_reason <= 0)
+				break;
+			network_server.process_events();
+		}
+
+		network_server.stop();
+	}
+	catch (CL_Exception e)
+	{
+		std::vector<CL_String> stackTrace = e.get_stack_trace();
+		CL_String text = e.message;
+		for (size_t i = 0; i < stackTrace.size(); i++)
+			text += cl_format("\r\n#%1 %2", (int) i, stackTrace[i]);
+
+		cl_log_event("Exception", text);
+	}
 }
 
 void Server::on_client_connected(CL_NetGameConnection *connection)

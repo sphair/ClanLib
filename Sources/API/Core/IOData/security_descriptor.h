@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "security_identifier.h"
@@ -49,10 +47,12 @@ public:
 	/// \brief Constructs a security descriptor.
 	CL_SecurityDescriptor();
 
+	/// \brief Constructs a SecurityDescriptor
+	///
+	/// \param copy = Security Descriptor
 	CL_SecurityDescriptor(const CL_SecurityDescriptor &copy);
 
 	~CL_SecurityDescriptor();
-
 
 /// \}
 /// \name Attributes
@@ -60,14 +60,12 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 	CL_SecurityDescriptor &operator =(const CL_SecurityDescriptor &copy);
-
 
 /// \}
 /// \name Implementation
@@ -87,6 +85,5 @@ private:
 	bool dacl_defaulted;
 /// \}
 };
-
 
 /// \}

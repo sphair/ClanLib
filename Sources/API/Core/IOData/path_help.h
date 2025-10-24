@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include <vector>
@@ -282,6 +280,5 @@ public:
 		PathType path_type = path_type_file);
 /// \}
 };
-
 
 /// \}

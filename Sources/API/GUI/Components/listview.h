@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 // (Note, enum moved here because of problems with gcc not allowing "enum CL_ListViewDisplayMode;")
 enum CL_ListViewDisplayMode
@@ -65,22 +63,38 @@ class CL_API_GUI CL_ListView : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a ListView
+	///
+	/// \param parent = GUIComponent
 	CL_ListView(CL_GUIComponent *parent);
 
 	virtual ~CL_ListView();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Header
+	///
+	/// \return header
 	CL_ListViewHeader *get_header() const;
 
+	/// \brief Get Document item
+	///
+	/// \return document_item
 	CL_ListViewItem get_document_item() const;
 
+	/// \brief Get Select whole row
+	///
+	/// \return select_whole_row
 	bool get_select_whole_row() const;
 
+	/// \brief Get Icon list
+	///
+	/// \return icon_list
 	CL_ListViewIconList get_icon_list() const;
 
 	/// \brief Returns a container class holding the selected items in a linked list structure.
@@ -92,6 +106,9 @@ public:
 	/// \brief Returns the preferred size of the component, as defined in its CSS file.
 	CL_Size get_preferred_size() const;
 
+	/// \brief Get Display mode
+	///
+	/// \return display_mode
 	CL_ListViewDisplayMode get_display_mode() const;
 
 /// \}
@@ -99,8 +116,15 @@ public:
 /// \{
 
 public:
+
+	/// \brief Create item
+	///
+	/// \return List View Item
 	CL_ListViewItem create_item();
 
+	/// \brief On process message
+	///
+	/// \param msg = GUIMessage
 	void on_process_message(CL_GUIMessage &msg);
 
 	/// \brief When true, the whole row is drawn selected, as opposed to only the first column.
@@ -109,6 +133,9 @@ public:
 	/// \brief When true, multiple items can be selected.
 	void set_multi_select(bool value);
 
+	/// \brief Set display mode
+	///
+	/// \param mode = List View Display Mode
 	void set_display_mode(CL_ListViewDisplayMode mode);
 
 	/// \brief Remove all items.
@@ -117,6 +144,10 @@ public:
 	/// \brief Unselect all selected items.
 	void clear_selection();
 
+	/// \brief Set selected
+	///
+	/// \param item = List View Item
+	/// \param selected = bool
 	void set_selected(CL_ListViewItem &item, bool selected=true);
 
 	/// \brief Returns a CL_ListViewItem with the string 'str' in the column 'col_id' or a NULL item if none found.
@@ -127,7 +158,6 @@ public:
 
 	/// \brief Returns a CL_ListViewItem with the userdata 'ptr', or a NULL item if none found.
 	CL_ListViewItem find(CL_UnknownSharedPtr userdata, bool recursive=true);
-
 
 /// \}
 /// \name Events
@@ -149,7 +179,6 @@ public:
 	/// Use this callback for listview context menus. Click position sent as parameter.
 	CL_Callback_v1<CL_Point> &func_mouse_right_up();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -160,6 +189,5 @@ private:
 	friend class CL_ListViewRenderer;
 /// \}
 };
-
 
 /// \}

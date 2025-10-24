@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -120,7 +114,6 @@ public:
 
 	~CL_BlendMode();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -150,7 +143,6 @@ public:
 	/// \brief Returns true if blending mode is enabled.
 	bool is_blend_enabled() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -171,7 +163,6 @@ public:
 	/// \brief Set the blend functions
 	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -180,6 +171,5 @@ private:
 	CL_SharedPtr<CL_BlendMode_Impl> impl;
 /// \}
 };
-
 
 /// \}

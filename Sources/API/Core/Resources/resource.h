@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Resources clanCore Resources
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../Resources/resource_manager.h"
@@ -54,7 +52,6 @@ public:
 	CL_Resource();
 
 	~CL_Resource();
-
 
 /// \}
 /// \name Attributes
@@ -79,7 +76,6 @@ public:
 	/// \brief Returns the number of CL_ResourceDataSession objects using this resource.
 	int get_data_session_count(const CL_String &data_name);
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -100,12 +96,16 @@ public:
 	/// \brief Decrement the usage session count for the resource.
 	int remove_data_session(const CL_String &data_name);
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a Resource
+	///
+	/// \param element = Dom Element
+	/// \param resource_manager = Resource Manager
 	CL_Resource(CL_DomElement element, CL_ResourceManager &resource_manager);
 
 	CL_SharedPtr<CL_Resource_Impl> impl;
@@ -113,6 +113,5 @@ private:
 	friend class CL_ResourceManager;
 /// \}
 };
-
 
 /// \}

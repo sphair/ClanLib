@@ -24,30 +24,28 @@
 **  File Author(s):
 **
 **    Emanuel Griesen
+**    Harry Storbacka
 */
 
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include <vector>
 #include "point.h"
 #include "circle.h"
+#include "rect.h"
 
 /// \brief Math operations related to point sets.
 ///
 /// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE CL_PointSetMath
 {
-	public:
 /// \name Operations
 /// \{
-
- public:
+public:
 	/// \brief Find minimum spanning circle for the set of points
 	///
 	/// \param std::vector<CL_Pointf> &points the points to calulate on
@@ -59,7 +57,12 @@ class CL_API_CORE CL_PointSetMath
 	/// \param std::vector<CL_Pointf> P the set of points
 	static std::vector<CL_Pointf> convex_hull_from_polygon(std::vector<CL_Pointf> &points);
 
- private:
+	static CL_Rect bounding_box(const std::vector<CL_Pointf> &points);
+
+/// \}
+/// \name Implementation
+/// \{
+private:
 	static void calculate_minimum_enclosing_disc(
 		CL_Circlef &smalldisc,
 		const std::vector<CL_Pointf> &points,
@@ -89,6 +92,5 @@ class CL_API_CORE CL_PointSetMath
 	friend class CL_OutlineMath;
 /// \}
 };
-
 
 /// \}

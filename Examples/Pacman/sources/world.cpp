@@ -49,7 +49,7 @@ World::World(CL_ResourceManager *resources, CL_DisplayWindow &window) :
 
 //FIXME:	fnt_clansoft = CL_Font("Game/fnt_clansoft", resources);
 //FIXME:	fnt_clansoft.set_alpha(0.5f);
-	fnt_clansoft = CL_Font_Texture(gc, L"Tahoma", 32);
+	fnt_clansoft = CL_Font(gc, L"Tahoma", 32);
 
 //	sample = CL_SoundBuffer("resources/ancient.mod");
 

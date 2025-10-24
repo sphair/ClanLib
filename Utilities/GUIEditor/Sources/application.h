@@ -8,16 +8,16 @@ public:
 	Application();
 	~Application();
 
-	void run();
+	void run(const CL_String &filename = CL_String());
 
 	CL_ResourceManager get_resources() { return resources; }
-	CL_GUIManager *get_gui() { return gui; }
+	CL_GUIManager *get_gui() { return &gui; }
 
 private:
 	CL_ResourceManager resources;
-	CL_SharedPtr<CL_GUITheme> theme;
-	CL_SharedPtr<CL_GUIWindowManagerSystem> window_manager;
-	CL_SharedPtr<CL_GUIManager> gui;
+	CL_GUIThemeDefault theme;
+	CL_GUIWindowManagerSystem window_manager;
+	CL_GUIManager gui;
 };
 
 #endif

@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_node.h"
@@ -54,12 +48,19 @@ public:
 	/// \brief Constructs a DOM Processing Instruction handle.
 	CL_DomProcessingInstruction();
 
+	/// \brief Constructs a DomProcessingInstruction
+	///
+	/// \param doc = Dom Document
+	/// \param target = Dom String
+	/// \param data = Dom String
 	CL_DomProcessingInstruction(CL_DomDocument &doc, const CL_DomString &target, const CL_DomString &data);
 
+	/// \brief Constructs a DomProcessingInstruction
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomProcessingInstruction();
-
 
 /// \}
 /// \name Attributes
@@ -76,8 +77,10 @@ public:
 	    character immediately preceding the ?&gt;.</p>*/
 	CL_DomString get_data() const;
 
+	/// \brief Set data
+	///
+	/// \param data = Dom String
 	void set_data(const CL_DomString &data);
-
 
 /// \}
 /// \name Operations
@@ -86,6 +89,5 @@ public:
 public:
 /// \}
 };
-
 
 /// \}

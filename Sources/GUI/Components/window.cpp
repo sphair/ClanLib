@@ -66,6 +66,7 @@ public:
 	void on_process_message(CL_GUIMessage &msg);
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_style_changed();
+	void on_resized();
 
 	void create_parts();
 
@@ -105,13 +106,13 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_Window Construction:
 
-CL_Window::CL_Window(const CL_Rect &geometry, CL_GUIComponent *owner, const CL_GUITopLevelDescription &description)
-: CL_GUIComponent(geometry, owner, description), impl(new CL_Window_Impl)
+CL_Window::CL_Window(CL_GUIComponent *owner, const CL_GUITopLevelDescription &description)
+: CL_GUIComponent(owner, description), impl(new CL_Window_Impl)
 {
 	impl->window = this;
 	impl->title = description.get_title();
 
-	if (owner->get_gui_manager().get_window_manager()->get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
+	if (owner->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
 		impl->draw_decorations = !description.get_decorations();
 	else
 		impl->draw_decorations = description.get_decorations();
@@ -119,19 +120,20 @@ CL_Window::CL_Window(const CL_Rect &geometry, CL_GUIComponent *owner, const CL_G
 	func_process_message().set(impl.get(), &CL_Window_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_Window_Impl::on_render);
 	func_style_changed().set(impl.get(), &CL_Window_Impl::on_style_changed);
+	func_resized().set(impl.get(), &CL_Window_Impl::on_resized);
 
 	set_type_name(CssStr::Window::type_name);
 
 	impl->create_parts();
 }
 
-CL_Window::CL_Window(const CL_Rect &geometry, CL_GUIManager *manager, const CL_GUITopLevelDescription &description)
-: CL_GUIComponent(geometry, manager, description), impl(new CL_Window_Impl)
+CL_Window::CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &description)
+: CL_GUIComponent(manager, description), impl(new CL_Window_Impl)
 {
 	impl->window = this;
 	impl->title = description.get_title();
 
-	if (manager->get_window_manager()->get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
+	if (manager->get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
 		impl->draw_decorations = !description.get_decorations();
 	else
 		impl->draw_decorations = description.get_decorations();
@@ -139,6 +141,7 @@ CL_Window::CL_Window(const CL_Rect &geometry, CL_GUIManager *manager, const CL_G
 	func_process_message().set(impl.get(), &CL_Window_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_Window_Impl::on_render);
 	func_style_changed().set(impl.get(), &CL_Window_Impl::on_style_changed);
+	func_resized().set(impl.get(), &CL_Window_Impl::on_resized);
 
 	set_type_name(CssStr::Window::type_name);
 
@@ -200,7 +203,7 @@ bool CL_Window::is_minimized() const
 	{
 		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager->is_minimized(cur);
+			return CL_GUIComponent::impl->gui_manager->window_manager.is_minimized(cur);
 	}
 
 	return false;
@@ -216,7 +219,7 @@ bool CL_Window::is_maximized() const
 	{
 		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager->is_maximized(cur);
+			return CL_GUIComponent::impl->gui_manager->window_manager.is_maximized(cur);
 	}
 
 	return false;
@@ -245,7 +248,7 @@ void CL_Window::bring_to_front()
 	{
 		CL_GUITopLevelWindow *cur = CL_GUIComponent::impl->gui_manager->root_components[pos];
 		if (cur->component == root_component)
-			return CL_GUIComponent::impl->gui_manager->window_manager->bring_to_front(cur);
+			return CL_GUIComponent::impl->gui_manager->window_manager.bring_to_front(cur);
 	}
 }
 
@@ -266,12 +269,13 @@ void CL_Window_Impl::create_parts()
 
 		part_buttonclose.set_state(CssStr::normal, true);
 
-		CL_Rect rect = window->get_geometry();
+		CL_Rect rect = window->get_size();
 
 		CL_Size part_buttonclose_size = part_buttonclose.get_preferred_size();
 		int frameright_width = part_frameright.get_preferred_width();
 		int caption_height = part_caption.get_preferred_height();
 
+		// TODO: Instead of -2 and -3, use some sort of caption content area
 		part_buttonclose_rect = CL_Rect(rect.right - part_buttonclose_size.width - frameright_width - 2, rect.top + caption_height - part_buttonclose_size.height - 3, rect.right - frameright_width - 2, rect.top + caption_height - 3);
 	}
 
@@ -280,6 +284,11 @@ void CL_Window_Impl::create_parts()
 }
 
 void CL_Window_Impl::on_style_changed()
+{
+	create_parts();
+}
+
+void CL_Window_Impl::on_resized()
 {
 	create_parts();
 }
@@ -296,19 +305,17 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 
 		if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 		{
-			bool inside = part_buttonclose_rect.contains(e.mouse_pos);
-			if(inside)
+			if(part_buttonclose_rect.contains(e.mouse_pos))
 				if(part_buttonclose.set_state(CssStr::pressed, true))
-					window->invalidate_rect();
+					window->request_repaint();
 		}
 		else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
 		{
 			if(draw_decorations)
 			{
-				bool inside = part_buttonclose_rect.contains(e.mouse_pos);
 				if(part_buttonclose.set_state(CssStr::pressed, false))
 				{
-					window->invalidate_rect();
+					window->request_repaint();
 					if (!func_close.is_null())
 						func_close.invoke();
 				}
@@ -323,7 +330,7 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 				if (part_buttonclose.get_state(CssStr::hot) != inside)
 				{
 					part_buttonclose.set_state(CssStr::hot, inside);
-					window->invalidate_rect();
+					window->request_repaint();
 				}
 			}
 		}
@@ -353,7 +360,7 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 
 CL_Rect CL_Window_Impl::get_client_area() const
 {
-	CL_Rect rect = window->get_geometry();
+	CL_Rect rect = window->get_size();
 
 	if (draw_decorations)
 	{
@@ -372,7 +379,7 @@ CL_Rect CL_Window_Impl::get_client_area() const
 
 void CL_Window_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect rect = window->get_geometry();
+	CL_Rect rect = window->get_size();
 
 	if (draw_decorations)
 	{
@@ -380,7 +387,6 @@ void CL_Window_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect
 		int frameleft_width = part_frameleft.get_preferred_width();
 		int frameright_width = part_frameright.get_preferred_width();
 		int framebottom_height = part_framebottom.get_preferred_height();
-//		CL_Size buttonclose_size = part_buttonclose.get_preferred_size();
 
 		CL_Rect content_rect = CL_Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
 		part_component.render_box(gc, content_rect, update_rect);
@@ -397,8 +403,6 @@ void CL_Window_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect
 		CL_Rect framebottom_rect = CL_Rect(rect.left, rect.bottom - framebottom_height, rect.right, rect.bottom);
 		part_framebottom.render_box(gc, framebottom_rect, update_rect);
 
-		// TODO: Instead of -2 and -3, use some sort of caption content area
-//		CL_Rect buttonclose_rect = CL_Rect(rect.right - buttonclose_size.width - frameleft_width - 2, caption_rect.bottom - buttonclose_size.height - 3, rect.right - frameleft_width - 2, caption_rect.bottom - 3);
 		part_buttonclose.render_box(gc, part_buttonclose_rect, update_rect);
 
 		CL_Size text_size = font.get_text_size(gc, title);
@@ -430,7 +434,7 @@ void CL_Window_Impl::check_move_window(CL_GUIMessage &msg)
 		if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
 		{
 			window->bring_to_front();
-			CL_Rect rect = window->get_geometry();
+			CL_Rect rect = window->get_size();
 			int caption_height = part_caption.get_preferred_height();
 			CL_Rect caption_rect = CL_Rect(rect.left, rect.top, rect.right, rect.top + caption_height);
 			if (caption_rect.contains(e.mouse_pos))
@@ -460,10 +464,10 @@ void CL_Window_Impl::check_move_window(CL_GUIMessage &msg)
 				CL_GUITopLevelWindow *cur = window->CL_GUIComponent::impl->gui_manager->root_components[pos];
 				if (cur->component == root_component)
 				{
-					CL_Rect geometry = window->CL_GUIComponent::impl->gui_manager->window_manager->get_geometry(cur, false);
+					CL_Rect geometry = window->get_window_geometry();
 					geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
 					//last_mouse_pos = e.mouse_pos;
-					window->CL_GUIComponent::impl->gui_manager->window_manager->set_geometry(cur, geometry, false);
+					window->set_window_geometry(geometry);
 				}
 			}
 		}

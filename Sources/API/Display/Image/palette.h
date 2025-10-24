@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -43,7 +37,7 @@
 
 #include "../api_display.h"
 #include "../2D/color.h"
-#include <string.h>
+#include <cstring>
 
 /// \brief 256 color ARGB palette class.
 ///
@@ -59,8 +53,10 @@ public:
 	/// \param copy Integer array of ARGB8888 color components to use as initial palette.
 	CL_Palette() { return; }
 
+	/// \brief Constructs a Palette
+	///
+	/// \param copy = value
 	CL_Palette(const unsigned int *copy) { memcpy(colors, copy, sizeof(int)*256); }
-
 
 /// \}
 /// \name Attributes
@@ -81,6 +77,5 @@ public:
 	operator unsigned int*() const { return (unsigned int *) colors; }
 /// \}
 };
-
 
 /// \}

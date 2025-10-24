@@ -4,7 +4,7 @@
 #include "client.h"
 
 LoginView::LoginView(Client *client)
-: CL_GUIComponent(start_position(), client->get_gui(), toplevel_description(client)), client(client)
+: CL_GUIComponent(client->get_gui(), get_toplevel_description()), client(client)
 {
 	set_class_name("connectdialog");
 
@@ -37,7 +37,7 @@ LoginView::LoginView(Client *client)
 
 	edit_port = new CL_LineEdit(this);
 	edit_port->set_geometry(CL_RectPS(320, 147, 65, 35));
-	edit_port->set_text("4556");
+	edit_port->set_text("4558");
 
 	button_ok = new CL_PushButton(this);
 	button_ok->set_geometry(CL_RectPS(15, 205, 140, 40));
@@ -59,16 +59,12 @@ LoginView::~LoginView()
 {
 }
 
-CL_GUITopLevelDescription LoginView::toplevel_description(Client *client)
+CL_GUITopLevelDescription LoginView::get_toplevel_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title("Connect to Server");
+	desc.set_position(CL_RectPS(312, 100, 400, 260), false);
 	return desc;
-}
-
-CL_Rect LoginView::start_position()
-{
-	return CL_RectPS(312, 100, 400, 260);
 }
 
 void LoginView::on_button_ok_clicked()

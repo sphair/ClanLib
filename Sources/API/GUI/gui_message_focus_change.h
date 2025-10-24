@@ -29,14 +29,11 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
 #include "gui_message.h"
-
 
 /// \brief GUI focus change notification message.
 ///
@@ -50,16 +47,22 @@ public:
 	/// \brief Constructs an input GUI message.
 	CL_GUIMessage_FocusChange();
 
+	/// \brief Constructs a GUIMessage FocusChange
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_FocusChange(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_FocusChange();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Type name
+	///
+	/// \return type_name
 	static CL_StringRef get_type_name();
 
 	enum FocusType
@@ -71,7 +74,6 @@ public:
 	/// \brief Retrieves the focus type of this message.
 	FocusType get_focus_type() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -80,7 +82,6 @@ public:
 	/// \brief Sets the focus type for this Message.
 	void set_focus_type(FocusType focus_type);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -88,6 +89,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

@@ -34,9 +34,9 @@
 // SourceGenerator Construction:
 
 SourceGeneratorDialog::SourceGeneratorDialog(CL_GUIManager *gui_manager)
-: CL_Window(get_startup_geometry(), gui_manager, get_startup_description())
+: CL_Window(gui_manager, get_startup_description())
 {
-	set_layout(&layout);
+	set_layout(layout);
 
 	create_components(cl_text("Dialogs/source_generator.xml"));
 
@@ -62,16 +62,12 @@ SourceGeneratorDialog::SourceGeneratorDialog(CL_GUIManager *gui_manager)
 /////////////////////////////////////////////////////////////////////////////
 // SourceGenerator Implementation:
 
-CL_Rect SourceGeneratorDialog::get_startup_geometry()
-{
-	return CL_RectPS(400, 400, 104, 208);
-}
-
 CL_GUITopLevelDescription SourceGeneratorDialog::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title(cl_text("ClanLib GUI Editor"));
 	desc.set_allow_resize(true);
+	desc.set_position(CL_RectPS(400, 400, 104, 208), false);
 	return desc;
 }
 

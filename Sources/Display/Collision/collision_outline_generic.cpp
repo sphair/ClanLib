@@ -29,6 +29,7 @@
 **    Emanuel Greisen
 **    Kenneth Gangstoe
 **    Trigve Siver
+**    Mark Page
 */
 
 #include "Display/precomp.h"
@@ -44,7 +45,7 @@
 #include "API/Core/Math/pointset_math.h"
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/angle.h"
-#include <float.h>
+#include <cfloat>
 #include <iostream>
 
 template<typename T> inline T pow2(T a) { return a*a; }
@@ -57,7 +58,6 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic()
 	do_inside_test(false),
 	width(0), height(0),
 	angle(0),
-//	radius(0),
 	minimum_enclosing_disc(0.0f,0.0f,0.0f),
 	position(0,0),
 	scale_factor(1,1),
@@ -69,19 +69,19 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic()
 	collision_info_normals(false),
 	collision_info_meta(false),
 	collision_info_pen_depth(false),
-	collision_info_collect(false)
+	collision_info_collect(false),
+	provider(NULL)
 {
 	return;
 }
 
 CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
-	CL_OutlineProvider *provider,
+	CL_OutlineProvider *new_provider,
 	CL_OutlineAccuracy accuracy )
 :
 	do_inside_test(false),
 	width(0), height(0),
 	angle(0),
-//	radius(0),
 	minimum_enclosing_disc(0.0f,0.0f,0.0f),
 	position(0,0),
 	scale_factor(1,1),
@@ -93,14 +93,16 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
 	collision_info_normals(false),
 	collision_info_meta(false),
 	collision_info_pen_depth(false),
-	collision_info_collect(false)
+	collision_info_collect(false),
+	provider(new_provider)
 {
 	contours = provider->get_contours();
 	width = provider->get_width();
 	height = provider->get_height();
 	//TODO: minimum_enclosing_disc = provider->get_minimum_enclosing_disc();
 
-	delete provider;
+	provider->destroy();
+	provider = NULL;
 
 	int check_distance = 3;
 
@@ -130,6 +132,8 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
 
 CL_CollisionOutline_Generic::~CL_CollisionOutline_Generic()
 {
+	if (provider)
+		provider->destroy();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -437,7 +441,7 @@ void CL_CollisionOutline_Generic::optimize(unsigned char check_distance, float c
 	}
 }
 
-void CL_CollisionOutline_Generic::save(const CL_StringRef &filename, CL_VirtualDirectory directory) const
+void CL_CollisionOutline_Generic::save(CL_IODevice &output_source) const
 {
 /*	fileformat:
 
@@ -462,8 +466,6 @@ void CL_CollisionOutline_Generic::save(const CL_StringRef &filename, CL_VirtualD
 			... contour N data ...
 */
 
-	CL_IODevice output_source = CL_File(directory.get_path() + cl_text("/") + filename, CL_File::create_always);
-	
 	// file type identifier
 	output_source.write_uint32( 0x16082004 );
 

@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -102,7 +100,6 @@ class CL_API_DISPLAY CL_GraphicContextProvider
 public:
 	virtual ~CL_GraphicContextProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -134,7 +131,7 @@ public:
 	virtual CL_GraphicContext create_worker_gc() = 0;
 
 	/// \brief Return the content of the draw buffer into a pixel buffer.
-	virtual CL_PixelBuffer get_pixeldata(const CL_Rect& rect) = 0;
+	virtual CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const = 0;
 
 	/// \brief Allocate texture provider for this gc.
 	virtual CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions) = 0;
@@ -202,12 +199,34 @@ public:
 	/// \brief Draws primitives from the current assigned primitives array.
 	virtual void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices) = 0;
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = value
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices) = 0;
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = short
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices) = 0;
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param indices = char
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices) = 0;
 
+	/// \brief Draw primitives elements
+	///
+	/// \param type = Primitives Type
+	/// \param count = value
+	/// \param array_provider = Element Array Buffer Provider
+	/// \param indices_type = Vertex Attribute Data Type
+	/// \param offset = void
 	virtual void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBufferProvider *array_provider, CL_VertexAttributeDataType indices_type, void *offset) = 0;
 
 	/// \brief Called when a primitives array is being recycled.
@@ -250,7 +269,6 @@ public:
 	/// \brief Sets the model view matrix to a new matrix.
 	virtual void set_modelview(const CL_Mat4f &matrix) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -258,6 +276,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

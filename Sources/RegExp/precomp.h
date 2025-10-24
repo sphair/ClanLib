@@ -35,6 +35,7 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
+#define PCRE_STATIC
 #include <pcre.h>
 #endif
 

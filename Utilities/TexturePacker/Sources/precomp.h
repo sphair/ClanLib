@@ -5,4 +5,5 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/gdi.h>
+//#include <ClanLib/gl1.h>
+//#include <ClanLib/gdi.h>

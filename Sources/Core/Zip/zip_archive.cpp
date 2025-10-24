@@ -42,7 +42,7 @@
 #include "zip_iodevice_fileentry.h"
 #include "zip_compression_method.h"
 #include "zip_digital_signature.h"
-#include <time.h>
+#include <ctime>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ZipArchive construction:
@@ -82,8 +82,12 @@ std::vector<CL_ZipFileEntry> CL_ZipArchive::get_file_list()
 	return impl->files;
 }
 
-std::vector<CL_ZipFileEntry> CL_ZipArchive::get_file_list(const CL_StringRef &path)
+std::vector<CL_ZipFileEntry> CL_ZipArchive::get_file_list(const CL_StringRef &dirpath)
 {
+	CL_String path = dirpath;
+	if (path.empty())
+		path = cl_text("/");
+
 	std::vector<CL_ZipFileEntry> files;
 	std::vector<CL_StringRef> added_directories;
 

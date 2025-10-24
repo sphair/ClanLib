@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -53,7 +51,6 @@ public:
 	CL_GUIMessage();
 
 	virtual ~CL_GUIMessage();
-
 
 /// \}
 /// \name Attributes
@@ -78,7 +75,6 @@ public:
 	/// \brief Returns true if the message has been consumed by a component.
 	bool is_consumed() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -99,7 +95,6 @@ public:
 	/// \brief Sets this message as consumed.
 	void set_consumed();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -108,6 +103,5 @@ private:
 	CL_SharedPtr<CL_GUIMessage_Impl> impl;
 /// \}
 };
-
 
 /// \}

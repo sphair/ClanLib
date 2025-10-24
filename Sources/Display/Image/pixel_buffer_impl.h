@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Display/Image/pixel_format.h"
 #include "API/Display/Image/palette.h"
 

@@ -37,35 +37,42 @@ Panel::Panel(GUI *gui) : gui(gui)
 {
 	CL_GUITopLevelDescription window_desc;
 	window_desc.set_title("Information");
-	CL_Rect geometry(20, 20, CL_Size(256, 256));
-	window.reset(new CL_Window(geometry, &gui->get_gui(), window_desc));
+	window_desc.set_position(CL_Rect(10, 20, CL_Size(280, 300)), false);
+	window = new CL_Window(&gui->get_gui(), window_desc);
 	window->set_draggable(true);
 
 	int yoffset = 30;
 
-	radiobutton_sprite.reset(new CL_RadioButton(window));
+	radiobutton_sprite = new CL_RadioButton(window);
 	radiobutton_sprite->set_geometry(CL_Rect(15, yoffset, CL_Size(64, 32)));
 	radiobutton_sprite->set_text("CL_Sprite");
 	radiobutton_sprite->set_selected(true);
 	radiobutton_sprite->set_group_name("ImageType");
-	radiobutton_sprite->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_sprite.get());
+	radiobutton_sprite->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_sprite);
 
-	radiobutton_image.reset(new CL_RadioButton(window));
+	radiobutton_image = new CL_RadioButton(window);
 	radiobutton_image->set_geometry(CL_Rect(105, yoffset, CL_Size(64, 32)));
 	radiobutton_image->set_text("CL_Image");
 	radiobutton_image->set_selected(false);
 	radiobutton_image->set_group_name("ImageType");
-	radiobutton_image->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_image.get());
+	radiobutton_image->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_image);
+
+	radiobutton_texture = new CL_RadioButton(window);
+	radiobutton_texture->set_geometry(CL_Rect(195, yoffset, CL_Size(64, 32)));
+	radiobutton_texture->set_text("CL_Texture");
+	radiobutton_texture->set_selected(false);
+	radiobutton_texture->set_group_name("ImageType");
+	radiobutton_texture->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_texture);
 
 	yoffset += 30;
 
-	radiobutton_linear.reset(new CL_RadioButton(window));
+	radiobutton_linear = new CL_RadioButton(window);
 	radiobutton_linear->set_geometry(CL_Rect(15, yoffset, CL_Size(64, 32)));
 	radiobutton_linear->set_text("cl_filter_linear");
 	radiobutton_linear->set_selected(true);
 	radiobutton_linear->set_group_name("FilterType");
 
-	radiobutton_nearest.reset(new CL_RadioButton(window));
+	radiobutton_nearest = new CL_RadioButton(window);
 	radiobutton_nearest->set_geometry(CL_Rect(105, yoffset, CL_Size(64, 32)));
 	radiobutton_nearest->set_text("cl_filter_nearest");
 	radiobutton_nearest->set_selected(false);
@@ -73,13 +80,13 @@ Panel::Panel(GUI *gui) : gui(gui)
 
 	yoffset += 40;
 
-	checkbox_outline.reset(new CL_CheckBox(window));
+	checkbox_outline = new CL_CheckBox(window);
 	checkbox_outline->set_geometry(CL_Rect(15, yoffset, CL_Size(150, 15)));
 	checkbox_outline->set_text("Outline Source Image");
 
 	yoffset += 40;
 
-	slider_scale.reset(new CL_Slider(window));
+	slider_scale = new CL_Slider(window);
 	slider_scale->set_geometry(CL_Rect(15, yoffset, CL_Size(100, 17)));
 	slider_scale->set_vertical(false);
 	slider_scale->set_horizontal(true);
@@ -89,19 +96,19 @@ Panel::Panel(GUI *gui) : gui(gui)
 	slider_scale->set_page_step(100);
 	slider_scale->set_position(50);
 	slider_scale->set_lock_to_ticks(false);
-	slider_scale->func_value_changed().set(this, &Panel::on_slider_changed, slider_scale.get());
+	slider_scale->func_value_changed().set(this, &Panel::on_slider_changed, slider_scale);
 
-	spin_scale.reset(new CL_Spin(window));
+	spin_scale = new CL_Spin(window);
 	spin_scale->set_geometry(CL_Rect(130, yoffset, CL_Size(64, 21)));
 	spin_scale->set_number_of_decimal_places(2);
 	spin_scale->set_floating_point_mode(true);
 	spin_scale->set_value_float(1.0f);
 	spin_scale->set_step_size_float(0.1f);
 	spin_scale->set_ranges_float(0.1f, 4.0f);
-	spin_scale->func_value_changed().set(this, &Panel::on_spin_changed, spin_scale.get());
+	spin_scale->func_value_changed().set(this, &Panel::on_spin_changed, spin_scale);
 
 	CL_Size label_size(50, 15);
-	label_scale.reset(new CL_Label(window));
+	label_scale = new CL_Label(window);
 	label_scale->set_geometry(CL_Rect(200, yoffset, label_size));
 	label_scale->set_text("Scale");
 
@@ -109,7 +116,7 @@ Panel::Panel(GUI *gui) : gui(gui)
 
 	yoffset += 40;
 
-	slider_rotation.reset(new CL_Slider(window));
+	slider_rotation = new CL_Slider(window);
 	slider_rotation->set_geometry(CL_Rect(15, yoffset, CL_Size(100, 17)));
 	slider_rotation->set_vertical(false);
 	slider_rotation->set_horizontal(true);
@@ -119,18 +126,18 @@ Panel::Panel(GUI *gui) : gui(gui)
 	slider_rotation->set_page_step(10);
 	slider_rotation->set_position(50);
 	slider_rotation->set_lock_to_ticks(false);
-	slider_rotation->func_value_changed().set(this, &Panel::on_slider_changed, slider_rotation.get());
+	slider_rotation->func_value_changed().set(this, &Panel::on_slider_changed, slider_rotation);
 
-	spin_rotation.reset(new CL_Spin(window));
+	spin_rotation = new CL_Spin(window);
 	spin_rotation->set_geometry(CL_Rect(130, yoffset, CL_Size(64, 21)));
 	spin_rotation->set_number_of_decimal_places(2);
 	spin_rotation->set_floating_point_mode(true);
 	spin_rotation->set_value_float(0.0f);
 	spin_rotation->set_step_size_float(45.0f);
 	spin_rotation->set_ranges_float(0.0f, 360.0f);
-	spin_rotation->func_value_changed().set(this, &Panel::on_spin_changed, spin_rotation.get());
+	spin_rotation->func_value_changed().set(this, &Panel::on_spin_changed, spin_rotation);
 
-	label_rotation.reset(new CL_Label(window));
+	label_rotation = new CL_Label(window);
 	label_rotation->set_geometry(CL_Rect(200, yoffset, label_size));
 	label_rotation->set_text("Rotation");
 
@@ -138,7 +145,7 @@ Panel::Panel(GUI *gui) : gui(gui)
 
 	yoffset += 40;
 
-	slider_translate.reset(new CL_Slider(window));
+	slider_translate = new CL_Slider(window);
 	slider_translate->set_geometry(CL_Rect(15, yoffset, CL_Size(100, 17)));
 	slider_translate->set_vertical(false);
 	slider_translate->set_horizontal(true);
@@ -148,25 +155,60 @@ Panel::Panel(GUI *gui) : gui(gui)
 	slider_translate->set_page_step(100);
 	slider_translate->set_position(50);
 	slider_translate->set_lock_to_ticks(false);
-	slider_translate->func_value_changed().set(this, &Panel::on_slider_changed, slider_translate.get());
+	slider_translate->func_value_changed().set(this, &Panel::on_slider_changed, slider_translate);
 
-	spin_translate.reset(new CL_Spin(window));
+	spin_translate = new CL_Spin(window);
 	spin_translate->set_geometry(CL_Rect(130, yoffset, CL_Size(64, 21)));
 	spin_translate->set_number_of_decimal_places(2);
 	spin_translate->set_floating_point_mode(true);
 	spin_translate->set_value_float(0.0f);
 	spin_translate->set_step_size_float(0.375f);
 	spin_translate->set_ranges_float(-1.5f, 1.5f);
-	spin_translate->func_value_changed().set(this, &Panel::on_spin_changed, spin_translate.get());
+	spin_translate->func_value_changed().set(this, &Panel::on_spin_changed, spin_translate);
 
-	label_translate.reset(new CL_Label(window));
+	label_translate = new CL_Label(window);
 	label_translate->set_geometry(CL_Rect(200, yoffset - 8, label_size));
 	label_translate->set_text("Matrix");
-	label_translate2.reset(new CL_Label(window));
+	label_translate2 = new CL_Label(window);
 	label_translate2->set_geometry(CL_Rect(200, yoffset + 8, label_size));
 	label_translate2->set_text("Translate");
 
 	set_slider_to_spin(slider_translate, spin_translate);
+
+	yoffset += 40;
+
+	slider_texture_translate = new CL_Slider(window);
+	slider_texture_translate->set_geometry(CL_Rect(15, yoffset, CL_Size(100, 17)));
+	slider_texture_translate->set_vertical(false);
+	slider_texture_translate->set_horizontal(true);
+	slider_texture_translate->set_min(0);
+	slider_texture_translate->set_max(1000);
+	slider_texture_translate->set_tick_count(2);
+	slider_texture_translate->set_page_step(100);
+	slider_texture_translate->set_position(50);
+	slider_texture_translate->set_lock_to_ticks(false);
+	slider_texture_translate->func_value_changed().set(this, &Panel::on_slider_changed, slider_texture_translate);
+
+	spin_texture_translate = new CL_Spin(window);
+	spin_texture_translate->set_geometry(CL_Rect(130, yoffset, CL_Size(64, 21)));
+	spin_texture_translate->set_number_of_decimal_places(3);
+	spin_texture_translate->set_floating_point_mode(true);
+	spin_texture_translate->set_value_float(0.375f);
+	spin_texture_translate->set_step_size_float(0.005f);
+	spin_texture_translate->set_ranges_float(-1.0f, 1.0f);
+	spin_texture_translate->func_value_changed().set(this, &Panel::on_spin_changed, spin_texture_translate);
+
+	label_texture_translate = new CL_Label(window);
+	label_texture_translate->set_geometry(CL_Rect(200, yoffset - 8, label_size));
+	label_texture_translate->set_text("CL_Texture");
+	label_texture_translate2 = new CL_Label(window);
+	label_texture_translate2->set_geometry(CL_Rect(200, yoffset + 8, label_size));
+	label_texture_translate2->set_text("Translate");
+
+	set_slider_to_spin(slider_texture_translate, spin_texture_translate);
+
+	slider_texture_translate->set_enabled(false);;
+	spin_texture_translate->set_enabled(false);;
 
 }
 
@@ -178,6 +220,11 @@ bool Panel::is_sprite()
 bool Panel::is_image()
 {
 	return radiobutton_image->is_selected();
+}
+
+bool Panel::is_texture()
+{
+	return radiobutton_texture->is_selected();
 }
 
 bool Panel::is_linear()
@@ -197,13 +244,15 @@ bool Panel::is_outlined()
 
 void Panel::on_slider_changed(CL_Slider *slider)
 {
-	CL_Spin *spin;
+	CL_Spin *spin = NULL;
 	if (slider == slider_rotation)
 		spin = spin_rotation;
 	if (slider == slider_scale)
 		spin = spin_scale;
 	if (slider == slider_translate)
 		spin = spin_translate;
+	if (slider == slider_texture_translate)
+		spin = spin_texture_translate;
 	if (!spin)
 		return;
 
@@ -242,6 +291,11 @@ float Panel::get_translate()
 	return spin_translate->get_value_float();
 }
 
+float Panel::get_texture_translate()
+{
+	return spin_texture_translate->get_value_float();
+}
+
 void Panel::set_slider_to_spin(CL_Slider *slider, CL_Spin *spin)
 {
 	float value = spin->get_value_float();
@@ -267,13 +321,15 @@ void Panel::set_slider_to_spin(CL_Slider *slider, CL_Spin *spin)
 
 void Panel::on_spin_changed(CL_Spin *spin)
 {
-	CL_Slider *slider;
+	CL_Slider *slider = NULL;
 	if (spin == spin_rotation)
 		slider = slider_rotation;
 	if (spin == spin_scale)
 		slider = slider_scale;
 	if (spin == spin_translate)
 		slider = slider_translate;
+	if (spin == spin_texture_translate)
+		slider = slider_texture_translate;
 	if (!slider)
 		return;
 
@@ -286,12 +342,24 @@ void Panel::on_imagetype_selected(CL_RadioButton *radiobutton)
 	{
 		radiobutton_linear->set_enabled(true);
 		radiobutton_nearest->set_enabled(true);
+		slider_texture_translate->set_enabled(false);;
+		spin_texture_translate->set_enabled(false);;
 	}
+
+	if (radiobutton == radiobutton_texture)
+	{
+		radiobutton_linear->set_enabled(true);
+		radiobutton_nearest->set_enabled(true);
+		slider_texture_translate->set_enabled(true);
+		spin_texture_translate->set_enabled(true);
+}
 
 	if (radiobutton == radiobutton_image)
 	{
 		radiobutton_linear->set_enabled(false);
 		radiobutton_nearest->set_enabled(false);
+		slider_texture_translate->set_enabled(false);;
+		spin_texture_translate->set_enabled(false);;
 	}
 
 }

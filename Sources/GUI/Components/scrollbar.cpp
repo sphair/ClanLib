@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/scrollbar.h"
+#include "API/Core/Math/cl_math.h"
 #include "API/Core/Math/rect.h"
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
@@ -56,7 +57,6 @@ CL_ScrollBar::CL_ScrollBar(CL_GUIComponent *parent)
 	func_enablemode_changed().set(impl.get(), &CL_ScrollBar_Impl::on_enablemode_changed);
 	func_resized().set(impl.get(), &CL_ScrollBar_Impl::on_resized);
 
-	impl->mouse_down_timer = create_timer();
 	impl->mouse_down_timer.func_expired().set(impl.get(), &CL_ScrollBar_Impl::on_timer_expired);
 }
 
@@ -125,7 +125,7 @@ void CL_ScrollBar::set_vertical()
 	impl->vertical = true;
 	impl->create_parts();
 	if(impl->update_part_positions())
-		invalidate_rect();
+		request_repaint();
 }
 
 void CL_ScrollBar::set_horizontal()
@@ -133,7 +133,7 @@ void CL_ScrollBar::set_horizontal()
 	impl->vertical = false;
 	impl->create_parts();
 	if(impl->update_part_positions())
-		invalidate_rect();
+		request_repaint();
 }
 
 void CL_ScrollBar::set_min(int new_scroll_min)
@@ -169,7 +169,7 @@ void CL_ScrollBar::set_ranges(int scroll_min, int scroll_max, int line_step, int
 	if (impl->position < impl->scroll_min)
 		impl->position = impl->scroll_min;
 	if(impl->update_part_positions())
-		invalidate_rect();
+		request_repaint();
 }
 
 void CL_ScrollBar::calculate_ranges(int view_size, int total_size)
@@ -195,7 +195,7 @@ void CL_ScrollBar::set_position(int pos)
 		impl->position = impl->scroll_min;
 
 	if(impl->update_part_positions())
-		invalidate_rect();
+		request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////

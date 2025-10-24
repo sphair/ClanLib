@@ -59,7 +59,7 @@ void TextureGroupComponent::on_style_changed()
 
 void TextureGroupComponent::on_scroll()
 {
-	invalidate_rect();
+	request_repaint();
 }
 
 void TextureGroupComponent::on_resized()

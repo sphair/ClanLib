@@ -55,7 +55,27 @@ CL_XMLTokenizer::CL_XMLTokenizer(CL_IODevice &input) : impl(new CL_XMLTokenizer_
 
 	CL_DataBuffer buffer(impl->size);
 	input.receive(buffer.get_data(), buffer.get_size(), true);
-	impl->data = CL_StringHelp::utf8_to_text(CL_StringRef8(buffer.get_data(), buffer.get_size(), false));
+
+	CL_StringHelp::BOMType bom_type = CL_StringHelp::detect_bom(buffer.get_data(), buffer.get_size());
+	switch (bom_type)
+	{
+	default:
+	case CL_StringHelp::bom_none:
+		impl->data = CL_StringHelp::utf8_to_text(CL_StringRef8(buffer.get_data(), buffer.get_size(), false));
+		break;
+	case CL_StringHelp::bom_utf32_be:
+	case CL_StringHelp::bom_utf32_le:
+		throw CL_Exception(cl_text("UTF-16 XML files not supported yet"));
+		break;
+	case CL_StringHelp::bom_utf16_be:
+	case CL_StringHelp::bom_utf16_le:
+		throw CL_Exception(cl_text("UTF-32 XML files not supported yet"));
+		break;
+	case CL_StringHelp::bom_utf8:
+		impl->data = CL_StringHelp::utf8_to_text(CL_StringRef8(buffer.get_data()+3, buffer.get_size()-3, false));
+		break;
+	}
+
 }
 
 CL_XMLTokenizer::~CL_XMLTokenizer()

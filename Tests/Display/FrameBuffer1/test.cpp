@@ -44,9 +44,9 @@ int ExampleText::start(const std::vector<CL_String> &args)
 		font_desc.set_typeface_name("Tahoma");
 		font_desc.set_anti_alias(true);
 		font_desc.set_height(32);
-		CL_Font_Texture font(gc, font_desc);
+		CL_Font font(gc, font_desc);
 
-		CL_Texture texture(gc, 512, 512, CL_RGB8);
+		CL_Texture texture(gc, 512, 512, cl_rgb8);
 		texture.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
 		texture.set_min_filter(cl_filter_linear);
 		texture.set_mag_filter(cl_filter_linear);

@@ -30,7 +30,6 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
 
 #include "../api_core.h"
@@ -56,7 +55,6 @@ public:
 	CL_Trianglex() { }
 	CL_Trianglex(const CL_Trianglex<Type> &copy) { p = copy.p; q = copy.q; r = copy.r;}
 	CL_Trianglex(const CL_Vec2<Type> &point_p, const CL_Vec2<Type> &point_q, const CL_Vec2<Type> &point_r) { p = point_p; q = point_q; r = point_r;}
-
 
 /// \name Attributes
 /// \{

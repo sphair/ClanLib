@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_Resources clanCore Resources
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "resource.h"
@@ -48,12 +46,18 @@ public:
 	/// \brief Constructs a resource data session.
 	CL_ResourceDataSession();
 
+	/// \brief Constructs a ResourceDataSession
+	///
+	/// \param data_name = String
+	/// \param resource = Resource
 	CL_ResourceDataSession(const CL_String &data_name, const CL_Resource &resource);
 
+	/// \brief Constructs a ResourceDataSession
+	///
+	/// \param copy = Resource Data Session
 	CL_ResourceDataSession(const CL_ResourceDataSession &copy);
 
 	~CL_ResourceDataSession();
-
 
 /// \}
 /// \name Attributes
@@ -61,14 +65,12 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 	CL_ResourceDataSession &operator =(const CL_ResourceDataSession &copy);
-
 
 /// \}
 /// \name Implementation
@@ -80,6 +82,5 @@ private:
 	CL_Resource resource;
 /// \}
 };
-
 
 /// \}

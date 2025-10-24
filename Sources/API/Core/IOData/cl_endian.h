@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 
@@ -64,7 +58,6 @@ public:
 	/// \param total_times Number of 'type_size' size data chunks to be swapped.
 	static void swap(void *data, int type_size, int total_times=1);
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -87,6 +80,5 @@ public:
 #define SWAP_IF_LITTLE_ALOT(i, times) if (!CL_Endian::is_system_big()) CL_Endian::swap(&i, sizeof(i), times)
 
 #define IS_SYSTEM_64BIT() CL_Endian::is_system_64bit()
-
 
 /// \}

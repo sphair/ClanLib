@@ -52,7 +52,7 @@
 // CL_GUIManager_Impl Construction:
 
 CL_GUIManager_Impl::CL_GUIManager_Impl()
-: mouse_capture_component(0), mouse_over_component(0), theme(0), exit_flag(false), exit_code(0), destroy_signal_connected(false)
+: mouse_capture_component(0), mouse_over_component(0), theme(0), exit_flag(false), exit_code(0), destroy_signal_connected(false),window_manager(NULL)
 {
 	func_focus_lost.set(this, &CL_GUIManager_Impl::on_focus_lost);
 	func_focus_gained.set(this, &CL_GUIManager_Impl::on_focus_gained);
@@ -85,7 +85,7 @@ CL_GUIManager_Impl::~CL_GUIManager_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager_Impl Attributes:
 
-CL_Font CL_GUIManager_Impl::get_named_font(const CL_FontDescription &desc)
+CL_Font CL_GUIManager_Impl::get_registered_font(const CL_FontDescription &desc)
 {
 	std::vector<NamedFontCacheEntry>::iterator it;
 	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
@@ -129,7 +129,7 @@ void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUICompone
 
 	try
 	{
-		window_manager->create_window(top_level_window, owner_window, desc, temporary);
+		window_manager.create_window(top_level_window, owner_window, desc, temporary);
 	}
 	catch (CL_Exception e)
 	{
@@ -150,7 +150,7 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 {
 	if (mouse_capture_component && mouse_capture_component->impl == component_impl)
 	{
-		window_manager->capture_mouse(get_toplevel_window(mouse_capture_component), false);
+		window_manager.capture_mouse(get_toplevel_window(mouse_capture_component), false);
 		mouse_capture_component = 0;
 	}
 
@@ -170,7 +170,7 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 		// Remove display window if needed:
 		if (cur->component->impl == component_impl)
 		{
-			window_manager->destroy_window(cur);
+			window_manager.destroy_window(cur);
 			root_components.erase(root_components.begin() + index);
 			delete cur;
 			break;
@@ -203,7 +203,7 @@ void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
 	if (toplevel_window->focused_component == component)
 		return;
 
-	if (window_manager->has_focus(toplevel_window))
+	if (window_manager.has_focus(toplevel_window))
 	{
 		if (toplevel_window->focused_component)
 		{
@@ -248,7 +248,7 @@ void CL_GUIManager_Impl::loose_focus(CL_GUIComponent *component)
 		return;	// Not in focus
 	}
 
-	if (window_manager->has_focus(toplevel_window))
+	if (window_manager.has_focus(toplevel_window))
 	{
 		if (toplevel_window->focused_component)
 		{
@@ -276,14 +276,14 @@ void CL_GUIManager_Impl::loose_focus(CL_GUIComponent *component)
 
 void CL_GUIManager_Impl::set_enabled(CL_GUIComponent *component, bool enable)
 {
-	window_manager->enable_window(get_toplevel_window(component), enable);
+	window_manager.enable_window(get_toplevel_window(component), enable);
 }
 
 bool CL_GUIManager_Impl::has_focus(const CL_GUIComponent *component) const
 {
 	CL_GUITopLevelWindow *toplevel_window = get_toplevel_window(component);
 	if (toplevel_window->focused_component == component)
-		return window_manager->has_focus(toplevel_window);
+		return window_manager.has_focus(toplevel_window);
 	else
 		return false;
 }
@@ -337,14 +337,111 @@ void CL_GUIManager_Impl::post_message(const CL_GUIMessage &message)
 	message_queue.push_back(message);
 }
 
+void CL_GUIManager_Impl::deliver_message(CL_GUIMessage &m)
+{
+	if (func_filter_message.is_null() || func_filter_message.invoke(m))
+	{
+		CL_GUIComponent *target = m.get_target();
+		if (target)
+		{
+			if (!target->func_process_message().is_null())
+				target->func_process_message().invoke(m);
+
+			if (!m.is_consumed())
+			{
+				if (m.get_type() == CL_GUIMessage_ActivationChange::get_type_name())
+				{
+					switch (CL_GUIMessage_ActivationChange(m).get_activation_type())
+					{
+					case CL_GUIMessage_ActivationChange::activation_lost:
+						if (!target->func_deactivated().is_null() && target->func_deactivated().invoke())
+							m.set_consumed();
+						break;
+					case CL_GUIMessage_ActivationChange::activation_gained:
+						if (!target->func_activated().is_null() && target->func_activated().invoke())
+							m.set_consumed();
+						break;
+					}
+				}
+				else if (m.get_type() == CL_GUIMessage_Close::get_type_name())
+				{
+					if (!target->func_close().is_null() && target->func_close().invoke())
+						m.set_consumed();
+				}
+				else if (m.get_type() == CL_GUIMessage_FocusChange::get_type_name())
+				{
+					switch (CL_GUIMessage_FocusChange(m).get_focus_type())
+					{
+					case CL_GUIMessage_FocusChange::losing_focus:
+						if (!target->func_focus_lost().is_null() && target->func_focus_lost().invoke())
+							m.set_consumed();
+						break;
+					case CL_GUIMessage_FocusChange::gained_focus:
+						if (!target->func_focus_gained().is_null() && target->func_focus_gained().invoke())
+							m.set_consumed();
+						break;
+					}
+				}
+				else if (m.get_type() == CL_GUIMessage_Input::get_type_name())
+				{
+					CL_GUIMessage_Input m_input(m);
+					CL_InputEvent e = m_input.get_event();
+
+					if (!target->func_input().is_null() && target->func_input().invoke(e))
+						m.set_consumed();
+
+					switch (e.type)
+					{
+					case CL_InputEvent::pressed:
+						if (!target->func_input_pressed().is_null() && target->func_input_pressed().invoke(e))
+							m.set_consumed();
+						break;
+					case CL_InputEvent::released:
+						if (!target->func_input_released().is_null() && target->func_input_released().invoke(e))
+							m.set_consumed();
+						break;
+					case CL_InputEvent::doubleclick:
+						if (!target->func_input_doubleclick().is_null() && target->func_input_doubleclick().invoke(e))
+							m.set_consumed();
+						break;
+					case CL_InputEvent::pointer_moved:
+						if (!target->func_input_pointer_moved().is_null() && target->func_input_pointer_moved().invoke(e))
+							m.set_consumed();
+						break;
+					default:
+						break;
+					}
+				}
+				else if (m.get_type() == CL_GUIMessage_Pointer::get_type_name())
+				{
+					switch (CL_GUIMessage_Pointer(m).get_pointer_type())
+					{
+					case CL_GUIMessage_Pointer::pointer_enter:
+						if (!target->func_pointer_enter().is_null() && target->func_pointer_enter().invoke())
+							m.set_consumed();
+						break;
+					case CL_GUIMessage_Pointer::pointer_leave:
+						if (!target->func_pointer_exit().is_null() && target->func_pointer_exit().invoke())
+							m.set_consumed();
+						break;
+					}
+				}
+				else if (m.get_type() == CL_GUIMessage_Resize::get_type_name())
+				{
+					// No need to do anything here. Already handled elsewhere.
+					m.set_consumed();
+				}
+			}
+		}
+	}
+}
+
 void CL_GUIManager_Impl::send_message(CL_GUIMessage &message)
 {
 	CL_GUIMessage m = message;
+	deliver_message(m);
 
-	if (func_filter_message.is_null() || func_filter_message.invoke(message))
-		if (m.get_target())
-			if (m.get_target()->func_process_message().is_null() == false)
-				m.get_target()->func_process_message().invoke(m);
+	CL_GUIComponent *message_original_target = m.get_target();
 
 	// Unconsumed input message are sent up the component tree until a null parent is encountered or the message gets consumed.
 	if (!m.is_consumed() && m.get_target() && m.is_type(CL_GUIMessage_Input::get_type_name()))
@@ -355,26 +452,17 @@ void CL_GUIManager_Impl::send_message(CL_GUIMessage &message)
 			CL_GUIMessage_Input input(m);
 			CL_InputEvent event = input.get_event();
 			event.mouse_pos.x += m.get_target()->get_geometry().left;
-			event.mouse_pos.y += m.get_target()->get_geometry().right;
+			event.mouse_pos.y += m.get_target()->get_geometry().top;
 			input.set_event(event);
 
 			m.set_target(m.get_target()->get_parent_component());
 
-			if (func_filter_message.is_null() || func_filter_message.invoke(message))
-				if (m.get_target())
-					if (m.get_target()->func_process_message().is_null() == false)
-						m.get_target()->func_process_message().invoke(m);
+			deliver_message(m);
 		}
 	}
 
-/*	if (m.get_target() == 0)
-		return;
-
-	if (func_filter_message.is_null() || func_filter_message.invoke(message))
-		if (m.get_target())
-			if (m.get_target()->func_process_message().is_null() == false)
-				m.get_target()->func_process_message().invoke(m);
-*/
+	if (m.get_target() == 0 && !m.is_consumed())
+		m.set_target(message_original_target);
 }
 
 CL_GUIComponent *CL_GUIManager_Impl::get_focus_component()
@@ -384,7 +472,7 @@ CL_GUIComponent *CL_GUIManager_Impl::get_focus_component()
 
 	for( pos = 0; pos < size; pos++ )
 	{
-		if( window_manager->has_focus(root_components[pos]) )
+		if( window_manager.has_focus(root_components[pos]) )
 		{
 			return root_components[pos]->focused_component;
 		}
@@ -402,9 +490,9 @@ void CL_GUIManager_Impl::check_for_new_messages()
 	mutex_lock.unlock();
 
 	// Handle window manager messages:
-	while (window_manager->has_message())
+	while (window_manager.has_message())
 	{
-		window_manager->process_message();
+		window_manager.process_message();
 		mutex_lock.lock();
 		if (!message_queue.empty())
 			return;
@@ -427,9 +515,9 @@ void CL_GUIManager_Impl::reset_rulesets()
 	rulesets_cache.clear();
 }
 
-void CL_GUIManager_Impl::set_named_font(const CL_Font &font, const CL_FontDescription &desc)
+void CL_GUIManager_Impl::register_font(const CL_Font &font, const CL_FontDescription &desc)
 {
-	if (get_named_font(desc).is_null())
+	if (get_registered_font(desc).is_null())
 	{
 		NamedFontCacheEntry entry;
 		entry.desc = desc;
@@ -473,7 +561,7 @@ void CL_GUIManager_Impl::invalidate_constant_repaint_components()
 		if (is_constant_repaint_enabled(root_components[i]->component))
 		{
 			CL_GUITopLevelWindow *cur = root_components[i];
-			cur->component->invalidate_rect();
+			cur->component->request_repaint();
 //			CL_Rect geometry = cur->component->get_geometry();
 //			cur->component->paint(CL_Rect(CL_Point(0,0), geometry.get_size()));
 		}
@@ -523,12 +611,12 @@ void CL_GUIManager_Impl::on_focus_gained(CL_GUITopLevelWindow *toplevel_window)
 void CL_GUIManager_Impl::on_resize(CL_GUITopLevelWindow *toplevel_window, const CL_Size &new_size)
 {
 	CL_GUIComponent *component = toplevel_window->component;
-
-	component->set_geometry(CL_Rect(0,0,new_size.width,new_size.height));
+	component->impl->geometry = component->get_geometry();
+	component->impl->geometry_updated();
 
 	CL_GUIMessage_Resize message;
 	message.set_target(component);
-	message.set_geometry(CL_Rect(0,0,new_size.width,new_size.height));
+	message.set_geometry(component->get_geometry());
 	post_message(message);
 }
 
@@ -559,7 +647,8 @@ void CL_GUIManager_Impl::on_input_received(
 			target = toplevel_window->proximity_component;
 
 		if (target == 0)
-			target = toplevel_window->component->get_component_at(input_event.mouse_pos);
+			target = toplevel_window->component->get_component_at(
+				toplevel_window->component->window_to_component_coords(input_event.mouse_pos));
 	}
 	else
 	{
@@ -569,44 +658,38 @@ void CL_GUIManager_Impl::on_input_received(
 			target = toplevel_window->component; // All keyboard messages are redirected to the toplevel component if no component is focused.
 	}
 
-	// Localize mouse position:
-	CL_InputEvent local_input_event = input_event;
-	CL_GUIComponent *cur_component = target;
-	while (cur_component)
+	if (target)
 	{
-		if (cur_component->get_parent_component() == 0)
-			break;
-		CL_Rect geometry = cur_component->get_window_geometry();
-		local_input_event.mouse_pos.x -= geometry.left;
-		local_input_event.mouse_pos.y -= geometry.top;
-		cur_component = cur_component->get_parent_component();
-	}
+		// Localize mouse position:
+		CL_InputEvent local_input_event = input_event;
+		local_input_event.mouse_pos = target->window_to_component_coords(input_event.mouse_pos);
 
-	// For pointer movements we may need to generate enter and leave messages:
-	if (local_input_event.type == CL_InputEvent::pointer_moved &&
-		target != mouse_over_component)
-	{
-		if (mouse_over_component)
+		// For pointer movements we may need to generate enter and leave messages:
+		if (local_input_event.type == CL_InputEvent::pointer_moved &&
+			target != mouse_over_component)
 		{
-			CL_GUIMessage_Pointer msg;
-			msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_leave);
-			msg.set_target(mouse_over_component);
-			post_message(msg);
+			if (mouse_over_component)
+			{
+				CL_GUIMessage_Pointer msg;
+				msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_leave);
+				msg.set_target(mouse_over_component);
+				post_message(msg);
+			}
+			mouse_over_component = target;
+			if (mouse_over_component)
+			{
+				CL_GUIMessage_Pointer msg;
+				msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_enter);
+				msg.set_target(mouse_over_component);
+				post_message(msg);
+			}
 		}
-		mouse_over_component = target;
-		if (mouse_over_component)
-		{
-			CL_GUIMessage_Pointer msg;
-			msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_enter);
-			msg.set_target(mouse_over_component);
-			post_message(msg);
-		}
-	}
 
-	CL_GUIMessage_Input message;
-	message.set_target(target);
-	message.set_event(local_input_event);
-	post_message(message);
+		CL_GUIMessage_Input message;
+		message.set_target(target);
+		message.set_event(local_input_event);
+		post_message(message);
+	}
 }
 
 CL_GUIComponent *CL_GUIManager_Impl::get_cancel_component(CL_GUIComponent *comp)

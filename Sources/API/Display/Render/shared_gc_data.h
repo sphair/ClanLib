@@ -36,6 +36,8 @@
 #include <map>
 
 class CL_GraphicContext;
+class CL_DisposableObject;
+class CL_SharedGCData_Impl;
 
 /// \brief Shared Graphic Context Data
 ///
@@ -43,34 +45,59 @@ class CL_GraphicContext;
 class CL_SharedGCData
 {
 public:
+
+	/// \brief Add ref
 	static void add_ref();
+
+	/// \brief Release ref
 	static void release_ref();
+
+	/// \brief Get Instance
+	///
+	/// \return instance
 	static CL_SharedGCData *get_instance();
 
 	static std::vector<CL_GraphicContextProvider*> &get_gc_providers();
 
+	/// \brief Dispose objects
+	static void dispose_objects();
+
+	/// \brief Add disposable
+	///
+	/// \param disposable = Disposable Object
+	static void add_disposable(CL_DisposableObject *disposable);
+
+	/// \brief Remove disposable
+	///
+	/// \param disposable = Disposable Object
+	static void remove_disposable(CL_DisposableObject *disposable);
+
+	/// \brief Func gc destruction imminent
+	///
+	/// \return Signal_v0
 	static CL_Signal_v0 &func_gc_destruction_imminent();
+
+	/// \brief Load texture
+	///
+	/// \param gc = Graphic Context
+	/// \param filename = String
+	/// \param virtual_directory = Virtual Directory
+	///
+	/// \return Texture
 	static CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
+
+	/// \brief Unload texture
+	///
+	/// \param filename = String
+	/// \param virtual_directory = Virtual Directory
 	static void unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
+
+	/// \brief Unload all textures
 	static void unload_all_textures();
 
 private:
 	CL_SharedGCData();
 	~CL_SharedGCData();
 
-	int reference_count;
-
-	struct SharedTextureMap
-	{
-		SharedTextureMap(CL_String key, const CL_Texture &texture) : key(key), texture(texture)
-		{
-		}
-		CL_String key;
-		CL_Texture texture;
-	};
-	std::vector<SharedTextureMap> textures;
-
-	CL_Signal_v0 sig_destruction_imminent;
-
-	std::vector<CL_GraphicContextProvider*> graphic_context_providers;
+	CL_SharedPtr<CL_SharedGCData_Impl> impl;
 };

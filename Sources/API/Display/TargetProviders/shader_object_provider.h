@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "shader_object_provider.h"
 #include "../Render/shader_object.h"
@@ -51,11 +49,14 @@ public:
 	/// \brief Creates a shader object.
 	virtual void create(CL_ShaderType type, const CL_StringRef &source)=0;
 
+	/// \brief Create
+	///
+	/// \param type = Shader Type
+	/// \param vector = std
 	virtual void create(CL_ShaderType type, const std::vector<CL_StringRef> &sources)=0;
 
 	/// \brief Destroys the shadoer object provider.
 	virtual void destroy()=0;
-
 
 /// \}
 /// \name Attributes
@@ -77,7 +78,6 @@ public:
 	/// \brief Get shader source code.
 	virtual CL_String get_shader_source() const=0;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -86,7 +86,6 @@ public:
 	/// \brief Compile program.
 	virtual void compile()=0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -94,6 +93,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

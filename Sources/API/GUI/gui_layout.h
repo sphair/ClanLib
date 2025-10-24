@@ -24,14 +24,13 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Mark Page
 */
 
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -39,6 +38,7 @@
 class CL_Size;
 class CL_Rect;
 class CL_GUILayout_Impl;
+class CL_GUILayoutProvider;
 
 /// \brief Layout management base class.
 ///
@@ -49,37 +49,62 @@ class CL_API_GUI CL_GUILayout
 /// \{
 
 public:
+	/// \brief Constructs a null layout
 	CL_GUILayout();
 
-	virtual ~CL_GUILayout();
+	/// \brief Constructs a layout
+	///
+	/// \param provider = The layout provider
+	CL_GUILayout(CL_GUILayoutProvider *provider);
 
+	/// \brief Constructs a GUILayout
+	///
+	/// \param copy = GUILayout
+	CL_GUILayout(const CL_GUILayout &copy);
+
+	~CL_GUILayout();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Returns the size of the dialog, as set in the editor.
-	virtual CL_Size get_preferred_size() const = 0;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
+	bool is_null();
+
+	/// \brief Retrieves the provider.
+	CL_GUILayoutProvider *get_provider() const;
+
+	/// \brief Returns the size of the dialog, as set in the editor.
+	CL_Size get_preferred_size() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	virtual void set_geometry(const CL_Rect &pos) = 0;
 
-	virtual void set_preferred_size(const CL_Size &size) = 0;
+	/// \brief Set geometry
+	///
+	/// \param pos = Rect
+	void set_geometry(const CL_Rect &pos);
 
+	/// \brief Set preferred size
+	///
+	/// \param size = Size
+	void set_preferred_size(const CL_Size &size);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	CL_SharedPtr<CL_GUILayout_Impl> impl;
+
 /// \}
 };
-
 
 /// \}

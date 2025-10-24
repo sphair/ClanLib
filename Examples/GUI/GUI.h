@@ -57,7 +57,7 @@ public:
 
 	CL_DisplayWindow *get_window() { return window_ptr; }
 	App *get_app() { return app; }
-	CL_Font_Texture &get_font() { return font; }
+	CL_Font &get_font() { return font; }
 	CL_GUIManager &get_gui_manager() { return gui_manager; }
 	CL_ResourceManager &get_resources_internal() { return resources_internal; }
 
@@ -84,7 +84,7 @@ private:
 	CL_ResourceManager resources_internal;
 	App *app;
 	CL_DisplayWindow *window_ptr;
-	CL_Font_Texture font;
+	CL_Font font;
 	CL_AutoPtr<GUI_Texture> gui_texture;
 	CL_AutoPtr<GUI_System> gui_system;
 

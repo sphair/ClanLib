@@ -29,17 +29,14 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
 
+/// \brief Point Sprite Origin
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CL_PointSpriteOrigin
 {
 	cl_point_sprite_origin_upper_left,
@@ -162,6 +159,5 @@ public:
 private:
 	CL_SharedPtr<CL_Pen_Impl> impl;
 };
-
 
 /// \}

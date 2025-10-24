@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -49,30 +47,45 @@ class CL_API_GUI CL_Frame : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a Frame
+	///
+	/// \param parent = GUIComponent
 	CL_Frame(CL_GUIComponent *parent);
 
 	virtual ~CL_Frame();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Header icon
+	///
+	/// \return header_icon
 	CL_Sprite get_header_icon() const;
 
+	/// \brief Get Header text
+	///
+	/// \return header_text
 	CL_StringRef get_header_text() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set header icon
+	///
+	/// \param icon = Sprite
 	void set_header_icon(const CL_Sprite &icon);
 
+	/// \brief Set header text
+	///
+	/// \param text = String Ref
 	void set_header_text(const CL_StringRef &text);
-
 
 /// \}
 /// \name Implementation
@@ -82,6 +95,5 @@ private:
 	CL_SharedPtr<CL_Frame_Impl> impl;
 /// \}
 };
-
 
 /// \}

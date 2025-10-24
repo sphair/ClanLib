@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Input clanDisplay Input
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -51,20 +49,17 @@ public:
 
 	virtual ~CL_InputState();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -74,6 +69,5 @@ private:
 	CL_SharedPtr<CL_InputState_Impl> impl;
 /// \}
 };
-
 
 /// \}

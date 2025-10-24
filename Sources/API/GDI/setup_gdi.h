@@ -29,13 +29,7 @@
 /// \addtogroup clanGDI_System clanGDI System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_gdi.h"
 
@@ -54,6 +48,5 @@ public:
 	~CL_SetupGDI();
 /// \}
 };
-
 
 /// \}

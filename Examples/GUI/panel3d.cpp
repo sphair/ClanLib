@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 Panel3D::Panel3D(GUI *gui) : 
-	CL_Window(CL_Rect(256*2, 256, CL_Size(320, 448)), &gui->get_gui_manager(), CL_GUITopLevelDescription("3D Controls")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("3D Controls", CL_Rect(256*2, 256, CL_Size(320, 448)), false)),
 	gui(gui)
 {
 	set_draggable(true);

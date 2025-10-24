@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/exception.h"
@@ -49,12 +43,15 @@ class CL_API_CORE CL_DomException : public CL_Exception
 /// \{
 
 public:
+
+	/// \brief Constructs a DomException
+	///
+	/// \param code = short
 	CL_DomException(unsigned short code);
 
 	CL_DomException(
 		const CL_StringRef &message,
 		unsigned short code);
-
 
 /// \}
 /// \name Attributes
@@ -82,7 +79,6 @@ public:
 
 	unsigned short code;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +86,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

@@ -34,7 +34,7 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 #include "API/Core/Text/string_types.h"

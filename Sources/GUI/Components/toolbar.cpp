@@ -193,7 +193,7 @@ CL_ToolBarItem CL_ToolBar::insert_item(const CL_Sprite &icon, int frame, const C
 	item.impl->text = text;
 	impl->items.push_back(item);
 	impl->need_layout_update = true;
-	invalidate_rect();
+	request_repaint();
 	return item;
 }
 
@@ -211,7 +211,7 @@ void CL_ToolBar::set_single_selection(bool value)
 void CL_ToolBar::clear_selection()
 {
 	impl->unselect_all(0);
-	invalidate_rect();
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ void CL_ToolBar::delete_item(int index)
 {
 	impl->items.erase(impl->items.begin() + index);
 	impl->need_layout_update = true;
-	invalidate_rect();
+	request_repaint();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 				if (index_hot_item != -1)
 				{
 					index_hot_item = -1;
-					toolbar->invalidate_rect();
+					toolbar->request_repaint();
 				}
 				return;
 			}
@@ -275,13 +275,13 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 				index_hot_item = -1;
 				index_pressed_item = index;
 				mouse_mode = cl_mouse_mode_pressed;
-				toolbar->invalidate_rect();
+				toolbar->request_repaint();
 				toolbar->capture_mouse(true);
 			}
 			else
 			{
 				index_hot_item = index;
-				toolbar->invalidate_rect();
+				toolbar->request_repaint();
 			}
 		}
 		else if (mouse_mode == cl_mouse_mode_pressed)
@@ -305,7 +305,7 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 
 				index_pressed_item = -1;
 				index_hot_item = index;
-				toolbar->invalidate_rect();
+				toolbar->request_repaint();
 
 				if (perform_click)
 				{
@@ -337,7 +337,7 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 			if (index_hot_item != -1)
 			{
 				index_hot_item = -1;
-				toolbar->invalidate_rect();
+				toolbar->request_repaint();
 			}
 		}
 	}
@@ -345,10 +345,9 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 
 void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-
 	update_layout();
 
-	CL_Rect rect = toolbar->get_geometry().get_size();
+	CL_Rect rect = toolbar->get_size();
 	part_component.render_box(gc, rect, update_rect);
 
 	std::vector<CL_ToolBarItem>::size_type index, size;
@@ -380,7 +379,7 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 			item.impl->icon.draw(gc, icon_pos);
 		}
 
-		toolbar->set_cliprect(item_content);
+		toolbar->set_cliprect(gc, item_content);
 
 		font.draw_text(gc,
 			item_content.left + item.impl->text_pos.x + pressed_offset.x,
@@ -388,7 +387,7 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 			item.impl->text,
 			text_color);
 
-		toolbar->reset_cliprect();
+		toolbar->reset_cliprect(gc);
 	}
 }
 
@@ -467,10 +466,10 @@ void CL_ToolBar_Impl::update_layout()
 		return;
 	need_layout_update = false;
 
-	CL_Rect rect = CL_Rect(CL_Point(0,0), toolbar->get_geometry().get_size());
+	CL_Rect rect = toolbar->get_size();
 	CL_Rect component_content = part_component.get_content_box(rect);
 
-	CL_GraphicContext gc = toolbar->get_gc();
+	CL_GraphicContext &gc = toolbar->get_gc();
 
 	CL_Rect item_content = part_item_normal.get_content_box(component_content);
 	int original_text_gap = part_item_normal.get_property_int(prop_text_gap);
@@ -554,7 +553,7 @@ void CL_ToolBar_Impl::update_layout()
 		}
 	}
 
-//	toolbar->invalidate_rect();
+//	toolbar->request_repaint();
 }
 
 int CL_ToolBar_Impl::find_item_at(const CL_Point &pos)

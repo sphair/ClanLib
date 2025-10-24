@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -47,43 +45,55 @@ class CL_API_GUI CL_ToolTip : public CL_GUIComponent
 {
 /// \name Construction
 /// \{
-
 public:
+
+	/// \brief Constructs a ToolTip
+	///
+	/// \param gui_manager = GUIManager
 	CL_ToolTip(CL_GUIManager gui_manager);
 
 	virtual ~CL_ToolTip();
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
-	CL_StringRef get_text() const;
 
+	/// \brief Get Text
+	///
+	/// \return text
+	CL_StringRef get_text() const;
 
 /// \}
 /// \name Operations
 /// \{
-
 public:
+
+	/// \brief Set text
+	///
+	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
 
+	/// \brief Show
+	///
+	/// \param position = Point
 	void show(const CL_Point &position);
 
+	/// \brief Show delayed
+	///
+	/// \param position = Point
+	/// \param delay_time = value
 	void show_delayed(const CL_Point &position, int delay_time = 750);
 
+	/// \brief Hide
 	void hide();
-
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_ToolTip_Impl> impl;
 /// \}
 };
-
 
 /// \}

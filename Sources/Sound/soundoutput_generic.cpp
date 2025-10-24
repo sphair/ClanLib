@@ -36,7 +36,7 @@
 
 CL_SoundOutput_Generic::CL_SoundOutput_Generic(int mixing_frequency, int latency)
 : mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
-  pan(0.0f), mix_buffer_size(0), ref_count(0)
+  pan(0.0f), mix_buffer_size(0)
 {
 	mix_buffers[0] = 0;
 	mix_buffers[1] = 0;
@@ -47,9 +47,6 @@ CL_SoundOutput_Generic::CL_SoundOutput_Generic(int mixing_frequency, int latency
 
 CL_SoundOutput_Generic::~CL_SoundOutput_Generic()
 {
-	int size = filters.size();
-	for (int i=0; i<size; i++) if (delete_filters[i]) delete filters[i];
-
 	delete[] stereo_buffer;
 	delete[] mix_buffers[0];
 	delete[] mix_buffers[1];
@@ -63,17 +60,6 @@ CL_SoundOutput_Generic::~CL_SoundOutput_Generic()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Generic operations:
-
-void CL_SoundOutput_Generic::add_ref()
-{
-	ref_count++;
-}
-
-void CL_SoundOutput_Generic::release_ref()
-{
-	if (--ref_count == 0)
-		delete this;
-}
 
 void CL_SoundOutput_Generic::play_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session)
 {
@@ -141,7 +127,7 @@ void CL_SoundOutput_Generic::mix_fragment()
 	int i;
 	for (i = 0; i < size_filters; i++)
 	{
-		filters[i]->filter(mix_buffers, mix_buffer_size, 2);
+		filters[i].filter(mix_buffers, mix_buffer_size, 2);
 	}
 
 	// Release any sessions pending for removal:

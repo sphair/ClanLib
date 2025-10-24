@@ -100,8 +100,10 @@ System/setup_core.cpp \
 System/static_memory_pool.cpp \
 System/system.cpp \
 System/thread.cpp \
+System/timer.cpp \
 System/thread_local_storage.cpp \
 System/thread_local_storage_impl.cpp \
+System/disposable_object.cpp \
 Text/console_logger.cpp \
 Text/file_logger.cpp \
 Text/logger.cpp \

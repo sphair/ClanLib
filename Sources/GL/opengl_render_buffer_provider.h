@@ -32,8 +32,9 @@
 
 #include "opengl_graphic_context_provider.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
+#include "API/Core/System/disposable_object.h"
 
-class CL_OpenGLRenderBufferProvider : public CL_RenderBufferProvider
+class CL_OpenGLRenderBufferProvider : public CL_RenderBufferProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -58,7 +59,7 @@ public:
 
 public:
 	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, int format);
+	virtual void create(int width, int height, CL_TextureFormat internal_format);
 
 	/// \brief Destroys the provider.
 	virtual void destroy();
@@ -69,6 +70,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	CL_OpenGLGraphicContextProvider *gc_provider;
 
 	CLuint handle;

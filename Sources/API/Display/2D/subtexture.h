@@ -50,6 +50,10 @@ public:
 	/// \brief Constructs a sub texture description.
 	CL_Subtexture();
 
+	/// \brief Constructs a Subtexture
+	///
+	/// \param texture = Texture
+	/// \param geometry = Rect
 	CL_Subtexture(CL_Texture texture, const CL_Rect &geometry);
 
 	~CL_Subtexture();

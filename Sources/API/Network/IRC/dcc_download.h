@@ -29,13 +29,7 @@
 /// \addtogroup clanNetwork_Internet_Relay_Chat clanNetwork Internet Relay Chat
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_network.h"
 #include "../../Core/Signals/signal_v0.h"
@@ -61,6 +55,9 @@ public:
 	/// \brief Constructs a new DCC download session.
 	CL_DCCDownload();
 
+	/// \brief Constructs a DCCDownload
+	///
+	/// \param copy = DCCDownload
 	CL_DCCDownload(const CL_DCCDownload &copy);
 
 	CL_DCCDownload(
@@ -71,7 +68,6 @@ public:
 		CL_VirtualDirectory directory = CL_VirtualDirectory());
 
 	virtual ~CL_DCCDownload();
-
 
 /// \}
 /// \name Attributes
@@ -110,7 +106,6 @@ public:
 	/// \brief sig_download_complete()
 	CL_Signal_v0 &sig_download_complete();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -122,7 +117,6 @@ public:
 	/// \brief Attemp to reconnect and resume download.
 	void reconnect();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -131,6 +125,5 @@ private:
 	CL_SharedPtr<CL_DCCDownload_Generic> impl;
 /// \}
 };
-
 
 /// \}

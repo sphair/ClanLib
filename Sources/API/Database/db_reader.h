@@ -29,9 +29,7 @@
 /// \addtogroup clanDatabase_System clanDatabase System
 /// \{
 
-
 #pragma once
-
 
 #include "api_database.h"
 
@@ -52,6 +50,9 @@ public:
 	/// \brief Constructs a database reader
 	CL_DBReader();
 
+	/// \brief Constructs a DBReader
+	///
+	/// \param CL_DBReader_Impl = Shared Ptr
 	CL_DBReader(const CL_SharedPtr<CL_DBReader_Impl> &impl);
 
 	~CL_DBReader();
@@ -110,6 +111,5 @@ private:
 	friend class CL_DBConnection;
 /// \}
 };
-
 
 /// \}

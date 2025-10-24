@@ -29,14 +29,11 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
 #include "gui_message.h"
-
 
 /// \brief GUI mouse pointer change notification message.
 ///
@@ -50,16 +47,22 @@ public:
 	/// \brief Constructs an input GUI message.
 	CL_GUIMessage_Pointer();
 
+	/// \brief Constructs a GUIMessage Pointer
+	///
+	/// \param message = GUIMessage
 	CL_GUIMessage_Pointer(const CL_GUIMessage &message);
 
 	~CL_GUIMessage_Pointer();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Get Type name
+	///
+	/// \return type_name
 	static CL_StringRef get_type_name();
 
 	enum PointerType
@@ -71,7 +74,6 @@ public:
 	/// \brief Retrieves the pointer type of this message.
 	PointerType get_pointer_type() const;
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -80,7 +82,6 @@ public:
 	/// \brief Sets the pointer type for this message.
 	void set_pointer_type(PointerType pointer_type);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -88,6 +89,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

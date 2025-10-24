@@ -29,9 +29,7 @@
 /// \addtogroup clanD3D10_Display clanD3D10 Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_d3d10.h"
 #include "../Display/display_target.h"
@@ -52,20 +50,17 @@ public:
 
 	~CL_D3D10Target();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -74,6 +69,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

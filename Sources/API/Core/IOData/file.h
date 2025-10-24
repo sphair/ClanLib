@@ -29,9 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "iodevice.h"
@@ -102,7 +100,6 @@ public:
 		flag_sequential_scan = 8
 	};
 
-
 /// \}
 /// \name Construction
 /// \{
@@ -132,7 +129,6 @@ public:
 
 	~CL_File();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -140,7 +136,6 @@ public:
 public:
 	/// \brief Returns the file permissions.
 	CL_SecurityDescriptor get_permissions() const;
-
 
 /// \}
 /// \name Operations
@@ -172,7 +167,6 @@ public:
 	/// \brief Change file permissions.
 	bool set_permissions(const CL_SecurityDescriptor &permissions);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -180,6 +174,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

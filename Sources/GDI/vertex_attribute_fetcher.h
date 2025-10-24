@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "API/Core/Math/cl_math.h"
 
 class VertexAttributeFetcher
 {

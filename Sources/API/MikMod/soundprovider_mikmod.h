@@ -30,13 +30,7 @@
 /// \addtogroup clanMikMod_Sound_Providers clanMikMod Sound Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../Core/IOData/virtual_directory.h"
 #include "../Sound/soundprovider.h"
@@ -66,7 +60,6 @@ public:
 
 	virtual ~CL_SoundProvider_MikMod();
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -81,7 +74,6 @@ public:
 	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +82,5 @@ private:
 	CL_SoundProvider_MikMod_Generic *impl;
 /// \}
 };
-
 
 /// \}

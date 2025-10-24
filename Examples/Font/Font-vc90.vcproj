@@ -205,10 +205,6 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\data.cpp"
-			>
-		</File>
-		<File
 			RelativePath="Font.cpp"
 			>
 			<FileConfiguration

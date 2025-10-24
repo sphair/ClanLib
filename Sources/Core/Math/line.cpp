@@ -31,7 +31,6 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/line.h"
 #include "API/Core/Math/angle.h"
-#include <cmath>
 
 template<typename Type>
 CL_Vec2<Type> CL_Line2x<Type>::get_intersection( const CL_Line2x<Type> &second, bool &intersect ) const

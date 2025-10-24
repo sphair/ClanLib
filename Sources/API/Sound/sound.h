@@ -29,13 +29,7 @@
 /// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_sound.h"
 #include "../Core/Text/string_types.h"
@@ -62,14 +56,13 @@ public:
 	static int get_mixing_frequency();
 
 	/// \brief Returns the current selected sound output.
-	static CL_SoundOutput *get_current_output();
+	static CL_SoundOutput get_current_output();
 
 	/// \brief Change the current selected sound output.
 	///
 	/// \param output The new current selected sound output.
-	static void select_output(CL_SoundOutput *output);
+	static void select_output(const CL_SoundOutput &output);
 /// \}
 };
-
 
 /// \}

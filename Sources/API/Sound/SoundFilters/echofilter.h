@@ -24,23 +24,18 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanSound_Filters clanSound Filters
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_sound.h"
 #include "../soundfilter.h"
 
-class CL_EchoFilter_Generic;
+class CL_EchoFilterProvider;
 
 /// \brief Echo Filter Class
 ///
@@ -57,25 +52,21 @@ public:
 	/// \brief Echo Filter Destructor
 	virtual ~CL_EchoFilter();
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Filter
-	virtual void filter(int **sample_data, int num_samples, int channels);
 
+	/// \brief Retrieves the provider.
+	CL_EchoFilterProvider *get_provider() const;
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_EchoFilter(const CL_EchoFilter &copy) { return; } // disallow copy construction.
-	CL_EchoFilter_Generic *impl;
 /// \}
 };
-
 
 /// \}

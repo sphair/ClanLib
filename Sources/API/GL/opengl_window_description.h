@@ -31,10 +31,6 @@
 
 #pragma once
 
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "api_gl.h"
 #include "../Core/System/sharedptr.h"
 #include "../Display/Window/display_window_description.h"
@@ -60,6 +56,10 @@ class CL_API_GL CL_OpenGLWindowDescription : public CL_DisplayWindowDescription
 public:
 	/// \brief Constructs a window description with default values.
 	CL_OpenGLWindowDescription();
+
+	/// \brief Constructs a OpenGLWindowDescription
+	///
+	/// \param desc = Display Window Description
 	CL_OpenGLWindowDescription(const CL_DisplayWindowDescription &desc);
 	CL_OpenGLWindowDescription &operator=(CL_DisplayWindowDescription &desc);
 

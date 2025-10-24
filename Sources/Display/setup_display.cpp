@@ -33,7 +33,6 @@
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/jpeg_provider.h"
 #include "API/Display/ImageProviders/png_provider.h"
-#include "Font/font_cache_native.h"
 
 #ifndef WIN32
 #include <X11/Xlib.h>
@@ -66,8 +65,6 @@ CL_SetupDisplay::CL_SetupDisplay()
 
 CL_SetupDisplay::~CL_SetupDisplay()
 {
-	cl_fontcache_native.free_font_cache();
-
 	delete pcx_provider;
 	pcx_provider = NULL;
 

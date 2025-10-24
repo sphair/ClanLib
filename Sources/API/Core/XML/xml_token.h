@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
@@ -54,7 +48,6 @@ public:
 	CL_XMLToken() : type(NULL_TOKEN), variant(SINGLE)
 	{
 	}
-
 
 /// \}
 /// \name Attributes
@@ -100,13 +93,11 @@ public:
 	/// \brief All the attributes attached to the token.
 	std::vector<Attribute> attributes;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -115,6 +106,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

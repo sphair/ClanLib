@@ -58,7 +58,7 @@ private:
 	ResourceItem *load_image(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources);
 	ResourceItem *load_sprite(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources);
 	void process_resource(CL_Resource &item_resource, std::vector<CL_Subtexture> &packed_sub_textures, std::map<CL_Texture, CL_String> &generated_texture_filenames, int &generated_texture_index);
-	void add_border(CL_PixelBuffer &pb, CL_PixelBuffer &new_pb, int border_size);
+	void add_border(const CL_PixelBuffer &pb, CL_PixelBuffer &new_pb, int border_size);
 
 	CL_GraphicContext gc;
 

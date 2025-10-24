@@ -68,12 +68,12 @@ CL_CSSDocument CL_GUIManager::get_css_document() const
 	return impl->css_document;
 }
 
-CL_GUITheme *CL_GUIManager::get_theme() const
+CL_GUITheme CL_GUIManager::get_theme() const
 {
 	return impl->theme;
 }
 
-CL_GUIWindowManager *CL_GUIManager::get_window_manager() const
+CL_GUIWindowManager CL_GUIManager::get_window_manager() const
 {
 	return impl->window_manager;
 }
@@ -98,9 +98,9 @@ CL_UnknownSharedPtr CL_GUIManager::get_userdata()
 	return impl->userdata;
 }
 
-CL_Font CL_GUIManager::get_named_font(const CL_FontDescription &desc)
+CL_Font CL_GUIManager::get_registered_font(const CL_FontDescription &desc)
 {
-	return impl->get_named_font(desc);
+	return impl->get_registered_font(desc);
 }
 
 CL_GUIComponent * CL_GUIManager::get_focused_component()
@@ -114,7 +114,7 @@ CL_String CL_GUIManager::get_clipboard_text() const
 		return CL_String();
 
 	CL_GUITopLevelWindow *cur = impl->root_components[0];
-	return get_window_manager()->get_display_window(cur).get_clipboard_text();
+	return impl->window_manager.get_display_window(cur).get_clipboard_text();
 }
 
 
@@ -134,7 +134,7 @@ CL_Callback_2<int, CL_AcceleratorTable &, bool> &CL_GUIManager::func_exec_handle
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager Operations:
 
-void CL_GUIManager::set_theme(CL_GUITheme *theme)
+void CL_GUIManager::set_theme(CL_GUITheme &theme)
 {
 	impl->theme = theme;
 }
@@ -147,19 +147,22 @@ void CL_GUIManager::set_css_document(CL_CSSDocument css)
 
 void CL_GUIManager::set_css_document(const CL_String &fullname)
 {
-	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
-	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
-	CL_IODevice file = CL_File(path + filename, CL_File::open_existing);
-
 	CL_CSSDocument css;
-	css.load(path, file); 
+	css.load(fullname); 
 	set_css_document(css);
 }
 
-void CL_GUIManager::set_window_manager(CL_GUIWindowManager *window_manager)
+void CL_GUIManager::set_css_document(const CL_String &filename, const CL_VirtualDirectory &directory)
+{
+	CL_CSSDocument css;
+	css.load(filename, directory); 
+	set_css_document(css);
+}
+
+void CL_GUIManager::set_window_manager(CL_GUIWindowManager &window_manager)
 {
 	impl->window_manager = window_manager;
-	window_manager->set_site(&impl->wm_site);
+	window_manager.set_site(&impl->wm_site);
 }
 
 void CL_GUIManager::set_capture_component(CL_GUIComponent *component, bool state)
@@ -167,13 +170,13 @@ void CL_GUIManager::set_capture_component(CL_GUIComponent *component, bool state
 	if (state)
 	{
 		impl->mouse_capture_component = component;
-		impl->window_manager->capture_mouse(impl->get_toplevel_window(component), true);
+		impl->window_manager.capture_mouse(impl->get_toplevel_window(component), true);
 	}
 	else
 	{
 		if (impl->mouse_capture_component == component)
 		{
-			impl->window_manager->capture_mouse(impl->get_toplevel_window(component), false);
+			impl->window_manager.capture_mouse(impl->get_toplevel_window(component), false);
 			impl->mouse_capture_component = NULL;
 		}
 	}
@@ -216,10 +219,10 @@ void CL_GUIManager::process_messages(CL_AcceleratorTable &accel_table)
 		}
 	}
 
-	get_window_manager()->setup_painting();
+	impl->window_manager.setup_painting();
 	impl->invalidate_constant_repaint_components();
-	get_window_manager()->update();
-	get_window_manager()->complete_painting();
+	impl->window_manager.update();
+	impl->window_manager.complete_painting();
 }
 
 bool CL_GUIManager::wait(int timeout)
@@ -314,13 +317,6 @@ CL_GUIMessage CL_GUIManager::peek_message(bool block)
 {
 	while (true)
 	{
-		if (impl->root_components.empty())
-		{
-			CL_GUIMessage message;
-			message.set_null();
-			return message;
-		}
-
 		impl->check_for_new_messages();
 
 		CL_MutexSection mutex_lock(&impl->message_queue_mutex);
@@ -348,7 +344,7 @@ CL_GUIMessage CL_GUIManager::peek_message(bool block)
 
 		if (impl->message_queue.empty() && regions_updated)
 		{
-			impl->window_manager->wait_for_message();
+			impl->window_manager.wait_for_message();
 		}
 	}
 }
@@ -377,7 +373,7 @@ void CL_GUIManager::send_message(CL_GUIMessage &message)
 	impl->send_message(message);
 }
 
-void CL_GUIManager::invalidate_rect(const CL_Rect &rect, CL_GUIComponent *root_component)
+void CL_GUIManager::request_repaint(const CL_Rect &rect, CL_GUIComponent *root_component)
 {
 	std::vector<CL_GUITopLevelWindow>::size_type pos, size;
 	size = impl->root_components.size();
@@ -388,8 +384,7 @@ void CL_GUIManager::invalidate_rect(const CL_Rect &rect, CL_GUIComponent *root_c
 
 		if (cur->component == root_component)
 		{
-			get_window_manager()->invalidate_rect(cur, rect);
-			//cur->update_regions.push_back(rect);
+			impl->window_manager.request_repaint(cur, rect);
 			break;
 		}
 	}
@@ -413,9 +408,9 @@ void CL_GUIManager::set_userdata(CL_UnknownSharedPtr ptr)
 	impl->userdata = ptr;
 }
 
-void CL_GUIManager::set_named_font(const CL_Font &font, const CL_FontDescription &desc)
+void CL_GUIManager::register_font(const CL_Font &font, const CL_FontDescription &desc)
 {
-	impl->set_named_font(font, desc);
+	impl->register_font(font, desc);
 }
 
 void CL_GUIManager::set_clipboard_text(const CL_StringRef &str)
@@ -424,7 +419,7 @@ void CL_GUIManager::set_clipboard_text(const CL_StringRef &str)
 		return;
 
 	CL_GUITopLevelWindow *cur = impl->root_components[0];
-	get_window_manager()->get_display_window(cur).set_clipboard_text(str);
+	impl->window_manager.get_display_window(cur).set_clipboard_text(str);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -46,6 +46,10 @@ class CL_API_GUI CL_Spin : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a Spin
+	///
+	/// \param parent = GUIComponent
 	CL_Spin(CL_GUIComponent *parent);
 
 	virtual ~CL_Spin();
@@ -54,44 +58,97 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Get Value
+	///
+	/// \return value
 	int get_value() const;
 
+	/// \brief Get Value float
+	///
+	/// \return value_float
 	float get_value_float() const;
 
+	/// \brief Get Min
+	///
+	/// \return min
 	int get_min() const;
 
+	/// \brief Get Max
+	///
+	/// \return max
 	int get_max() const;
 
+	/// \brief Get Min float
+	///
+	/// \return min_float
 	float get_min_float() const;
 
+	/// \brief Get Max float
+	///
+	/// \return max_float
 	float get_max_float() const;
 
+	/// \brief Get Floating point mode
+	///
+	/// \return floating_point_mode
 	bool get_floating_point_mode() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Set value
+	///
+	/// \param value = value
 	void set_value(int value);
 
+	/// \brief Set value float
+	///
+	/// \param value = value
 	void set_value_float(float value);
 
+	/// \brief Set ranges
+	///
+	/// \param min = value
+	/// \param max = value
 	void set_ranges(int min, int max);
 
+	/// \brief Set ranges float
+	///
+	/// \param min = value
+	/// \param max = value
 	void set_ranges_float(float min, float max);
 
+	/// \brief Set step size
+	///
+	/// \param step_size = value
 	void set_step_size(int step_size);
 
+	/// \brief Set step size float
+	///
+	/// \param step_size = value
 	void set_step_size_float(float step_size);
 
+	/// \brief Set number of decimal places
+	///
+	/// \param decimal_places = value
 	void set_number_of_decimal_places(int decimal_places);
 
+	/// \brief Set floating point mode
+	///
+	/// \param use_floating_point = bool
 	void set_floating_point_mode(bool use_floating_point);
 
 /// \}
 /// \name Events
 /// \{
 public:
+
+	/// \brief Func value changed
+	///
+	/// \return Callback_v0
 	CL_Callback_v0 &func_value_changed();
 
 /// \}

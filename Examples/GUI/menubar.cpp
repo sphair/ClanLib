@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 MenuBar::MenuBar(GUI *gui) :
-	CL_Window(CL_Rect(512 + 32, 256 + 32, CL_Size(256, 180)), &gui->get_gui_manager(), CL_GUITopLevelDescription("Menu Bar & Status Bar")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Menu Bar & Status Bar", CL_Rect(512 + 32, 256 + 32, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	tux_image = CL_ImageProviderFactory::load("tux.png");
@@ -75,6 +75,20 @@ MenuBar::MenuBar(GUI *gui) :
 	menu_submenu.insert_item("foo");
 	menu_submenu.insert_item("bar");
 	menu_submenu.insert_item("foobar");
+	CL_PopupMenuItem check_item1 = menu_submenu.insert_item("Checkable 1");
+	check_item1.set_checkable(true);
+	check_item1.set_checked(true);
+	CL_PopupMenuItem check_item2 = menu_submenu.insert_item("Checkable 2");
+	check_item2.set_checkable(true);
+	check_item2.set_checked(false);
+	CL_PopupMenuItem check_item3 = menu_submenu.insert_item("Disabled Checkable 1");
+	check_item3.set_checkable(true);
+	check_item3.set_checked(true);
+	check_item3.set_enabled(false);
+	CL_PopupMenuItem check_item4 = menu_submenu.insert_item("Disabled Checkable 2");
+	check_item4.set_checkable(true);
+	check_item4.set_checked(false);
+	check_item4.set_enabled(false);
 	item_submenu.set_submenu(menu_submenu);
 
 	menubar1->add_menu("Edit", menu_edit);

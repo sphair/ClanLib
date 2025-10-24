@@ -32,6 +32,7 @@
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/XML/dom_text.h"
+#include "API/Core/Text/string_help.h"
 #include "network_data.h"
 
 CL_NetGameEvent CL_NetGameNetworkData::receive_data(CL_TCPConnection connection)
@@ -56,30 +57,58 @@ CL_NetGameEvent CL_NetGameNetworkData::receive_data(CL_TCPConnection connection)
 		if (cur.is_element())
 		{
 			CL_DomElement argument_element = cur.to_element();
-			if (argument_element.get_tag_name() == cl_text("null"))
-			{
-				e.add_argument(CL_NetGameEventValue());
-			}
-			else if (argument_element.get_tag_name() == cl_text("integer"))
-			{
-				e.add_argument(CL_NetGameEventValue(CL_NetGameEventValue::integer, argument_element.get_text()));
-			}
-			else if (argument_element.get_tag_name() == cl_text("number"))
-			{
-				e.add_argument(CL_NetGameEventValue(CL_NetGameEventValue::number, argument_element.get_text()));
-			}
-			else if (argument_element.get_tag_name() == cl_text("boolean"))
-			{
-				e.add_argument(CL_NetGameEventValue(CL_NetGameEventValue::boolean, argument_element.get_text()));
-			}
-			else if (argument_element.get_tag_name() == cl_text("string"))
-			{
-				e.add_argument(CL_NetGameEventValue(CL_NetGameEventValue::string, argument_element.get_text()));
-			}
+			e.add_argument(create_event_value(argument_element));
 		}
 		cur = cur.get_next_sibling();
 	}
 	return e;
+}
+
+CL_NetGameEventValue CL_NetGameNetworkData::create_event_value(CL_DomElement &value_element)
+{
+	if (value_element.get_tag_name() == cl_text("null"))
+	{
+		return CL_NetGameEventValue(CL_NetGameEventValue::null);
+	}
+	else if (value_element.get_tag_name() == cl_text("uinteger"))
+	{
+		return CL_NetGameEventValue(CL_StringHelp::text_to_uint(value_element.get_text()));
+	}
+	else if (value_element.get_tag_name() == cl_text("integer"))
+	{
+		return CL_NetGameEventValue(CL_StringHelp::text_to_int(value_element.get_text()));
+	}
+	else if (value_element.get_tag_name() == cl_text("number"))
+	{
+		return CL_NetGameEventValue(CL_StringHelp::text_to_float(value_element.get_text()));
+	}
+	else if (value_element.get_tag_name() == cl_text("boolean"))
+	{
+		return CL_NetGameEventValue(value_element.get_text() == cl_text("true"));
+	}
+	else if (value_element.get_tag_name() == cl_text("string"))
+	{
+		return CL_NetGameEventValue(value_element.get_text());
+	}
+	else if (value_element.get_tag_name() == cl_text("complex"))
+	{
+		CL_NetGameEventValue value(CL_NetGameEventValue::complex);
+		CL_DomNode cur = value_element.get_first_child();
+		while (!cur.is_null())
+		{
+			if (cur.is_element())
+			{
+				CL_DomElement member_element = cur.to_element();
+				value.add_member(create_event_value(member_element));
+			}
+			cur = cur.get_next_sibling();
+		}
+		return value;
+	}
+	else
+	{
+		return CL_NetGameEventValue();
+	}
 }
 
 void CL_NetGameNetworkData::send_data(CL_TCPConnection connection, const CL_NetGameEvent &e)
@@ -91,33 +120,7 @@ void CL_NetGameNetworkData::send_data(CL_TCPConnection connection, const CL_NetG
 	for (unsigned int i = 0; i < e.get_argument_count(); i++)
 	{
 		CL_NetGameEventValue value = e.get_argument(i);
-		CL_DomText value_text = doc.create_text_node(value.get_value());
-		CL_DomElement value_element;
-		switch (value.get_type())
-		{
-		case CL_NetGameEventValue::null:
-			value_element = doc.create_element(cl_text("null"));
-			break;
-		case CL_NetGameEventValue::integer:
-			value_element = doc.create_element(cl_text("integer"));
-			value_element.append_child(value_text);
-			break;
-		case CL_NetGameEventValue::number:
-			value_element = doc.create_element(cl_text("number"));
-			value_element.append_child(value_text);
-			break;
-		case CL_NetGameEventValue::boolean:
-			value_element = doc.create_element(cl_text("boolean"));
-			value_element.append_child(value_text);
-			break;
-		case CL_NetGameEventValue::string:
-			value_element = doc.create_element(cl_text("string"));
-			value_element.append_child(value_text);
-			break;
-		default:
-			throw CL_Exception(cl_text("Unknown game event value type"));
-		}
-		event_element.append_child(value_element);
+		event_element.append_child(create_event_value_element(doc, value));
 	}
 	doc.append_child(event_element);
 
@@ -131,4 +134,45 @@ void CL_NetGameNetworkData::send_data(CL_TCPConnection connection, const CL_NetG
 
 	connection.write_uint16(buffer.get_size());
 	connection.write(buffer.get_data(), buffer.get_size());
+}
+
+CL_DomElement CL_NetGameNetworkData::create_event_value_element(CL_DomDocument &doc, const CL_NetGameEventValue &value)
+{
+	CL_DomElement value_element;
+	switch (value.get_type())
+	{
+	case CL_NetGameEventValue::null:
+		value_element = doc.create_element(cl_text("null"));
+		break;
+	case CL_NetGameEventValue::uinteger:
+		value_element = doc.create_element(cl_text("uinteger"));
+		value_element.append_child(doc.create_text_node(CL_StringHelp::uint_to_text(value.to_uinteger())));
+		break;
+	case CL_NetGameEventValue::integer:
+		value_element = doc.create_element(cl_text("integer"));
+		value_element.append_child(doc.create_text_node(CL_StringHelp::int_to_text(value.to_integer())));
+		break;
+	case CL_NetGameEventValue::number:
+		value_element = doc.create_element(cl_text("number"));
+		value_element.append_child(doc.create_text_node(CL_StringHelp::float_to_text(value.to_number())));
+		break;
+	case CL_NetGameEventValue::boolean:
+		value_element = doc.create_element(cl_text("boolean"));
+		value_element.append_child(doc.create_text_node(value.to_boolean() ? cl_text("true") : cl_text("false")));
+		break;
+	case CL_NetGameEventValue::string:
+		value_element = doc.create_element(cl_text("string"));
+		value_element.append_child(doc.create_text_node(value.to_string()));
+		break;
+	case CL_NetGameEventValue::complex:
+		{
+			value_element = doc.create_element(cl_text("complex"));
+			for (unsigned int i = 0; i < value.get_member_count(); i++)
+				value_element.append_child(create_event_value_element(doc, value.get_member(i)));
+		}
+		break;
+	default:
+		throw CL_Exception(cl_text("Unknown game event value type"));
+	}
+	return value_element;
 }

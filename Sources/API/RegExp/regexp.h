@@ -29,9 +29,7 @@
 /// \addtogroup clanRegExp_Regular_Expressions clanRegExp Regular Expressions
 /// \{
 
-
 #pragma once
-
 
 #include "../Core/System/sharedptr.h"
 #include "api_regexp.h"
@@ -48,12 +46,22 @@ class CL_API_REGEXP CL_RegExp
 /// \{
 
 public:
+
+	/// \brief Constructs a RegExp
+	///
+	/// \param expression = char
+	/// \param compile_flags = value
+	/// \param study = bool
 	CL_RegExp(const char *expression, int compile_flags = 0, bool study = false);
 
+	/// \brief Constructs a RegExp
+	///
+	/// \param expression = String Ref8
+	/// \param compile_flags = value
+	/// \param study = bool
 	CL_RegExp(const CL_StringRef8 &expression, int compile_flags = 0, bool study = false);
 
 	~CL_RegExp();
-
 
 /// \}
 /// \name Attributes
@@ -86,10 +94,19 @@ public:
 		search_partial       = 32
 	};
 
+	/// \brief Get string number
+	///
+	/// \param name = char
+	///
+	/// \return int
 	int get_string_number(const char *name) const;
 
+	/// \brief Get string number
+	///
+	/// \param name = String Ref8
+	///
+	/// \return int
 	int get_string_number(const CL_StringRef8 &name) const;
-
 
 /// \}
 /// \name Operations
@@ -121,7 +138,6 @@ public:
 		int search_flags,
 		CL_RegExpMatch &result) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -130,6 +146,5 @@ private:
 	CL_SharedPtr<CL_RegExp_Impl> impl;
 /// \}
 };
-
 
 /// \}

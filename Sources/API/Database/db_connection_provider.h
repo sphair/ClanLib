@@ -29,9 +29,7 @@
 /// \addtogroup clanDatabase_System clanDatabase System
 /// \{
 
-
 #pragma once
-
 
 #include "api_database.h"
 #include "db_command.h"
@@ -84,6 +82,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

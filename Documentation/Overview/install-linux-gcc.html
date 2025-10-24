@@ -25,18 +25,6 @@
 
 <p>Installing using Ubuntu (7.10 (Gutsy Gibbon) to Ubuntu 8.10 (Intrepid Ibex))</p>
 
-<p>
-Note: The standard freetype 2.3.7 package that comes with Ubuntu 8.10 (Intrepid Ibex) has very poor quality. It is recommended to reinstall the package from the source code as follows:
-</p>
-<pre>
-	(from: http://download.savannah.gnu.org/releases/freetype/ )
-	tar -xvzf freetype-2.3.7.tar.gz
-	cd freetype-2.3.7
-	./configure --prefix=/usr
-	make
-	sudo make install
-</pre>
-
 <p>Use the "Synaptic Package Manager", or overwise, ensure that the latest versions of these programs exist:</p>
 
 <pre>	automake
@@ -60,24 +48,21 @@ Note: The standard freetype 2.3.7 package that comes with Ubuntu 8.10 (Intrepid 
 	libfreetype6  (unless compiled manually)
 	libfreetype6-dev (unless compiled manually)
 	libfontconfig1-dev
-	freeglut3
-	freeglut3-dev (select all the required development packages that freeglut requires)
-		libgl1-mesa-dev
-		libglu1-mesa-dev
-		libice-dev
-		libsm-dev
-		libx11-dev
-		libxau-dev
-		libxdmcp-dev
-		libxext-dev
-		libxt-dev
-		mesa-common-dev
-		x11proto-core-dev
-		x11proto-input-dev
-		x11proto-kb-dev
-		x11proto-xext-dev
-		xlibmesa-gl-dev
-		xtrans-dev</pre>
+	libgl1-mesa-dev
+	libice-dev
+	libsm-dev
+	libx11-dev
+	libxau-dev
+	libxdmcp-dev
+	libxext-dev
+	libxt-dev
+	mesa-common-dev
+	x11proto-core-dev
+	x11proto-input-dev
+	x11proto-kb-dev
+	x11proto-xext-dev
+	xlibmesa-gl-dev
+	xtrans-dev</pre>
 
 <li>ClanGL:</li>
 <pre>	libxi-dev

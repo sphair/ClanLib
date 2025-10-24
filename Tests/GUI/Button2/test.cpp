@@ -26,19 +26,18 @@ public:
 			CL_GUIWindowManagerSystem wm;
 
 			CL_GUIManager gui;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 //			CL_ResourceManager resources("../../../Resources/GUIThemeLuna/resources.xml");
 			CL_ResourceManager resources("resources.xml");
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 //			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
 			gui.set_css_document("theme.css");
 
-			CL_GUITopLevelDescription window_desc;
-			CL_Window window(CL_Rect(200, 200, 540, 440), &gui, window_desc);
+			CL_Window window(&gui, CL_GUITopLevelDescription(CL_Rect(200, 200, 540, 440), false));
 			window.func_close().set(this, &App::on_close, &window);
 
 			CL_PushButton button(&window);

@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\custom_type.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\Client\main.cpp"
 				>
 			</File>

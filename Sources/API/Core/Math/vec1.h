@@ -34,8 +34,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "math.h"
-
+#include "cl_math.h"
 #include "vec2.h"
 #include "vec3.h"
 #include "vec4.h"

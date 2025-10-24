@@ -52,8 +52,6 @@ private:
 	void on_btn_browse_cpp();
 	void on_btn_browse_h();
 
-	CL_Rect get_startup_geometry();
-
 	CL_GUITopLevelDescription get_startup_description();
 
 	CL_GUILayoutCorners layout;

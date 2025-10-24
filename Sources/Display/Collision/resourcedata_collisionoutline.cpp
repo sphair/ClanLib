@@ -71,7 +71,7 @@ CL_ResourceData_CollisionOutline::CL_ResourceData_CollisionOutline(CL_Resource &
 	}
 	else
 	{
-		CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename, cl_text(""), resource.get_manager().get_directory(resource));
+		CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), cl_text(""));
 		outline = new CL_CollisionOutline_Generic(
 			new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy );
 	}

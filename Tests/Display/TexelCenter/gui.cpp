@@ -29,19 +29,22 @@
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gui.h>
+#include <ClanLib/gl.h>
 #include "gui.h"
 #include "app.h"
 
+#include <cstdio>
+
 GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 {
-	gui.set_window_manager(&wm);
+	gui.set_window_manager(wm);
 
-	resources_gui = CL_ResourceManager("../../../Resources/GUIThemeLuna/resources.xml");
+	resources_gui = CL_ResourceManager("../../../Resources/GUIThemeAeroPacked/resources.xml");
 	resources_internal = CL_ResourceManager("resources.xml");
 
 	theme.set_resources(resources_gui);
-	gui.set_theme(&theme); 
-	gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
+	gui.set_theme(theme); 
+	gui.set_css_document("../../../Resources/GUIThemeAeroPacked/theme.css");
 
 	CL_GraphicContext gc = window_ptr->get_gc();
 
@@ -50,6 +53,8 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	sprite_grid_outline = CL_Sprite(gc, "sprite_grid_outline", &resources);
 	image_grid_normal = CL_Image(gc, "image_grid_normal", &resources);
 	image_grid_outline = CL_Image(gc, "image_grid_outline", &resources);
+	texture_grid_normal = CL_Texture("texture_grid_normal", &resources, gc);
+	texture_grid_outline = CL_Texture("texture_grid_outline", &resources, gc);
 
 	display_image_size = CL_Size(64, 64);
 	display_image_geometry = CL_Rect(320, 40, CL_Size(512, 512));
@@ -64,9 +69,9 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	display_framebuffer.attach_color_buffer(0, display_image);
 
 	font_texture_group = CL_TextureGroup(gc, CL_Size(512, 512));
-	font = CL_Font_Texture(gc, cl_text("Tahoma"), 32);
+	font = CL_Font_System(gc, cl_text("Tahoma"), 32);
 	font.set_texture_group(font_texture_group);
-	font_small = CL_Font_Texture(gc, cl_text("Tahoma"), 16);
+	font_small = CL_Font_System(gc, cl_text("Tahoma"), 16);
 	font_small.set_texture_group(font_texture_group);
 
 	wm.func_repaint().set(this, &GUI::wm_repaint);
@@ -95,14 +100,15 @@ bool GUI::run()
 	for (index = 0; index < size; index++)
 	{
 		CL_GUIWindowManagerTextureWindow window = windows[index];
-		CL_Image image(gc, window.get_texture()); 
+		CL_Subtexture texture = window.get_texture();
+		CL_Image image(gc, texture); 
 		image.draw(gc, window.get_geometry().left, window.get_geometry().top);
 	}
 
 	write_display_image();
 
-	display_modelview_matrix("ModelView Matrix", 50.0f, 350.0f, last_modelview_matrix);
-	display_modelview_matrix("ModelView OpenGL", 50.0f, 500.0f, last_modelview_opengl);
+	display_modelview_matrix("ModelView Matrix", 50.0f, 400.0f, last_modelview_matrix);
+	display_modelview_matrix("ModelView OpenGL", 50.0f, 550.0f, last_modelview_opengl);
 
 	show_display_image();
 
@@ -190,6 +196,39 @@ void GUI::write_display_image()
 			sprite_grid_normal.draw(gc, source_image_geometry, dest_geometry);
 		}
 	}
+	if (panel->is_texture())
+	{
+		if (panel->is_outlined())
+		{
+			if (panel->is_linear())
+			{
+				texture_grid_outline.set_min_filter(cl_filter_linear);
+				texture_grid_outline.set_mag_filter(cl_filter_linear);
+			}
+			if (panel->is_nearest())
+			{
+				texture_grid_outline.set_min_filter(cl_filter_nearest);
+				texture_grid_outline.set_mag_filter(cl_filter_nearest);
+			}
+
+			draw_texture(gc, texture_grid_outline, source_image_geometry, dest_geometry);
+		}
+		else
+		{
+			if (panel->is_linear())
+			{
+				texture_grid_normal.set_min_filter(cl_filter_linear);
+				texture_grid_normal.set_mag_filter(cl_filter_linear);
+			}
+			if (panel->is_nearest())
+			{
+				texture_grid_normal.set_min_filter(cl_filter_nearest);
+				texture_grid_normal.set_mag_filter(cl_filter_nearest);
+			}
+
+			draw_texture(gc, texture_grid_normal, source_image_geometry, dest_geometry);
+		}
+	}
 	gc.pop_modelview();
 
 	gc.reset_frame_buffer();
@@ -262,6 +301,17 @@ void GUI::draw_reference_images()
 			sprite_grid_normal.draw(gc, xpos, ypos);
 		}
 	}
+	if (panel->is_texture())
+	{
+		if (panel->is_outlined())
+		{
+			draw_texture(gc, texture_grid_outline, xpos, ypos);
+		}
+		else
+		{
+			draw_texture(gc, texture_grid_normal, xpos, ypos);
+		}
+	}
 
 	ypos = 240;
 	font.draw_text(gc, xpos, ypos - 10, "Source Area");
@@ -287,6 +337,18 @@ void GUI::draw_reference_images()
 		else
 		{
 			sprite_grid_normal.draw(gc, source_image_geometry, dest_geometry);
+		}
+	}
+
+	if (panel->is_texture())
+	{
+		if (panel->is_outlined())
+		{
+			draw_texture(gc, texture_grid_outline, source_image_geometry, dest_geometry);
+		}
+		else
+		{
+			draw_texture(gc, texture_grid_normal, source_image_geometry, dest_geometry);
 		}
 	}
 
@@ -350,5 +412,27 @@ void GUI::display_modelview_matrix(const char *matrix_name, float xpos, float yp
 		}
 	}
 
+}
+
+void GUI::draw_texture(CL_GraphicContext &gc, CL_Texture &texture, CL_Rect &source, CL_Rectf &dest)
+{
+	float texture_translate = panel->get_texture_translate();
+
+	gc.set_texture(0, texture);
+	CL_Rectf source_rect;
+	source_rect.left = ( (float) source.left+texture_translate) / texture.get_width();
+	source_rect.top = ( (float) source.top+texture_translate) / texture.get_height();
+	source_rect.right = ( (float) source.right+texture_translate) / texture.get_width();
+	source_rect.bottom = ( (float) source.bottom+texture_translate) / texture.get_height();
+	CL_Draw::texture(gc, dest, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f), source_rect);
+	gc.reset_texture(0);
+}
+
+
+void GUI::draw_texture(CL_GraphicContext &gc, CL_Texture &texture, int xpos, int ypos)
+{
+	CL_Rectf dest_rect = CL_Rectf(( float) xpos, (float) ypos, CL_Sizef(texture.get_size()));
+	CL_Rect source = CL_Rect(0,0, CL_Size(texture.get_width(), texture.get_height()));
+	draw_texture(gc, texture, source, dest_rect);
 }
 

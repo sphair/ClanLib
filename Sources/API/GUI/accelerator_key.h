@@ -29,9 +29,7 @@
 /// \addtogroup clanGUI_System clanGUI System
 /// \{
 
-
 #pragma once
-
 
 #include "api_gui.h"
 #include "../Core/System/sharedptr.h"
@@ -53,10 +51,15 @@ class CL_AcceleratorKey
 public:
 	CL_AcceleratorKey();
 
+	/// \brief Constructs a AcceleratorKey
+	///
+	/// \param id = value
+	/// \param mod1 = value
+	/// \param mod2 = value
+	/// \param mod3 = value
 	CL_AcceleratorKey(int id, int mod1=-1, int mod2=-1, int mod3=-1);
 
 	~CL_AcceleratorKey();
-
 
 /// \}
 /// \name Attributes
@@ -65,23 +68,36 @@ public:
 public:
 	CL_Callback_v2<CL_GUIMessage, CL_AcceleratorKey> &func_pressed();
 
+	/// \brief Get Shift
+	///
+	/// \return shift
 	bool get_shift() const;
 
+	/// \brief Get Alt
+	///
+	/// \return alt
 	bool get_alt() const;
 
+	/// \brief Get Ctrl
+	///
+	/// \return ctrl
 	bool get_ctrl() const;
 
+	/// \brief Get Id
+	///
+	/// \return id
 	int get_id() const;
 
+	/// \brief Is Null
+	///
+	/// \return true = null
 	bool is_null() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -91,6 +107,5 @@ private:
 	CL_SharedPtr<CL_AcceleratorKey_Impl> impl;
 /// \}
 };
-
 
 /// \}

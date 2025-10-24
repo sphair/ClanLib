@@ -31,16 +31,10 @@
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
+#include "../api_display.h"
 #include "../../Core/Math/point.h"
-#include <cmath>
 
 /// \brief Collision detection outline segmentation circle.
 ///
@@ -64,7 +58,6 @@ class CL_OutlineCircle
 		return;
 	}
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -87,7 +80,6 @@ class CL_OutlineCircle
 		return true;
 	}
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -99,6 +91,5 @@ class CL_OutlineCircle
 	unsigned int end;
 /// \}
 };
-
 
 /// \}

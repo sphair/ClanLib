@@ -27,6 +27,8 @@
 */
 
 #include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/pcx_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/virtual_directory.h"
@@ -37,16 +39,51 @@
 
 CL_PixelBuffer CL_PCXProvider::load(
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 {
-	CL_PCXProvider_Impl pcx(filename, directory);
+	CL_IODevice datafile = directory.open_file_read(filename);
+	CL_PCXProvider_Impl pcx(datafile);
 	return CL_PixelBuffer(pcx.width, pcx.height, pcx.pitch, pcx.format, pcx.palette, pcx.get_data());
+}
+
+CL_PixelBuffer CL_PCXProvider::load(
+	CL_IODevice &file)
+{
+	CL_PCXProvider_Impl pcx(file);
+	return CL_PixelBuffer(pcx.width, pcx.height, pcx.pitch, pcx.format, pcx.palette, pcx.get_data());
+}
+
+CL_PixelBuffer CL_PCXProvider::load(
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_PCXProvider::load(filename, vfs.get_root_directory());
+}
+
+void CL_PCXProvider::save(
+	CL_PixelBuffer buffer,
+	CL_IODevice &file)
+{
+	throw CL_Exception(cl_text("PCXProvider doesn't support saving"));
 }
 
 void CL_PCXProvider::save(
 	CL_PixelBuffer buffer,
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	CL_VirtualDirectory &directory)
 {
 	throw CL_Exception(cl_text("PCXProvider doesn't support saving"));
+}
+
+void CL_PCXProvider::save(
+	CL_PixelBuffer buffer,
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	CL_PCXProvider::save(buffer, filename, dir);
 }

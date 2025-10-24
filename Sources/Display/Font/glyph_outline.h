@@ -74,7 +74,7 @@ public:
 
 	void triangulate();
 
-	void draw_debug_outline(CL_GraphicContext gc);
+	void draw_debug_outline(CL_GraphicContext &gc);
 
 
 /// \}

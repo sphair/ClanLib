@@ -20,5 +20,9 @@
 		<image file="grid_outline.png">
 		</image>
 	</image>
-		
+	<texture name="texture_grid_normal" file="grid_normal.png">
+	</texture>
+
+	<texture name="texture_grid_outline" file="grid_outline.png">
+	</texture>		
 </resources>

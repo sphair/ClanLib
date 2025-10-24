@@ -44,7 +44,7 @@
 #include "API/Display/2D/color.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/vector_font.h"
+#include "API/Display/Font/font_vector.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Vector Construction:
@@ -121,6 +121,12 @@ CL_FontMetrics CL_FontProvider_Vector::get_font_metrics(CL_GraphicContext &gc)
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Vector Operations:
 
+int CL_FontProvider_Vector::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
+{
+	throw CL_Exception(cl_text("FIXME"));
+	return 0;
+}
+
 void CL_FontProvider_Vector::destroy()
 {
 	delete this;
@@ -131,8 +137,6 @@ void CL_FontProvider_Vector::draw_text(CL_GraphicContext &gc, int x, int y, cons
 {
 	if (text.length() == 0)
 		return;
-
-	gc.reset_texture(0);
 
 	unsigned int text_length = text.length();
 	CL_DataBuffer buf_out_glyphs(sizeof(int) * (text_length+1));
@@ -151,8 +155,33 @@ CL_Size CL_FontProvider_Vector::get_text_size(CL_GraphicContext &gc, const CL_St
 	if (text.length() == 0)
 		return CL_Size(0, 0);
 
-	// TODO: Implement me !
-	return CL_Size(0, 0);
+	unsigned int text_length = text.length();
+	CL_DataBuffer buf_out_glyphs(sizeof(int) * (text_length+1));
+	CL_DataBuffer buf_interspacing_x(sizeof(float) * (text_length+1));
+	int *out_glyphs = (int *) buf_out_glyphs.get_data();
+	float *interspacing_x = (float *) buf_interspacing_x.get_data();
+ 
+	get_glyphs(text, out_glyphs, interspacing_x, 0);
+
+	float offset_x=0.0f;
+	float offset_y=metrics.get_height();
+
+	float max_x = 0.0f;
+
+	for( int i=0; i<text_length; i++ )
+	{
+		offset_x += interspacing_x[i];
+
+		if (offset_x > max_x)
+			max_x = offset_x;
+
+		if( out_glyphs[i] == cl_text('\n') )
+		{
+			offset_x = 0;
+			offset_y += metrics.get_height();
+		}
+	}
+	return CL_Size(max_x, offset_y);
 }
 
 int CL_FontProvider_Vector::get_glyph_count(const CL_StringRef &text)
@@ -206,7 +235,7 @@ void CL_FontProvider_Vector::get_glyphs(
 }
 
 void CL_FontProvider_Vector::draw_glyphs(
-	CL_GraphicContext gc,
+	CL_GraphicContext &gc,
 	float x,
 	float y,
 	int *glyphs,

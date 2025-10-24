@@ -29,6 +29,8 @@
 #include "Display/precomp.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "targa_provider_impl.h"
 
@@ -37,16 +39,51 @@
 
 CL_PixelBuffer CL_TargaProvider::load(
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory)
 {
-	CL_TargaProvider_Impl targa(filename, directory);
+	CL_IODevice datafile = directory.open_file_read(filename);
+	CL_TargaProvider_Impl targa(datafile);
 	return CL_PixelBuffer(targa.width, targa.height, targa.pitch, targa.format, targa.palette, targa.get_data());
+}
+
+CL_PixelBuffer CL_TargaProvider::load(
+	CL_IODevice &file)
+{
+	CL_TargaProvider_Impl targa(file);
+	return CL_PixelBuffer(targa.width, targa.height, targa.pitch, targa.format, targa.palette, targa.get_data());
+}
+
+CL_PixelBuffer CL_TargaProvider::load(
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_TargaProvider::load(filename, vfs.get_root_directory());
 }
 
 void CL_TargaProvider::save(
 	CL_PixelBuffer buffer,
 	const CL_String &filename,
-	CL_VirtualDirectory directory)
+	CL_VirtualDirectory &directory)
 {
 	throw CL_Exception(cl_text("TargaProvider doesn't support saving"));
+}
+
+void CL_TargaProvider::save(
+	CL_PixelBuffer buffer,
+	CL_IODevice &file)
+{
+	throw CL_Exception(cl_text("TargaProvider doesn't support saving"));
+}
+
+void CL_TargaProvider::save(
+	CL_PixelBuffer buffer,
+	const CL_String &fullname)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	CL_TargaProvider::save(buffer, filename, dir);
 }

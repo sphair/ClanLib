@@ -30,9 +30,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../Render/texture.h"
 #include "../api_display.h"
@@ -59,13 +57,11 @@ class CL_API_DISPLAY CL_TextureProvider
 public:
 	virtual ~CL_TextureProvider() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -76,13 +72,13 @@ public:
 	virtual void destroy() = 0;
 
 	/// \brief Create texture.
-	virtual void create(int width, int height, int format, int depth) = 0;
+	virtual void create(int width, int height, CL_TextureFormat internal_format, int depth) = 0;
 
 	/// \brief Retrieve image data from texture.
-	virtual CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) = 0;
+	virtual CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const = 0;
 
 	/// \brief Upload image to texture.
-	virtual void set_image(CL_PixelBuffer &image, int level, int format) = 0;
+	virtual void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format) = 0;
 
 	/// \brief Upload cube map.
 	virtual void set_cube_map(
@@ -93,11 +89,11 @@ public:
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
 		int level,
-		int format) = 0;
+		CL_TextureFormat internal_format) = 0;
 
 	virtual void set_compressed_image(
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		int width,
 		int height,
 		CL_DataBuffer &image) = 0;
@@ -116,7 +112,7 @@ public:
 		int width,
 		int height,
 		int level,
-		int format,
+		CL_TextureFormat internal_format,
 		CL_GraphicContextProvider *gc) = 0;
 
 	/// \brief Copy sub image data from a graphic context.
@@ -173,7 +169,6 @@ public:
 	/// \brief Sets the texture compare mode and compare function texture parameters.
 	virtual void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func) = 0;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -181,6 +176,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

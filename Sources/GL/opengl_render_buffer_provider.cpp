@@ -32,23 +32,38 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
 #include "opengl_render_buffer_provider.h"
+#include "API/Display/Render/shared_gc_data.h"
 
 
 CL_OpenGLRenderBufferProvider::CL_OpenGLRenderBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
 : gc_provider(gc_provider), handle(0)
 {
+	CL_SharedGCData::add_disposable(this);
 
 }
 
 CL_OpenGLRenderBufferProvider::~CL_OpenGLRenderBufferProvider()
 {
-	if (handle)
-	{
-		CL_OpenGL::set_active(gc_provider);
-		clDeleteRenderbuffers(1, &handle);
-	}
+	dispose();
+	CL_SharedGCData::remove_disposable(this);
 }
 
+void CL_OpenGLRenderBufferProvider::on_dispose()
+{
+	if (handle)
+	{
+		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+		if (!opengl_contexts.empty())
+		{
+			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
+			if (gc_provider)
+			{
+				CL_OpenGL::set_active(gc_provider);
+				clDeleteRenderbuffers(1, &handle);
+			}
+		}
+	}
+}
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLRenderBufferProvider Attributes:
 
@@ -60,7 +75,7 @@ CLuint CL_OpenGLRenderBufferProvider::get_handle()
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLRenderBufferProvider Operations:
 
-void CL_OpenGLRenderBufferProvider::create(int width, int height, int format)
+void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format)
 {
 	CL_OpenGL::set_active(gc_provider);
 	CLuint last_render_buffer = 0;
@@ -68,7 +83,7 @@ void CL_OpenGLRenderBufferProvider::create(int width, int height, int format)
 
 	clGenRenderbuffers(1, &handle);
 	clBindRenderbuffer(CL_RENDERBUFFER, handle);
-	clRenderbufferStorage(CL_RENDERBUFFER, format, width, height);
+	clRenderbufferStorage(CL_RENDERBUFFER, internal_format, width, height);
 
 	clBindRenderbuffer(CL_RENDERBUFFER, last_render_buffer);
 }

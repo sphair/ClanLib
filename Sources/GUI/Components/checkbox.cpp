@@ -133,7 +133,7 @@ void CL_CheckBox::set_indeterminated()
 	impl->part_checker.set_state(CssStr::unchecked, false);
 	impl->part_checker.set_state(CssStr::indeterminated, true);
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_CheckBox::set_checked(bool enable)
@@ -142,7 +142,7 @@ void CL_CheckBox::set_checked(bool enable)
 	impl->part_checker.set_state(CssStr::unchecked, !enable);
 	impl->part_checker.set_state(CssStr::indeterminated, false);
 
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_CheckBox::set_3state(bool enable)
@@ -200,7 +200,7 @@ void CL_CheckBox_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			part_component.set_state(CssStr::pressed, true);
 			part_checker.set_state(CssStr::pressed, true);
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 			msg.set_consumed();
 		}
 		else if (e.type == CL_InputEvent::released && 
@@ -231,7 +231,7 @@ void CL_CheckBox_Impl::on_process_message(CL_GUIMessage &msg)
 				part_checker.set_state(CssStr::checked, true);
 				part_checker.set_state(CssStr::indeterminated, false);
 			}
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 
 			if (part_checker.get_state(CssStr::checked))
 			{
@@ -271,14 +271,14 @@ void CL_CheckBox_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			part_checker.set_state(CssStr::hot, true);
 			part_component.set_state(CssStr::hot, true);
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 		}
 		else
 		{
 			part_checker.set_state(CssStr::hot, false);
 			part_checker.set_state(CssStr::pressed, false);
 			part_component.set_state(CssStr::hot, false);
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 		}
 		msg.set_consumed();
 	}
@@ -288,12 +288,12 @@ void CL_CheckBox_Impl::on_process_message(CL_GUIMessage &msg)
 		if (focus_msg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
 		{
 			part_component.set_state(CssStr::focused, true);
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 		}
 		else 
 		{
 			part_component.set_state(CssStr::focused, false);
-			checkbox->invalidate_rect();
+			checkbox->request_repaint();
 		}
 		msg.set_consumed();
 	}
@@ -352,11 +352,11 @@ void CL_CheckBox_Impl::create_parts()
 void CL_CheckBox_Impl::on_style_changed()
 {
 	create_parts();
-	checkbox->invalidate_rect();
+	checkbox->request_repaint();
 }
 
 void CL_CheckBox_Impl::on_enablemode_changed()
 {
 	create_parts();
-	checkbox->invalidate_rect();
+	checkbox->request_repaint();
 }

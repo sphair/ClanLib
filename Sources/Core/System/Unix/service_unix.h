@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include "../service_impl.h"
 #include "API/Core/System/event.h"
 
@@ -36,43 +35,32 @@ class CL_Service_Unix : public CL_Service_Impl
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_Service_Unix(CL_Service *service, const CL_String &service_name);
-
 	virtual ~CL_Service_Unix();
-
-
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
-
-
 /// \}
+
 /// \name Operations
 /// \{
-
 public:
 	int main(int argc, char **argv);
-
-
 /// \}
+
 /// \name Implementation
 /// \{
-
 private:
+	int run_debug(std::vector<CL_String> args);
+	int run_daemon(std::vector<CL_String> args);
 	void service_thread_main(std::vector<CL_String> args);
-
 	static void sig_term(int signal_code);
-
 	static void sig_hup(int signal_code);
 
 	CL_Event stop_event;
-
 	CL_Event reload_event;
 /// \}
 };
-
-

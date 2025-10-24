@@ -65,15 +65,28 @@ public:
 	// and we need to shutdown correctly during this phase.
 	CL_GUIManager_Impl *gui_manager_impl;
 
+	CL_GUIComponent *component;
 	CL_GUIComponent *parent;
 	CL_GUIComponent *prev_sibling;
 	CL_GUIComponent *next_sibling;
 	CL_GUIComponent *first_child;
 	CL_GUIComponent *last_child;
 	CL_GUIComponent::FocusPolicy focus_policy;
-	CL_GUILayout *layout;
+	CL_GUILayout layout;
 	CL_Callback_v2<CL_GraphicContext &, const CL_Rect &> func_render;
 	CL_Callback_v1<CL_GUIMessage &> func_process_message;
+	CL_Callback_0<bool> func_close;
+	CL_Callback_0<bool> func_activated;
+	CL_Callback_0<bool> func_deactivated;
+	CL_Callback_0<bool> func_focus_lost;
+	CL_Callback_0<bool> func_focus_gained;
+	CL_Callback_0<bool> func_pointer_enter;
+	CL_Callback_0<bool> func_pointer_exit;
+	CL_Callback_1<bool, const CL_InputEvent &> func_input;
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_pressed;
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_released;
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_doubleclick;
+	CL_Callback_1<bool, const CL_InputEvent &> func_input_pointer_moved;
 	CL_Callback_v0 func_style_changed;
 	CL_Callback_v0 func_enablemode_changed;
 	CL_Callback_v0 func_resized;
@@ -103,7 +116,8 @@ public:
 /// \{
 
 public:
-
+	void set_geometry(CL_Rect new_geometry, bool client_area);
+	void geometry_updated();
 
 /// \}
 /// \name Implementation

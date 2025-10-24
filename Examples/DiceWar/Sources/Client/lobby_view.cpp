@@ -7,7 +7,7 @@
 #include "lobby_view_create_game.h"
 
 LobbyView::LobbyView(Client *client)
-: CL_GUIComponent(start_position(), client->get_gui(), toplevel_description(client)), client(client)
+: CL_GUIComponent(client->get_gui(), get_toplevel_description()), client(client)
 {
 	func_render().set(this, &LobbyView::on_render);
 	func_process_message().set(this, &LobbyView::on_gui_message);
@@ -25,16 +25,12 @@ LobbyView::~LobbyView()
 {
 }
 
-CL_GUITopLevelDescription LobbyView::toplevel_description(Client *client)
+CL_GUITopLevelDescription LobbyView::get_toplevel_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title("DiceWar Lobby");
+	desc.set_position(CL_Rect(0, 0, 1024, 768), false);
 	return desc;
-}
-
-CL_Rect LobbyView::start_position()
-{
-	return CL_Rect(0, 0, 1024, 768);
 }
 
 void LobbyView::create_frame_create_game()

@@ -30,9 +30,7 @@
 /// \addtogroup clanGUI_Components clanGUI Components
 /// \{
 
-
 #pragma once
-
 
 #include "../api_gui.h"
 #include "../gui_component.h"
@@ -48,58 +46,118 @@ class CL_API_GUI CL_Slider : public CL_GUIComponent
 /// \{
 
 public:
+
+	/// \brief Constructs a Slider
+	///
+	/// \param parent = GUIComponent
 	CL_Slider(CL_GUIComponent *parent);
 
 	virtual ~CL_Slider();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+
+	/// \brief Is Vertical
+	///
+	/// \return true = vertical
 	bool is_vertical() const;
 
+	/// \brief Is Horizontal
+	///
+	/// \return true = horizontal
 	bool is_horizontal() const;
 
+	/// \brief Get Min
+	///
+	/// \return min
 	int get_min() const;
 
+	/// \brief Get Max
+	///
+	/// \return max
 	int get_max() const;
 
+	/// \brief Get Tick count
+	///
+	/// \return tick_count
 	int get_tick_count() const;
 
+	/// \brief Get Page step
+	///
+	/// \return page_step
 	int get_page_step() const;
 
+	/// \brief Get Position
+	///
+	/// \return position
 	int get_position() const;
 
+	/// \brief Get Lock to ticks
+	///
+	/// \return lock_to_ticks
 	bool get_lock_to_ticks() const;
 
+	/// \brief Get Preferred size
+	///
+	/// \return preferred_size
 	CL_Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Set vertical
+	///
+	/// \param enable = bool
 	void set_vertical(bool enable);
 
+	/// \brief Set horizontal
+	///
+	/// \param enable = bool
 	void set_horizontal(bool enable);
 
+	/// \brief Set min
+	///
+	/// \param slider_min = value
 	void set_min(int slider_min);
 
+	/// \brief Set max
+	///
+	/// \param slider_max = value
 	void set_max(int slider_max);
 
+	/// \brief Set tick count
+	///
+	/// \param tick_count = value
 	void set_tick_count(int tick_count);
 
+	/// \brief Set page step
+	///
+	/// \param steps = value
 	void set_page_step(int steps);
 
+	/// \brief Set lock to ticks
+	///
+	/// \param lock = bool
 	void set_lock_to_ticks(bool lock);
 
+	/// \brief Set ranges
+	///
+	/// \param slider_min = value
+	/// \param slider_max = value
+	/// \param tick_count = value
+	/// \param page_step = value
 	void set_ranges(int slider_min, int slider_max, unsigned int tick_count, int page_step);
 
+	/// \brief Set position
+	///
+	/// \param pos = value
 	void set_position(int pos);
-
 
 /// \}
 /// \name Callbacks
@@ -120,7 +178,6 @@ public:
 	/// \brief Emitted after the slider has been moved.
 	CL_Callback_v0 &func_slider_moved();
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -129,6 +186,5 @@ private:
 	CL_SharedPtr<CL_Slider_Impl> impl;
 /// \}
 };
-
 
 /// \}

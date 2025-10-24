@@ -31,6 +31,7 @@
 #include "sprite_render_batch.h"
 #include "API/Display/2D/sprite_description.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/Core/Math/cl_math.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/XML/dom_element.h"
@@ -72,7 +73,6 @@ CL_Sprite_Impl::CL_Sprite_Impl(CL_GraphicContext &gc) :
 	play_pingpong(false),
 	show_on_finish(CL_Sprite::show_blank),
 	prim_array(0),
-	gc(gc),
 	texture_group(gc, CL_Size(1,1))
 {
 	for (int i=0; i<6; i++)
@@ -89,7 +89,7 @@ CL_Sprite_Impl::~CL_Sprite_Impl()
 	delete prim_array;
 }
 
-void CL_Sprite_Impl::init(const CL_StringRef &resource_id, CL_ResourceManager *resources, CL_SharedPtr<CL_SpriteData> sprite_data)
+void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, CL_SharedPtr<CL_SpriteData> sprite_data)
 {
 	data = sprite_data;
 
@@ -98,7 +98,7 @@ void CL_Sprite_Impl::init(const CL_StringRef &resource_id, CL_ResourceManager *r
 
 	// Create sprite from sprite description
 	CL_SpriteDescription desc(gc, resource_id, resources);
-	create_textures(desc);
+	create_textures(gc, desc);
 
 	// Load base angle
 	float work_angle = CL_StringHelp::text_to_float(resource.get_element().get_attribute(cl_text("base_angle"), cl_text("0")));
@@ -283,7 +283,6 @@ CL_Sprite_Impl &CL_Sprite_Impl::operator =(const CL_Sprite_Impl &copy)
 	play_backward = copy.play_backward;
 	play_pingpong = copy.play_pingpong;
 	show_on_finish = copy.show_on_finish;
-	gc = copy.gc;
 
 	frames = copy.frames;
 
@@ -293,7 +292,6 @@ CL_Sprite_Impl &CL_Sprite_Impl::operator =(const CL_Sprite_Impl &copy)
 void CL_Sprite_Impl::draw(CL_GraphicContext &gc, float x, float y)
 {
 	SpriteFrame &frame = frames[current_frame];
-	CL_Sizef tex_size((float)frame.texture.get_width(0), (float)frame.texture.get_height(0));
 
 	CL_Surface_DrawParams2 params2;
 	params2.srcX = frame.position.left;
@@ -316,44 +314,54 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, float x, float y)
 	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
 	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
 	params2.sub_pixel_accuracy = true;
-	draw(gc, params2, tex_size);
+	draw(gc, params2);
 }
 
 void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest)
 {
 	SpriteFrame &frame = frames[current_frame];
-	CL_Sizef tex_size((float)frame.texture.get_width(0), (float)frame.texture.get_height(0));
 
 	CL_Surface_DrawParams1 params1;
-	params1.srcX[0] = (int)src.left;
-	params1.srcX[1] = (int)src.right;
-	params1.srcX[2] = (int)src.left;
-	params1.srcX[3] = (int)src.right;
-	params1.srcY[0] = (int)src.top;
-	params1.srcY[1] = (int)src.top;
-	params1.srcY[2] = (int)src.bottom;
-	params1.srcY[3] = (int)src.bottom;
-	params1.destX[0] = dest.left;
-	params1.destX[1] = dest.right;
-	params1.destX[2] = dest.left;
-	params1.destX[3] = dest.right;
-	params1.destY[0] = dest.top;
-	params1.destY[1] = dest.top;
-	params1.destY[2] = dest.bottom;
-	params1.destY[3] = dest.bottom;
+
+	float texture_width = frame.texture.get_width();
+	float texture_height = frame.texture.get_height();
+
+	float pixel_center = linear_filter ? cl_pixelcenter_constant : 0.0f;
+
+	CL_Rectf new_src(
+		(src.left + pixel_center) / texture_width,
+		(src.top + pixel_center) / texture_height,
+		(src.right + pixel_center) / texture_width,
+		(src.bottom + pixel_center) / texture_height
+		);
+
+	params1.texture_position[0].x = new_src.left;
+	params1.texture_position[1].x = new_src.right;
+	params1.texture_position[2].x = new_src.left;
+	params1.texture_position[3].x = new_src.right;
+	params1.texture_position[0].y = new_src.top;
+	params1.texture_position[1].y = new_src.top;
+	params1.texture_position[2].y = new_src.bottom;
+	params1.texture_position[3].y = new_src.bottom;
+	params1.dest_position[0].x = dest.left;
+	params1.dest_position[1].x = dest.right;
+	params1.dest_position[2].x = dest.left;
+	params1.dest_position[3].x = dest.right;
+	params1.dest_position[0].y = dest.top;
+	params1.dest_position[1].y = dest.top;
+	params1.dest_position[2].y = dest.bottom;
+	params1.dest_position[3].y = dest.bottom;
 	for (int i = 0; i < 4; i++)
 	{
 		params1.color[i] = CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f);
 	}
-	params1.sub_pixel_accuracy = true;
 	params1.destZ = 1.0;
-	draw(gc, params1, tex_size);
+	draw(gc, params1);
 }
 
 void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 {
 	SpriteFrame &frame = frames[current_frame];
-	CL_Sizef tex_size((float)frame.texture.get_width(0), (float)frame.texture.get_height(0));
 
 	CL_Surface_DrawParams2 params2;
 	params2.srcX = frame.position.left;
@@ -376,22 +384,22 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
 	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
 	params2.sub_pixel_accuracy = true;
-	draw(gc, params2, tex_size);
+	draw(gc, params2);
 }
 
-void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Surface_DrawParams1 &params1, const CL_Sizef &tex_size)
+void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Surface_DrawParams1 &params1)
 {
 	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
 	batcher->draw_sprite(gc, &params1, frames[current_frame].texture);
 }
 
-void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Surface_DrawParams2 &params2, const CL_Sizef &tex_size)
+void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Surface_DrawParams2 &params2)
 {
 	CL_Surface_TargetDrawParams1 t_params1;
 	CL_Surface_DrawParams1 params1;
 	draw_calcs_step1(params2, t_params1);
 	draw_calcs_step2(params2, &t_params1, params1);
-	draw(gc, params1, tex_size);
+	draw(gc, params1);
 }
 
 void CL_Sprite_Impl::draw_calcs_step1(
@@ -448,7 +456,6 @@ void CL_Sprite_Impl::draw_calcs_step1(
 	}
 }
 
-
 void CL_Sprite_Impl::draw_calcs_step2(
 	const CL_Surface_DrawParams2 & params2,
 	const CL_Surface_TargetDrawParams1 *t_params1,
@@ -501,62 +508,66 @@ void CL_Sprite_Impl::draw_calcs_step2(
 	}
 
 	// Calculate final source rectangle points for render:
+	const CL_Texture &texture = frames[current_frame].texture;
+	float texture_width = texture.get_width();
+	float texture_height = texture.get_height();
 
-	params1.srcX[0] = params2.srcX;
-	params1.srcX[1] = params2.srcX+params2.srcWidth;
-	params1.srcX[2] = params2.srcX;
-	params1.srcX[3] = params2.srcX+params2.srcWidth;
+	float pixel_center = linear_filter ? cl_pixelcenter_constant : 0.0f;
 
-	params1.srcY[0] = params2.srcY;
-	params1.srcY[1] = params2.srcY;
-	params1.srcY[2] = params2.srcY+params2.srcHeight;
-	params1.srcY[3] = params2.srcY+params2.srcHeight;
+	params1.texture_position[0].x = (((float) params2.srcX) + pixel_center ) / texture_width;
+	params1.texture_position[1].x = (((float) params2.srcX+params2.srcWidth) + pixel_center ) / texture_width;
+	params1.texture_position[2].x = (((float) params2.srcX) + pixel_center ) / texture_width;
+	params1.texture_position[3].x = (((float) params2.srcX+params2.srcWidth) + pixel_center ) / texture_width;
+
+	params1.texture_position[0].y = (((float) params2.srcY) + pixel_center ) / texture_height;
+	params1.texture_position[1].y = (((float) params2.srcY) + pixel_center ) / texture_height;
+	params1.texture_position[2].y = (((float) params2.srcY+params2.srcHeight) + pixel_center ) / texture_height;
+	params1.texture_position[3].y = (((float) params2.srcY+params2.srcHeight) + pixel_center ) / texture_height;
 
 	// Calculate final destination rectangle points for surface rectangle:
-
 	if (params2.rotate_angle.to_radians() == 0.0f)
 	{
-		params1.destX[0] = t_params1->pixDestX;
-		params1.destX[1] = t_params1->pixDestX+t_params1->destWidth;
-		params1.destX[2] = t_params1->pixDestX;
-		params1.destX[3] = t_params1->pixDestX+t_params1->destWidth;
+		params1.dest_position[0].x = t_params1->pixDestX;
+		params1.dest_position[1].x = t_params1->pixDestX+t_params1->destWidth;
+		params1.dest_position[2].x = t_params1->pixDestX;
+		params1.dest_position[3].x = t_params1->pixDestX+t_params1->destWidth;
 
-		params1.destY[0] = t_params1->pixDestY;
-		params1.destY[1] = t_params1->pixDestY;
-		params1.destY[2] = t_params1->pixDestY+t_params1->destHeight;
-		params1.destY[3] = t_params1->pixDestY+t_params1->destHeight;
+		params1.dest_position[0].y = t_params1->pixDestY;
+		params1.dest_position[1].y = t_params1->pixDestY;
+		params1.dest_position[2].y = t_params1->pixDestY+t_params1->destHeight;
+		params1.dest_position[3].y = t_params1->pixDestY+t_params1->destHeight;
 	}
 	else
 	{
-		// roll
-		params1.destX[0] = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		params1.destX[1] = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		params1.destX[2] = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		params1.destX[3] = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		// Roll
+		params1.dest_position[0].x = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		params1.dest_position[1].x = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		params1.dest_position[2].x = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		params1.dest_position[3].x = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
 
-		params1.destY[0] = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		params1.destY[1] = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		params1.destY[2] = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		params1.destY[3] = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		params1.dest_position[0].y = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		params1.dest_position[1].y = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		params1.dest_position[2].y = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		params1.dest_position[3].y = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
 	}
 
-	// pitch
+	// Pitch
 	if (params2.rotate_pitch.to_radians() != 0.0f)
 	{
 		float pitch_rad = sin(CL_PI/2 + params2.rotate_pitch.to_radians());
-		params1.destY[0] = (params1.destY[0] - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		params1.destY[1] = (params1.destY[1] - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		params1.destY[2] = (params1.destY[2] - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		params1.destY[3] = (params1.destY[3] - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
+		params1.dest_position[0].y = (params1.dest_position[0].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
+		params1.dest_position[1].y = (params1.dest_position[1].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
+		params1.dest_position[2].y = (params1.dest_position[2].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
+		params1.dest_position[3].y = (params1.dest_position[3].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
 	}
-	// yaw
+	// Yaw
 	if (params2.rotate_yaw.to_radians() != 0.0f)
 	{
 		float yaw_rad = cos(params2.rotate_yaw.to_radians());
-		params1.destX[0] = (params1.destX[0] - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		params1.destX[1] = (params1.destX[1] - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		params1.destX[2] = (params1.destX[2] - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		params1.destX[3] = (params1.destX[3] - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
+		params1.dest_position[0].x = (params1.dest_position[0].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
+		params1.dest_position[1].x = (params1.dest_position[1].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
+		params1.dest_position[2].x = (params1.dest_position[2].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
+		params1.dest_position[3].x = (params1.dest_position[3].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
 	}
 
 	params1.color[0] = params2.color;
@@ -565,7 +576,6 @@ void CL_Sprite_Impl::draw_calcs_step2(
 	params1.color[3] = params2.color;
 
 	params1.destZ = params2.destZ;
-	params1.sub_pixel_accuracy = params2.sub_pixel_accuracy;
 }
 
 float CL_Sprite_Impl::calc_time_elapsed()
@@ -581,7 +591,7 @@ float CL_Sprite_Impl::calc_time_elapsed()
 	return delta_time;
 }
 
-void CL_Sprite_Impl::create_textures(const CL_SpriteDescription &description)
+void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescription &description)
 {
 	// Fetch frames
 	const std::vector<CL_SpriteDescriptionFrame> &description_frames = description.get_frames();
@@ -711,224 +721,4 @@ void CL_Sprite_Impl::create_textures(const CL_SpriteDescription &description)
 			frames.push_back(frame);
 		}
 	}
-		/*
-	if (pack_texture && CL_DisplayTarget::current()->enable_packer())
-	{
-		// Fetch max texture size
-		CL_DisplayWindow *window = CL_Display::get_current_window();
-		CL_Size max_surface_size = window->get_gc()->get_max_surface_size();
-
-		// Pack frames into textures
-		CL_SpritePacker packer(spritedescription);
-		if(packer.pack(max_surface_size.width, max_surface_size.height) == false)
-			throw CL_Exception("Couldn't pack all frames into textures");
-
-		// Fetch texture, description-frame and packed-frame lists
-		const std::list<CL_SpriteDescription::FramePair> &frames = spritedescription.get_frames();
-		std::list<CL_SpriteDescription::FramePair>::const_iterator it_frames;
-
-		// Lock all pixelbuffers to avoid multiple loadings of same pb's:
-		for (it_frames = frames.begin(); it_frames != frames.end(); ++it_frames)
-		{
-			CL_PixelBuffer buffer = (*it_frames).first;
-			buffer.lock();
-		}
-		
-		const std::list<CL_SpritePacker::TexturePair> &packed_frames = packer.get_frames();
-		std::list<CL_SpritePacker::TexturePair>::const_iterator it_packed_frames;
-		
-		const std::vector<CL_Size> &texture_sizes = packer.get_texture_sizes();
-
-		std::vector<CL_Surface> surfaces;
-			
-		// Set up a pixelbuffer format
-		CL_PixelFormat format;
-		format.set_depth(32);
-		format.enable_colorkey(false);
-		format.set_alpha_mask(0xFF000000);
-		format.set_blue_mask (0x00FF0000);
-		format.set_green_mask(0x0000FF00);
-		format.set_red_mask  (0x000000FF);
-
-		// Create all the textures needed for packing
-//		cl_log_event("debug", "New sprite:");
-		for(unsigned int i = 0; i < texture_sizes.size(); i++)
-		{
-			int width = texture_sizes[i].width;
-			int height = texture_sizes[i].height;
-			
-			CL_PixelBuffer buffer(width, height, 4 * width, format);
-			buffer.lock();
-
-//			cl_log_event("debug", "- Packing texture %1x%2", width, height);
-
-			// Copy frames into this texture
-			for(it_frames = frames.begin(), it_packed_frames = packed_frames.begin();
-				it_frames != frames.end();
-				++it_frames, ++it_packed_frames)
-			{
-				if((*it_packed_frames).first == static_cast<int>(i))	// Frame uses this buffer
-				{
-					CL_PixelBuffer src = (*it_frames).first;
-					CL_PixelBuffer dest = buffer;
-
-					CL_Rect src_rect  = (*it_frames).second;
-					CL_Rect dest_rect = (*it_packed_frames).second;
-
-					// Remove border around image:
-					dest_rect.left++;
-					dest_rect.right--;
-					dest_rect.top++;
-					dest_rect.bottom--;
-					
-					src.convert(dest.get_data(), format, dest.get_pitch(), dest_rect, src_rect);
-
-					int x, y;
-					int dest_pitch = dest.get_pitch();
-					unsigned char *data_bytes = (unsigned char*) dest.get_data();
-
-					// Make transparent pixels grey:
-					for (y=dest_rect.top; y<dest_rect.bottom; y++)
-					{
-						unsigned int *line = (unsigned int *) (data_bytes+y*dest_pitch);
-						for (x=dest_rect.left; x<dest_rect.right; x++)
-						{
-							// Test for transparent pixels surrounded by non transparent ones
-							if ((line[x] & 0xff000000) == 0)
-							{
-								int r=0,g=0,b=0,n=0;
-								if((line[x+1] & 0xff000000) != 0)
-								{
-									r+= (line[x+1] & 0x00ff0000) >> 16;
-									g+= (line[x+1] & 0x0000ff00) >> 8;
-									b+= (line[x+1] & 0x000000ff);
-									n++;
-								}
-								if((line[x-1] & 0xff000000) != 0)
-								{
-									r+= (line[x-1] & 0x00ff0000) >> 16;
-									g+= (line[x-1] & 0x0000ff00) >> 8;
-									b+= (line[x-1] & 0x000000ff);
-									n++;
-								}
-								line = (unsigned int *) (data_bytes+(y+1)*dest_pitch);
-								if((line[x] & 0xff000000) != 0)
-								{
-									r+= (line[x] & 0x00ff0000) >> 16;
-									g+= (line[x] & 0x0000ff00) >> 8;
-									b+= (line[x] & 0x000000ff);
-									n++;
-								}
-								line = (unsigned int *) (data_bytes+(y-1)*dest_pitch);
-								if((line[x] & 0xff000000) != 0)
-								{
-									r+= (line[x] & 0x00ff0000) >> 16;
-									g+= (line[x] & 0x0000ff00) >> 8;
-									b+= (line[x] & 0x000000ff);
-									n++;
-								}
-
-								line = (unsigned int *) (data_bytes+y*dest_pitch);
-								if(n>0)
-								{
-									// Set colour to the avarage of the found pixels
-									line[x] = ( ((r/n)<<16) | ((g/n)<<8) | (b/n) );
-								}
-								else line[x] = 0x007f7f7f;
-							}
-						}
-					}
-
-					// Copy pixels in border area:
-					unsigned int *top_line = (unsigned int *) (data_bytes+(dest_rect.top-1)*dest_pitch);
-					unsigned int *next_line = (unsigned int *) (data_bytes+dest_rect.top*dest_pitch);
-					unsigned int *bottom_line = (unsigned int *) (data_bytes+(dest_rect.bottom)*dest_pitch);
-					unsigned int *prev_line = (unsigned int *) (data_bytes+(dest_rect.bottom-1)*dest_pitch);
-					for (x=dest_rect.left; x<dest_rect.right; x++)
-					{
-						top_line[x] = next_line[x];
-						bottom_line[x] = prev_line[x];
-					}
-					for (y=dest_rect.top; y<dest_rect.bottom; y++)
-					{
-						unsigned int *line = (unsigned int *) (data_bytes+y*dest_pitch);
-						line[dest_rect.left-1] = line[dest_rect.left];
-						line[dest_rect.right] = line[dest_rect.right-1];
-					}
-					#define dest_pixel(x,y) (*((unsigned int *) (data_bytes+(y)*dest_pitch)+x))
-					dest_pixel(dest_rect.left-1, dest_rect.top-1) = dest_pixel(dest_rect.left, dest_rect.top);
-					dest_pixel(dest_rect.right, dest_rect.top-1) = dest_pixel(dest_rect.right-1, dest_rect.top);
-					dest_pixel(dest_rect.left-1, dest_rect.bottom) = dest_pixel(dest_rect.left, dest_rect.bottom-1);
-					dest_pixel(dest_rect.right, dest_rect.bottom) = dest_pixel(dest_rect.right-1, dest_rect.bottom-1);
-				}
-			}
-
-			// Create CL_Surface
-			surfaces.push_back(CL_Surface(buffer, spritedescription.get_surface_flag()));
-
-			// Clean up
-			buffer.unlock();
-		}
-
-		// Create SpriteFrames
-		for(it_frames = frames.begin(), it_packed_frames = packed_frames.begin();
-			it_frames != frames.end();
-			++it_frames, ++it_packed_frames)
-		{
-			CL_Sprite_Generic::SpriteFrame frame;
-			
-			frame.surface = surfaces[(*it_packed_frames).first];
-			frame.position = (*it_packed_frames).second;
-			frame.delay = 0.06f;
-			frame.offset = CL_Point(0, 0);
-			
-			// Remove border around image:
-			frame.position.left++;
-			frame.position.right--;
-			frame.position.top++;
-			frame.position.bottom--;
-			
-			impl->frames.push_back(frame);
-		}
-
-		// Unlock all pixelbuffers:
-		for (it_frames = frames.begin(); it_frames != frames.end(); ++it_frames)
-		{
-			CL_PixelBuffer buffer = (*it_frames).first;
-			buffer.unlock();
-		}
-	}
-	else
-	{
-		// Create SpriteFrames
-		const std::list<CL_SpriteDescription::FramePair> &frames = spritedescription.get_frames();
-		std::list<CL_SpriteDescription::FramePair>::const_iterator it_frames;
-		std::map<CL_PixelBuffer, CL_Surface> surfaces;
-
-		for(it_frames = frames.begin();
-			it_frames != frames.end();
-			++it_frames)
-		{	
-			CL_Sprite_Generic::SpriteFrame frame;
-
-			std::map<CL_PixelBuffer, CL_Surface>::iterator i = surfaces.find((*it_frames).first);
-			if (i == surfaces.end())
-			{
-				frame.surface  = CL_Surface((*it_frames).first);
-				surfaces[(*it_frames).first] = frame.surface;
-			}
-			else
-			{
-				frame.surface = i->second;
-			}
-
-			frame.position = (*it_frames).second;
-			frame.delay = 0.06f;
-			frame.offset = CL_Point(0, 0);
-
-			impl->frames.push_back(frame);
-		}
-	}
-*/
 }
-

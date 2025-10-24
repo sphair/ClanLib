@@ -35,6 +35,7 @@ private:
 	};
 
 	void create_parts();
+	CL_GUITopLevelDescription get_toplevel_description(const CL_Rect &position);
 
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_style_changed();
@@ -43,6 +44,7 @@ private:
 	void on_mouse_move(CL_InputEvent &input_event);
 	void on_mouse_lbutton_down(CL_InputEvent &input_event);
 	void on_mouse_lbutton_up(CL_InputEvent &input_event);
+
 
 	int start_x;
 	int start_y;

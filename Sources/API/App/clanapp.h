@@ -29,13 +29,7 @@
 /// \addtogroup clanApp_System clanApp System
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "api_app.h"
 #include "../Core/Text/string_types.h"
@@ -78,6 +72,5 @@ public:
 	static MainFunction *main;
 /// \}
 };
-
 
 /// \}

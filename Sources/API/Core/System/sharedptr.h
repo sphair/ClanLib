@@ -40,7 +40,7 @@
 #include "memory_pool.h"
 
 #ifndef WIN32
-#include <string.h>
+#include <cstring>
 #endif
 
 /// (Internal ClanLib Class)

@@ -62,11 +62,12 @@ public:
 	HWND get_hwnd() const { return hwnd; }
 	HDC get_device_context() const { return device_context; }
 	HGLRC get_opengl_context() const { return opengl_context; }
-//	static std::list<HGLRC> opengl_contexts;
-	CL_GraphicContext get_gc() const { return gc; }
-	CL_InputContext get_ic() const { return win32_window.get_ic(); }
+	CL_GraphicContext& get_gc() { return gc; }
+	CL_InputContext& get_ic() { return win32_window.get_ic(); }
 	bool is_clipboard_text_available() const;
-
+	bool is_clipboard_image_available() const;
+	CL_String get_clipboard_text() const;
+	CL_PixelBuffer get_clipboard_image() const;
 
 /// \}
 /// \name Operations
@@ -105,30 +106,22 @@ public:
 	/// \brief Capture/Release the mouse.
 	void capture_mouse(bool capture);
 
-	/// \brief Set the window timer
-	void set_timer(CL_TimerProvider *timer);
-
-	/// \brief Stop the window timer
-	void kill_timer(CL_TimerProvider *timer);
-
 	/// \brief Stores text in the clipboard.
 	void set_clipboard_text(const CL_StringRef &text);
 
-	/// \brief Returns the text stored in the clipboard.
-	CL_String get_clipboard_text() const;
+	void set_clipboard_image(const CL_PixelBuffer &buf);
 
 	/// \brief Invalidates a region of a screen, causing a repaint.
-	void invalidate_rect(const CL_Rect &rect);
+	void request_repaint(const CL_Rect &rect);
 
-	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
+	void set_large_icon(const CL_PixelBuffer &image);
+	void set_small_icon(const CL_PixelBuffer &image);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	void set_videomode(int width, int height, int bpp, int refresh_rate);
-	void restore_videomode();
 	static BOOL CALLBACK enum_windows_callback_save(HWND hwnd, LPARAM lParam);
 	static BOOL CALLBACK enum_windows_callback_restore(HWND hwnd, LPARAM lParam);
 	void create_shadow_window(HWND wnd);

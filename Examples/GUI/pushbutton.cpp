@@ -34,7 +34,7 @@
 #include "GUI.h"
 
 PushButton::PushButton(GUI *gui) : 
-	CL_Window(CL_Rect(256 + 32, 256 + 32, CL_Size(256, 180)), &gui->get_gui_manager(), CL_GUITopLevelDescription("PushButton")),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("PushButton", CL_Rect(256 + 32, 256 + 32, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	CL_GraphicContext gc = gui->get_window()->get_gc();

@@ -28,11 +28,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Display/ImageProviders/png_provider.h"
 #include "API/Display/Image/pixel_format.h"
 #include "API/Display/Image/palette.h"
@@ -48,7 +43,9 @@ class CL_PNGProvider_Impl
 public:
 	CL_PNGProvider_Impl(
 		const CL_String &name,
-		CL_VirtualDirectory directory);
+		const CL_VirtualDirectory &directory);
+
+	CL_PNGProvider_Impl(CL_IODevice &input);
 
 	virtual ~CL_PNGProvider_Impl();
 

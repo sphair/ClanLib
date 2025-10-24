@@ -12,23 +12,21 @@
       </image>
     </sprite>
     <sprite name="spr_maptiles">
-			<image file="resources/pacman.pcx">
-				<grid pos="0,64" size="34,38" array="10,2" />
-			</image>
-		</sprite>
-
+      <image file="resources/pacman.pcx">
+        <grid pos="0,64" size="34,38" array="10,2" />
+      </image>
+    </sprite>
     <sprite name="spr_clansoft">
-			<image file="resources/pacman.pcx">
-				<palette pos="0,140" tcol="0" />
-			</image>
-		</sprite>
+      <image file="resources/pacman.pcx">
+        <palette pos="0,140" tcol="0" />
+      </image>
+    </sprite>
     <font name="fnt_clansoft">
       <bitmap
         glyphs="Game/spr_clansoft" 
         spacelen="6" 
         letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" />
     </font>
-		
     <sample name="sfx_start" file="resources/start.wav" />
 		<sample name="sfx_namnam" file="resources/namnam.wav" />
 		<sample name="sfx_ghost" file="resources/ghost.wav" />

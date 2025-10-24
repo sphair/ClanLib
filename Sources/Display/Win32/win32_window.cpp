@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 #include "Display/precomp.h"
@@ -32,6 +33,7 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Text/logger.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Core/IOData/iodevice_memory.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/display_window_message.h"
 #include "API/Display/Window/input_event.h"
@@ -39,10 +41,9 @@
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Window/timer.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/TargetProviders/timer_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/Display/ImageProviders/png_provider.h"
 #include "win32_window.h"
 #include "input_device_provider_win32keyboard.h"
 #include "input_device_provider_win32mouse.h"
@@ -66,9 +67,9 @@
 #endif
 
 CL_Win32Window::CL_Win32Window(CL_DisplayMessageQueue_Win32 *message_queue)
-: hwnd(0), destroy_hwnd(true), current_cursor(0), cursor_set(false), cursor_hidden(false), site(0),
-  directinput(0), keyboard(0), mouse(0), message_queue(message_queue), alt_down(false), ctrl_down(false),
-  shift_down(false), minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false)
+: hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
+  directinput(0), keyboard(0), mouse(0), message_queue(message_queue),
+  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false)
 {
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = new CL_InputDeviceProvider_Win32Keyboard(this);
@@ -76,6 +77,8 @@ CL_Win32Window::CL_Win32Window(CL_DisplayMessageQueue_Win32 *message_queue)
 
 	create_direct_input();
 	message_queue->add_client(this);
+
+	register_clipboard_formats();
 }
 
 CL_Win32Window::~CL_Win32Window()
@@ -87,6 +90,10 @@ CL_Win32Window::~CL_Win32Window()
 	destroy_direct_input();
 	if (destroy_hwnd && hwnd)
 		DestroyWindow(hwnd);
+	if (large_icon)
+		DestroyIcon(large_icon);
+	if (small_icon)
+		DestroyIcon(small_icon);
 }
 
 CL_Rect CL_Win32Window::get_geometry() const
@@ -282,28 +289,6 @@ void CL_Win32Window::capture_mouse(bool capture)
 		ReleaseCapture();
 }
 
-void CL_Win32Window::set_timer(CL_TimerProvider *timer)
-{
-	kill_timer(timer);
-	timer_list.push_back(timer);
-	SetTimer(hwnd, timer->get_id(), timer->get_timeout(), 0);
-}
-
-void CL_Win32Window::kill_timer(CL_TimerProvider *timer)
-{
-	std::list<CL_TimerProvider *>::iterator it;
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		if ((*it)->get_id() == timer->get_id())
-		{
-			KillTimer(hwnd, timer->get_id());
-			timer_list.erase(it);
-			break;
-		}
-	}
-}
-
 void CL_Win32Window::create_direct_input()
 {
 #ifndef BROKEN_DINPUT
@@ -484,7 +469,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 		received_keyboard_input(msg, wparam, lparam);
-		return TRUE;
+		return 0;
 
 	case WM_INPUT:
 		received_joystick_input();
@@ -510,9 +495,6 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		received_mouse_move(msg, wparam, lparam);
 		return TRUE;
 
-	case WM_TIMER:
-		received_timer(wparam);
-		return TRUE;
 	case WM_SIZING:
 		if (site)
 		{
@@ -558,9 +540,38 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 	case WM_SIZE:
 		if (!callback_on_resized.is_null())
 			callback_on_resized.invoke();
+
+		switch(wparam)
+		{
+		// Message is sent to all pop-up windows when some other window is maximized.
+		case SIZE_MAXHIDE:
+			break;
+
+		// Message is sent to all pop-up windows when some other window has been restored to its former size.
+		case SIZE_MAXSHOW:
+			break;
+
+		// The window has been maximized.
+		case SIZE_MAXIMIZED:
+			if (site)
+				site->sig_window_maximized->invoke();
+			break;
+
+		// The window has been minimized.
+		case SIZE_MINIMIZED:
+			if (site)
+				site->sig_window_minimized->invoke();
+			break;
+
+		// The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
+		case SIZE_RESTORED:
+			break;
+		}
+
 		if (site)
 			site->sig_resize->invoke(LOWORD(lparam), HIWORD(lparam));
-		return TRUE;
+
+		return 0;
 
 	case WM_ACTIVATE:
 		if (site)
@@ -578,12 +589,12 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 					tablet->set_enabled(true);
 			}
 		}
-		return TRUE;
+		return 0;
 
 	case WM_CLOSE:
 		if (site)
 			site->sig_window_close->invoke();
-		return TRUE;
+		return 0;
 
 	case WM_PAINT:
 		{
@@ -609,7 +620,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 				memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 			}
 		}
-		return TRUE;
+		return 0;
 
 	case WT_PACKET:
 		if (!tablet.is_null())
@@ -630,6 +641,13 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		if (wparam == SC_SCREENSAVE) return TRUE;
 		break;
 */
+
+	case WM_GETICON:
+		if (wparam == ICON_BIG && large_icon)
+			return reinterpret_cast<LRESULT>(large_icon);
+		else if ((wparam == ICON_SMALL || wparam == ICON_SMALL2) && small_icon)
+			return reinterpret_cast<LRESULT>(small_icon);
+		break;
 	}
 
 	// Do default window processing if our message handler didn't handle it:
@@ -739,7 +757,7 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 		{
 			style = WS_SIZEBOX;
 			if (desc.has_caption())
-				style |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX;
+				style |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU  | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 			else
 				style |= WS_POPUP;
 		}
@@ -961,24 +979,11 @@ void CL_Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lpa
 		return;
 	}
 
-//	int scancode = (lparam & 0xff0000) >> 16;
+	int scancode = (lparam & 0xff0000) >> 16;
 //	bool extended_key = (lparam & 0x1000000) != 0;
 
 	// Update the ctrl/alt/shift hints:
 	int key_id = wparam;
-
-	switch (wparam)
-	{
-	case VK_CONTROL:
-		ctrl_down = keydown;
-		break;
-	case VK_MENU:
-		alt_down = keydown;
-		break;
-	case VK_SHIFT:
-		shift_down = keydown;
-		break;
-	}
 
 	// Add to repeat count
 	if(keydown)
@@ -1008,18 +1013,18 @@ void CL_Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lpa
 	GetKeyboardState(keys_down);
 
 	// Figure out what character sequence this maps to:
-	char buf[4];
-	int result = ToAscii(
+	WCHAR buf[16];
+	int result = ToUnicode(
 		(UINT) key_id,
-		MapVirtualKey((UINT) key_id, 0),
+		scancode,
 		keys_down,
-		(LPWORD) buf,
+		buf,
+		16,
 		0);
-	if (result == 1 || result == 2) key.str = CL_StringHelp::local8_to_text(CL_String8(buf, result));
+	if (result > 0)
+		key.str = CL_StringHelp::ucs2_to_text(CL_String16(buf, result));
 
-	key.shift = shift_down;
-	key.alt = alt_down;
-	key.ctrl = ctrl_down;
+	set_modifier_keys(key);
 
 	// Emit message:
 	keyboard->sig_provider_event->invoke(key);
@@ -1055,9 +1060,7 @@ void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam
 	CL_InputEvent key;
 	key.mouse_pos = mouse_pos;
 	key.id = id;
-	key.alt = alt_down;
-	key.shift = shift_down;
-	key.ctrl = ctrl_down;
+	set_modifier_keys(key);
 
 	if (dblclk)
 	{
@@ -1111,9 +1114,7 @@ void CL_Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 		CL_InputEvent key;
 		key.type = CL_InputEvent::pointer_moved;
 		key.mouse_pos = mouse_pos;
-		key.alt = alt_down;
-		key.shift = shift_down;
-		key.ctrl = ctrl_down;
+		set_modifier_keys(key);
 
 		// Fire off signal
 		mouse->sig_provider_event->invoke(key);
@@ -1135,35 +1136,6 @@ void CL_Win32Window::received_joystick_input()
 	// However, the mouse and keyboard poll() functions are empty.
 	// So i think that's okay :)
 	ic.poll(false);
-}
-
-void CL_Win32Window::received_timer(unsigned int id)
-{
-	if (timer_list.empty())
-		return;
-
-	std::list<CL_TimerProvider *>::iterator it;
-
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		CL_TimerProvider *timer = (*it);
-
-		if (timer->get_id() == id)
-		{
-			if (!timer->is_repeating())
-			{
-				timer->stop();
-			}
-
-			// Note, it is possible that timer.func_expired deletes itself, so it must break after the call
-			if (!timer->func_expired.is_null())
-			{
-				timer->func_expired.invoke();
-			}
-			break;
-		}
-	}
 }
 
 void CL_Win32Window::setup_tablet()
@@ -1279,10 +1251,22 @@ bool CL_Win32Window::is_clipboard_text_available() const
 #endif
 }
 
+bool CL_Win32Window::is_clipboard_image_available() const
+{
+	if (IsClipboardFormatAvailable(CF_DIBV5))
+		return true;
+	else if (IsClipboardFormatAvailable(CF_DIB))
+		return true;
+	else if (IsClipboardFormatAvailable(CF_BITMAP))
+		return true;
+	else if (IsClipboardFormatAvailable(png_clipboard_format))
+		return true;
+
+	return false;
+}
+
 void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 {
-	CL_PixelBuffer bmp_image = create_bitmap_data(image);
-
 	BOOL result = OpenClipboard(hwnd);
 	if (result == FALSE)
 		throw CL_Exception(cl_text("Unable to open clipboard"));
@@ -1293,6 +1277,54 @@ void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 		CloseClipboard();
 		throw CL_Exception(cl_text("Unable to empty clipboard"));
 	}
+
+	add_dib_to_clipboard(image);
+	add_png_to_clipboard(image);
+
+	CloseClipboard();
+}
+
+
+void CL_Win32Window::add_png_to_clipboard(const CL_PixelBuffer &image)
+{
+	CL_DataBuffer png_data_buf(1024*8);
+	CL_IODevice_Memory iodev_mem(png_data_buf);
+	CL_PNGProvider::save(image, iodev_mem);
+	CL_DataBuffer png_data = iodev_mem.get_data();
+
+	unsigned int length = png_data.get_size();
+	HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
+	if (handle == 0)
+	{
+		CloseClipboard();
+		throw CL_Exception(cl_text("Unable to allocate clipboard memory"));
+	}
+
+	char *data = (char *) GlobalLock(handle);
+	if (data == 0)
+	{
+		GlobalFree(handle);
+		CloseClipboard();
+		throw CL_Exception(cl_text("Unable to lock clipboard memory"));
+	}
+
+	memcpy(data, png_data.get_data(), png_data.get_size());
+
+	GlobalUnlock(handle);
+
+	HANDLE data_result = SetClipboardData(png_clipboard_format, handle);
+
+	if (data_result == 0)
+	{
+		GlobalFree(handle);
+		CloseClipboard();
+		throw CL_Exception(cl_text("Unable to set clipboard data"));
+	}
+}
+
+void CL_Win32Window::add_dib_to_clipboard(const CL_PixelBuffer &image)
+{
+	CL_PixelBuffer bmp_image = create_bitmap_data(image);
 
 	unsigned int length = sizeof(BITMAPV5HEADER) + bmp_image.get_pitch() * bmp_image.get_height();
 	HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
@@ -1310,7 +1342,7 @@ void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 		throw CL_Exception(cl_text("Unable to lock clipboard memory"));
 	}
 
-	BITMAPV5HEADER *bmp_header = (BITMAPV5HEADER *) data;
+	BITMAPV5HEADER *bmp_header = (BITMAPV5HEADER*) data;
 	memset(bmp_header, 0, sizeof(BITMAPV5HEADER));
 	bmp_header->bV5Size = sizeof(BITMAPV5HEADER);
 	bmp_header->bV5Width = bmp_image.get_width();
@@ -1318,7 +1350,10 @@ void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 	bmp_header->bV5Planes = 1;
 	bmp_header->bV5BitCount = 32;
 	bmp_header->bV5Compression = BI_RGB;
-	memcpy(data + sizeof(bmp_header), bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
+	bmp_header->bV5AlphaMask = 0xff000000;
+	bmp_header->bV5CSType = LCS_WINDOWS_COLOR_SPACE;
+
+	memcpy(data + sizeof(BITMAPV5HEADER), bmp_image.get_data(), bmp_image.get_pitch() * bmp_image.get_height());
 
 	GlobalUnlock(handle);
 
@@ -1330,8 +1365,6 @@ void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 		CloseClipboard();
 		throw CL_Exception(cl_text("Unable to set clipboard data"));
 	}
-
-	CloseClipboard();
 }
 
 CL_PixelBuffer CL_Win32Window::create_bitmap_data(const CL_PixelBuffer &image)
@@ -1394,7 +1427,7 @@ HBITMAP CL_Win32Window::create_bitmap(HDC hdc, CL_PixelBuffer image)
 	bmp_header.bV5BitCount = 32;
 	bmp_header.bV5Compression = BI_RGB;
 
-	HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, bmp_image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
+	HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER*) &bmp_header, CBM_INIT, bmp_image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 	return bitmap;
 }
 
@@ -1419,7 +1452,7 @@ HICON CL_Win32Window::create_icon(const CL_PixelBuffer &image) const
 	return icon;
 }
 
-void CL_Win32Window::invalidate_rect( const CL_Rect &cl_rect )
+void CL_Win32Window::request_repaint( const CL_Rect &cl_rect )
 {
 	RECT rect;
 	rect.left = cl_rect.left;
@@ -1446,3 +1479,170 @@ void CL_Win32Window::set_maximum_size( int width, int height, bool client_area)
 	this->maximum_size = CL_Size(width,height);
 }
 
+CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
+{
+	BOOL result = OpenClipboard(hwnd);
+	if (result == FALSE)
+		throw CL_Exception(cl_text("Unable to open clipboard"));
+
+	UINT format = EnumClipboardFormats(0);
+	UINT png_format = 0;
+	while (format)
+	{
+		TCHAR szFormatName[80];
+		int retLen = GetClipboardFormatName(format, szFormatName, sizeof(szFormatName));
+		
+		if (CL_StringRef(cl_text("image/png")) == szFormatName || 
+			CL_StringRef(cl_text("PNG")) == szFormatName)
+		{
+			png_format = format;
+			break;
+		}
+
+		format = EnumClipboardFormats(format);
+	}
+
+	if (png_format != 0)
+	{
+		HGLOBAL handle = reinterpret_cast<HGLOBAL>(GetClipboardData(png_format));
+		if (handle)
+		{
+			cl_uint8 *data = reinterpret_cast<cl_uint8 *>(GlobalLock(handle));
+			size_t size = GlobalSize(handle);
+
+			CL_PixelBuffer image = get_argb8888_from_png(data, size);
+
+			GlobalUnlock(handle);
+			CloseClipboard();
+			return image;
+		}
+	}
+	else
+	{
+		HGLOBAL handle = reinterpret_cast<HGLOBAL>(GetClipboardData(CF_DIBV5));
+		if (handle)
+		{
+			BITMAPV5HEADER *data = reinterpret_cast<BITMAPV5HEADER*>(GlobalLock(handle));
+			size_t size = GlobalSize(handle);
+
+			CL_PixelBuffer image;
+			if (data->bV5Compression == BI_RGB)
+				image = get_argb8888_from_dib(data, size);
+
+			GlobalUnlock(handle);
+			CloseClipboard();
+			return image;
+		}
+	}
+
+	CloseClipboard();
+	return CL_PixelBuffer();
+}
+
+CL_PixelBuffer CL_Win32Window::get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+{
+	size_t offsetBitmapBits = bitmapInfo->bV5Size + bitmapInfo->bV5ClrUsed * sizeof(RGBQUAD);
+	char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
+	size_t bitmapBitsSize = bitmapInfo->bV5SizeImage;
+	if (bitmapInfo->bV5Compression == BI_RGB)
+	{
+		size_t pitch = (bitmapInfo->bV5BitCount * bitmapInfo->bV5Width + 31) / 32;
+		pitch *= 4;
+		bitmapBitsSize = pitch * abs(bitmapInfo->bV5Height);
+	}
+
+	if (offsetBitmapBits + bitmapBitsSize > size)
+		throw CL_Exception(cl_text("Out of bounds in get_rgba8888_from_dib!"));
+
+	// Ask GDI to do the hard work and convert it to rgba8888:
+	HDC hdc = GetDC(0);
+
+	void *bits2 = 0;
+	HBITMAP bitmap = CreateDIBSection(hdc, (BITMAPINFO*)bitmapInfo, DIB_RGB_COLORS, &bits2, 0, 0);
+	memcpy(bits2, bitmapBits, bitmapBitsSize);
+
+	BITMAPV5HEADER rgbBitmapInfo;
+	memset(&rgbBitmapInfo, 0, sizeof(BITMAPV5HEADER));
+	rgbBitmapInfo.bV5Size = sizeof(BITMAPV5HEADER);
+	rgbBitmapInfo.bV5Width = bitmapInfo->bV5Width;
+	rgbBitmapInfo.bV5Height = bitmapInfo->bV5Height;
+	rgbBitmapInfo.bV5Planes = 1;
+	rgbBitmapInfo.bV5BitCount = 32;
+	rgbBitmapInfo.bV5Compression = BI_RGB;
+	rgbBitmapInfo.bV5AlphaMask = 0xff000000;
+	size_t pitch = rgbBitmapInfo.bV5Width*4;
+	rgbBitmapInfo.bV5SizeImage = abs(rgbBitmapInfo.bV5Height) * pitch;
+	CL_DataBuffer bitmap_data(pitch * abs(rgbBitmapInfo.bV5Height));
+	int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data.get_data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
+	if (scanlines != abs(bitmapInfo->bV5Height))
+		throw CL_Exception("GetDIBits failed");
+
+	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), pitch, CL_PixelFormat::argb8888, bitmap_data.get_data());
+
+	ReleaseDC(0, hdc);
+
+	if (bitmapInfo->bV5Height > 0)
+		flip_pixelbuffer_vertical(pixelbuffer);
+
+	return pixelbuffer;
+}
+
+void CL_Win32Window::flip_pixelbuffer_vertical(CL_PixelBuffer &pbuf) const
+{
+	cl_uint8 *data = (cl_uint8*)pbuf.get_data();
+
+	for (int y=0; y<(pbuf.get_height()/2); y++)
+	{
+		cl_uint32 *dy = (cl_uint32*)(data + (y*pbuf.get_pitch()));
+		cl_uint32 *dy2 = (cl_uint32*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
+
+		for (int x=0; x<pbuf.get_width(); x++)
+		{
+			cl_uint32 tmp = dy[x];
+			dy[x] = dy2[x];
+			dy2[x] = tmp;
+		}
+	}
+}
+
+CL_PixelBuffer CL_Win32Window::get_argb8888_from_png(cl_uint8 *data, size_t size) const
+{
+	CL_DataBuffer data_buffer(data, size);
+	CL_IODevice_Memory iodev(data_buffer);
+	CL_PixelBuffer pbuf = CL_PNGProvider::load(iodev);
+	return pbuf;
+}
+
+void CL_Win32Window::register_clipboard_formats()
+{
+//	TCHAR *png_format_str = cl_text("image/png");
+	TCHAR *png_format_str = cl_text("PNG");
+	png_clipboard_format = RegisterClipboardFormat(png_format_str);
+}
+
+void CL_Win32Window::set_large_icon(const CL_PixelBuffer &image)
+{
+	if (large_icon)
+		DestroyIcon(large_icon);
+	large_icon = 0;
+	large_icon = create_icon(image);
+
+	SendMessage(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(large_icon));
+}
+
+void CL_Win32Window::set_small_icon(const CL_PixelBuffer &image)
+{
+	if (small_icon)
+		DestroyIcon(small_icon);
+	small_icon = 0;
+	small_icon = create_icon(image);
+
+	SendMessage(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(small_icon));
+}
+
+void CL_Win32Window::set_modifier_keys(CL_InputEvent &key)
+{
+	key.alt = (GetKeyState(VK_MENU) & 0xfe) != 0;
+	key.shift = (GetKeyState(VK_SHIFT) & 0xfe) != 0;
+	key.ctrl = (GetKeyState(VK_CONTROL) & 0xfe) != 0;
+}

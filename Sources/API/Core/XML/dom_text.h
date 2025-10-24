@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_XML clanCore XML
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "dom_character_data.h"
@@ -65,19 +59,24 @@ public:
 	/// \brief Constructs a DOM Text handle.
 	CL_DomText();
 
+	/// \brief Constructs a DomText
+	///
+	/// \param doc = Dom Document
+	/// \param data = Dom String
 	CL_DomText(CL_DomDocument &doc, const CL_DomString &data);
 
+	/// \brief Constructs a DomText
+	///
+	/// \param CL_DomNode_Generic = Shared Ptr
 	CL_DomText(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomText();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -92,15 +91,18 @@ public:
 	    retval: The new Text node.*/
 	CL_DomText split_text(unsigned long offset);
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 protected:
+
+	/// \brief Constructs a DomText
+	///
+	/// \param doc = Dom Document
+	/// \param node_type = short
 	CL_DomText(CL_DomDocument &doc, unsigned short node_type);
 /// \}
 };
-
 
 /// \}

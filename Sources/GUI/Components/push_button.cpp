@@ -155,7 +155,7 @@ CL_Size CL_PushButton::get_preferred_size() const
 void CL_PushButton::set_pushed(bool enable)
 {
 	if (impl->part.set_state(CssStr::pressed, enable))
-		invalidate_rect();
+		request_repaint();
 }
 
 void CL_PushButton::set_toggle(bool enable)
@@ -163,7 +163,7 @@ void CL_PushButton::set_toggle(bool enable)
 	if (impl->toggle_mode != enable)
 	{
 		impl->toggle_mode = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
@@ -172,14 +172,14 @@ void CL_PushButton::set_flat(bool enable)
 	if (impl->flat_mode != enable)
 	{
 		impl->flat_mode = enable;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
 void CL_PushButton::set_icon(const CL_Image &icon)
 {
 	impl->icon = icon;
-	invalidate_rect();
+	request_repaint();
 }
 
 void CL_PushButton::set_icon_position(IconPosition pos)
@@ -187,14 +187,14 @@ void CL_PushButton::set_icon_position(IconPosition pos)
 	if (impl->icon_position != pos)
 	{
 		impl->icon_position = pos;
-		invalidate_rect();
+		request_repaint();
 	}
 }
 
 void CL_PushButton::set_text(const CL_StringRef &text)
 {
 	impl->text = text;
-	invalidate_rect();
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -230,19 +230,20 @@ void CL_PushButton_Impl::on_style_changed()
 void CL_PushButton_Impl::on_enablemode_changed()
 {
 	create_parts();
-	button->invalidate_rect();
+	button->request_repaint();
 }
 
 void CL_PushButton_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect rect(CL_Point(0,0), button->get_geometry().get_size());
-	CL_Rect content_rect = part.get_content_box(rect);
+	CL_Rect rect = button->get_size();
 	part.render_box(gc, rect, update_rect);
 
 	if (button->has_focus())
 	{
 		part_focus.render_box(gc, rect, update_rect);
 	}
+
+	CL_Rect content_rect = part.get_content_box(rect);
 
 	if (!icon.is_null())
 	{
@@ -270,7 +271,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE) )
 			{
 				part.set_state(CssStr::pressed, !part.get_state(CssStr::pressed));
-				button->invalidate_rect();
+				button->request_repaint();
 				msg.set_consumed();
 				
 				if (!func_clicked.is_null())
@@ -283,7 +284,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE))
 			{
 				part.set_state(CssStr::pressed, true);
-				button->invalidate_rect();
+				button->request_repaint();
 				msg.set_consumed();
 			}
 			else if( e.type == CL_InputEvent::released &&
@@ -291,7 +292,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 				part.get_state(CssStr::pressed) )
 			{
 				part.set_state(CssStr::pressed, false);
-				button->invalidate_rect();
+				button->request_repaint();
 				msg.set_consumed();
 				
 				if (!func_clicked.is_null())
@@ -315,7 +316,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 		if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
 		{
 			part.set_state(CssStr::hot, true);
-			button->invalidate_rect();
+			button->request_repaint();
 			msg.set_consumed();
 		}
 		else if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_leave)
@@ -324,7 +325,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 
 			if (!toggle_mode)
 				part.set_state(CssStr::pressed, false);
-			button->invalidate_rect();
+			button->request_repaint();
 			msg.set_consumed();
 		}
 	}
@@ -336,7 +337,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 			part.set_state(CssStr::focused, true);
 			if (!toggle_mode)
 				update_default_state(true);
-			button->invalidate_rect();
+			button->request_repaint();
 			msg.set_consumed();
 		}
 		else 
@@ -344,7 +345,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 			part.set_state(CssStr::focused, false);
 			if (!toggle_mode)
 				update_default_state(false);
-			button->invalidate_rect();
+			button->request_repaint();
 			msg.set_consumed();
 		}
 	}
@@ -371,5 +372,5 @@ void CL_PushButton_Impl::update_default_state(bool focus_gained)
 	}
 
 	part.set_state(cl_text("defaulted"), is_default); 
-	button->invalidate_rect();
+	button->request_repaint();
 }

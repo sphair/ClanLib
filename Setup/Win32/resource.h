@@ -52,6 +52,7 @@
 #define IDC_CHECK_INCLUDE_NONUNICODE    1029
 #define IDC_CHECK_INCLUDE_X64           1030
 #define IDC_CHECK_INCLUDE_SDL           1031
+#define IDC_CHECK_INCLUDE_GL1         1032
 
 // Next default values for new objects
 // 

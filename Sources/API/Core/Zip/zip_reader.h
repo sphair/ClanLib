@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
@@ -55,8 +49,11 @@ class CL_API_CORE CL_ZipReader
 /// \{
 
 public:
-	CL_ZipReader(CL_IODevice &input);
 
+	/// \brief Constructs a ZipReader
+	///
+	/// \param input = IODevice
+	CL_ZipReader(CL_IODevice &input);
 
 /// \}
 /// \name Operations
@@ -88,7 +85,6 @@ public:
 	/// \brief Reads some file data from the zip file.
 	cl_int64 read_file_data(void *data, cl_int64 size, bool read_all = true);
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -97,6 +93,5 @@ private:
 	CL_SharedPtr<CL_ZipReader_Impl> impl;
 /// \}
 };
-
 
 /// \}

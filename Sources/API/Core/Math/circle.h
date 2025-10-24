@@ -30,13 +30,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "point.h"
 
@@ -114,12 +108,10 @@ public:
 	float radius;
 };
 
-
 inline CL_Circle::CL_Circle(const CL_Circlef &other)
 : position(other.position), radius(int(other.radius+0.5))
 {
 	return;
 }
-
 
 /// \}

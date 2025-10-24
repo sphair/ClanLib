@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Math/cl_math.h"
 #include "API/Display/Window/keys.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/Components/scrollbar.h"
@@ -101,7 +102,11 @@ void CL_ScrollBar_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent 
 			else
 				track_height = rect_track_decrement.get_width()+rect_track_increment.get_width();
 
-			position = scroll_min + position_pixels*(scroll_max-scroll_min)/track_height;
+			if (track_height != 0)
+				position = scroll_min + position_pixels*(scroll_max-scroll_min)/track_height;
+			else
+				position = 0;
+
 			if (position >= scroll_max)
 				position = scroll_max-1;
 			if (position < scroll_min)
@@ -119,7 +124,9 @@ void CL_ScrollBar_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent 
 	}
 
 	if(should_invalidate)
-		scrollbar->invalidate_rect();
+		scrollbar->request_repaint();
+
+	input.set_consumed();
 }
 
 void CL_ScrollBar_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
@@ -219,8 +226,9 @@ void CL_ScrollBar_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_Inp
 
 	update_part_positions();
 
-	scrollbar->invalidate_rect();
+	scrollbar->request_repaint();
 	scrollbar->capture_mouse(true);
+	input.set_consumed();
 }
 
 void CL_ScrollBar_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
@@ -241,8 +249,9 @@ void CL_ScrollBar_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_Input
 	mouse_down_mode = mouse_down_none;
 	mouse_down_timer.stop();
 
-	scrollbar->invalidate_rect();
+	scrollbar->request_repaint();
 	scrollbar->capture_mouse(false);
+	input.set_consumed();
 }
 
 void CL_ScrollBar_Impl::on_mouse_leave()
@@ -255,7 +264,7 @@ void CL_ScrollBar_Impl::on_mouse_leave()
 	part_thumb.set_state(CssStr::hot, false);
 	part_thumb_gripper.set_state(CssStr::hot, false);
 
-	scrollbar->invalidate_rect();
+	scrollbar->request_repaint();
 }
 
 void CL_ScrollBar_Impl::on_resized()
@@ -383,7 +392,7 @@ void CL_ScrollBar_Impl::on_timer_expired()
 		invoke_scroll_event(func_scroll_on_mouse_down);
 
 		if(update_part_positions())
-			scrollbar->invalidate_rect();
+			scrollbar->request_repaint();
 	}
 }
 
@@ -405,7 +414,7 @@ void CL_ScrollBar_Impl::on_enablemode_changed()
 	part_thumb.set_state(CssStr::normal, scrollbar->is_enabled());
 	part_thumb_gripper.set_state(CssStr::normal, scrollbar->is_enabled());
 
-	scrollbar->invalidate_rect();
+	scrollbar->request_repaint();
 }
 
 void CL_ScrollBar_Impl::invoke_scroll_event(CL_Callback_v0 *event_ptr)

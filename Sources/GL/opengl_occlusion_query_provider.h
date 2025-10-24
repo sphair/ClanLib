@@ -32,10 +32,11 @@
 #include "API/Display/TargetProviders/occlusion_query_provider.h"
 #include "API/Display/Render/compare_function.h"
 #include "API/GL/opengl.h"
+#include "API/Core/System/disposable_object.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLOcclusionQueryProvider : public CL_OcclusionQueryProvider
+class CL_OpenGLOcclusionQueryProvider : public CL_OcclusionQueryProvider, CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -71,6 +72,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	/// \brief OpenGL occlusion query handle.
 	CLuint handle;
 

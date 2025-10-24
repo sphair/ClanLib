@@ -29,13 +29,7 @@
 /// \addtogroup clanCore_CSS clanCore CSS
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_core.h"
 #include "../System/sharedptr.h"
@@ -58,7 +52,6 @@ public:
 
 	~CL_CSSSelector();
 
-
 /// \}
 /// \name Attributes
 /// \{
@@ -66,7 +59,6 @@ public:
 public:
 	/// \brief Returns the path elements required to match the selector.
 	const std::vector<CL_String> &get_path_elements() const;
-
 
 /// \}
 /// \name Operations
@@ -81,7 +73,6 @@ public:
 
 	bool operator ==(const CL_CSSSelector &other) const;
 
-
 /// \}
 /// \name Implementation
 /// \{
@@ -90,6 +81,5 @@ private:
 	CL_SharedPtr<CL_CSSSelector_Impl> impl;
 /// \}
 };
-
 
 /// \}

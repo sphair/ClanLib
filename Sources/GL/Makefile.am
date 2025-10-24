@@ -19,6 +19,7 @@ libclanGL_la_SOURCES = \
 	opengl_window_description.cpp \
 	opengl.cpp \
 	opengl_target.cpp \
+	opengl_graphic_context.cpp \
 	opengl_shader_object_provider.cpp \
 	opengl_program_object_provider.cpp \
 	opengl_frame_buffer_provider.cpp \
@@ -32,22 +33,16 @@ libclanGL_la_SOURCES = \
 
 if WIN32
 	libclanGL_la_SOURCES += \
-	WGL/opengl_window_provider_wgl.h \
-	WGL/input_device_provider_win32keyboard.h \
-	WGL/input_device_provider_directinput.h \
-	WGL/input_device_provider_win32mouse.h \
-	WGL/input_device_provider_win32tablet.h \
-	WGL/input_device_provider_win32mouse.cpp \
+	WGL/opengl_creation_helper.cpp \
 	WGL/opengl_window_provider_wgl.cpp \
-	WGL/input_device_provider_directinput.cpp \
-	WGL/input_device_provider_win32keyboard.cpp \
-	WGL/input_device_provider_win32tablet.cpp
+	WGL/opengl_creation_helper.h \
+	WGL/opengl_window_provider_wgl.h
 else
 libclanGL_la_SOURCES += \
 	GLX/opengl_window_provider_glx.cpp \
 	GLX/opengl_window_provider_glx.h
 
-libclanGL_la_LIBADD = -lXxf86vm -lXi -lGLU -lGL 
+libclanGL_la_LIBADD = -lXxf86vm -lXi -lGL 
 endif
 
 # EXTRA_DIST = \

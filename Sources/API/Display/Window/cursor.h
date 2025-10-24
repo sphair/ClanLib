@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Window clanDisplay Window
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
@@ -56,8 +54,12 @@ public:
 	/// \brief Constructs a cursor.
 	CL_Cursor();
 
+	/// \brief Constructs a Cursor
+	///
+	/// \param window = Display Window
+	/// \param sprite_description = Sprite Description
+	/// \param hotspot = Point
 	CL_Cursor(const CL_DisplayWindow &window, const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
-
 
 /// \}
 /// \name Attributes
@@ -67,13 +69,11 @@ public:
 	/// \brief Returns the cursor provider
 	CL_CursorProvider *get_provider() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
-
 
 /// \}
 /// \name Implementation
@@ -83,7 +83,5 @@ private:
 	CL_SharedPtr<CL_Cursor_Impl> impl;
 /// \}
 };
-
-
 
 /// \}

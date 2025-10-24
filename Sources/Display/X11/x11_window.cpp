@@ -39,10 +39,9 @@
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Window/timer.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/TargetProviders/timer_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/Core/System/event_provider.h"
 #include "x11_window.h"
 #include "input_device_provider_x11keyboard.h"
 #include "input_device_provider_x11mouse.h"
@@ -50,8 +49,9 @@
 #include "input_device_provider_linuxjoystick.h"
 #endif
 #include "display_message_queue_x11.h"
-#include "timer_provider_x11.h"
 #include <X11/Xatom.h>
+#include <cstdio>
+
 
 CL_X11Window::CL_X11Window(CL_DisplayMessageQueue_X11 *message_queue)
 : window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), message_queue(message_queue), fullscreen(false),
@@ -66,9 +66,6 @@ CL_X11Window::CL_X11Window(CL_DisplayMessageQueue_X11 *message_queue)
 CL_X11Window::~CL_X11Window()
 {
 	message_queue->remove_client(this);
-
-	if (is_fullscreen())
-		restore_videomode();
 
 	close_window();
 
@@ -455,36 +452,10 @@ CL_Rect CL_X11Window::get_screen_position() const
 	return (CL_Rect(xpos, ypos, width+xpos, height+ypos));
 }
 
-void CL_X11Window::set_timer(CL_TimerProvider *timer)
-{
-	kill_timer(timer);
-	CL_TimerProvider_X11 *xtimer = dynamic_cast<CL_TimerProvider_X11*>(timer);
-	if (!xtimer)
-		throw CL_Exception(cl_text("Unsupported timer"));
-
-	timer_list.push_back(xtimer);
-}
-
-void CL_X11Window::kill_timer(CL_TimerProvider *timer)
-{
-	CL_TimerProvider_X11 *xtimer = dynamic_cast<CL_TimerProvider_X11*>(timer);
-	if (!xtimer)
-		throw CL_Exception(cl_text("Unsupported timer"));
-
-	std::list<CL_TimerProvider_X11 *>::iterator it;
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		if (*it == xtimer)
-		{
-			timer_list.erase(it);
-			break;
-		}
-	}
-}
-
 void CL_X11Window::close_window()
 {
+	current_window_events.clear();
+
 	bool focus = false;
 	ic.clear();
 
@@ -531,6 +502,11 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	close_window();	// Close the window if already opened (maybe it should be modified instead of recreated?)
 
 	current_screen = visual->screen;
+	
+	CL_SocketMessage_X11 screen_connection;
+	screen_connection.type = CL_EventProvider::type_fd_read;
+	screen_connection.handle = ConnectionNumber(disp);
+	current_window_events.push_back(screen_connection);
 
 	window_has_caption = desc.has_caption();
 
@@ -636,10 +612,6 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 		win_x = 0;
 		win_y = 0;
 
-//TODO: What is the policy of screen mode change? should switching to fullscreen change the display mode?
-/*		win_width = DisplayWidth(disp, opengl_visual_info->screen);
-		win_height = DisplayHeight(disp, opengl_visual_info->screen);
-*/
 	}
 
 	if (win_x == -1 && win_y == -1)
@@ -728,7 +700,7 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	size_hints->max_height  = win_height;
 	size_hints->flags       = PSize|PBaseSize|PPosition;
 
-	resize_enabled = desc.get_allow_resize();
+	resize_enabled = desc.get_allow_resize() || desc.is_fullscreen(); // Fs needs resizable window
 
 	if (!resize_enabled)
 	{
@@ -766,49 +738,12 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	{
 		show(true);
 		set_enabled(true);
-		XSync(disp, True);
 	}
 
-	if (desc.is_fullscreen())
-		set_videomode(desc.get_size().width, desc.get_size().height, desc.get_bpp(), desc.get_refresh_rate());
-	else
-		restore_videomode();
+	if (desc.is_fullscreen()) set_fullscreen();
 
-}
+	XSync(disp, True);
 
-void CL_X11Window::process_timer_events()
-{
-
-	if (timer_list.empty()) return;
-
-	unsigned int current_time = CL_System::get_time();
-	std::list<CL_TimerProvider_X11 *>::iterator it;
-
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end();)
-	{
-		CL_TimerProvider_X11 *xptr = *it;
-		++it;	// Advance iterator now, as the current one may be destroyed
-
-		xptr->process_timer(current_time);
-	}
-}
-
-// Returns: true is a timer event would occur
-bool CL_X11Window::check_timers(void)
-{
-	if (timer_list.empty()) return false;
-
-	unsigned int current_time = CL_System::get_time();
-	std::list<CL_TimerProvider_X11 *>::iterator it;
-	// Find existing timer
-	for (it = timer_list.begin(); it != timer_list.end(); ++it)
-	{
-		if ((*it)->check_timer(current_time))
-			return true;
-	}
-
-	return false;
 }
 
 bool CL_X11Window::get_message(XEvent &clan_event)
@@ -819,9 +754,6 @@ bool CL_X11Window::get_message(XEvent &clan_event)
 	bool clan_event_set = false;
 
 	ic.poll(false);		// Check input devices
-
-	// Dispatch all timer events
-	process_timer_events();
 
 	// Dispatch all Xlib events
 	if (get_xevent(event))
@@ -948,11 +880,6 @@ bool CL_X11Window::has_messages()
 		message_flag = true;
 	}
 
-	if (check_timers())
-	{
-		message_flag = true;
-	}
-
 	if (ic.poll(true))
 	{
 		message_flag = true;
@@ -986,8 +913,15 @@ void CL_X11Window::setup_joysticks()
 		{
 			try
 			{
-				CL_InputDevice device(new CL_InputDeviceProvider_LinuxJoystick(this, cl_text(pathname)));
+				CL_InputDeviceProvider_LinuxJoystick *joystick_provider = new CL_InputDeviceProvider_LinuxJoystick(this, cl_text(pathname));
+				CL_InputDevice device(joystick_provider);
 				ic.add_joystick(device);
+
+				CL_SocketMessage_X11 joystick_connection;
+				joystick_connection.type = CL_EventProvider::type_fd_read;
+				joystick_connection.handle = joystick_provider->get_fd();
+				current_window_events.push_back(joystick_connection);
+
 			} 
 			catch (CL_Exception error)
 			{
@@ -998,130 +932,19 @@ void CL_X11Window::setup_joysticks()
 #endif
 }
 
-void CL_X11Window::restore_videomode()
+void CL_X11Window::set_fullscreen()
 {
-	if (!fullscreen)
-		return;
-
-	XF86VidModeSwitchToMode(disp, current_screen, &old_mode);
-	XF86VidModeSetViewPort(disp, current_screen, old_x, old_y);
-	old_x = old_y = -1;
-	
-	XUngrabPointer(disp, CurrentTime);
-
-	fullscreen = false;
-}
-
-void CL_X11Window::set_videomode(int width, int height, int bpp_local, int refresh_rate)
-{
-	if(fullscreen)
-		return;
-
-	// Vid-mode Switching
-	XF86VidModeModeLine cur_mode;
-
-	XF86VidModeGetModeLine(disp, current_screen, &dotclock, &cur_mode);
-
-	old_mode.dotclock   = dotclock;
-	old_mode.hdisplay   = cur_mode.hdisplay;
-	old_mode.hsyncstart = cur_mode.hsyncstart;
-	old_mode.hsyncend   = cur_mode.hsyncend;
-	old_mode.htotal     = cur_mode.htotal;
-	old_mode.vdisplay   = cur_mode.vdisplay;
-	old_mode.vsyncstart = cur_mode.vsyncstart;
-	old_mode.vsyncend   = cur_mode.vsyncend;
-	old_mode.vtotal     = cur_mode.vtotal;
-	old_mode.flags      = cur_mode.flags;
-	old_mode.privsize   = 0;
-
-	int num_modes;
-	XF86VidModeModeInfo **modes;
-	XF86VidModeGetAllModeLines(disp, current_screen, &num_modes, &modes);
-
-	std::list<XF86VidModeModeInfo *> usable_modes;
-	for(int i = 0; i < num_modes; i++)
-	{
-		if(modes[i]->hdisplay == width && modes[i]->vdisplay == height)
-		{
-			cl_log_event("debug", "Useable fullscreen mode found: %1x%2", width, height);
-			usable_modes.push_back(modes[i]);
-		}
-	}
-
-	if (usable_modes.empty())
-	{
-		cl_log_event("debug", "No useable fullscreen modes available!");
-	}
-	else 
-	{	
-		if(!width)
-			width = get_viewport().get_width();
-
-		if(!height)
-			height = get_viewport().get_height();
-	
-		if(!bpp_local)
-			bpp_local = bpp;
-
-		//Hide Window
-		if (0)
-		{  // FIXME: allow_override doesn't play together with
-			// GrabPointer, not sure what is wrong but it simply doesn't
-			// work.
-			//
-			// The code outside the 'if(0)' as it is now, works mostly,
-			// however it doesn't work when the window or a part of it is
-			// outside of the screen, since the window isn't moved
-			// fullscreen will only show half the window, shouldn't be a
-			// problem for most of the time, but will be tricky if the
-			// window has equal size as the desktop.
-
-			// Move the window into the right position, this must happen
-			// BEFORE we remove control from the window manager
-			XMoveResizeWindow(disp, window, 0, 0, width, height);
-
-			// Move the mouse and switch moves
-			XWarpPointer(disp, None, None, 0, 0, 0, 0, width/2, height/2);
-
-			XUnmapWindow(disp, window);
-			{ // Wait for window to disapear
-				XEvent event;
-				do {
-					XMaskEvent(disp, StructureNotifyMask, &event);
-				} while ( (event.type != UnmapNotify) || (event.xunmap.event != window) );
-			}
-			// Turn off WM control
-			attributes.override_redirect = True;
-			XChangeWindowAttributes(disp, window, CWBorderPixel | CWColormap | CWOverrideRedirect, &attributes);
-
-			// Re-appear window
-			XMapRaised(disp, window);
-		}
-
-		while (1) 
-		{
-			int result = XGrabPointer(disp, window, True, 0, GrabModeAsync, GrabModeAsync, window, None, CurrentTime);
-			if ( result == GrabSuccess ) {
-				break;
-			}	
-			CL_System::sleep(100);
-		}
-
-		XF86VidModeGetViewPort(disp,current_screen, &old_x, &old_y);
-
-		XF86VidModeSwitchToMode(disp, current_screen, *(usable_modes.begin()));
-		Window child_window;
-		int x, y;
-		// Get the windows absolute position (aka relative to
-		// the root window)
-		XTranslateCoordinates(disp, window, DefaultRootWindow(disp), 0, 0, &x, &y, &child_window);
-	
-		XF86VidModeSetViewPort(disp, current_screen, x, y);
-		
-		XSync(disp, True);
-
-		fullscreen = true;
-	}
+	// Set fullscreen mode: http://standards.freedesktop.org/wm-spec/wm-spec-1.3.html
+	XEvent xev = { 0 };
+	xev.xclient.type = ClientMessage;
+	xev.xclient.send_event = True;
+	xev.xclient.message_type = XInternAtom(disp, "_NET_WM_STATE", False);
+	xev.xclient.window = window;
+	xev.xclient.format = 32;
+	xev.xclient.data.l[0] = 1;
+	xev.xclient.data.l[1] = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", False);
+	// Send the event and set fullscreen to true if successful
+	fullscreen = XSendEvent(disp, DefaultRootWindow(disp), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev);
 }
 
 
@@ -1130,14 +953,31 @@ void CL_X11Window::set_clipboard_text(const CL_StringRef &text)
 	clipboard.set_clipboard_text(text);
 }
 
+void CL_X11Window::set_clipboard_image(const CL_PixelBuffer &buf)
+{
+	throw CL_Exception(cl_text("Todo: CL_X11Window::set_clipboard_image"));
+}
+
 CL_String CL_X11Window::get_clipboard_text() const
 {
 	return clipboard.get_clipboard_text();
 }
 
+CL_PixelBuffer CL_X11Window::get_clipboard_image() const
+{
+	throw CL_Exception(cl_text("Todo: CL_X11Window::get_clipboard_image"));
+
+	return CL_PixelBuffer();
+}
+
 bool CL_X11Window::is_clipboard_text_available() const
 {
 	return clipboard.is_clipboard_text_available();
+}
+
+bool CL_X11Window::is_clipboard_image_available() const
+{
+	return clipboard.is_clipboard_image_available();
 }
 
 void CL_X11Window::set_cursor(CL_CursorProvider_X11 *cursor)
@@ -1298,7 +1138,7 @@ bool CL_X11Window::get_xevent( XEvent &event ) const
 	return false;
 }
 
-void CL_X11Window::invalidate_rect( const CL_Rect &cl_rect )
+void CL_X11Window::request_repaint( const CL_Rect &cl_rect )
 {
 	XEvent event;
 	event.xexpose.type = Expose;
@@ -1368,5 +1208,18 @@ unsigned char *CL_X11Window::get_property(Window use_window, Atom prop, unsigned
 	return read_data;
 }
 
+const std::vector<CL_SocketMessage_X11> &CL_X11Window::get_window_socket_messages() const
+{
+	return current_window_events;
+}
 
+void CL_X11Window::set_large_icon(const CL_PixelBuffer &image)
+{
+
+}
+
+void CL_X11Window::set_small_icon(const CL_PixelBuffer &image)
+{
+
+}
 

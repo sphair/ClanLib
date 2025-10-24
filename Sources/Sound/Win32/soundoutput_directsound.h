@@ -27,11 +27,6 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "../soundoutput_generic.h"
 
 class CL_SoundOutput_DirectSound : public CL_SoundOutput_Generic

@@ -50,12 +50,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput construction:
 
-CL_SoundOutput::CL_SoundOutput() : impl(0)
+CL_SoundOutput::CL_SoundOutput()
 {
 }
 
 CL_SoundOutput::CL_SoundOutput(int mixing_frequency, int latency)
-: impl(0)
 {
 	CL_SoundOutput_Description desc;
 	desc.set_mixing_frequency(mixing_frequency);
@@ -63,45 +62,57 @@ CL_SoundOutput::CL_SoundOutput(int mixing_frequency, int latency)
 	operator =(CL_SoundOutput(desc));
 }
 
-CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc) : impl(0)
+CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 {
+
 #ifdef WIN32
-	impl = new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency());
+	CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	impl = soundoutput_impl;
 #else
 #ifdef __APPLE__
-	impl = new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency());
+	CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	impl = soundoutput_impl;
 #else
 #ifdef __linux__
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
-	CL_SoundOutput_alsa *alsa_impl;
-	alsa_impl = new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency());
-	if (alsa_impl->handle)
+	// Try building ALSA
+
+	CL_SharedPtr<CL_SoundOutput_Generic> alsa_impl(new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	if ( ( (CL_SoundOutput_alsa *) (alsa_impl.get()))->handle)
+	{
 		impl = alsa_impl;
+	}
 	else
-		delete alsa_impl;
-	if (!impl)
+	{
+		alsa_impl.disconnect();
+	}
+
+	if (impl.is_null())
 #endif
 
 #endif
-	impl = new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency());
+	{
+		CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		impl = soundoutput_impl;
+	}
 #endif
 #endif
-	impl->add_ref();
-	CL_Sound::select_output(this);
+	CL_Sound::select_output(*this);
 }
 
 CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput &copy) : impl(copy.impl)
 {
-	if (impl) impl->add_ref();
-	CL_Sound::select_output(this);
 }
 
 CL_SoundOutput::~CL_SoundOutput()
 {
-	if (impl) impl->release_ref();
 }
 
+CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Generic> impl)
+: impl(impl.to_sharedptr())
+{
+}
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput attributes:
 
@@ -138,22 +149,13 @@ float CL_SoundOutput::get_global_pan() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput operations:
 
-CL_SoundOutput &CL_SoundOutput::operator =(const CL_SoundOutput &copy)
-{
-	if (impl) impl->release_ref();
-	impl = copy.impl;
-	if (impl) impl->add_ref();
-	CL_Sound::select_output(this);
-	return *this;
-}
-
 void CL_SoundOutput::stop_all()
 {
 }
 	
 void CL_SoundOutput::set_global_volume(float volume)
 {
-	if (impl)
+	if (!impl.is_null())
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->volume = volume;
@@ -162,35 +164,32 @@ void CL_SoundOutput::set_global_volume(float volume)
 
 void CL_SoundOutput::set_global_pan(float pan)
 {
-	if (impl)
+	if (!impl.is_null())
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->pan = pan;
 	}
 }
 
-void CL_SoundOutput::add_filter(CL_SoundFilter *filter, bool delete_filter)
+void CL_SoundOutput::add_filter(CL_SoundFilter &filter)
 {
-	if (impl)
+	if (!impl.is_null())
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
 		impl->filters.push_back(filter);
-		impl->delete_filters.push_back(delete_filter);
 	}
 }
 
-void CL_SoundOutput::remove_filter(CL_SoundFilter *filter)
+void CL_SoundOutput::remove_filter(CL_SoundFilter &filter)
 {
-	if (impl)
+	if (!impl.is_null())
 	{
 		CL_MutexSection mutex_lock(&impl->mutex);
-		for (std::vector<CL_SoundFilter *>::size_type i=0; i<impl->filters.size(); i++)
+		for (std::vector<CL_SoundFilter>::size_type i=0; i<impl->filters.size(); i++)
 		{
 			if (impl->filters[i] == filter)
 			{
-				if (impl->delete_filters[i]) delete impl->filters[i];
 				impl->filters.erase(impl->filters.begin()+i);
-				impl->delete_filters.erase(impl->delete_filters.begin()+i);
 				break;
 			}
 		}

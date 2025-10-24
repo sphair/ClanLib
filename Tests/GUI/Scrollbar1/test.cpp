@@ -28,18 +28,18 @@ public:
 			CL_GUIManager gui; 
  
 			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(&wm);
+			gui.set_window_manager(wm);
 
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
-			gui.set_theme(&theme);
+			gui.set_theme(theme);
 			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
  
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
 			win_desc.set_title("The Amazing Scrollbar");
-    
-			CL_Window root(CL_Rect(200,200,600,600), &gui, win_desc);
+			win_desc.set_position(CL_Rect(200,200,600,600), false);
+			CL_Window root(&gui, win_desc);
 			root.func_close().set(this, &App::on_close, &root);
 
 			CL_PushButton button1(&root);
@@ -89,7 +89,7 @@ public:
 	void on_button_clicked(CL_PushButton *button)
 	{
 		scrollbar1->set_position(rand() % 100);
-		scrollbar1->invalidate_rect();
+		scrollbar1->request_repaint();
 	}
 
 	void on_close(CL_Window *win)

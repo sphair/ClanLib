@@ -37,10 +37,8 @@
 #include "API/Display/Window/display_window_description.h"
 
 #ifdef WIN32
-#include "Display/Win32/timer_provider_win32.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #else
-#include "Display/X11/timer_provider_x11.h"
 #include "Display/X11/cursor_provider_x11.h"
 #endif
 
@@ -90,12 +88,12 @@ bool CL_GDIDisplayWindowProvider::is_visible() const
 	return window.is_visible();
 }
 
-CL_GraphicContext CL_GDIDisplayWindowProvider::get_gc() const
+CL_GraphicContext& CL_GDIDisplayWindowProvider::get_gc()
 {
 	return gc;
 }
 
-CL_InputContext CL_GDIDisplayWindowProvider::get_ic() const
+CL_InputContext& CL_GDIDisplayWindowProvider::get_ic()
 {
 	return window.get_ic();
 }
@@ -112,17 +110,13 @@ bool CL_GDIDisplayWindowProvider::is_clipboard_text_available() const
 	return window.is_clipboard_text_available();
 }
 
+bool CL_GDIDisplayWindowProvider::is_clipboard_image_available() const
+{
+	return window.is_clipboard_image_available();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDIDisplayWindowProvider Operations:
-
-CL_TimerProvider *CL_GDIDisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
-{
-#ifdef WIN32
-	return new CL_TimerProvider_Win32(disp_window);
-#else
-	return new CL_TimerProvider_X11(disp_window);
-#endif
-}
 
 CL_Point CL_GDIDisplayWindowProvider::client_to_screen(const CL_Point &client)
 {
@@ -315,8 +309,6 @@ void CL_GDIDisplayWindowProvider::flip(int interval)
 			}
 		}
 	}
-
-
 }
 
 void CL_GDIDisplayWindowProvider::update(const CL_Rect &rect)
@@ -334,19 +326,14 @@ void CL_GDIDisplayWindowProvider::update(const CL_Rect &rect)
 #endif
 }
 
-void CL_GDIDisplayWindowProvider::set_timer(CL_TimerProvider *timer)
-{
-	window.set_timer(timer);
-}
-
-void CL_GDIDisplayWindowProvider::kill_timer(CL_TimerProvider *timer)
-{
-	window.kill_timer(timer);
-}
-
 void CL_GDIDisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)
 {
 	window.set_clipboard_text(text);
+}
+
+void CL_GDIDisplayWindowProvider::set_clipboard_image(const CL_PixelBuffer &buf)
+{
+	window.set_clipboard_image(buf);
 }
 
 CL_String CL_GDIDisplayWindowProvider::get_clipboard_text() const
@@ -354,9 +341,24 @@ CL_String CL_GDIDisplayWindowProvider::get_clipboard_text() const
 	return window.get_clipboard_text();
 }
 
-void CL_GDIDisplayWindowProvider::invalidate_rect(const CL_Rect &rect)
+CL_PixelBuffer CL_GDIDisplayWindowProvider::get_clipboard_image() const
 {
-	window.invalidate_rect(rect);
+	return window.get_clipboard_image();
+}
+
+void CL_GDIDisplayWindowProvider::request_repaint(const CL_Rect &rect)
+{
+	window.request_repaint(rect);
+}
+
+void CL_GDIDisplayWindowProvider::set_large_icon(const CL_PixelBuffer &image)
+{
+	window.set_large_icon(image);
+}
+
+void CL_GDIDisplayWindowProvider::set_small_icon(const CL_PixelBuffer &image)
+{
+	window.set_small_icon(image);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -440,6 +442,6 @@ void CL_GDIDisplayWindowProvider::draw_image(const CL_Rect &dest, const CL_Pixel
 	XPutImage(window.get_display(), window.get_window(), xgc, &ximage, src.left, src.top, dest.left, dest.top, src.get_width(), src.get_height());
 	XFreeGC(window.get_display(), xgc);
 }
-
 #endif
+
 

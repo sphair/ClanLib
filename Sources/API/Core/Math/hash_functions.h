@@ -30,9 +30,7 @@
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-
 #pragma once
-
 
 #include "../api_core.h"
 #include "../IOData/datatypes.h"
@@ -49,13 +47,11 @@ class CL_API_CORE CL_HashFunctions
 
 public:
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
 
 /// \}
 /// \name Operations
@@ -71,14 +67,39 @@ public:
 	/// \brief Generate SHA-1 hash from data.
 	static CL_String8 sha1(const void *data, int size, bool uppercase = false);
 
+	/// \brief Sha1
+	///
+	/// \param data = String Ref8
+	/// \param uppercase = bool
+	///
+	/// \return String8
 	static CL_String8 sha1(const CL_StringRef8 &data, bool uppercase = false);
 
+	/// \brief Sha1
+	///
+	/// \param data = Data Buffer
+	/// \param uppercase = bool
+	///
+	/// \return String8
 	static CL_String8 sha1(const CL_DataBuffer &data, bool uppercase = false);
 
+	/// \brief Sha1
+	///
+	/// \param data = void
+	/// \param size = value
+	/// \param out_hash = char
 	static void sha1(const void *data, int size, unsigned char out_hash[20]);
 
+	/// \brief Sha1
+	///
+	/// \param data = String Ref8
+	/// \param out_hash = char
 	static void sha1(const CL_StringRef8 &data, unsigned char out_hash[20]);
 
+	/// \brief Sha1
+	///
+	/// \param data = Data Buffer
+	/// \param out_hash = char
 	static void sha1(const CL_DataBuffer &data, unsigned char out_hash[20]);
 
 /// \}
@@ -88,6 +109,5 @@ public:
 private:
 /// \}
 };
-
 
 /// \}

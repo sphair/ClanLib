@@ -94,6 +94,5 @@ private:
 	bool camera_drag_in_progress;
 	CL_Point camera_drag_last_mouse_pos;
 
-	static CL_GUITopLevelDescription toplevel_description(Client *client);
-	static CL_Rect start_position();
+	static CL_GUITopLevelDescription get_toplevel_description();
 };

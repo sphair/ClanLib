@@ -45,6 +45,15 @@ public:
 	typedef CL_Callback_v4<const CL_NetGameEvent &, ContextParam1, ContextParam2, ContextParam3> CallbackClass;
 
 	CallbackClass &func_event(const CL_String &name) { return event_handlers[name]; }
+
+	/// \brief Dispatch
+	///
+	/// \param game_event = Net Game Event
+	/// \param context1 = Context Param1
+	/// \param context2 = Context Param2
+	/// \param context3 = Context Param3
+	///
+	/// \return bool
 	bool dispatch(const CL_NetGameEvent &game_event, ContextParam1 context1, ContextParam2 context2, ContextParam3 context3);
 
 private:

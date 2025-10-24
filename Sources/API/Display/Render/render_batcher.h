@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "../api_display.h"
 #include "../../Core/Math/mat4.h"
@@ -47,10 +45,17 @@ class CL_API_DISPLAY CL_RenderBatcher
 /// \{
 public:
 	virtual ~CL_RenderBatcher() { }
+
+	/// \brief Flush
+	///
+	/// \param gc = Graphic Context
 	virtual void flush(CL_GraphicContext &gc) = 0;
+
+	/// \brief Modelview changed
+	///
+	/// \param modelview = Mat4f
 	virtual void modelview_changed(const CL_Mat4f &modelview) = 0;
 /// \}
 };
-
 
 /// \}

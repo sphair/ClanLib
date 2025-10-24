@@ -46,6 +46,10 @@ class CL_API_GUI CL_ImageView : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a ImageView
+	///
+	/// \param parent = GUIComponent
 	CL_ImageView(CL_GUIComponent *parent);
 
 	virtual ~CL_ImageView();
@@ -54,18 +58,34 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Get Image
+	///
+	/// \return image
 	CL_Sprite get_image() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Set image
+	///
+	/// \param image = Sprite
 	void set_image(const CL_Sprite &image);
 
+	/// \brief Set image
+	///
+	/// \param image = Pixel Buffer
 	void set_image(const CL_PixelBuffer &image);
 
+	/// \brief Set scale to fit
 	void set_scale_to_fit();
 
+	/// \brief Set scale
+	///
+	/// \param x = value
+	/// \param y = value
 	void set_scale(float x, float y);
 
 /// \}

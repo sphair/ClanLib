@@ -29,9 +29,7 @@
 /// \addtogroup clanDisplay_Display clanDisplay Display
 /// \{
 
-
 #pragma once
-
 
 #include "api_display.h"
 #include "../Core/System/sharedptr.h"
@@ -52,10 +50,12 @@ public:
 	/// \brief Constructs a display target.
 	CL_DisplayTarget();
 
+	/// \brief Constructs a DisplayTarget
+	///
+	/// \param provider = Display Target Provider
 	CL_DisplayTarget(CL_DisplayTargetProvider *provider);
 
 	virtual ~CL_DisplayTarget();
-
 
 /// \}
 /// \name Attributes
@@ -68,19 +68,21 @@ public:
 	/// \brief Returns true if this display target is invalid.
 	bool is_null() const;
 
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+
+	/// \brief Constructs a DisplayTarget
+	///
+	/// \param CL_DisplayTarget_Impl = Weak Ptr
 	CL_DisplayTarget(const CL_WeakPtr<CL_DisplayTarget_Impl> impl);
 
 	CL_SharedPtr<CL_DisplayTarget_Impl> impl;
@@ -88,6 +90,5 @@ private:
 	friend class CL_Display;
 /// \}
 };
-
 
 /// \}

@@ -102,7 +102,8 @@ CL_Rect CL_GUIThemePart::get_content_box(const CL_Rect &render_box_rect) const
 {
 	impl->check_content_shrink_box_is_cached(*this);
 	CL_Rect box = render_box_rect;
-	box.shrink(impl->cached_content_box_shrink_rect);
+	CL_Rect &R = impl->cached_content_box_shrink_rect;
+	box.shrink(R.left, R.top, R.right, R.bottom);
 	return box;
 }
 
@@ -110,7 +111,9 @@ CL_Rect CL_GUIThemePart::get_render_box(const CL_Rect &content_box_rect) const
 {
 	impl->check_content_shrink_box_is_cached(*this);
 	CL_Rect box = content_box_rect;
-	box.expand(impl->cached_content_box_shrink_rect);
+
+	CL_Rect &R = impl->cached_content_box_shrink_rect;
+	box.expand(R.left, R.top, R.right, R.bottom);
 	return box;
 }
 
@@ -224,10 +227,10 @@ CL_Font CL_GUIThemePart::get_font() const
 		return font;
 
 	CL_GUIManager manager = impl->component->get_gui_manager();
-	font = manager.get_named_font(desc);
+	font = manager.get_registered_font(desc);
 	if (font.is_null())
 	{
-		CL_GraphicContext gc = component->get_gc();
+		CL_GraphicContext &gc = component->get_gc();
 		font = CL_Font(gc, desc);
 	}
 	
@@ -275,9 +278,9 @@ bool CL_GUIThemePart::set_state(const CL_StringRef &name, bool flag)
 
 void CL_GUIThemePart::render_box(CL_GraphicContext &gc, const CL_Rect &rect, const CL_Rect &clip_rect)
 {
-	CL_GUITheme *theme = impl->component->get_theme();
-	if (theme)
-		theme->render_box(gc, *this, rect, clip_rect);
+	CL_GUITheme theme = impl->component->get_theme();
+	if (!theme.is_null())
+		theme.render_box(gc, *this, rect, clip_rect);
 }
 
 CL_GUIThemePart::VerticalTextPosition CL_GUIThemePart::get_vertical_text_align(CL_GraphicContext &gc, CL_Font &font, const CL_Rect &content_rect)
@@ -298,9 +301,9 @@ CL_Rect CL_GUIThemePart::render_text( CL_GraphicContext &gc, const CL_StringRef 
 {
 	CL_Font font = get_font();
 
-	CL_GUITheme *theme = impl->component->get_theme();
-	if (theme)
-		return theme->render_text(gc, *this, font, text, content_rect, clip_rect);
+	CL_GUITheme theme = impl->component->get_theme();
+	if (!theme.is_null())
+		return theme.render_text(gc, *this, font, text, content_rect, clip_rect);
 
 	return CL_Rect(0,0,0,0);
 }

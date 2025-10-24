@@ -68,7 +68,7 @@ public:
 
 	CL_GraphicContext create_worker_gc();
 
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect);
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect) const;
 
 	CL_TextureProvider *alloc_texture(CL_TextureDimensions texture_dimensions);
 

@@ -29,13 +29,7 @@
 /// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
 /// \{
 
-
 #pragma once
-
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
@@ -54,8 +48,11 @@ class CL_API_DISPLAY CL_JPEGDecompressor
 /// \{
 
 public:
-	CL_JPEGDecompressor(CL_IODevice input_source);
 
+	/// \brief Constructs a JPEGDecompressor
+	///
+	/// \param input_source = IODevice
+	CL_JPEGDecompressor(CL_IODevice input_source);
 
 /// \}
 /// \name Attributes
@@ -92,30 +89,46 @@ public:
 		void *data;
 	};
 
+	/// \brief Get Output width
+	///
+	/// \return output_width
 	int get_output_width() const;
 
+	/// \brief Get Output height
+	///
+	/// \return output_height
 	int get_output_height() const;
 
+	/// \brief Get Output components
+	///
+	/// \return output_components
 	int get_output_components() const;
 
 	std::vector<SavedMarker> get_saved_markers() const;
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Record marker
+	///
+	/// \param marker_code = Special Marker
+	/// \param length_limit = value
 	void record_marker(SpecialMarker marker_code, unsigned int length_limit = 0xffff);
 
+	/// \brief Start
+	///
+	/// \param raw_data = bool
 	void start(bool raw_data = false);
 
 	unsigned int read_scanlines(unsigned char **data, unsigned int lines);
 
 	unsigned int read_raw_data(const unsigned char ***data, unsigned int lines);
 
+	/// \brief Finish
 	void finish();
-
 
 /// \}
 /// \name Implementation
@@ -125,6 +138,5 @@ private:
 	CL_SharedPtr<CL_JPEGDecompressor_Impl> impl;
 /// \}
 };
-
 
 /// \}
