@@ -388,7 +388,7 @@ void CGameTarget::UpdateModule(int id)
 			m_Session.play();
 		}
 	}
-#endif ENABLE_SOUND
+#endif // ENABLE_SOUND
 }
 
 //------------------------------------------------------------------------------
@@ -472,3 +472,4 @@ void CGameTarget::Draw(int dest_xpos, int dest_ypos, int width, int height, int 
 #endif
 
 }
+

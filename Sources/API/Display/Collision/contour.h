@@ -25,14 +25,13 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
 /// \{
 
-
 #pragma once
-
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,6 +39,18 @@
 
 #include <vector>
 #include "outline_circle.h"
+
+class CL_Contour_Impl
+{
+public:
+	CL_Contour_Impl() : is_inside_contour(false) {};
+
+	std::vector<CL_Pointf> points;
+
+	bool is_inside_contour;
+
+	std::vector<CL_OutlineCircle> sub_circles;
+};
 
 /// \brief Collision detection contour.
 ///
@@ -49,32 +60,51 @@ class CL_Contour
 {
 /// \name Construction
 /// \{
-
- public:
+public:
 	/// \brief Construct a contour
-	CL_Contour() : is_inside_contour(false) {};
+	CL_Contour() : impl(new CL_Contour_Impl()){};
 	~CL_Contour() {};
-
 
 /// \}
 /// \name Attributes
 /// \{
-
- public:
+public:
 	// Points forming the countour.
-	std::vector<CL_Pointf> points;
+	std::vector<CL_Pointf> &get_points() { return impl->points; }
+	const std::vector<CL_Pointf> &get_points() const { return impl->points; }
 
 	// boolean specifying if this contour is inside-out (the inside of a hollow polygon)
 	// if that is the case, then the collision-test will skip the inside_contour-test (because you can
 	// be inside this one, without causing a collision)
-	bool is_inside_contour;
+	bool is_inside_contour() const { return impl->is_inside_contour; }
+
+	void set_inside_contour(bool is_inside) { impl->is_inside_contour = is_inside; }
 
 	// Circles encapsulating a part of the outline.
 	// If two circles arent intersecting, none of the lines inside them
 	// collide either.
-	std::vector<CL_OutlineCircle> sub_circles;
+	std::vector<CL_OutlineCircle> &get_sub_circles() { return impl->sub_circles; }
+	const std::vector<CL_OutlineCircle> &get_sub_circles() const { return impl->sub_circles; }
+/// \}
+
+/// \name Operators
+/// \{
+public:
+	/// \brief Equality operator
+	bool operator==(const CL_Contour &other) const { return impl==other.impl; }
+
+	/// \brief Inequality operator
+	bool operator!=(const CL_Contour &other) const { return impl!=other.impl; }
+
+	/// \brief Less than operator
+	bool operator<(const CL_Contour &other) const { return impl < other.impl; }
+/// \}
+	
+/// \name Implementation
+/// \{
+private:
+	CL_SharedPtr<CL_Contour_Impl> impl;
 /// \}
 };
-
 
 /// \}

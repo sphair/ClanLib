@@ -35,9 +35,9 @@ public:
      	  
 			CL_GraphicContext gc = window.get_gc();
 
-			sprite = CL_Sprite(cl_text("../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"), gc);
-			sprite2 = CL_Sprite(cl_text("../../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png"), gc);
-			sprite_olay = CL_Sprite(cl_text("../../../Resources/GUIThemeLuna/Images/overlay_96x96.png"), gc);
+			sprite = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"));
+			sprite2 = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png"));
+			sprite_olay = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/overlay_96x96.png"));
 
 //			CL_PixelBuffer pbuf = CL_PNGProvider::load(cl_text("../Images/icon_folder.png"));
 			//			CL_PixelBuffer pbuf2 = CL_PNGProvider::load(cl_text("../Images/icon_folder_32x32.png"));

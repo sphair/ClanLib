@@ -109,7 +109,7 @@ public:
 	void AddScore( int value );
 	void CheckExtraLife( void );
 	void TogglePuffBlow( void );
-	void SetPlayerName(char *nptr);
+	void SetPlayerName(const char *nptr);
 
 private:
 	void InitSuck(CSuckable *pnearest);

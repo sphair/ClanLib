@@ -42,11 +42,6 @@ static int LastKey = 0;
 class SuperMethaneBrothers
 {
 public:
-	// This function returns the name of your game
-	virtual char *get_title()
-	{
-		return "Super Methane Brothers";
-	}
 	void on_button_press(const CL_InputEvent &key, const CL_InputState &state)
 	{
 		LastKey = key.id;

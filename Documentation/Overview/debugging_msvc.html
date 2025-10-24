@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Debugging with MSVC - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Debugging with MSVC
+</h2>
+
+<p>When debugging with Microsoft Visual C++ 6,7 or 8, the auto expand keywords
+will provide better Watch and Variable information for common ClanLib types.
+Add the following to autoexp.dat (located in C:\Program Files\Microsoft
+Visual Studio .NET\Common7\Packages\Debugger on my computer):</p>
+
+<pre>
+[AutoExpand]
+; from ClanLib
+CL_SharedPtr&lt;*&gt; =&lt;ptr&gt;
+CL_WeakPtr&lt;*&gt; =&lt;ptr&gt;
+CL_UnknownPtr =&lt;ptr&gt;
+CL_BasicString&lt;char,CL_String8Traits,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt; =&lt;data_ptr,s&gt; length=&lt;data_length&gt;
+CL_BasicString&lt;unsigned short,CL_String16Traits,std::basic_string&lt;unsigned short,std::char_traits&lt;unsigned short&gt;,std::allocator&lt;unsigned short&gt; &gt; &gt; =&lt;data_ptr,su&gt; length=&lt;data_length&gt;
+CL_BasicString&lt;wchar_t,CL_String16Traits,std::basic_string&lt;wchar_t,std::char_traits&lt;wchar_t&gt;,std::allocator&lt;wchar_t&gt; &gt; &gt; =&lt;data_ptr,su&gt; length=&lt;data_length&gt;
+CL_Rect =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+CL_Rectf =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+CL_Point =x=&lt;x&gt; y=&lt;y&gt;
+CL_Pointf =x=&lt;x&gt; y=&lt;y&gt;
+CL_Size =width=&lt;width&gt; height=&lt;height&gt;
+CL_Sizef =width=&lt;width&gt; height=&lt;height&gt;
+CL_Vector =x=&lt;x&gt; y=&lt;y&gt; z=&lt;z&gt; w=&lt;w&gt;
+CL_Vector2 =x=&lt;x&gt; y=&lt;y&gt;
+CL_Color =&lt;color,x&gt;
+</pre>
+
+<p>
+It is also possible disable that it steps into certain commonly used
+classes:
+</p>
+
+<p>
+In Visual C++ 6.0, add the following to autoexp.dat:
+</p>
+<pre>
+[ExecutionControl]
+CL_BasicString&lt;*&gt;::*=NoStepInto
+CL_SharedPtr_Link::*=NoStepInto
+CL_SharedPtr&lt;*&gt;::*=NoStepInto
+CL_WeakPtr&lt;*&gt;::*=NoStepInto
+CL_UnknownPtr::*=NoStepInto
+</pre>
+
+<p>
+In Visual C++ 7 they moved this to the registry:
+</p>
+
+<pre>
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\7.0\NativeDE\StepOver]
+"10"=".*CL_BasicString.*=NoStepInto"
+"15"=".*CL_String.*=NoStepInto"
+"20"=".*CL_SharedPtr.*=NoStepInto"
+"25"=".*CL_WeakPtr.*=NoStepInto"
+"30"=".*CL_UnknownPtr.*=NoStepInto"
+</pre>
+
+<p>
+Be careful not to just apply this .reg as-is, since the key names (10, 15,
+25 etc) could conflict with existing NoStepInto directives from other 3rd
+party software.
+</p>
+
+<p>
+In Visual C++ 8 (2005 beta 2) they moved this to HKEY_LOCAL_MACHINE,
+and instead of using numbers you can now name them properly:
+</p>
+
+<pre>
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\7.0\NativeDE\StepOver]
+"ClanLib BasicString"=".*CL_BasicString.*=NoStepInto"
+"ClanLib String"=".*CL_String.*=NoStepInto"
+"ClanLib SharedPtr"=".*CL_SharedPtr.*=NoStepInto"
+"ClanLib WeakPtr"=".*CL_WeakPtr.*=NoStepInto"
+"ClanLib UnknownPtr"=".*CL_UnknownPtr.*=NoStepInto"
+</pre>
+
+</div>
+</body>
+</html>

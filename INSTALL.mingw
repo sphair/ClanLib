@@ -1,6 +1,11 @@
-$Id: INSTALL.mingw,v 1.8 2004/03/17 14:22:06 sphair Exp $
+IMPORTANT!
+----------
+ClanLib 2.0 is not officially supported under MingW. If you have any
+trouble getting this to work, try searching the forums on clanlib.org.
 
-Readme file for ClanLib 0.7.x using MinGW under Win32
+The following text is the description for using it under ClanLib 1.x:
+
+Readme file for ClanLib using MinGW under Win32
 ---------------------------------------------------------------------------
 This readme will guide you with installing, compiling ClanLib and
 creating your first ClanLib application using the MinGW compiler and

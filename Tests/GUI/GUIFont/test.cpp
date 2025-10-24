@@ -156,8 +156,6 @@ public:
 			clanlib_font_desc.set_weight(400);
 			gui.set_named_font(font_bitmap, clanlib_font_desc);
 
-			CL_Font old_font = gc.get_font();
-
 			CL_Label label(&window);
 			label.set_geometry(CL_Rect(10, 160, 330, 180));
 			label.set_text("Click the button");
@@ -176,7 +174,6 @@ public:
 
 			CL_AcceleratorTable accel_table;
 			gui.exec(accel_table);
-			gc.set_font(old_font);
 		}
 		catch (CL_Exception e)
 		{

@@ -54,9 +54,9 @@ void MainWindow::create_components()
 
 	CL_ListViewIconList icon_list = resource_list->get_icon_list();
 	CL_ListViewIcon icon_disabled;
-	icon_disabled.set_sprite(CL_Sprite("Resources/sweetie-16-em-cross.png", get_gc()), listview_mode_details);
+	icon_disabled.set_sprite(CL_Sprite(get_gc(), "Resources/sweetie-16-em-cross.png"), listview_mode_details);
 	CL_ListViewIcon icon_enabled;
-	icon_enabled.set_sprite(CL_Sprite("Resources/sweetie-16-em-check.png", get_gc()), listview_mode_details);
+	icon_enabled.set_sprite(CL_Sprite(get_gc(), "Resources/sweetie-16-em-check.png"), listview_mode_details);
 	icon_list.set_icon(1, icon_disabled);
 	icon_list.set_icon(2, icon_enabled);
 

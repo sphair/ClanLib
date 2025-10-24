@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="texelcenter"
+	Version="9,00"
+	Name="Texelcenter1"
 	ProjectGUID="{BAB64109-DBA5-439B-A821-5AFF2D8124BC}"
 	RootNamespace="texelcenter"
 	TargetFrameworkVersion="0"

@@ -158,20 +158,20 @@ void CL_CollisionOutline_Generic::set_translation(float x, float y, bool offset_
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			contour_ptr->points[inner_cnt] += translation;
+			contour_ptr->get_points()[inner_cnt] += translation;
 		}
 	}
 
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			contour_ptr->sub_circles[inner_cnt].position += translation;
+			contour_ptr->get_sub_circles()[inner_cnt].position += translation;
 		}
 	}
 
@@ -185,20 +185,20 @@ void CL_CollisionOutline_Generic::rotate(const CL_Angle &add_angle)
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			contour_ptr->points[inner_cnt].rotate(position+rotation_hotspot, add_angle);
+			contour_ptr->get_points()[inner_cnt].rotate(position+rotation_hotspot, add_angle);
 		}
 	}
 
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			contour_ptr->sub_circles[inner_cnt].position.rotate(position+rotation_hotspot, add_angle);
+			contour_ptr->get_sub_circles()[inner_cnt].position.rotate(position+rotation_hotspot, add_angle);
 		}
 	}
 
@@ -214,20 +214,20 @@ void CL_CollisionOutline_Generic::set_angle(const CL_Angle &angle)
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			contour_ptr->points[inner_cnt].rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
+			contour_ptr->get_points()[inner_cnt].rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
 		}
 	}
 
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
 		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			contour_ptr->sub_circles[inner_cnt].position.rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
+			contour_ptr->get_sub_circles()[inner_cnt].position.rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
 		}
 	}
 
@@ -249,11 +249,11 @@ void CL_CollisionOutline_Generic::set_scale(float new_scale_x, float new_scale_y
 	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
-		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
 		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			contour_ptr->points[inner_cnt].x = position.x + ((contour_ptr->points[inner_cnt].x-position.x)*scale_x);
-			contour_ptr->points[inner_cnt].y = position.y + ((contour_ptr->points[inner_cnt].y-position.y)*scale_y);
+			contour_ptr->get_points()[inner_cnt].x = position.x + ((contour_ptr->get_points()[inner_cnt].x-position.x)*scale_x);
+			contour_ptr->get_points()[inner_cnt].y = position.y + ((contour_ptr->get_points()[inner_cnt].y-position.y)*scale_y);
 		}
 	}
 	
@@ -283,7 +283,7 @@ void CL_CollisionOutline_Generic::calculate_radius()
 	std::vector<CL_Contour>::iterator it;
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
-		for(std::vector<CL_Pointf>::const_iterator pit = (*it).points.begin(); pit != (*it).points.end(); pit++)
+		for(std::vector<CL_Pointf>::const_iterator pit = (*it).get_points().begin(); pit != (*it).get_points().end(); pit++)
 		{
 			allpoints.push_back(*pit);
 		}
@@ -309,9 +309,9 @@ void CL_CollisionOutline_Generic::calculate_sub_circles(float radius_multiplier)
 	std::vector<CL_Contour>::iterator it;
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
-		(*it).sub_circles.clear();
+		(*it).get_sub_circles().clear();
 
-		const std::vector<CL_Pointf> &points = (*it).points;
+		const std::vector<CL_Pointf> &points = (*it).get_points();
 
 		// Test that we have at least 2 points
 		if(points.size() < 2)
@@ -338,7 +338,7 @@ void CL_CollisionOutline_Generic::calculate_sub_circles(float radius_multiplier)
 			circle.radius += 0.01f; // Just to make sure.
 			
 			// Add the circle
-			(*it).sub_circles.push_back(circle);
+			(*it).get_sub_circles().push_back(circle);
 
 			// update i for next circle
 			i = circle.end;
@@ -351,15 +351,15 @@ void CL_CollisionOutline_Generic::calculate_smallest_enclosing_discs()
 	std::vector<CL_Contour>::iterator it;
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
-		(*it).sub_circles.clear();
-		CL_Circlef tmpdisc = CL_PointSetMath::minimum_enclosing_disc((*it).points);
+		(*it).get_sub_circles().clear();
+		CL_Circlef tmpdisc = CL_PointSetMath::minimum_enclosing_disc((*it).get_points());
 		CL_OutlineCircle mindisc;
 		mindisc.position = tmpdisc.position;
 		mindisc.radius = tmpdisc.radius;
 		mindisc.radius += 0.01f; // Just to make sure.
 		mindisc.start = 0;
-		mindisc.end   = (*it).points.size(); // This is actualy the first point, but this is how to start and end the same place
-		(*it).sub_circles.push_back(mindisc);
+		mindisc.end   = (*it).get_points().size(); // This is actualy the first point, but this is how to start and end the same place
+		(*it).get_sub_circles().push_back(mindisc);
 	}
 }
 
@@ -368,7 +368,7 @@ void CL_CollisionOutline_Generic::calculate_convex_hulls()
 	std::vector<CL_Contour>::iterator it;
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
-		(*it).points = CL_PointSetMath::convex_hull_from_polygon((*it).points);
+		(*it).get_points() = CL_PointSetMath::convex_hull_from_polygon((*it).get_points());
 	}
 	// We use smallest enclosing discs,
 	// since that gives great results with a convex shapes.
@@ -384,7 +384,7 @@ void CL_CollisionOutline_Generic::optimize(unsigned char check_distance, float c
 	{
 		check_distance = orig_check_distance;
 
-		std::vector<CL_Pointf> &points = (*it).points;
+		std::vector<CL_Pointf> &points = (*it).get_points();
 
 		if( points.empty() ) continue;
 
@@ -492,10 +492,10 @@ void CL_CollisionOutline_Generic::save(const CL_StringRef &filename, CL_VirtualD
 	for( it_cont = contours.begin(); it_cont != contours.end(); ++it_cont )
 	{
 		// number of points in contours
-		output_source.write_uint32((*it_cont).points.size());
+		output_source.write_uint32((*it_cont).get_points().size());
 		
 		std::vector<CL_Pointf>::const_iterator it;
-		for( it = (*it_cont).points.begin(); it != (*it_cont).points.end(); ++it )
+		for( it = (*it_cont).get_points().begin(); it != (*it_cont).get_points().end(); ++it )
 		{
 			// x,y of points
 			output_source.write_float((float)(*it).x);
@@ -534,7 +534,7 @@ bool CL_CollisionOutline_Generic::collide( const CL_CollisionOutline &outline, b
 			}
 			else if( do_inside_test || outline.get_inside_test() )
 			{
-				if( point_inside_contour((*it_contours).points[0], (*it_contours2)))
+				if( point_inside_contour((*it_contours).get_points()[0], (*it_contours2)))
 				{
 					if( collision_info_collect )
 					{
@@ -547,7 +547,7 @@ bool CL_CollisionOutline_Generic::collide( const CL_CollisionOutline &outline, b
 					}
 					any_collisions = true;
 				}
-				if(point_inside_contour((*it_contours2).points[0], (*it_contours)) )
+				if(point_inside_contour((*it_contours2).get_points()[0], (*it_contours)) )
 				{
 					if( collision_info_collect )
 					{
@@ -600,7 +600,7 @@ bool CL_CollisionOutline_Generic::point_inside( const CL_Pointf &point ) const
 bool CL_CollisionOutline_Generic::point_inside_contour( const CL_Pointf &point, const CL_Contour &contour )
 {
 	// In case the contour is inside-out (the inside of a hollow polygon) it makes no sense to do this test.
-	if(contour.is_inside_contour)
+	if(contour.is_inside_contour())
 		return false;
 	
 	CL_LineSegment2f lineX( CL_Pointf(point.x, point.y+0.000f), CL_Pointf(point.x+99999.0f, point.y+0.000f) );
@@ -608,11 +608,11 @@ bool CL_CollisionOutline_Generic::point_inside_contour( const CL_Pointf &point, 
 	// collide the line with the outline.
 	int num_intersections_x = 0;
 
-	const std::vector<CL_Pointf> &points = contour.points;
+	const std::vector<CL_Pointf> &points = contour.get_points();
 
 	std::vector<CL_OutlineCircle>::const_iterator it;
-	for( it = contour.sub_circles.begin();
-		 it != contour.sub_circles.end();
+	for( it = contour.get_sub_circles().begin();
+		 it != contour.get_sub_circles().end();
 		 ++it )
 	{
 		const CL_OutlineCircle &circle = (*it);
@@ -663,16 +663,16 @@ bool CL_CollisionOutline_Generic::contours_collide(const CL_Contour &contour1, c
 	CL_CollidingContours metadata(&contour1, &contour2);
 	
 	std::vector<CL_OutlineCircle>::const_iterator it_oc1, it_oc2;
-	for( it_oc1 = contour1.sub_circles.begin(); it_oc1 != contour1.sub_circles.end(); ++it_oc1 )
+	for( it_oc1 = contour1.get_sub_circles().begin(); it_oc1 != contour1.get_sub_circles().end(); ++it_oc1 )
 	{
-		for( it_oc2 = contour2.sub_circles.begin(); it_oc2 != contour2.sub_circles.end(); ++it_oc2 )
+		for( it_oc2 = contour2.get_sub_circles().begin(); it_oc2 != contour2.get_sub_circles().end(); ++it_oc2 )
 		{
 			if( do_subcirle_test ? (*it_oc1).collide(*it_oc2) : true ) // outline circles collide
 			{
 				// test each line segment inside the colliding circles
 
-				const std::vector<CL_Pointf> &points1 = contour1.points;
-				const std::vector<CL_Pointf> &points2 = contour2.points;
+				const std::vector<CL_Pointf> &points1 = contour1.get_points();
+				const std::vector<CL_Pointf> &points2 = contour2.get_points();
 				
 				int num_points1 = points1.size();
 				int num_points2 = points2.size();
@@ -759,15 +759,15 @@ void CL_CollisionOutline_Generic::calculate_penetration_depth( std::vector< CL_C
 			{
 				CL_CollisionPoint &p1 = (*pit);
 				std::cout << "\tLineSegment1:"
-					<< "(" << cc.contour1->points[p1.contour1_line_start].x
-					<< "," << cc.contour1->points[p1.contour1_line_start].y << ") - "
-					<< "(" << cc.contour1->points[p1.contour1_line_end].x
-					<< "," << cc.contour1->points[p1.contour1_line_end].y << ")\n";
+					<< "(" << cc.contour1->get_points()[p1.contour1_line_start].x
+					<< "," << cc.contour1->get_points()[p1.contour1_line_start].y << ") - "
+					<< "(" << cc.contour1->get_points()[p1.contour1_line_end].x
+					<< "," << cc.contour1->get_points()[p1.contour1_line_end].y << ")\n";
 				std::cout << "\tLineSegment2:"
-					<< "(" << cc.contour2->points[p1.contour2_line_start].x
-					<< "," << cc.contour2->points[p1.contour2_line_start].y << ") - "
-					<< "(" << cc.contour2->points[p1.contour2_line_end].x
-					<< "," << cc.contour2->points[p1.contour2_line_end].y << ")\n";
+					<< "(" << cc.contour2->get_points()[p1.contour2_line_start].x
+					<< "," << cc.contour2->get_points()[p1.contour2_line_start].y << ") - "
+					<< "(" << cc.contour2->get_points()[p1.contour2_line_end].x
+					<< "," << cc.contour2->get_points()[p1.contour2_line_end].y << ")\n";
 				std::cout << "\tColPoint:  ("<<p1.point.x<<","<<p1.point.y<<")\n";
 				std::cout << "\tColNormal: ("<<p1.normal.x<<","<<p1.normal.y<<")\n";
 				std::cout << "\tis_entry: " << p1.is_entry <<"\n";
@@ -815,17 +815,17 @@ void CL_CollisionOutline_Generic::calculate_penetration_depth( std::vector< CL_C
 			// Get points inside on c1
 			c1points.push_back(p2.point - p1.point);
 			c1points.push_back(p1.point - p1.point);
-			for(int p4 = p1.contour1_line_end; p4 != p2.contour1_line_end; p4 = ((p4+1) % cc.contour1->points.size()))
+			for(int p4 = p1.contour1_line_end; p4 != p2.contour1_line_end; p4 = ((p4+1) % cc.contour1->get_points().size()))
 			{
-				c1points.push_back(cc.contour1->points[p4] - p1.point);
+				c1points.push_back(cc.contour1->get_points()[p4] - p1.point);
 				//c1points.push_back(cc.contour1->points[p]);
 			}
 			// Get points inside on c2
 			c2points.push_back(p2.point - p1.point);
 			c2points.push_back(p1.point - p1.point);
-			for(int p6 = p2.contour2_line_end; p6 != p1.contour2_line_end; p6 = ((p6+1) % cc.contour2->points.size()))
+			for(int p6 = p2.contour2_line_end; p6 != p1.contour2_line_end; p6 = ((p6+1) % cc.contour2->get_points().size()))
 			{
-				c2points.push_back(cc.contour2->points[p6] - p1.point);
+				c2points.push_back(cc.contour2->get_points()[p6] - p1.point);
 				//c2points.push_back(cc.contour2->points[p]);
 			}
 		

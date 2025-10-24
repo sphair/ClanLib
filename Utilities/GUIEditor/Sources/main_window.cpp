@@ -109,14 +109,14 @@ void MainWindow::populate_tools_toolbar()
 {
 	toolbar_tools->func_item_selected().set(this, &MainWindow::on_tool_selected);
 
-	CL_Sprite sprite(cl_text("gfx/pointer.png"), get_gc());
+	CL_Sprite sprite(get_gc(), cl_text("gfx/pointer.png"));
 	CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, cl_text("Select"), 1337);
 	tbi.set_toggling(true);
 
 	const std::vector<ComponentType *> &types = ComponentTypes::get_types();
 	for (std::vector<ComponentType *>::size_type index = 0; index < types.size(); index++)
 	{
-		CL_Sprite sprite(types[index]->icon, get_gc());
+		CL_Sprite sprite(get_gc(), types[index]->icon);
 		tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
 		tbi.set_toggling(true);
 	}
@@ -125,16 +125,16 @@ void MainWindow::populate_tools_toolbar()
 void MainWindow::populate_main_toolbar()
 {
 	toolbar_main->func_item_clicked().set(this, &MainWindow::on_main_toolbar_clicked);
-	toolbar_main->insert_item(CL_Sprite(cl_text("new_16x16.png"), get_gc()), 0, cl_text("New"), main_toolbar_new);
-	toolbar_main->insert_item(CL_Sprite(cl_text("open_16x16.png"), get_gc()), 0, cl_text("Open"), main_toolbar_open);
-	toolbar_main->insert_item(CL_Sprite(cl_text("save_16x16.png"), get_gc()), 0, cl_text("Save As"), main_toolbar_save);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("new_16x16.png")), 0, cl_text("New"), main_toolbar_new);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("open_16x16.png")), 0, cl_text("Open"), main_toolbar_open);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("save_16x16.png")), 0, cl_text("Save As"), main_toolbar_save);
 }
 
 void MainWindow::populate_mode_toolbar()
 {
 	toolbar_mode->func_item_clicked().set(this, &MainWindow::on_mode_toolbar_clicked);
-	toolbar_mode->insert_item(CL_Sprite(cl_text("gfx/editor_mode_position.png"), get_gc()), 0, cl_text("Pos"), edit_mode_position);
-	toolbar_mode->insert_item(CL_Sprite(cl_text("gfx/editor_mode_taborder.png"), get_gc()), 0, cl_text("Tab"), edit_mode_taborder);
+	toolbar_mode->insert_item(CL_Sprite(get_gc(), cl_text("gfx/editor_mode_position.png")), 0, cl_text("Pos"), edit_mode_position);
+	toolbar_mode->insert_item(CL_Sprite(get_gc(), cl_text("gfx/editor_mode_taborder.png")), 0, cl_text("Tab"), edit_mode_taborder);
 
 	toolbar_mode->set_single_selection(true);
 

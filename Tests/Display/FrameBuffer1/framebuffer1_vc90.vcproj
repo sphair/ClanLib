@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
-	Name="framebuffer1"
+	Version="9,00"
+	Name="Framebuffer1"
 	ProjectGUID="{903374C5-87EA-4010-BD44-95D54D9A3834}"
 	TargetFrameworkVersion="0"
 	>

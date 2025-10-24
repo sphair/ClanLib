@@ -60,10 +60,10 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 		// the image contains no alpha - add only a rectangle
 		CL_Contour contour;
 		
-		contour.points.push_back( CL_Pointf(0.0f, 0.0f) );
-		contour.points.push_back( CL_Pointf(0.0f, float(height)) );
-		contour.points.push_back( CL_Pointf(float(width), float(height)) );
-		contour.points.push_back( CL_Pointf(float(width), 0.0f) );
+		contour.get_points().push_back( CL_Pointf(0.0f, 0.0f) );
+		contour.get_points().push_back( CL_Pointf(0.0f, float(height)) );
+		contour.get_points().push_back( CL_Pointf(float(width), float(height)) );
+		contour.get_points().push_back( CL_Pointf(float(width), 0.0f) );
 		
 		contours.push_back(contour);
 		
@@ -114,7 +114,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 	{
 		CL_Contour contour;
 		
-		contour.points.push_back(start_point);
+		contour.get_points().push_back(start_point);
 
 		// initialize outline finder algorithm (get_next_point)
 		last_point = CL_Pointf(start_point);
@@ -123,35 +123,35 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 		{
 			// This is the top left corner of an outside contour
 			last_dir = DIR_LEFT; // Since we are now going down, last time we was going left.
-			contour.is_inside_contour = false;
+			contour.set_inside_contour(false);
 		}
 		else if(last_corner == 0x7)
 		{
 			// This is the top left corner of an inside contour
 			last_dir = DIR_UP; // Since we are now going right, last time was up
-			contour.is_inside_contour = true;
+			contour.set_inside_contour(true);
 		}
 		else
 			throw CL_Exception(cl_text("Arg, the start corner is not of any of the two known types: 0x8, 0x7\n"));
 			
 		while( true )
 		{
-			get_next_point(contour.points);
+			get_next_point(contour.get_points());
 			
-			if( contour.points.front().x == contour.points.back().x
-				&& contour.points.front().y == contour.points.back().y )
+			if( contour.get_points().front().x == contour.get_points().back().x
+				&& contour.get_points().front().y == contour.get_points().back().y )
 			{
-				if( contour.points.size() > 3 )
+				if( contour.get_points().size() > 3 )
 				{
 					// line loop closed, remove last point (its the same as the first)
-					contour.points.pop_back();
+					contour.get_points().pop_back();
 					break;
 				}
 				else
-					throw CL_Exception(cl_format(cl_text("Error: front() == back(), but only %1 points in list"), (int)contour.points.size()));
+					throw CL_Exception(cl_format(cl_text("Error: front() == back(), but only %1 points in list"), (int)contour.get_points().size()));
 			}
 
-			if( contour.points.size() > 10000 ) break; // Sanity ?
+			if( contour.get_points().size() > 10000 ) break; // Sanity ?
 		}
 		// Now we have found the points for the contour, but this contour might be an
 		// inside of some other contour.
@@ -159,10 +159,10 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 		//    but the inside one is inside-out, very bad !)
 		// If this is the case we should "connect" it to the outer contour, that way they
 		// become one concave contour, and all collision-tests will work.
-		if(!contour.is_inside_contour)
+		if(!contour.is_inside_contour())
 		{
 			// It's a normal (outside) contour
-			contour.sub_circles.clear();
+			contour.get_sub_circles().clear();
 			contours.push_back(contour);
 		}
 		else
@@ -171,15 +171,15 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 			{
 				// Reverse the points (and shift by one, to get the same point as the front)
 				std::vector<CL_Pointf> rpoints;
-				rpoints.push_back(contour.points.front());
-				contour.points.erase(contour.points.begin());
-				std::vector<CL_Pointf>::reverse_iterator it = contour.points.rend();
+				rpoints.push_back(contour.get_points().front());
+				contour.get_points().erase(contour.get_points().begin());
+				std::vector<CL_Pointf>::reverse_iterator it = contour.get_points().rend();
 				do
 				{
 					it--;
 					rpoints.push_back(*it);
 				}
-				while(it != contour.points.rbegin());
+				while(it != contour.get_points().rbegin());
 				// Since we will be going through our starting point twice, we add it to the end.
 				rpoints.push_back(rpoints.front());
 				
@@ -195,11 +195,11 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 				// then all we need to do is combine the two vectors, into one great list of points.
 				std::vector<CL_Pointf> combined_points;
 				// First add from the outer contour untill we reach the point where we should splice.
-				while(outside_contour->points.size() > 0)
+				while(outside_contour->get_points().size() > 0)
 				{
-					CL_Pointf outside_point = outside_contour->points.front();
+					CL_Pointf outside_point = outside_contour->get_points().front();
 					combined_points.push_back(outside_point);
-					outside_contour->points.erase(outside_contour->points.begin());
+					outside_contour->get_points().erase(outside_contour->get_points().begin());
 					if(outside_point.x == tmp_point.x && outside_point.y == tmp_point.y)
 					{
 						CL_Pointf bridge_point(outside_point);
@@ -228,7 +228,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 					}
 				}
 				// Now we have combined the points, then we just add them to the other contour.
-				outside_contour->points = combined_points;
+				outside_contour->get_points() = combined_points;
 			}
 		}
 	
@@ -401,7 +401,7 @@ CL_Contour *CL_OutlineProviderBitmap_Generic::point_in_outline(unsigned int x, u
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
 		std::vector<CL_Pointf>::iterator ita;
-		for( ita = (*it).points.begin(); ita != (*it).points.end(); ++ita )
+		for( ita = (*it).get_points().begin(); ita != (*it).get_points().end(); ++ita )
 		{
 			if( (*ita).x == x && (*ita).y == y ) 
 			{

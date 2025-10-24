@@ -1,10 +1,23 @@
 
 #include "reference_grouped_classes.h"
 #include "reference_docs.h"
+#include <algorithm>
 
 void ReferenceGroupedClasses::load()
 {
 }
+
+	class SortByGroupAndSection
+	{
+	public:
+		bool operator()(ReferenceClass *a, ReferenceClass *b)
+		{
+			if (a->clan_section != b->clan_section)
+				return a->clan_section < b->clan_section;
+			else
+				return a->clan_group < b->clan_group;
+		}
+	};
 
 void ReferenceGroupedClasses::save(const CL_StringRef &filename)
 {
@@ -39,11 +52,11 @@ void ReferenceGroupedClasses::save(const CL_StringRef &filename)
 		"<!-- clanlib header end -->"
 		"<center>"
 		"<p>"
-		"<a href=\"http://clanlib.org/docs.html\">Home</a> |"
+//		"<a href=\"http://clanlib.org/docs.html\">Home</a> |"
 		"<a href=\"classes.html\">All Classes</a> |"
 		"<a href=\"modules.html\">Grouped Classes</a> |"
-		"<a href=\"index.html\">Index</a> |"
-		"<a href=\"search.html\">Search</a>"
+		"<a href=\"index.html\">Index</a>"
+//		"<a href=\"search.html\">Search</a>"
 		"</p>"
 		"</center>"
 		"<h1>Grouped Classes</h1>"
@@ -51,6 +64,63 @@ void ReferenceGroupedClasses::save(const CL_StringRef &filename)
 		"<tr><td valign=top><p>";
 	modules_file.write(html.data(), html.length());
 
+
+	std::vector<CL_String> lines;
+	
+	std::vector<ReferenceClass *> sorted_classes;
+	for (std::list<ReferenceClass>::iterator it = ReferenceDocs::class_list.begin(); it != ReferenceDocs::class_list.end(); ++it)
+		sorted_classes.push_back(&(*it));
+		
+	
+	std::sort(sorted_classes.begin(), sorted_classes.end(), SortByGroupAndSection());
+	
+	CL_String cur_group, cur_section;
+	for (std::vector<ReferenceClass *>::iterator it = sorted_classes.begin(); it != sorted_classes.end(); ++it)
+	{
+		if (cur_section != (*it)->clan_section)
+		{
+			if (!cur_section.empty())
+				lines.push_back(CL_String());
+			cur_group.clear();
+			cur_section = (*it)->clan_section;
+			html = cl_format("<p><b>%1</b></p>", cur_section);
+			lines.push_back(html);
+		}
+		if (cur_group != (*it)->clan_group)
+		{
+			if (!cur_group.empty())
+				lines.push_back(CL_String());
+			cur_group = (*it)->clan_group;
+			html = cl_format("<p><i>%1</i></p>", cur_group);
+			lines.push_back(html);
+		}
+		html = cl_format("<p><a href=\"%1.html\">%2</a></p>", (*it)->name, (*it)->name);
+		lines.push_back(html);
+	}
+	
+	int num_cols = 5;
+	int num_rows = (lines.size()+num_cols-1)/num_cols;
+	for (int row = 0; row < num_rows; row++)
+	{
+		html = "<tr>";
+		modules_file.write(html.data(), html.length());
+		for (int col = 0; col < num_cols; col++)
+		{
+			int line = row+col*num_rows;
+			html = "<td>";
+			modules_file.write(html.data(), html.length());
+			
+			if (line < lines.size())
+				modules_file.write(lines[line].data(), lines[line].length());
+			
+			html = "</td>";
+			modules_file.write(html.data(), html.length());
+		}
+		html = "</tr>";
+		modules_file.write(html.data(), html.length());
+	}
+
+#ifdef oldcode
 
 
 	const int tabrows = 4;
@@ -163,7 +233,7 @@ void ReferenceGroupedClasses::save(const CL_StringRef &filename)
 		++it1;
 	}
 	sumintablines += intabline;
-
+#endif
 
 
 

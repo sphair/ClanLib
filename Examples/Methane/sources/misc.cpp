@@ -87,35 +87,35 @@ static PARTYOFFS	*party_group8[] = {
 static PARTYOFFS	*party_group9[] = {
 	0};
 
-static char end_txt1[] =
+static const char end_txt1[] =
 	"\x20""PROJECT DIRECTOR\01"
 	"\x30""DELVIN SORRELL\01";
 
-static char end_txt2[] =
+static const char end_txt2[] =
 	"\x18""BACKGROUND BLOCKS\01"
 	"\x30""DEBBIE SORRELL\01";
 
-static char end_txt3[] =
+static const char end_txt3[] =
 	"\x28""THE DESIGN TEAM\01"
 	"\x38""LLOYD MURPHY\01"
 	"\x30""DEBBIE SORRELL\01"
 	"\x30""DELVIN SORRELL\01"
 	"\x60""MARK PAGE\01";
 
-static char end_txt4[] =
+static const char end_txt4[] =
 	"\x70""PICKUPS\01"
 	"\x38""TONY GAITSKELL\01";
 
-static char end_txt5[] =
+static const char end_txt5[] =
 	"\x48""SPRITES AND\01"
 	"\x58""ANIMATION\01"
 	"\x40""LLOYD MURPHY\01";
 
-static char end_txt6[] =
+static const char end_txt6[] =
 	"\x70""SUPPORT\01"
 	"\x60""TONY KING\01";
 
-static char end_txt7[] =
+static const char end_txt7[] =
 	"\x38""MUSIC AND SFX\01"
 	"\x50""MATT OWENS\01";
 
@@ -194,7 +194,7 @@ PLAYER_STATUS pstat2 = {
 //------------------------------------------------------------------------------
 // Level Text Names
 //------------------------------------------------------------------------------
-char *level_text_names[NUM_STD_LEVELS] =
+const char *level_text_names[NUM_STD_LEVELS] =
 {
 "THIS IS EASY","FRUIT SURPRISE","FOUR EDGES","FLYING FRUIT","GAS EM!",
 "SWITCH HUNT","FRYING TONIGHT","ROUND AND ROUND","WHIRLYGIGS GALORE",
@@ -1381,28 +1381,28 @@ void CSwitchObj::Do( void )
 // The Text
 //------------------------------------------------------------------------------
 
-static char *key_txt_1a[]={"GREAT YOU GOT THE", "FIRST PART", 0};
-static char *key_txt_1b[]={"ONLY 3 PARTS OF THE", "KEY LEFT TO GET", 0};
-static char *key_txt_1c[]={"NOW YOU HAVE THE", "FIRST PART","WHERE ARE THE REST",0};
+static const char *key_txt_1a[]={"GREAT YOU GOT THE", "FIRST PART", 0};
+static const char *key_txt_1b[]={"ONLY 3 PARTS OF THE", "KEY LEFT TO GET", 0};
+static const char *key_txt_1c[]={"NOW YOU HAVE THE", "FIRST PART","WHERE ARE THE REST",0};
 
-static char *key_txt_2a[]={"THAT IS 2 PIECES", "HALF WAY THERE", 0};
-static char *key_txt_2b[]={"DO NOT WORRY THE", "FIRST 2 WERE HARD","THE REST IS EASY",0};
-static char *key_txt_2c[]={"ANOTHER PIECE ", "ONLY 2 TO GO", 0};
+static const char *key_txt_2a[]={"THAT IS 2 PIECES", "HALF WAY THERE", 0};
+static const char *key_txt_2b[]={"DO NOT WORRY THE", "FIRST 2 WERE HARD","THE REST IS EASY",0};
+static const char *key_txt_2c[]={"ANOTHER PIECE ", "ONLY 2 TO GO", 0};
 
-static char *key_txt_3a[]={"3 PIECES YOU ARE", "DOING WELL", 0};
-static char *key_txt_3b[]={"LUCKY 3 JUST 1 MORE", "TO GET", 0};
-static char *key_txt_3c[]={"ONLY 1 MORE TO GO", "WILL YOU MAKE IT",0};
+static const char *key_txt_3a[]={"3 PIECES YOU ARE", "DOING WELL", 0};
+static const char *key_txt_3b[]={"LUCKY 3 JUST 1 MORE", "TO GET", 0};
+static const char *key_txt_3c[]={"ONLY 1 MORE TO GO", "WILL YOU MAKE IT",0};
 
-static char *key_txt_4a[]={"GOT ALL THE PARTS", "WELL DONE YOU CAN","NOW ESCAPE",0};
-static char *key_txt_4b[]={"THAT IS IT THE GAME", "IS COMPLETED", 0};
-static char *key_txt_4c[]={"WELL DONE YOU HAVE", "COMPLETED","METHANE BROTHERS",0};
+static const char *key_txt_4a[]={"GOT ALL THE PARTS", "WELL DONE YOU CAN","NOW ESCAPE",0};
+static const char *key_txt_4b[]={"THAT IS IT THE GAME", "IS COMPLETED", 0};
+static const char *key_txt_4c[]={"WELL DONE YOU HAVE", "COMPLETED","METHANE BROTHERS",0};
 
-static char **key_txt_1[] = {key_txt_1a,key_txt_1b,key_txt_1c};
-static char **key_txt_2[] = {key_txt_2a,key_txt_2b,key_txt_2c};
-static char **key_txt_3[] = {key_txt_3a,key_txt_3b,key_txt_3c};
-static char **key_txt_4[] = {key_txt_4a,key_txt_4b,key_txt_4c};
+static const char **key_txt_1[] = {key_txt_1a,key_txt_1b,key_txt_1c};
+static const char **key_txt_2[] = {key_txt_2a,key_txt_2b,key_txt_2c};
+static const char **key_txt_3[] = {key_txt_3a,key_txt_3b,key_txt_3c};
+static const char **key_txt_4[] = {key_txt_4a,key_txt_4b,key_txt_4c};
 
-static char ***key_txt[] = {key_txt_1,key_txt_2,key_txt_3,key_txt_4};
+static const char ***key_txt[] = {key_txt_1,key_txt_2,key_txt_3,key_txt_4};
 
 //------------------------------------------------------------------------------
 //! \brief Initialise the keyroom
@@ -1438,8 +1438,8 @@ void CKeyRoomObj::Setup( int keytype )
 	int delay;
 
 	int offset;
-	char ***bunch;
-	char **txtset;
+	const char ***bunch;
+	const char **txtset;
 
 	keytype--;	// 0 to 3
 	keytype = keytype&3;	// Validate it is 0 to 3

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="Image1"
-	ProjectGUID="{48750355-940C-4DB8-8E60-3C12A0D50D73}"
+	ProjectGUID="{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>

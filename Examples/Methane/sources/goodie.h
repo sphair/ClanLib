@@ -80,7 +80,7 @@ public:
 	void FlowerGoodie( void );
 	void SausageGoodie( void );
 	int CheckPickedUp( void );
-	void ChkSpecial( int *cntptr, int toynumber, int max, char *text );
+	void ChkSpecial( int *cntptr, int toynumber, int max, const char *text );
 public:
 	int m_GFlags;
 	int m_GScore;

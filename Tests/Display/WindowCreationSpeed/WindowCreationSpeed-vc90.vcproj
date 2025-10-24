@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="WindowCreationSpeed"
-	ProjectGUID="{4E27E943-27C7-4F00-A431-B6ACA236ACD2}"
+	ProjectGUID="{EA15BD07-102D-48E1-AAA2-B58FA1A2452A}"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>

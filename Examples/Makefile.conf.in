@@ -5,7 +5,7 @@
 #
 
 PACKAGES = $(patsubst %,%-@LT_RELEASE@,$(LIBS))
-CXXFLAGS += `pkg-config --cflags $(PACKAGES)`
+CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -pthread
 
 #EXAMPLE_BIN contains list of example binaries to build
 

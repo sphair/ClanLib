@@ -92,7 +92,7 @@ void CL_OutlineProviderFile_Generic::load(const CL_StringRef &filename)
 			point.x = input_source.read_float();
 			point.y = input_source.read_float();
 
-			contour.points.push_back(point);
+			contour.get_points().push_back(point);
 		}
 		
 		contours.push_back(contour);

@@ -60,11 +60,11 @@ void ReferenceFunction::save(const CL_StringRef &filename)
 		"<!-- clanlib header end -->"
 		"<center>"
 		"<p>"
-		"<a href=\"http://clanlib.org/docs.html\">Home</a> |"
+//		"<a href=\"http://clanlib.org/docs.html\">Home</a> |"
 		"<a href=\"classes.html\">All Classes</a> |"
 		"<a href=\"modules.html\">Grouped Classes</a> |"
-		"<a href=\"index.html\">Index</a> |"
-		"<a href=\"search.html\">Search</a>"
+		"<a href=\"index.html\">Index</a>"
+//		"<a href=\"search.html\">Search</a>"
 		"</p>"
 		"</center>",
 		name);

@@ -35,7 +35,7 @@ typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 
 PageTarget::PageTarget()
 {
-	target_version = 710;
+	target_version = 900;
 	include_unicode = false;
 	include_mtdll = false;
 	include_dll = false;

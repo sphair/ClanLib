@@ -1,6 +1,8 @@
-$Id: INSTALL.linux,v 1.17 2004/03/17 14:22:06 sphair Exp $
+There is also an online guide to installing ClanLib. Please read it at
+http://clanlib.org/docs/clanlib-2.0.0/overview/
 
-Readme file for ClanLib 0.7.x under Linux
+
+Readme file for ClanLib under Linux
 ---------------------------------------------------------------------------
 This readme will guide you with compiling, installing ClanLib and creating
 your first ClanLib application.
@@ -17,12 +19,11 @@ If you have downloaded the binaries, you can skip section 2 and 3.
 
 1. Getting started
 ---------------------------------------------------------------------------
-Make sure you have all the required libraries and programms you need
+Make sure you have all the required libraries and programs you need
 before you start compiling ClanLib. Currently, you need at least zlib,
 libjpg and libpng to compile ClanLib and pkgconfig to guide at
 the compilation of examples and games using ClanLib. Check out the
-Links and Download page on our website for more info on these
-libraries.
+Download page on our website for more info on these libraries.
 
 Remember to read the README if you run into any problems!
 
@@ -30,12 +31,10 @@ This is the linux/unix INSTALL document, have a look at INSTALL.win32
 for the win32 installation & readme information.
 
 
-2. Checking out from CVS
+2. Checking out from SVN
 ---------------------------------------------------------------------------
-If you download a nightly snapshot, or this is an official release, skip
-this step.
-
-If checked out from cvs, run autogen.sh to produce the configure script:
+If checked out from svn, or the configure script is not existing, run 
+autogen.sh to produce the configure script:
 
   ./autogen.sh
 
@@ -73,7 +72,7 @@ Doing so will reduce the compile size by a half.
 A simple makefile used to compile ClanLib under Linux could look like
 this:
 
-PACKAGES = clanCore-0.7 clanDisplay-0.7 clanApp-0.7 clanGL-0.7
+PACKAGES = clanCore-2.0 clanDisplay-2.0 clanApp-2.0 clanGL-2.0
 CPPFLAGS = `pkg-config --cflags $(PACKAGES)`
 LIBS = `pkg-config --libs $(PACKAGES)`
 OBJS = simple.o
@@ -94,7 +93,6 @@ Optional libraries:
      If you want to use MikMod, add clanMikMod
      If you want to use Vorbis, add clanVorbis
      If you want to use GUI, add clanGUI
-     If you want to use SDL, add clanSDL
 
 If you are not using pkg-config to compile your program, you might want to
 refer to INSTALL.mingw in order to link your program with the libraries
@@ -104,76 +102,12 @@ this is not the case if you use pkg-config, it will handle it for you.
 therefore it is recommended that you use pkg-config in your makefile.
 
 
-5. Creating a simple application
+6. Compiling a sample application
 ---------------------------------------------------------------------------
 
-#include <ClanLib/gl.h>
-#include <ClanLib/core.h>
-#include <ClanLib/application.h>
-#include <ClanLib/display.h>
-
-class MyApp : public CL_ClanApplication
-{
-public:
-	virtual int main(int argc, char **argv)
-	{
-		// Create a console window for text-output if not available
-		// Use printf or cout to display some text in your program
-		CL_ConsoleWindow console("Console");
-		console.redirect_stdio();
-
-		try
-		{
-			// Initialize ClanLib base components
-			CL_SetupCore setup_core;
-
-			// Initialize the ClanLib display component
-			CL_SetupDisplay setup_display;
-
-			// Initialize the ClanLib GL component
-			CL_SetupGL setup_gl;
-
-			// Create a display window
-			CL_DisplayWindow window("ClanLib application", 640, 480);
-
-			// Run until someone presses escape
-			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
-			{
-				// Clear the display in a dark blue nuance
-				// The four arguments are red, green, blue and alpha (defaults to 255)
-				// All color nuances in ClanLib are measured in the interval 0->255
-				CL_Display::clear(CL_Color(0, 0, 50));
-
-				// Flip the display (using a double-buffer),
-				// showing on the screen what we have drawed
-				// since last call to flip()
-				CL_Display::flip();
-
-				// This call updates input and performs other "housekeeping"
-				// Call this each frame
-				// Also, gives the CPU a rest for 10 milliseconds to catch up
-				CL_System::keep_alive(10);
-			}
-		}
-		// Catch any errors from ClanLib
-		catch (CL_Error err)
-		{
-			// Display the error message
-			std::cout << err.message.c_str() << std::endl;
-		}
-
-		// Display console close message and wait for a key
-		console.display_close_message();
-
-		return 0;
-	}
-} app;
-
-
-6. Problems ?
----------------------------------------------------------------------------
-Please read the FAQ on http://clanlib.org for common errors and explanations!
-
+Under Examples directory, you can find a selection of ClanLib examples.
+Try out the Basic2D example to see how you do some simple 2D graphics, and
+making sure your ClanLib installation is ok.
 
 --
 Enjoy,

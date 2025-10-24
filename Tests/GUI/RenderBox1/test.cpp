@@ -22,7 +22,7 @@ class App : public CL_ClanApplication
 			
 			gc.set_map_mode(cl_map_2d_upper_left);
 
-			CL_Sprite spr1("testimage.png", gc);
+			CL_Sprite spr1(gc, "testimage.png");
 			while(1)
 			{
 				gc.clear();

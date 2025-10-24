@@ -1,16 +1,14 @@
-$Id: CREDITS,v 1.26 2004/04/14 18:19:39 sphair Exp $
-
 This file contains the somewhat complete list of the people, who made
-ClanLib what it is today. If you contribute anything to ClanLib, please feel
+ClanLib 2.x what it is today. If you contribute anything to ClanLib, please feel
 free to add yourself to this file!
 
 ClanLib developers:
 (Ranked after coolness, work and activeness)
 
-  Magnus Norddahl <mbn at clanlib.org>
-  Kenneth Gangstoe <sphair at clanlib.org>
-  Harry Storbacka <harrysto at nic.fi>
-  Ingo Ruhnke <grumbel at gmx.de>
-  Sean Heber <sean at fifthace.com>
-  Mark Page <rombust at postmaster.co.uk>
+  Magnus Norddahl
+  Kenneth Gangstoe 
+  Harry Storbacka 
+  Mark Page
+  Ingo Ruhnke
+  Sean Heber 
 

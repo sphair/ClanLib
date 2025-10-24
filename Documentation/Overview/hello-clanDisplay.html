@@ -56,16 +56,16 @@ int DisplayProgram::main(const std::vector&lt;CL_String&gt; &amp;args)
 	// Retrieve some commonly used objects:
 	CL_GraphicContext gc = window.get_gc();
 	CL_InputDevice keyboard = window.get_ic().get_keyboard();
-	CL_Font font(gc, "Tahoma", 20);
+	CL_Font font(gc, "Tahoma", 30);
 	
 	// Loop until user hits escape:
 	while (!keyboard.get_keycode(CL_KEY_ESCAPE))
 	{
 		// Draw some text and lines:
 		gc.clear(CL_Colord::cadetblue);
-		gc.set_font(font);
-		CL_Draw::line(gc, 0, 0, 640, 480, CL_Colord::yellow);
-		gc.draw_text(10, 10, "Hello World!", CL_Colord::lightseagreen);
+
+		CL_Draw::line(gc, 0, 110, 640, 110, CL_Colorf::yellow);
+		font.draw_text(gc, 100, 100, "Hello World!", CL_Colorf::lightseagreen);
 		
 		// Make the stuff visible:
 		window.flip();

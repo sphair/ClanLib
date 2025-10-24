@@ -829,7 +829,7 @@ void CGoodieObj::Do( void )
 //!	\param max = Number of objects to pickup before the toy explosion
 //!	\param text = Message to display
 //------------------------------------------------------------------------------
-void CGoodieObj::ChkSpecial( int *cntptr, int toynumber, int max, char *text )
+void CGoodieObj::ChkSpecial( int *cntptr, int toynumber, int max, const char *text )
 {
 	int cnt;
 	(*cntptr)++;

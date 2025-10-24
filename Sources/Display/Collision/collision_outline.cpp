@@ -285,11 +285,11 @@ void CL_CollisionOutline::draw(
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
 	{
 		// Draw the contour
-		unsigned int numpoints = impl->contours[i].points.size();
+		unsigned int numpoints = impl->contours[i].get_points().size();
 		for(unsigned int s = 0; s < numpoints; s++)
 		{
-			const CL_Pointf &p1 = impl->contours[i].points[s];
-			const CL_Pointf &p2 = impl->contours[i].points[(s+1) % numpoints];
+			const CL_Pointf &p1 = impl->contours[i].get_points()[s];
+			const CL_Pointf &p2 = impl->contours[i].get_points()[(s+1) % numpoints];
 			CL_Draw::line(gc, x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
 		}
 
@@ -303,7 +303,7 @@ void CL_CollisionOutline::draw(
 
 		for(unsigned int s1 = 0; s1 < numpoints; s1++)
 		{
-			const CL_Pointf &p1 = impl->contours[i].points[s1];
+			const CL_Pointf &p1 = impl->contours[i].get_points()[s1];
 			CL_Draw::point(gc, x + p1.x + 0.5f, y + p1.y + 0.5f, colorinv);
 		}
 
@@ -320,11 +320,11 @@ void CL_CollisionOutline::draw_sub_circles(
 	// Draw the circles
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
 	{
-		unsigned int numcircles = impl->contours[i].sub_circles.size();
+		unsigned int numcircles = impl->contours[i].get_sub_circles().size();
 		for(unsigned int s = 0; s < numcircles; s++)
 		{
-			CL_Pointf center = impl->contours[i].sub_circles[s].position;
-			float radius     = impl->contours[i].sub_circles[s].radius;
+			CL_Pointf center = impl->contours[i].get_sub_circles()[s].position;
+			float radius     = impl->contours[i].get_sub_circles()[s].radius;
 			float numsegments = 16;
 			for(float e = 0; e < numsegments; e++)
 			{

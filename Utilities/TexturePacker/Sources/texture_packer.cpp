@@ -53,9 +53,9 @@ ResourceItem *TexturePacker::load_resource(CL_String &resource_id, CL_Resource &
 
 ResourceItem *TexturePacker::load_sprite(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
-	CL_SpriteDescription desc(resource_id, &resources, gc);
+	CL_SpriteDescription desc(gc, resource_id, &resources);
 
-	CL_Sprite sprite(resource_id, &resources, gc);
+	CL_Sprite sprite(gc, resource_id, &resources);
 	sprite.set_play_loop(true);
 	sprite.set_alignment(origin_top_left);
 
@@ -68,7 +68,7 @@ ResourceItem *TexturePacker::load_sprite(CL_String &resource_id, CL_Resource &re
 
 ResourceItem *TexturePacker::load_image(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
-	CL_SpriteDescription desc(resource_id, &resources, gc);
+	CL_SpriteDescription desc(gc, resource_id, &resources);
 
 	CL_Image image(gc, resource_id, &resources);
 	image.set_alignment(origin_top_left);

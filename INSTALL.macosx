@@ -1,3 +1,10 @@
+IMPORTANT!
+----------
+ClanLib 2.0 is not yet supported under MacOS. If you want to help us
+finish the MacOS port, please contact us through the forum.
+
+The following text is the description for using it under ClanLib 1.x:
+
 ---------------------------------------------------------------------------
 Building ClanLib on Mac OS X
 ---------------------------------------------------------------------------

@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.0.0)
+AC_INIT(ClanLib, 2.0.1)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=0
-CLANLIB_MICRO_VERSION=0
+CLANLIB_MICRO_VERSION=1
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 
@@ -559,7 +559,7 @@ dnl API header files for the Modules which will be installed
 ClanLib_API_Modules="$ClanLib_API_Modules \$(clanApp_includes)"
 
 dnl Default examples which will be build
-ClanLib_Examples="Directory Minimum Resources ResourcesCustom Signals ThreadSync XML Zip"
+ClanLib_Examples="CommandLine"
 
 CLANLIB_ENABLE_MODULES(Core)
 
@@ -568,7 +568,6 @@ if test "$enable_clanDisplay" = "yes"; then
 fi
 if test "$enable_clanSound" = "yes"; then
     CLANLIB_ENABLE_MODULES(Sound)
-	ClanLib_Examples="$ClanLib_Examples SoundFilters SoundBuffer StreamSoundProvider PlayCD"
 fi
 
 if test "$enable_clanDatabase" = "yes"; then
@@ -585,12 +584,12 @@ fi
 
 if test "$enable_clanGL" = "yes"; then
     CLANLIB_ENABLE_MODULES(GL)
-	ClanLib_Examples="$ClanLib_Examples AdventureScene Basic2D Canvas DisplayModes Font GLCube GLFog GlyphBuffer InitDisplay Joystick MousePoll MouseSignal Pacman ShadowOfTheBeast Surface SpritesRTS ScreenShot Time"
+	ClanLib_Examples="$ClanLib_Examples Basic2D Canvas Methane Pacman ShadowOfTheBeast SpritesRTS Text"
 fi
 
 if test "$enable_clanGUI" = "yes"; then
     CLANLIB_ENABLE_MODULES(GUI)
-	ClanLib_Examples="$ClanLib_Examples GLGUICube GUISimple GUILayout GUITreeView GUIWindow GUIInputDialog GUIScript GUIStyle PilotsPuzzle"
+	ClanLib_Examples="$ClanLib_Examples CTalk DiceWar Font GUI NetGame"
 fi
 
 if test "$enable_clanGDI" = "yes"; then
@@ -599,18 +598,14 @@ fi
 
 if test "$enable_clanNetwork" = "yes"; then
     CLANLIB_ENABLE_MODULES(Network)
-	ClanLib_Examples="$ClanLib_Examples NetChannel NetFTP IRCBot CTalk UDPTunnel"
-	# todo: Many of these examples require more than Network, and a check should be performed
 fi
 
 if test "$enable_clanMikMod" = "yes"; then
     CLANLIB_ENABLE_MODULES(MikMod)
-	ClanLib_Examples="$ClanLib_Examples MikMod"
 fi
 
 if test "$enable_clanVorbis" = "yes"; then
     CLANLIB_ENABLE_MODULES(Vorbis)
-	ClanLib_Examples="$ClanLib_Examples Vorbis"
 fi
 
 dnl ----------------------------------------
@@ -650,8 +645,7 @@ if test "$enable_docs" != "no"; then
     AC_SUBST(ClanLib_docs,"Documentation")
     AC_SUBST(ClanLib_add_docs,"Reference Overview")
     enable_docs=yes
-    AC_CONFIG_FILES([Documentation/Makefile Documentation/Overview/Makefile Documentation/Reference/Makefile
-        Documentation/Tutorial/Makefile])
+    AC_CONFIG_FILES([Documentation/Makefile Documentation/Overview/Makefile Documentation/Reference/Makefile])
 fi
 
 echo ""

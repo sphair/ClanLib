@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Basic2D", "Examples\Basic2D\Basic2D-vc90.vcproj", "{4E27E943-27C7-4F00-A431-B6ACA236FFE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Canvas", "Examples\Canvas\Canvas-vc90.vcproj", "{903374C5-87EA-4010-BD44-95D54D95D529}"
@@ -47,8 +47,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUI", "Examples\GUI\GUI-vc90.vcproj", "{BC3ED51C-8A02-4EE7-98DA-9E3106DDA590}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gui3d", "Examples\GUI3D\gui3d-vc90.vcproj", "{BAB64109-DBA5-439B-A821-5AFF2D8AAACC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{E06C74F3-6BEF-4BFB-85B0-B2E73FBC5C47}"
 EndProject
@@ -124,10 +122,6 @@ Global
 		{BC3ED51C-8A02-4EE7-98DA-9E3106DDA590}.Debug|Win32.Build.0 = Debug|Win32
 		{BC3ED51C-8A02-4EE7-98DA-9E3106DDA590}.Release|Win32.ActiveCfg = Release|Win32
 		{BC3ED51C-8A02-4EE7-98DA-9E3106DDA590}.Release|Win32.Build.0 = Release|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D8AAACC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D8AAACC}.Debug|Win32.Build.0 = Debug|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D8AAACC}.Release|Win32.ActiveCfg = Release|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D8AAACC}.Release|Win32.Build.0 = Release|Win32
 		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Debug|Win32.Build.0 = Debug|Win32
 		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Release|Win32.ActiveCfg = Release|Win32

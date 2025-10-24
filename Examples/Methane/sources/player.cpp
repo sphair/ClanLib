@@ -1321,7 +1321,7 @@ void CPlayerObj::TogglePuffBlow( void )
 //!
 //!	\param nptr = The player name
 //------------------------------------------------------------------------------
-void CPlayerObj::SetPlayerName(char *nptr)
+void CPlayerObj::SetPlayerName(const char *nptr)
 {
 	int cnt;
 	char let;
