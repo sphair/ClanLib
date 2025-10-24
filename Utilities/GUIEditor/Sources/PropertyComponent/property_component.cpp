@@ -34,7 +34,7 @@
 #include "GridComponent/grid_component.h"
 #include "ComponentTypes/custom_component.h"
 #include "Selection/selection.h"
-#include "MainWindow/main_window.h"
+#include "MainWindow/gui_editor_window.h"
 #include "ComponentTypes/PropertyItems/property_item_position.h"
 #include "ComponentTypes/PropertyItems/property_item_text.h"
 #include "ComponentTypes/PropertyItems/property_item_group_name.h"
@@ -49,7 +49,7 @@
 #include "ComponentTypes/PropertyItems/property_item_anchor.h"
 #include "ComponentTypes/PropertyItems/property_item_enabled.h"
 
-PropertyComponent::PropertyComponent(MainWindow *main_window)
+PropertyComponent::PropertyComponent(GuiEditorWindow *main_window)
 : CL_GUIComponent(main_window), main_window(main_window), name_column_width(75), active_item(0), active_component(0), scrollbar(0)
 {
 	set_type_name("property-component");
@@ -302,9 +302,9 @@ void PropertyComponent::on_selection_changed()
 			add_property(new PropertyItemLineEdit(cb.get_callback_name(), cb.get_handler_function_name()));
 		}
 */
-
 		for (size_t i = 0; i < items.size(); i++)
 			items[i]->selection_changed(selection);
+
 		request_repaint();
 	}
 }
@@ -378,6 +378,9 @@ void PropertyComponent::deactivate()
 			try
 			{
 				active_item->apply_changes(selection[i]);
+
+				for (size_t i = 0; i < items.size(); i++)
+					items[i]->selection_changed(selection);
 			}
 			catch (CL_Exception &)
 			{

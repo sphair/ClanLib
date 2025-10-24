@@ -27,8 +27,7 @@
 */
 
 #include "precomp.h"
-#include "main_window.h"
-#include "application.h"
+#include "gui_editor_window.h"
 #include "GridComponent/grid_component.h"
 #include "PropertyComponent/property_component.h"
 #include "view_border.h"
@@ -38,31 +37,36 @@
 
 enum MainToolbarID { main_toolbar_new, main_toolbar_open, main_toolbar_saveas, main_toolbar_save };
 
-MainWindow::MainWindow(Application *application)
-: CL_Window(application->get_gui(), get_startup_description()),
-  application(application), grid_component(0), property_component(0), selected_tool(1337)
+GuiEditorWindow::GuiEditorWindow(CL_GUIManager *gui_manager)
+: CL_Window(gui_manager, get_startup_description()),
+ grid_component(0), property_component(0), selected_tool(1337)
 {
+	ComponentTypes::initialize();
+
 	set_id_name("editor");
-	func_close().set(this, &MainWindow::on_close);
-	func_resized().set(this, &MainWindow::on_resized);
-	func_process_message().set(this, &MainWindow::on_process_messages);
+	func_close().set(this, &GuiEditorWindow::on_close);
+	func_resized().set(this, &GuiEditorWindow::on_resized);
+	func_process_message().set(this, &GuiEditorWindow::on_process_messages);
 
 	create_components();
 //	populate_menubar();
-	populate_main_toolbar();
-	populate_tools_toolbar();
+	CL_ResourceManager resources = get_resources();
+	populate_main_toolbar(resources);
+	populate_tools_toolbar(resources);
 
 	create_new_document();
 	update_child_positions();
 }
 
-MainWindow::~MainWindow()
+GuiEditorWindow::~GuiEditorWindow()
 {
+	ComponentTypes::deinitialize();
+
 	// We do not have to free the GUI components here because the CL_GUIComponent
 	// destructor deletes all child components.
 }
 
-CL_GUITopLevelDescription MainWindow::get_startup_description()
+CL_GUITopLevelDescription GuiEditorWindow::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title("ClanLib GUI Editor");
@@ -71,7 +75,7 @@ CL_GUITopLevelDescription MainWindow::get_startup_description()
 	return desc;
 }
 
-void MainWindow::create_components()
+void GuiEditorWindow::create_components()
 {
 //	menubar = new CL_MenuBar(this);
 	toolbar_main = new CL_ToolBar(this);
@@ -85,7 +89,7 @@ void MainWindow::create_components()
 	toolbar_tools->set_single_selection(true);
 }
 
-void MainWindow::populate_menubar()
+void GuiEditorWindow::populate_menubar()
 {
 	CL_PopupMenu menu_file;
 	menu_file.insert_item("New").set_enabled(false);
@@ -110,7 +114,7 @@ void MainWindow::populate_menubar()
 /*	CL_PopupMenu menu_tools;
 	menu_tools.insert_item("Options");
 	CL_PopupMenuItem pmi_source_generator = menu_tools.insert_item("Source Generator...");
-	pmi_source_generator.func_clicked().set(this, &MainWindow::on_menu_source_generator);
+	pmi_source_generator.func_clicked().set(this, &GuiEditorWindow::on_menu_source_generator);
 	menubar->add_menu("Tools", menu_tools);*/
 
 	CL_PopupMenu menu_help;
@@ -118,49 +122,50 @@ void MainWindow::populate_menubar()
 	menubar->add_menu("Help", menu_help);
 }
 
-void MainWindow::populate_tools_toolbar()
+void GuiEditorWindow::populate_tools_toolbar(CL_ResourceManager &resources)
 {
-	toolbar_tools->func_item_selected().set(this, &MainWindow::on_tool_selected);
+	toolbar_tools->func_item_selected().set(this, &GuiEditorWindow::on_tool_selected);
 
-	CL_Sprite sprite(get_gc(), "gfx/pointer.png");
+	CL_Sprite sprite(get_gc(), "Pointer", &resources);
 	CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, "Select", 1337);
 	tbi.set_toggling(true);
 
 	const std::vector<ComponentType *> &types = ComponentTypes::get_types();
 	for (std::vector<ComponentType *>::size_type index = 0; index < types.size(); index++)
 	{
-		CL_Sprite sprite(get_gc(), types[index]->icon);
+		CL_Sprite sprite(get_gc(), types[index]->resource_icon, &resources);
 		CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
 		tbi.set_toggling(true);
 	}
 }
 
-void MainWindow::populate_main_toolbar()
+void GuiEditorWindow::populate_main_toolbar(CL_ResourceManager &resources)
 {
-	toolbar_main->func_item_clicked().set(this, &MainWindow::on_main_toolbar_clicked);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), "new_16x16.png"), 0, "New", main_toolbar_new);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), "open_16x16.png"), 0, "Open", main_toolbar_open);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), "save_16x16.png"), 0, "Save As", main_toolbar_saveas);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), "save_16x16.png"), 0, "Save", main_toolbar_save);
+	toolbar_main->func_item_clicked().set(this, &GuiEditorWindow::on_main_toolbar_clicked);
+
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "ToolbarNew", &resources), 0, "New", main_toolbar_new);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "ToolbarOpen", &resources), 0, "Open", main_toolbar_open);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "ToolbarSaveAs", &resources), 0, "Save As", main_toolbar_saveas);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "ToolbarSave", &resources), 0, "Save", main_toolbar_save);
 }
 
-bool MainWindow::on_close()
+bool GuiEditorWindow::on_close()
 {
 	exit_with_code(0);
 	return true;
 }
 
-void MainWindow::on_resized()
+void GuiEditorWindow::on_resized()
 {
 	update_child_positions();
 }
 
-void MainWindow::on_tool_selected(CL_ToolBarItem item)
+void GuiEditorWindow::on_tool_selected(CL_ToolBarItem item)
 {
 	selected_tool = item.get_id();
 }
 
-void MainWindow::update_child_positions()
+void GuiEditorWindow::update_child_positions()
 {
 	CL_Rect client_area = get_client_area();
 	CL_Size size = client_area.get_size();
@@ -174,7 +179,7 @@ void MainWindow::update_child_positions()
 	view_border->on_resized();
 }
 
-void MainWindow::create_new_document()
+void GuiEditorWindow::create_new_document()
 {
 	selection.clear();
 	property_component->clear();
@@ -182,12 +187,12 @@ void MainWindow::create_new_document()
 	delete grid_component;
 	grid_component = new GridComponent(view_border, this);
 
-	grid_component->func_boundary_resized.set(this, &MainWindow::on_grid_resized);
+	grid_component->func_boundary_resized.set(this, &GuiEditorWindow::on_grid_resized);
 	grid_component->set_boundary_size(CL_Size(320,200));
 	property_component->set_dialog_size(CL_Size(320,200));
 }
 
-void MainWindow::on_main_toolbar_clicked(CL_ToolBarItem item)
+void GuiEditorWindow::on_main_toolbar_clicked(CL_ToolBarItem item)
 {
 	switch(item.get_id())
 	{
@@ -233,7 +238,7 @@ void MainWindow::on_main_toolbar_clicked(CL_ToolBarItem item)
 	}
 }
 
-CL_String MainWindow::show_open_file_dialog()
+CL_String GuiEditorWindow::show_open_file_dialog()
 {
 	CL_OpenFileDialog dlg(this);
 	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
@@ -245,7 +250,7 @@ CL_String MainWindow::show_open_file_dialog()
 		return CL_String();
 }
 
-CL_String MainWindow::show_save_file_dialog()
+CL_String GuiEditorWindow::show_save_file_dialog()
 {
 	CL_SaveFileDialog dlg(this);
 	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
@@ -257,11 +262,11 @@ CL_String MainWindow::show_save_file_dialog()
 		return CL_String();
 }
 
-void MainWindow::on_menu_source_generator()
+void GuiEditorWindow::on_menu_source_generator()
 {
 }
 
-void MainWindow::load(const CL_StringRef &filename)
+void GuiEditorWindow::load(const CL_StringRef &filename)
 {
 	create_new_document();
 	grid_component->load(filename);
@@ -270,12 +275,12 @@ void MainWindow::load(const CL_StringRef &filename)
 	update_child_positions();
 }
 
-void MainWindow::on_grid_resized()
+void GuiEditorWindow::on_grid_resized()
 {
 	property_component->set_dialog_size(grid_component->get_dialog_size());
 }
 
-void MainWindow::on_process_messages(CL_GUIMessage &msg)
+void GuiEditorWindow::on_process_messages(CL_GUIMessage &msg)
 {
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
@@ -342,7 +347,7 @@ void MainWindow::on_process_messages(CL_GUIMessage &msg)
 	}
 }
 
-void MainWindow::use_select_tool()
+void GuiEditorWindow::use_select_tool()
 {
 	toolbar_tools->get_item_by_id(selected_tool).set_pressed(false);
 	selected_tool = 1337;

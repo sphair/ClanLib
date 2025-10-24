@@ -62,6 +62,7 @@
 #include "GUI/gui_theme_part_property.h"
 #include "GUI/Components/checkbox.h"
 #include "GUI/Components/combobox.h"
+#include "GUI/Components/folderbrowsedialog.h"
 #include "GUI/Components/frame.h"
 #include "GUI/Components/groupbox.h"
 #include "GUI/Components/imageview.h"

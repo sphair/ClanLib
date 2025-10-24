@@ -56,8 +56,8 @@ MainWindow::MainWindow(CL_GUIManager *gui, CL_ResourceManager *resources)
 	create_welcome_view();
 	create_texture_packer_view();
 	create_css_packer_view();
-	create_resource_viewer_view();
 	create_ico_creator_view();
+	create_resource_viewer_view();
 
 	on_resized();
 }

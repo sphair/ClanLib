@@ -171,6 +171,8 @@ int CL_GL1GraphicContextProvider::get_max_attributes()
 	set_active();
 	CLint max_attributes = 0;
 	cl1GetIntegerv(CL_MAX_VERTEX_ATTRIBS, &max_attributes);
+    if(max_attributes < 16)
+        max_attributes = 16;
 	return max_attributes;
 }
 

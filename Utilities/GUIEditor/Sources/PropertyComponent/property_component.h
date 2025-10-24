@@ -31,16 +31,16 @@
 
 #include "EditState/property_component_edit_state.h"
 
-class MainWindow;
+class GuiEditorWindow;
 class PropertyItem;
 
 class PropertyComponent : public CL_GUIComponent
 {
 public:
-	PropertyComponent(MainWindow *main_window);
+	PropertyComponent(GuiEditorWindow *main_window);
 	~PropertyComponent();
 
-	MainWindow *get_main_window() { return main_window; }
+	GuiEditorWindow *get_main_window() { return main_window; }
 
 	void set_dialog_size(CL_Size s) { }
 
@@ -64,7 +64,7 @@ private:
 	void update_scrollbar_size(CL_GraphicContext &gc);
 	void update_layout();
 
-	MainWindow *main_window;
+	GuiEditorWindow *main_window;
 	int name_column_width;
 	std::vector<PropertyItem *> items;
 	PropertyItem *active_item;

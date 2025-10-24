@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>TestClient</ProjectName>
+    <ProjectName>NetworkTestClient</ProjectName>
     <ProjectGuid>{D4E85A72-C5E8-40CA-A8B4-789582115EAF}</ProjectGuid>
     <RootNamespace>Client</RootNamespace>
     <Keyword>Win32Proj</Keyword>

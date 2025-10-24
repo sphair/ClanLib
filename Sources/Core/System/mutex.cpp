@@ -98,8 +98,8 @@ bool CL_Mutex::try_lock()
 	BOOL result = TryEnterCriticalSection(&critical_section);
 	return (result != FALSE);
 #else
-	throw CL_Exception("Congratulations, you just got the task of implementing CL_Mutex::try_lock() for unix!");
-	return false;
+	int result = pthread_mutex_trylock(&handle);
+	return (result == 0);
 #endif
 }
 

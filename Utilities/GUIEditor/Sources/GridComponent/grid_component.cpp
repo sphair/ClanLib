@@ -34,10 +34,10 @@
 #include "ComponentTypes/custom_component.h"
 #include "ComponentTypes/component_types.h"
 #include "ComponentTypes/component_type.h"
-#include "MainWindow/main_window.h"
+#include "MainWindow/gui_editor_window.h"
 #include "Selection/selection.h"
 
-GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
+GridComponent::GridComponent(CL_GUIComponent *parent, GuiEditorWindow *main_window)
 : CL_GUIComponent(parent), main_window(main_window), component_container(0),
   component_overlay(0), boundary(320,200)
 {

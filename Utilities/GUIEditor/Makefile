@@ -4,7 +4,6 @@ OBJF = \
 ./Sources/ComponentTypes/PropertyItems/Popups/line_edit_popup.o \
 ./Sources/ComponentTypes/component_types.o \
 ./Sources/ComponentTypes/custom_component.o \
-./Sources/precomp.o \
 ./Sources/PropertyComponent/property_component.o \
 ./Sources/PropertyComponent/property_item_popup.o \
 ./Sources/PropertyComponent/EditState/property_component_edit_state.o \
@@ -24,10 +23,11 @@ OBJF = \
 ./Sources/GridComponent/EditState/grid_edit_state_object_sizing.o \
 ./Sources/GridComponent/EditState/grid_edit_state_none.o \
 ./Sources/MainWindow/view_border.o \
-./Sources/MainWindow/application.o \
-./Sources/MainWindow/main.o \
-./Sources/MainWindow/main_window.o \
-./Sources/MainWindow/edit_columns_window.o
+./Sources/MainWindow/gui_editor_window.o \
+./Sources/MainWindow/edit_columns_window.o \
+./Sources/precomp.o \
+./Sources/application.o \
+./Sources/main.o
 
 LIBS=clanApp clanDisplay clanCore clanSWRender clanGUI
 

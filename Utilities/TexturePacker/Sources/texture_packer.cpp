@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #include "precomp.h"
@@ -42,6 +42,9 @@ void TexturePacker::load_resources(CL_GraphicContext &gc, const CL_String &filen
 {
 	resources = CL_ResourceManager(filename);
 
+	// TODO: Delete items before clearing
+	resource_items.clear();
+
 	std::vector<CL_String> resource_names = resources.get_resource_names();
 	std::vector<CL_String>::iterator resource_it;
 	for(resource_it = resource_names.begin(); resource_it != resource_names.end(); ++resource_it)
@@ -55,28 +58,42 @@ void TexturePacker::load_resources(CL_GraphicContext &gc, const CL_String &filen
 
 ResourceItem *TexturePacker::load_resource(CL_GraphicContext &gc, CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
+	ResourceItem *item = 0;
+
 	try
 	{
 		CL_String type = resource.get_type();
 		if(type == "sprite")
 		{
-			return load_sprite(gc, resource_id, resource, resources);
+			item = load_sprite(gc, resource_id, resource, resources);
 		}
 		else if(type == "image")
 		{
-			return load_image(gc, resource_id, resource, resources);
+			item = load_image(gc, resource_id, resource, resources);
 		}
 		else
 		{
-			throw CL_Exception("Resourcetype is not supported");
+			throw CL_Exception(cl_format("Resourcetype %1 is not supported", type));
 		}
 	}
 	catch(CL_Exception ex)
 	{
-		NotSupportedResourceItem *item = new NotSupportedResourceItem(resource);
-		item->error = ex.message;
-		return item;
+		item = new NotSupportedResourceItem(resource, ex.message);
 	}
+
+	// Find resource path by traversing parents
+	CL_DomElement &dom_element = resource.get_element();
+	CL_DomNode parent = dom_element.get_parent_node();
+	while (!parent.is_null())
+	{
+		CL_DomElement parent_element = parent.to_element();
+		CL_String parent_name = parent_element.get_attribute("name");
+		if(parent_name.length() > 0)
+			item->resource_path = cl_format("%1/%2", parent_name, item->resource_path);
+		parent = parent.get_parent_node();
+	}
+
+	return item;
 }
 
 ResourceItem *TexturePacker::load_sprite(CL_GraphicContext &gc, CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)

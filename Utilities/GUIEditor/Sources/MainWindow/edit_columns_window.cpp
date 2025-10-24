@@ -56,7 +56,7 @@ void EditColumnsWindow::load_components()
 {
 	CL_GUILayoutCorners layout;
 	set_layout(layout);
-	create_components("Dialogs/edit_columns.gui");
+	create_components("Resources/Dialogs/edit_columns.gui");
 
 	button_ok = CL_PushButton::get_named_item(this, "button_ok");
 	button_ok->func_clicked().set(this, &EditColumnsWindow::on_button_ok_clicked);

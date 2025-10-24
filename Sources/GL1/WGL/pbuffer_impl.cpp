@@ -114,6 +114,10 @@ void CL_PBuffer_GL1_Impl::reset()
 	if (pbuffer_dc) cl1WglReleasePbufferDCARB(pbuffer, pbuffer_dc);
 	if (pbuffer) cl1WglDestroyPbufferARB(pbuffer);
 
+	// Note: cl1WglReleasePbufferDCARB does not delete the GDI object associated with the pbuffer DC
+	// DeleteDC must be called to prevent GDI object leaks
+	if (pbuffer_dc) DeleteDC(pbuffer_dc);
+
 	pbuffer_context = 0;
 	pbuffer_dc = 0;
 	pbuffer = 0;

@@ -27,45 +27,48 @@
 */
 
 #include "precomp.h"
-#include "MainWindow/application.h"
-#include "MainWindow/main_window.h"
-#include "ComponentTypes/component_types.h"
+#include "application.h"
+#include "MainWindow/gui_editor_window.h"
 
 Application::Application()
 {
-	ComponentTypes::initialize();
-
 	CL_String base_path = CL_System::get_exe_path();
-	if(CL_FileHelp::file_exists(base_path + "resources.xml") == false)
+	if(CL_FileHelp::file_exists(base_path + "Resources\\resources.xml") == false)
 		base_path += "..\\";
 	CL_Directory::set_current(base_path);
 
-	resources = CL_ResourceManager("resources.xml");
+	resources = CL_ResourceManager("Resources\\resources.xml");
 
-	CL_String resource_filename("../../Resources/GUIThemeAero/resources.xml");
-	CL_String theme_filename("theme.css");
-	if (!CL_FileHelp::file_exists(resource_filename))
+	CL_String global_resource_filename("../../Resources/GUIThemeAero/resources.xml");
+	CL_String global_theme_filename("../../Resources/GUIThemeAero/theme.css");
+	CL_String local_theme_filename("Resources\\theme.css");
+	if (!CL_FileHelp::file_exists(global_resource_filename))
 	{
-		resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
-		theme_filename = "theme_basic.css";
+		global_resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+		global_theme_filename = "../../Resources/GUIThemeBasic/theme.css";
+		local_theme_filename = "Resources\\theme_basic.css";
 	}
 
-	CL_ResourceManager resources2(resource_filename);
-	resources.add_resources(resources2);
+	CL_ResourceManager global_resources(global_resource_filename);
+	resources.add_resources(global_resources);
 	theme.set_resources(resources);
 	gui.set_window_manager(window_manager);
 	gui.set_theme(theme);
-	gui.set_css_document(theme_filename);
+
+	CL_CSSDocument css;
+	css.load(global_theme_filename);
+	css.load(local_theme_filename);
+
+	gui.set_css_document(css);
 }
 
 Application::~Application()
 {
-	ComponentTypes::deinitialize();
 }
 
 void Application::run(const CL_String &filename)
 {
-	MainWindow main_window(this);
+	GuiEditorWindow main_window(get_gui());
 
 	if(!filename.empty())
 		main_window.load(filename);

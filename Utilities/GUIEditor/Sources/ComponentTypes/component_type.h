@@ -34,8 +34,8 @@ class GridObject;
 class ComponentType
 {
 public:
-	ComponentType(const CL_String &xmlname, const CL_String &name, int id, const CL_StringRef &icon)
-	: xmlname(xmlname), name(name), id(id), icon(icon)
+	ComponentType(const CL_String &xmlname, const CL_String &name, int id, const CL_StringRef &resource_icon)
+	: xmlname(xmlname), name(name), id(id), resource_icon(resource_icon)
 	{
 	}
 
@@ -45,5 +45,5 @@ public:
 	CL_String xmlname;
 	CL_String name;
 	int id;
-	CL_String icon;
+	CL_String resource_icon;
 };

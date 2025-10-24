@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+# Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TexturePacker", "Utilities\TexturePacker\TexturePacker-vc2010.vcxproj", "{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditor", "Utilities\GUIEditor\GuiEditor-vc2010.vcxproj", "{5C1AAF8C-7FF0-447E-B01D-AED0A0B2849F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditorApp", "Utilities\GUIEditor\GuiEditor-vc2010.vcxproj", "{5C1AAF8C-7FF0-447E-B01D-AED0A0B2849F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQL", "Examples\Database\SQL\SQL-vc2010.vcxproj", "{0E7C035C-9855-466F-9468-9FF06750C64D}"
 EndProject
@@ -89,9 +89,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUI3d", "Examples\GUI\GUI3D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUICustomComponent", "Examples\GUI\GUICustomComponent\GUICustomComponent-vc2010.vcxproj", "{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "Examples\Network\NetGame\Client-vc2010.vcxproj", "{D4E85A72-C5E8-40CA-A8B4-789582115EAF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestClient", "Examples\Network\NetGame\Client-vc2010.vcxproj", "{D4E85A72-C5E8-40CA-A8B4-789582115EAF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestServer", "Examples\Network\NetGame\Server-vc2010.vcxproj", "{F182A2F3-21ED-4E67-B88F-B434716110CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetworkTestServer", "Examples\Network\NetGame\Server-vc2010.vcxproj", "{F182A2F3-21ED-4E67-B88F-B434716110CE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chess3D", "Examples\3D\Chess3D\Chess3D-vc2010.vcxproj", "{76F99003-593A-4103-A12E-F6E857B32366}"
 EndProject
@@ -113,7 +113,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Timing", "Examples\Display\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Thread", "Examples\Display\Thread\Thread-vc2010.vcxproj", "{C40C2488-5052-4581-A9A5-392CC19418BA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "direct_render1", "Examples\GUI\DirectRender\direct_render-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiDirectRender", "Examples\GUI\DirectRender\direct_render-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TileMap", "Examples\Game\TileMap\TileMap-vc2010.vcxproj", "{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -451,6 +453,12 @@ Global
 		{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}.Release|Win32.ActiveCfg = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}.Release|x64.ActiveCfg = Release|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Debug|Win32.Build.0 = Debug|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Debug|x64.ActiveCfg = Debug|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Release|Win32.ActiveCfg = Release|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Release|Win32.Build.0 = Release|Win32
+		{55672B55-E5EA-4CF2-80CB-0350A8CAB0B3}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

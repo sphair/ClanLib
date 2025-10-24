@@ -96,6 +96,7 @@ clanGUI_includes = \
 	GUI/gui_window_manager_texture_window.h \
 	GUI/accelerator_key.h \
 	GUI/accelerator_table.h \
+	GUI/Components/folderbrowsedialog.h \
 	GUI/Components/checkbox.h \
 	GUI/Components/combobox.h \
 	GUI/Components/frame.h \

@@ -31,7 +31,7 @@
 #include "GridComponent/grid_component.h"
 #include "GridComponent/grid_object.h"
 #include "ComponentTypes/component_type.h"
-#include "MainWindow/main_window.h"
+#include "MainWindow/gui_editor_window.h"
 
 GridEditStateNone::GridEditStateNone()
 {

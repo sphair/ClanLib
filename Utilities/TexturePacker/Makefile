@@ -14,6 +14,7 @@ OBJF= \
 ./Sources/Views/texture_packer_view.o \
 ./Sources/Views/welcome_view.o \
 ./Sources/Views/css_packer_view.o \
+./Sources/Dialogs/create_collision_data_dialog.o \
 ./Sources/css_packer.o
 
 LIBS=clanCore clanApp clanDisplay clanGUI clanGL

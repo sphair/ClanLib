@@ -1,7 +1,36 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2011 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Kenneth Gangstoe
+*/
+
 #include "precomp.h"
 #include "resource_viewer_view.h"
 #include "../sprite_component.h"
 #include "../texture_packer.h"
+#include "../Dialogs/create_collision_data_dialog.h"
 
 ResourceViewerView::ResourceViewerView(CL_GUIComponent *parent, MainWindow *mainwindow)
 : View(parent, mainwindow, "Resource viewer")
@@ -17,10 +46,20 @@ ResourceViewerView::ResourceViewerView(CL_GUIComponent *parent, MainWindow *main
 	button_browse_resource_file->set_text("...");
 	button_browse_resource_file->func_clicked().set(this, &ResourceViewerView::on_button_browse_resource_file);
 
+	button_edit_resource = new CL_PushButton(this);
+	button_edit_resource->set_text("Edit resource");
+	button_edit_resource->func_clicked().set(this, &ResourceViewerView::on_button_edit_resource);
+	button_edit_resource->set_enabled(false);
+
+	button_create_collision_data = new CL_PushButton(this);
+	button_create_collision_data->set_text("Create collision data");
+	button_create_collision_data->func_clicked().set(this, &ResourceViewerView::on_button_create_collision_data);
+	button_create_collision_data->set_enabled(false);
+
 	resource_list = new CL_ListView(this);
-	CL_ListViewColumnHeader col = resource_list->get_header()->append(resource_list->get_header()->create_column("Resource", "Resource"));
-	col.set_width(200);
-	resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
+	CL_ListViewColumnHeader col_resource = resource_list->get_header()->append(resource_list->get_header()->create_column("Resource", "Resource"));
+	col_resource.set_width(350);
+	CL_ListViewColumnHeader col_message = resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
 
 	CL_ListViewIconList icon_list = resource_list->get_icon_list();
 	CL_ListViewIcon icon_disabled;
@@ -47,11 +86,11 @@ void ResourceViewerView::on_resized()
 
 	label_selected_resource_file->set_geometry(CL_Rect(10, 13, 80, 30));
 	lineedit_selected_resource_file->set_geometry(CL_Rect(80, 10, size.width - 20 - 20, 30));
-	button_browse_resource_file->set_geometry(CL_Rect(10 + size.width - 20 - 30, 10, 10 + size.width - 20, 30));
-
-	resource_list->set_geometry(CL_Rect(10, 40, 10 + size.width - 20, 200));
-
-	sprite_component->set_geometry(CL_Rect(10, 210, 10 + size.width - 20, 210 + size.height - 50));
+	button_browse_resource_file->set_geometry(CL_Rect(10 + size.width - 20 - 30, 10, size.width - 10, 30));
+	resource_list->set_geometry(CL_Rect(10, 40, size.width - 10, 200));
+	sprite_component->set_geometry(CL_Rect(10, 205, size.width - 10, size.height - 35));
+	button_edit_resource->set_geometry(CL_Rect(10, size.height - 30, 130, size.height - 10));
+	button_create_collision_data->set_geometry(CL_Rect(140, size.height - 30, 260, size.height - 10));
 }
 
 void ResourceViewerView::on_button_browse_resource_file()
@@ -78,6 +117,26 @@ void ResourceViewerView::on_button_browse_resource_file()
 	}
 }
 
+void ResourceViewerView::on_button_edit_resource()
+{
+}
+
+void ResourceViewerView::on_button_create_collision_data()
+{
+	CL_UnknownSharedPtr ptr =  resource_list->get_selected_item().get_userdata();
+	ResourceItem *resource_item = (ResourceItem *)ptr.get();
+	if(resource_item)
+	{
+		SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(resource_item);
+		if(sprite_item)
+		{
+			CreateCollisionDataDialog dlg(this);
+			dlg.exec();
+//			resource.
+		}
+	}
+}
+
 void ResourceViewerView::on_selection_changed(CL_ListViewSelection selection)
 {
 	CL_UnknownSharedPtr ptr =  selection.get_first().get_item().get_userdata();
@@ -92,11 +151,21 @@ void ResourceViewerView::show_resource(ResourceItem *resource_item)
 	if(sprite_item)
 	{
 		sprite_component->set_sprite(&sprite_item->sprite);
+//		button_edit_resource->set_enabled(true);
+		button_create_collision_data->set_enabled(true);
+	}
+	else
+	{
+		sprite_component->clear_sprite();
+//		button_edit_resource->set_enabled(false);
+		button_create_collision_data->set_enabled(false);
 	}
 }
 
 void ResourceViewerView::load_resource_file(const CL_String &file)
 {
+	resource_list->clear();
+
 	packer.load_resources(get_gc(), file);
 
 	std::vector<ResourceItem *> &items = packer.get_resource_items();
@@ -106,7 +175,7 @@ void ResourceViewerView::load_resource_file(const CL_String &file)
 		ResourceItem *resource_item = (ResourceItem *)(*it);
 
 		CL_ListViewItem item = resource_list->create_item();
-		item.set_column_text("Resource", resource_item->resource.get_name());
+		item.set_column_text("Resource", cl_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
 
 		CL_SharedPtr<ResourceItem> userdata(resource_item);
 		item.set_userdata(userdata);

@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #pragma once
@@ -35,12 +35,14 @@ public:
 	virtual ~ResourceItem() {};
 
 	CL_Resource resource;
+
+	CL_String resource_path;
 };
 
 class NotSupportedResourceItem : public ResourceItem
 {
 public:
-	NotSupportedResourceItem(CL_Resource resource) : ResourceItem(resource) {};
+	NotSupportedResourceItem(CL_Resource resource, const CL_String &error) : ResourceItem(resource), error(error) {};
 
 	CL_String error;
 };

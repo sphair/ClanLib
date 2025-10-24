@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="Sources\application.cpp" />
     <ClCompile Include="Sources\css_packer.cpp" />
+    <ClCompile Include="Sources\Dialogs\create_collision_data_dialog.cpp" />
     <ClCompile Include="Sources\main_window.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\css_packer.h" />
+    <ClInclude Include="Sources\Dialogs\create_collision_data_dialog.h" />
     <ClInclude Include="Sources\main_window.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\sprite_component.h" />
@@ -122,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources.xml" />
+    <None Include="Resources\create_collision_data.gui" />
     <None Include="theme.css" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

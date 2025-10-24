@@ -105,6 +105,7 @@ Components/tab_header.cpp \
 Components/window.cpp \
 Components/openfiledialog.cpp \
 Components/savefiledialog.cpp \
+Components/folderbrowsedialog.cpp \
 Components/filedialog_impl.h \
 gui_component_description_impl.h \
 gui_component_impl.h \

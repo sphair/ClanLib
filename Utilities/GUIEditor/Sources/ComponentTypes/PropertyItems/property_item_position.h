@@ -83,19 +83,26 @@ public:
 		int new_value = CL_StringHelp::text_to_int(value);
 
 		CL_Rect geometry = object->get_geometry();
+		int width = geometry.get_width();
+		int height = geometry.get_height();
+
 		switch (type)
 		{
 		case type_x1:
 			geometry.left = new_value;
+			geometry.right = geometry.left + width;
 			break;
 		case type_y1:
 			geometry.top = new_value;
+			geometry.bottom = geometry.top + height;
 			break;
 		case type_x2:
 			geometry.right = new_value;
+			geometry.left = geometry.right - width;
 			break;
 		case type_y2:
 			geometry.bottom = new_value;
+			geometry.top = geometry.bottom - height;
 			break;
 		case type_width:
 			geometry.right = geometry.left + new_value;

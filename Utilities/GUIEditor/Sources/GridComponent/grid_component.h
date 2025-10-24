@@ -30,7 +30,7 @@
 
 #include "EditState/grid_edit_state.h"
 
-class MainWindow;
+class GuiEditorWindow;
 class PropertyComponent;
 class GridObject;
 class SnapLine;
@@ -38,10 +38,10 @@ class SnapLine;
 class GridComponent : public CL_GUIComponent
 {
 public:
-	GridComponent(CL_GUIComponent *parent, MainWindow *main_window);
+	GridComponent(CL_GUIComponent *parent, GuiEditorWindow *main_window);
 	virtual ~GridComponent() { }
 
-	MainWindow *get_main_window() { return main_window; }
+	GuiEditorWindow *get_main_window() { return main_window; }
 
 	CL_Size get_dialog_size();
 
@@ -89,7 +89,7 @@ private:
 
 	void load(CL_DomElement &element, CL_GUIComponent *parent);
 
-	MainWindow *main_window;
+	GuiEditorWindow *main_window;
 	CL_GUIComponent *component_container;
 	CL_GUIComponent *component_overlay;
 	std::vector<GridObject*> objects;

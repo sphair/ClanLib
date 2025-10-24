@@ -112,6 +112,10 @@ public:
 	bool show(bool save_mode)
 	{
 		#ifdef WIN32
+
+		// THIS REALLY SHOULD BE UPDATED TO USE IFileOpenDialog under Vista or later!
+		// See CL_BrowseFolderDialog_Impl for usage example.
+
 		OPENFILENAME ofn;
 
 		ZeroMemory(&ofn, sizeof(ofn));

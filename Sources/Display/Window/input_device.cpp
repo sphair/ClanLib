@@ -198,7 +198,7 @@ CL_String CL_InputDevice::keyid_to_string(int keycode) const
 		case CL_KEY_NUMPAD7: return "numpad7";
 		case CL_KEY_NUMPAD8: return "numpad8";
 		case CL_KEY_NUMPAD9: return "numpad9";
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
 		case CL_KEY_NUMPAD_ENTER: return "numpad_enter";
 #endif
 		case CL_KEY_MULTIPLY: return "multiply";

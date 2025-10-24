@@ -12,6 +12,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Source Files\Dialogs">
+      <UniqueIdentifier>{8d35035e-d922-4b5f-937e-9fc25de0c582}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\application.cpp">
@@ -56,6 +59,9 @@
     <ClCompile Include="Sources\Views\welcome_view.cpp">
       <Filter>Source Files\Views</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Dialogs\create_collision_data_dialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\css_packer.h">
@@ -97,12 +103,18 @@
     <ClInclude Include="Sources\Views\welcome_view.h">
       <Filter>Source Files\Views</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Dialogs\create_collision_data_dialog.h">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources.xml">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="theme.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\create_collision_data.gui">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

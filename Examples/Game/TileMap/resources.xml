@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <sprite name="tavern_tileset">
+    <image file="Resources\tileset.png">
+      <grid size="16,16" array="7,12" />
+    </image>
+  </sprite>
+  <tilemap name="tavern" resource="tavern_tileset" width="6" height="7">
+    <layer name="ground">
+      6,6,6,6,6,6,
+      6,6,6,6,6,6,
+      6,6,6,6,6,6,
+      6,6,6,6,6,6,
+      6,6,6,6,6,6,
+      6,6,6,6,6,6,
+      6,6,6,6,6,6
+    </layer>
+    <layer name="walls and carpets">
+      28,29,36,29,29,30,
+      35,82,82,82,82,37,
+      35,82,82,82,82,37,
+      35,82,82,82,82,37,
+      35,82, 0, 1, 2,37,
+      35,82, 7, 8, 9,37,
+      42,43,43,43,43,44,
+    </layer>
+    <layer name="stuff">
+      82,82,82,82,41,82,
+      82,15,82,82,32,82,
+      82,22,82,82,39,82,
+      82,82,18,19,16,82,
+      35,82,25,26,23,82,
+      82,82,82,82,82,82,
+      82,82,82,82,82,82,
+    </layer>
+  </tilemap>
+</resources>

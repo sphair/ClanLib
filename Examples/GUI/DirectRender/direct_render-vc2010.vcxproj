@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>direct_render1</ProjectName>
+    <ProjectName>GuiDirectRender</ProjectName>
     <ProjectGuid>{BAB64109-DBA5-439B-A821-5AFAAACCCAEE}</ProjectGuid>
     <RootNamespace>direct_render</RootNamespace>
   </PropertyGroup>

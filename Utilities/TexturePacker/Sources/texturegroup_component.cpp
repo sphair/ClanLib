@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #include "precomp.h"

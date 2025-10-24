@@ -31,21 +31,19 @@
 
 #include "Selection/selection.h"
 
-class Application;
 class ViewBorder;
 class GridComponent;
 class PropertyComponent;
 class TextureListWindow;
 
-class MainWindow : public CL_Window
+class GuiEditorWindow : public CL_Window
 {
 public:
-	MainWindow(Application *application);
-	~MainWindow();
+	GuiEditorWindow(CL_GUIManager *gui_manager);
+	~GuiEditorWindow();
 
 // Attributes:
 public:
-	Application *get_app() { return application; }
 	Selection *get_selection() { return &selection; }
 	GridComponent *get_grid_component() { return grid_component; }
 
@@ -63,8 +61,8 @@ private:
 	void create_components();
 	void create_new_document();
 	void populate_menubar();
-	void populate_main_toolbar();
-	void populate_tools_toolbar();
+	void populate_main_toolbar(CL_ResourceManager &resources);
+	void populate_tools_toolbar(CL_ResourceManager &resources);
 	void update_child_positions();
 	bool on_close();
 	void on_resized();
@@ -77,7 +75,6 @@ private:
 	CL_String show_open_file_dialog();
 	CL_String show_save_file_dialog();
 
-	Application *application;
 	Selection selection;
 	CL_MenuBar *menubar;
 	CL_ToolBar *toolbar_main;

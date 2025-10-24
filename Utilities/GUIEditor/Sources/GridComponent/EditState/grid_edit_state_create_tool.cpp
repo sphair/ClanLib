@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "grid_edit_state_create_tool.h"
 #include "GridComponent/grid_component.h"
-#include "MainWindow/main_window.h"
+#include "MainWindow/gui_editor_window.h"
 
 GridEditStateCreateTool::GridEditStateCreateTool()
 {

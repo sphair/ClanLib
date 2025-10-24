@@ -40,8 +40,9 @@ public:
 	{
 		CL_ImageView *component = new CL_ImageView(parent);
 		component->set_geometry(CL_Rect(0, 0, 128, 128));
-		CL_PixelBuffer buffer("gfx/image_large.png");
-		component->set_image(buffer);
+
+		CL_Sprite image(parent->get_gc(), "ImageViewDefaultImage", &(parent->get_resources()));
+		component->set_image(image);
 		component->set_scale_to_fit();
 		return component;
 	}

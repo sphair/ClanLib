@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #pragma once
@@ -39,6 +39,8 @@ public:
 
 // Operations:
 public:
+	void clear_sprite();
+
 	void set_sprite(CL_Sprite *sprite);
 	void set_sprite_description(CL_SpriteDescription *sprite_description);
 
@@ -47,7 +49,22 @@ private:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_style_changed();
 	void on_resized();
+	void on_button_startstop_clicked();
+
+	void update_buttons_enabled_state();
+
+	void on_button_prevframe_clicked();
+	void on_button_nextframe_clicked();
+
+	CL_PushButton *button_startstop;
+	CL_PushButton *button_nextframe;
+	CL_PushButton *button_prevframe;
+	CL_Label *label_frame;
 
 	CL_Sprite *sprite;
 	CL_SpriteDescription *sprite_description;
+
+	bool is_playing;
+
+	int sprite_current_frame;
 };

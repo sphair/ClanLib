@@ -193,6 +193,20 @@ void CL_TextureGroup_Impl::remove(CL_Subtexture &subtexture)
 	if (node)
 	{
 		node->clear();
+		if(root_nodes[index]->node.get_subtexture_count() <= 0)
+		{
+			root_nodes[index]->node.clear();
+			delete root_nodes[index];
+			root_nodes.erase(root_nodes.begin() + index);
+		}
+		if(root_nodes.empty())
+		{
+			active_root = 0;
+		}
+		else
+		{
+			active_root = root_nodes.back();
+		}
 	}
 	else
 	{

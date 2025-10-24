@@ -1,0 +1,13 @@
+Thanks to Stephen Challener for contributing this piece of art. 
+
+The tileset was found at Open Game Art, and was modified to use an alphachannel instead of purple colorkey, 
+and also slightly modified the offsets of tiles to make it fit better into a 16x16 tileset.
+
+http://opengameart.org/content/16x16-indoor-rpg-tileset-the-baseline
+
+Artist:
+Stephen Challener (Redshrike) (Email contact form)
+
+License(s):
+CC-BY 3.0
+

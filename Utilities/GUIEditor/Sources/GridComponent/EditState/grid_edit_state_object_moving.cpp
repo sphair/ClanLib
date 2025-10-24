@@ -31,7 +31,7 @@
 #include "grid_edit_state_object_moving.h"
 #include "GridComponent/grid_component.h"
 #include "GridComponent/grid_object.h"
-#include "MainWindow/main_window.h"
+#include "MainWindow/gui_editor_window.h"
 
 GridEditStateObjectMoving::GridEditStateObjectMoving()
 : object(0)

@@ -284,6 +284,8 @@ int CL_OpenGLGraphicContextProvider::get_max_attributes()
 	CL_OpenGL::set_active(this);
 	CLint max_attributes = 0;
 	clGetIntegerv(CL_MAX_VERTEX_ATTRIBS, &max_attributes);
+    if(max_attributes < 16)
+        max_attributes = 16;
 	return max_attributes;
 }
 
