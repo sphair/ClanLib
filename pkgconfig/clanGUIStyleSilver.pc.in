@@ -1,0 +1,15 @@
+# pkg-config Metadata for clanGUIStyleSilver
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanGUIStyleSilver
+Description: a silver GUI style for ClanLib
+Version: @VERSION@
+Requires: clanGUI-@LT_RELEASE@ = @VERSION@
+Libs:   -L${libdir} -lclanGUIStyleSilver
+Cflags: -I${includedir}
+
+# EOF #

@@ -1,0 +1,15 @@
+# pkg-config Metadata for clanCore
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanCore
+Description: Core library of ClanLib
+Version: @VERSION@
+Requires: clanSignals-@LT_RELEASE@ = @VERSION@
+Libs:   -L${libdir} -lclanCore @extra_LIBS_clanCore@
+Cflags: -I${includedir} @extra_CFLAGS_clanCore@
+
+# EOF #

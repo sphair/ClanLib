@@ -1,0 +1,14 @@
+
+LIBFILES =
+IDLFILES =  
+IDLGENFILES =  
+LIBRARIES = 
+PACKAGES =  
+SPARELIBS = 
+DEFFILE =  
+# ---------------------------------------------------------------------------
+PATHASM = .;
+PATHPAS = .; 
+PATHRC = .;
+LINKER = TLib
+

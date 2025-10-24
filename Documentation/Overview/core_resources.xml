@@ -1,0 +1,63 @@
+<xml>
+<head>
+<title>Core Resources</title>
+</head>
+<body>
+
+<p>ClanLib got the following core resource types:</p>
+
+<h3>&lt;string&gt; resource</h3>
+
+<pre>
+&lt;string name="my_string" value="value" /&gt;
+</pre>
+
+<p>String resources allow an application to easilly use text strings inside
+the program specified in a resource file. CL_String::load is used to extract
+the value specified in a string resource.</p>
+
+<h3>&lt;integer&gt; resource</h3>
+
+<pre>
+&lt;integer name="my_integer" value="value" /&gt;
+</pre>
+
+<p>Integer resources work the same way a string resources, except they
+contain integer values instead of string values and are retrieved using
+CL_Integer.</p>
+
+<h3>&lt;float&gt; resource</h3>
+
+<pre>
+&lt;float name="my_float" value="value" /&gt;
+</pre>
+
+<p>Float resources work the same way a string resources, except they
+contain float values instead of string values and are retrieved using
+CL_Float.</p>
+
+
+
+<h3>&lt;boolean&gt; resource</h3>
+
+<pre>
+&lt;boolean name="my_boolean" value="value" /&gt;
+</pre>
+
+<p>Boolean resources work just like the integer resource, but for booleans
+and via CL_Boolean instead.</p>
+
+<h3>&lt;raw&gt; resource</h3>
+
+<pre>
+&lt;raw name="my_raw" file="filename" /&gt;
+</pre>
+
+<p>The raw resource is a way to access a file via the resource system. A
+&lt;raw&gt; resource is accessed inside ClanLib using the CL_Raw class. In
+CL_Raw the file is accessable as a std::vector&lt;unsigned char&gt; (binary
+array). Alternatively the data can be used as an input source by
+constructing a CL_InputSource_Raw object.</p>
+
+</body>
+</xml>

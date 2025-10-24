@@ -1,0 +1,113 @@
+<xml>
+<head>
+<title>Loading graphics</title>
+</head>
+<body>
+
+<h3>Before you load graphics</h3>
+
+<p>Before loading any graphics in ClanLib, you <b>MUST</b> have created a displaywindow first.
+When surfaces are created, they are converted to the most optimal format for fast
+blitting to the display, and therefore you need a displaywindow before loading any graphics.</p>
+
+<h3>Loading from files</h3>
+
+<p>Most ClanLib games will usually use resources to load its graphics, but
+we will start showing how the inner parts of the resource manager loads its
+graphics. Hopefully this should make it more clear how the whole stuff
+works.</p>
+
+<p>To construct a surface or texture in ClanLib, we first need to load it
+into a surface provider. There are surface providers for many common image
+formats, including: CL_PCXProvider, CL_TargaProvider, CL_PNGProvider and
+CL_JPEGProvider.</p>
+
+<p>To use these providers, simple create an instance of it, eg.</p>
+
+<code>
+// Create a provider:
+CL_TargaProvider provider("image.tga");
+
+// Load it:
+CL_Surface surface(provider);
+</code>
+
+<p>Luckily, ClanLib provides a shortcut for the lazy among us.
+It can automatically figure out which provider to use based on the
+file-extension. Use it like this:</p>
+
+<code>
+CL_Surface surface2("image.tga");
+</code>
+
+<h3>Loading from resources</h3>
+
+<p>Although the above loading mechanism in itself is quite simple, it is
+often far better to seperate the description of an image from the actual
+game code. Instead of specifying an image by its filename and type, you use
+an name making more sense for the game code.</p>
+
+<code>
+CL_ResourceManager resources("resources.xml");
+
+CL_Surface surface("InGame/Level1/background", &resources);
+</code>
+
+<p>The image may be in any format supported by the ClanLib surface
+providers, and the resource description may include transparency, subarrays
+and other fancy stuff. The resources.xml file includes a description of the
+resource that may look like this:</p>
+
+<code>
+<resources>
+	<section name="InGame">
+		<section name="Level1">
+			<surface name="background" file="background1.tga" />
+			<surface name="walking_man" file="man.pcx" tcol="0,1,2,3" />
+		</section>
+	</section>
+</resources>
+</code>
+
+<p>As you can probably see, the game code no longer needs to know how the
+resource is physically loaded. And it is possible to change the image
+without recompiling the application.</p>
+
+<p>The resource manager may also be attached to something else than physical
+files, it may be loading them from a network server, or a zipfile. The nice
+thing is that the game code does not need to know.</p>
+
+<p>If you want more information about resources, have a look at the <a
+href="resources-1.html">resource overview</a>.</p>
+
+<!--
+<h3>Creating from scratch</h3>
+
+<p>NOTE THAT CANVAS IS NOT FULLY TESTED IN ClanLib 0.7!</p>
+
+<p>If you need to create an image from scratch, or want to compose an image
+from multiple other images, or modify an image in some way, ClanLib provides
+a surface type called CL_Canvas. At construction time, you tell how large
+and in what format the canvas should be in, and then afterwards you modify
+the contents of it by drawling lines, boxes, surfaces on it.</p>
+
+<code>
+// Load an image:
+CL_Surface *surf = new CL_Surface("image.tga");
+
+// Create a canvas, size 320x200, default image format:
+CL_Canvas *canvas = new CL_Canvas(CL_Size(320, 200));
+
+// Draw a line on it:
+canvas->draw_line(0,0,100,100);
+
+// Draw the surface on it:
+surf->draw(10, 10, canvas);
+
+// Construct a surface from it:
+CL_Surface *canvas_surf = CL_Surface::Create(canvas, true);
+</code>
+-->
+
+</body>
+</xml>

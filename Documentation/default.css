@@ -1,0 +1,77 @@
+h1 { 
+  font-family: Sans-Serif;  
+  margin-left: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Sans-Serif;
+}
+
+h1 {
+  margin: 0em 0em 0em 25px;
+}
+
+h2 {
+  margin: 0em 0em 0em 10px;
+}
+
+h3 {
+  margin: 0em 0em 0em 10px;
+}
+
+h4 {
+  margin: 0em 0em 0em 10px;
+}
+
+pre { 
+  background-color: #dddddd;
+  margin: 1em;
+  padding: 1em;
+}
+
+div.menu
+{ 
+  text-align: center;
+  line-height: 1.5em;
+}
+
+div.menu a:visited
+{
+  color: black;
+}
+
+div.menu a:hover
+{
+  color: black;
+  background-color: #99ddff;
+  border-color: black;
+}
+
+div.menu a.active
+{ 
+  background-color: #99ddff;
+  border-bottom-color:  black;
+  border-top-color:  black;
+}
+
+div.menu a
+{
+  text-decoration: none;
+  font-size: .8em;
+  font-family: Sans-Serif;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color:  #cdedf7;
+
+  padding-left: 15px;
+  padding-right: 15px;
+
+  margin-left: 3px;
+  margin-right: 3px;
+
+  background-color: #cdedf7;
+  color: black;  
+}
+
+/* EOF */

@@ -1,0 +1,378 @@
+<xml>
+<head>
+<title>Sprites Resources</title>
+</head>
+<body>
+
+<h3>Resource options</h3>
+
+<p>The sprite resource options is a plethora of possibilities to tweak a sprites
+looks and behaviours, but all of them have default values. In most
+cases you will only need to use the basic options.</p>
+
+<p>Each sprite <i>can</i> have the following properties:</p>
+
+<pre>
+&lt;sprite
+	name="my_sprite"
+	description="resource_containing_shared_description_data"
+	pack_texture="[yes,no]"
+	base_angle="angle"
+	id="id"&gt;
+
+	&lt;!-- Frame image loading: --&gt;
+	
+	&lt;image file="filename" /&gt;
+
+	&lt;image file="filename"&gt;
+		&lt;grid
+			pos="x,y"
+			size="width,height"
+			array="tiles_x,tiles_y"
+			array_skipframes="skip_count"
+			spacing="width,height" /&gt;
+	&lt;/image&gt;
+
+	&lt;image file="filename"&gt;
+		&lt;palette
+			pos="x,y" /&gt;
+	&lt;/image&gt;
+
+	&lt;image file="image4.png"&gt;
+		&lt;alpha
+			pos="x,y"
+ 			free="true"
+			trans_limit="limit" /&gt;
+	&lt;/image&gt;
+	
+	&lt;!-- Sprite render and animation states: --&gt;
+
+	&lt;color
+		red="red_component"
+		green="green_component"
+		blue="blue_component"
+		alpha="alpha_component" /&gt;
+
+	&lt;animation
+		speed="speed"
+		loop="[yes,no]"
+		pingpong="[yes,no]"
+		direction="[backward,forward]
+		on_finish="[blank,last_frame,first_frame]" /&gt;
+
+	&lt;scale x="scale_x" y="scale_y" /&gt;
+	
+	&lt;translation
+		origin="[top_left, top_center, top_right,
+		         center_left, center, center_right,
+		         bottom_left, bottom_center, bottom_right]"
+		x="offset_x"
+		y="offset_y" /&gt;
+	
+	&lt;rotation
+		origin="[top_left, top_center, top_right,
+		         center_left, center, center_right,
+		         bottom_left, bottom_center, bottom_right]"
+		x="offset_x"
+		y="offset_y" /&gt;
+		
+	&lt;frame
+		nr="frame_number"
+		speed="frame_delay"
+		x="offset_x"
+		y="offset_y" /&gt;
+
+&lt;/sprite&gt;
+</pre>
+
+<p>Only the <i>name</i> attribute of &lt;sprite&gt; and at least one &lt;image&gt;
+element is required to construct a sprite. The remaining elements and
+attributes are optional.</p>
+
+<h3>Using the &lt;image&gt; element</h3>
+
+<p>The first step in setting up a sprite is telling the resource loader
+where it should get the images for all the frames. This is done specifying
+one or more &lt;image&gt; elements. Each &lt;image&gt; element specify an image from
+where one or several frames should be extracted:</p>
+
+<ul>
+
+<li>If there is no child element in &lt;image&gt;, it will simply take the entire
+image and add it as one large frame.</li>
+
+<li>If the child element is &lt;grid&gt; it will use the grid cutter in
+CL_SpriteDescription to extract a set of frames placed in a grid in the
+image file.</li>
+
+<li>If the child is &lt;alpha&gt; the alpha cutter will be used instead. The alpha
+cutter uses the alpha channel to find frames separated with pure alpha
+(within trans_limit).</li>
+
+<li>Then there is the &lt;palette&gt; child element. This method adds frames
+separated with palette-colours defining the boundaries.</li>
+
+</ul>
+
+<p>If you have many sprites that are using the same frames for its
+animation, you can use the <i>description</i> attribute on the
+&lt;sprite&gt; element to use the frames from an other sprite resource.</p>
+
+<h3>Setting up render and animation</h3>
+
+<p>The remaining elements &lt;color&gt;, &lt;animation&gt;, &lt;scale&gt;,
+&lt;translation&gt; and &lt;rotation&gt; alter the default values of the
+CL_Sprite render and animation properties.</p>
+
+<p>&lt;frame&gt; sets up properties for a specific frame.</p>
+
+<h3>Sprite resource options reference</h3>
+
+<p><b>&lt;sprite&gt;</b></p>
+
+<ul>
+<li>Attribute <b>name</b>: Name of resource.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: None, MUST BE PRESENT.
+  </p>
+</li>
+<li>Attribute <b>description</b>: Resource identifier of other resource to
+use as base for this sprite.
+  <p>
+  <i>Valid values</i>: "string" - Resource ID of other sprite resource<br>
+  <i>Default value</i>: Don't use any other sprite resource as base.
+  </p>
+</li>
+<li>Attribute <b>pack_texture</b>: When pack_texture is enabled CL_Sprite
+will pack as many frames as it can into the same texture object.
+  <p>
+  <i>Valid values</i>: "yes, no" - Enable or disable texture packing<br>
+  <i>Default value</i>: yes
+  </p>
+</li>
+<li>Attribute <b>base_angle</b>: Defines what direction the sprite is in. All other angles are relative to this one.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: "0"
+  </p>
+</li>
+<li>Attribute <b>id</b>: Sets the sprite identify retrievable via
+CL_Sprite::get_id().
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: "0"
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;image&gt;</b></p>
+
+<ul>
+<li>Attribute <b>file</b>: Image filename.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: None, MUST BE PRESENT.
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;grid&gt;</b></p>
+<ul>
+<li>Attribute <b>pos</b>: Position in image to start grid-cutting.
+  <p>
+  <i>Valid values</i>: "integer, integer" - x-position, y-position<br>
+  <i>Default value</i>: "0, 0"
+  </p>
+</li>
+<li>Attribute <b>size</b>: Size of each grid-tile.
+  <p>
+  <i>Valid values</i>: "integer, integer" - width, height<br>
+  <i>Default value</i>: "1, 1"
+  </p>
+</li>
+<li>Attribute <b>array</b>: Grid-size.
+  <p>
+  <i>Valid values</i>: "integer, integer" - width, height<br>
+  <i>Default value</i>: None, MUST BE PRESENT.
+  </p>
+</li>
+<li>Attribute <b>array_skipframes</b>: How many frames to skip at end of last gridline.
+  <p>
+  <i>Valid values</i>: "integer" - frames to skip<br>
+  <i>Default value</i>: "0"
+  </p>
+</li>
+<li>Attribute <b>spacing</b>: Space between each grid-tile.
+  <p>
+  <i>Valid values</i>: "integer, integer" - x-spacing, y-spacing<br>
+  <i>Default value</i>: "0, 0"
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;palette&gt;</b></p>
+<ul>
+<li>Attribute <b>pos</b>: Position in image to start palette-cutting.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: "0, 0"
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;alpha&gt;</b></p>
+<ul>
+<li>Attribute <b>pos</b>: Position in image to start alpha-cutting.
+  <p>
+  <i>Valid values</i>: (integer,integer)<br>
+  <i>Default value</i>: "0, 0"
+  </p>
+</li>
+<li>Attribute <b>free</b>: Use the "Free Alpha Cutter".
+  <p>The default alpha cutter finds columns of sprites, all of which have the
+  same height and variable width. The "Free Cutter" identifies all rectangular 
+  non alpha blocks of pixels and puts them on a single frame. The algorithms
+  starts at the top left corner (or the specified position) and scans the
+  image line by line, from top to bottom. 
+  </p>
+  <p>
+    <i>Valid values</i>: blank, true<br>
+    <i>Default value</i>: blank
+  </p>
+</li>
+<li>Attribute <b>trans_limit</b>: Transparency limit.
+  <p>
+  <i>Valid values</i>: "float" - between 0.0 and 1.0<br>
+  <i>Default value</i>: "0.05"
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;color&gt;</b></p>
+
+<ul>
+<li>Attributes <b>red</b>, <b>green</b>, <b>blue</b>, <b>alpha</b>: Color.
+  <p>Sets the red, green, blue and alpha color components of the sprite.</p>
+  <p>
+  <i>Valid values</i>: "float" - between 0.0 and 1.0<br>
+  <i>Default values</i>: 1.0, 1.0, 1.0, 1.0
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;animation&gt;</b></p>
+
+<ul>
+<li>Attribute <b>play_options</b>: Sets the playback options for the animation.
+  <p>pingpong/nopingpong: Set it to pingpong if you want the animation to play back to start once it has reached
+  the end of the animation.<br>
+  loop/noloop: Set it to loop if you want the animation to loop after it has reached end of 
+  of the animation.<br>
+  forward/backward: Set it to backwards if you want the animation to play backwards - starts at
+  last frame, and plays forward to first frame.</p>
+  <p>
+  <i>Valid values</i>: nopingpong, pingpong, noloop, loop, backward, forward - any of the options<br>
+  <i>Default value</i>: (nopingpong, loop, forward)
+  </p>
+</li>
+<li>Attribute <b>speed</b>: Default frame delay.
+  <p>This sets the delay between each frame. You can override separate frames using frameX_speed (see below).
+  Value is in milliseconds.</p>
+  <p>
+  <i>Valid values</i>: integer<br>
+  <i>Default value</i>: 50
+  </p>
+</li>
+<li>Attribute <b>show_on_finish</b>: What to show when animation is finished.
+  <p>Specify what is shown when the animation is finished. Blank shows nothing,
+  last_frame shows last frame in animation, first_frame shows first frame in animation.
+  If you use looping, this option has no effect.</p>
+  <p>
+  <i>Valid values</i>: blank, last_frame, first_frame - one of the 3 options<br>
+  <i>Default value</i>: blank
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;scale&gt;</b></p>
+
+<ul>
+<li>Attributes <b>x</b> and <b>y</b>: Scale.
+  <p>Sets the x and y scale of the sprite. A value of 1.0 is the normal size,
+  2.0 is double the size, etc.</p>
+  <p>
+  <i>Valid values</i>: (float, float)<br>
+  <i>Default value</i>: (1.0, 1.0)
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;translation&gt;</b></p>
+
+<ul>
+<li>Attribute <b>origin</b>: Hotspot/alignment for translation operations.
+  <p>This is which pixel will go at the location specified with CL_Sprite::draw.
+  So if your sprite has origin=top_left (the default), and you call, say,
+  my_sprite.draw(50, 100), the very top left hand pixel will be placed at (50, 100)
+  and the rest of the sprite drawn around that. If you have origin=center then the
+  centermost pixel will be placed at (50, 100) and the rest of the picture drawn
+  around that.</p>
+
+  <p>
+  <i>Valid values</i>: top_left, top_center, top_right, center_left, center, center_right, bottom_left, bottom_center, bottom_right<br>
+  <i>Default value</i>: top_left
+  </p>
+</li>
+<li>Attributes <b>x</b> and <b>y</b>: This is how far from the origin the picture should be placed.
+  <p>x=50 will draw the picture 50 pixels right of where it would normally go. Note that this does take into account the value of origin.</p>
+  <p>
+  <i>Valid values</i>: integer <br>
+  <i>Default value</i>: 0
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;rotation&gt;</b></p>
+
+<ul>
+<li>Attribute <b>origin</b>: Hotspot/alignment for rotation operations.
+  <p>This is the pixel that will stay where it is when you rotate the image.
+  By default this is the center, so any rotations will leave the center pixel
+  where it is and rotate the rest of the image around it. If you want to rotate
+  about the top left corner set this to top_left, etc.</p>
+  <p>
+  <i>Valid values</i>: top_left, top_center, top_right, center_left, center, center_right, bottom_left, bottom_center, bottom_right<br>
+  <i>Default value</i>: center
+  </p>
+</li>
+<li>Attributes <b>x</b> and <b>y</b>: This is how far to offset the hotspot from the origin.
+  <p>
+  <i>Valid values</i>: integer <br>
+  <i>Default value</i>: 0
+  </p>
+</li>
+</ul>
+
+<p><b>&lt;frame&gt;</b></p>
+
+<ul>
+<li>Attribute <b>speed</b>: Override default speed for this specific frame.
+  <p>Value is in milliseconds.</p>
+  <p>
+  <i>Valid values</i>: integer<br>
+  <i>Default value</i>: play_speed
+  </p>
+</li>
+<li>Attributes <b>x</b> and <b>y</b>: Offset to display this frame.
+  <p>This let you set a position-offset on a frame, finetuning its
+  position relative to the other frames.</p>
+  <p>
+  <i>Valid values</i>: (integer, integer) - x-position, y-position<br>
+  <i>Default value</i>: (0, 0)
+  </p>
+</li>
+</ul>
+
+</body>
+</xml>

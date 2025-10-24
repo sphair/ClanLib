@@ -1,0 +1,80 @@
+<xml>
+<head>
+<title>Tips and tricks</title>
+</head>
+<body>
+
+<h3>Calculating frames per second (fps)</h3>
+<p>Author: Sphair</p>
+
+<p>Often you want to know how fast or slow your game is running, and displaying
+a FPS counter can be a handy debug-tool.</p>
+
+<code>
+class Game
+{
+public:
+	void run();
+	void update();
+	void draw();
+
+	int calc_fps(int frame_time);
+
+	CL_Font font_fps;
+	int fps;
+};
+
+void Game::run()
+{
+	CL_ResourceManager resources("resources.xml");
+	font_fps = CL_Font("font_gray", &resources);
+
+	while(!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+	{
+		update();
+		draw();
+
+		CL_Display::flip();
+		CL_System::keep_alive();
+	};
+}
+
+void Game::update()
+{
+	// Calculate time since last update
+	static int start_time = CL_System::get_time();
+	
+	int cur_time = CL_System::get_time();
+	int delta_time = cur_time - start_time;
+	start_time = cur_time;
+
+	fps = calc_fps(delta_time);
+}
+
+int Game::calc_fps(int frame_time)
+{
+	static int fps_result = 0;
+	static int fps_counter = 0;
+	static int total_time = 0;
+	
+	total_time += frame_time;
+	if(total_time >= 1000)	// One second has passed
+	{
+		fps_result = fps_counter + 1;
+		fps_counter = total_time = 0;
+	}
+	fps_counter++;	// Increase fps
+
+	return fps_result;
+}
+
+void Game::draw()
+{
+	CL_Display::clear();
+	
+	font_fps.draw(0, 0, "fps: " + CL_String::from_int(fps));
+}
+</code>
+
+</body>
+</xml>

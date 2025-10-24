@@ -1,0 +1,5 @@
+OBJS=Setup/Generic/project.o Setup/MinGW/configure.o
+
+configure.exe: $(OBJS)
+	g++ -o configure.exe $(OBJS)
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<components>
+	<button
+		name="btn_to_main_menu"
+		x="20"
+		y="540"
+		text="Back to Main menu"
+		type="text"
+		size="big" />
+	<button
+		name="btn_to_play_menu"
+		x="700"
+		y="540"
+		text="Play"
+		type="text"
+		size="big" />
+	<listbox
+		name="lb_level"
+		x="20"
+		y="100"
+		height="300"
+		width="300"
+		type="levels_list" />
+	<listbox
+		name="lb_level_set"
+		x="350"
+		y="100"
+		height="300"
+		width="400" />
+	<label
+		name="l_level"
+		x="25"
+		y="75"
+		text="Choose level"
+		type="type2" />
+	<label
+		name="l_level_set"
+		x="375"
+		y="75"
+		text="Choose level set"
+		type="type1" />
+</components>

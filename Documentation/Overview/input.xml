@@ -1,0 +1,131 @@
+<xml>
+<head>
+<title>ClanLib Input</title>
+<eyecolor>yellow</eyecolor>
+</head>
+<body>
+
+<h3>Handling input</h3>
+<p>Main classes: <codelink>CL_InputContext</codelink>,
+<codelink>CL_InputDevice</codelink>, <codelink>CL_InputEvent</codelink>,
+<codelink>CL_InputBuffer</codelink>.</p>
+
+<p>There are two ways to deal with input from the user; via events generated
+by the operating system, or by polling the input devices. Access to both
+polling and event handlers hookups is provided by the CL_InputContext
+class, available from CL_DisplayWindow::get_ic(), as shown earlier.</p>
+
+<p>The CL_InputContext class is a container for all the different types of
+input devices available from a window, categorized as either keyboards, mice
+or joysticks (game controllers). Here's an example of getting the input device for
+common devices:</p>
+
+<code>
+	CL_DisplayWindow window("My ClanLib Window", 640, 480);
+	CL_InputContext *ic = window.get_ic();
+	CL_InputDevice keyboard = ic->get_keyboard();
+	CL_InputDevice mouse = ic->get_mouse();
+	CL_InputDevice joystick = ic->get_joystick();
+</code>
+
+<p>CL_InputDevice is an abstraction for any input device type. It has a set
+of polling functions for both keyboards, mice and joysticks:</p>
+
+<code>
+	bool space_down = keyboard.get_keycode(CL_KEY_SPACE);
+	std::string name_of_space = keyboard.get_key_name(CL_KEY_SPACE);
+	int mouse_x = mouse.get_x();
+	int mouse_y = mouse.get_y();
+	float axis_x = joystick.get_axis(0);
+	float axis_y = joystick.get_axis(1);
+</code>
+
+<p>In addition to the polling functions, CL_InputDevice also has a list of
+signals that are emitted when ClanLib receives input events for the specific
+device. When any of those events occur, a CL_InputEvent is passed along to
+any slot listening for that event. Here's an example of a handler routine listening
+for key down events from the keyboard:</p>
+
+<code>
+	CL_Slot slot_key_down;
+	
+	void setup_slot(CL_InputContext *ic)
+	{
+		CL_InputDevice keyboard = ic->get_keyboard();
+		slot_key_down = keyboard.sig_key_down().connect(&on_key_down);
+	}
+	
+	void on_key_down(const CL_InputEvent &event)
+	{
+		std::cout << "User pressed: " << event.str.c_str() << std::endl;
+	}
+</code>
+
+<p><i>Note:</i> ClanLib only polls the operating system for new events when
+you call CL_System::keep_alive(), so make sure you call that at least once
+a frame.</p>
+
+<p>CL_InputBuffer is a class that helps you capture keyboard press events
+and convert them into a poll-able buffer. This is  useful if you
+want to avoid setting up an event handler when you want the user to enter a
+string of text:</p>
+
+<code>
+	CL_InputBuffer buffer(keyboard);
+	bool quit = false;
+	std::string text;
+	while (!quit)
+	{
+		while (buffer.keys_left() > 0)
+		{
+			CL_InputEvent key = buffer.pop_key();
+			if (key.type != CL_InputEvent::pressed) continue;
+			if (key.id == CL_KEY_ENTER)
+			{
+				quit = true;
+				break;
+			}
+			else
+			{
+				text += key.str;
+			}
+		}
+	
+		draw_gfx(text);
+		window.flip();
+		CL_System::keep_alive();
+	}
+	std::cout << "User wrote: " << text.c_str() << std::endl;
+</code>
+
+<h3>Keycodes</h3>
+<p>The following table shows the keycodes available for ClanLib. Codes that start with CL_KEY are for use with the CL_Keyboard class, and codes that start with CL_MOUSE are for use with the CL_Mouse class:</p>
+<table>
+<tr> <td> CL_MOUSE_LEFT </td> <td> CL_MOUSE_RIGHT </td> <td> CL_MOUSE_MIDDLE </td> <td> CL_MOUSE_WHEEL_UP </td> <td> CL_MOUSE_WHEEL_DOWN </td> </tr>
+<tr> <td> CL_MOUSE_XBUTTON1 </td> <td> CL_MOUSE_XBUTTON2 </td> <td> CL_KEY_BACKSPACE </td> <td> CL_KEY_TAB </td> <td> CL_KEY_CLEAR </td> </tr>
+<tr> <td> CL_KEY_RETURN </td> <td> CL_KEY_SHIFT </td> <td> CL_KEY_CONTROL </td> <td> CL_KEY_MENU </td> <td> CL_KEY_PAUSE </td> </tr>
+<tr> <td> CL_KEY_ESCAPE </td> <td> CL_KEY_SPACE </td> <td> CL_KEY_PRIOR </td> <td> CL_KEY_NEXT </td> <td> CL_KEY_END </td> </tr>
+<tr> <td> CL_KEY_HOME </td> <td> CL_KEY_LEFT </td> <td> CL_KEY_UP </td> <td> CL_KEY_RIGHT </td> <td> CL_KEY_DOWN </td> </tr>
+<tr> <td> CL_KEY_SELECT </td> <td> CL_KEY_PRINT </td> <td> CL_KEY_EXECUTE </td> <td> CL_KEY_INSERT </td> <td> CL_KEY_DELETE </td> </tr>
+<tr> <td> CL_KEY_HELP </td> <td> CL_KEY_0 </td> <td> CL_KEY_1 </td> <td> CL_KEY_2 </td> <td> CL_KEY_3 </td> </tr>
+<tr> <td> CL_KEY_4 </td> <td> CL_KEY_5 </td> <td> CL_KEY_6 </td> <td> CL_KEY_7 </td> <td> CL_KEY_8 </td> </tr>
+<tr> <td> CL_KEY_9 </td> <td> CL_KEY_A </td> <td> CL_KEY_B </td> <td> CL_KEY_C </td> <td> CL_KEY_D </td> </tr>
+<tr> <td> CL_KEY_E </td> <td> CL_KEY_F </td> <td> CL_KEY_G </td> <td> CL_KEY_H </td> <td> CL_KEY_I </td> </tr>
+<tr> <td> CL_KEY_J </td> <td> CL_KEY_K </td> <td> CL_KEY_L </td> <td> CL_KEY_M </td> <td> CL_KEY_N </td> </tr>
+<tr> <td> CL_KEY_O </td> <td> CL_KEY_P </td> <td> CL_KEY_Q </td> <td> CL_KEY_R </td> <td> CL_KEY_S </td> </tr>
+<tr> <td> CL_KEY_T </td> <td> CL_KEY_U </td> <td> CL_KEY_V </td> <td> CL_KEY_W </td> <td> CL_KEY_X </td> </tr>
+<tr> <td> CL_KEY_Y </td> <td> CL_KEY_Z </td> <td> CL_KEY_LWIN </td> <td> CL_KEY_RWIN </td> <td> CL_KEY_APPS </td> </tr>
+<tr> <td> CL_KEY_NUMPAD0 </td> <td> CL_KEY_NUMPAD1 </td> <td> CL_KEY_NUMPAD2 </td> <td> CL_KEY_NUMPAD3 </td> <td> CL_KEY_NUMPAD4 </td> </tr>
+<tr> <td> CL_KEY_NUMPAD5 </td> <td> CL_KEY_NUMPAD6 </td> <td> CL_KEY_NUMPAD7 </td> <td> CL_KEY_NUMPAD8 </td> <td> CL_KEY_NUMPAD9 </td> </tr>
+<tr> <td> CL_KEY_MULTIPLY </td> <td> CL_KEY_ADD </td> <td> CL_KEY_SEPARATOR </td> <td> CL_KEY_SUBTRACT </td> <td> CL_KEY_DECIMAL </td> </tr>
+<tr> <td> CL_KEY_DIVIDE </td> <td> CL_KEY_F1 </td> <td> CL_KEY_F2 </td> <td> CL_KEY_F3 </td> <td> CL_KEY_F4 </td> </tr>
+<tr> <td> CL_KEY_F5 </td> <td> CL_KEY_F6 </td> <td> CL_KEY_F7 </td> <td> CL_KEY_F8 </td> <td> CL_KEY_F9 </td> </tr>
+<tr> <td> CL_KEY_F10 </td> <td> CL_KEY_F11 </td> <td> CL_KEY_F12 </td> <td> CL_KEY_F13 </td> <td> CL_KEY_F14 </td> </tr>
+<tr> <td> CL_KEY_F15 </td> <td> CL_KEY_F16 </td> <td> CL_KEY_F17 </td> <td> CL_KEY_F18 </td> <td> CL_KEY_F19 </td> </tr>
+<tr> <td> CL_KEY_F20 </td> <td> CL_KEY_F21 </td> <td> CL_KEY_F22 </td> <td> CL_KEY_F23 </td> <td> CL_KEY_F24 </td> </tr>
+<tr> <td> CL_KEY_NUMLOCK </td> <td> CL_KEY_SCROLL </td> <td> CL_KEY_LSHIFT </td> <td> CL_KEY_RSHIFT </td> <td> CL_KEY_LCONTROL </td> </tr>
+<tr> <td> CL_KEY_RCONTROL </td> <td> CL_KEY_LMENU </td> <td> CL_KEY_RMENU </td>
+</table>
+
+</body>
+</xml>

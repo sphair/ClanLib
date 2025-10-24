@@ -1,0 +1,15 @@
+# pkg-config Metadata for clanDisplay
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanDisplay
+Description: Display support for ClanLib
+Version: @VERSION@
+Requires: clanCore-@LT_RELEASE@ = @VERSION@
+Libs:   -L${libdir} -lclanDisplay @extra_LIBS_clanDisplay@
+Cflags: -I${includedir} @extra_CFLAGS_clanDisplay@
+
+# EOF #

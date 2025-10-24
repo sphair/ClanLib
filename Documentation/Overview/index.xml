@@ -1,0 +1,60 @@
+<xml>
+<head>
+<title>ClanLib - Overview</title>
+<eyecolor>yellow</eyecolor>
+</head>
+<body>
+
+<p>The overview section is a walkthrough of many of ClanLib's components,
+classes and interfaces. It is highly adviceable to read it from the one end
+to the other, if you want to get a proper overview of what ClanLib can do
+for you.</p>
+
+<p>The ClanLib game SDK is a library that can ease your game development in
+many ways. ClanLib has APIs for 2D graphics, 3D graphics, sound, network,
+I/O, input, GUI and resource administration. ClanLib reads a number of
+common image formats, either natively or through third-party libraries
+supported by ClanLib. ClanLib provides transparent support for OpenGL, so
+that you can use native OpenGL commands while letting ClanLib handle the
+boring parts such as window management, sound, networking and all the other
+things that are required to make a good game besides 3D graphics.</p>
+
+<p>We will assume you're familiar with C++, and basic game programming
+terminology. If you're just starting out on making games, perhaps you should
+first look at a few of the numerous sites that describe game programming in
+general.</p>
+
+<p>If there is something you think is missing out in the documentation, please add a
+comment to the page most relevant to the information you are seeking. We
+will then when reviewing the documentation update it based on user
+requests.</p>
+
+<menu>
+<menuitem "getting_started.html" "Getting started" "The bootstrapping code needed in all ClanLib applications.">
+<menuitem "display-1.html" "Display overview" "An overview over the display components.">
+<menuitem "input.html" "Input overview" "Hints regarding getting input from the player.">
+<menuitem "resources-1.html" "Resources" "Learn to use the resource system.">
+<menuitem "sound_overview.html" "Sound overview" "Play samples and music.">
+<menuitem "signals.html" "Signals & Slots overview" "Use a powerful component programming mechanism.">
+<menuitem "sprites_overview.html" "Sprites overview" "How to use sprites. (NEED TEXT)">
+<menuitem "font_overview-1.html" "Font overview" "Learn how to create and use fonts.">
+<menuitem "loading_graphics.html" "Loading graphics overview" "A description on how to load graphics. (obsoleted by display overview?)">
+<menuitem "opengl_overview.html" "OpenGL overview" "Using OpenGL with ClanLib.">
+<menuitem "gui_overview.html" "GUI overview" "Add GUIs easily to your game.">
+<menuitem "gui_theme.html" "GUI Theme/Style creation" "Add custom themes to your GUI.">
+<menuitem "gui_resources.html" "GUI XML creation" "Use XML to define your GUIs.">
+<menuitem "network_overview.html" "Network overview" "Easy and powerful network communication.">
+<menuitem "pointers.html" "Smart pointers" "Smart pointers offered by ClanLib.">
+<menuitem "crash_reporter.html" "Post-Mortem Debugging" "Find rare crashes due to stuff like race conditions with the ClanLib Crash Reporter.">
+<menuitem "core_resources.html" "Core resources" "The resource options for boolean, integer, float, string and raw.">
+<menuitem "font_resources.html" "Font resources" "The resource options for creating fonts.">
+<menuitem "sprites_resources.html" "Sprite resources" "The resource options for creating sprites.">
+<menuitem "surface_resources.html" "Surface resources" "The resource options for creating surfaces.">
+<menuitem "sample_resources.html" "Sample resources" "The resource options for creating samples.">
+<menuitem "tipsandtricks.html" "Tips & Tricks" "Tips and tricks on various topics.">
+<menuitem "collision_detection.html" "Collision Detection" "Advanced collision detection made easy.">
+<menuitem "adding_resources.html" "Custom Resources" "Create your own resource types.">
+</menu>
+
+</body>
+</xml>

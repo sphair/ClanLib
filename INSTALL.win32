@@ -1,0 +1,271 @@
+$Id: INSTALL.win32,v 1.11 2004/03/28 00:13:14 sphair Exp $
+
+Readme file for ClanLib 0.8.x under Win32
+---------------------------------------------------------------------------
+This readme will guide you with installing, compiling ClanLib and creating
+your first ClanLib application.
+
+If you have downloaded the binaries, you can skip section 3 and 4.
+
+1. Getting started
+2. Preparing installation
+3. Configuring ClanLib
+4. Compiling ClanLib
+5. Testing ClanLib
+6. Creating applications with ClanLib
+7. Creating a workspace for your application
+8. Problems ?
+
+
+1. Getting started
+---------------------------------------------------------------------------
+You need Microsoft Developer Studio 6.0 or 7.x/200x (.NET) with MFC
+installed to follow this installation guide (see INSTALL.borland for
+Borland specific instructions). The instructions here are mostly based
+on VC 6.0, but you will be able to easily find the same options in VC 7.0.
+
+Go to http://clanlib.org/download.html and download at least the zlib,
+libjpeg and libpng multithreaded libraries. If you need more
+functionality in ClanLib, you can download those other libraries you need.
+(Check out the handy Windows External Libraries section!)
+
+Install these libraries in a directory - remember which one, because you
+need to enter that information in the next section.
+
+If you are using VC6, You MUST install service pack 5 from 
+http://msdn.microsoft.com/vstudio/downloads/updates/sp/vs6/sp5/
+
+It is also recommended to install latest Microsoft Platform SDK, which
+will give you a much newer set of include files and libraries, making it
+possible to use things Microsoft invented since 1998.  If you are using
+VS.Net Express, then you will HAVE to do this.
+
+The Microsoft Platform SDK is available at:
+http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
+
+
+2. Preparing installation
+---------------------------------------------------------------------------
+The first step in using ClanLib under Windows is to setup a sane build
+environment. This involves two things:
+
+1. ClanLib must be able to locate the libraries it uses.
+2. ClanLib must know where to install itself.
+
+My personal build environment is setup as follows using "c:\My Documents"
+as base path. (You don't need to follow the same scheme, put your libraries
+where it fits you).
+
+"c:\My Documents\lib" contains all .lib files that didn't come along with
+msvc++ and that are needed by ClanLib.
+
+"c:\My Documents\include" contains all include files needed by the libs.
+
+Here is how it looks like after I've installed Zlib:
+
+c:\My Documents\lib\zlib.lib
+c:\My Documents\include\zlib.h
+c:\My Documents\include\zconf.h
+
+You must configure Visual C++ so it knows where to find the include and 
+library files.  This is done through the Tools -> Options -> Projects 
+-> VC++ Directories.  Fill in the include directory
+("c:\My Documents\include") under the Include Files listbox,
+and the library directory ("c:\My Documents\lib") under the Library Files
+listbox. 
+
+IMPORTANT: Put the new include and library paths on the TOP of the lists
+(to avoid it using dx3 for instance) UNLESS you are using VS.Net 2005.
+In that case, make sure the PlatformSDK include folder is at the top of
+the list.
+
+
+3. Configuring ClanLib
+---------------------------------------------------------------------------
+A freshly downloaded ClanLib source package will include a workspace/solution
+and project for either MSVC6 (configure.dsw), or Visual Studio .NET 2005
+(configure-vs80.sln).  This is a configuration tool that
+will generate the real ClanLib workspace and project files. If you are using
+Visual Studio .NET below 2005, use the configure.dsw file and answer yes
+to the conversion.
+
+You have to compile and run this wizard and answer its questions carefully.
+Incorrect information will give you problems during the compilation.
+After you've compiled the app, just run it from inside of the compiler.
+
+When the configure wizard asks me where to install the header and library
+files, I specify those paths from section 2 (C:\My Documents\include and
+C:\My Documents\lib).
+
+When this is done, open the ClanLib.dsw file if you are using Developer
+Studio 6, or the ClanLib.sln file if you are using .NET version.  Answer
+Yes to convert the file to your MSVC version if prompted.
+
+
+4. Compiling ClanLib
+---------------------------------------------------------------------------
+After loading the ClanLib workspace, the project view will show many different
+projects; clanApp, clanCore, clanDisplay etc...
+
+Start with making clanCore the active project, if its not active already.
+You do this by right-clicking it, and select 'Set as Active Project'.
+Select Debug or Release in the toolbar. If you can't find this option
+anywhere, right click on the toolbar, and make sure Build is selected,
+and deselect the Build Minibar. Press F7 to compile the active project.
+
+You need to compile at least these projects:
+- ClanApp
+- ClanCore
+- ClanDisplay
+- ClanGL
+
+Optionally, you can compile the others if you need them. Batch Build is
+handy here.
+
+You'll get some warnings for the different projects, similar to:
+
+   ddraw.lib(DDRAW.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already
+   defined in winmm.lib(WINMM.dll); second definition ignored
+
+   GLU32.lib(GLU32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already
+   defined in OpenGL32.lib(OPENGL32.dll); second definition ignored
+
+   LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other
+   libs; use /NODEFAULTLIB:library
+
+Ignore these warnings, they are not important.
+
+For each library in ClanLib, we produce two .lib files, eg clanCore.lib and
+clanCored.lib. The first one is for release versions of your game, and the
+second is for debug versions.
+
+The debug version includes debugging information in the library itself (so
+if the lib crashes, you can see where in the source code it crashed).
+
+After a successful compilation of ClanLib, it will automatically run a batch
+file that will install all headers and lib files in the path you specified
+in the wizard. In my case, that is "c:\My Documents\lib" and
+"c:\My Documents\include". So the following files will be added:
+
+c:\My Documents\lib\clanCore.lib  (release lib)
+c:\My Documents\lib\clanCored.lib (debug lib)
+c:\My Documents\lib\clanGL.lib
+c:\My Documents\lib\clanGLd.lib
+
+c:\My Documents\include\ClanLib\core.h
+c:\My Documents\include\ClanLib\gl.h
+...
+
+
+5. Testing ClanLib
+---------------------------------------------------------------------------
+To have a look at some examples of various parts of ClanLib, open the
+Examples.dsw/.sln file in your ClanLib root directory. This was created after
+you ran the Configure application.
+
+Select any example, and compile it. You'll find examples covering most
+parts of the ClanLib API.
+
+Once you're done and ready for some coding, proceed to next section.
+
+
+6. Creating applications with ClanLib
+---------------------------------------------------------------------------
+Note that MSVC will know what .lib file to link into your application, based
+upon the ClanLib headers you include in your application.
+
+Example:
+	If you include <ClanLib/core.h> then depending on whether you are
+	building release or debug binaries the clanCore.lib or clanCored.lib
+	library will be automatically linked into your executable. 
+
+
+7. Creating a workspace for your application
+---------------------------------------------------------------------------
+ 1.  Select File->New...
+ 2.  Select Projects->Win32 Application, and specify where you want it located.
+ 3.  Select "An empty project", and press OK till you're finished with the wizard.
+ 4.  Select Project->Settings...
+     Notice there are several configurations in which you can modify settings.
+     Normally, these are 'Win32 Debug' and 'Win32 Release'. You switch between
+     these in the 'Settings for:' droplist. 
+     In section 5 and 6 below, you need to modify both these settings
+     (sections a for release setting, and sections b for debug settings).
+ 5.  Select the 'C/C++' tab, and then Category 'Code Generation'
+ 5a. For Release version, change the 'Use run-time library' to Multithreaded.
+ 5b. For Debug version, change the 'Use run-time library' to Debug Multithreaded.
+ 6.  Select Project->Add To Project->New...
+ 7.  Select C++ Source File, and enter a name for the file, for example 'app.cpp'
+ 8.  Enter a skeleton for your code:
+
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+
+class MyApp : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		// Create a console window for text-output if not available
+		// Use printf or cout to display some text in your program
+		CL_ConsoleWindow console("Console");
+		console.redirect_stdio();
+
+		try
+		{
+			// Initialize ClanLib base components
+			CL_SetupCore setup_core;
+
+			// Initialize the ClanLib display component
+			CL_SetupDisplay setup_display;
+
+			// Initialize the ClanLib GL component
+			CL_SetupGL setup_gl;
+
+			// Create a display window
+			CL_DisplayWindow window("ClanLib application", 640, 480);
+
+			// Run until someone presses escape
+			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+			{
+				// Clear the display in a dark blue nuance
+				// The four arguments are red, green, blue and alpha (defaults to 255)
+				// All color nuances in ClanLib are measured in the interval 0->255
+				CL_Display::clear(CL_Color(0, 0, 50));
+
+				// Flip the display (using a double-buffer),
+				// showing on the screen what we have drawed
+				// since last call to flip()
+				CL_Display::flip();
+
+				// This call updates input and performs other "housekeeping"
+				// Call this each frame
+				// Also, gives the CPU a rest for 10 milliseconds to catch up
+				CL_System::keep_alive(10);
+			}
+		}
+		// Catch any errors from ClanLib
+		catch (CL_Error err)
+		{
+			// Display the error message
+			std::cout << err.message.c_str() << std::endl;
+		}
+
+		// Display console close message and wait for a key
+		console.display_close_message();
+
+		return 0;
+	}
+} app;
+
+
+8. Problems ?
+---------------------------------------------------------------------------
+Please read the FAQ on http://clanlib.org for common errors and explanations!
+
+
+--
+Enjoy,
+The ClanLib development team

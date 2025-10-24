@@ -1,0 +1,55 @@
+<xml>
+<head>
+<title>Warnings and Gotchas of using ClanLib</title>
+</head>
+<body>
+
+<h1>OUTDATED</h1>
+
+<h2>Abstract:</h2>
+
+<p>This document covers all issues about ClanLib safely and correctly</p>
+
+<h3>Creating destroying objects</h3>
+
+<p>All objects must both created AND destroyed inside their respective ::init() and ::deinit() groups.  This means that letting an object fall out of scope might not work, especially in CL_Application::main().<p>
+
+<code>
+...
+Do_Bar()
+{
+   CL_SetupSound::init();
+   CL_SoundBuffer *soundbuffer = CL_Sample::create("beep.wav",NULL);
+   CL_SoundBuffer_Session ses = soundbuffer->play();
+   ...
+
+   delete soundbuffer; // Good
+ 
+   CL_SetupSound::deinit(); //All user objects must be destroyed before now
+} //ses destroyed here, very bad
+
+</code>
+
+<p>  In this code ses is destroyed when it goes out of scope, which is after it should be destroyed.  A better solution to this problem would be either wrap Do_Bar in some other function. eg<p>
+
+<code>
+
+init_sound() {
+ CL_SetupSound::init();
+ Do_Bar();
+ CL_SetupSound::deinit();
+}
+
+Do_Bar() {
+   CL_SoundBuffer *soundbuffer = CL_Sample::create("beep.wav",NULL);
+   CL_SoundBuffer_Session ses = soundbuffer->play(); //Ok here
+   ...
+
+   delete soundbuffer; // Good
+}
+</code>
+
+<p> The code above is perfectly safe as ses is destroy when Do_Bar goes out of scope which is before deinit().  Another way is to use pointers.</p>
+
+</body>
+</xml>

@@ -1,0 +1,279 @@
+<xml>
+<head>
+<title>Using OpenGL with ClanLib</title>
+</head>
+<body>
+
+<p>ClanLib's primary render target is OpenGL. It is handled by the module
+clanGL, a target for clanDisplay.</p>
+
+<p>ClanDisplay is an abstraction, working to allow ClanLib applications to
+do stuff in a general matter that can be applied to any display target
+supported by ClanLib. In order to use clanDisplay, one or more display
+targets must also be setup. For example, a GL-based ClanLib app must call
+both CL_SetupDisplay::init() and CL_SetupGL::init() when starting.</p>
+
+<p>Because clanDisplay is an abstraction, its API in itself will not
+directly offer you access to the objects the implementation is using.
+Instead, each of the display targets offer their own set of subclasses for
+clanDisplay. An example of this the CL_OpenGLSurface class. This is the
+OpenGL version of CL_Surface - you can use it anywhere in ClanLib where it
+takes a CL_Surface object, and you can cast between the two types of
+objects:</p>
+
+<code>
+        CL_Surface some_surface("fish.png");
+        CL_OpenGLSurface gl_version = some_surface;
+        gl_version.bind();
+</code>
+
+<p>The display target specific versions of the clanDisplay classes offer
+ways to integrate directly with target specific code. The bind() function on
+CL_OpenGLSurface binds the texture used by the surface, for apps wanting to
+do 3D OpenGL stuff, but use ClanLib to load the textures. Sometimes it's also
+possible to get the internal handles used by the target.</p>
+
+<h3>OpenGL states</h3>
+
+<p>OpenGL as a library is very hardware oriented. It uses a state model that
+reflect how hardware is, more than how things are ideally from a software
+developers point of view. This is both the strength and weakness of the
+OpenGL API. It makes OpenGL very simple and fast, but also makes it hard to
+write component oriented rendering.</p>
+
+<p>If a state is set in OpenGL (ie glEnable(GL_TEXTURE_2D) or
+glBindTexture(textureid)), it remains in this state until its changed. This
+makes it problematic for different rendering code to share the same OpenGL
+context. If the first piece of render code (ie ClanLib) enables
+GL_TEXTURE_2D, and the next render code expects it to be disabled, then the
+output produced may be wrong. To make things even worse, for each graphic
+context in ClanLib, there is a new OpenGL context. Each of those OpenGL
+contexts maintain their own set of states.</p>
+
+<p>To address these issues, clanGL introduces a concept called OpenGL state,
+maintained by the class <codelink>CL_OpenGLState</codelink>. CL_OpenGLState
+acts like there is a seperate OpenGL context (state setup) for each
+CL_OpenGLState object contstructed. It setups and keeps OpenGL states in a
+known configuration for the user of CL_OpenGLState.</p>
+
+<p>Currently it tracks the following states:</p>
+
+<ul>
+<li>glEnable/glDisable GL_TEXTURE_2D</li>
+<li>glBindTexture GL_TEXTURE_2D</li>
+<li>glEnable/glDisable GL_BLEND</li>
+<li>glEnable/glDisable GL_FOG</li>
+<li>glEnable/glDisable GL_DEPTH_TEST</li>
+<li>glEnable/glDisable GL_SCISSOR_TEST</li>
+<li>glEnable/glDisable GL_ALPHA_TEST</li>
+<li>glEnable/glDisable GL_STENCIL_TEST</li>
+<li>glViewport</li>
+<li>glScissor</li>
+<li>glClearColor</li>
+<li>glBlendFunc</li>
+<li>glColor</li>
+<li>glVertexPointer</li>
+<li>glColorPointer</li>
+<li>glTexCoordPointer</li>
+<li>glEnableClientState GL_VERTEX_ARRAY</li>
+<li>glEnableClientState GL_COLOR_ARRAY</li>
+<li>glEnableClientState GL_TEXTURE_COORD_ARRAY</li>
+<li>glMatrixMode</li>
+<li>matrix GL_TEXTURE</li>
+<li>matrix GL_PROJECTION</li>
+<li>matrix GL_MODELVIEW</li>
+<li>glTexEnvf GL_TEXTURE_ENV GL_TEXTURE_ENV_MODE</li>
+<li>glPolygonMode</li>
+<li>glAlphaFunc</li>
+<li>glStencilFunc</li>
+<li>glStencilOp</li>
+</ul>
+
+<p>Only one CL_OpenGLState is active in clanlib at a time. When its made
+active, it will setup OpenGL to the state that the instance had last time it
+was active.</p>
+
+<p>To illustrate with an example, look at the following code:</p>
+
+<code>
+CL_OpenGLState state_a(window1.get_gc());
+CL_OpenGLState state_b(window1.get_gc());
+CL_OpenGLState state_c(window2.get_gc());
+
+state_a.set_active();
+glColor3d(1.0,0.0,0.0);
+
+state_b.set_active();
+glEnable(GL_TEXTURE_2D);
+glBindTexture(texture_handle);
+
+state_c.set_active();
+glColor3d(0.0,0.0,1.0);
+
+state_a.set_active();
+glBegin(GL_QUADS);
+glVertex3d(...); glVertex3d(...); glVertex3d(...); glVertex3d(...);
+glEnd();
+
+state_b.set_active();
+glBegin(GL_QUADS);
+glVertex3d(...); glVertex3d(...); glVertex3d(...); glVertex3d(...);
+glEnd();
+</code>
+
+<p>In the above example, the first quad drawn will be rendered with
+GL_TEXTURE_2D disabled, but with color red color (1.0, 0.0, 0.0). The second
+quad will be with GL_TEXTURE_2D enabled, texture bound to texture_handle and
+with white color (OpenGL default color).</p>
+
+<h3>Doing custom OpenGL with ClanLib</h3>
+
+<p>If you want to do your own OpenGL (or use external OpenGL specific
+libraries) with clanGL, you need to create your own CL_OpenGLState object.
+Internally ClanLib works with a set of CL_OpenGLState objects, one for each
+of the following steps, but also other places. This is just to describe the
+general idea.</p>
+
+<ul>
+<li>Texture uploads and downloads (CL_Surface)</li>
+<li>ClanDisplay 2D Batch Rendering (lines, fills, surface rendering)</li>
+<li>Copying from back buffer to front (CL_DisplayWindow::update())</li>
+<li>Flipping front and back buffers (CL_DisplayWindow::flip())</li>
+<li>Copying texture to pbuffer (CL_Surface::get_gc())</li>
+<li>Copying from pbuffer to texture (CL_Surface::draw())</li>
+</ul>
+
+<p>Each of those commands act as stand alone components that do not know
+terrible much about each other. They each have their own CL_OpenGLState
+object that keep OpenGL's states like they set them up. If you call
+CL_DisplayWindow::flip(), then ClanLib makes a CL_OpenGLState::set_active()
+call, causing the current active OpenGL state to be saved, and the new one
+loaded.</p>
+
+<p>This can happen in any clanDisplay/clanGL call you might make, except
+those specifically not designed to do so, like CL_OpenGLSurface::bind().
+Common error is when loading surfaces/textures - make sure to reactivate
+your state after doing this.</p>
+
+<p>By creating one (or more) CL_OpenGLState objects yourself, ClanLib is
+able to store your OpenGL setup and restore it when you need to do OpenGL
+calls next time. Simply call set_active() before every time you are going to
+do OpenGL. If the state object is already active, no actions will be
+performed.</p>
+
+<code>
+CL_DisplayWindow window("Hello OpenGL!", 640, 480);
+CL_GraphicContext *gc = window.get_gc();
+CL_OpenGLSurface surface("hello.png");
+
+// Setup my OpenGL state:
+CL_OpenGLState my_opengl(gc);
+my_opengl.set_active();
+glEnable(GL_TEXTURE_2D);
+surface.bind();
+glMatrixMode(GL_PROJECTION);
+glProject(...);
+glMatrixMode(GL_MODELVIEW);
+gluLookAt(...);
+
+while (CL_Keyboard::get_keycode(CL_KEY_ESCAPE) == false)
+{
+	// draw my opengl world:
+	my_opengl.set_active();
+	glBegin(GL_TRIANGLES);
+	glVertex4d(...);
+	glVertex4d(...);
+	glVertex4d(...);
+	glVertex4d(...);
+	glEnd();
+
+	// draw HUD (with clanlib 2D stuff):
+	gc->draw_line(...);
+
+	// Make things visible for user:
+	window.flip();
+	CL_System::keep_alive();
+}
+</code>
+
+<h3>Accessing OpenGL 2.0</h3>
+
+<p>One of the problems you will face when using OpenGL is that nobody really
+got the OpenGL 2.0 API (at least at the time this was written). If you use
+the standard OpenGL headers and libraries delivered by your operating
+system, you will get:</p>
+
+<table>
+<tr>
+<th>Operating System</th>
+<th>OpenGL version</th>
+<th>Extensions</th>
+</tr>
+<tr>
+<td>Microsoft Windows</td>
+<td>OpenGL 1.2</td>
+<td>No extensions in glext.h added since 1995 when Microsoft
+abandoned OpenGL.</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>OpenGL 1.2</td>
+<td>Each vendor got their own set of OpenGL headers. Nvidia got theirs, ATI
+got theirs, DRI too. Depending on the age of the headers, they can be
+anywhere between OpenGL 1.3's extensions to OpenGL 1.5.</td>
+</tr>
+<tr>
+<td>Apple Mac OS X</td>
+<td>OpenGL 1.4 (for Jaguar, OS X 10.3.5)</td>
+<td>Extensions? Apple didnt even bother make an aglGetProcAddress
+function to at least get you started!</td>
+</tr>
+</table>
+
+<p>ClanLib offers the complete OpenGL 2.0 API via its own set of macros. All
+you need to do is to include ClanLib/GL/opengl_wrap.h, and then change the
+gl prefix to cl. It's that simple.</p>
+
+<code>
+// Setup my OpenGL state:
+CL_OpenGLState my_opengl(gc);
+my_opengl.set_active();
+
+// Do some OpenGL 2.0 specific stuff:
+CLInt shader_handle = clCreateShader(CL_FRAGMENT_SHADER);
+clShaderSource(shader_handle, ..);
+clCompileShader(shader_handle);
+
+CLInt program_handle = clCreateProgram();
+clAttachShader(program_handle);
+clLinkProgram(program_handle);
+
+clUseProgram(program_handle);
+</code>
+
+<h3>Custom OpenGL 2D</h3>
+
+<p>If you intend to do 2D OpenGL rendering, you can get ClanLib to manage
+your projection matrix, view matrix and clipping (glScissor). To enable
+that, simply call CL_OpenGLState::setup_2d() when setting up your OpenGL
+state. Changes to the CL_GraphicContext's view matrix or clipping will be
+applied automatically.</p>
+
+<code>
+// Setup my OpenGL state:
+CL_OpenGLState my_opengl(gc);
+my_opengl.set_active();
+
+// We want to work in 2d, doing our own fancy OpenGL effects:
+my_opengl.setup_2d();
+
+// Ok so our fancy effect is just a boring triangle here :)
+clBegin(CL_TRIANGLES);
+clVertex2i(x, y);
+clVertex2i(x + 10, y);
+clVertex2i(x, y + 10);
+clEnd();
+</code>
+
+</body>
+</xml>

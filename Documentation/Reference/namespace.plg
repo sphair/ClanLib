@@ -1,0 +1,104 @@
+use strict;
+sub plugin {
+  my $global=shift;
+  print "Generation namespace documentation\n";
+  print_namespaces($global);
+  print "Done with namespaces\n";
+}
+
+sub print_namespaces {
+  my $space=shift;
+  print_namespace($space);
+}
+
+sub print_namespace {
+  $_=shift;
+
+  print "Generating $$_{fullname} index\n";
+  open(FILE,">html/$$_{fullname}_index.html");
+
+  print FILE "<html>\n";
+  print FILE "<head><title>ClanLib Reference: $$_{fullname}</title></head>\n";
+  print FILE '
+<body text=black link=blue vlink=#800080 bgcolor=white topmargin=0 leftmargin=0>
+<table border=0 cellspacing=0 cellpadding=0 width=100%><tr><td><img border=0 src="../images/eyeheader-main-green-a.png" alt="ClanSoft logo" width=525 height=96></td></tr>
+<tr bgcolor=#dadada><td align=left valign=top><img border=0 src="../images/eyeheader-main-green-b.png" alt="ClanSoft logo" width=190 height=14></td><td align=right valign=top><img border=0 src="../images/clanlib_light.png" width=42 height=14></td></tr></table>
+<table align=center border=0 cellspacing=10> <tr>
+<td><a href="entire_class_index.html">Entire Class Index</a></td>
+<td><a href="class_index.html">Main Class Index</a></td>
+<td><a href="cross_index.html">Cross Index</a></td>
+<td>Global Index</td>
+</table>
+';
+   
+   print FILE "<h1 align=center>Namespace $$_{fullname}</h1><p>\n";
+
+   my $items = $_->{items};
+   my @array = sort byname @$items;
+   my $child;
+   my $type;
+   my $col;
+
+   $col = 0;
+
+   print FILE "<hr noshade>\n";
+   print FILE "<h1>Index:</h1>\n";
+   foreach $type ( $Enum::CLASS, $Enum::TYPEDEF )
+   {
+      print FILE "<dt><h3>Members of type <em>$Enum::TYPE_NAMES[$type]</em></h3>\n";
+      print FILE "<table>\n";
+      foreach $child (@array)
+      {
+         if ($child->{ntype} == $type)
+         {
+            print FILE "<tr>" if $col == 0;
+            $col++;
+            print FILE "<td width=20%>";
+            print FILE $child->href();
+            print FILE "</td>";
+            if ($col == 5)
+            {
+               $col = 0;
+               print FILE "</tr>";
+            }
+            print FILE "\n";
+         }
+      }
+      if ($col != 0)
+      {
+         print FILE "</tr>";
+      }
+      print FILE "</table>\n";
+   }
+
+
+   print FILE "<hr noshade>\n";
+   print FILE "<h1>Member Descriptions:</h1>\n";
+   print FILE "<dl>\n";
+   foreach $type ( $Enum::TYPEDEF, $Enum::FUNCTION )
+   {
+      print FILE "<dt><h3>Members of type <em>$Enum::TYPE_NAMES[$type]</em></h3>\n";
+      foreach $child (@array)
+      {
+         if ($child->{ntype} == $type)
+         {
+            print FILE "<dd>";
+            print FILE $child->href($child->{fullname});
+            if ($child->{short})
+            {
+                print FILE " - $child->{short}";
+            }
+            if ($child->{longcomment})
+            {
+                print FILE "<br>$child->{long}";
+            }
+            print FILE "\n";
+         }
+      }
+   }
+   print FILE "</dl>\n";
+
+   print FILE "</body>\n";
+   print FILE "</html>\n";
+   close(FILE);
+}

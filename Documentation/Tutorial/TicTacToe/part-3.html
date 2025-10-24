@@ -1,0 +1,153 @@
+<HTML>
+<HEAD>
+<TITLE>ClanLib Game SDK: ClanLib - Documentation</TITLE>
+<STYLE TYPE="text/css"><!--
+HTML BODY
+{
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 14px;
+	border-style: solid;
+}
+H1 { font-size: 22px; }
+H2 { font-size: 18px; }
+H3 { font-size: 16px; }
+H4 { font-size: 14px; }
+P { font-size: 14px; }
+LI { font-size: 14px; }
+--></STYLE>
+</HEAD>
+
+<body bgcolor=white text=black>
+<center>
+<table width=70%>
+<tr>
+<td>
+
+<center><table><tr><td>
+<img
+	SRC="../../Images/clanlib_logo_small.png"
+ alt="ClanLib logo"><br>
+</td></tr></table></center>
+
+<h1>Simple Game Development with ClanLib 0.8</h1>
+<h2>Part 3</h2>
+<b>Signals and User Input</b><br><br>
+
+<ul>
+<p>
+In ClanLib, signals go hand-in-hand with user input, but what is a signal? Signals and Slots are a part of the CL library, and they make event-driven programming possible for games without the need for 'polling' or checking for changes in status of all the possible input devices (is the 'A' button pressed or mouse moving, for example).<br>
+<br>
+Every time a button on the mouse is pressed, CL sends out a signal (<b>CL_Mouse::sig_key_down</b>). If you want to capture that mouse click and do something with it, you have to create a Slot for the signal and function to handle the signal. Then, you have to connect the Signal and the Slot.
+<br><br>
+
+
+<!--
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>// Signal / Slot example - psuedocode
+
+// Create a slot 
+CL_Slot slot;
+
+// Connect the slot to the signal (sig_key_down)
+// Specifying which function to call when the signal is 'fired': Game::handleMousePress
+slot = CL_Mouse::sig_key_down().connect(this, &Game::handleMousePress);</pre> 
+</td></tr></table></div>
+
+<p>
+handleMousePress cannot be just any method, however. <b>sig_key_down</b> sends data every time it fires, and handleMousePress must be written to accept it. <b>sig_key_down</b> sends <i>const CL_InputEvent &</i> when it fires, so handleMousePress must have the corresponding parameters const CL_InputEvent &key.<br>
+<br>
+-->
+Including a CL_Slot and a function to handle mouse presses, our TicTacToeGame class looks like this:
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>class TicTacToeGame {
+
+public:
+	TicTacToeGame();
+	~TicTacToeGame();
+
+	void loadGraphics();	// Load the game graphics
+	void paint();		// Paint the board and moves
+	void run();		// Game loop
+	void handleMousePress(const CL_InputEvent &key);
+
+private:
+	bool alive;
+	CL_Surface *board, *o, *x, *menu;
+	CL_Slot mousePress;
+};</pre> 
+</td></tr></table></div>
+
+<p>
+Notice that handleMousePress has an extra parameter. Every time <b>CL_Mouse::sig_key_down</b> is fired, that parameter is included. So handleMousePress specifies that parameter to catch it from the signal.<br>
+<br>
+This isn't mere coincidence, though. The parameters of the handler function must always match those of the signal it's being connected to. Below is the code needed to connect the two. (You can safely ignore the this argument for now.)
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>// Constructor
+TicTacToeGame::TicTacToeGame() {
+
+	alive = true;
+	loadGraphics();
+
+	// Connect the mousePress slot to sig_key_down, specifying handleMousePress to call
+	mousePress = CL_Mouse::sig_key_down().connect(this, &TicTacToeGame::handleMousePress);
+}</pre> 
+</td></tr></table></div>
+
+<p>
+An unfortunately long line of code, but very useful. Now, every time the mouse is clicked handleMousePress is executed, with which button was clicked specified in the parameters.
+</p>
+
+</ul>
+
+<b>Mouse Location & Handling Input</b>
+
+<ul>
+<p>
+Of course, knowing that a button was clicked is usually not enough. We want to know <i>where</i> it was clicked, too. So in the below implementation of handleMousePress I will show how to get the x and y screen coordinates of the mouse click as well as demonstrate how to do simple collision detection to see if the user has clicked 'quit'.
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>void TicTacToeGame::handleMousePress(const CL_InputEvent &key) {
+
+	// Since a clicked happened, get the screen coordinates of the mouse
+	// They are included in the 'key' parameter
+	int x = key.mouse_pos.x, y = key.mouse_pos.y;
+
+	// 4 points forming a box around the 'Quit' label
+	int quitX = 300, quitY = 400, quitWidth = 85, quitHeight = 20;
+
+	// See if the x and y mouse coordinates lie inside that box
+	if (x > quitX && x < quitX+quitWidth && y > quitY && y < quitY+quitHeight) {
+		alive = false;
+	}
+}</pre> 
+</td></tr></table></div>
+
+<p>
+That about covers it for signals and input. Now you should be able to connect to signals for input and do something useful with it!<br>
+<br>
+<a href="clanlib-tutorial-part3.zip">Download Visual C++ Workspace for Part 3</a><br>
+</p>
+</ul>
+
+<b>The Finished Game</b>
+
+<ul>
+<p>
+Believe it or not, those are the only ClanLib topics to be covered in the design and coding of our Tic-Tac-Toe example game. You can download the final workspace from the main tutorial page to review the additional code needed to complete the game. 
+<br><br>
+<a href="index.html">Return to tutorial main</a>
+</p>
+</ul>
+
+</TD>
+</TR>
+</TABLE>
+
+</CENTER>
+</BODY>
+</HTML>

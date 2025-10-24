@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<page title="ClanLib Tutorial">
+	<section title="Installing ClanLib">
+		<p align="center">
+		<a href="#downloading">Downloading</a> |
+		<a href="#linux">Installing on Linux</a> |
+		<a href="#pkgconfig">Pkgconfig</a> |
+		<a href="#windows">Installing on Windows</a> |
+		</p>
+
+		<h3>Installing ClanLib on Linux/Windows</h3>
+		<p>
+		This part of the tutorial describes how to install the ClanLib-0.8.x on your Unix or Windows system.
+		After reading these lines you should be well prepared to write your first application using ClanLib.
+		</p>
+
+		<br/>
+
+		<h4><a name="downloading">Downloading</a></h4>
+		<p>
+		If you decided to use ClanLib in your program the first step you should do is downloading necessary
+		files from www.ClanLib.org. You need at least the library itself. 
+		</p>
+
+		<p>
+		For Unix it's recommended to download latest ClanLib-0.8.x.tar.gz file. On Windows systems you'll
+		probably have easier work with ClanLib-0.8.x.zip archive.
+		</p>
+
+		<br/>
+
+		<h4><a name="linux">Installing on Linux</a></h4>
+		<p>
+		Unpack ClanLib-0.8.x.tar.gz to some folder (for examle /home/you/ClanLib-0.8.0). In this folder
+		you can find INSTALL.linux file with latest installing informations. You should probably be able
+		to find all necessary inrofmations reading next lines, but when you still got troubles INSTALL.linux
+		is the first place you can find answers to your questions.
+		</p>
+
+		<p>
+		Your target is compiling ClanLib now. For compiling ClanLib you also need at least zlib, libjpg,
+		libpng and pkgconfig. You can find downloading links for them at www.clanlib.org, but it's very
+		probably that they are also part of your linux distribution (for example SuSE linux 9.1 contains
+		everything you need).
+		</p>
+
+		<p>
+		You shouldn't have any problem with installing thesse external libraries. Usually the whole work
+		is to dowload apropriate .tgz archive and to write
+		</p>
+
+		<pre>
+../configure
+make
+make install
+		</pre>
+
+		<p>
+		in the directory you have unpacked the archive to. If needed there are readme files in the
+		directory where you can find help.
+		</p>
+
+		<p><a name="pkgconfig"></a>
+		May be you haven't met pkg-config before. It's not a kind of graphic library like zlib,
+		libjpg or libpng. Pkg-config is usefull program for recieveng informations about libraries
+		installed on your system and ClanLib uses it for it's compilation. Don't worry it will be
+		helpfull for us too. So here is a little description of it's behavior.
+		</p>
+
+		<p>
+		After succesfull installation of ClanLib you can find .pc files in /usr/local/lib/pkgconfig.
+		For example clanApp-0.8.pc file containing informations about libclanApp-0.8.so.0.
+		Pkg-config generates compilator options we'll need for example in our makefiles. You can find
+		real world example in First Application tutorial (will be written soon). Pkg-config searches
+		for .pc files in folders contained in PKG_CONFIG_PATH variable so I recomend you to add the
+		following line to ./bashrc in your home directory:
+		</p>
+
+		<pre>
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+		</pre>
+
+		<p>
+		Now we're at last prepared to compile ClanLib itself. Go to the ClanLib's folder and execute
+		configuration script:
+		</p>
+
+		<pre>
+../configure
+		</pre>
+
+		<p>
+		You'll recieve quite long list of messages from this script. Somewhere at the end you can find
+		something like this:
+		</p>
+
+		<pre>
+------------------------------------------------------------------------------
+The following modules will be built:
+                        
+	clanGL = yes
+        clanSDL = yes
+        clanApp = yes
+        clanGUI = yes
+        clanCore = yes
+        clanSound = yes
+        clanNetwork = yes
+        clanSignals = yes
+        clanDisplay = yes
+        clanMikmod = yes
+        clanVorbis = yes
+
+        Build Documentation = yes
+        Debug Build = no
+-----------------------------------------------------------------------------
+Configure done.
+
+Type 'make' to compile ClanLib.
+		</pre>
+
+		<p>
+		When you see "no" next to some of modules names (for example clanSDL = no), it means that
+		ClanLib found that it's impossible to compile this module because of failed dependencies.
+		In this case there should be some more detailed information about this in configure's message
+		list. In our example the problem will probably be solved when you instal SDL library development
+		packages to your system. I recomend you to make your system abele to compile all the ClanLib
+		modules, but of course it's not necessary and alhough you see "clanVorbis = no" you can compile
+		ClanLib and use it without problems utill you need this module. For compiling clanVorbis you'll
+		need something like libogg and libogg-devel.
+		</p>
+
+		<p>
+		Now follow the last instruction of configure script and type 'make' to compile ClanLib. Then
+		the last step is to type 'make install'.
+		</p>
+
+		<p>
+		The only problem I had on older systems after 'make' is typed was problem with too old XFree86.
+		You need XFree86 4.3.0 or higher and of corse acceptable graphic card. When the problem is in
+		XFree86 you'll see words like glXGetProcAddress in error messages of compilator.
+		</p>
+
+		<p>
+		If you have some another problems you can try to find solution in ClanLib mailing lists.
+		</p>
+
+		<br/>
+		
+		<h4><a name="windows">Installing on Windows</a></h4>
+		<p>
+		Of course the first step you have to do is unpacking ClanLib-0.8.x.zip file to some folder
+		(C:\Development\ClanLib for example).
+		</p>
+
+		<p>
+		I have personal experience only with Visual Studio 6.0 or .net. If you need to compile and use
+		ClanLib in Borland C++ Builder or somethink like this try to read INSTALL.xx file in the folder
+		(C:\Development\ClanLib in our example), where xx is name you need (borland in this case).
+		</p>
+
+		<p>
+		Same as on Linux you'll need some additional libraries to compile ClanLib on Windows too. The
+		easiest way of getting them is to download ..zip file called External Libraries from www.clanlib.org
+		downloading section. Unpack External Libraries to another folder (C:\Development\ExternalLibraries for example). 
+		</p>
+
+		<p>
+		If you are using Visual Studio 6.0 you'll have to do a little bit more probably. Your Visual Studio
+		needs service pack 5 (http://msdn.microsoft.com/vstudio/downloads/updates/sp/vs6/sp5) and 
+		Platform SDK (http://www.microsoft.com/msdownload/platformsdk/sdkupdate) is requested too.
+		If you have troubles with downloading whole Platform SDK because of it's size (something about 100 Mb)
+		you can download only Debugging Tools which are only a part, but if you are able to download it all I recommend it. 
+		</p>
+
+		<p>
+		Your Visual Studio needs to know where to find include and library files of your external libraries. 
+		</p>
+
+		<p>
+		In Visual Studio 6.0 you can do this in Tools->Options->Directories. Here add to Include File's listbox
+		appropriate path (C:\Development\ExternalLibraries\include in our example). Do the same in Library Files's
+		listbox (here add C:\Development\ExternalLibraries\lib in our example). It's recomended to have this
+		new paths on the top of the listboxes.
+		</p>
+
+		<p><img src="Images/IncludeListbox_VC6.png"/></p>
+
+		<p>	
+		In Visual Studio 2003 .net you can do this in Tools->Options->Projects->VC++ Directories. Here add to
+		Include File's listbox appropriate path (C:\Development\ExternalLibraries\include in our example).
+		Do the same in Library Files's listbox (here add C:\Development\ExternalLibraries\lib in our example).
+		It's recomended to have this new paths on the top of the listboxes.
+		</p>
+
+		<p><img src="Images/IncludeListbox_VCNet.png"/></p>
+
+		<p>
+		Now you're nearly prepared to compile ClanLib. In the directory where you have unpacked ClanLib-0.8.x.zip 
+		to (C:\Development\ClanLib) you will find only one workspace and project called configure.dsw. 
+		It's configuration tool that wil generate the real ClanLib workspace and project files. Open this file 
+		(answer yes to the question if you're using .net) compile it, execute it and answer it's questions carefully. 
+		If you give some incorrect informations to this tool, you'll heve troubles with compilation. 
+		You'll be asked where to install ClanLib's include and headder files so you have to decide where you want
+		to have them (C:\Development\CL_Include, C:\Development\CL_Lib for example). Then you should specify where
+		are the ExternalLibraries include and header files (C:\Development\ExternalLibraries\include and 
+		C:\Development\ExternalLibraries\lib in our example).
+		</p>
+
+		<p><img src="Images/Configure.png"/></p>
+
+		<p>
+		After succesful running the configure, open the ClanLib.dsw (Visual Studio 6.0) or ClanLib.sln (Visual Studio .net) file.
+		You'll see many different projects (clanApp, ClanDisplay ...). You need to compile at least ClanApp, ClanCore,
+		ClanDisplay and ClanDisplay, but I recomed you to do all the work at once by using Batch Build. You can ignore
+		wrnings you get during the compilation. The files are autamatically installed to the folder you specified in
+		configure tool. So after a succesfull compilation you're done, you're prepared to write your first ClanLib application.
+		</p>
+	</section>
+</page>

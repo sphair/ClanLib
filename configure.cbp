@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE Code::Blocks_project_file>
+<Code::Blocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="Configure"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option compiler="1"/>
+		<Build>
+			<Target title="Release">
+				<Option output="configure.exe"/>
+				<Option working_dir="."/>
+				<Option object_output="Release\configure"/>
+				<Option deps_output=".deps"/>
+				<Option external_deps=""/>
+				<Option type="1"/>
+				<Option compiler="1"/>
+				<Option projectResourceIncludeDirsRelation="1"/>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="/EHsc"/>
+			<Add option="/DWIN32"/>
+		</Compiler>
+		<Unit filename="Setup\CodeBlocks\codeblock_gen.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\codeblock_gen.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\iniparser.c">
+			<Option compilerVar="CC"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\iniparser.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\main.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\vc++toolkit.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\CodeBlocks\vc++toolkit.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\Generic\project.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\Generic\project.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Release"/>
+		</Unit>
+		<Unit filename="Setup\Generic\workspace.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="Release"/>
+		</Unit>
+	</Project>
+</Code::Blocks_project_file>

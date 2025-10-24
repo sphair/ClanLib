@@ -1,0 +1,24 @@
+Due to the modest volume of patches we get on the mailing list and
+because all recent patches that have come in are rather hairy, here
+is a summary of how to create patches for ClanLib.
+
+Diffing
+===================================
+Use 'diff -u > mypatch.patch' or 'svn diff > mypatch.patch' from within
+the ClanLib (trunk) directory. This is contextual diff, it provides more
+information so it easier to examine the changes before applying.
+
+If you're using Windows, the TortoiseSVN utility
+(http://tortoisesvn.tigris.org/) can easily create patches. Right click
+your ClanLib directory (or trunk), and select TortoiseSVN->Create Patch.
+
+Submitting
+===================================
+Please submit patches to our devel mailing-list:
+clanlib-devel@lists.sourceforge.net
+
+Describing
+===================================
+You should describe what your patch does. Please no 'This fixes a bug'.
+Tell us which bug, in what component. Generally, be descriptive without
+being needless verbose.

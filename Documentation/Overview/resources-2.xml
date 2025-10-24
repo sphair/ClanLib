@@ -1,0 +1,205 @@
+<xml>
+<head>
+<title>Resource API Overview - Part 2</title>
+</head>
+<body>
+
+<h3>Custom resources</h3>
+
+<p>It is possible to add your own resource types to clanlib, or even extend the functionality of already
+existing resource types.</p>
+
+<p>The resource system uses an interface called CL_ResourceType to identify resource types in the resource
+files, and instantiate the appropiate data objects for a resource. When a resource is being loaded, the
+following happens:</p>
+
+<ul>
+<li>The resource manager parses a resource description in the resource file, and creates a CL_Resource
+object containing the description.</li>
+<li>The manager walks through a linked list of registered resource types, finding all resource types that
+aknowledges the resource description.</li>
+<li>Each resource type is asked to create and attach a resource data object (CL_ResourceData) that can
+handle the resource' data.</li
+<li>The CL_Resource object has some signals that are invoked when a resource is to be loaded, unloaded, or
+saved to a datafile. If a resource data object is interesting in reacting on this (a surface resource data
+object would load the surface into memory on a load signal), they must connect a slot to the appropiate
+signal.</li>
+<li>Each resource data object uses a identifying string that can be used to locate the object's pointer.
+A surface data object might register itself as "surface", and a call to CL_Resource.get_data("surface")
+will then return a pointer this object.</li>
+</ul>
+
+<p>This may sound a little advanced, but a small example will show how simple it can look. First
+we create our data object:</p>
+
+<code>
+// resources.scr:
+our_map = some_location.map
+(
+	type=map,
+	size=100x200
+};
+
+class ResourceData_Map : public CL_ResourceData
+{
+public:
+	ResourceData_Map(CL_Resource &resource)
+	: CL_ResourceData(resource), width(0), height(0), map(NULL)
+	{
+		// Connect to the file load signal:
+		slot_load_file = resource.sig_load_file().connect(this, &ResourceData_Map::on_load_file);
+	
+		// Attach resource data object to the resource.
+		resource.attach_data("map", this);
+	}
+	
+	~ResourceData_Map()
+	{
+		delete[] map;
+	}
+	
+	void on_load_file()
+	{
+		// get the size option (100x200)
+		CL_ResourceOption &size_opt = get_resource().get_options().get_option("size");
+		
+		// get the first value of the size (100)
+		width = CL_String(size_opt.get_value(0)).get_as_int();
+		
+		// get the second value of the size (200)
+		height = CL_String(size_opt.get_value(1)).get_as_int();
+		
+		// allocate memory for the map
+		map = new char[width*height];
+
+		// open the file "some_location.map"
+		FILE *file = fopen(get_resource().get_location().c_str(), "rb");
+		fread(map, width*height, file);
+		fclose(file);
+	}
+	
+	char *map;
+	int width, height;
+	CL_Slot slot_load_file;
+};
+</code>
+
+<p>The data object attaches itself to the resource using the name 'map'. We can obtain a pointer to
+the object by using the CL_Resource::get_data() function: </p>
+
+<code>
+// open the resource file
+CL_ResourceManager resources("resources.scr", false);
+
+// get the map resource
+CL_Resource &map_resource = resources.get_resource("our_map");
+
+// get the attached Map data from the resource
+ResourceData_Map *map = (ResourceData_Map*) map_resource.get_data("map");
+</code>
+
+<p>Note that the above code will not produce a call to ResourceData_Map::on_load_file(). This will
+first happen when a call is done to CL_Resource::load(). The same thing applies with unloading; if
+you loaded an object by calling load(), you must also call unload(). The resource class reference
+counts the loading, so several objects can call load(), but only the first call will actually perform
+the load.</p>
+
+<p>When the resource manager parses the resource file, it will need to know what resource types exist,
+and how to attach data objects. In order to do this, the resource manager use a linked list of
+CL_ResourceType objects. It walks through all the resource type objects, and then asks wether it can
+attach data to the resource. If no resource type recognizes the resource, the resource manager will throw
+and exception, telling the program that it has encountered an unknown resource type.</p>
+
+<p>ClanLib contain a template class called CL_RegisterResourceType<ResourceDataClass> that allows you
+to construct simple resource type objects, that just attach a single data object to the resource. Registration
+of resource types require that you create an instance of CL_ResourceType. The template class is inheriated
+from CL_ResourceType and is nothing more than a convience class. An example of its usage:</p>
+
+<code>
+void MyApp::main(int argc, char **argv)
+{
+	CL_SetupCore setup_core;
+
+	CL_RegisterResourceType<ResourceData_Map> resource_type_map("map"); // register resource type 'map'
+	CL_ResourceManager manager("resources.scr", false);
+	CL_Resource &map_resource = manager.get_resource("our_map");
+
+	map_resource.load(); // calls on_load_file() on our data object
+	ResourceData_Map *map = (ResourceData_Map *) map_resource.get_data("map");
+	
+	std::cout << "width of map: " << map->width << std::endl;
+
+	map_resource.unload(); // calls on_unload() on our data object
+}
+</code>
+
+<p>That's it! We have constructed our own custom resource.</p>
+
+<h3>Extending existing resource types</h3>
+
+<p>It is possible to have several resource type objects for the same resource. This is practical if you
+want to extend an already existing resource type with more functionality. Each resource type object can
+attach its own data to the resource object, allowing you to eg. add "animation_data" to a surface type.</p>
+
+<p>The following is a small example of how to extend the surface type with some additional data:</p>
+
+<code>
+class AnimationData;
+
+class AnimationSurface : public CL_Surface
+{
+public:
+	AnimationSurface(const std::string &res_id, CL_ResourceManager *resources)
+	: CL_Surface(res_id, resources)
+	{
+		CL_Resource &resource = resources->get_resource(res_id);
+		anim_data = (AnimationData *) resource.get_data("animation_data");
+	}
+	
+	AnimationData *get_anim_data() { return anim_data; }
+	
+private:
+	AnimationData *anim_data;
+};
+
+class AnimationData : public CL_ResourceData
+{
+public:
+	AnimationData(CL_Resource &resource)
+	{
+		some_data = resource.get_option("anim_data").get_value();
+		resource.attach_data(this);
+	}
+	
+	std::string some_data;
+};
+
+class MyApplication : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		CL_SetupCore setup_core;
+		CL_SetupGL setup_gl;
+		CL_SetupDisplay setup_display;
+
+		CL_RegisterResourceType<AnimationData> restype_anim("surface");
+		
+		CL_DisplayWindow window("Window", 640, 480);
+		
+		CL_ResourceManager resources("resources.scr", false);
+		AnimationSurface surf("my_surf", &resources);
+
+		surf.draw(0, 0);
+
+		CL_Display::flip();
+		
+		std::cout << "some data: " << surf.get_anim_data()->some_data.c_str() << std::endl;
+	
+		return 0;
+	}
+} app;
+</code>
+
+</body>
+</xml>

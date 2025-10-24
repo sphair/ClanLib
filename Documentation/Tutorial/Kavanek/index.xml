@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<page title="ClanLib RFCs">
+	<section title="Kavanak Tutorial">
+		<subsection title="Parts">
+			<ul>
+				<li>
+					<a href="01-Installing.html">Part 01: Installing</a>:
+					How to get ClanLib installed.
+				</li>
+			</ul>
+		</subsection>
+	</section>
+</page>

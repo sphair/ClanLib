@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="latin-1" ?>
+<resources>
+	<section name="FontGlyphs">
+		<sprite name="font_black">
+			<image file="fonts/font_black.tga">
+				<alpha />
+			</image>
+		</sprite>
+		<sprite name="font_gray">
+			<image file="fonts/font_gray.tga">
+				<alpha />
+			</image>
+		</sprite>
+	</section>
+	<section name="Window">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+ 		</font>
+		<font name="font_disabled">
+			<bitmap glyphs="FontGlyphs/font_gray" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+		<surface name="surface_help" file="window/help.tga" />
+		<surface name="surface_help_disabled" file="window/help_disabled.tga" />
+		<surface name="surface_close" file="window/close.tga" />
+		<surface name="surface_close_disabled" file="window/close_disabled.tga" />
+		<surface name="surface_maximize" file="window/maximize.tga" />
+		<surface name="surface_maximize_disabled" file="window/maximize_disabled.tga" />
+		<surface name="surface_minimize" file="window/minimize.tga" />
+		<surface name="surface_minimize_disabled" file="window/minimize_disabled.tga" />
+		<surface name="surface_restore" file="window/restore.tga" />
+		<surface name="surface_restore_disabled" file="window/restore_disabled.tga" />
+	</section>
+	<section name="Button">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+		<font name="font_disabled">
+			<bitmap glyphs="FontGlyphs/font_gray" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="InputBox">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+		<font name="font_disabled">
+			<bitmap glyphs="FontGlyphs/font_gray" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="Label">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="ListBox">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="CheckBox">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~"/>
+		</font>
+		<font name="font_disabled">
+			<bitmap glyphs="FontGlyphs/font_gray" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~"/>
+		</bitmap>
+		<surface name="surface_checked" file="checkbox/checked.tga" />
+		<surface name="surface_unchecked" file="checkbox/unchecked.tga" />
+		<surface name="surface_checked_disabled" file="checkbox/checked_disabled.tga" />
+		<surface name="surface_unchecked_disabled" file="checkbox/unchecked_disabled.tga" />
+	</section>
+	<section name="ProgressBar">
+		<surface name="surface_foreground" file="scrollbar/foreground.tga" />
+		<surface name="surface_background" file="scrollbar/background.tga" />
+	</section>
+	<section name="RadioButton">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~"/>
+		</font>
+		<surface name="surface_checked" file="radiobutton/checked.tga" />
+		<surface name="surface_unchecked" file="radiobutton/unchecked.tga" />
+		<surface name="surface_checked_disabled" file="radiobutton/checked_disabled.tga" />
+		<surface name="surface_unchecked_disabled" file="radiobutton/unchecked_disabled.tga" />
+	</section>
+	<section name="TreeView">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="TreeViewItem">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+	</section>
+	<section name="MessageBox">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+		<integer name="min_width" value="200" />
+		<boolean name="fixed_size_buttons" value="true" />
+		<integer name="min_button_width" value="80" />
+		<integer name="min_button_height" value="20" />
+	</section>
+	<section name="InputDialog">
+		<integer name="min_width" value="50" />
+		<boolean name="fixed_size_buttons" value="true" />
+		<integer name="min_button_width" value="80" />
+		<integer name="min_button_height" value="20" />
+	</section>
+
+	<section name="Menu">
+		<surface name="submenu_arrow" file="menu/arrow.png" />
+	</section>
+
+	<section name="MenuItem">
+		<font name="font">
+			<bitmap glyphs="FontGlyphs/font_black" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+ 		</font>
+		<font name="font_disabled">
+			<bitmap glyphs="FontGlyphs/font_gray" spacelen="4" letters="!'#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+		</font>
+		<surface name="checked" file="menu/checked.png" />
+		<surface name="unchecked" file="menu/unchecked.png" />
+	</section>
+</resources>

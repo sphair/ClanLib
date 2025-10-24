@@ -1,0 +1,180 @@
+$Id: INSTALL.linux,v 1.17 2004/03/17 14:22:06 sphair Exp $
+
+Readme file for ClanLib 0.8.x under Linux
+---------------------------------------------------------------------------
+This readme will guide you with compiling, installing ClanLib and creating
+your first ClanLib application.
+
+If you have downloaded the binaries, you can skip section 2 and 3.
+
+1. Getting started
+2. Checking out from CVS
+3. Compilation
+4. Creating a simple Makefile
+5. Creating a simple application
+6. Problems ?
+
+
+1. Getting started
+---------------------------------------------------------------------------
+Make sure you have all the required libraries and programms you need
+before you start compiling ClanLib. Currently, you need at least zlib,
+libjpg and libpng to compile ClanLib and pkgconfig to guide at
+the compilation of examples and games using ClanLib. Check out the
+Links and Download page on our website for more info on these
+libraries.
+
+Remember to read the README if you run into any problems!
+
+This is the linux/unix INSTALL document, have a look at INSTALL.win32
+for the win32 installation & readme information.
+
+
+2. Checking out from CVS
+---------------------------------------------------------------------------
+If you download a nightly snapshot, or this is an official release, skip
+this step.
+
+If checked out from cvs, run autogen.sh to produce the configure script:
+
+  ./autogen.sh
+
+
+3. Compilation
+---------------------------------------------------------------------------
+  ./configure
+  make
+  make install
+
+You can force enabling of implementations, or disable some - eg.:
+
+  ./configure --disable-clanMikMod --enable-clanGL
+
+To get a list of possible options, run "./configure --help"
+
+
+The documentation is generated automatically if the required tools are
+on your system, you can disable it if you don't need them with:
+
+  ./configure --disable-docs
+
+
+At default both shared (.so) and static libraries (.a) are build,
+unless you want to make a static release, you will probally only want
+the shared libraries, you can disable the static ones with:
+
+  ./configure --disable-static
+
+Doing so will reduce the compile size by a half.
+
+
+4. Creating a simple Makefile
+---------------------------------------------------------------------------
+A simple makefile used to compile ClanLib under Linux could look like
+this:
+
+PACKAGES = clanCore-0.8 clanDisplay-0.8 clanApp-0.8 clanGL-0.8
+CPPFLAGS = `pkg-config --cflags $(PACKAGES)`
+LIBS = `pkg-config --libs $(PACKAGES)`
+OBJS = simple.o
+
+all: $(OBJS)
+	g++ -o simple $(OBJS) $(LIBS)
+
+clean:
+	-rm -rf *.o
+	-rm simple
+
+Note that you should minimum link with clanCore, clanDisplay, clanGL and 
+clanApp.
+
+Optional libraries:
+     If you want to use network, add clanNetwork
+     If you want to use sound, add clanSound
+     If you want to use MikMod, add clanMikMod
+     If you want to use Vorbis, add clanVorbis
+     If you want to use GUI, add clanGUI
+     If you want to use SDL, add clanSDL
+
+If you are not using pkg-config to compile your program, you might want to
+refer to INSTALL.mingw in order to link your program with the libraries
+manually. In INSTALL.mingw, you can see that when linking your program
+manually, you need to be careful about the order of the libraries, however
+this is not the case if you use pkg-config, it will handle it for you.
+therefore it is recommended that you use pkg-config in your makefile.
+
+
+5. Creating a simple application
+---------------------------------------------------------------------------
+
+#include <ClanLib/gl.h>
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
+#include <ClanLib/display.h>
+
+class MyApp : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		// Create a console window for text-output if not available
+		// Use printf or cout to display some text in your program
+		CL_ConsoleWindow console("Console");
+		console.redirect_stdio();
+
+		try
+		{
+			// Initialize ClanLib base components
+			CL_SetupCore setup_core;
+
+			// Initialize the ClanLib display component
+			CL_SetupDisplay setup_display;
+
+			// Initialize the ClanLib GL component
+			CL_SetupGL setup_gl;
+
+			// Create a display window
+			CL_DisplayWindow window("ClanLib application", 640, 480);
+
+			// Run until someone presses escape
+			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+			{
+				// Clear the display in a dark blue nuance
+				// The four arguments are red, green, blue and alpha (defaults to 255)
+				// All color nuances in ClanLib are measured in the interval 0->255
+				CL_Display::clear(CL_Color(0, 0, 50));
+
+				// Flip the display (using a double-buffer),
+				// showing on the screen what we have drawed
+				// since last call to flip()
+				CL_Display::flip();
+
+				// This call updates input and performs other "housekeeping"
+				// Call this each frame
+				// Also, gives the CPU a rest for 10 milliseconds to catch up
+				CL_System::keep_alive(10);
+			}
+		}
+		// Catch any errors from ClanLib
+		catch (CL_Error err)
+		{
+			// Display the error message
+			std::cout << err.message.c_str() << std::endl;
+		}
+
+		// Display console close message and wait for a key
+		console.display_close_message();
+
+		return 0;
+	}
+} app;
+
+
+6. Problems ?
+---------------------------------------------------------------------------
+Please read the FAQ on http://clanlib.org for common errors and explanations!
+
+
+--
+Enjoy,
+The ClanLib development team

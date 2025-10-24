@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+
+	<sprite name="FontA_Glyphs">
+		<image file="fontA1.tga"><alpha /></image>
+		<image file="fontA2.tga"><alpha /></image>
+	</sprite>
+
+	<font name="FontA">
+		<bitmap glyphs="FontA_Glyphs" letters="!~#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}" />
+	</font>
+
+	<sprite name="FontB_Glyphs">
+		<image file="fontB1.tga"><alpha /></image>
+		<image file="fontB2.tga"><alpha /></image>
+	</sprite>
+
+	<font name="FontB">
+		<bitmap glyphs="FontB_Glyphs" letters="!~#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}" />
+	</font>
+
+	<text_styler name="ts">
+		<font name="default" font="FontA" />
+		<font name="red" font="FontB" />
+	</text_styler>
+
+</resources>

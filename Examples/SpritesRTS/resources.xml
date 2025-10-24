@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<surface name="background" file="Gfx/background.png"/>
+
+	<sprite name="SpaceShootSelected" base_angle="180">
+		<image file="Gfx/spaceshoot_selected.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+		<color alpha="0.5"/>
+	</sprite>
+
+	<sprite name="SpaceShootBodyStill" base_angle="180">
+		<image file="Gfx/spaceshoot_body_still1.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+
+	<sprite name="SpaceShootBodyMoving" base_angle="180">
+		<image file="Gfx/spaceshoot_body_moving1.png" />
+		<image file="Gfx/spaceshoot_body_moving2.png" />
+		<image file="Gfx/spaceshoot_body_moving3.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+		<animation pingpong="no" speed="100"/>
+	</sprite>
+	
+	<sprite name="SpaceShootTurretStill" base_angle="180">
+		<image file="Gfx/spaceshoot_turret_still1.png" />
+		<translation origin="center" y="5"/>
+		<rotation origin="center" y="5"/>
+	</sprite>
+	
+	<sprite name="RedGlow" base_angle="180">
+		<image file="Gfx/redglow.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+	
+	<sprite name="SpaceShootTurretShooting" base_angle="180">
+		<image file="Gfx/spaceshoot_turret_shooting1.png" />
+		<image file="Gfx/spaceshoot_turret_shooting2.png" />
+		<image file="Gfx/spaceshoot_turret_shooting3.png" />
+		<image file="Gfx/spaceshoot_turret_shooting4.png" />
+		<image file="Gfx/spaceshoot_turret_shooting5.png" />
+		<image file="Gfx/spaceshoot_turret_shooting6.png" />
+		<image file="Gfx/spaceshoot_turret_shooting7.png" />
+		
+		<frame nr="1" y="0"/>
+		<frame nr="2" y="-1"/>
+		<frame nr="3" y="-2"/>
+		<frame nr="4" y="-3"/>
+		<frame nr="5" y="-2"/>
+		<frame nr="6" y="-1"/>
+		<frame nr="7" y="0"/>
+		
+		<translation origin="center" y="5"/>
+		<rotation origin="center" y="5"/>
+		<animation pingpong="no" loop="false" speed="50"/>
+	</sprite>
+
+	<sprite name="SpaceShootTurretReloading" base_angle="180">
+		<image file="Gfx/spaceshoot_turret_reloading1.png" />
+		<image file="Gfx/spaceshoot_turret_reloading2.png" />
+		<image file="Gfx/spaceshoot_turret_reloading3.png" />
+		<image file="Gfx/spaceshoot_turret_reloading4.png" />
+		<image file="Gfx/spaceshoot_turret_reloading5.png" />
+		<image file="Gfx/spaceshoot_turret_reloading6.png" />
+		<image file="Gfx/spaceshoot_turret_reloading7.png" />
+		<image file="Gfx/spaceshoot_turret_reloading8.png" />
+		<translation origin="center" y="5"/>
+		<rotation origin="center" y="5"/>
+		<animation pingpong="no" loop="false" speed="100"/>
+	</sprite>
+	
+	<sprite name="SpaceShootTurretGunFlash" base_angle="180">
+		<image file="Gfx/spaceshoot_turret_gunflash.png" />
+		<translation origin="center" y="53"/>
+		<rotation origin="center" y="53"/>
+		<animation pingpong="no" loop="false"/>
+	</sprite>
+
+	<sprite name="SpaceShootMissile" base_angle="180">
+		<image file="Gfx/spaceshoot_missile.png" />
+		<translation origin="bottom_center"/>
+		<rotation origin="bottom_center"/>
+	</sprite>
+	
+	<sprite name="Explosion" base_angle="0">
+		<image file="Gfx/explosion_01.png" />
+		<image file="Gfx/explosion_02.png" />
+		<image file="Gfx/explosion_03.png" />
+		<image file="Gfx/explosion_04.png" />
+		<image file="Gfx/explosion_05.png" />
+		<image file="Gfx/explosion_06.png" />
+		<image file="Gfx/explosion_07.png" />
+		<image file="Gfx/explosion_08.png" />
+		<image file="Gfx/explosion_09.png" />
+		<image file="Gfx/explosion_10.png" />
+		<image file="Gfx/explosion_11.png" />
+		<image file="Gfx/explosion_12.png" />
+		<image file="Gfx/explosion_13.png" />
+		<image file="Gfx/explosion_14.png" />
+		<image file="Gfx/explosion_15.png" />
+		<image file="Gfx/explosion_16.png" />
+		<image file="Gfx/explosion_17.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+		<animation loop="no" speed="100"></animation>
+	</sprite>
+
+	<sprite name="helipad">
+		<image file="Gfx/helipad.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+	
+	<sample name="SpaceShootTurret" file="Sound/spaceshootturret.WAV"/>
+	<sample name="MissileHit" file="Sound/missilehit.wav"/>
+</resources>

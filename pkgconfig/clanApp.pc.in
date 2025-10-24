@@ -1,0 +1,14 @@
+# pkg-config Metadata for clanApp
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanApp
+Description: portable main() wrapper of ClanLib
+Version: @VERSION@
+Libs:   -L${libdir} -lclanApp @extra_LIBS_clanApp@
+Cflags: -I${includedir}       @extra_CFLAGS_clanApp@
+
+# EOF #

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="font_gray_glyph">
+		<image file="font_gray.tga"><alpha /></image>
+	</sprite>
+
+	<font name="font_gray">
+	      <bitmap spacelen="4" glyphs="font_gray_glyph" letters="!'#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+	</font>
+</resources>

@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<TITLE>ClanLib Game SDK: ClanLib - Documentation</TITLE>
+<STYLE TYPE="text/css"><!--
+HTML BODY
+{
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 14px;
+	border-style: solid;
+}
+H1 { font-size: 22px; }
+H2 { font-size: 18px; }
+H3 { font-size: 16px; }
+H4 { font-size: 14px; }
+P { font-size: 14px; }
+LI { font-size: 14px; }
+--></STYLE>
+</HEAD>
+
+<body bgcolor=white text=black>
+<center>
+<table width=70%>
+<tr>
+<td>
+
+<center><table><tr><td>
+<img
+	SRC="../../Images/clanlib_logo_small.png"
+ alt="ClanLib logo"><br>
+</td></tr></table></center>
+
+<h1>Simple Game Development with ClanLib 0.8</h1>
+<h2>Part 1</h2>
+<b>Introduction to ClanLib & Visual C++ Workspace Setup</b>
+
+<ul>
+<p>
+<i>This tutorial assumes you have a working knowledge of C++ or a good reference from which to learn. We will be designing classes, using pointers, and doing other moderately-advanced things.</i>
+<br><br>
+That out of the way, let's start with this question: What is ClanLib? It is a programming library that handles mundane things like drawing graphics, playing sounds, and accepting user input from the mouse and keyboard. It also does much more, but even these simple things can be very difficult if you're creating them from scratch. ClanLib has the added bonus of being a cross-platform library, which means that you can use the same source code you use to build a Windows game to also build that game under Linux (or vice versa.)<br>
+<br>
+The first step in creating a game with ClanLib (CL) is downloading, installing, and (optionally) compiling the library. We will be using the static libraries that you can download or compile yourself. There are other ways of using the library, such as compiling dynamic DLLs, but we'll ignore those. If you have trouble with this first step there is good documentation to help you out, so I'll be moving along to the next step: setting up the Visual C++ workspace.<br>
+<br>
+First, create a new, empty workspace with the name of your game. The sample game we'll be developing here is Tic-Tac-Toe (more on that a bit later).<br>
+</p>
+
+<b>Fig 1</b>. 
+<div align="center"><img src="figure1.png" width="561" height="400" alt="" border="0"></div><br><br>
+
+<p>
+Next, go into <i>Project > Settings > Link</i> and add the CL libraries you'll be using to the Object/library modules field. For the Debug project configuration, I've added the basic debug libraries we'll need:<b> clanCored.lib clanAppd.lib clanDisplayd.lib </b> For the Release configuration, we'll use the same libraries without the 'd' appended to the name. (Note: this is apparently now optional - if you include the CL headers, these libraries are automatically linked.) Also for the Debug configuration, I've  added the entry <b>/nodefaultlib:"libcmt"</b> to the options field. This tells the compiler to ignore the that particular library because it would duplicate symbols (variables, functions) defined in another library. 
+</p>
+
+<b>Fig 2</b>. 
+<div align="center"><img src="figure2.png" width="577" height="372" alt="" border="0"></div>
+
+<p>
+Last in setting up, go into <i>Project > Settings > C++</i> and change the category to 'code generation'. Under 'run-time library', select <b>Debug Multithreaded</b>. (For your release configuration, choose plain <b>Multithreaded</b>.)
+</p>
+
+<b>Fig 3</b>. 
+<div align="center"><img src="figure3.png" width="577" height="372" alt="" border="0"></div>
+
+<p>
+At this point I like to test the new application's setup to make sure everything compiles and all the header files are located. You may have to add the CL library and include directories to VC++'s configuration under <i>Tools > Options > Directories.</i><br>
+<br>
+To test the setup, just grab the file 'minimum.cpp' from the Minimum example program included with the CL release. Add it to your source files folder and try compiling. If it compiles and runs correctly, you can go ahead and delete it to have a clean slate for your game.
+</ul>
+
+<b>CL_ClanApplication</b>
+<ul>
+Every CL application must derive this class and create an instance of the derived class. This instances forms the base of your program, and you add whatever code you need to the main() function. Here is a simple derived class that will form the basis of our program.
+<br><br>
+<i>A quick note about style - I got my programming start with Java, so my C++ style reflects this. It differs somewhat from the CL API but I don't either style has a particular advantage. Just don't get me started on Hungarian notation..</i><br><br>
+
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>// Interface (for the .h file)
+// Include necessary CL header files
+#include &lt;ClanLib/core.h&gt;
+#include &lt;ClanLib/display.h&gt;
+#include &lt;ClanLib/gl.h&gt;
+#include &lt;ClanLib/application.h&gt;
+
+class TicTacToeApp : public CL_ClanApplication {
+
+public:
+	TicTacToeApp();
+	~TicTacToeApp();
+
+	virtual int main(int, char **);
+};</pre> 
+</td></tr></table></div>
+
+<br><br>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>// Implementation (for the .cpp file)
+#include "TicTacToeApp.h"
+
+// This application instance is required or the app will not run
+TicTacToeApp applicationInstance; 
+
+// Constructor
+TicTacToeApp::TicTacToeApp() {}
+
+// Destructor
+TicTacToeApp::~TicTacToeApp() {}
+
+int TicTacToeApp::main(int, char **) {
+
+	// Create a console window for text-output if not available
+	CL_ConsoleWindow console("TicTacToeApp Console");
+	console.redirect_stdio();
+
+	try {
+		// CL initialization functions
+		// These must be called or CL functions will not work
+		// Also, SetupCore must be init()'ed first and denit()'ed last
+		CL_SetupCore::init();
+		CL_SetupDisplay::init();
+		CL_SetupGL::init();
+
+		// Set display mode
+		CL_DisplayWindow window("TicTacToeApp", 500, 450);
+
+		// CL deinitialization functions
+		CL_SetupGL::deinit();
+		CL_SetupDisplay::deinit();
+		CL_SetupCore::deinit();
+	} catch (CL_Error err) {
+		std::cout << "Exception caught: " << err.message.c_str() << std::endl;
+
+		// Display console close message and wait for a key
+		console.display_close_message();
+	}
+
+	return 0;
+}</pre> 
+</td></tr></table></div>
+<br>
+
+<p>
+Of course, this program does nothing but open and close, but if it does that then we're off to a good start. Now for a momentary time-out that every programmer should take before diving into the creation of their next masterpiece.</p>
+</ul>
+
+<b>Tic-Tac-Toe</b>
+
+<ul>
+<p>
+Games don't come any simpler than this. I plan on creating 2 classes for this application - the TicTacToeApp we've already started,  and a TicTacToeGame for actually playing with X's and O's. Note that in this tutorial I will be focusing on using CL to create this game and not the game itself, so I will skip over large portions of game implementation. That's experience you will have to pick up somewhere else.<br>
+<br>
+We're ready to start adding graphics and control code to our game, so that's it for this part of the tutorial.<br>
+<br>
+<a href="clanlib-tutorial-part1.zip">Download Visual C++ Workspace for Part 1</a><br>
+<br>
+<a href="part-2.html">Move on to Part 2</a>
+
+</p>
+
+</ul>
+
+</TD>
+</TR>
+</TABLE>
+
+</CENTER>
+</BODY>
+</HTML>
+

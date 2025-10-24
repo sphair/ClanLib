@@ -1,0 +1,122 @@
+<xml>
+<head>
+<title>Getting started with ClanLib</title>
+<eyecolor>yellow</eyecolor>
+</head>
+<body>
+
+<p>This document shows how to write a very basic ClanLib application, using
+the CL_ClanApplication interface. It explains why a global instance of this
+class is needed and how to initialize the different subsystems/components in
+ClanLib. Finally it explains how to trace errors and handle exceptions in ClanLib.</p>
+
+<h3>The CL_ClanApplication Interface</h3>
+
+<p>We will start at the first steps needed to use ClanLib: initialization of
+the library and the application. Most libraries do this by requiring an application
+to call some kind of init function before the library is used, and a deinit function
+at the end of the application. Eg.:</p>
+
+<code>
+void main()
+{
+	library_init();
+	// run game
+	library_deinit();
+}
+</code>
+
+<p>However, ClanLib doesn't use this strategy for one important reason:
+ClanLib runs on a lot of platforms. Some of these platforms do not use the
+traditional main() initialization method. Windows is an example where
+WinMain() is used instead. Often ClanLib need to use the parameters to these
+alternative main() functions, and thus requires a very platform dependent
+initialization.</p>
+
+<p>We have solved the problem by making ClanLib itself encapsulate the real
+main() function, and then call the ClanLib application when it is done with
+its initialization. The resulting main() "function" in ClanLib looks like
+this:</p>
+
+<code>
+
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
+
+class MyClanLibApplication : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		CL_SetupCore setup_init;
+		
+		// Insert game code here
+		
+		return 0;
+	}
+} app;
+</code>
+
+<p>There has to be <i>one</i> single instance of this class - otherwise
+ClanLib isn't able to locate the class, and thus cannot invoke the main
+function.</p>
+
+<p>This can somewhat be compared to the Applet class in Java, and CWinApp in
+Microsoft's Foundation Classes (MFC).</p>
+
+<h3>Initializing components</h3>
+
+<p>ClanLib is a large library and thus can be used for several purposes.
+Because of this, ClanLib doesn't initialize its components before asked to.
+This is done through the <codelink>CL_SetupCore</codelink> class. </p>
+
+<p>Each library in ClanLib has such a class. The clanGL library has
+<codelink>CL_SetupGL</codelink>, clanGUI has
+<codelink>CL_SetupGUI</codelink>, and so on.
+You <i>must</i> create these classes before using the respective components in your
+program. Make sure they don't go out of scope until your program is ending.</p>
+
+<p>If you need to use the display and sound parts of ClanLib, but not the
+network, you could do something like this:</p>
+
+<code>
+
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/sound.h>
+
+class MyClanLibApplication : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char** argv)
+	{
+		CL_SetupCore setup_core;
+		CL_SetupDisplay setup_display;
+		CL_SetupGL setup_gl;
+		CL_SetupSound setup_sound;
+		
+		// run game.
+
+		return 0;
+	}
+} app;
+</code>
+
+<h3>Creating a simple Makefile for Linux</h3>
+
+<p>Read the file INSTALL.linux in the ClanLib root directory for
+specifix details on how to use ClanLib under Linux.</p>
+
+<h3>Creating a ClanLib project in Visual C++</h3>
+
+<p>Read the file INSTALL.win32 in the ClanLib root directory for
+specific details on how to use ClanLib with Microsoft Visual C++.</p>
+
+<h3>Creating a ClanLib project in Borland C++</h3>
+
+<p>Read the file INSTALL.borland in the ClanLib root directory for
+specific details on how to use ClanLib with Borland C++.</p>
+
+</body>
+</xml>

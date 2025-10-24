@@ -1,0 +1,197 @@
+------------------------
+PCE2 
+C++ Documentation Engine
+------------------------
+
+
+Introduction
+--
+PCE2 is a powerful, modular documentation engine for C++. By processing
+a series of C++ header files (.h or .hh) it removes specially marked
+comments and generates a tree data structure representing the classes,
+namespaces, and other primitives found within the set of files. This 
+data structure is made available to end-user "plugins" which walk the
+tree and generate whatever output is required.
+
+Using PCE2
+--
+PCE2 is incapable of generating any output by itself. It requires at
+least one plugin which will walk the generated tree of the header
+files. In particular, the first plugin must be named "output.plg" and
+have a "plugin" subroutine. PCE2 loads this plugin and calls the subroutine,
+passing the base of the header tree as the first argument.
+
+
+Data structures in PCE2
+--
+The primary data structure is a recursive type named Object. A parse
+tree composed of "Object"s is passed to the output plugin once all
+header files have been parsed. The output plugin then walks the various
+methods and properties of Object to generate output. 
+
+Additionally, there are a few subclasses of the Object type. At this
+time the only one of note is the Function type. This sub-type provides
+additional information on the return type, const-specifiers and other
+function modifiers available in C++.
+
+Definitions
+--
+
+item                    - refers to any thing from classes to friends
+class(es)               - refers to classes and structs
+space(es)               - refers to all C++ types which may hold a class
+                          including: namespace, class or union
+
+
+Object::
+Basic Properties
+--------------------------------------
+Object::{name}          - object name w/o path (use Object::name())
+Object::{fullname}      - object name including path (use Object::fullname())
+Object::{htmlname}      - object name rendered in HTML
+Object::{comments}      - ??
+Object::{space}         - namespace/class/struct in which this object resides
+Object::{ntype}         - object type ID (use Object::type_name())
+			  1 = Namespace
+			  2 = Class
+			  3 = Struct
+			  4 = Union
+			  5 = Function
+			  6 = Variable
+			  7 = Typedef
+			  8 = Friend
+			  9 = Macro
+Object::{access}	- object access ID (use Object::access_name())
+			  1 = Public
+			  2 = Protected
+			  3 = Private
+Object::{file}		- file in which this object resides
+Object::{short}		- summary comment for this object (designated by //:)
+Object::{long}		- extended comment for this object (designated by //-)
+Object::{unique_string} - Unique Variables ("name=value") (designated by //! )
+
+
+Object::
+Basic Accessor Methods
+--------------------------------------
+Object::name()          - name of item w/o path
+Object::fullname()      - name of item including path
+Object::type_name()     - string describing type of this item
+Object::access_name()   - string describing access of this item
+Object::href()          - returns a relative hyperlink to the file which
+			  contains this object
+Object::full_href()     - returns an absolute hyperlink to the file which
+			  contains this object
+Object::is_known()      - true if object was encountered in source; false
+		          if pce2 assumed its existence from class definitions
+			  or calls
+Object::is_namespace()  - true if this object type is a namespace
+
+Object::is_class()
+Object::is_union()
+Object::is_function()
+Object::is_typedef()
+Object::is_friend()
+Object::is_template()
+
+
+Object::
+List Accessor Methods
+--------------------------------------
+These methods return a list of sub-objects within an object. 
+Use these to extract subsets of the items in a space.
+
+Object::children()      - all classes derived from this class
+Object::parents()       - immediate base classes of this class
+Object::known_parents() - same as Object::parents() with the additional
+                          constraint that all object must satisfy "is_known()"
+
+Object::all()           - all items in all subtrees (recursive) 
+Object::items()		- items in this space
+Object::spaces()	- classes and namespaces in this space
+Object::classes()	- classes in this space
+Object::unions()	- unions in this space
+Object::namespaces()	- namespaces in this space
+Object::friends()	- friends in this space
+Object::typedefs()	- typedefs in this space
+Object::macros()	- macros in this space
+
+Object::public()	- public items in this space
+Object::private()	- private  items in this space
+Object::protected()	- protected items in this space
+
+Object::get_by_type(type)     - uses type index number; returns a list of
+			        sub-objects filtered by type (see Object::ntype)
+Object::get_by_access(access) - uses access index number; returns a list of
+			        sub-objects filtered by access
+ 
+
+
+Function:: (sub-class of Object)
+Basic Properties
+--------------------------------------
+Function::{type}        - return type of this function
+Function::{args}        - unparsed string of this function's argument list
+Function::{html_type}   - html rendering of the return type
+Function::{html_args}   - html rendering of the function argument list
+
+Function::{const}       - returns true if this is a const function
+Function::{explicit}    - returns true if this is an explicit ctor
+Function::{virtual}     - returns true if this is a virtual method
+Function::{static}      - returns true if this a static method
+
+
+
+Additional notes
+----------------------------
+
+The variable "$file_global_string" contains a global string which is created
+by using:
+//: A message 1
+//: on 2 lines
+//! Global=message_1
+//: A message 2
+//! Global=message_2
+So that $file_global_string =
+! message_1
+: A message 1
+: on 2 lines
+! message_2
+: A message 2
+
+It is up to the plugins to decide how to use the information
+
+Sorters
+--
+Sorters are mini functions used to sort lists
+
+Ex.  @list= sort byname $obj->get_public();
+
+  byname  - sorts by name
+
+
+Perl Notes
+--
+
+$obj->{foo} is equivelent to $$obj{foo}
+$obj->foo() is equivelent to foo($obj) 
+
+$_ is local scope in nature and thus can be used one inside another.
+
+  foreach ($object->spaces()) {
+    print "start $$_{name};\n";  # prints space name
+    foreach ($_->functions()) {
+      print "$$_{name}\n";       # prints functions in space
+    }
+    print "end $$_{name};\n\n";  # prints space name
+  }
+      
+Often doing a "perl myplugin.plg" will turn up errors not caught 
+otherwise in perl.  Plugins use an eval which does not check
+as carefully as one would like.
+
+
+
+
+
+

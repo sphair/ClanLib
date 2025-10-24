@@ -1,0 +1,261 @@
+<xml>
+<head>
+<title>Creating a custom GUI style</title>
+</head>
+<body>
+
+<p>ClanGUI contains a powerful mechanism to code custom themes, or styles as
+we call them in ClanGUI. Styles are very flexible, yet very easy to implement.
+This document will guide you through creation of a custom style.</p>
+
+<h3>Styles overview</h3>
+
+<p>Each component in ClanGUI is clearly separated into logic and presentation.
+When creating a new style for a component (for example CL_Button), you create
+a new class which does the drawing of a component - the logic is still the same
+between different styles.</p>
+
+<p>A CL_StyleManager is used to attach styles to each component available. So
+in order to create a new style you need two parts - a stylemanager, and then
+the style-classes for each component you want a new look for.</p>
+
+<h3>When do I need to create my own GUI style?</h3>
+
+<p>The standard GUI style in ClanGUI very much resembles any desktop-gui used
+in applications. This doesn't always fit with games.</p>
+
+<p>Some of the components in the default GUI style supports surfaces, like CL_Button.
+So, if you only wants some nice-looking buttons in your game which use predrawed
+pictures, you can still use the default style. But if you want a custom-looking
+inputbox or scrollbar, you need to create a custom style.</p>
+
+<h3>Creating a stylemanager</h3>
+
+<p>Create a new file called <b>stylemanager_coolstyle.h</b>, and insert the following
+code into it:</p>
+
+<code>
+#ifndef header_stylemanager_coolstyle
+#define header_stylemanager_coolstyle
+
+#include <ClanLib/gui.h>
+#include <ClanLib/guistyleboring.h>
+
+class CL_StyleManager_CoolTheme : public CL_StyleManager_Boring
+{
+public:
+	CL_StyleManager_CoolTheme(CL_ResourceManager *resources);
+
+	// Connect component styles to component.
+	// The 'type' parameter indicates what type the component is.
+	virtual void connect_styles(const std::string &type, CL_Component *owner);
+};
+
+#endif
+</code>
+
+<p>The new stylemanager (CoolTheme) inherits the CL_StyleManager_Boring. This
+means it will use the default style for any components you don't define a new style
+for. Note that it is not neccessary to inherit from CL_StyleManager_Boring - you 
+could also inherit from CL_StyleManager, but if you then try to use a component for
+which you haven't created a style for, nothing will be drawn for the component.
+You could also use the CL_StyleManager_Silver for a slightly fancier default style.</p>
+
+<p>The connect_styles() is the function which attaches the styles to the various
+components. Make sure you inherit this function.</p>
+
+<p>Next, create a new file called <b>stylemanager_coolstyle.cpp</b>, and insert the
+following code into it:</p>
+
+<code>
+#include "stylemanager_coolstyle.h"
+#include "button_coolstyle.h"
+
+CL_StyleManager_CoolTheme::CL_StyleManager_CoolTheme(CL_ResourceManager *resources)
+: CL_StyleManager_Boring(resources)
+{
+}
+
+void CL_StyleManager_CoolTheme::connect_styles(const std::string &type, CL_Component *component)
+{
+	if (type == "button")
+	{
+		CL_Button *button = (CL_Button *)component;
+		button->set_style(new CL_Button_CoolTheme(button, this));
+	}
+	else
+	{
+		CL_StyleManager_Boring::connect_styles(type, component);
+	}
+}
+</code>
+
+<p>A file called <b>button_coolstyle.h</b> is included here; we'll get back to that in the next
+section.</p>
+
+<p>The connect_styles() function has two parameters - <b>type</b> and <b>component</b>.</p>
+
+<p>The <b>type</b> parameter contains the name of the component to be styled - examples are
+label, button, frame, inputbox, scrollbar, radiobutton, listbox, window, etc. For each
+component you want to put a style on, make a new test for the type, and attach the style
+using the set_style() function in the component. Notice how its done through creating
+a new style class called CL_Button_CoolTheme.</p>
+
+<p>Any components we don't attach, we just pass on to the default stylemanager. You can skip
+doing this if you have styled all the component you want to use, or don't want to use the
+default stylemanager at all.</p>
+
+<h3>Creating a styled component</h3>
+
+<p>Create a new file called <b>button_coolstyle.h</b>, and insert the following
+code into it:</p>
+
+<code>
+#ifndef header_button_coolstyle
+#define header_button_coolstyle
+
+#include <ClanLib/gui.h>
+#include "stylemanager_coolstyle.h"
+
+class CL_Button_CoolTheme : public CL_ComponentStyle
+{
+public:
+	CL_Button_CoolTheme(CL_Button *button, CL_StyleManager_CoolTheme *style);
+
+private:
+	CL_Slot slot_paint;
+	void on_paint();
+
+	CL_Button *button;
+};
+
+#endif
+</code>
+
+<p>Each component-style inherits from the class CL_ComponentStyle. The CL_Button
+object you get in the constructor is the logic class for the button. You can 
+query it for states (is_down()) and size etc.</p>
+
+<p>In this simple style, we only prepare to hook into the sig_paint signal - 
+therefore the slot_paint and on_paint() code. Read on for more specifics on this.</p>
+
+<p>Create a new file called <b>button_coolstyle.cpp</b>, and insert the following
+code into it:</p>
+
+<code>
+#include <ClanLib/display.h>
+#include "button_coolstyle.h"
+
+CL_Button_CoolTheme::CL_Button_CoolTheme(CL_Button *button, CL_StyleManager_CoolTheme *style)
+: CL_ComponentStyle(button)
+{
+	this->button = button;
+
+	slot_paint = button->sig_paint().connect(this, &CL_Button_CoolTheme::on_paint);
+}
+
+void CL_Button_CoolTheme::on_paint()
+{
+	int button_width = button->get_width();
+	int button_height = button->get_height();
+
+	CL_Display::fill_rect(CL_Rect(1, 1, button_width - 1, button_height - 1), CL_Color(70, 120, 255));
+
+	if(button->is_down())
+		CL_Display::draw_rect(CL_Rect(0, 0, button_width, button_height), CL_Color::white);
+	else
+		CL_Display::draw_rect(CL_Rect(0, 0, button_width, button_height), CL_Color::black);
+}
+</code>
+
+<p>In the constructor we hook into the sig_paint signal of the CL_Button. This allows
+us to do custom drawing of the button.</p>
+
+<p>The on_paint() function fetches the size of the button, and draws some simple rects,
+based on the button state - if its pressed down or not.</p>
+
+<h3>Testing the new style</h3>
+
+<p>We have now created a very simple style, using only one themed component - a CL_Button.
+Lets try to test it, and see if it behaves as we expect it to do.</p>
+
+<code>
+#include <ClanLib/core.h>
+#include <ClanLib/gui.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
+#include <ClanLib/display.h>
+
+#include "stylemanager_coolstyle.h"
+
+class StyleTest : public CL_ClanApplication
+{
+public:
+	int main(int argc, char** argv)
+	{
+		try
+		{
+			CL_SetupCore setup_core;
+			CL_SetupGUI setup_gui;
+			CL_SetupDisplay setup_display;
+			CL_SetupGL setup_gl;
+
+			CL_DisplayWindow window("StyleTest", 640, 480);
+
+			CL_ResourceManager resources("gui.xml");
+			CL_StyleManager_CoolTheme style(&resources);
+			CL_GUIManager gui(&style);
+			
+			CL_Button button(CL_Rect(10, 10, 100, 40), "", &gui);
+
+			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+			{
+				CL_Display::clear(CL_Color::grey);
+				gui.show();
+				CL_Display::flip();
+				CL_System::keep_alive(10);
+			}
+		}
+		catch (CL_Error e)
+		{
+			std::cout << e.message.c_str() << std::endl;
+		}
+
+		return 0;
+	}
+} app;
+</code>
+
+<p>Remember to copy the Resources/GUIStyleBoring files into your project,
+so it has some fonts and resources to use. These can be replaced later with your own
+resources.</p>
+
+<h3>Some example GUI styles</h3>
+
+<table border="0" cellpadding="10">
+	<tr>
+		<td align="center"><p><a href="Images/silver.jpg"><img src="Images/silver.jpg" alt=Silver height="80" border="1"></a></p>
+			<p> ClanGUIs default theme Silver</p>
+		</td>
+		<td align="center"><p><a href="Images/boring.jpg"><img src="Images/boring.jpg" alt=Boring height="80" border="1"></a></p>
+			<p>ClanGUIs default theme Boring</p>
+		</td>
+		<td align="center"><p><a href="Images/supaplex.jpg"><img src="Images/supaplex.jpg" alt=SupaPlex height="80" border="1"></a></p>
+			<p>The game Supaplex</p>
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><p><a href="Images/race.jpg"><img src="Images/race.jpg" alt=Race height="80" border="1"></a></p>
+			<p>The game Race</p>
+		</td>
+		<td align="center"><p><a href="Images/raceeditor.jpg"><img src="Images/raceeditor.jpg" alt="Race Editor" height="80" border="1"></a></p>
+			<p>The gameeditor in Race</p>
+		</td>
+		<td align="center"><p><a href="Images/apoc.jpg"><img src="Images/apoc.jpg" alt=APOC height="80" border="1"></a></p>
+			<p>The game APOC</p>
+		</td>
+	</tr>
+</table>
+
+</body>
+</xml>

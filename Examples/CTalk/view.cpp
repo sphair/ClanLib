@@ -1,0 +1,37 @@
+
+#include "precomp.h"
+#include "view.h"
+#include "mainframe.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// View construction:
+
+View::View(MainFrame *mainframe, const std::string &title)
+: CL_Component(mainframe), mainframe(mainframe), title(title)
+{
+	show(false);
+}
+
+View::~View()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// View attributes:
+
+MainFrame *View::get_mainframe()
+{
+	return mainframe;
+}
+
+Document *View::get_document()
+{
+	return mainframe->get_document();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// View operations:
+
+
+/////////////////////////////////////////////////////////////////////////////
+// View implementation:

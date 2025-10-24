@@ -1,0 +1,138 @@
+#
+# ClanSoft Documentation: Overview theme,
+# Copyright (c) 1999 by Magnus Norddahl / ClanSoft & Kenneth Gangstoe.
+#
+
+use English;
+
+sub theme_header
+{
+	my ($xml_head) = @ARG;
+	my $html;
+
+	my $image_path = "Images";
+
+	my $title = "";
+	$title = $1 if ($xml_head =~ /<title>(.*?)<\/title>/si);
+
+	$html .= <<END;
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>$title - ClanLib Game SDK</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+<body style="background-color: #a4daea; color: black; margin: 1em 3em 1em 3em;">
+<div style="border-style: solid; border-width:thin; border-color: black;">
+<div style="background-color: white; color: black; padding: .3em 1em .3em 1em; border-bottom-style: dotted; border-bottom-width: 2px;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+<td align="center">
+<h1>
+<a href="http://www.clanlib.org"><img style="border-style: none; padding-right: 130px;" src="../../gfx/clanlib.png" alt="ClanLib"></a>
+</h1>
+</td>
+</tr>
+</table>
+<!--<div class="menu">
+  <a href="index.html">News</a>
+  <a href="intro.html">About</a>
+  <a href="download.html">Download</a>
+  <a href="cvs.html">CVS</a>
+  <a class="active" href="docs.html">Docs</a>
+  <a href="games.html">Games</a>
+  <a href="contact.html">Contact</a>
+  <a href="links.html">Links</a>
+</div>-->
+</div>
+<div style=\"background-color: white; padding: 1em 3em 1em 3em;\">
+<!-- clanlib header end -->
+
+END
+
+	$html .= "<div style=\"border-bottom-style: dotted;  border-bottom-width: 1px; margin-bottom: 1em;\"><h2>$title</h2></div>\n\n" if ($title ne "");
+
+	return $html;
+}
+
+sub theme_body_filters
+{
+	my @filters;
+
+	push(@filters, \&filt_code);
+	push(@filters, \&filt_codelink);
+	push(@filters, \&filt_std);
+
+	return @filters;
+}
+
+sub theme_body_end
+{
+	my $str = <<END2;
+<!-- clanlib footer begin -->
+<div style="margin-top: 0em; text-align: center; color: #a0a0a0; border-top-style: dotted; border-top-width: 1px;">
+              Questions or comments, write to the <a href="http://clanlib.org/contact.html">ClanLib mailing list</a>.
+            </div>
+</div>
+</div>
+</body>
+</html>
+END2
+
+	return $str;
+}
+
+sub filt_code
+{
+	my ($xml_body) = @ARG;
+	
+	while ($xml_body =~ /<code>(.*?)<\/code>/si)
+	{
+		my $code = $1;
+		$code =~ s/</&lt;/g;
+		$code =~ s/>/&gt;/g;
+		$code =~ s/^\n//;
+
+		$xml_body =~ s/<code>.*?<\/code>/<ul><pre><font face=\"Arial,Courier New,Courier\">$code<\/font><\/pre><\/ul>/si;
+	}
+
+	return $xml_body;
+}
+
+sub filt_codelink
+{
+	my ($xml_body) = @ARG;
+	
+	while ($xml_body =~ /<codelink>(.*?)<\/codelink>/si)
+	{
+		my $code = $1;
+		$code =~ s/</&lt;/g;
+		$code =~ s/>/&gt;/g;
+		$code =~ s/(CL_\w+)/<a href=\"..\/Reference\/html\/$1.html\">$1<\/a>/g;
+		
+		$xml_body =~ s/<codelink>.*?<\/codelink>/$code/si;
+	}
+
+	return $xml_body;
+}
+
+sub filt_std
+{
+	my ($xml_body) = @ARG;
+
+	$xml_body =~ s/<h>/<h3>/ig;
+	$xml_body =~ s/<\/h>/<\/h3>/ig;
+	$xml_body =~ s/<h2>/<div style=\"border-bottom-style: dotted;  border-bottom-width: 1px;\"><h2>/ig;
+	$xml_body =~ s/<h3>/<div style=\"border-bottom-style: dotted;  border-bottom-width: 1px;\"><h3>/ig;
+	$xml_body =~ s/<\/h2>/<\/h2><\/div>/ig;
+	$xml_body =~ s/<\/h3>/<\/h3><\/div>/ig;
+	$xml_body =~ s/<menu>/<ul>/ig;
+	$xml_body =~ s/<\/menu>/<\/ul>/ig;
+	$xml_body =~ s/<menuitem \"(.*?)\" \"(.*?)\" \"(.*?)\">/<li><a href=\"$1\">$2<\/a><br>\n<ul>$3<\/ul><br>/ig;
+	$xml_body =~ s/<image \"(.*?)\" \"(.*?)\">/<img src=\"$image_path\/$1\" alt=\"$2\">/ig;
+	$xml_body =~ s/<a download=\"/<a href=\"http:\/\/dark.x.dtu.dk\/~mbn\/clanlib\/download\//ig;
+
+	return $xml_body;
+}

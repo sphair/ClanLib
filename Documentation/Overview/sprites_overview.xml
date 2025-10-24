@@ -1,0 +1,157 @@
+<xml>
+<head>
+<title>Using sprites</title>
+</head>
+<body>
+
+<p>As probably most people know, a sprite is a collection of 2D images (called frames),
+shown in sequence with a delay between each frame. Sprites are used for a lot of game objects,
+i.e. moving people, spaceships, chairs, powerups, missiles, animated mouse cursors, etc.</p>
+
+<p><codelink>CL_Sprite</codelink> does all this for you in a very easy, yet flexible way.
+The simplest sprites are just a collection of frames, all shown after eachother, drawed on
+the screen somewhere.</p>
+
+<p>If you need more advanced features, sprites can be rotated and made semi-translucent, 
+you can tweak the animation speed for individual frames, set frame offsets, set drawing and
+rotation alignment, you can play them in a backward looping pattern, a ping-pong loop,
+forward just-once, etc. Short said, CL_Sprite can do most things you'll ever need for basic
+2d sprites.</p>
+
+<h3>Constructing sprites</h3>
+
+<p>CL_Sprite can be constructed in two ways - either using ClanLib resources,
+or manually through a CL_SpriteDescription.</p>
+
+<h4>Creating sprites using resources</h4>
+
+<p>Please read the <a href="sprites_resources.html">Sprites Resources Overview</a> for
+a description on the resource options for sprites.</p>
+
+<p>After you have created your sprite resource, you can easily create a <codelink>CL_Sprite</codelink>
+object from it.</p>
+
+<pre>
+	CL_ResourceManager *resources = new CL_ResourceManager("resources.xml");
+
+	CL_Sprite *sprite1 = new CL_Sprite("my_simple_sprite", resources);
+	CL_Sprite *sprite2 = new CL_Sprite("my_advanced_sprite", resources);
+</pre>
+
+<h4>Creating sprites manually</h4>
+
+<p>If you for some reason don't want to use resource files, you can manually create
+the same sprite setup using the <codelink>CL_SpriteDescription</codelink> class, which
+describes a set of image-frames.</p>
+
+<p>You add, just like in the resource file, a series of cutters which will extract
+the frames to be used in the sprite.</p>
+
+<pre>
+	CL_SpriteDescription desc_simple;
+	desc_simple.add_frame(new CL_TargaProvider("image_single1.tga"), true);
+	desc_simple.add_frame(new CL_TargaProvider("image_single2.tga"), true);
+	desc_simple.add_frame(new CL_TargaProvider("image_single2.tga"), true);
+
+	CL_SpriteDescription desc_advanced;
+	desc_advanced.add_frame(new CL_TargaProvider("image1.tga"), true);
+	desc_advanced.add_gridclipped_frames(new CL_TargaProvider("gridframes.tga"), 0, 0, 32, 32, 10, 2, 0, 0, true);
+	desc_advanced.add_alphaclipped_frames(new CL_TargaProvider("alphaframes.tga"), 0, 0, 0.05f, true);
+	desc_advanced.add_frame(new CL_TargaProvider("image2.tga"), true);
+	desc_advanced.add_gridclipped_frames(new CL_TargaProvider("image3.tga"), 0, 0, 32, 32, 1, 1, 0, 0, true);
+
+	CL_Sprite *sprite1 = new CL_Sprite(desc_simple);
+	CL_Sprite *sprite2 = new CL_Sprite(desc_advanced);
+
+	sprite2->set_alpha(0.5f);
+	sprite2->set_base_angle(90.0f);
+	sprite2->set_frame_delay(20, 100);
+	sprite2->set_frame_offset(20, CL_Point(1, 1));
+</pre>
+
+<p>If you read the <a href="sprites_resources.html">Sprites Resources Overview</a>, you will see this code
+creates the exact same setup, only now using code instead of a resourcefile.</p>
+
+<h3>Using sprites</h3>
+
+<p>Example usage code:</p>
+<pre>
+	// Make sure sprites are animated
+	sprite1->update();
+	sprite2->update();
+
+	// Rotate sprite
+	sprite1->rotate(0.5f);
+
+	// Draw sprites
+	sprite1->draw(10, 10);
+	sprite2->draw(100, 100);
+</pre>
+
+<h4>Changing look of a sprite</h4>
+
+<p>If you want to change the look of your sprite, use CL_Sprite::set_image_data().
+This will keep the current attributes (rotation, alpha, etc), except the animation
+status (current frame etc).</p>
+
+<pre>
+class Man
+{
+	...
+
+	CL_Sprite *sprite_man_walk;
+	CL_Sprite *sprite_man_still;
+
+	CL_Sprite *sprite_man;
+}
+
+void Man::init()
+{
+	sprite_man_walk = new CL_Sprite("man_walk", resources);
+	sprite_man_still = new CL_Sprite("man_still", resources);
+
+	set_walking(true);
+}
+
+void Man::set_walking(bool walking)
+{
+	if(walking)
+		sprite_man->set_image_data(*sprite_man_walk);
+	else
+		sprite_man->set_image_data(*sprite_man_still);
+}
+
+void Man::draw()
+{
+	sprite_man->update();
+	sprite_man->rotate(1.0f);
+
+	sprite_man->draw(x, y);
+}
+</pre>
+
+<h3>Playback control</h3>
+<p>TODO</p>
+
+<h3>Alignment and hotspot</h3>
+<p>TODO</p>
+
+<h3>Advanced: Frame-independent update</h3>
+
+<p>There are different ways of having a frame-independent game.
+One way is to calculate the time elapsed since last frame.
+This is how the update() function in CL_Sprite works. Between 
+every call to update(), it calculates the amount of time lapsed,
+and uses this to decide which frame in the animation it should
+display. In most cases, this is good enough, and you won't have
+to bother with the second option described below.</p>
+
+<p>Some games works in a fixed-tick-mode, where updates are called
+X numbers of times during one second, instead of calculating a
+variable time between each update. It is possible to use this approach
+with CL_Sprite as well; you just call CL_Sprite::update(float time) with
+the time between each tick. So, if you have a constant tick of 30 per second,
+you would call sprite->update(1000.0f/30);</p>
+
+</body>
+</xml>

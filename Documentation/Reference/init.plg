@@ -1,0 +1,6 @@
+sub plugin {
+  push(@Html::intrensics,"gchar","guint32","guint16","gpointer",
+                         "guint","gint","gfloat","gboolean",
+                         "gushort","gdouble");
+  push(@Html::specifiers,"signal","emitable");
+}

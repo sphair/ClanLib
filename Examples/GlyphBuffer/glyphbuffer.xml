@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="Font_glyphs" file="font.tga">
+		<image file="font.tga"><alpha /></image>
+	</sprite>
+	<font name="Font">
+		<bitmap glyphs="Font_glyphs" letters="!!#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~" />
+	</font>
+</resources>

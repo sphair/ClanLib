@@ -1,0 +1,136 @@
+body
+{ 
+  background-color: #dcdcec;
+  color: black; 
+  margin: 1em 3em 1em 3em;
+}
+
+a:link
+{
+  color: #7c7cac;
+  text-decoration: underline;
+}
+
+a:visited
+{
+  color: black;
+  text-decoration: underline;
+}
+
+a:hover
+{
+  color: #7c7cac;
+  text-decoration: underline;
+}
+
+a:active
+{
+  color: #7c7c9c;
+}
+
+div.newsbox
+{
+  background-color: #dcdcec;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  font-family: Sans-Serif;
+  padding-left: 10px;
+}
+
+#footer
+{
+  margin-top: 0em;
+  text-align: center;
+  color: #a0a0a0;
+  border-top-style: dotted;
+  border-top-width: 1px;
+}
+
+h1
+{
+  font-family: Sans-Serif;  
+  margin-left: 1em;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+  font-family: Sans-Serif;
+}
+
+h1
+{
+  margin: 0em 0em 0em 25px;
+}
+
+h2
+{
+  margin: 0em 0em 0em 10px;
+}
+
+h3
+{
+  margin: 0em 0em 0em 10px;
+}
+
+h4
+{
+  margin: 0em 0em 0em 0px;
+}
+
+pre
+{
+  background-color: #dddddd;
+  margin: 1em;
+  padding: 1em;
+}
+
+div.menu
+{ 
+  text-align: center;
+  line-height: 1.5em;
+}
+
+div.menu a:visited
+{
+  color: black;
+  text-decoration: none;
+}
+
+div.menu a:hover
+{
+  color: black;
+  background-color: #cdedf7;
+  border-color: black;
+  text-decoration: none;
+}
+
+div.menu a.active
+{ 
+  background-color: #cdedf7;
+  border-bottom-color:  black;
+  border-top-color:  black;
+  text-decoration: none;
+}
+
+div.menu a
+{
+  text-decoration: none;
+  font-size: .8em;
+  font-family: Sans-Serif;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: #cdedf7; 
+
+  padding-left: 15px;
+  padding-right: 15px;
+
+  margin-left: 3px;
+  margin-right: 3px;
+
+  background-color: #dcdcec;
+  color: black;  
+  text-decoration: none;
+}
+
+/* EOF */

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="font_glyph1">
+		<image file="font1.tga"><alpha /></image>
+		<image file="font2.tga"><alpha /></image>
+	</sprite>
+	
+	<sprite name="font_glyph2">
+		<image file="font3.tga"><alpha /></image>
+	</sprite>
+
+	<font name="Font1">
+		<bitmap glyphs="font_glyph1" letters="!~#$%&amp;'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}" />
+	</font>
+	
+	<font name="Font2">
+		<bitmap glyphs="font_glyph2" spacelen="4" letters="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÆæØøÅå0123456789[]()!#$&amp;%/\=-+~'`&quot;.,:;*?" />
+	</font>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<surface name="sphere" file="resources/sphere.tga" />
+	<surface name="fog" file="resources/fog.tga" />
+	<surface name="floor" file="resources/floor.tga" />
+</resources>

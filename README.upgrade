@@ -1,0 +1,903 @@
+This document describes how to port your game from an old ClanLib version to a new one.
+
+Upgrading from 0.7.8 to 0.8.0
+=============================
+
+  1. CL_InputEvent changes
+  ------------------------
+  CL_InputEvent::right/left_alt/shift/ctrl got removed, 
+  use this to check if they are pressed instead: 
+
+    CL_Keyboard::get_keycode(CL_KEY_LSHIFT) // (CL_KEY_LCONTROL, CL_KEY_RCONTROL, etc)
+
+  2. CL_Surface changes
+  ---------------------
+  The CL_Surface_DrawParams got turned into references
+  (they were pointers before):
+
+    void draw(
+      const CL_Surface_DrawParams1& params1,
+      CL_GraphicContext *context = 0);
+    void draw(
+      const CL_Surface_DrawParams2& params2,
+      CL_GraphicContext *context = 0);
+
+  3. CL_PixelBuffer changes
+  -------------------------
+  CL_PixelBuffer is a ref_counted class, thus its no longer needed
+  to manully keep track of the ownership, so all calls which took
+  CL_PixelBuffer* have been changed to use CL_PixelBuffer instead:
+
+    CL_Surface(CL_PixelBuffer*, bool delete_provider);
+
+  was changed to
+
+    CL_Surface(CL_PixelBuffer);
+
+  4. sig_key_dblclk() is gone
+  ---------------------------
+  If you need it, you have to emulate it now yourself via
+  sig_key_down() and CL_System::get_time(). 
+
+  5. CL_InputDevice::keyid_to_string(const std::string &str)
+  ---------------------------------------------------------------------
+  We renamed a function here to more sense what it actually does:
+
+    int CL_InputDevice::keyid_to_string(const std::string &str) const;
+
+  is now called
+
+    int CL_InputDevice::string_to_keyid(const std::string &str) const;
+
+  6. ClanGUI clipping and translation changes
+  ------------------
+  For performance reasons, GUI components do no longer automatically
+  add translation and clipping to the drawing area. If you have a
+  CL_Component and use sig_paint(), you can get the absolute screen
+  coordinates by calling:
+
+    CL_Rectf rect = component->get_screen_rect();
+
+  If you want to have a clipping section around your component use:
+
+    component->set_clipping(true);
+
+  7. ClanGUI CL_Window buttons
+  ----------------------------
+  If you want to hook into the close buttons of windows, use
+  CL_Window::sig_close_button_clicked() instead of sig_close().
+  Also have a look at the GUIWindow example to see how you define
+  which buttons go on the titlebar.
+
+
+Upgrading from 0.7.7 to 0.7.8
+=============================
+
+  1. Canvas changes
+  -----------------
+
+    Instead of using surface.get_gc() to get a surface canvas, you now create a CL_Canvas object.
+    Example:
+
+	CL_Surface surface_foo("foo.png");
+	CL_Surface surface_bar("bar.png");
+	CL_Canvas canvas(surface_foo);
+	surface_bar.draw(5, 5, canvas.get_gc());
+
+    Check the new Canvas example, and the API reference for more information.
+
+  2. Surface changes
+  ------------------
+
+    The Hint parameter to surface construction was removed.
+
+  3. Module initializations
+  -------------------------
+
+    To initialize ClanLib modules, you call CL_SetupCore::init(), CL_SetupDisplay::init(), etc
+    for each module. ::deinit() to de-initialize them.
+
+    This can cause problems, since in some cases objects on the stack are deleted after the
+    deinit of ClanLib modules.
+
+    So, we have added some new initialization classes to help remedy this problem.
+
+    CL_SetupCore::init(); -> CL_SetupCore setup_core;
+    CL_SetupDisplay::init(); -> CL_SetupDisplay setup_display;
+    CL_SetupNetwork::init(); -> CL_SetupNetwork setup_network;
+
+    etc, for all modules. There is no deinit in this new case.
+
+    If you have problems with crashes on shutdown, try to use this alternative initialization.
+
+  4. TargaProvider changes
+  ------------------------
+ 
+    The internal format of images provided by the Targa loader changed. Make sure you don't
+    make any assumptions of the formats returned by the image providers. Check the format
+    using get_format(), and its functions get_red/green/blue/alpha_mask().
+
+
+Upgrading from 0.7.6 to 0.7.7
+=============================
+
+  1. OpenGL state changes 
+  -----------------------
+
+  Instead of begin_3d() / end_3d(), we now have a new method of synchronizing the OpenGL
+  state between ClanLib and your own custom OpenGL code. Please read the new OpenGL
+  Overview on how to use this new class.
+
+  2. CL_Component signal changes
+  ------------------------------
+
+  sig_get_minimum_size / sig_get_maximum_size / sig_get_preferred_size 
+
+  These signals in CL_Component changed from CL_Point to CL_Size, so if you have a custom
+  theme make sure you change the signal function to
+  
+  void ...::on_get_preferred_size(CL_Size &size)
+
+  Note that CL_Size has width and height, compared to CL_Points x and y.
+
+  3. CL_Window construction changes
+  ---------------------------------
+
+  Previously, a CL_Window would always make itself a root component in the GUI hierarchy,
+  no matter what parent component you specificed in its constructor.
+
+  We've changed this behaviour to make it use the parent you give in its constructor.
+  This way a CL_Window behaves the same as all other components, and also makes it possible
+  to create MDI apps.
+
+  To make sure your windows are root components, use get_gui_manager() as the parent.
+  In most cases this is probably what you already do, or the parent IS the root component,
+  so any changes will normally not be required.
+
+
+Upgrading from 0.7.5 to 0.7.6
+=============================
+
+No changes needed.
+
+
+Upgrading from 0.7.4 to 0.7.5
+=============================
+
+1. ClanGUI changes
+------------------
+
+1a. XML used for GUI
+
+  To complete our transition away from proprietary formats, we have now moved the last
+  part over to XML - the GUI definition files.
+
+  GUI definition example of the old format:
+
+    window my_window
+    {
+      x = 10;
+      y = 10;
+      width = 600;
+      height = 400;
+      title = "My Window";
+	
+      button my_button
+      {
+        text = "My Button";
+        x = 25;
+        y = 130;
+        width = 100;
+        height = 20;
+      }
+    }
+
+  The same defintion in the new format:
+
+    <components>
+      <window name="my_window" x="10" y="10" width="600" height="400" title="My Window"> 
+        <components>
+          <button name="my_button" x="25" y="130" width="100" height="20" text="My Button" />
+        </components>
+      </window>
+    </components>
+
+  Since we now use both XML for the resources and gui definition, you can now put them both
+  into the same XML file if you want. Make sure you read the GUI XML Overview for more info
+  about the GUI resource format.
+
+1b. CL_ComponentManager
+
+  We changed the constructors of this class to make less used parameters use default values.
+  Check the reference, it should be plain to see what should be done.
+
+1c. CL_ListBox
+  
+  ListBox now uses pointers internally, so the insert_item(CL_ListItem) function was changed,
+  and minor others. If you have a custom theme, you'll notice that get_items() now return
+  std::vector<CL_ListItem *> instead of std::vector<CL_ListItem>.
+
+
+Upgrading from 0.7.3 to 0.7.4
+=============================
+
+  No API changes.
+
+
+Upgrading from 0.7.2 to 0.7.3
+=============================
+
+1. XML used for resources
+-------------------------
+
+  We threw away our proprietary resource format, and now use XML instead. The changes
+  are mostly cosmetic, but using XML gives us and the user a lot more freedom and
+  flexibility in creating resource-types.
+
+  Resource example of the old format:
+
+    my_surface = my_surface.tga (type=surface);
+    my_integer = 80 (type = integer);
+    my_sample = beep.wav (type = sample);
+
+    section my_fonts
+    {
+      font_glyph = 
+      (
+        type = sprite,
+        image1 = my_font.tga,
+        image1_method = alpha
+      );
+
+      font = 
+      (
+        type = font,
+        glyphs = my_fonts/font_glyph,
+        spacelen = 4,
+        letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      );
+    }
+
+  The same resources in the new format:
+
+    <resources>
+      <surface name="my_surface" file="my_surface.tga" />
+      <integer name="my_integer" value="80" />
+      <sample name="my_sample" file="beep.wav" />
+
+      <section name="my_fonts">
+        <sprite name="font_glyph">
+          <image file="my_font.tga"><alpha /></image>
+        </sprite>
+
+        <font name="font">
+          <bitmap glyphs="my_fonts/font_glyph" spacelen="4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ" />
+        </font>
+      </section>
+    </resources>
+
+  Read the brand new overviews explaining all the resource options!
+
+
+2. Sound must use soundoutput object
+------------------------------------
+
+   If you are using sound in your application, you must create a 
+   CL_SoundOutput object first. CL_SoundOutput is the interface
+   to a sound output device. It is used to control the main mixer
+   volume and other global settings. 
+
+   Example:
+     CL_SetupCore::init();
+     CL_SetupSound::init();
+     CL_SetupVorbis::init();
+
+     CL_SoundOutput sound_output(44100);
+
+
+3. CL_Texture was replaced with CL_OpenGLSurface
+------------------------------------------------
+
+   Example 1 of its usage:
+     CL_OpenGLSurface surface("texture.jpg");
+     gc->begin_3d();
+     surface.bind();
+     renderCoolOpenGLStuff();
+     gc->end_3d();
+
+   Example 2:
+     CL_Surface surface("texture.jpg");
+     CL_OpenGLSurface surface_gl = surface;
+     gc->begin_3d();
+     surface_gl.bind();
+     renderCoolOpenGLStuff();
+     gc->end_3d();
+
+
+3. Custom resources
+-------------------
+
+   Custom resources was changed slightly, check the ResourcesCustom for an example 
+   how its done now.
+
+   Note that most users will prolly be happy with the direct-dom approach to 
+   custom resources used in the example Resources.
+
+
+Upgrading from 0.7.0/1 to 0.7.2
+===============================
+
+1. String API changed
+---------------------
+
+  The CL_String class was modified to be a helper-class only. You don't construct 
+  a CL_String anymore as an object, instead you use the standard std::string.
+
+  It might look like this is more work to use now, but it was done so we can use
+  one string construct all over ClanLib, and not mix std::string and CL_String
+  like we did before.
+
+  Using CL_String::format instead of CL_String << also has its advantages, for 
+  example in localization of your game.
+
+  Examples:
+
+  - CL_String str("ClanLib");
+
+    -> must be replaced with ->
+
+    std::string str("ClanLib");
+
+  - CL_String str(integer);
+
+    -> must be replaced with ->
+
+    std::string str = CL_String::from_int(integer);
+
+  - CL_String str(10);
+    int i = str.to_int();
+
+    -> must be replaced with ->
+
+    std::string str = CL_String::from_int(10);
+    int i = CL_String::to_int(str);
+
+  - CL_String str; CL_String text("text"); int number = 10;
+    str << "Example string with " << text << ", " << number << ", " << "yo" << " and " << 23 "!";
+
+    -> must be replaced with ->
+
+    std::string str; std::string text("text"); int number = 10;
+    str = CL_String::format("Example string with %1, %2, %3 and %4 !", text, number, "yo", 23);
+
+  - CL_String str("my_string_resource", resourcemanager);
+
+    -> must be replaced with ->
+
+    std::string str = CL_String::load(""my_string_resource", resourcemanager);
+
+
+2. GUI
+------
+
+  The GUI was cleaned up alot in this release. Also, we made themeing alot
+  more flexible.
+
+2a. Default theme was removed
+
+  It was replaced with the Boring and the Silver theme.
+  Replace CL_StyleManager_Default with either CL_StyleManager_Boring
+  or CL_StyleManager_Silver.
+
+  The Boring theme is the old Default theme, but with some features removed
+  (like button-bitmaps). The Silver theme is a completely new theme, which
+  support everything in the old Default theme, and more.
+
+  Resources for the themes was moved from Documentation/Examples/GUIThemeDefault
+  to Resources/GUIStyleSilver and Resources/GUIStyleBoring.
+
+2b. Modal GUI components
+
+  Modal component creation was changed. It is now more logical.
+
+  How it was done earlier:
+	CL_Component comp(..., NULL, style);
+	comp.run(gui);
+
+  How its done now:
+	CL_Component comp(..., gui);
+	comp.run();
+
+  We've removed the need to create separate GUIManagers, so don't do that anymore.
+
+2c. GUI Themeing
+
+  CL_Component::attach_style() was replaced with CL_Component::set_style(), so
+  you need to update your styleManager to reflect this.
+
+2d. CL_Button surface setting
+
+  The surface handling was moved from CL_Button to CL_Button_Silver, so you
+  need to replace:
+
+    CL_Button b(pos, text, surface_up, surface_down, surface_disabled, surface_highlight)
+
+  with
+
+    CL_Button b(pos, text);
+    CL_Button_Silver *b_style = (CL_Button_Silver *) b->get_style();
+    b_style->set_surface_up(surface_up);
+    b_style->set_surface_down(surface_down);
+    b_style->set_surface_disabled(surface_disabled);
+    b_style->set_surface_highlighted(surface_highlighted);
+
+  Note that the Boring style no longer support bitmapped buttons.
+
+2e. GUI.scr themes
+
+  In CL_CheckBox and CL_RadioButton, the resource name was changed from sur_ to surface_.
+  For example, in CL_CheckBox:
+
+	Old syntax:
+	sur_checked = checkbox/checked.tga (type=surface);
+	sur_unchecked = checkbox/unchecked.tga (type=surface);
+	sur_checked_disabled = checkbox/checked_disabled.tga (type=surface);
+	sur_unchecked_disabled = checkbox/unchecked_disabled.tga (type=surface);
+	
+	New syntax:
+	surface_checked = checkbox/checked.tga (type=surface);
+	surface_unchecked = checkbox/unchecked.tga (type=surface);
+	surface_checked_disabled = checkbox/checked_disabled.tga (type=surface);
+	surface_unchecked_disabled = checkbox/unchecked_disabled.tga (type=surface);
+
+  This is for both Boring and Silver theme.
+
+2f. CL_ListBox::max_visible_items
+
+  Set/get max visible items was removed. You have to calculate the size of the listbox
+  yourself. This might be reimplemented in the future, though.
+
+2g. CL_Window::set_client_size
+
+  This function was removed. It might be reimplemented in the future, though.
+
+	
+3. begin_2d()/end_2d -> begin_3d()/end_3d()
+-------------------------------------------
+
+  Remove any begin_2d() calls, they were replaced with the invert called
+  begin_3d() - which you call if you need to do something OpenGL specific.
+
+
+
+Upgrading from 0.6.0 to 0.7.0
+=============================
+
+1. Network API has been rewritten
+---------------------------------
+
+ClanLib 0.7.0 now includes the former-known ClanNet2 - replacing the previous
+network API. Some API changes, but the overall structure should be relative 
+easy to understand if you have worked with the previous network API.
+
+2. New Display API
+------------------
+
+ClanDisplay2 is now included in 0.7.0 - replacing the previous ClanDisplay from
+0.6.x. Many API changes, but looking in the reference you shouldn't have too
+much trouble adapting to the new API. More powerful, more streamlined, more flexible.
+
+3. Default GUI theme was separated from clanGUI
+-----------------------------------------------
+
+You now need to link with clanGUIStyle in addition to clanGUI to use the default theme. 
+
+Also, you need to include this:
+#include <ClanLib/guistyle.h>
+
+If you only use a custom theme, you don't need to link with these new libs, nor
+include the guistyle.h file.
+
+4. Minor GUI API adjustments
+----------------------------
+
+	CL_Signal_v2<CL_InputDevice *, const CL_Key &> &CL_Component::sig_input_down()
+	CL_Signal_v2<CL_InputDevice *, const CL_Key &> &CL_Component::sig_input_up()
+
+were changed to:
+
+	CL_Signal_v1<const CL_Key &> &CL_Component::sig_input_down()
+	CL_Signal_v1<const CL_Key &> &CL_Component::sig_input_up()
+
+	Use key.device to get hold of the inputdevice instead.
+
+5. New CL_String class
+----------------------
+The string class was replaced with a new, more powerful one. Should be pretty easy
+to upgrade though.
+
+5. CL_Rect changes
+------------------
+The x1, y1, x2, y2 variables in CL_Rect was replaced with left, top, right, bottom.
+
+
+Upgrading from 0.5.4 to 0.6.0
+=============================
+
+1. Signals have been made consistent all over ClanLib
+-----------------------------------------------------
+In a few cases you need to add a parenthesis to a signal.
+
+Example:
+
+     CL_Timer timer;
+
+     // ClanLib 0.5.x:
+     sig_timer.connect(...)
+
+     // ClanLib 0.6.0:
+     sig_timer().connect(...)
+
+
+The affected signals are as follows:
+
+     CL_Timer::sig_timer
+     CL_Input::sig_button_press
+     CL_Input::sig_button_release
+     CL_Input::sig_mouse_move
+     CL_Mouse::sig_move
+     CL_Mouse::sig_button_press
+     CL_Mouse::sig_button_release
+
+2. Input signals were changed in clanGUI
+----------------------------------------
+
+     CL_Component::sig_key_up(CL_Component *comp, CL_InputDevice *device, const CL_Key &key)
+     CL_Component::sig_key_down(CL_Component *comp, CL_InputDevice *device, const CL_Key &key)
+     CL_Component::sig_mouse_move(CL_Component *comp, int x, int y);
+
+were changed to: 
+
+     CL_Component::sig_key_up(const CL_Key &key)
+     CL_Component::sig_key_down(const CL_Key &key)
+     CL_Component::sig_mouse_move(int x, int y);
+ 
+Also, the following signals were added:
+
+     CL_Component::sig_input_up(CL_InputDevice *device, const CL_Key &key)
+     CL_Component::sig_input_down(CL_InputDevice *device, const CL_Key &key)
+
+sig_key_up/down used to include both mouse and keyboard events, but now sig_key_up/down is
+ONLY keyboard, and the newly added sig_input_up/down is ANY inputdevice (mouse, keyboard,
+joystick, etc). So, if you want the old behaviour, hook into the sig_input instead of sig_key signals.
+
+Remember, you can always use CL_InputDevice::get_type() to check which inputdevice the
+sig_input_up/down got its event from (returns CL_InputDevice::type_mouse, type_joystick,
+type_keyboard).
+
+
+Upgrading from 0.5.2 to 0.5.3
+=============================
+
+1. Default videomode has been set to windowed, and not fullscreen as previously.
+
+   To override default, you specify fullscreen-mode like this:
+	CL_Display::set_videomode(640, 480, 16, true);
+   or, window-mode:
+	CL_Display::set_videomode(640, 480, 16, false);
+
+
+Upgrading from 0.5.1 to 0.5.2
+=============================
+
+1. Resource pathhandling is changed
+-----------------------------------
+Now all resources are loaded with path from the location of the resource file, and 
+not the location of the executable as before.
+
+So, for example, if you have this structure:
+	data/
+	data/images/
+	data/images/surface.tga
+	data/images.scr
+
+Previously, the images.scr would look like this:
+	surface = data/images/surface.tga (type = surface);
+
+Now, it must be changed into:
+	surface = images/surface.tga (type = surface);
+without the first data/, as the resourcefile itself is in the data directory.
+
+
+2. Signal connection API changed
+--------------------------------
+
+Earlier you had to use CL_CreateSlot when connecting to a signal:
+
+	CL_Slot slot = sig_something.connect(CL_CreateSlot(this, &MyApp::on_signal));
+
+It has been modified to this shorter method instead:
+
+	CL_Slot slot = sig_something.connect(this, &MyApp::on_signal);
+
+Just remove CL_CreateSlot from your code, and you're set.
+
+
+Also, we added a handy CL_SlotContainer. If you find it awkward storing all those
+CL_Slot objects, you can do use this instead:
+
+CL_SlotContainer slots; // Put this where you earlier stored your CL_Slot objects. Don't make it local!
+
+...
+
+slots.connect(sig_something, this, &MyApp::on_signal);
+slots.connect(sig_something2, this, &MyApp::on_signal2);
+slots.connect(sig_something_else, this, &MyApp::on_signal_else);
+
+
+3. GUI Themeing
+---------------
+
+If you have created your own StyleManager, you need to remove the 
+	CL_ComponentOptions &options 
+from the
+	void CL_StyleManager::connect_styles(..) function.
+
+For example:
+
+void CL_StyleManager_OpenGL::connect_styles(
+	const std::string &type,
+	CL_Component *owner)
+
+Also, remove the ComponentOptions from all the components. Check
+the GUIGL example for more specific details.
+
+
+-------------------------------------------------------------------------------
+
+
+Upgrading from 0.5.0 to 0.5.1
+=============================
+
+1. CL_Input::sig_mouse_move
+---------------------------
+This signal was moved into the CL_Mouse class, and is now called
+
+	CL_Mouse::sig_move(int x, int y);
+
+
+
+2. ClanGUI
+----------
+Sorry, but this module is so rapidly changing these days, so
+its no use updating this document regarding that.
+
+
+-------------------------------------------------------------------------------
+
+
+Upgrading from 0.4.x to 0.5.0
+=============================
+
+1. Multithreaded on Windows
+2. Separated modules (Sound, Display, Network & Application)
+3. Init/Deinit modules
+4. Debug console
+5. Datafile invocation
+6. Event Chains
+7. Input/OutputSource
+8. Resources
+9. Network
+
+
+1. Multithreaded on Windows
+---------------------------
+ClanLib now uses multithreaded libraries on Windows, and you need to upgrade your
+libraries (zlib, libpng etc) - see http://clanlib.org/download/foreign-win32.html
+and download the needed libraries there.
+
+Also, you need to change your own application to use multithreaded libraries:
+
+1.  Select Project->Settings...
+2.  Select the 'C/C++' tab, and then Category 'Code Generation'
+3a. For Release version, change the 'Use run-time library' to Multithreaded.
+3b. For Debug version, change the 'Use run-time library' to Debug Multithreaded.
+
+
+2. Separated modules (Sound, Display, Network & Application)
+------------------------------------------------------------
+Sound, Display, Network, Application was separated from clanCore, and you need to do
+some changes to the initialization and library including in your game.
+
+  ClanApplication
+  ---------------
+  ClanCore was separated from the CL_ClanApplication initializing, and therefore you need
+  to link with both clanCore and clanApp if you want to use the "standard" way of
+  initializing ClanLib (the easy way).
+
+  Windows:
+	Add clanApp.lib (release) or clanAppd.lib (debug) to your project settings.
+
+  Linux:
+	Add -lclanApp to your Makefile.
+
+  You also need to add this: #include <ClanLib/application.h>
+
+  If you want to initialize ClanLib yourself (for example if you want to use ClanNetwork
+  without anything else from ClanLib), you do not link with ClanApplication,
+  and do a manual initialization.
+
+  ClanDisplay
+  -----------
+  ClanDisplay was separated from ClanCore, and therefore you need to link with both clanCore
+  and clanDisplay.
+
+  Windows:
+	Add clanDisplay.lib (release) or clanDisplayd.lib (debug) to your project settings.
+
+  Linux:
+	Add -lclanDisplay to your Makefile.
+
+  Codewise, you need to replace
+	CL_SetupCore::init_display();
+	CL_SetupCore::deinit_display();
+  with
+	CL_SetupDisplay::init();
+	CL_SetupDisplay::deinit();
+
+  You also need to add this: #include <ClanLib/display.h>
+
+  ClanSound
+  ---------
+  ClanSound was separated from ClanCore, and therefore you need to link with both clanCore
+  and clanSound IF you want to use sound in your game.
+
+  Windows:
+	Add clanSound.lib (release) or clanSoundd.lib (debug) to your project settings.
+
+  Linux:
+	Add -lclanSound to your Makefile.
+
+  Codewise, you need to replace 
+
+	CL_SetupCore::init_sound();
+	CL_SetupCore::deinit_sound();
+  with
+	CL_SetupSound::init();
+	CL_SetupSound::deinit();
+
+  You also need to add this: #include <ClanLib/sound.h>
+
+  ClanNetwork
+  -----------
+  ClanNetwork was separated from ClanCore, and therefore you need to link with both clanCore
+  and clanNetwork IF you want to use network in your game.
+
+  Windows:
+	Add clanNetwork.lib (release) or clanNetworkd.lib (debug) to your project settings.
+
+  Linux:
+	Add -lclanNetwork to your Makefile.
+
+  Codewise, you need to replace 
+
+	CL_SetupCore::init_network();
+	CL_SetupCore::deinit_network();
+  with
+	CL_SetupNetwork::init();
+	CL_SetupNetwork::deinit();
+
+  You also need to add this: #include <ClanLib/network.h>
+
+
+3. Init/Deinit modules
+----------------------
+The CL_ClanApplication no longer uses the init_modules() and deinit_modules()
+functions. Move the initialization into your main() instead, and remove these
+functions. Or, add functions calling init_modules() and deinit_modules() from
+your main().
+
+
+4. Debug console
+----------------
+The debug window under Windows is no longer enabled by default. If you want a
+console window (for std::cout and printf), add this code:
+(at the beginning of CL_Application::main for example)
+
+	CL_ConsoleWindow console("My console");
+	console.redirect_stdio();
+
+
+5. Datafile invocation
+----------------------
+Datafile support is no longer enabled by default. To support the feature with
+"app -datafile ..." add something like the following code to your main():
+(You can of course improve this to use filenames from the command line as well)
+
+	... CL_SetupCore::init();
+	... CL_SetupGL::init();
+
+	if (argv[1] == "-datafile") {
+		CL_DatafileCompiler::write("my_file.scr", "my_file.dat");
+		return;
+	}
+
+	... CL_SetupCore::init_display();
+	... CL_Display::set_videomode(640, 480, 16 false);	
+
+
+Lines starting with ... are just to show where you could put the code.
+
+
+6. Event Chains
+---------------
+Event chains has been removed, and replaced with a signal-system.
+So, if any of your classes inherit the following classes, read on to find out
+how to upgrade your app to the signal system:
+	CL_Event_ButtonRelease
+	CL_Event_ButtonPress
+	CL_Event_WindowResize
+	CL_Event_MouseMove
+	CL_Event_MouseEnter
+	CL_Event_MouseExit
+
+1. Remove these inherited classes from your classes.
+
+2. Replace the lines:
+      CL_Input::chain_button_press.push_back( this );
+      ...
+      CL_Input::chain_button_press.remove( this );
+
+   with 
+
+      CL_Slot slot; // Put this is a non-local location (like your class-header)
+      ...
+      slot = CL_Input::sig_button_press.connect(CL_CreateSlot(this, &MyClass::on_button_press));
+
+This just shows the buttonpress event, the others are similar. Refer to the
+reference for correct API.
+
+
+7. Input/OutputSource
+---------------------
+This change is represented in all CL_InputSource* and CL_OutputSource* classes.
+
+The read_bool() function was renamed to read_bool8().
+The write_bool() function was renamed to write_bool8().
+
+
+8. Resources
+------------
+The resource API has changed a little bit.
+
+First, the construction of the CL_ResourceManager is uses a standard constructor instead
+of the previous ::create() method.
+
+Replace
+	CL_ResourceManager *resource = CL_ResourceManager::create(...);
+with
+	CL_ResourceManager *resource = new CL_ResourceManager(...);
+	or
+	CL_ResourceManager resource(...);
+
+Second, if you use custom resources, go read the new Documentation/Overview about
+resources. It is now much easier to create custom resources, but it uses a different method
+than earlier.
+
+Third, the classes CL_Res_Integer, CL_Res_Boolean and CL_Res_String was replaced with
+CL_Integer, CL_Boolean and CL_String.
+
+Instead of previously doing:
+	int my_integer = CL_Res_Integer::load("resource_name", resource_manager);
+you now do:
+	int my_integer = CL_Integer("resource_name", resource_manager);
+
+
+9. Network
+----------
+CL_NetGame was renamed to CL_NetSession, as it is now possible to use ClanNetwork
+in other than games; ClanNetwork is no longer dependent on the rest of ClanLib.
+
+Various other stuff was altered in ClanNetwork, but the specifics we cannot recall.
+If you have any additions, please send mail to the mailing-lists.
+

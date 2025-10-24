@@ -1,0 +1,9 @@
+Using ClanLib with Anjuta
+
+1. Create a new project, this is done by selecting File->New Project and following the on screen wizard.  Be sure to select a the Generic/Terminal project type, and also set the programming language to c++.
+
+2. Add an include path for clanlib.  Goto to Settings->Compiler and Linker Settings and select the Include Paths tab.  In the text box type in the path where ClanLib's include files are located (/usr/local/include/ClanLib-0.8).
+
+3. Import the ClanLib libraries you need.  To do this again goto Settings->Compiler and Linker Settings and select the Libraries tab.  In the text box type in clanCore and click add.  You should also do this for the other ClanLib libraries such as clanDisplay, clanApp, and clanGL.  Add more as needed.
+
+~shadowarts

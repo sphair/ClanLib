@@ -1,0 +1,244 @@
+<xml>
+<head>
+<title>Implementing a GUI with ClanLib</title>
+</head>
+<body>
+
+<p>Thanks to the new GUI API in ClanLib, having a GUI in your game no longer
+has to be an ardous boring task. ClanLib GUI comes complete with
+implementations of most standard widgets/components, such as inputboxes,
+scrollbars, comboboxes, menus, listboxes, checkboxes and buttons.</p>
+
+<p>At the core of the ClanLib GUI API, lies the routing of GUI input to game
+code. ClanLib uses a signals/slot system for this. If you are familiar with
+QT, you should also be familiar with signals and slots, but if you're in
+doubt, you can read our signals and slots <a href="signals.html">overview</a>.</p>
+
+<p>The ClanLib GUI has a default look, eg. the way each component is
+displayed, but the logical functionality of each implemented base-component
+is entirely isolated from the displaying, so it's easy to create a
+customized GUI "style". Styles are managed through a style-manager that
+makes it easy to extend the default-style with new ones. This makes it
+possible for people to create a new GUI style, and release it for easy use
+by other ClanLib-users. An overview on how to create custom style can be
+read <a href="gui_theme.html">here</a>.</p>
+
+<p>There are two ways to create GUI components, using standard C++ objects,
+or using special GUI definition script files.</p>
+
+<p>TODO: Write about manually creating components</p>
+
+<p>GUIs can be defined in special GUI definition script files, which provide
+a flexible and powerful way to describe the layout of a GUI. Components are
+layered in a hierarchical fashion. Each component has a set of parameters
+(mandatory or optional) that describe the component, and through a
+naming-scheme, these components can be modified and hooked to callback
+functions at run-time. You can read more about that in the
+<a href="gui_resources.html">GUI resource overview</a>.</p>
+
+<h3>GUI systems in general</h3>
+
+<p>This is a little introduction in what a GUI framework is and how you use
+them. If you are already familiar with a GUI toolkit, MFC, Gtk+ og Qt, then
+odds are you know this already, so you might want to skip to the next
+section.</p>
+
+<p>When you look at a normal GUI application then it consists of a set of
+components (often referrered as widget or controls too). In the case of
+notepad (you do know notepad, right? :)), it consist of a window frame,
+menubar, a textbox and in newer versions there's a statusbar too:</p>
+
+<p align=center>&lt;insert picture here pointing at the different components
+of notepad&gt;</p>
+
+<p>Drawn as a tree, notepad looks like this:</p>
+
+<pre>
++ Window (titlebar, resize frame around all of notepad)
+  + Menu bar
+    + File
+    + Edit
+    + View
+    + Help
+  + Textbox
+  + Statusbar
+</pre>
+
+<p>For each of these objects, you should construct a CL_Component that handles
+the user interaction in these areas of the screen:</p>
+
+<pre>
+CL_Window *window = new CL_Window(CL_Rect(0,0,640,480), gui);
+CL_MenuBar *menubar = new CL_MenuBar(CL_Rect(0,0,640,32), window);
+CL_TextBox *textbox = new CL_TextBox(CL_Rect(0,32,640,480-64), window);
+CL_StatusBar *statusbar = new CL_StatusBar(CL_Rect(0,480-32,640,32), window);
+</pre>
+
+<p>Note: clanGUI does not work exactly like this example, but it
+illustrates the concept.</p>
+
+<p>Whenever the user clicks on the menubar, the menubar object is notified.
+If he types text, the textbox object is notified, and so forth.</p>
+
+<p>Only one component can have the focus at a time. All keyboard activity is
+directed to this component until focus is put on another component. In the
+notepad example, the textbox will usually have the focus, but if you eg
+click on the File menu, then a popup component will be created that gets the
+focus. Pressing the arrow keys will then be sent to the popup menu component
+and it will move the selected item indicator.</p>
+
+<p>A GUI toolkit consist mainly of two parts: first a generic component
+class (CL_Component in clanGUI) which represents any object in the GUI tree.
+It does not do anything by itself, but its the interface in which you
+interact with the user in a certain space of the screen. Beside that, a GUI
+toolkit have a set of CL_Component inheriated objects that make it easier to
+do common UI tasks, this is usually inputboxes, labels, menus, frames,
+etc.</p>
+
+<h3>Event handling</h3>
+
+<p>One of the keys to learning how to use clanGUI is to understand how it
+uses signals and slots to do event handling. If someone clicks on a button
+component, the CL_Button object will emit its sig_clicked signal, and any
+slot connected to the signal will get called.</p>
+
+<p>Here's an example:</p>
+
+<pre>
+void MyApp::show_gui()
+{
+	CL_StyleManager_Silver style(....);
+	CL_GUIManager gui(&style);
+
+	CL_Button button_ok(CL_Rect(....), "Ok", &gui);
+	CL_Button button_cancel(CL_Rect(....), "Cancel", &gui);
+
+	CL_SlotContainer slots;
+	slots.connect(button_ok.sig_clicked(), this, &MyApp::on_button_ok);
+	slots.connect(button_cancel.sig_clicked(), this, &MyApp::on_button_cancel);
+	
+	gui.run();
+}
+
+void MyApp::on_button_ok()
+{
+	std::cout << "Button ok was clicked!" << std::endl;
+}
+
+void MyApp::on_button_cancel()
+{
+	std::cout << "Button cancel was clicked!" << std::endl;
+}
+</pre>
+
+<p>Each of the components in clanGUI have their own special events that can
+occour, but a few signals are common for all GUI components:</p>
+
+<ul>
+<li>Key events (key down, key up, key repeat)</li>
+<li>Mouse events (mouse up, mouse down, mouse move)</li>
+<li>Paint events (begin_paint, paint, end_paint)</li>
+</ul>
+
+<p>If you want to do custom drawing in your GUI, you need to hook yourself
+in on the sig_paint signal of the component you want to customize. Normally
+you should not need to do this for normal objects, but if you want to make
+your own objects in the GUI, then you will most likely want to use most of
+the common signals.</p>
+
+
+<h3>ClanGUI System Basics</h3>
+
+<p>In order to be able to use any GUI toolkit properly and take fully
+advantage of its possibilities, it is essential to understand how the core
+classes operate and communicate with each others. In clanGUI there are the
+following core classes:</p>
+
+<ul>
+<li>CL_Component</li>
+<li>CL_ComponentStyle</li>
+<li>CL_StyleManager</li>
+<li>CL_GUIManager</li>
+<li>CL_ComponentManager</li>
+</ul>
+
+<h4>CL_Component</h4>
+
+<p>The component class is the core class of clanGUI. It presents any
+widget/control/window in the system and is responsible for drawing the
+components and feeding the components with user input.</p>
+
+<p>As with just about any other GUI toolkit out there, components are
+ordered in a tree. At the top of the tree, we have the root/desktop
+component. It represents the entire screen area and any child components on
+the screen. A typical child of the root component could be a window
+component, and the window component then has maybe a inputbox and two button
+child components. Anyone ever having looked at a GUI toolkit earlier in
+their life should be familiar with this concept.</p>
+
+<p>The root component in clanGUI is called CL_GUIManager. More on this when
+we examine the GUI manager more closely.</p>
+
+<p>CL_Component exports a large set of signals that any subclassed component
+usually connects signals to. The GUI emits these events whenever interaction
+with the component is required. Some examples of these signals are:
+sig_paint, sig_key_down, sig_mouse_move and sig_got_focus. For instance, if
+the GUI needs the component drawn, it will emit the sig_paint signal and all
+hooked up painting functions will then draw the component.</p>
+
+<h4>CL_ComponentStyle</h4>
+
+<p>The component style class is the component styling (theme) interface.
+When a component is instantiated, one component style class is attached
+to the component.</p>
+
+<p>The main purpose of the component style class is to seperate styling data
+and functions from the component class. This is directly compareable to a
+document/view relationship, where the component class is the document, and
+then style class is a view.</p>
+
+<p>To illustrate this a bit further, imagine we are constructing an input
+button. At construction time, an input button specific component style is
+attached. The style class connects a local member function to the sig_paint
+signal of its CL_Button owner and stores data needed for the styling as
+local member variables.</p>
+
+<p>When the GUI needs to draw the button, it will emit the sig_paint signal,
+which causes the member function in the style class to be called. This
+function then uses the public available attribute functions in its CL_Button
+owner to figure out what the text of the input button is and where its
+located, finally drawing the button on screen.</p>
+
+<p>This two level construction of a component allows us to construct
+component objects without knowing what style is being used, making styles
+totally transparent for anything but the styling objects.</p>
+
+<h4>CL_StyleManager</h4>
+
+<p>Something need to attach these component styles to a component. This is
+what the CL_StyleManager interface does. When a component is constructed,
+the very first thing it does is to contact its style manager, where it asks
+it to attach component styles to it.</p>
+
+<p>CL_StyleManager also function as a class factory. When loading components
+from gui definition files, the component manager asks the style manager to
+create an instance of a control based on a type string and a set of
+component options.</p>
+
+<h4>CL_GUIManager</h4>
+
+<p>The GUI manager is the root comopnent in clanGUI. It should always be the
+top-level component in any component tree. The GUI manager contain the main
+message pump for the GUI and is responsible for routing events from clanCore
+and clanDisplay into the GUI system.</p>
+
+<h4>CL_ComponentManager</h4>
+
+<p>The component manager is the interface used to load GUI component trees
+from a GUI definition file. Have a look on the login_view.cpp/h files in the
+CTalk example for an example of how to use it.</p>
+
+<p>TODO: Add some code examples</p>
+
+</body>
+</xml>

@@ -1,0 +1,875 @@
+use strict;
+use POSIX qw(strftime); 
+sub plugin {
+  my $global=shift;
+  print "Generation class documentation\n";
+  print_class_index($global);
+  print_classes($global);
+  print "Done with classes\n";
+}
+
+sub print_classes {
+  my $space=shift;
+  foreach (sort byfullname $space->all()) {
+    next if (!$_->is_class());
+    print_class($_);
+  }
+}
+
+my %see_also;
+
+# Remember to set $new_line_flag = 0 before using this function
+my $new_line_flag = 0;
+my @classes;
+sub print_description {
+  my $mydesc=shift;
+  foreach (@classes) {
+    my $item = $_;
+    my $name = $$item{fullname};
+    # Find comment cross reference
+    my $mylink=$item->href($$item{fullname});
+    $mydesc=~s/([. ,()])${name}([. ,()])/${1}${mylink}${2}/g;
+    $mydesc=~s/([. ,()])${name}$/${1}${mylink}/g;
+    $mydesc=~s/^${name}([. ,()])/${mylink}${1}/g;
+  }
+  # Check if new lines are required
+  if ($mydesc=~/&lt;p&gt;/) {
+    $new_line_flag = 1;
+    $mydesc=~s/&lt;p&gt;//g;
+  }
+  if ($mydesc=~/&lt;\/p&gt;/) {
+    $new_line_flag = 0;
+    $mydesc=~s/&lt;\/p&gt;//g;
+  }
+  $mydesc = &addCrossRef($mydesc);
+  if ($new_line_flag eq 0) {
+    print FILE "$mydesc<br>";
+  }else {
+    print FILE "$mydesc";
+  }
+
+}
+
+sub addCrossRef {
+    my $text = shift;
+#    my @sortedClasses = sort { $$b{fullname} cmp $$a{fullname} } @classes;
+    
+    foreach (@classes) {
+	my $name = $$_{fullname};
+	my $loc = $name . ".html";
+#	$text =~ s/${name}/<a href="$loc">$name<\/a>/g;
+	if ($text =~ /${name}/) {
+		$see_also{$name} = "<a href=\"$loc\">$name<\/a>";
+	}
+    }
+    return $text;
+}
+
+sub print_html_header {
+  my $html_name=shift;
+  my $index_number=shift;
+  my $colour=shift;
+  print FILE '
+<!-- clanlib header begin -->
+<HTML>
+<HEAD>
+<TITLE>', $html_name, ' - ClanLib Game SDK</TITLE>
+<STYLE TYPE="text/css"><!--
+HTML BODY
+{
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 12px;
+}
+H1 { font-size: 22px; }
+H2 { font-size: 18px; }
+H3 { font-size: 16px; }
+H4 { font-size: 14px; }
+P { font-size: 12px; }
+LI { font-size: 12px; }
+--></STYLE>
+</HEAD>
+
+<body bgcolor=white text=black link=blue vlink=#800080>
+
+<center>
+<img src="http://clanlib.org/gfx/clanlib.png">
+</center>
+<!-- clanlib header end -->
+
+<center>
+<p>
+<a href="http://clanlib.org/docs.html">Home</a> |
+<a href="classes.html">All Classes</a> |
+<a href="modules.html">Grouped Classes</a> |
+<a href="index.html">Index</a> |
+<a href="search.html">Search</a>
+</p>
+</center>
+';
+
+#  if ($index_number eq 1)
+#  {
+#    print FILE "<td>Entire Class Index</td>\n";
+#  }else
+#  {
+#    print FILE "<td><a href=\"entire_class_index.html\">Entire Class Index</a></td>\n";
+#  }
+#
+#  if ($index_number eq 2)
+#  {
+#    print FILE "<td>Main Class Index</td>\n";
+#  }else
+#  {
+#    print FILE "<td><a href=\"class_index.html\">Main Class Index</a></td>\n";
+#  }
+#
+#:  if ($index_number eq 3)
+# {
+#   print FILE "<td>Cross Index</td>\n";
+# }else
+#  {
+#    print FILE "<td><a href=\"cross_index.html\">Cross Index</a></td>\n";
+#  }
+#
+#  if ($index_number eq 4)
+#  {
+#    print FILE "<td>Global Index</td>\n";
+#  }else
+#  {
+#    print FILE "<td><a href=\"global_index.html\">Global Index</a></td>\n";
+#  }
+#  print FILE "</table>";
+}
+
+sub print_html_footer {
+  print FILE '
+
+<!-- clanlib footer begin -->
+
+<center><br><br><font color="#a0a0a0">
+Questions or comments, write to the <a href="http://clanlib.org/contact.html">ClanLib mailing list</a>.
+</font></center>
+
+</body>
+</html>
+<!-- clanlib footer end -->';
+}
+
+my $last_group;
+my $last_section;
+my $file_open_flag;
+sub print_class_index {
+  my $space=shift;
+  my $clan_group;
+  my $clan_section;
+  my $id;
+  my %hash;
+  my %classname_hash;
+  my $time_string = strftime "%e %b %Y", gmtime;
+  my @alpha_classes;
+  # Get the class in order of Group / Section / Name
+  $id = 0;
+  foreach (all $space) {
+    if ($_->is_class())
+    {
+      my $cname = $_->name;
+      $clan_group = "";
+      $clan_section = "";
+ 
+      foreach (split("\n",$$_{unique_string})) {
+        /^!.(.*)$/;
+        my $workbuffer;
+        $workbuffer=$1;
+        if (substr($workbuffer,0,4) eq "clan")
+        {
+          $workbuffer = substr($workbuffer,4);
+          ($clan_group, $clan_section)=split(/=/, $workbuffer);
+          $clan_section=~s/\"//g;
+        }
+      }
+      my $name = "$clan_group=$clan_section=$cname=$id\n";
+      $hash{$name}=[] if (!$hash{$name});
+      
+      my $classname = "$cname=$clan_group=$clan_section=$id\n";
+      $classname_hash{$classname}=[] if (!$classname_hash{$classname});
+    }
+    $id = $id + 1;
+  }
+  my @entire_list = $space->all();
+  
+  foreach (sort keys %hash)
+  {
+    my $cname;
+    ($clan_group, $clan_section, $cname, $id) = split(/=/, $_);
+    if ($cname =~ /^CL_/)
+    {
+      push(@classes, $entire_list[$id]);
+    }
+  }
+
+  my $num_alpha = 0;
+  foreach (sort keys %classname_hash)
+  {
+    my $cname;
+    ($cname, $clan_group, $clan_section, $id) = split(/=/, $_);
+    if ($cname =~ /^CL_/)
+    {
+      push(@alpha_classes, $entire_list[$id]);
+      $num_alpha = $num_alpha + 1;
+    }
+  }
+  
+  open(FILE,">html/classes.html");
+  print_html_header("All Classes", 1, "green");
+  print FILE "<h1>All Classes</h1>\n";
+
+  print FILE "<table width=100%>\n";
+  print FILE "<tr><td valign=top><p>\n";
+
+  my $last_letter="";
+
+  my $next_tr = int ($num_alpha/3-5);
+  foreach (@alpha_classes) {
+  
+    my $cname = $_->name;
+    $cname =~ /CL_(.)/;
+    my $letter = $1;
+
+    if ($last_letter ne $letter)
+    {
+      if ($next_tr < 3)
+      {
+        print FILE "</p></td>\n<td valign=top><p>\n";
+        $next_tr = int ($num_alpha/3-5);
+      }
+
+      if ($next_tr < int ($num_alpha/3-5))
+      {
+        print FILE "<br>";
+        $next_tr = $next_tr - 1;
+      }
+      print FILE "<b>$letter</b><br>\n";
+      $last_letter = $letter;
+      $next_tr = $next_tr - 1;
+    }
+  
+    print FILE "<a href=\"$$_{name}.html\">$$_{name}</a><br>\n";
+    $next_tr = $next_tr - 1;
+    if ($next_tr == 0)
+    {
+      print FILE "</p></td>\n<td valign=top><p>\n";
+      $next_tr = int ($num_alpha/3-5);
+    }
+  }
+  print FILE "</p></td></tr>\n";
+  print FILE "</table>\n";
+  print_html_footer();
+  close(FILE);
+
+  
+  open(FILE,">html/modules.html");
+  print_html_header("Grouped Classes", 1, "green");
+  print FILE "<h1>Grouped Classes</h1>\n";
+
+  print FILE "<table width=100%>\n";
+  print FILE "<tr><td valign=top><p>\n";
+
+  my $last_group="";
+  my $last_section="";
+  my %func_hash;
+  my %empty;
+
+  my $next_tr = int ($num_alpha/2)-22;
+  foreach (@classes) {
+
+    my $cname = $_->name;
+
+    $clan_group = "";
+    $clan_section = "";
+ 
+    foreach (split("\n",$$_{unique_string})) {
+      /^!.(.*)$/;
+      my $workbuffer;
+      $workbuffer=$1;
+      if (substr($workbuffer,0,4) eq "clan")
+      {
+        $workbuffer = substr($workbuffer,4);
+        ($clan_group, $clan_section)=split(/=/, $workbuffer);
+        $clan_section=~s/\"//g;
+      }
+    }
+
+    if ($last_group ne $clan_group || $last_section ne $clan_section)
+    {
+      my $key;
+      foreach $key (sort keys %func_hash)
+      {
+        print FILE $func_hash{$key};
+        $next_tr = $next_tr - 1;
+        if ($next_tr <= 0)
+        {
+          print FILE "</p></td>\n<td valign=top><p>\n";
+          $next_tr = int ($num_alpha/2)-22;
+        }
+      }
+      %func_hash = %empty;
+    
+      if ($next_tr < 3)
+      {
+        print FILE "</p></td>\n<td valign=top><p>\n";
+        $next_tr = int ($num_alpha/2)-22;
+      }
+
+      if ($next_tr < int ($num_alpha/2-22))
+      {
+        print FILE "<br>";
+        $next_tr = $next_tr - 1;
+      }
+      
+      if ($last_group ne $clan_group)
+      {
+        print FILE "<b>$clan_group</b><br>\n";
+        $next_tr = $next_tr - 1;
+      }
+      
+      print FILE "<i>$clan_section</i><br>\n";
+      $next_tr = $next_tr - 1;
+      
+      $last_group = $clan_group;
+      $last_section = $clan_section;
+    }
+    
+    $func_hash{$$_{name}} = "<a href=\"$$_{name}.html\">$$_{name}</a><br>\n";
+
+  }
+
+  
+  my $key;
+  foreach $key (sort keys %func_hash)
+  {
+    print FILE $func_hash{$key};
+    $next_tr = $next_tr - 1;
+    if ($next_tr <= 0)
+    {
+      print FILE "</p></td>\n<td valign=top><p>\n";
+      $next_tr = int ($num_alpha/2)-22;
+    }
+  }
+  %func_hash = %empty;
+
+  
+  print FILE "</p></td></tr>\n";
+  print FILE "</table>\n";
+  print_html_footer();
+  close(FILE);
+
+  # Print index:
+  my %index;
+  foreach (sort byfullname $space->all()) {
+    next if (!$_->is_class());
+
+    my $dfilename = $$_{fullname};
+    $dfilename=~s/::/__/g;
+    $index{$$_{fullname}} .= "<dd><a href=\"$dfilename.html\">$$_{fullname}</a></dd>\n";
+
+    if ($_->functions()) {
+      my $access;
+      foreach $access ($Enum::PUBLIC, $Enum::PROTECTED, $Enum::PRIVATE) {
+        foreach ($_->get_by_access($access)) {
+          next if ($$_{name} =~ /^~/); # no destructors please.
+
+          # Replace :: with __ for filenames
+          my $dummyfilename = $$_{fullname};
+          $dummyfilename=~s/::/__/g;
+
+          my $func_ref = "<dd><a href=\"$dummyfilename.html\">$$_{fullname}</a></dd>\n";
+          $index{$$_{name}} .= $func_ref if ($_->is_function());
+#          $index{$$_{name}} .= $func_ref if ($_->is_function() && !($index{$$_{name}} =~ /$func_ref/));
+        }
+      }
+    }
+  }
+
+  open(FILE,">html/index.html");
+  print_html_header("Index", 1, "green");
+  print FILE "<h1>Index</h1>\n";
+
+  my $key;
+  foreach $key (sort keys %index) {
+    print FILE "<p><dt>$key</dt>\n$index{$key}</p>\n";
+  }
+
+  print_html_footer();
+  close(FILE);
+
+
+  open(FILE,">html/search.html");
+  print_html_header("Search", 1, "green");
+  print FILE "<h1>Search</h1>\n";
+
+  print FILE "<table width=100% topmargin=0 leftmargin=0 cellpadding=0 cellspacing=0 border=0 align=center>\n";
+  print FILE "<tr><td valign=top>\n";
+  print FILE "<table cellpadding=4 cellspacing=0 border=0>\n";
+  print FILE "<tr><td>\n";
+  print FILE "<form\n";
+  print FILE "  action=\"http://search.ankiro.dk/s/search_3a5812cd894444669a903e56c7414ecb.asp\"\n";
+  print FILE "  method=\"get\"\n";
+  print FILE "  id=\"SearchForm\"\n";
+  print FILE "  name=\"SearchForm\">\n";
+  print FILE "<input type=\"text\" name=\"q\">\n";
+  print FILE "<input type=\"submit\" value=\"Search\" id=\"submitButton\" name=\"submitButton\">\n";
+  print FILE "</form>\n";
+  print FILE "</td></tr>\n";
+  print FILE "</table>\n";
+  print FILE "</td></tr>\n";
+  print FILE "</table>\n";
+
+  print_html_footer();
+  close(FILE);
+
+
+
+#  open(FILE,">html/entire_class_index.html");
+#  print_html_header("Entire Class Index", 1, "green");
+#  print FILE "<h1 align=center>Entire Class Index</h1>\n<ul type=disc>\n";
+#  $last_group="E R R O R";
+#  $last_section="E R R O R";
+#  foreach (@classes) {
+#    print_class_full_index($_);
+#  }
+#  print FILE "</ul>Documentation Created : $time_string\n</body></html>";
+#  print_html_footer();
+#  close(FILE);
+#
+#  open(FILE,">html/class_index.html");
+#  print_html_header("Main Index", 2, "orange");
+#  print FILE "<h1 align=center>Main Index</h1>\n<ul type=disc>\n";
+#  $last_group="E R R O R";
+#  $last_section="E R R O R";
+#  foreach (@classes) {
+#    print_class_main_index($_);
+#  }
+#  print FILE "</ul>Documentation Created : $time_string\n</body></html>";
+#  print_html_footer();
+#  close(FILE);
+#
+#  $last_group="E R R O R";
+#  $last_section="E R R O R";
+#  $file_open_flag = 0;
+#  foreach (@classes) {
+#    print_class_section_index($_);
+#  }
+#
+#  # Close the old file
+#  if ($file_open_flag ne 0)
+#  {
+#    $file_open_flag = 0;
+#    print_html_footer();
+#    close(FILE);
+#  }
+
+}
+
+sub print_class_section_index {
+  my $item=shift;
+
+  my $clan_group="";
+  my $clan_section="";
+  my $workbuffer;
+
+  foreach (split("\n",$$_{unique_string})) {
+    /^!.(.*)$/;
+    $workbuffer=$1;
+    if (substr($workbuffer,0,4) eq "clan")
+    {
+      $workbuffer = substr($workbuffer,4);
+      ($clan_group, $clan_section)=split(/=/, $workbuffer);
+      $clan_section=~s/\"//g;
+    }
+  } 
+  # Start of a new group
+  if ($clan_group ne $last_group)
+  {
+    # Close the old file
+    if ($file_open_flag ne 0)
+    {
+      $file_open_flag = 0;
+      print_html_footer();
+      close(FILE);
+    }
+    # Open a new file
+    open(FILE,">html/${clan_group}_index.html");
+    print_html_header("$clan_group Index", 0, "orange");
+    print FILE "<h1 align=center>$clan_group Index</h1>\n<ul type=disc>\n";
+    $file_open_flag = 1;
+    $last_group = $clan_group;
+    $last_section = "E R R O R";
+  }
+
+  # Start of a new section
+  if ($clan_section ne $last_section )
+  {
+    print FILE '<hr size="1" width="70%" align="left" noshade="noshade">';
+    print FILE "<h3>$clan_group - $clan_section </h3>";
+    $last_section = $clan_section;
+  }
+  print FILE "<li><b>",$item->href($$item{fullname}),"</b>\n";
+}
+
+#sub print_class_main_index {
+#  my $item=shift;
+#
+#  my $clan_group="";
+#  my $clan_section="";
+#  my $workbuffer;
+#  my $comment_found_flag = 0;
+#
+#  foreach (split("\n",$$_{unique_string})) {
+#    /^!.(.*)$/;
+#    $workbuffer=$1;
+#    if (substr($workbuffer,0,4) eq "clan")
+#    {
+#      $workbuffer = substr($workbuffer,4);
+#      ($clan_group, $clan_section)=split(/=/, $workbuffer);
+#    }
+#  } 
+#  if ($clan_group ne $last_group)
+#  {
+#
+#    print FILE '<hr size="1" width="70%" align="left" noshade="noshade">';
+#    print FILE "<li><b><a href=\"${clan_group}_index.html\"> $clan_group </a> </b><br>\n";
+#    $last_group = $clan_group;
+#
+#    $new_line_flag = 0;
+#    foreach (split("\n", $file_global_string))
+#    {
+#      /(.*)$/;
+#      my $mydesc = $1;
+#
+#      # A new comment found - it will always need processing
+#      if (substr($mydesc,0, 2) eq "! ")
+#      {
+#        $comment_found_flag = 0;
+#      }
+#
+#      if ($comment_found_flag eq 0)
+#      {
+#        # Find the correct comment
+#        if ($mydesc eq "! ${clan_group}")
+#        {
+#          $comment_found_flag = 1;
+#        }
+#      }else
+#      {
+#        $mydesc = substr($mydesc, 1);
+#        print_description($mydesc);
+#      }
+#    }
+#  }
+#}
+#
+#
+#sub print_class_full_index {
+#  my $item=shift;
+#
+#  my $clan_group="";
+#  my $clan_section="";
+#  my $workbuffer;
+# 
+#  foreach (split("\n",$$_{unique_string})) {
+#    /^!.(.*)$/;
+#    $workbuffer=$1;
+#    if (substr($workbuffer,0,4) eq "clan")
+#    {
+#      $workbuffer = substr($workbuffer,4);
+#      ($clan_group, $clan_section)=split(/=/, $workbuffer);
+#      $clan_section=~s/\"//g;
+#    }
+#  } 
+#  if (($clan_group ne $last_group) || ($clan_section ne $last_section ))
+#  {
+#    print FILE '<hr size="1" width="70%" align="left" noshade="noshade">';
+#    print FILE "<h3>$clan_group - $clan_section </h3>";
+#    $last_group = $clan_group;
+#    $last_section = $clan_section;
+#  }
+#
+#  print FILE "<li><b>",$item->href($$item{fullname}),"</b>\n";
+#}
+    
+sub print_class {
+  $_=shift;
+
+  # Replace :: with __ for filenames
+  my $dummyfilename = $$_{fullname};
+  $dummyfilename=~s/::/__/g;
+
+  print "Generating $$_{fullname}\n";
+  open(FILE,">html/$dummyfilename.html");
+  
+  my $classname = $$_{fullname};
+  my $classfilename = $dummyfilename;
+
+  print_html_header("$$_{fullname}", 0, "purple");
+  print FILE "<h1>Class $$_{fullname}</h1>\n";
+  
+  my $workbuffer="";
+  my $clan_group="";
+  my $clan_section="";
+  my $clan_header="";
+  foreach (split("\n",$$_{unique_string})) {
+    /^!.(.*)$/;
+    $workbuffer=$1;
+    if (substr($workbuffer,0, 7) eq "header=")
+    {
+      $clan_header = substr($workbuffer, 7);
+    }
+    if (substr($workbuffer,0,4) eq "clan")
+    {
+      $workbuffer = substr($workbuffer,4);
+      ($clan_group, $clan_section)=split(/=/, $workbuffer);
+      $clan_section=~s/\"//g;
+    }
+  }
+  
+  print FILE "<p>$$_{short} <a href=\"#description\">More...</a></p>\n";
+
+  # Print containing space
+  my $space=$$_{space};
+  my $tempname = $space->href($$space{fullname});
+  # Fix to change global to global_index
+  $tempname=~s/global.html/global_index.html/g;
+  # print FILE "Contained in: ",$tempname,"<br>\n";
+
+  # Print base classes
+  print FILE "<p>Derived from:\n";
+  if ($_->parents()) {
+    foreach (sort byname parents $_) {
+      print FILE $_->href("$$_{fullname}"),"\n";
+    }
+  }
+  else {print FILE "<i>none</i>\n"; }
+  print FILE "<br>\n";
+
+  # Print derived classes
+  print FILE "Derived by:\n";
+  if ($_->children()) {
+    foreach (sort byname children $_) {
+
+      # Replace :: with __ for filenames
+      $dummyfilename = $$_{fullname};
+      $dummyfilename=~s/::/__/g;
+
+      print FILE "<a href=\"$dummyfilename.html\">$$_{fullname}</a>\n";
+      #print FILE "<a href=\"$$_{fullname}.html\">$$_{fullname}</a>\n";
+    }
+  }
+  else { print FILE "<i>none</i>\n"; }
+
+  print FILE "<br>Group: $clan_group ($clan_section)</p>\n";
+
+  print FILE "<p>\n";
+  print FILE "#include \&lt;ClanLib/$clan_header\&gt;\n";
+  print FILE "<p>\n";
+
+  my %functions;
+
+  if ($_->functions()) {
+    my $access;
+ 
+    my $current_function_type = "";
+ 
+    print FILE "<table border=0 width=100%>\n";
+    foreach $access ($Enum::PUBLIC, $Enum::PROTECTED) {
+
+      my @group;
+      foreach ($_->get_by_access($access)) {
+        push(@group,$_); # if ($_->is_function());
+      }
+      next if (!@group);
+
+
+      foreach  (@group) {
+# See if a different function type required (using the "! c=" identifier)
+        my $this_name="";
+        my $this_value="";
+        foreach (split("\n",$$_{unique_string})) {
+          /(.*)$/;
+          ($this_name, $this_value)=split(/=/, $1);
+          if ($this_name eq "! c")
+          {
+            if ($this_value ne $current_function_type)
+            {
+              print FILE "</table>\n";
+              $current_function_type = $this_value;
+              print FILE "<p><b>$this_value</b></p>\n";
+              print FILE "<table border=0 width=100%>\n";
+            }
+          }
+        }
+        
+        next if ($$_{name} =~ /^~/); # Skip destructors.
+        next if ($current_function_type eq "Implementation"); # Skip Implementation group.
+
+        # Replace :: with __ for filenames
+        my $dummyfilename = $$_{fullname};
+        $dummyfilename=~s/::/__/g;
+
+        if (!$functions{$dummyfilename}) # Only write function description once.
+        {
+          my $hint = "";
+          $hint = " <i>static</i>" if ($$_{type} =~ /^static/);
+          print FILE "<tr><td width=30% valign=top><p><a href=\"$dummyfilename.html\">$$_{name}</a>$hint</p></td><td valign=top><p>$$_{short}</p></td></tr>";
+          $functions{$dummyfilename} = [];
+        }
+      }
+    }
+    print FILE "</table>\n";
+  }
+
+  print FILE "<a name=\"#description\"><p><b>Detailed description:</b></p>\n";
+
+#  print FILE "<p>";
+#
+#  $new_line_flag = 0;
+#  foreach (split("\n",$$_{long})) {
+#    /(.*)$/;
+#    print_description($1);
+#  }
+#  print FILE "</p>\n";
+
+  print FILE "$$_{long}\n";
+
+  print_html_footer();
+  close(FILE);
+  
+  my %funcname;
+  my %funcshort;
+  my %funcproto;
+  my %funcparams;
+  my %funcretval;
+  my %funcdesc;
+
+  my $access;
+  foreach $access ($Enum::PUBLIC, $Enum::PROTECTED) {
+    foreach ($_->get_by_access($access)) {
+ 
+#  if ($_->functions()) {
+#    foreach (sort byname $_->functions()) {
+      my $impl;
+
+      # Replace :: with __ for filenames
+      my $filename = $$_{fullname};
+      $filename=~s/::/__/g;
+      
+      my $proto = "";
+      $proto .= "\n\t";
+      $proto .= "$$_{type} " if ($$_{type} ne "");
+      $proto .= "$$_{name}";
+      
+      if ($_->is_function()) {
+        $proto .= "(";
+        $proto .= "\n\t\t$$_{args}" if ($$_{args});
+        $proto .= ")";
+      }
+
+      $proto .= ";\n";
+      
+      # Html. Replace < and > with &lt; and &gt;
+      $proto =~ s/</\&lt;/g;
+      $proto =~ s/>/\&gt;/g;
+
+      my $retval;
+      my $params;
+      my $param_name;
+      my $param_value;
+      foreach (split("\n",$$_{comments})) {
+        if (/^param (.+?): (.+)$/) {
+          if ($param_name ne $1) {
+            if ($param_name)
+            {
+              $params .= "<dt><i>$param_name</i></dt><dd>$param_value</dd>\n";
+            }
+            $param_name = $1;
+            $param_value = "";
+          }
+          $param_value .= $2;
+        }
+        elsif (/^return: (.+)$/) {
+          $retval .= $1;
+        }
+      }
+      if ($param_name)
+      {
+        $params .= "<dt><i>$param_name</i></dt><dd>$param_value</dd>\n";
+      }
+      
+      $funcname{$filename} = $$_{fullname};
+      $funcshort{$filename} .= $$_{short};
+      $funcproto{$filename} .= $proto;
+      $funcparams{$filename} .= $params;
+      $funcretval{$filename} .= $retval if ($retval);
+      $funcdesc{$filename} .= $$_{long};
+    }
+  }
+
+  my $filename;
+  foreach $filename (keys %funcname)
+  {
+      my %empty;
+      %see_also = %empty;
+  
+      open(FILE,">html/$filename.html");
+
+      print_html_header("$funcname{$filename}", 0, "purple");
+      print FILE "<h1>$funcname{$filename}</h1>\n";
+
+      print FILE &addCrossRef("<p>$funcshort{$filename}</p>\n");
+
+      print FILE &addCrossRef("<pre>$funcproto{$filename}</pre>\n");
+
+      if ($funcparams{$filename})
+      {
+        print FILE "<p><b>Parameters:</b></p>\n";
+      
+        print FILE "<dl>\n";
+        print FILE &addCrossRef("$funcparams{$filename}");
+        print FILE "</dl>\n";
+      }
+
+      if ($funcretval{$filename})
+      {
+        print FILE "<p><b>Return value:</b></p>\n";
+        print FILE "<p>";
+        print_description(&addCrossRef($funcretval{$filename}));
+        print FILE "</p>\n";
+      }
+
+      if ($funcdesc{$filename}) {
+        print FILE "<p><b>Detailed description:</b></p>";
+        print FILE &addCrossRef("$funcdesc{$filename}\n");
+         
+#        my $longhtmlstring = $funcdesc{$filename};
+#        $longhtmlstring=~s/\n/<br>/g; 
+#        print FILE "<br><blockquote>$longhtmlstring</blockquote>\n";
+      }
+
+      print FILE "<p><b>See also:</b></p>\n";
+#      print FILE "<p><a href=\"$classfilename.html\">$classname</a>\n";
+
+      $see_also{$classname} = "<a href=\"$classfilename.html\">$classname</a>";
+      
+      my $str;
+      my $cur_also;
+      foreach $cur_also (keys %see_also)
+      {
+        $str .= " | " if ($str ne "");
+        $str .= $see_also{$cur_also};
+      }
+
+      print FILE "<p>$str</p>\n";
+
+      print_html_footer();
+      close(FILE);
+  }
+}

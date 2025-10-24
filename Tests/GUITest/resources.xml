@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<surface name="button_surface1" file="resources/button_normal.tga" />
+	<surface name="button_surface2" file="resources/button_highlighted.tga" />
+	<surface name="button_surface3" file="resources/button_pressed.tga" />
+	<surface name="button_surface4" file="resources/button_disabled.tga" />
+
+	<surface name="icon_save" file="resources/save.tga" />
+</resources>

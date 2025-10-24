@@ -1,0 +1,174 @@
+<xml>
+<head>
+<title>Using ClanLib's smart pointers</title>
+</head>
+<body>
+
+<p>ClanLib has a set of smart pointer template classes which it uses internally, and which you
+can also use in your own game code. They make it easier to manage memory in cases where you
+don't want to use the stack due to a need for polymorphism, shared data, implementation-pointers,
+or lazy copying.</p>
+
+<p>Smart pointers can be used as members of classes and work fine with compiler-supplied
+destructors, default constructors, copy constructors, and copy assignment operators. They can
+also be used as function temporaries, they safely handle data deletion when they go out of scope,
+and they can also be used inside STL containers.</p>
+
+<h3>CL_SharedPtr : Sharing Pointer</h3>
+
+<p>The simplest smart pointer is CL_SharedPtr. CL_SharedPtr will share the same data among one or more instances of the pointer:</p>
+
+<code>
+CL_SharedPtr<Thing> a = new Thing;
+CL_SharedPtr<Thing> b = a; //There's only one instance of Thing being pointed to by both a and b
+CL_SharedPtr<Thing> c = b; //Still only one instance of Thing, being pointed to by all three pointers
+
+a->some_method(); //You can access indirect methods with '->', just like a regular pointer
+some_func(*a); //You can dereference it with '*', just like a regular pointer
+
+a = 0; //Now a is a null pointer (as it would be when just constructed), but b and c still point to that same data
+b = 0;
+c = 0; //Now the data is safely destroyed, and all three pointers are null
+</code>
+
+<p>When all the CL_SharedPtrs pointing to a particular piece of data are gone or not pointing to it anymore, the data is automatically destroyed. Keep
+in mind that CL_SharedPtr uses a simple reference counting system; circular loops will result in memory leaks,
+since the data won't ever be destroyed. However, situations where such circular loops
+arise are pretty rare and convoluted.</p>
+
+<p>Like a regular pointer, a CL_SharedPtr can also point to derivations of its supplied type. But make sure that you
+give the classes you plan to do this with virtual destructors. Assuming MaBob is a derivation of Thing:</p>
+
+<code>
+CL_SharedPtr<Thing> d = new MaBob; //Works just like it would with a regular Thing*
+</code>
+
+<h3>Preparing classes for use in CL_LazyCopyPtr and CL_OwningPtr</h3>
+
+<p>To make your classes usable in the other two ClanLib smart pointer types, it's important that the classes you
+use in the smart pointers descend (directly or indirectly) from CL_Clonable, and implement a
+very specific clone() method at the start of their definitions. For example, if you have a class called Thing, and intended to use
+it in a smart pointer, it would look like so:</p>
+
+<code>
+class Thing : public CL_Clonable
+{
+	CL_Clonable* clone() const {return new Thing(*this);}
+
+	/* here is the regular definition of Thing */
+};
+</code>
+
+<p>If you want to derive from Thing, then each child class must reimplement clone(), substituting
+their own class name for Thing:</p>
+
+<code>
+class MaBob : public Thing
+{
+	CL_Clonable* clone() const {return new MaBob(*this);}
+
+	/* here is the regular definition of MaBob */
+};
+</code>
+
+<p>It's important that you reimplement clone() in every derivation of a CL_Clonable class, otherwise slicing
+will occur. The compiler won't warn you of this, it'll just happen, so watch out!</p>
+
+<h3>CL_OwningPtr : Possessive Pointer</h3>
+
+<p>CL_OwningPtr acts like a regular stack instance of a class: whenever CL_OwningPtr is copied, then the pointed-to class is
+copied as well:</p>
+
+<code>
+CL_OwningPtr<Thing> a = new Thing; //Assign the result of 'new' to the pointer
+CL_OwningPtr<Thing> b = a; //After this statement, there are two instances of Thing
+</code>
+
+<p>In this example, possessive a and b both refer to entirely different instances of Thing, which you can access
+by dereferencing the respective pointer. The instance of Thing pointed to by b was made by calling the copy constructor on the
+Thing instance pointed to by b. When the possessive pointers are destroyed, then the things they point to are automatically
+destroyed as well:</p>
+
+<code>
+CL_OwningPtr<Thing> a = new Thing(1);
+a = new Thing(2); //The older Thing(1) is safely deleted here
+a = 0; //Now the Thing(2) is also safely destroyed
+</code>
+
+<h3>CL_LazyCopyPtr : Copy-on-write Pointer</h3>
+
+<p>CL_LazyCopyPtr has the same usage semantics as CL_OwningPtr; you can replace the text CL_OwningPtr with CL_LazyCopyPtr in your
+code and everything will continue to work. The difference is that copying a CL_OwningPtr results in an immediate
+copy of the pointed-to data, while copying a CL_LazyCopyPtr will not result in a copy of the pointed-to data until
+the CL_LazyCopyPtr is dereferenced in a non-const way:</p>
+
+<code>
+CL_LazyCopyPtr<Thing> a = new Thing;
+CL_LazyCopyPtr<Thing> b = a; //There's still only one instance of Thing
+b->some_member = 3; //Before the assignment, another instance of Thing is made for b to point to
+</code>
+
+<p>If the CL_LazyCopyPtr is a member of a class and the using code is a const method of that class, or if the CL_LazyCopyPtr
+is being passed to a function by const reference, then no copy of the data is made, since it's impossible
+for you to call a non-const method of Thing in those situations. However, in a case where you would be allowed
+to call a non-const method of Thing, the copy will still be made, even if you're only calling a const method.
+To avoid this, you can call the cd() method of CL_LazyCopyPtr, which stands for 'const dereference':</p>
+
+<code>
+CL_LazyCopyPtr<Thing> a = new Thing;
+CL_LazyCopyPtr<Thing> b = a;
+b.cd().some_const_method(); //There still is only one instance of Thing
+b->some_const_method(); //Now there are two instances of Thing, even though some_method() is a const method
+</code>
+
+<h3>Ownership Transfer</h3>
+
+<p>It's important to remember that when you assign something to any ClanLib smart pointer, then the smart pointer
+gets control over that data. From that point, you shouldn't attempt to access the data except directly through the smart pointer:</p>
+
+<code>
+Thing* a = new Thing;
+CL_SharedPtr<Thing> b = a; //Should be no direct use of a after this statement
+
+/* Stuff happens here */
+
+some_func(*a); //EVIL BAD CODE : Should've dereferenced b instead
+</code>
+
+<p>The insidious thing about the above code is that it might work or it might segfault, depending on
+what happens at the 'Stuff happens here' comment.</p>
+
+<h3>Autocasting</h3>
+
+<p>When using a smart pointer as a pointer-to-implementation, it's often useful to have the pointer automatically
+cast dereferences to some type that has only been forward declared. For example, let's say you've got a CL_OwningPtr
+in your class Narf, with an implementation class called NarfImpl. Inside Narf's header, NarfImpl has only been forward
+declared. Since NarfImpl has to be derived from CL_Clonable to be in a CL_OwningPtr anyways, it's convienent
+to use that as the template parameter to CL_OwningPtr:</p>
+
+<code>
+class NarfImpl;
+class Narf {
+	CL_OwningPtr<CL_Clonable> pimpl;
+};
+</code>
+
+<p>This works, but there's an annoying problem. In Narf's implementation file, you're forced to cast
+to NarfImpl* or NarfImpl& evrey time you want to call any of NarfImpl's methods. Although you know that pimpl is under your
+strict control and will never have any derivative of CL_Clonable besides NarfImpl in it, C++ isn't convinced
+and requires you do all that casting.</p>
+
+<p>However, ClanLib's smart pointers can automatically do this casting for you, when you specify a second template
+parameter as the cast-to type:</p>
+
+<code>
+class NarfImpl;
+class Narf {
+	CL_OwningPtr<CL_Clonable, NarfImpl> pimpl;
+};
+</code>
+
+<p>Now, every time you dereference, do an indirect member access, or call get() on pimpl, the result will be a NarfImpl& or a NarfImpl* instead of a CL_Clonable& or CL_Clonable*.</p>
+
+</body>
+</xml>

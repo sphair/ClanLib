@@ -1,0 +1,421 @@
+<xml>
+<head>
+<title>GUI Resources</title>
+</head>
+<body>
+
+<p align="center">
+<a href="#component">Component</a> |
+<a href="#button">Button</a> |
+<a href="#frame">Frame</a> |
+<a href="#image">Image</a> |
+<a href="#inputbox">InputBox</a> |
+<a href="#label">Label</a> |
+<a href="#listbox">ListBox</a> |
+<a href="#progressbar">ProgressBar</a> |
+<a href="#radiobutton">RadioButton</a> |
+<a href="#scrollbar">ScrollBar</a> |
+<a href="#window">Window</a>
+</p>
+
+<h3>GUI definition files (.xml)</h3>
+<p>
+Instead of hardcoding every GUI components by code, you can use a GUI definition file to define the placement,
+attributes and hierarchy of GUI components. The GUI definition format looks a lot like the ClanLib resource
+manager format, so if you're familiar with that, you should easily get acquainted with the GUI definition
+format. GUI files do not have sections. Instead, components can contain child-components within a <components>
+tag, simply function as "sections". This means that the hierarchical structure of the GUI is directly readable
+from the GUI definition file. Let's look at a small example;
+</p>
+<code>
+<components>
+   <window name="my_window" x="10" y="10" width="600" height="400" title="My Window" > 
+      <components>
+         <button name="my_button" x="25" y="25" width="100" height="20" text="My Button" />
+         <label name="my_label" x="25" y="50" text="My label" />
+      </components>
+   </window>
+</components>
+</code>
+
+<p>A window named my_window is the top-level component here. As this component is at the top of the component
+hierarchy, the x, y position is directly mapped to the parent GUI item. Since this window has no GUI parent, 
+the coordinates aremapped to your <codelink>CL_DisplayWindow</codelink>. Each sub-somponent's x/y values are
+relative to the current position of their parent. This means that my_button will always be offset (25, 25)
+pixels from the upper-left corner of the client area of the window, and that both my_button and my_label
+will be dragged along if my_window is moved. Width and height is not relative to any parents, and is measured
+in pixels also. However, all sub-components are clipped within the screen area of the parent.
+</p>
+
+<p>Every component type recognize different sets of values in the .xml file. Some values
+are mandatory for a component (they have to exist in the .xml-file for the initialization to succeed), 
+and some are optional, and have default values in case they don't exist. All component types require
+the 'x' and 'y' value, describing the position/offset of the component in question.
+</p>
+
+<p>Note that all components need to be within a &lt;components&gt; tag. This goes for
+the root items, and also children of other components.</p>
+
+<p>Example code to load a GUI definition file:</p>
+
+<code>
+CL_ResourceManager resources("resources.xml");
+CL_StyleManager_Silver style(&resources);
+CL_GUIManager gui(&style);
+
+CL_ComponentManager manager("mygui.xml", &gui);
+
+gui.run();
+</code>
+
+<p>This code is fairly simple, but a few things need to be explained.</p>
+<ul>
+<li>The "resources.xml" file <b>must</b> contain items that describe the GUI style. The easiest way to do this is to copy the files required from the "Resources" directory of your ClanLib distribution.</li>
+<li>The "mygui.xml" file contains the GUI layout code, as listed above.</li>
+<li>Finally, calling "gui.run();" will block all further execution. This may, or may not be what you want. You can call "gui.show();" to draw the GUI to the screen exactly once. For more information, see <codelink>CL_GUIManager</codelink>.</li>
+</ul>
+<p>To access individual components from a definition file, you use the 
+CL_ComponentManager::get_component function. Some examples:</p>
+
+<code>
+// Hook up the button click signal to a function
+CL_Button *my_button = (CL_Button *) manager.get_component("my_button");
+CL_Slot s = my_button->sig_clicked().connect(this, &App::on_button_clicked);
+</code>
+
+<p>If you have RTTI enabled in your project, you can also use the following approach:</p>
+<code>
+CL_Button *my_button;
+manager.get_component("my_button", &my_button);
+</code>
+
+<br/>
+<h3>Methods for running a GUI and rendering game graphics</h3>
+<p>If you want to draw directly to the screen <b>and</b> run a GUI at the same time, there are two options 
+available to you.</p>
+<h4>Option 1: Use gui.show()</h4>
+<p>Instead of calling "gui.run()" in the above example, you can simply call "gui.show()" every time the GUI needs
+to be drawn to the screen. It's up to you to decide how often to redraw the GUI. Calling "gui.show()" from within 
+your own render loop is very easy to do, but is slow without code to detect when the GUI needs to be redrawn.</p>
+<h4>Option 2: Use the sig_paint event.</h4>
+<p>A sig_paint signal is emitted every time the GUI is redrawn. You can use this event to draw your own graphics 
+before the GUI is drawn to the screen. Simply connect one of your own methods to the paint event:</p>
+<code>
+CL_Slot m_slotOnPaint = gui.sig_paint().connect(this, &Game::OnRender);
+</code>
+<p>All you need to do is create the "Game::OnRender" class (obviously replace "Game" with the name of your class).</p>
+<h3>Putting GUI definitions inside ClanLib resource files</h3>
+
+<p>
+Now that ClanLib uses XML for both the resources and the gui definitions, you can actually put them
+both into the same file.
+</p>
+
+<code>
+<resources>
+   <!-- Include all resources from the silver theme here too -->
+   <surface name="button_up" file="resources/button_up.tga" />
+
+   <components name="gui">
+      <button x="10" y="190" surface_up="button_up" />
+   </components>
+</resources>
+</code>
+
+<p>And some code to load it:</p>
+<code>
+CL_ResourceManager resources("resources.xml");
+CL_StyleManager_Silver style(&resources);
+CL_GUIManager gui(&style);
+
+CL_ComponentManager manager("gui", &resources, &gui);
+
+gui.run();
+</code>
+
+<br/>
+<h3>Component options</h3>
+
+<p>The following section describes all the component attributes available for
+each component.</p>
+
+<br/>
+<h4><a name="component">Component</a></h4>
+
+<p>This is the base class all other components inherit. So every other component
+has these basic attributes.</p>
+
+<p>Tag name: <b>&lt;component&gt;</b><br/>
+Class name: <codelink>CL_Component</codelink></p>
+
+<ul>
+<li>Attribute <b>name</b>: Name of gui component.<br/>
+  <i>Valid values</i>: String<br>
+  <i>Default value</i>: ""
+</li>
+<li>Attribute <b>x</b>: Position x of component.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+<li>Attribute <b>y</b>: Position y of component.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+<li>Attribute <b>width</b>: Width of component.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+<li>Attribute <b>height</b>: Height of component.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+<li>Attribute <b>visible</b>: Visibility of component.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: true
+</li>
+<li>Attribute <b>enabled</b>: If the component is enabled or disabled.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: true
+</li>
+<li>Attribute <b>tab_id</b>: Tab id.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+</ul>
+
+<p>Examples:</p>
+<code>
+<component name="component1" x="10" y="10" width="100" height="20" />
+<component name="component2" x="10" y="30" width="70" height="20" enabled="false" tab_id="3"/>
+<component name="component3" x="10" y="50" width="80" height="40" visible="false" />
+</code>
+
+<br/>
+<h4><a name="button">Button</a></h4>
+
+<p>Tag name: <b>&lt;button&gt;</b><br/>
+Class name: <codelink>CL_Button</codelink></p>
+
+<ul>
+<li>Attribute <b>text</b>: The text on the button.<br/>
+  <i>Valid values</i>: String<br>
+  <i>Default value</i>: ""
+</li>
+<li>Attribute <b>toggled</b>: If the button is toggled by default or not.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: false
+</li>
+<li>Attribute <b>togglemode</b>: The togglemode, if false the button is sticky.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: false
+</li>
+</ul>
+
+<p>Examples:</p>
+<code>
+<button name="button1" togglemode="true" x="10" y="10" width="100" height="20" text="Stick me!" />
+<button name="button2" x="10" y="40" width="100" height="20" text="Press me!" />
+<button name="button3" x="10" y="70" text="Auto size" />
+</code>
+
+<br/>
+<h4><a name="frame">Frame</a></h4>
+
+<p>Tag name: <b>&lt;frame&gt;</b><br/>
+Class name: <codelink>CL_Frame</codelink></p>
+
+<ul>
+<li>Attribute <b>filled</b>: If the frame should be filled or transparent.<br/>
+  <i>Valid values</i>: Boolean<br/>
+  <i>Default value</i>: false
+</li>
+</ul>
+
+<p>Examples:</p>
+<code>
+<frame name="frame1" x="10" y="10" width="100" height="20" filled="true" />
+<frame x="10" y="35" width="100" height="20" />
+</code>
+
+<br/>
+<h4><a name="image">Image</a></h4>
+
+<p>Tag name: <b>&lt;image&gt;</b><br/>
+Class name: <codelink>CL_Image</codelink></p>
+
+<ul>
+<li>Attribute <b></b>:<br/>
+  <i>Valid values</i>: <br>
+  <i>Default value</i>: 
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+</code>
+
+<br/>
+<h4><a name="inputbox">InputBox</a></h4>
+
+<p>Tag name: <b>&lt;inputbox&gt;</b><br/>
+Class name: <codelink>CL_InputBox</codelink></p>
+
+<ul>
+<li>Attribute <b>text</b>: Default input of the inputbox.<br/>
+  <i>Valid values</i>: String<br>
+  <i>Default value</i>: ""
+</li>
+<li>Attribute <b>passwordmode</b>: Password mode sets if the inputbox should display only * when entering text.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: false
+</li>
+<li>Attribute <b>read_only</b>: If read only, it is not possible to enter text into the inputbox.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: false
+</li>
+<li>Attribute <b>max_length</b>: Max number of characters allowed.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: unlimited
+</li>
+</ul>
+
+<p>Examples:</p>
+<code>
+<inputbox name="inputbox1" x="10" y="10" width="100" height="20" text="Default value" />
+<inputbox name="inputbox2" x="10" y="35" width="100" height="20" max_length="4" passwordmode="true" />
+</code>
+
+<br/>
+<h4><a name="label">Label</a></h4>
+
+<p>Tag name: <b>&lt;label&gt;</b><br/>
+Class name: <codelink>CL_Label</codelink></p>
+
+<ul>
+<li>Attribute <b>text</b>: The text of the label.<br/>
+  <i>Valid values</i>: String<br>
+  <i>Default value</i>: ""
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+<label x="10" y="10" width="100" height="20" text="Welcome to ClanGUI!" />
+</code>
+
+<br/>
+<h4><a name="listbox">ListBox</a></h4>
+
+<p>Tag name: <b>&lt;listbox&gt;</b><br/>
+Class name: <codelink>CL_ListBox</codelink></p>
+
+<ul>
+<li>Child element <b>item</b>: Defines a item in the listbox.
+  <ul>
+  <li>Attribute <b>value</b>: Text of the listitem.<br/>
+    <i>Valid values</i>: String<br>
+    <i>Default value</i>: ""
+  </li>
+  </ul>
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+<listbox name="listbox1" x="10" y="10" width="100" height="100">
+	<item value="Item 1" />
+	<item value="Item 2" />
+	<item value="Item 3" />
+</listbox>
+</code>
+
+<br/>
+<h4><a name="progressbar">ProgressBar</a></h4>
+
+<p>Tag name: <b>&lt;progressbar&gt;</b><br/>
+Class name: <codelink>CL_ProgressBar</codelink></p>
+
+<ul>
+<li>Attribute <b>steps</b>: Number of steps in the progressbar.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+<progressbar name="progressbar1" x="10" y="10" width="100" height="20" steps="100" />
+</code>
+
+<br/>
+<h4><a name="radiobutton">RadioButton</a></h4>
+
+<p>Tag name: <b>&lt;radiobutton&gt;</b><br/>
+Class name: <codelink>CL_RadioButton</codelink></p>
+
+<ul>
+<li>Attribute <b></b>:<br/>
+  <i>Valid values</i>: <br>
+  <i>Default value</i>: 
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+</code>
+
+<br/>
+<h4><a name="scrollbar">ScrollBar</a></h4>
+
+<p>Tag name: <b>&lt;scrollbar&gt;</b><br/>
+Class name: <codelink>CL_ScrollBar</codelink></p>
+
+<ul>
+<li>Attribute <b>orientation</b>: The orientation of the scrollbar, horizontal or vertical.<br/>
+  <i>Valid values</i>: hor, horz, horizontal, 1 = horizontal orientation - ver, vert, vertical, 0 = vertical orientation<br>
+  <i>Default value</i>: vertical 
+</li>
+<li>Attribute <b>min</b>: Minimum value of the scrollbar range.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: 0 
+</li>
+<li>Attribute <b>max</b>: Maximum value of the scrollbar range.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: value of minimum
+</li>
+<li>Attribute <b>value</b>: Current value of the scrollbar range.<br/>
+  <i>Valid values</i>: Integer<br>
+  <i>Default value</i>: value of minimum
+</li>
+<li>Attribute <b>tracking</b>: Enables or disables tracking.<br/>
+  <i>Valid values</i>: Boolean<br>
+  <i>Default value</i>: false
+</li>
+</ul>
+
+<p>Examples:</p>
+<code>
+<scrollbar name="scrollbar1" x="160" y="10" width="20" height="220" min="0" orientation="ver" max="100" />
+<scrollbar name="scrollbar2" x="10" y="230" width="150" height="20" min="0" max="10" orientation="hor" />
+</code>
+
+<br/>
+<h4><a name="window">Window</a></h4>
+
+<p>Tag name: <b>&lt;window&gt;</b><br/>
+Class name: <codelink>CL_Window</codelink></p>
+
+<ul>
+<li>Attribute <b>title</b>: Title of the window.<br/>
+  <i>Valid values</i>: String<br>
+  <i>Default value</i>: ""
+</li>
+</ul>
+
+<p>Example:</p>
+<code>
+<window name="window1" x="10" y="10" width="400" height="300" title="This is a window" />
+</code>
+
+</body>
+</xml>

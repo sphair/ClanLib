@@ -1,0 +1,210 @@
+$Id: INSTALL.mingw,v 1.8 2004/03/17 14:22:06 sphair Exp $
+
+Readme file for ClanLib 0.8.x using MinGW under Win32
+---------------------------------------------------------------------------
+This readme will guide you with installing, compiling ClanLib and
+creating your first ClanLib application using the MinGW compiler and
+MSYS toolset on Win32 or a gcc ix86-mingw32msvc cross-compiler (i.e.
+you can compile ClanLib in Linux and then run the binaries in Windows!
+(or even run them using a Windows emulator like Wine...)). You should
+also be able to compile ClanLib with Cygwin, the ./configure script
+will detect Cygwin and append the '-mno-cygwin -DWIN32' flags to the
+compiler call.
+
+1. Requirements
+2. Compiling ClanLib
+3. Compiling ClanLib applications
+4. Simple akefile example
+5. Creating a simple application
+
+
+1. Requirements
+---------------------------------------------------------------------------
+To compile and use ClanLib you need some other libraries. As with any
+ClanLib target you need to zlib, libjpeg and libpng. There are
+links from the ClanLib download page (www.clanlib.org/download) to all
+these libraries.
+
+All libraries should be named as Unix libraries (i.e. libjpeg.a instead
+of jpeg.lib) and has to be installed so that the compiler can find both
+the archive files (*.a) and the include files.
+
+You also need the DirectX libraries and headers version 7 or later. Just google
+the net to find them. It should be possible to use the DirectX SDK from MS
+but there are also some MinGW specific packages out there. At the moment
+of writing there is a DirectX 7 MinGW package at:
+
+ * http://caesar.logiqx.com/zips/tools/compilers/mingw/dx70_mgw.zip
+
+Other additional libraries for MinGW can be found at (site looks a bit
+outdated, but might still be helpfull):
+
+ * http://mingwrep.sourceforge.net/
+
+Instructions on how to build a cross-compile environment can be found
+at:
+
+ * http://www.libsdl.org/Xmingw32/
+
+If you try to compile the other libraries from source you might
+want to '--enable-static --disable-shared' at ./configure time since
+often the DLL build process is a bit buggy and also doesn't lead to
+having a standalone binary in the end, so static libraries should be
+prefered.
+
+
+2. Compiling ClanLib
+---------------------------------------------------------------------------
+Compiling ClanLib works buy using the standard ./configure script as
+with most other Free Software.
+
+ClanLibs configure script should be able to detect a mingw or cygwin
+environment automatically and setup everything according to that. As
+with other libraries, compiling a static library is recomment if you
+want a binary that doesn't depend on extra .dll's. So to compile you
+would do:
+
+ ./configure --enable-static --disable-shared
+ make
+ make install
+
+If you want to cross compile, you have to use the cross-configure.sh
+scripts as documented on:
+
+  * http://www.libsdl.org/Xmingw32/
+
+or pass the target options manually.
+
+
+3. Compiling ClanLib applications
+---------------------------------------------------------------------------
+When you compile an application that uses ClanLib you have to use the
+-mthreads option to enable multithreading.
+
+Depending on which ClanLib modules you use you also may have to link with
+some extra libraries:
+
+Module          Extra linker flags
+
+clanCore        -lz
+clanDisplay     -lwinmm -lddraw -ldinput -ldxguid -ljpeg -lpng
+clanGL          -lopengl32 -lglu32
+clanSound       -ldsound -lwinmm
+clanNetwork     -lws2_32
+
+If you want to try the ClanLib examples in the Examples directory
+you'll have to adjust the makefiles to include the above mentioned
+compiler and linker flags. [FIXME: in the future this should be
+handled automatically by pkg-config, but currently thats not the case]
+
+
+4. Simple makefile example
+---------------------------------------------------------------------------
+MY_GAME=my_great_game
+OBJS=badies.o goodies.o lots_of_weapons.o
+
+CXX=g++
+
+CXXFLAGS= -mthreads
+CLANLIBS= -lclanApp -lclanGL -lclanDisplay -lclanCore
+EXTRALIBS= -lz -lwinmm -lddraw -ldinput -ldxguid -ljpeg -lpng \
+           -lopengl32 -lglu32
+
+PROGRAM: OBJS
+	$(CXX) $(CXXFLAGS) -o $(MY_GAME) $(OBJS) $(CLANLIBS) $(EXTRALIBS)
+
+
+Note that you should minimum link with clanCore, clanDisplay, clanGL and 
+clanApp.
+
+Note that it is important to realize that in order to get your code 
+compiled, some of the libraries should be put in a certain order. 
+
+For example:
+If you want to compile code that is involving GUI stuff, you will need
+to link your program with clanGUI library. In addition, You might also 
+need to include clanGUIStyleBoring and clanGUIStyleSilver libraries in
+your makefile. These libraries should go before clanDisplay library, 
+and both the clanGUIStyleBoring and clanGUIStyleSilver libraries should
+be put before clanGUI. 
+
+One possibility of the libraries orders would be:
+   -lclanGUIStyleBoring -lclanGUIStyleSilver -lclanGUI -lclanApp -lclanGL 
+   -lclanDisplay -lclanCore
+
+If you need to link your program with any other libraries and the compiler
+complains something about "undefined reference to <some stuff>", and
+you are sure that the libraries that you link with, already contain the
+<stuff>, you will probably need to shuffle your libraries order abit.
+
+You may also need to check that the required libraries have already been
+installed. The basic ClanLib libraries are:
+clanApp, clanCore, clanDisplay, clanGL, clanGUI, clanGUIStyleBoring, 
+clanGUIStyleSilver, clanNetwork, clanSignals, and clanSound
+These libraries filenames are usually prefixed by "lib" and followed by 
+".a", e.g. libclanApp.a
+
+
+5. Creating a simple application
+---------------------------------------------------------------------------
+
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
+#include <ClanLib/display.h>
+
+class MyApp : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		// Create a console window for text-output if not available
+		// Use printf or cout to display some text in your program
+		CL_ConsoleWindow console("Console");
+		console.redirect_stdio();
+
+		try
+		{
+			// Initialize ClanLib base components
+			CL_SetupCore setup_core;
+
+			// Initialize the ClanLib display component
+			CL_SetupDisplay setup_display;
+
+			// Initialize the ClanLib GL component
+			CL_SetupGL setup_gl;
+
+			// Create a display window
+			CL_DisplayWindow window("ClanLib application", 640, 480);
+
+			// Run until someone presses escape
+			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+			{
+				// Clear the display in a dark blue nuance
+				// The four arguments are red, green, blue and alpha (defaults to 255)
+				// All color nuances in ClanLib are measured in the interval 0->255
+				CL_Display::clear(CL_Color(0, 0, 50));
+
+				// Flip the display (using a double-buffer),
+				// showing on the screen what we have drawed
+				// since last call to flip()
+				CL_Display::flip();
+
+				// This call updates input and performs other "housekeeping"
+				// Call this each frame
+				// Also, gives the CPU a rest for 10 milliseconds to catch up
+				CL_System::keep_alive(10);
+			}
+		}
+		// Catch any errors from ClanLib
+		catch (CL_Error err)
+		{
+			// Display the error message
+			std::cout << err.message.c_str() << std::endl;
+		}
+
+		// Display console close message and wait for a key
+		console.display_close_message();
+
+		return 0;
+	}
+} app;

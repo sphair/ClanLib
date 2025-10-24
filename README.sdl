@@ -1,0 +1,52 @@
+In this version of ClanLib we have an experimental version of a classic software
+2d display. We use SDL for this, as we couldn't bother to write such oldskool
+stuff ourselves.
+
+This doesn't mean ClanLib requires SDL, far from it. The normal display is still
+using OpenGL, which it is far more featureful compared to the SDL target,
+and most important, it is hardware accelerated.
+
+But if you have any problems with the OpenGL display, or just want to run your
+game on old hardware, you could try clanSDL.
+
+Note that due to limitations in SDL clanSDL doesn't support everything in the
+ClanLib API:
+
+- You can only create one CL_DisplayWindow.
+- Rotation is not supported.
+- Scaling is not supported.
+- Gradient is not supported.
+- set_color on surfaces and sprites is not supported.
+- Only the default blendfunc set is supported.
+- Because it is software and not hardware accelerated, the amount of
+  alphablending should be taken in consideration.
+
+--
+
+Why should you use clanSDL instead of just SDL ?
+
+Because ClanLib has so much more to offer than a simple display
+API. We have xml resources, high-level network, themable gui, advanced
+sprites, transparent use of gfxformats (jpeg, png, tga, pcx), 
+transparent use of soundinputs (vorbis, mods, wavs, etc) and
+much, much more. And you can now switch from using classic 2D software
+rendering to blazingly fast OpenGL rendering with just a single code line!
+
+Also, lets not forget to mention that our API is C++, putting all
+functionality neatly into manageable and consistent classes.
+
+--
+ 
+How to switch between ClanGL and ClanSDL ?
+
+To use OpenGL in your app, you do the following:
+
+	#include <ClanLib/gl.h>
+	...
+	CL_SetupGL::init();
+
+If you want to use SDL instead, replace it with:
+
+	#include <ClanLib/sdl.h>
+	...
+	CL_SetupSDL::init();

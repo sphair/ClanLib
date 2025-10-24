@@ -1,0 +1,258 @@
+<xml>
+<head>
+<title>Creating and using fonts</title>
+</head>
+<body>
+
+<p>ClanLib makes it possible to create your own font in an image file or use
+existing system fonts. You can then use the fonts to display text to the
+player, such as FPS counters, dialog boxes, and other such information.
+ClanLib gives you a great deal of control over how your text is
+displayed.</p>
+
+<h3>Creating fonts</h3>
+
+<p>You can make your own font by drawing all the glyphs (or character
+images) in an image file. Once that is done, you must tell ClanLib how to
+separate the file into individual glyphs. The easiest way to do this is to
+use alpha-cutting. To create an alpha-cut font, open up your favorite image
+editor, and create a wide, short, transparent image:</p>
+
+<img src="Images/font0.png" width="363" height="332" />
+
+<p>Then type a long string of characters, which will become the characters
+in your font. Usually this string will look something like this:</p>
+
+<img src="Images/font1.png" width="551" height="358" />
+
+<p>The example set of character glyphs above isn't very useful: usually, you
+will want to include at least the entire alphabet, probably in upper and
+lower case, all the numbers, and quite a few of the symbols. However, you do
+not have to, and in some cases, you won't want to. For example, an LCD
+numerals font might only include 0-9 and the colon.</p>
+
+<p>Once you've typed the string in, you must clean up the image to make
+certain that there's at least one column of transparency between each
+character. A common problem is the double-quote character: you may need to
+add a slightly-visible pixel between the two quote marks to make ClanLib
+treat it as a single character. Here's a before and after example:</p>
+
+<img src="Images/font2.png" width="236" height="251" />
+<img src="Images/font3.png" width="236" height="251" />
+
+<p>ClanLib uses the same mechanism to load bitmap font glyphs as it does to
+separate the frames of a sprite from a single file. In fact, a
+<codelink>CL_Sprite</codelink> is used for bitmap fonts: you can use any
+sprite creation method to create the glyphs of a font, including
+palette-cutting, grid-cutting, storing glyphs in individual files, or any
+combination of the above. See the <a href="sprites_overview.html">sprites
+overview</a> for more information.</p>
+
+<h3>Font resources</h3>
+
+<p>You should probably already have a resource file or two as part of your
+game; if you don't, then you're missing out on a lot of flexibility. See the
+<a href="resources-1.html">resource overview</a> for more info.</p>
+
+<p>You will need two resources: one for the sprite containing all the
+glyphs, and one for the font itself. The only one you use directly is the
+font resource.</p>
+
+<p>Assuming you'd like to create a font called FontA based on an alpha-cut
+image called font_a.tga, containing the glyphs in the visual example above,
+your should have some entries in your resources file that look like
+this:</p>
+
+<code>
+&lt;sprite name="Font_glyphs"&gt;
+	&lt;image file="font.tga"&gt;&lt;alpha /&gt;&lt;/image&gt;
+&lt;/sprite&gt;
+
+&lt;font name="Font"&gt;
+	&lt;bitmap glyphs="Font_glyphs" letters="AaBb1234.,&amp;quot;" /&gt;
+&lt;/font&gt;
+</code>
+
+<p>The following options for sprite-based font resources are supported:</p>
+
+<ul>
+<li>glyphs : Required. The name of the resource of the sprite to extract glyphs from.</li>
+<li>letters : Required. The ASCII characters that are in the font, in the same order as they appear in the sprite.</li>
+<li>spacelen : The width, in pixels, of a space. If this value is unspecified, it will use the average of the font's glyph widths.</li>
+<li>monospace : If non-zero, causes all glyphs in the font to seem to be the width of the widest glyph. This results
+in a typewriter-like font.</li>
+</ul>
+
+<p>You can also use resources for system fonts, with the following
+options:</p>
+
+<ul>
+<li>font : Required. The name of the system font to use. What this precisely means depends on how your OS's font interface works.</li>
+<li>height : Required. The requested height of the font in pixels. What this means depends on how the OS's font interface works.</li>
+<li>width : The requested width of the font in pixels. If unspecified, attempts to find the best matching width for the given height. Again, what this means is dependent upon the details of the OS's font interface.</li>
+<li>letters : The ASCII characters that should be in the font; if unspecified, it will put in all the characters it can find
+in the font.</li>
+<li>bold : If non-zero, requests bold text.</li>
+<li>italic : If non-zero, requests italic text.</li>
+<li>underline : If non-zero, requests underlined text.</li>
+<li>strikeout : If non-zero, requests text with a horizontal line through the middle of the glyphs.</li>
+</ul>
+
+<p>And these options work for both sprite-based and system fonts:</p>
+
+<ul>
+<li>width_offset : This is used to apply an offset to the widths of all glyphs. You can set this
+to a negative value to kern characters together (this may be useful, for example, for italic fonts), or
+positive to spread characters apart. You can always change this value afterwards using 
+<codelink>CL_Font</codelink>::set_width_offset.</li>
+<li>height_offset : This is an offset applied to the height of the font. ClanLib uses the
+height of the tallest glyph to determine the height of the line: you can use this option to give it
+a positive offset, spreading lines apart, or a negative offset, merging lines together. You can always
+change this afterwards using <codelink>CL_Font</codelink>::set_height_offset.</li>
+<li>delims : This string of characters is what separates words from each other when word wrapping. Do not include
+the newline character here, since that is implicitly a delimiter. By default, the only delimiter is the space.</li>
+</ul>
+
+<h3>Using fonts</h3>
+
+<p>If your resources file was named 'resources.xml', then you can load the
+font into your program from the resource using the following C++ code:</p>
+
+<code>
+  CL_ResourceManager manager("resources.xml"); 
+  CL_Font font_a("Font_A", &manager);
+</code>
+
+<p>Once you've done that, you can call
+<codelink>CL_Font</codelink>::draw(int, int, std::string) to print arbitrary
+text. For example:</p>
+
+<code>
+  font_a.draw(150, 150,
+  	"How many boards would the Mongols hoard,"
+	" if the Mongol hordes got bored?\n"
+	"  --Calvin and Hobbes");
+</code>
+
+<p>You can also print into a <codelink>CL_Rect</codelink> using
+<codelink>CL_Font</codelink>::draw(CL_Rect, std::string). If you do this,
+the text will be word-wrapped to the width of the rectangle, and will not
+exceed the rectangle's height:</p>
+
+<code>
+  CL_Rect bounds_rect(50, 50, 300, 350);
+  font_a.draw(bounds_rect, 
+  	"Gau: There's treasure! It's shiny, shiny, shiny shiny shiny!\n"
+	"Sabin: Could anything be that shiny?"
+	);
+</code>
+
+<h3>CL_TextStyler</h3>
+
+<p><codelink>CL_TextStyler</codelink> is a class which contains one or more <codelink>CL_Font</codelink>s. You can then
+use a CL_TextStyler to draw strings with various effects (scaling,
+justification, etc), and to change between fonts mid-string.</p>
+
+<p><codelink>CL_TextStyler</codelink> keeps track of the fonts it contains by naming them with
+strings. Every CL_TextStyler should have a font named "default", which is used when no particular font
+is explicitly specified. You can name any other fonts in the CL_TextStyler whatever you like.</p>
+
+<p>You can create a working <codelink>CL_TextStyler</codelink> by using its default constructor, then
+using the add_font() method to copy fonts in:</p>
+
+<code>
+CL_TextStyler ts;
+ts.add_font("default", some_font);
+ts.add_font("bold", another_font);
+</code>
+
+<p>It's also possible to keep CL_TextStylers in your resource files. Here's
+the same CL_TextStyler as above, in resource form, assuming that some_font
+and another_font are in the resource file:</p>
+
+<code>
+&lt;text_styler name="ts"&gt;
+&lt;font name="default" font="some_font" /&gt;
+&lt;font name="bold" font="another_font" /&gt;
+&lt;/text_styler&gt;
+</code>
+
+<h3>Using CL_TextStyler</h3>
+
+<p><codelink>CL_TextStyler</codelink>'s interface is almost identical to <codelink>CL_Font</codelink>'s. The main
+difference is in the strings you pass, which can contain curly-bracketed
+tags to change the font:</p>
+
+<code>
+ts.draw(0, 0, "This text is in the default font. {bold}And this text is in another font.{/bold} Narf!");
+</code>
+
+<p>To draw a "{" character without starting a tag, you can simply put two in
+a row, which is escaped to mean a single left curly-bracket (right
+curly-brackets don't need need to be escaped):</p>
+
+<code>
+ts.draw(0, 0, "This {{ is a left curly brace. Only one of them will appear in the actual output.");
+</code>
+
+<p>You can also use square-bracket tags that change the justification, color, or
+scale, or insert newlines:</p>
+
+<code>
+ts.draw(0, 0,
+	"This is a line that's at regular scale and is left justified.\n"
+	"[c red]Red[/c][c 0 255 0]Blue[/c][c 0 0 255 170]Green (slightly transparent)[/c].\n"
+	"[s 2.0][j center]Here's a line that's center justified and double-sized.\n"
+	"[s 2.0][j right]Here's a line that's quadruple-sized (2.0x2.0) and right justified.\n"
+	"[/j][/j][/s][/s]This line is back at regular size and left justification.\n"
+	"This text is on it's line.[n]This text is on a different line.[n]"
+	"There's no difference between using 'n' tags and regular ASCII newlines.\n"
+	"[[ Here is a literal left square bracket; only one will appear in the actual output.\n"
+);
+</code>
+
+<p>The above example also demonstrates a handy little C trick: literal
+strings that appear next to each other will be attached together into a single
+string by the compiler.</p>
+
+<h3>CL_GlyphBuffer</h3>
+
+<p>For unusual text effects, you can use a <codelink>CL_GlyphBuffer</codelink> to 
+alter the details of <codelink>CL_Font</codelink>'s or <codelink>CL_TextStyler</codelink>'s output before it is drawn
+to the screen. CL_Font and CL_TextStyler both have draw_to_gb() methods, which you
+can use to send glyph information to a CL_GlyphBuffer instead of the
+display. Then, you can modify the CL_GlyphBuffer's various data structures,
+and use the CL_GlyphBuffer's draw() method to display your post-edited text.
+For example, you can use CL_GlyphBuffer to change justification:</p>
+
+<code>
+CL_GlyphBuffer gb;
+some_font.draw_to_gb("Eat\nFlaming\nDeath!", gb);
+gb.justify_center(); //Applies to all text in the buffer by default
+gb.draw(0,0); //Draws the upper left corner of the text bounding box at given pos
+</code>
+
+<p>You can also use the draw_to_gb() functions several times in a row with
+different text and/or fonts, which causes the text to be combined in the
+same way that <codelink>CL_TextStyler</codelink> combines text from several fonts. For example,
+to duplicate the first CL_TextStyler example above
+using only <codelink>CL_Font</codelink>s and <codelink>CL_GlyphBuffer</codelink>:</p>
+
+<code>
+CL_GlyphBuffer gb;
+some_font.draw_to_gb("This text is in the default font. ", gb);
+another_font.draw_to_gb("And this text is in another font.", gb);
+some_font.draw_to_gb("Narf!", gb);
+gb.draw(0, 0);
+</code>
+
+<p>Editing operations on a <codelink>CL_GlyphBuffer</codelink> have to occur in a specific
+order, with any number of calls to either or both of
+<codelink>CL_Font</codelink>::draw_to_gb() or <codelink>CL_TextStyler</codelink>::draw_to_gb() first, any number of
+calls to CL_GlyphBuffer's justification methods second, and any manual
+modification of the CL_GlyphBuffer's contents last. You can skip past any of
+these steps, but you cannot go backwards in the list unless you clear the
+CL_GlyphBuffer and start over again from scratch. </p>
+
+</body>
+</xml>

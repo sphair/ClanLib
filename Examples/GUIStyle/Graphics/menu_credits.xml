@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<components>
+	<button
+		name="btn_to_main_menu"
+		x="20"
+		y="540"
+		text="Back to Main menu"
+		type="text"
+		size="big" />
+	<label
+		name="lbl_credits"
+		x="20"
+		y="40"
+		text="Credits"
+		type="type2" />
+	<label
+		name="lbl_graphics"
+		x="40"
+		y="70"
+		text="Theme graphics & design: Blacky Gray" />
+	<label
+		name="lbl_me"
+		x="40"
+		y="95"
+		text="Theme programming: Sergey Antonov aka zz|sergant" />
+	<label
+		name="lbl_thanks_to"
+		x="20"
+		y="150"
+		text="Created for a great game library"
+		type="type2" />
+	<label
+		name="lbl_clanlib"
+		x="40"
+		y="180"
+		text="ClanLib 0.8, see more info at www.clanlib.org" />
+</components>

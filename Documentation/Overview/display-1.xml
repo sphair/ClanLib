@@ -1,0 +1,374 @@
+<xml>
+<head>
+<title>ClanLib Display</title>
+<eyecolor>yellow</eyecolor>
+</head>
+<body>
+
+<p>To do graphics with ClanLib, you need to use clanDisplay. This module
+acts as an abstraction for any graphics target available via ClanLib -
+currently the OpenGL and SDL targets. ClanDisplay allows you to do stuff in
+the following categories:</p>
+
+<ul>
+<li>Top level windows</li>
+<li>Handling input (see <a href="input.html">Input overview</a>)</li>
+<li>Drawing simple graphics</li>
+<li>Loading images from common formats</li>
+<li>Animating images easily</li>
+<li>Font and text rendering</li>
+<li>Working with image data</li>
+</ul>
+
+<p>ClanDisplay is an abstraction, working to allow ClanLib applications to
+do stuff in a general matter that can be applied to any display target
+supported by ClanLib. In order to use clanDisplay, one or more display
+targets must also be setup. For example, a GL-based ClanLib app must
+call both CL_SetupDisplay::init() and
+CL_SetupGL::init() when starting.</p>
+
+<p>The SDL target does not support every feature currently offered by
+clanDisplay, and it most likely never will. The main point of the
+SDL target in ClanLib is to support older cards that come with no 3D
+accelerator. ClanDisplay has been written to try take advantage of as much
+of modern OpenGL hardware acceleration as possible - for example, all the
+blending functions offered by glBlendFunc. Implementing a software target for
+all this is would take forever, and most likely would end up being as slow as using
+OpenGL software targets such as Mesa. Instead, the clanSDL target aims at only
+supporting the things that SDL API itself supports; it's better for it
+to get some things fast, instead of everything slow.</p>
+
+<p>Because clanDisplay is an abstraction, its API in itself will not
+directly offer you access to the objects the implementation is using.
+Instead, each of the display targets offer their own set of subclasses for
+clanDisplay. For more information about this, see the
+<a href="opengl_overview.html">OpenGL overview</a>.</p>
+
+<p>In general, if you are just doing normal 2D graphics, you will not need to
+use the target specific interfaces.</p>
+
+<h3>Top level windows</h3>
+<p>Main classes: <codelink>CL_DisplayWindow</codelink>,
+<codelink>CL_DisplayWindowDescription</codelink>.</p>
+
+<p>Before you can do any graphics with ClanLib, you need to create a window
+for your application. CL_DisplayWindow creates such a top level window.
+There are two ways to create it; either use one of the convenience
+constructors on CL_DisplayWindow:</p>
+
+<code>
+	CL_DisplayWindow window("My ClanLib Window", 640, 480);
+</code>
+
+<p>Or you can create it by setting up a CL_DisplayWindowDescription, and
+pass that to CL_DisplayWindow:</p>
+
+<code>
+	CL_DisplayWindowDescription desc;
+	desc.set_title("My ClanLib Window");
+	desc.set_size(CL_Size(640, 480));
+	CL_DisplayWindow window(desc);
+</code>
+
+<p>If you need to set target specific parameters, you can create a
+CL_OpenGLWindowDescription or CL_SDLWindowDescription object instead.</p>
+
+<p>The CL_DisplayWindow object mainly gives you access to four things: a
+graphic context (for rendering to the screen), an input context (for getting input from the user),
+pixel buffers for back and front buffers (for accessing the frame buffer) and top level
+window management (for setting window position, resizing the window, going fullscreen, etc):</p>
+
+<code>
+	CL_GraphicContext *gc = window.get_gc();
+	CL_InputContext *ic = window.get_ic();
+	CL_PixelBuffer buffer = window.get_back_buffer();
+	window.set_fullscreen();
+</code>
+
+
+
+<h3>Drawing simple graphics</h3>
+<p>Main classes: <codelink>CL_GraphicContext</codelink>,
+<codelink>CL_Surface</codelink></p>
+
+<p>After setting up a display window and learning how to deal with input
+from it, the next logical step is to draw something in the window. All
+drawing in ClanLib is done on a graphic context, which CL_GraphicContext
+abstracts. Just like with the input context, CL_DisplayWindow also has a
+function get_gc() that returns the graphic context.</p>
+
+<p>The graphic context itself has a set of functions that allow you to draw
+some common primitives (lines, boxes, gradients, etc.). These functions
+are fairly straightforward:</p>
+
+<code>
+	CL_DisplayWindow window("My ClanLib Window", 640, 480);
+	CL_GraphicContext *gc = window.get_gc();
+	gc->clear(CL_Color::black);
+	gc->draw_line(100, 100, 400, 400, CL_Color::red);
+	gc->draw_rect(CL_Rect(101,101,399,399), CL_Color::blue);
+</code>
+
+<p>Sometimes it's practical to limit the drawing of items to a specific area
+of the screen. ClanLib always uses the screen boundary as a clipping
+rectangle, so you never have to worry about showing objects outside the
+screen - just call the draw-function and they are trivially rejected by the
+clipper.</p>
+
+<p>Like many other clipping systems, the ClanLib clipping system uses a
+stack principle. It's not possible to create polygonal clipping areas this
+way. Instead, if you push a new clipping rectangle upon the clipping stack,
+the single clipping rectangle used to clip further graphics is defined as
+the area shared by the previous clipping rectangle and the newly pushed one
+(the intersection).</p>
+
+<p>The previous clipping rectangle is stored and brought back to use when
+the clipping rectangle in action is popped off the clipping stack. However,
+it's also possible to set the clipping rectangle in absolute terms,
+disregarding any previous clipping rectangles.</p>
+
+<p>Example of use:</p>
+
+<code>
+	gc->push_cliprect(CL_Rect(10,10,100,100));
+	gc->clear(CL_Color::black);
+	gc->fill_rect(CL_Rect(0, 0, 400, 400), CL_Color::white);
+	gc->pop_cliprect();
+</code>
+
+<p>In this example, the clear() and fill_rect() calls are clipped to the
+10,10,100,100 rectangle.</p>
+
+<p>A translation stack is also available.</p>
+
+<p>To draw images on a graphic context, we need to use the surface class.
+<codelink>CL_Surface</codelink> is the interface that stores images in a texture and perform
+drawing commands to render it. Using CL_Surface is rather simple and
+straightforward. Create the surface by specifying a source for the image to
+be loaded from, then call draw() to render it:</p>
+
+<code>
+	CL_Surface image("cow.png");
+	image.draw(10, 10, gc);
+</code>
+
+<p><i>Note:</i> It is important you create your surface objects <i>after</i>
+you have created the display window. Otherwise, mysterious crashes will result.
+This is a known bug, and might be fixed in a future version of ClanLib.</p>
+
+<p>All the operations done by CL_GraphicContext are implemented by making
+calls to OpenGL (or SDL, if that's the display target). OpenGL uses a state
+machine model where states affect the result of primitive drawing commands -
+for example, the OpenGL command glBlendMode affects how textures with
+glBegin(GL_TRIANGLES) blend to the framebuffer. If an application needs to
+do its own lower level drawing using direct OpenGL calls, there has to be
+some kind of cooperation between ClanLib and the application about OpenGL
+states.</p>
+
+<p>In other words, it is possible for a ClanLib application to interact directly
+with OpenGL, but you must warn ClanLib before and after doing so.</p>
+
+<p>An application tells ClanLib it wants to do OpenGL operations by calling
+the begin_3d() method on the graphic context. This causes ClanLib to flush any pending
+drawing commands it has queued for rendering, restore the view matrix, and
+set other OpenGL states to their defaults. When the application is done
+doing its own drawing, it should restore the states to OpenGL defaults, then
+call end_3d() to tell ClanLib it can setup the OpenGL states for its own use
+again.</p>
+
+<code>
+	gc->begin_3d();
+	glMatrixMode(GL_PROJ_MATRIX);
+	glPushMatrix();
+	glProject(...);
+	glMatrixMode(GL_VIEW_MATRIX);
+	glPushMatrix();
+	gluLookAt(...);
+	glBegin(GL_POLYGONS);
+	glColor3f(1.0f, 1.0f, 0.0f);
+	for (int i=0; i<100; i++) glVertex3f(x[i],y[i],z[i]);
+	glEnd(GL_POLYGONS);
+	glPopMatrix();
+	glMatrixMode(GL_PROJ_MATRIX);
+	glPopMatrix();
+	gc->end_3d();
+</code>
+
+<p>We are currently working on a system to control states in a more
+intelligent way in ClanLib. When this system is done, the begin_3d/end_3d
+system may be modified, but it should be fairly straightforward to port
+any code using the current model.</p>
+
+<h3>Loading images from common formats</h3>
+<p>Main classes:
+<codelink>CL_JPEGProvider</codelink>, <codelink>CL_PNGProvider</codelink>,
+<codelink>CL_PCXProvider</codelink>,
+<codelink>CL_TargaProvider</codelink>.</p>
+
+<p>As mentioned in the previous section, <codelink>CL_Surface</codelink> needs a source for its
+image data. Image data is offered through the <codelink>CL_PixelBuffer</codelink> interface. A
+pixel buffer is an image format description, plus the image data itself. You
+can feed CL_Surface with any image made available via a pixel buffer, but in
+most cases the built-in image providers will do. Currently those are the
+JPEG (.jpg), PNG (.png), PCX (.pcx) and Targa (.tga) providers.</p>
+
+<p>The constructor on CL_Surface that take a filename uses the interface
+<codelink>CL_ProviderFactory</codelink> to find a suitable surface provider
+(pixel buffer) that can load the image. If you write your own image loader,
+and want ClanLib to be able to recognize images of the new type based on
+the filename extension, you must add a <codelink>CL_ProviderType</codelink> object to
+CL_ProviderFactory::types.</p>
+
+<p>It is not possible to directly examine the image contained in a surface.
+CL_Surface does not keep a local copy of the image it uploads to the texture.
+CL_Surface offers a function called get_pixeldata() that can download the
+image from the texture, but this can result in a loss of quality depending
+on the graphics card. The original picture may be in 32 bit with 8 bits per
+channel for red, green, blue and alpha - but when stored on the card it may
+been stored in 16 bit, with 4 bits per channel.</p>
+
+<p>If it is needed to examine the image used by a surface, the best way to
+do it is to first load image into a pixel buffer, analyze the image, and
+then pass on the pixel buffer to CL_Surface:</p>
+
+<code>
+CL_PixelBuffer *image = new CL_PNGProvider("dog.png");
+image->lock();
+examine_image(
+	image->get_format(),
+	image->get_width(),
+	image->get_height(),
+	image->get_pitch(),
+	image->get_data());
+image->unlock();
+CL_Surface surface(image, true);
+</code>
+
+<p><i>Note:</i> The built-in surface providers in ClanLib will not return
+the correct values for get_width(), get_height(), get_pitch() and
+get_format() until lock() have been called the first time. This will be
+fixed in a future version of ClanLib.</p>
+
+<h3>Animating images easily</h3>
+<p>Main classes: <codelink>CL_Sprite</codelink>,
+<codelink>CL_SpriteDescription</codelink>,
+<codelink>CL_SpritePacker</codelink>.</p>
+
+<p>As most people probably know, a sprite is a collection of 2D images
+(called frames), shown in sequence with a delay between each frame. Sprites
+are used for a lot of game objects, i.e. moving people, spaceships, chairs,
+powerups, missiles, animated mouse cursors, etc.</p>
+
+<p><codelink>CL_Sprite</codelink> does all this for you in a very easy, yet
+flexible way. The simplest sprites are just a collection of frames, all
+shown after each other, drawn on the screen somewhere.</p>
+
+<p>You can also rotate sprites and make them translucent, you can tweak the
+animation speed for individual frames, set frame offsets, set drawing and
+rotation alignment, play frames in a backward looping pattern, a ping-pong loop,
+forward just-once, etc. Basically, CL_Sprite can do most things you'll ever need for basic 2d
+sprites.</p>
+
+<p>ClanLib's sprites are rather advanced. Because of this it got its own
+overview. You can <a href="sprites_overview.html">read it here</a>.</p>
+
+<h3>Font and text rendering</h3>
+<p>Main classes: <codelink>CL_Font</codelink>,
+<codelink>CL_TextStyler</codelink>,
+<codelink>CL_GlyphBuffer</codelink>.</p>
+
+<p>Drawing text in ClanLib is simple, but creating a font is slightly more
+complex. There is support for drawing both system fonts and bitmap fonts,
+but the system font support should be considered experimental at this time.
+Creating a bitmap font requires some basic knowledge about sprites - CL_Font
+collects its bitmap glyphs from a sprite.</p>
+
+<p>The easiest way to construct your first font is to take a look at one of
+the font image files from ClanLib's examples, and then <a
+href="font_overview-1.html">read the font overview</a>.</p>
+
+<h3>Working with image data</h3>
+<p>Main classes: <codelink>CL_PixelBuffer</codelink>,
+<codelink>CL_PixelFormat</codelink>, <codelink>CL_Palette</codelink>.</p>
+
+<!--
+
+<p>Displaying 2D graphics, setting the video mode and drawing on 
+the screen are very basic features of any game. The ClanLib
+2D api provides support for this and several other things, 
+including:</p>
+
+<ul>
+<li>Setting a videomode</li>
+<li>Clearing the screen</li>
+<li>Drawing sprites</li>
+<li>Drawing lines/rectangles</li>
+<li>Clipping</li>
+<li>Printing text</li>
+</ul>
+
+<h3>ClanDisplay class overview</h3>
+
+<p>ClanDisplay is divided into several classes.</p>
+
+<p>Note that input is part of the display component in ClanLib, there
+is no separate ClanInput. The input API and its classes are explained
+in a separate documentation overview.</p>
+
+<p>Here is a short overview over the most important display classes:</p>
+
+<ul>
+<li><codelink>CL_Display</codelink>
+    <p>The display class provides a static function interface to
+    CL_DisplayWindow and other display classes. It uses a selected
+    display window (by default the first created window) to call the
+    equivalent functions in CL_DisplayWindow, CL_GraphicContext and such.</p>
+    <p>The entire point of this is to allow applications with only one
+    window to not pass around a pointer to the display window.</p></li>
+
+<li><codelink>CL_DisplayWindow</codelink>
+    <p>CL_DisplayWindow represents a window in your windowing system
+    (Windows, X11). You need to create at least one display window in order
+    to draw graphics in ClanLib.</p></li>
+
+<li><codelink>CL_GraphicContext</codelink>
+    <p>A graphic context is something that ClanLib can render onto, for
+    examples a CL_DisplayWindow, CL_Canvas or CL_PixelBuffer.</p>
+
+<li><codelink>CL_InputContext</codelink>
+    <p>An input context is a collection of inputdevices available in
+    a displaywindow.</p>
+
+<li><codelink>CL_PixelBuffer</codelink>
+    <p>Pixel data access.</p>
+
+<li><codelink>CL_PixelFormat</codelink>
+    <p>Pixel data format description.</p>
+
+<li><codelink>CL_Surface</codelink>
+    <p>A surface is an image you can draw to the display, having
+    support for scaling, rotation, alignment and more.</p>
+
+<li><codelink>CL_Canvas</codelink>
+    <p>The Canvas class is a special surface that is optimized for rapid
+    changes in its pixel data. This is opposite to CL_Surface, which is optimized
+    for no changes in its pixel data.</p>
+
+<li><codelink>CL_Texture</codelink>
+    <p>A texture is just a simple texture, nice for use in 3D application.</p>
+
+<li><codelink>CL_Font</codelink>
+    <p>Font makes it possible to write text to a displaywindow, with support for
+    scaling, rotation, alignment, and more.</p>
+
+<li><codelink>CL_Sprite</codelink>
+    <p>Animated sprites with CL_Sprite is both easy, and very powerful.</p>
+
+</ul>
+
+<p><a href="display-2.html">Move on to part two</a>.</p>
+
+-->
+
+</body>
+</xml>

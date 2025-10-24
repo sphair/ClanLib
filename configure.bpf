@@ -1,0 +1,8 @@
+USEUNIT("Setup\Borland\main.cpp");
+USEUNIT("Setup\Generic\project.cpp");
+USEUNIT("Setup\Borland\generator.cpp");
+//---------------------------------------------------------------------------
+This file is used by the project manager only and should be treated like the project file
+
+
+main

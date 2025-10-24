@@ -1,0 +1,125 @@
+#!@perl_exec@
+#
+# The XML -> HTML WebBuilder script,
+# Copyright (c)1999 by Magnus Norddahl / ClanSoft.
+#
+
+use English;
+use File::Basename;
+
+if ($ARGV[0] eq "")
+{
+	print "\nThe XML -> HTML WebBuilder script,\n";
+	print "Copyright (c)1999 by Magnus Norddahl / ClanSoft.\n\n";
+
+	print "Syntax: webbuilder.pl <theme> <file.xml>\n\n";
+	exit(0);
+}
+
+open (INPUT, $ARGV[1]) || die "Could not open: $ARGV[1]";
+my @input = <INPUT>;
+my $input = join("", @input);
+close (INPUT);
+
+basename ($ARGV[1]) =~ /^(.*).xml$/;
+$output = "$1.html";
+
+open (OUTPUT, ">$output") || die "Could not open $output for writing.";
+print OUTPUT convert($input);
+close (OUTPUT);
+
+sub convert
+{
+	my ($input) = @ARG;
+	my $html_output;
+
+	if ($input =~ /<xml>(.*)<\/xml>/si)
+	{
+		my $xml_input = $1;
+
+		if ($input =~ /(<head[>\w].*<\/head>)/si)
+		{
+			my $xml_head = $1;
+			$html_output .= print_head($xml_head, $ARGV[0]);
+		}
+		else
+		{
+			die "Document has no head";
+		}
+
+		if ($input =~ /<body[>\w](.*)<\/body>/si)
+		{
+			my $xml_body = $1;
+			$html_output .= print_body($xml_body, $ARGV[0]);
+		}
+		else
+		{
+			die "Document has no head";
+		}
+	}
+	else
+	{
+		die "Not valid XML input";
+	}
+
+	return $html_output;
+}
+
+sub print_head
+{
+	my ($xml_head, $file) = @ARG;
+	my $ml, $buffer;
+
+	# Don't know what this does, but Perceps does it:
+	if ($*) { $ml=1; }
+	else { $ml=0; }
+	
+	# Read theme from disk and execute it:
+	if ( -e $file )
+	{
+		open(FILT, "<$file");
+		while (<FILT>) { $buffer.=$_; }
+		close(FILT);
+		eval($buffer);
+		
+		return theme_header($xml_head);
+	}
+	else
+	{
+		die "theme '$file' not found";
+	}
+}
+
+sub print_body
+{
+	my ($xml_body, $file) = @ARG;
+	my $ml, $buffer;
+
+	# Don't know what this does, but Perceps does it:
+	if ($*) { $ml=1; }
+	else { $ml=0; }
+	
+	# Read theme from disk and execute it:
+	if ( -e $file )
+	{
+		open(FILT, "<$file");
+		while (<FILT>) { $buffer.=$_; }
+		close(FILT);
+		eval($buffer);
+		
+		my @filters = theme_body_filters();
+		
+		foreach $filter (@filters)
+		{
+			$xml_body = $filter->($xml_body);
+		}
+
+		$xml_body .= theme_body_end();
+	}
+	else
+	{
+		die "theme '$file' not found";
+	}
+	
+	return $xml_body."\n";
+}

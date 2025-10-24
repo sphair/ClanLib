@@ -1,0 +1,131 @@
+BorlandC++ 5 Install instructions. 
+Written by Mark Page.
+Last modified February 28, 2002 by Craig Timpany
+
+THIS FILE IS NOT BEING MAINTAINED. IF YOU DISCOVER SOMETHING IS WRONG,
+PLEASE TRY TO FIGURE IT OUT AND SEND US A PATCH.
+
+Building ClanLib
+===========================================================================
+If you have the Borland C++Builder then simply compile and run
+configure.bpr.
+
+If some Borland packages seem to be missing:
+If you have the standard version of the Borland IDE you may need to disable
+the use of runtime packages in order to get it working.
+Go to Project->Options and select the Packages tab. Then disable the lowerst 
+option ('Compile with runtime packages', should be the name, I tried to 
+translate)
+
+If you have the commmand line tools then 'make -f configure.mak'.
+
+Run Configure, this creates the necessary directories and files. Then
+simply open the appropriate Borland/*.bpr file and start building. To build
+specific projects either use C++Builder or use make. It is suggested that
+you build App, Core and Display at the very minimum. The config program
+will ask if you have TASM, Borland's assembler. The Free-tools do *not*
+have it.
+
+In the Borland directory are makefiles and C++Builder project files.
+Either will build the project.  The files with an extra 'd' on the end
+builds the debug versions.  If you just want to build ClanLib quickly then
+I suggest you use the makefiles. They are faster (you don't need to have BCB
+loaded) and won't crash your computer.  The makefiles assume you have
+Hermes and zlib includes in your $(BCB)\include dir so it looks like this:
+($(BCB) being where you install borland c++)
+
+$(BCB)\include\zlib.h
+$(BCB)\include\zconf.h
+$(BCB)\include\Hermes\Hermes.h
+$(BCB)\include\Hermes\H_Blit.h
+$(BCB)\include\Hermes\H_Clear.h
+$(BCB)\include\Hermes\H_Config.h
+$(BCB)\include\Hermes\H_Conv.h
+$(BCB)\include\Hermes\H_Format.h
+$(BCB)\include\Hermes\H_Pal.h
+$(BCB)\include\Hermes\H_Types.h
+
+To run a makefile from DOS, type 'make -f whatever.mak'. There is no master
+makefile, you'll need to do this individually for each ClanLib module you need.
+
+You need zlib.lib and hermes.lib to create complete applications, however you
+don't need them to compile ClanLib.  You can build them from source but they
+MUST be multi-threaded (use -tWM) or else you'll get weird crashes.
+
+Check out clanlib.org for pre-built binaries of these libraries.
+
+
+Compiling Apps with ClanLib
+===========================================================================
+
+1. You must compile your program the -tWM flag.  This enables
+multi-threading (ClanLib is multi-threaded).
+
+2. You must link with cw32mt.lib and not cw32.lib.  You also need to link
+to zlib.lib, hermes.lib and libapp.lib you may also have to link with
+other libraries(eg Clanlib libdisplay.lib) and almost certainly the 
+directX libs (dinput.lib, ddraw.lib). 
+
+You can't use the user run-time DLLs of DirectX for this, you need the SDK.
+If you only have free command-line borland, you probably have headers, but
+not libraries. Converting the MS DirectX libraries to ones Borland can use 
+is reputed to be difficult, so you might have to find a package of Borland 
+.libs somewhere on the net.
+
+At the time of writing, there were some here:
+http://www.geocities.com/foetsch/borland_dx8_libs.zip
+
+Don't worry if you can't find the latest version, as far as I know, Clanlib
+only uses very basic DirectX features (circa DirectX 3).
+
+There are external libraries that you may need as well (libPNG, etc...).
+
+3. You must place a directory called ClanLib somewhere in your header search path.  I recommend placing it in $(BCB)\include\.  Then simply copy the files under ClanLib\Sources\API to $(BCB)\include\ClanLib\.  If you do this properly then $(BCB)\include\ClanLib\ should be populated with files such as ttf.h, core.h, display.h and app.h.  There should also the appropriate subdirectories for each.
+
+4. Depending on which external libraries you link with(Hermes-dynamic, Hermes-static...) then you might have to include the .def files for the project into your application.  This is required when using Hermes-dynamic(Hermes.lib/Hermes.dll).
+
+
+If your app doesnt work with the supplied .libs you may need to compile them
+yourself. See above for instructions. Firstly only compile
+libApp.lib, libClan.lib and libDisplay.lib and see whether it works then.
+Don't forget to use your self compiled libraries for your project after that !
+(Project->Remove from project to remove the downloaded ones and Project->Add
+to project to add your self compiled ones).
+You can find your self-compiled libraries in <ClanLib Dir>\Release for release 
+libraries and <ClanLib Dir>\Debug for debug versions (the ones with a 'd' at 
+the end).
+
+For those with command-line tools, here's an example makefile:
+
+===========================================================================
+
+OBJS = mysourcefilename.obj anotherfile.obj andsoon.obj
+CPP        = bcc32
+LINKER     = ilink32
+
+CCOPTS = -tWM
+DEBUG = -v -k
+LDEBUG = /v
+CPPFLAGS= -jb $(CCOPTS) $(DEBUG) -DHAVEMIKMOD
+
+LINKFLAGS= /aa /Tpe $(LDEBUG)	c0w32.obj
+LINKLIBS=zlib.lib hermes.lib \
+	ddraw.lib dinput.lib \
+	libapp.lib libdisplay.lib libcore.lib \
+	import32.lib \
+	cw32mt.lib
+
+all: $(OBJS)
+	$(LINKER) $(LINKFLAGS) $(OBJS), acmegame.exe, , $(LINKLIBS)
+
+# cpp -> obj:
+.cpp.obj:
+    $(CPP) $(CPPFLAGS) -c {$? }
+
+Known Issues
+===========================================================================
+
+- The define BORLAND must be set in all your programs or else they won't
+  compile at all.
+
+Report bugs to plasmoid@shaw.ca and clanlib-devel@dark.x.dtu.dk.

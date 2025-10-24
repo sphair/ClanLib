@@ -1,0 +1,1662 @@
+#!@perl_exec@
+
+#  PCE2 - Perl C++ Extractor version 2
+#  Copyright 2000-1999, Karl Nelson  <kenelson@users.sourceforge.net>
+#  Copyright 1997, Mark Peskin <mpeskin@mail.utexas.edu>
+#
+#  This program is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU General Public License as published by the
+#  Free Software Foundation; either version 2 of the License, or (at your
+#  option) any later version.
+#
+#  This program is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+#  or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+#  for more details.
+
+#
+#  Credits:  
+#     Mark Peskin - original percep extractor 
+#     Karl Nelson - rewrite of extractor, added OO tree views.
+#     Dave Smith  - xml dump
+#     Mark Page - added file_unique_string and file_global_string option
+#
+
+# TODO:
+#   add reporting functions
+#   enums
+#   improve plugins
+#   add command line interface
+
+# This file is divided into 3 sections.  
+#
+#  1.0 Extraction  - Lexer and parser to extract the C++ headers
+#  2.0 Plugin      - System for adding user defined code
+#  3.0 Symbol Tree - Perl classes representing extracted code.
+#
+
+#
+# usage: pce2 [options] files
+#
+
+#######################################################################
+##### 0.0 Global defines
+#######################################################################
+$Enum::NONE=0;
+
+@Enum::ACCESS_NAMES=("none","public","protected","private");
+$Enum::PUBLIC=1;
+$Enum::PROTECTED=2;
+$Enum::PRIVATE=3;
+
+
+@Enum::TYPE_NAMES=("none","namespace","class","struct","union",
+                   "function","variable","typedef","friend","macro");
+@Enum::TYPE_NAMES_=("none","namespaces","classes","structs","unions",
+                   "functions","variables","typedefs","friends","macros");
+
+$Enum::NAMESPACE=1;
+$Enum::CLASS=2;
+$Enum::STRUCT=3;
+$Enum::UNION=4;
+$Enum::FUNCTION=5;
+$Enum::VARIABLE=6;
+$Enum::TYPEDEF=7;
+$Enum::FRIEND=8;
+$Enum::MACRO=9;
+
+$Enum::SYM="[A-Za-z_][A-Za-z0-9_]*";
+
+$Html::COMMENT="<tt><font color=maroon><i>";
+$Html::COMMENT_="</i></font></tt>";
+
+$Html::BOLD="<b>";
+$Html::BOLD_="</b>";
+$Html::ITAL="<i>";
+$Html::ITAL_="</i>";
+
+$Html::STRING="<tt><font color=green><i>";
+$Html::STRING_="</i></font></tt>";
+$Html::KEYWORD="<tt><font color=black><b>";
+$Html::KEYWORD_="</b></font></tt>";
+$Html::FUNCTION="<tt><font color=blue><b>";
+$Html::FUNCTION_="</b></font></tt>";
+$Html::TYPE="<tt><font color=navy>";
+$Html::TYPE_="</font></tt>";
+$Html::VARIABLE="<tt><font color=blue>";
+$Html::VARIABLE_="</font></tt>";
+$Html::CLASS="<tt><font color=navy><b>";
+$Html::CLASS_="</b></font></tt>";
+$Html::ENUM="<tt><font color=green>";
+$Html::ENUM_="</font></tt>";
+$Html::NAMESPACE="<tt><font color=navy><b>";
+$Html::NAMESPACE_="</b></font></tt>";
+$Html::INTRENSIC="<tt><font color=purple>";
+$Html::INTRENSIC_="</font></tt>";
+$Html::SPECIFIER="<tt>";
+$Html::SPECIFIER_="</tt>";
+
+# hash tables for syntax highlighting (use init.plg to add to these)
+@Html::intrensics=("void","bool","char","int","float","double");
+@Html::specifiers=("inline","register","auto","virtual","const","static");
+
+#######################################################################
+##### 0.1 Command line and Main 
+#######################################################################
+#
+# GLOBALS:
+#   &PROCESS
+#   &PLUGIN
+#   $global - namespace for all extracted symbols
+#   $unknown - namespace for extrapolated symbols 
+# 
+package main;
+use strict;
+
+$::debug=0;
+$::verbose=1;
+$::ws_verbose=1;
+$::report_xml=0;
+
+&parseArgs(@ARGV);
+
+$::global=Namespace::new("","");
+$::anonymous=Namespace::new("","");
+$::unknown=Namespace::new("","");
+
+my $output_plugin="output";
+my @filelist;
+my @suffixes=("h","H","hh");
+my $buffer;
+my $file_unique_string;
+my $file_global_string = "";
+
+&EXEC();
+exit;
+
+##################################################  
+### EXEC
+sub EXEC {
+  my $buffer;
+  my $file;
+
+  &PLUGIN("init");
+
+  foreach $file (@filelist) {
+    $buffer="";
+    print "Reading $file\n" if ($::verbose);
+    $::currentfile=$file;
+    $::currentfile=~s/^.*\///g;
+
+    open(INPUT,"<$file");
+    while(<INPUT>) { $buffer.=$_; }
+    close(INPUT);  
+
+    $buffer=&PLUGIN("input",$buffer);
+
+    &Extract::process($buffer);
+  }
+
+  &Extract::crossRef($::global);
+  &Extract::crossArgs($::global);
+  &Extract::markup($::global);
+
+  &PLUGIN($output_plugin,$::global);
+  &XML if ($::report_xml);
+}
+
+
+##################################################  
+### parseArgs
+sub parseArgs {
+  my $arg;
+  print "Parsing Command Line\n" if $::debug;
+  while (@_) {
+    $arg=shift;
+    if ( $arg=~/^--(.*)/) {
+      if    ($1 eq "help")   {
+        USAGE();
+      }
+      elsif ($1 eq "plgdir") {
+        unshift(@Plugin::directory_,shift @_);
+      }
+      elsif ($1 eq "xml") {
+        $::report_xml=1;
+        $::verbose=0;
+      }
+      elsif ($1 eq "output") {
+	$output_plugin=shift;
+#	print STDERR "USING $output_plugin\n" if ($::debug);
+      }
+      else {
+        print STDERR "Unknown argument --$1\n";
+	exit;
+      }
+    }
+    else
+    {
+      if ( -d $arg ) {
+        my $entry;
+	my $str;
+
+        $str='\.((';
+	$str.=join(")|(",@suffixes);
+	$str.='))$';
+
+	opendir(DIR,"$arg");
+	foreach $entry (sort readdir(DIR)) {
+	  push (@filelist,"$arg/$entry") if ( $entry =~ /$str/) ;
+	}
+      }
+      else {
+        push(@filelist,$arg);
+      }
+    }
+  }
+}
+
+sub XML {
+  print "<?xml version=\"1.0\"?>\n";
+  print "<global>\n";
+  $::global->dump_xml();
+  print "</global>\n";
+}
+
+
+
+#######################################################################
+##### 1.0 Code Extractor
+#######################################################################
+package Extract;
+use strict;
+
+##################################################  
+### process
+sub process  {
+  my ($buffer)=@_;
+  
+  $file_unique_string="";
+
+  $buffer=&prep($buffer);
+
+  &parse($::global,$buffer);
+
+  return $::global;
+}
+
+##################################################  
+### Typedef
+sub parse {
+  my($env,$buffer)=@_;
+
+  my $line;
+  my(@lines)=split(/\n|([}{;])/,$buffer); # lines to be processed
+
+  my $block="";
+  my($comments);      # comments collected before a block
+  my($macro_data)=""; # macro string collected
+  my($process)=0;     # indicates time to process block
+  my($inblock)=0;     # indicates block start found
+  my($bcount)=0; 
+  my($isdef)=0;  
+  my($needsemi)=0;  
+  my($gcomments);
+
+#
+#  Process File
+#   (line by line)
+
+  while (@lines) {
+    $_=shift @lines;
+#    print STDERR "Processing \"$_\"\n";
+
+#
+#  main statement blocks
+#
+
+    # collect up comments for later
+    if (/^\s*\/\/(.*)$/) {
+      if ($bcount<1) {
+	$gcomments=&unmask($1);
+        if (/^\s*\/\/! /) {
+# Append the Name=Variable, removing duplicates
+          my $current_name;
+          my $current_value;
+          my $this_name;
+          my $this_value;
+          ($this_name, $this_value) = split(/=/, $gcomments);
+          # If no equals sign is provided - assume the name is "c="
+          if ($this_value eq "")
+          {
+            $this_value = substr($this_name, 2);
+            $this_name = "! c";
+          }
+# Check for a global string
+          if ($this_name eq "! Global")
+          {
+            $file_global_string = "${file_global_string}! ${this_value}\n$comments";
+            $comments = "";
+          }else
+          {
+            my $old_global_string = $file_unique_string;
+            $file_unique_string = "";
+# Do the unique string
+            foreach (split("\n",$old_global_string)) {
+               /(.*)$/;
+              ($current_name, $current_value)=split(/=/, $1);
+              if ($current_name ne $this_name)
+              {
+                $file_unique_string = "$file_unique_string$current_name=$current_value\n";
+              }
+            }
+            $file_unique_string = "$file_unique_string$this_name=$this_value\n";
+          }
+        }else
+        {
+          $comments.=$gcomments;
+          $comments.="\n";
+        }
+      }
+      else {
+        $block.="$_\n";
+      }
+      next;
+    }
+
+    # push back comments not starting line
+    if (/^(.+)\s*(\/\/.*)$/) {
+      unshift(@lines,$2);
+      $_=$1;
+    }
+
+    if (!$inblock) {
+      if (/^\s*(public|protected|private):(.*)$/) {
+        $_=$2;
+        $env->set_public() if ($1 eq "public");
+        $env->set_private() if ($1 eq "private");
+        $env->set_protected() if ($1 eq "protected");
+      }
+
+      # break up lines with access declarations
+      if (/^(.*)(public:|protected:|private:)(.*)$/) {
+        unshift(@lines,$2);
+        unshift(@lines,$3);
+        $_=$1;
+      }
+
+      next if ($_ eq ";" ); # dump extra ;
+      next if (/^\s*$/);
+
+      # handle macros
+      if (/^\#/ || $macro_data) {
+        $macro_data.=$_;
+        if (!s/\\$//) {
+          # why do we process the macro only if there are comments?
+          &procMacro($macro_data) if ($comments);
+          $comments="";
+          $macro_data="";
+        }
+        next;
+      }
+
+      # We are entering a code block 
+      $inblock=1;
+      $isdef=0;
+      $inblock=1;
+      $bcount=0;
+
+      $needsemi=1 if (/^(class|struct|union|enum)/); 
+    }
+
+    # we must be in a block
+    if ( $_ eq "{" ) { 
+      $bcount++; 
+      $isdef=1; 
+    }
+
+    if ( $_ eq "}" ) { 
+      $bcount--; 
+$_="} << $needsemi $isdef " if ($bcount == 0);
+    }
+
+    $process=1 if ( $bcount<1 && /^;/ );
+    $process=1 if ( $bcount<1 && !$needsemi && $isdef );
+    
+    if ($bcount)
+      { $block.="$_\n";}
+    else
+      { $block.="$_ ";}
+
+#
+#  Examine extracted statement blocks: Determine type and process appropriately
+#
+    if ($process) {
+
+#       print STDERR "PROCESS\n";
+      if ($block=~/^\s*template(\s|<)/) 
+        {&procTemplate($env,$block,$comments);}
+      elsif ($block=~/^\s*(class|struct|union)\s/) 
+        {&procClass($env,$block,$comments);}
+      elsif ($block=~/^\s*namespace/) 
+        {&procNamespace($env,$block,$comments);}
+      elsif ($block=~/^\s*extern %%QUOTDC%%QUOTD/) 
+        {&procExtern($env,$block,$comments);}
+      elsif ($block=~/^\s*using\s/) 
+        {} # we don't track using
+      elsif ($block=~/^\s*friend\s/) 
+        {&procFriend($env,$block,$comments);} 
+      elsif ($block=~/^\s*enum/) 
+        {&procEnum($env,$block,$comments);}
+      elsif ($block=~/^\s*typedef/) 
+        {&procDef($env,$block,$comments);}
+      elsif ($block=~/^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\S+|operator\s*\S+)\s*\(([^\{\)]*)\)\s*(const|)/) 
+        {&procFunc($env,$block,$comments);}
+      elsif ($block=~/^\s*(\S+|operator\s*\S+)\s*\(([^\{\)]*)\)\s*(const|)/) 
+        {&procFunc($env,$block,$comments);}
+      elsif ($block=~/^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\w[\w\s:\[\]]*)\s*\=*\s*\S*\s*([,;])/) 
+        {&procVar($env,$block,$comments);}
+      else
+        { print STDERR "UNKNOWN: >>$block<<\n"; }
+
+      $process=0;
+      $bcount=0;
+      $block="";
+      $inblock=0;
+      $needsemi=0;
+      $comments="";
+    }
+  }
+#  print STDERR "LEFTOVERS\n$comments\n" if ($comments);
+}
+
+##################################################  
+### prep
+#
+# Prepares buffer for parser.  
+#  - removes C comments
+#  - masks ^#.*$ ^//.*$ (.*) ".*" '.'
+#
+sub prep {
+  my $in=join("",@_);
+  my $str;
+  my $token;
+  my $last;
+  my @tokens;
+  my @out;
+  my $line;
+  my @lines;
+  my @look=();
+  my $lookfor="";
+  my $newline=0;
+  my @buffer=split("\n",$in);;
+  
+  while (@buffer) {
+    $newline=1;
+
+    # handle continued lines
+    $str=shift(@buffer);
+    $str.="\n";
+
+    while ($str =~/^(.*)\\$/)  {
+      $str="$1"; 
+      $str.=shift(@buffer); 
+    }
+
+
+    @tokens=split(/(\s+|\/\*|\*\/|\/\/|\\.|\"|\'|#|\(|\))/,$str);
+    while(@tokens)
+      {
+        $last=$token if ($token ne "");
+        $token=shift(@tokens);
+  
+        # order is very important
+ 
+        next if ($token eq "");  # skip blank tokens
+ 
+        # C comment beats most
+        if ($lookfor eq "/*") {
+          if ($token eq "*/") {
+            $line=pop(@lines);
+            $lookfor=pop(@look);
+            next;
+          } 
+          $line.=$token;
+          next;
+        }
+ 
+        # quote beats ()
+        if ($lookfor eq "\"" || $lookfor eq "\'") {
+          if ($token eq $lookfor) {
+            $line.=$token;
+            $str=&mask($line);
+            $line=pop(@lines);
+            $line.=$str;
+            $lookfor=pop(@look);
+            next;
+          }
+          $line.=$token;
+          next;
+        }
+       
+        if ($lookfor eq "(" && $token eq ")") {
+          $str=&mask($line);
+          $line=pop(@lines);
+          $line.=$str;
+          $line.=$token;
+          $lookfor=pop(@look);
+          next;
+        }
+ 
+        if ($token =~ /\s+/) { 
+          $line.=$token;
+          next;
+        }
+
+        if (!$lookfor && $newline && $token eq "#") {
+          $line.=$token;
+          $str=&prep(join("",@tokens));
+          $line.=$str;
+          @tokens=();
+          next;
+        }
+        $newline=0;
+        if ($token eq "//") {
+          $line.=$token;
+          $str=&mask(join("",@tokens));
+          $str=~s/\/\//%%CPCOMM/g;
+          $line.=$str;
+          @tokens=();
+          next;
+        }
+
+        if ($token eq "\"" || $ token eq "\'" || $token eq "/*" ) {
+          push(@look,$lookfor);
+          push(@lines,$line); 
+          $line="";
+          $lookfor=$token;
+        }
+        elsif ($token eq "(") {
+          $line.=$token;
+          push(@look,$lookfor);
+          push(@lines,$line); 
+          $line="";
+          $lookfor=$token;
+          next;
+        }
+
+        $line.=$token;
+      }
+
+    if (!@lines) {
+      push(@out,$line);
+      $line="";
+    }
+  }
+  $str=join("",@out);
+  $str.=join("",@lines);
+  $str;
+}
+
+##################################################  
+### mask
+#
+# hides certain symbols so they don't confuse the parser
+sub mask {
+  my $line=shift;
+  $line=~s/\{/%%BRACEO/g;
+  $line=~s/\}/%%BRACEC/g;
+  $line=~s/\"/%%QUOTD/g;
+  $line=~s/\'/%%QUOTS/g;
+  $line=~s/\(/%%BRAKO/g;
+  $line=~s/\)/%%BRAKC/g;
+  $line=~s/,/%%COMM/g;
+  $line=~s/;/%%SEMI/g;
+  $line;
+}
+
+##################################################  
+### mask_API
+#
+# hides certain API symbols so they don't confuse the parser
+sub mask_API {
+  my $line=shift;
+  $line=~s/CL_API_DISPLAY//g;
+  $line=~s/CL_API_VORBIS//g;
+  $line=~s/CL_API_MIKMOD//g;
+  $line=~s/CL_API_SOUND//g;
+  $line=~s/CL_API_SIGNALS//g;
+  $line=~s/CL_API_NETWORK//g;
+  $line=~s/CL_API_GUISTYLESILVER//g;
+  $line=~s/CL_API_GUISTYLE_SILVER//g;
+  $line=~s/CL_API_GUI//g;
+  $line=~s/CL_API_CORE//g;
+  $line=~s/CL_API_SDL//g;
+  $line=~s/CL_API_GL//g;
+  $line;
+}
+
+##################################################  
+### unmask
+#
+# recovers masked symbols
+sub unmask {
+  my $line=shift;
+  $line=~s/%%BRACEO/\{/g;
+  $line=~s/%%BRACEC/\}/g;
+  $line=~s/%%QUOTD/\"/g;
+  $line=~s/%%QUOTS/\'/g;
+  $line=~s/%%BRAKO/\(/g;
+  $line=~s/%%BRAKC/\)/g;
+  $line=~s/%%COMM/,/g;
+  $line=~s/%%SEMI/;/g;
+  $line;
+}
+
+
+##################################################  
+### extract
+# extracts part of the buffer.
+sub extract {
+  my ($block,$start,$stop,$nonest)=@_;
+  my @in=split(/($start|$stop)/,$block);
+  my @out;
+  my $str;
+  my $token;
+  my $depth=0;
+  while (@in) {
+    $token=shift(@in);
+    if ($token eq $stop) {
+      $depth--;
+      if ($nonest || $depth==0) {
+        $str=join("",@out); 
+        return $str;
+      }
+    }
+    push(@out,$token) if ($depth>0);
+    $depth++ if ($token eq $start);
+  }
+  return "";
+}
+
+
+##################################################  
+### proc*
+
+# sub routines for extracting sepecific types of blocks.
+
+sub procNamespace {
+  my($env,$block,$com)=@_;
+  $block=~s/^\s+//;
+  if ($block=~/^namespace\s+(\S+)\s*{/) { 
+    $env=Namespace::new($env,"$1",$com);
+  }
+  elsif ($block=~/^namespace\s*{/) { 
+    $env=$::anonymous; 
+  }
+  elsif ($block=~/^namespace\s+\S+\s*=\s*\S+\s*;/) { 
+    # ignore namespaces aliases
+  }
+  else { 
+    print STDERR "ERROR: namespace:\n<BLOCK>\n$block\n<\BLOCK>\n\n"; 
+    return ""; 
+  }
+  &parse($env,&extract($block,"{","}"));
+  return $env;
+}
+
+sub procClass {
+  my($env,$block,$com)=@_;
+
+  if (&mask_API($block)=~/^\s*(class|union|struct)\s+(\S+)\s*:(.*){/) { 
+    $env=Class::new($env,$2,$com,$1,$3);
+  }
+  elsif (&mask_API($block)=~/^\s*(class|union|struct)\s+(\S+)\s*{/) { 
+    $env=Class::new($env,$2,$com,$1);
+  }
+  elsif ($block=~/^\s*(union|struct)\s*{/) { 
+    # anonymous union (do nothing)
+    &parse($env,&extract($block,"{","}"));
+    return "";
+  }
+  elsif ($block=~/^\s*(class|union|struct)\s+(\S+)\s*;/) { 
+    # forward decl (ignore)
+    return "";
+  }
+  else 
+  { print STDERR "ERROR: class:\n$block\n\n"; return ""; }
+  &parse($env,&extract($block,"{","}"));
+  return $env;
+}
+
+sub procArgs {
+  my($env,$block,$comments)=@_;
+  return "";
+}
+
+sub procFunc {
+  my($env,$block,$com)=@_;
+  my($obj,$type,$args,$name,$const);
+  ($block)=split("\n",$block,2);
+  $block=~s/\s+\*/* /g;
+  $block=~s/\s+\&/& /g;
+  $block=~s/\s+/ /g;
+  $block=~s/inline//g;
+
+  # normal function
+  if ($block=~/^\s*([^)]*)\s+(\~*$Enum::SYM)\s*\(([^\)]*)\)\s*(const)*\s*(=\s*0\s*)*[:{;]/) {
+    $type=$1;
+    $name=$2;
+    $args=&unmask($3);
+    $const=$4;
+  }
+
+  # ctor
+  elsif ($block=~/^\s*(\~*$Enum::SYM)\s*\(([^)]*)\)\s*(const)*\s*[:{;]/) {
+    $type="";
+    $name=$1;
+    $args=&unmask($2);
+    $const=$3;
+  }
+
+  #operator
+  elsif ($block=~/^(.*)\s*operator\s*(.*)\s*\((.*)\)\s*(const)*\s*[{;]/) {
+    $type=$1;
+    $name="operator $2";
+    $args=&unmask($3);
+    $const=$4;
+  }
+  else {
+    print STDERR "ERROR: function:\n$block\n\n"; 
+    return "";
+  }
+  $obj=Function::new($env,$name,$com,$type,$args);
+  $obj->{const}=1 if ($const eq "const");
+  return $obj;
+}
+
+sub procVar {
+  my($env,$block,$com)=@_;
+  ($block)=split("\n",$block,2);
+  $block=~s/\s+/ /g;
+  if ($block=~/^\s*(.*\s+\**)($Enum::SYM)\s*(\[.*\])*\s*(=\s*\S+\s*)*;/) { 
+    return Variable::new($env,$2,$com,"$1$3");
+  }
+  else {
+    print STDERR "ERROR: variable:\n$block\n\n"; 
+  }
+  return "";
+}
+
+sub procDef {
+  my($env,$block,$com)=@_;
+  if ($block=~/^\s*typedef\s+(.*)\s+(\S+)\s*;/) { 
+    return Typedef::new($env,$2,$com);
+  }
+  else {
+    print STDERR "ERROR: typedef:\n$block\n\n"; 
+  }
+  return "";  
+}
+
+sub procEnum {
+  my($env,$block,$com)=@_;
+  #print STDERR "ERROR: enum:\n$block\n\n"; 
+  return "";
+}
+
+sub procFriend {
+  my($env,$block,$com)=@_;
+  if ($block=~/^\s*friend\s+(.*)\s*;/) { 
+    return Friend::new($env,$2,$com);
+  }
+  else {
+    print STDERR "ERROR: friend:\n$block\n\n"; 
+  }
+  return "";
+}
+
+sub procMacro {
+  my($env,$block,$com)=@_;
+  return "";
+}
+
+sub procExtern {
+  my($env,$block,$com)=@_;
+  if ($block=~/^\s*extern\s*%%QUOTDC%%QUOTD\s*{/) {
+    &parse($env,&extract($block,"{","}"));
+    return "";
+  }
+  elsif ($block=~/^\s*extern\s*%%QUOTDC%%QUOTD\s*/) {
+    $block=~s/^extern\s*%%QUOTDC%%QUOTD\s*//;
+    &parse($env,$block);
+    return "";
+  }
+  else {
+    print STDERR "ERROR: extern:\n$block\n\n"; 
+  }
+  return "";
+}
+
+sub procTemplate {
+  my($env,$block,$comments)=@_;
+  # sorry, not handled yet.
+  # print STDERR "TEMPLATE\n";
+  return "";
+}
+
+
+sub procComments {
+  my ($comments)=@_;
+  my ($short,$long,$str);
+  $short = "";
+  $long  = "";
+  $comments=~s/%%CPCOMM/\/\//g;
+  foreach (split("\n",$comments))
+    {
+       if (/^\:|\-|\!|\+|\./)
+       {
+          /^.(.*)$/;
+          $str = "$1\n";
+
+          if (/^-\s*$/) {
+            $long.= "\n";
+          }
+          elsif (/^-/) {
+            $long.=" $str";
+          }
+          elsif (/^:/) {
+            $long="";
+            $short.= " $str";
+          }
+       }
+#       else
+#       {
+#          $short = "";
+#          $long  = "";
+#       }
+    }
+  ($short,$long);
+}
+
+
+##################################################  
+### crossRef
+#
+# This establishes all the parent and child relationships between classes
+# after data is extracted.
+sub crossRef {
+  my $space=shift;
+  my $access="public";
+  my $class;
+  my $parent;
+  my $pname;
+  my $pstr;
+  foreach $class (classes $space) {
+    $pstr=$class->{parent_str};
+    $pstr=~s/<[^>]*>//g;
+    foreach (split(",",$pstr)) {
+      $access="private";
+      $access=$1 if ( s/^\s*((public)|(private)|(protected))\s+// );
+      $access.=$1 if ( s/^\s*(virtual\s)// );
+      if ( /^\s*(\S+)\s*$/) {
+        $pname=$1;
+        if ($pname =~ /::/) {
+	  $parent=Object::find($pname);
+	}
+        else {
+	  $parent=$class->{space}->lookdown($pname);
+	}
+	$parent=$::unknown->lookup($pname) if (!$parent);
+	$parent=Class::new($::unknown,$pname,"","class") if (!$parent);
+	if ($parent) {
+	  my $parents=$class->{parents};
+	  push(@$parents,$parent);
+	  my $children=$parent->{children};
+	  push(@$children,$class);
+	}
+      }
+      else {
+        print "can't parse $_\n";
+      
+      }
+    }
+  }
+  foreach (spaces $space) {
+    crossRef($_);
+  }
+}
+
+##################################################  
+### crossArgs
+#
+# This establishs the html args with syntax highlighting
+#
+# This uses a dumb, dumb heristic to do the dirty work, needs fixing
+#
+sub crossArgs {
+  my $global=shift;
+  my $intrensic=::buildRE(@Html::intrensics);
+  my $specifier=::buildRE(@Html::specifiers);
+  my $item;
+
+  foreach $item ($global->all) {
+    next if (!$item->is_function()&&!$item->is_variable());
+
+    # handle return type
+    my $ret;
+    foreach (split(/([^A-z0-9:])/,$$item{type})) {
+      next if ($_ eq "");
+      if ($_ !~ /^[A-z0-9_:]+$/) {
+        $ret.=$_;
+      }
+      elsif ($_ =~ /${intrensic}/) {
+        $ret.="${Html::INTRENSIC}$_${Html::INTRENSIC_}";
+      }
+      elsif ($_ =~ /${specifier}/) {
+        $ret.="${Html::SPECIFIER}$_${Html::SPECIFIER_}";
+      }
+      else {
+        my $i;
+        $i=$item->lookdown($_);
+
+        if ($i) {
+          $ret.=$i->href(); 
+        }
+        else {
+          $ret.="${Html::TYPE}$_${Html::TYPE_}";
+        }
+      }
+    }
+    $item->{html_type}=$ret;
+
+    next if (!$item->is_function());
+    my $args;
+    my $drinks=0;
+    foreach (split(/([^A-z0-9:])/,$$item{args})) {
+      next if ($_ eq "");
+
+      # we use a drinking game style guesser.
+      $drinks=0 if ($_ =~ /[,)<]/);
+      $drinks=-100 if ($_ =~ /[=]/);
+
+      if ($_ !~ /^[A-z_0-9:]+$/) {
+        $args.=$_;
+        next;
+      }
+      elsif ($_ =~ /${intrensic}/) {
+        $args.="${Html::INTRENSIC}$_${Html::INTRENSIC_}";
+      }
+      elsif ($_ =~ /${specifier}/) {
+        $args.="${Html::SPECIFIER}$_${Html::SPECIFIER_}";
+        next;
+      } 
+      elsif ($drinks < 0) {
+        $args.=$_;
+        next;
+      }
+      elsif ($drinks == 0 || $_ =~ /::/ ) {
+        my $i;
+        $i=$item->lookdown($_);
+        
+        if ($i) {
+          $args.=$i->href(); 
+        } 
+        else {
+          $args.="${Html::TYPE}$_${Html::TYPE_}";
+        }
+      }
+      elsif ($drinks > 0) {
+        $args.="${Html::VARIABLE}$_${Html::VARIABLE_}";
+      }
+      else {
+        $args.=$_;
+      }
+
+      # take a drink
+      $drinks++;
+    }
+    $item->{html_args}=$args;
+  }
+}
+
+##################################################  
+### markup
+#
+# Markup the comments must happen after the crossRef
+#
+sub markup {
+  my $global=shift;
+  my $item;
+
+  foreach $item ($global->all) {
+    $$item{short}=Plugin::exec("desc",$$item{short},$item) if ($$item{short});
+    $$item{long}=Plugin::exec("desc",$$item{long},$item) if ($$item{long});
+  }
+}
+
+package main;
+
+sub to_xml {
+  my $str=join("",@_);
+  $str=~s/&/&amp;/g;
+  $str=~s/</&lt;/g;
+  $str=~s/>/&gt;/g;
+  $str=~s/\'/&#39;/g;
+  $str=~s/\"/&#34;/g;
+  $str;
+}
+
+#######################################################################
+#### 2.0 Plugin
+#######################################################################
+#
+# Plugins represent mini perl files that can get pulled in to enhance
+# the capablities of pce2.  At minumum, you will need to define one
+# plugin to dump our extracted information.
+#
+# All plugin's must have a subroutine called plugin without a package.
+# they can have their own package at their option to protect their
+# varables.  By default, they are loaded into the namespace Plugin.
+# You should take care to avoid the following globals located in that
+# namespace.
+#
+#  GLOBALS:
+#    %has_
+#    @directory_
+#    &has
+#    &load
+#    &exec
+#
+
+package main;
+
+# stub to call Plugin::exec from the main space.
+sub PLUGIN {
+  return Plugin::exec(@_);
+}
+
+package Plugin;
+BEGIN { @Plugin::ISA=qw(main); }
+
+BEGIN {
+  %Plugin::has_;
+  push(@Plugin::directory_,".");
+  push(@Plugin::directory_,"./plugins");
+}
+
+sub hash_ {
+  my $file=shift;
+  $file=~s/\.plg$//;
+  $file=~tr/\/./__/;
+  return $file;
+  
+}
+
+sub has {
+  my $name=shift;
+  return ($Plugin::has_{$name});
+}
+
+sub load {
+  my $plugin=shift;
+  my $hash=&hash_($plugin);
+  my $buffer;
+  my $line;
+  if (!has($plugin)) {
+    $Plugin::has_{$plugin}=1;
+    foreach (@Plugin::directory_) {
+      if ( -e "$_/$plugin.plg" ) {
+        open(FILE,"<$_/$plugin.plg");
+        while ($line=<FILE>) {
+          $line=~s/sub +plugin/sub plugin_$hash/;
+          $buffer.=$line;
+        }
+        close(FILE);
+        eval($buffer);
+	return 1;
+      }
+    }
+
+    # if it isn't found, fake it.
+    print STDERR "warning: can't find plugin $plugin, using default\n" 
+      if ($::debug);
+    eval("sub plugin_$hash {return shift;}");
+    return 1;
+  }
+  return 0;
+}
+
+sub exec {
+
+  my $plugin=shift;
+  my $hash=hash_($plugin);
+
+#  print STDERR "PLUGIN $plugin\n" if ($::debug);
+  load($plugin) if (!has($plugin));
+
+  eval("return &plugin_$hash(\@_);");
+}
+
+##################################################  
+### Reporting globals
+sub byname { $a->{name} cmp $b->{name}; }
+sub byfullname { $a->{fullname} cmp $b->{fullname}; }
+
+sub alter {
+  my $self=shift;
+  my $str=shift;
+  $str=~s/\${/\$\$self{/g;
+  $str=~s/\\n/\n/g;
+  $str=~s/"/\\"/g;
+  eval("\$str=\"$str\";");
+  $str;
+}
+
+
+#######################################################################
+##### 3.0 Tree
+#######################################################################
+#
+# These Perl objects represent the extracted information
+# taken from the C++ header.  
+# 
+# In here your will find the various reporting functions, you will
+# use to dump the extracted information
+#
+
+package main;
+
+sub buildHash { my %hash; foreach (@_) {$hash{$_}=$_;} %hash; }
+
+sub buildRE   { 
+  my $str='^(('; 
+  $str.=join(')|(',@_); 
+  $str.='))$'; 
+  return $str; 
+}
+
+
+##################################################  
+### Object
+package Object;
+use strict;
+BEGIN { @Namespace::ISA=qw(main); }
+
+BEGIN { $Object::refnum=1;}
+#
+# $name   - name in the class
+# $space  - namespace/class/struct/union that contains this object
+# $access - type of access in that space
+# $ntype  - numerical type number
+# @items  - things contained in this space
+# %items_hash  - things contained in this space
+# $refnum - unique number used for referencing
+#
+# $html_name - name using syntax highlighting
+#
+
+sub new($$$) {
+  my ($space_,$name_,$comments_)=@_;
+  my $self={};
+  bless $self;
+  $self->{name}=$name_;
+  $self->{html_name}=$name_;
+  $self->{comments}=$comments_;
+  $self->{space}=$space_;
+  $self->{ntype}=$Enum::NONE;
+  $self->{access}=$Enum::PUBLIC;
+  $self->{items}=[];
+  $self->{items_hash}={};
+  $self->{file}=$::currentfile;
+  $self->{refnum}=$Object::refnum++;
+  $self->{fullname}=$self->make_fullname();
+  $self->{member_access}=$Enum::PUBLIC;
+  my ($short,$long) = &Extract::procComments($comments_);
+  $self->{short}=$short; # Plugin::exec("desc",$short,$self);
+  $self->{long}=$long; # Plugin::exec("desc",$long,$self);
+  $self->{unique_string}=$file_unique_string;
+  $space_->Object::add($self) if ($space_);
+  return $self;
+}
+
+# (internal) used to generate fullname
+sub make_fullname {
+  my $self=shift;
+  my $name_;
+  if ($self->{space}) {
+    $name_=$self->{space}->get_pathname() ;
+  }
+  else {
+    return "global";
+  }
+  $name_.=$self->{name};
+}
+
+sub get_pathname {
+  my $self=shift;
+  my $name_;
+  if ($self->{space}) {
+    $name_=$self->{space}->get_pathname() ;
+  }
+  $name_.="$self->{name}::" if ($self->{name});
+  $name_;
+}
+
+sub dump_xml {
+  my ($self,$sp) = @_;
+  my $sp1="$sp  " if ($::ws_verbose);
+  my $nl="\n" if ($::ws_verbose);
+  printf "$sp<%s name='%s'>$nl", $self->type_name(), &::to_xml($self->name());
+  $self->dump_xml_($sp1,$nl);
+  printf "$sp</%s>$nl", $self->type_name();
+}
+
+sub dump_xml_ {
+  my ($self,$sp,$nl) = @_;
+
+  # Access level
+  printf "$sp<%s/>$nl", $self->access_name();
+  # Comments
+  printf "$sp<description>%s</description>$nl", &::to_xml($self->{short}) if $self->{short};
+  printf "$sp<comments>%s</comments>$nl", &::to_xml($self->{long}) if $self->{long};
+  # File
+  printf "$sp<sourcefile>%s</sourcefile>$nl", &::to_xml($self->{file});
+
+  # Parent objects
+  my $parents = $self->{parents};
+  if ($parents && @$parents) {
+    print "$sp<parents>$nl";
+    foreach (@$parents) {
+      printf "$sp<parent>%s</parent>$nl", &::to_xml($_->{name});
+    }
+    print "$sp</parents>$nl";
+  }
+
+  # Process sub-items
+  my $items = $self->{items};
+  if ($items && @$items) {
+    foreach (@$items) {
+      $_->dump_xml($sp);
+    }
+  }  
+}
+
+
+sub add {
+  my $self=shift;
+  my $child=shift;
+  my $items=$self->{items};
+  my $items_hash=$self->{items_hash};
+  push(@$items,$child);
+  $$items_hash{$child->{name}}=$child;
+  $child->{access}=$self->{member_access};
+}
+
+sub get_by_type {
+  my $self=shift;
+  my %hash=&::buildHash(@_);
+  my $wild=!(@_);
+  my $items=$self->{items};
+  my @group;
+  foreach (@$items) {
+    push(@group,$_) if ($hash{$_->{ntype}} || $wild);
+  } 
+  return @group;
+}
+
+sub get_by_access {
+  my $self=shift;
+  my %hash=&::buildHash(@_);
+  my $items=$self->{items};
+  my @group;
+  foreach (@$items) {
+    push(@group,$_) if ($hash{$_->{access}} || !@_);
+  } 
+  return @group;
+}
+
+sub all {
+  my $space=shift;
+  my @l;
+  foreach ($space->items()) {
+    push(@l,$_);
+    push(@l,all($_)) if ($_->{ntype}==$Enum::NAMESPACE);
+    push(@l,all($_)) if ($_->{ntype}==$Enum::CLASS);
+    push(@l,all($_)) if ($_->{ntype}==$Enum::STRUCT);
+    push(@l,all($_)) if ($_->{ntype}==$Enum::UNION);
+    }
+  return @l;
+}
+
+#places an html reference
+sub href {
+  my $self=shift;
+  my $str=shift;
+  my $r;
+  my $s;
+  $str=$$self{html_name} if (!$str);
+  return $str if (!$self->is_known());
+  $r="<a href=\"";
+  if ($self->{ntype}==$Enum::CLASS ||
+         $self->{ntype}==$Enum::STRUCT ||
+         $self->{ntype}==$Enum::NAMESPACE ||
+         $self->{ntype}==$Enum::UNION) {
+    $r.=$self->{fullname};
+    $r.=".html";
+  }
+  else {
+    $s=$self->{space};
+    $r.=$s->{fullname};
+    $r.=".html#";
+    $r.=$self->{refnum};
+  }
+  $r.="\">";
+  $r=~s/\:/_/g;
+  $r.=$str;
+  $r.="</a>";
+}
+
+sub full_href {
+  my $self=shift;
+  my $out=$self->href();
+  my $str;
+  my $space=$self->{space};
+  while ($space!=$::global) {
+    $str=$space->href();
+    $str.="::$out";
+    $out=$str;
+    $space=$space->{space};
+  }
+  $out="<tt>$out</tt>";
+  return $out;
+}
+
+
+# searchs by name in the child array
+sub lookup {
+  my $self=shift;
+  my $name=shift;
+  my $items=$self->{items_hash};
+  $name=~s/^:://;
+  if ($name =~ /::/) {
+    foreach (split(/::/,$name)) {
+      $self=$self->lookup($_);
+      if (!$self) {return "";}
+    }
+    return $self;
+  }
+  return $$items{$name};
+}
+
+# search from this level back to root space for a name
+sub lookdown {
+  my $self=shift;
+  my $name=shift;
+  my $parent=$self->{space};
+  my $items=$self->{items_hash};
+  if ($name =~/::/)
+    {
+     $name=~s/^:://;
+     my @path=split(/::/,$name,2);
+     my $place=$self->lookdown(shift(@path));
+     return "" if (!$place);
+     return $place->lookup(shift(@path));
+    }
+  return $$items{$name} if ($$items{$name});
+  return $parent->lookdown($name) if ($parent);
+  return "";
+}
+
+# lookup using full path name
+sub find {
+  my $name=shift;
+  my $space=$::global;
+  return $space->lookup($_);
+}
+
+#######################
+# Utility functions for reporting
+
+sub type_name { my $self=shift; $Enum::TYPE_NAMES[$self->{ntype}];}
+sub access_name { my $self=shift; $Enum::ACCESS_NAMES[$self->{access}];}
+
+sub name { my $self=shift; $self->{name}; }
+sub fullname { my $self=shift; $self->{fullname}; }
+
+sub children   { my $self=shift; my $children=$self->{children}; return @$children; }
+sub parents    { 
+  my $self=shift; 
+  my $parents=$self->{parents}; 
+  return @$parents; 
+}
+
+sub known_parents { 
+  my $self=shift; 
+  my @parents;
+  foreach ($self->parents()) {
+    push (@parents,$_) if $_->is_known();
+  } 
+  return @parents; 
+}
+
+sub items      { return get_by_type(shift); }
+sub spaces     { my $self=shift; return $self->get_by_type($Enum::NAMESPACE,$Enum::CLASS,$Enum::STRUCT,$Enum::UNION); }
+
+sub classes    { my $self=shift; return $self->get_by_type($Enum::CLASS,$Enum::STRUCT); }
+sub unions     { my $self=shift; return $self->get_by_type($Enum::UNION); }
+sub namespaces { my $self=shift; return $self->get_by_type($Enum::NAMESPACE); }
+sub friends    { my $self=shift; return $self->get_by_type($Enum::FRIEND); }
+sub variables  { my $self=shift; return $self->get_by_type($Enum::VARIABLE); }
+sub functions  { my $self=shift; return $self->get_by_type($Enum::FUNCTION); }
+sub typedefs   { my $self=shift; return $self->get_by_type($Enum::TYPEDEF); }
+sub macros     { my $self=shift; return $self->get_by_type($Enum::MACRO); }
+
+sub public     { my $self=shift; return $self->get_by_access($Enum::PUBLIC); } 
+sub private    { my $self=shift; return $self->get_by_access($Enum::PRIVATE); } 
+sub protected  { my $self=shift; return $self->get_by_access($Enum::PROTECTED); } 
+
+sub is_known   { my $self=shift; return $self->{space}!=$::unknown; }
+sub is_class   { 
+  my $self=shift; 
+  return $self->{ntype}==$Enum::CLASS || $self->{ntype}==$Enum::STRUCT; 
+}
+
+sub is_namespace { my $self=shift; return $self->{ntype}==$Enum::NAMESPACE; }
+sub is_union     { my $self=shift; return $self->{ntype}==$Enum::UNION; }
+sub is_variable  { my $self=shift; return $self->{ntype}==$Enum::VARIABLE; }
+sub is_function  { my $self=shift; return $self->{ntype}==$Enum::FUNCTION; }
+sub is_typedef   { my $self=shift; return $self->{ntype}==$Enum::TYPEDEF; }
+sub is_friend    { my $self=shift; return $self->{ntype}==$Enum::FRIEND; }
+# sub is_template {}
+
+##################################################  
+### Namespace
+package Namespace;
+use strict;
+BEGIN { @Namespace::ISA=qw(Object); }
+
+sub new($$$) {
+  my ($space_,$name_,$comments_)=@_;
+  my $other;
+  $other=$space_->lookup($name_) if ($space_);
+  return $other if ($other);
+  my $self=Object::new($space_,$name_,$comments_);
+  $self->{ntype}=$Enum::NAMESPACE;
+  $self->{html_name}="${Html::NAMESPACE}$name_${Html::NAMESPACE_}";
+  bless $self;
+}
+
+##################################################  
+### Class
+#
+# $parent_str        -  raw parent data
+# @parents           -  referenced parent list 
+# @children          -  referenced child list
+#
+package Class;
+use strict;
+BEGIN {
+  @Class::ISA=qw(Object);
+}
+
+sub new {
+  my ($space_,$name_,$comments_,$typename,$pstr)=@_;
+  my $self=Object::new($space_,$name_,$comments_);
+
+  $self->{ntype}=$Enum::CLASS if ($typename eq "class");
+  $self->{ntype}=$Enum::STRUCT if ($typename eq "struct");
+  $self->{ntype}=$Enum::UNION if ($typename eq "union");
+
+  $self->{html_name}="${Html::CLASS}$name_${Html::CLASS_}";
+
+  $self->{member_access}=$Enum::PUBLIC ;
+  $self->{member_access}=$Enum::PRIVATE if ($typename eq "class");
+
+  $self->{parents}=[];
+  $self->{children}=[];
+
+  $self->{parent_str}=$pstr;
+
+  bless $self;
+}
+
+sub set_public    { my $self=shift; $self->{member_access}=$Enum::PUBLIC ; }
+sub set_private   { my $self=shift; $self->{member_access}=$Enum::PRIVATE ; }
+sub set_protected { my $self=shift; $self->{member_access}=$Enum::PROTECTED ; }
+
+
+##################################################  
+### Function
+package Function;
+use strict;
+BEGIN {
+  @Function::ISA=qw(Object);
+}
+
+sub new {
+  my ($space_,$name_,$comments_,$type_,$args_)=@_;
+  my $self=Object::new($space_,$name_,$comments_);
+
+  $type_=" $type_ ";
+  $type_=~s/\s(explicit)\s//; $self->{explicit}=1 if ($1 eq "explicit");
+  $type_=~s/\s(virtual)\s//;  $self->{virtual}=1 if ($1 eq "virtual");
+  $type_=~s/\s(static)\s//;  $self->{static}=1 if ($1 eq "static");
+  $type_=~s/^\s+//;
+  $type_=~s/\s+$//;
+
+  $args_=~s/\,/, /g;
+  $args_=~s/\s+/ /g;
+  $args_=~s/^\s+//;
+  $args_=~s/\s+$//;
+
+  $self->{ntype}=$Enum::FUNCTION;
+
+  $self->{type}=$type_;
+  $self->{html_type}=$type_;
+
+  $self->{args}=$args_;
+  $self->{html_args}=$args_;
+
+  if ($name_ =~/^operator\s(.*)$/) {
+    $self->{html_name}="${Html::KEYWORD}operator${Html::KEYWORD_}<tt> ";
+    $self->{html_name}.=::to_xml($1);
+    $self->{html_name}.="</tt>";
+  }
+  else {
+    $self->{html_name}="${Html::FUNCTION}${name_}${Html::FUNCTION_}";
+  }
+
+  bless $self;
+}
+
+sub decl {
+  my $self=shift;
+  my $ret;
+  my $args;
+  $ret.="explicit " if $$self{explicit};
+  $ret.="virtual " if $$self{virtual};
+  $ret.="static " if $$self{static};
+  $ret.=$$self{type};
+  $ret.=" ";
+  $args="(";
+  $args=$$self{args};
+  $args=")";
+  $args.=" const" if $$self{const};
+  return ($ret,$$self{name},$$self{args});
+}
+
+sub html_decl {
+  my $self=shift;
+  my $ret;
+  my $name;
+  my $args;
+  $ret="<tt>";
+  $ret.="${Html::SPECIFIER}explicit${Html::SPECIFIER_} " if $$self{explicit};
+  $ret.="${Html::SPECIFIER}virtual${Html::SPECIFIER_} " if $$self{virtual};
+  $ret.="${Html::SPECIFIER}static${Html::SPECIFIER_} " if $$self{static};
+  $ret.=$$self{html_type};
+  $ret.="</tt> ";
+  $name.=$self->href(); #&Plugin::href($self,$$self{html_name});
+  $args="<tt>(";
+  $args.=$$self{html_args};
+  $args.=")";
+  $args.=" ${Html::SPECIFIER}const${Html::SPECIFIER_}" if $$self{const};
+  $args.="</tt>;";
+  return ($ret,$name,$args);
+}
+
+sub dump_xml_ {
+  my ($self,$sp,$nl) = @_;
+  Object::dump_xml_($self,$sp,$nl);  
+  print "$sp<ctor/>$nl"     if $self->is_ctor();
+  print "$sp<dtor/>$nl"     if $self->is_dtor();
+  print "$sp<const/>$nl"    if $self->{const};
+  print "$sp<explicit/>$nl" if $self->{explicit};
+  print "$sp<virtual/>$nl"  if $self->{virtual};
+  print "$sp<static/>$nl"   if $self->{static};
+  printf "$sp<returntype>%s</returntype>$nl", &::to_xml($self->{type});
+  printf "$sp<args>%s</args>$nl", &::to_xml($self->{args});  
+}
+
+sub is_ctor {
+  my ($self)=@_;
+  return !$$self{type};
+}
+
+sub is_dtor {
+  my ($self)=@_;
+  return $$self{name}=~/^~/;
+}
+
+##################################################  
+### Variable
+package Variable;
+use strict;
+BEGIN {
+  @Variable::ISA=qw(Object);
+}
+
+sub new {
+  my ($space_,$name_,$comments_,$type_)=@_;
+  my $self=Object::new($space_,$name_,$comments_);
+
+  $self->{ntype}=$Enum::VARIABLE;
+  $self->{type}=$type_;
+  $self->{html_name}="${Html::VARIABLE}$name_${Html::VARIABLE_}";
+
+  bless $self;
+}
+
+sub html_decl {
+  my $self=shift;
+  my $ret;
+  my $name;
+  $ret="<tt>";
+  $ret.=$$self{html_type};
+  $ret.="</tt> ";
+  $name.="<tt>";
+  $name.=$self->href();
+  $name.=";</tt>";
+  ($ret,$name);
+}
+
+sub dump_xml_ {
+  my ($self,$sp,$nl) = @_;
+  Object::dump_xml_($self,$sp,$nl);
+  printf "$sp<type>%s</type>$nl", &::to_xml($self->{type});
+}
+
+##################################################  
+### Typedef
+package Typedef;
+use strict;
+BEGIN {
+  @Typedef::ISA=qw(Object);
+}
+
+sub new {
+  my ($space_,$name_,$comments_)=@_;
+  my $self=Object::new($space_,$name_,$comments_);
+
+  $self->{ntype}=$Enum::TYPEDEF;
+
+  bless $self;
+}
+
+##################################################  
+### Friend
+package Friend;
+use strict;
+BEGIN {
+  @Friend::ISA=qw(Object);
+}
+
+sub new {
+  my ($space_,$name_,$comments_)=@_;
+  my $self=Object::new($space_,$name_,$comments_);
+
+  $self->{ntype}=$Enum::FRIEND;
+
+  bless $self;
+}
+

@@ -1,0 +1,11 @@
+</OPTIONS>
+<LINKER>
+<ALLOBJ value="$(OBJFILES)"/>
+<ALLRES value="$(RESFILES)"/>
+<ALLLIB value="$(LIBFILES) $(LIBRARIES)"/>
+</LINKER>
+
+
+
+</PROJECT>
+

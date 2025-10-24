@@ -1,0 +1,141 @@
+<xml>
+<head>
+<title>Custom Resource Types</title>
+</head>
+<body>
+
+<p>Extending the resource management system to incorporate a new resource type can be tricky,
+but with a little guidance, it is fairly straight forward.  </p>
+
+<h3>Intoduction</h3>
+<p>For this tutorial we will be using a simple class called Object</p>
+
+<code>
+class Object
+{
+public:
+	Object();
+	Object(int x, int y);
+	int x;
+	int y;
+};
+</code>
+
+<h3>Modifing the class</h3>
+<p>First you will need to add a constructor that will load from the resource management system and an instance of <codelink>CL_Resource</codelink> to store our resource information in.</p>
+
+<code>
+class Object
+{
+public:
+	Object();
+	Object(int x, int y);
+	Object(const std::string &resource_id, CL_ResourceManager *manager);
+	int x;
+	int y;
+
+private:
+	CL_Resource resource;
+};
+</code>
+
+<h3>Creating your resourcedata class</h3>
+<p>Now, before we actually define our new constructor for Object, lets create our new <codelinke> CL_ResourceData</codelink> derivative class that will actually do the loading. This class is also fairly simple; it needs a constructor that takes a <codelink>CL_Resource</codelink> and two functions: on_load() and on_unload().  These functions will be called by the resource manager when the resource is loaded and unloaded respectively.</p>
+
+<code>
+class CL_ResourceData_Object : public CL_ResourceData
+{
+public:
+	ResourceData_Object(CL_Resource &resource);
+	virtual ~ResourceData_Object();
+	Object &get_object();
+private:
+	void on_load();
+	void on_unload();
+	Object object;
+};
+</code>
+
+<p>The constructor tells the resource to attach the data through this instance of CL_ResourceData.  Later when you ask your resource manager to load the object it will call the on_load() function which actually reads in your data.  Notice that the call to get_attribute takes two parameters in this instance. The first is obviously the variable name, but the second is the default value which is used when the attribute is not found.</p>
+<code>
+ResourceData_Object::ResourceData_Object(CL_Resource &resource)
+: CL_ResourceData(resource)
+{
+	resource.attach_data("object", this);
+}
+ResourceData_Object::on_load()
+{
+	CL_Resource resource = get_resource();
+	int x = atoi( (resource.get_element().get_attribute("x","50")).c_str() );
+	int y = atoi( (resource.get_element().get_attribute("y","75")).c_str() );
+ 
+	object.x = x;
+	object.y = y;
+}
+ResourceData_Object::on_unload()
+{
+	object = Object();
+}
+</code>
+
+<h3>The callback function</h3>
+<p>In order for this to work, we have to create a custom callback function to load your new resource types.  The callback function just looks to see if the new resource is of our custom type, and in that event creates a new instance of our resourcedata type.</p>
+
+<code>
+static void resource_added(CL_Resource &resource)
+{
+	std::string type = resource.get_type();
+
+	if (type == "object") new ResourceData_Object(resource);
+}
+</code>
+<p>And then in your initialization routines just add a line like:</p>
+<code>
+CL_Slot slot_resource_added - CL_ResourceManager::sig_resource_added().connect(&resource_added);
+</code>
+
+<h3>Adding object's constructor</h3>
+<p>Now just add that constructor for Object that we nearly forgot about.  This function will just ask the our <codelink>CL_ResourceManager</codelink> for the instance of our object, then we tell it load it up.  Then just get our our data from the resource, but if it returns no data then the name you specified is not of type Object.  Then just get out your data however you like, a copy constuctor or overloaded = operator comes in real handy here.</p>
+
+<code>
+Object::Object(const std::string &resource_id, CL_ResourceManager *manager)
+{
+	resource = manager->get_resource(resource_id);
+	resource.load();
+
+	ResourceData_Object *data =
+		(ResourceData_Object *) resource.get_data("object");
+
+	if(!data)
+		throw CL_Error("Resource '" + resource_id + "' is not of type 'object'");
+
+	x = data->get_object().x;
+	y = data->get_object().y;
+
+	resource.unload();
+}
+</code>
+
+<h3>Finale</h3>
+<p>The last thing to do is to call your resource. For a resource file looking like:</p>
+
+<code>
+&lt;resources&gt;
+	&lt;object name="object01" x="20" y="20" /&gt;
+&lt;/resources&gt;
+</code>
+<p>Just create your object like this:</p>
+
+<code>
+Object *my_object = new Object("object01", new CL_ResourceManager("my_resourcefile.xml"));
+</code>
+
+Thats it!
+
+<h3>TODO:</h3>
+<list>
+<li>Explain how to use the resource manager's provider to load files.</li>
+<li>Explain how to make the resource manager cache objects.</li>
+</list>
+</body>
+</xml>

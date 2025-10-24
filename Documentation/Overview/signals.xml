@@ -1,0 +1,308 @@
+<xml>
+<head>
+<title>Signals and Slots</title>
+</head>
+<body>
+
+<p>Signals and slots are used for communication between objects. In GUI programming we often
+want a change in one component to be notified to another component. More generally, we want objects
+of any kind to be able to communicate with one another. In ClanLib we started using signals
+in ClanGUI, but broadened it up into other areas, like network and input.</p>
+
+<p>Older toolkits achieve this kind of communication using callbacks. A callback is a pointer to a
+function, so if you want a processing function to notify you about some event you pass a pointer
+to another function (the callback) to the processing function. The processing function then calls
+the callback when appropriate. Callbacks have two fundamental flaws. Firstly they are not type safe.
+We can never be certain that the processing function will call the callback with the correct arguments.
+Secondly the callback is strongly coupled to the processing function since the processing function must
+know which callback to call.</p>
+
+<p>In ClanLib we have an alternative to the callback technique. We use signals and slots. A signal is
+emitted when a particular event occurs. ClanLib's components have many pre-defined signals. To handle
+the signals that you are interested in, you connect the signal to a slot.</p>
+
+<p>Signals are emitted by objects when they change their state in a way that may be interesting to
+the outside world. This is all the object does to communicate. It does not know or care whether
+anything is receiving the signals it emits. This is true information encapsulation. A signal can be
+connected to as many slots as you desire.</p>
+
+<p>A list box, for example, emits both highlighted() and activated() signals. Most objects will probably only be
+interested in activated() but some may want to know about which item in the list box is currently highlighted.
+If the signal is interesting to two different objects you just connect the signal to slots in both objects.</p>
+
+<p>When a signal is emitted, the slots connected to it are executed immediately, just like a normal function
+call. The emit will return when all slots have returned.</p>
+
+<p>Slots can be used for receiving signals, but they are normal member functions. A slot does not
+know if it has any signals connected to it.</p>
+
+<p>Slot objects maintains connection state to the signals to which they are connected. When a slot
+object is destroyed, the signals to which it was connected will be automatically informed,
+and subsequently disconnected. However, this also means that it's important to be aware that 
+you have to store the slots somewhere (even though they slots themselves are never used actively).</p>
+
+<p>A minimal C++ class declaration might read:</p>
+<code>
+	class Foo
+	{
+	public:
+		Foo();
+		int get_value() const { return val; }
+		void set_value(int);
+
+	private:
+		int val;
+	};
+</code>
+
+<p>Adding a signal to this:</p>
+
+<code>
+	class Foo
+	{
+	public:
+		Foo();
+		int get_value() const { return val; }
+		void set_value(int);
+
+		CL_Signal_v1<int> sig_value_changed;
+
+	private:
+		int val;
+	};
+</code>
+
+<p>This class has the same internal state, and public methods to access the state, but in addition it has
+support for component programming using signals and slots: this class can tell the outside world that
+its state has changed by emitting a signal, sig_value_changed.</p>
+
+<p>The template-type of the signal class is called CL_Signal_v1. The _v1 means void, 1 parameter. If we
+wanted a type with 2 parameters, we would create a signal of type CL_Signal_v2:</p>
+<code>
+	CL_Signal_v2<int, const std::string &text> sig_another_example;
+	CL_Signal_v3<char, char, int> sig_yet_another_example;
+</code>
+<p>Currently void is the only return type supported, so all signals are called CL_Signal_v?.</p>
+
+<h3>Emitting signals</h3>
+<p>Here is a possible implementation of Foo::set_value():</p>
+
+<code>
+	void Foo::set_value(int v)
+	{
+		if (v != val)
+		{
+			val = v;
+			sig_value_changed(v);
+		}
+	}
+</code>
+
+<p>The line sig_value_changed(v) emits the signal sig_value_changed from the object. As you can see, you emit
+a signal by calling the signal as a function(arguments). Examples on the _v2 and _v3 signals mentioned above:</p>
+<code>
+	sig_another_example(10, "Hello world");
+	sig_yet_another_example('a', 'b', 10);
+</code>
+
+<h3>Connecting to signals</h3>
+
+<p>Connecting to a signal is pretty straightforward as well:</p>
+<code>
+	class FooTester
+	{
+	public:
+		FooTester();
+		void test();
+
+	private:
+		void on_value_changed(int val);
+
+		Foo foo;
+		CL_Slot slot_value_changed;
+	}
+	
+	FooTester::FooTester()
+	{
+		slot_value_changed = foo.sig_value_changed.connect(this, &FooTester::on_value_changed);
+	}
+
+	void FooTester::test()
+	{
+		foo.set_value(49);
+	}
+
+	void FooTester::on_value_changed(int val)
+	{
+		std::cout << "New value from foo object is " << val << std::endl;
+	}
+</code>
+
+<p>Explanation:</p>
+<code>
+	CL_Slot slot_value_changed;
+</code>
+<p>Make sure you store the CL_Slot object somewhere, otherwise the slot is disconnected when it is destroyed
+(goes out of scope for instance). Put it in your class definition or similar; just don't make it a local variable.</p>
+
+<code>
+	slot_value_changed = foo.sig_value_changed.connect(this, &FooTester::on_value_changed);
+</code>
+<p>Each signal has a connect() function, which returns a CL_Slot object you need to keep. It takes
+two parameters; the object of the receiving slot, and the definition of the receiving slot. Most often the first
+argument will be <b>this</b>, but you can actually connect it to another class than your current object:</p>
+<code>
+	slot_value_changed = foo.sig_value_changed.connect(myOtherObject, &OtherObject::on_value_changed);
+</code>
+
+<h3>Slot Container</h3>
+<p>CL_SlotContainer is a utility class which can store CL_Slots for you. Its syntax is as follows:
+<code>
+	CL_SlotContainer slots;
+      ...
+      slots.connect(mySignal1, this, &MyApp::on_signal1);
+      slots.connect(mySignal2, this, &MyApp::on_signal2);
+      slots.connect(mySignal3, this, &MyApp::on_signal3);
+</code>
+<p>You see the syntax for connecting signals using a CL_SlotContainer is a little bit different than the
+CL_Slot method (example below).</p>
+<code>
+	CL_Slot slot1, slot2, slot3;
+      ...
+	slot1 = mySignal1.connect(this, &MyApp::on_signal1);
+	slot2 = mySignal2.connect(this, &MyApp::on_signal2);
+	slot3 = mySignal3.connect(this, &MyApp::on_signal3);
+</code>
+
+<h3>Disconnecting slots</h3>
+
+<p>It is possible to disconnect a slot from its signal. This is automatically done when the slot
+is deleted/leaves scope, but you can also call the signal.disconnect() function to disable a slot.</p>
+
+<code>
+	CL_Slot slot1;
+	slot1 = mySignal1.connect(this, &MyApp::on_signal1);
+
+	...
+
+	mySignal1.disconnect(slot1);
+</code>
+
+<h3>Virtual slots</h3>
+
+<p>ClanLib supports "virtual" slots, meaning you can override previously connected slots.
+This works like the inheritage in C++, you can call earlier hooked up signals from the
+overridden slot.</p>
+
+<p>A normal connect looks like this:</p>
+
+<code>
+CL_Slot slot = window.sig_close().connect(this, &App::on_close);
+
+void App::on_close() { ... }
+
+</code>
+
+<p>But to override any previously connected signals, you use the connect_virtual method:</p>
+
+<code>
+CL_Slot slot = window.sig_close().connect_virtual(this, &App::on_close);
+
+void App::on_close(CL_SlotParent_v0 &super)
+{
+	if(I_want_to_call_parent_slow)
+		super();
+}
+
+</code>
+
+<p>Note that the connected function must have an extra parameter, the CL_SlotParent.
+This is a reference to the previously connected signal, and you can call it if
+you want, just like virtual methods in C++.</p>
+
+<h3>Userdata</h3>
+
+<p>When a signal is fired, the connected slots are called with the parameters defined in the signal.
+Sometimes you want to add extra information to each slot, and for that ClanLib provides userdata.
+It is used by adding an extra variable when connecting to the signal.</p>
+
+<code>
+	void App::on_signal(int a, int b)
+	{
+	}
+
+	CL_Signal_v2<int, int> mySignal;
+
+	CL_Slot slot = mySignal.connect(this, &App::on_signal);
+</code>
+
+<p>This is how you would connect to a normal signal, without using any userdata. The signal
+requires two params, and you supply a function with two params.</p>
+
+<code>
+	void App::on_signal(int a, int b, std::string userdata)
+	{
+	}
+
+	CL_Signal_v2<int, int> mySignal;
+
+	std::string text = "Hello";
+
+	CL_Slot slot = mySignal.connect(this, &App::on_signal, text);
+</code>	
+
+<p>Here we used the exact same signal, but added a string parameters as a userdata. Each 
+time the signal is now fired, the userdata string will contain the string "hello".</p>
+
+<p>You can use any type for the userdata, be it string, ints, whatever.</p>
+
+<code>
+	CL_SlotContainer slots;
+	slots.connect(button1.sig_button_press(), this, &App::on_button_press, 1);
+	slots.connect(button2.sig_button_press(), this, &App::on_button_press, 2);
+	slots.connect(button3.sig_button_press(), this, &App::on_button_press, 3);
+</code>
+
+<p>In this example, userdata is used to connect several button clicks to the same function,
+but with an extra userdata integer describing which button was pressed.</p>
+
+<h3>Specific ClanLib signals</h3>
+
+<p>All signals in ClanLib is a little bit different than explained in this overview so far - they are all functions.
+The only effect this has on your code is that you put parenthesis behind the signal when connecting to it.
+Some examples:</p>
+
+<code>
+CL_Mouse: (clanDisplay)
+	static CL_Signal_v2<int, int> &sig_move();
+	static CL_Signal_v1<const CL_InputEvent &> &sig_button_press();
+	static CL_Signal_v1<const CL_InputEvent &> &sig_button_release();
+
+CL_Component: (clanGUI)
+	CL_Signal_v1<const CL_InputEvent &> & sig_mouse_down();
+
+CL_Button: (clanGUI)
+	CL_Signal_v1<bool> &sig_toggled();
+	CL_Signal_v0 &sig_clicked();
+
+Usage examples:
+	CL_Slot slot1 = CL_Mouse::sig_move().connect(this, &App::on_mouse_move);
+	CL_Slot slot2 = button->sig_clicked().connect(this, &GUIApp::on_button_clicked);
+	CL_Slot slot3 = component->sig_mouse_down().connect(this, &GUIApp::on_component_mouse_down);
+
+	void App::on_mouse_move(int x, int y);
+	void GUIApp::on_button_toggled(bool state);
+	void GUIApp::on_component_mouse_down(const CL_InputEvent &key);
+</code>
+
+<p>As you see, the only different is the parenthesis - sig_clicked() instead of sig_clicked.</p>
+
+<h3>More examples</h3>
+
+<p>If you need to see some real world examples of signals and slots, have a look at the <a href="gui_overview.html">GUI overview</a>.</p>
+
+<p>Thanks to TrollTech and their QT toolkit for their Signal & Slot explanation; this overview was 
+based on theirs.</p>
+
+</body>
+</xml>

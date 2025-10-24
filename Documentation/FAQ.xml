@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<page title="ClanLib Game SDK">
+  <section title="ClanLib 0.8 FAQ">
+    <p>Frequently Asked Questions about the ClanLib Library:</p>
+
+    <p>This document tries to answer questions a user might have when installing and
+      using ClanLib. Please make sure you read this before sending questions or bug
+      reports to the maintainers.</p>
+
+    <p>If you find any errors or outdated information in this document, please let us
+      know at <a href="mailto:clanlib-user@clanlib.org">clanlib-user@clanlib.org</a>.</p>
+
+    <subsection title="Compiling under Linux">
+      <faq-item>
+        <question>
+          <p>After compiling ClanLib and trying to link anything with it, I get a linker error complaining about glX:</p>
+          <typewriter>/usr/local/lib/libclanGL.so: undefined reference to `glXGetProcAddress`</typewriter>
+        </question>
+        <answer>
+          <p>The OpenGL GLX headers and library files are out-of-sync on the machine.
+          Typically when this happens, the headers are from XFree86/DRI, and the OpenGL
+          library files are from Nvidia.</p>
+          
+          <p>It looks like the NVidia driver implements GLX 1.3 and the
+          installer does not substitute the "default" XFree86-devel headers (which
+          define GLX 1.4). Luckily the header files are included in
+          /usr/share/doc/NVIDIA_GLX-1.0/.</p>
+          
+          <p>In GLX 1.3 glXGetProcAddress is named glXGetProcAddressARB,
+          causing a conflict here. To resolve the problem, make sure ClanLib
+          is compiled with the same headers as the library files being
+          used.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>How can I detect ClanLib from within a configure script?</question>
+        <question>How do I use <tt>pkg-config?</tt></question>
+
+        <answer>
+          <p>
+            ClanLib-0.8 uses <tt>pkg-config</tt> to handle the issue
+            of maintaining compiler and library flags needed for
+            compilation. ClanLib-0.8 also installes its include files
+            into <tt>${prefix}/include/ClanLib-0.8/ClanLib/</tt>, so
+            the normal way of just adding -lclanCore, etc. will not
+            work. <tt>pkg-config</tt> simply outputs the compiler
+            flags that are nedded for a given package, so usage is
+            easy. To compile a simple test programm just do:
+          </p>
+
+          <typewriter>
+            $ g++ yourprog.cpp -o yourprog `pkg-config --cflags --libs clanCore-0.8 clanDisplay-0.8 clanGL-0.8`
+          </typewriter>
+
+          <p>
+            If you are using a configure script to configure the build
+            process you can get the same thing done with the following
+            macro:
+          </p>
+
+          <typewriter>
+            REQUIRED_CLANLIB_VERSION="0.8.0"<br />
+            PKG_CHECK_MODULES(YOURPROG,<br />
+            [<br />
+            clanCore-0.8           &gt;= $REQUIRED_CLANLIB_VERSION<br />
+            clanApp-0.8            &gt;= $REQUIRED_CLANLIB_VERSION<br />
+            clanDisplay-0.8        &gt;= $REQUIRED_CLANLIB_VERSION<br />
+            clanGL-0.8             &gt;= $REQUIRED_CLANLIB_VERSION<br />
+            ],
+            [])
+
+            AC_SUBST(YOURPROG_CFLAGS)
+            AC_SUBST(YOURPROG_LIBS)
+          </typewriter>
+
+          <p>
+            Replace REQUIRED_CLANLIB_VERSION by whatever minor version
+            is required for you program and YOURPROG with whatever is
+            the name of your application. The result of this macro
+            will be that YOURPROG_LIBS and YOURPROG_CFLAGS get set to
+            the values returned by <tt>pkg-config</tt>. If you also
+            use automake you have to add a line like:
+          </p>
+
+          <typewriter>
+            yourprog_CPPFLAGS = @PINGUS_CFLAGS@
+          </typewriter>
+
+          <p>
+            to your Makefile.am.
+          </p>
+        </answer>
+      </faq-item>
+
+      <faq-item>
+        <question>
+          Why does <tt>pkg-config</tt> fails to find ClanLib?
+        </question>
+
+        <answer>
+          <p>
+            By default <tt>pkg-config</tt> does <em>not</em> look in
+            <tt>/usr/local/lib/pkg-config/</tt>. To fix this simply
+            set the environment varible <tt>PKG_CONFIG_PATH</tt> as
+            described in the pkg-config man page:
+          </p>
+          <typewriter>
+            export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/
+          </typewriter>
+        </answer>
+      </faq-item>
+
+      <faq-item>
+        <question>
+          Why does ClanLib install its includes into <tt>${prefix}/include/ClanLib-0.8/ClanLib/?</tt>
+        </question>
+
+        <answer>
+          <p>
+            While GNU/Linux systems provide versioned library files and
+            so allow to have multiple libraries installed at the same
+            time, they do not provide such a system for include files.
+            So if the include files would go directly to
+            <tt>${prefix}/include/ClanLib/</tt> there would be no way to
+            have two ClanLibs (say an old stable one and the newest
+            development version) installed at the same time. By
+            installing the includes in a versioned subdirectory this
+            problem is solved. To still being able to find the includes
+            with there normal <tt>ClanLib/foobar.h</tt> names it is
+            however needed to pass an include flag to the compiler, the
+            include flag is returned by the <tt>pkg-config</tt>
+            programm:
+          </p>
+          
+          <typewriter>
+            $ pkg-config --cflags clanCore-0.8<br />
+            -I/usr/local/include/ClanLib-0.8/<br />
+         </typewriter>
+        </answer>
+      </faq-item>
+
+      <faq-item>
+        <question>How can I install and use ClanLib when I am not root?</question>
+        <question>How can I keep multiple version of ClanLib at the same time?</question>
+
+        <answer>
+          <p>
+            First of all, to install ClanLib in a different location you
+            need to set another prefix, which is per default at
+            <tt>/usr/local</tt>. To set another prefix just configure
+            ClanLib like this:
+          </p>
+
+          <typewriter>
+            ./configure --prefix=/home/your_name/run/ClanLib-0.8-CVS-2003-08-16/
+          </typewriter>
+
+          <p>
+            Once you have done that <tt>make install</tt> will install
+            all ClanLib stuff into the given location. To make gcc and
+            pkg-config recognize include files and libraries that are
+            not in the standard locations you need to set a few extra
+            variables:
+          </p>
+
+          <typewriter>
+            export CLANLIB_PREFIX=/home/your_name/run/ClanLib-0.8-CVS-2003-08-16/<br/>
+            export PKG_CONFIG_PATH=$CLANLIB_PREFIX/lib/pkgconfig/<br/>
+            export LD_LIBRARY_PATH=$CLANLIB_PREFIX/lib/<br/>
+            export LD_RUN_PATH=$CLANLIB_PREFIX/lib/<br/>
+            export LIBRARY_PATH=$CLANLIB_PREFIX/lib/<br/>
+            export CPLUS_INCLUDE_PATH=$CLANLIB_PREFIX/include/<br />
+            export C_INCLUDE_PATH=$CLANLIB_PREFIX/include/<br />
+          </typewriter>
+
+          <p>
+            Once you have set all the variables gcc and pkgconfig should
+            find everything needed and compilation of other programms
+            can be done just as normal.
+          </p>
+        </answer>
+      </faq-item>
+
+      <faq-item>
+        <question>
+          <p>When I try to compile ClanLib, I get errors regarding that try, catch and
+            throw are reserved C++ keywords.</p>
+        </question>
+        <question>
+          <p>My C++ compiler wants exceptions to be enabled with -fhandle-exceptions.</p>
+        </question>
+        <question>
+          <p>I get an "Internal compiler error" message from my C++ compiler.</p>
+        </question>
+        <answer>
+          <p>Try upgrading your compiler to a newer version.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>When compiling it complains that it cannot open shared object libclanCore...</p>
+          <p><typewriter>
+              error in loading shared libraries: libclanCore.so.0: cannot open shared object file: No such file or directory
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>Chances are you installed the ClanLib libraries into
+            /usr/local/lib, but usr/local/lib isn't present in the
+            /etc/ld.so.conf. You can choose to install in a directory that IS
+            present in /etc/ld.so.conf or choose to add /usr/local/lib to
+            /etc/ld.so.conf. Remember to run ldconfig as root afterwards.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I'm using PGCC, and I get error while compiling a file called virtch.c.</p>
+        </question>
+        <question>
+          <p>I'm using Mandrake 6.x or earlier, and I get error while compiling a file called virtch.c.</p>
+        </question>
+        <answer>
+          <p>Open Setup/Unix/makefile.conf, search for -O3 and replace it with -O6.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I'm using SuSE and am getting warnings about multiple common of...</p>
+          <p><typewriter>
+              obj/Input.o: warning: multiple common of 'CL_InputAxis type_info node'<br/>
+              /usr/local/lib/libclan.so: warning: previous common is here
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>To get rid of those annoying "multiple common..." warnings edit 
+            /usr/lib/gcc-lib/i486-linux/egcs-???/specs:</p>
+          <p><typewriter>
+              *lib<br/>
+              -warn-common%{share....
+            </typewriter></p>
+          <p>should be:</p>
+          <p><typewriter>
+              *lib<br/>
+              %{share...
+            </typewriter></p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I use Slack 7 and getting errors about cannot specify -o with -c or -S...</p>
+          <p><typewriter>
+              Sources/Core/Display/Generic/cliprect.cpp g++: cannot specify -o with -c or -S and multiple compilations<br/>
+              make: *** [Libs/Intermediate/cliprect.o]<br/>
+              Error 1
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>The problem is that configure fails at detecting where X11 is installed.
+            This means that Makefile.conf gets a faulty "-I -I" and an empty "-L". If
+            you remove those in Makefile.conf, then your compile should preceed without
+            problems. (Or better, modify configure to correctly locate X11, and send us
+            a patch).</p>
+        </answer>
+      </faq-item>
+    </subsection>
+
+    <subsection title="Compiling under Windows">
+      <faq-item>
+        <question>
+          <p>I try to compile an app using ClanLib under Visual C++ and it gets
+            unresolved external symbol _main...</p>
+          <p><typewriter>
+              Linking...<br/>
+              LIBCD.lib(crt0.obj) : error LNK2001: unresolved external symbol _main
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>You have to create a Win32 Application project and not a Win32 Console
+            Application. Otherwise, add the linker option "/entry:WinMainCRTStartup"
+            to your project options.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I try to compile an app using ClanLib under Visual C++ and it gets
+            unresolved external symbol _WinMain...</p>
+          <p><typewriter>
+              Linking...<br/>
+              LIBCD.lib(crt0.obj) : error LNK2001: unresolved external symbol _WinMain@16
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>Link clanApp.lib (for release) and clanAppd.lib (for debug) into your project.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>When I compile ClanLib, I get messages about "Directory already exists"</p>
+        </question>
+        <question>
+          <p>When I compile ClanLib, I get warnings about __NULL_IMPORT_DESCRIPTOR...</p>
+          <p><typewriter>
+              ddraw.lib(DDRAW.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in winmm.lib(WINMM.dll); second definition ignored<br/>
+              dsound.lib(DSOUND.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in winmm.lib(WINMM.dll); second definition ignored<br/>
+              dinput.lib(DINPUT.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in winmm.lib(WINMM.dll); second definition ignored<br/>
+              wsock32.lib(WSOCK32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in winmm.lib(WINMM.dll); second definition ignored
+            </typewriter></p>
+        </question>
+        <answer>
+          <p>Ignore these warnings, they are non-fatal.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I get errors about conflicts with the library "LIBCMT"</p>
+          <p><typewriter>
+              LINK : warning LNK4098: defaultlib "LIBCMT" conflicts with use of other libs; use /NODEFAULTLIB:library
+            </typewriter></p>
+        </question>
+        <question>
+          <p>I just upgraded to VS7 now all my projects wont compile , even the examples , I get a link error:</p>
+          <p><typewriter>
+              ExampleGUIGL error LNK2001: unresolved external symbol "void __cdecl std::_Xlen(void)" (?_Xlen@std@@YAXXZ)
+            </typewriter></p>
+        </question>
+        <answer>
+          
+          <p>This is a warning from the linker telling you that not all your
+            libraries (or the application itself) have been compiled with the
+            same threading model.  LIBCMT.lib is the C library used for the
+            Multi-threadded model. LIBC.lib is the one used for the
+            Single-threadded model.</p>
+          
+          <p>Make sure that all libraries have built with the same settings,
+            otherwise you will get this message. You find the settings for
+            this in the Project Settings of each project.</p>
+          
+          <p>In some cases it can be difficult to completely eliminate this
+            warning. This particular happens in the context where you link
+            debug versions with release versions of libraries. If eg. zlib.lib
+            is built with the Multithreaded model, but clanCored.lib is built
+            with Multithreaded debug model, then you could also get this
+            warning. It is possible to workaround this problem by 
+            entering the project settings->link->input category, and
+            write "libcmt" to the Ignore Libraries section.</p>
+          
+          <p>Please be aware that some of the libraries ClanLib uses per
+            default is built using an other threading model than the ClanLib
+            libraries. Some of those use makefiles to build themself, making
+            it more tricky to switch threading model. An easy way out of this
+            problem is to download the precompiled Windows External Binaries
+            we offer on our <a href="http://clanlib.org/download.html">download page</a>.</p>
+          
+          <p>For more information about linking with the correct C run-time
+            library, have a look at Microsoft's knowledge base article
+            <a href="http://support.microsoft.com/support/kb/articles/q140/5/84.asp">Q140584</a>.</p>
+          
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>How can I compile ClanLib under Win32 using an other compiler than Visual C++?</p>
+        </question>
+        <question>
+          <p>Can I use the windows binaries with another compiler than Visual C++?</p>
+        </question>
+        <answer>
+          <p>ClanLib does not currently officially support anything but Microsoft Visual C++
+            under Windows. But it should be possible to use ClanLib with other
+            compilers. Recently support for Borland C was added, but in an experimental state.</p>
+          <p>If people want to use another compiler together with ClanLib, notice
+            that there are some things you need to be aware of:</p>
+          <p>1. You probably cannot use the win32 binaries. Because there is no standard on
+            the symbol names used, it will be only Visual C++ 6.0 that those are
+            guaranteed to work with.</p>
+          <p>2. You will have to make your own makefiles or projectfiles.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>What is the configure app?</p>
+        </question>
+        <answer>
+          <p>In the source package, there is a workspace called Configure.dsw. It
+            produces the real ClanLib workspace and project files based on some questions
+            asked in a MFC Wizard. This configure app should always be run after a ClanLib
+            update, and of course when compiling ClanLib for the first time.</p>
+        </answer>
+      </faq-item>
+    </subsection>
+    <subsection title="Running under Windows">
+      <faq-item>
+        <question>
+          <p>What is required to run ClanLib games under Windows?</p>
+        </question>
+        <answer>
+          <p>Nothing except your game, as all libraries will be statically linked into your game.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>How do I get a console window under Windows to print debug information?</p>
+        </question>
+        <answer>
+          <p>You can add this code to your app:</p>
+          <p><typewriter>
+              // Create a console window for text-output if not available<br/>
+              CL_ConsoleWindow console("Console");<br/>
+              console.redirect_stdio();<br/>
+              <br/>
+              .... rest of app ....<br/>
+              <br/>
+              // Display console close message and wait for a key<br/>
+              console.display_close_message();
+            </typewriter></p>
+          <p>Otherwise, you can specify the following linker options for a standard Win32
+            Application project:</p>
+          <p><typewriter>/entry:"WinMainCRTStartup" /subsystem:console</typewriter></p>
+        </answer>
+      </faq-item>
+    </subsection>
+    <subsection title="Programming issues">
+      <faq-item>
+        <question>
+          <p>When I try to run my ClanLib program, it tells me there is no global
+            CL_ClanApplication instance...</p>
+          <p><typewriter>ClanLib: No global CL_ClanApplication instance!!!</typewriter></p>
+        </question>
+        <answer>
+          <p>The CL_ClanApplication class must be inherited by all ClanLib
+            applications. In your application you must create a class inheriting
+            CL_ClanApplication, make a global instance of it, and fill in the main() function.</p>
+        </answer>
+      </faq-item>
+      <faq-item>
+        <question>
+          <p>I'm getting an error while using the resources.
+            It says: Unknown type 'surface' declared for resource 'Graphics/maptiles'</p>
+        </question>
+        <answer>
+          <p>unknown type 'surface' means that you didn't initialise clanDisplay.
+            The different resource types must be registered before trying to access
+            the resource file, and this is done in eg. CL_SetupDisplay::init().</p>
+        </answer>
+      </faq-item>
+    </subsection>
+
+    <subsection title="CVS">
+      <faq-item>
+        <question>
+          <p>I run WinCVS, and it exits with code 0...</p>
+          <p><typewriter>*****CVS exited normally with code 0******</typewriter></p>
+          <p>What do I do wrong ?</p>
+        </question>
+        <answer>
+          <p>Nothing, this simply means everything went OK.</p>
+        </answer>
+      </faq-item>
+    </subsection>
+  </section>
+</page>

@@ -1,0 +1,35 @@
+Making a ClanLib project in KDevelop
+------------------------------------------------------------
+This guide will help you set up a project in KDevelop that
+will use the ClanLib libraries. This is quite simple.
+Make sure you have clanlib installed :)
+
+1. Create a project
+------------------------------------------------------------
+First, Project->new, then in the Application wizard select
+terminal C++ project. Fill out the rest, and create the
+project.
+
+2. Add the libraries to the project
+------------------------------------------------------------
+Go to Project->Options
+Then in go to Compiler Options.
+Under additional options put in
+-lclanCore -lclanDisplay -lclanApp -lclanGL
+and then any other additional libraries you need.
+
+Note
+-------------------------------------------------------------
+Cronos (I think that was his name) informed me that KDevelop
+creates large project files (about 1 mb) which is true.  So
+he suggested to run autoproject, then create a custom project
+in KDevelop and so on. I couldn't get this to work very well
+without having to rig everything up and you lose some
+features. So please update this file with the information on
+how to do this if you know how.
+
+Contributed by lowercase@crappysoft.com
+
+--
+Enjoy,
+The ClanLib development team

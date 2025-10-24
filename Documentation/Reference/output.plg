@@ -1,0 +1,8 @@
+sub plugin {
+  my $global=shift;
+  print "Generation documentation\n";
+  main::PLUGIN("class",$global);
+  main::PLUGIN("cross",$global);
+  main::PLUGIN("namespace",$global);
+  print "Done with documentation\n";
+}

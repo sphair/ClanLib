@@ -1,0 +1,34 @@
+<xml>
+<head>
+<title>Creating a font using alpha method, ClanLib API overview</title>
+</head>
+<body>
+
+<p>1. Launch your favourite paint program.</p>
+<p>2. Create a new image; make sure the background is set to <b>transparent</b>. 
+  You have to make the image very wide; set the image to 2000x50 for example. 
+  <p><img src="Images/font0.png" width="363" height="332"></p>
+</p>
+<p>3. Select the text tool, select a font and size, and enter the letters you 
+      want in your font. You need to make sure there is an empty space between
+      each letter; a good practise is to put a space between each letter.
+      Example: "A a B b C c D d E e ...".
+      <p><img src="Images/font1.png" width="551" height="358"></p>
+</p>
+<p>4. Make sure the whole font fits in your image. It doesn't matter if there 
+      are empty lines above, below, in front or at the end of the font.
+      <p><img src="Images/font4.png" width="691" height="162"></p>
+</p> 
+<p>5. Often some characters need some manual fixing, as they contain empty vertical 
+      lines. The " is a typical example of this, it often has empty lines between 
+      the two '. The solution is to create some barely visible pixels between them,
+      so the cutter understands it is only one letter.
+      <p><img src="Images/font5.png" width="346" height="380"><img src="Images/font6.png" width="346" height="380"></p>
+</p>
+<p>6. Save your work as a 32-bits image; TGA or PNG is well-suited for this.
+Notice that Photoshop and Paintshop have trouble handling alphavalues when saving.
+Gimp is excellent for this, though.</p>
+
+</body>
+</xml>
+

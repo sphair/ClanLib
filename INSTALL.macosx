@@ -1,0 +1,194 @@
+---------------------------------------------------------------------------
+Building ClanLib on Mac OS X
+---------------------------------------------------------------------------
+
+1. Getting Started
+2. Building ClanLib
+3. Running Example Applications
+4. Creating Applications with ClanLib
+5. Universal Binaries
+6. F.A.Q.
+7. Problems?
+
+1. Getting Started
+---------------------------------------------------------------------------
+The ClanLib Xcode project file was created with Xcode 1.5, so download and
+install that (or something newer) before continuing.
+
+In order to build ClanLib, you need to locate a few dependencies.
+The required frameworks depend upon which ClanLib modules you will build.
+You will most likely require at least libjpeg and libpng as ClanDisplay
+requires those frameworks and several other ClanLib components require
+ClanDisplay. The available external frameworks are:
+
+- libjpeg
+- libpng
+- mikmod
+- Ogg
+- SDL
+- Vorbis
+
+With the likely exception of libjpeg and libpng, the source code and Xcode
+project files for each of these frameworks can be found at their respective
+websites (use Google). To make things easier, all of them have been pre-built
+and collected at these URLs for easy downloading:
+
+- Mac OS X 10.4+ Universal (PowerPC + Intel):
+- http://www.clanlib.org/download-binaries-osx-gcc40-universal.html
+
+- Mac OS X 10.4+ PowerPC Only:
+- http://www.clanlib.org/download-binaries-osx-gcc40.html
+
+- Older Mac OS X PowerPC Only:
+- http://www.clanlib.org/download-binaries-osx-gcc33.html
+
+Once you have all of the external frameworks collected, place them into
+a "Frameworks" folder in your "ClanLib-0.8" folder (the same folder that
+the ClanLib.xcode project file is in) as this is where the ClanLib Xcode
+project expects them to be. You will have to create this folder manually.
+If you want them somewhere else, then you will have to point the way to
+Xcode - in which case you are on your own.  :-)
+
+2. Building ClanLib
+---------------------------------------------------------------------------
+Now that you've installed Xcode and got the other frameworks, go ahead and
+open the ClanLib.xcode project file. (If you are using a newer version of
+Xcode it will prompt to upgrade the project file - do it.) The project file
+contains several targets which build each component of ClanLib as a
+separate framework. These resulting frameworks are private frameworks which
+are meant to be copied/embedded into the bundle for the application you are
+creating. This means your finished application will be self-contained as
+far as ClanLib is concerned and not require installation of any components
+onto end-user machines.
+
+Select the ClanLib target in the Xcode project and hit build. The resulting
+frameworks are placed into a "MacOSX" folder within the same folder as the
+ClanLib.xcode file itself resides. Inside this folder you will find all
+required frameworks that are both part of ClanLib as well as the required
+external frameworks. This should make it easy to see exactly what you will
+need to bundle with your application.
+
+If you don't need all of the modules (for instance, if you have no need for
+ClanSDL and ClanMikMod), then simply edit the "ClanLib Distro" target and
+delete the references to the targets you do not need. Don't forget to look
+in the "Copy Files (MacOSX)" build phase as well!
+
+3. Running Example Applications
+---------------------------------------------------------------------------
+The "Examples" folder has another Xcode project file named Examples.xcode.
+This project has most (but not all) of the ClanLib example applications
+pre-built as targets for easy testing. Simply set the active target to the
+example you wish to try and hit build. The project file expects the ClanLib
+frameworks to be in the "ClanLib-0.8/MacOSX/" folder which is where the
+ClanLib.xcode project you used in step #2 places them.
+
+4. Creating Applications with ClanLib
+---------------------------------------------------------------------------
+Now that you've got ClanLib and the modules you need built, it is time to
+use them! Create an Xcode project however you like. (The Carbon Application
+template is probably what you will want for now.) Then add the frameworks
+you will need to your project - remember they are in the "MacOSX" folder as
+mentioned in step 2 above. You will *always* need the ClanLib.framework as
+well as any others you may have used (most certainly ClanCore.framework).
+
+Don't forget to add the external frameworks that may be required by the
+ClanLib components you are using! (These are libjpeg, libpng, etc. which
+should have been copied into the "MacOSX" folder mentioned earlier and are
+required by ClanDisplay.framework.) When adding external frameworks, Xcode
+should automatically set your target to link with them. You can check to
+make sure by opening the "Link Binary With Libraries" folder under your
+target and verifying that they are represented there.  If not, simply drag
+them into the folder.
+
+The final preparation step is to add a "Copy Files" build phase to your
+target. Set the location to "Frameworks" and then drag the various ClanLib
+and required external frameworks (such as libjpeg and libpng) into the build
+phase's folder.  This will cause Xcode to copy those frameworks directly into
+your application's bundle and result in a self-contained binary which needs
+no installer.  You do not need to copy in CoreServices, Carbon, libstdc++,
+or any other frameworks or libraries that were automatically added by the
+new project template (such as Carbon Application) when you created the new
+project file with Xcode as they are always included with Mac OS X.
+
+After your project file is prepared, add your source files and click build.
+With luck it will all just work.
+
+5. Universal Binaries
+---------------------------------------------------------------------------
+As you know, universial binaries will execute natively on PowerPC and Intel
+based Macs using the same application bundle.  This means that you can
+easily deploy Mac applications to users of both types of machines and be
+sure that each user enjoys the performance they expect from their platform.
+
+Building a universal version of your ClanLib application is easy and should
+only require a few changes to your Xcode project file as well as ClanLib's
+project file.  You must have Xcode 2.2 or newer in order for this to work
+as well as universal versions of the required frameworks copied into your
+"Frameworks" folder (as talked about above).  Additionally, it is important
+that if you have previously built ClanLib *without* using the universal
+frameworks, you must remove the non-universal frameworks from the "MacOSX"
+folder that the ClanLib build process created (as was described above).
+Sometimes Xcode doesn't notice that the new universal frameworks have
+changed from the old and so they don't get replaced which can cause
+problems if your project file refers to that "MacOSX" folder directly (as
+is the case with the Examples Xcode project file provided in the ClanLib
+"Examples" folder).
+
+Since you should already have Xcode 2.2 or higher, you've likely already
+opened and upgraded a copy of the ClanLib.xcode project file.  If not, do
+so.  Be sure to tell Xcode to save the upgraded project file in the same
+folder as the original ClanLib.xcode file (which it should do by default).
+
+Once Xcode is open and the ClanLib project file is loaded, click on the
+"Project" menu followed by the "Edit Project Settings" option.  The project
+settings editor should pop up.  First switch to the "General" tab.  There
+should be an option labled "Cross-Develop Using Target SDK" with a drop
+down menu.  The menu likely reads something like "Current Mac OS."  Change
+that to "Mac OS X 10.4 (Universal)."
+
+Switch to the "Build" tab and look for the setting named "Architectures".
+Select it and click "Edit" and check the boxes for both Intel and PowerPC
+and click OK.
+
+Now rebuild ClanLib.  It will take awhile since it'd building for two, now.
+
+Once ClanLib has been built, simply make those same two changes to your own
+project file and make sure it is refering to the now universal ClanLib and
+supporting frameworks and rebuild your application.  Once the build is done
+you will have a complete universal application bundle that will run on both
+PowerPC and Intel based Macs with OS X 10.4 or later.  Of course to be safe
+you should test the end product on both architectures before your final
+deployment.
+
+
+6. F.A.Q.
+
+Q:
+
+My try/catch doesn't seem to be able to catch CL_Error throws, instead I just get a segfault!
+
+A:
+
+Due to changes to default visibility attributes in gcc 4.0 it is necessary
+to make the following changes to your XCode 2.2+ projects (ClanLib and your app's):
+
+Look for "Symbols Hidden By Default" and set it to unchecked.  If it's
+already unchecked, check it and uncheck it anyway, so it will override
+whatever the default is.
+
+That may be all that is needed, but perhaps you need Inline Functions Hidden
+unchecked as well, not sure, something to try if you have any problems.
+
+7. Problems?
+---------------------------------------------------------------------------
+Please read the FAQ on http://www.clanlib.org/ for common errors and
+explanations.  There is also a Wiki at http://www.clanlib.org/wiki/.
+
+If you cannot find the answer to your problem in the FAQ, feel free to ask
+on the ClanLib user mailing list or join the #clanlib channel on IRC at
+irc.freenode.net.
+
+--
+Enjoy,
+The ClanLib development team
+

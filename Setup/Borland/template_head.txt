@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+	<MACROS>
+		<VERSION value="BCB.05.03"/>

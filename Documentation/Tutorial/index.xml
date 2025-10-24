@@ -1,0 +1,19 @@
+<xml>
+<head>
+<title>ClanLib - Documentation</title>
+<eyecolor>orange</eyecolor>
+</head>
+<body>
+
+<p>These pages contain step-by-step tutorials which will help you understand and use ClanLib.</p>
+
+<menu>
+<menuitem "Kavanek/index.html" "Kavanek Tutorial" "This multipart tutorial guides you through many areas of ClanLib.">
+<menuitem "TicTacToe/index.html" "TicTacToe Tutorial" "This tutorial will guide you through the development of a simple TicTacToe game.">
+<menuitem "Quickflash/index.html" "QuickFlash Tutorial" "This tutorial will guide you through various aspects of ClanLib.">
+</menu>
+
+<p>Note: These last two tutorials has not been updated in ages, and might be horribly out of date! If you have some free time,
+feel free to update them, and send the changes to us. We'd really appreciate it.</p>
+</body>
+</xml>

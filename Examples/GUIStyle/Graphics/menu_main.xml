@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<components>
+	<button
+		name="btn_to_profile"
+		x="20"
+		y="20"
+		text="Profile"
+		tab_id="1"
+		type="text"
+		size="big" />
+	<button
+		name="btn_to_game"
+		x="20"
+		y="45"
+		text="Game"
+		tab_id="2"
+		type="text"
+		size="big" />
+	<button
+		name="btn_to_demos"
+		x="20"
+		y="70"
+		text="Demos"
+		tab_id="3"
+		type="text"
+		size="big" />
+	<button
+		name="btn_to_options"
+		x="20"
+		y="95"
+		text="Options"
+		tab_id="4"
+		type="text"
+		size="big" />
+	<button
+		name="btn_to_credits"
+		x="20"
+		y="120"
+		text="Credits"
+		tab_id="5"
+		type="text"
+		size="big" />
+	<button
+		name="btn_quit"
+		x="20"
+		y="145"
+		text="Quit"
+		tab_id="6"
+		type="text"
+		size="big" />
+</components>

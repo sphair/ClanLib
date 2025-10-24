@@ -1,0 +1,15 @@
+# pkg-config Metadata for clanMikMod
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanMikMod
+Description: MikMod support for ClanLib
+Version: @VERSION@
+Requires: clanSound-@LT_RELEASE@ = @VERSION@
+Libs:   -L${libdir} -lclanMikMod @extra_LIBS_clanMikMod@
+Cflags: -I${includedir} @extra_CFLAGS_clanMikMod@
+
+# EOF #

@@ -1,0 +1,175 @@
+<HTML>
+<HEAD>
+<TITLE>ClanLib Game SDK: ClanLib - Documentation</TITLE>
+<STYLE TYPE="text/css"><!--
+HTML BODY
+{
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 14px;
+	border-style: solid;
+}
+H1 { font-size: 22px; }
+H2 { font-size: 18px; }
+H3 { font-size: 16px; }
+H4 { font-size: 14px; }
+P { font-size: 14px; }
+LI { font-size: 14px; }
+--></STYLE>
+</HEAD>
+
+<body bgcolor=white text=black>
+<center>
+<table width=70%>
+<tr>
+<td>
+
+<center><table><tr><td>
+<img
+	SRC="../../Images/clanlib_logo_small.png"
+ alt="ClanLib logo"><br>
+</td></tr></table></center>
+
+<h1>Simple Game Development with ClanLib 0.8</h1>
+<h2>Part 2</h2>
+<b>The Game Loop and ClanLib Graphics</b><br><br>
+
+<ul>
+<p>
+Every game needs a loop, or something to keep it alive and kicking (and painting). Without it, getting input and displaying graphics becomes either very linear or next to impossible. Our game loop needs to do three basic things with CL, in addition to the things your game needs to do like update and paint:</p>
+<ol>
+<li>Call CL_Display::flip()
+<li>Call CL_System::sleep(10)
+<li>Call CL_System::keep_alive()
+</ol>
+
+<p>
+The flip() is a call to flip, or update the display buffers. sleep(10), although not a neccessary line, helps the program multitask well with other windows, giving them time to update and not hogging the system. The keep_alive() call allows CL to update itself and do things like handle Windows messages, gather input, etc. I tend to seperate my game code from my CL code where possible, so the game loop in code looks like this:<br><br></p>
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>// Make sure there's a way out of the looop
+while (gameAliveVariable && !CL_Keyboard::get_keycode(CL_KEY_ESCAPE)) {
+
+	// Game update function
+	// Game paint function
+
+	CL_Display::flip();
+	CL_System::sleep(10);
+	CL_System::keep_alive();
+}</pre> 
+</td></tr></table></div>
+
+<p>
+In our game, this loop will be included in the TicTacToeGame's run() function. So as soon as TicTacToeApp's main() function is executed, it should create an instance of TicTacToeGame, call run() and our game will be up and running.
+</p>
+
+</ul>
+
+<b>Graphics</b>
+<ul>
+<p>
+Now that we're created a framework for our new CL game we can start adding game elements. Foremost is something to look at, or our Tic-Tac-Toe game will be seriously suffering. This is the graphics set we'll be using for the game:
+</p>
+
+<b>Fig 4-7</b>. 
+<div align="center">
+<img src="figure_board.png" width="350" height="350" alt="" border="0" vspace=4 hspace=4><br>
+<img src="figure_circle.png" width="100" height="100" alt="" border="0" vspace=4 hspace=4><img src="figure_cross.png" width="100" height="100" alt="" border="0" vspace=4 hspace=4><br>
+<img src="figure_menu.png" width="350" height="30" alt="" border="0" vspace=4 hspace=4>
+</div>
+
+<p>
+Some technical notes about using graphics. You can use JPEGs, PNGs, or a few other formats. I use Targa (TGA) format out of habit because it lets me save 32-bit targas including alpha channels for transparency. Another note about transparency and CL, is that you only want to use one one level of alpha value or you will take a significant performance hit. Here is a visual example of what I mean. Fig 8 is an alpha channel with one alpha value, Fig 9 is one with multiple levels of alpha transparency. So it's a tradeoff of looks for speed, but only if you need alpha blending.
+</p>
+
+<b>Fig 8 & 9</b>. 
+<div align="center"><img src="figure8.png" width="160" height="160" alt="" border="0" vspace=4 hspace=4><img src="figure9.png" width="160" height="160" alt="" border="0" vspace=4 hspace=4></div>
+
+<p>
+Now that we have our graphics created, we need that TicTacToeGame class and member CL_Surface pointers to access them. CL handles the loading and storing of the graphics for us, so we simply need a pointer to access them. 
+<br><br>
+In TicTacToeGame, we'll include a utility loadGraphics() function to initialize CL_Surface pointers. It will be called by the constructor so we won't have to worry about doing it manually. 
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>class TicTacToeGame {
+
+public:
+	TicTacToeGame();
+	~TicTacToeGame();
+
+	void loadGraphics();
+	void paint();
+	void run();	// Function for game loop
+
+	CL_Surface *board, *o, *x, *menu;
+};</pre> 
+</td></tr></table></div>
+
+<p>
+The first function we'll write is the loadGraphics() one 
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>void TicTacToeGame::loadGraphics() {
+
+	// create loads the file with the given name and stores it for us; we only
+	// need a pointer to access it.
+	board = new CL_Surface("board.tga");
+	o = new CL_Surface("o.tga");
+	x = new CL_Surface("x.tga");
+	menu = new CL_Surface("menu.tga");
+}</pre> 
+</td></tr></table></div>
+
+<p>
+The CL_Surface pointers now point at the graphics file we want to use. Painting them on the screen is a very simple operation - we simple say graphicPointer->put_screen(xCoordinate, yCoordinate). <br>
+<br>
+We can also specify the width and height of the image we want to put on the screen (they don't have to be the same size the graphic file actually is), and CL will scale them for us. On some systems this scaling is smooth, but on others it appears jagged. We won't be scaling any graphics in this application, though. Now on to the paint() function.
+</p>
+
+<div align="center"><table border=1 bordercolor="#000000" cellpadding=5 cellspacing=0><tr><td>
+<pre>void TicTacToeGame::paint() {
+
+	// First we want to clear the screen to a certain R, G, B color
+	// 0, 0, 0, is black (255 is the alpha paramater - we want it full)
+	// Black is the default clear color, so you could just use CL_Display::clear() here
+	CL_Display::clear(CL_Color(0, 0, 0, 255));
+
+	// Paint the board to the screen
+	board->draw(75, 25);
+
+	// Paint a sample move to the screen
+	o->draw(200, 150);
+
+	// Paint the 'restart / quit' menu below the board
+	menu->draw(75, 400);
+}</pre> 
+</td></tr></table></div>
+
+<p>
+So we have functions for loading and painting the graphics, all that remains is to fill in the run() function with a call to paint the screen, fill the constructor with a call to load the graphics, and create an instance of TicTacToeGame and run it inside the main() function of the TicTacToeApp class.<br>
+<br>
+Once you have finished adding the requisite code you can run the program and see the image painting in action.
+</p>
+
+<b>Fig 10</b>. 
+<div align="center"><img src="figure10.png" width="506" height="475" alt="" border="0"></div>
+
+<p>
+A Tic-Tac-Toe board without any interactivity is pretty dull. In the next part we'll look at how to add input through CL.
+<br><br>
+<a href="clanlib-tutorial-part2.zip">Download Visual C++ Workspace for Part 2</a><br>
+<br>
+<a href="part-3.html">Move on to Part 3</a>
+
+</p>
+
+</ul>
+
+</TD>
+</TR>
+</TABLE>
+
+</CENTER>
+</BODY>
+</HTML>
+

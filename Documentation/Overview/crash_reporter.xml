@@ -1,0 +1,125 @@
+<xml>
+<head>
+<title>ClanLib Crash Reporter</title>
+</head>
+<body>
+
+<p>ClanLib includes a class called CL_CrashReporter that help doing
+post-mortem debugging of a ClanLib application. Post-mortem debugging is a
+method to debug an application that crashes at the customer site - or in
+general when its in production and not running on a developers computer with
+access to Just-In-Time (JIT) debugging.</p>
+
+<p><i>Note</i>: For the time being, this class only does anything on Windows with
+Microsoft Visual Studio.NET 2002 or later. If compiled with any other tool
+it will simply do nothing.</p>
+
+<!--
+<p>To compile CrashReporter on win32 using MSVC6 you need the "Debugging Tools"
+library. Without this library while trying to compile clanCore the compiler
+will spit out some errors similar to:</p>
+
+<p>C:\ClanLib\Sources\Core\System\Win32\crash_reporter_win32.h(127) : error
++C2061: syntax error : identifier 'MINIDUMP_TYPE'</p>
+
+<p>Download it from:<br/>
+http://www.microsoft.com/whdc/ddk/debugging/installx86.mspx</p>
+
+<p>The "Debugging Tools" are also part of the Microsoft Platform SDK, which
+will be better to install if you dont mind the larger download (you will get
+a much newer set of include files and libraries, making it possible to use
+things Microsoft invented since 1998). </p>
+
+<p>The Microsoft Platform SDK is available at:
+http://www.microsoft.com/msdownload/platformsdk/sdkupdate/</p>
+
+<p>IMPORTANT: After installing one of those two packages mentioned above, make
+sure that the installed package is mentioned before the msvc6 header in the
+include and library paths in the Tools->Options menu.</p>
+-->
+
+<p>Microsoft originally introduced this form of debugging as part of NT 4.
+When an application crashes on this platform, a program calling itself "Dr
+Watson" appears and produces a memory dump of the application that crashed.
+This tool has then been further improved in Windows XP. Generally Microsoft
+discovered that a complete memory dump of an application could be huge, and
+in the majority of cases you'd be able to figure out the source of the
+problem by using a 'mini dump' instead. In Windows XP "Dr Watson" still
+exist, but now it appears far more integrated with Windows. Thanks to the
+now much smaller minidump files, "Dr Watson" is able to send dumps of
+applications for analysis at Microsoft. No doubt this have helped Microsoft
+find race conditions and other more rare and subtile bugs in their
+systems.</p>
+
+<p>The good news is that Microsoft decided to make this possible for not
+only themselves, but for anyone else as well. Windows XP ships a
+redistributable dbghelp.dll library that contain functions that can produce
+a minidump of a running application. Such a produced minidump file can then
+be loaded into MSVC7's Visual Studio debugger for analysis. Combined with
+program database files (.pdb) built for the executable, it is able to point
+exactly at the source code line where the application crashed, show the call
+stack of all threads as it appeared when it crashed, local stack variables
+visible as well. Not every variable in the application is visible (its a
+mini dump, not a complete memory dump), but despite this it really narrows
+it down what could be causing the error in the first place.</p>
+
+<p>To enable post-mortem debugging in your application, you must perform the
+following steps:</p>
+
+<ol>
+<li>
+<p>Create a CL_CrashReporter instance in every thread you wish to enable
+post-mortem debugging for. Avoid to destroying it until the shutdown of
+the thread, since the post-mortem debugging will only be enabled as long as
+there's an instance of the crash reporter.</p>
+</li>
+<li>
+<p>Link up against clanCore.lib for release builds, and clanCored.lib
+for debug builds.</p>
+</li>
+<li>
+<p>Enable debug information for release builds. This is enabled by entering
+the Project Settings dialogs for each project, going to the C++ tab and
+finding the Debug info, putting it to "Program Database". Don't set it to
+Program Database with Edit and Continue. Then go to the Linker tab and
+enable debug info there as well.</p>
+</li>
+<li>
+<p>
+That's it!
+</p>
+</li>
+</ol>
+
+<p>Enabling debug information will not slow down the application, it just
+means it will produce program database files (pdb) files for release builds.</p>
+
+<p><i>Note:</i>: You can skip step 1 in any thread created by ClanLib: the
+main thread for CL_ClanApplication apps, and any thread created by
+CL_Thread. ClanLib internally constructs a crash reporter object for
+you.</p>
+
+<p>After rebuilding your application and any libraries you might want to be
+able to have debug information about, you should get a set of pdb files
+(one for the exe, one for each library you enabled debug info in) along
+your application.</p>
+
+<p>Send the exe to the customer, and save the pdb files locally somewhere.</p>
+
+<p>When the application crashes, the crash reporter will generate a
+dump-1234.dmp file, where 1234 is the thread ID of the thread that crashed.
+Get the customer to send back this file to you.</p>
+
+<p>You are now ready to debug the application from the point it crashed. Put
+the exe and its dll's and the pdb files generated when you built it into a
+common directory, along with the minidump (.dmp) file. Then doubleclick the
+dmp file as if it was a Visual Studio project. After Developer Studio has
+launched, hit F5 to start the debugging.</p>
+
+<p>Make sure you ship the imagehlp.dll and dbghelp.dll that come with
+<i>Windows XP</i> along your application. Post-mortem debugging is only
+supported by the latest versions of those dlls, so any OS older than WinXP
+will need those updated dlls.</p>
+
+</body>
+</xml>

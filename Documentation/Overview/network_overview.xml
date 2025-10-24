@@ -1,0 +1,460 @@
+<xml>
+<head>
+<title>Network API overview</title>
+</head>
+<body>
+
+<p>This document explains how to write network games with ClanLib's network
+model:</p>
+
+<ul>
+<li>Sockets, low-level sockets wrapped into nice c++ classes.</li>
+<li>NetSession, a networking engine.</li>
+<li>NetObjects, dynamic object replication for the networking engine.</li>
+<li>NetVariables, a object variables serialization system.</li>
+<li>Browse, system that allows games to register themselves to a browse master.</li>
+</ul>
+
+<h3>ClanLib Sockets, low-level sockets</h3>
+
+<p>The lowest level is <codelink>CL_Socket</codelink>. This is platform independent
+version of the system level socket functions, encapsulated in a class for your
+convience. A simple example:</p>
+
+<code>
+/* Gets clanlib.org's index.html page: */
+try
+{
+  std::string request_msg = "GET index.html HTTP/1.0\n\n";
+  CL_Socket sock(CL_Socket::tcp);
+  sock.connect(CL_IPAddress("clanlib.org", "80"));
+  sock.send(request_msg);
+  while (true)
+  {
+    char buffer[16*1024+1];
+    int received = sock.recv(buffer, 16*1024);
+    if (received == 0) break; // end of stream. server closed connection.
+    buffer[received] = 0;
+    std::cout << buffer;
+  }
+  std::cout << std::endl;
+}
+catch (CL_Error err)
+{
+  std::cout << "Why wont things never work as planned? " << err.message.c_str() << std::endl;
+}
+</code>
+
+<p>The <codelink>CL_BufferedSocket</codelink> class is not completely implemented
+and should not be used. I'm not even anymore sure it was a good idea and it might
+be pending for removal.</p>
+
+<h4>EventTriggers:</h4>
+
+<p>Additionally to this, <codelink>CL_Socket</codelink> can use the
+<codelink>CL_EventTrigger</codelink> and <codelink>CL_EventListener</codelink>
+to wait for socket data. A small example:</p>
+
+<code>
+void wait_for_socket_data(CL_Socket &sock, int timeout)
+{
+  CL_EventTrigger *read_trigger = sock.get_read_trigger();
+  read_trigger->wait(timeout);
+}
+
+void wait_for_sockets(std::list<CL_Socket> &sockets, int timeout)
+{
+  CL_EventListener listener;
+  std::list<CL_Socket>::iterator it;
+  for (it = sockets.begin(); it != sockets.end(); it++)
+  {
+    CL_Socket &sock = *it;
+    listener.add_trigger(sock.get_read_trigger();
+  }
+  listener.wait(timeout);
+}
+</code>
+
+<h4>OutputSources:</h4>
+<p><codelink>CL_OutputSource_Socket</codelink> is a <codelink>CL_OutputSource</codelink>
+compatible wrapper for <codelink>CL_Socket</codelink>. It can be mixed with
+<codelink>CL_Socket</codelink> since the <codelink>CL_Socket</codelink> class reference
+counts the handle to the system level socket. A small example of its usage:</p>
+
+<code>
+void send_init_handshake(CL_Socket &sock)
+{
+  CL_OutputSource_Socket output(sock);
+
+  // output.set_big_endian_mode(); // ha! as if that actually worked...
+  output.write_string("Yo dude! You've entered the 1337 socket owned by Cl4nL1b");
+
+  output.write_int(42);
+}
+</code>
+
+<p>You will find a similar <codelink>CL_InputSource_Socket</codelink> for
+reading from sockets.</p>
+
+<p>That was the lowest level socket support. It doesnt do much except save you
+from the trouble of setting up some annoying C structs and filling them with
+data.</p>
+
+<h3>The ClanLib networking engine</h3>
+
+<p>ClanLib features a networking engine called NetSession. It is built on top
+of the lower level socket interface in ClanLib, so its all up to the game
+developer which level API is prefered. The NetSession engine provides the
+following core features:</p>
+
+<ul>
+
+<li>Single socket firewall & NAT friendly channeling system. It will not use a
+dozen of ports, forcing firewall admins to open a wide range of ports, and
+it should work flawlessly through NAT internet connected systems.</li>
+
+<li>Simple but powerful channel system to seperate different types of network
+communication in the game.</li>
+
+<li>Connection oriented stream communication support (like TCP sockets), and
+connectionless communication (like UDP sockets) support.</li>
+
+<li>Recognition of players that have left the server and now rejoining it -
+allowing a game to restore scores for people lagging out of server or for
+other reason left the server to return again.</li>
+
+<li>Flexible server/client relationship in a netsession, allowing a game to
+easilly implement server travelling (often used by mass-multiplayer online
+game servers). Server travelling means to have a client seamlessly connect
+to a new server as it reaches the border boundary of the map that a game
+server controls.</li>
+
+<li>Threadding model that both give you the option to run everything in one
+single thread, or to spread things over multiple worker threads.
+TODO: Explain more whats threaded in clanNetwork</li>
+
+<li>And most important of all, its simple and easy to understand. Most stuff
+is done completely automatically. :)</li>
+
+</ul>
+
+<h4>CL_NetSession:</h4>
+
+<p>So what is a CL_NetSession exactly?</p>
+
+<ol>
+
+<li>Its a container for computers connected to or from the computer.</li>
+
+<li>A set of signals being invoked when accepting new computers into the
+system, leaving the system, and rejoining the system.</li>
+
+<li>Signals that are being invoked when a new stream connection is made, or a
+netpacket is received.</li>
+
+</ol>
+
+<p>When a netsession is initially constructed, it will not listen for incoming
+computers on any ports, nor will it connect to any remote system. It can
+become a server, a client or any kind of combination you prefer.</p>
+
+<p>There are two ways a new computer can enter a netsession. Either
+CL_NetSession::start_listen() is called, making it accept connecting
+computers on the specified port, or CL_NetSession::connect() is called,
+making the netsession connect to an other computer.</p>
+
+<p>There is nothing that prevents you from mixing those two calls. Eg. to have
+a Peer To Peer network model, or to make servers connect to other servers.
+Its also no problem to make a client connect to two different servers at the
+same time, or to disconnect from them again.</p>
+
+<pre>
+  // Connect to a server
+  CL_NetSession netsession("MyGame");
+  CL_NetComputer server = netsession.connect(CL_IPAddress("myserver.coolgames.com", "4322"));
+
+  ... 
+
+  // Start a server which listens to incoming connections:
+  CL_NetSession netsession("MyGame");
+  slots.connect(netsession.sig_computer_connected(), this, &Server::on_connect);
+  slots.connect(netsession.sig_computer_disconnected(), this, &Server::on_disconnect);
+  netsession.start_listen("4322");
+
+  ...
+  
+  void Server::on_connect(CL_NetComputer &computer)
+  {
+    std::cout << "A computer connected from " << computer.get_address().get_address() << std::endl;;
+  }
+
+  void Server::on_disconnect(CL_NetComputer &computer)
+  {
+    std::cout << "Computer " << computer.get_address().get_address() << "disconnected" << std::endl;
+  }
+</pre>
+
+<h4>CL_NetComputer:</h4>
+
+<p>When a computer enters the system, it is represented by a CL_NetComputer
+handle. The signal CL_NetSession::sig_computer_connected() is emitted when a
+new computer enters the system.</p>
+
+<p>If the incoming computer is already known to the system,
+CL_NetSession::sig_computer_reconnected() is emitted instead. A reconnecting
+computer can only be recognized if not all original CL_NetComputer handles
+to it has been destroyed. This allows the application to control for how
+long time an earlier computer can be recognized by the system. For instance,
+if a game wants to remember old computers for ten minutes, it could store
+the CL_NetComputer handle when being emitted by
+CL_NetSession::sig_computer_disconnected(). After the 10 minutes timeout, it
+just need to destroy the instance it kept, and the netsession will forget
+about the previous connected computer.</p>
+
+<h4>CL_NetPacket:</h4>
+
+<p>To send a message to an other computer, the most simple approach is to
+construct a netpacket, fill it with data, and send it to one or more
+computers (via CL_NetComputer::send() or CL_NetGroup::send()).</p>
+
+<pre>
+  CL_NetPacket msg;
+  msg.output.write_string(player->name);
+  msg.output.write_int32(player->x);
+  msg.output.write_int32(player->y);
+  msg.output.write_bool8(player->running);
+  destination_computer.send("Players", msg);
+</pre>
+
+<p>This is the connectionless sending approach. The message can be sent
+reliably (via TCP) or unreliable (via UDP). Netpackets are perfect for short
+messages where the latency (ping) should be kept at a minimum.</p>
+
+<p>When sending a netpacket, you have to point out what channel you want to
+send it to. This allows you to seperate the different types of communication
+in your application. If a game features a lobby, the messages sent between
+players in the lobby could use a channel name of "lobby". Player name stuff
+might be sent to "playerinfo" and so forth.</p>
+
+<p>The netpacket channel is used when a netpacket is received. For each channel
+in the application, there exist a signal in CL_NetSession that gets emitted.
+To hook up a receive function to the eg. the "lobby" channel, use
+CL_NetSession::sig_netpacket_receive() with "lobby" as the parameter. That
+will return the signal for that channel.</p>
+
+<pre>
+  slot = netsession.sig_netpacket_receive("Login").connect(this, &Login::on_netpacket));
+
+  ...
+
+  void Login::on_netpacket(CL_NetPacket &packet, CL_NetComputer &computer)
+  {
+    std::string user = packet.input.read_string();
+    std::string password = packet.input.read_string();
+    ...
+</pre>
+
+<h4>CL_NetStream:</h4>
+
+<p>It is also possible to make connection oriented connections to a computer.
+This is often practical if there needs to a higher level of communication
+between the two computers.</p>
+
+<p>Imagine a game server that just did a map switch. The game supports
+automatic downloads of map files that are not available on the client. This
+is easiest implemented with a netstream. The server first has to tell the
+client about a file, then the client has to check if the file already exist
+locally, if not, it should report back and ask for the download. Then the
+server has to start sending the entire file, which may be several megs in
+size.</p>
+
+<p>There's a lot of 'ping-pong' communication here, where each end need to know
+what they talked about earlier. Connectionless communication (netpackets)
+become very unpleasant and annoying to use in this kind of communication,
+but with streams its very simple:</p>
+
+<pre>
+	// Client version:
+	CL_NetStream stream("download channel", server_netcomputer);
+	int num_files = stream.input.read_int32();
+	for (int i=0; i&lt;num_files; i++)
+	{
+		std::string filename = stream.input.read_string();
+		if (file_exist(filename))
+		{
+			stream.output.write_bool8(false); // dont send file.
+		}
+		else
+		{
+			stream.output.write_bool8(true); // send file.
+			download_and_store_file(stream);
+		}
+	}
+</pre>
+
+<p>Simple, eh? What's the catch? The catch is that those calls are blocking.
+The code will stop up and wait for the server to answer, and if the
+connection is slow, we have to wait for the sends to complete as well.</p>
+
+<p>The solution to that problem is threadding. Construct a worker thread to do
+the communcation, and let the main game thread continue its run. Of course
+this means you'll have to do threadsafe code, but trust me, in most cases
+its far easier and nice than to start trying to store states between
+received netpackets.</p>
+
+<p>When a stream connection is made, CL_NetSession::sig_netstream_connect() is
+emitted on the receiving computer. ClanNetwork will not create a new thread
+for you when emitting this function, so if you want to thread your stream
+communcation, you'll have to create a thread in your slot function yourself.</p>
+
+
+<h3>NetObjects</h3>
+
+<p>On top of the netsession network engine, ClanLib provides a system to
+replicate objects to client machines. This system is called netobjects, and
+consist of three classes: CL_NetObject_Controller, CL_NetObject_Server and
+CL_NetObject_Client.</p>
+
+<p>The idea of the netobjects is that a CL_NetObject_Server object can send
+messages to a CL_NetObject_Client object, which is present on one or more
+client machines. These client objects can also send messages back to the
+server object.</p>
+
+<p>Netobjects operate over a netsession netpacket channel, which means that
+both the server and clients need to instantiate a CL_NetObject_Controller
+object. This object is responsible for receiving messages and dispatch them
+to the proper netobjects.</p>
+
+<p>In order to construct a server side netobject, simply construct an instance
+of CL_NetObject_Server. Notice that the object will NOT immidiately be
+replicated to clients. This will first happen when you send a message to the
+clients.</p>
+
+<p>When a server object sends a message, the receiving client machine's
+controller will look to see if there exist any CL_NetObject_Client for the
+object. If there do not, the controller will create a new
+CL_NetObject_Client object and signal CL_NetController:sig_create_object().</p>
+
+<p>The application is supposed to hook itself into this signal and read the
+message received. If the application keeps the CL_NetObject_Client handle
+around, future messages sent to this object will cause
+CL_NetObject_Client::sig_received_message() to be emitted. If the
+application do not keep the handle, or if it later on destroys it, any
+future messages sent to the object will cause sig_create_object() to be
+invoked again.</p>
+
+<p>Let's look at this again. When a server sends an initial message to the
+client, the client get the opportunity to create a client version of the
+object. If the game is a 3D shooter, where objects are only replicated to
+the client when within visible range, it is possible for the client to
+destroy the object when not visible any more. Next time the object comes
+within visible range, sig_create_object will be invoked again, and client
+recreates the object.</p>
+
+<p>Another example. Our netobject can have different kinds of messages. One of
+the messages is a "full update", including all information needed to
+construct the object. Then it has some "position update" messages that only
+include the new position of the object. Lets assume the first message, the
+full update, gets lost in package loss. Now the object sends a position
+update to the client. Since the client never got the original full update,
+sig_create_object is emitted, and the function do not have the information
+needed to create the object. The application can use the netobject handle in
+sig_create_object to send a message back to the server object, and in this
+message it asks for a full update. No object was created, so we do not keep
+the netobject handle. When the server receives the message, it sends back a
+full update, and sig_create_object is again invoked on the client. This time
+we do have the information needed to replicate, and we construct our object.</p>
+
+<pre>
+class ServerObject
+{
+	int x, y, shield;
+	CL_NetObject_Server netobj;
+	CL_Slot slot;
+	
+	ServerObject(CL_NetObject_Controller *controller)
+	: netobj(controller)
+	{
+		slot = netobj.sig_received_message(0).connect(
+			this, &ServerObject::on_received_pos_update);
+	}
+	
+	void on_received_pos_update(
+		CL_NetComputer &computer, CL_NetPacket &packet)
+	{
+		x = packet.input.read_int32();
+		y = packet.input.read_int32();
+	}
+	
+	void send_update(CL_NetComputer &comp)
+	{
+		CL_NetPacket packet;
+		packet.output.write_int32(x);
+		packet.output.write_int32(y);
+		packet.output.write_int32(shield);
+		netobj.send(comp, 0, packet);
+	}
+};
+
+class ClientObject
+{
+	int x, y;
+	CL_NetObject_Client netobj;
+	CL_Slot slot;
+	
+	ClientObject(CL_NetObject_Client &netobj, CL_NetPacket &packet)
+	: netobj(netobj)
+	{
+		slot = netobj.sig_received_message(0).connect(
+			this, &ClientObject::on_received_update);
+			
+		on_received_update(packet);
+	}
+
+	void on_received_update(CL_NetPacket &packet)
+	{
+		x = packet.input.read_int32();
+		y = packet.input.read_int32();
+		shield = packet.input.read_int32();
+	}
+	
+	void send_pos_update()
+	{
+		CL_NetPacket packet;
+		packet.output.write_int32(x);
+		packet.output.write_int32(y);
+		netobj.send(0, packet);
+	}
+};
+
+class ClientWorld
+{
+public:
+	CL_NetObject_Controller controller;
+	CL_Slot slot;
+	std::list<ClientObject *> objects;
+
+	ClientWorld(CL_NetSession &netsession)
+	: controller("netobj_channel", netsession)
+	{
+		slot = controller.sig_create_object().connect(
+			this, &ClientWorld::on_create_object);
+	}
+	
+	void on_create_object(
+		CL_NetObject_Client &netobj, int msgtype, CL_NetPacket &packet)
+	{
+		if (msgtype != 0)
+		{
+			// not a update message. we can only create object
+			// based on an update message.
+			return;
+		}
+		
+		objects.push_back(new ClientObject(netobj, packet));
+	}
+};
+</pre>
+
+</body>
+</xml>

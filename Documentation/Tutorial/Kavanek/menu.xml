@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<menu>
+  <item file="http://clanlib.org/index.html">News</item>
+  <item file="http://clanlib.org/intro.html">About</item>
+  <item file="http://clanlib.org/download.html">Download</item>
+  <item file="http://clanlib.org/subversion.html">Subversion</item>
+  <item file="http://clanlib.org/docs.html">Docs</item>
+  <item file="http://clanlib.org/donations.html">Donations</item>
+  <item file="http://clanlib.org/games.html">Games</item>
+  <item file="http://clanlib.org/contact.html">Contact</item>
+  <item file="http://clanlib.org/links.html">Links</item>
+</menu>

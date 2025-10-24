@@ -1,0 +1,5 @@
+<resources>
+	<program-object name="program" shader="gradient_shader"/>
+	<fragment-shader name="white_shader" file="white_shader.glsl"/>
+	<fragment-shader name="gradient_shader" file="gradient_shader.glsl"/>
+</resources>

@@ -1,0 +1,130 @@
+#
+# This should look for tags of the form
+#   Format tags
+#     {\i foo} - italic
+#     {\b foo} - bold
+#
+#   Type tags (unlinked)
+#     {\func foo}  - function
+#     {\class foo} - class
+#     {\enum foo}  - enum
+#     {\macro foo} - macro
+#     {\type foo}  - parameter type
+#     {\var foo}   - parameter variable
+#     {\key foo}   - keyword
+#
+#   Link tags
+#     {\link foo html} - hyperlink
+#     {func()} - hyperlink to function func
+#     {class::func()} - hyperlink to function class::func
+#     {varaible} - hyperlink to variable
+#     {varaible.feild} - hyperlink to field
+#     {class::} - hyperlink to class
+#
+#     {\example text} - include an example {} must match
+
+sub plugin {
+  my $desc=shift;
+  my $obj=shift;
+  my @inter;
+  my @out;
+  my @stack;
+
+  $desc=~s/&/&amp;/g;
+#  $desc=~s/</&lt;/g; ## mbn -- commented out because we use tags in documentation.
+#  $desc=~s/>/&gt;/g;
+
+  $desc=~s/\{\\link\s+([^}]+)\s+(\S+)\s*}/<a href="$2">$1<\/a>/g;
+
+  foreach (split(/(\{[:A-Za-z_][:A-Za-z_0-9]*\(\)\})|(\{[:A-Za-z_][:.A-Za-z_0-9]*\})/,$desc) ) {
+    next if (/^$/);
+
+    if ( /\{([A-Za-z_][:A-Za-z_0-9]*)\(\)\}/) {
+      my $i=$obj->lookdown($1);
+      if ($i) {
+        push(@inter,$i->href());
+      } else {
+        my $name=$1;
+        if ( $name =~ /::/) {
+          $name=~/^(.*)::([^:]*)$/;
+          push(@inter,"<tt>${Html::CLASS}$1${Html::CLASS_}::${Html::FUNCTION}$2${Html::FUNCTION_}</tt>");
+        } else {
+          push(@inter,"${Html::FUNCTION}$2${Html::FUNCTION_}");
+        }
+      }
+    } elsif ( /\{([A-Za-z_][:A-Za-z_0-9]*)::\}/) {
+      my $i=$obj->lookdown($1);
+      if ($i) {
+        if ( /::/ ) {
+          push(@inter,$i->full_href());
+        } else {
+          push(@inter,$i->href());
+        } 
+      } else {
+        push(@inter,"<tt>${Html::CLASS}$1${Html::CLASS_}</tt>");
+      }
+    } elsif ( /\{([A-Za-z_][:A-Za-z_0-9]*)\}/) {
+      push(@inter,"<tt>${Html::VARIABLE}$1${Html::VARIABLE_}</tt>");
+    } else {
+      push(@inter,$_);
+    } 
+  }
+  $desc=join("",@inter);
+  @inter=("");
+
+  foreach (split(/({\\\S+\s)|({)|(})/,$desc)) {
+    next if (/^$/);
+    if ( /^{\\i\s$/ ) {
+      push (@inter,${Html::ITAL});
+      push (@stack,${Html::ITAL_});
+    } elsif ( /^{\\b\s$/ ) {
+      push (@inter,${Html::BOLD});
+      push (@stack,${Html::BOLD_});
+    } elsif ( /^{\\key\s$/ ) {
+      push (@inter,${Html::KEYWORD});
+      push (@stack,${Html::KEYWORD_});
+    } elsif ( /^{\\func\s$/ ) {
+      push (@inter,${Html::FUNC});
+      push (@stack,${Html::FUNC_});
+    } elsif ( /^{\\class\s$/ ) {
+      push (@inter,${Html::CLASS});
+      push (@stack,${Html::CLASS_});
+    } elsif ( /^{\\enum\s$/ ) {
+      push (@inter,${Html::ENUM});
+      push (@stack,${Html::ENUM_});
+    } elsif ( /^{\\macro\s$/ ) {
+      push (@inter,${Html::MACRO});
+      push (@stack,${Html::MACRO_});
+    } elsif ( /^{\\var\s$/ ) {
+      push (@inter,${Html::VARIABLE});
+      push (@stack,${Html::VARIABLE_});
+    } elsif ( /^{\\type\s$/ ) {
+      push (@inter,${Html::TYPE});
+      push (@stack,${Html::TYPE_});
+    } elsif ( /^{\\example\s$/ ) {
+      push (@inter,"<pre>");
+      push (@stack,"</pre>");
+    } elsif ( /^{\\/ ) {
+      print STDERR "unknown directive $_\n";
+    } elsif ( /^{$/ ) {
+      push (@inter,"{");
+      push (@stack,"}");
+    } elsif ( /^}$/ ) {
+      if (@stack) {
+        push (@inter, pop(@stack));
+      } else { 
+        push(@inter, "}"); 
+      }
+    } else {
+      push (@inter,$_);
+    }
+  }
+  $desc=join("",@inter);
+     
+  foreach (split(/\n/,$desc)) {
+    push (@out,$_);
+  }
+
+  return join("\n",@out);
+}
+

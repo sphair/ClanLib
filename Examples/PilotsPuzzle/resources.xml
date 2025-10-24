@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="handle_off">
+		<image file="Graphics/handle_off.png" />
+	</sprite>
+	<sprite name="handle_on">
+		<image file="Graphics/handle_on.png" />
+	</sprite>
+	<sprite name="handle_off_highlight">
+		<image file="Graphics/handle_off_highlight.png" />
+	</sprite>
+	<sprite name="handle_on_highlight">
+		<image file="Graphics/handle_on_highlight.png" />
+	</sprite>
+	<sprite name="handle_off_hint">
+		<image file="Graphics/handle_off_hint.png" />
+	</sprite>
+	<sprite name="handle_on_hint">
+		<image file="Graphics/handle_on_hint.png" />
+	</sprite>
+
+	<sprite name="my_fnt_glyphs_1">
+		<image file="Graphics/my_fnt_1.png">
+			<alpha />
+		</image>
+	</sprite>
+	
+	<font name="font">
+		<bitmap glyphs="my_fnt_glyphs_1" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+</resources>

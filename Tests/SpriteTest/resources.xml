@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="font_gray_glyph">
+		<image file="images/font_gray.png"><alpha /></image>
+	</sprite>
+
+  <font name="font_gray">
+    <bitmap spacelen="4" glyphs="font_gray_glyph" letters="!'#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_'abcdefghijklmnopqrstuvwxyz{|}~" />
+  </font>
+
+	<sprite name="spr1">
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+	
+	<sprite name="spr2" base_angle="180">
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+	
+	<sprite name="spr3" base_angle="180">
+		<scale x="2" y="1" />
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+
+	<sprite name="spr4">
+		<scale x="1" y="0.5" />
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+
+	<sprite name="spr5">
+		<scale x="2" y="2" />
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+	
+	<sprite name="spr6">
+		<color red="1" green="0" blue="0" alpha="1"/>
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+
+	<sprite name="spr7">
+		<color red="0.5" green="1" blue="0.3" alpha="1"/>
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+	
+	<sprite name="spr8">
+		<color alpha="0.5"/>
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+
+	<sprite name="spr9">
+		<color red="0.0" green="0.0" alpha="0.5"/>
+		<image file="images/manwalk_0010.tga" />
+	</sprite>
+
+	<sprite name="spr10">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+	</sprite>
+	
+	<sprite name="spr11">
+		<animation speed="10" />
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+	</sprite>
+
+	<sprite name="spr12">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<animation pingpong="yes" />
+	</sprite>
+
+	<sprite name="spr13">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<animation direction="backward" />
+	</sprite>
+
+	<sprite name="spr14">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<animation loop="no" />
+	</sprite>
+
+	<sprite name="spr15">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<animation loop="no" on_finish="last_frame"/>
+	</sprite>
+
+	<sprite name="spr16">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<animation loop="no" on_finish="first_frame"/>
+	</sprite>
+
+	<sprite name="spr17">
+		<image file="images/manwalk_0010.tga" />
+		<translation origin="center" />
+	</sprite>
+
+	<sprite name="spr18">
+		<image file="images/manwalk_0010.tga" />
+		<translation origin="top_left" />
+	</sprite>
+
+	<sprite name="spr19">
+		<image file="images/manwalk_0010.tga" />
+		<translation origin="bottom_right" />
+	</sprite>
+
+	<sprite name="spr20">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<translation origin="center" x="10" y="10" />
+	</sprite>
+
+	<sprite name="spr21">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<frame nr="1" speed="30" />
+		<frame nr="2" speed="30" />
+		<frame nr="3" speed="30" />
+		<frame nr="4" speed="30" />
+		<frame nr="5" speed="30" />
+		<frame nr="6" speed="30" />
+		<frame nr="7" speed="30" />
+		<frame nr="8" speed="30" />
+		<frame nr="9" speed="30" />
+		<frame nr="10" speed="30" />
+		<frame nr="11" speed="30" />
+		<frame nr="12" speed="30" />
+		<frame nr="13" speed="30" />
+		<frame nr="14" speed="30" />
+		<frame nr="15" speed="30" />
+	</sprite>
+
+	<sprite name="spr22">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<frame nr="1" x="10" y="10" />
+		<frame nr="2" x="10" y="10" />
+		<frame nr="3" x="10" y="10" />
+		<frame nr="4" x="10" y="10" />
+		<frame nr="5" x="10" y="10" />
+		<frame nr="6" x="10" y="10" />
+		<frame nr="7" x="10" y="10" />
+		<frame nr="8" x="10" y="10" />
+		<frame nr="9" x="10" y="10" />
+		<frame nr="10" x="10" y="10" />
+		<frame nr="11" x="10" y="10" />
+		<frame nr="12" x="10" y="10" />
+		<frame nr="13" x="10" y="10" />
+		<frame nr="14" x="10" y="10" />
+		<frame nr="15" x="10" y="10" />
+	</sprite>
+	
+	<sprite name="spr23">
+		<image file="images/manwalk_0010.tga" />
+		<rotation origin="top_left"/>
+	</sprite>	
+	
+	<sprite name="spr24">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<rotation origin="bottom_right"/>
+	</sprite>	
+
+	<sprite name="spr25">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<rotation origin="top_left" x="10" y="10" />
+		<scale x="2.0" y="2.0" />
+	</sprite>	
+
+	<description name="walking_man">
+		<image file="images/manwalk_0010.tga" />
+		<image file="images/manwalk_0011.tga" />
+		<image file="images/manwalk_0012.tga" />
+		<image file="images/manwalk_0013.tga" />
+		<image file="images/manwalk_0014.tga" />
+		<image file="images/manwalk_0015.tga" />
+		<image file="images/manwalk_0016.tga" />
+		<image file="images/manwalk_0017.tga" />
+		<image file="images/manwalk_0018.tga" />
+		<image file="images/manwalk_0019.tga" />
+		<image file="images/manwalk_0020.tga" />
+		<image file="images/manwalk_0021.tga" />
+		<image file="images/manwalk_0022.tga" />
+		<image file="images/manwalk_0023.tga" />
+		<image file="images/manwalk_0024.tga" />
+		<image file="images/manwalk_0025.tga" />
+		<image file="images/manwalk_0026.tga" />
+		<image file="images/manwalk_0027.tga" />
+		<image file="images/manwalk_0028.tga" />
+		<image file="images/manwalk_0029.tga" />
+		<image file="images/manwalk_0001.tga" />
+		<image file="images/manwalk_0002.tga" />
+		<image file="images/manwalk_0003.tga" />
+		<image file="images/manwalk_0004.tga" />
+		<image file="images/manwalk_0005.tga" />
+		<image file="images/manwalk_0006.tga" />
+		<image file="images/manwalk_0007.tga" />
+		<image file="images/manwalk_0008.tga" />
+		<image file="images/manwalk_0009.tga" />
+	</description>
+
+	<sprite name="spr26" description="walking_man" />
+
+	<sprite name="spr27" description="walking_man">
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+		<image file="images/manwalk_0009.tga" />
+	</sprite>
+</resources>

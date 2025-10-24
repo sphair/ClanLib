@@ -1,0 +1,237 @@
+$Id: CODING_STYLE,v 1.7 2004/02/07 23:11:42 mbn Exp $
+
+ClanLib coding style and conventions:
+--------------------------------------
+
+1. All classes have a "CL_" prefix. Eg. CL_Display, CL_SoundBuffer...
+2. All macros have a "cl_" prefix. Eg. cl_assert, cl_info...
+
+3. We do NOT use K&R style C style. We use the special ClanSoft variant of
+the Microsoft style!! Please do NOT use K&R style and not GNU style either.
+Braces should look like this:
+
+int CL_MyClass::my_func(int arg1, int arg2)
+{
+	if (...)
+	{
+		switch (whatever)
+		{
+		case 1:
+			break;
+		
+		case 2:
+			{
+				int i = 5;
+				...
+			}
+			break;
+		}
+	}
+	else
+	{
+	}
+}
+
+Please try to follow this indenting style as closely as you can. If
+you are using Emacs you can set the coding style with:
+
+(c-set-style "linux") or C-c . linux
+
+4. We always use TABS, and NEVER SPACES to do indenting. This is because we
+want people to be able to pick their own tab size. I run with 4, but others
+like 8 and some like 2.
+
+So please don't use spaces. It will have a very bad effect when someone else
+uses another tab size than you. For instance, imagine the following was
+written by someone using tabs, and then you add a section with spaces:
+(all is written here with spaces so people will notice the difference seen
+with other tab sizes than their own)
+
+	void my_func()
+	{
+	    int a,b,c,d;
+	    a = b + c/d;
+	    
+	    // added section with spaces:
+	    d = a;
+	    c = b/d;
+	    // end of space section
+	    
+	    do_something(a,b,c,d);
+	}
+
+So it looks nice to you - but then we watch it with someone that has tab
+size 8:
+
+	void my_func();
+	{
+	        int a,b,c,d;
+	        a = b + c/d;
+	    
+	    // added section with spaces:
+	    d = a;
+	    c = b/d;
+	    // end of space section
+	
+	        do_something(a,b,c,d);
+	}
+
+Not very nice, is it?
+
+Many unix editors use a "smart" indenting algorithm which will fuck things
+even more up. They exchange spaces with tabs when reaching a given size
+(normally 8 or 4), but that just isn't very smart. The result is that some
+sections are spaces, and others are tabbed - all messed into one pile of
+junk.
+
+So please verify that your editor does indenting correct. This is
+important.
+
+5. Function names and variables are always in small, and underscore is used
+where other people often use a captial letter.
+Eg. MyVariable -> my_variable.
+
+6. Variable access functions have a set/get prefix.
+Eg. int size()         -> int get_size()
+    void size(int s)   -> void set_size(int s)
+
+7. STL and variable names.
+
+Do NOT use the "using namespace std;" command. Not in API header or in source
+files. You may be the world champion in STL, but for us other mortals its NICE
+to be able to read what is STL and whats not.
+
+Also don't use two letter variable names and avoid to do aggressive shortening
+of common words (ie. cnt, num, refcnt, glph, fnt, idx). Its annoying to read
+if you have to stop up and think for every variable you encounter just to try
+figure out what it stands for. :) Yes we don't all speak english natively.
+
+8. The API documentation
+
+ClanLib uses a reference documentation system called pce2. It builds the
+reference by parsing the API header files where it looks for the
+documentation. There are the following types of documentation:
+
+1) Short description.
+
+The marker for short description is //:
+
+The short description is used at top of the class reference pages and
+function pages. Its supposed to be "a one sentence description". Example:
+
+	//: Sprite image class.
+	class CL_Sprite
+	{ ...
+
+Short descriptions do not support markup and should not include any further
+markup tags (bold, italic, paragraph, etc etc).
+
+2) Long description.
+
+The marker for long description is //-
+
+The long description is also known as the "Detailed description:" part of
+the reference pages. This is where the class/functions purpose and
+functional details are explained.
+
+Long descriptions are supposed to put everything into html markup tags. Use
+the paragraph (<p>Text</p>) tag for text. Example:
+
+	//: Sprite image class.
+	//- <p>CL_Sprite is the image class of ClanLib. A sprite is a serie
+	//- of images (each called a frame) that somehow have a connection
+	//- to each others. It could be all the images needed to animate a
+	//- man, or it could be all the different tiles of a tile map.</p>
+	class CL_Sprite
+	{ ...
+
+3) Function groups.
+
+Functions in a class is grouped into different sections. The typical ones
+are Construction, Attributes, Operations and Implementation. These groups
+are marked up like this:
+
+	//! Construction:
+	//! Attributes:
+	//! Operations:
+	//! Implementation:
+
+Any functions following such a group markup will belong to that group. The
+group markups are placed at the beginning of the line:
+
+	//! Construction:
+	public:
+		//: Constructs a sprite object.
+		//- <p>Blah blah, this will make a sprite, surprise!</p>
+		CL_Sprite();
+
+4) Function parameters.
+
+The marker for a function parameter is //param name: description
+
+Parameters of a function are desired to have a parameter description. An example:
+
+	//! Operations:
+	public:
+		//: Draws the sprite onto back buffer.
+		//- <p>The draw function will draw the current frame of the
+		//- sprite at the specified position, using the alignment
+		//- and other attributes specified for the sprite.</p>
+		//param x: x position of where to draw the sprite.
+		//param y: y position of where to draw the sprite.
+		//param gc: Graphic context used as target. If null, current
+		//param gc: selected display window will be used.
+		void draw(int x, int y, CL_GraphicContext *gc = 0);
+
+5) See also.
+
+The marker for adding a "See also" reference is //also: text
+
+Example:
+
+	//: Sprite image class.
+	//- <p>CL_Sprite is the image class of ClanLib. A sprite is a serie
+	//- of images (each called a frame) that somehow have a connection
+	//- to each others. It could be all the images needed to animate a
+	//- man, or it could be all the different tiles of a tile map.</p>
+	//also: <a href="../../overview/sprite.html">Sprite overview</a>
+	//also: CL_SpriteDescription
+	class CL_Sprite
+	{ ...
+
+6) Polymorph functions.
+
+If there exist several functions with the same name, then they share one
+common reference page for all of them. The documentation of them should be
+placed in front of the first function:
+
+	//! Operations:
+	public:
+		//: Draws the sprite onto back buffer.
+		//- <p>The draw function will draw the current frame of the
+		//- sprite at the specified position, using the alignment
+		//- and other attributes specified for the sprite.</p>
+		//param x: x position of where to draw the sprite.
+		//param y: y position of where to draw the sprite.
+		//param dest: Destination rectangle of where to draw sprite.
+		//param gc: Graphic context used as target. If null, current
+		//param gc: selected display window will be used.
+		void draw(int x, int y, CL_GraphicContext *gc = 0);
+
+		void draw(CL_Rect &dest, CL_GraphicContext *gc = 0);
+
+7) Class groups and header file info.
+
+Each header file should contain below the GPL notice:
+//! clan{group}="{section}"
+{group} denotes the ClanLib group (eg Core, Display, GUI)
+{section} denotes the group section (eg "Controls" for GUI)
+
+To denote which base header file a class belongs to:
+//! header={fname}.h
+{fname} denotes the base header file name eg "display"
+
+
+
+There is more things than there - but I think this summarizes the most
+important issues. In general, just do like the other source files do.

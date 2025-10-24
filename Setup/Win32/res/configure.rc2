@@ -1,0 +1,23 @@
+//
+// CONFIGURE.RC2 - resources Microsoft Visual C++ does not edit directly
+//
+
+#ifdef APSTUDIO_INVOKED
+	#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Add manually edited resources here...
+
+#ifndef RT_MANIFEST
+#define RT_MANIFEST 24
+#endif
+
+#ifndef VC8MANIFEST
+#ifdef _UNICODE
+IDR_MANIFEST	RT_MANIFEST	"res\\configure.manifest"
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////

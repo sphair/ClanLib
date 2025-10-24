@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+ <section name="Classes">
+  <uclass name="Mage" strength="100" magic="75" />
+  <uclass name="Thief" strength="200" magic="50" />
+ </section>
+</resources>

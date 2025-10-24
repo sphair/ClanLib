@@ -1,0 +1,613 @@
+<head>
+<title>This is meant as a basic tutorial that will teach you how to do some of
+the more basic things in ClanLib</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:553679495 -2147483648 8 0 66047 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoCommentText, li.MsoCommentText, div.MsoCommentText
+	{mso-style-noshow:yes;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+span.MsoCommentReference
+	{mso-style-noshow:yes;
+	mso-ansi-font-size:8.0pt;
+	mso-bidi-font-size:8.0pt;}
+p.MsoCommentSubject, li.MsoCommentSubject, div.MsoCommentSubject
+	{mso-style-noshow:yes;
+	mso-style-parent:"Comment Text";
+	mso-style-next:"Comment Text";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal>This is meant as a basic tutorial that will teach you how to
+do some of the more basic things in <span class=SpellE>ClanLib</span>.<span
+style='mso-spacerun:yes'>  </span>This document refers currently to the 0.8
+series.<span style='mso-spacerun:yes'>  </span>We will start off by explaining
+the main include statements in <span class=SpellE>ClanLib</span>.<o:p></o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+  <p class=MsoNormal><o:p>&nbsp;</o:p></p>
+  <hr>
+  <p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><span style='color:#3366FF'>&lt;<span class=SpellE>ClanLib/core.h</span>&gt;
+</span><span style='color:black'>- This must be included when using any part of
+<span class=SpellE>clanlib</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='color:#3366FF'>&lt;<span class=SpellE>ClanLib/application.h</span>&gt; 
+    </span><span style='color:black'>- <o:p>Needed for the crossplatform application 
+    framework</o:p></span></p>
+
+<p class=MsoNormal><span style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='color:#3366FF'>&lt;<span class=SpellE>ClanLib/display.h</span>&gt;
+</span><span style='color:black'>- Needed for any graphics use in <span
+class=SpellE>ClanLib</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='color:#3366FF'>&lt;<span class=SpellE>ClanLib/GL.h</span>&gt;
+</span><span style='color:black'>- Used for OpenGL, currently the only hardware
+support (DX7 and DX8 are planned)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <hr>
+  <p class=MsoNormal><span style='color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='color:black'>I’m going to approach this as if
+we are going to have 2 files, <span class=SpellE><b style='mso-bidi-font-weight:
+normal'>main.h</b></span> and <span class=SpellE><b style='mso-bidi-font-weight:
+normal'>main.cpp</b></span><b style='mso-bidi-font-weight:normal'>.<span
+style='mso-spacerun:yes'>  </span></b>Let’s first set up our header file with
+our main class<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+  <hr>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'>//<span
+class=SpellE>main.h</span> – has the definition for our main <span
+class=SpellE>clanapp</span> class<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>#include &lt;<span
+class=SpellE>ClanLib/core.h</span>&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>#include &lt;<span
+class=SpellE>ClanLib/application.h</span>&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>#include &lt;<span
+class=SpellE>ClanLib/display.h</span>&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>#include &lt;<span
+class=SpellE>ClanLib/gl.h</span>&gt;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><span style='font-size:10.0pt;color:black'>class</span></span><span
+style='font-size:10.0pt;color:black'> <span class=SpellE>SimpleApp</span> : public
+<span class=SpellE>CL_ClanApplication</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>virtual <span class=SpellE>int</span> 
+    main(<span class=SpellE>int</span>, char**);<o:p></o:p></span><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>};<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+  <hr>
+  <p class=MsoNormal><span style='color:black'>Above we created a class named 
+    <span
+class=SpellE>SimpleApp</span> that inherits from <span class=SpellE>CL_ClanApplication</span>.<span
+style='mso-spacerun:yes'>  </span>Within that class we have a function <span
+class=GramE><b style='mso-bidi-font-weight:normal'>main(</b></span><span
+class=SpellE><b style='mso-bidi-font-weight:normal'>int</b></span><b
+style='mso-bidi-font-weight:normal'>, char**)</b> which will be the starting function 
+    for your application.<span style='mso-spacerun:yes'>  </span>Ok so let’s go 
+    on to <span class=SpellE>main.cpp</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>//<span
+class=SpellE>main.cpp</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>#include “<span
+class=SpellE>main.h</span>”<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><span style='font-size:
+10.0pt;color:black'>int</span></span></span><span style='font-size:10.0pt;
+color:black'> <span class=SpellE>SimpleApp::main</span>(<span class=SpellE>int</span>
+<span class=SpellE>argc</span>, char **<span class=SpellE>argv</span>)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//we need to set up all the
+different pieces<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupCore::<span
+class=GramE>init</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupApplication::<span
+class=GramE>init</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupDisplay::<span
+class=GramE>init</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupGL::<span
+class=GramE>init</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'> </span></span><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//We need to create a window so 
+    people can see what we’re doing<o:p></o:p></span></p>
+
+<span class=SpellE><span
+style='font-size:10.0pt;color:black'> <span
+style='mso-tab-count:1'>               </span>CL_DisplayWindow</span></span><span
+style='font-size:10.0pt;color:black'> <span class=GramE>window(</span>&quot;A 
+  Simple <span class=SpellE>ClanLib</span> App&quot;, 640, 480, false, true);<o:p></o:p></span> 
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'> </span></span><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//Tell Clanlib that we will be 
+    drawing in 2D<o:p></o:p></span></p>
+  <span class=SpellE><span
+style='font-size:10.0pt;color:black'> <span
+style='mso-tab-count:1'></span></span></span>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span class=SpellE><span
+style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>               </span></span></span><span style='font-size:10.0pt;color:black'><o:p>CL_Display::begin_2d();</o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p><br>
+    </o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//Create a <span class=SpellE>CL_Surface</span>
+that we will load from file.<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_Surface</span> 
+    *Image = new <span class=SpellE>CL_<span class=GramE>Surface</span></span><span
+class=GramE>(</span>&quot;<span
+class=SpellE>clanlib.tga</span>&quot;);<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//let’s start our while loop and
+draw on the screen<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>               </span>//If escape was hit, we should quit<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=GramE>while(</span>!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                                </span>//clear the
+screen to black<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span style='mso-tab-count:1'>                
+    </span><span
+class=SpellE>CL_Display::</span>clear();<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                                </span>//Draw our image
+on the screen<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                                </span>Image-&gt;<span
+class=GramE>draw(</span>150, 150);<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                             </span></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                                </span>//flip our screen 
+    so it draws it to the front buffer<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:2'>                                </span><span
+class=SpellE><span class=GramE>CL_Display::flip</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span style='mso-tab-count:1'>                
+    </span>//call <span class=SpellE>keep_alive</span>, the most important call 
+    in any loop<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_System::keep_<span class=GramE>alive</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>}<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=GramE>delete</span> 
+    Image;<o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'> </span></span><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//Tell Clanlib that we are done 
+    drawing in 2D<o:p></o:p></span></p>
+  <span class=SpellE><span
+style='font-size:10.0pt;color:black'> <span
+style='mso-tab-count:1'></span></span></span> 
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span class=SpellE><span
+style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>               </span></span></span><span style='font-size:10.0pt;color:black'><o:p>CL_Display::end_2d();</o:p></span><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupCore::<span
+class=GramE>deinit</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupApplication::<span
+class=GramE>deinit</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupDisplay::<span
+class=GramE>deinit</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>CL_SetupGL::<span
+class=GramE>deinit</span></span><span class=GramE>(</span>);<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span style='font-size:10.0pt;color:black'><o:p> 
+    </o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><span class=SpellE>return 0;</span><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'>}<o:p></o:p></span></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE>SimpleApp</span> app;</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+  <hr>
+  <p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>So let’s go over the separate <span class=SpellE>ClanLib</span>
+related pieces of app</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//we need to set up all the different pieces<o:p></o:p></i></span></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupCore::<span class=GramE>init</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupApplication::<span class=GramE>init</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupDisplay::<span class=GramE>init</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupGL::<span class=GramE>init</span></span><span class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>First thing we need to do is initialize the different <span
+class=SpellE>ClanLib</span> subsystems we will use.<span
+style='mso-spacerun:yes'>  </span>Basic rule of thumb is for every <span
+class=SpellE>ClanLib</span> include you will need to do a <span class=SpellE>CL_<span
+class=GramE>Setup</span></span><span class=GramE>(</span>subsystem)::init().</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//We need to create a window so people can see what we’re doing<o:p></o:p></i></span></p>
+
+  <p class=MsoNormal style='text-indent:.5in'><span class=SpellE><i
+style='mso-bidi-font-style:normal'><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'></i>CL_DisplayWindow</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:10.0pt;color:black'> 
+    <span
+class=GramE>window(</span>&quot;A Simple <span class=SpellE>ClanLib</span> App&quot;, 
+    640, 480, false, true);<o:p></o:p></span></i></p>
+
+  <p><span class=SpellE>CL_DisplayWindow</span> creates a window named “A Simple 
+    <span class=SpellE>ClanLib</span> App” of specified size (640 x 480 in our 
+    case) which is not <span class=SpellE>fullscreen</span> and is resizable.<span style='mso-spacerun:yes'>  
+    </span><span class=SpellE>CL_DisplayWindow</span> will be the main window 
+    of your app.</p>
+  <p class=MsoNormal><o:p></o:p><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'><i> </i></span></span><i><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//Tell Clanlib that we will be 
+    drawing in 2D<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span class=SpellE><span
+style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>               </span></span></span><span style='font-size:10.0pt;color:black'><o:p>CL_Display::begin_2d();</o:p></span></i></p>
+  <p class=MsoNormal><i><span style='font-size:10.0pt;color:black'><o:p></o:p></span></i><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal>Tell Clanlib that we will be drawing in 2D at this point</p>
+  <p class=MsoNormal><o:p></o:p><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//Create a <span class=SpellE>CL_Surface</span> that we will load from
+file.<o:p></o:p></i></span></p>
+
+  <p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                
+    </span><span
+class=SpellE>CL_Surface</span> *Image = new <span class=SpellE>CL_<span
+class=GramE>Surface</span></span><span class=GramE>(</span>&quot;<span class=SpellE>clanlib.tga</span>&quot;);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><span class=SpellE>CL_Surface</span> is the main class used
+for loading graphics file and displaying them on screen.<span
+style='mso-spacerun:yes'>  </span><span class=SpellE>CL_Surfaces</span> are
+created either from resources or a <span class=SpellE>CL_Provider</span> class.<span
+style='mso-spacerun:yes'>  </span>The following Providers are available at this
+time:</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='text-indent:.5in'><span class=SpellE>CL_PCXProvider</span></p>
+
+<p class=MsoNormal style='text-indent:.5in'><span class=SpellE>CL_PNGProvider</span></p>
+
+  <p class=MsoNormal style='text-indent:.5in'><span class=SpellE>CL_TGAProvider</span></p>
+  <p class=MsoNormal style='text-indent:.5in'><span class=SpellE>CL_JPEGProvider</span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Feel free to create more.</p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p><i><span
+style='mso-tab-count:1'> </span></i></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><i><span
+style='mso-tab-count:1'>              </span><o:p>while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))</o:p></i><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'></span></span><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p></o:p></span><span style='font-size:10.0pt;color:black'><o:p></o:p></span>Checks 
+    to see if the user pressed escape...</p>
+  <p class=MsoNormal><o:p></o:p><o:p>&nbsp;</o:p><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//clear the screen to black<o:p></o:p></i></span></p>
+
+  <p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                
+    </span>CL_Display::clear();<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+  <p class=MsoNormal>Clears the <span class=SpellE>backbuffer</span> to black…</p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//Draw our image on the screen<o:p></o:p></i></span></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span>Image-&gt;<span
+class=GramE>draw(</span>150, 150);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Draws our <span class=SpellE>tga</span> file to x<span
+class=GramE>:150</span>, y:150 starting from the upper left corner…</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//flip our screen so it draws it to the front buffer<o:p></o:p></i></span></p>
+
+  <p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                
+    </span><span
+class=SpellE><span class=GramE>CL_Display::.flip</span></span><span class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Draws the image on our screen by moving it from the <span
+class=SpellE>backbuffer</span> to the front buffer…</p>
+
+  <p class=MsoNormal><o:p></o:p></p>
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><i><span
+style='mso-tab-count:1'> </span></i></span><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span><i style='mso-bidi-font-style:
+normal'>//call <span class=SpellE>keep_alive</span>, the most important call in 
+    any loop<o:p></o:p></i></span></p>
+  <p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_System::keep_<span class=GramE>alive</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>Does housecleaning and makes sure our app doesn’t die…</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+  <p class=MsoNormal><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'><i> </i></span></span><i><span style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>                </span>//Tell Clanlib that we are done 
+    drawing in 2D<o:p></o:p></span></i></p>
+  <p class=MsoNormal><i><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span><span class=SpellE><span
+style='font-size:10.0pt;color:black'><span
+style='mso-tab-count:1'>               </span></span></span><span style='font-size:10.0pt;color:black'><o:p>CL_Display::end_2d();</o:p></span></i></p>
+  <p class=MsoNormal><i><span style='font-size:10.0pt;color:black'><o:p></o:p></span></i><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal>Tell Clanlib that we are done drawing in 2D at this point</p>
+  <p class=MsoNormal><o:p></o:p><span style='font-size:10.0pt;color:black'><o:p></o:p></span></p>
+  <p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                
+    </span><span
+class=SpellE>CL_SetupCore::<span class=GramE>deinit</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupApplication::<span class=GramE>deinit</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupDisplay::<span class=GramE>deinit</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;color:black'><span style='mso-tab-count:1'>                </span><span
+class=SpellE>CL_SetupGL::<span class=GramE>deinit</span></span><span
+class=GramE>(</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:black'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span class=GramE>And shutdown your subsystems.</span></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+  <p class=MsoNormal><span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt'>SimpleApp</span></i></span><i style='mso-bidi-font-style:
+normal'><span style='font-size:10.0pt'> app;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt'><o:p>&nbsp;</o:p></span></i></p>
+
+<p class=MsoNormal>This call makes an instance of our class.</p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal>That’s it.<span style='mso-spacerun:yes'>  </span>Next is resources…<o:p></o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>

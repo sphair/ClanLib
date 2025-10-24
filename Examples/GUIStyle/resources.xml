@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<sprite name="menu_right_bottom">
+		<image file="Graphics/menu/menu_right_bottom.png" />
+	</sprite>
+
+	<sprite name="my_fnt_glyphs_1">
+		<image file="Graphics/Fonts/my_fnt_1.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_1_sh">
+		<image file="Graphics/Fonts/my_fnt_1_with_shadow.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_2">
+		<image file="Graphics/Fonts/my_fnt_2.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_2_sh">
+		<image file="Graphics/Fonts/my_fnt_2_with_shadow.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_3">
+		<image file="Graphics/Fonts/my_fnt_3.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_3_sh">
+		<image file="Graphics/Fonts/my_fnt_3_with_shadow.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_4">
+		<image file="Graphics/Fonts/my_fnt_4.png">
+			<alpha />
+		</image>
+	</sprite>
+	<sprite name="my_fnt_glyphs_4_sh">
+		<image file="Graphics/Fonts/my_fnt_4_with_shadow.png">
+			<alpha />
+		</image>
+	</sprite>
+
+	<font name="my_fnt_1">
+		<bitmap glyphs="my_fnt_glyphs_1" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	
+	<font name="my_fnt_2">
+		<bitmap glyphs="my_fnt_glyphs_2" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	
+	<font name="my_fnt_3">
+		<bitmap glyphs="my_fnt_glyphs_3" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<font name="my_fnt_4">
+		<bitmap glyphs="my_fnt_glyphs_4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<font name="my_fnt_1_sh">
+		<bitmap glyphs="my_fnt_glyphs_1_sh" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<font name="my_fnt_2_sh">
+		<bitmap glyphs="my_fnt_glyphs_2_sh" width_offset="-3" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<font name="my_fnt_3_sh">
+		<bitmap glyphs="my_fnt_glyphs_3_sh" width_offset="-4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<font name="my_fnt_4_sh">
+		<bitmap glyphs="my_fnt_glyphs_4_sh" width_offset="-4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+	</font>
+	<section name="Button">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_1_sh" width_offset="-4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+		<font name="font_big">
+			<bitmap glyphs="my_fnt_glyphs_2_sh" width_offset="-3" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+	</section>
+	
+	<section name="CheckBox">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_4" width_offset="-4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+	</section>
+	
+	<section name="Label">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_4" width_offset="-1" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+	</section>
+
+	<section name="InputBox">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_4" width_offset="-4" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+	</section>
+
+	<section name="ListBox">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_3" width_offset="-1" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+		<surface name="scroll_btn_down" file="Graphics/menu/scroll_btn_down.png" />
+		<surface name="scroll_btn_up" file="Graphics/menu/scroll_btn_up.png" />
+	</section>
+
+	<section name="Window">
+		<font name="font">
+			<bitmap glyphs="my_fnt_glyphs_2_sh" width_offset="-3" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-+=().,?$%!/\~&'_;:" />
+		</font>
+	</section>
+</resources>

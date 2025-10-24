@@ -1,0 +1,19 @@
+CC=gcc
+CFLAGS+=-ISources/
+CXX=g++
+CXXFLAGS+=-ISources/
+RC=windres -O COFF
+AR=ar
+ARFLAGS=rus
+
+OBJS=$(patsubst %.s,%.o,$(patsubst %.rc,%.res,$(patsubst %.cpp,%.o, \
+	$(patsubst %.c,%.o,$(filter %.s %.c %.cpp %.rc,$(SOURCES))))))
+
+$(TARGET): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: clean
+

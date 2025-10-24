@@ -1,0 +1,192 @@
+<xml>
+<head>
+<title>Using sound - samples and music</title>
+</head>
+<body>
+
+<p>ClanSound provides you with easy-to-use and powerful sound functionality.</p>
+
+<h3>Sound overview</h3>
+
+<p>To play sound in ClanLib, you have to initialize <codelink>CL_SetupSound</codelink> and also
+create a <codelink>CL_SoundOutput</codelink>. CL_SoundOutput is the interface to a sound output device,
+which is used to control the main mixer volume and other global settings. It is used as a singleton.</p>
+
+<code>
+	#include <ClanLib/sound.h>
+
+	...
+
+	CL_SetupSound setup_sound;
+	CL_SoundOutput output(44100);
+
+	...
+</code>
+
+<h3>Playing wav samples</h3>
+
+<p>A <codelink>CL_SoundBuffer</codelink> contains a sample or music stream. To load and play
+a WAV file, you do the following:</p>
+
+<code>
+	// Load a sample from a wave file:
+	CL_SoundBuffer sample("beep.wav");
+
+	// Play sample
+	sample.play();
+</code>
+
+<p>You can set the volume and panning of soundbuffers. This will change
+the default attributes of the soundbuffer, and will be effective on all 
+subsequent calls to play().</p>
+
+<code>
+	// Turn down volume on this soundbuffer.
+	sample.set_volume(0.1f);
+
+	// Play only in left speaker.
+	sample.set_pan(-1.0f);
+</code>
+
+<p>Note that setting these attributes don't affect already playing soundbuffers,
+only when you call play() again afterwards. To have individual control over each
+playing sound, you need to use a sound session - read about that further down.</p>
+
+<h3>Playing music streams</h3>
+
+<p>There isn't much difference between playing wav samples and music stream. ClanSound itself
+doesn't provide more than wav samples playback, so you'll need one or more additional
+music modules. ClanLib currently has two, MikMod and Vorbis. They are initialized using 
+<codelink>CL_SetupMikMod</codelink> and <codelink>CL_SetupVorbis</codelink>.</p>
+
+<code>
+	#include <ClanLib/sound.h>
+	#include <ClanLib/vorbis.h>
+	#include <ClanLib/mikmod.h>
+
+	CL_SetupSound setup_sound;
+	CL_SetupMikMod setup_mikmod;
+	CL_SetupVorbis setup_vorbis;
+
+	CL_SoundOutput output(44100);
+</code>
+
+<p>Then to play music, you use the same approach as with wav samples:</p>
+
+<code>
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Play vorbis stream
+	vorbis.play();
+
+	...
+
+	// Load an XM mod into a soundbuffer
+	CL_SoundBuffer mod("clanbeat.xm");
+
+	// Play mod
+	mod.play();
+</code>
+
+<h3>Resources</h3>
+
+<p>TODO: Write about loading samples from resources.</p>
+
+<h3>Sessions</h3>
+
+<p>If you want to control the playback of sound, or want to know
+if the sound is still playing, you use <codelink>CL_SoundBuffer_Session</codelink>.
+This can be created in two ways, either by calling
+CL_SoundBuffer::play() or CL_SoundBuffer::prepare().
+The difference between prepare() and play() is that prepare will just load the sound,
+but not play it. You can then call play() from your resulting CL_SoundBuffer_Session.</p>
+
+<code>
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Create a session from soundbuffer.
+	CL_SoundBuffer_Session playback = vorbis.play();
+
+	..
+
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Create a session from soundbuffer.
+	CL_SoundBuffer_Session playback = vorbis.prepare();
+
+	playback.play();
+</code>
+
+<p>When you have a session object, you can modify the attributes of
+the playing sound in many ways. These take effect immidiately, you
+can change it while it is playing. You can set the volume, panning,
+position, and frequency (speed). You can make it loop, and adding filters.
+You can query if it is still playing, and you can ofcourse start and stop
+it as you want.</p>
+
+<code>
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Create a session from soundbuffer.
+	CL_SoundBuffer_Session playback = vorbis.prepare();
+
+	playback.set_volume(0.5f);
+	playback.set_looping(true);
+	playback.play();
+</code>
+
+<h3>Filters</h3>
+
+<p>If you want to modify sounds in special, dynamic ways, you
+can apply a CL_SoundFilter to it.</p>
+
+<p>ClanLib has three builtin filters: <codelink>CL_EchoFilter</codelink>, <codelink>CL_FadeFilter</codelink> and <codelink>CL_InverseEchoFilter</codelink>.
+The usefulness of an CL_InverseEchoFilter can be discussed :)</p>
+
+<p>Example of the fade filter:</p>
+
+<code>
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Create a session from soundbuffer.
+	CL_SoundBuffer_Session playback = vorbis.prepare();
+
+	CL_FadeFilter fade(0.0f);
+
+	playback.add_filter(&fade);
+	playback.play();
+
+	fade.fade_to_volume(1.0f, 10*1000); // fade in, duration 10 seconds.
+</code>
+
+<p>Example of the echo filter:</p>
+
+<code>
+	// Load ogg file into a soundbuffer
+	CL_SoundBuffer vorbis("cheer1.ogg");
+
+	// Create a session from soundbuffer.
+	CL_SoundBuffer_Session playback = vorbis.prepare();
+
+	playback.add_filter(new CL_EchoFilter(8*1024), true);
+	playback.play();
+</code>
+
+<p>You can ofcourse also code your own filters. Check the SoundFilters example
+how do to that - it creates a CL_DistortFilter.</p>
+
+<p>It is also possible to add filters on mixer level too. Ie fade all sound out alltogether.
+Use CL_SoundOutput::add_filter() just like with CL_SoundBuffer_Session.</p>
+
+<h3>Sound providers</h3>
+
+<p>It is also possible to create sound on-the-fly, or adding extra sound
+providers. See the StreamSoundProvider example for code how to do this.</p>
+
+</body>
+</xml>

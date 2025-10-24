@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<components name="menu">
+		<component name="menu" x="0" y="0" width="640" height="480">
+			<components>
+				<button
+					name="cmd_option"
+					text="Option"
+					x="10" y="190"
+					width="100" height="20"
+				/>
+				<button
+					name="cmd_credit"
+					text="Credit"
+					x="120" y="190"
+					width="100" height="20"
+				/>
+			</components>
+		</component>
+	</components>
+
+	<components name="option">
+		<component name="option" x="0" y="0" width="640" height="480">
+			<components>
+				<button
+					name="cmd_menu"
+					text="menu"
+					x="10" y="190"
+					width="100" height="20"
+				/>
+			</components>
+		</component>
+	</components>
+
+	<components name="credit">
+		<component name="credit" x="0" y="0" width="640" height="480">
+			<components>
+				<button
+					name="cmd_menu"
+					text="menu"
+					x="10" y="190"
+					width="100" height="20"
+				/>
+			</components>
+		</component>
+	</components>
+</resources>

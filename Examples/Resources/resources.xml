@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+ <section name="Configuration">
+  <string name="name" value="The name of the game" />
+  <integer name="width" value="640" />
+  <integer name="height" value="480" />
+ </section>
+ 
+ <section name="Classes">
+  <uclass name="Mage" strength="100" magic="200" />
+  <uclass name="Thief" strength="200" magic="100" />
+  <uclass name="Fighter" strength="300" magic="0" />
+  <dummy name="This shouldn't show up in the classes output"/>
+ </section>
+</resources>

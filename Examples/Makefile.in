@@ -1,0 +1,18 @@
+EXAMPLES = @ClanLib_Examples@
+
+all: 
+	@for i in $(EXAMPLES); do \
+          $(MAKE) -C $$i all; \
+        done
+	@echo ""
+	@echo "The following examples where build: " 
+	@for i in $(EXAMPLES); do \
+          echo "     "$$i; \
+        done
+
+clean:
+	@for i in $(EXAMPLES); do \
+           $(MAKE) -C $$i clean; \
+         done
+
+# EOF #

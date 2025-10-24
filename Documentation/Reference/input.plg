@@ -1,0 +1,15 @@
+
+sub plugin {
+  my ($block)=@_;
+  my @out;
+  my @lines=split(/\n/,$block);
+  my $line;
+  while ($#lines>-1) {
+    $line=shift(@lines);
+    $line=~s/GTKMM_USING_STD_\S+\s*;//g;
+    push(@out,$line);
+  }
+  $block=join("\n",@out);
+  return $block;
+}
+ 

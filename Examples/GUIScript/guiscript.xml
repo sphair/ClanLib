@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<surface name="button_up" file="resources/button_up.tga" />
+	<surface name="button_down" file="resources/button_down.tga" />
+	<surface name="button_highlighted" file="resources/button_highlighted.tga" />
+	<surface name="button_disabled" file="resources/button_disabled.tga" />
+	
+	<components name="gui">
+		<window name="window1" x="10" y="10" width="200" height="290" title="A window">
+			<components>
+				<label x="10" y="10" text="Enter some text here:" />
+				<inputbox name="inputbox1" x="10" y="25" width="134" height="20" text="User input" />
+				
+				<label x="10" y="70" text="Normal silver buttons:" />
+				<button name="button1" x="10" y="85" width="134" height="30" text="Manual sized button" />
+				<button x="10" y="125" text="Auto sized button" />
+
+				<label x="10" y="175" text="Gfx buttons:" />
+				<button 
+					x="10" y="190"
+					surface_up="button_up"
+					surface_down="button_down"
+					surface_highlighted="button_highlighted"
+					surface_disabled="button_disabled"
+				/>
+				<button 
+					x="80" y="190" enabled="false"
+					surface_up="button_up"
+					surface_down="button_down"
+					surface_highlighted="button_highlighted"
+					surface_disabled="button_disabled"
+				/>
+				
+				<scrollbar x="160" y="10" width="20" height="220" min="0" orientation="ver" max="100"/>
+				<scrollbar x="10" y="230" width="150" height="20" min="0" orientation="hor" max="100"/>
+			</components>
+		</window>
+	</components>
+</resources>

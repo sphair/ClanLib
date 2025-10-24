@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<section name="Game">
+		<sprite name="spr_maptiles">
+			<image file="resources/pacman.pcx">
+				<grid pos="75,258" size="34,38" array="10,2" />
+			</image>
+		</sprite>
+		<sprite name="spr_pacman">
+			<image file="resources/pacman.pcx">
+				<grid pos="125,92" size="28,32" array="12,2" tcol="0,1" />
+			</image>
+		</sprite>
+		<sprite name="spr_ghost">
+			<image file="resources/pacman.pcx">
+				<grid pos="125,156" size="28,32" array="6,2" tcol="0,1" />
+			</image>
+		</sprite>
+		<sprite name="spr_clansoft">
+			<image file="resources/clanfont.pcx">
+				<palette pos="129,209" tcol="0" />
+			</image>
+		</sprite>
+		<font name="fnt_clansoft">
+      <bitmap
+        glyphs="Game/spr_clansoft" 
+        spacelen="6" 
+        letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" />
+    </font>
+		<sample name="sfx_start" file="resources/start.wav" />
+		<sample name="sfx_namnam" file="resources/namnam.wav" />
+		<sample name="sfx_ghost" file="resources/ghost.wav" />
+		<sample name="sfx_dead" file="resources/blowup.wav" />
+		<sample name="sfx_ghost_dead" file="resources/ghost_dead.wav" />
+		<sample name="sfx_powerup" file="resources/powerup.wav" />
+	</section>
+</resources>

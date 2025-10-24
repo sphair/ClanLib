@@ -1,0 +1,26 @@
+<xml>
+<head>
+<title>Creating a font using palette method, ClanLib API overview</title>
+</head>
+<body>
+
+<p>You need to use a 256 color bitmap. You may draw the letters in any order,
+but keep in mind that colors with indexes 253, 254, 255 are reserved.</p>
+
+<p>A typical font would look like this:</p>
+
+<p><img src="Images/font_old0.png"</p>
+
+<p>From this, one can deduce the following rules:</p>
+
+<ul>
+<li>color 255 is used as an "horizontal delimiter" (the white lines).</li>
+<li>color 254 is used as a "vertical delimiter" (the green lines).</li>
+<li>color 253 is used as a "carriage return" (the dark red lines), when one needs to define a font on several lines.</li>
+</ul>
+
+<p>Save your file as a 256 coloured PCX. Note that Photoshop strangely moves index
+colours 253, 254, 255 to index 1,2 and 3. Don't ask why :)</p>
+
+</body>
+</xml>

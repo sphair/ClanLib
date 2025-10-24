@@ -1,0 +1,26 @@
+<RESFILES value=""/>
+<IDLFILES value=""/>
+<IDLGENFILES value=""/>
+<DEFFILE value=""/>
+<RESDEPEN value="$(RESFILES)"/>
+<LIBFILES value=""/>
+<LIBRARIES value=""/>
+<SPARELIBS value=""/>
+<PACKAGES value=""/>
+<PATHPAS value=".;"/>
+<PATHRC value=".;"/>
+<PATHASM value=".;"/>
+<PATHNASM value=".;"/>
+<DEBUGLIBPATH value="$(BCB)\lib\debug\"/>
+<RELEASELIBPATH value="$(BCB)\lib\release\"/>
+<LINKER value="TLib"/>
+
+<SYSDEFINES value="_NO_VCL;_ASSERTE;NO_STRICT;_RTLDLL"/>
+
+<INCLUDEPATH value="$(BCB)\include;$(BCB)\include\mfc;$(BCB)\include\atl;..\Sources"/>
+<LIBPATH value="$(BCB)\lib\psdk;"/>
+<WARNINGS value=""/>
+<LISTFILE value=""/>
+<WARNINGS value="-w-8027"/>
+</MACROS>
+<OPTIONS>

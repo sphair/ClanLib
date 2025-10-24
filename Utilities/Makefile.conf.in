@@ -1,0 +1,24 @@
+# -*- mode: Makefile; -*-
+# $Id: Makefile.conf.in,v 1.1 2003/11/25 11:04:50 mbn Exp $
+#
+# This file contains all compiler options used to build ClanLib.
+#
+
+PACKAGES = $(patsubst %,%-@LT_RELEASE@,$(LIBS))
+CXXFLAGS += `pkg-config --cflags $(PACKAGES)`
+
+#UTIL_BIN contains list of example binaries to build
+
+all: $(UTIL_BIN)@EXEEXT@
+
+$(UTIL_BIN)@EXEEXT@: $(OBJF)
+	$(CXX) $(CXXFLAGS) $(OBJF) -o $(UTIL_BIN)@EXEEXT@ `pkg-config --libs $(PACKAGES)`
+
+clean:
+	rm -f $(OBJF) $(UTIL_BIN)@EXEEXT@
+
+%.o : %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+#configuration settings
+

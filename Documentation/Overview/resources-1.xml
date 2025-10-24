@@ -1,0 +1,328 @@
+<xml>
+<head>
+<title>Resources</title>
+</head>
+<body>
+
+<p>Resources are a fundamental aspect of any game. The graphics in the game
+may consist of sprites, and the sounds in the game typically consists of
+wave-samples or similar. Other data used in games could be the data defining
+a level in a game, or the dialogue used in some scene in the game. As a
+matter of fact, anything except the actual game code in the game, can be
+viewed as resources.</p>
+
+<p>We would like resources in a game to be separated from the game as much
+as possible. For instance, we don't want to change code because we change
+the filename of some sprite graphics file, and we certainly don't want to
+update source code, if we change the dimensions or any similar aspect of a
+resource either. We want to have flexible control of the resources
+initialization, separated from the game code. For instance we want to be
+able to specify whether a sample loops, or set it's volume separately from
+the source code. We want to have as great resource flexibility as possible
+while developing the game. And finally we would like our resources to be
+location transparent. If we have some netgame server that includes a level
+unknown to a joining client, we want that level to be transferred to the
+client game location transparently, as if the resource resided locally on
+that client.</p>
+
+<p>To design a resource system, that provides an adequate solution to these
+problems, we need a level of abstraction between physical resource
+location/loading, and resource naming in the actual game code. This is where
+the resource manager in ClanLib comes in. The resource manager,
+<codelink>CL_ResourceManager</codelink>, provides this level of abstraction
+by presenting an uniform resource interface to ClanLib applications. The
+resource managers main responsibility is to parse a resource definition
+file, and load the resources using the proper resource loader, when
+requested.</p>
+
+<p>A resource definition file in ClanLib is a xml file. It contains two
+different types of XML tags: sections and resource types. It has a form like
+this:</p>
+
+<code>
+<resources>
+  <section name="Game">
+    <sample name="sfx_explosion" file="explosion.wav" />
+    <surface name="sur_explosion" file="explosion.png" />
+    <customtype name="data" text="hello">
+      <meaning_of_life value="42" />
+    </customtype>
+  </section>
+</resources>
+</code>
+
+<p>The top element of a resource definition file in ClanLib starts with the
+&lt;resources&gt; tag. It can then be followed either by the special
+&lt;section&gt; tag, or by a resource type tag. Sections and resource
+tags only have one required attribute "name". The resource identifer for the
+explosion sample is "Game/sfx_explosion" in the above example.</p>
+
+<p>Sections are a way to group resources. This aids readability and logical
+grouping for the game coder, as well as providing an efficient way to load a
+group of resources at the same time.</p>
+
+<p>Any other element than the &lt;section&gt; element will be considered a
+resource. You can create as many custom resource element types as you want,
+in this example the &lt;customtype&gt; resource (note that "customtype" isnt
+a keyword, it could be any tag name). The only requirement is that it has
+the "name" attribute, which is used to access the resource from the resource
+manager. Via the <codelink>CL_Resource</codelink> interface, you can access
+the XML tree from any resource in the resource definition file.</p>
+
+<p>If the above resource definition file was named resources.xml, the
+following code illustrates how to load and access resources in it:</p>
+
+<code>
+CL_ResourceManager resources("resources.xml");
+CL_Resource resource_sample = resources.get_resource("Game/sfx_explosion");
+std::string file = resource_sample.get_element().get_attribute("file");
+CL_Resource resource_data = resources.get_resource("Game/data");
+CL_DomNode meaning_of_life = resource_data.get_element().named_item("meaning_of_life");
+</code>
+
+<h3>Resource Loading And Unloading</h3>
+
+<p>Built on top of the above system, the resource system can also
+administrate reference counted loading and unloading of resources.
+<codelink>CL_Resource</codelink> contains two functions called load() and
+unload(), which can be called to increase or decrease the load reference
+count of a resource. At the first load the resource will emit its sig_load
+signal, and at the last unload the sig_unload signal is emitted. This can be
+used to load additional shared data related to a resource.</p>
+
+<p>It is possible to attach data objects to a resource. Such additional data
+is attached by deriving <codelink>CL_ResourceData</codelink> and then using
+the attach_data function on CL_Resource to attach it. Any other part of the
+application can then get the pointer to the data object by calling get_data
+via CL_Resource.</p>
+
+<p>To allow a more automatic way of attaching data objects to resources,
+CL_ResourceManager provides a static global signal called
+sig_resource_loaded. When a resource definition file is loaded, it will emit
+this signal with each resource found in the definition file. By connecting
+slots to this signal, applications and ClanLib can attach data objects
+transparently at construction time of CL_ResourceManager.</p>
+
+<h3>Built-In Resource Types</h3>
+
+<p>The resource loading system above is used by ClanLib to automatically
+administrate the following resource types:</p>
+
+<ul>
+<li>&lt;surface&gt; - represents a <codelink>CL_Surface</codelink></li>
+<li>&lt;sprite&gt; - <codelink>CL_Sprite</codelink></li>
+<li>&lt;sprite_description&gt; - <codelink>CL_SpriteDescription</codelink></li>
+<li>&lt;texture&gt; - <codelink>CL_Texture</codelink></li>
+<li>&lt;font&gt; - <codelink>CL_Font</codelink></li>
+<li>&lt;string&gt; - <codelink>CL_String</codelink></li>
+<li>&lt;integer&gt; - <codelink>CL_Integer</codelink></li>
+<li>&lt;boolean&gt; - <codelink>CL_Boolean</codelink></li>
+<li>&lt;raw&gt; - <codelink>CL_Raw</codelink></li>
+<li>&lt;sample&gt; - <codelink>CL_Sample</codelink></li>
+</ul>
+
+<p>If you create a resource tag of any of these types, you will be able use
+the resource constructor in their equivalent C++ class (eg.
+<codelink>CL_Surface</codelink> for &lt;surface&gt;), like illustrated in
+the following code block:</p>
+
+<code>
+CL_Surface sur_explosion("Game/sur_explosion", &resources);
+</code>
+
+<p>All the resource related constructors use the above syntax in
+ClanLib.</p>
+
+<p>Behind the curtain, ClanLib uses the sig_resource_loaded signal to attach
+a "surface" resource data object to any &lt;surface&gt; resource type. Then
+when the above constructor is called, it will increase the reference count
+on the resource, which causes sig_load to be called on the CL_Resource
+object. The surface resource data object will be listening on this event,
+loading the shared surface data, and finally the CL_Surface constructor
+above will access the shared data calling get_data("surface") on the
+resource. When the local CL_Surface instance is destroyed, the load
+reference count will be decreased again, possibly unloading the shared
+resource data.</p>
+
+<p>This means that constructing another CL_Surface using the same resource
+ID should only cause the load reference count increase - sharing the
+image data together with the other CL_Surface instance.</p>
+
+<h3>Resources In Datafiles</h3>
+
+<p>It is possible to compile resources used in a resource definition file
+into a datafile. This can be useful for a various of reasons, the two most
+obvious being having only one file containing a large set of resource data,
+and compression of resource data. The datafile format of choice in ClanLib
+is zip - ClanLib has native zip archive support via the
+<codelink>CL_Zip_Archive</codelink> interface. To create a datafile for your
+resources, simply zip the resource definition file and its related resource
+data files into an archive and construct your resources like this:</p>
+
+<code>
+CL_ResourceManager resources(
+	"resources.xml",
+	new CL_Zip_Archive("resources.zip"),
+	true);
+</code>
+
+<p>That's it. Resources are now loaded from the zip archive instead. The
+above code will cause it look for a resource definition file called
+resources.xml inside the resources.zip</p>
+
+<p>There's one little detail worth paying attention to: compression.
+Depending on speed versus size, you may want to instruct your zipping tool
+to store (some or all) files in uncompressed form inside the archive.
+Loading from an uncompressed file is in most cases faster, but in particular
+if a resource needs to do random file access (seek around in a file),
+compressed files can produce a significant overhead.</p>
+
+<h3>Using Multiple Resource Definition Files</h3>
+
+<p>The resource management system in ClanLib supports setting up a search
+tree for additional resources provided via other resource managers. Using
+this feature it is possible to have one central resource file with general
+resources, and other resource files for each level or mod for a game. The
+following code chunk illustrates how to set it up:</p>
+
+<code>
+CL_ResourceManager resources_global("global.xml");
+CL_ResourceManager resources_mod("mod.xml");
+CL_ResourceManager resources_level("level.xml");
+resources_level.add_resources(resources_mod);
+resources_level.add_resources(resources_global);
+</code>
+
+<p>When requesting a resource from resources_level, it will first search its
+local resources, then from resources_mod and finally from
+resources_global.</p>
+
+<!-- Old resource docs:
+
+<p>The purpose of these resource types should be self explanatory. Each
+resource type has several configuration options associated with it. All
+options in the resource definition file must be enterered within the
+parantheses following the physical resource location, and must be separated
+by commas. A later part of this overview will describe the options
+associated with each resource type.</p>
+
+<h3>A resource usage example</h3>
+
+<p>Let us look at an example resource definition file, and see how that can
+be translated to resources usable by the ClanLib classes during runtime:</p>
+
+<code>
+res_surface = test.tga (type=surface);
+res_sample = test.wav (type=sample);
+</code>
+
+<p>As mentioned previously, this definition file is interfaced to via the
+<codelink>CL_ResourceManager</codelink> class. The
+<codelink>CL_ResourceManager</codelink> is created using the following
+constructor:</p>
+
+<code>
+CL_ResourceManager::CL_ResourceManager(
+	const char *file_name,
+	const bool is_datafile);
+</code>
+
+<p>It receives as input the name of a file. If 'is_datafile' is true, the
+filename is assumed to be the filename of a datafile, containing both the
+resource definition file, and the resources. If not, the filename is assumed
+to be the name of the resource definition file. If the resource definition
+file cannot be found, or if a syntax error is found during parsing of the
+resource definition file, an exception of type <codelink>CL_Error</codelink>
+is thrown.</p>
+
+<p>The instantiated <codelink>CL_ResourceManager</codelink> class, is in
+most cases only used indirectly. Classes like
+<codelink>CL_Surface</codelink> and <codelink>CL_SoundBuffer</codelink> have
+resource load constructors, receiving as argument a pointer to the
+instantiated resource manager, as well as a resource id specifying the
+specific resource to be loaded as data for that given object.</p>
+
+<p>When using resources, make sure you include <ClanLib/core.h></p>
+
+<p>Some example code could look like this:</p>
+<code>
+// my_resources.scr:
+section Surfaces
+{
+	my_surface = test.tga (type=surface);
+}
+
+CL_ResourceManager manager(
+	"my_resources.scr", // Name of resource definition file
+	false); // This is not read from a datafile - load resource data through normal files
+
+CL_Surface my_surface("Surfaces/my_surface", &manager);
+</code>
+
+<h3>Compiling resourcefiles</h3>
+
+<p>As mentioned briefly already, resource definition files can be compiled
+into a datafile, which will contain both the resource definition file, and
+the all resources in one big file.</p>
+
+<p>To compile your datafile, add this code:</p>
+
+<code>
+CL_DatafileCompiler::write("my_resources.scr", "my_resources.dat");
+</code>
+
+<p>This compiles the resource-file my_resources.scr into a datafile called
+my_resources.dat. Normally, the datafile compiler can be made available
+through a command-line interface or similar.</p>
+
+<p>Now, to create a resourcemanager from a compiled datafile, use the
+following code:</p>
+
+<code>
+CL_ResourceManager manager(
+	"my_resources.dat", // Name of resource file
+	true); // This is read from a datafile - load resource data through a packed resourcefile
+</code>
+
+<h3>Resource sections</h3>
+
+<p>As you may have noted in the previous section, my_resources.scr, contains
+a 'section Surfaces' construct. 'section' is a keyword in ClanLib resource
+definition files, and sections can be build up, to provide better grouping
+of resources. Sections can be nested inside each other, but a resource can
+be a part of only one section (as the resource name is qualified with the
+section hierachy of which it is a part (as in "Surfaces/my_surface")). The
+syntax of a resource section is as follows:</p>
+
+<code>
+section MySection
+{
+	section MyNestedSection
+	{
+		my_resource = resource.tga (type=surface);
+	}
+}
+</code>
+
+<p>'my_resource' has the following fully qualified resource_id:
+"MySection/MyNestedSection/my_resource".</p>
+
+<p>One of the advantages of grouping is that you can load all resources in a
+group into memory at once. This allows your game to do all in-game loading
+at game start, instead of loading the resources as they are used in the
+game. The following code will do that:</p>
+
+<code>
+manager.load_section("MySection");
+</code>
+
+<p>When you load an entire section of resources, you will have to inform the
+resource manager when it can unload them from memory again. All the
+resources in ClanLib are reference counted, and if you do not call the
+CL_ResourceManager::unload_section() function, your application will memory
+leak!</p>
+
+<p><a href="resources-2.html">Move on to part two</a>.</p>
+-->
+</body>
+</xml>

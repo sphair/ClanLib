@@ -1,0 +1,61 @@
+<xml>
+<head>
+<title>Sample Resources</title>
+</head>
+<body>
+
+<h3>Resource options</h3>
+
+<p>Each sample <i>can</i> have the following properties:</p>
+
+<pre>
+&lt;sample
+	name="my_sample"
+	file="filename"
+	format="sound_format"
+	stream="[no,yes]" &gt;
+</pre>
+
+<p>To setup a sample resource, it is required to specify the <i>name</i>
+and <i>file</i> attributes of &lt;sample&gt;. If ClanLib has trouble
+determining what format the specified filename is in, the extension known by
+clanlib (eg. "wav") can be told using the <i>format</i> attribute.</p>
+
+<p>Per default a sample is loaded in its entirely into memory. If the
+<i>stream</i> attribute is set to "yes", it will instead stream the sample
+from disk during playback. For very long samples (eg. music in a level),
+this can save considerable memory.</p>
+
+<h3>Sample resource options reference</h3>
+
+<p><b>&lt;sample&gt;</b></p>
+
+<ul>
+<li>Attribute <b>name</b>: Name of resource.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: None, MUST BE PRESENT.
+  </p>
+</li>
+<li>Attribute <b>file</b>: Filename of sample to be used.
+  <p>
+  <i>Valid values</i>:<br>
+  <i>Default value</i>: None, MUST BE PRESENT.
+  </p>
+</li>
+<li>Attribute <b>format</b>: Extension of known format to be used for loading.
+  <p>
+  <i>Valid values</i>: "wav", "ogg", "it", "xm", "s3m", "mtm", "669", "stm", "ult", "far", "med", "amf", "dsm", "imf", "gdm", "stx", "okt" and "mod"<br>
+  <i>Default value</i>: Uses the extension used in the <i>file</i> attribute.
+  </p>
+</li>
+<li>Attribute <b>stream</b>: Stream from file flag.
+  <p>
+  <i>Valid values</i>: "no", "yes"<br>
+  <i>Default value</i>: "no"
+  </p>
+</li>
+</ul>
+
+</body>
+</xml>
