@@ -27,10 +27,10 @@
 **    (if your name is missing here, please add it)
 */
 
+#include "Display/display_precomp.h"
 #include <errno.h>
 #include <stdio.h>
 #include <iostream>
-#include "Display/display_precomp.h"
 #include "API/Core/System/error.h"
 #include "API/Display/Providers/png_provider.h"
 #include "png_provider_generic.h"
@@ -108,8 +108,10 @@ CL_PNGProvider::save(
 
 	png_write_end(png_ptr, info_ptr);
 
-	delete image;
-	delete row_pointers;
+	png_destroy_write_struct( &png_ptr, &info_ptr );
+
+	delete[] image;
+	delete[] row_pointers;
 
 	fclose(fp);
 

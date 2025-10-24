@@ -71,6 +71,9 @@ public:
 	//: Returns true if extended 3DNow! is present on this CPU.
 	static bool detect_ext_3dnow();
 
+	//: Returns the amount of cpus and -1 if it wasn't possible to detect
+	static int get_num_cores();
+
 //! Operations:
 public:
 	//: Checks for system events, updates input and other stuff.

@@ -200,9 +200,10 @@ void CL_BMPProvider_Generic::read_bmp(
 			CL_PixelBuffer_Generic::format.set_green_mask(0x03e0);
 			CL_PixelBuffer_Generic::format.set_red_mask(0x7c00);
 
-		} else
+		} else 	if (main_header.biBitCount == 24)
 		{
-					
+			//why does only 24 bit have this endian stuff?  This looks like a bug to me, will check on OSX first though.. -Seth	
+
 			if (CL_Endian::is_system_big())
 			{
 				CL_PixelBuffer_Generic::format.set_red_mask(0x0000ff);
@@ -216,7 +217,16 @@ void CL_BMPProvider_Generic::read_bmp(
 				CL_PixelBuffer_Generic::format.set_green_mask(0x00ff00);
 				CL_PixelBuffer_Generic::format.set_red_mask(0xff0000);
 			}
+		} else
+		{
+				//32 bit with alpha
+			
+				CL_PixelBuffer_Generic::format.set_red_mask(0x00ff0000);
+				CL_PixelBuffer_Generic::format.set_green_mask(0x0000ff00);
+				CL_PixelBuffer_Generic::format.set_blue_mask(0x000000ff);
+				CL_PixelBuffer_Generic::format.set_alpha_mask(0xff000000);
 		}
+		
 	}
 
 

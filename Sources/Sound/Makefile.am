@@ -37,16 +37,19 @@ SoundProviders/Win32/soundprovider_recorder_directsound.h
 else
 libclanSound_la_SOURCES += \
 Unix/soundoutput_oss.cpp \
-Unix/soundoutput_oss.h \
+Unix/soundoutput_oss.h
+if ALSA
+libclanSound_la_SOURCES += \
 Unix/soundoutput_alsa.cpp \
-Unix/soundoutput_alsa.h \
+Unix/soundoutput_alsa.h
+endif
+libclanSound_la_SOURCES += \
 SoundProviders/Unix/soundprovider_recorder_oss.cpp \
 SoundProviders/Unix/soundprovider_recorder_oss.h
 endif
 
 libclanSound_la_LDFLAGS = \
-  -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-  -lasound
-
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(SOUND_LDFLAGS)
+  
 # EOF #

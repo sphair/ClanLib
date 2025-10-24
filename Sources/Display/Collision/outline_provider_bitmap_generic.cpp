@@ -105,7 +105,7 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 
 CL_OutlineProviderBitmap_Generic::~CL_OutlineProviderBitmap_Generic()
 {
-	delete data;
+	delete[] data;
 }
 
 void CL_OutlineProviderBitmap_Generic::find_contours()

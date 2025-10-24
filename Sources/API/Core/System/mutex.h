@@ -156,8 +156,8 @@ public:
 	void leave()
 	{
 		if (lock_count == 0) return;
-		mutex->leave();
 		lock_count--;
+		mutex->leave();
 	}
 
 //! Implementation:

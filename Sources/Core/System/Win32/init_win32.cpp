@@ -70,6 +70,7 @@ void init_system()
 {
 	init_ref_count++;
 	if (init_ref_count > 1) return;
+	timeBeginPeriod(1);
 
 	event_dispatcher = new CL_Win32Event_Dispatcher;
 
@@ -89,6 +90,8 @@ void deinit_system()
 
 	delete event_dispatcher;
 	event_dispatcher = NULL;
+	timeEndPeriod(1);
+
 }
 
 void CL_Win32Event_Dispatcher::keep_alive()
@@ -119,6 +122,7 @@ void CL_Win32Event_Dispatcher::keep_alive()
 
 unsigned int CL_System::sys_time()
 {
+	/*
 	static LARGE_INTEGER perf_frequency, perf_counter;
 	static bool first_time = true;
 
@@ -131,11 +135,25 @@ unsigned int CL_System::sys_time()
 
 	QueryPerformanceCounter(&perf_counter);
 	return (unsigned int) (perf_counter.QuadPart / perf_frequency.QuadPart);
+	*/
+
+	//Using TimeGetTime() fixed small but annoying stutter problems with intel dual core systems -SAR
+	
+	unsigned int time = timeGetTime();
+	return time;
 }
 
 void CL_System::sleep(int millis)
 {
 	Sleep(millis);
+}
+
+int CL_System::get_num_cores() {
+	SYSTEM_INFO sysinf;
+	memset(&sysinf, 0, sizeof(SYSTEM_INFO));
+	GetSystemInfo(&sysinf);
+	long cpus = sysinf.dwNumberOfProcessors;
+	return (cpus < 1)?-1 : static_cast<int>(cpus);
 }
 
 std::string CL_System::get_exe_path()

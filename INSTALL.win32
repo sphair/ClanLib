@@ -1,6 +1,6 @@
 $Id: INSTALL.win32,v 1.11 2004/03/28 00:13:14 sphair Exp $
 
-Readme file for ClanLib 0.8.x under Win32
+Readme file for ClanLib 1.0.x under Win32
 ---------------------------------------------------------------------------
 This readme will guide you with installing, compiling ClanLib and creating
 your first ClanLib application.

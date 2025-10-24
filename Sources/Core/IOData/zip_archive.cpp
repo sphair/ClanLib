@@ -30,6 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/IOData/zip_archive.h"
 #include "API/Core/IOData/inputsource_file.h"
+#include "API/Core/IOData/outputsource_file.h"
 #include "API/Core/IOData/inputsource_memory.h"
 #include "API/Core/System/clanstring.h"
 #include "zip_archive_generic.h"
@@ -39,6 +40,10 @@
 #include "zip_end_of_central_directory_record.h"
 #include "zip_file_entry_generic.h"
 #include "inputsource_zip_fileentry.h"
+#include "zip_local_file_descriptor.h"
+#include "zip_compression_method.h"
+#include <time.h>
+#include "zip_flags.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Zip_Archive construction:
@@ -200,15 +205,253 @@ CL_OutputSource *CL_Zip_Archive::create_file(const std::string &filename, bool c
 
 void CL_Zip_Archive::add_file(const std::string &filename, bool compress)
 {
+	 add_file("", filename, compress);
+}
+
+void CL_Zip_Archive::add_file(const std::string &input_filename, const std::string &filename_in_archive, bool compress)
+{
+	CL_Zip_FileEntry file;
+	file.impl->type = CL_Zip_FileEntry_Generic::type_file;
+	file.impl->record.compression_method = compress ? zip_compress_deflate : zip_compress_store;
+	file.set_filename(filename_in_archive);
+	file.set_local_filename(input_filename);
+	impl->files.push_back(file);
 }
 
 void CL_Zip_Archive::save()
 {
+	if (impl->filename.empty())
+	{
+		throw CL_Error("CL_Zip_Archive: No filename specified, call save(filename) instead");
+	} else
+	{
+		throw CL_Error("Todo: Write to a temp file, then rename");
+	}
+}
+
+void CL_Zip_Archive::write_zip_file(CL_Zip_FileEntry *pEntry, CL_OutputSource *output)
+{	
+
+	//set some last minute data
+	pEntry->impl->record.relative_offset_of_local_header = output->tell(); //remember our location for later
+	
+	CL_Zip_Archive_Generic::calc_time_and_date(pEntry->impl->record.last_mod_file_date, pEntry->impl->record.last_mod_file_time);
+	output->write_int32(0x04034b50);
+	output->write_int16(pEntry->impl->record.version_needed_to_extract);
+	output->write_int16(pEntry->impl->record.general_purpose_bit_flag);
+	output->write_int16(pEntry->impl->record.compression_method);
+	output->write_int16(pEntry->impl->record.last_mod_file_time);
+	output->write_int16(pEntry->impl->record.last_mod_file_date);
+	output->write_int32(pEntry->impl->record.crc32);
+	output->write_int32(pEntry->impl->record.compressed_size);
+	output->write_int32(pEntry->impl->record.uncompressed_size);
+	output->write_int16(pEntry->impl->record.filename.size());
+	output->write_int16(pEntry->impl->record.extra_field.size());
+
+	output->write(pEntry->impl->record.filename.data(), pEntry->impl->record.filename.size());
+	output->write(pEntry->impl->record.extra_field.data(), pEntry->impl->record.extra_field.size());
+
+	if (pEntry->impl->type != CL_Zip_FileEntry_Generic::type_file)
+	{
+		throw CL_Error("Don't know how to compress standard added files yet");
+	}
+	//save out the actual file
+	std::string fileName = pEntry->get_filename();
+
+	if (!pEntry->get_local_filename().empty())
+	{
+		fileName = pEntry->get_local_filename();
+	}
+	CL_InputSource *input = new CL_InputSource_File(fileName);
+
+	const int bufferSize = 16384;
+
+	cl_uint8 buffer[bufferSize];
+	
+	int bytesRead;
+	int totalBytes = 0;
+	int totalBytesCompressed = 0;
+	cl_uint32 crc = 0;
+
+	if (pEntry->impl->record.compression_method == 0)
+	{
+		//not compressed
+		while (bytesRead = input->read(buffer, bufferSize))
+		{
+			crc = crc32(crc, buffer, bytesRead);
+			totalBytes += output->write(buffer, bytesRead);
+		}
+		totalBytesCompressed = totalBytes;
+
+	} else
+	{
+		//compression version
+		int ret, flush;
+		z_stream strm;
+		cl_uint8 bufferOut[bufferSize];
+		int bytesCompressed;
+
+		/* allocate deflate state */
+		strm.zalloc = Z_NULL;
+		strm.zfree = Z_NULL;
+		strm.opaque = Z_NULL;
+		ret = deflateInit2(&strm, Z_DEFAULT_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, 0);
+
+		if (ret != Z_OK) 
+		{
+			throw CL_Error("zLib init error:");
+		}
+
+		do
+		{
+			bytesRead = input->read(buffer, bufferSize);
+			crc = crc32(crc, buffer, bytesRead);
+			totalBytes += bytesRead;
+			strm.avail_in = bytesRead;
+			flush = input->tell() >= input->size() ? Z_FINISH : Z_NO_FLUSH;
+			strm.next_in = buffer;
+		
+		/* run deflate() on input until output buffer not full, finish
+		compression if all of source has been read in */
+		do 
+		{
+			strm.avail_out = bufferSize;
+			strm.next_out = bufferOut;
+			ret = deflate(&strm, flush); 
+			if (ret == Z_STREAM_ERROR)
+			{
+				throw CL_Error("zLib error zipping:" + CL_String::from_int(ret));
+			}
+
+			bytesCompressed = (bufferSize)-strm.avail_out;
+			output->write(bufferOut, bytesCompressed) ;
+
+		} while (strm.avail_out == 0);
+
+	} while(flush != Z_FINISH);
+
+
+		//guess we're done
+		ret = deflateEnd(&strm);
+		totalBytesCompressed = strm.total_out;
+		if (ret != Z_OK)
+		{
+			throw CL_Error("zLib deflateEnd error:" + CL_String::from_int(ret));
+		}
+	}
+
+	delete input;
+
+	//actually now that we know what is going on, copy it over here:
+	pEntry->impl->record.compressed_size = totalBytesCompressed;
+	pEntry->impl->record.uncompressed_size = totalBytes;
+	pEntry->impl->record.crc32  = crc;
+	
+	//7-zip coughs if you do this
+	//pEntry->impl->record.general_purpose_bit_flag = 0; //notify that we now have good data
+
+	//write post-file header now that we know the specifics
+	output->write_int32(0x08074b50);  //osx's built-in zip reader coughs if you don't add this header
+	
+	output->write_int32(pEntry->impl->record.crc32);
+	output->write_int32(pEntry->impl->record.compressed_size);
+	output->write_int32(pEntry->impl->record.uncompressed_size);
 }
 	
 void CL_Zip_Archive::save(const std::string &filename)
 {
+	// Load zip file structures:
+
+	CL_OutputSource *output = new CL_OutputSource_File(filename);
+
+	// indicate the file is little-endian
+	output->set_little_endian_mode();
+
+	//write out all our files
+
+	for (unsigned int i=0; i < impl->files.size(); i++)
+	{
+		CL_Zip_FileEntry *pFile = &impl->files[i];
+		write_zip_file(pFile, output);
+	}
+	cl_int32 offset_start_central_dir = output->tell();
+
+	CL_Zip_EndOfCentralDirectoryRecord end_of_directory;
+	end_of_directory.number_of_this_disk = 0;
+	end_of_directory.number_of_disk_with_start_of_central_directory = 0;
+	end_of_directory.number_of_entries_on_this_disk = impl->files.size();
+	end_of_directory.number_of_entries_in_central_directory = impl->files.size();
+	end_of_directory.offset_to_start_of_central_directory = offset_start_central_dir;
+	end_of_directory.file_comment_length = 0;
+	
+	//save out all the file headers again
+
+	for (unsigned int i=0; i < impl->files.size(); i++)
+	{
+		CL_Zip_FileEntry *pFile = &impl->files[i];
+		pFile->impl->record.save(output); //write the header, which now has all offsets/etc correctly specified
+	}
+
+	// write end of central directory record:
+	end_of_directory.size_of_central_directory = (output->tell() - offset_start_central_dir);
+
+	end_of_directory.save(output);
+	delete output;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Zip_Archive implementation:
+
+
+
+void CL_Zip_Archive_Generic::calc_time_and_date(cl_int16 &out_date, cl_int16 &out_time)
+{
+	cl_uint32 day_of_month = 0;
+	cl_uint32 month = 0;
+	cl_uint32 year_from_1980 = 0;
+	cl_uint32 hour = 0;
+	cl_uint32 min = 0;
+	cl_uint32 sec = 0;
+
+#if !defined(_WINDOWS)
+
+	//unix style way, slightly different than windows
+
+	time_t t = time(0);
+	tm *tm_time;
+	tm_time = localtime(&t);
+	day_of_month = tm_time->tm_mday;
+	month = tm_time->tm_mon + 1;
+	year_from_1980 = tm_time->tm_year - 80;
+	hour = tm_time->tm_hour;
+	min = tm_time->tm_min;
+	sec = tm_time->tm_sec;
+
+#elif (_MSC_VER >= 1400)
+	time_t t = time(0);
+	tm tm_time;
+	localtime_s(&tm_time, &t);
+	day_of_month = tm_time.tm_mday;
+	month = tm_time.tm_mon + 1;
+	year_from_1980 = tm_time.tm_year - 80;
+	hour = tm_time.tm_hour;
+	min = tm_time.tm_min;
+	sec = tm_time.tm_sec;
+#else
+	static CL_Mutex mutex;
+	CL_MutexSection mutex_lock(&mutex);
+	time_t t = time(0);
+	tm *tm_time = gmtime(&t);
+	day_of_month = tm_time->tm_mday;
+	month = tm_time->tm_mon + 1;
+	year_from_1980 = tm_time->tm_year - 80;
+	hour = tm_time->tm_hour;
+	min = tm_time->tm_min;
+	sec = tm_time->tm_sec;
+	mutex_lock.unlock();
+#endif
+
+	out_date = (cl_int16) (day_of_month + (month << 5) + (year_from_1980 << 9));
+	out_time = (cl_int16) (sec/2 + (min << 5) + (hour << 11));
+}
+

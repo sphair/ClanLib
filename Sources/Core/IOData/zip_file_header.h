@@ -88,6 +88,8 @@ public:
 	std::string extra_field;
 	
 	std::string file_comment;
+
+	std::string local_filename; //used only when zipping
 	
 //! Operations:
 public:

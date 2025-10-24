@@ -27,6 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
+#include "Display/display_precomp.h"
+
 #ifndef __APPLE__
 #ifndef WIN32
 #include <X11/Xlib.h>
@@ -37,7 +39,6 @@
 #endif
 #endif
 
-#include "Display/display_precomp.h"
 #include "API/Display/display_mode.h"
 #include "API/Core/System/clanstring.h"
 #include "display_mode_generic.h"

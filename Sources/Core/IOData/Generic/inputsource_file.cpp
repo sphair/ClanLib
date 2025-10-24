@@ -31,6 +31,10 @@
 
 #ifdef WIN32
 #include <direct.h>
+#else
+#ifndef getcwd
+#include <unistd.h>
+#endif
 #endif
 #include <cstring>
 #include <API/Core/IOData/inputsource_file.h>

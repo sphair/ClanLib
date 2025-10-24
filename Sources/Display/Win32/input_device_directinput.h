@@ -81,12 +81,15 @@ public:
 //! Implementation:
 private:
 	virtual void keep_alive();
-
 	CL_DisplayWindow_Win32 *window;
+	static BOOL CALLBACK enum_axes_callback(const DIDEVICEOBJECTINSTANCE* instance, void* context);
+	static BOOL CALLBACK enum_button_callback(const DIDEVICEOBJECTINSTANCE* instance, void* context);
 
 	DIDEVICEINSTANCE device_instance;
 
 	LPDIRECTINPUTDEVICE8 directinput_device;
+	int button_count;
+	int axis_count;
 };
 
 #endif

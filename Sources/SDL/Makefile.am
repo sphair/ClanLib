@@ -23,7 +23,6 @@ libclanSDL_la_CXXFLAGS = $(SDL_CFLAGS)
 libclanSDL_la_LIBADD   = $(SDL_LIBS)
 
 libclanSDL_la_LDFLAGS = \
-  -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

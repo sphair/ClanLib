@@ -147,6 +147,15 @@ void CL_InputSource_Zip_FileEntry::open()
 	inputsource->open();
 	inputsource->seek(file_entry.impl->record.relative_offset_of_local_header, CL_InputSource::seek_set);
 	file_header.load(inputsource);
+	
+	//This fix allows OS X created .zips to be opened - SAR
+	if (file_header.general_purpose_bit_flag  & 8) //if this bit is set, it means the local header data for sizes was not
+	{
+		//the correct size data is not in the local header.. luckily, we have a real copy from the entry database
+		file_header.compressed_size = file_entry.get_compressed_size();
+		file_header.uncompressed_size = file_entry.get_uncompressed_size();
+	}
+	
 	pos = 0;
 	compressed_pos = 0;
 

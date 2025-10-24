@@ -92,7 +92,7 @@ void CL_Zip_EndOfCentralDirectoryRecord::save(CL_OutputSource *output)
 	output->write_int16(number_of_entries_in_central_directory);
 	output->write_int32(size_of_central_directory);
 	output->write_int32(offset_to_start_of_central_directory);
-	output->write_int16(file_comment_length);
+	output->write_int16(file_comment.length());
 	output->write(file_comment.data(), file_comment.length());
 }
 

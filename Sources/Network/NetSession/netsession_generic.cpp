@@ -172,12 +172,17 @@ void CL_NetSession_Generic::shutdown()
 
 	// Disconnect all computers:
 	all = CL_NetGroup();
-	std::list<CL_NetComputer_Generic *>::iterator it;
-	for (it = computers.begin(); it != computers.end(); it++)
+	while (!computers.empty()) 
 	{
-		CL_NetComputer_Generic *computer = *it;
+		CL_NetComputer_Generic *computer = computers.front(); 
+		computers.pop_front();
+		// have to leave in order to enable the worker thread to return
+		mutex_section.leave(); 
+
 		computer->do_shutdown();
 		computer->release_ref();
+
+		mutex_section.enter();
 	}
 	computers = std::list<CL_NetComputer_Generic *>();
 
@@ -260,6 +265,8 @@ void CL_NetSession_Generic::keep_alive()
 		mutex_section.enter();
 	}
 
+	// extra list to handle mutexing correctly
+	std::list<CL_NetComputer_Generic *> releasecomputers; 
 	// Check if any computer handles need to be removed:
 	std::list<CL_NetComputer_Generic *>::iterator it_computers = computers.begin();
 	while (it_computers != computers.end())
@@ -267,7 +274,7 @@ void CL_NetSession_Generic::keep_alive()
 		CL_NetComputer_Generic *computer = *it_computers;
 		if (computer->disconnected)
 		{
-			computer->release_ref();
+			releasecomputers.push_back(computer);
 			computers.erase(it_computers++);
 		}
 		else
@@ -275,7 +282,16 @@ void CL_NetSession_Generic::keep_alive()
 			++it_computers;
 		}
 	}
-	
+
+	mutex_section.leave();
+	while (!releasecomputers.empty())
+	{
+		CL_NetComputer_Generic *computer = releasecomputers.front();
+		releasecomputers.pop_front();
+		computer->release_ref();
+	}
+	mutex_section.enter();
+
 	in_keep_alive = false;
 }
 

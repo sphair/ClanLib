@@ -54,6 +54,7 @@
 AGLContext CL_DisplayWindow_OpenGL::share_context = 0;
 
 int CL_DisplayWindow_OpenGL::disp_ref_count = 0;
+OSStatus AEHandler(EventHandlerCallRef inCaller, EventRef inEvent, void* inRefcon);
 
 /////////////////////////////////////////////////////////////////////////////
 // Construction:
@@ -73,6 +74,12 @@ CL_DisplayWindow_OpenGL::CL_DisplayWindow_OpenGL() :
 		SetEventMask(everyEvent);
 		target_ref = GetEventDispatcherTarget();
 		first_call = false;
+		
+		//install special handler to process Apple Event messages - SAR
+		
+		const EventTypeSpec kEvents[] = {{kEventClassAppleEvent, kEventAppleEvent}};
+		InstallApplicationEventHandler(NewEventHandlerUPP(AEHandler),
+ 	    GetEventTypeCount(kEvents), kEvents, 0, NULL);
 	}
 
 	gc = CL_GraphicContext(new CL_GraphicContext_OpenGL(this));
@@ -1033,7 +1040,40 @@ OSStatus CL_DisplayWindow_OpenGL::on_window_event(EventHandlerCallRef call_ref, 
 			// when maximized, but kEventWindowBoundsChanged is also called
 			break;
 		}
-	}
+	} 	
 
 	return result;
+}
+
+OSStatus AEHandler(EventHandlerCallRef inCaller, EventRef inEvent, void* inRefcon)
+{
+	
+    Boolean     release = false;
+    EventRecord eventRecord;
+    OSErr       ignoreErrForThisSample;
+	
+    // Events of type kEventAppleEvent must be removed from the queue
+    //  before being passed to AEProcessAppleEvent.
+	
+    if (IsEventInQueue(GetMainEventQueue(), inEvent))
+    {
+        // RemoveEventFromQueue will release the event, which will
+        //  destroy it if we don't retain it first.
+		
+        RetainEvent(inEvent);
+        release = true;
+        RemoveEventFromQueue(GetMainEventQueue(), inEvent);
+    }
+	
+    // Convert the event ref to the type AEProcessAppleEvent expects.
+    ConvertEventRefToEventRecord(inEvent, &eventRecord);
+    ignoreErrForThisSample = AEProcessAppleEvent(&eventRecord);
+	
+    if (release)
+		
+        ReleaseEvent(inEvent);
+    // This Carbon event has been handled, even if no AppleEvent handlers
+    //  were installed for the Apple event.
+    return noErr;
+	
 }

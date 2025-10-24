@@ -34,7 +34,12 @@
 #ifdef __linux__
 
 #include "../soundoutput_generic.h"
+#ifdef HAVE_ALSA_ASOUNDLIB_H
 #include <alsa/asoundlib.h> 
+#endif
+#ifdef HAVE_ASOUNDLIB_H
+#include <asoundlib.h>
+#endif
 
 class CL_SoundOutput_alsa : public CL_SoundOutput_Generic
 {

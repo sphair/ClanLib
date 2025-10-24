@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "API/Display/pixel_buffer.h"
 #include "Display/display_precomp.h"
+#include "API/Display/pixel_buffer.h"
 #include "sprite_packer_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////

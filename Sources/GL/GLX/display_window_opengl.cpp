@@ -33,9 +33,13 @@
 #include <cstring>
 
 #include "display_window_opengl.h"
+#ifdef HAVE_LINUX_JOYSTICK_H
 #include "input_device_linuxjoystick.h"
+#endif
 #include "input_device_linuxusbmouse.h"
+#ifdef HAVE_LINUX_INPUT_H
 #include "input_device_linuxevent.h"
+#endif
 #include "Display/display_precomp.h"
 #include "Display/display_window_generic.h"
 #include "API/Core/System/keep_alive.h"
@@ -327,6 +331,7 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 void
 CL_DisplayWindow_OpenGL::setup_event()
 {
+#ifdef HAVE_LINUX_INPUT_H
 	char pathname[256];
 	bool done = false;
 
@@ -351,6 +356,9 @@ CL_DisplayWindow_OpenGL::setup_event()
 			done = true;
 		}
 	}
+#else
+	CL_Log::log("debug", "linux input support not compiled-in");
+#endif
 }
 
 void CL_DisplayWindow_OpenGL::setup_usb_mice()
@@ -383,6 +391,7 @@ void CL_DisplayWindow_OpenGL::setup_usb_mice()
 
 void CL_DisplayWindow_OpenGL::setup_joysticks()
 {
+#ifdef HAVE_LINUX_JOYSTICK_H
 	// This could need some improvments, it doesn't look for
 	// /dev/input/jsX for example
 	char pathname[256];
@@ -422,6 +431,9 @@ void CL_DisplayWindow_OpenGL::setup_joysticks()
 			done = true;
 		}
 	}
+#else
+	CL_Log::log("debug", "linux joystick support not compiled-in");
+#endif
 }
 
 

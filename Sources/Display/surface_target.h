@@ -138,7 +138,7 @@ public:
 		{
 		case origin_top_left:
 		default:
-			return CL_Pointf(-hotspot_x, hotspot_y);
+			return CL_Pointf(-hotspot_x, -hotspot_y);
 			break;
 		case origin_top_center:
 			return CL_Pointf(size_width / 2 - hotspot_x, -hotspot_y);

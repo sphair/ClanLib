@@ -48,7 +48,9 @@ public:
 
 	std::string filename;
 
-//! Operations:
+	static void calc_time_and_date(cl_int16 &out_date, cl_int16 &out_time);
+
+	//! Operations:
 public:
 	
 //! Implementation:

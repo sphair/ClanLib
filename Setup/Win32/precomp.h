@@ -37,6 +37,10 @@
 #define WINVER 0x0500
 #endif
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <windows.h>
 #include <tchar.h>
 

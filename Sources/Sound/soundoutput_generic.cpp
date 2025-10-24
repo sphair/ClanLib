@@ -101,7 +101,10 @@ void CL_SoundOutput_Generic::stop_mixer_thread()
 	CL_MutexSection mutex_lock(&mutex);
 	stop_mixer.set_flag();
 	mutex_lock.leave();
-	thread.wait();
+	if (thread.is_initialized()) 
+	{
+		thread.wait();
+	}
 	thread = CL_Thread();
 }
 

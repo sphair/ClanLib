@@ -259,7 +259,7 @@ void CL_InputSource_Datafile::seek(int pos, SeekEnum seek_type)
 			{
 				char *temp = new char[pos];
 				read(temp, pos);
-				delete temp;
+				delete[] temp;
 			}
 			else if (pos < 0)
 			{

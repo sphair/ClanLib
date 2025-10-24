@@ -50,6 +50,10 @@
 #include "API/signals.h"
 #include "API/Core/System/error.h"
 
+#ifndef DEFAULT_DSP
+#define DEFAULT_DSP "/dev/dsp"
+#endif
+
 #ifdef __BORLANDC__
 #define BAD_MATH
 #endif

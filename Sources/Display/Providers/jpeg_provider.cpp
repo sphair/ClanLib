@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#include <iostream>
 #include "Display/display_precomp.h"
+#include <iostream>
 #include "API/Display/Providers/jpeg_provider.h"
 #include "API/Core/System/error.h"
 #include "jpeg_provider_generic.h"

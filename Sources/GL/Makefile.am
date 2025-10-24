@@ -37,11 +37,18 @@ WGL/display_window_opengl.cpp
 else
 libclanGL_la_SOURCES += \
 GLX/display_window_opengl.h \
-GLX/display_window_opengl.cpp \
+GLX/display_window_opengl.cpp
+if LINUX_JOYSTICK
+libclanGL_la_SOURCES += \
 GLX/input_device_linuxjoystick.cpp \
-GLX/input_device_linuxjoystick.h \
+GLX/input_device_linuxjoystick.h
+endif
+if LINUX_INPUT
+libclanGL_la_SOURCES += \
 GLX/input_device_linuxevent.cpp \
-GLX/input_device_linuxevent.h \
+GLX/input_device_linuxevent.h
+endif
+libclanGL_la_SOURCES += \
 GLX/input_device_linuxusbmouse.cpp \
 GLX/input_device_linuxusbmouse.h \
 GLX/display_window_opengl.h \
@@ -60,7 +67,6 @@ EXTRA_DIST = \
  WGL/setupgl_win32.cpp
 
 libclanGL_la_LDFLAGS = \
-  -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

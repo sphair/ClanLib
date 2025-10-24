@@ -32,7 +32,7 @@
 #include "Socket/socket_select.h"
 #include <signal.h>
 
-#if defined(__FreeBSD__) || defined(__APPLE__)
+#ifndef sighandler_t
 #define sighandler_t sig_t
 #endif
 

@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libclanDisplay.la
 # FIXME: This needs to be @LIBS@ or @X11LIBS@ or something like that
 if WIN32
 else
-libclanDisplay_la_LIBADD = -L/usr/X11R6/lib/ -lX11 -lXmu -lGL -lGLU -lpng -ljpeg -lXxf86vm @X_LIBS@
+libclanDisplay_la_LIBADD = -L/usr/X11R6/lib/ -lX11 -lGL -lGLU -lpng -ljpeg -lXxf86vm @X_LIBS@
 endif
 
 libclanDisplay_la_SOURCES = \
@@ -118,7 +118,6 @@ Win32/input_device_win32mouse.h
 endif
 
 libclanDisplay_la_LDFLAGS = \
-  -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

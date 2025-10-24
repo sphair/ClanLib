@@ -179,6 +179,7 @@ CL_SoundProvider_Vorbis_Session::~CL_SoundProvider_Vorbis_Session()
 	
 	vorbis_block_clear(&vb);
 	vorbis_dsp_clear(&vd);
+	vorbis_comment_clear(&vc);
 	vorbis_info_clear(&vi);  /* must be called last */
 
 	/* OK, clean up the framer */

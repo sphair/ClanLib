@@ -64,6 +64,7 @@ public:
 	
 	//: Data of zip file entry, if added from memory (type_added_memory).
 	std::string data;
+
 };
 
 #endif

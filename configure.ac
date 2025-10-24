@@ -4,14 +4,14 @@ dnl Process this file with autoconf to produce a configure script.
 dnl
 
 AC_PREREQ(2.50)
-AC_INIT(ClanLib, 0.8.1)
+AC_INIT(ClanLib, 1.0.0)
 AC_CONFIG_SRCDIR(Sources/API/core.h)
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
-CLANLIB_MAJOR_VERSION=0
-CLANLIB_MINOR_VERSION=8
-CLANLIB_MICRO_VERSION=1
+CLANLIB_MAJOR_VERSION=1
+CLANLIB_MINOR_VERSION=0
+CLANLIB_MICRO_VERSION=0
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 
@@ -23,6 +23,9 @@ AC_SUBST(CLANLIB_VERSION)
 # Set this to: MAJOR.MINOR, ie 0.7, 0.8, 0.9 it gets append as:
 #  libclanDisplay-$LT_RELEASE
 LT_RELEASE=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION
+if test -z "$LDFLAGS_LT_RELEASE"; then
+	LDFLAGS_LT_RELEASE=-release $LT_RELEASE
+fi
 
 # If any features got added to the API since last release incremeant
 # this by 1 (ie increment this for each develpment release, and only
@@ -44,6 +47,7 @@ LT_REVISION=0
 
 # libclanFoobar-$LT_RELEASE.so.[$LT_CURRENT-$LT_AGE].$LT_AGE.$LT_REVISION
 
+AC_SUBST(LDFLAGS_LT_RELEASE)
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -116,6 +120,7 @@ AC_SUBST(extra_LIBS_clanVorbis)
 AC_SUBST(extra_LIBS_clanMikMod)
 
 AM_CONDITIONAL([WIN32], [test $WIN32 = "yes"])
+AM_CONDITIONAL(LINUX, [test -n "`echo ${target} | grep linux`"])
 
 dnl ----------------------------------------
 dnl Additional include and library paths:
@@ -187,6 +192,12 @@ AC_CHECK_HEADER(sys/types.h)
 AC_CHECK_HEADER(sys/ipc.h)
 AC_CHECK_HEADER(sys/shm.h)
 AC_CHECK_HEADER(fstab.h, AC_DEFINE([HAVE_FSTAB_H]))
+
+AC_MSG_CHECKING([for extern *__progname])
+AC_TRY_COMPILE([],
+[extern const char *__progname;],
+AC_MSG_RESULT(yes);AC_DEFINE(EXTERN___PROGNAME),
+AC_MSG_RESULT(no))
 
 dnl -----------------------------------------------------------------------
 dnl Check system endianess: (note: ClanLib is _not_ endian clean right now)
@@ -345,6 +356,16 @@ if test "$enable_clanDisplay" != "no"; then
               AC_DEFINE(HAVE_GLX_GETPROCADDRESSARB, 1,
                  [Define if the OpenGL library supports the glXGetProcAddressARB call])
             fi
+
+	    dnl Check for linux/joystick.h
+	    linux_joystick=no
+	    AC_CHECK_HEADERS(linux/joystick.h, linux_joystick=yes)
+	    AM_CONDITIONAL(LINUX_JOYSTICK, test x$linux_joystick = xyes)
+
+	    dnl Check for linux/input.h
+	    linux_input=no
+	    AC_CHECK_HEADERS(linux/input.h, linux_input=yes)
+	    AM_CONDITIONAL(LINUX_INPUT, test x$linux_input = xyes)
                 fi
             fi
         fi
@@ -367,7 +388,21 @@ if test "$enable_clanSound" != "no"; then
             clanSound, [ *** Cannot find directsound libs],[-ldxguid -lwinmm])
     else
         dnl OSS header check
-        AC_CHECK_HEADER([sys/soundcard.h], [], CLANLIB_DISABLE_MODULE(clanSound,[ *** Cannot find sys/soundcard.h]))
+	soundcard_h=no
+	AC_CHECK_HEADERS(machine/soundcard.h sys/soundcard.h soundcard.h, [soundcard_h=yes && break])
+	if test "$soundcard_h" == "no"; then
+		CLANLIB_DISABLE_MODULE(clanSound,[ *** Cannot find soundcard.h])
+	fi
+	sound_libs=""
+	have_alsa=no
+	AC_CHECK_LIB(ossaudio, _oss_ioctl, sound_libs=-lossaudio)
+	AC_CHECK_HEADERS(asoundlib.h alsa/asoundlib.h, [have_alsa=yes && break])
+	if test "$have_alsa" != "no"; then
+		sound_libs="$sound_libs -lasound"
+	fi
+	SOUND_LDFLAGS="$sound_libs"
+	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
+	AC_SUBST(SOUND_LDFLAGS)
     fi
 fi
 

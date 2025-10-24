@@ -63,7 +63,6 @@ libclanNetwork_la_SOURCES += setupnetwork_unix.cpp
 endif
 
 libclanNetwork_la_LDFLAGS = \
-  -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

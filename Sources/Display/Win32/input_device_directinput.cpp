@@ -42,11 +42,14 @@ CL_InputDevice_DirectInput::CL_InputDevice_DirectInput(
 	LPCDIDEVICEINSTANCE ptr_device_instance)
 	: window(window), device_instance(*ptr_device_instance), directinput_device(0)
 {
+	button_count = -1;
+	
 	HRESULT result = window->get_directinput()->CreateDevice(
 		device_instance.guidInstance,
 		&directinput_device,
 		0);
-
+	
+	
 	if (FAILED(result))
 	{
 		throw CL_Error(
@@ -55,6 +58,7 @@ CL_InputDevice_DirectInput::CL_InputDevice_DirectInput(
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
+
 
 	result = directinput_device->SetCooperativeLevel(window->get_hwnd(), DISCL_FOREGROUND|DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
@@ -110,6 +114,33 @@ CL_InputDevice_DirectInput::CL_InputDevice_DirectInput(
 				"Unable to acquire device %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
+	}
+
+
+	//get info on its buttons and axis
+	// record number of values and states
+	DIDEVCAPS  caps; 
+
+	caps.dwSize = sizeof(DIDEVCAPS); 
+	if (FAILED(directinput_device->GetCapabilities(&caps)))
+	{
+		CL_Log::log("debug", "Unable to getcaps of direct input");
+	}
+	axis_count = 0;
+	// Enumerate the axes of the joyctick 
+	if (FAILED(directinput_device->EnumObjects(&CL_InputDevice_DirectInput::enum_axes_callback, (void*) this, DIDFT_AXIS)))
+	{
+		CL_Log::log("debug", "Unable to enumerate joystick axis");
+	}
+
+	//note, the axis enum thing is buggy, it returns only 5 for a 360 controller.  Ignoring.
+	axis_count = 36;
+	
+	// Enumerate the buttons available
+	button_count = 0;
+	if (FAILED(directinput_device->EnumObjects(&CL_InputDevice_DirectInput::enum_button_callback, (void*) this, DIDFT_BUTTON)))
+	{
+		CL_Log::log("debug", "Unable to enumerate joystickbuttons");
 	}
 }
 
@@ -274,12 +305,12 @@ std::string CL_InputDevice_DirectInput::get_name() const
 
 int CL_InputDevice_DirectInput::get_axis_count() const
 {
-	return 36;
+	return axis_count;
 }
 
 int CL_InputDevice_DirectInput::get_button_count() const
 {
-	return -1;
+	return button_count;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -622,4 +653,37 @@ void CL_InputDevice_DirectInput::keep_alive()
 			}
 		}
 	}
+}
+
+
+BOOL CALLBACK CL_InputDevice_DirectInput::enum_axes_callback(const DIDEVICEOBJECTINSTANCE* instance, void* context)
+{
+	CL_InputDevice_DirectInput *pJoystick = (CL_InputDevice_DirectInput *)context;
+
+	/*
+	//I won't bother with uisng SetProperty() until we have a reason to do it.. -SAR
+
+	DIPROPRANGE propRange; 
+	propRange.diph.dwSize       = sizeof(DIPROPRANGE); 
+	propRange.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
+	propRange.diph.dwHow        = DIPH_BYID; 
+	propRange.diph.dwObj        = instance->dwType;
+	propRange.lMin              = -1000; 
+	propRange.lMax              = +1000; 
+
+	// Set the range for the axis
+	if (FAILED(joystick->SetProperty(DIPROP_RANGE, &propRange.diph))) {
+	return DIENUM_STOP;
+	}
+	*/
+	
+	pJoystick->axis_count++;
+	return DIENUM_CONTINUE;
+}
+
+BOOL CALLBACK CL_InputDevice_DirectInput::enum_button_callback(const DIDEVICEOBJECTINSTANCE* instance, void* context)
+{
+	CL_InputDevice_DirectInput *pJoystick = (CL_InputDevice_DirectInput *)context;
+	pJoystick->button_count++;
+	return DIENUM_CONTINUE;
 }

@@ -99,6 +99,12 @@ public:
 	//param filename: Filename of file.
 	void add_file(const std::string &filename, bool compress = true);
 
+	//: Adds a file to zip archive with extra parameters
+	//- <p> This versions allows you to set filename to any path you wish, to flexibily construct file tree layouts in the
+	//- zip.  input_filename should be the true path and filename of the source file.</p>
+	
+	void add_file(const std::string &input_filename, const std::string &filename_in_archive, bool compress = true);
+
 	//: Saves zip archive.
 	//param filename: Filename of zip archive. Must not be used to save to the same as loaded from.
 	//- <p>If no filename parameter was passed, it will modify the zip
@@ -110,13 +116,16 @@ public:
 	//- be specify a filename. Likewise, if saving to same archive as
 	//- loaded from, a filename must not be specified. Doing so will
 	//- cause the save operation to fail.</p>
+
+
 	void save();
 	
 	void save(const std::string &filename);
-
 //! Implementation:
 private:
+
+	void write_zip_file(CL_Zip_FileEntry *pEntry, CL_OutputSource *output);
+
 	CL_SharedPtr<CL_Zip_Archive_Generic> impl;
 };
-
 #endif

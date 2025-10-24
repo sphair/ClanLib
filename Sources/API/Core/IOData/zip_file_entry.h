@@ -70,6 +70,9 @@ public:
 	//: Returns the filename of file entry.
 	const std::string & get_filename() const;
 	
+	//: Returns the local filename of file entry. Applicable only when making zips.
+	const std::string & get_local_filename() const;
+
 	//: Returns the uncompressed size of file entry.
 	cl_int64 get_uncompressed_size();
 	
@@ -83,6 +86,9 @@ public:
 	
 	//: Sets the filename of file entry.
 	void set_filename(const std::string &filename);
+
+	//: Sets the physical location of the file on our HD
+	void set_local_filename(const std::string &forced_path);
 
 //! Implementation:
 private:

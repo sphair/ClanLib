@@ -132,7 +132,7 @@ CL_PixelBuffer CL_GraphicContext_OpenGL::get_pixeldata(const CL_Rect& rect, int 
       memcpy(buf + ((height-y-1) * pitch), buf + (y * pitch), sizeof(unsigned char) * pitch);
       memcpy(buf + (y * pitch), tmp, sizeof(unsigned char) * pitch);
 	}
-	delete tmp;
+	delete[] tmp;
 
 	buffer.unlock();
 	clReadBuffer(old_frame);

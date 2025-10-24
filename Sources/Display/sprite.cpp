@@ -71,9 +71,10 @@ CL_Sprite::CL_Sprite(const std::string &resource_id, CL_ResourceManager *manager
 	}
 }
 
-CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_texture, unsigned int min_width, unsigned int min_height)
-: impl(new CL_Sprite_Generic)
+void CL_Sprite::createFromDescription(const CL_SpriteDescription &spritedescription, bool pack_texture, unsigned int min_width, unsigned int min_height)
 {
+	impl = new CL_Sprite_Generic;
+	
 	if (pack_texture && CL_DisplayTarget::current()->enable_packer())
 	{
 		// Fetch max texture size
@@ -302,6 +303,17 @@ CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_te
 	
 	restart();
 }
+
+CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_texture, unsigned int min_width, unsigned int min_height)
+{
+	createFromDescription(spritedescription, pack_texture, min_width, min_height);
+}
+
+CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_texture)
+{
+	createFromDescription(spritedescription, pack_texture, 16, 16);
+}
+
 
 CL_Sprite::CL_Sprite(const CL_Sprite &sprite)
 : impl(0)
@@ -570,6 +582,8 @@ void CL_Sprite::set_image_data(const CL_Sprite &image_source)
 	restart();
 }
 	
+
+
 bool CL_Sprite::setup_draw_params(float x, float y, CL_Surface_DrawParams1 & params1, bool sub_pixel_accuracy)
 {
 	if (impl->finished && impl->show_on_finish == show_blank)
@@ -824,6 +838,8 @@ float CL_Sprite::update(float time_elapsed)
 	//we still want to know when a 1 frame 'anim' loops, based on the timer -mrfun
 	//if(total_frames < 2 || impl->finished)
 	//	return time_elapsed; 
+	// but we need to stop when animation is finished -gpmfuchs
+	if (impl->finished) return time_elapsed;
 
 	CL_Sprite_Generic::SpriteFrame *frame = &impl->frames[impl->current_frame];
 

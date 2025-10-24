@@ -2,7 +2,6 @@
        Status: Windows(Y), Linux(Y)
         Level: Beginner
    Maintainer: Core developers
-      Summary: Loads a zip-archive and displays the content.
+      Summary: Shows how to create and load zip files
 
-Opens a zip-archive, iterates through all the files in it, and displays the
-filenames to the console.
+Creates a zip archive, opens it, displays its contents, then extracts a single file and displays it in the console.

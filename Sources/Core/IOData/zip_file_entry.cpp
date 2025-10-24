@@ -56,6 +56,11 @@ const std::string &CL_Zip_FileEntry::get_filename() const
 {
 	return impl->record.filename;
 }
+
+const std::string &CL_Zip_FileEntry::get_local_filename() const
+{
+	return impl->record.local_filename;
+}
 	
 cl_int64 CL_Zip_FileEntry::get_uncompressed_size()
 {
@@ -75,12 +80,18 @@ CL_Zip_FileEntry &CL_Zip_FileEntry::operator =(const CL_Zip_FileEntry &copy)
 	*impl = *copy.impl;
 	return *this;
 }
-	
+	 
 void CL_Zip_FileEntry::set_filename(const std::string &filename)
 {
 	impl->record.file_name_length = filename.length();
 	impl->record.filename = filename;
 }
+
+void CL_Zip_FileEntry::set_local_filename( const std::string &local_filename )
+{
+	impl->record.local_filename = local_filename;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Zip_FileEntry implementation:

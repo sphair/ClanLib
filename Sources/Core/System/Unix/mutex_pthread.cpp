@@ -40,7 +40,7 @@
 // suck:
 extern "C"
 {
-#ifdef __FreeBSD__
+#if defined(__APPLE__) || defined (__FreeBSD__) || defined(__OpenBSD__)
 	int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind);
 #else
 	int pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind);
@@ -60,10 +60,7 @@ CL_Mutex::CL_Mutex()
 	pthread_mutexattr_t attr;
 	pthread_mutexattr_init(&attr);
 
-#ifdef __APPLE__
-	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE );
-#else
-#ifdef __FreeBSD__
+#if defined(__APPLE__) || defined (__FreeBSD__) || defined(__OpenBSD__)
         pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 #else
 #if PTHREAD_MUTEX_RECURSIVE_NP
@@ -71,7 +68,6 @@ CL_Mutex::CL_Mutex()
 	pthread_mutexattr_setkind_np(&attr, PTHREAD_MUTEX_RECURSIVE);
 #else
 	pthread_mutexattr_setkind_np(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
-#endif
 #endif
 #endif
 	pthread_mutex_init(&impl->mutex, &attr);

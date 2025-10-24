@@ -86,7 +86,9 @@ public:
 		const std::string &resource_id,
 		CL_ResourceManager *manager);
 
-	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture = true, unsigned int min_width = 16, unsigned int min_height = 16);
+	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture = true);
+
+	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture, unsigned int min_width, unsigned int min_height);
 
 	CL_Sprite(const CL_Sprite &sprite);
 
@@ -337,6 +339,8 @@ public:
 private:
 	
 	CL_Sprite_Generic *impl;
+
+	void createFromDescription(const CL_SpriteDescription &spritedescription, bool pack_texture, unsigned int min_width, unsigned int min_height);
 };
 
 #endif

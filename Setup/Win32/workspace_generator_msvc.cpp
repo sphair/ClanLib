@@ -160,8 +160,13 @@ void WorkspaceGenerator_MSVC::install_mkdir(
 	{
 		bool skip = false;
 
+#if _MSC_VER < 1500
 		for (int i=0; exclude_from_build[i] != NULL; i++)
 			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
+#else
+		for (int i=0; exclude_from_build[i] != NULL; i++)
+			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
+#endif
 
 		if (skip) continue;
 
@@ -227,8 +232,13 @@ void WorkspaceGenerator_MSVC::install_copydir(
 	{
 		bool skip = false;
 
+#if _MSC_VER < 1500
 		for (int i=0; exclude_from_build[i] != NULL; i++)
 			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
+#else
+		for (int i=0; exclude_from_build[i] != NULL; i++)
+			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
+#endif
 
 		if (skip) continue;
 

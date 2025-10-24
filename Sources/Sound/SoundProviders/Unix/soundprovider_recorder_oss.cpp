@@ -37,7 +37,15 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#ifdef HAVE_MACHINE_SOUNDCARD_H
+#include <machine/soundcard.h>
+#endif
+#ifdef HAVE_SYS_SOUNDCARD_H
 #include <sys/soundcard.h>
+#endif
+#ifdef HAVE_SOUNDCARD_H
+#include <soundcard.h>
+#endif
 #ifdef __CYGWIN__
 #include <sys/select.h>
 #endif
@@ -50,12 +58,12 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 	frequency(frequency), position(0)
 {
 
-	dev_dsp_fd = open("/dev/dsp", O_RDONLY);
+	dev_dsp_fd = open(DEFAULT_DSP, O_RDONLY);
 	if (dev_dsp_fd == -1)
 	{
 		frag_size = frequency/2;
 		return;
-//		throw CL_Error("Could not open /dev/dsp. No sound will be available.");
+//		throw CL_Error("Could not open " + DEFAULT_DSP + ". No sound will be available.");
 	}
 
 #ifndef USE_DRIVER_FRAGSIZE

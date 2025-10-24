@@ -1,6 +1,6 @@
 This document describes how to port your game from an old ClanLib version to a new one.
 
-Upgrading from 0.7.8 to 0.8.0
+Upgrading from 0.7.8 to 1.0.0
 =============================
 
   1. CL_InputEvent changes

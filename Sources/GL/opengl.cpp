@@ -33,6 +33,7 @@
 #include "API/Core/System/error.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/core.h"
+#include <cstring>
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>

@@ -41,8 +41,8 @@
 #endif
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(0,8,1)
-#define CL_VERSION_STRING "0.8.1"
+#define CL_CURRENT_VERSION	CL_VERSION(1,0,0)
+#define CL_VERSION_STRING "1.0.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -153,6 +153,8 @@
 #pragma comment(lib, "clanCore-static-mt-debug.lib")
 #pragma comment(lib, "zlib-static-mt-debug.lib")
 #endif
+
+#pragma comment(lib, "winmm.lib")
 
 #endif
 

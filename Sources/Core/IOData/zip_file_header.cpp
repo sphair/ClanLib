@@ -31,13 +31,30 @@
 #include "zip_file_header.h"
 #include "API/Core/IOData/inputsource.h"
 #include "API/Core/IOData/outputsource.h"
+#include "zip_compression_method.h"
+#include "zip_flags.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Zip_FileHeader construction:
+// CL_Zip_FileHeader construction: 
 
 CL_Zip_FileHeader::CL_Zip_FileHeader()
 {
 	signature = 0x02014b50;
+	version_needed_to_extract = 20;
+	version_made_by = 0;
+	general_purpose_bit_flag = CL_ZIP_CRC32_IN_FILE_DESCRIPTOR; //turn on bit 3 to indicate our CRC and filesizes won't
+	//be valid until we add it after the actual file
+	compression_method = zip_compress_deflate;
+	last_mod_file_time = 0;
+	last_mod_file_date = 0;
+
+	disk_number_start = 0;
+	crc32 = 0;
+	compressed_size = 0;
+	uncompressed_size = 0;
+	internal_file_attributes = 0;
+	external_file_attributes = 0;
+
 }
 	
 CL_Zip_FileHeader::~CL_Zip_FileHeader()
@@ -103,6 +120,7 @@ void CL_Zip_FileHeader::load(CL_InputSource *input)
 
 void CL_Zip_FileHeader::save(CL_OutputSource *output)
 {
+	
 	output->write_int32(signature);
 	output->write_int16(version_made_by);
 	output->write_int16(version_needed_to_extract);
@@ -113,16 +131,17 @@ void CL_Zip_FileHeader::save(CL_OutputSource *output)
 	output->write_int32(crc32);
 	output->write_int32(compressed_size);
 	output->write_int32(uncompressed_size);
-	output->write_int16(file_name_length);
-	output->write_int16(extra_field_length);
-	output->write_int16(file_comment_length);
+	output->write_int16(filename.size());
+	output->write_int16(extra_field.size());
+	output->write_int16(file_comment.size());
 	output->write_int16(disk_number_start);
 	output->write_int16(internal_file_attributes);
 	output->write_int32(external_file_attributes);
 	output->write_int32(relative_offset_of_local_header);
-	output->write(filename.data(), file_name_length);
-	output->write(extra_field.data(), extra_field_length);
-	output->write(file_comment.data(), file_comment_length);
+	output->write(filename.data(), filename.size());
+	output->write(extra_field.data(), extra_field.size());
+	output->write(file_comment.data(), file_comment.size());
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

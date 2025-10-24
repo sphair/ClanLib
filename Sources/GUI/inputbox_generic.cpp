@@ -237,25 +237,25 @@ bool CL_InputBox_Generic::check_control(const CL_InputEvent &key)
 	{
 		switch (key.id)
 		{
-		case 'C':
+		case CL_KEY_C:
 		case CL_KEY_INSERT:
 			clipboard_copy();
 			return true;
-		case 'V':
+		case CL_KEY_V:
 			if (!read_only)
 				clipboard_paste();
 			return true;
-		case 'X':
+		case CL_KEY_X:
 			if (!read_only)
 				clipboard_cut();
 			return true;
-		case 'A':
+		case CL_KEY_A:
 			select_all();
 			return true;
-		case 'Z':
+		case CL_KEY_Z:
 			do_undo();
 			return true;
-		case 'Y':
+		case CL_KEY_Y:
 			do_redo();
 			return true;
 		}
