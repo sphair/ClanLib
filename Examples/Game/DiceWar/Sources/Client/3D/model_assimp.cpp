@@ -292,10 +292,10 @@ void ModelAssimp::insert_vbo(const struct aiScene* sc, const struct aiNode* nd, 
 			for(i = 0; i < face->mNumIndices; i++)
 			{
 				int index = face->mIndices[i];
-				normals.push_back(&mesh->mNormals[index].x);
-				vertices.push_back( &mesh->mVertices[index].x);
+				normals.push_back(CL_Vec3f(&mesh->mNormals[index].x));
+				vertices.push_back( CL_Vec3f(&mesh->mVertices[index].x));
 				if (use_texcoords)
-					tex_coords.push_back( &mesh->mTextureCoords[0][index].x);
+					tex_coords.push_back( CL_Vec2f(&mesh->mTextureCoords[0][index].x));
 			}
 		}
 

@@ -171,9 +171,6 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout)
 			return index_events;
 	}
 
-	if (timeout == -1)		// Wait forever
-		timeout = 0x7FFFFFFF;
-
 	// Placing the timeval struct here allows linux systems to more
 	// correctly resume a select if it was awaken by a complex event.
 	// On non-linux unixes (those that do not update timeval), the
@@ -181,8 +178,17 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout)
 	// events with multiple listeners.
 	//   -- mbn 4 nov 2004
 	timeval tv;
-	tv.tv_sec = timeout / 1000;
-	tv.tv_usec = (timeout % 1000) * 1000;
+	if (timeout == -1)
+	{
+		// Just set the timeval to zero.  Not really needed since we don't pass the field to select in this case.
+		tv.tv_sec = 0;
+		tv.tv_usec = 0;
+	}
+	else
+	{
+		tv.tv_sec = timeout / 1000;
+		tv.tv_usec = (timeout % 1000) * 1000;
+	}
 
 	while (true)
 	{
@@ -229,19 +235,18 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout)
 		}
 
 		int result;
-	rerun_eintr:
-		result = select(highest_fd+1,
-				reads ? &rfds : 0,
-				writes ? &wfds : 0,
-				exceptions ? &efds : 0,
-				(timeout == -1) ? 0 : &tv);
+		do
+		{
+			result = select(highest_fd+1,
+					reads ? &rfds : 0,
+					writes ? &wfds : 0,
+					exceptions ? &efds : 0,
+					(timeout == -1) ? 0 : &tv);
+		} while (result == -1 && errno == EINTR); // The syscall was interrupted.  Try again.
 		
 		if (result == -1) // Error occoured
 		{
-		  if(errno == EINTR) //The syscall was interrupted. Try again
-		    goto rerun_eintr;
-		  else
-		    throw CL_Exception(CL_String("Event wait failed! Unix Error: ") + strerror(errno));
+			throw CL_Exception(CL_String("Event wait failed! Unix Error: ") + strerror(errno));
 		}
 		else if (result == 0) // Timed out
 		{

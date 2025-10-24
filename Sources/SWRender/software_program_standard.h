@@ -49,12 +49,7 @@ public:
 
 private:
 	const CL_Mat4f &get_modelview() const { return modelview; }
-	const CL_Mat4f &get_projection() const { return projection; }
 	void set_modelview(const CL_Mat4f &new_modelview);
-	void set_projection(const CL_Mat4f &new_projection);
 
 	CL_Mat4f modelview;
-	CL_Mat4f projection;
-	mutable CL_Mat4f modelview_projection;
-	mutable bool modelview_projection_invalid;
 };

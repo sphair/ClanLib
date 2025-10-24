@@ -81,11 +81,14 @@ void CL_MenuModalLoop::end()
 		menubar->impl->clear_selection();
 
 	ignore_menubar_mouse_up = true;
-	close_all_popup_windows();
+
 	owner->capture_mouse(false);
 	running = false;
 	owner = 0;
 	menubar = 0;
+
+	close_all_popup_windows();	//< Warning might delete "this" ... I am unsure if it should
+
 }
 
 void CL_MenuModalLoop::on_filter_message(CL_GUIMessage &message)

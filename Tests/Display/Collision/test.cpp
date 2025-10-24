@@ -41,6 +41,8 @@ void print_usage()
 	CL_Console::write_line( "'r':    rotate other figure");
 	CL_Console::write_line( "'i':    toggle drawing of sub-circles on triangle");
 	CL_Console::write_line( "'o':    toggle drawing of sub-circles on other figure");
+	CL_Console::write_line( "'t':    toggle drawing of get_minimum_enclosing_disc on triangle");
+	CL_Console::write_line( "'y':    toggle drawing of get_minimum_enclosing_disc on other figure");
 	CL_Console::write_line( "'s':    toggle drawing of surfaces");
 	CL_Console::write_line( "+/-:    (in/de)crease the radius-multiplier");
 	CL_Console::write_line( "'g':    use smallest enclosing disc only");
@@ -123,6 +125,8 @@ int App::start(const std::vector<CL_String> &args)
 
 		// draw_limit = 0;
 
+		bool draw_min_on_co1 = false;
+		bool draw_min_on_co2 = false;
 		bool draw_sub_on_co1 = false;
 		bool draw_sub_on_co2 = false;
 		bool draw_surfaces = false;
@@ -292,6 +296,16 @@ int App::start(const std::vector<CL_String> &args)
 				draw_sub_on_co2 = !draw_sub_on_co2;
 				CL_System::sleep(100);
 			}
+			if( keyboard.get_keycode(CL_KEY_T) )
+			{
+				draw_min_on_co1 = !draw_min_on_co1;
+				CL_System::sleep(100);
+			}
+			if( keyboard.get_keycode(CL_KEY_Y) )
+			{
+				draw_min_on_co2 = !draw_min_on_co2;
+				CL_System::sleep(100);
+			}
 			if( keyboard.get_keycode(CL_KEY_D) )
 			{
 				draw_deep_point = !draw_deep_point;
@@ -376,6 +390,12 @@ int App::start(const std::vector<CL_String> &args)
 			co2.draw(0.0, 0.0, CL_Colorf::red, gc );
 			if(draw_sub_on_co2)
 				co2.draw_sub_circles(0.0, 0.0, CL_Colorf::blue, gc);
+
+			if(draw_min_on_co1)
+				CL_Draw::circle(gc, co1.get_minimum_enclosing_disc().position, co1.get_minimum_enclosing_disc().radius, CL_Colorf(0.4f, 0.0f, 0.0f, 0.5f));
+
+			if(draw_min_on_co2)
+				CL_Draw::circle(gc, co2.get_minimum_enclosing_disc().position, co2.get_minimum_enclosing_disc().radius, CL_Colorf(0.0f, 0.4f, 0.0f, 0.5f));
 
 			int font_ypos = 20;
 

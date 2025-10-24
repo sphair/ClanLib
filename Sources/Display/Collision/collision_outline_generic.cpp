@@ -99,7 +99,7 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
 	contours = provider->get_contours();
 	width = provider->get_width();
 	height = provider->get_height();
-	//TODO: minimum_enclosing_disc = provider->get_minimum_enclosing_disc();
+	//minimum_enclosing_disc set by calculate_radius()
 
 	provider->destroy();
 	provider = NULL;

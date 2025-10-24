@@ -98,6 +98,9 @@ public:
 	void enable_line_antialiasing(bool enabled);
 
 	/// \brief Enables if points are being drawn as texture point sprites.
+	///
+	/// This function is not used. Point sprites are always enabled. Except for clanGL1 where you should call cl1Enable(GL_POINT_SPRITE) if you require it\n
+	/// This function is to be removed in ClanLib 2.4
 	void enable_point_sprite(bool enable);
 
 	/// \brief Enables if points sizes is set by the vertex shader.

@@ -374,17 +374,22 @@ void CL_OpenGLProgramObjectProvider::set_uniform_matrix(const CL_StringRef &name
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLProgramObjectProvider Implementation:
 
-CL_ProgramObjectStateTracker::CL_ProgramObjectStateTracker(GLuint handle)
+CL_ProgramObjectStateTracker::CL_ProgramObjectStateTracker(GLuint handle) : program_set(false)
 {
 	CL_OpenGL::set_active();
 
 	glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *) &last_program_object);
-	glUseProgram(handle);
+	if (handle != last_program_object)
+	{
+		program_set = true;
+		glUseProgram(handle);
+	}
 }
 
 CL_ProgramObjectStateTracker::~CL_ProgramObjectStateTracker()
 {
-	glUseProgram(last_program_object);
+	if (program_set)
+		glUseProgram(last_program_object);
 }
 
 void CL_OpenGLProgramObjectProvider::fetch_attributes() const

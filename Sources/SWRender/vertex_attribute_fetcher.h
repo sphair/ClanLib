@@ -45,13 +45,13 @@ public:
 	virtual void fetch(CL_Vec2f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = fetch(indexes[i], default_value);
+			result[i] = CL_Vec2f(fetch(indexes[i], default_value));
 	}
 
 	virtual void fetch(CL_Vec1f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = fetch(indexes[i], default_value);
+			result[i] = CL_Vec1f(fetch(indexes[i], default_value));
 	}
 
 protected:

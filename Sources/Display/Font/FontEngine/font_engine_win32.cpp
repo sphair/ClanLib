@@ -116,7 +116,7 @@ CL_FontPixelBuffer CL_FontEngine_Win32::get_font_glyph_lcd(int glyph)
 	HDC screen_dc = GetDC(0);
 	old_font = (HFONT)SelectObject(screen_dc, handle);
 
-	wchar_t text[2] = { glyph, 0 };
+	wchar_t text[2] = { static_cast<wchar_t>(glyph), 0 };
 	WORD indices[2] = {0};
 	GetGlyphIndicesW(screen_dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
 

@@ -31,7 +31,6 @@
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/Math/sha1.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"

@@ -68,8 +68,8 @@ char ShaderColor::fragment[] =
 	"uniform vec4 MaterialSpecular;\n"
 	"uniform vec4 MaterialAmbient;\n"
 	"\n"
-	"uniform vec4 LightVector;\n"
-	"uniform vec4 LightHalfVector;\n"
+	"uniform vec3 LightVector;\n"
+	"uniform vec3 LightHalfVector;\n"
 	"uniform vec4 LightSpecular;\n"
 	"uniform vec4 LightDiffuse;\n"
 	"uniform vec4 LightAmbient;\n"
@@ -81,14 +81,14 @@ char ShaderColor::fragment[] =
 	"	vec4 spec = vec4(0); \n"
 	"\n"
 	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector.xyz)); \n"
+	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
 	"	{\n"
 	"		pf = 0.0; \n"
 	"	}else\n"
 	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector.xyz));\n"
+	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
 	"			pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
@@ -133,7 +133,7 @@ ShaderColor::ShaderColor(CL_GraphicContext &gc)
 	material_specular = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 
 	light_ambient = CL_Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
-	light_vector = CL_Vec4f(0.0f, 0.0f, 1.0f, 0.0f);
+	light_vector = CL_Vec3f(0.0f, 0.0f, 1.0f);
 	light_specular = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	light_diffuse = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 
@@ -154,11 +154,11 @@ void ShaderColor::Use(CL_GraphicContext &gc)
 	if (!light_updated)
 	{
 		light_updated = true;
-		program_object.set_uniform4f("LightVector", light_vector);
-		CL_Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
+		program_object.set_uniform3f("LightVector", light_vector);
+		CL_Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
 		light_halfvector += light_vector;
-		light_halfvector.normalize3();
-		program_object.set_uniform4f("LightHalfVector", light_halfvector);
+		light_halfvector.normalize();
+		program_object.set_uniform3f("LightHalfVector", light_halfvector);
 		program_object.set_uniform4f("LightSpecular", light_specular);
 		program_object.set_uniform4f("LightDiffuse", light_diffuse);
 		program_object.set_uniform4f("LightAmbient", light_ambient);
@@ -194,7 +194,7 @@ void ShaderColor::SetMaterial(float new_material_shininess, const CL_Vec4f &new_
 	}
 }
 
-void ShaderColor::SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse, CL_Vec4f &new_light_ambient)
+void ShaderColor::SetLight(CL_Vec3f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse, CL_Vec4f &new_light_ambient)
 {
 	if (new_light_vector != light_vector)
 	{

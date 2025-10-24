@@ -58,7 +58,8 @@ public:
 		blue_write_enabled(true),
 		alpha_write_enabled(true),
 		draw_buffer(cl_buffer_back),
-		logic_op_enabled(false)
+		logic_op_enabled(false),
+		logic_op(cl_logic_op_copy)
 	{
 	}
 

@@ -79,7 +79,7 @@ int App::start(const std::vector<CL_String> &args)
 				color_offset.r += time_delta * 1.0f;
 				if (color_offset.r > 2.0f)
 				{
-					color_offset = 2.0f;
+					color_offset.r = 2.0f;
 					direction = false;
 				}
 			}
@@ -88,7 +88,7 @@ int App::start(const std::vector<CL_String> &args)
 				color_offset.r -= time_delta * 1.0f;
 				if (color_offset.r < -2.0f)
 				{
-					color_offset = -2.0f;
+					color_offset.r = -2.0f;
 					direction = true;
 				}
 			}

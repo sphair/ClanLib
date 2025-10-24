@@ -267,6 +267,7 @@ void CL_Sprite::set_image_data(const CL_Sprite &image_source)
 	impl->play_backward = image_source.is_play_backward();
 	impl->play_pingpong = image_source.is_play_pingpong();
 	impl->base_angle = image_source.get_base_angle();
+	impl->show_on_finish = image_source.get_show_on_finish();
 
 	restart();
 }
@@ -583,6 +584,7 @@ void CL_Sprite::set_play_pingpong(bool pingpong)
 void CL_Sprite::set_play_backward(bool backward)
 {
 	impl->play_backward = backward;
+	impl->delta_frame = impl->play_backward ? -1 : 1;
 }
 
 void CL_Sprite::set_show_on_finish(CL_Sprite::ShowOnFinish show_on_finish)

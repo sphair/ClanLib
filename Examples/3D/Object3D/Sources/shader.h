@@ -41,7 +41,7 @@ public:
 	//CL_Vec4f material_ambient;
 	CL_Vec4f material_specular;
 
-	CL_Vec4f light_position;
+	CL_Vec3f light_position;
 	CL_Vec4f light_specular;
 	CL_Vec4f light_diffuse;
 

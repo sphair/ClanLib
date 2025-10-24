@@ -301,7 +301,7 @@ void CL_TextEdit::add_text(const CL_StringRef &text)
 
 void CL_TextEdit::set_selection(int pos, int length)
 {
-	impl->selection_start = pos;
+	impl->selection_start = CL_Vec2i(pos, 0);
 	impl->selection_length = length;
 	request_repaint();
 }

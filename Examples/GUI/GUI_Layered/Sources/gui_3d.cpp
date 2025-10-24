@@ -41,7 +41,7 @@ public:
 	CL_Vec4f m_Ambient;
 	CL_Vec4f m_Diffuse;
 	CL_Vec4f m_Specular;
-	CL_Vec4f m_Vector;
+	CL_Vec3f m_Vector;
 };
 
 const char GUI_Texture_Shader_Vertex[] =
@@ -85,8 +85,8 @@ const char GUI_Texture_Shader_Fragment[] =
 	"uniform vec4 MaterialSpecular;\n"
 	"uniform float MaterialTransparency;\n"
 	"\n"
-	"uniform vec4 LightVector;\n"
-	"uniform vec4 LightHalfVector;\n"
+	"uniform vec3 LightVector;\n"
+	"uniform vec3 LightHalfVector;\n"
 	"uniform vec4 LightSpecular;\n"
 	"uniform vec4 LightDiffuse;\n"
 	"uniform vec4 LightAmbient;\n"
@@ -101,14 +101,14 @@ const char GUI_Texture_Shader_Fragment[] =
 	"	vec4 spec = vec4(0); \n"
 	"\n"
 	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector.xyz)); \n"
+	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
 	"	{\n"
 	"		pf = 0.0; \n"
 	"	}else\n"
 	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector.xyz));\n"
+	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
 	"			pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
@@ -144,10 +144,10 @@ bool GUI_Layered::run3d()
 	LightSource lightsource;
 	lightsource.m_Specular = CL_Vec4f(panel3d->get_light_specular(), panel3d->get_light_specular(), panel3d->get_light_specular(), 1.0f);
 	lightsource.m_Diffuse = CL_Vec4f(panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), 1.0f);
-	lightsource.m_Vector = CL_Vec4f( panel3d->get_light_position_x(), panel3d->get_light_position_y(), panel3d->get_light_position_z(), 0.0f);
+	lightsource.m_Vector = CL_Vec3f( panel3d->get_light_position_x(), panel3d->get_light_position_y(), panel3d->get_light_position_z());
 	lightsource.m_Ambient = CL_Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
 
-	lightsource.m_Vector.normalize3();
+	lightsource.m_Vector.normalize();
 
 	std::vector<CL_GUIWindowManagerTextureWindow> windows = wm.get_windows();
 	std::vector<CL_GUIWindowManagerTextureWindow>::size_type index, size;
@@ -155,11 +155,11 @@ bool GUI_Layered::run3d()
 
 	gc.set_program_object(gui_shader);
 
-	gui_shader.set_uniform4f("LightVector", lightsource.m_Vector);
-	CL_Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
+	gui_shader.set_uniform3f("LightVector", lightsource.m_Vector);
+	CL_Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
 	light_halfvector +=  lightsource.m_Vector;
-	light_halfvector.normalize3();
-	gui_shader.set_uniform4f("LightHalfVector", light_halfvector);
+	light_halfvector.normalize();
+	gui_shader.set_uniform3f("LightHalfVector", light_halfvector);
 	gui_shader.set_uniform4f("LightSpecular", lightsource.m_Specular);
 	gui_shader.set_uniform4f("LightDiffuse", lightsource.m_Diffuse);
 	gui_shader.set_uniform4f("LightAmbient", lightsource.m_Ambient);

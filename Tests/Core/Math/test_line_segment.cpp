@@ -175,7 +175,7 @@ void TestApp::test_line_segment2()
 
 	CL_Console::write_line("   Function: point_distance()");
 	{
-		CL_LineSegment2f line_a(CL_Vec3f(1.0f, 0.0f), CL_Vec2f(9.0f, 0.0f));
+		CL_LineSegment2f line_a(CL_Vec2f(1.0f, 0.0f), CL_Vec2f(9.0f, 0.0f));
 		CL_Vec2f point;
 		float distance;
 
@@ -194,7 +194,7 @@ void TestApp::test_line_segment2()
 
 		if (distance != 2.0f ) fail();
 
-		line_a = CL_LineSegment2f(CL_Vec2f(0.0f, 1.0f), CL_Vec3f(0.0f, 9.0f));
+		line_a = CL_LineSegment2f(CL_Vec2f(0.0f, 1.0f), CL_Vec2f(0.0f, 9.0f));
 
 		point = CL_Vec2f(0.0f, -1.0f);
 		distance = line_a.point_distance(point);

@@ -170,6 +170,7 @@ libclan23Display_la_SOURCES += \
 	Win32/win32_window.cpp \
 	Win32/input_device_provider_win32mouse.cpp \
 	Win32/input_device_provider_win32tablet.cpp \
+	Win32/dwm_functions.cpp \
 	Win32/input_device_provider_win32mouse.h \
 	Win32/screen_info_provider_win32.h \
 	Win32/input_device_provider_win32tablet.h \
@@ -177,6 +178,7 @@ libclan23Display_la_SOURCES += \
 	Win32/display_message_queue_win32.h \
 	Win32/cursor_provider_win32.h \
 	Win32/input_device_provider_directinput.h \
+	Win32/dwm_functions.h \
 	Win32/win32_window.h
 else
 libclan23Display_la_SOURCES += \

@@ -34,7 +34,7 @@
 #include "Canvas/Commands/pixel_command_line.h"
 
 CL_SoftwareProgram_Standard::CL_SoftwareProgram_Standard()
-: modelview(CL_Mat4f::identity()), projection(CL_Mat4f::identity()), modelview_projection(CL_Mat4f::identity()), modelview_projection_invalid(false)
+: modelview(CL_Mat4f::identity())
 {
 }
 
@@ -81,15 +81,13 @@ void CL_SoftwareProgram_Standard::set_uniform_matrix(const CL_StringRef &name, c
 {
 	if (name == "cl_ModelView")
 		set_modelview(mat);
-	else if (name == "cl_Projection")
-		set_projection(mat);
 }
 
 CL_PixelCommand *CL_SoftwareProgram_Standard::draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values)
 {
 	CL_Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
 	CL_Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
-	CL_Vec2f init_texcoords[3] = { attribute_values[6], attribute_values[7], attribute_values[8] };
+	CL_Vec2f init_texcoords[3] = { CL_Vec2f(attribute_values[6]), CL_Vec2f(attribute_values[7]), CL_Vec2f(attribute_values[8]) };
 	int init_sampler = (int)attribute_values[9].x;
 	return new(pipeline) CL_PixelCommandTriangle(init_points, init_primcolor, init_texcoords, init_sampler);
 }
@@ -98,7 +96,7 @@ CL_PixelCommand *CL_SoftwareProgram_Standard::draw_sprite(CL_PixelPipeline *pipe
 {
 	CL_Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
 	CL_Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
-	CL_Vec2f init_texcoords[3] = { attribute_values[6], attribute_values[7], attribute_values[8] };
+	CL_Vec2f init_texcoords[3] = { CL_Vec2f(attribute_values[6]), CL_Vec2f(attribute_values[7]), CL_Vec2f(attribute_values[8]) };
 	int init_sampler = (int)attribute_values[9].x;
 	return new(pipeline) CL_PixelCommandSprite(init_points, init_primcolor[0], init_texcoords, init_sampler);
 }
@@ -107,7 +105,7 @@ CL_PixelCommand *CL_SoftwareProgram_Standard::draw_line(CL_PixelPipeline *pipeli
 {
 	CL_Vec2f init_points[2] = { transform(attribute_values[0]), transform(attribute_values[1]) };
 	CL_Vec4f init_primcolor[2] = { attribute_values[2], attribute_values[3] };
-	CL_Vec2f init_texcoords[2] = { attribute_values[4], attribute_values[5] };
+	CL_Vec2f init_texcoords[2] = { CL_Vec2f(attribute_values[4]), CL_Vec2f(attribute_values[5]) };
 	int init_sampler = (int)attribute_values[6].x;
 	return new(pipeline) CL_PixelCommandLine(init_points, init_primcolor, init_texcoords, init_sampler);
 }
@@ -115,23 +113,10 @@ CL_PixelCommand *CL_SoftwareProgram_Standard::draw_line(CL_PixelPipeline *pipeli
 void CL_SoftwareProgram_Standard::set_modelview(const CL_Mat4f &new_modelview)
 {
 	modelview = new_modelview;
-	modelview_projection_invalid = true;
-}
-
-void CL_SoftwareProgram_Standard::set_projection(const CL_Mat4f &new_projection)
-{
-	projection = new_projection;
-	modelview_projection_invalid = true;
 }
 
 CL_Vec2f CL_SoftwareProgram_Standard::transform(const CL_Vec4f &vertex) const
 {
-	if (modelview_projection_invalid)
-	{
-		modelview_projection = projection * modelview;
-		modelview_projection_invalid = false;
-	}
-
-	CL_Vec4f v = modelview_projection * vertex;
+	CL_Vec4f v = modelview * vertex;
 	return CL_Vec2f(v.x, v.y);
 }

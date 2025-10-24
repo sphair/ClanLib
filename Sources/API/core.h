@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,3,4)
-#define CL_VERSION_STRING "2.3.4"
+#define CL_CURRENT_VERSION	CL_VERSION(2,3,5)
+#define CL_VERSION_STRING "2.3.5"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -196,13 +196,29 @@
 #include "Core/Math/quad.h"
 #include "Core/Math/rect.h"
 #include "Core/Math/rect_packer.h"
-#include "Core/Math/sha1.h"
 #include "Core/Math/size.h"
 #include "Core/Math/triangle_math.h"
 #include "Core/Math/line.h"
 #include "Core/Math/line_ray.h"
 #include "Core/Math/line_segment.h"
 #include "Core/Math/hash_functions.h"
+#include "Core/Crypto/random.h"
+#include "Core/Crypto/secret.h"
+#include "Core/Math/sha1.h"
+#include "Core/Crypto/md5.h"
+#include "Core/Crypto/sha224.h"
+#include "Core/Crypto/sha256.h"
+#include "Core/Crypto/sha384.h"
+#include "Core/Crypto/sha512.h"
+#include "Core/Crypto/sha512_224.h"
+#include "Core/Crypto/sha512_256.h"
+#include "Core/Crypto/aes128_encrypt.h"
+#include "Core/Crypto/aes128_decrypt.h"
+#include "Core/Crypto/aes192_encrypt.h"
+#include "Core/Crypto/aes192_decrypt.h"
+#include "Core/Crypto/aes256_encrypt.h"
+#include "Core/Crypto/aes256_decrypt.h"
+#include "Core/Crypto/rsa.h"
 #include "Core/core_iostream.h"
 
 #ifdef __cplusplus_cli

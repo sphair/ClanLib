@@ -305,12 +305,12 @@ void CL_PixelBuffer::convert(CL_PixelBuffer &target, const CL_Rect &dest_rect, c
 		new_src_rect.bottom = get_height();
 	}
 
-	if ( dest_rect.get_size() != src_rect.get_size())
+	if ( dest_rect.get_size() != new_src_rect.get_size())
 	{
 		throw CL_Exception("Source and destination rects must have same size. Scaled converting not supported.");
 	}
 
-	impl->convert(target, dest_rect, src_rect);
+	impl->convert(target, dest_rect, new_src_rect);
 }
 
 CL_PixelBuffer CL_PixelBuffer::to_format(CL_TextureFormat sized_format) const

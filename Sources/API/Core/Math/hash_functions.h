@@ -35,7 +35,7 @@
 #include "../api_core.h"
 #include "../System/cl_platform.h"
 #include "../Text/string_types.h"
-#include "sha1.h"
+#include "../Math/sha1.h"
 
 /// \brief A Collection of checksum functions.
 ///

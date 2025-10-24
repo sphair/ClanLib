@@ -31,10 +31,23 @@
 
 GraphicStore::GraphicStore(CL_GraphicContext &gc) : shader_bumpmap(gc)
 {
+#ifdef _DEBUG
+	//struct aiLogStream stream;
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	//aiAttachLogStream(&stream);
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+	//aiAttachLogStream(&stream);
+#endif
+
+	store = aiCreatePropertyStore();
+	aiSetImportPropertyFloat(store, AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
+
 }
 
 GraphicStore::~GraphicStore()
 {
+	aiReleasePropertyStore(store);
+	aiDetachAllLogStreams();
 }
 
 void GraphicStore::LoadImages( CL_GraphicContext &gc )

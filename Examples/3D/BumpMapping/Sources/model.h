@@ -38,7 +38,7 @@ class Model
 public:
 
 	Model();
-	Model(CL_GraphicContext &gc, const char *filename, bool generate_texture_coords);
+	Model(CL_GraphicContext &gc, GraphicStore *gs, const char *filename, bool generate_texture_coords);
 
 	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix);
 	bool is_null();

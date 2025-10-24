@@ -118,17 +118,18 @@ int App::start(const std::vector<CL_String> &args)
 
 	// Create the objects
 
-	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
+	aiPropertyStore* store = aiCreatePropertyStore();
+	aiSetImportPropertyFloat(store, AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
 
-	const struct aiScene* scene_teapot = aiImportFile("../Clan3D/Resources/teapot.dae",aiProcessPreset_TargetRealtime_MaxQuality);
+	const struct aiScene* scene_teapot = aiImportFileExWithProperties("../Clan3D/Resources/teapot.dae",aiProcessPreset_TargetRealtime_MaxQuality, NULL, store);
 	if (!scene_teapot)
 		throw CL_Exception("Cannot load the teapot model");
 
-	const struct aiScene* scene_clanlib = aiImportFile("../Clan3D/Resources/clanlib.dae",aiProcessPreset_TargetRealtime_MaxQuality);
+	const struct aiScene* scene_clanlib = aiImportFileExWithProperties("../Clan3D/Resources/clanlib.dae",aiProcessPreset_TargetRealtime_MaxQuality, NULL, store);
 	if (!scene_clanlib)
 		throw CL_Exception("Cannot load the clanlib model");
 
-	const struct aiScene* scene_tuxball = aiImportFile("../Clan3D/Resources/tux_ball.dae",aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
+	const struct aiScene* scene_tuxball = aiImportFileExWithProperties("../Clan3D/Resources/tux_ball.dae",aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs, NULL, store);
 	if (!scene_tuxball)
 		throw CL_Exception("Cannot load the tux ball model");
 
@@ -204,6 +205,7 @@ int App::start(const std::vector<CL_String> &args)
 	aiReleaseImport(scene_tuxball);
 	aiReleaseImport(scene_clanlib);
 	aiReleaseImport(scene_teapot);
+	aiReleasePropertyStore(store);
 	aiDetachAllLogStreams();
 
 	return 0;
@@ -213,7 +215,7 @@ void App::recursive_render(CL_GraphicContext &gc, const struct aiScene *sc, cons
 {
 	int i;
 	unsigned int n = 0, t;
-	struct aiMatrix4x4 m = nd->mTransformation;
+	aiMatrix4x4 m = nd->mTransformation;
 
 	// update transform
 	aiTransposeMatrix4(&m);
@@ -230,7 +232,7 @@ void App::recursive_render(CL_GraphicContext &gc, const struct aiScene *sc, cons
 
 		std::vector<CL_Vec3f> normals;
 		std::vector<CL_Vec3f> vertices;
-		std::vector<CL_Vec3f> tex_coords;
+		std::vector<CL_Vec2f> tex_coords;
 
 		normals.reserve(mesh->mNumFaces * 3);
 		vertices.reserve(mesh->mNumFaces * 3);
@@ -252,10 +254,10 @@ void App::recursive_render(CL_GraphicContext &gc, const struct aiScene *sc, cons
 			for(i = 0; i < face->mNumIndices; i++)
 			{
 				int index = face->mIndices[i];
-				normals.push_back(&mesh->mNormals[index].x);
-				vertices.push_back( &mesh->mVertices[index].x);
+				normals.push_back(CL_Vec3f(&mesh->mNormals[index].x));
+				vertices.push_back( CL_Vec3f(&mesh->mVertices[index].x));
 				if (use_texture_coords)
-					tex_coords.push_back( &mesh->mTextureCoords[0][index].x);
+					tex_coords.push_back( CL_Vec2f(&mesh->mTextureCoords[0][index].x));
 			}
 		}
 

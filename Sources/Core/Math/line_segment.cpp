@@ -136,7 +136,7 @@ CL_Vec2<Type> CL_LineSegment2x<Type>::get_intersection( const CL_LineSegment2x<T
 	}
 	
 	intersect = true;
-	return CL_Vec3<Type>(p.x+r*(q.x-p.x), p.y+r*(q.y-p.y));
+	return CL_Vec2<Type>(p.x+r*(q.x-p.x), p.y+r*(q.y-p.y));
 }
 
 template<typename Type>

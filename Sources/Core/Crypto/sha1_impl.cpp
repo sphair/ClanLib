@@ -29,6 +29,9 @@
 #include "Core/precomp.h"
 #include "sha1_impl.h"
 
+#include "../../API/Core/Math/cl_math.h"
+#include "../../API/Core/Math/sha1.h"
+
 #ifndef WIN32
 #include <cstring>
 #endif
@@ -44,22 +47,22 @@ CL_SHA1_Impl::CL_SHA1_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SHA1_Impl Attributes:
 
-CL_String8 CL_SHA1_Impl::get_hash(bool uppercase)
+CL_String8 CL_SHA1_Impl::get_hash(bool uppercase) const
 {
 	if (calculated == false)
 		throw CL_Exception("SHA-1 hash has not been calculated yet!");
 	
 	char digest[41];
-	memset(digest, 0, 41);
-	to_hex(digest, h0, uppercase);
-	to_hex(digest+8, h1, uppercase);
-	to_hex(digest+16, h2, uppercase);
-	to_hex(digest+24, h3, uppercase);
-	to_hex(digest+32, h4, uppercase);
+	to_hex_be(digest, h0, uppercase);
+	to_hex_be(digest+8, h1, uppercase);
+	to_hex_be(digest+16, h2, uppercase);
+	to_hex_be(digest+24, h3, uppercase);
+	to_hex_be(digest+32, h4, uppercase);
+	digest[40] = 0;
 	return digest;
 }
 
-void CL_SHA1_Impl::get_hash(unsigned char out_hash[20])
+void CL_SHA1_Impl::get_hash(unsigned char out_hash[20]) const
 {
 	if (calculated == false)
 		throw CL_Exception("SHA-1 hash has not been calculated yet!");
@@ -91,41 +94,78 @@ void CL_SHA1_Impl::get_hash(unsigned char out_hash[20])
 
 void CL_SHA1_Impl::reset()
 {
+	//  FIPS 180-3 section 5.3.1
 	h0 = 0x67452301;
 	h1 = 0xEFCDAB89;
 	h2 = 0x98BADCFE;
 	h3 = 0x10325476;
 	h4 = 0xC3D2E1F0;
-	memset(chunk, 0, 64);
+	memset(chunk, 0, block_size);
 	chunk_filled = 0;
 	length_message = 0;
 	calculated = false;
+	hmac_enabled = false;
+
 }
 
 void CL_SHA1_Impl::add(const void *_data, int size)
 {
 	if (calculated)
 		reset();
-		
-	#define cl_min(a,b) ((a) < (b) ? (a) : (b))
 
 	const unsigned char *data = (const unsigned char *) _data;
 	int pos = 0;
 	while (pos < size)
 	{
 		int data_left = size - pos;
-		int buffer_space = 64 - chunk_filled;
+		int buffer_space = block_size - chunk_filled;
 		int data_used = cl_min(buffer_space, data_left);
 		memcpy(chunk + chunk_filled, data + pos, data_used);
 		chunk_filled += data_used;
 		pos += data_used;
-		if (chunk_filled == 64)
+		if (chunk_filled == block_size)
 		{
 			process_chunk();
 			chunk_filled = 0;
 		}
 	}
 	length_message += size * (cl_ubyte64) 8;
+}
+
+void CL_SHA1_Impl::set_hmac(const void *key_data, int key_size)
+{
+	memset(hmac_key_chunk, 0, block_size);
+
+	int key_chunk_filled;
+
+	if (key_size > block_size)
+	{
+		CL_SHA1 sha1;
+		sha1.add(key_data, key_size);
+		sha1.calculate();
+		key_chunk_filled = CL_SHA1::hash_size;
+		sha1.get_hash(hmac_key_chunk);
+	}
+	else
+	{
+		memcpy(hmac_key_chunk, key_data, key_size);
+		key_chunk_filled = key_size;
+	}
+
+	for (int cnt = 0; cnt < block_size; cnt++)	// XOR key with inner pad values
+	{
+		hmac_key_chunk[cnt] ^= 0x36;
+	}
+
+	add(hmac_key_chunk, block_size);	// Add the inner HMAC
+
+	for (int cnt = 0; cnt < block_size; cnt++)	// XOR key with outer pad values
+	{
+		hmac_key_chunk[cnt] ^= 0x36;	// Undo the inner pad
+		hmac_key_chunk[cnt] ^= 0x5c;
+	}
+	hmac_enabled = true;	// This has to be after the add(), as that function may call reset()
+
 }
 
 void CL_SHA1_Impl::calculate()
@@ -137,13 +177,13 @@ void CL_SHA1_Impl::calculate()
 	// append "0" bits until message length ≡ 448 ≡ -64 (mod 512)
 	// append length of message, in bits as 64-bit big-endian integer to message
 	
-	unsigned char end_data[128];
-	memset(end_data, 0, 128);
+	unsigned char end_data[block_size*2];
+	memset(end_data, 0, block_size*2);
 	end_data[0] = 128;
 	
-	int size = 64 - chunk_filled;
+	int size = block_size - chunk_filled;
 	if (size < 9)
-		size += 64;
+		size += block_size;
 
 	unsigned int length_upper = (unsigned int) (length_message >> 32);
 	unsigned int length_lower = (unsigned int) (length_message & 0xffffffff);
@@ -163,6 +203,16 @@ void CL_SHA1_Impl::calculate()
 		throw CL_Exception("Error in CL_SHA1_Impl class. Still chunk data at end of calculate");
 
 	calculated = true;
+
+	if (hmac_enabled)
+	{
+		unsigned char temp_hash[CL_SHA1::hash_size];
+		get_hash(temp_hash);
+		reset();
+		add(hmac_key_chunk, block_size);	// Add the outer HMAC
+		add(temp_hash, CL_SHA1::hash_size);
+		calculate();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -230,26 +280,3 @@ void CL_SHA1_Impl::process_chunk()
 	h4 += e;
 }
 
-void CL_SHA1_Impl::to_hex(char *buffer, cl_ubyte32 value, bool uppercase)
-{
-	cl_ubyte32 values[4];
-	values[0] = ((value & 0xff000000) >> 24);
-	values[1] = ((value & 0x00ff0000) >> 16);
-	values[2] = ((value & 0x0000ff00) >> 8);
-	values[3] = (value & 0x000000ff);
-	
-	cl_ubyte32 low = '0';
-	cl_ubyte32 high = uppercase ? 'A' : 'a';
-	for (int i = 0; i < 4; i++)
-	{
-		cl_ubyte32 a = ((values[i] & 0xf0) >> 4);
-		cl_ubyte32 b = (values[i] & 0x0f);
-		buffer[i*2+0] = (a < 10) ? (low + a) : (high + a - 10);
-		buffer[i*2+1] = (b < 10) ? (low + b) : (high + b - 10);
-	}
-}
-
-inline unsigned int CL_SHA1_Impl::leftrotate_uint32(unsigned int value, int shift)
-{
-	return (value << shift) + (value >> (32-shift));
-}

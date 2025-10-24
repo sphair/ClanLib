@@ -24,65 +24,81 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
+
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 #pragma once
 
+#include "../api_core.h"
+#include "../System/sharedptr.h"
 
-#include "API/Core/System/cl_platform.h"
+class CL_DataBuffer;
+class CL_SHA256_Impl;
 
-class CL_SHA1_Impl
+/// \brief SHA-256 hash function class.
+///
+/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
+class CL_API_CORE CL_SHA256
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SHA1_Impl();
-
+	/// \brief Constructs a SHA-256 hash generator.
+	CL_SHA256();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	CL_String8 get_hash(bool uppercase = false);
+	static const int hash_size = 32;
 
-	void get_hash(unsigned char out_hash[20]);
+	/// \brief Returns the calculated hash.
+	CL_String8 get_hash(bool uppercase = false) const;
 
+	/// \brief Get hash
+	///
+	/// \param out_hash = where to write to
+	void get_hash(unsigned char out_hash[hash_size]) const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	/// \brief Resets the hash generator.
 	void reset();
 
+	/// \brief Enable a HMAC based calculation
+	///
+	/// Call this function before the initial add(). It is reset by reset()
+	///
+	/// \param key_data = The HMAC key
+	/// \param key_size = The size of the key_data
+	void set_hmac(const void *key_data, int key_size);
+
+	/// \brief Adds data to be hashed.
 	void add(const void *data, int size);
 
-	void calculate();
+	/// \brief Add
+	///
+	/// \param data = Data Buffer
+	void add(const CL_DataBuffer &data);
 
+	/// \brief Finalize hash calculation.
+	void calculate();
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	void process_chunk();
-
-	void to_hex(char *buffer, cl_ubyte32 value, bool uppercase);
-
-	unsigned int leftrotate_uint32(unsigned int value, int shift);
-
-	cl_ubyte32 h0, h1, h2, h3, h4;
-
-	unsigned char chunk[64];
-
-	int chunk_filled;
-
-	cl_ubyte64 length_message;
-
-	bool calculated;
+	CL_SharedPtr<CL_SHA256_Impl> impl;
 /// \}
 };
 
-
+/// \}

@@ -14,8 +14,8 @@
 
 #include <cstdlib>
 
-#include "assimp/assimp.h"
-#include "assimp/aiPostProcess.h"
-#include "assimp/aiScene.h"
-#include "assimp/aiConfig.h"
+#include "assimp/cimport.h"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+#include "assimp/config.h"
 

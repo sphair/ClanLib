@@ -219,8 +219,24 @@ clanCore_includes = \
 	Core/Math/rect_packer.h \
 	Core/Math/hash_functions.h \
 	Core/Math/size.h \
-	Core/Math/sha1.h \
 	Core/Math/triangle_math.h \
+	Core/Crypto/secret.h \
+	Core/Crypto/random.h \
+	Core/Math/sha1.h \
+	Core/Crypto/md5.h \
+	Core/Crypto/aes128_encrypt.h \
+	Core/Crypto/aes128_decrypt.h \
+	Core/Crypto/aes192_encrypt.h \
+	Core/Crypto/aes192_decrypt.h \
+	Core/Crypto/aes256_encrypt.h \
+	Core/Crypto/aes256_decrypt.h \
+	Core/Crypto/sha256.h \
+	Core/Crypto/sha224.h \
+	Core/Crypto/sha384.h \
+	Core/Crypto/sha512.h \
+	Core/Crypto/sha512_224.h \
+	Core/Crypto/sha512_256.h \
+	Core/Crypto/rsa.h \
 	Core/Resources/resource_data_session.h \
 	Core/Resources/resource.h \
 	Core/Resources/resource_manager.h \

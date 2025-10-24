@@ -246,7 +246,7 @@ BEGIN
             VALUE "InternalName", "Configure"
             VALUE "LegalCopyright", "The ClanLib Team"
             VALUE "OriginalFilename", "Configure.EXE"
-            VALUE "ProductName", "ClanLib Setup Wizard"
+            VALUE "ProductName", "ClanLib Wizard"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END

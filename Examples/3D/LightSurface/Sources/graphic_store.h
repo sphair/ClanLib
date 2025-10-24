@@ -47,5 +47,6 @@ public:
 	CL_Mat4f camera_modelview;
 	CL_Mat4f light_projection;
 	CL_Mat4f light_modelview;
+	aiPropertyStore* store;
 
 };

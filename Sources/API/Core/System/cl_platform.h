@@ -3,7 +3,7 @@
 
 #pragma once
 
-#ifdef WIN32
+#if defined (WIN32) && !defined(__GNUC__) 
 // GCC automatically sets __SSE2__
 #ifndef CL_DISABLE_SSE2
 #define __SSE__

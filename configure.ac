@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.3.4)
+AC_INIT(ClanLib, 2.3.5)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=3
-CLANLIB_MICRO_VERSION=4
+CLANLIB_MICRO_VERSION=5
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -103,22 +103,23 @@ AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 dnl -----------------------------------------------------------------------
 dnl TODO: Is this the correct way to enable c++0x?
 dnl -----------------------------------------------------------------------
-CXXFLAGS="$CXXFLAGS -std=c++0x"
+
 
 case $target in
 	*cygwin* )
 		X11="no"
 		WIN32="yes"
-		CXXFLAGS="$CXXFLAGS -mno-cygwin -DWIN32"
+		CXXFLAGS="$CXXFLAGS -std=c++0x -mno-cygwin -DWIN32"
 		;;
 	*mingw*)
 		X11="no"
 		WIN32="yes"
-		CXXFLAGS="$CXXFLAGS -DWIN32 -DUNICODE"
+		CXXFLAGS="$CXXFLAGS -std=gnu++0x -DWIN32 -DUNICODE"
 		;;
 	*)
 		X11="yes"
 		WIN32="no"
+		CXXFLAGS="$CXXFLAGS -std=c++0x"
 		;;
 esac
 
@@ -249,7 +250,12 @@ if test "$use_sse2" != "no"; then
 else
 	extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -DCL_DISABLE_SSE2"
 fi
-extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -pthread -std=c++0x"
+
+if test "$WIN32" = "no"; then
+	extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -pthread -std=c++0x"
+else
+	extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -mthreads -std=c++0x"
+fi
 
 dnl -----------------------------------------------------------------------
 dnl Check system endianess
@@ -507,10 +513,10 @@ if test "$enable_clanSound" != "no"; then
 	fi
 
 	extra_LIBS_clanSound="$extra_LIBS_clanSound $sound_libs"
-	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 	fi
 
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
+	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 
 fi
 

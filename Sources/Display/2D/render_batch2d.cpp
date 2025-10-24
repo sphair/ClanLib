@@ -248,9 +248,9 @@ void CL_RenderBatch2D::flush(CL_GraphicContext &gc)
 void CL_RenderBatch2D::modelview_changed(const CL_Mat4f &new_modelview)
 {
 	modelview = new_modelview;
-	x_dir = modelview * CL_Vec4f(1.0f, 0.0f, 1.0f, 1.0f);
-	y_dir = modelview * CL_Vec4f(0.0f, 1.0f, 1.0f, 1.0f);
-	origin = modelview * CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+	x_dir = CL_Vec2f(modelview * CL_Vec4f(1.0f, 0.0f, 1.0f, 1.0f));
+	y_dir = CL_Vec2f(modelview * CL_Vec4f(0.0f, 1.0f, 1.0f, 1.0f));
+	origin = CL_Vec2f(modelview * CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f));
 	x_dir -= origin;
 	y_dir -= origin;
 }

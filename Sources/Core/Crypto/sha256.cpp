@@ -24,56 +24,61 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Core/precomp.h"
-#include "API/Core/Math/sha1.h"
+#include "API/Core/Crypto/sha256.h"
 #include "API/Core/System/databuffer.h"
-#include "sha1_impl.h"
+#include "sha256_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SHA1 Construction:
+// CL_SHA256 Construction:
 
-CL_SHA1::CL_SHA1()
-: impl(new CL_SHA1_Impl)
+CL_SHA256::CL_SHA256()
+: impl(new CL_SHA256_Impl(cl_sha_256))
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SHA1 Attributes:
+// CL_SHA256 Attributes:
 
-CL_String8 CL_SHA1::get_hash(bool uppercase)
+CL_String8 CL_SHA256::get_hash(bool uppercase) const
 {
 	return impl->get_hash(uppercase);
 }
 
-void CL_SHA1::get_hash(unsigned char out_hash[20])
+void CL_SHA256::get_hash(unsigned char out_hash[32]) const
 {
 	impl->get_hash(out_hash);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SHA1 Operations:
+// CL_SHA256 Operations:
 
-void CL_SHA1::reset()
+void CL_SHA256::reset()
 {
 	impl->reset();
 }
 
-void CL_SHA1::add(const void *data, int size)
+void CL_SHA256::add(const void *data, int size)
 {
 	impl->add(data, size);
 }
 
-void CL_SHA1::add(const CL_DataBuffer &data)
+void CL_SHA256::add(const CL_DataBuffer &data)
 {
 	add(data.get_data(), data.get_size());
 }
 
-void CL_SHA1::calculate()
+void CL_SHA256::calculate()
 {
 	impl->calculate();
 }
 
+void CL_SHA256::set_hmac(const void *key_data, int key_size)
+{
+	impl->set_hmac(key_data, key_size);
+}
 /////////////////////////////////////////////////////////////////////////////
-// CL_SHA1 Implementation:
+// CL_SHA256 Implementation:

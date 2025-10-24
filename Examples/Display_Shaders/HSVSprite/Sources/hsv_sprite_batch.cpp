@@ -63,7 +63,7 @@ void HSVSpriteBatch::draw_sprite(CL_GraphicContext &gc, const CL_Rectf &dest, co
 	tex1_coords[fill_position+5] = CL_Vec2f(src.right/256.f, src.bottom/256.f);
 
 	for (int i=0; i<6; i++)
-		hue_offsets[fill_position+i] = hue_offset;
+		hue_offsets[fill_position+i] = CL_Vec1f(hue_offset);
 
 	fill_position += 6;
 

@@ -35,6 +35,9 @@
 #include <Shlobj.h>
 #endif
 
+#ifdef __MINGW32__
+#include <cstdio>
+#endif
 /////////////////////////////////////////////////////////////////////////////
 // CL_BrowseFolderDialog_Impl Class:
 
@@ -56,6 +59,8 @@ public:
 		CL_String16 title16 = CL_StringHelp::utf8_to_ucs2(title);
 		CL_String16 initial_directory16 = CL_StringHelp::utf8_to_ucs2(initial_directory);
 
+		#ifndef __MINGW32__
+		
 		if(is_vista_or_later())
 		{
 			HRESULT result;
@@ -131,6 +136,7 @@ public:
 			}
 		}
 		else
+		#endif
 		{
 			BROWSEINFO bi;
 			ZeroMemory(&bi, sizeof(bi));

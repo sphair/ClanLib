@@ -66,15 +66,6 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_DisplayWindow window(desc);
 
-#ifdef _DEBUG
-	//struct aiLogStream stream;
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
-	//aiAttachLogStream(&stream);
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
-	//aiAttachLogStream(&stream);
-#endif
-	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
-
 	// Connect the Window close event
 	CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 
@@ -170,7 +161,6 @@ int App::start(const std::vector<CL_String> &args)
 		// This call processes user input and other events
 		CL_KeepAlive::process();
 	}
-	aiDetachAllLogStreams();
 
 	return 0;
 }
@@ -216,15 +206,15 @@ void App::render(CL_GraphicContext &gc)
 
 void App::create_scene(CL_GraphicContext &gc)
 {
-	Model model_landscape(gc, "../Shadow/Resources/land.dae", false);
+	Model model_landscape(gc, scene.gs, "../Shadow/Resources/land.dae", false);
 	model_landscape.SetMaterial(64.0f,	// Shiny
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f));	// Specular
 
-	Model model_cone(gc, "Resources/cone.dae", true);
+	Model model_cone(gc, scene.gs, "Resources/cone.dae", true);
 
-	Model model_teapot(gc, "../Clan3D/Resources/teapot.dae", true);
+	Model model_teapot(gc, scene.gs, "../Clan3D/Resources/teapot.dae", true);
 	model_teapot.SetMaterial(64.0f,	// Shiny
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
@@ -280,7 +270,7 @@ void App::update_light(CL_GraphicContext &gc, Options *options)
 	work_matrix.matrix[1+3*4] = 0.0f;
 	work_matrix.matrix[2+3*4] = 0.0f;
 
-	CL_Vec4f light_vector = work_matrix.get_transformed_point(CL_Vec3f(0.0f, 0.0f, -1.0f));
+	CL_Vec3f light_vector = work_matrix.get_transformed_point(CL_Vec3f(0.0f, 0.0f, -1.0f));
 
 	CL_Vec4f light_specular(options->distant_specular_color.r, options->distant_specular_color.g, options->distant_specular_color.b, options->distant_specular_color.a);
 	CL_Vec4f light_diffuse(options->distant_diffuse_color.r, options->distant_diffuse_color.g, options->distant_diffuse_color.b, options->distant_diffuse_color.a);
@@ -309,7 +299,7 @@ void App::update_spot_light(CL_GraphicContext &gc, Options *options)
 	temp_matrix.matrix[2+3*4] = 0.0f;
 
 	// Get direction
-	CL_Vec4f light_vector = temp_matrix.get_transformed_point(CL_Vec3f(0.0f, 0.0f, -1.0f));
+	CL_Vec3f light_vector = temp_matrix.get_transformed_point(CL_Vec3f(0.0f, 0.0f, -1.0f));
 
 	CL_Vec4f spot_light_specular(options->spot_specular_color.r, options->spot_specular_color.g, options->spot_specular_color.b, options->spot_specular_color.a);
 	CL_Vec4f spot_light_diffuse(options->spot_diffuse_color.r, options->spot_diffuse_color.g, options->spot_diffuse_color.b, options->spot_diffuse_color.a);

@@ -74,8 +74,8 @@ char Shader::fragment[] =
 	"uniform vec4 MaterialEmission;\n"
 	"uniform vec4 MaterialSpecular;\n"
 	"\n"
-	"uniform vec4 LightPosition;\n"
-	"uniform vec4 LightHalfVector;\n"
+	"uniform vec3 LightPosition;\n"
+	"uniform vec3 LightHalfVector;\n"
 	"uniform vec4 LightSpecular;\n"
 	"uniform vec4 LightDiffuse;\n"
 	"\n"
@@ -87,14 +87,14 @@ char Shader::fragment[] =
 	"	vec4 diff = vec4(0); \n"
 	"	vec4 spec = vec4(0); \n"
 	"\n"
-	"	float nDotL = max(0.0, dot(WorldSpaceNormal, LightPosition.xyz)); \n"
+	"	float nDotL = max(0.0, dot(WorldSpaceNormal, LightPosition)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
 	"	{\n"
 	"		pf = 0.0; \n"
 	"	}else\n"
 	"	{\n"
-	"			float nDotHV = max(0.0, dot(WorldSpaceNormal, LightHalfVector.xyz));\n"
+	"			float nDotHV = max(0.0, dot(WorldSpaceNormal, LightHalfVector));\n"
 	"			pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
 	"	\n"
@@ -143,7 +143,7 @@ Shader::Shader(CL_GraphicContext &gc)
 	material_emission = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	material_specular = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 
-	light_position = CL_Vec4f(0.0f, 0.0f, 1.0f, 0.0f);
+	light_position = CL_Vec3f(0.0f, 0.0f, 1.0f);
 	light_specular = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	light_diffuse = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 
@@ -165,11 +165,11 @@ void Shader::Set(CL_GraphicContext &gc, int textureID)
 		program_object.set_uniform1f("MaterialShininess", material_shininess);
 		program_object.set_uniform4f("MaterialEmission", material_emission);
 		program_object.set_uniform4f("MaterialSpecular", material_specular);
-		program_object.set_uniform4f("LightPosition", light_position);
-		CL_Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
+		program_object.set_uniform3f("LightPosition", light_position);
+		CL_Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
 		light_halfvector += light_position;
-		light_halfvector.normalize3();
-		program_object.set_uniform4f("LightHalfVector", light_halfvector);
+		light_halfvector.normalize();
+		program_object.set_uniform3f("LightHalfVector", light_halfvector);
 		program_object.set_uniform4f("LightSpecular", light_specular);
 		program_object.set_uniform4f("LightDiffuse", light_diffuse);
 }

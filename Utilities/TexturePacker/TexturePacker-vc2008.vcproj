@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="TexturePacker"
 	ProjectGUID="{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}"
 	RootNamespace="TexturePacker"
@@ -298,6 +298,18 @@
 				</File>
 				<File
 					RelativePath=".\Sources\Views\welcome_view.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Dialogs"
+				>
+				<File
+					RelativePath=".\Sources\Dialogs\create_collision_data_dialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Dialogs\create_collision_data_dialog.h"
 					>
 				</File>
 			</Filter>

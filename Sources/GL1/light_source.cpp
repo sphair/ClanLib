@@ -130,7 +130,8 @@ CL_Vec4f CL_LightSource_GL1::get_position() const
 
 CL_Vec4f CL_LightSource_GL1::get_spot_direction() const
 {
-	return impl->spot_direction;
+	// This is a bug, this function should return CL_Vec3f. Fixed in ClanLib 2.4
+	return CL_Vec4f(impl->spot_direction);
 }
 
 /////////////////////////////////////////////////////////////////////////////

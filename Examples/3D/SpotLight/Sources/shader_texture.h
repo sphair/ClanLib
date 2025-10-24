@@ -36,7 +36,7 @@ public:
 	void Use(CL_GraphicContext &gc);
 
 	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
-	void SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse);
+	void SetLight(CL_Vec3f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse);
 	void SetSpotLight(const CL_Vec3f &new_light_position, const CL_Vec3f &new_light_direction, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse, float new_spot_exponent, float new_spot_cutoff);
 
 private:
@@ -48,7 +48,7 @@ private:
 	CL_Vec4f material_specular;
 
 	bool light_updated;
-	CL_Vec4f light_vector;
+	CL_Vec3f light_vector;
 	CL_Vec4f light_specular;
 	CL_Vec4f light_diffuse;
 

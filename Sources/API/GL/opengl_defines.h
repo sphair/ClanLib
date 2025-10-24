@@ -40,6 +40,9 @@
 #include <OpenGLES/ES2/glext.h>
 #else
 #include <GL/gl.h>
+#ifdef __MINGW32__//MinGW32 Does not define most GL Functions needed
+#include <gl/glext.h> //Because they are treated as extensions
+#endif
 #endif
 
 #ifndef CL_DISPLAYDEFINES_DEFINES

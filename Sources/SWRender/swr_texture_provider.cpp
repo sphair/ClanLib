@@ -119,12 +119,12 @@ void CL_SWRenderTextureProvider::set_subimage(
 	unsigned int *dest_data = static_cast<unsigned int *>(image.get_data());
 	const unsigned int *src_data = static_cast<const unsigned int *>(temp_source.get_data());
 
-	for (int yy = 0; yy < source_image.get_height(); yy++)
+	for (int yy = 0; yy < temp_source.get_height(); yy++)
 	{
 		if (y+yy >= dest_buffer_height)
 			break;
 
-		for (int xx = 0; xx < source_image.get_width(); xx++)
+		for (int xx = 0; xx < temp_source.get_width(); xx++)
 		{
 			if (x+xx < dest_buffer_width)
 				dest_data[x+xx+(y+yy)*dest_buffer_width] = src_data[xx+yy*src_buffer_width];

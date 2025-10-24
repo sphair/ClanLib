@@ -32,7 +32,7 @@
 #include "API/Core/Math/circle.h"
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/point.h"
-#include "API/Core/Math/line_segment.h"
+#include "API/Core/Math/line.h"
 #include <climits>
 
 //////////////////////////////////////////////////////////////////////////
@@ -231,16 +231,17 @@ void CL_PointSetMath::minimum_disc_with_3points(
 	// Find center:
 	// http://astronomy.swin.edu.au/~pbourke/geometry/circlefrom3/
 	// 
+
 	CL_Pointf ji_mid  = CL_LineMath::midpoint(points[i],points[j]);
 	CL_Pointf ji_norm = ji_mid + CL_Pointf(points[i].y - ji_mid.y, -(points[i].x - ji_mid.x));
 	CL_Pointf ki_mid  = CL_LineMath::midpoint(points[k],points[i]);
 	CL_Pointf ki_norm = ki_mid + CL_Pointf(points[k].y - ki_mid.y, -(points[k].x - ki_mid.x));
 
-	CL_LineSegment2f line_segment_a( ji_mid, ji_norm );
-	CL_LineSegment2f line_segment_b( ki_mid, ki_norm );
+	CL_Line2f line_a( ji_mid,ji_norm );
+	CL_Line2f line_b( ki_mid,ki_norm );
 
 	bool did_intersect;
-	smalldisc.position = line_segment_a.get_intersection( line_segment_b, did_intersect );
+	smalldisc.position = line_a.get_intersection( line_b, did_intersect );
 
 	// Since (i,j,k) are all on the circle, just get distance to one of them
 	smalldisc.radius = smalldisc.position.distance(points[i]);

@@ -915,6 +915,9 @@ void CL_X11Window::map_window()
 			}while ( (event.type != MapNotify) || (event.xmap.event != window) );
 
 			is_window_mapped = true;
+
+			if (fullscreen)
+				XSetInputFocus(display, window, RevertToParent, CurrentTime);
 		}
 		XSync(display, True);
 

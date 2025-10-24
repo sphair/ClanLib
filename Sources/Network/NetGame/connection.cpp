@@ -47,6 +47,7 @@ CL_NetGameConnection::CL_NetGameConnection(CL_NetGameConnectionSite *site, const
 
 CL_NetGameConnection::~CL_NetGameConnection()
 {
+	delete impl;
 }
 
 void CL_NetGameConnection::set_data(const CL_StringRef &name, void *new_data)

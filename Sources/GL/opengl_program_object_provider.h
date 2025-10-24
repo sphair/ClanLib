@@ -161,6 +161,7 @@ public:
 
 private:
 	GLuint last_program_object;
+	bool program_set;
 };
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="GuiEditor"
 	ProjectGUID="{5C1AAF8C-7FF0-447E-B01D-AED0A0B2849F}"
 	RootNamespace="GuiEditor-vc90"
@@ -176,6 +176,18 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\Sources\application.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\application.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\main.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\Sources\precomp.cpp"
 				>
@@ -452,14 +464,6 @@
 				Name="MainWindow"
 				>
 				<File
-					RelativePath=".\Sources\MainWindow\application.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\MainWindow\application.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\MainWindow\edit_columns_window.cpp"
 					>
 				</File>
@@ -468,15 +472,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\MainWindow\main.cpp"
+					RelativePath=".\Sources\MainWindow\gui_editor_window.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\MainWindow\main_window.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\MainWindow\main_window.h"
+					RelativePath=".\Sources\MainWindow\gui_editor_window.h"
 					>
 				</File>
 				<File

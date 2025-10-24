@@ -37,7 +37,7 @@ class Model
 {
 public:
 	Model();
-	Model(CL_GraphicContext &gc, const char *filename, bool we_do_not_want_texures_on_this_object);
+	Model(CL_GraphicContext &gc, GraphicStore *gs, const char *filename, bool we_do_not_want_texures_on_this_object);
 
 	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool is_draw_shadow);
 	bool is_null();
