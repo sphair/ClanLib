@@ -133,6 +133,10 @@ CL_PixelBuffer_Impl::~CL_PixelBuffer_Impl()
 CL_Colorf CL_PixelBuffer_Impl::get_pixel(int x, int y)
 {
 	CL_Colorf color(0.0f, 0.0f, 0.0f, 0.0f);
+	const int red_shift = CL_PixelFormat::get_mask_shift(red_mask);
+	const int green_shift = CL_PixelFormat::get_mask_shift(green_mask);
+	const int blue_shift = CL_PixelFormat::get_mask_shift(blue_mask);
+	const int alpha_shift = CL_PixelFormat::get_mask_shift(alpha_mask);
 
 	cl_uint8* buf = static_cast<cl_uint8*>(get_data());
 
@@ -140,15 +144,15 @@ CL_Colorf CL_PixelBuffer_Impl::get_pixel(int x, int y)
 	{
 		cl_uint8 *pos = &buf[y * get_pitch() + x * bytes_per_pixel];
 
-		if (sized_format == cl_rgba8 || sized_format == cl_argb8)
+		if (sized_format == cl_rgba8 || sized_format == cl_argb8 || sized_format == cl_abgr8)
 		{
 			cl_uint32 value = *((cl_uint32*)pos);
 
 			float max_value = 255.0f;
-			color = CL_Colorf (((value & red_mask) >> red_bits) / max_value,
-				((value & green_mask) >> green_bits) / max_value,
-				((value & blue_mask) >> blue_bits) / max_value,
-				((value & alpha_mask) >> alpha_bits) / max_value);
+			color = CL_Colorf (((value & red_mask) >> red_shift) / max_value,
+				((value & green_mask) >> green_shift) / max_value,
+				((value & blue_mask) >> blue_shift) / max_value,
+				((value & alpha_mask) >> alpha_shift) / max_value);
 		}
 	}
 

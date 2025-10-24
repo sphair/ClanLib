@@ -40,7 +40,7 @@ public:
 
 	int target_version;
 
-	bool include_unicode, include_mtdll, include_dll, include_x64;
+	bool include_unicode, include_mtdll, include_dll, include_x64, include_sse2, include_intrinsics;
 
 	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
 

@@ -101,10 +101,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSSTokenize", "Tests\Core\C
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HDR", "Tests\Display\HDR\hdr-vc2008.vcproj", "{BAB64109-DBA5-439B-A821-5AFF2D111A1A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayeredWindow", "Tests\Display\LayeredWindow\LayeredWindow-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6ACA237766A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayeredWindow2", "Tests\Display\LayeredWindow2\LayeredWindow2-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6ACA23EA32F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texture3D", "Tests\Display\Texture3D\Texture3D-vc2008.vcproj", "{BAB64109-DBA5-439B-A821-5AFF2A4427AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DestructionOrder1", "Tests\GUI\DestructionOrder\DestructionOrder1-vc2008.vcproj", "{BD0D7D76-D4C7-4FD4-9278-2B1F780841A0}"
@@ -333,14 +329,6 @@ Global
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Release|Win32.ActiveCfg = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Release|Win32.Build.0 = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA237766A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA237766A}.Debug|Win32.Build.0 = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA237766A}.Release|Win32.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA237766A}.Release|Win32.Build.0 = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Debug|Win32.Build.0 = Debug|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Release|Win32.ActiveCfg = Release|Win32
-		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Release|Win32.ActiveCfg = Release|Win32

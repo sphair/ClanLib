@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="SSE2 Build"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		EnableEnhancedInstructionSet="2"
+	/>
+</VisualStudioPropertySheet>

@@ -93,6 +93,7 @@ clanGUI_includes = \
 	GUI/gui_window_manager.h \
 	GUI/gui_window_manager_system.h \
 	GUI/gui_window_manager_texture.h \
+	GUI/gui_window_manager_direct.h \
 	GUI/gui_window_manager_texture_window.h \
 	GUI/accelerator_key.h \
 	GUI/accelerator_table.h \

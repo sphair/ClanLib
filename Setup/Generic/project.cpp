@@ -69,6 +69,8 @@ static const char *exclude_from_build[] =
 	"Quartz",
 	"OSX",
 	"AGL",
+	"font_engine_cocoa.h",
+	"font_engine_cocoa.mm",
 	NULL
 };
 
@@ -86,7 +88,6 @@ Project::Project(
 	const std::list<std::string> &libs_list_shared,
 	const std::list<std::string> &libs_list_release,
 	const std::list<std::string> &libs_list_debug,
-	const std::list<std::string> &defines_list,
 	const std::list<std::string> &ignore_list)
 :
 	name(name),
@@ -94,8 +95,7 @@ Project::Project(
 	headername(headername),
 	libs_shared(libs_list_shared),
 	libs_release(libs_list_release),
-	libs_debug(libs_list_debug),
-	defines_list(defines_list)
+	libs_debug(libs_list_debug)
 {
 #ifdef _MSC_VER
 	std::string lib_main_header;

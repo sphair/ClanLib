@@ -42,6 +42,8 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/IOData/datatypes.h"
 #include "API/Core/Signals/callback_v0.h"
+#include "API/Core/System/thread.h"
+#include "API/Display/Image/pixel_buffer.h"
 
 #if DIRECTINPUT_HEADER_VERSION < 0x0800
 #error Found DirectX headers older than 8.0. Please download a newer directx, and make sure its FIRST in the include path and library path (Tools->Options->Directories in MSVC).
@@ -131,11 +133,14 @@ public:
 
 	void set_modifier_keys(CL_InputEvent &key);
 
-	void update_layered(CL_PixelBuffer &image, const CL_Point &dest_offset, const CL_Colorf &colorkey, int window_alpha, bool use_colorkey);
+	void update_layered(CL_PixelBuffer &image);
 
 	void set_allow_drop_shadow(bool value) { allow_dropshadow = value; }
 
 private:
+	void update_layered_worker_thread();
+	void update_layered_process_alpha(int y_start, int y_stop);
+
 	void create_direct_input();
 
 	static LRESULT WINAPI static_window_try_proc(
@@ -209,6 +214,9 @@ private:
 	bool allow_dropshadow;
 	bool minimized;
 	bool maximized;
+
+	CL_Thread update_window_worker_thread;
+	CL_PixelBuffer update_window_image;
 
 	friend class CL_InputDeviceProvider_DirectInput;
 };

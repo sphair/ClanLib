@@ -7,7 +7,6 @@
 	<Tool
 		Name="VCCLCompilerTool"
 		PreprocessorDefinitions="WIN32"
-		EnableEnhancedInstructionSet="2"
 	/>
 	<Tool
 		Name="VCLinkerTool"

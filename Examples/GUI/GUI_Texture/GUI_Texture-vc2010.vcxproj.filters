@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="CommonCode">
+      <UniqueIdentifier>{6eb1ae8e-0d7b-4d41-a515-8a35d829c69e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\gui_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\checkbox.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\combobox.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\info.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\lineedit.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\listview.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\menubar.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\progressbar.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\pushbutton.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\radiobutton.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\scrollbar.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\slider.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\spin.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\tabpage.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\theme.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonCode\Sources\balls.cpp">
+      <Filter>CommonCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\app.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GUI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\gui_texture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\program.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\checkbox.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\combobox.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\info.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\lineedit.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\listview.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\menubar.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\progressbar.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\pushbutton.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\radiobutton.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\scrollbar.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\slider.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\spin.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\tabpage.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\theme.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonCode\Sources\balls.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>

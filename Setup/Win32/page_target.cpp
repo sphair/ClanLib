@@ -37,6 +37,8 @@ PageTarget::PageTarget()
 {
 	target_version = 900;
 	include_unicode = false;
+	include_sse2 = true;
+	include_intrinsics = true;
 	include_mtdll = false;
 	include_dll = false;
 	include_x64 = false;
@@ -70,6 +72,20 @@ PageTarget::PageTarget()
 		if (result == ERROR_SUCCESS && type == REG_DWORD)
 		{
 			include_mtdll = (value != 0);
+		}
+
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeSSE2"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_sse2 = (value != 0);
+		}
+
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeIntrinsics"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_intrinsics = (value != 0);
 		}
 
 		size = sizeof(DWORD);
@@ -119,6 +135,8 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_NONUNICODE), BM_SETCHECK, BST_CHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_SETCHECK, self->include_unicode ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_SETCHECK, self->include_mtdll ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SSE2), BM_SETCHECK, self->include_sse2 ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_INTRINSICS), BM_SETCHECK, self->include_intrinsics ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_SETCHECK, self->include_dll ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_SETCHECK, self->include_x64 ? BST_CHECKED : BST_UNCHECKED, 0);
 
@@ -165,6 +183,8 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_sse2 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SSE2), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_intrinsics = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_INTRINSICS), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_dll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		return TRUE;
 	case PSN_WIZFINISH:

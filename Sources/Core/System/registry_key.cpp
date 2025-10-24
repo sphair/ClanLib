@@ -312,10 +312,12 @@ void CL_RegistryKey::set_value_binary(const CL_StringRef &name, const CL_DataBuf
 
 void CL_RegistryKey::set_value_string(const CL_StringRef &name, const CL_StringRef &value)
 {
-	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *) value.c_str(), (value.length()+1) * sizeof(TCHAR));
+	CL_String16 value_str = CL_StringHelp::utf8_to_ucs2(value);
+	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *) value_str.c_str(), (value_str.length()+1) * sizeof(TCHAR));
 	if (result != ERROR_SUCCESS)
 		throw CL_Exception(cl_format("Unable to set registry key value %1", name));
 }
+
 /*
 void CL_RegistryKey::set_value_multi_string(const CL_StringRef &name, const std::vector<CL_String> &value)
 {

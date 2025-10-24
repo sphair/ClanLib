@@ -426,7 +426,7 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 			CL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
-		win32_window.update_layered(pixelbuffer, CL_Point(0, 0), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
+		win32_window.update_layered(pixelbuffer);
 
 		if (blending)
 			cl1Enable(CL_BLEND);
@@ -502,7 +502,7 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 			CL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
-		win32_window.update_layered(pixelbuffer, CL_Point(rect.left, rect.top), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
+		win32_window.update_layered(pixelbuffer);
 	}
 	else
 	{

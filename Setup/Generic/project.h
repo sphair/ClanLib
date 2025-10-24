@@ -51,7 +51,6 @@ public:
 		const std::list<std::string> &libs_list_shared,
 		const std::list<std::string> &libs_list_release,
 		const std::list<std::string> &libs_list_debug,
-		const std::list<std::string> &defines_list,
 		const std::list<std::string> &ignore_list = std::list<std::string>());
 	// Construct a project by searching automatically for the files in the Sources subdir.
 
@@ -65,9 +64,6 @@ public:
 
 	std::string headername;
 	// Project library name. Eg. "core.h".
-
-	std::list<std::string> defines_list;
-	// Defines set for this project.
 
 	std::list<std::string> libs_shared;
 	// Libraries to link with in all targets.

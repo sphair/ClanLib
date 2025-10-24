@@ -41,6 +41,7 @@
 template<typename T> inline T cl_pow2(T value) { return value*value; }
 template<typename A, typename B> inline A cl_min(A a, B b) { return a < b ? a : b; }
 template<typename A, typename B> inline A cl_max(A a, B b) { return a > b ? a : b; }
+template<typename A, typename B, typename C> inline C cl_clamp(A val, B minval, C maxval) { return cl_max(minval, cl_min(maxval, val)); }
 
 /// \}
 

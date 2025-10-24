@@ -149,6 +149,11 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,76,173,10
     CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,63,225,10
+    CONTROL         "Compile using SSE2 Minimum CPU Architecture",IDC_CHECK_INCLUDE_SSE2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,89,173,10
+    CONTROL         "Compile using SSE2 Intrinsics",IDC_CHECK_INCLUDE_INTRINSICS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,102,173,10
+
 END
 
 

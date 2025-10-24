@@ -55,6 +55,10 @@
 #include "cursor_provider_win32.h"
 #include "../Window/input_context_impl.h"
 
+#ifndef CL_DISABLE_SSE2
+#include <emmintrin.h>
+#endif
+
 // #define fun_and_games_with_vista
 
 #ifdef fun_and_games_with_vista
@@ -84,6 +88,8 @@ CL_Win32Window::CL_Win32Window()
 
 CL_Win32Window::~CL_Win32Window()
 {
+	update_window_worker_thread.join();
+
 	CL_DisplayMessageQueue_Win32::message_queue.remove_client(this);
 	if (!ic.impl.is_null())
 		ic.impl->dispose();
@@ -1913,66 +1919,159 @@ RECT CL_Win32Window::get_window_geometry_from_description(const CL_DisplayWindow
 	return window_rect;
 }
 
-void CL_Win32Window::update_layered(CL_PixelBuffer &image, const CL_Point &dest_offset, const CL_Colorf &colorkey, int window_alpha, bool use_colorkey)
+void CL_Win32Window::update_layered(CL_PixelBuffer &image)
 {
 	// Note that the APIs use pre-multiplied alpha, which means that the red,
 	// green and blue channel values in the bitmap must be pre-multiplied with
 	// the alpha channel value. For example, if the alpha channel value is x,
 	// the red, green and blue channels must be multiplied by x and divided by
 	// 0xff prior to the call.
-	int w = image.get_width();
-	int h = image.get_height();
-	cl_uint32 *p = (cl_uint32 *) image.get_data();
-	for (int y = 0; y < h; y++)
+
+
+	update_window_worker_thread.join();
+	update_window_image = image;
+	update_window_worker_thread.start(this, &CL_Win32Window::update_layered_worker_thread);
+
+}
+
+void CL_Win32Window::update_layered_process_alpha(int y_start, int y_stop)
+{
+	int w = update_window_image.get_width();
+
+#ifndef CL_DISABLE_SSE2
+	int sse_size = (w/8)*8;
+#endif
+
+	cl_uint32 *p = (cl_uint32 *) update_window_image.get_data();
+	for (int y = y_start; y < y_stop; y++)
 	{
 		int index = y * w;
 		cl_uint32 *line = p + index;
-		for (int x = 0; x < w; x++)
+
+		int size = w;
+#ifndef CL_DISABLE_SSE2
+
+		int not_aligned = (line - p) & 0x3;	// 4 lots of 32bit integers
+		// Draw any that is not 128bit aligned
+		for (int x = 0; x < not_aligned; x++)
 		{
 			// Reading RGBA
-			cl_uint32 r = ((line[x] >> 24) & 0xff);
-			cl_uint32 g = ((line[x] >> 16) & 0xff);
-			cl_uint32 b = ((line[x] >> 8) & 0xff);
-			cl_uint32 a = (line[x] & 0xff);
+			unsigned int cval = *line;
+			cl_uint32 r = (cval >> 24) & 0xff;
+			cl_uint32 g = (cval >> 16) & 0xff;
+			cl_uint32 b = (cval >> 8) & 0xff;
+			cl_uint32 a = cval & 0xff;
 
 			r = r * a / 255;
 			g = g * a / 255;
 			b = b * a / 255;
 
 			// Writing ARGB
-			line[x] = (a << 24) + (r << 16) + (g << 8) + b;
+			*(line++) = (a << 24) + (r << 16) + (g << 8) + b;
+		}
+		size -= not_aligned;
+
+		int sse_size = (size/4)*4;
+
+		const __m128i alpha_mask = _mm_set1_epi32(0xFF);
+		const __m128i lomask = _mm_set1_epi32(0x00FF00FF);
+		const __m128i round = _mm_set1_epi16(128);
+
+		for (int x = 0; x < sse_size; x+=4)
+		{
+			__m128i source = _mm_load_si128((__m128i*)(line+x));
+		// now source = RRGGBBAA
+
+			__m128i alpha = _mm_and_si128(alpha_mask, source);
+			alpha = _mm_or_si128(alpha, _mm_slli_epi32(alpha, 16));
+		// now alpha = 00AA00AA
+
+			__m128i red_blue = _mm_and_si128(lomask, _mm_srli_epi32(source, 8));
+		// now red_blue = 00RR00BB
+
+			red_blue =_mm_mullo_epi16(red_blue, alpha);
+			red_blue = _mm_add_epi16(red_blue, round);
+			__m128i t = _mm_srli_epi16(red_blue, 8);
+			t = _mm_add_epi16(t, red_blue);
+			red_blue = _mm_srli_epi16(t, 8);
+		// now red_blue = 00rr00bb  (rr = RR * AA/255) (bb = BB * AA/255)
+
+			__m128i green_alpha = _mm_and_si128(lomask, source);
+		// now green_alpha = 00GG00AA
+
+			green_alpha =_mm_mullo_epi16(green_alpha, alpha);
+			green_alpha = _mm_add_epi16(green_alpha, round);
+			t = _mm_srli_epi16(green_alpha, 8);
+			t = _mm_add_epi16(t, green_alpha);
+			green_alpha = _mm_srli_epi16(t, 8);
+		// now green_alpha = 00gg00aa  (gg = GG * AA/255) (aa = AA * AA/255)
+
+			t = _mm_or_si128(red_blue, _mm_slli_epi32(green_alpha, 24));
+		// now t = aarr00bb
+
+			t = _mm_or_si128(t, _mm_srli_epi32(green_alpha, 8));
+		// now t = aarrggbb
+
+			_mm_store_si128((__m128i*)(line+x), t);
+		}
+
+		// Do remaining pixels
+		size-=sse_size;
+		line+=sse_size;
+
+#endif
+		for (int x = 0; x < size; x++)
+		{
+			// Reading RGBA
+			unsigned int cval = *line;
+			cl_uint32 r = (cval >> 24) & 0xff;
+			cl_uint32 g = (cval >> 16) & 0xff;
+			cl_uint32 b = (cval >> 8) & 0xff;
+			cl_uint32 a = cval & 0xff;
+
+			r = r * a / 255;
+			g = g * a / 255;
+			b = b * a / 255;
+
+			// Writing ARGB
+			*(line++) = (a << 24) + (r << 16) + (g << 8) + b;
 		}
 	}
+}
+
+void CL_Win32Window::update_layered_worker_thread()
+{
+	update_layered_process_alpha(0, update_window_image.get_height());
 
 	BITMAPV5HEADER bmp_header;
 	memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
 	bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
-	bmp_header.bV5Width = image.get_width();
-	bmp_header.bV5Height = image.get_height();
+	bmp_header.bV5Width = update_window_image.get_width();
+	bmp_header.bV5Height = update_window_image.get_height();
 	bmp_header.bV5Planes = 1;
 	bmp_header.bV5BitCount = 32;
 	bmp_header.bV5Compression = BI_RGB;
 
 	HDC hdc = GetDC(hwnd);
 	HDC bitmap_dc = CreateCompatibleDC(hdc);
-	HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
+	HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, update_window_image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 	HGDIOBJ old_bitmap = SelectObject(bitmap_dc, bitmap);
 
-	SIZE size = { image.get_width(), image.get_height() };
+	SIZE size = { update_window_image.get_width(), update_window_image.get_height() };
 	POINT point = { 0, 0 };
-	COLORREF rgb_colorkey = RGB(colorkey.get_red(), colorkey.get_green(), colorkey.get_blue());
+	COLORREF rgb_colorkey = RGB(0, 0, 0);
 	BLENDFUNCTION blend;
 	memset(&blend, 0, sizeof(BLENDFUNCTION));
 	blend.BlendOp = AC_SRC_OVER;
-	blend.SourceConstantAlpha = (BYTE) window_alpha;
+	blend.SourceConstantAlpha = (BYTE) 255;
 	blend.AlphaFormat = AC_SRC_ALPHA;
-	if (use_colorkey)
-		UpdateLayeredWindow(hwnd, 0, 0, &size, bitmap_dc, &point, rgb_colorkey, &blend, ULW_COLORKEY);
-	else
-		UpdateLayeredWindow(hwnd, 0, 0, &size, bitmap_dc, &point, rgb_colorkey, &blend, ULW_ALPHA);
+
+	UpdateLayeredWindow(hwnd, 0, 0, &size, bitmap_dc, &point, rgb_colorkey, &blend, ULW_ALPHA);
 
 	SelectObject(bitmap_dc, old_bitmap);
 	DeleteObject(bitmap);
 	DeleteDC(bitmap_dc);
 	ReleaseDC(hwnd, hdc);
+
+	update_window_image = CL_PixelBuffer();
 }
