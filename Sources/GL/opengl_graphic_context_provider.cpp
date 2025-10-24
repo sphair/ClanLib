@@ -57,6 +57,10 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 
+#ifndef WIN32
+#include "GLX/opengl_window_provider_glx.h"
+#endif
+
 const CL_String::char_type *cl_glsl_vertex_color_only = 
 	cl_text("attribute vec4 Position, Color0; ")
 	cl_text("varying vec4 Color; ")
@@ -176,7 +180,10 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 CL_OpenGLGraphicContextProvider::~CL_OpenGLGraphicContextProvider()
 {
 	standard_programs.clear();
+
+	CL_OpenGL::remove_active(this);
 	delete render_window;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -295,6 +302,45 @@ int CL_OpenGLGraphicContextProvider::get_height() const
 		return framebuffer_provider->get_attachment_size(0).height;
 	else
 		return render_window->get_viewport_height();
+}
+
+
+#ifdef __APPLE__
+static CFBundleRef cl_gBundleRefOpenGL = 0;
+#endif
+
+CL_ProcAddress *CL_OpenGLGraphicContextProvider::get_proc_address(const CL_String8& function_name) const
+{
+
+#ifdef WIN32
+	return (void (*)())wglGetProcAddress(function_name.c_str());
+#else
+#ifdef __APPLE__
+	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
+	if (cl_gBundleRefOpenGL == 0)
+	{
+		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
+		if (cl_gBundleRefOpenGL == 0)
+			throw CL_Exception("Unable to find com.apple.opengl bundle");
+	}
+
+	return (CL_ProcAddress *) CFBundleGetFunctionPointerForName(
+		cl_gBundleRefOpenGL,
+		CFStringCreateWithCStringNoCopy(
+			0,
+			function_name.c_str(),
+			CFStringGetSystemEncoding(),
+			0));
+#else
+
+	const CL_GL_RenderWindowProvider_GLX *wptr = dynamic_cast<const CL_GL_RenderWindowProvider_GLX *> (render_window);
+	if (wptr == NULL)
+		return NULL;
+
+	return wptr->get_proc_address(function_name);
+#endif
+#endif
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1280,7 +1326,6 @@ CLenum CL_OpenGLGraphicContextProvider::to_enum(CL_BlendEquation eq)
 	case cl_blend_equation_reverse_subtract: return CL_FUNC_REVERSE_SUBTRACT;
 	case cl_blend_equation_min: return CL_MIN;
 	case cl_blend_equation_max: return CL_MAX;
-	case cl_blend_equation_logic_op: return CL_LOGIC_OP;
 	default: return CL_FUNC_ADD;
 	}
 }

@@ -56,39 +56,6 @@
 #endif
 #endif
 
-CL_GL1ProcAddress *CL_GL1::get_proc_address(const CL_String8& function_name)
-{
-#ifdef WIN32
-	return (void (*)())wglGetProcAddress(function_name.c_str());
-#else
-#ifdef __APPLE__
-	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
-
-	static CFBundleRef cl_gBundleRefOpenGL = 0;
-	if (cl_gBundleRefOpenGL == 0)
-	{
-		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
-		if (cl_gBundleRefOpenGL == 0)
-			throw CL_Exception("Unable to find com.apple.opengl bundle");
-	}
-
-	return (CL_GL1ProcAddress *) CFBundleGetFunctionPointerForName(
-		cl_gBundleRefOpenGL,
-		CFStringCreateWithCStringNoCopy(
-			0,
-			function_name.c_str(),
-			CFStringGetSystemEncoding(),
-			0));
-#else
-#  ifdef HAVE_GLX_GETPROCADDRESSARB
-	return glXGetProcAddressARB((GLubyte*)function_name.c_str());
-#  else
-	return glXGetProcAddress((GLubyte*)function_name.c_str());
-#  endif
-#endif
-#endif
-}
-
 CL_GL1Functions *CL_GL1::functions = 0;
 
 void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, CLint &gl_internal_format, CLenum &gl_pixel_format)
@@ -603,9 +570,6 @@ bool CL_GL1::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, CLe
 /////////////////////////////////////////////////////////////////////////////
 // OpenGL context management:
 
-// to-do: change these variables to be TLS variables:
-//        (each thread has their own opengl context)
-
 #if defined(_MSC_VER)
 #define cl_tls_variable _declspec(thread)
 #else
@@ -625,6 +589,15 @@ typedef std::map<const CL_GL1GraphicContextProvider *, CL_GL1Functions *> cl_gl1
 static cl_gl1_function_map_type cl_gl1_function_map;
 
 CL_GL1Functions *cl_gl1_setup_binds();
+
+CL_GL1ProcAddress *CL_GL1::get_proc_address(const CL_String8& function_name)
+{
+	if (cl_gl1_active_opengl_gc)
+	{
+		return cl_gl1_active_opengl_gc->get_proc_address(function_name);
+	}
+	return NULL;
+}
 
 void CL_GL1::set_active(CL_GraphicContext &gc)
 {
@@ -672,6 +645,7 @@ void CL_GL1::set_active(const CL_GL1GraphicContextProvider * const gc_provider)
 			}
 			else
 			{
+				cl_gl1_active_opengl_gc = gc_provider;
 				CL_GL1Functions *functions = cl_gl1_setup_binds();
 				cl_gl1_function_map[gc_provider] = functions;
 				CL_GL1::functions = functions;
@@ -686,7 +660,9 @@ void CL_GL1::set_active(const CL_GL1GraphicContextProvider * const gc_provider)
 #		elif defined(__APPLE__)
 			aglMakeCurrent(AGL_NONE, NULL);
 #		else
-			glXMakeCurrent(glXGetCurrentDisplay(), None, NULL);
+			//Note: glX may not even be available. Also glXGetCurrentDisplay() may fail
+			// Hopefully this will not matter!
+			//glXMakeCurrent(glXGetCurrentDisplay(), None, NULL);
 #		endif
 
 			// If no current context, don't map function bindings either.
@@ -698,6 +674,24 @@ void CL_GL1::set_active(const CL_GL1GraphicContextProvider * const gc_provider)
 	}
 }
 
+void CL_GL1::remove_active(const CL_GL1GraphicContextProvider * const gc_provider)
+{
+	CL_MutexSection mutex_lock(&cl_gl1_function_map_mutex);
+	cl_gl1_function_map_type::iterator it;
+	it = cl_gl1_function_map.find(gc_provider);
+	if (it != cl_gl1_function_map.end())
+	{
+		CL_GL1Functions *functions = it->second;
+		cl_gl1_function_map.erase(it);
+		delete functions;
+
+		if (cl_gl1_active_opengl_gc == gc_provider)
+		{
+			cl_gl1_active_opengl_gc = NULL;
+		}
+	}
+}
+
 CL_GL1Functions *cl_gl1_setup_binds()
 {
 	CL_GL1Functions *functions = new CL_GL1Functions;
@@ -705,7 +699,9 @@ CL_GL1Functions *cl_gl1_setup_binds()
 
 	// Binds for OpenGL 1.1:
 
-#ifdef GL_VERSION_1_1
+//#ifdef GL_VERSION_1_1
+#ifdef WIN32	// Only win32 static links opengl
+
 	functions->accum = (CL_GL1Functions::ptr_glAccum) &glAccum;
 	functions->alphaFunc = (CL_GL1Functions::ptr_glAlphaFunc) &glAlphaFunc;
 	functions->areTexturesResident = (CL_GL1Functions::ptr_glAreTexturesResident) &glAreTexturesResident;

@@ -48,7 +48,7 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 
-#include <X11/extensions/XInput.h>
+//#include <X11/extensions/XInput.h>
 #include <sys/time.h>
 
 class CL_InputDeviceProvider_X11Keyboard;
@@ -189,6 +189,12 @@ public:
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 
 	CL_Point get_mouse_position() const;
+
+	// The library will be opened / closed by this class
+	// Returns 0 if the library could not be found
+	// Currently, only supports a single library
+	void *dlopen(const char *filename, int flag); 
+
 /// \}
 /// \name Implementation
 /// \{
@@ -263,6 +269,8 @@ private:
 	static bool frame_size_set;
 	bool window_has_caption;
 	bool resize_enabled;
+
+	void *dlopen_lib_handle;
 
 	CL_Clipboard_X11 clipboard;
 

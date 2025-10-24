@@ -45,7 +45,7 @@ class CL_GL1GraphicContextProvider;
 class CL_RenderWindowProvider_WGL : public CL_RenderWindowProvider
 {
 public:
-	CL_RenderWindowProvider_WGL(CL_GL1WindowProvider_WGL & window, HGLRC wgl_context = NULL);
+	CL_RenderWindowProvider_WGL(CL_GL1WindowProvider_WGL & window, HGLRC wgl_context, bool own_context);
 	virtual ~CL_RenderWindowProvider_WGL();
 	virtual int get_viewport_width() const;
 	virtual int get_viewport_height() const;
@@ -58,6 +58,7 @@ public:
 private:
 	CL_GL1WindowProvider_WGL & window;
 	HGLRC wgl_context;
+	bool own_context;
 
 	friend class CL_GL1WindowProvider_WGL;
 };

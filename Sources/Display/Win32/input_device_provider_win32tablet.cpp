@@ -100,18 +100,20 @@ bool CL_InputDeviceProvider_Win32Tablet::get_keycode(int keycode) const
 
 CL_String CL_InputDeviceProvider_Win32Tablet::get_key_name(int id) const
 {
-	//TODO: Fixme
 	return CL_String();
 }
 
 float CL_InputDeviceProvider_Win32Tablet::get_axis(int index) const
 {
+	if (!init_successfull)
+		return 0.0f;
+
 	if (index >= 0 && index < get_axis_count())
 	{
 		return float(axis[index].pos)/(axis[index].max_value - axis[index].min_value);
 	}
 
-	return 0.0;
+	return 0.0f;
 }
 
 CL_String CL_InputDeviceProvider_Win32Tablet::get_name() const
@@ -139,15 +141,22 @@ bool CL_InputDeviceProvider_Win32Tablet::device_present() const
 	return init_successfull;
 }
 
+bool CL_InputDeviceProvider_Win32Tablet::is_context_on_top()
+{
+	LOGCONTEXT context;
+	WTGet(htab, &context);
+
+	return context.lcStatus & CXS_ONTOP;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_Win32Tablet Operations:
 
 void CL_InputDeviceProvider_Win32Tablet::set_position(int x, int y)
 {
-	//TODO: Fixme
 }
 
-void CL_InputDeviceProvider_Win32Tablet::set_enabled(bool enable)
+void CL_InputDeviceProvider_Win32Tablet::set_context_on_top(bool enable)
 {
 	if (enable == true)
 	{
@@ -246,6 +255,8 @@ bool CL_InputDeviceProvider_Win32Tablet::init_tablet()
 
 	init_axis();
 
+	WTOverlap(htab, TRUE); // raise to top of context overlap stack.
+
 	// get button count of cursor
 	WTInfo(WTI_CURSORS, CSR_BUTTONS, &button_count );
 
@@ -285,63 +296,64 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		return FALSE;
 	}
 
-
 	PACKET pkt;
-	WTPacket((HCTX)wParam, lParam, &pkt);
 
-	if (pkt.pkContext != htab)
+	if (WTPacket((HCTX)wParam, lParam, &pkt))
 	{
-		return FALSE;
-	}
+		if (pkt.pkContext == htab)
+		{
+			old_axis = axis;
 
-	old_axis = axis;
+			axis[0].pos = pkt.pkX; // x-axis
+			axis[1].pos = pkt.pkY; // y-axis
+			axis[2].pos = pkt.pkNormalPressure;	// pressure
 
-	axis[0].pos = pkt.pkX; // x-axis
-	axis[1].pos = pkt.pkY; // y-axis
-	axis[2].pos = pkt.pkNormalPressure;	// pressure
+			if (HIWORD(pkt.pkButtons) == TBN_DOWN)
+			{
+				SetActiveWindow(window->get_hwnd());
 
-	if (HIWORD(pkt.pkButtons) == TBN_DOWN)
-	{
-		int keycode = LOWORD(pkt.pkButtons);
-		key_states[keycode] = true;
-		CL_InputEvent e;
+				int keycode = LOWORD(pkt.pkButtons);
+				key_states[keycode] = true;
+				CL_InputEvent e;
 
-		e.id           = keycode + CL_KEY_TABLET1;
-		e.type         = CL_InputEvent::pressed;
-		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
-		e.axis_pos     = 0;
-		e.repeat_count = 0;
-		window->set_modifier_keys(e);
-		sig_provider_event->invoke(e);
-		return TRUE;
-	}
-	else if (HIWORD(pkt.pkButtons) == TBN_UP)
-	{
-		int keycode = LOWORD(pkt.pkButtons);
-		key_states[keycode] = false;
-		CL_InputEvent e;
-		
-		e.id           = keycode + CL_KEY_TABLET1;
-		e.type         = CL_InputEvent::released;
-		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
-		e.axis_pos     = 0;
-		e.repeat_count = 0;
-		window->set_modifier_keys(e);
-		sig_provider_event->invoke(e);
-		return TRUE;
-	}
-	else
-	{
-		CL_InputEvent e;
-		
-		e.id           = CL_InputEvent::z_axis; // TODO: support tilt, rotation.
-		e.type         = CL_InputEvent::axis_moved; // x,y as pointer movements
-		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
-		e.axis_pos     = get_axis(2);
-		e.repeat_count = 0;
-		window->set_modifier_keys(e);
-		sig_provider_event->invoke(e);
-		return TRUE;
+				e.id           = keycode + CL_KEY_TABLET1;
+				e.type         = CL_InputEvent::pressed;
+				e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.axis_pos     = 0;
+				e.repeat_count = 0;
+				window->set_modifier_keys(e);
+				sig_provider_event->invoke(e);
+				return TRUE;
+			}
+			else if (HIWORD(pkt.pkButtons) == TBN_UP)
+			{
+				int keycode = LOWORD(pkt.pkButtons);
+				key_states[keycode] = false;
+				CL_InputEvent e;
+
+				e.id           = keycode + CL_KEY_TABLET1;
+				e.type         = CL_InputEvent::released;
+				e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.axis_pos     = 0;
+				e.repeat_count = 0;
+				window->set_modifier_keys(e);
+				sig_provider_event->invoke(e);
+				return TRUE;
+			}
+			else
+			{
+				CL_InputEvent e;
+
+				e.id           = CL_InputEvent::z_axis; // TODO: support tilt, rotation.
+				e.type         = CL_InputEvent::axis_moved; // x,y as pointer movements
+				e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
+				e.axis_pos     = get_axis(2);
+				e.repeat_count = 0;
+				window->set_modifier_keys(e);
+				sig_provider_event->invoke(e);
+				return TRUE;
+			}
+		}
 	}
 
 	return FALSE;

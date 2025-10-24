@@ -10,8 +10,6 @@ class GridComponent;
 class PropertyComponent;
 class TextureListWindow;
 
-enum EditorMode { edit_mode_position };
-
 class MainWindow : public CL_Window
 {
 public:
@@ -23,7 +21,6 @@ public:
 	Application *get_app() { return application; }
 	DialogDocument *get_document() { return document; }
 	Selection *get_selection() { return &selection; }
-	EditorMode get_editor_mode() { return editor_mode; }
 	GridComponent *get_grid_component() { return grid_component; }
 
 	int get_selected_tool() const { return selected_tool; }
@@ -47,7 +44,6 @@ private:
 	void on_resized();
 	void on_tool_selected(CL_ToolBarItem item);
 	void on_main_toolbar_clicked(CL_ToolBarItem item);
-	void on_mode_toolbar_clicked(CL_ToolBarItem item);
 	void on_menu_source_generator();
 	void on_grid_resized();
 	void on_process_messages(CL_GUIMessage &msg);
@@ -65,6 +61,5 @@ private:
 	ViewBorder *view_border;
 	GridComponent *grid_component;
 	PropertyComponent *property_component;
-	EditorMode editor_mode;
 	int selected_tool;
 };

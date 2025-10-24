@@ -1,0 +1,1727 @@
+
+checkbox
+{
+	text-gap:3;
+	padding-top:1;
+	padding-bottom:4;
+	text-color:black;
+}
+
+checkbox:disabled
+{
+	text-color:darkgray;
+}
+
+checkbox focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+
+checkbox checker
+{
+	bg-image-sizing:center;
+	preferred-width:13;
+	preferred-height:13;
+}
+
+checkbox checker:checked:normal
+{
+	bg-image:CheckBoxCheckedNormal; 
+}
+
+checkbox checker:checked:hot
+{
+	bg-image:CheckBoxCheckedHot; 
+}
+
+checkbox checker:checked:pressed
+{
+	bg-image:CheckBoxCheckedPressed; 
+}
+
+checkbox checker:checked:disabled
+{
+	bg-image:CheckBoxCheckedDisabled; 
+}
+
+checkbox checker:unchecked:normal
+{
+	bg-image:CheckBoxUncheckedNormal; 
+}
+
+checkbox checker:unchecked:pressed
+{
+	bg-image:CheckBoxUncheckedPressed;
+}
+
+checkbox checker:unchecked:disabled
+{
+	bg-image:CheckBoxUncheckedDisabled; 
+}
+
+checkbox checker:unchecked:hot
+{
+	bg-image:CheckBoxUncheckedHot; 
+}
+
+checkbox checker:indeterminated:normal
+{
+	bg-image:CheckBoxIndeterminatedNormal; 
+}
+
+checkbox checker:indeterminated:pressed
+{
+	bg-image:CheckBoxIndeterminatedPressed;
+}
+
+checkbox checker:indeterminated:disabled
+{
+	bg-image:CheckBoxIndeterminatedDisabled; 
+}
+
+checkbox checker:indeterminated:hot
+{
+	bg-image:CheckBoxIndeterminatedHot; 
+}
+
+combobox lineedit
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+	
+	text-color:black;
+	text-color-selected:white;
+}
+
+combobox opener
+{
+	preferred-width:17;
+	preferred-height:21;
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
+}
+
+combobox opener:normal
+{
+	bg-image:ComboBoxDropDownButtonNormal; 
+}
+
+combobox opener:hot
+{
+	bg-image:ComboBoxDropDownButtonHot; 
+}
+
+combobox opener:pressed
+{
+	bg-image:ComboBoxDropDownButtonPressed; 
+}
+
+combobox opener:disabled
+{
+	bg-image:ComboBoxDropDownButtonDisabled; 
+}
+
+combobox opener_glyph
+{
+	bg-image-sizing:center; 
+	align:center;
+	vertical-align:center;
+}
+
+combobox opener_glyph:normal
+{
+	bg-image:ComboBoxDropDownButtonGlyphNormal; 
+}
+
+combobox opener_glyph:hot
+{
+	bg-image:ComboBoxDropDownButtonGlyphHot; 
+}
+
+combobox opener_glyph:pressed
+{
+	bg-image:ComboBoxDropDownButtonGlyphPressed; 
+}
+
+combobox opener_glyph:disabled
+{
+	bg-image:ComboBoxDropDownButtonGlyphDisabled;
+}
+frame
+{
+	preferred-width:100;
+	preferred-height:100;
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+
+	text-color:blue;
+}
+
+frame header
+{
+	preferred-height:16;
+	
+	bg-image:; 
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+}
+
+frame headerleft
+{
+	preferred-width:10;
+	preferred-height:16;
+	
+	bg-image:;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+}
+
+frame headerright
+{
+	bg-image:;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+}
+
+frame headercaption
+{
+	bg-image:;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+	
+	border-left:4;
+	border-right:4;
+}
+
+frame body
+{
+	bg-image:; 
+	
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+}
+groupbox
+{
+	preferred-width:100;
+	preferred-height:100;
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:GroupBox;
+}
+
+image
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	bg-image:;
+
+	border-top:3;
+	border-bottom:3;
+	border-left:3;
+	border-right:3;
+}
+
+
+lineedit
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+
+	text-color:black;
+}
+
+lineedit:normal
+{
+	bg-image:LineEditNormal; 
+}
+
+lineedit:hot
+{
+	bg-image:LineEditHot;
+}
+
+lineedit:disabled
+{
+	bg-image:LineEditDisabled; 
+	text-color:gray;
+}
+
+lineedit cursor
+{
+	preferred-width:1;
+
+	bg-color: black;
+
+	blink-time-on:1000;
+	blink-time-off:1000;
+	bg-image
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit cursor:blink_on
+{
+	bg-color: black;
+}
+
+lineedit cursor:blink_off
+{
+	bg-color: white;
+}
+
+lineedit selection
+{
+    text-color: white;
+	expand-top:-2;
+	expand-bottom:-1;
+	bg-image:;
+	bg-color: #316ac5;
+
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit selection:disabled
+{
+	bg-image:;
+	bg-color: #7a96df;
+}
+
+lineedit selection:unfocused
+{
+	bg-image:;
+	bg-color: #7a96df;
+}
+
+listview 
+{
+	bg-image:; 
+
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+}
+
+listview row:details
+{
+	bg-image 
+	indent-width:20;
+	bg-color:#eeeeee;
+
+	border-top:0;
+	border-bottom:0;
+}
+
+listview row:alternate
+{
+	bg-image 
+	indent-width:20;
+	bg-color:#e2e2e2;
+
+	border-top:0;
+	border-bottom:0;
+}
+
+listview column
+{
+	bg-image 
+	bg-color:#f2f2f2;
+}
+
+listview row_opener:open
+{
+	bg-image:;
+	preferred-height:9;
+	preferred-width:9;
+	offset-y:-2;
+}
+
+listview row_opener:closed
+{
+	bg-image:;
+	preferred-height:9;
+	preferred-width:9;
+	offset-y:-2;
+}
+
+listview selection
+{
+	selection-margin-left:3;
+	selection-margin-right:4;
+	selection-margin-top:1;
+	selection-margin-bottom:2;
+
+	bg-color:#316ac5;
+	text-color:#f2e3f2;
+}
+
+listview selection:unfocused
+{
+	bg-color:#ece9d8;
+	text-color:black;
+}
+
+listview selection:normal
+{
+    text-decoration:none;
+}
+
+listview selection:hot
+{
+    text-decoration:underline;
+}
+
+listview icon_selection:normal
+{
+	bg-image:;
+
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+
+	border-top:-3;
+	border-left:-3;
+	border-right:-3;
+	border-bottom:-3;
+}
+
+
+listview columns_bg
+{
+	bg-image
+	bg-color:white;
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+listview row:icons
+{
+	bg-image
+	bg-color:#eeeeee;
+}
+
+listview cell:details:hot
+{
+	text-color:blue;
+	text-decoration:underline;
+}
+
+listview cell:details:normal
+{
+	bg-image 
+	bg-color:;
+
+	text-color:black;
+    
+	preferred-width:100;
+	preferred-height:17;
+
+	icon-width: 16;
+	icon-height: 16;
+
+	opener-icon-gap:6;
+	icon-text-gap:5;
+	icon-offset-y:0;
+
+	padding-top:2;
+	padding-left:4;
+	padding-right:0;
+	padding-bottom:0;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:2;
+	line-edit-offset-bottom:2;
+	line-edit-offset-right:14;
+}
+
+listview cell:icons:normal
+{
+   	bg-image 
+	bg-color:;
+
+	preferred-width:70;
+	preferred-height:66;
+
+	icon-width: 32;
+	icon-height: 32;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:0;
+	line-edit-offset-bottom:5;
+	line-edit-offset-right:14;
+}
+
+listview cell:thumbnails:normal
+{
+	preferred-width:125;
+	preferred-height:119;
+
+	icon-width: 96;
+	icon-height: 96;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:3;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:0;
+	line-edit-offset-bottom:5;
+	line-edit-offset-right:14;
+}
+
+
+
+listview_header
+{
+	bg-image:;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	
+	preferred-height: 20;
+}
+
+listview_header columnheader:normal
+{
+	bg-image:ListViewColumnHeaderNormal;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+	
+	border-top:3;
+	border-left:7;
+	border-right:3;
+	border-bottom:3;
+}
+
+listview_header columnheader:hot
+{
+	bg-image:ListViewColumnHeaderHot;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+
+	border-top:3;
+	border-left:7;
+	border-right:3;
+	border-bottom:3;
+}
+
+listview_header columnheader:pressed
+{
+	bg-image:ListViewColumnHeaderPressed;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+	
+	border-top:3;
+	border-left:8;
+	border-right:3;
+	border-bottom:3;
+}
+
+menubar
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:15;
+	bg-image-sizing:stretch;
+	bg-image:MenuBarBackgroundActive; 
+
+	preferred-width:100;
+	preferred-height:24;
+
+	text-color:black;
+}
+
+menubar item
+{
+    padding-left:8;
+    padding-right:8;
+	align:center;
+	vertical-align:center;
+}
+
+menubar item:disabled
+{
+	text-color:darkgray;
+}
+
+menubar item:selected
+{
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:MenuBarItemSelected;
+}
+
+menubar item:hot
+{
+	/*margin-top:3;*/
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:MenuBarItemSelected;
+}
+
+popupmenu
+{
+	bg-image-sizing-left:32;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenu;
+	padding-top:2;
+	padding-bottom:2;
+	icon-column-width:30;
+}
+
+popupmenu row
+{
+	preferred-width:140;
+	preferred-height:20;
+	padding-left:2;
+	bg-image:;
+}
+
+popupmenu icon
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:;
+}
+
+popupmenu check
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuChecked;
+}
+
+popupmenu check:disabled
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuCheckedDisabled;
+}
+
+popupmenu label
+{
+	preferred-width:70;
+	preferred-height:20;
+	padding-left:2;
+	bg-image:;
+}
+
+popupmenu label:selected
+{
+}
+
+popupmenu label:disabled
+{
+	text-color:darkgray;
+}
+
+popupmenu accel_label
+{
+	padding-left:20;
+	bg-image:;
+}
+
+popupmenu accel_label:disabled
+{
+	padding-left:20;
+	bg-image:;
+	text-color:darkgray;
+}
+
+popupmenu row:selected
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenuSelected;
+}
+
+popupmenu separator
+{
+	preferred-height:2;
+	padding-left:32;
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:1;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenuSeparator;
+}
+
+popupmenu submenu_arrow
+{
+	preferred-width:24;
+	preferred-height:8;
+	bg-image-sizing:center; 
+	bg-image:PopupMenuSubmenuArrow;
+}
+
+popupmenu joiner
+{
+    no-draw:true;
+}
+progress 
+{
+	bg-image:;
+	bg-color: #22dd22;
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+	preferred-width:17;
+}
+
+
+button
+{
+	bg-image-sizing-left:6;
+	bg-image-sizing-right:6;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	text-color:black;
+	align:center;
+	vertical-align:center;
+}
+
+button:normal
+{
+	bg-image:ButtonNormal; 
+}
+
+button:defaulted
+{
+	bg-image:ButtonDefaulted; 
+}
+
+button:hot
+{
+	bg-image:ButtonHot; 
+}
+
+button:pressed
+{
+	bg-image:ButtonPressed; 
+}
+
+button:disabled
+{
+	bg-image:ButtonDisabled; 
+	text-color:darkgray;
+}
+
+button focus
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:8;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:repeat;
+	bg-image:ButtonFocus; 
+}
+radiobutton
+{
+	text-color:black;
+	text-gap:3;
+}
+
+radiobutton:disabled
+{
+	text-color:darkgray;
+}
+
+radiobutton checker
+{
+	bg-image-sizing:center;
+	preferred-width:13;
+	preferred-height:13;
+}
+
+radiobutton checker:checked:normal
+{
+	bg-image:RadioButtonCheckedNormal; 
+}
+
+radiobutton checker:checked:hot
+{
+	bg-image:RadioButtonCheckedHot; 
+}
+
+radiobutton checker:checked:pressed
+{
+	bg-image:RadioButtonCheckedPressed; 
+}
+
+radiobutton checker:checked:disabled
+{
+	bg-image:RadioButtonCheckedDisabled; 
+}
+
+radiobutton checker:unchecked:normal
+{
+	bg-image:RadioButtonUncheckedNormal; 
+}
+
+radiobutton checker:unchecked:hot
+{
+	bg-image:RadioButtonUncheckedHot; 
+}
+
+radiobutton checker:unchecked:pressed
+{
+	bg-image:RadioButtonUncheckedPressed; 
+}
+
+radiobutton checker:unchecked:disabled
+{
+	bg-image:RadioButtonUncheckedDisabled; 
+}
+
+radiobutton focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:; 
+} 
+
+scrollbar 
+{
+	no-draw:true;
+	preferred-height:17;
+}
+
+scrollbar scrolltrack.left
+{
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.left:normal
+{
+	bg-image:ScrollbarHoriTrackNormal; 
+}
+
+scrollbar scrolltrack.left:hot
+{
+	bg-image:ScrollbarHoriTrackHot; 
+}
+
+scrollbar scrolltrack.left:pressed
+{  
+	bg-image:ScrollbarHoriTrackPressed; 
+}
+
+scrollbar scrolltrack.left:disabled
+{
+	bg-image:ScrollbarHoriTrackDisabled; 
+}
+
+scrollbar scrolltrack.right
+{
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.right:normal
+{
+	bg-image:ScrollbarHoriTrackNormal; 
+}
+
+scrollbar scrolltrack.right:hot
+{
+	bg-image:ScrollbarHoriTrackHot; 
+}
+
+scrollbar scrolltrack.right:pressed
+{
+	bg-image:ScrollbarHoriTrackPressed; 
+}
+
+scrollbar scrolltrack.right:disabled
+{
+	bg-image:ScrollbarHoriTrackDisabled; 
+}
+
+
+scrollbar scrollthumb.horizontal
+{
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrollthumb.horizontal:normal
+{
+	bg-image:ScrollbarHoriThumbNormal; 
+}
+
+scrollbar scrollthumb.horizontal:hot
+{
+	bg-image:ScrollbarHoriThumbHot; 
+}
+
+scrollbar scrollthumb.horizontal:pressed
+{
+	bg-image:ScrollbarHoriThumbPressed; 
+}
+
+scrollbar scrollthumb.horizontal:disabled
+{
+	bg-image:ScrollbarHoriThumbDisabled; 
+}
+
+
+scrollbar scrollthumbgripper.horizontal
+{
+	bg-image-sizing:center; 
+}
+
+scrollbar scrollthumbgripper.horizontal:normal
+{
+	bg-image:ScrollbarHoriThumbGripperNormal; 
+}
+
+scrollbar scrollthumbgripper.horizontal:hot
+{
+	bg-image:ScrollbarHoriThumbGripperHot; 
+}
+
+scrollbar scrollthumbgripper.horizontal:pressed
+{
+	bg-image:ScrollbarHoriThumbGripperPressed; 
+}
+
+scrollbar scrollthumbgripper.horizontal:disabled
+{
+	bg-image:ScrollbarHoriThumbGripperDisabled; 
+}
+
+
+scrollbar scrollbutton.left
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing:tile;
+}
+
+scrollbar scrollbutton.left:normal
+{
+	bg-image:ScrollbarHoriButtonLeftNormal;
+}
+
+scrollbar scrollbutton.left:hot
+{
+	bg-image:ScrollbarHoriButtonLeftHot; 
+}
+
+scrollbar scrollbutton.left:pressed
+{
+	bg-image:ScrollbarHoriButtonLeftPressed; 
+}
+
+scrollbar scrollbutton.left:disabled
+{
+	bg-image:ScrollbarHoriButtonLeftDisabled; 
+}
+
+
+scrollbar scrollbutton.right
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing:tile;
+}
+
+scrollbar scrollbutton.right:normal
+{
+	bg-image:ScrollbarHoriButtonRightNormal; 
+}
+
+scrollbar scrollbutton.right:hot
+{
+	bg-image:ScrollbarHoriButtonRightHot; 
+}
+
+scrollbar scrollbutton.right:pressed
+{
+	bg-image:ScrollbarHoriButtonRightPressed; 
+}
+
+scrollbar scrollbutton.right:disabled
+{
+	bg-image:ScrollbarHoriButtonRightDisabled; 
+}
+
+scrollbar 
+{
+	no-draw:true;
+	preferred-width:17;
+}
+
+scrollbar scrolltrack.up
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+
+}
+
+scrollbar scrolltrack.up:normal
+{
+	bg-image:ScrollbarVertTrackNormal; 
+}
+
+scrollbar scrolltrack.up:hot
+{
+	bg-image:ScrollbarVertTrackHot; 
+}
+
+scrollbar scrolltrack.up:pressed
+{
+	bg-image:ScrollbarVertTrackPressed; 
+}
+
+scrollbar scrolltrack.up:disabled
+{
+	bg-image:ScrollbarVertTrackDisabled; 
+}
+
+scrollbar scrolltrack.down
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.down:normal
+{
+	bg-image:ScrollbarVertTrackNormal; 
+}
+
+scrollbar scrolltrack.down:hot
+{
+	bg-image:ScrollbarVertTrackHot; 
+}
+
+scrollbar scrolltrack.down:pressed
+{
+	bg-image:ScrollbarVertTrackPressed; 
+}
+
+scrollbar scrolltrack.down:disabled
+{
+	bg-image:ScrollbarVertTrackDisabled; 
+}
+
+scrollbar scrollthumb.vertical
+{
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch;
+}
+
+scrollbar scrollthumb.vertical:normal
+{
+	bg-image:ScrollbarVertThumbNormal; 
+}
+
+scrollbar scrollthumb.vertical:hot
+{
+	bg-image:ScrollbarVertThumbHot; 
+}
+
+scrollbar scrollthumb.vertical:pressed
+{
+	bg-image:ScrollbarVertThumbPressed; 
+}
+
+scrollbar scrollthumb.vertical:disabled
+{
+	bg-image:ScrollbarVertThumbDisabled; 
+}
+
+scrollbar scrollthumbgripper.vertical
+{
+	bg-image-sizing:center; 
+}
+
+scrollbar scrollthumbgripper.vertical:normal
+{
+	bg-image:ScrollbarVertThumbGripperNormal; 
+}
+
+scrollbar scrollthumbgripper.vertical:hot
+{
+	bg-image:ScrollbarVertThumbGripperHot; 
+}
+
+scrollbar scrollthumbgripper.vertical:pressed
+{
+	bg-image:ScrollbarVertThumbGripperPressed; 
+}
+
+scrollbar scrollthumbgripper.vertical:disabled
+{
+	bg-image:ScrollbarVertThumbGripperDisabled;
+}
+
+scrollbar scrollbutton.up
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing:tile;
+}
+
+scrollbar scrollbutton.up:normal
+{
+	bg-image:ScrollbarVertButtonUpNormal;
+}
+
+scrollbar scrollbutton.up:hot
+{
+	bg-image:ScrollbarVertButtonUpHot; 
+}
+
+scrollbar scrollbutton.up:pressed
+{
+	bg-image:ScrollbarVertButtonUpPressed; 
+}
+
+scrollbar scrollbutton.up:disabled
+{
+	bg-image:ScrollbarVertButtonUpDisabled; 
+}
+
+scrollbar scrollbutton.down
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing:tile;
+}
+
+
+scrollbar scrollbutton.down:normal
+{
+	bg-image:ScrollbarVertButtonDownNormal; 
+}
+
+scrollbar scrollbutton.down:hot
+{
+	bg-image:ScrollbarVertButtonDownHot; 
+}
+
+scrollbar scrollbutton.down:pressed
+{
+	bg-image:ScrollbarVertButtonDownPressed; 
+}
+
+scrollbar scrollbutton.down:disabled
+{
+	bg-image:ScrollbarVertButtonDownDisabled; 
+}
+
+
+
+slider
+{
+	text-color:black;
+	preferred-height:22;
+	preferred-width:22;
+}
+
+slider:disabled
+{
+	text-color:darkgray;
+}
+
+slider focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+
+
+slider slidertrack.horizontal
+{
+	preferred-height:4;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:1;
+	bg-image-sizing:stretch; 
+	bg-image:SliderTrack;
+}
+
+slider sliderthumb.horizontal
+{
+	preferred-width:11;
+	preferred-height:17;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+}
+
+slider sliderthumb.horizontal:normal
+{
+	bg-image:SliderHorizontalThumbNormal; 
+}
+
+slider sliderthumb.horizontal:hot
+{
+	bg-image:SliderHorizontalThumbHot;
+}
+
+slider sliderthumb.horizontal:disabled
+{
+	bg-image:SliderHorizontalThumbDisabled;
+}
+
+slider slidertrack.vertical
+{
+	preferred-width:4;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:2; 
+	bg-image-sizing:stretch; 
+	bg-image:SliderTrack;
+}
+
+slider sliderthumb.vertical
+{
+	preferred-width:17;
+	preferred-height:11;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+}
+
+slider sliderthumb.vertical:normal
+{
+	bg-image:SliderVerticalThumbNormal; 
+}
+
+slider sliderthumb.vertical:hot
+{
+	bg-image:SliderVerticalThumbHot;
+}
+
+slider sliderthumb.vertical:disabled
+{
+	bg-image:SliderVerticalThumbDisabled;
+}
+
+
+spin 
+{
+	bg-image:;
+	preferred-width:42;
+	preferred-height:21;
+
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 	
+
+	text-color:black;
+}
+
+spin:disabled
+{
+	text-color:darkgray;
+}
+
+spin button_up
+{
+	preferred-width:16;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 	
+}
+
+spin button_up:normal
+{
+	bg-image:SpinButtonUpNormal;
+}
+
+spin button_up:hot
+{
+	bg-image:SpinButtonUpHot;
+}
+
+spin button_up:pressed
+{
+	bg-image:SpinButtonUpPressed;
+}
+
+spin button_up:disabled
+{
+	bg-image:SpinButtonUpDisabled;
+}
+
+spin arrow_up:normal
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowUpNormal;
+}
+
+spin arrow_up:hot
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowUpNormal;
+}
+
+spin arrow_up:pressed
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowUpNormal;
+}
+
+spin arrow_up:disabled
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowUpDisabled;
+}
+
+spin button_down
+{
+	preferred-width:16;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 	
+}
+
+spin button_down:normal
+{
+	bg-image:SpinButtonDownNormal;
+}
+
+spin button_down:hot
+{
+	bg-image:SpinButtonDownHot;
+}
+
+spin button_down:pressed
+{
+	bg-image:SpinButtonDownPressed;
+}
+
+spin button_down:disabled
+{
+	bg-image:SpinButtonDownDisabled;
+}
+
+spin arrow_down:normal
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowDownNormal;
+}
+
+spin arrow_down:hot
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowDownNormal;
+}
+
+spin arrow_down:pressed
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowDownNormal;
+}
+
+spin arrow_down:disabled
+{
+	bg-image-sizing:center; 
+	bg-image:SpinArrowDownDisabled;
+}
+
+
+statusbar
+{
+	preferred-width:100;
+	preferred-height:23;
+
+	bg-image:; 
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+
+	text-color:black;
+}
+
+
+tab 
+{
+	bg-image: TabBorder;	
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:3;
+
+	border-left:8;
+	border-right:8;
+	border-top:8;
+	border-bottom:8;
+}
+
+tabheader
+{
+	bg-image: TabHeaderBorder;	
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	first-tab-x-offset: 0;
+	preferred-height:20;
+}
+
+tabheader focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+}
+
+tabheader page
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:1;
+	padding-left:5;
+	padding-right:5;
+	align:center;
+	
+	preferred-width:45;
+	preferred-height:20;
+}
+
+tabheader page:normal
+{
+	bg-image: TabHeaderPageNormal;
+}
+
+tabheader page:hot
+{
+	bg-image: TabHeaderPageHot;
+}
+
+tabheader page:selected
+{
+	bg-image: TabHeaderPageSelected;
+}
+
+
+toolbar
+{
+	bg-color:transparent;
+	text-color:black;
+}
+
+toolbar.disabled
+{
+	text-color:darkgray;
+}
+
+toolbar.vertical
+{
+	padding-top:3;
+	padding-bottom:3;
+	layout:center;
+}
+
+toolbar.vertical item
+{
+	preferred-width:40;
+	preferred-height:34;
+	icon-width:32;
+	icon-height:32;
+	text-gap:3;
+	padding-right:4;
+	padding-top:1;
+	padding-bottom:1;
+}
+
+toolbar.horizontal
+{
+	layout:left;
+	padding-left:3;
+}
+
+toolbar.horizontal item
+{
+	preferred-height:34;
+	padding-right:5;
+	padding-left:5;
+	padding-top:1;
+	padding-bottom:1;
+	text-gap:3;
+	icon-width:16;
+	icon-height:16;
+}
+
+toolbar item
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	text-color:black;
+}
+
+toolbar item:normal
+{
+	bg-image:ToolBarButtonNormal; 
+}
+
+toolbar item:hot
+{
+	bg-image:ToolBarButtonHot; 
+}
+
+toolbar item:pressed
+{
+	bg-image:ToolBarButtonPressed; 
+}
+
+toolbar item:on
+{
+	bg-image:ToolBarButtonPressed; 
+}
+
+toolbar item:disabled
+{
+	bg-image:ToolBarButtonNormal;
+	text-color:darkgray;
+}
+
+
+tooltip
+{
+	bg-image: Tooltip;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	border-left: 5;
+	border-top: 7;
+	border-right: 5;
+	border-bottom: 6;
+}
+
+window
+{
+	bg-color: #d0d0d0;
+	bg-image:WindowBackdrop;
+	bg-image-sizing:repear;
+ }
+
+window caption
+{
+	bg-image:WindowActive;
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-height:22;
+}
+
+window frameleft
+{
+	bg-image:WindowFrameLeftActive;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:5;
+}
+
+window frameright
+{
+	bg-image:WindowFrameRightActive;
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:5;
+}
+
+window framebottom
+{
+	bg-image:WindowFrameBottomActive;
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+	preferred-height:5;
+}
+
+
+window buttonclose
+{
+	preferred-width:25;
+	preferred-height:15;
+	bg-image-sizing:center; 
+}
+
+window buttonclose:normal
+{
+	bg-image:WindowCloseButtonActiveNormal; 
+}
+
+window buttonclose:hot
+{
+	bg-image:WindowCloseButtonActiveHot; 
+}
+
+window buttonclose:pressed
+{
+	bg-image:WindowCloseButtonActivePressed; 
+}
+
+window buttonclose:disabled
+{
+	bg-image:WindowCloseButtonActiveDisabled; 
+}
+

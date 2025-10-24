@@ -52,10 +52,12 @@
 #include <cstdio>
 #include "../Window/input_context_impl.h"
 
+#include <dlfcn.h>
+
 CL_X11Window::CL_X11Window()
 : window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
-  site(0), clipboard(this)
+  site(0), clipboard(this), dlopen_lib_handle(NULL)
 {
 	keyboard = CL_InputDevice(new CL_InputDeviceProvider_X11Keyboard(this));
 	mouse = CL_InputDevice(new CL_InputDeviceProvider_X11Mouse(this));
@@ -84,7 +86,23 @@ CL_X11Window::~CL_X11Window()
 		XCloseDisplay(disp);
 		disp = 0;
 	}
+
+	// This MUST be called after XCloseDisplay - It is used for http://www.xfree86.org/4.8.0/DRI11.html
+	if (dlopen_lib_handle)
+	{
+		dlclose(dlopen_lib_handle);
+	}
+
 }
+
+void *CL_X11Window::dlopen(const char *filename, int flag)
+{
+	if (dlopen_lib_handle)
+		throw CL_Exception(cl_text("CL_X11Window::dlopen called twice - This is currently not supported, and is probably a bug!"));
+	dlopen_lib_handle = ::dlopen(filename, flag);
+	return dlopen_lib_handle;
+}
+
 
 CL_Rect CL_X11Window::get_geometry() const
 {

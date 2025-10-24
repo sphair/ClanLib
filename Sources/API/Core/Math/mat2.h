@@ -257,6 +257,6 @@ private:
 
 typedef CL_Mat2<int> CL_Mat2i;
 typedef CL_Mat2<float> CL_Mat2f;
-typedef CL_Mat2<float> CL_Mat2d;
+typedef CL_Mat2<double> CL_Mat2d;
 
 /// \}

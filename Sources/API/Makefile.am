@@ -223,6 +223,7 @@ clanCore_includes = \
 	Core/Math/pointset_math.h \
 	Core/Math/quad.h \
 	Core/Math/rect.h \
+	Core/Math/rect_packer.h \
 	Core/Math/hash_functions.h \
 	Core/Math/size.h \
 	Core/Math/sha1.h \
@@ -342,6 +343,10 @@ clanDisplay_includes = \
 	Display/2D/sprite_description.h \
 	Display/2D/subtexture.h \
 	Display/2D/color.h \
+	Display/2D/color_hsv.h \
+	Display/2D/color_hsl.h \
+	Display/2D/color_hsv2.h \
+	Display/2D/color_hsl2.h \
 	Display/2D/span_layout.h \
 	Display/Collision/outline_accuracy.h \
 	Display/Collision/outline_provider_bitmap.h \

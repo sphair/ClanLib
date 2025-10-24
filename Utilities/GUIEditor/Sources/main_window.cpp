@@ -257,23 +257,6 @@ void MainWindow::on_menu_source_generator()
 	int retval = srcgen.exec();
 }
 
-void MainWindow::on_mode_toolbar_clicked( CL_ToolBarItem item )
-{
-	if (editor_mode == item.get_id())
-		return;
-
-	editor_mode = EditorMode(item.get_id());
-
-	switch (editor_mode)
-	{
-		case edit_mode_position:
-			property_component->set_visible(true);
-			break;
-		default:
-			break;
-	}
-}
-
 void MainWindow::load(const CL_StringRef &filename)
 {
 	create_new_document();

@@ -54,6 +54,8 @@ private:
 	CL_RadioButton *radiobutton_aero_packed;
 	CL_RadioButton *radiobutton_luna;
 	CL_RadioButton *radiobutton_luna_packed;
+	CL_RadioButton *radiobutton_basic;
+	CL_RadioButton *radiobutton_basic_packed;
 
 };
 

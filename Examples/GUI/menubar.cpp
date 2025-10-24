@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 MenuBar::MenuBar(GUI *gui) :
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Menu Bar & Status Bar", CL_Rect(512 + 32, 256 + 32, CL_Size(256, 180)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Menu Bar & Status Bar", CL_Rect(512 + 24, 256 + 16, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	tux_image = CL_ImageProviderFactory::load("tux.png");

@@ -564,10 +564,6 @@ CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLeve
 	{
 		painting_set = true;
 		gc.set_frame_buffer(frame_buffer);
-
-		CL_BlendMode blendmode;
-		blendmode.enable_blending(true);
-		gc.set_blend_mode(blendmode);
 	}
 
 	gc.set_map_mode(cl_map_2d_upper_left);
@@ -578,10 +574,15 @@ CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLeve
 	clip_rect.translate(subtexture_geometry.left, subtexture_geometry.top);
 	clip_rect.overlap(subtexture_geometry);
 
+	CL_BlendMode blendmode;
+	blendmode.enable_blending(false);
+	gc.set_blend_mode(blendmode);
 	// TODO: CL_Draw::fill() is slightly slower than gc.clear() - but it works with a cliprect on the GDI target
 	CL_Draw::fill(gc, clip_rect, CL_Colorf::transparent);
 	gc.set_cliprect(clip_rect);
 	//gc.clear(CL_Colorf::transparent);
+	blendmode.enable_blending(true);
+	gc.set_blend_mode(blendmode);
 
 	// Translate model view matrix to the texture position
 	gc.push_modelview();

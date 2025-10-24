@@ -256,14 +256,30 @@ void CL_MenuModalLoop::on_keyboard_input(CL_InputEvent e)
 			popup_windows.pop_back();
 			delete window;
 			
-			window = popup_windows.back();
-			window->request_repaint();
+			if (popup_windows.empty())
+			{
+				menubar->impl->select_previous();
+				create_popup_window(menubar->impl->get_selected_menu(), menubar->impl->get_submenu_screen_pos());
+			}
+			else
+			{
+				window = popup_windows.back();
+				window->request_repaint();
+			}
 		}
 		else if (e.id == CL_KEY_RIGHT)
 		{
 			CL_PopupMenuItem pmi = window->get_selected_item();
-			if (pmi.has_submenu())
+			if (!pmi.is_null() && pmi.has_submenu())
+			{
 				create_popup_window(pmi.get_submenu(), window->get_submenu_screen_position());
+			}
+			else
+			{
+				close_all_popup_windows();
+				menubar->impl->select_next();
+				create_popup_window(menubar->impl->get_selected_menu(), menubar->impl->get_submenu_screen_pos());
+			}
 		}
 		else if (e.id == CL_KEY_DOWN)
 		{

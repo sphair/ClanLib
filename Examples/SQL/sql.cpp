@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	{
 		CL_SetupCore setup_core;
 
-		CL_String database = "Database\\clanlib.db";
+		CL_String database = CL_PathHelp::normalize("Database/clanlib.db");
 
 		CL_SqliteConnection connection(database);
 

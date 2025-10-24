@@ -9,7 +9,16 @@ public:
 		try
 		{
 			CL_ResourceManager local_resources("resources.xml");
-			CL_ResourceManager resources("../../Resources/GUIThemeAero/resources.xml");
+
+			CL_String resource_filename(cl_text("../../Resources/GUIThemeAero/resources.xml"));
+			CL_String theme_filename(cl_text("theme.css"));
+			if (!CL_FileHelp::file_exists(resource_filename))
+			{
+				resource_filename = cl_text("../../Resources/GUIThemeBasic/resources.xml");
+				theme_filename = cl_text("theme_basic.css");
+			}
+
+			CL_ResourceManager resources(resource_filename);
 			local_resources.add_resources(resources);
 
 			CL_GUIThemeDefault theme;
@@ -20,7 +29,7 @@ public:
 			CL_GUIManager gui;
 			gui.set_window_manager(wm);
 			gui.set_theme(theme);
-			gui.set_css_document("theme.css");
+			gui.set_css_document(theme_filename);
 
 			MainWindow mainwindow(&gui, &resources);
 			gui.exec();

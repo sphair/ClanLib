@@ -49,8 +49,6 @@
 class CL_GLFunctions
 {
 
-/// \}
-
 /// \name Typedefs
 /// \{
 
@@ -2437,8 +2435,9 @@ public:
 	/// \brief glGenerateMipmap (EXT_framebuffer_blit)
 	ptr_glBlitFramebufferEXT blitFramebuffer;
 
-};
 /// \}
+};
+
 
 #define clAccum CL_OpenGL::functions->accum
 #define clAlphaFunc CL_OpenGL::functions->alphaFunc

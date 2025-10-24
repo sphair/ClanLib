@@ -1,6 +1,20 @@
  
 @import "../../Resources/GUIThemeAero/theme.css";
 
+grid window-frame
+{
+	bg-image:WindowFrame; 
+	bg-image-sizing-left:9;
+	bg-image-sizing-right:9;
+	bg-image-sizing-top:30;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+	border-left:9;
+	border-right:9;
+	border-top:30;
+	border-bottom:9;
+}
+
 window#editor
 {
 	bg-image:MainMenuBg;

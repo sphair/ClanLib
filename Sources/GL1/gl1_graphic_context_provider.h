@@ -181,6 +181,9 @@ public:
 
 	void on_window_resized();
 
+	/// \brief Get OpenGL extension specific function address.
+	CL_GL1ProcAddress *get_proc_address(const CL_String8& function_name) const;
+
 	// GL1 Only
 	void push_texture_matrix(int unit_index);
 	void set_texture_matrix(int unit_index, const CL_Mat4f &matrix);

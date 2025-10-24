@@ -72,6 +72,7 @@ public:
 public:
 	/// \brief Render the column backgrounds and visible items.
 	void render(
+		CL_GraphicContext &gc,
 		std::vector<ListViewColumn> &columns,
 		std::vector<ListViewRow> &rows,
 		std::vector<ListViewShownItem> &items,
@@ -101,7 +102,6 @@ public:
 
 private:
 	CL_ListView *listview;
-	CL_GraphicContext gc;
 	CL_GUIThemePart part_cell;
 	CL_GUIThemePart part_row;
 	CL_GUIThemePart part_row_alternate;

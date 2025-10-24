@@ -806,7 +806,7 @@ CL_String CL_DateTime::to_string() const
 
 	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7"));
 	format.set_arg(1, days[get_day_of_week()]);
-	format.set_arg(2, months[get_month()]);
+	format.set_arg(2, months[get_month() - 1]);
 	format.set_arg(3, get_day());
 	format.set_arg(4, get_hour(), 2);
 	format.set_arg(5, get_minutes(), 2);

@@ -64,7 +64,15 @@ public:
 
 	/// \brief Constructs a quad.
 	///
-	/// \param rect Rectangle used to initialize the quad.
+	/// \param rect Rectangle used to initialize the quad. 
+	/// <p>The corners of the rect are mapped to the quad member variables as follows:
+	///   <ul>
+	///     <li>Top-left: p</li>
+	///     <li>Top-right: q</li>
+	///     <li>Bottom-right: r</li>
+	///     <li>Bottom-left: s</li>
+	///   </ul>
+	/// </p>
 	CL_Quadx(const CL_Rectx<Type> &rect)
 	{ p.x = rect.left; p.y = rect.top; q.x = rect.right; q.y = rect.top;
 		r.x = rect.right; r.y = rect.bottom; s.x = rect.left; s.y = rect.bottom;

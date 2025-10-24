@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 LineEdit::LineEdit(GUI *gui) :
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Line Edit", CL_Rect(512 + 32, 32, CL_Size(256, 256)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Line Edit", CL_Rect(512 + 24, 8, CL_Size(256, 256)), false)),
 	gui(gui)
 {
 	set_draggable(true);

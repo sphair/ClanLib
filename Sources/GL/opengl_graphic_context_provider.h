@@ -177,6 +177,9 @@ public:
 
 	void on_window_resized();
 
+	/// \brief Get OpenGL extension specific function address.
+	CL_ProcAddress *get_proc_address(const CL_String8& function_name) const ;
+
 /// \}
 /// \name Implementation
 /// \{

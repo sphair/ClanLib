@@ -49,13 +49,17 @@
 #include <commctrl.h>
 #include "pbuffer_impl.h"
 
-CL_RenderWindowProvider_WGL::CL_RenderWindowProvider_WGL(CL_GL1WindowProvider_WGL & window, HGLRC wgl_context)
-	: window(window), wgl_context(wgl_context)
+CL_RenderWindowProvider_WGL::CL_RenderWindowProvider_WGL(CL_GL1WindowProvider_WGL & window, HGLRC wgl_context, bool own_context)
+	: window(window), wgl_context(wgl_context), own_context(own_context)
 {
 }
 
 CL_RenderWindowProvider_WGL::~CL_RenderWindowProvider_WGL()
 {
+	if( wgl_context && own_context)
+	{
+		wglDeleteContext(wgl_context);
+	}
 }
 
 int CL_RenderWindowProvider_WGL::get_viewport_width() const
@@ -75,14 +79,14 @@ void CL_RenderWindowProvider_WGL::flip_buffers(int interval) const
 
 void CL_RenderWindowProvider_WGL::make_current() const
 {
-	wglMakeCurrent(window.get_device_context(), wgl_context ? wgl_context : window.get_opengl_context());
+	wglMakeCurrent(window.get_device_context(), wgl_context );
 }
 
 const CL_RenderWindowProvider * CL_RenderWindowProvider_WGL::new_worker_context() const
 {
 	HGLRC new_gl_context = wglCreateContext(window.get_device_context());
 	wglShareLists(window.get_opengl_context(), new_gl_context);
-	return new CL_RenderWindowProvider_WGL(window, new_gl_context);
+	return new CL_RenderWindowProvider_WGL(window, new_gl_context, true);
 }
 
 CL_GL1WindowProvider_WGL &CL_RenderWindowProvider_WGL::get_window()
@@ -261,7 +265,7 @@ void CL_GL1WindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const CL_D
 		if (!opengl_context)
 			opengl_context = helper.create_opengl2_context(share_context);
 
-		gc = CL_GraphicContext(new CL_GL1GraphicContextProvider(new CL_RenderWindowProvider_WGL(*this, opengl_context)));
+		gc = CL_GraphicContext(new CL_GL1GraphicContextProvider(new CL_RenderWindowProvider_WGL(*this, opengl_context, false)));
 		CL_SharedGCData::get_gc_providers().push_back(gc.get_provider());
 	}
 }

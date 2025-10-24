@@ -93,6 +93,14 @@ public:
 	static bool set_active();
 
 /// \}
+private:
+	/// \brief Remove the opengl bindings from the thread's OpenGL context
+	/// 
+	/// This should only be called by the CL_GL1GraphicContextProvider destructor
+	static void remove_active(const CL_GL1GraphicContextProvider * const gc_provider);
+
+	friend class CL_GL1GraphicContextProvider;
+
 };
 
 /// \}

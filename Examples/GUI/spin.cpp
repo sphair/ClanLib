@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 Spin::Spin(GUI *gui) :
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Spin", CL_Rect(256*3 + 32, 256 + 32, CL_Size(256, 180)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Spin", CL_Rect(256*3 + 32, 256 + 16, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	set_draggable(true);

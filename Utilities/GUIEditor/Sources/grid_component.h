@@ -37,13 +37,10 @@ class SnapLine;
 
 class GridComponent : public CL_GUIComponent
 {
-//! Construction:
 public:
 	GridComponent(CL_GUIComponent *parent, MainWindow *main_window);
 	virtual ~GridComponent() { }
 
-//! Attributes:
-public:
 	CL_Size get_dialog_size();
 
 	const std::vector<HolderComponent*> &get_holders() const;
@@ -51,8 +48,6 @@ public:
 
 	CL_Vec2i snap(HolderComponent *holder, const std::vector<SnapLine> &source_snaplines, const CL_Rect &source_rect);
 
-//! Operations:
-public:
 	HolderComponent *on_add_component(int id, const CL_Vec2i &pos);
 	void remove_holder(HolderComponent *holder);
 
@@ -60,11 +55,8 @@ public:
 	void save(const CL_StringRef &str);
 	void set_boundary_size(const CL_Size &size);
 
-//! Events:
-public:
 	CL_Callback_v0 func_boundary_resized;
 
-//! Implementation:
 private:
 	bool on_input_pressed(const CL_InputEvent &input_event);
 	bool on_input_released(const CL_InputEvent &input_event);
@@ -74,6 +66,7 @@ private:
 	void on_render_overlay(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
 
+	CL_InputEvent offset_event(CL_InputEvent e);
 	CL_Rect holder_to_grid_coords(HolderComponent *holder, const CL_Rect &rect);
 	CL_Point holder_to_grid_coords(HolderComponent *holder, const CL_Point &point);
 	CL_Rect grid_to_holder_coords(HolderComponent *holder, const CL_Rect &rect);
@@ -96,9 +89,9 @@ private:
 	CL_GUIComponent *component_overlay;
 	std::vector<HolderComponent*> holders;
 
-	CL_Rect boundary;
-
+	CL_Size boundary;
 	GridEditState edit_state;
+	CL_GUIThemePart part_windowframe;
 
 	friend class GridEditStateNone;
 	friend class GridEditStateBoundarySizing;

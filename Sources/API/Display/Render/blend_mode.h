@@ -97,8 +97,7 @@ enum CL_BlendEquation
 	cl_blend_equation_subtract,
 	cl_blend_equation_reverse_subtract,
 	cl_blend_equation_min,
-	cl_blend_equation_max,
-	cl_blend_equation_logic_op
+	cl_blend_equation_max
 };
 
 /// \brief Blend mode description.

@@ -56,39 +56,6 @@
 #endif
 #endif
 
-CL_ProcAddress *CL_OpenGL::get_proc_address(const CL_String8& function_name)
-{
-#ifdef WIN32
-	return (void (*)())wglGetProcAddress(function_name.c_str());
-#else
-#ifdef __APPLE__
-	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
-
-	static CFBundleRef cl_gBundleRefOpenGL = 0;
-	if (cl_gBundleRefOpenGL == 0)
-	{
-		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
-		if (cl_gBundleRefOpenGL == 0)
-			throw CL_Exception("Unable to find com.apple.opengl bundle");
-	}
-
-	return (CL_ProcAddress *) CFBundleGetFunctionPointerForName(
-		cl_gBundleRefOpenGL,
-		CFStringCreateWithCStringNoCopy(
-			0,
-			function_name.c_str(),
-			CFStringGetSystemEncoding(),
-			0));
-#else
-#  ifdef HAVE_GLX_GETPROCADDRESSARB
-	return glXGetProcAddressARB((GLubyte*)function_name.c_str());
-#  else
-	return glXGetProcAddress((GLubyte*)function_name.c_str());
-#  endif
-#endif
-#endif
-}
-
 CL_GLFunctions *CL_OpenGL::functions = 0;
 
 
@@ -604,9 +571,6 @@ bool CL_OpenGL::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGL context management:
 
-// to-do: change these variables to be TLS variables:
-//        (each thread has their own opengl context)
-
 #if defined(_MSC_VER)
 #define cl_tls_variable _declspec(thread)
 #else
@@ -626,6 +590,15 @@ typedef std::map<const CL_OpenGLGraphicContextProvider *, CL_GLFunctions *> cl_f
 static cl_function_map_type cl_function_map;
 
 CL_GLFunctions *cl_setup_binds();
+
+CL_ProcAddress *CL_OpenGL::get_proc_address(const CL_String8& function_name)
+{
+	if (cl_active_opengl_gc)
+	{
+		return cl_active_opengl_gc->get_proc_address(function_name);
+	}
+	return NULL;
+}
 
 void CL_OpenGL::set_active(CL_GraphicContext &gc)
 {
@@ -673,6 +646,7 @@ void CL_OpenGL::set_active(const CL_OpenGLGraphicContextProvider * const gc_prov
 			}
 			else
 			{
+				cl_active_opengl_gc = gc_provider;
 				CL_GLFunctions *functions = cl_setup_binds();
 				cl_function_map[gc_provider] = functions;
 				CL_OpenGL::functions = functions;
@@ -687,7 +661,9 @@ void CL_OpenGL::set_active(const CL_OpenGLGraphicContextProvider * const gc_prov
 #		elif defined(__APPLE__)
 			aglMakeCurrent(AGL_NONE, NULL);
 #		else
-			glXMakeCurrent(glXGetCurrentDisplay(), None, NULL);
+			//Note: glX may not even be available. Also glXGetCurrentDisplay() may fail
+			// Hopefully this will not matter!
+			//glXMakeCurrent(glXGetCurrentDisplay(), None, NULL);
 #		endif
 
 			// If no current context, don't map function bindings either.
@@ -699,6 +675,24 @@ void CL_OpenGL::set_active(const CL_OpenGLGraphicContextProvider * const gc_prov
 	}
 }
 
+void CL_OpenGL::remove_active(const CL_OpenGLGraphicContextProvider * const gc_provider)
+{
+	CL_MutexSection mutex_lock(&cl_function_map_mutex);
+	cl_function_map_type::iterator it;
+	it = cl_function_map.find(gc_provider);
+	if (it != cl_function_map.end())
+	{
+		CL_GLFunctions *functions = it->second;
+		cl_function_map.erase(it);
+		delete functions;
+
+		if (cl_active_opengl_gc == gc_provider)
+		{
+			cl_active_opengl_gc = NULL;
+		}
+	}
+}
+
 CL_GLFunctions *cl_setup_binds()
 {
 	CL_GLFunctions *functions = new CL_GLFunctions;
@@ -706,7 +700,8 @@ CL_GLFunctions *cl_setup_binds()
 
 	// Binds for OpenGL 1.1:
 
-#ifdef GL_VERSION_1_1
+//#ifdef GL_VERSION_1_1
+#ifdef WIN32	// Only win32 static links opengl
 	functions->accum = (CL_GLFunctions::ptr_glAccum) &glAccum;
 	functions->alphaFunc = (CL_GLFunctions::ptr_glAlphaFunc) &glAlphaFunc;
 	functions->areTexturesResident = (CL_GLFunctions::ptr_glAreTexturesResident) &glAreTexturesResident;
@@ -2004,8 +1999,20 @@ CL_GLFunctions *cl_setup_binds()
 	functions->getVertexAttribiv = (CL_GLFunctions::ptr_glGetVertexAttribivARB) CL_OpenGL::get_proc_address("glGetVertexAttribivARB");
 	functions->getVertexAttribPointerv = (CL_GLFunctions::ptr_glGetVertexAttribPointervARB) CL_OpenGL::get_proc_address("glGetVertexAttribPointervARB");
 	functions->drawBuffers = (CL_GLFunctions::ptr_glDrawBuffersARB) CL_OpenGL::get_proc_address("glDrawBuffersARB");
-	functions->stencilFuncSeparate = (CL_GLFunctions::ptr_glStencilFuncSeparateATI) CL_OpenGL::get_proc_address("glStencilFuncSeparateATI");
-	functions->stencilOpSeparate = (CL_GLFunctions::ptr_glStencilOpSeparateATI) CL_OpenGL::get_proc_address("glStencilOpSeparateATI");
+
+	functions->stencilFuncSeparate = (CL_GLFunctions::ptr_glStencilFuncSeparateATI) CL_OpenGL::get_proc_address("glStencilFuncSeparate");
+	functions->stencilOpSeparate = (CL_GLFunctions::ptr_glStencilOpSeparateATI) CL_OpenGL::get_proc_address("glStencilOpSeparate");
+
+	if (functions->stencilFuncSeparate == NULL)
+	{
+		functions->stencilFuncSeparate = (CL_GLFunctions::ptr_glStencilFuncSeparateATI) CL_OpenGL::get_proc_address("glStencilFuncSeparateATI");
+	}
+
+	if (functions->stencilOpSeparate == NULL)
+	{
+		functions->stencilOpSeparate = (CL_GLFunctions::ptr_glStencilOpSeparateATI) CL_OpenGL::get_proc_address("glStencilOpSeparateATI");
+	}
+
 	functions->stencilMaskSeparate = (CL_GLFunctions::ptr_glStencilMaskSeparate) CL_OpenGL::get_proc_address("glStencilMaskSeparate");
 #endif
 

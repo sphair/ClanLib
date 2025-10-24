@@ -278,6 +278,12 @@ void CL_BufferControl::set_stencil_write_mask(unsigned char front_facing_mask, u
 	impl->stencil_enable_mask_back = back_facing_mask;
 }
 
+void CL_BufferControl::set_stencil_compare_mask(int front_mask, int back_mask)
+{
+	impl->stencil_compare_mask_front = front_mask;
+	impl->stencil_compare_mask_back = back_mask;
+}
+
 void CL_BufferControl::enable_depth_write(bool enabled)
 {
 	impl->depth_write_enabled = enabled;

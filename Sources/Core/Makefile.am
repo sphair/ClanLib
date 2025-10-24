@@ -67,6 +67,9 @@ Math/outline_triangulator_generic.cpp \
 Math/pointset_math.cpp \
 Math/quad.cpp \
 Math/rect.cpp \
+Math/rect_packer.cpp \
+Math/rect_packer_impl.cpp \
+Math/rect_packer_impl.h \
 Math/sha1.cpp \
 Math/line.cpp \
 Math/hash_functions.cpp \

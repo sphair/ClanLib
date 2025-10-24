@@ -39,12 +39,22 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 {
 	gui.set_window_manager(wm);
 
-	resources_gui = CL_ResourceManager("../../../Resources/GUIThemeAeroPacked/resources.xml");
+	CL_String resource_filename("../../../Resources/GUIThemeAeroPacked/resources.xml");
+	CL_String theme_filename("../../../Resources/GUIThemeAeroPacked/theme.css");
+	if (!CL_FileHelp::file_exists(resource_filename))
+	{
+		resource_filename = "../../../Resources/GUIThemeBasicPacked/resources.xml";
+		theme_filename = "../../../Resources/GUIThemeBasicPacked/theme.css";
+	}
+
+
+
+	resources_gui = CL_ResourceManager(resource_filename);
 	resources_internal = CL_ResourceManager("resources.xml");
 
 	theme.set_resources(resources_gui);
 	gui.set_theme(theme); 
-	gui.set_css_document("../../../Resources/GUIThemeAeroPacked/theme.css");
+	gui.set_css_document(theme_filename);
 
 	CL_GraphicContext gc = window_ptr->get_gc();
 

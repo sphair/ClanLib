@@ -175,6 +175,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Sources\anchor_popup.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\anchor_popup.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\application.cpp"
 				>
 			</File>
@@ -448,6 +456,10 @@
 			</File>
 			<File
 				RelativePath=".\Sources\property_item_tick_count.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_type_name.h"
 				>
 			</File>
 			<File

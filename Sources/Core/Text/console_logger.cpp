@@ -91,7 +91,7 @@ void CL_ConsoleLogger::log(const CL_StringRef &type, const CL_StringRef &text)
 	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n"));
 #endif
 	format.set_arg(1, days[cur_time.get_day_of_week()]);
-	format.set_arg(2, months[cur_time.get_month()]);
+	format.set_arg(2, months[cur_time.get_month() - 1]);
 	format.set_arg(3, cur_time.get_day());
 	format.set_arg(4, cur_time.get_hour(), 2);
 	format.set_arg(5, cur_time.get_minutes(), 2);

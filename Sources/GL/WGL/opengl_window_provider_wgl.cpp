@@ -53,17 +53,16 @@ namespace
 	class RenderWindowProvider_WGL: public CL_RenderWindowProvider
 	{
 	public:
-		RenderWindowProvider_WGL(CL_OpenGLWindowProvider_WGL & window, HGLRC wgl_context = NULL)
-			: window(window), wgl_context(wgl_context)
+		RenderWindowProvider_WGL(CL_OpenGLWindowProvider_WGL & window, HGLRC wgl_context, bool own_context)
+			: window(window), wgl_context(wgl_context), own_context(own_context)
 		{
 		}
 		virtual ~RenderWindowProvider_WGL()
 		{
-		// Note: ~CL_OpenGLWindowProvider_WGL deletes the context
-		//	if( wgl_context )
-		//	{
-		//		wglDeleteContext(wgl_context);
-		//	}
+			if( wgl_context && own_context)
+			{
+				wglDeleteContext(wgl_context);
+			}
 		}
 		virtual int get_viewport_width() const
 		{
@@ -79,17 +78,18 @@ namespace
 		}
 		virtual void make_current() const
 		{
-			wglMakeCurrent(window.get_device_context(), wgl_context ? wgl_context : window.get_opengl_context());
+			wglMakeCurrent(window.get_device_context(), wgl_context);
 		}
 		virtual const CL_RenderWindowProvider * new_worker_context() const
 		{
 			HGLRC new_gl_context = wglCreateContext(window.get_device_context());
 			wglShareLists(window.get_opengl_context(), new_gl_context);
-			return new RenderWindowProvider_WGL(window, new_gl_context);
+			return new RenderWindowProvider_WGL(window, new_gl_context, true);
 		}
 	private:
 		CL_OpenGLWindowProvider_WGL & window;
 		HGLRC wgl_context;
+		bool own_context;
 
 		friend class CL_OpenGLWindowProvider_WGL;
 	};
@@ -266,7 +266,7 @@ void CL_OpenGLWindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const C
 		if (!opengl_context)
 			opengl_context = helper.create_opengl2_context(share_context);
 
-		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_WGL(*this, opengl_context)));
+		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_WGL(*this, opengl_context, false)));
 		CL_SharedGCData::get_gc_providers().push_back(gc.get_provider());
 	}
 }

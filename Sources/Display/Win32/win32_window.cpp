@@ -102,6 +102,9 @@ CL_Win32Window::~CL_Win32Window()
 		DestroyIcon(small_icon);
 }
 
+//////////////////////////////////////////////////////////////////////////
+// CL_Win32Window Attributes:
+
 CL_Rect CL_Win32Window::get_geometry() const
 {
 	RECT rect;
@@ -135,6 +138,9 @@ bool CL_Win32Window::is_visible() const
 {
 	return IsWindowVisible(hwnd) != 0;
 }
+
+//////////////////////////////////////////////////////////////////////////
+// CL_Win32Window Operations:
 
 void CL_Win32Window::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
 {
@@ -500,6 +506,11 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		received_mouse_move(msg, wparam, lparam);
 		return 0;
 
+	case WM_NCMOUSEMOVE:
+		if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
+			get_tablet()->set_context_on_top(true);
+		return 0;
+
 	case WM_SIZING:
 		if (site)
 		{
@@ -584,14 +595,14 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 			if (LOWORD(wparam) == WA_INACTIVE)
 			{
 				site->sig_lost_focus->invoke();
-				if (get_tablet())
-					get_tablet()->set_enabled(false);
+				if (get_tablet() && get_tablet()->device_present())
+					get_tablet()->set_context_on_top(false);
 			}
 			else
 			{
 				site->sig_got_focus->invoke();
-				if (get_tablet())
-					get_tablet()->set_enabled(true);
+				if (get_tablet() && get_tablet()->device_present())
+					get_tablet()->set_context_on_top(true);
 			}
 		}
 		return 0;
@@ -628,12 +639,12 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		return 0;
 
 	case WT_PACKET:
-		if (get_tablet())
+		if (get_tablet() && get_tablet()->device_present())
 			return get_tablet()->process_packet(lparam, wparam);
 		return FALSE;
 
 	case WT_PROXIMITY:
-		if (get_tablet())
+		if (get_tablet() && get_tablet()->device_present())
 			return get_tablet()->process_proximity(lparam, wparam);
 		return FALSE;
 
@@ -899,13 +910,16 @@ void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam
 
 void CL_Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
+		get_tablet()->set_context_on_top(true);
+
 	cursor_set = false;
 
 	// Fetch coordinates
 	short x = LOWORD(lparam);
 	short y = HIWORD(lparam);
 
-	if(mouse_pos.x != x || mouse_pos.y != y)
+	if (mouse_pos.x != x || mouse_pos.y != y)
 	{
 		mouse_pos.x = x;
 		mouse_pos.y = y;

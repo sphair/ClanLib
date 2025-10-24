@@ -85,12 +85,17 @@ bool GridEditStateBoundarySizing::on_input_doubleclick(const CL_InputEvent &e)
 
 bool GridEditStateBoundarySizing::on_input_pointer_moved(const CL_InputEvent &e)
 {
+	CL_Size boundary_size = grid->boundary;
+
 	if (dir.x > 0)
-		grid->boundary.right = e.mouse_pos.x;
+		boundary_size.width = cl_max(e.mouse_pos.x, 10);
 
 	if (dir.y > 0)
-		grid->boundary.bottom = e.mouse_pos.y;
+		boundary_size.height = cl_max(e.mouse_pos.y, 10);
 
-	grid->request_repaint();
+	if ( (dir.x > 0) || (dir.y > 0) )
+	{
+		grid->set_boundary_size(boundary_size);
+	}
 	return true;
 }

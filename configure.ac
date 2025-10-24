@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.1.0)
+AC_INIT(ClanLib, 2.1.1)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=1
-CLANLIB_MICRO_VERSION=0
+CLANLIB_MICRO_VERSION=1
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -353,11 +353,11 @@ if test "$enable_clanDisplay" != "no"; then
 			clanDisplay, [ *** Cannot find version 8 of DirectInput], [-ldxguid -lole32 -ldinput8])
 	fi
 
-	if test "$X11" = "yes"; then
-		AC_CHECK_HEADERS(X11/extensions/XInput.h , , CLANLIB_DISABLE_MODULE(clanDisplay, [ *** Cannot find libXi (xinput) (Try libxi-dev or better) ]), [[	# include <X11/Xlib.h>
-		# include <X11/Xutil.h>  
-		]])
-	fi
+#	if test "$X11" = "yes"; then
+#		AC_CHECK_HEADERS(X11/extensions/XInput.h , , CLANLIB_DISABLE_MODULE(clanDisplay, [ *** Cannot find libXi (xinput) (Try libxi-dev or better) ]), [[	# include <X11/Xlib.h>
+#		# include <X11/Xutil.h>  
+#		]])
+#	fi
 fi
 
 dnl Check for linux/joystick.h
@@ -378,7 +378,6 @@ AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 
 if test "$enable_clanDisplay" != "no"; then
 	enable_clanDisplay=yes
-	XF86_VidMode=no
 
 	dnl Add any flags required to compiple clanDisplay
 	CXXFLAGS="$CXXFLAGS $clanDisplay_CXXFLAGS"
@@ -396,22 +395,9 @@ if test "$enable_clanDisplay" != "no"; then
 		OLDLIBS="$LIBS"
 		LIBS=""
 
-		AC_CHECK_HEADERS(X11/extensions/xf86vmode.h, XF86_VidMode=yes, [],
-			[[# include <X11/Xlib.h>
-			# include <X11/Xutil.h>  
-			]])
-
-		if test "$XF86_VidMode" != "yes"; then
-			echo " *** Try installing x11proto-xf86vidmode-dev and libxxf86vm-dev to enable XF86 VidMode "
-		fi
-
 		LIBS="$OLDLIBS"
 		clanDisplay_CFLAGS="$clanDisplay_CFLAGS $X_CFLAGS"
 		clanDisplay_LIBS="$clanDisplay_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
- 
-		if test "$XF86_VidMode" == "yes"; then
-			clanDisplay_LIBS="$clanDisplay_LIBS -lXxf86vm"
-		fi
  
 		echo ""
 		fi
@@ -424,8 +410,8 @@ if test "$enable_clanDisplay" != "no"; then
 			else # test "$WIN32" = "yes"
 				CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL], [ $LIBPTHREAD -lGL])
 				if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
-					AC_CHECK_LIB(Xi,XListInputDevices, [clanGL_LIBS="$clanGL_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS -lXi"],
-						CLANLIB_DISABLE_MODULE(clanGL, [ *** Cannot find libXi (xinput)]))
+					#AC_CHECK_LIB(Xi,XListInputDevices, [clanGL_LIBS="$clanGL_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS -lXi"],
+					#	CLANLIB_DISABLE_MODULE(clanGL, [ *** Cannot find libXi (xinput)]))
 					if test "$enable_clanGL" != "no"; then
 			
 						dnl Check that glXGetProcAddressARB is defined in glx.h
@@ -454,8 +440,8 @@ if test "$enable_clanDisplay" != "no"; then
 			else
 				CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL1, [ *** Cannot find GL], [ $LIBPTHREAD -lGL])
 				if test "$enable_clanGL1" != "no" && test "$X11" = "yes"; then
-					AC_CHECK_LIB(Xi,XListInputDevices, [clanGL1_LIBS="$clanGL1_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS -lXi"],
-						CLANLIB_DISABLE_MODULE(clanGL1, [ *** Cannot find libXi (xinput)]))
+					#AC_CHECK_LIB(Xi,XListInputDevices, [clanGL1_LIBS="$clanGL1_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS -lXi"],
+					#	CLANLIB_DISABLE_MODULE(clanGL1, [ *** Cannot find libXi (xinput)]))
 					if test "$enable_clanGL1" != "no"; then
 			
 						dnl Check that glXGetProcAddressARB is defined in glx.h
@@ -669,7 +655,7 @@ fi
 
 if test "$enable_clanGL" = "yes"; then
 	CLANLIB_ENABLE_MODULES(GL)
-	ClanLib_Examples="$ClanLib_Examples Basic2D Canvas Pacman ShadowOfTheBeast SpritesRTS Text PostProcessing Input CanvasAdvanced CustomGL HSVExample HSVSprite MultiWindow Chess3D"
+	ClanLib_Examples="$ClanLib_Examples Basic2D Canvas Pacman ShadowOfTheBeast SpritesRTS Text PostProcessing Input CanvasAdvanced CustomGL HSVExample HSVSprite MultiWindow Chess3D Blend VertexBuffer Stencil"
 fi
 
 if test "$enable_clanGL1" = "yes"; then
@@ -678,7 +664,7 @@ fi
 
 if test "$enable_clanGUI" = "yes"; then
 	CLANLIB_ENABLE_MODULES(GUI)
-	ClanLib_Examples="$ClanLib_Examples CTalk DiceWar Font GUI3D GUI NetGame GUICustomComponent Sound GUIBasic GUILayout DisplayTarget"
+	ClanLib_Examples="$ClanLib_Examples CTalk DiceWar Font GUI3D GUI NetGame GUICustomComponent Sound GUIBasic GUILayout DisplayTarget ColorWheel"
 fi
 
 if test "$enable_clanGDI" = "yes"; then
@@ -876,12 +862,6 @@ if test "$enable_clanDisplay" != "no"; then
 		display_options="$display_options (Linux Input Enabled)"
 	else
 		display_options="$display_options (Linux Input Disabled)"
-	fi
-
-	if test "$XF86_VidMode" == "yes"; then
-		display_options="$display_options (XF86 VidMode Enabled)"
-	else
-		display_options="$display_options (XF86 VidMode Disabled)"
 	fi
 fi
 

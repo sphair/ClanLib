@@ -7,6 +7,8 @@ endif
 
 libclan21Display_la_SOURCES = \
 	2D/color.cpp \
+	2D/color_hsv.cpp \
+	2D/color_hsl.cpp \
 	2D/draw.cpp \
 	2D/image.cpp \
 	2D/rounded_rect.cpp \

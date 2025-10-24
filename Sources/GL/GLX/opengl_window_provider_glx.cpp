@@ -37,7 +37,6 @@
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/TargetProviders/render_window_provider.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl_window_description.h"
@@ -48,65 +47,147 @@
 #include "../opengl_target_provider.h"
 #include <cstdio>
 
-namespace
+#ifdef CL_USE_DLOPEN
+#define CL_OPENGL_LIBRARY "libGL.so"
+#include <dlfcn.h>
+#endif
+		
+#ifdef CL_USE_DLOPEN
+#define CL_LOAD_GLFUNC(x) dlsym(opengl_lib_handle, # x)
+#else
+#define CL_LOAD_GLFUNC(x) &x
+#endif
+
+CL_GL_RenderWindowProvider_GLX::CL_GL_RenderWindowProvider_GLX(CL_OpenGLWindowProvider_GLX & window, GLXContext glx_context, bool own_context)
+	: window(window), glx_context(glx_context), own_context(own_context)
 {
-	class RenderWindowProvider_GLX: public CL_RenderWindowProvider
-	{
-	public:
-		RenderWindowProvider_GLX(CL_OpenGLWindowProvider_GLX & window, GLXContext glx_context = None)
-			: window(window), glx_context(glx_context)
-		{
-		}
-		virtual ~RenderWindowProvider_GLX()
-		{
-		// Note: ~CL_OpenGLWindowProvider_GLX deletes the context
-		//	if( glx_context )
-		//	{
-		//		glXDestroyContext(window.get_display(), glx_context);
-		//	}
-		}
-		virtual int get_viewport_width() const
-		{
-			return window.get_viewport().get_width();
-		}
-		virtual int get_viewport_height() const
-		{
-			return window.get_viewport().get_height();
-		}
-		virtual void flip_buffers(int interval) const
-		{
-			window.flip(interval);
-		}
-		virtual void make_current() const
-		{
-			// *** Note, If glxMakeCurrent crashes KDE when using a nvidia graphics card, then
-			// update the driver from nvidia.com ***
-			glXMakeCurrent(window.get_display(), window.get_window(),
-			               glx_context ? glx_context : window.get_opengl_context());
-		}
-		virtual const CL_RenderWindowProvider * new_worker_context() const
-		{
-			return new RenderWindowProvider_GLX(window, window.create_context());
-		}
-
-		GLXContext get_context() const {return glx_context;}
-
-	private:
-		CL_OpenGLWindowProvider_GLX & window;
-		GLXContext glx_context;
-
-	//	friend class CL_OpenGLWindowProvider_GLX;
-
-	};
 }
+
+CL_GL_RenderWindowProvider_GLX::~CL_GL_RenderWindowProvider_GLX()
+{
+	if( glx_context && own_context)
+	{
+		window.glx.glXDestroyContext(window.get_display(), glx_context);
+	}
+}
+
+int CL_GL_RenderWindowProvider_GLX::get_viewport_width() const
+{
+	return window.get_viewport().get_width();
+}
+
+int CL_GL_RenderWindowProvider_GLX::get_viewport_height() const
+{
+	return window.get_viewport().get_height();
+}
+
+void CL_GL_RenderWindowProvider_GLX::flip_buffers(int interval) const
+{
+	window.flip(interval);
+}
+
+void CL_GL_RenderWindowProvider_GLX::make_current() const
+{
+// *** Note, If glxMakeCurrent crashes KDE when using a nvidia graphics card, then
+	// update the driver from nvidia.com ***
+	window.glx.glXMakeCurrent(window.get_display(), window.get_window(), glx_context);
+}
+
+const CL_RenderWindowProvider * CL_GL_RenderWindowProvider_GLX::new_worker_context() const
+{
+	return new CL_GL_RenderWindowProvider_GLX(window, window.create_context(), true);
+}
+
+CL_ProcAddress *CL_GL_RenderWindowProvider_GLX::get_proc_address(const CL_String8& function_name) const
+{
+	if (window.glx.glXGetProcAddressARB)
+		return window.glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
+	if (window.glx.glXGetProcAddress)
+		return window.glx.glXGetProcAddress((GLubyte*)function_name.c_str());
+	return NULL;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_GLX Construction:
 
 CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 : x11_window(),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), last_set_interval(-1)
+ opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), glx_swap_interval_set(false), last_set_interval(-1)
+#ifdef CL_USE_DLOPEN
+, opengl_lib_handle(NULL)
+#endif
 {
+#ifdef CL_USE_DLOPEN
+	// http://www.xfree86.org/4.8.0/DRI11.html -
+	// "Do not close the library with dlclose() until after XCloseDisplay() has been called. When libGL.so initializes itself it registers several callbacks functions with Xlib. When XCloseDisplay() is called those callback functions are called. If libGL.so has already been unloaded with dlclose() this will cause a segmentation fault"
+	// - Which it did - So we need x11_window to own the library (and close it)
+	opengl_lib_handle = x11_window.dlopen(CL_OPENGL_LIBRARY, RTLD_NOW | RTLD_GLOBAL);
+	if (!opengl_lib_handle)
+	{
+		throw CL_Exception(cl_format("Cannot open opengl library: %1", CL_OPENGL_LIBRARY));
+	}
+#endif
+	glx.glXChooseVisual = (CL_GL_GLXFunctions::ptr_glXChooseVisual) CL_LOAD_GLFUNC(glXChooseVisual);
+	glx.glXCopyContext = (CL_GL_GLXFunctions::ptr_glXCopyContext) CL_LOAD_GLFUNC(glXCopyContext);
+	glx.glXCreateContext = (CL_GL_GLXFunctions::ptr_glXCreateContext) CL_LOAD_GLFUNC(glXCreateContext);
+	glx.glXCreateGLXPixmap = (CL_GL_GLXFunctions::ptr_glXCreateGLXPixmap) CL_LOAD_GLFUNC(glXCreateGLXPixmap);
+	glx.glXDestroyContext = (CL_GL_GLXFunctions::ptr_glXDestroyContext) CL_LOAD_GLFUNC(glXDestroyContext);
+	glx.glXDestroyGLXPixmap = (CL_GL_GLXFunctions::ptr_glXDestroyGLXPixmap) CL_LOAD_GLFUNC(glXDestroyGLXPixmap);
+	glx.glXGetConfig = (CL_GL_GLXFunctions::ptr_glXGetConfig) CL_LOAD_GLFUNC(glXGetConfig);
+	glx.glXGetCurrentContext = (CL_GL_GLXFunctions::ptr_glXGetCurrentContext) CL_LOAD_GLFUNC(glXGetCurrentContext);
+	glx.glXGetCurrentDrawable = (CL_GL_GLXFunctions::ptr_glXGetCurrentDrawable) CL_LOAD_GLFUNC(glXGetCurrentDrawable);
+	glx.glXIsDirect = (CL_GL_GLXFunctions::ptr_glXIsDirect) CL_LOAD_GLFUNC(glXIsDirect);
+	glx.glXMakeCurrent = (CL_GL_GLXFunctions::ptr_glXMakeCurrent) CL_LOAD_GLFUNC(glXMakeCurrent);
+	glx.glXQueryExtension = (CL_GL_GLXFunctions::ptr_glXQueryExtension) CL_LOAD_GLFUNC(glXQueryExtension);
+	glx.glXQueryVersion = (CL_GL_GLXFunctions::ptr_glXQueryVersion) CL_LOAD_GLFUNC(glXQueryVersion);
+	glx.glXSwapBuffers = (CL_GL_GLXFunctions::ptr_glXSwapBuffers) CL_LOAD_GLFUNC(glXSwapBuffers);
+	glx.glXUseXFont = (CL_GL_GLXFunctions::ptr_glXUseXFont) CL_LOAD_GLFUNC(glXUseXFont);
+	glx.glXWaitGL = (CL_GL_GLXFunctions::ptr_glXWaitGL) CL_LOAD_GLFUNC(glXWaitGL);
+	glx.glXWaitX = (CL_GL_GLXFunctions::ptr_glXWaitX) CL_LOAD_GLFUNC(glXWaitX);
+	glx.glXGetClientString = (CL_GL_GLXFunctions::ptr_glXGetClientString) CL_LOAD_GLFUNC(glXGetClientString);
+	glx.glXQueryServerString = (CL_GL_GLXFunctions::ptr_glXQueryServerString) CL_LOAD_GLFUNC(glXQueryServerString);
+	glx.glXQueryExtensionsString = (CL_GL_GLXFunctions::ptr_glXQueryExtensionsString) CL_LOAD_GLFUNC(glXQueryExtensionsString);
+	glx.glXGetCurrentDisplay = (CL_GL_GLXFunctions::ptr_glXGetCurrentDisplay) CL_LOAD_GLFUNC(glXGetCurrentDisplay);
+	glx.glXChooseFBConfig = (CL_GL_GLXFunctions::ptr_glXChooseFBConfig) CL_LOAD_GLFUNC(glXChooseFBConfig);
+	glx.glXCreateNewContext = (CL_GL_GLXFunctions::ptr_glXCreateNewContext) CL_LOAD_GLFUNC(glXCreateNewContext);
+	glx.glXCreatePbuffer = (CL_GL_GLXFunctions::ptr_glXCreatePbuffer) CL_LOAD_GLFUNC(glXCreatePbuffer);
+	glx.glXCreatePixmap = (CL_GL_GLXFunctions::ptr_glXCreatePixmap) CL_LOAD_GLFUNC(glXCreatePixmap);
+	glx.glXCreateWindow = (CL_GL_GLXFunctions::ptr_glXCreateWindow) CL_LOAD_GLFUNC(glXCreateWindow);
+	glx.glXDestroyPbuffer = (CL_GL_GLXFunctions::ptr_glXDestroyPbuffer) CL_LOAD_GLFUNC(glXDestroyPbuffer);
+	glx.glXDestroyPixmap = (CL_GL_GLXFunctions::ptr_glXDestroyPixmap) CL_LOAD_GLFUNC(glXDestroyPixmap);
+	glx.glXDestroyWindow = (CL_GL_GLXFunctions::ptr_glXDestroyWindow) CL_LOAD_GLFUNC(glXDestroyWindow);
+	glx.glXGetCurrentReadDrawable = (CL_GL_GLXFunctions::ptr_glXGetCurrentReadDrawable) CL_LOAD_GLFUNC(glXGetCurrentReadDrawable);
+	glx.glXGetFBConfigAttrib = (CL_GL_GLXFunctions::ptr_glXGetFBConfigAttrib) CL_LOAD_GLFUNC(glXGetFBConfigAttrib);
+	glx.glXGetFBConfigs = (CL_GL_GLXFunctions::ptr_glXGetFBConfigs) CL_LOAD_GLFUNC(glXGetFBConfigs);
+	glx.glXGetSelectedEvent = (CL_GL_GLXFunctions::ptr_glXGetSelectedEvent) CL_LOAD_GLFUNC(glXGetSelectedEvent);
+	glx.glXGetVisualFromFBConfig = (CL_GL_GLXFunctions::ptr_glXGetVisualFromFBConfig) CL_LOAD_GLFUNC(glXGetVisualFromFBConfig);
+	glx.glXMakeContextCurrent = (CL_GL_GLXFunctions::ptr_glXMakeContextCurrent) CL_LOAD_GLFUNC(glXMakeContextCurrent);
+	glx.glXQueryContext = (CL_GL_GLXFunctions::ptr_glXQueryContext) CL_LOAD_GLFUNC(glXQueryContext);
+	glx.glXQueryDrawable = (CL_GL_GLXFunctions::ptr_glXQueryDrawable) CL_LOAD_GLFUNC(glXQueryDrawable);
+	glx.glXSelectEvent = (CL_GL_GLXFunctions::ptr_glXSelectEvent) CL_LOAD_GLFUNC(glXSelectEvent);
+
+	glx.glXGetProcAddressARB = (CL_GL_GLXFunctions::ptr_glXGetProcAddressARB) CL_LOAD_GLFUNC(glXGetProcAddressARB);
+	glx.glXGetProcAddress = (CL_GL_GLXFunctions::ptr_glXGetProcAddress) CL_LOAD_GLFUNC(glXGetProcAddress);
+
+
+	if ( (glx.glXDestroyContext == NULL) ||
+		(glx.glXMakeCurrent == NULL) ||
+		(glx.glXGetCurrentContext == NULL) ||
+		(glx.glXChooseVisual == NULL) ||
+		(glx.glXIsDirect == NULL) ||
+		(glx.glXGetConfig == NULL) ||
+		(glx.glXQueryExtensionsString == NULL) ||
+		(glx.glXCreateContext == NULL) )
+	{
+		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+	}
+
+	if ((glx.glXGetProcAddressARB == NULL) && (glx.glXGetProcAddress == NULL))
+	{
+		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+	}
+
 	x11_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_GLX::on_window_resized);
 }
 
@@ -146,18 +227,19 @@ CL_OpenGLWindowProvider_GLX::~CL_OpenGLWindowProvider_GLX()
 		// Delete the context
 
 		Display *disp = x11_window.get_display();
-		if (glXGetCurrentContext() == opengl_context)
+		if (glx.glXGetCurrentContext() == opengl_context)
 		{
 			CL_OpenGL::set_active(NULL);
 		}
 
 		if (disp)
 		{
-			glXDestroyContext(disp, opengl_context);
+			glx.glXDestroyContext(disp, opengl_context);
 		}
 
 		opengl_context = 0;
 	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -192,46 +274,32 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 		int i = 0;
 
 		CL_OpenGLWindowDescription gl_desc(desc);
-//		if( gl_desc )	
-//		{
-			// Note: gl_attribs[32] !!!!
-			gl_attribs[i++] = GLX_RGBA;
-			if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
-			if( gl_desc.get_stereo() ) gl_attribs[i++] = GLX_STEREO;
-			gl_attribs[i++] = GLX_BUFFER_SIZE;
-			gl_attribs[i++] = gl_desc.get_buffer_size();
-			gl_attribs[i++] = GLX_RED_SIZE; 
-			gl_attribs[i++] = gl_desc.get_red_size();
-			gl_attribs[i++] = GLX_GREEN_SIZE;
-			gl_attribs[i++] = gl_desc.get_green_size();
-			gl_attribs[i++] = GLX_BLUE_SIZE;
-			gl_attribs[i++] = gl_desc.get_blue_size();
-			gl_attribs[i++] = GLX_DEPTH_SIZE;
-			gl_attribs[i++] = gl_desc.get_depth_size();
-			gl_attribs[i++] = GLX_STENCIL_SIZE;
-			gl_attribs[i++] = gl_desc.get_stencil_size();
-			gl_attribs[i++] = None;
-/*		}
-		else
-		{
-			gl_attribs[i++] = GLX_RGBA;
-			gl_attribs[i++] = GLX_DOUBLEBUFFER;
-			gl_attribs[i++] = GLX_DEPTH_SIZE;
-			gl_attribs[i++] = 16;
-			gl_attribs[i++] = GLX_STENCIL_SIZE;
-			gl_attribs[i++] = 8;
-			gl_attribs[i++] = GLX_BUFFER_SIZE;
-			gl_attribs[i++] = 24;
-			gl_attribs[i++] = None;
-		}*/
+
+		// Note: gl_attribs[32] !!!!
+		gl_attribs[i++] = GLX_RGBA;
+		if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
+		if( gl_desc.get_stereo() ) gl_attribs[i++] = GLX_STEREO;
+		gl_attribs[i++] = GLX_BUFFER_SIZE;
+		gl_attribs[i++] = gl_desc.get_buffer_size();
+		gl_attribs[i++] = GLX_RED_SIZE; 
+		gl_attribs[i++] = gl_desc.get_red_size();
+		gl_attribs[i++] = GLX_GREEN_SIZE;
+		gl_attribs[i++] = gl_desc.get_green_size();
+		gl_attribs[i++] = GLX_BLUE_SIZE;
+		gl_attribs[i++] = gl_desc.get_blue_size();
+		gl_attribs[i++] = GLX_DEPTH_SIZE;
+		gl_attribs[i++] = gl_desc.get_depth_size();
+		gl_attribs[i++] = GLX_STENCIL_SIZE;
+		gl_attribs[i++] = gl_desc.get_stencil_size();
+		gl_attribs[i++] = None;
 
 		// get an appropriate visual
 		if (opengl_visual_info) XFree(opengl_visual_info);
-		opengl_visual_info = glXChooseVisual(disp, DefaultScreen(disp), gl_attribs);
+		opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs);
 	
 		if (opengl_visual_info == NULL)
 		{
-			opengl_visual_info = glXChooseVisual(disp, DefaultScreen(disp), gl_attribs_single);
+			opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs_single);
 			printf("Requested visual not supported by your OpenGL implementation. Falling back on singlebuffered Visual!\n");
 			if (opengl_visual_info == NULL)
 			{
@@ -242,7 +310,7 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 		// create a GLX context
 		opengl_context = create_context();
 
-		if (!glXIsDirect(disp, opengl_context))
+		if (!glx.glXIsDirect(disp, opengl_context))
 			printf("No hardware acceleration available. I hope you got a really fast machine.\n");
 
 		last_set_interval = -1;
@@ -250,16 +318,15 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 	}
 
 	int screen_bpp = 0;
-	glXGetConfig(disp, opengl_visual_info, GLX_BUFFER_SIZE, &screen_bpp);
+	glx.glXGetConfig(disp, opengl_visual_info, GLX_BUFFER_SIZE, &screen_bpp);
 
 	x11_window.create(opengl_visual_info, screen_bpp, site, desc);
 
 	if (create_provider_flag)
 	{
-		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_GLX(*this, opengl_context)));
+		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_GLX(*this, opengl_context, false)));
 		std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
 		gc_providers.push_back(gc.get_provider());
-		setup_swap_interval_pointers();
 	}
 }
 
@@ -271,7 +338,7 @@ void CL_OpenGLWindowProvider_GLX::on_window_resized()
 
 bool CL_OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 {
-	const char *ext_string = glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
+	const char *ext_string = glx.glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
 	if (ext_string)
 	{
 		if (strstr(ext_string, ext_name))
@@ -282,6 +349,7 @@ bool CL_OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_nam
 	return false;
 }
 
+// Call when glx_swap_interval_set == false
 void CL_OpenGLWindowProvider_GLX::setup_swap_interval_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) CL_OpenGL::get_proc_address("glXSwapIntervalSGI");
@@ -298,6 +366,8 @@ void CL_OpenGLWindowProvider_GLX::setup_swap_interval_pointers()
 		glXSwapIntervalMESA = NULL;
 	}
 
+	glx_swap_interval_set = true;
+
 }
 
 GLXContext CL_OpenGLWindowProvider_GLX::create_context()
@@ -311,14 +381,14 @@ GLXContext CL_OpenGLWindowProvider_GLX::create_context()
 		if (gl_provider)
 		{
 			const CL_RenderWindowProvider *rwp = &gl_provider->get_render_window();
-			const RenderWindowProvider_GLX *render_window_glx = dynamic_cast<const RenderWindowProvider_GLX*>(rwp);
+			const CL_GL_RenderWindowProvider_GLX *render_window_glx = dynamic_cast<const CL_GL_RenderWindowProvider_GLX*>(rwp);
 			if (render_window_glx)
 				shared_context = render_window_glx->get_context();
 		}
 	}
 
 	GLXContext context;
-	context = glXCreateContext(x11_window.get_display(), opengl_visual_info, shared_context, GL_TRUE);
+	context = glx.glXCreateContext(x11_window.get_display(), opengl_visual_info, shared_context, GL_TRUE);
 	if(context == NULL)
 		throw CL_Exception("glXCreateContext failed");
 
@@ -335,6 +405,9 @@ void CL_OpenGLWindowProvider_GLX::flip(int interval)
 		if (last_set_interval != interval)
 		{
 			last_set_interval = interval;
+			if (!glx_swap_interval_set)
+				setup_swap_interval_pointers();
+				
 			if (glXSwapIntervalSGI)
 			{
 				glXSwapIntervalSGI(interval);
@@ -345,7 +418,7 @@ void CL_OpenGLWindowProvider_GLX::flip(int interval)
 		}
 	}
 
-	glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
+	glx.glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
 }
 
 void CL_OpenGLWindowProvider_GLX::update(const CL_Rect &_rect)

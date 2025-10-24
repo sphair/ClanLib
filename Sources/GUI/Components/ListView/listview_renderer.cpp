@@ -53,7 +53,7 @@
 // CL_ListViewRenderer Construction:
 
 CL_ListViewRenderer::CL_ListViewRenderer(CL_ListView *listview)
-: listview(listview), gc(listview->get_gc()), display_mode(listview_mode_details),
+: listview(listview), display_mode(listview_mode_details),
   scroll_x(0), scroll_y(0), height_row(0)
 {
 	prop_icon_color = CL_GUIThemePartProperty(CssStr::icon_color, cl_text("white"));
@@ -79,6 +79,7 @@ CL_ListViewRenderer::~CL_ListViewRenderer()
 // CL_ListViewRenderer Operations:
 
 void CL_ListViewRenderer::render(
+	CL_GraphicContext &gc,
 	std::vector<ListViewColumn> &columns,
 	std::vector<ListViewRow> &rows,
 	std::vector<ListViewShownItem> &items,

@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 RadioButton::RadioButton(GUI *gui) : 
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Radio Button", CL_Rect(256 + 256 + 32, 256 + 180 + 32, CL_Size(256, 180)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Radio Button", CL_Rect(256 + 256 + 24, 256 + 180 + 24, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	set_draggable(true);

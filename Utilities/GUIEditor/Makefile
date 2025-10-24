@@ -23,13 +23,13 @@ OBJF = \
 ./Sources/property_component_edit_state_header_sizing.o \
 ./Sources/property_component_edit_state.o \
 ./Sources/precomp.o \
-./Sources/tab_order_visualisation.o \
 ./Sources/callback_info.o \
 ./Sources/grid_edit_state_object_sizing.o \
 ./Sources/dialog_container.o \
 ./Sources/snapline.o \
 ./Sources/selection.o \
 ./Sources/property_component_edit_state_revert_button.o \
+./Sources/anchor_popup.o \
 ./Sources/main.o
 
 LIBS=clanApp clanDisplay clanCore clanGL clanGUI

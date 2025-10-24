@@ -74,7 +74,7 @@ public:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
 	void create_parts();
-	void update_layout();
+	void update_layout(CL_GraphicContext &gc);
 	void unselect_all(CL_ToolBarItem_Impl *ignore);
 	int find_item_at(const CL_Point &pos);
 
@@ -345,7 +345,7 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 
 void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	update_layout();
+	update_layout(gc);
 
 	CL_Rect rect = toolbar->get_size();
 	part_component.render_box(gc, rect, update_rect);
@@ -370,7 +370,7 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 
 		CL_Point pressed_offset(0,0);
 		if (index == index_pressed_item)
-			pressed_offset = CL_Point(-1,-1);
+			pressed_offset = CL_Point(0,0); // To do: Read this from css properties or remove feature totally
 
 		if (!item.impl->icon.is_null())
 		{
@@ -407,9 +407,9 @@ void CL_ToolBar_Impl::on_resized()
 			toolbar->set_class_name(cl_text("horizontal"));
 		else 
 			toolbar->set_class_name(cl_text("vertical"));
-
-		need_layout_update = true;
 	}
+
+	need_layout_update = true;
 }
 
 void CL_ToolBar_Impl::unselect_all(CL_ToolBarItem_Impl *ignore)
@@ -460,7 +460,7 @@ void CL_ToolBar_Impl::create_parts()
 	need_layout_update = true;
 }
 
-void CL_ToolBar_Impl::update_layout()
+void CL_ToolBar_Impl::update_layout(CL_GraphicContext &gc)
 {
 	if (need_layout_update == false)
 		return;
@@ -468,8 +468,6 @@ void CL_ToolBar_Impl::update_layout()
 
 	CL_Rect rect = toolbar->get_size();
 	CL_Rect component_content = part_component.get_content_box(rect);
-
-	CL_GraphicContext &gc = toolbar->get_gc();
 
 	CL_Rect item_content = part_item_normal.get_content_box(component_content);
 	int original_text_gap = part_item_normal.get_property_int(prop_text_gap);

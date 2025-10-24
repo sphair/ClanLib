@@ -32,16 +32,6 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Math/size.h"
 
-#ifndef WIN32
-#ifndef __APPLE__
-#ifdef HAVE_X11_EXTENSIONS_XF86VMODE_H
-#include <X11/Xlib.h>
-#include <X11/extensions/xf86vmode.h>
-#define V_DBLSCAN       0x020
-#endif
-#endif
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMode_Impl Class:
 
@@ -100,50 +90,6 @@ std::vector<CL_DisplayWindowMode> &CL_DisplayWindowMode::get_display_modes()
 				cur_devmode.dmBitsPerPel,
 				cur_devmode.dmDisplayFrequency));
 		}
-#else
-#ifndef __APPLE__
-#ifdef HAVE_X11_EXTENSIONS_XF86VMODE_H
-		Display *display = XOpenDisplay(NULL);
-
-		int event_base;
-		int error_base;
-
-		// Check for VidMode extension
-		if (XF86VidModeQueryExtension(display, &event_base, &error_base))
-		{
-			int screen = DefaultScreen(display);
-
-			XF86VidModeModeInfo **vmodes;
-			int nmodes;
-
-			if (XF86VidModeGetAllModeLines(display, screen, &nmodes, &vmodes))
-			{
-				int bpp = DefaultDepth(display, screen);
-				int refresh_rate;
-
-				for (int i = 0; i < nmodes; i++)
-				{
-					if(vmodes[i]->htotal * vmodes[i]->vtotal != 0)
-					{
-						if ((vmodes[i]->flags) & V_DBLSCAN)
-							refresh_rate = vmodes[i]->dotclock * 500 / (vmodes[i]->htotal * vmodes[i]->vtotal);
-						else
-							refresh_rate = vmodes[i]->dotclock * 1000 / (vmodes[i]->htotal * vmodes[i]->vtotal);
-					}
-					else
-						refresh_rate = 0;
-
-					modes.push_back(CL_DisplayWindowMode(
-						CL_Size(vmodes[i]->hdisplay, vmodes[i]->vdisplay),
-						bpp,
-						refresh_rate));
-				}
-			}
-		}
-
-		XCloseDisplay(display);
-#endif
-#endif
 #endif
 	}
 

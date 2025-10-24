@@ -16,7 +16,7 @@ OBJF= \
 ./Sources/Views/css_packer_view.o \
 ./Sources/css_packer.o
 
-LIBS=clanCore clanApp clanDisplay clanGUI clanGDI
+LIBS=clanCore clanApp clanDisplay clanGUI clanGL
 
 CXXFLAGS += -I./Sources -I./Sources/Views
 

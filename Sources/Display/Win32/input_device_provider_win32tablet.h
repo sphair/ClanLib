@@ -104,6 +104,9 @@ public:
 	/// \brief Returns true if a tablet stylus is in proximity (hovering close enough over the tablet surface).
 	bool in_proximity() const;
 
+	/// \brief Returns true if the tablet context is currently enabled (enabled and on top in context overlap order).
+	bool is_context_on_top();
+
 /// \}
 /// \name Operations
 /// \{
@@ -119,9 +122,8 @@ public:
 	/// \brief Sets the position of the device.
 	void set_position(int x, int y);
 
-	/// \brief Enable/disable tablet context.
-	/** <p>Raises the windows tablet context to the top of the tablet context stack when set to true.</p>*/
-	void set_enabled(bool enable);
+	/// \brief Raises the tablet context to the top of the tablet context stack and enables it, or disable the context if false.
+	void set_context_on_top(bool enable);
 
 	BOOL process_packet(WPARAM wParam, LPARAM lParam);
 

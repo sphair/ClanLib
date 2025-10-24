@@ -42,7 +42,7 @@ HolderComponent::HolderComponent(CL_GUIComponent *parent)
 	func_render().set(this, &HolderComponent::on_render);
 	func_resized().set(this, &HolderComponent::on_resized);
 
-	font = CL_Font(get_gc(), "Tahoma", -11);
+//	font = CL_Font(get_gc(), "Tahoma", -11);
 
 	parent_grid = static_cast<GridComponent*>(parent);
 }
@@ -315,7 +315,7 @@ void HolderComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 {
 	// Do a fill rect for otherwise transparent components:
 	CL_TempString type = get_first_child()->get_type_name();
-	if (type == cl_text("toolbar") || type == cl_text("menubar") || type == cl_text("label"))
+	if (type == cl_text("toolbar") || type == cl_text("menubar") /*|| type == cl_text("label")*/)
 	{
 		CL_Rect child_geom = get_first_child()->get_geometry();
 		CL_Draw::fill(get_gc(), child_geom, CL_Colorf(0.35f, 0.498f, 0.603f, 0.2f));
@@ -473,4 +473,19 @@ std::vector<SnapLine> HolderComponent::get_snaplines() const
 	snaplines.push_back(SnapLine(SnapLine::Bottom, -5, SnapLine::Low));
 
 	return snaplines;
+}
+
+HolderComponent *HolderComponent::find_holder_at(CL_GUIComponent *container, const CL_Point &pos)
+{
+	CL_GUIComponent *child = container->get_component_at(pos);
+	if (child && child != container)
+	{
+		while (child && !dynamic_cast<HolderComponent*>(child))
+			child = child->get_parent_component();
+		return child ? dynamic_cast<HolderComponent*>(child) : 0;
+	}
+	else
+	{
+		return 0;
+	}
 }

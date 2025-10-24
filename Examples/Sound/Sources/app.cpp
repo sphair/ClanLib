@@ -46,11 +46,20 @@ int App::start(const std::vector<CL_String> &args)
 	CL_GUIWindowManagerSystem wm;
 	gui.set_window_manager(wm);
 
+	CL_String resource_filename("../../Resources/GUIThemeAeroPacked/resources.xml");
+	CL_String theme_filename("../../Resources/GUIThemeAeroPacked/theme.css");
+	if (!CL_FileHelp::file_exists(resource_filename))
+	{
+		resource_filename = "../../Resources/GUIThemeBasicPacked/resources.xml";
+		theme_filename = "../../Resources/GUIThemeBasicPacked/theme.css";
+	}
+
+	CL_ResourceManager resources(resource_filename);
+
 	CL_GUIThemeDefault theme;
-	CL_ResourceManager resources("../../Resources/GUIThemeAeroPacked/resources.xml");
 	theme.set_resources(resources);
 	gui.set_theme(theme); 
-	gui.set_css_document("../../Resources/GUIThemeAeroPacked/theme.css");
+	gui.set_css_document(theme_filename);
 
 	CL_DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);

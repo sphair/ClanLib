@@ -41,7 +41,7 @@
 
 GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
 : CL_GUIComponent(parent), main_window(main_window), component_container(0),
-  component_overlay(0), boundary(0,0,320,200)
+  component_overlay(0), boundary(320,200)
 {
 	set_type_name(cl_text("grid"));
 	func_input_pressed().set(this, &GridComponent::on_input_pressed);
@@ -50,6 +50,7 @@ GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
 	func_input_pointer_moved().set(this, &GridComponent::on_input_pointer_moved);
 	func_render().set(this, &GridComponent::on_render);
 	func_resized().set(this, &GridComponent::on_resized);
+	part_windowframe = CL_GUIThemePart(this, "window-frame");
 
 	edit_state.set_grid_component(this);
 
@@ -63,7 +64,7 @@ GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
 
 CL_Size GridComponent::get_dialog_size()
 {
-	return boundary.get_size();
+	return boundary;
 }
 
 const std::vector<HolderComponent*> &GridComponent::get_holders() const
@@ -112,48 +113,48 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 
 		if (tag == cl_text("button"))
 		{
-			CL_PushButton *co = new CL_PushButton(holder);
+			CL_PushButton *co = new CL_PushButton(holder->get_container());
 			co->set_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
 		}
 		else if (tag == cl_text("checkbox"))
 		{
-			CL_CheckBox *co = new CL_CheckBox(holder);
+			CL_CheckBox *co = new CL_CheckBox(holder->get_container());
 			co->set_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
 		}
 		else if (tag == cl_text("radiobutton"))
 		{
-			CL_RadioButton *co = new CL_RadioButton(holder);
+			CL_RadioButton *co = new CL_RadioButton(holder->get_container());
 			co->set_text(e.get_attribute(cl_text("text")));
 			co->set_group_name(e.get_attribute("group"));
 			new_comp = co;
 		}
 		else if (tag == cl_text("label"))
 		{
-			CL_Label *co = new CL_Label(holder);
+			CL_Label *co = new CL_Label(holder->get_container());
 			co->set_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
 		}
 		else if (tag == cl_text("statusbar"))
 		{
-			CL_StatusBar *co = new CL_StatusBar(holder);
+			CL_StatusBar *co = new CL_StatusBar(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("lineedit"))
 		{
-			CL_LineEdit *co = new CL_LineEdit(holder);
+			CL_LineEdit *co = new CL_LineEdit(holder->get_container());
 			co->set_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
 		}
 		else if (tag == cl_text("imageview"))
 		{
-			CL_ImageView *co = new CL_ImageView(holder);
+			CL_ImageView *co = new CL_ImageView(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("slider"))
 		{
-			CL_Slider *co = new CL_Slider(holder);
+			CL_Slider *co = new CL_Slider(holder->get_container());
 			co->set_min(CL_StringHelp::text_to_int(e.get_attribute(cl_text("min"))));
 			co->set_max(CL_StringHelp::text_to_int(e.get_attribute(cl_text("max"))));
 			co->set_tick_count(CL_StringHelp::text_to_int(e.get_attribute(cl_text("ticks"))));
@@ -162,13 +163,13 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 		}
 		else if (tag == cl_text("listview"))
 		{
-			CL_ListView *co = new CL_ListView(holder);
+			CL_ListView *co = new CL_ListView(holder->get_container());
 //			load_listview(e, co);
 			new_comp = co;
 		}
 		else if (tag == cl_text("tab"))
 		{
-			CL_Tab *co = new CL_Tab(holder);
+			CL_Tab *co = new CL_Tab(holder->get_container());
 			new_comp = co;
 
 			CL_DomElement tab_child = e.get_first_child().to_element();
@@ -188,12 +189,12 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 		}
 		else if (tag == cl_text("menubar"))
 		{
-			CL_MenuBar *co = new CL_MenuBar(holder);
+			CL_MenuBar *co = new CL_MenuBar(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("frame"))
 		{
-			CL_Frame *co = new CL_Frame(holder);
+			CL_Frame *co = new CL_Frame(holder->get_container());
 			co->set_header_text(e.get_attribute(cl_text("text")));
 			new_comp = co;
 
@@ -202,29 +203,29 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 		}
 		else if (tag == cl_text("spin"))
 		{
-			CL_Spin *co = new CL_Spin(holder);
+			CL_Spin *co = new CL_Spin(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("combobox"))
 		{
-			CL_ComboBox *co = new CL_ComboBox(holder);
+			CL_ComboBox *co = new CL_ComboBox(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("toolbar"))
 		{
-			CL_ToolBar *co = new CL_ToolBar(holder);
+			CL_ToolBar *co = new CL_ToolBar(holder->get_container());
 			new_comp = co;
 		}
 		else if (tag == cl_text("dialog"))
 		{
 			int w = CL_StringHelp::text_to_int(e.get_attribute(cl_text("width")));
 			int h = CL_StringHelp::text_to_int(e.get_attribute(cl_text("height")));
-			boundary.right = w;
-			boundary.bottom = h;
+			boundary.width = w;
+			boundary.height = h;
 		}
 		else // unknown component... create CustomComponent.
 		{
-			CustomComponent *co = new CustomComponent(holder);
+			CustomComponent *co = new CustomComponent(holder->get_container());
 			co->set_type_name(tag);
 			new_comp = co;
 		}
@@ -315,16 +316,17 @@ void GridComponent::remove_holder(HolderComponent *holder)
 
 void GridComponent::set_boundary_size(const CL_Size &size)
 {
-	boundary.right = size.width;
-	boundary.bottom = size.height;
+	boundary.width = size.width;
+	boundary.height = size.height;
+	on_resized();
 	request_repaint();
 }
 
 CL_DomElement GridComponent::to_element(CL_DomDocument &doc)
 {
 	CL_DomElement de = doc.create_element("dialog");
-	de.set_attribute(cl_text("width"), CL_StringHelp::int_to_text(boundary.get_width()));
-	de.set_attribute(cl_text("height"), CL_StringHelp::int_to_text(boundary.get_height()));
+	de.set_attribute(cl_text("width"), CL_StringHelp::int_to_text(boundary.width));
+	de.set_attribute(cl_text("height"), CL_StringHelp::int_to_text(boundary.height));
 	return de;
 }
 
@@ -333,32 +335,22 @@ CL_DomElement GridComponent::to_element(CL_DomDocument &doc)
 
 CL_Rect GridComponent::get_boundary_grabber_se() const
 {
-	return CL_Rect(CL_Point(boundary.right-3, boundary.bottom-3), CL_Size(6, 6));
+	return CL_Rect(CL_Point(boundary.width, boundary.height), CL_Size(8, 8));
 }
 
 CL_Rect GridComponent::get_boundary_grabber_s() const
 {
-	return CL_Rect(CL_Point(0, boundary.bottom-3), CL_Size(get_boundary_grabber_se().left, 6));
+	return CL_Rect(CL_Point(0, boundary.height), CL_Size(get_boundary_grabber_se().left, 8));
 }
 
 CL_Rect GridComponent::get_boundary_grabber_e() const
 {
-	return CL_Rect(CL_Point(boundary.right-3, 0), CL_Size(6, get_boundary_grabber_se().top));
+	return CL_Rect(CL_Point(boundary.width, 0), CL_Size(8, get_boundary_grabber_se().top));
 }
 
 HolderComponent *GridComponent::find_holder_at(const CL_Point &pos)
 {
-	CL_GUIComponent *child = component_container->get_component_at(pos);
-	if (child && child != component_container)
-	{
-		while (child && !dynamic_cast<HolderComponent*>(child))
-			child = child->get_parent_component();
-		return child ? dynamic_cast<HolderComponent*>(child) : 0;
-	}
-	else
-	{
-		return 0;
-	}
+	return HolderComponent::find_holder_at(component_container, pos);
 }
 
 bool GridComponent::deliver_input_to_tab(const CL_InputEvent &e)
@@ -384,26 +376,33 @@ bool GridComponent::on_input_pressed(const CL_InputEvent &e)
 {
 	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
 		return true;
-	return edit_state.on_input_pressed(e);
+	return edit_state.on_input_pressed(offset_event(e));
 }
 
 bool GridComponent::on_input_released(const CL_InputEvent &e)
 {
 	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
 		return true;
-	return edit_state.on_input_released(e);
+	return edit_state.on_input_released(offset_event(e));
 }
 
 bool GridComponent::on_input_doubleclick(const CL_InputEvent &e)
 {
 	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
 		return true;
-	return edit_state.on_input_doubleclick(e);
+	return edit_state.on_input_doubleclick(offset_event(e));
 }
 
 bool GridComponent::on_input_pointer_moved(const CL_InputEvent &e)
 {
-	return edit_state.on_input_pointer_moved(e);
+	return edit_state.on_input_pointer_moved(offset_event(e));
+}
+
+CL_InputEvent GridComponent::offset_event(CL_InputEvent e)
+{
+	e.mouse_pos.x -= component_container->get_geometry().left;
+	e.mouse_pos.y -= component_container->get_geometry().top;
+	return e;
 }
 
 void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
@@ -422,13 +421,18 @@ void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 		CL_Draw::fill(gc, g, CL_Colorf::darkgray);
 		CL_Draw::fill(gc, boundary, CL_Colorf::lightgrey/*CL_Colorf("E0DFE3")*/);
 	}
-
+/*
 	if (!tab_parent)
 	{
 		CL_Draw::line(gc, (float)boundary.left, (float)boundary.bottom, (float)boundary.right, (float)boundary.bottom, CL_Colorf::black);
 		CL_Draw::line(gc, (float)boundary.right, (float)boundary.top, (float)boundary.right, (float)boundary.bottom, CL_Colorf::black);
 		// CL_Draw::fill(gc, get_boundary_grabber_se(), CL_Colorf::darkslategray);
 	}
+*/
+	CL_Rect framebox = part_windowframe.get_render_box(boundary);
+	framebox.translate(-framebox.left, -framebox.top);
+	part_windowframe.render_box(gc, framebox, update_rect);
+
 	reset_cliprect(gc);
 }
 
@@ -438,7 +442,6 @@ void GridComponent::on_render_overlay(CL_GraphicContext &gc, const CL_Rect &upda
 	std::vector<HolderComponent *> selection = main_window->get_selection()->get_selection();
 	for (size_t i = 0; i < selection.size(); i++)
 	{
-		CL_Rect pos = window_to_component_coords(selection[i]->component_to_window_coords(selection[i]->get_size()));
 		CL_Rect grabbers[8] =
 		{
 			selection[i]->get_grabber_e(),
@@ -454,6 +457,7 @@ void GridComponent::on_render_overlay(CL_GraphicContext &gc, const CL_Rect &upda
 		for (int j=0; j<8; j++)
 			grabbers[j] = window_to_component_coords(selection[i]->component_to_window_coords(grabbers[j]));
 
+		CL_Rect pos = window_to_component_coords(selection[i]->component_to_window_coords(selection[i]->get_size()));
 		pos.expand(4,4,3,3);
 		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f, 0.25f));
 
@@ -462,20 +466,16 @@ void GridComponent::on_render_overlay(CL_GraphicContext &gc, const CL_Rect &upda
 			CL_Draw::fill(gc, grabbers[j], CL_Colorf::white);
 			CL_Draw::box(gc, grabbers[j], CL_Colorf::black);
 		}
-
-		/*		CL_Draw::box(gc, pos, CL_Colorf::cornflowerblue);
-		pos.expand(1,1,1,1);
-		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 149.0f/255.0f, 237.0f/255.0f, 0.25f));
-		pos.shrink(2,2,2,2);
-		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 149.0f/255.0f, 237.0f/255.0f, 0.25f));
-*/	}
+	}
 
 	reset_cliprect(gc);
 }
 
 void GridComponent::on_resized()
 {
-	component_container->set_geometry(get_size());
+	CL_Rect framebox = part_windowframe.get_render_box(boundary);
+	framebox.translate(-framebox.left, -framebox.top);
+	component_container->set_geometry(part_windowframe.get_content_box(framebox));
 	component_overlay->set_geometry(get_size());
 }
 
@@ -495,22 +495,22 @@ CL_Rect GridComponent::load_geometry(CL_DomElement &e)
 
 CL_Rect GridComponent::holder_to_grid_coords(HolderComponent *holder, const CL_Rect &rect)
 {
-	return window_to_component_coords(holder->component_to_window_coords(rect));
+	return component_container->window_to_component_coords(holder->component_to_window_coords(rect));
 }
 
 CL_Point GridComponent::holder_to_grid_coords(HolderComponent *holder, const CL_Point &point)
 {
-	return window_to_component_coords(holder->component_to_window_coords(point));
+	return component_container->window_to_component_coords(holder->component_to_window_coords(point));
 }
 
 CL_Rect GridComponent::grid_to_holder_coords(HolderComponent *holder, const CL_Rect &rect)
 {
-	return component_to_window_coords(holder->window_to_component_coords(rect));
+	return component_container->component_to_window_coords(holder->window_to_component_coords(rect));
 }
 
 CL_Point GridComponent::grid_to_holder_coords(HolderComponent *holder, const CL_Point &point)
 {
-	return component_to_window_coords(holder->window_to_component_coords(point));
+	return component_container->component_to_window_coords(holder->window_to_component_coords(point));
 }
 
 std::vector<SnapLine> GridComponent::get_snaplines() const
@@ -518,10 +518,10 @@ std::vector<SnapLine> GridComponent::get_snaplines() const
 	CL_Size size = get_size();
 	std::vector<SnapLine> snaplines;
 	int margin = 11;
-	snaplines.push_back(SnapLine(SnapLine::Top, boundary.top+margin, SnapLine::Low));
-	snaplines.push_back(SnapLine(SnapLine::Bottom, boundary.bottom-margin, SnapLine::Low));
-	snaplines.push_back(SnapLine(SnapLine::Left, boundary.left+margin, SnapLine::Low));
-	snaplines.push_back(SnapLine(SnapLine::Right, boundary.right-margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Top, margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Bottom, boundary.height-margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Left, margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Right, boundary.width-margin, SnapLine::Low));
 	return snaplines;
 }
 

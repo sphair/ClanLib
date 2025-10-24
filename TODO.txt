@@ -19,6 +19,8 @@ Remember when releasing:
 - Strings and Core
   - Should be possible to use strings without initializing clanCore first.
 
+- Why does TextureGroup have add_texture and other CL_Texture functions? Makes the class responsibility unclear..
+
 - GUI Editor
   - Finish property editor
 
@@ -27,6 +29,12 @@ Remember when releasing:
   - Change all tests/examples to use unicode 
     Why? Just set the "Character Set" to "Use Multi-Byte Character Set" for UTF8
     Maybe the Unicode configuration should be renamed UTF16 ?
+
+- CL_Directory::get_resourcedata() needs fixing on linux. (See API docs)
+
+- Examples: 
+  We need an example that shows how to load a shader from a CL_String, instead of a file
+  A benchmark application, showing fps of drawing triangles / images / sprites using various display targets
 
 - GraphicContext::set_primitives_array() uses CL_PrimitivesArrayData
   Internally we use some standard settings as follows:
@@ -72,26 +80,30 @@ Disposable objects:
     Add pixel_canvas->set_projection(matrix);
 
 - GUI Component issues:
-  - Minor: Scrollbar buttons should use separate glyph part
-  - Minor: Window close/min/max/etc buttons should use separate glyph part
-  - scrollbar trackarea and buttonarea overlap with 1 pixel
-  - checkbox draw something wrong? (compare with vista screenshot, especially disabled)
-  - slider - thumb size for horizontal is too small (compare to vertical)
-  - slider - support focused
-  - lineedit - use readonly and focused gfx
-  - lineedit - set states on parts (hot doesn't show)
-  - checkbox support excluded and implicit
-  - lineedit - selecting with mouse when there is only one char is difficult
-  - spin - disabled state is not shown visually
-  - groupbox - no clickthrough  - progressbar - Does not work!
-  - Window - texture wm - clicking on window client area does not bring it to front
-  - Tab - redo parts so we won't have to use header_border, and resizing of active tagpage part
-  - Frame vs GroupBox - whats the difference - do we need both?
-  - Popupmenu separator part is too short
-  - ToolBar: You cannot switch between horizontal and Vertical Toolbar
-  - ToolBar: It uses CL_Sprite, not CL_Image
-  - ToolBar: It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
-  - Combobox: Line edit doesn't use hot state visually
+  - Important:
+    - ProgressBar!
+
+  - Less important:
+    - Minor: Scrollbar buttons should use separate glyph part
+    - Minor: Window close/min/max/etc buttons should use separate glyph part
+    - scrollbar trackarea and buttonarea overlap with 1 pixel
+    - checkbox draw something wrong? (compare with vista screenshot, especially disabled)
+    - slider - thumb size for horizontal is too small (compare to vertical)
+    - slider - support focused
+    - lineedit - use readonly and focused gfx
+    - lineedit - set states on parts (hot doesn't show)
+    - checkbox support excluded and implicit
+    - lineedit - selecting with mouse when there is only one char is difficult
+    - spin - disabled state is not shown visually
+    - groupbox - no clickthrough
+    - Window - texture wm - clicking on window client area does not bring it to front
+    - Tab - redo parts so we won't have to use header_border, and resizing of active tagpage part
+    - Frame vs GroupBox - whats the difference - do we need both?
+    - Popupmenu separator part is too short
+    - ToolBar: You cannot switch between horizontal and Vertical Toolbar
+    - ToolBar: It uses CL_Sprite, not CL_Image
+    - ToolBar: It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
+    - Combobox: Line edit doesn't use hot state visually
 
 - GUI Render
   Issue: If a component alters the state during rendering (for example calls gc.set_texture(index, texture) ),

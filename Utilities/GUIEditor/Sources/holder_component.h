@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Magnus Norddahl
 */
 
 #pragma once
@@ -36,12 +37,9 @@ class GridComponent;
 
 class HolderComponent : public CL_GUIComponent
 {
-//! Construction:
 public:
 	HolderComponent(CL_GUIComponent *parent);
 
-//! Attributes:
-public:
 	CL_ComponentAnchorPoint get_anchor_tl();
 	CL_ComponentAnchorPoint get_anchor_br();
 	CallbackInfo get_callback_info();
@@ -51,6 +49,10 @@ public:
 	CL_String get_position_equation_y2() const;
 
 	CL_GUIComponent *get_container();
+	CL_GUIComponent *get_component() { return get_first_child(); }
+
+	HolderComponent *get_next_sibling() { return dynamic_cast<HolderComponent*>(CL_GUIComponent::get_next_sibling()); }
+	HolderComponent *get_previous_sibling() { return dynamic_cast<HolderComponent*>(CL_GUIComponent::get_previous_sibling()); }
 
 	CL_Rect get_grabber_w() const;
 	CL_Rect get_grabber_nw() const;
@@ -63,19 +65,26 @@ public:
 
 	std::vector<SnapLine> get_snaplines() const;
 
-//! Operations:
-public:
 	void set_selected(bool value);
 	CL_DomElement to_element(CL_DomDocument &doc);
 	void set_anchor_tl(CL_ComponentAnchorPoint);
 	void set_anchor_br(CL_ComponentAnchorPoint);
 	void set_position_equations(const CL_String &str_x, const CL_String &str_y);
 	void set_position_equations2(const CL_String &str_x, const CL_String &str_y);
+/*
+	void set_geometry(const CL_Rect &g) { CL_GUIComponent::set_geometry(g); }
+	CL_Rect get_geometry() const { return CL_GUIComponent::get_geometry(); }
+	CL_Size get_size() const { return CL_GUIComponent::get_size(); }
+	int get_width() const { return CL_GUIComponent::get_width(); }
+	int get_height() const { return CL_GUIComponent::get_height(); }
 
-//! Events:
-public:
+	CL_Point window_to_component_coords(const CL_Point &window_point) const { return CL_GUIComponent::window_to_component_coords(window_point); }
+	CL_Rect window_to_component_coords(const CL_Rect &window_rect) const { return CL_GUIComponent::window_to_component_coords(window_rect); }
+	CL_Point component_to_window_coords(const CL_Point &component_point) const { return CL_GUIComponent::component_to_window_coords(component_point); }
+	CL_Rect component_to_window_coords(const CL_Rect &component_rect) const { return CL_GUIComponent::component_to_window_coords(component_rect); }
+*/
+	static HolderComponent *find_holder_at(CL_GUIComponent *container, const CL_Point &pos);
 
-//! Implementation:
 private:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
@@ -89,7 +98,7 @@ private:
 	CL_GUIComponent *get_toplevel_component();
 	CL_GUIComponent *get_tab_or_frame_parent(CL_GUIComponent *comp);
 
-	CL_Font font;
+	// CL_Font font;
 	CL_String pos_equation_x;
 	CL_String pos_equation_y;
 	CL_String pos_equation_x2;

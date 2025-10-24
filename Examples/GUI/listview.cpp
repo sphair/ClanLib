@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 ListView::ListView(GUI *gui) :
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("List View & Toolbar", CL_Rect(32, 256*1 + 180*1 + 32, CL_Size(256*2, 180*2)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("List View & Toolbar", CL_Rect(8, 256*1 + 180*1 + 24, CL_Size(256*2, 180*2)), false)),
 	gui(gui)
 {
 	set_draggable(true);
@@ -39,10 +39,18 @@ ListView::ListView(GUI *gui) :
 	CL_Rect client_area = get_client_area();
 
 	CL_GraphicContext gc = gui->get_window()->get_gc();
-
-	sprite_mycomputer = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"));
-	sprite_folder = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png"));
-	sprite_overlay = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/overlay_96x96.png"));
+	if (CL_FileHelp::file_exists("../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"))
+	{
+		sprite_mycomputer = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"));
+		sprite_folder = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png"));
+		sprite_overlay = CL_Sprite(gc, cl_text("../../Resources/GUIThemeLuna/Images/overlay_96x96.png"));
+	}
+	else
+	{
+		sprite_mycomputer = CL_Sprite(gc, cl_text("tux.png"));
+		sprite_folder = CL_Sprite(gc, cl_text("tux.png"));
+		sprite_overlay = CL_Sprite(gc, cl_text("tux.png"));
+	}
 
 	toolbar = new CL_ToolBar(this);
 	toolbar->set_geometry(CL_Rect(client_area.left, client_area.top, CL_Size(32, 180)));

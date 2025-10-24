@@ -57,8 +57,11 @@
 #include "WGL/gl1_window_provider_wgl.h"
 #else
 #include "GLX/gl1_window_provider_glx.h"
+#include "GLX/pbuffer_impl.h"
 #endif
 #include "pbuffer.h"
+
+#include "../Display/2D/sprite_render_batch.h"
 
 class CL_GL1SelectedTexture
 {
@@ -80,6 +83,19 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
 
 	max_texture_coords = get_max_texture_coords();
 
+	// Hack, so the sprite render batcher does not exceed the allowed number of textures
+	if (max_texture_coords < CL_SpriteRenderBatch::max_textures)
+	{
+		if (max_texture_coords > 0)
+		{
+			CL_SpriteRenderBatch::max_textures = max_texture_coords;
+		}
+		else
+		{
+			CL_SpriteRenderBatch::max_textures = 1;
+		}
+	}
+
 	// Limit the internal texture coords, to avoid situations where the opengl driver says there are unlimited texture coords
 	if (max_texture_coords > 255)
 		max_texture_coords = 255;
@@ -89,6 +105,7 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
 
 CL_GL1GraphicContextProvider::~CL_GL1GraphicContextProvider()
 {
+	CL_GL1::remove_active(this);
 	delete render_window;
 }
 
@@ -192,11 +209,11 @@ CL_PBuffer_GL1 CL_GL1GraphicContextProvider::create_pbuffer(CL_Size size)
 
 	return ((CL_RenderWindowProvider_WGL *) wptr)->get_window().create_pbuffer(this, size);
 #else
-	const CL_RenderWindowProvider_GLX *wptr = dynamic_cast<const CL_RenderWindowProvider_GLX *> (render_window);
+	const CL_GL1_RenderWindowProvider_GLX *wptr = dynamic_cast<const CL_GL1_RenderWindowProvider_GLX *> (render_window);
 	if (wptr == NULL)
 		throw CL_Exception(cl_text("Render window type is not known"));
 
-	return ((CL_RenderWindowProvider_GLX *) wptr)->get_window().create_pbuffer(this, size);
+	return ((CL_GL1_RenderWindowProvider_GLX *) wptr)->get_window().create_pbuffer(this, size);
 #endif
 
 }
@@ -207,6 +224,49 @@ int CL_GL1GraphicContextProvider::get_height() const
 		return framebuffer_provider->get_attachment_size(0).height;
 	else
 		return render_window->get_viewport_height();
+}
+
+#ifdef __APPLE__
+static CFBundleRef cl_gl1_gBundleRefOpenGL = 0;
+#endif
+
+CL_GL1ProcAddress *CL_GL1GraphicContextProvider::get_proc_address(const CL_String8& function_name) const
+{
+
+#ifdef WIN32
+	return (void (*)())wglGetProcAddress(function_name.c_str());
+#else
+#ifdef __APPLE__
+	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
+	if (cl_gl1_gBundleRefOpenGL == 0)
+	{
+		cl_gl1_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
+		if (cl_gl1_gBundleRefOpenGL == 0)
+			throw CL_Exception("Unable to find com.apple.opengl bundle");
+	}
+
+	return (CL_GL1ProcAddress *) CFBundleGetFunctionPointerForName(
+		cl_gl1_gBundleRefOpenGL,
+		CFStringCreateWithCStringNoCopy(
+			0,
+			function_name.c_str(),
+			CFStringGetSystemEncoding(),
+			0));
+#else
+	// FIXME: This is very messy
+	const CL_GL1_RenderWindowProvider_GLX *wptr = dynamic_cast<const CL_GL1_RenderWindowProvider_GLX *> (render_window);
+	if (wptr)
+		return wptr->get_proc_address(function_name);
+
+	const CL_RenderWindowProvider_GLX_PBuffer *pptr = dynamic_cast<const CL_RenderWindowProvider_GLX_PBuffer *> (render_window);
+	if (pptr)
+		return pptr->get_proc_address(function_name);
+
+	return NULL;
+
+#endif
+#endif
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1577,7 +1637,6 @@ CLenum CL_GL1GraphicContextProvider::to_enum(CL_BlendEquation eq)
 	case cl_blend_equation_reverse_subtract: return CL_FUNC_REVERSE_SUBTRACT;
 	case cl_blend_equation_min: return CL_MIN;
 	case cl_blend_equation_max: return CL_MAX;
-	case cl_blend_equation_logic_op: return CL_LOGIC_OP;
 	default: return CL_FUNC_ADD;
 	}
 };
@@ -1744,12 +1803,16 @@ CLenum CL_GL1GraphicContextProvider::to_enum(enum CL_LogicOp op)
 
 void CL_GL1GraphicContextProvider::set_primitive_texture( int texture_index, CL_PrimitivesArrayData::VertexData &array_texture, int offset, int num_vertices, int total_vertices)
 {
+	CL_GL1TextureProvider *texture;
 	if ( (texture_index <0) || (texture_index >= max_texture_coords) )
 	{
-		throw CL_Exception(cl_text("Invalid texture unit index in GL1 target"));
+		texture = NULL;		// Ignore invalid texture index's
+	}
+	else
+	{
+		texture = selected_textures[texture_index].texture;
 	}
 
-	CL_GL1TextureProvider *texture = selected_textures[texture_index].texture;
 	if (texture)
 	{
 		if (cl1ActiveTexture != 0)

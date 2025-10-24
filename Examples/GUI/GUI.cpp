@@ -32,8 +32,14 @@
 
 GUI::GUI(App *app) : app(app)
 {
-//	current_theme = new_theme = theme_aero_packed;
-	current_theme = new_theme = theme_aero;
+	if (CL_FileHelp::file_exists("../../Resources/GUIThemeAero/theme.css"))
+	{
+		current_theme = new_theme = theme_aero;
+	}
+	else
+	{
+		current_theme = new_theme = theme_basic;
+	}
 
 	current_manager = manager_texture;
 //	current_manager = manager_system;
@@ -165,6 +171,12 @@ const char *GUI::get_theme_location()
 	if (current_theme == theme_aero_packed)
 		return "../../Resources/GUIThemeAeroPacked/theme.css";
 
+	if (current_theme == theme_basic)
+		return "../../Resources/GUIThemeBasic/theme.css";
+
+	if (current_theme == theme_basic_packed)
+		return "../../Resources/GUIThemeBasicPacked/theme.css";
+
 	if (current_theme == theme_luna_packed)
 		return "../../Resources/GUIThemeLunaPacked/theme.css";
 
@@ -178,6 +190,12 @@ const char *GUI::get_resources_location()
 
 	if (current_theme == theme_aero_packed)
 		return "../../Resources/GUIThemeAeroPacked/resources.xml";
+
+	if (current_theme == theme_basic)
+		return "../../Resources/GUIThemeBasic/resources.xml";
+
+	if (current_theme == theme_basic_packed)
+		return "../../Resources/GUIThemeBasicPacked/resources.xml";
 
 	if (current_theme == theme_luna_packed)
 		return "../../Resources/GUIThemeLunaPacked/resources.xml";

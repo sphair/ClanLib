@@ -49,8 +49,6 @@
 class CL_GL1Functions
 {
 
-/// \}
-
 /// \name Typedefs
 /// \{
 
@@ -1937,9 +1935,8 @@ public:
 	ptr_wglDestroyPbufferARB wglDestroyPbufferARB;
 	ptr_wglQueryPbufferARB wglQueryPbufferARB;
 #endif
-
-};
 /// \}
+};
 
 #define cl1Accum CL_GL1::functions->accum
 #define cl1AlphaFunc CL_GL1::functions->alphaFunc

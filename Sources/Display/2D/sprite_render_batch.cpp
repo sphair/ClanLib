@@ -30,6 +30,8 @@
 #include "sprite_render_batch.h"
 #include "sprite_impl.h"
 
+int CL_SpriteRenderBatch::max_textures = 4;	// For use by the GL1 target, so it can reduce the number of textures
+
 CL_SpriteRenderBatch::CL_SpriteRenderBatch()
 : modelview(CL_Mat4f::identity()), origin(0.0f, 0.0f), x_dir(1.0f, 0.0f), y_dir(0.0f, 1.0f), position(0), num_current_textures(0)
 {
@@ -125,7 +127,7 @@ int CL_SpriteRenderBatch::set_batcher_active(CL_GraphicContext &gc, const CL_Tex
 			break;
 		}
 	}
-	if (texindex == -1 && num_current_textures < 4)
+	if (texindex == -1 && num_current_textures < max_textures)
 	{
 		texindex = num_current_textures;
 		current_textures[num_current_textures++] = texture;

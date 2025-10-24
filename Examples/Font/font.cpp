@@ -73,7 +73,16 @@ int App::start(const std::vector<CL_String> &args)
 		CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 		app_resources = CL_ResourceManager("resources.xml");
-		CL_ResourceManager gui_resources("../../Resources/GUIThemeLuna/resources.xml");
+
+		CL_String resource_filename("../../Resources/GUIThemeLuna/resources.xml");
+		CL_String theme_filename("theme.css");
+		if (!CL_FileHelp::file_exists(resource_filename))
+		{
+			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+			theme_filename = "theme_basic.css";
+		}
+
+		CL_ResourceManager gui_resources(resource_filename);
 
 		CL_GUIManager gui;
 
@@ -84,7 +93,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_GUIThemeDefault theme;
 		theme.set_resources(gui_resources);
 		gui.set_theme(theme); 
-		gui.set_css_document("theme.css");
+		gui.set_css_document(theme_filename);
 
 		CL_GUITopLevelDescription gui_desc;
 		gui_desc.set_title("Options");

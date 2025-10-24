@@ -31,7 +31,7 @@
 #include "GUI.h"
 
 Manager::Manager(GUI *gui) : 
-	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Window Manager", CL_Rect(256*3 + 32, 256 + 180 + 32, CL_Size(256, 180)), false)),
+	CL_Window(&gui->get_gui_manager(), CL_GUITopLevelDescription("Window Manager", CL_Rect(256*3 + 32, 256 + 180 + 24, CL_Size(256, 180)), false)),
 	gui(gui)
 {
 	set_draggable(true);
@@ -58,13 +58,13 @@ Manager::Manager(GUI *gui) :
 		button_texture->set_enabled(false);
 
 	checkbox_constant_repaint = new CL_CheckBox(this);
-	checkbox_constant_repaint->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 100, CL_Size(128, 40)));
+	checkbox_constant_repaint->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 114, CL_Size(128, 40)));
 	checkbox_constant_repaint->set_text("Constant repaint windows");
 	checkbox_constant_repaint->func_state_changed().set(this, &Manager::on_statechanged_constant_repaint);
 
 	int xoffset = client_area.left + 150;
 	int yoffset = client_area.top + 4;
-	int ygap = 24;
+	int ygap = 20;
 
 	radiobutton_aero = new CL_RadioButton(this);
 	radiobutton_aero->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
@@ -97,6 +97,34 @@ Manager::Manager(GUI *gui) :
 	radiobutton_luna_packed->set_group_name("Theme");
 	radiobutton_luna_packed->func_selected().set(this, &Manager::on_theme_selected, radiobutton_luna_packed);
 	yoffset += ygap;
+
+	radiobutton_basic = new CL_RadioButton(this);
+	radiobutton_basic->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
+	radiobutton_basic->set_text("Basic");
+	radiobutton_basic->set_selected(gui->get_theme() == GUI::theme_basic);
+	radiobutton_basic->set_group_name("Theme");
+	radiobutton_basic->func_selected().set(this, &Manager::on_theme_selected, radiobutton_basic);
+	yoffset += ygap;
+
+	radiobutton_basic_packed = new CL_RadioButton(this);
+	radiobutton_basic_packed->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
+	radiobutton_basic_packed->set_text("Basic Packed");
+	radiobutton_basic_packed->set_selected(gui->get_theme() == GUI::theme_basic_packed);
+	radiobutton_basic_packed->set_group_name("Theme");
+	radiobutton_basic_packed->func_selected().set(this, &Manager::on_theme_selected, radiobutton_basic_packed);
+	yoffset += ygap;
+
+	if (!CL_FileHelp::file_exists("../../Resources/GUIThemeAero/theme.css"))
+	{
+		radiobutton_aero->set_enabled(false);
+		radiobutton_aero_packed->set_enabled(false);
+		radiobutton_luna->set_enabled(false);
+		radiobutton_luna_packed->set_enabled(false);
+		radiobutton_basic->set_selected(true);
+
+	}
+
+
 }
 
 void Manager::run(CL_GraphicContext &gc)
@@ -131,4 +159,10 @@ void Manager::on_theme_selected(CL_RadioButton *radiobutton)
 
 	if (radiobutton == radiobutton_luna_packed)
 		gui->set_theme(GUI::theme_luna_packed);
+
+	if (radiobutton == radiobutton_basic)
+		gui->set_theme(GUI::theme_basic);
+
+	if (radiobutton == radiobutton_basic_packed)
+		gui->set_theme(GUI::theme_basic_packed);
 }

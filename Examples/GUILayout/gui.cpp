@@ -23,7 +23,15 @@ int App::start(const std::vector<CL_String> &args)
 	{
 		CL_GUIManager gui;
 
-		CL_ResourceManager resources("../../Resources/GUIThemeAero/resources.xml");
+		CL_String resource_filename("../../Resources/GUIThemeAero/resources.xml");
+		CL_String theme_filename("../../Resources/GUIThemeAero/theme.css");
+		if (!CL_FileHelp::file_exists(resource_filename))
+		{
+			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+			theme_filename = "../../Resources/GUIThemeBasic/theme.css";
+		}
+
+		CL_ResourceManager resources(resource_filename);
 
 		CL_GUIWindowManagerSystem wm;
 		gui.set_window_manager(wm);
@@ -31,7 +39,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_GUIThemeDefault theme;
 		theme.set_resources(resources);
 		gui.set_theme(theme); 
-		gui.set_css_document("../../Resources/GUIThemeAero/theme.css");
+		gui.set_css_document(theme_filename);
 
 		CL_DisplayWindowDescription win_desc;
 		win_desc.set_allow_resize(true);

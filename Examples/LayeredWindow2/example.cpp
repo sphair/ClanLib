@@ -4,6 +4,7 @@
 #include <ClanLib/gl.h>
 
 #include <cmath>
+#include <cstdlib>
 
 #include "framerate_counter.h"
 

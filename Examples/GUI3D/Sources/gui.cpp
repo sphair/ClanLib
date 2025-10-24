@@ -37,10 +37,18 @@ GUI::GUI(App *app) : app(app), window(app->get_window()), wm(window)
 {
 	gui.set_window_manager(wm);
 
-	resources_gui = CL_ResourceManager("../../Resources/GUIThemeLuna/resources.xml");
+	CL_String resource_filename("../../Resources/GUIThemeLuna/resources.xml");
+	CL_String theme_filename("../../Resources/GUIThemeLuna/theme.css");
+	if (!CL_FileHelp::file_exists(resource_filename))
+	{
+		resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+		theme_filename = "../../Resources/GUIThemeBasic/theme.css";
+	}
+
+	resources_gui = CL_ResourceManager(resource_filename);
 	theme.set_resources(resources_gui);
 	gui.set_theme(theme); 
-	gui.set_css_document("../../Resources/GUIThemeLuna/theme.css");
+	gui.set_css_document(theme_filename);
 
 	wm.func_repaint().set(this, &GUI::wm_repaint);
 	wm.func_input_intercept().set(this, &GUI::wm_input_intercept);

@@ -42,7 +42,7 @@ libclan21GL_la_SOURCES += \
 	GLX/opengl_window_provider_glx.cpp \
 	GLX/opengl_window_provider_glx.h
 
-libclan21GL_la_LIBADD = -lXi -lGL 
+#libclan21GL_la_LIBADD = -lXi
 endif
 
 # EXTRA_DIST = \

@@ -76,6 +76,10 @@ public:
 public:
 	bool is_null() const;
 	unsigned short get_year() const;
+
+	/// \brief Returns the month number in range 1-12.
+	///
+	/// \return 1 = Jan ... 12 = December
 	unsigned char get_month() const;
 	unsigned char get_day() const;
 	unsigned char get_hour() const;

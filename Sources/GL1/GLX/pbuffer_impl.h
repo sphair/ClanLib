@@ -32,17 +32,40 @@
 #include "API/Core/System/disposable_object.h"
 #include "API/GL1/opengl1_wrap.h"
 #include "API/Core/System/disposable_object.h"
+#include "API/Display/TargetProviders/render_window_provider.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 
-#include <X11/extensions/XInput.h>
+//#include <X11/extensions/XInput.h>
 
 #include <GL/glx.h>
 
 class CL_GL1GraphicContextProvider;
 class CL_GL1WindowProvider_GLX;
+class CL_GL1_GLXFunctions;
+class CL_PBuffer_GL1_Impl;
+
+class CL_RenderWindowProvider_GLX_PBuffer : public CL_RenderWindowProvider
+{
+public:
+	CL_RenderWindowProvider_GLX_PBuffer(CL_PBuffer_GL1_Impl &pbuffer_impl, Display *display, GLXPbuffer pbuffer, GLXContext glx_context, CL_Size pb_size);
+	virtual ~CL_RenderWindowProvider_GLX_PBuffer();
+	virtual int get_viewport_width() const;
+	virtual int get_viewport_height() const;
+	virtual void flip_buffers(int interval) const;
+	virtual void make_current() const;
+	virtual const CL_RenderWindowProvider * new_worker_context() const;
+	CL_GL1ProcAddress *get_proc_address(const CL_String8& function_name) const;
+
+private:
+	CL_PBuffer_GL1_Impl &pbuffer_impl;
+	Display *display;
+	GLXPbuffer pbuffer;
+	GLXContext glx_context;
+	CL_Size size;
+};
 
 class CL_PBuffer_GL1_Impl : public CL_DisposableObject
 {
@@ -60,7 +83,7 @@ public:
 /// \{
 
 public:
-
+	CL_GL1_GLXFunctions *glx;
 
 /// \}
 /// \name Operations
@@ -87,5 +110,7 @@ private:
 	CL_GL1GraphicContextProvider *pbuffer_gc_provider;
 	CL_GraphicContext pbuffer_gc;
 
+
 /// \}
 };
+

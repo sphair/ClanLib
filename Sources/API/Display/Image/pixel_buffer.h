@@ -322,6 +322,10 @@ public:
 	/// \brief Flip the entire image vertically (turn it upside down)
 	void flip_vertical();
 
+	/// \brief Mutiply the RGB components by the Alpha component
+	///
+	/// This is useful with certain blending functions
+	void premultiply_alpha();
 /// \}
 /// \name Implementation
 /// \{

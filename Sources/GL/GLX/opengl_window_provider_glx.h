@@ -38,12 +38,127 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 
-#include <X11/extensions/XInput.h>
+//#include <X11/extensions/XInput.h>
 
 #include <GL/glx.h>
 
+#include "API/GL/opengl_wrap.h"
+#include "API/Display/TargetProviders/render_window_provider.h"
+
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
+
+class CL_OpenGLWindowProvider_GLX;
+
+#define CL_USE_DLOPEN		// Using dlopen for linux by default
+
+class CL_GL_GLXFunctions
+{
+public:
+	typedef XVisualInfo* (CL_GLFUNC *ptr_glXChooseVisual)(Display *dpy, int screen, int *attrib_list);
+	typedef void (CL_GLFUNC *ptr_glXCopyContext)(Display *dpy, GLXContext src, GLXContext dst, unsigned long mask);
+	typedef GLXContext (CL_GLFUNC *ptr_glXCreateContext)(Display *dpy, XVisualInfo *vis, GLXContext share_list, Bool direct);
+	typedef GLXPixmap (CL_GLFUNC *ptr_glXCreateGLXPixmap)(Display *dpy, XVisualInfo *vis, Pixmap pixmap);
+	typedef void (CL_GLFUNC *ptr_glXDestroyContext)(Display *dpy, GLXContext ctx);
+	typedef void (CL_GLFUNC *ptr_glXDestroyGLXPixmap)(Display *dpy, GLXPixmap pix);
+	typedef int (CL_GLFUNC *ptr_glXGetConfig)(Display *dpy, XVisualInfo *vis, int attrib, int *value);
+	typedef GLXContext (CL_GLFUNC *ptr_glXGetCurrentContext)(void);
+	typedef GLXDrawable (CL_GLFUNC *ptr_glXGetCurrentDrawable)(void);
+	typedef Bool (CL_GLFUNC *ptr_glXIsDirect)(Display *dpy, GLXContext ctx);
+	typedef Bool (CL_GLFUNC *ptr_glXMakeCurrent)(Display *dpy, GLXDrawable drawable, GLXContext ctx);
+	typedef Bool (CL_GLFUNC *ptr_glXQueryExtension)(Display *dpy, int *error_base, int *event_base);
+	typedef Bool (CL_GLFUNC *ptr_glXQueryVersion)(Display *dpy, int *major, int *minor);
+	typedef void (CL_GLFUNC *ptr_glXSwapBuffers)(Display *dpy, GLXDrawable drawable);
+	typedef void (CL_GLFUNC *ptr_glXUseXFont)(Font font, int first, int count, int list_base);
+	typedef void (CL_GLFUNC *ptr_glXWaitGL)(void);
+	typedef void (CL_GLFUNC *ptr_glXWaitX)(void);
+	typedef const char *(CL_GLFUNC *ptr_glXGetClientString)(Display *dpy, int name);
+	typedef const char *(CL_GLFUNC *ptr_glXQueryServerString)(Display *dpy, int screen, int name);
+	typedef const char *(CL_GLFUNC *ptr_glXQueryExtensionsString)(Display *dpy, int screen);
+	typedef Display *(CL_GLFUNC *ptr_glXGetCurrentDisplay)(void);
+	typedef GLXFBConfig *(CL_GLFUNC *ptr_glXChooseFBConfig)(Display *dpy, int screen, const int *attrib_list, int *nelements);
+	typedef GLXContext (CL_GLFUNC *ptr_glXCreateNewContext)(Display *dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
+	typedef GLXPbuffer (CL_GLFUNC *ptr_glXCreatePbuffer)(Display *dpy, GLXFBConfig config, const int *attrib_list);
+	typedef GLXPixmap (CL_GLFUNC *ptr_glXCreatePixmap)(Display *dpy, GLXFBConfig config, Pixmap pixmap, const int *attrib_list);
+	typedef GLXWindow (CL_GLFUNC *ptr_glXCreateWindow)(Display *dpy, GLXFBConfig config, Window win, const int *attrib_list);
+	typedef void (CL_GLFUNC *ptr_glXDestroyPbuffer)(Display *dpy, GLXPbuffer pbuf);
+	typedef void (CL_GLFUNC *ptr_glXDestroyPixmap)(Display *dpy, GLXPixmap pixmap);
+	typedef void (CL_GLFUNC *ptr_glXDestroyWindow)(Display *dpy, GLXWindow win);
+	typedef GLXDrawable (CL_GLFUNC *ptr_glXGetCurrentReadDrawable)(void);
+	typedef int (CL_GLFUNC *ptr_glXGetFBConfigAttrib)(Display *dpy, GLXFBConfig config, int attribute, int *value);
+	typedef GLXFBConfig *(CL_GLFUNC *ptr_glXGetFBConfigs)(Display *dpy, int screen, int *nelements);
+	typedef void (CL_GLFUNC *ptr_glXGetSelectedEvent)(Display *dpy, GLXDrawable draw, unsigned long *event_mask);
+	typedef XVisualInfo *(CL_GLFUNC *ptr_glXGetVisualFromFBConfig)(Display *dpy, GLXFBConfig config);
+	typedef Bool (CL_GLFUNC *ptr_glXMakeContextCurrent)(Display *display, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
+	typedef int (CL_GLFUNC *ptr_glXQueryContext)(Display *dpy, GLXContext ctx, int attribute, int *value);
+	typedef void (CL_GLFUNC *ptr_glXQueryDrawable)(Display *dpy, GLXDrawable draw, int attribute, unsigned int *value);
+	typedef void (CL_GLFUNC *ptr_glXSelectEvent)(Display *dpy, GLXDrawable draw, unsigned long event_mask);
+
+	typedef __GLXextFuncPtr (CL_GLFUNC *ptr_glXGetProcAddress) (const GLubyte *);
+	typedef void (*(CL_GLFUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
+
+public:
+	ptr_glXChooseVisual glXChooseVisual;
+	ptr_glXCopyContext glXCopyContext;
+	ptr_glXCreateContext glXCreateContext;
+	ptr_glXCreateGLXPixmap glXCreateGLXPixmap;
+	ptr_glXDestroyContext glXDestroyContext;
+	ptr_glXDestroyGLXPixmap glXDestroyGLXPixmap;
+	ptr_glXGetConfig glXGetConfig;
+	ptr_glXGetCurrentContext glXGetCurrentContext;
+	ptr_glXGetCurrentDrawable glXGetCurrentDrawable;
+	ptr_glXIsDirect glXIsDirect;
+	ptr_glXMakeCurrent glXMakeCurrent;
+	ptr_glXQueryExtension glXQueryExtension;
+	ptr_glXQueryVersion glXQueryVersion;
+	ptr_glXSwapBuffers glXSwapBuffers;
+	ptr_glXUseXFont glXUseXFont;
+	ptr_glXWaitGL glXWaitGL;
+	ptr_glXWaitX glXWaitX;
+	ptr_glXGetClientString glXGetClientString;
+	ptr_glXQueryServerString glXQueryServerString;
+	ptr_glXQueryExtensionsString glXQueryExtensionsString;
+	ptr_glXGetCurrentDisplay glXGetCurrentDisplay;
+	ptr_glXChooseFBConfig glXChooseFBConfig;
+	ptr_glXCreateNewContext glXCreateNewContext;
+	ptr_glXCreatePbuffer glXCreatePbuffer;
+	ptr_glXCreatePixmap glXCreatePixmap;
+	ptr_glXCreateWindow glXCreateWindow;
+	ptr_glXDestroyPbuffer glXDestroyPbuffer;
+	ptr_glXDestroyPixmap glXDestroyPixmap;
+	ptr_glXDestroyWindow glXDestroyWindow;
+	ptr_glXGetCurrentReadDrawable glXGetCurrentReadDrawable;
+	ptr_glXGetFBConfigAttrib glXGetFBConfigAttrib;
+	ptr_glXGetFBConfigs glXGetFBConfigs;
+	ptr_glXGetSelectedEvent glXGetSelectedEvent;
+	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfig;
+	ptr_glXMakeContextCurrent glXMakeContextCurrent;
+	ptr_glXQueryContext glXQueryContext;
+	ptr_glXQueryDrawable glXQueryDrawable;
+	ptr_glXSelectEvent glXSelectEvent;
+	ptr_glXGetProcAddress glXGetProcAddress;
+	ptr_glXGetProcAddressARB glXGetProcAddressARB;
+};
+
+class CL_GL_RenderWindowProvider_GLX: public CL_RenderWindowProvider
+{
+public:
+	CL_GL_RenderWindowProvider_GLX(CL_OpenGLWindowProvider_GLX & window, GLXContext glx_context, bool own_context);
+	virtual ~CL_GL_RenderWindowProvider_GLX();
+	virtual int get_viewport_width() const;
+	virtual int get_viewport_height() const;
+	virtual void flip_buffers(int interval) const;
+	virtual void make_current() const;
+	virtual const CL_RenderWindowProvider * new_worker_context() const;
+	CL_ProcAddress *get_proc_address(const CL_String8& function_name) const;
+
+	GLXContext get_context() const {return glx_context;}
+
+private:
+	CL_OpenGLWindowProvider_GLX & window;
+	GLXContext glx_context;
+	bool own_context;
+};
 
 
 class CL_OpenGLWindowProvider_GLX : public CL_OpenGLWindowProvider
@@ -99,6 +214,7 @@ public:
 
 	CL_GraphicContext gc;
 
+	CL_GL_GLXFunctions glx;
 
 /// \}
 /// \name Operations
@@ -194,8 +310,12 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
-
+	bool  glx_swap_interval_set;
 	int last_set_interval;	// Set to -1 when not set
+
+#ifdef CL_USE_DLOPEN
+	void *opengl_lib_handle;
+#endif
 
 /// \}
 };

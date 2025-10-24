@@ -73,7 +73,7 @@ bool GridEditStateObjectSizing::on_input_pressed(const CL_InputEvent &e)
 		for (size_t i = 0; i < selection.size(); i++)
 		{
 			HolderComponent *h = selection[i];
-			CL_Point h_mouse_pos = h->window_to_component_coords(grid->component_to_window_coords(e.mouse_pos));
+			CL_Point h_mouse_pos = grid->grid_to_holder_coords(h, e.mouse_pos);
 
 			if (h->get_grabber_e().contains(h_mouse_pos))
 				dir = CL_Vec2i(1,0);

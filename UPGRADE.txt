@@ -1,5 +1,30 @@
 This file describes breaking changes between versions. 
 
+2.1.1: Not released yet
+- Display: CL_DisplayWindowMode is now considered obsolute. 
+  On linux, this function does not do anything.
+  It used to use the libxxf86vm library, but this caused various problems:
+  it would only report the current mode on most system, and xf86vidmode is
+  considered sort of deprecated by upstream xorg.
+  So for now, the ClanLib developers have removed it, until a solution is found.
+  (Note, since clanlib v2.x no longer changes the video resolution,
+  CL_DisplayWindowMode has no use ).
+
+- GL and GL1: Linux does not link with libxi
+  There was no requirement to link with this library
+
+- GL and GL1: Linux does not link with libgl
+  Instead internally, ClanLib uses dlopen(). Your application now can use
+  the libgl.so local on the machine it runs on (so it uses the configured
+  driver on the machine, not the driver that the application was compiled with)
+
+- General: The Microsoft windows themes have been removed from the Linux package.
+  Instead, a free GUI theme (GUIThemeBasic) is included for use with the ClanLib
+  examples (or your application).
+
+- Core: CL_Mat2 had an incorrect typedef - 
+  "CL_Mat2<float> CL_Mat2d;" was changed to "CL_Mat2<double> CL_Mat2d;"
+
 2.1.0: Released 20 october 2009
 - IMPORTANT: Display: CL_Sprite animation delay now uses milliseconds integers,
   instead of float seconds. There was a discrepancy between the documentation

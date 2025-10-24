@@ -24,4 +24,7 @@
   <image name="StatusbarComponent">
     <image file="gfx/statusbarcomponent.png" />
   </image>
+  <image name="WindowFrame">
+    <image file="gfx/windowframe.png" />
+  </image>
 </resources>

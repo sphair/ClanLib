@@ -50,7 +50,9 @@ public:
 		theme_aero,
 		theme_aero_packed,
 		theme_luna,
-		theme_luna_packed
+		theme_luna_packed,
+		theme_basic,
+		theme_basic_packed
 	};
 
 	bool run();

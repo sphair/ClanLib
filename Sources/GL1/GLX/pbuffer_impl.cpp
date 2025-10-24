@@ -29,52 +29,55 @@
 #include "GL1/precomp.h"
 #include "API/GL1/opengl1_wrap.h"
 #include "API/GL1/opengl1.h"
-#include "API/Display/TargetProviders/render_window_provider.h"
 #include "pbuffer_impl.h"
 #include "../gl1_graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "gl1_window_provider_glx.h"
 
-class CL_RenderWindowProvider_GLX_PBuffer : public CL_RenderWindowProvider
+CL_RenderWindowProvider_GLX_PBuffer::CL_RenderWindowProvider_GLX_PBuffer(CL_PBuffer_GL1_Impl &pbuffer_impl, Display *display, GLXPbuffer pbuffer, GLXContext glx_context, CL_Size pb_size)
+: pbuffer_impl(pbuffer_impl), display(display), pbuffer(pbuffer), glx_context(glx_context), size(pb_size)
 {
-public:
-	CL_RenderWindowProvider_GLX_PBuffer(Display *display, GLXPbuffer pbuffer, GLXContext glx_context, CL_Size pb_size)
-		: display(display), pbuffer(pbuffer), glx_context(glx_context), size(pb_size)
-	{
-	}
-	virtual ~CL_RenderWindowProvider_GLX_PBuffer()
-	{
-	}
-	virtual int get_viewport_width() const
-	{
-		return size.width;
-	}
-	virtual int get_viewport_height() const
-	{
-		return size.height;
-	}
-	virtual void flip_buffers(int interval) const
-	{
-	}
-	virtual void make_current() const
-	{
-		glXMakeCurrent(display, pbuffer, glx_context);
-	}
-	virtual const CL_RenderWindowProvider * new_worker_context() const
-	{
-		throw CL_Exception(cl_text("Pixel buffer worker threads are not implemented"));
-	}
+}
 
-private:
-	Display *display;
-	GLXPbuffer pbuffer;
-	GLXContext glx_context;
-	CL_Size size;
-};
+CL_RenderWindowProvider_GLX_PBuffer::~CL_RenderWindowProvider_GLX_PBuffer()
+{
+}
 
+int CL_RenderWindowProvider_GLX_PBuffer::get_viewport_width() const
+{
+	return size.width;
+}
+
+int CL_RenderWindowProvider_GLX_PBuffer::get_viewport_height() const
+{
+	return size.height;
+}
+
+void CL_RenderWindowProvider_GLX_PBuffer::flip_buffers(int interval) const
+{
+}
+
+void CL_RenderWindowProvider_GLX_PBuffer::make_current() const
+{
+	pbuffer_impl.glx->glXMakeCurrent(display, pbuffer, glx_context);
+}
+
+CL_GL1ProcAddress *CL_RenderWindowProvider_GLX_PBuffer::get_proc_address(const CL_String8& function_name) const
+{
+	if (pbuffer_impl.glx->glXGetProcAddressARB)
+		return pbuffer_impl.glx->glXGetProcAddressARB((GLubyte*)function_name.c_str());
+	if (pbuffer_impl.glx->glXGetProcAddress)
+		return pbuffer_impl.glx->glXGetProcAddress((GLubyte*)function_name.c_str());
+	return NULL;
+}
+
+const CL_RenderWindowProvider * CL_RenderWindowProvider_GLX_PBuffer::new_worker_context() const
+{
+	throw CL_Exception(cl_text("Pixel buffer worker threads are not implemented"));
+}
 
 CL_PBuffer_GL1_Impl::CL_PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
-, pbuffer(0), pbuffer_context(0), disp(0), pbuffer_gc_provider(0)
+, pbuffer(0), pbuffer_context(0), disp(0), pbuffer_gc_provider(0), glx(NULL)
 {
 	CL_SharedGCData::add_disposable(this);
 
@@ -111,16 +114,22 @@ void CL_PBuffer_GL1_Impl::reset()
 	}
 	CL_GL1::set_active(gc_provider);
 
-	if (pbuffer_context) glXDestroyContext(disp, pbuffer_context);
-	if (pbuffer) glXDestroyPbuffer(disp, pbuffer);
+	if (glx)
+	{
+		if (pbuffer_context) glx->glXDestroyContext(disp, pbuffer_context);
+		if (pbuffer) glx->glXDestroyPbuffer(disp, pbuffer);
+	}
 
 	pbuffer_context = 0;
 	pbuffer = 0;
+	glx = NULL;
 }
 
 void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_Size &size)
 {
 	reset();
+
+	glx = &window_provider.glx;	// FIXME: What a hack!
 
 	CL_GL1::set_active(gc_provider);
 
@@ -156,20 +165,25 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 
 	scrnum = DefaultScreen(disp );
 
-	fbconfig = glXChooseFBConfig(disp, scrnum, attrib, &nitems);
+	if ((glx->glXChooseFBConfig == NULL) ||  (glx->glXCreatePbuffer == NULL) || (glx->glXGetVisualFromFBConfig == NULL) ||  (glx->glXCreateContext == NULL))
+	{
+		throw CL_Exception(cl_text("pbuffer support is not available (require glx 1.3)"));
+	}
+
+	fbconfig = glx->glXChooseFBConfig(disp, scrnum, attrib, &nitems);
 
 	if (fbconfig == NULL)
 	{
 		throw CL_Exception(cl_text("Error: couldn't get fbconfig"));
 	}
 
-	pbuffer = glXCreatePbuffer(disp, fbconfig[0], pbufAttrib);
+	pbuffer = glx->glXCreatePbuffer(disp, fbconfig[0], pbufAttrib);
 	if (!pbuffer)
 	{
 		throw CL_Exception(cl_text("Error: couldn't create pbuffer"));
 	}
 
-	visinfo = glXGetVisualFromFBConfig(disp, fbconfig[0]);
+	visinfo = glx->glXGetVisualFromFBConfig(disp, fbconfig[0]);
 	if (!visinfo)
 	{
 		throw CL_Exception(cl_text("Error: couldn't get an RGBA, double-buffered visual"));
@@ -182,7 +196,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 		throw CL_Exception(cl_text("Error: cannot obtain the shared context"));
 	}
 
-	pbuffer_context = glXCreateContext( disp, visinfo, 
+	pbuffer_context = glx->glXCreateContext( disp, visinfo, 
 		shared_context, GL_TRUE );
 
 	if (!pbuffer_context)
@@ -193,7 +207,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 	XFree(fbconfig);
 	XFree(visinfo);
 
-	CL_RenderWindowProvider_GLX_PBuffer *render_window = new CL_RenderWindowProvider_GLX_PBuffer(disp, pbuffer, pbuffer_context, size);
+	CL_RenderWindowProvider_GLX_PBuffer *render_window = new CL_RenderWindowProvider_GLX_PBuffer(*this, disp, pbuffer, pbuffer_context, size);
 	pbuffer_gc_provider = new CL_GL1GraphicContextProvider(render_window);
 	pbuffer_gc = CL_GraphicContext(pbuffer_gc_provider);
 }

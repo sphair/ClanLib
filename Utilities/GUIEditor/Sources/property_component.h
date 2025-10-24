@@ -51,6 +51,7 @@ public:
 
 	int hit_test(const CL_Point &pos) const;
 	void activate_item(int index);
+	void deactivate();
 
 private:
 	bool on_input_pressed(const CL_InputEvent &input_event);
@@ -60,7 +61,6 @@ private:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_selection_changed();
 	void on_filter_message(CL_GUIMessage &message);
-	void deactivate();
 	void update_scrollbar_size(CL_GraphicContext &gc);
 	void update_layout();
 

@@ -355,7 +355,13 @@ CL_String CL_Directory::get_resourcedata(const CL_StringRef &application_name)
 #elif defined(__APPLE__)
 	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_resourcedata on this platform."));
 #else
-	return cl_text("Resources");
+	//TODO: 
+	/// In Linux, this function will return the directory "../share/application_name/"
+	///    relative to the executable, so if it is located in "/usr/bin" it will return
+	///    "/usr/share/application_name/"
+	/// (Assuming that is correct!)
+
+	return cl_text("Resources/");
 #endif
 }
 

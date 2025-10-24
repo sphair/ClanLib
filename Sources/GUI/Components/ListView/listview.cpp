@@ -743,7 +743,7 @@ void CL_ListView_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	std::vector<ListViewShownItem> &items = layout->get_shown_items();
 	std::vector<ListViewColumn> &columns = layout->get_columns();
 	std::vector<ListViewRow> &rows = layout->get_rows();
-	renderer->render(columns, rows, items, update_rect);
+	renderer->render(gc, columns, rows, items, update_rect);
 
 	listview->pop_cliprect(gc);
 }
