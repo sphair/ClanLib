@@ -65,7 +65,9 @@ public:
 	  min_value_d(-1000.0f),
 	  max_value_d(1000.0f),
 	  num_decimal_places(2),
-	  floating_point_mode(false)
+	  floating_point_mode(false),
+	  step_size_i(1),
+	  step_size_d(1.0f)
 	{
 	}
 
@@ -78,7 +80,7 @@ public:
 
 	void create_components();
 	
-	void clamp_value();
+	bool clamp_value();
 	void update_lineedit();
 	void decrement_value();
 	void increment_value();
@@ -183,6 +185,7 @@ float CL_Spin::get_max_float() const
 
 void CL_Spin::set_value(int value)
 {
+	set_floating_point_mode(false);
 	impl->value_i = value;
 	impl->clamp_value();
 	impl->update_lineedit();
@@ -190,6 +193,7 @@ void CL_Spin::set_value(int value)
 
 void CL_Spin::set_ranges(int minv, int maxv)
 {
+	set_floating_point_mode(false);
 	impl->min_value_i = minv;
 	impl->max_value_i = maxv;
 	impl->clamp_value();
@@ -198,11 +202,13 @@ void CL_Spin::set_ranges(int minv, int maxv)
 
 void CL_Spin::set_step_size(int step_size)
 {
+	set_floating_point_mode(false);
 	impl->step_size_i = step_size;
 }
 
 void CL_Spin::set_value_float(float value)
 {
+	set_floating_point_mode(true);
 	impl->value_d = value;
 	impl->clamp_value();
 	impl->update_lineedit();
@@ -210,6 +216,7 @@ void CL_Spin::set_value_float(float value)
 
 void CL_Spin::set_ranges_float(float minv, float maxv)
 {
+	set_floating_point_mode(true);
 	impl->min_value_d = minv;
 	impl->max_value_d = maxv;
 	impl->clamp_value();
@@ -218,6 +225,7 @@ void CL_Spin::set_ranges_float(float minv, float maxv)
 
 void CL_Spin::set_step_size_float(float step_size)
 {
+	set_floating_point_mode(true);
 	impl->step_size_d = step_size;
 }
 
@@ -236,8 +244,11 @@ void CL_Spin::set_number_of_decimal_places(int decimal_places)
 
 void CL_Spin::set_floating_point_mode(bool use_floating_point)
 {
-	impl->lineedit->set_numeric_mode(true, true);
-	impl->floating_point_mode = use_floating_point;
+	if (use_floating_point != impl->floating_point_mode)
+	{
+		impl->lineedit->set_numeric_mode(true, use_floating_point);
+		impl->floating_point_mode = use_floating_point;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -427,7 +438,9 @@ void CL_Spin_Impl::on_lineedit_modified(CL_InputEvent &event)
 
 		if (value_d != original_value && !lineedit->get_text().empty()) 
 		{
-			clamp_value();
+			if (clamp_value())
+				update_lineedit();
+
 			if (!func_value_changed.is_null())
 				func_value_changed.invoke();
 		}
@@ -438,20 +451,23 @@ void CL_Spin_Impl::on_lineedit_modified(CL_InputEvent &event)
 		value_i = lineedit->get_text_int();
 		if (value_i != original_value && !lineedit->get_text().empty()) 
 		{
-			clamp_value();
+			if (clamp_value())
+				update_lineedit();
+
 			if (!func_value_changed.is_null())
 				func_value_changed.invoke();
 		}
 	}
 }
 
-void CL_Spin_Impl::clamp_value()
+bool CL_Spin_Impl::clamp_value()
 {
 	bool changed = false;
 	if (value_i > max_value_i) { changed=true; value_i = max_value_i; }
 	if (value_i < min_value_i) { changed=true; value_i = min_value_i; }
 	if (value_d > max_value_d) { changed=true; value_d = max_value_d; }
 	if (value_d < min_value_d) { changed=true; value_d = min_value_d; }
+	return changed;
 }
 
 void CL_Spin_Impl::on_enablemode_changed()
@@ -500,7 +516,7 @@ void CL_Spin_Impl::decrement_value()
 void CL_Spin_Impl::update_lineedit()
 {
 	if (floating_point_mode)
-		lineedit->set_text(CL_StringHelp::float_to_text(value_d, num_decimal_places));
+		lineedit->set_text(value_d, num_decimal_places);
 	else
 		lineedit->set_text(value_i);
 }

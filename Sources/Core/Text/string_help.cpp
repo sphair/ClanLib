@@ -527,7 +527,7 @@ unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
 	}
 	else if (base == 16)
 	{
-		int result = 0;
+		unsigned int result = 0;
 		CL_String8::size_type i, length;
 		length = value.length();
 		for (i = 0; i < length; i++)
@@ -553,7 +553,7 @@ unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception("Unsupported base passed for local8_to_int");
+		throw CL_Exception("Unsupported base passed for local8_to_uint");
 	}
 }
 	

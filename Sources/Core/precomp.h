@@ -35,6 +35,8 @@
 #endif
 #include <windows.h>
 #include <cstdlib>
+#else
+#include <unistd.h>
 #endif
 
 #include "API/Core/Text/string_types.h"

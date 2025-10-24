@@ -46,6 +46,11 @@ int main(int argc, char** argv)
 		CL_Console::write_line( cl_format("sse4_a = %1",  CL_System::detect_cpu_extension(CL_System::sse4_a)) );
 		CL_Console::write_line( cl_format("sse4_1 = %1",  CL_System::detect_cpu_extension(CL_System::sse4_1)) );
 		CL_Console::write_line( cl_format("sse4_2 = %1",  CL_System::detect_cpu_extension(CL_System::sse4_2)) );
+		CL_Console::write_line( cl_format("xop = %1",  CL_System::detect_cpu_extension(CL_System::xop)) );
+		CL_Console::write_line( cl_format("avx = %1",  CL_System::detect_cpu_extension(CL_System::avx)) );
+		CL_Console::write_line( cl_format("aes = %1",  CL_System::detect_cpu_extension(CL_System::aes)) );
+		CL_Console::write_line( cl_format("fma3 = %1",  CL_System::detect_cpu_extension(CL_System::fma3)) );
+		CL_Console::write_line( cl_format("fma4 = %1",  CL_System::detect_cpu_extension(CL_System::fma4)) );
 		CL_Console::write_line( cl_format("num cores = %1",  CL_System::get_num_cores()) );
 		console.display_close_message();
 	} 
