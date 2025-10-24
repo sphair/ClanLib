@@ -1,0 +1,27 @@
+ 
+@import "../../../Resources/GUIThemeLuna/theme.css";
+
+button#SuperFancyButton:normal
+{
+	bg-image:ButtonNormal_SFB; 
+}
+
+button#SuperFancyButton:hot
+{
+	bg-image:ButtonHot_SFB;
+}
+
+button#SuperFancyButton:pressed
+{
+	bg-image:ButtonPressed_SFB;
+}
+
+button#SuperFancyButton:disabled
+{
+	bg-image:ButtonDisabled_SFB;
+}
+
+window#mainmenu
+{
+	bg-image:MainMenuBg;
+}

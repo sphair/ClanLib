@@ -27,14 +27,14 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_directory_scanner_unix
-#define header_directory_scanner_unix
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../Generic/directory_scanner_generic.h"
+#include "../directory_scanner_impl.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -42,68 +42,69 @@
 #include <stdio.h>
 #include <unistd.h>
 
-class CL_DirectoryScanner_Unix : public CL_DirectoryScanner_Generic
+class CL_DirectoryScanner_Unix : public CL_DirectoryScanner_Impl
 {
 //!Construction:
 public:
 	CL_DirectoryScanner_Unix();
-	~CL_DirectoryScanner_Unix();
-	
-	//: Construct directory scanner for the specified scan expression.
-	//: The scan expression only supports * and ? wildcards. Eg: "gfx/*.jpg".
-//	CL_DirectoryScanner_Generic(const std::string &scan_exp);
 
-	//: Copy constructor.
-//	CL_DirectoryScanner_Generic(const CL_DirectoryScanner &copy);
+	~CL_DirectoryScanner_Unix();
 
 //!Attributes:
 public:
-	bool scan (const std::string& pathname);
-	bool scan (const std::string& pathname, const std::string& pattern);
+	bool scan (const CL_String& pathname);
 
-	//: Returns the path of the directory being scanned.
-	std::string get_directory_path();
+	bool scan (const CL_String& pathname, const CL_String& pattern);
 
-	//: Returns the size of the current found file.
+	/// \brief Returns the path of the directory being scanned.
+	CL_String get_directory_path();
+
+	/// \brief Returns the size of the current found file.
 	int get_size();
 
-	//: Returns the name of the current found file.
-	std::string get_name();
-	
-	//: Returns the name of the current found file, including the directory path.
-	std::string get_pathname();
-	
-	//: Returns true if filename is a directory.
+	/// \brief Returns the name of the current found file.
+	CL_String get_name();
+
+	/// \brief Returns the name of the current found file, including the directory path.
+	CL_String get_pathname();
+
+	/// \brief Returns true if filename is a directory.
 	bool is_directory();
 
-	//: Returns true if filename is hidden.
+	/// \brief Returns true if filename is hidden.
 	bool is_hidden();
 
-  	//: Returns true if file is readable by current user.
+  	/// \brief Returns true if file is readable by current user.
 	virtual bool is_readable();
 
-	//: Returns true if file is writable by current user.
+	/// \brief Returns true if file is writable by current user.
 	virtual bool is_writable();
 	// todo: add other attributes of a file.
 
 //!Operations:
 public:
-	//: Copy assignment operator.
-	//CL_DirectoryScanner_Generic &operator =(const CL_DirectoryScanner_Generic &copy);
-
-	//: Find next file in directory scan. Returns false if no more files was found.
+	/// \brief Find next file in directory scan. Returns false if no more files was found.
 	bool next();
+
+/// \name Implementation
+/// \{
+
 private:
 	DIR *dir_temp;
+
 	dirent *entry;
+
 	struct stat statbuf;
 
 	bool use_pattern;
-	//Path stored without the trailing slash
-	std::string file_name;
-	std::string path_name;
-	std::string file_pattern;
 
+	/// \brief Path stored without the trailing slash
+	CL_String file_name;
+
+	CL_String path_name;
+
+	CL_String file_pattern;
+/// \}
 };
 
-#endif
+

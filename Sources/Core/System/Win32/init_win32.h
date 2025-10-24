@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,29 +27,11 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_init_win32
-#define header_init_win32
+#pragma once
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "API/Core/System/system.h"
-
-class CL_API_CORE CL_System_Win32 : public CL_System
-{
-public:
-	static HINSTANCE hInstance;
-};
-
-#endif

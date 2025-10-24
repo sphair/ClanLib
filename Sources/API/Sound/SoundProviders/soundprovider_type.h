@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,57 +24,61 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Sound Providers"
-//! header=sound.h
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
-#ifndef header_soundprovider_type
-#define header_soundprovider_type
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <string>
+#include "../../Core/IOData/virtual_directory.h"
+#include "../api_sound.h"
 
 class CL_SoundProvider;
 class CL_InputSourceProvider;
+class CL_VirtualDirectory;
 
-//: Sound provider type
-//- !group=Sound/Sound Providers!
-//- !header=sound.h!
+/// \brief Sound provider type
+///
+/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundProviderType
 {
-//! Construction:
-public:
-	//: Registers a sound provider type in the CL_SoundProviderFactory.
-	CL_SoundProviderType(const std::string &type);
+/// \name Construction
+/// \{
 
-	//: Unregisters a sound provider type in the CL_SoundProviderFactory.
+public:
+	/// \brief Registers a sound provider type in the CL_SoundProviderFactory.
+	CL_SoundProviderType(const CL_String &type);
+
+	/// \brief Unregisters a sound provider type in the CL_SoundProviderFactory.
 	virtual ~CL_SoundProviderType();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called to load with this sound provider type.
+	/// \brief Called to load with this sound provider type.
 	virtual CL_SoundProvider *load(
-		const std::string &filename,
-		CL_InputSourceProvider *input_provider,
+		const CL_String &filename,
+		CL_VirtualDirectory directory,
 		bool streamed) = 0;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+
+/// \}

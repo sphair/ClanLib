@@ -51,5 +51,5 @@ endif
 libclanSound_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(SOUND_LDFLAGS)
-  
+
 # EOF #

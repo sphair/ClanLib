@@ -1,0 +1,215 @@
+
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gui.h>
+#include "windows_theme.h"
+#include <vsstyle.h>
+#include <vssym32.h>
+
+#pragma comment(lib, "uxtheme.lib")
+
+WindowsTheme::WindowsTheme(CL_GUITheme *fallback_theme)
+: fallback_theme(fallback_theme), hwnd(0)
+{
+	WNDCLASS wndclass;
+
+	wndclass.style = 0;
+	wndclass.lpfnWndProc = DefWindowProc;
+	wndclass.cbClsExtra = 0;
+	wndclass.cbWndExtra = 0;
+	wndclass.hInstance = GetModuleHandle(0);
+	wndclass.hIcon = 0;
+	wndclass.hCursor = 0;
+	wndclass.hbrBackground = 0;
+	wndclass.lpszMenuName = 0;
+	wndclass.lpszClassName = TEXT("WindowsTheme");
+
+	RegisterClass(&wndclass);
+
+	hwnd = CreateWindow(
+		TEXT("WindowsTheme"),
+		TEXT("WindowsTheme"),
+		0, // WS_POPUP,
+		0,
+		0,
+		1,
+		1,
+		NULL,
+		NULL,
+		GetModuleHandle(0),
+		NULL);
+	SetWindowTheme(hwnd, 0, 0);
+}
+
+WindowsTheme::~WindowsTheme()
+{
+	DestroyWindow(hwnd);
+}
+
+CL_StringRef WindowsTheme::get_property(const CL_GUIThemePart &part, const CL_StringRef &name, const CL_StringRef &css_value)
+{
+	return fallback_theme->get_property(part, name, css_value);
+}
+
+CL_ResourceManager WindowsTheme::get_resources() const
+{
+	return fallback_theme->get_resources();
+}
+
+CL_Size WindowsTheme::get_minimum_size(const CL_GUIThemePart &part) const
+{
+	return fallback_theme->get_minimum_size(part);
+}
+
+CL_Size WindowsTheme::get_maximum_size(const CL_GUIThemePart &part) const
+{
+	return fallback_theme->get_maximum_size(part);
+}
+
+CL_Size WindowsTheme::get_preferred_size(const CL_GUIThemePart &part) const
+{
+	return fallback_theme->get_preferred_size(part);
+}
+
+CL_Rect WindowsTheme::get_content_box(const CL_GUIThemePart &part, const CL_Rect &render_box_rect) const
+{
+	UxPart uxpart = get_ux_part(part); 
+	if (uxpart.theme)
+	{
+		RECT bounding_rect = { render_box_rect.left, render_box_rect.top, render_box_rect.right, render_box_rect.bottom };
+		RECT content_rect = { 0, 0, 0, 0 };
+		HRESULT result = GetThemeBackgroundContentRect(uxpart.theme, 0, uxpart.part_id, uxpart.state_id, &bounding_rect, &content_rect);
+		CloseThemeData(uxpart.theme);
+		return CL_Rect(content_rect.left, content_rect.top, content_rect.right, content_rect.bottom);
+	}
+	else
+	{
+		return fallback_theme->get_content_box(part, render_box_rect);
+	}
+}
+
+CL_Rect WindowsTheme::get_content_shrink_box(const CL_GUIThemePart &part) const
+{
+	return fallback_theme->get_content_shrink_box(part);
+}
+
+CL_Rect WindowsTheme::get_render_box(const CL_GUIThemePart &part, const CL_Rect &content_box_rect) const
+{
+	UxPart uxpart = get_ux_part(part); 
+	if (uxpart.theme)
+	{
+		RECT content_rect_win32 = { content_box_rect.left, content_box_rect.top, content_box_rect.right, content_box_rect.bottom };
+		RECT extent_box_win32 = { 0, 0, 0, 0 };
+		HRESULT result = GetThemeBackgroundExtent(uxpart.theme, 0, uxpart.part_id, uxpart.state_id, &content_rect_win32, &extent_box_win32);
+		CloseThemeData(uxpart.theme);
+		return CL_Rect(extent_box_win32.left, extent_box_win32.top, extent_box_win32.right, extent_box_win32.bottom);
+	}
+	else
+	{
+		return fallback_theme->get_render_box(part, content_box_rect);
+	}
+}
+
+void WindowsTheme::set_resources(CL_ResourceManager resources)
+{
+	fallback_theme->set_resources(resources);
+}
+
+void WindowsTheme::render_box(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_Rect &rect, const CL_Rect &clip_rect)
+{
+	UxPart uxpart = get_ux_part(part); 
+	if (uxpart.theme)
+	{
+		HDC screen_dc = GetDC(hwnd);
+		HDC bitmap_dc = CreateCompatibleDC(screen_dc);
+		HBITMAP bitmap = CreateCompatibleBitmap(screen_dc, rect.get_width(), rect.get_height());
+		HBITMAP old_bitmap = reinterpret_cast<HBITMAP>(SelectObject(bitmap_dc, bitmap));
+		RECT rect_win32 = { 0, 0, rect.right-rect.left, rect.bottom-rect.top };
+		RECT clip_rect_win32 = { clip_rect.left-rect.left, clip_rect.top-rect.top, clip_rect.right-rect.left, clip_rect.bottom-rect.top };
+		HRESULT result = DrawThemeBackground(uxpart.theme, bitmap_dc, uxpart.part_id, uxpart.state_id, &rect_win32, &clip_rect_win32);
+		if (SUCCEEDED(result))
+		{
+			CL_PixelFormat argb8888(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+			CL_PixelBuffer buffer(rect.get_width(), rect.get_height(), rect.get_width()*4, argb8888);
+			BITMAPV5HEADER bmp_header;
+			memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
+			bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
+			bmp_header.bV5Width = rect.get_width();
+			bmp_header.bV5Height = -rect.get_height();
+			bmp_header.bV5Planes = 1;
+			bmp_header.bV5BitCount = 32;
+			bmp_header.bV5Compression = BI_RGB;
+			GetDIBits(bitmap_dc, bitmap, 0, rect.get_height(), buffer.get_data(), (BITMAPINFO*)&bmp_header, DIB_PAL_COLORS);
+			gc.draw_pixels((float)rect.left, (float)rect.top, buffer);
+		}
+
+		SelectObject(bitmap_dc, old_bitmap);
+		DeleteDC(bitmap_dc);
+		ReleaseDC(hwnd, screen_dc);
+		CloseThemeData(uxpart.theme);
+	}
+	else
+	{
+		fallback_theme->render_box(gc, part, rect, clip_rect);
+	}
+}
+
+CL_Rect WindowsTheme::render_text(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_StringRef &text, const CL_Rect &content_rect, const CL_Rect &clip_rect)
+{
+	UxPart uxpart = get_ux_part(part); 
+	if (uxpart.theme)
+	{
+		LOGFONTW font_description_win32;
+		memset(&font_description_win32, 0, sizeof(LOGFONT));
+		HRESULT result = GetThemeFont(uxpart.theme, 0, uxpart.part_id, uxpart.state_id, TMT_BODYFONT, &font_description_win32);
+		CloseThemeData(uxpart.theme);
+		if (SUCCEEDED(result))
+		{
+			CL_FontDescription font_description;
+			font_description.set_typeface_name(font_description_win32.lfFaceName);
+			font_description.set_height(font_description_win32.lfHeight);
+			font_description.set_average_width(font_description_win32.lfWidth);
+			font_description.set_escapement((float)font_description_win32.lfEscapement);
+			font_description.set_orientation((float)font_description_win32.lfOrientation);
+			font_description.set_weight(font_description_win32.lfWeight);
+			font_description.set_italic(font_description_win32.lfItalic ? true : false);
+			font_description.set_underline(font_description_win32.lfUnderline ? true : false);
+			font_description.set_strikeout(font_description_win32.lfStrikeOut ? true : false);
+			font_description.set_fixed_pitch(font_description_win32.lfPitchAndFamily & FIXED_PITCH);
+			// font_description.set_anti_alias(?);
+			CL_Font font(gc, font_description);
+			gc.set_font(font);
+			gc.draw_text(content_rect.left, content_rect.top, text, CL_Colorf::black);
+			return CL_Rect(content_rect.get_top_left(), gc.get_text_size(text));
+		}
+	}
+
+	return fallback_theme->render_text(gc, part, text, content_rect, clip_rect);
+}
+
+void WindowsTheme::component_destroyed(CL_GUIComponent *component)
+{
+	fallback_theme->component_destroyed(component);
+}
+
+WindowsTheme::UxPart WindowsTheme::get_ux_part(const CL_GUIThemePart &part) const
+{
+	// To do: Extract type from part.get_element_name()
+	UxPart uxpart;
+	uxpart.theme = OpenThemeData(hwnd, L"button"); 
+	if (uxpart.theme)
+	{
+		uxpart.part_id = BP_PUSHBUTTON;
+		if (part.get_state("pressed"))
+			uxpart.state_id = PBS_PRESSED;
+		else if (part.get_state("disabled"))
+			uxpart.state_id = PBS_DISABLED;
+		else if (part.get_state("default"))
+			uxpart.state_id = PBS_DEFAULTED;
+		else if (part.get_state("hot"))
+			uxpart.state_id = PBS_HOT;
+		else
+			uxpart.state_id = PBS_NORMAL;
+	}
+	return uxpart;
+}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -40,31 +39,50 @@
 #include "API/Core/XML/dom_attr.h"
 #include "API/Core/XML/dom_entity_reference.h"
 #include "API/Core/XML/dom_node_list.h"
+#include "API/Core/XML/dom_named_node_map.h"
 #include "API/Core/XML/xml_tokenizer.h"
 #include "API/Core/XML/xml_writer.h"
 #include "API/Core/XML/xml_token.h"
 #include "dom_document_generic.h"
 #include <stack>
 
-#include "API/Core/XML/xml_token_load.h"
-#include "API/Core/XML/xml_token_save.h"
-#include "API/Core/XML/xml_token_string.h"
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomDocument construction:
 
-CL_DomDocument::CL_DomDocument() : CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic))
+CL_DomDocument::CL_DomDocument()
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
 {
+	impl->owner_document = impl;
 }
 
-CL_DomDocument::CL_DomDocument(CL_InputSource *input, bool delete_input, bool eat_whitespace)
-: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic))
+CL_DomDocument::CL_DomDocument(CL_IODevice &input, bool eat_whitespace)
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
 {
-	load(input, delete_input, eat_whitespace);
+	impl->owner_document = impl;
+	load(input, eat_whitespace);
 }
 
-CL_DomDocument::CL_DomDocument(const CL_SharedPtr<CL_DomNode_Generic> &impl) : CL_DomNode(impl)
+CL_DomDocument::CL_DomDocument(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &qualified_name,
+	const CL_DomDocumentType &document_type)
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
 {
+	impl->owner_document = impl;
+	CL_DomElement element = create_element(qualified_name);
+	element.set_attribute(cl_text("xmlns:") + element.get_prefix(), qualified_name);
+	append_child(element);
+
+	CL_DomDocument_Generic *doc = dynamic_cast<CL_DomDocument_Generic *>(impl.get());
+	const CL_DomDocument_Generic *doctype = dynamic_cast<const CL_DomDocument_Generic *>(document_type.impl.get());
+	doc->public_id = doctype->public_id;
+	doc->system_id = doctype->system_id;
+}
+
+CL_DomDocument::CL_DomDocument(const CL_SharedPtr<CL_DomNode_Generic> &new_impl)
+: CL_DomNode(new_impl)
+{
+	impl->owner_document = impl;
 }
 
 CL_DomDocument::~CL_DomDocument()
@@ -86,10 +104,11 @@ CL_DomImplementation CL_DomDocument::get_implementation()
 
 CL_DomElement CL_DomDocument::get_document_element()
 {
-	CL_DomNode cur(impl->first_child);
+	CL_DomNode cur = get_first_child();
 	while (!cur.is_null())
 	{
-		if (cur.is_element()) return cur.to_element();
+		if (cur.is_element())
+			return cur.to_element();
 		cur = cur.get_next_sibling();
 	}
 	return CL_DomElement();
@@ -98,9 +117,19 @@ CL_DomElement CL_DomDocument::get_document_element()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomDocument operations:
 
-CL_DomElement CL_DomDocument::create_element(const std::string &tag_name)
+CL_DomElement CL_DomDocument::create_element(const CL_DomString &tag_name)
 {
-	return CL_DomElement(*this, tag_name);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomElement(*this, doc->string_allocator.alloc(tag_name));
+}
+
+CL_DomElement CL_DomDocument::create_element_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &qualified_name)
+{
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomElement(*this, doc->string_allocator.alloc(qualified_name),
+		doc->string_allocator.alloc(namespace_uri));
 }
 
 CL_DomDocumentFragment CL_DomDocument::create_document_fragment()
@@ -108,103 +137,142 @@ CL_DomDocumentFragment CL_DomDocument::create_document_fragment()
 	return CL_DomDocumentFragment(*this);
 }
 
-CL_DomText CL_DomDocument::create_text_node(const std::string &data)
+CL_DomText CL_DomDocument::create_text_node(const CL_DomString &data)
 {
-	return CL_DomText(*this, data);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomText(*this, doc->string_allocator.alloc(data));
 }
 
-CL_DomComment CL_DomDocument::create_comment(const std::string &data)
+CL_DomComment CL_DomDocument::create_comment(const CL_DomString &data)
 {
-	return CL_DomComment(*this, data);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomComment(*this, doc->string_allocator.alloc(data));
 }
 
-CL_DomCDATASection CL_DomDocument::create_cdata_section(const std::string &data)
+CL_DomCDATASection CL_DomDocument::create_cdata_section(const CL_DomString &data)
 {
-	return CL_DomCDATASection(*this, data);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomCDATASection(*this, doc->string_allocator.alloc(data));
 }
 
 CL_DomProcessingInstruction CL_DomDocument::create_processing_instruction(
-	const std::string &target,
-	const std::string &data)
+	const CL_DomString &target,
+	const CL_DomString &data)
 {
-	return CL_DomProcessingInstruction(*this, target, data);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomProcessingInstruction(*this, doc->string_allocator.alloc(target),
+		doc->string_allocator.alloc(data));
 }
 
-CL_DomAttr CL_DomDocument::create_attribute(const std::string &name)
+CL_DomAttr CL_DomDocument::create_attribute(const CL_DomString &name)
 {
-	return CL_DomAttr(*this, name);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomAttr(*this, doc->string_allocator.alloc(name));
 }
 
-CL_DomEntityReference CL_DomDocument::create_entity_reference(const std::string &name)
+CL_DomAttr CL_DomDocument::create_attribute_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &qualified_name)
 {
-	return CL_DomEntityReference(*this, name);
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomAttr(*this, doc->string_allocator.alloc(qualified_name), doc->string_allocator.alloc(namespace_uri));
 }
 
-CL_DomNodeList CL_DomDocument::get_elements_by_tag_name(const std::string &tag_name)
+CL_DomEntityReference CL_DomDocument::create_entity_reference(const CL_DomString &name)
+{
+	CL_DomDocument_Generic *doc = static_cast<CL_DomDocument_Generic *>(impl.get());
+	return CL_DomEntityReference(*this, doc->string_allocator.alloc(name));
+}
+
+CL_DomNodeList CL_DomDocument::get_elements_by_tag_name(const CL_DomString &tag_name)
 {
 	return CL_DomNodeList(*this, tag_name);
 }
 
+CL_DomNodeList CL_DomDocument::get_elements_by_tag_name_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &qualified_name)
+{
+	return CL_DomNodeList(*this, namespace_uri, qualified_name);
+}
+
+CL_DomElement CL_DomDocument::get_element_by_id(const CL_DomString &element_id)
+{
+	return CL_DomElement();
+}
+
+CL_DomNode CL_DomDocument::import_node(
+	const CL_DomNode &node,
+	bool deep)
+{
+	return CL_DomNode();
+}
+
 std::vector<CL_DomNode> CL_DomDocument::load(
-	CL_InputSource *input,
-	bool delete_input,
+	CL_IODevice &input,
 	bool eat_whitespace,
 	CL_DomNode insert_point)
 {
 	clear_all();
 
-	CL_XMLTokenizer tokenizer(input, delete_input);
+	CL_XMLTokenizer tokenizer(input);
 	tokenizer.set_eat_whitespace(eat_whitespace);
 
 	if (insert_point.is_element() == false)
 		insert_point = *this;
 		
-	std::stack<CL_DomNode> node_stack;
-	node_stack.push(insert_point);
+	std::vector<CL_DomNode> node_stack;
+	node_stack.push_back(insert_point);
 
 	std::vector<CL_DomNode> result;
 	
 	try
 	{
-		CL_XMLTokenLoad cur_token = tokenizer.next();
-		while (cur_token.get_type() != CL_XMLToken::NULL_TOKEN)
+		CL_XMLToken cur_token;
+		tokenizer.next(&cur_token);
+		while (cur_token.type != CL_XMLToken::NULL_TOKEN)
 		{
-			switch (cur_token.get_type())
+			switch (cur_token.type)
 			{
 			case CL_XMLToken::TEXT_TOKEN:
-				node_stack.top().append_child(create_text_node(cur_token.get_value()));
-				if (node_stack.top() == insert_point)
-					result.push_back(node_stack.top().get_last_child());
+				node_stack.back().append_child(create_text_node(cur_token.value));
+				if (node_stack.back() == insert_point)
+					result.push_back(node_stack.back().get_last_child());
 				break;
 
 			case CL_XMLToken::CDATA_SECTION_TOKEN:
-				node_stack.top().append_child(create_cdata_section(cur_token.get_value()));
-				if (node_stack.top() == insert_point)
-					result.push_back(node_stack.top().get_last_child());
+				node_stack.back().append_child(create_cdata_section(cur_token.value));
+				if (node_stack.back() == insert_point)
+					result.push_back(node_stack.back().get_last_child());
 				break;
 
 			case CL_XMLToken::ELEMENT_TOKEN:
-				if (cur_token.get_variant() != CL_XMLToken::END)
+				if (cur_token.variant != CL_XMLToken::END)
 				{
-					CL_DomElement element = create_element(cur_token.get_name());
-					node_stack.top().append_child(element);
-					if (node_stack.top() == insert_point)
-						result.push_back(node_stack.top().get_last_child());
+					CL_DomString namespace_uri = CL_DomDocument_Generic::find_namespace_uri(cur_token.name, cur_token, node_stack.back());
+					CL_DomElement element = create_element_ns(namespace_uri, cur_token.name);
+					node_stack.back().append_child(element);
+					if (node_stack.back() == insert_point)
+						result.push_back(node_stack.back().get_last_child());
 
-					int size = cur_token.get_attributes_number();
+					int size = (int) cur_token.attributes.size();
 					for (int i=0; i<size; i++)
 					{
-						std::pair<CL_XMLTokenString, CL_XMLTokenString> const & attribute = cur_token.get_attribute_fast(i);
-						element.set_attribute(attribute.first.to_string(), attribute.second.to_string());
+						CL_XMLToken::Attribute &attribute = cur_token.attributes[i];
+						CL_DomString attribute_namespace_uri = CL_DomDocument_Generic::find_namespace_uri(attribute.first, cur_token, node_stack.back());
+						element.set_attribute_ns(
+							attribute_namespace_uri,
+							attribute.first,
+							attribute.second);
 					}
 				
-					if (cur_token.get_variant() == CL_XMLToken::BEGIN)
-						node_stack.push(element);
+					if (cur_token.variant == CL_XMLToken::BEGIN)
+						node_stack.push_back(element);
 				}
 				else
 				{
-					node_stack.pop();
-					if (node_stack.empty()) throw CL_Error("Malformed XML tree!");
+					node_stack.pop_back();
+					if (node_stack.empty()) throw CL_Exception(cl_text("Malformed XML tree!"));
 				}
 				break;
 
@@ -230,10 +298,10 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 				break;
 			}		
 
-			cur_token = tokenizer.next();
+			tokenizer.next(&cur_token);
 		}
 	}
-	catch (CL_Error e)
+	catch (CL_Exception e)
 	{
 		for (std::vector<CL_DomNode>::size_type i = 0; i < result.size(); i++)
 		{
@@ -244,27 +312,32 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 	return result;
 }
 
-void CL_DomDocument::save(CL_OutputSource *output, bool delete_output, bool insert_whitespace)
+void CL_DomDocument::save(CL_IODevice &output, bool insert_whitespace)
 {
-	CL_XMLWriter writer(output, delete_output);
+	CL_XMLWriter writer(output);
 	writer.set_insert_whitespace(insert_whitespace);
 
-	std::stack<CL_DomNode> node_stack;
+	std::vector<CL_DomNode> node_stack;
 	CL_DomNode cur_node = get_first_child();
 	while (!cur_node.is_null())
 	{
 		// Create opening node:
-		CL_XMLTokenSave opening_node;
-		opening_node.set_type((CL_XMLToken::TokenType) cur_node.get_node_type());
-		opening_node.set_variant(cur_node.has_child_nodes() ? CL_XMLToken::BEGIN : CL_XMLToken::SINGLE);
-		opening_node.set_name(cur_node.get_node_name());
-		opening_node.set_value(cur_node.get_node_value());
+		CL_XMLToken opening_node;
+		opening_node.type = (CL_XMLToken::TokenType) cur_node.get_node_type();
+		opening_node.variant = cur_node.has_child_nodes() ? CL_XMLToken::BEGIN : CL_XMLToken::SINGLE;
+		opening_node.name = cur_node.get_node_name();
+		opening_node.value = cur_node.get_node_value();
 		if (cur_node.is_element())
 		{
-			for (int i = 0; i < cur_node.impl->attributes.get_length(); ++i)
+			CL_DomNamedNodeMap attributes = cur_node.get_attributes();
+			int length = attributes.get_length();
+			for (int i = 0; i < length; ++i)
 			{
-				opening_node.set_attribute(cur_node.impl->attributes.item(i).to_attr().get_name(),
-													cur_node.impl->attributes.item(i).to_attr().get_value());
+				CL_DomAttr attribute = attributes.item(i).to_attr();
+				opening_node.attributes.push_back(
+					CL_XMLToken::Attribute(
+						attribute.get_name(),
+						attribute.get_value()));
 			}
 		}
 		writer.write(opening_node);
@@ -272,7 +345,7 @@ void CL_DomDocument::save(CL_OutputSource *output, bool delete_output, bool inse
 		// Create any possible child nodes:
 		if (cur_node.has_child_nodes())
 		{
-			node_stack.push(cur_node);
+			node_stack.push_back(cur_node);
 			cur_node = cur_node.get_first_child();
 			continue;
 		}
@@ -282,19 +355,21 @@ void CL_DomDocument::save(CL_OutputSource *output, bool delete_output, bool inse
 		{
 			if (cur_node.has_child_nodes())
 			{
-				CL_XMLTokenSave closing_node;
-				closing_node.set_type((CL_XMLToken::TokenType) cur_node.get_node_type());
-				closing_node.set_name(cur_node.get_node_name());
-				closing_node.set_variant(CL_XMLToken::END);
+				CL_XMLToken closing_node;
+				closing_node.type = (CL_XMLToken::TokenType) cur_node.get_node_type();
+				closing_node.name = cur_node.get_node_name();
+				closing_node.variant = CL_XMLToken::END;
 				writer.write(closing_node);
 			}
 
 			cur_node = cur_node.get_next_sibling();
-			if (!cur_node.is_null()) break;
-			if (node_stack.empty()) break;
+			if (!cur_node.is_null())
+				break;
+			if (node_stack.empty())
+				break;
 
-			cur_node = node_stack.top();
-			node_stack.pop();
+			cur_node = node_stack.back();
+			node_stack.pop_back();
 		}
 	}
 }

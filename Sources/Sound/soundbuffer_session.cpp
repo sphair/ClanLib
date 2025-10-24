@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -33,7 +32,6 @@
 #include "API/Sound/soundfilter.h"
 #include "soundbuffer_session_generic.h"
 #include "soundoutput_generic.h"
-#include <cmath>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer_Session construction:
@@ -46,7 +44,7 @@ CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_SoundBuffer_Session &cop
 {
 }
 
-CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> &impl) : impl(impl)
+CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_SharedPtr<CL_SoundBuffer_Session_Generic> &impl) : impl(impl)
 {
 }
 
@@ -74,7 +72,6 @@ float CL_SoundBuffer_Session::get_position_relative() const
 
 int CL_SoundBuffer_Session::get_length() const
 {
-	if (!impl) return 0;
 	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->provider_session->get_num_samples();
 }
@@ -97,15 +94,8 @@ float CL_SoundBuffer_Session::get_pan() const
 	return impl->pan;
 }
 
-float CL_SoundBuffer_Session::get_speedfactor() const
-{
-	CL_MutexSection mutex_lock(&impl->mutex);
-	return impl->speedfactor;
-}
-
 bool CL_SoundBuffer_Session::is_playing()
 {
-	if (!impl) return false;
 	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->playing;
 }
@@ -149,12 +139,6 @@ void CL_SoundBuffer_Session::set_pan(float new_pan)
 	impl->pan = new_pan;
 }
 
-void CL_SoundBuffer_Session::set_speedfactor(float new_speedfactor)
-{
-	CL_MutexSection mutex_lock(&impl->mutex);
-	impl->speedfactor = fabs(new_speedfactor);
-}
-
 void CL_SoundBuffer_Session::play()
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
@@ -163,20 +147,19 @@ void CL_SoundBuffer_Session::play()
 	{
 		impl->playing = true;
 		CL_SoundOutput_Generic *output = impl->output;
-		mutex_lock.leave();
+		mutex_lock.unlock();
 		output->play_session(impl);
 	}
 }
 
 void CL_SoundBuffer_Session::stop()
 {
-	if (!impl) return;
 	CL_MutexSection mutex_lock(&impl->mutex);
 	if (!impl->playing) return;
 	CL_SoundOutput_Generic *output = impl->output;
-	mutex_lock.leave();
+	mutex_lock.unlock();
 	output->stop_session(impl);
-	mutex_lock.enter();
+	mutex_lock.lock();
 	impl->playing = false;
 	impl->provider_session->stop();
 }
@@ -193,21 +176,6 @@ void CL_SoundBuffer_Session::add_filter(CL_SoundFilter *filter, bool delete_filt
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->filters.push_back(filter);
 	impl->delete_filters.push_back(delete_filter);
-}
-
-
-void CL_SoundBuffer_Session::remove_all_filters()
-{
-	if (!impl) return;
-
-	CL_MutexSection mutex_lock(&impl->mutex);
-	for (std::vector<CL_SoundFilter *>::size_type i=0; i<impl->filters.size(); i++)
-	{
-		if (impl->delete_filters[i]) delete impl->filters[i];
-	}
-
-	impl->filters.clear();
-	impl->delete_filters.clear();
 }
 
 void CL_SoundBuffer_Session::remove_filter(CL_SoundFilter *filter)

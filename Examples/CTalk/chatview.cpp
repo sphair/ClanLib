@@ -7,28 +7,35 @@
 /////////////////////////////////////////////////////////////////////////////
 // ChatView construction:
 
-ChatView::ChatView(IRCConnection *connection, const std::string &filter, MainFrame *mainframe) :
-	View(mainframe, filter.empty() ? "Status" : filter), chat(0), inputbox(0), userlist(0), connection(connection)
+ChatView::ChatView(IRCConnection *connection, const CL_String &filter, CL_GUIComponent *parent, MainFrame *mainframe)
+: View(parent, mainframe, filter.empty() ? "Status" : filter), chat(0), inputbox(0), userlist(0), connection(connection)
 {
 	chat = new Chat(connection, filter, this);
-	inputbox = new CL_InputBox(this);
-	userlist = new CL_ListBox(this);
+	inputbox = new CL_LineEdit(this);
+	userlist = new CL_ListView(this);
 	inputbox->set_focus();
 
-	// Only show userlist for channels:
-	if (filter.substr(0, 1) != "#") userlist->show(false);
+	userlist->get_header()->append(userlist->get_header()->create_column("nick", "Name"));
 
-	slots.connect(sig_resize(), this, &ChatView::on_resize);
-	slots.connect(sig_paint(), this, &ChatView::on_paint);
-	slots.connect(inputbox->sig_return_pressed(), this, &ChatView::on_inputbox_return_pressed);
+	// Only show userlist for channels:
+	if (!is_channel())
+		userlist->set_visible(false);
+
+	func_resized().set(this, &ChatView::on_resize);
+	inputbox->func_unhandled_event().set(this, &ChatView::on_inputbox_unhandled_input);
+/*
 	slots.connect(inputbox->sig_changed(), this, &ChatView::on_inputbox_changed);
 	slots.connect(userlist->sig_activated(), this, &ChatView::on_userlist_activated);
 	slots.connect(userlist->sig_key_up(), this, &ChatView::on_userlist_key_up);
 	slots.connect(userlist->sig_mouse_up(), this, &ChatView::on_userlist_mouse_up);
+*/
+	slots.connect(connection->sig_unknown_command_received(), this, &ChatView::on_connection_unknown_command_received);
 	slots.connect(connection->sig_numeric_reply(), this, &ChatView::on_connection_numeric_reply);
 	slots.connect(connection->sig_nick(), this, &ChatView::on_connection_nick);
 	slots.connect(connection->sig_join(), this, &ChatView::on_connection_join);
 	slots.connect(connection->sig_part(), this, &ChatView::on_connection_part);
+
+	on_resize();
 }
 
 ChatView::~ChatView()
@@ -38,6 +45,10 @@ ChatView::~ChatView()
 /////////////////////////////////////////////////////////////////////////////
 // ChatView attributes:
 
+bool ChatView::is_channel() const
+{
+	return get_filter().substr(0, 1) == "#";
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // ChatView operations:
@@ -46,25 +57,35 @@ ChatView::~ChatView()
 /////////////////////////////////////////////////////////////////////////////
 // ChatView implementation:
 
-void ChatView::on_resize(int old_width, int old_height)
+void ChatView::on_resize()
 {
 	int inputbox_height = 16;
 	int userlist_width = 150;
 
-	if (userlist->is_visible() == false) userlist_width = 0;
+	if (!is_channel())
+		userlist_width = 0;
 
-	chat->set_position(CL_Rect(0, 0, get_width()-userlist_width, get_height()-inputbox_height));
-	userlist->set_position(CL_Rect(get_width()-userlist_width, 0, get_width(), get_height()-inputbox_height));
-	inputbox->set_position(CL_Rect(0, get_height()-inputbox_height, get_width(), get_height()));
+	chat->set_geometry(CL_Rect(0, 0, get_width()-userlist_width, get_height()-inputbox_height));
+	userlist->set_geometry(CL_Rect(get_width()-userlist_width, 0, get_width(), get_height()-inputbox_height));
+	inputbox->set_geometry(CL_Rect(0, get_height()-inputbox_height, get_width(), get_height()));
 }
 
-void ChatView::on_paint()
+bool ChatView::on_inputbox_unhandled_input(CL_InputEvent input_event)
 {
+	if (input_event.id == CL_KEY_ENTER)
+	{
+		on_inputbox_return_pressed();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void ChatView::on_inputbox_return_pressed()
 {
-	std::string command_line = inputbox->get_text();
+	CL_String command_line = inputbox->get_text();
 	if (command_line.empty()) return;
 
 	if (command_line[0] != '/') // not a command
@@ -74,18 +95,22 @@ void ChatView::on_inputbox_return_pressed()
 	}
 	else // its a command
 	{
-		std::vector<std::string> args = CL_String::tokenize(command_line, " ");
+		std::vector<CL_TempString> args = CL_StringHelp::split_text(command_line, " ");
 
 		if (args[0] == "/nick")
 		{
-			if (args.size() > 1)
+			if (args.size() == 2)
 			{
-				connection->send_nick(args[1]); 
+				connection->send_nick(args[1]);
+			}
+			else
+			{
+				chat->add_line("syntax: /nick <new nick>", chat->color_system);
 			}
 		}
 		else if (args[0] == "/oper")
 		{
-			// void send_oper(const std::string &user, const std::string &password);
+			// void send_oper(const CL_String &user, const CL_String &password);
 		}
 		else if (args[0] == "/quit")
 		{
@@ -95,7 +120,7 @@ void ChatView::on_inputbox_return_pressed()
 			}
 			else if (args.size() >= 2)
 			{
-				std::string reason;
+				CL_String reason;
 				for (unsigned int i=1; i<args.size(); i++)
 				{
 					if (i > 1) reason += " ";
@@ -105,7 +130,7 @@ void ChatView::on_inputbox_return_pressed()
 				connection->send_quit(reason);
 			}
 
-			quit();
+			exit_with_code(1);
 		}
 		else if (args[0] == "/join")
 		{
@@ -130,7 +155,7 @@ void ChatView::on_inputbox_return_pressed()
 			}
 			else if (args.size() >= 3)
 			{
-				std::string reason;
+				CL_String reason;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) reason += " ";
@@ -148,7 +173,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 3)
 			{
-				std::vector<std::string> remaining_args;
+				std::vector<CL_String> remaining_args;
 				for (unsigned int i=3; i<args.size(); i++) remaining_args.push_back(args[i]);
 				connection->send_mode(args[1], args[2], remaining_args);
 			}
@@ -165,7 +190,7 @@ void ChatView::on_inputbox_return_pressed()
 			}
 			else if (args.size() > 2)
 			{
-				std::string new_topic;
+				CL_String new_topic;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) new_topic += " ";
@@ -223,7 +248,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 3)
 			{
-				std::string comment;
+				CL_String comment;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) comment += " ";
@@ -312,11 +337,11 @@ void ChatView::on_inputbox_return_pressed()
 			}
 			else if (args.size() == 3)
 			{
-				connection->send_connect(args[1], CL_String::to_int(args[2]));
+				connection->send_connect(args[1], CL_StringHelp::text_to_int(args[2]));
 			}
 			else if (args.size() == 4)
 			{
-				connection->send_connect(args[1], CL_String::to_int(args[2]), args[3]);
+				connection->send_connect(args[1], CL_StringHelp::text_to_int(args[2]), args[3]);
 			}
 			else
 			{
@@ -342,7 +367,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 1)
 			{
-				connection->send_admin("");
+				connection->send_admin();
 			}
 			else if (args.size() == 2)
 			{
@@ -372,7 +397,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 2)
 			{
-				std::string text;
+				CL_String text;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) text += " ";
@@ -389,7 +414,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 3)
 			{
-				std::string data;
+				CL_String data;
 				for (unsigned int i=3; i<args.size(); i++)
 				{
 					if (i > 3) data += " ";
@@ -406,7 +431,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 2)
 			{
-				std::string text;
+				CL_String text;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) text += " ";
@@ -423,7 +448,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 3)
 			{
-				std::string data;
+				CL_String data;
 				for (unsigned int i=3; i<args.size(); i++)
 				{
 					if (i > 3) data += " ";
@@ -475,11 +500,11 @@ void ChatView::on_inputbox_return_pressed()
 			}
 			else if (args.size() == 3)
 			{
-				connection->send_whowas(args[1], CL_String::to_int(args[2]));
+				connection->send_whowas(args[1], CL_StringHelp::text_to_int(args[2]));
 			}
 			else if (args.size() == 4)
 			{
-				connection->send_whowas(args[1], CL_String::to_int(args[2]), args[3]);
+				connection->send_whowas(args[1], CL_StringHelp::text_to_int(args[2]), args[3]);
 			}
 			else
 			{
@@ -490,7 +515,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() >= 3)
 			{
-				std::string text;
+				CL_String text;
 				for (unsigned int i=2; i<args.size(); i++)
 				{
 					if (i > 2) text += " ";
@@ -505,15 +530,15 @@ void ChatView::on_inputbox_return_pressed()
 		}
 		else if (args[0] == "/me" || args[0] == "/action")
 		{
-			std::string text;
-			for (std::string::size_type i=1; i<args.size(); i++)
+			CL_String text;
+			for (CL_String::size_type i=1; i<args.size(); i++)
 			{
 				if (i > 1) text += " ";
 				text += args[i];
 			}
 
 			connection->send_privmsg_ctcp(chat->get_filter(), "ACTION", text);
-			chat->add_line(std::string("*CTalk ")+text, chat->color_text);
+			chat->add_line(cl_format("*%1 %2", connection->get_nick(), text), chat->color_text);
 		}
 		else if (args[0] == "/dcc")
 		{
@@ -522,7 +547,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "FINGER", std::string());
+				connection->send_privmsg_ctcp(args[1], "FINGER", CL_String());
 			}
 			else
 			{
@@ -533,7 +558,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "VERSION", std::string());
+				connection->send_privmsg_ctcp(args[1], "VERSION", CL_String());
 			}
 			else
 			{
@@ -544,7 +569,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "USERINFO", std::string());
+				connection->send_privmsg_ctcp(args[1], "USERINFO", CL_String());
 			}
 			else
 			{
@@ -555,7 +580,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "CLIENTINFO", std::string());
+				connection->send_privmsg_ctcp(args[1], "CLIENTINFO", CL_String());
 			}
 			else
 			{
@@ -566,7 +591,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "PING", CL_String::from_int(CL_System::get_time()));
+				connection->send_privmsg_ctcp(args[1], "PING", CL_StringHelp::int_to_text(CL_System::get_time()));
 			}
 			else
 			{
@@ -577,7 +602,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 2)
 			{
-				connection->send_privmsg_ctcp(args[1], "TIME", std::string());
+				connection->send_privmsg_ctcp(args[1], "TIME", CL_String());
 			}
 			else
 			{
@@ -587,14 +612,17 @@ void ChatView::on_inputbox_return_pressed()
 	}
 
 	inputbox->set_text("");
+#if defined(netsession_implemented)
 	connection->send_type_packet(chat->get_filter(), "");
+#endif
 }
 
-void ChatView::on_inputbox_changed(const std::string &text)
+#if defined(netsession_implemented)
+void ChatView::on_inputbox_changed(const CL_String &text)
 {
-	//why was this sending a packet on every keystroke?  No need.  --mrfun Sep 22 2006
-	//connection->send_type_packet(chat->get_filter(), text);
+	connection->send_type_packet(chat->get_filter(), text);
 }
+#endif
 
 void ChatView::on_userlist_activated(int item_id)
 {
@@ -623,25 +651,28 @@ void ChatView::on_userlist_contextmenu()
 }
 
 void ChatView::on_connection_numeric_reply(
-	const std::string &prefix,
+	const CL_String &prefix,
 	int command,
-	const std::vector<std::string> &params)
+	const std::vector<CL_String> &params)
 {
 	if (command == RPL_NAMREPLY && params.size() >= 4)
 	{
-		std::string channel = params[2];
-		std::string nicks = params[3];
+		CL_String channel = params[2];
+		CL_String nicks = params[3];
 
-		if (channel != chat->get_filter()) return;
-
-		std::vector<std::string> nick_list = CL_String::tokenize(nicks, " ");
-		for (unsigned int i=0; i<nick_list.size(); i++)
+		if (channel == chat->get_filter())
 		{
-			std::string nick = nick_list[i];
-			userlist->insert_item(nick);
-		}
+			std::vector<CL_TempString> nick_list = CL_StringHelp::split_text(nicks, " ");
+			for (unsigned int i=0; i<nick_list.size(); i++)
+			{
+				CL_String nick = nick_list[i];
+				CL_ListViewItem item = userlist->create_item();
+				item.set_column_text("nick", nick);
+				userlist->get_document_item().append_child(item);
+			}
 
-		userlist->sort();
+			// userlist->sort();
+		}
 	}
 	else if (command == RPL_ENDOFNAMES)
 	{
@@ -649,25 +680,26 @@ void ChatView::on_connection_numeric_reply(
 	}
 }
 
-void ChatView::on_connection_nick(const std::string &_old_nick, const std::string &_new_nick)
+void ChatView::on_connection_nick(const CL_String &_old_nick, const CL_String &_new_nick)
 {
-	std::string old_nick = CL_IRCConnection::extract_nick(_old_nick);
-	std::string new_nick = CL_IRCConnection::extract_nick(_new_nick);
+	CL_String old_nick = CL_IRCConnection::extract_nick(_old_nick);
+	CL_String new_nick = CL_IRCConnection::extract_nick(_new_nick);
 
-	std::vector<CL_ListItem *> &items = userlist->get_items();
-	for (unsigned int i=0; i<items.size(); i++)
+	CL_ListViewItem cur = userlist->get_document_item().get_first_child();
+	while (!cur.is_null())
 	{
-		if (items[i]->str == old_nick)
+		if (cur.get_column("nick").get_text() == old_nick)
 		{
-			userlist->remove_item(i);
-			userlist->insert_item(new_nick);
-			userlist->sort();
-			return;
+			cur.set_column_text("nick", new_nick);
+			// userlist->sort();
+			break;
 		}
+
+		cur = cur.get_next_sibling();
 	}
 }
 
-void ChatView::on_connection_join(const std::string &nick, const std::string &channel)
+void ChatView::on_connection_join(const CL_String &nick, const CL_String &channel)
 {
 	if (channel == chat->get_filter())
 	{
@@ -676,40 +708,68 @@ void ChatView::on_connection_join(const std::string &nick, const std::string &ch
 		if (CL_IRCConnection::extract_nick(nick) == connection->get_nick())
 		{
 			userlist->clear();
-			return;
 		}
-
-		// Check if we are already in userlist:
-		std::vector<CL_ListItem *> &items = userlist->get_items();
-		for (unsigned int i=0; i<items.size(); i++)
+		else
 		{
-			std::string old_nick = CL_IRCConnection::extract_nick(nick);
-
-			if (items[i]->str == old_nick)
+			// Check if we are already in userlist:
+			CL_String old_nick = CL_IRCConnection::extract_nick(nick);
+			CL_ListViewItem cur = userlist->get_document_item().get_first_child();
+			while (!cur.is_null())
 			{
-				return;
+				if (cur.get_column("nick").get_text() == old_nick)
+					break;
+				cur = cur.get_next_sibling();
 			}
-		}
 
-		userlist->insert_item(CL_IRCConnection::extract_nick(nick));
-		userlist->sort();
+			CL_ListViewItem item = userlist->create_item();
+			item.set_column_text("nick", CL_IRCConnection::extract_nick(nick));
+			userlist->get_document_item().append_child(item);
+			// userlist->sort();
+		}
 	}
 }
 
-void ChatView::on_connection_part(const std::string &nick, const std::string &channel, const std::string &reason)
+void ChatView::on_connection_part(const CL_String &nick, const CL_String &channel, const CL_String &reason)
 {
 	if (channel == chat->get_filter())
 	{
-		std::vector<CL_ListItem *> &items = userlist->get_items();
-		for (unsigned int i=0; i<items.size(); i++)
+		CL_String old_nick = CL_IRCConnection::extract_nick(nick);
+		CL_ListViewItem cur = userlist->get_document_item().get_first_child();
+		while (!cur.is_null())
 		{
-			std::string old_nick = CL_IRCConnection::extract_nick(nick);
-
-			if (items[i]->str == old_nick)
+			if (cur.get_column("nick").get_text() == old_nick)
 			{
-				userlist->remove_item(i);
-				return;
+				cur.remove();
+				break;
 			}
+			cur = cur.get_next_sibling();
+		}
+	}
+}
+
+void ChatView::on_connection_unknown_command_received(const CL_String &prefix, const CL_String &command, const std::vector<CL_String> &params)
+{
+	if (command == "QUIT")
+	{
+		CL_String nick = prefix;
+		CL_String reason;
+		if (params.size() > 0)
+			reason = params[0];
+
+		CL_String old_nick = CL_IRCConnection::extract_nick(nick);
+		CL_ListViewItem cur = userlist->get_document_item().get_first_child();
+		while (!cur.is_null())
+		{
+			if (cur.get_column("nick").get_text() == old_nick)
+			{
+				cur.remove();
+				if (!reason.empty())
+					chat->add_line(cl_format("%1 quit (%2)", CL_IRCConnection::extract_nick(nick), reason), chat->color_system);
+				else
+					chat->add_line(cl_format("%1 quit", CL_IRCConnection::extract_nick(nick)), chat->color_system);
+				break;
+			}
+			cur = cur.get_next_sibling();
 		}
 	}
 }

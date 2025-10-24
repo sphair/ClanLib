@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Ingo Ruhnke
 */
 
 #include "Core/precomp.h"
@@ -38,16 +38,45 @@ CL_DomNodeList::CL_DomNodeList()
 {
 }
 
-CL_DomNodeList::CL_DomNodeList(CL_DomNode &node, const std::string &tag_name)
+CL_DomNodeList::CL_DomNodeList(CL_DomNode &node, const CL_DomString &tag_name)
 {
-	CL_DomNode current_child=node.get_first_child();
+	CL_DomNode current_child = node.get_first_child();
 	while(!current_child.is_null())
 	{
-		if(current_child.get_node_name()==tag_name)
+		if(current_child.get_node_name() == tag_name)
 		{
 			add_item(current_child);
 		}
-		current_child=current_child.get_next_sibling();
+		current_child = current_child.get_next_sibling();
+	}
+}
+
+CL_DomNodeList::CL_DomNodeList(
+	CL_DomNode &node,
+	const CL_DomString &namespace_uri,
+	const CL_DomString &name,
+	bool local_name)
+{
+	CL_DomNode current_child = node.get_first_child();
+	while(!current_child.is_null())
+	{
+		if (local_name)
+		{
+			if (current_child.get_namespace_uri() == namespace_uri &&
+				current_child.get_local_name() == name)
+			{
+				add_item(current_child);
+			}
+		}
+		else
+		{
+			if (current_child.get_namespace_uri() == namespace_uri &&
+				current_child.get_node_name() == name)
+			{
+				add_item(current_child);
+			}
+		}
+		current_child = current_child.get_next_sibling();
 	}
 }
 
@@ -68,8 +97,9 @@ int CL_DomNodeList::get_length() const
 
 CL_DomNode CL_DomNodeList::item(unsigned long index) const
 {
-	if( index < 0 || index >= node_list.size() )
-	{//if the given index is not valid
+	if (index < 0 || index >= node_list.size())
+	{
+		//if the given index is not valid
 		CL_DomNode empty_node;
 		return(empty_node);
 	}

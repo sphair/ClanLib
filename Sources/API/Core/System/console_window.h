@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,71 +24,68 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="System"
-//! header=core.h
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
-#ifndef header_console_window
-#define header_console_window
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <string>
+#include "../api_core.h"
 
 class CL_ConsoleWindow_Generic;
 
-//: Text console window.
-//- !group=Core/System!
-//- !header=core.h!
-//- <p>Note: This class has no effect under Linux.</p>
+/// \brief Text console window.
+///
+///  Note: This class has no effect under Linux.
+/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE CL_ConsoleWindow
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Console Window constructor.
-	//param title: Window title of console window.
-	//param width: Columns in console window.
-	//param height: Rows in console window.
+	/// \brief Console Window constructor.
+	///
+	/// \param title Window title of console window.
+	/// \param width Columns in console window.
+	/// \param height Rows in console window.
 	CL_ConsoleWindow(
-		const std::string &title,
+		const CL_StringRef &title,
 		int width = 80,
 		int height = 25);
 
-	//: Console Window destructor.
+	/// \brief Console Window destructor.
 	~CL_ConsoleWindow();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Redirects stdout, stdin and stderr to the console window.
-	void redirect_stdio();
-
-	//: Redirects stdout and stderr to filename.
-	void redirect_stdio(const std::string &filename);
-
-	//: Waits until user hits a key.
+	/// \brief Waits until user hits a key.
 	void wait_for_key();
 
-	//: Displays 'press any key to close this console window',
-	//: and waits until user hits a key.
+	/// \brief Displays 'press any key to close this console window',
+	/// \brief and waits until user hits a key.
 	void display_close_message();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_ConsoleWindow_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

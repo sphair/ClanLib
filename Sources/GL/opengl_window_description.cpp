@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,50 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
-#include "API/GL/opengl_window.h"
+#include "GL/precomp.h"
 #include "API/GL/opengl_window_description.h"
-#include "opengl_window_description_generic.h"
+#include "opengl_window_description_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowDescription construction:
 
 CL_OpenGLWindowDescription::CL_OpenGLWindowDescription()
-: CL_DisplayWindowDescription(new CL_OpenGLWindowDescription_Generic)
 {
+	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	if (impl_gl.is_null())
+	{
+		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
+		set_data(cl_text("OpenGL"), impl_gl);
+	}
 }
 
 CL_OpenGLWindowDescription::~CL_OpenGLWindowDescription()
 {
+}
+
+CL_OpenGLWindowDescription::CL_OpenGLWindowDescription(const CL_DisplayWindowDescription &desc)
+{
+	CL_DisplayWindowDescription::operator=(desc);
+	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	if (impl_gl.is_null())
+	{
+		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
+		set_data(cl_text("OpenGL"), impl_gl);
+	}
+}
+
+CL_OpenGLWindowDescription &CL_OpenGLWindowDescription::operator=(CL_DisplayWindowDescription &desc)
+{
+	CL_DisplayWindowDescription::operator=(desc);
+	impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	if (impl_gl.is_null())
+	{
+		impl_gl = CL_SharedPtr<CL_OpenGLWindowDescription_Impl>(new CL_OpenGLWindowDescription_Impl);
+		set_data(cl_text("OpenGL"), impl_gl);
+	}
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -49,165 +75,85 @@ CL_OpenGLWindowDescription::~CL_OpenGLWindowDescription()
 
 int CL_OpenGLWindowDescription::get_buffer_size() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->buffer_size;
-}
-
-int CL_OpenGLWindowDescription::get_level() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->level;
-}
-
-bool CL_OpenGLWindowDescription::get_rgba() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->rgba;
+	return impl_gl->buffer_size;
 }
 
 bool CL_OpenGLWindowDescription::get_doublebuffer() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->doublebuffer;
+	return impl_gl->doublebuffer;
 }
 
 bool CL_OpenGLWindowDescription::get_stereo() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->stereo;
-}
-
-int CL_OpenGLWindowDescription::get_aux_buffers() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->aux_buffers;
+	return impl_gl->stereo;
 }
 
 int CL_OpenGLWindowDescription::get_red_size() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->red_size;
+	return impl_gl->red_size;
 }
 
 int CL_OpenGLWindowDescription::get_green_size() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->green_size;
+	return impl_gl->green_size;
 }
 
 int CL_OpenGLWindowDescription::get_blue_size() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->blue_size;
+	return impl_gl->blue_size;
 }
 
 int CL_OpenGLWindowDescription::get_alpha_size() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->alpha_size;
+	return impl_gl->alpha_size;
 }
 
-int CL_OpenGLWindowDescription::get_depth_size() const
+int CL_OpenGLWindowDescription::get_multisampling() const
 {
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->depth_size;
-}
-
-int CL_OpenGLWindowDescription::get_stencil_size() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->stencil_size;
-}
-
-int CL_OpenGLWindowDescription::get_accum_red_size() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_red_size;
-}
-
-int CL_OpenGLWindowDescription::get_accum_green_size() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_green_size;
-}
-
-int CL_OpenGLWindowDescription::get_accum_blue_size() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_blue_size;
-}
-
-int CL_OpenGLWindowDescription::get_accum_alpha_size() const
-{
-	return dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_alpha_size;
+	return impl_gl->multisampling;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowDescription operations:
 
-void CL_OpenGLWindowDescription::set_rgba(bool value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->rgba = value;
-}
-
 void CL_OpenGLWindowDescription::set_doublebuffer(bool value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->doublebuffer = value;
+	impl_gl->doublebuffer = value;
 }
 
 void CL_OpenGLWindowDescription::set_stereo(bool value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->stereo = value;
+	impl_gl->stereo = value;
 }
 
 void CL_OpenGLWindowDescription::set_buffer_size(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->buffer_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_level(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->level = value;
-}
-
-void CL_OpenGLWindowDescription::set_aux_buffers(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->aux_buffers = value;
+	impl_gl->buffer_size = value;
 }
 
 void CL_OpenGLWindowDescription::set_red_size(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->red_size = value;
+	impl_gl->red_size = value;
 }
 
 void CL_OpenGLWindowDescription::set_green_size(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->green_size = value;
+	impl_gl->green_size = value;
 }
 
 void CL_OpenGLWindowDescription::set_blue_size(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->blue_size = value;
+	impl_gl->blue_size = value;
 }
 
 void CL_OpenGLWindowDescription::set_alpha_size(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->alpha_size = value;
+	impl_gl->alpha_size = value;
 }
 
-void CL_OpenGLWindowDescription::set_depth_size(int value)
+void CL_OpenGLWindowDescription::set_multisampling(int value)
 {
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->depth_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_stencil_size(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->stencil_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_accum_red_size(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_red_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_accum_green_size(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_green_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_accum_blue_size(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_blue_size = value;
-}
-
-void CL_OpenGLWindowDescription::set_accum_alpha_size(int value)
-{
-	dynamic_cast<CL_OpenGLWindowDescription_Generic*>(impl.get())->accum_alpha_size = value;
+	impl_gl->multisampling = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////

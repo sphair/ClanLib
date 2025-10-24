@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -58,7 +58,7 @@ const std::vector<CL_DelauneyTriangulator_Triangle> &CL_DelauneyTriangulator::ge
 /////////////////////////////////////////////////////////////////////////////
 // CL_DelauneyTriangulator operations:
 
-void CL_DelauneyTriangulator::add_vertex(double x, double y, void *data)
+void CL_DelauneyTriangulator::add_vertex(float x, float y, void *data)
 {
 	CL_DelauneyTriangulator_Vertex vertex;
 	vertex.x = x;

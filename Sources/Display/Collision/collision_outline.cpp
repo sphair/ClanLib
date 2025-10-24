@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,24 +30,25 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
+#include "Display/precomp.h"
 #include "API/Display/Collision/collision_outline.h"
 #include "API/Display/Collision/outline_provider_bitmap.h"
 #include "API/Display/Collision/outline_provider_file.h"
 #include "API/Display/Collision/outline_circle.h"
-#include "API/Display/display.h"
-#include "API/Display/display_window.h"
-#include "API/Display/graphic_context.h"
-#include "API/Display/pixel_format.h"
-#include "API/Core/System/clanstring.h"
-#include "API/Display/Providers/provider_factory.h"
-#include "API/Display/pixel_buffer.h"
-#include "collision_outline_generic.h"
-#include "../surface_target.h"
+#include "API/Display/Window/display_window.h"
+#include "API/Display/Render/graphic_context.h"
+#include "API/Display/Image/pixel_format.h"
+#include "API/Display/ImageProviders/provider_factory.h"
+#include "API/Display/Image/pixel_buffer.h"
+#include "API/Display/2D/draw.h"
+#include "API/Display/Render/pen.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "Display/resourcedata_collisionoutline.h"
-#include "API/Core/System/error.h"
-
+#include "API/Core/Resources/resource_data_session.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/IOData/path_help.h"
+#include "resourcedata_collisionoutline.h"
+#include "collision_outline_generic.h"
+#include "API/Core/Text/string_format.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CollisionOutline Construction:
@@ -57,7 +58,6 @@ CL_CollisionOutline::CL_CollisionOutline()
 {
 	impl = new CL_CollisionOutline_Generic();
 }
-
 
 CL_CollisionOutline::CL_CollisionOutline(const CL_CollisionOutline &other)
  : impl(0)
@@ -77,19 +77,20 @@ CL_CollisionOutline::CL_CollisionOutline(std::vector<CL_Contour> contours, int w
 }
 
 CL_CollisionOutline::CL_CollisionOutline(
-	const std::string &filename,
+	const CL_StringRef &filename,
+	CL_VirtualDirectory directory,
 	int alpha_limit,
 	CL_OutlineAccuracy accuracy,
 	bool get_insides)
  : impl(0)
 {
-	if( CL_String::right(filename, 3) == "out" )
+	if( CL_PathHelp::get_extension(filename) == cl_text("out"))
 	{
 		impl = new CL_CollisionOutline_Generic( new CL_OutlineProviderFile(filename), accuracy_raw );
 		return;
 	}
 
-	CL_PixelBuffer pbuf = CL_ProviderFactory::load(filename);
+	CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename);
 	
 	if( pbuf.get_format() == CL_PixelFormat::rgba8888 )
 	{
@@ -106,27 +107,25 @@ CL_CollisionOutline::CL_CollisionOutline(
 }
 
 CL_CollisionOutline::CL_CollisionOutline(
-	const std::string &resource_id,
-	CL_ResourceManager *manager )
+	const CL_StringRef &resource_id,
+	CL_ResourceManager *manager)
  : impl(0)
 {
 	resource = manager->get_resource(resource_id);
-	resource.load();
-
-	CL_ResourceData_CollisionOutline *data =
-		(CL_ResourceData_CollisionOutline *) resource.get_data("collisionoutline");
-
-	if (!data)
-		throw CL_Error("Resource '" + resource_id + "' is not of type 'collisionoutline'");
-
-	impl = new CL_CollisionOutline_Generic();
-	*this = data->get_CollisionOutline();
-
-	resource.unload();
+	if (resource.get_type() != cl_text("collisionoutline"))
+		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'collisionoutline'"), resource_id));
+	CL_ResourceDataSession(cl_text("collisionoutline"), resource);
+	CL_SharedPtr<CL_ResourceData_CollisionOutline> data(resource.get_data(cl_text("collisionoutline")));
+	if (data.is_null())
+	{
+		data = CL_SharedPtr<CL_ResourceData_CollisionOutline>(new CL_ResourceData_CollisionOutline(resource));
+		resource.set_data(cl_text("collisionoutline"), data);
+	}
+	impl = data->collision_outline.impl;
 }
 
 CL_CollisionOutline::CL_CollisionOutline(
-	CL_PixelBuffer pbuf,
+	const CL_PixelBufferRef &pbuf,
 	int alpha_limit,
 	CL_OutlineAccuracy accuracy)
  : impl(0)
@@ -222,7 +221,6 @@ void CL_CollisionOutline::clean_collision_info()
 	impl->collision_info.clear();
 }
 
-
 void CL_CollisionOutline::get_collision_info_state(bool &points, bool &normals, bool &metadata, bool &pendepth) const
 {
 	points = impl->collision_info_points;
@@ -230,7 +228,6 @@ void CL_CollisionOutline::get_collision_info_state(bool &points, bool &normals, 
 	metadata = impl->collision_info_meta;
 	pendepth = impl->collision_info_pen_depth;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CollisionOutline Operations:
@@ -278,16 +275,12 @@ void CL_CollisionOutline::optimize(unsigned char check_distance, float corner_an
 	impl->optimize(check_distance, corner_angle);
 }
 
-
 void CL_CollisionOutline::draw(
 	float x,
 	float y,
-	const CL_Color &color,
-	CL_GraphicContext *gc)
+	const CL_Colorf &color,
+	CL_GraphicContext gc)
 {
-	// Get a graphics context
-	if (gc == 0) gc = CL_Display::get_current_window()->get_gc();
-	
 	// Draw collision outline (Contours are assumed as closed polygons, hence we use line-loop)
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
 	{
@@ -297,28 +290,33 @@ void CL_CollisionOutline::draw(
 		{
 			const CL_Pointf &p1 = impl->contours[i].points[s];
 			const CL_Pointf &p2 = impl->contours[i].points[(s+1) % numpoints];
-			gc->draw_line( x + p1.x+0.5f, y + p1.y+0.5f, x + p2.x+0.5f, y + p2.y+0.5f, color);
+			CL_Draw::line(gc, x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
 		}
+
 		// Add points (as oposite color)
 		// TODO: This did not work with SDL, the draw_pixel fails
-		CL_Color colorinv(255-color.get_red(),255-color.get_green(),255-color.get_blue());
+		CL_Colorf colorinv(1.0f-color.get_red(),1.0f-color.get_green(),1.0f-color.get_blue());
+
+		CL_Pen pen;
+		pen.set_point_size(2.0);
+		gc.set_pen(pen);
+
 		for(unsigned int s1 = 0; s1 < numpoints; s1++)
 		{
 			const CL_Pointf &p1 = impl->contours[i].points[s1];
-			gc->draw_pixel( int(x + p1.x+0.5f), int(y + p1.y+0.5f), colorinv);
+			CL_Draw::point(gc, x + p1.x + 0.5f, y + p1.y + 0.5f, colorinv);
 		}
+
+		gc.reset_pen();
 	}
 }
 
 void CL_CollisionOutline::draw_sub_circles(
 	float x,
 	float y,
-	const CL_Color &color,
-	CL_GraphicContext *gc)
+	const CL_Colorf &color,
+	CL_GraphicContext gc)
 {
-	// Get a graphics context
-	if (gc == 0) gc = CL_Display::get_current_window()->get_gc();
-
 	// Draw the circles
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
 	{
@@ -330,13 +328,13 @@ void CL_CollisionOutline::draw_sub_circles(
 			float numsegments = 16;
 			for(float e = 0; e < numsegments; e++)
 			{
-				float offx1 = cos(float(M_PI) * 2.0f * (e / numsegments))*radius;
-				float offy1 = sin(float(M_PI) * 2.0f * (e / numsegments))*radius;
-				float offx2 = cos(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
-				float offy2 = sin(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
+				float offx1 = float(cos(CL_PI * 2.0 * (e / numsegments))*radius);
+				float offy1 = float(sin(CL_PI * 2.0 * (e / numsegments))*radius);
+				float offx2 = float(cos(CL_PI * 2.0 * ((e+1) / numsegments))*radius);
+				float offy2 = float(sin(CL_PI * 2.0 * ((e+1) / numsegments))*radius);
 				CL_Pointf p1(x + center.x + offx1, y + center.y + offy1);
 				CL_Pointf p2(x + center.x + offx2, y + center.y + offy2);
-				gc->draw_line( p1.x+0.5f, p1.y+0.5f, p2.x+0.5f, p2.y+0.5f, color);
+				CL_Draw::line(gc, p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
 			}
 		}
 	}
@@ -345,25 +343,22 @@ void CL_CollisionOutline::draw_sub_circles(
 void CL_CollisionOutline::draw_smallest_enclosing_disc(
 	float x,
 	float y,
-	const CL_Color &color,
-	CL_GraphicContext *gc)
+	const CL_Colorf &color,
+	CL_GraphicContext gc)
 {
-	// Get a graphics context
-	if (gc == 0) gc = CL_Display::get_current_window()->get_gc();
-
 	// Draw the smallest enclosing disc
 	CL_Pointf center = impl->minimum_enclosing_disc.position;
-	float radius     = float(impl->minimum_enclosing_disc.radius);
+	float radius     = impl->minimum_enclosing_disc.radius;
 	float numsegments = 24; // To make it visible if the outline has only one contour, and the contour only has one sub-circle
 	for(float e = 0; e < numsegments; e++)
 	{
-		float offx1 = cos(float(M_PI) * 2.0f * (e / numsegments))*radius;
-		float offy1 = sin(float(M_PI) * 2.0f * (e / numsegments))*radius;
-		float offx2 = cos(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
-		float offy2 = sin(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
+		float offx1 = float(cos(CL_PI * 2.0 * (e / numsegments))*radius);
+		float offy1 = float(sin(CL_PI * 2.0 * (e / numsegments))*radius);
+		float offx2 = float(cos(CL_PI * 2.0 * ((e+1) / numsegments))*radius);
+		float offy2 = float(sin(CL_PI * 2.0 * ((e+1) / numsegments))*radius);
 		CL_Pointf p1(x + center.x + offx1, y + center.y + offy1);
 		CL_Pointf p2(x + center.x + offx2, y + center.y + offy2);
-		gc->draw_line( p1.x+0.5f, p1.y+0.5f, p2.x+0.5f, p2.y+0.5f, color);
+		CL_Draw::line(gc, p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
 	}
 }
 
@@ -377,12 +372,12 @@ void CL_CollisionOutline::set_scale(float x, float y)
 	impl->set_scale(x,y);
 }
 
-void CL_CollisionOutline::set_angle(float angle)
+void CL_CollisionOutline::set_angle(const CL_Angle &angle)
 {
 	impl->set_angle(angle);
 }
 
-void CL_CollisionOutline::rotate(float angle)
+void CL_CollisionOutline::rotate(const CL_Angle &angle)
 {
 	impl->rotate(angle);
 }
@@ -421,9 +416,9 @@ void CL_CollisionOutline::calculate_convex_hulls()
 	impl->calculate_convex_hulls();
 }
 
-void CL_CollisionOutline::save(const std::string &filename, CL_OutputSourceProvider *provider) const
+void CL_CollisionOutline::save(const CL_StringRef &filename, CL_VirtualDirectory directory) const
 {
-	impl->save(filename, provider);
+	impl->save(filename, directory);
 }
 
 bool CL_CollisionOutline::collide(const CL_CollisionOutline &outline, bool remove_old_collision_info)
@@ -453,8 +448,8 @@ void CL_CollisionOutline::set_alignment( CL_Origin origin, float x, float y )
 	{
 		float fix_x = 0, fix_y = 0;
 
-		float width = float(impl->width)/2;
-		float height = float(impl->height)/2;
+		float width = impl->width/2.0f;
+		float height = impl->height/2.0f;
 
 		switch( old_origin )
 		{
@@ -516,8 +511,8 @@ void CL_CollisionOutline::set_alignment( CL_Origin origin, float x, float y )
 	{
 		float fix_x = 0, fix_y = 0;
 
-		float width = float(impl->width)/2;
-		float height = float(impl->height)/2;
+		float width = impl->width/2.0f;
+		float height = impl->height/2.0f;
 
 		switch( origin )
 		{
@@ -578,15 +573,15 @@ void CL_CollisionOutline::set_rotation_hotspot( CL_Origin origin, float x, float
 
 	// undo the rotation of the current rotation hotspot
 	float angle = impl->angle;
-	impl->set_angle(0.0f);
+	impl->set_angle(CL_Angle(0.0f,cl_degrees));
 
 	float fix_x = 0, fix_y = 0;
 
 	// set new origin offset.
 	if( origin != origin_center )
 	{
-		float width = float(impl->width)/2;
-		float height = float(impl->height)/2;
+		float width = impl->width/2.0f;
+		float height = impl->height/2.0f;
 
 		switch( origin )
 		{
@@ -637,11 +632,9 @@ void CL_CollisionOutline::set_rotation_hotspot( CL_Origin origin, float x, float
 	impl->rotation_hotspot.y = fix_y + y;
 
 	// transform data using new rotation hotspot
-	impl->set_angle(angle);
+	impl->set_angle(CL_Angle(angle,cl_degrees));
 
 	set_alignment(trans_origin);
 
 	impl->calculate_radius();
 }
-
-

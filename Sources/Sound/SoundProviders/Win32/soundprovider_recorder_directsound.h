@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundrecorder_directsound
-#define header_soundrecorder_directsound
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,15 +39,25 @@
 #include "API/Core/System/mutex.h"
 #include <dsound.h>
 
+#if DIRECTSOUND_VERSION < 0x0800
+#error Found DirectX headers older than 8.0. Please download a newer directx, and make sure its FIRST in the include path and library path (Tools->Options->Directories in MSVC).
+#endif
+
 class CL_SoundProvider_Recorder_DirectSound_Session : public CL_SoundProvider_Session, CL_Runnable
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider_Recorder_DirectSound_Session(int frequency);
 
 	virtual ~CL_SoundProvider_Recorder_DirectSound_Session();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	virtual int get_num_samples() const;
 
@@ -60,19 +69,27 @@ public:
 
 	virtual int get_position() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool eof() const;
-	
+
 	virtual void stop();
 
 	virtual bool play();
-		
+
 	virtual bool set_position(int pos);
-	
+
 	virtual int get_data(void **data_ptr, int data_requested);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	virtual void run();
 
@@ -101,6 +118,7 @@ private:
 	volatile bool stop_thread;
 
 	CL_Thread thread;
+/// \}
 };
 
-#endif
+

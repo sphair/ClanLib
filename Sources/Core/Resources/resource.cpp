@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,41 +24,52 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/Resources/resource.h"
-#include "API/Core/Resources/resourcedata.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Core/System/cl_assert.h"
-#include "Core/Resources/resource_manager_generic.h"
-#include "resource_generic.h"
-#include <ctype.h>
-#include <algorithm>
+#include "API/Core/System/weakptr.h"
+#include "API/Core/XML/dom_element.h"
+#include <vector>
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Resource construction:
+// CL_Resource_Impl Class:
 
-CL_Resource::CL_Resource(
-	CL_DomElement &element,
-	CL_ResourceManager *manager)
-: impl(new CL_Resource_Generic(element, manager->impl))
-{
-}
+class CL_ResourceManager_Impl;
 
-CL_Resource::CL_Resource(const CL_Resource &copy)
-: impl(copy.impl)
+struct CL_ResourceData
 {
-}
+	CL_String name;
 
-CL_Resource::CL_Resource(const CL_SharedPtr<CL_Resource_Generic> &impl)
-: impl(impl)
+	CL_UnknownSharedPtr data;
+
+	int reference_count;
+};
+
+class CL_Resource_Impl
 {
-}
+//! Attributes:
+public:
+	CL_WeakPtr<CL_ResourceManager_Impl> resource_manager;
+
+	CL_DomElement element;
+
+	std::vector<CL_ResourceData> cache_objects;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_Resource Construction:
 
 CL_Resource::CL_Resource()
 {
+}
+
+CL_Resource::CL_Resource(CL_DomElement element, CL_ResourceManager &resource_manager)
+: impl(new CL_Resource_Impl)
+{
+	impl->element = element;
+	impl->resource_manager = CL_WeakPtr<CL_ResourceManager_Impl>(resource_manager.impl);
 }
 
 CL_Resource::~CL_Resource()
@@ -66,109 +77,122 @@ CL_Resource::~CL_Resource()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Resource attributes:
+// CL_Resource Attributes:
 
-std::string CL_Resource::get_type() const
+CL_String CL_Resource::get_type() const
 {
-	if (!impl) return 0;
-	return impl->element.get_tag_name();
+	return impl->element.get_local_name();
 }
 
-std::string CL_Resource::get_name() const
+CL_String CL_Resource::get_name() const
 {
-	if (!impl) return 0;
-	return impl->element.get_attribute("name");
+	return impl->element.get_attribute(cl_text("name"));
 }
-/*
-std::string CL_Resource::get_full_location() const
-{
-	CL_InputSourceProvider *provider = (CL_InputSourceProvider *) impl->manager->get_resource_provider();
-	return provider->get_path(get_location().c_str());
-}
-*/
 
 CL_DomElement &CL_Resource::get_element()
 {
-	if (!impl)
-	{
-		static CL_DomElement null;
-		return null;
-	}
 	return impl->element;
 }
 
 CL_ResourceManager CL_Resource::get_manager()
 {
-	return CL_ResourceManager(impl->manager);
+	return CL_ResourceManager(impl->resource_manager);
 }
 
-CL_ResourceData *CL_Resource::get_data(const std::string &name)
+CL_UnknownSharedPtr CL_Resource::get_data(const CL_String &name)
 {
-	if (!impl) return 0;
-	return impl->datas[name];
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
+		if (impl->cache_objects[i].name == name)
+			return impl->cache_objects[i].data;
+	return CL_UnknownSharedPtr();
 }
 
-int CL_Resource::get_reference_count() const
+int CL_Resource::get_data_session_count(const CL_String &data_name)
 {
-	if (!impl) return 0;
-	return impl->load_ref;
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
+	{
+		if (impl->cache_objects[i].name == data_name)
+		{
+			return impl->cache_objects[i].reference_count;
+		}
+	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Resource operations:
+// CL_Resource Operations:
 
-void CL_Resource::attach_data(const std::string &name, CL_ResourceData *data)
+bool CL_Resource::operator ==(const CL_Resource &other) const
 {
-	impl->datas[name] = data;
+	return impl == other.impl;
 }
 
-void CL_Resource::detach_data(CL_ResourceData *data)
+void CL_Resource::set_data(const CL_String &name, const CL_UnknownSharedPtr &ptr)
 {
-	std::map<std::string, CL_ResourceData *>::iterator it;
-	for (it = impl->datas.begin(); it != impl->datas.end(); it++)
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
-		if (it->second == data)
+		if (impl->cache_objects[i].name == name)
 		{
-			impl->datas.erase(it);
-			break;
+			impl->cache_objects[i].data = ptr;
+			return;
+		}
+	}
+
+	CL_ResourceData data;
+	data.name = name;
+	data.data = ptr;
+	data.reference_count = 0;
+	impl->cache_objects.push_back(data);
+}
+
+void CL_Resource::clear_data(const CL_String &data_name)
+{
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
+	{
+		if (impl->cache_objects[i].name == data_name)
+		{
+			impl->cache_objects.erase(impl->cache_objects.begin() + i);
+			return;
 		}
 	}
 }
 
-void CL_Resource::unload()
+int CL_Resource::add_data_session(const CL_String &data_name)
 {
-	if (!impl) return;
-	if (impl->manager == 0) return;
-
-	impl->load_ref--;
-	cl_assert(impl->load_ref >= 0);
-	if (impl->load_ref == 0)
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
-		std::map<std::string, CL_ResourceData*>::iterator it;
-		for (it = impl->datas.begin(); it != impl->datas.end(); ++it)
+		if (impl->cache_objects[i].name == data_name)
 		{
-			CL_ResourceData *data = it->second;
-			data->on_unload();
+			return ++impl->cache_objects[i].reference_count;
 		}
 	}
+
+	CL_ResourceData data;
+	data.name = data_name;
+	data.reference_count = 1;
+	impl->cache_objects.push_back(data);
+	return 1;
 }
 
-void CL_Resource::load()
+int CL_Resource::remove_data_session(const CL_String &data_name)
 {
-	if (!impl) return;
-	if (impl->manager == 0) return;
-
-	impl->load_ref++;
-	if (impl->load_ref == 1)
+	std::vector<CL_ResourceData>::size_type i;
+	for (i = 0; i < impl->cache_objects.size(); i++)
 	{
-		std::map<std::string, CL_ResourceData*>::iterator it;
-		for (it = impl->datas.begin(); it != impl->datas.end(); ++it)
+		if (impl->cache_objects[i].name == data_name)
 		{
-			CL_ResourceData *data = it->second;
-			data->on_load();
+			if (impl->cache_objects[i].reference_count == 0)
+				return 0;
+			return --impl->cache_objects[i].reference_count;
 		}
 	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Resource implementation:
+// CL_Resource Implementation:

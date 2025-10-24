@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,6 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/System/cl_assert.h"
 #include "directory_scanner_win32.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,12 +51,12 @@ CL_DirectoryScanner_Win32::~CL_DirectoryScanner_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DirectoryScanner_Win32 attributes:
 
-bool CL_DirectoryScanner_Win32::scan (const std::string &pathname)
+bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname)
 {
-	return scan(pathname, "*.*");
+	return scan(pathname, cl_text("*.*"));
 }
 
-bool CL_DirectoryScanner_Win32::scan (const std::string &pathname, const std::string& pattern)
+bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname, const CL_String& pattern)
 {
 	if (handle != INVALID_HANDLE_VALUE)
 	{
@@ -76,13 +75,13 @@ bool CL_DirectoryScanner_Win32::scan (const std::string &pathname, const std::st
 	directory_path = path_with_ending_slash(pathname);
 
 	// Start our search:
-	std::string filename = directory_path + pattern;
-	handle = FindFirstFile(filename.c_str (), &fileinfo);
+	CL_String filename = directory_path + pattern;
+	handle = FindFirstFile(filename.c_str(), &fileinfo);
 	first_next = true;
 	return (handle != INVALID_HANDLE_VALUE);
 }
 
-std::string CL_DirectoryScanner_Win32::get_directory_path()
+CL_String CL_DirectoryScanner_Win32::get_directory_path()
 {
 	return directory_path;
 }
@@ -92,16 +91,16 @@ int CL_DirectoryScanner_Win32::get_size()
 	return fileinfo.nFileSizeLow;
 }
 
-std::string CL_DirectoryScanner_Win32::get_name()
+CL_String CL_DirectoryScanner_Win32::get_name()
 {
-	if (first_next) return std::string();
-	return std::string(fileinfo.cFileName);
+	if (first_next) return CL_String();
+	return CL_String(fileinfo.cFileName);
 }
 	
-std::string CL_DirectoryScanner_Win32::get_pathname()
+CL_String CL_DirectoryScanner_Win32::get_pathname()
 {
-	if (first_next) return std::string();
-	return directory_path + std::string(fileinfo.cFileName);
+	if (first_next) return CL_String();
+	return directory_path + CL_String(fileinfo.cFileName);
 }
 	
 bool CL_DirectoryScanner_Win32::is_directory()
@@ -168,10 +167,10 @@ bool CL_DirectoryScanner_Win32::next()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DirectoryScanner_Win32 implementation:
 
-std::string CL_DirectoryScanner_Win32::path_with_ending_slash(const std::string &path)
+CL_String CL_DirectoryScanner_Win32::path_with_ending_slash(const CL_String &path)
 {
 	int len = path.length();
-	if (len == 0) return ".\\";
-	if (path[len-1] == '/' || path[len-1] == '\\') return path;
-	return path + "\\";
+	if (len == 0) return cl_text(".\\");
+	if (path[len-1] == cl_text('/') || path[len-1] == cl_text('\\')) return path;
+	return path + cl_text("\\");
 }

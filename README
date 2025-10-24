@@ -1,53 +1,25 @@
 Welcome
 -------
-Welcome to ClanLib, a multi-platform game development library.
+Welcome to ClanLib, a multi-platform toolkit library.
 
 
 Getting started
 ---------------
-PLEASE! Please read the INSTALL files for the platform/compiler you want to use.
-See INSTALL.win32, INSTALL.linux, INSTALL.borland, INSTALL.whatever.
-
-
-Upgrading from earlier ClanLib versions
----------------------------------------
-If you are upgrading your ClanLib project from earlier ClanLib versions, read the
-file README.upgrade for API changes. The NEWS file will have some details on
-what was upgraded, fixed and added in this specific version.
+Please read the INSTALL files for the platform/compiler you want to use.
+See INSTALL.win32, INSTALL.linux, INSTALL.whatever.
 
 
 Documentation
 -------------
-If you get any problems, there is a FAQ in the Documentation folder; it might have
-an answer to your questions. Otherwise, read the overviews for specific info on
-the various areas of ClanLib. 
+Please read documentation online at http://clanlib.org/docs.html
 
-  Examples: Many small examples showing features of ClanLib.
-  Documentation/Overview: Articles about certain features of ClanLib.
-  Documentation/Reference: The complete API reference to all ClanLib classes.
-  Documentation/Tutorial: Some tutorials about game programming with ClanLib.
-  Documentation/FAQ: Frequently asked/answered questions.
-
-YOU ARE NOT SUPPOSED TO READ THE XML FILES, THEY MUST BE CONVERTED TO HTML!
-(OR JUST READ THEM ONLINE ON CLANLIB.ORG)
-
-If you are using Windows, and haven't got the tools required to build the
-documentation, or the distribution of ClanLib you have don't have a Documentation
-folder, you can manually download the documentation packages from
-http://clanlib.org/download.html. Also, all documentation is available
-for viewing online at http://clanlib.org/docs.html
-
-
-Forum
--------------
-If you need to search for questions, or have a question yourself,
-visit our forum at http://www.rtsoft.com/clanlib
+In the Examples folder you find a selection of examples showing various
+features of ClanLib.
 
 
 IRC
 ---
 Our official IRC channel is located at irc.freenode.net, channel #clanlib.
-Drop by to meet fellow ClanLibbers and developers! 
 
 
 Making ClanLib even better
@@ -58,11 +30,9 @@ anything, don't hesitate to contact us.
 If you have fixed something in ClanLib, you can send us a patch. Please have a
 look at the PATCHES file for more detailed information.
 
-If you have discovered a bug, please tell us about it in the forum.
-
-A developer's reference is available. This contains all the internal classes for 
-ClanLib which are useful for ClanLib developers.  To enable the reference, go in
-to the Documentation/Reference directory and run 'make dev_ref'. Note that you
+A developer's reference is available. This contains all the internal classes 
+for ClanLib which are useful for ClanLib developers.  To enable the reference, 
+go in to the Documentation/Reference directory and run 'make dev_ref'. Note that you
 need the same tools as described in the section Documentation to make this.
 
 
@@ -71,7 +41,6 @@ ClanLib Website
 Check out ClanLib homepage at:
 
 	http://www.clanlib.org
-
 --
 Enjoy,
 The ClanLib development team

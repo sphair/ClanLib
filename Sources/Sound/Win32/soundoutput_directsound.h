@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,12 +23,10 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundoutput_directsound
-#define header_soundoutput_directsound
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,13 +36,19 @@
 
 class CL_SoundOutput_DirectSound : public CL_SoundOutput_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_SoundOutput_DirectSound(int mixing_frequency);
-	
+	CL_SoundOutput_DirectSound(int mixing_frequency, int mixing_latency = 50);
+
 	~CL_SoundOutput_DirectSound();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	LPDIRECTSOUND directsound;
 
@@ -55,26 +59,37 @@ public:
 	HANDLE sleep_event;
 
 	LPDIRECTSOUNDNOTIFY notify;
-	
+
+	bool has_sound;
+
 	int last_write_pos;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called when we have no samples to play - and wants to tell the soundcard
-	//: about this possible event.
+	/// \brief Called when we have no samples to play - and wants to tell the soundcard
+	/// \brief about this possible event.
 	virtual void silence();
 
-	//: Returns the buffer size used by device (returned as num [stereo] samples).
+	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
 	virtual int get_fragment_size();
 
-	//: Writes a fragment to the soundcard.
+	/// \brief Writes a fragment to the soundcard.
 	virtual void write_fragment(short *data);
 
-	//: Waits until output source isn't full anymore.
+	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

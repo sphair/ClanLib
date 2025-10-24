@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/core.h>
 #include <ClanLib/sound.h>
-#include <ClanLib/mikmod.h>
+//#include <ClanLib/mikmod.h>
 #include <ClanLib/application.h>
 #include <string.h>
 

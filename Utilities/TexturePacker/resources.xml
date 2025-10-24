@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <sprite name="Explosion" base_angle="0">
+    <image file="Resources/explosion_01.png" />
+    <image file="Resources/explosion_02.png" />
+    <!--<image file="Resources/explosion_03.png" />
+    <image file="Resources/explosion_04.png" />
+    <image file="Resources/explosion_05.png" />
+    <image file="Resources/explosion_06.png" />
+    <image file="Resources/explosion_07.png" />
+    <image file="Resources/explosion_08.png" />
+    <image file="Resources/explosion_09.png" />
+    <image file="Resources/explosion_10.png" />
+    <image file="Resources/explosion_11.png" />
+    <image file="Resources/explosion_12.png" />
+    <image file="Resources/explosion_13.png" />
+    <image file="Resources/explosion_14.png" />
+    <image file="Resources/explosion_15.png" />
+    <image file="Resources/explosion_16.png" />
+    <image file="Resources/explosion_17.png" />-->
+    <translation origin="center"/>
+    <rotation origin="center"/>
+    <animation loop="no" speed="100"></animation>
+  </sprite>
+
+  <section name="section1">
+    <sprite name="section1Sprite1">
+      <image file="Resources/helipad.png" />
+    </sprite>
+    <!--<section name="subsection1">
+      <sprite name="subsection1Sprite1">
+        <image file="Resources/helipad.png" />
+      </sprite>
+    </section>-->
+  </section>
+
+  <!--
+  <sprite name="Square1">
+    <image file="Resources/square.png" />
+    <image file="Resources/helipad.png" />
+  </sprite>
+  
+  <section name="Game">
+    <sprite name="spr_pacman">
+      <image file="resources/pacman.pcx">
+        <grid pos="0,0" size="28,32" array="12,2" tcol="0,1" />
+      </image>
+    </sprite>
+    <sprite name="spr_ghost">
+      <image file="resources/pacman.pcx">
+        <grid pos="336,0" size="28,32" array="6,2" tcol="0,1" />
+      </image>
+    </sprite>
+    <sprite name="spr_maptiles">
+      <image file="resources/pacman.pcx">
+        <grid pos="0,64" size="34,38" array="10,2" />
+      </image>
+    </sprite>
+    <sprite name="spr_clansoft">
+      <image file="resources/pacman.pcx">
+        <palette pos="0,140" tcol="0" />
+      </image>
+    </sprite>
+    <font name="fnt_clansoft">
+      <bitmap
+        glyphs="Game/spr_clansoft"
+        spacelen="6"
+        letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" />
+    </font>
+    
+    <sample name="sfx_start" file="resources/start.wav" />
+    <sample name="sfx_namnam" file="resources/namnam.wav" />
+    <sample name="sfx_ghost" file="resources/ghost.wav" />
+    <sample name="sfx_dead" file="resources/blowup.wav" />
+    <sample name="sfx_ghost_dead" file="resources/ghost_dead.wav" />
+    <sample name="sfx_powerup" file="resources/powerup.wav" />
+  </section>-->
+</resources>

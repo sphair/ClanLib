@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,25 +28,37 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_outline_provider_bitmap_generic
-#define header_outline_provider_bitmap_generic
+#pragma once
+
 
 #include "API/Display/Collision/contour.h"
 
-class CL_PixelBuffer;
+class CL_PixelBufferRef;
 
 class CL_OutlineProviderBitmap_Generic
 {
-//!Construction
- public:
-	CL_OutlineProviderBitmap_Generic(CL_PixelBuffer pbuf, int alpha_limit=128, bool get_insides=true);
+/// \name Construction
+/// \{
+
+public:
+	CL_OutlineProviderBitmap_Generic(const CL_PixelBufferRef &pbuf, int alpha_limit=128, bool get_insides=true);
 	~CL_OutlineProviderBitmap_Generic();
 
-//!Attributes
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
 	std::vector<CL_Contour> contours;
 	int width, height;
 
- private:
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
 	// find the start point of the next outline
 	CL_Pointf find_next_contour_start(unsigned int x, unsigned int y);
 
@@ -61,6 +73,7 @@ class CL_OutlineProviderBitmap_Generic
 
 	// test if a corner is part of an edge
 	bool is_edge(int x, int y);
+
 	inline unsigned char &get_corner(int x, int y)
 	{
 		return data[y*(width+1)+x];
@@ -73,15 +86,15 @@ class CL_OutlineProviderBitmap_Generic
 	unsigned char last_corner;
 
 	bool get_insides;
-	
+
 	int alpha_limit;
 
 	int alpha_pixel;
 
-	CL_PixelBuffer &pb;
+	CL_PixelBuffer pb;
 
-	CL_Point last_point;
-	
+	CL_Pointf last_point;
+
 	enum MoveDir
 	{
 		DIR_LEFT=0,
@@ -89,7 +102,7 @@ class CL_OutlineProviderBitmap_Generic
 		DIR_UP,
 		DIR_DOWN
 	} last_dir;
-
+/// \}
 };
 
-#endif
+

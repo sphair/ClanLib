@@ -18,7 +18,7 @@ public:
 // Construction
 public:
 	Building(BuildingType building_type, World *world);
-	virtual ~Building();
+	~Building();
 	
 // Attributes
 public:

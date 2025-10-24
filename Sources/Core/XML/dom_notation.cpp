@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -48,14 +47,14 @@ CL_DomNotation::~CL_DomNotation()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNotation attributes:
 
-std::string CL_DomNotation::get_public_id() const
+CL_DomString CL_DomNotation::get_public_id() const
 {
-	return std::string();
+	return CL_DomString();
 }
 
-std::string CL_DomNotation::get_system_id() const
+CL_DomString CL_DomNotation::get_system_id() const
 {
-	return std::string();
+	return CL_DomString();
 }
 
 /////////////////////////////////////////////////////////////////////////////

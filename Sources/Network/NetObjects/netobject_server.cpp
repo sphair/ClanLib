@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,9 +24,9 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "API/Network/NetObjects/netobject_server.h"
 #include "API/Network/NetObjects/netobject_controller.h"
 #include "netobject_server_generic.h"
@@ -35,21 +35,17 @@
 // CL_NetObject_Server construction:
 
 CL_NetObject_Server::CL_NetObject_Server(CL_NetObject_Controller *controller)
-: impl(0)
+: impl(new CL_NetObject_Server_Generic(controller->impl))
 {
-	impl = new CL_NetObject_Server_Generic(controller->impl);
-	impl->add_ref();
 }
 
 CL_NetObject_Server::CL_NetObject_Server(const CL_NetObject_Server &copy)
 : impl(copy.impl)
 {
-	if (impl) impl->add_ref();
 }
 
 CL_NetObject_Server::~CL_NetObject_Server()
 {
-	if (impl) impl->release_ref();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,20 +59,20 @@ int CL_NetObject_Server::get_obj_id() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetObject_Server operations:
 
-void CL_NetObject_Server::send(CL_NetGroup &group, int msg_type, const CL_NetPacket &message, bool reliable)
+void CL_NetObject_Server::send(CL_NetGroup &group, int msg_type, const CL_DataBuffer &message)
 {
-	impl->send(group, msg_type, message, reliable);
+	impl->send(group, msg_type, message);
 }
 
-void CL_NetObject_Server::send(CL_NetComputer &computer, int msg_type, const CL_NetPacket &message, bool reliable)
+void CL_NetObject_Server::send(CL_NetComputer &computer, int msg_type, const CL_DataBuffer &message)
 {
-	impl->send(computer, msg_type, message, reliable);
+	impl->send(computer, msg_type, message);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetObject_Server signals:
 
-CL_Signal_v2<CL_NetComputer &, CL_NetPacket &> &CL_NetObject_Server::sig_received_message(int msg_type)
+CL_Signal_v2<CL_NetComputer &, CL_DataBuffer &> &CL_NetObject_Server::sig_received_message(int msg_type)
 {
 	return impl->sig_received_message[msg_type];
 }

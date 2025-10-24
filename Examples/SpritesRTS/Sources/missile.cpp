@@ -7,9 +7,11 @@
 Missile::Missile(World *world, GameObject *_owner)
 : GameObject(world)
 {
-	spriteMissile = new CL_Sprite("SpaceShootMissile", world->resources);
-	spriteExplosion = new CL_Sprite("Explosion", world->resources);
-	sound = new CL_SoundBuffer("MissileHit", world->resources);
+	CL_GraphicContext gc = world->get_gc();
+
+	spriteMissile = new CL_Sprite(gc, "SpaceShootMissile", &world->resources);
+	spriteExplosion = new CL_Sprite(gc, "Explosion", &world->resources);
+	sound = new CL_SoundBuffer("MissileHit", &world->resources);
 
 	collisionMissile = new CL_CollisionOutline("Gfx/spaceshoot_missile.png");
 	collisionMissile->set_alignment(origin_center);
@@ -43,8 +45,8 @@ void Missile::setPos(int x, int y)
 void Missile::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(angle);
-	collisionMissile->set_angle(angle);
+	sprite->set_angle(CL_Angle(angle, cl_degrees));
+	collisionMissile->set_angle(CL_Angle(angle, cl_degrees));
 }
 
 void Missile::setSpeed(float newSpeed)
@@ -54,8 +56,8 @@ void Missile::setSpeed(float newSpeed)
 
 void Missile::move(float length)
 {
-	posX += length * float(sin(angle * PI / 180.0f));
-	posY += length * float(-cos(angle * PI / 180.0f));
+	posX += length * float(sin(angle * CL_PI / 180.0f));
+	posY += length * float(-cos(angle * CL_PI / 180.0f));
 
 	collisionMissile->set_translation(posX, posY);
 }
@@ -63,7 +65,10 @@ void Missile::move(float length)
 void Missile::draw()
 {
 	if(!hidden)
-		sprite->draw((int)posX, (int)posY);
+	{
+		CL_GraphicContext gc = world->get_gc();
+		sprite->draw(gc, posX, posY);
+	}
 }
 
 bool Missile::update(float timeElapsed)
@@ -84,12 +89,13 @@ bool Missile::update(float timeElapsed)
 			sound->play();
 
 			sprite = spriteExplosion;
-			sprite->set_angle(0);
+			sprite->set_angle(CL_Angle(0, cl_degrees));
 			sprite->set_alpha(0.85f);
 
 			exploding = true;
 		}
 	}
 
-	return !(posX < -100 || posY < -100 || posX > CL_Display::get_width() + 100 || posY > CL_Display::get_height() + 100);
+	CL_GraphicContext gc = world->get_gc();
+	return !(posX < -100 || posY < -100 || posX > gc.get_width() + 100 || posY > gc.get_height() + 100);
 }

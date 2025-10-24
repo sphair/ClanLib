@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -40,7 +39,10 @@
 #ifdef __APPLE__
 #include "MacOSX/soundoutput_macosx.h"
 #else
+
+#ifdef HAVE_ALSA_ASOUNDLIB_H
 #include "Unix/soundoutput_alsa.h"
+#endif
 #include "Unix/soundoutput_oss.h"
 #endif
 #endif
@@ -52,31 +54,37 @@ CL_SoundOutput::CL_SoundOutput() : impl(0)
 {
 }
 
-CL_SoundOutput::CL_SoundOutput(int mixing_frequency) : impl(0)
+CL_SoundOutput::CL_SoundOutput(int mixing_frequency, int latency)
+: impl(0)
 {
 	CL_SoundOutput_Description desc;
 	desc.set_mixing_frequency(mixing_frequency);
+	desc.set_mixing_latency(latency);
 	operator =(CL_SoundOutput(desc));
 }
 
 CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc) : impl(0)
 {
 #ifdef WIN32
-	impl = new CL_SoundOutput_DirectSound(desc.get_mixing_frequency());
+	impl = new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency());
 #else
 #ifdef __APPLE__
-	impl = new CL_SoundOutput_MacOSX(desc.get_mixing_frequency());
+	impl = new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency());
 #else
 #ifdef __linux__
+
+#ifdef HAVE_ALSA_ASOUNDLIB_H
 	CL_SoundOutput_alsa *alsa_impl;
-	alsa_impl = new CL_SoundOutput_alsa(desc.get_mixing_frequency());
+	alsa_impl = new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency());
 	if (alsa_impl->handle)
 		impl = alsa_impl;
 	else
 		delete alsa_impl;
 	if (!impl)
 #endif
-	impl = new CL_SoundOutput_OSS(desc.get_mixing_frequency());
+
+#endif
+	impl = new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency());
 #endif
 #endif
 	impl->add_ref();
@@ -97,13 +105,7 @@ CL_SoundOutput::~CL_SoundOutput()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput attributes:
 
-bool CL_SoundOutput::has_sound() const
-{
-	if (impl) return impl->has_sound;
-	return false;
-}
-
-const std::string &CL_SoundOutput::get_name() const
+const CL_String8 &CL_SoundOutput::get_name() const
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->name;
@@ -113,6 +115,12 @@ int CL_SoundOutput::get_mixing_frequency() const
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->mixing_frequency;
+}
+
+int CL_SoundOutput::get_mixing_latency() const
+{
+	CL_MutexSection mutex_lock(&impl->mutex);
+	return impl->mixing_latency;
 }
 
 float CL_SoundOutput::get_global_volume() const

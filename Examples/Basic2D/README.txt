@@ -6,3 +6,15 @@
 
 This program draws a ClanLib logo to screen, has a moving clip-area and
 some partially transparent rectangles moving around.
+
+Linux - OpenGL
+  make clean
+  make
+  ./basic2d
+
+Linux - GDI (software renderer)
+  make clean
+  make basic2d_gdi
+  ./basic2d_gdi
+
+

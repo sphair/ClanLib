@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="NetObjects"
-//! header=network.h
+/// \addtogroup clanNetwork_NetObjects clanNetwork NetObjects
+/// \{
 
-#ifndef header_netobject_client
-#define header_netobject_client
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -51,54 +41,75 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <string>
-#include "../../signals.h"
+#include "../api_network.h"
+#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/System/sharedptr.h"
 
 class CL_NetObject_Client_Generic;
-class CL_NetPacket;
+class CL_DataBuffer;
 class CL_NetObject_Controller_Generic;
 class CL_NetComputer;
 
-//: Network replication object, client version.
-//- !group=Network/NetObjects!
-//- !header=network.h!
-//- <p>The netobject is a message dispatcher for objects being replicated over the network.</p>
-//- <p>It provides an easy system for a server object to send messages to replicated clients
-//- on remote computers, as well as getting answers back.</p>
+/// \brief Network replication object, client version.
+///
+///  <p>The netobject is a message dispatcher for objects being replicated over the network.</p>
+///    <p>It provides an easy system for a server object to send messages to replicated clients
+///    on remote computers, as well as getting answers back.</p> 
+/// \xmlonly !group=Network/NetObjects! !header=network.h! \endxmlonly
 class CL_API_NETWORK CL_NetObject_Client
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: NetObject client constructor.
+	/// \brief NetObject client constructor.
 	CL_NetObject_Client(int obj_id, const CL_NetComputer &server, CL_NetObject_Controller_Generic *controller);
 
-	//: Copy constructor.
+	/// \brief Copy constructor.
 	CL_NetObject_Client(const CL_NetObject_Client &copy);
 
-	//: NetObject destructor.
+	/// \brief NetObject destructor.
 	virtual ~CL_NetObject_Client();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the netobject handle that identifies it over the network.
+	/// \brief Returns the netobject handle that identifies it over the network.
 	int get_obj_id() const;
 
-	//: Returns the netcomputer handle to the server of this object.
-	CL_NetComputer &get_server() const;
+	/// \brief Returns the netcomputer handle to the server of this object.
+	CL_NetComputer &get_server();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Send a message to the server object.
-	void send(int msg_type, const CL_NetPacket &message, bool reliable = true);
+	/// \brief Send a message to the server object.
+	void send(int msg_type, const CL_DataBuffer &message);
 
-//! Signals:
+
+/// \}
+/// \name Signals
+/// \{
+
 public:
-	//: Signal emitted when receiving messages of the specified type from the server.
-	CL_Signal_v1<CL_NetPacket &> &sig_received_message(int msg_type);
+	/// \brief Signal emitted when receiving messages of the specified type from the server.
+	CL_Signal_v1<CL_DataBuffer &> &sig_received_message(int msg_type);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_NetObject_Client_Generic *impl;
+	CL_SharedPtr<CL_NetObject_Client_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

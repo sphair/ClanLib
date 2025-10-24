@@ -30,6 +30,7 @@
 #include "wizard.h"
 #include "resource.h"
 #include "workspace_generator_msvc.h"
+#include "workspace_generator_msvc8.h"
 #include "../Generic/workspace.h"
 
 Wizard::Wizard()
@@ -54,45 +55,74 @@ Wizard::Wizard()
 
 INT_PTR Wizard::exec()
 {
-	return PropertySheet(&propsheetheader);
+	// Simple check to see if we are in ClanLib root directory - check if we can locate the Sources directory
+	DWORD file_attributes = GetFileAttributes(TEXT("Sources"));
+	if (file_attributes != INVALID_FILE_ATTRIBUTES && (file_attributes & FILE_ATTRIBUTE_DIRECTORY))
+	{
+		return PropertySheet(&propsheetheader);
+	}
+	else
+	{
+		MessageBox(0, TEXT("Unable to locate ClanLib directory.\n\nPlease start this application from the ClanLib root directory\n(where the Sources and Projects directories are located),\nor start the application directly from Visual Studio."), TEXT("Unable to locate ClanLib"), MB_ICONERROR|MB_OK);
+		return 0;
+	}
 }
 
 BOOL Wizard::finish()
 {
 	HKEY hKey = 0;
 	LONG result = RegCreateKeyEx(
-		HKEY_CURRENT_USER, TEXT("Software\\ClanSoft\\ClanLib Configure\\InstallLocation"),
+		HKEY_CURRENT_USER, TEXT("Software\\Clanlib.org\\ClanLib Configure\\InstallLocation"),
 		0, 0, 0, KEY_ALL_ACCESS, 0, &hKey, 0);
 	if (result == ERROR_SUCCESS)
 	{
 		RegSetValueEx(
 			hKey, TEXT("InputInclude"), 0, REG_SZ,
 			(LPBYTE) page_system.path_input_include,
-			(_tcslen(page_system.path_input_include) + 1) * sizeof(TCHAR));
+			(DWORD) (_tcslen(page_system.path_input_include) + 1) * sizeof(TCHAR));
 
 		RegSetValueEx(
 			hKey, TEXT("InputLib"), 0, REG_SZ,
 			(LPBYTE) page_system.path_input_lib,
-			(_tcslen(page_system.path_input_lib) + 1) * sizeof(TCHAR));
+			(DWORD) (_tcslen(page_system.path_input_lib) + 1) * sizeof(TCHAR));
 
 		RegSetValueEx(
 			hKey, TEXT("OutputInclude"), 0, REG_SZ,
 			(LPBYTE) page_system2.path_output_include,
-			(_tcslen(page_system2.path_output_include) + 1) * sizeof(TCHAR));
+			(DWORD) (_tcslen(page_system2.path_output_include) + 1) * sizeof(TCHAR));
 
 		RegSetValueEx(
 			hKey, TEXT("OutputLib"), 0, REG_SZ,
 			(LPBYTE) page_system2.path_output_lib,
-			(_tcslen(page_system2.path_output_lib) + 1) * sizeof(TCHAR));
+			(DWORD) (_tcslen(page_system2.path_output_lib) + 1) * sizeof(TCHAR));
 
 		DWORD target_version = page_target.target_version;
 		RegSetValueEx(
 			hKey, TEXT("TargetVersion"), 0, REG_DWORD,
 			(LPBYTE) &target_version, sizeof(DWORD));
 
+		DWORD include_unicode = (page_target.include_unicode ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("IncludeUnicode"), 0, REG_DWORD,
+			(LPBYTE) &include_unicode, sizeof(DWORD));
+
+		DWORD include_mtdll = (page_target.include_mtdll ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("IncludeMTDLL"), 0, REG_DWORD,
+			(LPBYTE) &include_mtdll, sizeof(DWORD));
+
+		DWORD include_dll = (page_target.include_dll ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("IncludeDLL"), 0, REG_DWORD,
+			(LPBYTE) &include_dll, sizeof(DWORD));
+
+		DWORD include_x64 = (page_target.include_x64 ? 1 : 0);
+		RegSetValueEx(
+			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
+			(LPBYTE) &include_x64, sizeof(DWORD));
+
 		RegCloseKey(hKey);
 	}
-
 
 	Workspace workspace = create_workspace();
 
@@ -101,19 +131,20 @@ BOOL Wizard::finish()
 		WorkspaceGenerator_MSVC6 generator6;
 		generator6.write(workspace);
 	}
-	else
+	else if (page_target.target_version < 800)
 	{
 		WorkspaceGenerator_MSVC7 generator7;
 		generator7.target_version = page_target.target_version;
 		generator7.write(workspace);
 	}
-
-	/*
-	\\LOCAL MACHINE\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (x86)\Directories\Include Dirs
-	\\LOCAL MACHINE\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (x86)\Directories\Library Dirs
-	\\LOCAL MACHINE\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (x86)\Directories\Path Dirs
-	\\LOCAL MACHINE\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (x86)\Directories\Source Dirs
-	*/
+	else
+	{
+		WorkspaceGenerator_MSVC8 generator8;
+		generator8.set_target_version(page_target.target_version);
+		generator8.set_platforms(true, page_target.include_x64);
+		generator8.enable_configurations(page_target.include_unicode, page_target.include_mtdll, page_target.include_dll);
+		generator8.write(workspace);
+	}
 
 	return TRUE;
 }
@@ -140,6 +171,8 @@ Workspace Wizard::create_workspace()
 	defines_list.push_back("USE_CLANSOUND");
 	
 	defines_list.push_back("DIRECTINPUT_VERSION=0x0800");
+	defines_list.push_back("WINVER=0x0501");
+	defines_list.push_back("_WIN32_WINNT=0x0501");
 	
 	Project clanCore(
 		"Core",
@@ -150,17 +183,44 @@ Workspace Wizard::create_workspace()
 		libs_list_debug,
 		defines_list);
 
-	Project clanSignals(
-		"Signals",
-		"clanSignals",
-		"signals.h",
+	Project clanDatabase(
+		"Database",
+		"clanDatabase",
+		"database.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
+	Project clanSqlite(
+		"Sqlite",
+		"clanSqlite",
+		"sqlite.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
+	Project clanMySQL(
+		"MySQL",
+		"clanMySQL",
+		"mysql.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
+	Project clanRegExp(
+		"RegExp",
+		"clanRegExp",
+		"regexp.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug,
 		defines_list);
 
 	Project clanApp(
-		"Application",
+		"App",
 		"clanApp",
 		"application.h",
 		libs_list_shared,
@@ -204,10 +264,28 @@ Workspace Wizard::create_workspace()
 		libs_list_debug,
 		defines_list);
 
-	Project clanSDL(
-		"SDL",
-		"clanSDL",
-		"sdl.h",
+	Project clanD3D9(
+		"D3D9",
+		"clanD3D9",
+		"d3d9.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
+	Project clanD3D10(
+		"D3D10",
+		"clanD3D10",
+		"d3d10.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
+	Project clanGDI(
+		"GDI",
+		"clanGDI",
+		"gdi.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug,
@@ -217,15 +295,6 @@ Workspace Wizard::create_workspace()
 		"GUI",
 		"clanGUI",
 		"gui.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug,
-		defines_list);
-
-	Project clanGUIStyleSilver(
-		"GUIStyleSilver",
-		"clanGUIStyleSilver",
-		"guistylesilver.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug,
@@ -250,16 +319,20 @@ Workspace Wizard::create_workspace()
 		defines_list);
 
 	// Add projects to workspace:
-	workspace.projects.push_back(clanSignals);
 	workspace.projects.push_back(clanCore);
+	workspace.projects.push_back(clanDatabase);
+	workspace.projects.push_back(clanSqlite);
+//	workspace.projects.push_back(clanMySQL);
+	workspace.projects.push_back(clanRegExp);
 	workspace.projects.push_back(clanApp);
 	workspace.projects.push_back(clanNetwork);
 	workspace.projects.push_back(clanDisplay);
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
-	workspace.projects.push_back(clanSDL);
+	workspace.projects.push_back(clanD3D9);
+	workspace.projects.push_back(clanD3D10);
+	workspace.projects.push_back(clanGDI);
 	workspace.projects.push_back(clanGUI);
-	workspace.projects.push_back(clanGUIStyleSilver);
 	workspace.projects.push_back(clanVorbis);
 	workspace.projects.push_back(clanMikMod);
 

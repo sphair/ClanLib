@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -35,37 +34,39 @@
 
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
 #include "API/Sound/SoundProviders/soundprovider_type.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/clanstring.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/IOData/path_help.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProviderFactory attributes:
 
-std::map<std::string, CL_SoundProviderType *> CL_SoundProviderFactory::types;
+std::map<CL_String, CL_SoundProviderType *> CL_SoundProviderFactory::types;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProviderFactory operations:
 
 CL_SoundProvider *CL_SoundProviderFactory::load(
-	const std::string &filename,
+	const CL_String &filename,
 	bool streamed,
-	const std::string &type,
-	CL_InputSourceProvider *input_provider)
+	const CL_String &type,
+	CL_VirtualDirectory directory)
 {
-	if (type != "")
+	if (!type.empty())
 	{
-		if (types.find(type) == types.end()) throw CL_Error("Unknown sound provider type " + type);
+		if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown sound provider type ") + type);
 
 		CL_SoundProviderType *factory = types[type];
-		return factory->load(filename, input_provider, streamed);
+		return factory->load(filename, directory, streamed);
 	}
 
 	// Determine file extension and use it to lookup type.
-	std::string ext = CL_String::get_extension(filename);
+	CL_String ext = CL_PathHelp::get_extension(filename);
 	if (ext.empty()) ext = filename;
-	ext = CL_String::to_lower(ext);
-	if (types.find(ext) == types.end()) throw CL_Error(std::string("Unknown sound provider type ") + ext.c_str());
+	ext = CL_StringHelp::text_to_lower(ext);
+	if (types.find(ext) == types.end()) throw CL_Exception(CL_String(cl_text("Unknown sound provider type ")) + ext);
 
 	CL_SoundProviderType *factory = types[ext];
-	return factory->load(filename, input_provider, streamed);
+	return factory->load(filename, directory, streamed);
 }

@@ -1,35 +1,28 @@
 
-#ifndef file_view
-#define file_view
+#pragma once
 
 class MainFrame;
 class Document;
 
-class View : public CL_Component
+class View : public CL_GUIComponent
 {
 //! Construction:
 public:
-	View(MainFrame *mainframe, const std::string &title);
-
+	View(CL_GUIComponent *parent, MainFrame *mainframe, const CL_String &title);
 	virtual ~View();
 
 //! Attributes:
 public:
 	MainFrame *get_mainframe();
-
 	Document *get_document();
-
-	const std::string &get_title() const { return title; }
+	const CL_String &get_title() const { return title; }
 
 //! Operations:
 public:
-	void set_title(const std::string &new_title) { title = new_title; }
+	void set_title(const CL_String &new_title) { title = new_title; }
 
 //! Implementation:
 private:
 	MainFrame *mainframe;
-
-	std::string title;
+	CL_String title;
 };
-
-#endif

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_inverse_echofilter_generic
-#define header_inverse_echofilter_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -44,4 +43,4 @@ public:
 	int pos;
 };
 
-#endif
+

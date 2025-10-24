@@ -1,67 +1,127 @@
-dnl $Id: configure.ac,v 1.40 2004/04/04 16:40:22 grumbel Exp $
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
 
+dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
-AC_INIT(ClanLib, 1.0.0)
+
+dnl Set the name of the package and its version. (This must be called first)
+AC_INIT(ClanLib, 2.0.0)
+
+AC_CONFIG_MACRO_DIR(m4)
+
+dnl Ensure that the source code exists (by specifying a known source code file)
 AC_CONFIG_SRCDIR(Sources/API/core.h)
+
+dnl Compute the canonical target-system type variable (target_cpu, target_vendor, target_os)
 AC_CANONICAL_TARGET
+
+dnl Space-separated list of Automake options to be applied to every Makefile.am in the tree
+dnl foreign -> Make automake less strict about GNU policy (as ClanLib is missing ChangeLog)
+dnl dist-bzip2 -> Hook dist-bzip2 to dist
+dnl dist-zip -> Hook dist-zip to dist
+dnl 1.5b -> Minimum Automake version
+dnl subdir-objects -> Objects places into the subdirectory of the build directory (eg subdir/file.c would be subdir/file.o)
 AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
-CLANLIB_MAJOR_VERSION=1
+CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=0
 CLANLIB_MICRO_VERSION=0
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 
+AC_SUBST(LDFLAGS_LT_RELEASE)
 AC_SUBST(CLANLIB_MAJOR_VERSION)
 AC_SUBST(CLANLIB_MINOR_VERSION)
 AC_SUBST(CLANLIB_MICRO_VERSION)
 AC_SUBST(CLANLIB_VERSION)
 
-# Set this to: MAJOR.MINOR, ie 0.7, 0.8, 0.9 it gets append as:
-#  libclanDisplay-$LT_RELEASE
+dnl Set this to: MAJOR.MINOR, ie 0.7, 0.8, 0.9 it gets append as:
+dnl  libclanDisplay-$LT_RELEASE
+
 LT_RELEASE=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION
 if test -z "$LDFLAGS_LT_RELEASE"; then
-	LDFLAGS_LT_RELEASE=-release $LT_RELEASE
+	LDFLAGS_LT_RELEASE="-release $LT_RELEASE"
 fi
 
-# If any features got added to the API since last release incremeant
-# this by 1 (ie increment this for each develpment release, and only
-# if features have been added to a stable release)
+dnl If any features got added to the API since last release incremeant
+dnl this by 1 (ie increment this for each develpment release, and only
+dnl if features have been added to a stable release)
 LT_CURRENT=1
 
-# If any interfaces have been added since the last public release,
-# then increment AGE. If any interfaces have been removed since the
-# last public release, then set AGE to 0. So when backward compability
-# is broken, set this to 0, else stay in sinc with LT_CURRENT
-# (development releases should stay 0, stable be in sync with
-# LT_CURRENT)
+dnl If any interfaces have been added since the last public release,
+dnl then increment AGE. If any interfaces have been removed since the
+dnl last public release, then set AGE to 0. So when backward compability
+dnl is broken, set this to 0, else stay in sinc with LT_CURRENT
+dnl (development releases should stay 0, stable be in sync with
+dnl LT_CURRENT)
 LT_AGE=0
 
-# If LT_CURRENT has changed, set this to 0, if LT_CURRENT stayed the
-# same increment by 1 (so stable releases should increment, while
-# development releases stay at 0)
+dnl If LT_CURRENT has changed, set this to 0, if LT_CURRENT stayed the
+dnl same increment by 1 (so stable releases should increment, while
+dnl development releases stay at 0)
 LT_REVISION=0
 
-# libclanFoobar-$LT_RELEASE.so.[$LT_CURRENT-$LT_AGE].$LT_AGE.$LT_REVISION
+dnl libclanFoobar-$LT_RELEASE.so.[$LT_CURRENT-$LT_AGE].$LT_AGE.$LT_REVISION
 
-AC_SUBST(LDFLAGS_LT_RELEASE)
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
+dnl Checks for C++ compiler
 AC_PROG_CXX
-AC_PROG_CC
-AM_PROG_AS
+
+dnl Check for a C compiler 
+AM_PROG_CC_C_O
+dnl AC_PROC_CC
+
+dnl Check for a C preprocessor
 AC_PROG_CPP
+
+dnl Check for a BSD-compatible install program
 AC_PROG_INSTALL
+
+dnl Check for libtool (enabled shared libraries)
 AC_PROG_LIBTOOL
 
+dnl Using C++
 AC_LANG(C++)
+dnl AC_LANG(C)
 
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_STDBOOL
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl (Removed as they are currently not used, and adds to compile clutter)
+dnl AC_C_CONST
+dnl AC_C_INLINE
+dnl AC_TYPE_MODE_T
+dnl AC_TYPE_OFF_T
+dnl AC_TYPE_SIZE_T
+dnl AC_HEADER_TIME
+dnl AC_STRUCT_TM
+dnl AC_STRUCT_TIMEZONE
+dnl AC_C_VOLATILE
+
+dnl Checks for library functions.
+dnl (Removed as they are currently not used, and adds to compile clutter)
+dnl AC_FUNC_CLOSEDIR_VOID
+dnl AC_FUNC_ERROR_AT_LINE
+dnl AC_REPLACE_FNMATCH
+dnl AC_FUNC_FORK
+AC_PROG_GCC_TRADITIONAL
+dnl AC_FUNC_MALLOC
+dnl AC_FUNC_MEMCMP
+dnl AC_FUNC_MKTIME
+dnl AC_FUNC_SELECT_ARGTYPES
+dnl AC_TYPE_SIGNAL
+dnl AC_FUNC_STAT
+dnl AC_FUNC_STRERROR_R
+dnl AC_CHECK_FUNCS([bzero getcwd gethostbyaddr gethostbyname gettimeofday localtime_r memmove memset mkdir rmdir select socket sqrt strcasecmp strchr strdup strerror strstr strtoul])
+
+dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
 case $target in
@@ -77,12 +137,10 @@ case $target in
     *)
         X11="yes"
         WIN32="no"
-        dnl We set CC and AS here to make libtool happy
-        dnl FIXME: Why exactly do we do this?!
         ;;
 esac
 
-# Extra flags that are needed to compile
+dnl Extra flags that are needed to compile (for pkg-config)
 if test "$WIN32" = "yes"; then
         extra_CFLAGS_clanApp="-mwindows"
         extra_LIBS_clanCore="-lz"
@@ -91,36 +149,41 @@ if test "$WIN32" = "yes"; then
         extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
         extra_LIBS_clanMikMod="-lmikmod"
         extra_LIBS_clanVorbis="-lvorbis -logg"
-        extra_LIBS_clanSDL="-lSDL"
         extra_LIBS_clanNetwork="-lws2_32"
 fi
 
+dnl Store cflags for Setup/pkgconfig/clan*.in pkg-config files
 AC_SUBST(extra_CFLAGS_clanApp)
 AC_SUBST(extra_CFLAGS_clanCore)
 AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
-AC_SUBST(extra_CFLAGS_clanSDL)
 AC_SUBST(extra_CFLAGS_clanGUI)
-AC_SUBST(extra_CFLAGS_clanSignals)
+AC_SUBST(extra_CFLAGS_clanGDI)
 AC_SUBST(extra_CFLAGS_clanSound)
+AC_SUBST(extra_CFLAGS_clanDatabase)
+AC_SUBST(extra_CFLAGS_clanSqlite)
+AC_SUBST(extra_CFLAGS_clanRegExp)
 AC_SUBST(extra_CFLAGS_clanNetwork)
 AC_SUBST(extra_CFLAGS_clanVorbis)
 AC_SUBST(extra_CFLAGS_clanMikMod)
 
+dnl Store libs for pkg-config Metadata - for files in Setup/pkgconfig/*.in
 AC_SUBST(extra_LIBS_clanApp)
 AC_SUBST(extra_LIBS_clanCore)
 AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
-AC_SUBST(extra_LIBS_clanSDL)
 AC_SUBST(extra_LIBS_clanGUI)
-AC_SUBST(extra_LIBS_clanSignals)
+AC_SUBST(extra_LIBS_clanGDI)
 AC_SUBST(extra_LIBS_clanSound)
+AC_SUBST(extra_LIBS_clanDatabase)
+AC_SUBST(extra_LIBS_clanSqlite)
+AC_SUBST(extra_LIBS_clanRegExp)
 AC_SUBST(extra_LIBS_clanNetwork)
 AC_SUBST(extra_LIBS_clanVorbis)
 AC_SUBST(extra_LIBS_clanMikMod)
 
+dnl Set makefile condition when WIN32 should be compiled
 AM_CONDITIONAL([WIN32], [test $WIN32 = "yes"])
-AM_CONDITIONAL(LINUX, [test -n "`echo ${target} | grep linux`"])
 
 dnl ----------------------------------------
 dnl Additional include and library paths:
@@ -154,10 +217,7 @@ if test -n "$use_extra_libs" && test "$use_extra_libs" != "NO"; then
    IFS=$ac_save_ifs
 fi
 
-AC_ARG_WITH(sdl-gfx, AS_HELP_STRING([--with-sdl-gfx],[use sdl-gfx library for scaling and rotation (automatic)]),
-  use_sdl_gfx="$withval", use_sdl_gfx=auto)
-
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h sys/sysctl.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h)
 AC_EGREP_HEADER(fcvt, stdlib.h,,AC_DEFINE(NEED_FCVT))
 
 dnl Checks the system type
@@ -182,15 +242,11 @@ CHECK_ENABLED(asm386,
     AC_HELP_STRING([--enable-asm386], [Enable i386 assembly support]),
     USE_I386_ASSEMBLER, $i386)
 
-AC_MSG_CHECKING(for dynamic loading support)
-CHECK_ENABLED(dyn,
-   AC_HELP_STRING([--enable-dyn], [Enable dynamic loading]),
-   USE_DYN, disabled)
-
 AC_CHECK_HEADER(libgen.h)
 AC_CHECK_HEADER(sys/types.h)
-AC_CHECK_HEADER(sys/ipc.h)
-AC_CHECK_HEADER(sys/shm.h)
+dnl (Removed as they are currently not used, and adds to compile clutter)
+dnl AC_CHECK_HEADER(sys/ipc.h)
+dnl AC_CHECK_HEADER(sys/shm.h)
 AC_CHECK_HEADER(fstab.h, AC_DEFINE([HAVE_FSTAB_H]))
 
 AC_MSG_CHECKING([for extern *__progname])
@@ -199,12 +255,12 @@ AC_TRY_COMPILE([],
 AC_MSG_RESULT(yes);AC_DEFINE(EXTERN___PROGNAME),
 AC_MSG_RESULT(no))
 
+dnl Check for GNU extensions
+AC_CHECK_FUNCS(wcscasecmp)
+
 dnl -----------------------------------------------------------------------
 dnl Check system endianess: (note: ClanLib is _not_ endian clean right now)
 dnl -----------------------------------------------------------------------
-
-dnl AC_C_BIGENDIAN
-dnl AC_CHECK_SIZEOF(int, 4)
 
 if test "$ac_cv_sizeof_int" = "8"; then
 	AC_DEFINE(USE_64BIT)
@@ -217,9 +273,33 @@ fi
 dnl ----------------------------------------
 dnl Search for libraries useful for ClanLib:
 dnl ----------------------------------------
+
 if test "$WIN32" = "no"; then
-    AC_CHECK_LIB(pthread,pthread_create,AC_SUBST(LIBPTHREAD,"-lpthread"), AC_MSG_ERROR([" *** ClanLib requires pthread to run."]))
+    dnl Check for prefered pthread flag
+    has_pthreads=no;
+    save_CFLAGS=$CFLAGS
+    for _thread in "pthread" "pthreads" "lpthread"; do
+	AC_MSG_CHECKING([pthread_create in -${_thread}])
+	CFLAGS="$save_CFLAGS -${_thread}"
+	AC_TRY_COMPILE(
+	[#include <pthread.h>],
+	[pthread_create(0,NULL,0,NULL);],
+	AC_MSG_RESULT(yes);has_pthreads=yes && break, AC_MSG_RESULT(no);)
+    done
+
+    if test x$has_pthreads = "xyes"; then
+	LIBPTHREAD="-${_thread}"
+    else
+	AC_MSG_ERROR([" *** ClanLib requires pthread to run."])
+    fi
+
+    AC_SUBST(LIBPTHREAD)
+    CFLAGS=$save_CFLAGS
+
+    dnl Check for thread-local storage support
+    GCC_CHECK_TLS
 fi
+
 AC_CHECK_LIB(z, main, , AC_MSG_ERROR([" *** ClanLib requires zlib."]))
 
 dnl ----------------------------------------------------------
@@ -229,70 +309,83 @@ echo ""
 echo "Checking for ClanLib Modules to build..."
 echo "========================================"
 
-CLANLIB_ARG_ENABLE(docs,        auto, [Build Clanlib documentation], [whether we should try to build documentation])
+CLANLIB_ARG_ENABLE(docs,         auto, [Build Clanlib API documentation], [whether we should try to build API documentation])
 
-CLANLIB_ARG_ENABLE(clanDisplay, auto, [Build clanDisplay module],    [whether we should try to build clanDisplay])
+CLANLIB_ARG_ENABLE(clanDisplay,  auto, [Build clanDisplay module],    [whether we should try to build clanDisplay])
 
-CLANLIB_ARG_ENABLE(clanSDL,     auto, [Build clanSDL module],        [whether we should try to build clanSDL])
+CLANLIB_ARG_ENABLE(clanGL,       auto, [Build clanGL module],         [whether we should try to build clanGL])
 
-CLANLIB_ARG_ENABLE(clanGL,      auto, [Build clanGL module],         [whether we should try to build clanGL])
+CLANLIB_ARG_ENABLE(clanSound,    auto, [Build clanSound module],      [whether we should try to build clanSound])
 
-CLANLIB_ARG_ENABLE(clanSound,   auto, [Build clanSound module],      [whether we should try to build clanSound])
+CLANLIB_ARG_ENABLE(clanDatabase, auto, [Build clanDatabase module],   [whether we should try to build clanDatabase])
 
-CLANLIB_ARG_ENABLE(clanNetwork, auto, [Build clanNetwork module],    [whether we should try to build clanNetwork])
+CLANLIB_ARG_ENABLE(clanSqlite,   auto, [Build clanSqlite module],     [whether we should try to build clanSqlite])
 
-CLANLIB_ARG_ENABLE(clanGUI,     auto, [Build clanGUI module],        [whether we should try to build clanGUI])
+CLANLIB_ARG_ENABLE(clanRegExp,   auto, [Build clanRegExp module],     [whether we should try to build clanRegExp])
 
-CLANLIB_ARG_ENABLE(clanMikMod,  auto, [Build clanMikMod module],     [whether we should try to build clanMikMod])
+CLANLIB_ARG_ENABLE(clanNetwork,  auto, [Build clanNetwork module],    [whether we should try to build clanNetwork])
 
-CLANLIB_ARG_ENABLE(clanVorbis,  auto, [Build clanVorbis module],     [whether we should try to build clanVorbis])
+CLANLIB_ARG_ENABLE(clanGUI,      auto, [Build clanGUI module],        [whether we should try to build clanGUI])
+
+CLANLIB_ARG_ENABLE(clanGDI,      auto, [Build clanGDI module],        [whether we should try to build clanGDI])
+
+CLANLIB_ARG_ENABLE(clanMikMod,   auto, [Build clanMikMod module],     [whether we should try to build clanMikMod])
+
+CLANLIB_ARG_ENABLE(clanVorbis,   auto, [Build clanVorbis module],     [whether we should try to build clanVorbis])
 
 echo ""
 if test "$enable_clanDisplay" != "no"; then
     echo "Checking for clanDisplay stuff"
     echo "=============================="
-    CLANLIB_CHECK_LIB(png,  [`cat $srcdir/Setup/Tests/png.cpp`],  clanDisplay, [ *** Cannot find png], [-lz])
-    CLANLIB_CHECK_LIB(jpeg, [`cat $srcdir/Setup/Tests/jpeg.cpp`], clanDisplay, [ *** Cannot find jpeg])
+    CLANLIB_CHECK_LIB(png,  [`cat $srcdir/Setup/Tests/png.cpp`],  clanDisplay, [ *** Cannot find png (See http://www.libpng.org )], [-lz -lpng])
+    CLANLIB_CHECK_LIB(jpeg, [`cat $srcdir/Setup/Tests/jpeg.cpp`], clanDisplay, [ *** Cannot find jpeg (See http://www.ijg.org )], [ -ljpeg ])
+    CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )], [`freetype-config --libs` ], [ `freetype-config --cflags`])
+    CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ )], [-lfontconfig])
     if test "$WIN32" = "yes" && test "$enable_clanDisplay" != "no"; then
         CLANLIB_CHECK_LIB(gdi32,[#include <windows.h>
              int main(){} void used_stuff(){ CreateCompatibleDC(NULL); }],
-            clanDisplay, [ *** Cannot find gdi32])
+            clanDisplay, [ *** Cannot find gdi32], [-lgdi32])
         CLANLIB_CHECK_LIB(dinput8,[#include <dinput.h>
              #if DIRECTINPUT_HEADER_VERSION < 0x0800
                  #error Need newer DirectInput header! (version 8)
              #endif
              int main(){}void used_stuff(){ DirectInput8Create(NULL, 0, IID_IDirectInput8, NULL, 0); } ],
-            clanDisplay, [ *** Cannot find version 8 of DirectInput], [-ldxguid -lole32])
+            clanDisplay, [ *** Cannot find version 8 of DirectInput], [-ldxguid -lole32 -ldinput8])
     fi
 fi
 
+dnl Check for linux/joystick.h
+linux_joystick=no
+AC_CHECK_HEADERS(linux/joystick.h, linux_joystick=yes)
+AM_CONDITIONAL(LINUX_JOYSTICK, test x$linux_joystick = xyes)
+
+dnl Check for linux/input.h
+linux_input=no
+AC_CHECK_HEADERS(linux/input.h, linux_input=yes)
+AM_CONDITIONAL(LINUX_INPUT, test x$linux_input = xyes)
+
+dnl Check for alsa
+have_alsa=no
+AC_CHECK_HEADERS(asoundlib.h alsa/asoundlib.h, have_alsa=yes)
+AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
+
 if test "$enable_clanDisplay" != "no"; then
     enable_clanDisplay=yes
+
+    dnl Add any flags required to compiple clanDisplay
+    CXXFLAGS="$CXXFLAGS $clanDisplay_CXXFLAGS"
+
     if test "$X11" = "yes"; then
         AC_PATH_X
         AC_PATH_XTRA
-        
-        if false; then
-            echo "---------------------------"
-            echo "LIBS:         $LIBS"
-            echo "LDFLAGS:      $LDFLAGS"
-            echo "CXXFLAGS:     $CXXFLAGS"
-            echo "CFLAGS:       $CFLAGS"
-            echo "X_CFLAGS:     $X_CFLAGS"
-            echo "X_LIBS:       $X_LIBS"
-            echo "X_EXTRA_LIBS: $X_EXTRA_LIBS"
-            echo "X_PRE_LIBS:   $X_PRE_LIBS"
-            echo "x_includes:   $x_includes"
-            echo "x_libraries:  $x_libraries"
-            echo "---------------------------"
-        fi
-        
-        dnl Add the flags we found to the default ones
-        dnl CLAGS="$CFLAGS $X_CFLAGS"
-        dnl CXXFLAGS="$CXXFLAGS $X_CFLAGS"
-        CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-        LDFLAGS="$LDFLAGS $X_LIBS"
 
+        dnl Add the flags we found to the default ones
+
+	dnl X_CFLAGS are compiler flags (CXXFLAGS), not define flags (CPPFLAGS)
+        CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+
+        dnl X_LIBS are the X linker flags
+        LDFLAGS="$LDFLAGS $X_LIBS"
         
         OLDLIBS="$LIBS"
         LIBS=""
@@ -301,45 +394,16 @@ if test "$enable_clanDisplay" != "no"; then
         LIBS="$OLDLIBS"
         clanDisplay_CFLAGS="$clanDisplay_CFLAGS $X_CFLAGS"
         clanDisplay_LIBS="$clanDisplay_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
+	echo ""
     fi
 
-    if test "$enable_clanSDL" != "no"; then
-        AC_LANG(C)
-        echo "Checking for clanSDL stuff"
-        echo "=============================="
-        AM_PATH_SDL([1.2.0], 
-            [AC_SUBST(SDL_CFLAGS)
-             AC_SUBST(SDL_LIBS)],
-            CLANLIB_DISABLE_MODULE(clanSDL, [ *** Could not find SDL]))
-        if test "$enable_clanSDL" != "no"; then
-        enable_clanSDL=yes
-        dnl testing for SDL_gfx
-        if test "$use_sdl_gfx" != "no"; then
-        OLDLIBS="$LIBS"
-        LIBS="$SDL_LIBS $LIBS"
-        AC_CHECK_LIB(SDL_gfx, zoomSurface, 
-            [SDL_LIBS="$SDL_LIBS -lSDL_gfx"
-             AC_DEFINE(HAVE_LIBSDL_GFX)], 
-            [if test "$use_sdl_gfx" = "auto"; then
-                AC_MSG_WARN([SDL_gfx not found, clanSDL will not be able to use scaling and rotation!])
-             else
-                AC_MSG_ERROR([SDL_gfx not found!])
-             fi])
-        LIBS="$OLDLIBS"
-        fi
-        clanSDL_LIBS="$clanSDL_LIBS $SDL_LIBS"
-        clanSDL_CFLAGS="$clanSDL_CFLAGS $SDL_CFLAGS"
-        fi
-        AC_LANG(C++)
-    fi
-
-    if test "$enable_clanGL" != "no"; then
+     if test "$enable_clanGL" != "no"; then
         echo "Checking for clanGL stuff"
         echo "=============================="
         if test "$WIN32" = "yes"; then
-            CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32/glu32], [-lglu32])
+            CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32/glu32], [-lglu32 -lopengl32])
         else # test "$WIN32" = "yes"
-            CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL/GLU], [-lGLU -lpthread])
+            CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL/GLU (See: http://freeglut.sourceforge.net )], [-lGLU $LIBPTHREAD -lGL])
             if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
                 AC_CHECK_LIB(Xi,XListInputDevices, [clanGL_LIBS="$clanGL_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS -lXi"],
                     CLANLIB_DISABLE_MODULE(clanGL, [ *** Cannot find libXi (xinput)]))
@@ -356,25 +420,16 @@ if test "$enable_clanDisplay" != "no"; then
               AC_DEFINE(HAVE_GLX_GETPROCADDRESSARB, 1,
                  [Define if the OpenGL library supports the glXGetProcAddressARB call])
             fi
-
-	    dnl Check for linux/joystick.h
-	    linux_joystick=no
-	    AC_CHECK_HEADERS(linux/joystick.h, linux_joystick=yes)
-	    AM_CONDITIONAL(LINUX_JOYSTICK, test x$linux_joystick = xyes)
-
-	    dnl Check for linux/input.h
-	    linux_input=no
-	    AC_CHECK_HEADERS(linux/input.h, linux_input=yes)
-	    AM_CONDITIONAL(LINUX_INPUT, test x$linux_input = xyes)
                 fi
             fi
         fi
         test "$enable_clanGL" = "auto" && enable_clanGL=yes
     fi
     test "$enable_clanGUI" = "auto" && enable_clanGUI=yes
+    test "$enable_clanGDI" = "auto" && enable_clanGDI=yes
     echo ""
 else
-    CLANLIB_DISABLE_MODULE(clanSDL, [ *** clanSDL depends on clanDisplay])
+    CLANLIB_DISABLE_MODULE(clanGDI, [ *** clanGDI depends on clanDisplay])
     CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
     CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
 fi
@@ -385,7 +440,7 @@ if test "$enable_clanSound" != "no"; then
     if test "$WIN32" = "yes"; then
         CLANLIB_CHECK_LIB(dsound,[#include <dsound.h>
              int main() { return 0; } void used_stuff() {DirectSoundCreate(NULL, NULL, NULL);}],
-            clanSound, [ *** Cannot find directsound libs],[-ldxguid -lwinmm])
+            clanSound, [ *** Cannot find directsound libs],[-ldxguid -lwinmm -ldsound])
     else
         dnl OSS header check
 	soundcard_h=no
@@ -409,16 +464,56 @@ fi
 if test "$enable_clanSound" != "no"; then
     enable_clanSound=yes
     echo ""
-    CLANLIB_CHECK_LIB(mikmod, [`cat $srcdir/Setup/Tests/mikmod.cpp`], clanMikMod, [ *** Cannot find mikmod])
+    CLANLIB_CHECK_LIB(mikmod, [`cat $srcdir/Setup/Tests/mikmod.cpp`], clanMikMod, [ *** Cannot find mikmod (See: http://mikmod.raphnet.net ) ], [-lmikmod])
     test "$enable_clanMikMod" = "auto" && enable_clanMikMod=yes
     
     PKG_CHECK_MODULES(clanVorbis, vorbis >= 1.0,,[AC_MSG_CHECKING([for libvorbis directly])
-        CLANLIB_CHECK_LIB(vorbis, [`cat $srcdir/Setup/Tests/vorbis.cpp`], clanVorbis, [ *** Cannot find vorbis],[-logg])])
+        CLANLIB_CHECK_LIB(vorbis, [`cat $srcdir/Setup/Tests/vorbis.cpp`], clanVorbis, [ *** Cannot find vorbis (See: http://www.vorbis.com ) ],[-logg -lvorbis])])
     test "$enable_clanVorbis" = "auto" && enable_clanVorbis=yes
     echo ""
 else
     CLANLIB_DISABLE_MODULE(clanMikMod, [ *** clanMikMod depends on clanSound])
     CLANLIB_DISABLE_MODULE(clanVorbis, [ *** clanVorbis depends on clanSound])
+fi
+
+if test "$enable_clanDatabase" != "no"; then
+    echo "Checking for clanDatabase stuff"
+    echo "==============================="
+    enable_clanDatabase=yes
+    echo ""
+    dnl Damn autohell. Someone please add the needed checks here :) -- mbn 18 may 2005
+fi
+
+if test "$enable_clanSqlite" != "no"; then
+    echo "Checking for clanSqlite stuff"
+    echo "==============================="
+
+        CLANLIB_CHECK_LIB(sqlite,[#include <sqlite3.h>
+             int main() { return 0; }],
+            clanSqlite, [ *** Cannot find sqlite libs (See http://www.sqlite.org )],[-lsqlite3] )
+    echo ""
+fi
+
+if test "$enable_clanSqlite" != "no"; then
+    enable_clanDatabase=yes
+    enable_clanSqlite=yes
+fi
+
+if test "$enable_clanRegExp" != "no"; then
+    echo "Checking for clanRegExp stuff"
+    echo "==============================="
+
+        CLANLIB_CHECK_LIB(regexp,[#include <pcre.h>
+             int main() { return 0; }],
+            clanRegExp, [ *** Cannot find regexp (pcre) libs (See http://www.pcre.org )],[`pcre-config --libs`], [`pcre-config --cflags`] )
+    echo ""
+fi
+
+if test "$enable_clanRegExp" != "no"; then
+      enable_clanRegExp=yes
+
+    dnl Add any flags required to compiple clanRegExp
+    CXXFLAGS="$CXXFLAGS $clanRegExp_CXXFLAGS"
 fi
 
 if test "$enable_clanNetwork" != "no"; then
@@ -430,7 +525,7 @@ if test "$enable_clanNetwork" != "no"; then
                 #include <winsock2.h>
                 int main(){ return 0;}
                 void used_stuff() {WSAStartup(0, NULL);}
-            ], clanNetwork, [ *** Could not find ws2_32 (winsock2)])
+            ], clanNetwork, [ *** Could not find ws2_32 (winsock2)], [-lws2_32])
     fi
 fi
 
@@ -453,20 +548,20 @@ dnl ----------------------------------------------------
 dnl Which clan subprojects & examples should be compiled?
 dnl ----------------------------------------------------
 
-# Set the include path
+dnl Set the include path
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/Sources"
 
-# Modules which will be build
-ClanLib_Modules="Application"
+dnl Modules which will be build
+ClanLib_Modules="App"
 ClanLib_pkgconfig="clanApp.pc"
 
-# API header files for the Modules which will be installed
+dnl API header files for the Modules which will be installed
 ClanLib_API_Modules="$ClanLib_API_Modules \$(clanApp_includes)"
 
-# Default examples which will be build
+dnl Default examples which will be build
 ClanLib_Examples="Directory Minimum Resources ResourcesCustom Signals ThreadSync XML Zip"
 
-CLANLIB_ENABLE_MODULES([Core Signals])
+CLANLIB_ENABLE_MODULES(Core)
 
 if test "$enable_clanDisplay" = "yes"; then
     CLANLIB_ENABLE_MODULES(Display)
@@ -476,17 +571,30 @@ if test "$enable_clanSound" = "yes"; then
 	ClanLib_Examples="$ClanLib_Examples SoundFilters SoundBuffer StreamSoundProvider PlayCD"
 fi
 
-if test "$enable_clanSDL" = "yes"; then
-    CLANLIB_ENABLE_MODULES(SDL)
+if test "$enable_clanDatabase" = "yes"; then
+    CLANLIB_ENABLE_MODULES(Database)
 fi
+
+if test "$enable_clanSqlite" = "yes"; then
+    CLANLIB_ENABLE_MODULES(Sqlite)
+fi
+
+if test "$enable_clanRegExp" = "yes"; then
+    CLANLIB_ENABLE_MODULES(RegExp)
+fi
+
 if test "$enable_clanGL" = "yes"; then
     CLANLIB_ENABLE_MODULES(GL)
 	ClanLib_Examples="$ClanLib_Examples AdventureScene Basic2D Canvas DisplayModes Font GLCube GLFog GlyphBuffer InitDisplay Joystick MousePoll MouseSignal Pacman ShadowOfTheBeast Surface SpritesRTS ScreenShot Time"
 fi
 
 if test "$enable_clanGUI" = "yes"; then
-    CLANLIB_ENABLE_MODULES([GUI GUIStyleSilver])
+    CLANLIB_ENABLE_MODULES(GUI)
 	ClanLib_Examples="$ClanLib_Examples GLGUICube GUISimple GUILayout GUITreeView GUIWindow GUIInputDialog GUIScript GUIStyle PilotsPuzzle"
+fi
+
+if test "$enable_clanGDI" = "yes"; then
+    CLANLIB_ENABLE_MODULES(GDI)
 fi
 
 if test "$enable_clanNetwork" = "yes"; then
@@ -505,52 +613,18 @@ if test "$enable_clanVorbis" = "yes"; then
 	ClanLib_Examples="$ClanLib_Examples Vorbis"
 fi
 
-dnl ----------------------------------------------------
-dnl Setup libs to be linked with the core library files.
-dnl ----------------------------------------------------
-
-dnl check wich display targets to build
-
-if false; then
-    if test "$USE_DIRECTFB" = "enabled"; then 
-	disp_directfb='$(DISP_DIRECTFB)'; 
-    else
-	directfb_cflags=""; 
-	directfb_libs=""; 
-    fi
-    
-    AC_SUBST(directfb_cflags)
-    AC_SUBST(directfb_libs)
-    AC_SUBST(disp_directfb)
-fi
-
-AC_SUBST(js_cflags)
-AC_SUBST(js_libs)
-AC_SUBST(js_defs)
-
-AC_SUBST(extra_includes)
-AC_SUBST(extra_libraries)
-
-AC_SUBST(libs)
-AC_SUBST(objf_nondyn)
-AC_SUBST(LIBS)
-
-dnl ---------------------------------------------------------------------
-dnl Set which extra object files that should be used in case of assembly:
-dnl ---------------------------------------------------------------------
-
-if test "$USE_I386_ASSEMBLER" = "enabled"; then
-    clanSound_extra_objects="$clanSound_extra_objects mixer_asm.lo"
-fi
-
-AC_SUBST(clanSound_extra_objects)
-
 dnl ----------------------------------------
 dnl Check for documentation generation tools
 dnl ----------------------------------------
+
+if test "$enable_docs" != "yes"; then
+	enable_docs=no
+fi
+
 if test "$enable_docs" != "no"; then
     echo "Checking for Documentation stuff"
     echo "================================"
+
     AC_PATH_PROG([perl_exec], [perl])
     if test -z "$perl_exec"; then
         if test "$enable_docs" = "yes"; then
@@ -560,45 +634,24 @@ if test "$enable_docs" != "no"; then
             enable_docs=no
         fi
     fi
-fi
-if test "$enable_docs" != "no"; then
-    xslt_exec=''
-    AC_PATH_PROGS([xslt_exec], [Xalan xsltproc sabcmd MSXSL])
-    if test -z "$xslt_exec"; then
+   AC_PATH_PROG([doxygen_exec], [doxygen])
+    if test -z "$doxygen_exec"; then
         if test "$enable_docs" = "yes"; then
-            AC_MSG_ERROR([cannot find xalan, xsltproc, sabcmd or MSXSL])
+            AC_MSG_ERROR([cannot find doxygen])
         else
-            AC_MSG_WARN([cannot find xalan, xsltproc, sabcmd or MSXSL. Disabling documentation generation]); enable_docs=no
+            AC_MSG_WARN([cannot find doxygen])
+            enable_docs=no
         fi
-    else
-        # $1="xml file" $2="output file" $3="xslt stylesheet"
-        case "$xslt_exec" in
-        *Xalan)
-           xslt_exec="$xslt_exec -o \$2 \$1 \$3"
-           ;;
-        *xsltproc)
-           xslt_exec="$xslt_exec -o \$2 \$3 \$1"
-           ;;
-        *sabcmd)
-           xslt_exec="$xslt_exec \$3 \$1 \$2"
-           ;;
-        *MSXSL)
-           xslt_exec="$xslt_exec \$1 \$3 -o \$2"
-        esac
     fi
 fi
+
 AC_MSG_CHECKING([if documentation should be generated]); AC_MSG_RESULT([$enable_docs])
 if test "$enable_docs" != "no"; then
-    Kavanek_Tutorial_HTML=CLANLIB_FILE_LIST([Documentation/Tutorial/Kavanek], [*.xml], ['$0!="menu.xml"{sub("\\.xml$",".html");print}'])
-    AC_SUBST(Kavanek_Tutorial_HTML)
     AC_SUBST(ClanLib_docs,"Documentation")
     AC_SUBST(ClanLib_add_docs,"Reference Overview")
     enable_docs=yes
-    AC_CONFIG_FILES([Documentation/Utilities/xslt.sh], [chmod +x Documentation/Utilities/xslt.sh])
-    AC_CONFIG_FILES([Documentation/Utilities/webbuilder.pl], [chmod +x Documentation/Utilities/webbuilder.pl])
-    AC_CONFIG_FILES([Documentation/Reference/pce2], [chmod +x Documentation/Reference/pce2])
     AC_CONFIG_FILES([Documentation/Makefile Documentation/Overview/Makefile Documentation/Reference/Makefile
-        Documentation/Tutorial/Makefile Documentation/Tutorial/Kavanek/Makefile])
+        Documentation/Tutorial/Makefile])
 fi
 
 echo ""
@@ -653,60 +706,121 @@ dnl ---------------------
 dnl Finish configuration:
 dnl ---------------------
 
-# Set which parts of ClanLib should be build (could probally solved more nicely)
+dnl Insert libraries for ClanLib examples (for pkgconfig)
+AC_SUBST(clanDisplay_LIBS)
+
+dnl Set which parts of ClanLib should be built (could probally solved more nicely)
 AC_SUBST(ClanLib_Modules)
 AC_SUBST(ClanLib_pkgconfig)
 AC_SUBST(ClanLib_API_Modules)
 AC_SUBST(ClanLib_Examples)
 
 AC_CONFIG_FILES([
-        pkgconfig/clanApp.pc
-        pkgconfig/Makefile
+        Setup/pkgconfig/clanApp.pc
+        Setup/pkgconfig/Makefile
         Makefile
         Examples/Makefile
         Examples/Makefile.conf
         Setup/Makefile
         Sources/API/Makefile
-        Sources/Application/Makefile
+        Sources/App/Makefile
         Sources/Makefile
         Tests/Makefile.conf
         ])
 
 AC_OUTPUT
 
-
-dnl echo Building dependencies...please wait.
-dnl make dep > /dev/null 2>&1
-
 echo "------------------------------------------------------------------------------"
+echo "The following options are set: (use ./configure --help for more options)"
+echo ""
+echo "                   --prefix = $prefix"
+echo "              --exec-prefix = $exec_prefix"
+echo "              --datarootdir = $datarootdir"
+echo ""
+echo "   Installation Include Dir = $includedir/ClanLib-${LT_RELEASE}"
+echo "   Installation Library Dir = $libdir"
+echo "      Installation Docs Dir = $datadir/doc/${PACKAGE}-${LT_RELEASE}"
+
+dnl Do a check to see if the user has forgotton to set the prefix directory
+if test "$prefix" == "/usr/local"; then
+	echo " * Warning: installation directory is /usr/local. This may cause problems on some linux distros. Use --prefix=/usr if required *"
+fi
+
+dnl echo ""
+dnl echo "                   CXXFLAGS = $CXXFLAGS"
+dnl echo "                   CPPFLAGS = $CPPFLAGS"
+dnl echo "                       LIBS = $LIBS"
+dnl echo "                    LDFLAGS = $LDFLAGS"
+echo ""
 echo "The following modules will be built:"
 echo ""
 echo "                     clanGL = $enable_clanGL"
-echo "                    clanSDL = $enable_clanSDL"
 echo "                    clanApp = yes"
+echo "               clanDatabase = $enable_clanDatabase"
+echo "                 clanRegExp = $enable_clanRegExp"
+echo "                 clanSqlite = $enable_clanSqlite"
 echo "                    clanGUI = $enable_clanGUI"
-echo "                   clanCore = yes"
-echo "                  clanSound = $enable_clanSound"
+echo "                    clanGDI = $enable_clanGDI"
+
+core_options=""
+if test "$gcc_cv_have_tls" != "yes"; then
+	core_options="$core_options * Warning Thread Local Storage is Disabled *"
+fi
+echo "                   clanCore = yes$core_options"
+
+sound_options=""
+if test "$enable_clanSound" != "no"; then
+	if test "$have_alsa" != "no"; then
+		sound_options="$sound_options (ALSA Enabled)"
+	else
+		sound_options="$sound_options (ALSA Disabled)"
+	fi
+fi
+
+echo "                  clanSound = $enable_clanSound$sound_options"
 echo "                clanNetwork = $enable_clanNetwork"
-echo "                clanSignals = yes"
-echo "                clanDisplay = $enable_clanDisplay"
+
+display_options=""
+if test "$enable_clanDisplay" != "no"; then
+	if test "$linux_joystick" != "no"; then
+		display_options="$display_options (Linux Joystick Enabled)"
+	else
+		display_options="$display_options (Linux Joystick Disabled)"
+	fi
+
+	if test "$linux_joystick" != "no"; then
+		display_options="$display_options (Linux Input Enabled)"
+	else
+		display_options="$display_options (Linux Input Disabled)"
+	fi
+
+fi
+
+echo "                clanDisplay = $enable_clanDisplay$display_options"
 echo "                 clanMikmod = $enable_clanMikMod"
 echo "                 clanVorbis = $enable_clanVorbis"
 echo ""
-echo "        Build Documentation = $enable_docs"
-echo "                Debug Build = $enable_debug"
-dnl echo "                   CXXFLAGS = $CXXFLAGS"
-dnl echo "                       LIBS = $LIBS"
-dnl echo "                    LDFLAGS = $LDFLAGS"
-dnl echo ""
+
+if test "$enable_docs" == "no"; then
+echo "        Build Documentation = no (Use --enable-docs to enable)"
+else
+echo "        Build Documentation = yes (Use \"make html\" and \"make install-html\" to also install the API documentation)"
+fi
+
+if test "$enable_debug" != "no"; then
+echo "                Debug Build = yes"
+else
+echo "                Debug Build = no (Use --enable-debug to enable)"
+fi
+
+
 echo "------------------------------------------------------------------------------"
 echo "Configure done."
 echo ""
 echo "Type 'make' to compile ClanLib."
+echo "Then 'sudo make install' to install ClanLib."
 echo ""
 
-dnl Local Variables:
-dnl compile-command: "./autogen.sh && ./configure"
-dnl End:
-
 dnl EOF dnl
+
+

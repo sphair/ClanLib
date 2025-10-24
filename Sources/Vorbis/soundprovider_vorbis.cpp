@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,9 +29,7 @@
 
 #include "Sound/precomp.h"
 #include "API/Vorbis/soundprovider_vorbis.h"
-#include "API/Core/IOData/inputsource.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/System/clanstring.h"
+#include "API/Core/IOData/iodevice.h"
 #include "soundprovider_vorbis_generic.h"
 #include "soundprovider_vorbis_session.h"
 
@@ -39,36 +37,24 @@
 // CL_SoundProvider_Vorbis construction:
 
 CL_SoundProvider_Vorbis::CL_SoundProvider_Vorbis(
-	const std::string &filename,
-	CL_InputSourceProvider *provider,
-	bool stream) : impl(new CL_SoundProvider_Vorbis_Generic)
+	const CL_String &filename,
+	CL_VirtualDirectory directory,
+	bool stream)
+: impl(new CL_SoundProvider_Vorbis_Generic)
 {
-	if (provider == 0) provider = CL_InputSourceProvider::create_file_provider(".");
-	else provider = provider->clone();
+	impl->filename = filename;
+	impl->directory = directory;
+	impl->stream = stream;
 
-	try
-	{
-		impl->provider = provider;
-		impl->filename = filename;
-		impl->stream = stream;
-
-		CL_InputSource *input = provider->open_source(filename);
-		int size = input->size();
-		impl->buffer = new unsigned char[size];
-		impl->buffer_size = input->read(impl->buffer, size);
-		delete input;
-	}
-	catch (...)
-	{
-		delete impl->provider;
-		throw;
-	}
+	CL_IODevice input = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
+	int size = input.get_size();
+	impl->buffer = CL_DataBuffer(size);
+	int bytes_read = input.read(impl->buffer.get_data(), impl->buffer.get_size());
+	impl->buffer.set_size(bytes_read);
 }
 
 CL_SoundProvider_Vorbis::~CL_SoundProvider_Vorbis()
 {
-	delete[] impl->buffer;
-	delete impl->provider;
 	delete impl;
 }
 

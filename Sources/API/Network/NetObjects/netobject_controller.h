@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="NetObjects"
-//! header=network.h
+/// \addtogroup clanNetwork_NetObjects clanNetwork NetObjects
+/// \{
 
-#ifndef header_netobject_controller
-#define header_netobject_controller
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -51,57 +41,77 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <string>
-#include "../../signals.h"
+#include "../api_network.h"
+#include "../../Core/Signals/signal_v3.h"
+#include "../../Core/System/databuffer.h"
 #include "../NetSession/netcomputer.h"
-#include "../NetSession/netpacket.h"
 
 class CL_NetObject_Controller_Generic;
 class CL_NetGroup;
 class CL_NetObject_Client;
 
-//: Network object replication channel.
-//- !group=Network/NetObjects!
-//- !header=network.h!
-//- <p>Manages a netchannel with netobject replication data. It dispatches incoming
-//- messages to the correct netobject.</p>
+/// \brief Network object replication channel.
+///
+///    <p>Manages a netchannel with netobject replication data. It dispatches incoming
+///    messages to the correct netobject.</p> 
+/// \xmlonly !group=Network/NetObjects! !header=network.h! \endxmlonly
 class CL_API_NETWORK CL_NetObject_Controller
 {
-//! Construction:
-public:
-	//: Constructs a netobject controller.
-	CL_NetObject_Controller(class CL_NetSession *netsession, const std::string &channel);
+/// \name Construction
+/// \{
 
-	//: Copy constructor.
+public:
+	/// \brief Constructs a netobject controller.
+	CL_NetObject_Controller(class CL_NetSession *netsession, const CL_String &channel);
+
+	/// \brief Copy constructor.
 	CL_NetObject_Controller(const CL_NetObject_Controller &copy);
 
-	//: NetObject Controller destructor.
+	/// \brief NetObject Controller destructor.
 	virtual ~CL_NetObject_Controller();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	// Copy assignment operator.
 	CL_NetObject_Controller &operator =(const CL_NetObject_Controller &copy);
 
-//! Signals:
-public:
-	//: Signal that is called whenever the netobject channel receives a message for a netobject
-	//: it doesnt know. The application should hook a slot into this signal and determine what
-	//: to do with the message.
-	//- <p>CL_Signal_v3<netobject, msgtype, message>.</p>
-	//- <p>Signal parameters:
-	//- CL_NetObject &netobj_handle - Handle identifying the netobject created.
-	//- int msg_type - Message type of the message (the msg_type param used to send it with netobj.send()).
-	//- CL_NetPacket &message - The message itself.</p>
-	CL_Signal_v3<CL_NetObject_Client &, int, CL_NetPacket &> &sig_create_object();
 
-//! Implementation:
+/// \}
+/// \name Signals
+/// \{
+
 public:
-	//: NetObjectController implementation.
-	CL_NetObject_Controller_Generic *impl;
+	/// \brief Signal that is called whenever the netobject channel receives a message for a netobject
+	/// \brief it doesnt know. The application should hook a slot into this signal and determine what
+	/// \brief to do with the message.
+	/** <p>CL_Signal_v3<netobject, msgtype, message>.</p>
+	    <p>Signal parameters:
+	    CL_NetObject &netobj_handle - Handle identifying the netobject created.
+	    int msg_type - Message type of the message (the msg_type param used to send it with netobj.send()).
+	    CL_NetPacket &message - The message itself.</p>*/
+	CL_Signal_v3<CL_NetObject_Client &, int, CL_DataBuffer &> &sig_create_object();
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+public:
+	/// \brief NetObjectController implementation.
+	CL_SharedPtr<CL_NetObject_Controller_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

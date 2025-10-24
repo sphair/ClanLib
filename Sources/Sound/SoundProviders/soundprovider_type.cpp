@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -39,14 +38,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProviderType construction:
 
-CL_SoundProviderType::CL_SoundProviderType(const std::string &type)
+CL_SoundProviderType::CL_SoundProviderType(const CL_String &type)
 {
 	CL_SoundProviderFactory::types[type] = this;
 }
 
 CL_SoundProviderType::~CL_SoundProviderType()
 {
-	std::map<std::string, CL_SoundProviderType *>::iterator it;
+	std::map<CL_String, CL_SoundProviderType *>::iterator it;
 	
 	for (it = CL_SoundProviderFactory::types.begin(); it != CL_SoundProviderFactory::types.end(); it++)
 	{

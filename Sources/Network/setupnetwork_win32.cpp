@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,60 +24,34 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #ifdef _MSC_VER
 #pragma warning (disable:4786)
 #endif
-
-#include <winsock2.h>
 #include "API/Network/setupnetwork.h"
-#include "API/Core/System/cl_assert.h"
-#include "Socket/event_trigger_socket.h"
-#include "Socket/socket_select.h"
+#include "API/Core/System/exception.h"
 
 static int ref_count = 0;
 
 CL_SetupNetwork::CL_SetupNetwork(bool register_resources_only)
 {
-	CL_SetupNetwork::init(register_resources_only);
+	ref_count++;
+	if (ref_count > 1) return;
+
+	if (register_resources_only == false)
+	{
+		WORD winsock_version = MAKEWORD( 2, 2 ); 
+		WSADATA wsaData;
+		int err = WSAStartup(winsock_version, &wsaData);
+		if (err != 0)
+			throw CL_Exception(cl_text("Failed to initialize winsockets"));
+	}
 }
 
 CL_SetupNetwork::~CL_SetupNetwork()
 {
-	CL_SetupNetwork::deinit();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Initialize network.
-
-void CL_SetupNetwork::init(bool register_resources_only)
-{
-	ref_count++;
-	if (ref_count > 1) return;
-
-	if(register_resources_only == false)
-	{
-		WORD winsock_version = MAKEWORD( 2, 0 ); 
-		WSADATA wsaData;
-		int err = WSAStartup(winsock_version, &wsaData);
-
-		// Failed to initialize winsockets. You got some weird ancient windows 95 or something?
-		cl_assert(err == 0);
-	}
-
-	CL_EventTrigger_Socket::socket_select = new CL_SocketSelect();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Deinitialize network.
-
-void CL_SetupNetwork::deinit()
-{
 	ref_count--;
 	if (ref_count > 0) return;
-
-	delete CL_EventTrigger_Socket::socket_select;
-	CL_EventTrigger_Socket::socket_select = 0;
 }

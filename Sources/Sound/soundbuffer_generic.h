@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundbuffer_generic
-#define header_soundbuffer_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -42,33 +41,48 @@ class CL_SoundFilter;
 
 class CL_SoundBuffer_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundBuffer_Generic();
-	
+
 	virtual ~CL_SoundBuffer_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	CL_SoundProvider *provider;
-	
+
 	bool delete_provider;
-	
+
 	float volume;
-	
+
 	float pan;
 
 	std::vector<CL_SoundFilter *> filters;
-	
+
 	std::vector<bool> delete_filters;
-	
+
 	mutable CL_Mutex mutex;
-	
-//! Operations:
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	
-//! Implementation:
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

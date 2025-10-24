@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,28 +24,32 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
-#include "API/Core/System/cl_assert.h"
 #include "Core/XML/dom_named_node_map_generic.h"
 #include "API/Core/XML/dom_named_node_map.h"
 #include "API/Core/XML/dom_attr.h"
 #include "API/Core/XML/dom_node.h"
+#include "dom_document_generic.h"
+#include "dom_node_generic.h"
+#include "dom_tree_node.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNamedNodeMap construction:
 
 CL_DomNamedNodeMap::CL_DomNamedNodeMap()
 {
-	impl = new CL_DomNamedNodeMap_Generic();
 }
 
-CL_DomNamedNodeMap::CL_DomNamedNodeMap(CL_DomNode &node)
+CL_DomNamedNodeMap::CL_DomNamedNodeMap(const CL_SharedPtr<CL_DomNamedNodeMap_Generic> &impl)
+: impl(impl)
 {
-	// FIXME: Not sure what this should do
-	cl_assert(0);
+}
+
+CL_DomNamedNodeMap::CL_DomNamedNodeMap(const CL_DomNamedNodeMap &copy)
+: impl(copy.impl)
+{
 }
 
 CL_DomNamedNodeMap::~CL_DomNamedNodeMap()
@@ -57,53 +61,336 @@ CL_DomNamedNodeMap::~CL_DomNamedNodeMap()
 
 int CL_DomNamedNodeMap::get_length() const
 {
-	return impl->attributes.size();
+	if (impl.is_null())
+		return 0;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	const CL_DomTreeNode *tree_node = impl->get_tree_node();
+	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	int length = 0;
+	while (cur_attribute)
+	{
+		length++;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
+	return length;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNamedNodeMap operations:
 
-CL_DomNode CL_DomNamedNodeMap::get_named_item(const std::string &name) const
+CL_DomNode CL_DomNamedNodeMap::get_named_item(const CL_DomString &name) const
 {
-	int size = impl->attributes.size();
-	for (int i=0; i<size; i++)
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	const CL_DomTreeNode *tree_node = impl->get_tree_node();
+	unsigned int cur_index = tree_node->first_attribute;
+	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
 	{
-		if (impl->attributes[i].first == name)
+		if (cur_attribute->get_node_name() == name)
 		{
-			return CL_DomNode(impl->attributes[i].second);
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = cur_index;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
 		}
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
+	return CL_DomNode();
+}
+
+CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &local_name) const
+{
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	const CL_DomTreeNode *tree_node = impl->get_tree_node();
+	unsigned int cur_index = tree_node->first_attribute;
+	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
+	{
+		CL_StringRef lname = cur_attribute->get_node_name();
+		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		if (lpos != CL_StringRef::npos)
+			lname = lname.substr(lpos + 1);
+
+		if (cur_attribute->get_namespace_uri() == namespace_uri && lname == local_name)
+		{
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = cur_index;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+
+		}
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
 	}
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNamedNodeMap::set_named_item(const CL_DomNode &node)
 {
-	int size = impl->attributes.size();
-	for (int i=0; i<size; i++)
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomString name = node.get_node_name();
+	CL_DomTreeNode *new_tree_node = (CL_DomTreeNode *) node.impl->get_tree_node();
+	CL_DomTreeNode *tree_node = impl->get_tree_node();
+	if (new_tree_node == tree_node)
+		return node;
+	unsigned int cur_index = tree_node->first_attribute;
+	unsigned int last_index = cl_null_node_index;
+	CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
 	{
-		if (impl->attributes[i].first == node.to_attr().get_name())
+		if (cur_attribute->get_node_name() == name)
 		{
-			CL_DomNode oldnode(impl->attributes[i].second);
-			impl->attributes[i].second = node;
-			return oldnode;
+			new_tree_node->parent = cur_attribute->parent;
+			new_tree_node->previous_sibling = cur_attribute->previous_sibling;
+			new_tree_node->next_sibling = cur_attribute->next_sibling;
+			if (cur_attribute->previous_sibling == cl_null_node_index)
+				tree_node->first_attribute = node.impl->node_index;
+			else
+				cur_attribute->get_previous_sibling(doc_impl)->next_sibling = node.impl->node_index;
+			if (cur_attribute->next_sibling != cl_null_node_index)
+				cur_attribute->get_next_sibling(doc_impl)->previous_sibling = node.impl->node_index;
+			cur_attribute->parent = cl_null_node_index;
+			cur_attribute->previous_sibling = cl_null_node_index;
+			cur_attribute->next_sibling = cl_null_node_index;
+			return node;
 		}
+		last_index = cur_index;
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
 	}
-	
-	impl->attributes.push_back(std::pair<std::string, CL_DomNode>(node.to_attr().get_name(), node));
+	if (last_index == cl_null_node_index)
+	{
+		tree_node->first_attribute = node.impl->node_index;
+		new_tree_node->parent = impl->node_index;
+		new_tree_node->previous_sibling = cl_null_node_index;
+		new_tree_node->next_sibling = cl_null_node_index;
+	}
+	else
+	{
+		new_tree_node->parent = impl->node_index;
+		new_tree_node->previous_sibling = last_index;
+		new_tree_node->next_sibling = cl_null_node_index;
+		doc_impl->nodes[last_index]->next_sibling = node.impl->node_index;
+	}
+	return node;
+}
+
+CL_DomNode CL_DomNamedNodeMap::set_named_item_ns(const CL_DomNode &node)
+{
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomString namespace_uri = node.get_namespace_uri();
+	CL_DomString local_name = node.get_local_name();
+	CL_DomTreeNode *new_tree_node = (CL_DomTreeNode *) node.impl->get_tree_node();
+	CL_DomTreeNode *tree_node = impl->get_tree_node();
+	if (new_tree_node == tree_node)
+		return node;
+	unsigned int cur_index = tree_node->first_attribute;
+	unsigned int last_index = cl_null_node_index;
+	CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
+	{
+		CL_StringRef lname = cur_attribute->get_node_name();
+		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		if (lpos != CL_StringRef::npos)
+			lname = lname.substr(lpos + 1);
+
+		if (cur_attribute->get_namespace_uri() == namespace_uri && lname == local_name)
+		{
+			new_tree_node->parent = cur_attribute->parent;
+			new_tree_node->previous_sibling = cur_attribute->previous_sibling;
+			new_tree_node->next_sibling = cur_attribute->next_sibling;
+			if (cur_attribute->previous_sibling == cl_null_node_index)
+				tree_node->first_attribute = node.impl->node_index;
+			else
+				cur_attribute->get_previous_sibling(doc_impl)->next_sibling = node.impl->node_index;
+			if (cur_attribute->next_sibling != cl_null_node_index)
+				cur_attribute->get_next_sibling(doc_impl)->previous_sibling = node.impl->node_index;
+			cur_attribute->parent = cl_null_node_index;
+			cur_attribute->previous_sibling = cl_null_node_index;
+			cur_attribute->next_sibling = cl_null_node_index;
+			return node;
+		}
+		last_index = cur_index;
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
+	if (last_index == cl_null_node_index)
+	{
+		tree_node->first_attribute = node.impl->node_index;
+		new_tree_node->parent = impl->node_index;
+		new_tree_node->previous_sibling = cl_null_node_index;
+		new_tree_node->next_sibling = cl_null_node_index;
+	}
+	else
+	{
+		new_tree_node->parent = impl->node_index;
+		new_tree_node->previous_sibling = last_index;
+		new_tree_node->next_sibling = cl_null_node_index;
+		doc_impl->nodes[last_index]->next_sibling = node.impl->node_index;
+	}
+	return node;
+}
+
+CL_DomNode CL_DomNamedNodeMap::remove_named_item(const CL_DomString &name)
+{
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomTreeNode *tree_node = impl->get_tree_node();
+	unsigned int cur_index = tree_node->first_attribute;
+	unsigned int last_index = cl_null_node_index;
+	CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
+	{
+		if (cur_attribute->get_node_name() == name)
+		{
+			if (cur_attribute->previous_sibling == cl_null_node_index)
+				tree_node->first_attribute = cur_attribute->next_sibling;
+			else
+				cur_attribute->get_previous_sibling(doc_impl)->next_sibling = cur_attribute->next_sibling;
+			if (cur_attribute->next_sibling != cl_null_node_index)
+				cur_attribute->get_next_sibling(doc_impl)->previous_sibling = cur_attribute->previous_sibling;
+			cur_attribute->parent = cl_null_node_index;
+			cur_attribute->previous_sibling = cl_null_node_index;
+			cur_attribute->next_sibling = cl_null_node_index;
+
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = cur_index;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+		last_index = cur_index;
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
 
 	return CL_DomNode();
 }
 
-CL_DomNode CL_DomNamedNodeMap::remove_named_item(const std::string &name)
+CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &local_name)
 {
-	// FIXME: Implement me
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	CL_DomTreeNode *tree_node = impl->get_tree_node();
+	unsigned int cur_index = tree_node->first_attribute;
+	unsigned int last_index = cl_null_node_index;
+	CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	while (cur_attribute)
+	{
+		CL_StringRef lname = cur_attribute->get_node_name();
+		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		if (lpos != CL_StringRef::npos)
+			lname = lname.substr(lpos + 1);
+
+		if (cur_attribute->get_namespace_uri() == namespace_uri && lname == local_name)
+		{
+			if (cur_attribute->previous_sibling == cl_null_node_index)
+				tree_node->first_attribute = cur_attribute->next_sibling;
+			else
+				cur_attribute->get_previous_sibling(doc_impl)->next_sibling = cur_attribute->next_sibling;
+			if (cur_attribute->next_sibling != cl_null_node_index)
+				cur_attribute->get_next_sibling(doc_impl)->previous_sibling = cur_attribute->previous_sibling;
+			cur_attribute->parent = cl_null_node_index;
+			cur_attribute->previous_sibling = cl_null_node_index;
+			cur_attribute->next_sibling = cl_null_node_index;
+
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = cur_index;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+		last_index = cur_index;
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
+
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNamedNodeMap::item(unsigned long index) const
 {
-	return CL_DomNode(impl->attributes[index].second);
+	if (impl.is_null())
+		return CL_DomNode();
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	const CL_DomTreeNode *tree_node = impl->get_tree_node();
+	unsigned int cur_index = tree_node->first_attribute;
+	const CL_DomTreeNode *cur_attribute = tree_node->get_first_attribute(doc_impl);
+	unsigned int pos = 0;
+	while (cur_attribute)
+	{
+		if (index == pos)
+		{
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = cur_index;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+ 		}
+		pos++;
+		cur_index = cur_attribute->next_sibling;
+		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
+	}
+	return CL_DomNode();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNamedNodeMap implementation:
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_DomNamedNodeMap_Generic construction:
+
+CL_DomNamedNodeMap_Generic::CL_DomNamedNodeMap_Generic()
+: map_type(type_null), node_index(cl_null_node_index)
+{
+}
+
+CL_DomNamedNodeMap_Generic::~CL_DomNamedNodeMap_Generic()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_DomNamedNodeMap_Generic operations:
+
+inline CL_DomTreeNode *CL_DomNamedNodeMap_Generic::get_tree_node()
+{
+	if (node_index == cl_null_node_index)
+		return 0;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	return doc_impl->nodes[node_index];
+}
+
+inline const CL_DomTreeNode *CL_DomNamedNodeMap_Generic::get_tree_node() const
+{
+	if (node_index == cl_null_node_index)
+		return 0;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	return doc_impl->nodes[node_index];
+}

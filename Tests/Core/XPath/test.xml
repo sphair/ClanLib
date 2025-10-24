@@ -1,0 +1,33 @@
+<root xmlns:com="fisk">
+  <child>
+    <childchild>Test</childchild>
+    <childchild>Test2</childchild>
+    <childchild>Test3</childchild>
+  </child>
+  <child foo="bar">
+    <childchild>Test4</childchild>
+    <childchild>Test5</childchild>
+  </child>
+  <child foo="barism">
+    <childchild>Test4.1</childchild>
+    <childchild>Test5.1</childchild>
+  </child>
+  <child>
+    <foobar>Muh!</foobar>
+    <childchild>Test6</childchild>
+    <childchild>Test7</childchild>
+  </child>
+  <child age="10">
+    <foobar>Age under 27</foobar>
+    <childchild>Test6.1</childchild>
+    <childchild>Test7.1</childchild>
+  </child>
+  <child age="77">
+    <foobar>Age over 27</foobar>
+    <childchild>Test6.2</childchild>
+    <childchild>Test7.2</childchild>
+  </child>
+  <com:child>
+    <foobar>To foobar!!</foobar>
+  </com:child>
+</root>

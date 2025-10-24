@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,12 +24,12 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/dom_comment.h"
 #include "dom_node_generic.h"
+#include "dom_tree_node.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomComment construction:
@@ -38,10 +38,11 @@ CL_DomComment::CL_DomComment()
 {
 }
 
-CL_DomComment::CL_DomComment(CL_DomDocument &doc, const std::string &data)
+CL_DomComment::CL_DomComment(CL_DomDocument &doc, const CL_DomString &data)
 : CL_DomCharacterData(doc, COMMENT_NODE)
 {
-	impl->node_value = data;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	impl->get_tree_node()->set_node_value(doc_impl, data);
 }
 
 CL_DomComment::CL_DomComment(const CL_SharedPtr<CL_DomNode_Generic> &impl) : CL_DomCharacterData(impl)

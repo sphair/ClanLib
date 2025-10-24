@@ -1,14 +1,14 @@
 
-#ifndef file_application
-#define file_application
+#pragma once
 
-class Application : public CL_ClanApplication
+class Application
 {
 //! Construction:
 public:
 	Application();
-
 	~Application();
+
+	int main(const std::vector<CL_String> &args);
 
 //! Attributes:
 public:
@@ -19,7 +19,5 @@ public:
 
 //! Implementation:
 private:
-	int main(int argc, char **argv);
-};
 
-#endif
+};

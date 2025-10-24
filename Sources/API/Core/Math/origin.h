@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,35 +24,20 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_origin
-#define header_origin
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-#include "size.h"
-#include "point.h"
+#include "../api_core.h"
 
-//: Alignment origins.
-//- !group=Core/Math!
-//- !header=core.h!
+/// \brief Alignment origins.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum CL_Origin
 {
 	origin_top_left,
@@ -66,10 +51,4 @@ enum CL_Origin
 	origin_bottom_right
 };
 
-//: Returns the anchor point for the origin within the dimensions of the size structure.
-//- !group=Display/Display 2D!
-//- !header=display.h!
-CL_Point CL_API_CORE calc_origin(CL_Origin origin, const CL_Size &size);
-CL_Pointf CL_API_CORE calc_origin(CL_Origin origin, const CL_Sizef &size);
-
-#endif
+/// \}

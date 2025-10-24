@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,58 +24,74 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_xml_tokenizer_generic
-#define header_xml_tokenizer_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "API/Core/IOData/inputsource.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/Text/string_allocator.h"
 
 class CL_XMLTokenizer_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_XMLTokenizer_Generic() : input(0), delete_input(false), pos(0), size(0), eat_whitespace(true) { return; }
+	CL_XMLTokenizer_Generic() : pos(0), size(0), eat_whitespace(true) { return; }
 
-	~CL_XMLTokenizer_Generic() { if (delete_input) delete input; }
+	~CL_XMLTokenizer_Generic() { return; }
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	CL_InputSource *input;
-	
-	bool delete_input;
+	CL_IODevice input;
 
-	std::string::size_type pos, size;
+	CL_String::size_type pos, size;
 
-	std::string data;
+	CL_String data;
 
 	bool eat_whitespace;
 
-//! Operations:
+	CL_StringAllocator string_allocator;
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
+	static void throw_exception(const CL_StringRef &str);
+
+	bool next_text_node(CL_XMLToken *out_token);
+
+	bool next_tag_node(CL_XMLToken *out_token);
+
+	bool next_exclamation_mark_node(CL_XMLToken *out_token);
+
 	// used to get the line number when there is an error in the xml file
-	int get_line_number()
-	{
-		int line = 1;
-		std::string::size_type tmp_pos = 0;
+	int get_line_number();
 
-		std::string::const_iterator it;
-		for( it = data.begin(); it != data.end() && tmp_pos <= pos; ++it, tmp_pos++ )
-		{
-			if( (*it) == '\n' )
-				line++;
-		}
-	
-		return line;
-	}
+	void unescape(CL_StringRef &text_out, const CL_StringRef &text_in);
 
-//! Implementation:
+	void unescape(CL_StringRef &text, const CL_StringRef &search, CL_String::char_type replace);
+
+	CL_StringRef trim_whitespace(const CL_StringRef &text);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,18 +24,17 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundbuffer_session_generic
-#define header_soundbuffer_session_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include <vector>
-#include "API/Core/System/mutexsharedptr.h"
+#include "API/Core/System/sharedptr.h"
 #include "API/Core/System/mutex.h"
 #include "API/Sound/soundformat.h"
 
@@ -46,62 +45,75 @@ class CL_SoundOutput_Generic;
 
 class CL_SoundBuffer_Session_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundBuffer_Session_Generic(
-		CL_MutexSharedPtr<CL_SoundBuffer_Generic> soundbuffer,
+		CL_SharedPtr<CL_SoundBuffer_Generic> soundbuffer,
 		bool looping,
 		CL_SoundOutput_Generic *output);
-	
+
 	virtual ~CL_SoundBuffer_Session_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	CL_MutexSharedPtr<CL_SoundBuffer_Generic> soundbuffer;
+	CL_SharedPtr<CL_SoundBuffer_Generic> soundbuffer;
 
 	CL_SoundProvider_Session *provider_session;
 
 	CL_SoundOutput_Generic *output;
 
 	float volume;
-	
+
 	float pan;
 
 	bool looping;
-	
+
 	bool playing;
-	
-	float speedfactor;
 
 	std::vector<CL_SoundFilter *> filters;
-	
+
 	std::vector<bool> delete_filters;
-	
+
 	mutable CL_Mutex mutex;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	bool mix_to(int **sample_data, int **temp_data, int num_samples, int channels);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	//: Fills temporary buffers with data from provider.
+	/// \brief Fills temporary buffers with data from provider.
 	void get_data();
 
-	//: Temporary channel buffers containing sound data in provider frequency.
+	/// \brief Temporary channel buffers containing sound data in provider frequency.
 	int **buffer_data;
 
-	//: Size of temporary channel buffers.
+	/// \brief Size of temporary channel buffers.
 	int num_buffer_samples;
 
-	//: Number of temporary channel buffers;
+	/// \brief Number of temporary channel buffers;
 	int num_buffer_channels;
 
-	//: Current playback position in temporary buffers.
+	/// \brief Current playback position in temporary buffers.
 	double buffer_position;
 
-	//: Number of samples currently written to buffer_data.
+	/// \brief Number of samples currently written to buffer_data.
 	int buffer_samples_written;
+/// \}
 };
 
-#endif
+

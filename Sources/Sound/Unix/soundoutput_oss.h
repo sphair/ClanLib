@@ -27,49 +27,61 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundoutput_oss
-#define header_soundoutput_oss
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
 #include "../soundoutput_generic.h"
 
 class CL_SoundOutput_OSS : public CL_SoundOutput_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_SoundOutput_OSS(int mixing_frequency);
-	
+	CL_SoundOutput_OSS(int mixing_frequency, int mixing_latency);
+
 	~CL_SoundOutput_OSS();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	int dev_dsp_fd;
 
 	int frag_size;
 
-//! Operations:
+	bool has_sound;
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called when we have no samples to play - and wants to tell the soundcard
-	//: about this possible event.
+	/// \brief Called when we have no samples to play - and wants to tell the soundcard
+	/// \brief about this possible event.
 	virtual void silence();
 
-	//: Returns true if all fragments are filled with data.
+	/// \brief Returns true if all fragments are filled with data.
 	virtual bool is_full();
 
-	//: Returns the buffer size used by device (returned as num [stereo] samples).
+	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
 	virtual int get_fragment_size();
 
-	//: Writes a fragment to the soundcard.
+	/// \brief Writes a fragment to the soundcard.
 	virtual void write_fragment(short *data);
 
-	//: Waits until output source isn't full anymore.
+	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

@@ -1,6 +1,5 @@
 
-#ifndef file_document
-#define file_document
+#pragma once
 
 #include <list>
 
@@ -24,5 +23,3 @@ public:
 //! Implementation:
 private:
 };
-
-#endif

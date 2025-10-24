@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Template Callbacks - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Template Callbacks
+</h2>
+
+<p>ClanLib includes a complete signalling library -- a signal library is a
+C++ template library that allow you to use type-safe C++ templates to setup
+function callbacks.</p>
+
+<p>The library currently supports three different types of callback
+templates:</p>
+
+<ul>
+<li>Signals and slots</li>
+<li>Virtual functions</li>
+<li>Callbacks</li>
+</ul>
+
+<h3>Signals and Slots</h3>
+
+<p>A signal is an object that, when emitted, invokes one or more slot
+functions.  This setup allows a one-way messaging system that informs a
+number of functions whenever a certain event occours.  A simple example with
+one signal and two slot functions:</p>
+
+<pre>
+void slot_function1(int p1, int p2)
+{
+	CL_Console::write_line("Slot 1: %1,%2", p1, p2);
+}
+
+void slot_function2(int p1, int p2)
+{
+	CL_Console::write_line("Slot 2: %1,%2", p1, p2);
+}
+
+// Create signal and hook up slots:
+CL_Signal_v2&lt;int, int&gt; signal;
+CL_Slot slot1 = signal.connect(&amp;slot_function1);
+CL_Slot slot2 = signal.connect(&amp;slot_function2);
+
+// Emit signal:
+signal.invoke(21, 42);
+</pre>
+
+<p>The 'v2' part of <span class="code">CL_Signal_v2</span> indicates that
+the slot functions returns void and take 2 parameters.  The types of the
+parameters are then defined as <span class="code">int, int</span>.  When the
+CL_Slot handle object returned by <span
+class="code">CL_Signal_vX::connect</span> is destroyed, the slot function is
+disconnected from the signal.  If you plan to connect a lot of slots to
+signals, the CL_SlotContainer class may come in handy:</p>
+
+<pre>
+void slot_function1(int p1, int p2, CL_String p3);
+void slot_function2(int p1, int p2, CL_String p3);
+
+CL_SlotContainer slots;
+CL_Signal_v3&lt;int, int, CL_String&gt; signal;
+slots.connect(signal, &amp;slot_function1);
+slots.connect(signal, &amp;slot_function2);
+signal.invoke(21, 42, "text");
+</pre>
+
+<p>Just like with the <span class="code">CL_Thread::start</span> and <span
+class="code">cl_format</span> functions, the slot callback function can be
+placed in a class and have additional fixed parameters passed along:</p>
+
+<pre>
+class MyClass
+{
+public:
+	void slot_func(int p1, int p2, int user1);
+	CL_SlotContainer slots;
+};
+
+CL_Signal_v2&lt;int, int&gt; signal;
+
+MyClass my_class;
+my_class.slots.connect(signal, &amp;my_class, &amp;MyClass:slot_func, 100);
+my_class.slots.connect(signal, &amp;my_class, &amp;MyClass:slot_func, 200);
+
+signal.invoke(21, 42);
+</pre>
+
+<h3>Virtual Functions</h3>
+
+<p>The <span class="code">CL_VirtualFunction_X</span> template classes
+offers a different type of signal object, where each function connected
+replaces the previous object:</p>
+
+<pre>
+int slot_function1(int p1, int p2)
+{
+	return p1 + p2;
+}
+
+int slot_function2(int p1, int p2, CL_Super_2&lt;int, int, int&gt; &amp;super)
+{
+	if (super.is_invokable())
+		return -super.invoke(p1, p2);
+	else
+		return 0;
+}
+
+// Create signal and hook up slots:
+CL_VirtualFunction_3&lt;int, int, int&gt; signal;
+CL_Slot slot1 = signal.connect(&amp;slot_function1);
+CL_Slot slot2 = signal.connect(&amp;slot_function2);
+
+// Emit signal:
+int result = signal.invoke(21, 42);
+// result becomes -(p1 + p2)
+</pre>
+
+<p>In this example the <span class="code">CL_VirtualFunction::invoke</span>
+function calls <span class="code">slot_function2</span>, which then calls
+<span class="code">slot_function2</span> - just like a virtual
+function in a derived class could do.</p>
+
+<h3>Callbacks</h3>
+
+<p>The last type of callback template classes available is <span
+class="code">CL_Callback_X</span>.  It simply calls one callback function
+when invoked, just like a standard C style function pointer would do.</p>
+
+<pre>
+int callback_function(int p1, int p2)
+{
+	return p1 + p2;
+}
+
+CL_Callback_2&lt;int, int, int&gt; callback;
+callback.set(&callback_function);
+
+int result = callback.invoke(21, 42);
+</pre>
+
+</div>
+
+</body>
+</html>

@@ -24,15 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundoutput_oss.h"
-#include <API/Core/System/error.h>
-#include "API/Core/System/cl_assert.h"
+#include <API/Core/System/exception.h>
 #include "API/Core/System/system.h"
-#include "API/Core/System/log.h"
+#include "API/Core/Text/logger.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -49,11 +47,13 @@
 #include <sys/select.h>
 #endif
 
+#define DEFAULT_DSP "/dev/dsp"
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_OSS construction:
 
-CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
-	CL_SoundOutput_Generic(mixing_frequency), dev_dsp_fd(-1), frag_size(0)
+CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
+	CL_SoundOutput_Generic(mixing_frequency, mixing_latency), dev_dsp_fd(-1), frag_size(0), has_sound(true)
 {
 	dev_dsp_fd = open(DEFAULT_DSP, O_WRONLY|O_NONBLOCK);
 	if (dev_dsp_fd == -1)
@@ -71,7 +71,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 
 	if (ioctl(dev_dsp_fd, SNDCTL_DSP_SETFRAGMENT, &frag_settings))
 	{
-		CL_Log::log("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
+		cl_log_event("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
 	}
 
 #endif
@@ -81,7 +81,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	if (format != AFMT_S16_NE)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("Requires 16 bit soundcard. No sound will be available.");
+		throw CL_Exception("Requires 16 bit soundcard. No sound will be available.");
 	}
 	
 	int stereo = 1;
@@ -89,7 +89,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	if (stereo != 1)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("ClanSound: Requires 16 bit stereo capable soundcard. No sound will be available.");
+		throw CL_Exception("ClanSound: Requires 16 bit stereo capable soundcard. No sound will be available.");
 	}
 	
 	int speed = mixing_frequency;
@@ -99,7 +99,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	if (percent_wrong < 0.90 || percent_wrong > 1.10)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("ClanSound: Mixing rate (22.05 kHz) not supported by soundcard.");
+		throw CL_Exception("ClanSound: Mixing rate (22.05 kHz) not supported by soundcard.");
 	}
 	
 	// Try to improve mixing performance by using the same mixing buffer size
@@ -107,7 +107,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETBLKSIZE, &frag_size);
 	if (err == -1)
 	{
-		CL_Log::log("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
+		cl_log_event("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
 		frag_size = mixing_frequency/2; // 0.25 sec mixing buffer used.
 	}
 
@@ -119,7 +119,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	
 CL_SoundOutput_OSS::~CL_SoundOutput_OSS()
 {
-	if (has_sound) stop_mixer_thread();
+	stop_mixer_thread();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ bool CL_SoundOutput_OSS::is_full()
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETOSPACE, &info);
 	if (err == -1)
 	{
-		CL_Log::log("debug", "ClanSound: fragments free not supported by device!?");
+		cl_log_event("debug", "ClanSound: fragments free not supported by device!?");
 		return false; // not supported by device!?
 	}
 

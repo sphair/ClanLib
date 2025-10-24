@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "API/Core/Math/circle.h"
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/point.h"
-
+#include "API/Core/Math/line_segment.h"
 
 CL_Circlef CL_PointSetMath::minimum_enclosing_disc( const std::vector<CL_Pointf> &points )
 {
@@ -43,7 +43,7 @@ CL_Circlef CL_PointSetMath::minimum_enclosing_disc( const std::vector<CL_Pointf>
 	if(points.size() == 0)
 	{
 		// ERROR !!!!
-		smalldisc.position = CL_Pointf(0.0f, 0.0f);
+		smalldisc.position = CL_Pointf(0.0, 0.0);
 		smalldisc.radius = 0.0;
 	}
 	else if(points.size() == 1)
@@ -71,7 +71,7 @@ void CL_PointSetMath::calculate_minimum_enclosing_disc(
 {
 	// Get first disc (between the first two points)
 	smalldisc.position = CL_LineMath::midpoint(points[start], points[start+1]);
-	smalldisc.radius   = points[start].distance(points[start+1]) / 2.0;
+	smalldisc.radius   = points[start].distance(points[start+1]) / 2.0f;
 
 	// Now start the loop
 	for(int i = start+2; i <= end; i++)
@@ -84,7 +84,6 @@ void CL_PointSetMath::calculate_minimum_enclosing_disc(
 	}
 }
 
-
 void CL_PointSetMath::minimum_disc_with_1point(
 	CL_Circlef &smalldisc,
 	const std::vector<CL_Pointf> &points,
@@ -93,7 +92,7 @@ void CL_PointSetMath::minimum_disc_with_1point(
 {
 	// Get first disc (between the first point and `points[i]`)
 	smalldisc.position = CL_LineMath::midpoint(points[start], points[i]);
-	smalldisc.radius   = points[start].distance(points[i]) / 2.0;
+	smalldisc.radius   = points[start].distance(points[i]) / 2.0f;
 	
 	for(unsigned int j = start+1; j < i; j++)
 	{
@@ -105,7 +104,6 @@ void CL_PointSetMath::minimum_disc_with_1point(
 	}
 }
 
-
 void CL_PointSetMath::minimum_disc_with_2points(
 	CL_Circlef &smalldisc,
 	const std::vector<CL_Pointf> &points,
@@ -115,7 +113,7 @@ void CL_PointSetMath::minimum_disc_with_2points(
 {
 	// Get first disc (between `points[i]` and `points[j]`)
 	smalldisc.position = CL_LineMath::midpoint(points[i], points[j]);
-	smalldisc.radius   = points[i].distance(points[j]) / 2.0;
+	smalldisc.radius   = points[i].distance(points[j]) / 2.0f;
 
 	for(unsigned int k = start; k < j; k++)
 	{
@@ -147,17 +145,15 @@ void CL_PointSetMath::minimum_disc_with_3points(
 	CL_Pointf ki_mid  = CL_LineMath::midpoint(points[k],points[i]);
 	CL_Pointf ki_norm = ki_mid + CL_Pointf(points[k].y - ki_mid.y, -(points[k].x - ki_mid.x));
 
-	float lineA[4] = {ji_mid.x, ji_mid.y, ji_norm.x, ji_norm.y };
-	float lineB[4] = {ki_mid.x, ki_mid.y, ki_norm.x, ki_norm.y };
+	CL_LineSegment2f line_segment_a( ji_mid, ji_norm );
+	CL_LineSegment2f line_segment_b( ki_mid, ki_norm );
 
-	smalldisc.position = CL_LineMath::get_intersection( lineA, lineB );
+	bool did_intersect;
+	smalldisc.position = line_segment_a.get_intersection( line_segment_b, did_intersect );
 
 	// Since (i,j,k) are all on the circle, just get distance to one of them
 	smalldisc.radius = smalldisc.position.distance(points[i]);
 }
-
-
-
 
 // Descending date sorting function
 struct PointAngleSorter
@@ -211,13 +207,13 @@ std::vector<CL_Pointf> CL_PointSetMath::convex_hull_from_polygon(std::vector<CL_
 	for(; i != rightpoint; i = (i+1) % points.size())
 	{
 		// Only insert the point if it is on the convex hull
-		if(CL_LineMath::point_right_of_line(hull.back(), points[i], rightp) < 0.0f)
+		if(CL_LineMath::point_right_of_line(hull.back(), points[i], rightp) < 0.0)
 		{
 			hull.push_back(points[i]);
 			
 			// remove any left-turns behind us
 			while(hull.size() > 2 &&
-				CL_LineMath::point_right_of_line(hull[hull.size()-3], hull[hull.size()-2], hull[hull.size()-1]) >= 0.0f)
+				CL_LineMath::point_right_of_line(hull[hull.size()-3], hull[hull.size()-2], hull[hull.size()-1]) >= 0.0)
 			{
 				// Erase the second backmost point
 				hull[hull.size()-2] = hull[hull.size()-1];
@@ -235,13 +231,13 @@ std::vector<CL_Pointf> CL_PointSetMath::convex_hull_from_polygon(std::vector<CL_
 	for(; i != leftpoint; i = (i+1) % points.size())
 	{
 		// Only insert the point if it is on the convex hull
-		if(CL_LineMath::point_right_of_line(hull.back(), points[i], leftp) < 0.0f)
+		if(CL_LineMath::point_right_of_line(hull.back(), points[i], leftp) < 0.0)
 		{
 			hull.push_back(points[i]);
 			
 			// remove any left-turns behind us
 			while(hull.size() > 2 &&
-				CL_LineMath::point_right_of_line(hull[hull.size()-3], hull[hull.size()-2], hull[hull.size()-1]) >= 0.0f)
+				CL_LineMath::point_right_of_line(hull[hull.size()-3], hull[hull.size()-2], hull[hull.size()-1]) >= 0.0)
 			{
 				// Erase the second backmost point
 				hull[hull.size()-2] = hull[hull.size()-1];
@@ -252,3 +248,4 @@ std::vector<CL_Pointf> CL_PointSetMath::convex_hull_from_polygon(std::vector<CL_
 
 	return hull;
 }
+

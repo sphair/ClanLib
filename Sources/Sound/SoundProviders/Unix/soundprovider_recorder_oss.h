@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_recorder_oss
-#define header_sound_provider_recorder_oss
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,13 +38,19 @@
 
 class CL_SoundProvider_Recorder_OSS_Session : public CL_SoundProvider_Session
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider_Recorder_OSS_Session(int frequency);
 
 	~CL_SoundProvider_Recorder_OSS_Session();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	virtual int get_num_samples() const;
 
@@ -56,29 +62,38 @@ public:
 
 	virtual int get_position() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool eof() const;
-	
+
 	virtual void stop();
 
 	virtual bool play();
-		
+
 	virtual bool set_position(int pos);
-	
+
 	virtual int get_data(void **data_ptr, int data_requested);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	int frequency;
-	
+
 	int position;
-	
+
 	int dev_dsp_fd;
-	
+
 	int format;
-	
+
 	int frag_size;
+/// \}
 };
 
-#endif
+

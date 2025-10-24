@@ -1,0 +1,98 @@
+- GDI
+  - The output from Tests/Display/2D is different for OpenGL and GDI
+  - The output from Tests/Display/Image1 is different for OpenGL and GDI
+
+- GUI Component issues:
+  - Scrollbar buttons should use separate glyph part
+  - Window close/min/max/etc buttons should use separate glyph part
+  - scrollbar trackarea and buttonarea overlap with 1 pixel
+  - checkbox draw something wrong? (compare with vista screenshot, especially disabled)
+  - slider - thumb size for horizontal is too small (compare to vertical)
+  - slider - support focused
+  - lineedit - use readonly and focused gfx
+  - lineedit - set states on parts (hot doesn't show)
+  - checkbox support excluded and implicit
+  - button - support animated state?
+  - lineedit - selecting with mouse when there is only one char is difficult
+  - spin - disabled state is not shown visually
+  - groupbox - no clickthrough  - progressbar - Does not work!
+  - ToolTip - No components use it at present, and the API is incomplete
+  - Window - texture wm - clicking on window client area does not bring it to front
+  - Tab - redo parts so we won't have to use header_border, and resizing of active tagpage part
+  - Frame vs GroupBox - whats the difference - do we need both?
+  - Popupmenu separator part is too short
+
+- GUI Exception issues:
+  - In "int CL_MenuModalLoop::exec_handler(CL_AcceleratorTable &accel_table, bool loop_until_complete)"
+    If you call "throw CL_Exception(cl_text("I'm an exception!"));"
+    The destructor CL_GUIComponent::~CL_GUIComponent() crashes.
+
+- GUI CL_ToolBar issues:
+  - You cannot switch between horizontal and Vertical Toolbar
+  - It uses CL_Sprite, not CL_Image
+  - It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
+
+- GUI Set Clip Rect
+  In "void CL_GUIComponent::set_cliprect(const CL_Rect &rect)"
+   The code used to inspect the parent components to obtain the clip rect offset.
+   But because the GUI Texture Window Manager uses an offset into the texture, this rect is incorrect
+   So, this function has been modified to use the translation part of the model view matrix
+   This might be an incorrect and hacky method.
+   Please check and fix :)
+
+- GUI Modal Window
+  There currently is a inconsistancy in the way modal windows are handled (for example, CL_ComboBox_Impl::on_btn_arrow_clicked() )
+  The System WM, has its own modal loop
+  The Texture WM intercept the main gui loop via gui_manager.func_exec_handler().set(this, &CL_MenuModalLoop::exec_handler); 
+  Ideally, the System WM should use the Texture WM method - This gives the user control of external objects (network i/o  etc)
+ 
+- GUI Render
+  Issue: If a component alters the state during rendering (for example calls gc.set_texture(index, texture) ),
+   currently there is no way to restore the previous texture
+   Maybe, we could have: texture = gc.get_texture(index) - And texture.is_null() if it was not set.
+   etc.
+
+- GUI Texture Manager
+  Since the GUI is now based on a single texture  (when the CL_TextureGroup has been set)
+   There are issues with setting the Stencil and Depth buffer
+   To be valid, they must be the same size as the texture (for the frame buffer object to work)
+   A quick fix, is to set the default CL_TextureGroup size to 0 by 0, which indirectly would force a single texture -
+   to be created for each window.
+
+- Add thread safety to CL_Logger:
+  The three places the vector is accessed needs to be mutex locked 
+  (add a static CL_Mutex to the class, CL_MutexSection the three places its used)
+- Logger: If you do "CL_ConsoleLogger logger; logger.enable();" it will have two instances
+  of logging!
+
+- ClanMikMod 
+  Fix Mikmod package to compile on 64 bit in windows (works on linux)
+
+- Modifying existing display window
+  Is this function required: void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc) 
+  Adds extra complexity, to modify a window that has already been created. Should we force the user, to call set_size() etc manually. 
+  This function is not supported in linux.
+
+- D3D9
+	1) Create a hidden window and create a Direct3DDevice9 for it
+	2) Create all textures on this device
+	3) For each CL_DisplayWindow, it creates an additional swap chain 
+	4) The CL_GraphicContext for each window shares the same Direct3DDevice, and thus shares states (oh no, now we are f**ked)
+	5) When you call flip() or update() on the display window, it calls Present on the swap chain
+	6) When you resize the window, it destroys the swap chain and creates a new one
+	7) If we had fullscreen support, it would destroy the swap chain and create a fullscreen one
+	8) If the fullscreen window loses focus, we have to manually destroy the fullscreen swap chain and hide 
+
+- Documentation
+  INSTALL.linux - Outdated, needs update / link to online version
+  INSTALL.macosx - unknown
+  INSTALL.mingw - Outdated, obsoleted?
+  INSTALL.win32 - Needs update / link to online version
+  README.Upgrade - Needs total rewrite and remove pre-0.9 stuff
+  README.visualcpp - Nice content, but better suited somewhere else?
+  Documentation\Tutorial - Upgrade TicTacToe tutorial with 0.9 API?
+  Documentation\Tutorial - Write new based on DiceWar
+
+- Folder structure
+  Projects/* Can this be moved into Setup?
+

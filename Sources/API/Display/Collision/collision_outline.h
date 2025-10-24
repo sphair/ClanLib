@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,14 +27,14 @@
 **    Magnus Norddahl
 **    James Wynn
 **    Emanuel Greisen
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_collision_outline
-#define header_collision_outline
+
+#pragma once
+
 
 #ifdef CL_API_DLL
 #ifdef CL_DISPLAY_EXPORT
@@ -50,46 +50,45 @@
 #pragma once
 #endif
 
-#include <string>
 #include <vector>
 #include "contour.h"
 #include "outline_accuracy.h"
+#include "../Render/graphic_context.h"
 #include "../../Core/Resources/resource.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
-#include "../../GL/opengl_wrap.h"
+#include "../../Core/IOData/virtual_directory.h"
 
 class CL_CollisionOutline_Generic;
 class CL_ResourceManager;
-class CL_PixelBuffer;
+class CL_PixelBufferRef;
 class CL_OutputSourceProvider;
 class CL_GraphicContext;
 class CL_Color;
 
-
-//: Collision point information structure.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>Structure used for returning information about collisions</p>
+/// \brief Collision point information structure.
+///
+///  <p>Structure used for returning information about collisions</p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 struct CL_CollisionPoint
 {
-	//: Coordinates of the point where the contours intersected.
+	/// \brief Coordinates of the point where the contours intersected.
 	CL_Pointf point;
 
-	//: Normal vector at the point where the contours intersected.
+	/// \brief Normal vector at the point where the contours intersected.
 	CL_Pointf normal;
 
-	//: Every contour intersection has an entry and exit point. True, if this is an entry point.
+	/// \brief Every contour intersection has an entry and exit point. True, if this is an entry point.
 	bool is_entry;
 
-	//: Indexes of intersecting lines on the contours.
+	/// \brief Indexes of intersecting lines on the contours.
 	int contour1_line_start, contour2_line_start, contour1_line_end, contour2_line_end;
 };
 
-//: Strurcture containing information about contours that collided.
-//- !group=Display/Collision !
-//- !header=display.h!/
-//- <p>Structure used for returning information about collisions</p>
+/// \brief Strurcture containing information about contours that collided.
+///
+/// <p>Structure used for returning information about collisions</p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 struct CL_CollidingContours
 {
 	const CL_Contour *contour1;
@@ -105,181 +104,239 @@ struct CL_CollidingContours
 		contour1(c1),
 		contour2(c2),
 		inside(in),
-		penetration_normal(0.0f,0.0f),
-		penetration_depth(0.0f),
-		contour1_deep_point(0.0f,0.0f),
-		contour2_deep_point(0.0f,0.0f)
+		penetration_normal(0.0, 0.0),
+		penetration_depth(0.0),
+		contour1_deep_point(0.0, 0.0),
+		contour2_deep_point(0.0, 0.0)
 	{
 		points.clear();
 	}
 };
 
 
-//: Collision detection outline.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>A collision outline is used in collision detection</p>
+/// \brief Collision detection outline.
+///
+/// <p>A collision outline is used in collision detection</p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CL_CollisionOutline
 {
-//! Construction:
+/// \name Construction
+/// \{
+
  public:
-	//: Construct a collision outline.
-	//param CL_PixelBuffer pbuf : Find alpha outline from a pixel buffer
-	//param int alpha_limit : Alpha limit for pixels considered solid (collidable) 
-	//param CL_OutlineAccuracy accuracy : Amount of optimization of the outline (default: medium)
-	//param std::string filename : Load outline from a file. The file can be an image or a precompiled outline.
+	/// \brief Construct a collision outline.
 	CL_CollisionOutline();
+
+	/// \brief Construct a collision outline.
+	///
+	/// \param other = Construct from
 	CL_CollisionOutline(const CL_CollisionOutline &other);
-	CL_CollisionOutline( CL_PixelBuffer pbuf, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium );
-	CL_CollisionOutline( const std::string &filename, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
-	CL_CollisionOutline( const std::string &resource_id, CL_ResourceManager *manager );
+
+	/// \brief Construct a collision outline.
+	///
+	/// \param pbuf = Find alpha outline from a pixel buffer
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	CL_CollisionOutline(const CL_PixelBufferRef &pbuf, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium );
+
+	/// \brief Construct a collision outline.
+	///
+	/// \param filename = Load outline from a file. The file can be an image or a precompiled outline.
+	/// \param directory = The virtual directory
+	CL_CollisionOutline(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory(), int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
+
+	/// \brief Construct a collision outline.
+	///
+	/// \param resource_id = The resource id
+	/// \param mananger = The resource manager
+	CL_CollisionOutline(const CL_StringRef &resource_id, CL_ResourceManager *manager );
+
+	/// \brief Construct a collision outline.
+	///
+	/// \param contours = The contours
+	/// \param width = The width
+	/// \param height = The height
 	CL_CollisionOutline(std::vector<CL_Contour> contours, int width, int height);
 
 	~CL_CollisionOutline();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
  public:
-	//: Returns the contour used as an object bounding box. (an rotated rectangle)
+	/// \brief Returns the contour used as an object bounding box. (an rotated rectangle)
 	const CL_Contour &get_object_bounding_box() const;
-	
-	//: Returns the radius of the outline.
-	//float get_radius() const;
+
+	/// \brief Returns the radius of the outline.
+	/** float get_radius() const;*/
 	CL_Circlef get_minimum_enclosing_disc() const;
-		
-	//: Returns true if completely-inside test is used.
+
+	/// \brief Returns true if completely-inside test is used.
 	bool get_inside_test() const;
 
-	//: Returns the contours in the outline.
+	/// \brief Returns the contours in the outline.
 	std::vector<CL_Contour> &get_contours() const;
 
-	//: Returns the position of the outline.
+	/// \brief Returns the position of the outline.
 	CL_Pointf get_translation() const;
 
-	//: Returns the scaling factor.
+	/// \brief Returns the scaling factor.
 	CL_Pointf get_scale() const;
 
-	//: Returns the rotation angle.
+	/// \brief Returns the rotation angle.
 	float get_angle() const;
-	
-	//: Returns the width of the image this outline was created from.
+
+	/// \brief Returns the width of the image this outline was created from.
 	unsigned int get_width() const;
 
-	//: Returns the height of the image this outline was created from.
+	/// \brief Returns the height of the image this outline was created from.
 	unsigned int get_height() const;
 
-	//: Get the translation origin and hotspot of the outline.	
+	/// \brief Get the translation origin and hotspot of the outline.
 	void get_alignment( CL_Origin &origin, float &x, float &y ) const;
 
-	//: Get the rotation hotspot of the outline.	
+	/// \brief Get the rotation hotspot of the outline.
 	void get_rotation_hotspot( CL_Origin &origin, float &x, float &y) const;
 
-	//: Return the info about the collisions. (collision points, normals, pointers to contours, and indexes to lines that intersected)
+	/// \brief Return the info about the collisions. (collision points, normals, pointers to contours, and indexes to lines that intersected)
 	std::vector<CL_CollidingContours> &get_collision_info() const;
 
-	//: Fetch the state of the collision testing variables.
+	/// \brief Fetch the state of the collision testing variables.
 	void get_collision_info_state(bool &points, bool &normals, bool &metadata, bool &pendepth) const;
 
-	//: Resource owning this outline, if any.
+	/// \brief Resource owning this outline, if any.
 	CL_Resource resource;
-	
-//! Operations:
+
+
+/// \}
+/// \name Operations
+/// \{
+
  public:
-	//: Assignment operator
+	/// \brief Assignment operator
 	CL_CollisionOutline &operator=(const CL_CollisionOutline &other);
 
-	//: Optimize the outline by removing redundant points.
-	//param unsigned char check_distance : the distance of points compared on the outline
-	//param float corner_angle : angle for a corner
-	void optimize( unsigned char check_distance=3, float corner_angle=M_PI/5.0f );
+	/// \brief Optimize the outline by removing redundant points.
+	///
+	/// \param check_distance = the distance of points compared on the outline
+	/// \param corner_angle = angle for a corner
+	void optimize( unsigned char check_distance=3, float corner_angle = CL_PI / 5.0 );
 
-	//: Draw outline on graphic context.
-	//param x, y: Anchor position of where to render sprite. Actual rendering position depends on the anchor and the alignment mode.
-	//param gc: Graphic context on which to render upon. If null, will use CL_Display's current graphic context.
+	/// \brief Draw outline on graphic context.
+	///
+	/// Actual rendering position depends on the anchor and the alignment mode.
+	///
+	/// \param x = Anchor position of where to render sprite. 
+	/// \param y = Anchor y position
+	/// \param color = The color
+	/// \param gc = Graphic context on which to render upon.
 	void draw(
 		float x,
 		float y,
-		const CL_Color &color,
-		CL_GraphicContext *gc = 0);
-	
-	//: Draw the subcircles surrounding the linesegments on graphic context.
-	//param x, y: Anchor position of where to render cirles. Actual rendering position depends on the anchor and the alignment mode.
-	//param gc: Graphic context on which to render upon. If null, will use CL_Display's current graphic context.
+		const CL_Colorf &color,
+		CL_GraphicContext gc);
+
+	/// \brief Draw the subcircles surrounding the linesegments on graphic context.
+	///
+	///  Actual rendering position depends on the anchor and the alignment mode.
+	///
+	/// \param x = Anchor position of where to render cirles.
+	/// \param y = Anchor y position
+	/// \param color = The color
+	/// \param gc = Graphic context on which to render upon.
 	void draw_sub_circles(
 		float x,
 		float y,
-		const CL_Color &color,
-		CL_GraphicContext *gc = 0);
+		const CL_Colorf &color,
+		CL_GraphicContext gc);
 
-	//: Draw the disc enclosing the entire outline.
-	//param x, y: Anchor position of where to render the cirle. Actual rendering position depends on the anchor and the alignment mode.
-	//param gc: Graphic context on which to render upon. If null, will use CL_Display's current graphic context.
+	/// \brief Draw the disc enclosing the entire outline.
+	///
+	/// Actual rendering position depends on the anchor and the alignment mode.
+	///
+	/// \param x = Anchor position of where to render the cirle.
+	/// \param y = Anchor y position
+	/// \param color = The color
+	/// \param gc = Graphic context on which to render upon.
 	void draw_smallest_enclosing_disc(
 		float x,
 		float y,
-		const CL_Color &color,
-		CL_GraphicContext *gc);
+		const CL_Colorf &color,
+		CL_GraphicContext gc);
 
-	//: Set the translation hotspot of the outline.
+	/// \brief Set the translation hotspot of the outline.
 	void set_alignment( CL_Origin origin, float x=0, float y=0 );
 
-	//: Set the rotation hotspot of the outline.	
+	/// \brief Set the rotation hotspot of the outline.
 	void set_rotation_hotspot( CL_Origin origin, float x=0, float y=0 );
 
-	//: Set the position of the outline.	
+	/// \brief Set the position of the outline.
 	void set_translation( float x, float y );
-	
-	//: Set the scale of the outline.	
+
+	/// \brief Set the scale of the outline.
 	void set_scale( float x, float y );
-	
-	//: Set the angle (in degrees) of the outline.	
-	void set_angle( float angle );
-	
-	//: Rotate the outline by angle (in degrees).
-	void rotate( float angle );
-	
-	//: Set to true if completely-inside test should be done
+
+	/// \brief Set the angle (in degrees) of the outline.
+	void set_angle(const CL_Angle &angle);
+
+	/// \brief Rotate the outline by angle (in degrees).
+	void rotate(const CL_Angle &angle);
+
+	/// \brief Set to true if completely-inside test should be done
 	void set_inside_test( bool value );
 
-	//: Enable collision info gathering.
+	/// \brief Enable collision info gathering.
 	void enable_collision_info( bool points=true, bool normals=false, bool metadata=false, bool pen_depth=false);
 
-	//: This will set the collision info of the outline
+	/// \brief This will set the collision info of the outline
 	void set_collision_info(const std::vector<CL_CollidingContours> &colinfo);
 
-	//: This will empty the collision-info vector
+	/// \brief This will empty the collision-info vector
 	void clean_collision_info();
 
-	//: (Re)calculate the radius of the outline.
+	/// \brief (Re)calculate the radius of the outline.
 	void calculate_radius();
 
-	//: (Re)calculate the subcircle segmentation of the outline.
-	void calculate_sub_circles(float radius_multiplier=3.5f);
+	/// \brief (Re)calculate the subcircle segmentation of the outline.
+	void calculate_sub_circles(float radius_multiplier=3.5);
 
-	//: (Re)calculate the smallest circles enclosing every contour in the outline.
+	/// \brief (Re)calculate the smallest circles enclosing every contour in the outline.
 	void calculate_smallest_enclosing_discs();
 
-	//: (Re)calculate the convex hull for every contour in the outline
+	/// \brief (Re)calculate the convex hull for every contour in the outline
 	void calculate_convex_hulls();
 
-	//: Write the outline to a file.
-	//param std::string filename: Name of file.
-	//param CL_OutputSourceProvider *provider: (Optional) OutputSourceProvider to use.
-	void save(const std::string &filename, CL_OutputSourceProvider *provider=0) const;
+	/// \brief Write the outline to a file.
+	///
+	/// \param filename = Name of file.
+	/// \param directory = Visual Directory to use
+	void save(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory()) const;
 
-	//: Returns true if outlines overlap
-	//param CL_CollisionOutline outline : Outline to test against.
+	/// \brief Returns true if outlines overlap
+	///
+	/// \param outline = Outline to test against.
+	/// \param remove_old_collision_info = set to true to remove old collision info
 	bool collide( const CL_CollisionOutline &outline, bool remove_old_collision_info=true );
 
-	//: Will calculate the penetration_depth and penetration_normal for all colliding contours.
+	/// \brief Will calculate the penetration_depth and penetration_normal for all colliding contours.
 	static void calculate_penetration_depth(std::vector<CL_CollidingContours> &collision_info);
-	
-	//: Returns true if a point is inside the outline.
-	//param CL_Pointf &point: the point to test.
+
+	/// \brief Returns true if a point is inside the outline.
+	///
+	/// \param point = the point to test.
 	bool point_inside( const CL_Pointf &point ) const;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
  private:
 	CL_CollisionOutline_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

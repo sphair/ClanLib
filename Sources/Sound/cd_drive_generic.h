@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,42 +23,51 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_cd_drive_generic
-#define header_cd_drive_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <string>
+#include "API/Core/Text/string_types.h"
 
 class CL_CDDrive_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_CDDrive_Generic() { return; }
-	
+
 	virtual ~CL_CDDrive_Generic() { return; }
 
-//! Attributes:
-public:
-	virtual std::string get_drive_path() = 0;
 
-	virtual std::string get_cd_name() = 0;
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	virtual CL_String8 get_drive_path() = 0;
+
+	virtual CL_String8 get_cd_name() = 0;
 
 	virtual int get_num_tracks() = 0;
 
 	virtual bool is_playing() = 0;
-	
+
 	virtual int get_cur_track() = 0;
 
 	virtual int get_cur_frame() = 0;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool play_tracks(int track, int end_track) = 0;
 
@@ -72,8 +81,13 @@ public:
 
 	virtual void resume() = 0;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

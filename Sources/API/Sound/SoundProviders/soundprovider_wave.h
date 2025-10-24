@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,67 +24,71 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Sound Providers"
-//! header=sound.h
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
-#ifndef header_sound_provider_wave
-#define header_sound_provider_wave
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_sound.h"
 #include "../soundprovider.h"
-#include <string>
+#include "../../Core/IOData/virtual_directory.h"
 
 class CL_InputSourceProvider;
 class CL_SoundProvider_Wave_Generic;
 
-//: Windows WAVE sample format (.wav) sound provider.
-//- !group=Sound/Sound Providers!
-//- !header=sound.h!
+/// \brief Windows WAVE sample format (.wav) sound provider.
+///
+/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundProvider_Wave : public CL_SoundProvider
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a sound provider based on a Windows wave (.wav) file.
-	//param filename: Filename of wave file.
-	//param provider: Input source provider used to retrieve wave file.
-	//param stream: If true, will stream from disk. If false, will load it to memory.
+	/// \brief Constructs a sound provider based on a Windows wave (.wav) file.
+	///
+	/// \param filename Filename of wave file.
+	/// \param provider Input source provider used to retrieve wave file.
+	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	CL_SoundProvider_Wave(
-		const std::string &filename,
-		CL_InputSourceProvider *provider = 0,
+		const CL_String &filename,
+		CL_VirtualDirectory directory = CL_VirtualDirectory(),
 		bool stream = false);
 
 	virtual ~CL_SoundProvider_Wave();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called by CL_SoundBuffer when a new session starts.
-	//return: The soundbuffer session to be attached to the newly started session.
+	/// \brief Called by CL_SoundBuffer when a new session starts.
+	/** \return The soundbuffer session to be attached to the newly started session.*/
 	virtual CL_SoundProvider_Session *begin_session();
 
-	//: Called by CL_SoundBuffer when a session has finished. After this call,
-	//- <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
-	//- here (and in most cases should be delete here).</p>
+	/// \brief Called by CL_SoundBuffer when a session has finished. After this call,
+	/** <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
+	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundProvider_Wave_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

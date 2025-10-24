@@ -1,0 +1,15 @@
+
+statusbar
+{
+	preferred-width:100;
+	preferred-height:18;
+
+	bg-image:StatusBar; 
+	bg-image-sizing-left:50;
+	bg-image-sizing-right:17;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+
+	text-color:black;
+}

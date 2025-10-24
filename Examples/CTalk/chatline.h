@@ -1,18 +1,16 @@
 
-#ifndef file_chatline
-#define file_chatline
+#pragma once
 
 class ChatLine
 {
-//! Attributes:
 public:
-	std::string timestamp;
+	ChatLine(): layout_width(0) { }
 
-	std::string nick;
-
-	std::string text;
-
-	CL_Color color;
+public:
+	CL_String timestamp;
+	CL_String nick;
+	CL_String text;
+	CL_Colorf color;
+	CL_SpanLayout layout;
+	int layout_width;
 };
-
-#endif

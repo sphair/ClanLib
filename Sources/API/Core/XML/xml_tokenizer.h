@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,66 +24,75 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_xml_tokenizer
-#define header_xml_tokenizer
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
 
-class CL_InputSource;
-class CL_XMLTokenLoad;
+class CL_IODevice;
+class CL_XMLToken;
 class CL_XMLTokenizer_Generic;
 
-//: The XML Tokenizer breaks a XML file into XML tokens.
-//- !group=Core/XML!
-//- !header=core.h!
+/// \brief The XML Tokenizer breaks a XML file into XML tokens.
+///
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_XMLTokenizer
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_XMLTokenizer();
-	
+
 	CL_XMLTokenizer(const CL_XMLTokenizer &copy);
 
-	CL_XMLTokenizer(CL_InputSource *input, bool delete_input = false);
-	
+	CL_XMLTokenizer(CL_IODevice &input);
+
 	virtual ~CL_XMLTokenizer();
-	
-//! Attributes:
+
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns true if eat whitespace flag is set.
+	/// \brief Returns true if eat whitespace flag is set.
 	bool get_eat_whitespace() const;
 
-	//: If enabled, will eat any whitespace between tags.
+	/// \brief If enabled, will eat any whitespace between tags.
 	void set_eat_whitespace(bool enable);
 
-//! Operations:
-public:
-	//: Returns the next token available in input stream.
-	CL_XMLTokenLoad next();
 
-//! Implementation:
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief Returns the next token available in input stream.
+	CL_XMLToken next();
+
+	void next(CL_XMLToken *out_token);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SharedPtr<CL_XMLTokenizer_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,121 +24,181 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Harry Storbacka
 */
 
-//! clanGUI="Framework"
-//! header=gui.h
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
-#ifndef header_gui_manager
-#define header_gui_manager
 
-#ifdef CL_API_DLL
-#ifdef CL_GUI_EXPORT
-#define CL_API_GUI __declspec(dllexport)
-#else
-#define CL_API_GUI __declspec(dllimport)
-#endif
-#else
-#define CL_API_GUI
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-#include <stddef.h>
 
-#include "component.h"
+#include "api_gui.h"
+#include "../Core/System/sharedptr.h"
+#include "../Core/System/weakptr.h"
+#include "../Core/Signals/callback_1.h"
+#include "../Core/Signals/callback_2.h"
+#include "../Core/Math/point.h"
+#include "accelerator_table.h"
+#include "../Display/Window/timer.h"
 
-class CL_ComponentManager;
-class CL_StyleManager;
-class CL_EventTrigger;
-class CL_GUIManager_Generic;
-class CL_Component_Generic;
+class CL_Size;
+class CL_Rect;
+class CL_CSSDocument;
+class CL_GUIComponent;
+class CL_GUIMessage;
+class CL_GUITheme;
+class CL_GUIWindowManager;
+class CL_GUIManager_Impl;
+class CL_Font;
+class CL_FontDescription;
 
-//: Root component.
-//- !group=GUI/Framework!
-//- !header=gui.h!
-//- <p>The GUI manager component is the 'root component' of any GUI system. It
-//- is responsible channeling input and output from the general clanlib display
-//- API and into the GUI system.</p>
-//- <p>The GUI manager must to be the top-level component in any component tree.</p>
-//- <p>Modal dialog interfaces in clanGUI is archived by constructing a GUI manager
-//- with a parent component. This will disable the input of the previous GUI, but
-//- will keep calling its painting signals.</p>
-class CL_API_GUI CL_GUIManager : public CL_Component
+/// \brief GUI manager.
+///
+/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
+class CL_API_GUI CL_GUIManager
 {
-//! Construction:
-public:
-	//: GUI Manager Constructor
-	CL_GUIManager(CL_StyleManager *style);
+/// \name Construction
+/// \{
 
-	//: GUI Manager Destructor
+public:
+	CL_GUIManager();
+
+	CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl);
+
 	virtual ~CL_GUIManager();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the currently focused component.
-	CL_Component *get_focus() const;
+	/// \brief Returns true if the parent is the GUI manager.
+	bool is_gui_manager() const { return true; }
 
-	//: Returns the currently captured component.
-	CL_Component *get_capture() const;
+	/// \brief Returns the GUI theme being used.
+	CL_GUITheme *get_theme() const;
 
-	//: Returns true if input is enabled.
-	bool is_input_enabled() const;
-	
-	//: Return component on top of modal stack or NULL if none
-	CL_Component * get_modal_component() const;
+	/// \brief Returns the CSS document being used.
+	CL_CSSDocument get_css_document() const;
 
-	//: Returns the event trigger for the gui manager.
-	CL_EventTrigger *get_update_trigger();
+	/// \brief Returns the windows manager being used.
+	CL_GUIWindowManager *get_window_manager() const;
 
-	//: Returns true if gui manager is currently shutting down
-	bool is_shutting_down() const;
+	/// \brief Returns the mouse capture component
+	CL_GUIComponent *get_capture_component() const;
 
-//! Operations:
+	/// \brief Returns the currently focused component.
+	CL_GUIComponent *get_focused_component();
+
+	/// \brief Returns if a dialog message pump loop should exit.
+	bool get_exit_flag() const;
+
+	/// \brief Returns the dialog exit code.
+	int get_exit_code() const;
+
+	/// \brief Returns userdata.
+	CL_UnknownSharedPtr get_userdata();
+
+	/// \brief Get the shared user defined GUI font (set with set_named_font() ). Returns NULL if not found
+	CL_Font get_named_font(const CL_FontDescription &desc);
+
+	CL_String get_clipboard_text() const;
+
+/// \}
+/// \name Events
+/// \{
+
 public:
-	//: Sets the focus component of the gui.
-	void set_focus(CL_Component *component);
+	/// \brief bool func_filter_message(const CL_GUIMessage &message)
+	CL_Callback_1<bool, CL_GUIMessage &> &func_filter_message();
 
-	//: Draws the GUI once.
-	void show();
+	/// \brief int func_exec_handler(CL_AcceleratorTable &accel_table)
+	CL_Callback_2<int, CL_AcceleratorTable &, bool> &func_exec_handler();
 
-	//: Runs the GUI message pump continuosly.
-	//- <p>This function runs the GUI mesage pump continously until CL_GUIManager::quit() is called.
-	//- It will redraw the screen and user events to components as they occour.</p>
-	//param modal_component: This parameter indicates if input events should only occour from a certain
-	//param modal_component: component or beneath in the component tree. This is used to start modal
-	//param modal_component: message pumps in the system, where you can only interface with a popup or
-	//param modal_component: similar.
-	void run(CL_Component *modal_component = 0);
+/// \}
+/// \name Operations
+/// \{
 
-	//: Break run loop.
-	void quit();
-
-	//: Tells the GUI to start accepting input.
-	void enable_input();
-	
-	//: Tells the GUI to stop accepting input.
-	void disable_input();
-
-	//: Sets the GUI in capture mode. [should we move this out of API space? -- mbn]
-	void gui_capture_mouse(CL_Component *component);
-
-	//: Takes GUI out of capture mode. [should we move this out of API space? -- mbn]
-	void gui_release_mouse();
-
-//! Signals:
 public:
-	//: Called when a new component get the focus
-	CL_Signal_v1<CL_Component *> &sig_focus_changed();
-	
-//! Implementation:
+	/// \brief Sets the GUI theme.
+	void set_theme(CL_GUITheme *theme);
+
+	/// \brief Sets the CSS document.
+	void set_css_document(CL_CSSDocument css);
+
+	/// \brief Sets the CSS document, by creating a CSSDocument from file automatically.
+	void set_css_document(const CL_String &filename);
+
+	/// \brief Sets the windows manager.
+	void set_window_manager(CL_GUIWindowManager *window_manager);
+
+	/// \brief Processes messages until exit_with_code is called.
+	int exec(CL_AcceleratorTable &table, bool loop_until_complete = true);
+
+	/// \brief Processes messages until exit_with_code is called - When an accelarator table is not required
+	int exec(bool loop_until_complete = true) {CL_AcceleratorTable table; return exec(table, loop_until_complete);}
+
+	/// \brief Reads the next message but leaves it in the queue.
+	CL_GUIMessage peek_message(bool block);
+
+	/// \brief Reads the next message.
+	/** <p>If there is no next message available, this function blocks until it receives one.</p>*/
+	CL_GUIMessage get_message();
+
+	/// \brief Sends a GUI message to the message handler target for the message.
+	void dispatch_message(CL_GUIMessage message);
+
+	/// \brief Breaks the message loop.
+	void exit_with_code(int exit_code);
+
+	/// \brief Clears the flag indicating exec() should exit its message pump loop.
+	void clear_exit_flag();
+
+	/// \brief Post GUI message onto the message queue.
+	/** <p>This function is thread safe.</p>*/
+	void post_message(const CL_GUIMessage &message);
+
+	/// \brief Send GUI message directly to the target.
+	void send_message(CL_GUIMessage &message);
+
+	/// \brief Set the mouse capture component.
+	void set_capture_component(CL_GUIComponent *component, bool state);
+
+	/// \brief Mark the specified area to be redrawn.
+	void invalidate_rect(const CL_Rect &rect, CL_GUIComponent *root_component);
+
+	/// \brief Set userdata.
+	void set_userdata(CL_UnknownSharedPtr ptr);
+
+	/// \brief Set the shared user defined GUI font - referenced using the specified font description.
+	void set_named_font(const CL_Font &font, const CL_FontDescription &desc);
+
+	void render_windows();
+
+	/// \brief Set clipboard text.
+	void set_clipboard_text(const CL_StringRef &str);
+
+	/// \brief Redirect proximity events from tablet to the specified component.
+	void set_tablet_proximity_component(CL_GUIComponent *, bool state);
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_GUIManager_Generic *impl;
+	void process_standard_gui_keys(CL_GUIMessage &message);
+	CL_SharedPtr<CL_GUIManager_Impl> impl;
 
-	friend class CL_Component_Generic;
+	friend class CL_GUIComponent_Impl;
+
+	friend class CL_GUIThemePart;
+
+	friend class CL_GUIThemePart_Impl;
+/// \}
 };
 
-#endif
+
+/// \}

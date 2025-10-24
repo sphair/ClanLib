@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,11 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/dom_processing_instruction.h"
+#include "API/Core/XML/dom_document.h"
 #include "dom_node_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -38,10 +38,10 @@ CL_DomProcessingInstruction::CL_DomProcessingInstruction()
 {
 }
 
-CL_DomProcessingInstruction::CL_DomProcessingInstruction(CL_DomDocument &doc, const std::string &target, const std::string &data)
+CL_DomProcessingInstruction::CL_DomProcessingInstruction(CL_DomDocument &doc, const CL_DomString &target, const CL_DomString &data)
 : CL_DomNode(doc, PROCESSING_INSTRUCTION_NODE)
 {
-	impl->node_value = data;
+	set_node_value(data);
 }
 
 CL_DomProcessingInstruction::CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl) : CL_DomNode(impl)
@@ -55,17 +55,17 @@ CL_DomProcessingInstruction::~CL_DomProcessingInstruction()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomProcessingInstruction attributes:
 
-std::string CL_DomProcessingInstruction::get_target() const
+CL_DomString CL_DomProcessingInstruction::get_target() const
 {
-	return std::string();
+	return CL_DomString();
 }
 
-std::string CL_DomProcessingInstruction::get_data() const
+CL_DomString CL_DomProcessingInstruction::get_data() const
 {
-	return std::string();
+	return CL_DomString();
 }
 
-void CL_DomProcessingInstruction::set_data(const std::string &data)
+void CL_DomProcessingInstruction::set_data(const CL_DomString &data)
 {
 }
 

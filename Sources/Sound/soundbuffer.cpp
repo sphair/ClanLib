@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -36,7 +35,8 @@
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/resource.h"
-#include "API/Core/IOData/inputsource_provider_file.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/virtual_directory.h"
 #include "soundbuffer_generic.h"
 #include "soundbuffer_session_generic.h"
 #include "resourcetype_sample.h"
@@ -49,53 +49,51 @@ CL_SoundBuffer::CL_SoundBuffer()
 }
 	
 CL_SoundBuffer::CL_SoundBuffer(
-	const std::string &res_id,
+	const CL_String &res_id,
 	CL_ResourceManager *manager)
 {
-	resource = manager->get_resource(res_id);
-	resource.load();
-
-	CL_ResourceData_Sample *data =
-		(CL_ResourceData_Sample *) resource.get_data("sample");
-
-	if (!data)
-		throw CL_Error("Resource '" + res_id + "' is not of type 'sample'");
-
+	CL_Resource resource = manager->get_resource(res_id);
+	resource_data_session = CL_ResourceDataSession(cl_text("sample"), resource);
+	CL_SharedPtr<CL_ResourceData_Sample> data(resource.get_data(cl_text("sample")));
+	if (data.is_null())
+	{
+		data = CL_SharedPtr<CL_ResourceData_Sample>(new CL_ResourceData_Sample(resource));
+		resource.set_data(cl_text("sample"), data);
+	}
 	impl = data->soundbuffer->impl;
 }
 
 CL_SoundBuffer::CL_SoundBuffer(
 	CL_SoundProvider *provider,
-	bool delete_provider) : impl(new CL_SoundBuffer_Generic)
+	bool delete_provider)
+: impl(new CL_SoundBuffer_Generic)
 {
 	impl->provider = provider;
 	impl->delete_provider = delete_provider;
 }
 
 CL_SoundBuffer::CL_SoundBuffer(
-	const std::string &filename,
+	const CL_String &filename,
 	bool streamed,
-	const std::string &sound_format) : impl(new CL_SoundBuffer_Generic)
+	const CL_String &sound_format)
+: impl(new CL_SoundBuffer_Generic)
 {
-	CL_InputSourceProvider_File *inputprovider = new CL_InputSourceProvider_File(".");
+	CL_VirtualFileSystem vfs(cl_text("."));
 	impl->provider = CL_SoundProviderFactory::load(
 		filename,
 		streamed,
 		sound_format,
-		inputprovider);
+		vfs.get_root_directory());
 	impl->delete_provider = true;
-	delete inputprovider;
 }
 
-CL_SoundBuffer::CL_SoundBuffer(const CL_SoundBuffer &copy) : impl(copy.impl)
+CL_SoundBuffer::CL_SoundBuffer(const CL_SoundBuffer &copy)
+: impl(copy.impl)
 {
-	resource = copy.resource;
-	resource.load();
 }
 
 CL_SoundBuffer::~CL_SoundBuffer()
 {
-	resource.unload();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -129,10 +127,7 @@ bool CL_SoundBuffer::is_playing() const
 
 CL_SoundBuffer &CL_SoundBuffer::operator =(const CL_SoundBuffer &copy)
 {
-	resource.unload();
 	impl = copy.impl;
-	resource = copy.resource;
-	resource.load();
 	return *this;
 }
 
@@ -187,7 +182,12 @@ CL_SoundBuffer_Session CL_SoundBuffer::prepare(bool looping, CL_SoundOutput *out
 	if (output == 0) output = CL_Sound::get_current_output();
 
 	CL_MutexSection mutex_lock(&impl->mutex);
-	return CL_SoundBuffer_Session(CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic>(new CL_SoundBuffer_Session_Generic(impl, looping, output->impl)));
+	return CL_SoundBuffer_Session(
+		CL_SharedPtr<CL_SoundBuffer_Session_Generic>(
+			new CL_SoundBuffer_Session_Generic(
+				impl,
+				looping,
+				output->impl)));
 }
 
 /////////////////////////////////////////////////////////////////////////////

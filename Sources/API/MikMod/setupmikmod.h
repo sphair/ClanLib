@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,47 +27,46 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanMikMod="System"
-//! header=mikmod.h
+/// \addtogroup clanMikMod_System clanMikMod System
+/// \{
 
-#ifndef header_setupmikmod
-#define header_setupmikmod
 
-#ifdef CL_API_DLL
-#ifdef CL_MIKMOD_EXPORT
-#define CL_API_MIKMOD __declspec(dllexport)
-#else
-#define CL_API_MIKMOD __declspec(dllimport)
-#endif
-#else
-#define CL_API_MIKMOD
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: ClanMikMod initialization.
-//- !group=MikMod/System!
-//- !header=mikmod.h!
-class CL_API_MIKMOD CL_SetupMikMod
+/// \brief ClanMikMod initialization.
+///
+/// \xmlonly !group=MikMod/System! !header=mikmod.h! \endxmlonly
+class CL_SetupMikMod
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Initializes clanMikMod.
-	//- <p>Constructing a CL_SetupMikMod object is equalent to calling CL_SetupMikMod::init().</p>
-	//- <p>When the CL_SetupMikMod instance is destroyed, CL_SetupMikMod::deinit() is called.</p>
+	/// \brief Initializes clanMikMod.
+	/** <p>Constructing a CL_SetupMikMod object is equalent to calling CL_SetupMikMod::init().</p>
+	    <p>When the CL_SetupMikMod instance is destroyed, CL_SetupMikMod::deinit() is called.</p>*/
 	CL_SetupMikMod(bool register_resources_only = false);
 
 	~CL_SetupMikMod();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Call this function in init_modules() to use clanMikMod.
+	/// \brief Call this function in init_modules() to use clanMikMod.
 	static void init(bool register_resources_only = false);
 
-	//: Call this function in deinit_modules().
+	/// \brief Call this function in deinit_modules().
 	static void deinit();
+/// \}
 };
 
-#endif
+
+/// \}

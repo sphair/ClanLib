@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,31 +24,22 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_node
-#define header_dom_node
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include <string>
+#include "dom_string.h"
 
 class CL_DomElement;
 class CL_DomAttr;
@@ -66,34 +57,40 @@ class CL_DomNodeList;
 class CL_DomNamedNodeMap;
 class CL_DomNode_Generic;
 
-//: DOM Node class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>The Node interface is the primary datatype for the entire Document Object Model.
-//- It represents a single node in the document tree. While all objects implementing
-//- the Node interface expose methods for dealing with children, not all objects
-//- implementing the Node interface may have children. For example, Text nodes may
-//- not have children, and adding children to such nodes results in a CL_DOMException
-//- being thrown.</p>
-//- <p>The attributes 'node_name', 'node_value' and 'attributes' are included as a
-//- mechanism to get at node information without casting down to the specific derived
-//- interface. In cases where there is no obvious mapping of these attributes for a
-//- specific node_type (e.g., node_value for an Element or attributes for a Comment),
-//- this returns null. Note that the specialized interfaces may contain additional
-//- and more convenient mechanisms to get and set the relevant information.</p>
+/// \brief DOM Node class.
+///
+/// <p>The Node interface is the primary datatype for the entire Document Object Model.
+///    It represents a single node in the document tree. While all objects implementing
+///    the Node interface expose methods for dealing with children, not all objects
+///    implementing the Node interface may have children. For example, Text nodes may
+///    not have children, and adding children to such nodes results in a CL_DOMException
+///    being thrown.</p>
+///    <p>The attributes 'node_name', 'node_value' and 'attributes' are included as a
+///    mechanism to get at node information without casting down to the specific derived
+///    interface. In cases where there is no obvious mapping of these attributes for a
+///    specific node_type (e.g., node_value for an Element or attributes for a Comment),
+///    this returns null. Note that the specialized interfaces may contain additional
+///    and more convenient mechanisms to get and set the relevant information.</p>
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomNode
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_DomNode();
 
 	CL_DomNode(const CL_DomNode &copy);
-	
+
 	~CL_DomNode();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: An integer indicating which type of node this is.
+	/// \brief An integer indicating which type of node this is.
 	enum NodeType
 	{
 		NULL_NODE                     = 0,
@@ -110,242 +107,303 @@ public:
 		DOCUMENT_FRAGMENT_NODE        = 11,
 		NOTATION_NODE                 = 12
 	};
-	
-	//: Returns the node name.
-	//- <p>The return value vary according to the node type as follows:</p>
-	//- <ul>
-	//- <li>Element: name of tag</li>
-	//- <li>Attr: name of attribute</li>
-	//- <li>Text: "#text"</li>
-	//- <li>CDataSection: "#cdata-section"</li>
-	//- <li>EntityReference: name of entity referenced</li>
-	//- <li>Entity: entity name</li>
-	//- <li>ProcessingInstruction: target</li>
-	//- <li>Comment: "#comment"</li>
-	//- <li>Document: "#document"</li>
-	//- <li>DocumentType: document type name</li>
-	//- <li>DocumentFragment: "#document-fragment"</li>
-	//- <li>Notation: notation name</li>
-	//- </ul>
-	std::string get_node_name() const;
-	
-	//: Returns the node value.
-	//- <p>The return value vary according to the node type as follows:</p>
-	//- <ul>
-	//- <li>Element: null</li>
-	//- <li>Attr: value of attribute</li>
-	//- <li>Text: content of text node</li>
-	//- <li>CDataSection: content of CDATA Section</li>
-	//- <li>EntityReference: null</li>
-	//- <li>Entity: null</li>
-	//- <li>ProcessingInstruction: entire content excluding the target</li>
-	//- <li>Comment: content of the comment</li>
-	//- <li>Document: null</li>
-	//- <li>DocumentType: null</li>
-	//- <li>DocumentFragment: null</li>
-	//- <li>Notation: null</li>
-	//- </ul>
-	std::string get_node_value() const;
 
-	//: Sets the node value.
-	void set_node_value(const std::string &value);
+	/// \brief Returns the node name.
+	/** <p>The return value vary according to the node type as follows:</p>
+	    <ul>
+	    <li>Element: name of tag</li>
+	    <li>Attr: name of attribute</li>
+	    <li>Text: "#text"</li>
+	    <li>CDataSection: "#cdata-section"</li>
+	    <li>EntityReference: name of entity referenced</li>
+	    <li>Entity: entity name</li>
+	    <li>ProcessingInstruction: target</li>
+	    <li>Comment: "#comment"</li>
+	    <li>Document: "#document"</li>
+	    <li>DocumentType: document type name</li>
+	    <li>DocumentFragment: "#document-fragment"</li>
+	    <li>Notation: notation name</li>
+	    </ul>*/
+	CL_DomString get_node_name() const;
 
-	//: Returns the node type (one of those in the NodeType enum).
+	/// \brief Returns the namespace URI of this node.
+	CL_DomString get_namespace_uri() const;
+
+	/// \brief Returns the namespace prefix of the node.
+	/** <p>For nodes of any type other than ELEMENT_NODE and ATTRIBUTE_NODE and
+	    nodes created with a DOM Level 1 method, such as create_element from the
+	    Document interface, this is always an empty string.</p>*/
+	CL_DomString get_prefix() const;
+
+	/// \brief Sets the namespace prefix of the node.
+	/** <p>Note that setting this attribute, when permitted, changes the node_name
+	    attribute, which holds the qualified name, as well as the tag_name and name
+	    attributes of the Element and Attr interfaces, when applicable.</p>
+	    <p>Note also that changing the prefix of an attribute that is known to
+	    have a default value, does not make a new attribute with the default value
+	    and the original prefix appear, since the namespace_uri and local_name do
+	    not change.</p>*/
+	void set_prefix(const CL_DomString &prefix);
+
+	/// \brief Returns local part of the qualified name of this node.
+	/** <p>For nodes of any type other than ELEMENT_NODE and ATTRIBUTE_NODE and
+	    nodes created with a DOM Level 1 method, such as create_element from the
+	    Document interface, this is always an empty string.</p>*/
+	CL_DomString get_local_name() const;
+
+	/// \brief Returns the node value.
+	/** <p>The return value vary according to the node type as follows:</p>
+	    <ul>
+	    <li>Element: null</li>
+	    <li>Attr: value of attribute</li>
+	    <li>Text: content of text node</li>
+	    <li>CDataSection: content of CDATA Section</li>
+	    <li>EntityReference: null</li>
+	    <li>Entity: null</li>
+	    <li>ProcessingInstruction: entire content excluding the target</li>
+	    <li>Comment: content of the comment</li>
+	    <li>Document: null</li>
+	    <li>DocumentType: null</li>
+	    <li>DocumentFragment: null</li>
+	    <li>Notation: null</li>
+	    </ul>*/
+	CL_DomString get_node_value() const;
+
+	/// \brief Sets the node value.
+	void set_node_value(const CL_DomString &value);
+
+	/// \brief Returns the node type (one of those in the NodeType enum).
 	unsigned short get_node_type() const;
-	
-	//: Returns the parent of this node.
-	//- <p>All nodes, except Document, DocumentFragment, and Attr may have a parent.
-	//- However, if a node has just been created and not yet added to the tree, or if
-	//- it has been removed from the tree, this is null.</p>
+
+	/// \brief Returns the parent of this node.
+	/** <p>All nodes, except Document, DocumentFragment, and Attr may have a parent.
+	    However, if a node has just been created and not yet added to the tree, or if
+	    it has been removed from the tree, this is null.</p>*/
 	CL_DomNode get_parent_node() const;
 
-	//: Returns a NodeList that contains all children of this node.
-	//- <p>If there are no children, this is a NodeList containing no nodes. The content
-	//- of the returned NodeList is "live" in the sense that, for instance, changes to
-	//- the children of the node object that it was created from are immediately reflected
-	//- in the nodes returned by the NodeList accessors; it is not a static snapshot of
-	//- the content of the node. This is true for every NodeList, including the ones
-	//- returned by the getElementsByTagName method.</p>
+	/// \brief Returns a NodeList that contains all children of this node.
+	/** <p>If there are no children, this is a NodeList containing no nodes. The content
+	    of the returned NodeList is "live" in the sense that, for instance, changes to
+	    the children of the node object that it was created from are immediately reflected
+	    in the nodes returned by the NodeList accessors; it is not a static snapshot of
+	    the content of the node. This is true for every NodeList, including the ones
+	    returned by the getElementsByTagName method.</p>*/
 	CL_DomNodeList get_child_nodes() const;
 
-	//: The first child of this node.
-	//- <p>If there is no such node, this returns a null node.</p>
+	/// \brief The first child of this node.
+	/** <p>If there is no such node, this returns a null node.</p>*/
 	CL_DomNode get_first_child() const;
-	
-	//: The last child of this node.
-	//- <p>If there is no such node, this returns a null node.</p>
+
+	/// \brief The last child of this node.
+	/** <p>If there is no such node, this returns a null node.</p>*/
 	CL_DomNode get_last_child() const;
-	
-	//: The node immediately preceding this node.
-	//- <p>If there is no such node, this returns a null node.</p>
+
+	/// \brief The node immediately preceding this node.
+	/** <p>If there is no such node, this returns a null node.</p>*/
 	CL_DomNode get_previous_sibling() const;
-	
-	//: The node immediately following this node.
-	//- <p>If there is no such node, this returns a null node.</p>
+
+	/// \brief The node immediately following this node.
+	/** <p>If there is no such node, this returns a null node.</p>*/
 	CL_DomNode get_next_sibling() const;
 
-	//: A NamedNodeMap containing the attributes of this node (if it is an Element) or null otherwise.
-	CL_DomNamedNodeMap get_attributes();
+	/// \brief A NamedNodeMap containing the attributes of this node (if it is an Element) or null otherwise.
+	CL_DomNamedNodeMap get_attributes() const;
 
-	//: The Document object associated with this node.
-	//- <p>This is also the Document object used to create new nodes. When this node is a Document this is null.</p>
-	CL_DomDocument get_owner_document();
+	/// \brief The Document object associated with this node.
+	/** <p>This is also the Document object used to create new nodes. When this node is a Document this is null.</p>*/
+	CL_DomDocument get_owner_document() const;
 
-	//: Returns true if this is a null node.
+	/// \brief Returns true if this is a null node.
 	bool is_null() const;
 
-	//: Returns true if this is an element node.
+	/// \brief Returns true if this is an element node.
 	bool is_element() const;
 
-	//: Returns true if this is an attribute node.
+	/// \brief Returns true if this is an attribute node.
 	bool is_attr() const;
 
-	//: Returns true if this is a text node.
+	/// \brief Returns true if this is a text node.
 	bool is_text() const;
 
-	//: Returns true if this is a CDATA section node.
+	/// \brief Returns true if this is a CDATA section node.
 	bool is_cdata_section() const;
 
-	//: Returns true if this is an entity reference node.
+	/// \brief Returns true if this is an entity reference node.
 	bool is_entity_reference() const;
 
-	//: Returns true if this is an entity node.
+	/// \brief Returns true if this is an entity node.
 	bool is_entity() const;
 
-	//: Returns true if this is a processing instruction node.
+	/// \brief Returns true if this is a processing instruction node.
 	bool is_processing_instruction() const;
 
-	//: Returns true if this is a comment node.
+	/// \brief Returns true if this is a comment node.
 	bool is_comment() const;
 
-	//: Returns true if this is a document node.
+	/// \brief Returns true if this is a document node.
 	bool is_document() const;
 
-	//: Returns true if this is a document type node.
+	/// \brief Returns true if this is a document type node.
 	bool is_document_type() const;
 
-	//: Returns true if this is a document fragment node.
+	/// \brief Returns true if this is a document fragment node.
 	bool is_document_fragment() const;
 
-	//: Returns true if this is a notation node.
+	/// \brief Returns true if this is a notation node.
 	bool is_notation() const;
 
-	//: Returns true if this node has any children.
+	/// \brief Tests whether the DOM implementation implements a specific feature and that feature is supported by this node.
+	bool is_supported(const CL_DomString &feature, const CL_DomString &version) const;
+
+	/// \brief Returns true if this node (if its an element) has any attributes.
+	bool has_attributes() const;
+
+	/// \brief Returns true if this node has any children.
 	bool has_child_nodes() const;
-	
-//! Operations:
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignment operator.
-	//- <p>All objects in the DOM are handles to the underlying implementation. Therefore this doesn't
-	//- actually copy contents between two CL_DomNode's, but instead change the two CL_DomNode's to point
-	//- at the same node in the DOM.</p>
+	/// \brief Copy assignment operator.
+	/** <p>All objects in the DOM are handles to the underlying implementation. Therefore this doesn't
+	    actually copy contents between two CL_DomNode's, but instead change the two CL_DomNode's to point
+	    at the same node in the DOM.</p>*/
 	CL_DomNode &operator =(const CL_DomNode &copy);
 
-	//: Compare operator.
+	/// \brief Compare operator.
 	bool operator ==(const CL_DomNode &other) const;
 
-	//: Inserts the node new_child before the existing child node ref_child.
-	//- <p>If refChild is a null node, inserts new_child at the end of the list of children.</p>
-	//- <p>If newChild is a DocumentFragment object, all of its children are inserted, in the same order,
-	//- before ref_child. If the new_child is already in the tree, it is first removed.</p>
-	//param new_child: The node to insert.
-	//param ref_child: The reference node, i.e., the node before which the new node must be inserted.
-	//retval: The node being inserted.
+	/// \brief Merges any adjacent Text nodes.
+	/** <p>Puts all Text nodes in the full depth of the sub-tree underneath this node, including
+	    attribute nodes, into a "normal" form where only structure (e.g., elements, comments,
+	    processing instructions, CDATA sections, and entity references) separates Text nodes, i.e.,
+	    there are neither adjacent Text nodes nor empty Text nodes.</p>
+	    <p>This can be used to ensure that the DOM view of a document is the same as if it were
+	    saved and re-loaded, and is useful when operations (such as XPointer lookups)
+	    that depend on a particular document tree structure are to be used.</p>
+	    <p><b>Note:</b> In cases where the document contains CDATASections, the normalize operation
+	    alone may not be sufficient, since XPointers do not differentiate between Text nodes and
+	    CDATASection nodes.</p>*/
+	void normalize();
+
+	/// \brief Inserts the node new_child before the existing child node ref_child.
+	/** <p>If refChild is a null node, inserts new_child at the end of the list of children.</p>
+	    <p>If newChild is a DocumentFragment object, all of its children are inserted, in the same order,
+	    before ref_child. If the new_child is already in the tree, it is first removed.</p>
+	    \param new_child The node to insert.
+	    \param ref_child The reference node, i.e., the node before which the new node must be inserted.
+	    retval: The node being inserted.*/
 	CL_DomNode insert_before(CL_DomNode &new_child, CL_DomNode &ref_child);
 
-	//: Replaces the child node old_child with new_child in the list of children.
-	//- <p>If the new_child is already in the tree, it is first removed.</p>
-	//param new_child: The new node to put in the child list.
-	//param old_child: The node being replaced in the list.
-	//retval: The node replaced.
+	/// \brief Replaces the child node old_child with new_child in the list of children.
+	/** <p>If the new_child is already in the tree, it is first removed.</p>
+	    \param new_child The new node to put in the child list.
+	    \param old_child The node being replaced in the list.
+	    retval: The node replaced.*/
 	CL_DomNode replace_child(CL_DomNode &new_child, CL_DomNode &old_child);
 
-	//: Removes the child node indicated by old_child from the list of children, and returns it.
+	/// \brief Removes the child node indicated by old_child from the list of children, and returns it.
 	CL_DomNode remove_child(CL_DomNode &old_child);
 
-	//: Adds the node new_child to the end of the list of children of this node.
-	//- <p>If the new_child is already in the tree, it is first removed.</p>
+	/// \brief Adds the node new_child to the end of the list of children of this node.
+	/** <p>If the new_child is already in the tree, it is first removed.</p>*/
 	CL_DomNode append_child(CL_DomNode new_child);
 
-	//: Returns a duplicate of this node, i.e., serves as a generic copy constructor for nodes.
-	//- <p>The duplicate node has no parent.</p>
-	//- <p>Cloning an Element copies all attributes and their values, including those generated
-	//- by the XML processor to represent defaulted attributes, but this method does not copy
-	//- any text it contains unless it is a deep clone, since the text is contained in a child
-	//- Text node. Cloning any other type of node simply returns a copy of this node.</p>
-	//param deep: If true, recursively clone the subtree under the specified node; if false, clone only the node itself (and its attributes, if it is an Element).
-	//retval: The duplicate node.
+	/// \brief Returns a duplicate of this node, i.e., serves as a generic copy constructor for nodes.
+	/** <p>The duplicate node has no parent.</p>
+	    <p>Cloning an Element copies all attributes and their values, including those generated
+	    by the XML processor to represent defaulted attributes, but this method does not copy
+	    any text it contains unless it is a deep clone, since the text is contained in a child
+	    Text node. Cloning any other type of node simply returns a copy of this node.</p>
+	    \param deep If true, recursively clone the subtree under the specified node; if false, clone only the node itself (and its attributes, if it is an Element).
+	    retval: The duplicate node.*/
 	CL_DomNode clone_node(bool deep) const;
-	
-	//: Returns whether this node is the same node as the given one.
-    //- <p>This method provides a way to determine whether two Node references returned by the implementation reference the same object.
-	//- When two Node references are references to the same object, even if through a proxy, the references may be used completely interchangeably,
-	//- such that all attributes have the same values and calling the same DOM method on either reference always has exactly the same effect.</p>
-	//param other: The node to test against.
-	//retval: Returns true if the nodes are the same, false otherwise.
-	bool is_same_node(const CL_DomNode &other) const;
 
-	//: Returns the Element interface to this node.
-	//- <p>If the node is not an Element node, then it returns a null node.</p>
+	/// \brief Returns the Element interface to this node.
+	/** <p>If the node is not an Element node, then it returns a null node.</p>*/
 	CL_DomElement to_element() const;
 
-	//: Returns the Attribute interface to this node.
-	//- <p>If the node is not an Attribute node, then it returns a null node.</p>
+	/// \brief Returns the Attribute interface to this node.
+	/** <p>If the node is not an Attribute node, then it returns a null node.</p>*/
 	CL_DomAttr to_attr() const;
 
-	//: Returns the Text interface to this node.
-	//- <p>If the node is not a Text node, then it returns a null node.</p>
+	/// \brief Returns the Text interface to this node.
+	/** <p>If the node is not a Text node, then it returns a null node.</p>*/
 	CL_DomText to_text() const;
 
-	//: Returns the CDATA Section interface to this node.
-	//- <p>If the node is not a CDATA Section node, then it returns a null node.</p>
+	/// \brief Returns the CDATA Section interface to this node.
+	/** <p>If the node is not a CDATA Section node, then it returns a null node.</p>*/
 	CL_DomCDATASection to_cdata_section() const;
 
-	//: Returns the Entity Reference interface to this node.
-	//- <p>If the node is not an Entity Reference node, then it returns a null node.</p>
+	/// \brief Returns the Entity Reference interface to this node.
+	/** <p>If the node is not an Entity Reference node, then it returns a null node.</p>*/
 	CL_DomEntityReference to_entity_reference() const;
 
-	//: Returns the Entity interface to this node.
-	//- <p>If the node is not an Entity node, then it returns a null node.</p>
+	/// \brief Returns the Entity interface to this node.
+	/** <p>If the node is not an Entity node, then it returns a null node.</p>*/
 	CL_DomEntity to_entity() const;
 
-	//: Returns the Processing Instruction interface to this node.
-	//- <p>If the node is not a Processing Instrucion node, then it returns a null node.</p>
+	/// \brief Returns the Processing Instruction interface to this node.
+	/** <p>If the node is not a Processing Instrucion node, then it returns a null node.</p>*/
 	CL_DomProcessingInstruction to_processing_instruction() const;
 
-	//: Returns the Comment interface to this node.
-	//- <p>If the node is not a Comment node, then it returns a null node.</p>
+	/// \brief Returns the Comment interface to this node.
+	/** <p>If the node is not a Comment node, then it returns a null node.</p>*/
 	CL_DomComment to_comment() const;
 
-	//: Returns the Document interface to this node.
-	//- <p>If the node is not a Document node, then it returns a null node.</p>
+	/// \brief Returns the Document interface to this node.
+	/** <p>If the node is not a Document node, then it returns a null node.</p>*/
 	CL_DomDocument to_document() const;
 
-	//: Returns the Document Type interface to this node.
-	//- <p>If the node is not a Document Type node, then it returns a null node.</p>
+	/// \brief Returns the Document Type interface to this node.
+	/** <p>If the node is not a Document Type node, then it returns a null node.</p>*/
 	CL_DomDocumentType to_document_type() const;
 
-	//: Returns the Document Fragment interface to this node.
-	//- <p>If the node is not a DocumentFragment node, then it returns a null node.</p>
+	/// \brief Returns the Document Fragment interface to this node.
+	/** <p>If the node is not a DocumentFragment node, then it returns a null node.</p>*/
 	CL_DomDocumentFragment to_document_fragment() const;
 
-	//: Returns the Notation interface to this node.
-	//- <p>If the node is not a Notation node, then it returns a null node.</p>
+	/// \brief Returns the Notation interface to this node.
+	/** <p>If the node is not a Notation node, then it returns a null node.</p>*/
 	CL_DomNotation to_notation() const;
 
-	//: Returns the first child node with the specified node name.
-	//- <p>Returns a null node if no child is found.</p>
-	CL_DomNode named_item(const std::string &name) const;
+	/// \brief Returns the first child node with the specified node name.
+	/** <p>Returns a null node if no child is found.</p>*/
+	CL_DomNode named_item(const CL_DomString &name) const;
 
-//! Implementation:
+	/// \brief Retrieves the first child node with the specified namespace URI and local name.
+	CL_DomNode named_item_ns(
+		const CL_DomString &namespace_uri,
+		const CL_DomString &local_name) const;
+
+	/// \brief Searches the node tree upwards for the namespace URI of the given qualified name.
+	CL_DomString find_namespace_uri(const CL_DomString &qualified_name) const;
+
+	/// \brief Searches the node tree upwards for the prefix name for the namespace URI.
+	CL_DomString find_prefix(const CL_DomString &namespace_uri) const;
+
+	/// \brief Returns all the nodes matching the specified xpath expression using this node as the context node.
+	std::vector<CL_DomNode> select_nodes(const CL_DomString &xpath_expression) const;
+
+/// \}
+/// \name Implementation
+/// \{
+
 protected:
-	CL_DomNode(CL_DomDocument &doc, unsigned short node_type);
+	CL_DomNode(CL_DomDocument doc, unsigned short node_type);
 
 	CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNode_Generic> impl;
 
 	friend class CL_DomDocument;
+
+	friend class CL_DomNamedNodeMap;
+/// \}
 };
 
-#endif
+
+/// \}

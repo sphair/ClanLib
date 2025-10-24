@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,65 +24,68 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_cdata_section
-#define header_dom_cdata_section
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_text.h"
 
-//: DOM CDATA Section.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>CDATA sections are used to escape blocks of text containing characters that would
-//- otherwise be regarded as markup. The only delimiter that is recognized in a CDATA
-//- section is the "]]>" string that ends the CDATA section. CDATA sections can not be
-//- nested. The primary purpose is for including material such as XML fragments, without
-//- needing to escape all the delimiters.</p>
-//- <p>The DOMString attribute of the Text node holds the text that is contained by the
-//- CDATA section. Note that this may contain characters that need to be escaped outside
-//- of CDATA sections and that, depending on the character encoding ("charset") chosen
-//- for serialization, it may be impossible to write out some characters as part of a
-//- CDATA section.</p>
-//- <p>The CDATASection interface inherits the CharacterData interface through the Text
-//- interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
-//- method.</p>
+/// \brief DOM CDATA Section.
+///
+///   <p>CDATA sections are used to escape blocks of text containing characters that would
+///    otherwise be regarded as markup. The only delimiter that is recognized in a CDATA
+///    section is the "]]>" string that ends the CDATA section. CDATA sections can not be
+///    nested. The primary purpose is for including material such as XML fragments, without
+///    needing to escape all the delimiters.</p>
+///    <p>The DOMString attribute of the Text node holds the text that is contained by the
+///    CDATA section. Note that this may contain characters that need to be escaped outside
+///    of CDATA sections and that, depending on the character encoding ("charset") chosen
+///    for serialization, it may be impossible to write out some characters as part of a
+///    CDATA section.</p>
+///    <p>The CDATASection interface inherits the CharacterData interface through the Text
+///    interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
+///    method.</p> 
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomCDATASection : public CL_DomText
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM CDATA Section handle.
+	/// \brief Constructs a DOM CDATA Section handle.
 	CL_DomCDATASection();
 
-	CL_DomCDATASection(CL_DomDocument &doc, const std::string &data);
+	CL_DomCDATASection(CL_DomDocument &doc, const CL_DomString &data);
 
 	CL_DomCDATASection(const CL_SharedPtr<CL_DomNode_Generic> &impl);
-	
+
 	~CL_DomCDATASection();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
+/// \}
 };
 
-#endif
+
+/// \}

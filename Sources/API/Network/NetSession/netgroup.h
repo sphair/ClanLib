@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,58 +24,62 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="NetSessions"
-//! header=network.h
+/// \addtogroup clanNetwork_NetSessions clanNetwork NetSessions
+/// \{
 
-#ifndef header_netgroup
-#define header_netgroup
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <list>
+#include "../api_network.h"
+#include <vector>
 #include "netcomputer.h"
 
-//: Represents a group of computers.
-//- !group=Network/NetSessions!
-//- !header=network.h!
-class CL_API_NETWORK CL_NetGroup : public std::list<CL_NetComputer>
+/// \brief Represents a group of computers.
+///
+/// \xmlonly !group=Network/NetSessions! !header=network.h! \endxmlonly
+class CL_API_NETWORK CL_NetGroup : public std::vector<CL_NetComputer>
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a group.
-	//param computer: Add this computer to group.
-	//param group: Add this group of computers to the group.
+	/// \brief Constructs a group.
+	///
+	/// \param computer Add this computer to group.
+	/// \param group Add this group of computers to the group.
 	CL_NetGroup();
 
 	CL_NetGroup(const CL_NetComputer &computer);
 
-	CL_NetGroup(const std::list<CL_NetComputer> &group);
+	CL_NetGroup(const std::vector<CL_NetComputer> &group);
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Send packet to all the computers in the group.
-	void send(const std::string &packet_channel, const CL_NetPacket &packet, bool reliable = true);
+	/// \brief Send packet to all the computers in the group.
+	void send(const CL_String &packet_channel, const CL_DataBuffer &packet, bool reliable = true);
 
-	//: Disconnects all computers in the group.
-	void disconnect();
+	/// \brief Disconnects all computers in the group.
+	void disconnect(const CL_String &reason);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+
+/// \}

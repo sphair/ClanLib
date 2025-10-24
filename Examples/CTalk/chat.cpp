@@ -10,21 +10,16 @@
 /////////////////////////////////////////////////////////////////////////////
 // Chat construction:
 
-Chat::Chat(IRCConnection *connection, const std::string &filter, CL_Component *parent) :
-	CL_Component(parent),
-	connection(connection),
-	filter(filter),
-	font("InputBox/font", get_style_manager()->get_resources())
+Chat::Chat(IRCConnection *connection, const CL_String &filter, CL_GUIComponent *parent)
+: CL_GUIComponent(parent), connection(connection), filter(filter), font(get_gc(), get_font_description())
 {
-	scroll = new CL_ScrollBar(0, 0, false, this);
-	scroll->set_width(16);
-	scroll->set_tracking(true);
-//	scroll->set_fixed_length_mode(true);
-//	scroll->set_slider_length(1);
+	scroll = new CL_ScrollBar(this);
+	scroll->set_vertical();
+	scroll->set_geometry(CL_Rect(get_width() - 16, 0, get_width(), get_height()));
 
-	slots.connect(sig_resize(), this, &Chat::on_resize);
-	slots.connect(sig_paint(), this, &Chat::on_paint);
-	slots.connect(scroll->sig_value_changed(), this, &Chat::on_scroll_value_changed);
+	func_render().set(this, &Chat::on_render);
+	func_resized().set(this, &Chat::on_resize);
+	scroll->func_scroll().set(this, &Chat::on_scroll);
 	slots.connect(connection->sig_command_received(), this, &Chat::on_connection_command_received);
 	slots.connect(connection->sig_unknown_command_received(), this, &Chat::on_connection_unknown_command_received);
 	slots.connect(connection->sig_numeric_reply(), this, &Chat::on_connection_numeric_reply);
@@ -43,9 +38,17 @@ Chat::Chat(IRCConnection *connection, const std::string &filter, CL_Component *p
 	slots.connect(connection->sig_ping(), this, &Chat::on_connection_ping);
 	slots.connect(connection->sig_typepacket, this, &Chat::on_typepacket);
 
-	color_text = CL_Color(0,0,0);
-	color_channel = CL_Color(0,255,0);
-	color_system = CL_Color(0,0,255);
+	color_text = CL_Colorf(0.0f,0.0f,0.0f);
+	color_channel = CL_Colorf(0.0f,1.0f,0.0f);
+	color_system = CL_Colorf(0.0f,0.0f,1.0f);
+}
+
+CL_FontDescription Chat::get_font_description()
+{
+	CL_FontDescription desc;
+	desc.set_typeface_name("Courier New");
+	desc.set_height(-13);
+	return desc;
 }
 
 Chat::~Chat()
@@ -61,12 +64,12 @@ Chat::~Chat()
 /////////////////////////////////////////////////////////////////////////////
 // Chat operations:
 
-void Chat::add_line(const std::string &text, const CL_Color &color)
+void Chat::add_line(const CL_String &text, const CL_Colorf &color)
 {
 	add_line("", text, color);
 }
 
-void Chat::add_line(const std::string &nick, const std::string &text, const CL_Color &color)
+void Chat::add_line(const CL_String &nick, const CL_String &text, const CL_Colorf &color)
 {
 	ChatLine *line = new ChatLine;
 	line->nick = nick;
@@ -76,66 +79,60 @@ void Chat::add_line(const std::string &nick, const std::string &text, const CL_C
 
 	if (lines.size() >= 1)
 	{
-		scroll->set_max_value(scroll->get_max_value()+1);
-		if (scroll->get_value() == scroll->get_max_value()-1) scroll->set_value(scroll->get_max_value());
-	
-		//signal that we want to be repainted
-		update();
+		scroll->set_max(lines.size());
+		// if (scroll->get_position() == scroll->get_max()-2)
+			scroll->set_position(scroll->get_max()-1);
 	}
-
+	invalidate_rect();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Chat implementation:
 
-void Chat::on_resize(int old_width, int old_height)
+void Chat::on_resize()
 {
-	scroll->set_position(CL_Rect(get_width()-scroll->get_width(), 0, get_width(), get_height()));
+	scroll->set_geometry(CL_Rect(get_width()-scroll->get_width(), 0, get_width(), get_height()));
 }
 
-void Chat::on_paint()
+void Chat::on_render(CL_GraphicContext &gc, const CL_Rect &clip_rect)
 {
-	CL_Gradient gradient(
-		CL_Color::aliceblue, CL_Color::lightskyblue, CL_Color::aqua, CL_Color::deepskyblue);
-	CL_Display::fill_rect(CL_Rect(0, 0, get_width()-scroll->get_width(), get_height()), gradient);
-
 	int border = 5;
 	int y = get_height() - border;
+	CL_Rect client_area(0, 0, get_width(), get_height() - border);
 
 	int indent = 120;
 
-	std::map<std::string, std::string>::iterator it_typetext;
+	std::map<CL_String, CL_String>::iterator it_typetext;
 	for (it_typetext = typetext.begin(); it_typetext != typetext.end(); ++it_typetext)
 	{
-		std::string nick = it_typetext->first;
-		std::string text = it_typetext->second;
+		CL_String nick = it_typetext->first;
+		CL_String text = it_typetext->second;
 
 		// Skip empty lines:
-		if (text.empty()) continue;
+		if (text.empty())
+			continue;
 
-		font.set_color(
-			color_system.get_red()/255.0f,
-			color_system.get_green()/255.0f,
-			color_system.get_blue()/255.0f,
-			color_system.get_alpha()/255.0f);
-
-		CL_Size nick_size = font.get_size("** "+nick+": ");
+		CL_Size nick_size = font.get_text_size(gc, "** "+nick+": ");
 		if (nick_size.width < indent) nick_size.width = indent;
 
-		CL_Size bounding_size = font.get_size(text, CL_Size(get_width()-nick_size.width-2*border, 0));
+		CL_Size bounding_size = font.get_text_size(gc, text);//, CL_Size(get_width()-nick_size.width-2*border, 0));
 		y -= bounding_size.height + 2;
 
-		if (!nick.empty()) font.draw(border, y, "** "+nick+": ");
-		font.draw(CL_Rect(CL_Point(border+nick_size.width, y), bounding_size), text);
+		if (!nick.empty()) font.draw_text(gc, border, y, "** "+nick+": ", color_system);
+		//font.draw_text(gc, CL_Rect(CL_Point(border+nick_size.width, y), bounding_size), text, color_system);
+		font.draw_text(gc, border+nick_size.width, y, text, color_system);
 	}
 
-	y -= 5;
+	// y -= 5;
 
-	int skip_lines = scroll->get_max_value()-scroll->get_value();
+	int skip_lines = scroll->get_max()-(scroll->get_position()+1);
 
 	std::list<ChatLine *>::reverse_iterator it;
 	for (it = lines.rbegin(); it != lines.rend(); ++it)
 	{
+		if (y < 0)
+			break;
+
 		if (skip_lines > 0)
 		{
 			skip_lines--;
@@ -143,109 +140,117 @@ void Chat::on_paint()
 		}
 
 		ChatLine *line = *it;
+		if (line->layout_width != client_area.get_width())
+		{
+			line->layout.clear();
+			if (!line->nick.empty())
+				line->layout.add_text("<"+line->nick+"> ", font, line->color);
+			line->layout.add_text(line->text, font, line->color);
+			line->layout.layout(gc, client_area.get_width()-border-scroll->get_width());
+			line->layout_width = client_area.get_width();
+		}
 
-		font.set_color(
-			line->color.get_red()/255.0f,
-			line->color.get_green()/255.0f,
-			line->color.get_blue()/255.0f,
-			line->color.get_alpha()/255.0f);
-
-		CL_Size nick_size = font.get_size("<"+line->nick+"> ");
+		CL_Size nick_size = font.get_text_size(gc, "<"+line->nick+"> ");
 		if (nick_size.width < indent) nick_size.width = indent;
 
-		CL_Size bounding_size = font.get_size(line->text, CL_Size(get_width()-nick_size.width-2*border, 0));
-		y -= bounding_size.height + 2;
+		y -= line->layout.get_size().height;
 
-		if (!line->nick.empty()) font.draw(border, y, "<"+line->nick+">");
-		font.draw(CL_Rect(CL_Point(border+nick_size.width, y), bounding_size), line->text);
+		line->layout.set_position(CL_Point(border, y));
+		line->layout.draw_layout(gc);
+	}
+
+	CL_FontMetrics font_metrics = font.get_font_metrics(gc);
+	int page_step = max(1, get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
+	if (scroll->get_page_step() != page_step)
+		scroll->set_ranges(0, lines.empty() ? 1 : lines.size(), 1, page_step);
+}
+
+void Chat::on_scroll()
+{
+	invalidate_rect();
+}
+
+void Chat::on_connection_command_received(const CL_String &prefix, const CL_String &command, const std::vector<CL_String> &params)
+{
+}
+
+void Chat::on_connection_unknown_command_received(const CL_String &prefix, const CL_String &command, const std::vector<CL_String> &params)
+{
+	if (filter.empty() && command != "QUIT")
+	{
+		add_line(CL_IRCConnection::extract_nick(prefix), cl_format("Unknown command %1 received.", command), color_system);
 	}
 }
 
-void Chat::on_scroll_value_changed(int value)
-{
-}
-
-void Chat::on_connection_command_received(const std::string &prefix, const std::string &command, const std::vector<std::string> &params)
-{
-}
-
-void Chat::on_connection_unknown_command_received(const std::string &prefix, const std::string &command, const std::vector<std::string> &params)
+void Chat::on_connection_numeric_reply(const CL_String &prefix, int command, const std::vector<CL_String> &params)
 {
 	if (filter.empty())
 	{
-		add_line(CL_IRCConnection::extract_nick(prefix), CL_String::format("Unknown command %1 received.", command), color_system);
-	}
-}
-
-void Chat::on_connection_numeric_reply(const std::string &prefix, int command, const std::vector<std::string> &params)
-{
-	if (filter.empty())
-	{
-		std::string param_line;
+		CL_String param_line;
 		for (unsigned int i=0; i<params.size(); i++) param_line += params[i] + " ";
-		add_line(CL_IRCConnection::extract_nick(prefix), CL_String::format("[%1] %2", CL_String::from_int(command), param_line), color_system);
+		add_line(CL_IRCConnection::extract_nick(prefix), cl_format("[%1] %2", CL_StringHelp::int_to_text(command), param_line), color_system);
 	}
 }
 
-void Chat::on_connection_name_reply(const std::string &self, const std::string &channel, const std::vector<std::string> &users)
+void Chat::on_connection_name_reply(const CL_String &self, const CL_String &channel, const std::vector<CL_String> &users)
 {
 }
 
-void Chat::on_connection_nick(const std::string &old_nick, const std::string &new_nick)
+void Chat::on_connection_nick(const CL_String &old_nick, const CL_String &new_nick)
 {
-	add_line(CL_String::format("%1 is now known as %2", CL_IRCConnection::extract_nick(old_nick), CL_IRCConnection::extract_nick(new_nick)), color_channel);
+	add_line(cl_format("%1 is now known as %2", CL_IRCConnection::extract_nick(old_nick), CL_IRCConnection::extract_nick(new_nick)), color_channel);
 }
 
-void Chat::on_connection_join(const std::string &nick, const std::string &channel)
+void Chat::on_connection_join(const CL_String &nick, const CL_String &channel)
 {
 	if (channel == filter)
 	{
-		add_line(CL_String::format("%1 joined %2", CL_IRCConnection::extract_nick(nick), channel), color_channel);
+		add_line(cl_format("%1 joined %2", CL_IRCConnection::extract_nick(nick), channel), color_channel);
 	}
 }
 
-void Chat::on_connection_part(const std::string &nick, const std::string &channel, const std::string &reason)
+void Chat::on_connection_part(const CL_String &nick, const CL_String &channel, const CL_String &reason)
 {
 	if (channel == filter)
 	{
 		if (reason.empty())
 		{
-			add_line(CL_String::format("%1 left %2", CL_IRCConnection::extract_nick(nick), channel), color_channel);
+			add_line(cl_format("%1 left %2", CL_IRCConnection::extract_nick(nick), channel), color_channel);
 		}
 		else
 		{
-			add_line(CL_String::format("%1 left %2 (%3)", CL_IRCConnection::extract_nick(nick), channel, reason), color_channel);
+			add_line(cl_format("%1 left %2 (%3)", CL_IRCConnection::extract_nick(nick), channel, reason), color_channel);
 		}
 	}
 }
 
-void Chat::on_connection_mode(const std::string &prefix, const std::string &receiver, const std::string &mode, const std::vector<std::string> &params)
+void Chat::on_connection_mode(const CL_String &prefix, const CL_String &receiver, const CL_String &mode, const std::vector<CL_String> &params)
 {
-	add_line(CL_String::format("%1 sets mode %3 on %2", CL_IRCConnection::extract_nick(prefix), CL_IRCConnection::extract_nick(receiver), mode), color_channel);
+	add_line(cl_format("%1 sets mode %3 on %2", CL_IRCConnection::extract_nick(prefix), CL_IRCConnection::extract_nick(receiver), mode), color_channel);
 }
 
-void Chat::on_connection_topic(const std::string &prefix, const std::string &channel, const std::string &topic)
+void Chat::on_connection_topic(const CL_String &prefix, const CL_String &channel, const CL_String &topic)
 {
 	if (channel == filter)
 	{
-		add_line(CL_String::format("Topic on %2 is '%3', set by %1", CL_IRCConnection::extract_nick(prefix), channel, topic), color_channel);
+		add_line(cl_format("Topic on %2 is '%3', set by %1", CL_IRCConnection::extract_nick(prefix), channel, topic), color_channel);
 	}
 }
 
-void Chat::on_connection_invite(const std::string &prefix, const std::string &nick, const std::string &channel)
+void Chat::on_connection_invite(const CL_String &prefix, const CL_String &nick, const CL_String &channel)
 {
-	add_line(CL_String::format("%1 invites %2 to %3", CL_IRCConnection::extract_nick(prefix), CL_IRCConnection::extract_nick(nick), channel), color_channel);
+	add_line(cl_format("%1 invites %2 to %3", CL_IRCConnection::extract_nick(prefix), CL_IRCConnection::extract_nick(nick), channel), color_channel);
 }
 
-void Chat::on_connection_kick(const std::string &prefix, const std::string &channel, const std::string &user, const std::string &comment)
+void Chat::on_connection_kick(const CL_String &prefix, const CL_String &channel, const CL_String &user, const CL_String &comment)
 {
 	if (channel == filter || filter.empty())
 	{
-		add_line(CL_String::format("%1 kicked %3 from %2 (%4)", CL_IRCConnection::extract_nick(prefix), channel, CL_IRCConnection::extract_nick(user), comment), color_channel);
+		add_line(cl_format("%1 kicked %3 from %2 (%4)", CL_IRCConnection::extract_nick(prefix), channel, CL_IRCConnection::extract_nick(user), comment), color_channel);
 	}
 }
 
-void Chat::on_connection_privmsg(const std::string &prefix, const std::string &receiver, const std::string &text)
+void Chat::on_connection_privmsg(const CL_String &prefix, const CL_String &receiver, const CL_String &text)
 {
 	if (receiver == filter)
 	{
@@ -253,7 +258,7 @@ void Chat::on_connection_privmsg(const std::string &prefix, const std::string &r
 	}
 }
 
-void Chat::on_connection_notice(const std::string &prefix, const std::string &receiver, const std::string &text)
+void Chat::on_connection_notice(const CL_String &prefix, const CL_String &receiver, const CL_String &text)
 {
 	if (receiver == filter || receiver.substr(0, 1) != "#")
 	{
@@ -261,15 +266,15 @@ void Chat::on_connection_notice(const std::string &prefix, const std::string &re
 	}
 }
 
-void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::string &receiver, const std::string &command, const std::string &data)
+void Chat::on_connection_privmsg_ctcp(const CL_String &prefix, const CL_String &receiver, const CL_String &command, const CL_String &data)
 {
-	std::string nick = prefix.substr(0,prefix.find("!"));
+	CL_String nick = prefix.substr(0,prefix.find("!"));
 
 	if (command == "ACTION")
 	{
 		if (filter == receiver)
 		{
-			add_line(CL_String::format("*%1 %2", CL_IRCConnection::extract_nick(nick), data), color_text);
+			add_line(cl_format("* %1 %2", CL_IRCConnection::extract_nick(nick), data), color_text);
 		}
 		return;
 	}
@@ -280,42 +285,41 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 
 	if (command == "DCC")
 	{
-		add_line(CL_String::format("%1 DCC line: %2", CL_IRCConnection::extract_nick(nick), data), color_text);
+		add_line(cl_format("%1 DCC line: %2", CL_IRCConnection::extract_nick(nick), data), color_text);
 
-		std::vector<std::string> tokens = CL_String::tokenize(data, " ");
+		std::vector<CL_TempString> tokens = CL_StringHelp::split_text(data, " ");
 		if (tokens.size() >= 4 && tokens[0] == "SEND")
 		{
-			std::string filename = "dcc_received_file"; // tokens[1];
-			unsigned int address = CL_String::to_int(tokens[2]);
-			std::string ip_address = CL_String::format(
+			CL_String filename = "dcc_received_file"; // tokens[1];
+			unsigned int address = CL_StringHelp::text_to_int(tokens[2]);
+			CL_String ip_address = cl_format(
 				"%1.%2.%3.%4",
-				CL_String::from_int((address>>24)&0xff),
-				CL_String::from_int((address>>16)&0xff),
-				CL_String::from_int((address>>8)&0xff),
-				CL_String::from_int(address&0xff));
-			std::string port = tokens[3];
+				CL_StringHelp::int_to_text((address>>24)&0xff),
+				CL_StringHelp::int_to_text((address>>16)&0xff),
+				CL_StringHelp::int_to_text((address>>8)&0xff),
+				CL_StringHelp::int_to_text(address&0xff));
+			CL_String port = tokens[3];
 			int size = 0;
-			if (tokens.size() >= 5) size = CL_String::to_int(tokens[4]);
+			if (tokens.size() >= 5) size = CL_StringHelp::text_to_int(tokens[4]);
 
 			try
 			{
-				CL_Socket sock(CL_Socket::tcp);
-				
-				sock.connect(CL_IPAddress(ip_address, port));
+				CL_TCPConnection sock;
+				sock.connect(CL_SocketName(ip_address, port));
 
-				CL_OutputSource_File outputfile(filename);
+				CL_File outputfile(filename, CL_File::create_always);
 				char buffer[64*1024];
 				while (true)
 				{
-					int data_read = sock.input.read(buffer, 64*1024);
+					int data_read = sock.read(buffer, 64*1024);
 					if (data_read == 0) break;
 					outputfile.write(buffer, data_read);
-					sock.output.write_int32(htonl(data_read));
+					sock.write_int32(htonl(data_read));
 				}
 			}
-			catch (CL_Error err)
+			catch (CL_Exception& exception)
 			{
-				add_line(CL_String::format("%1 DCC failed: %2", CL_IRCConnection::extract_nick(nick), err.message), color_text);
+				add_line(cl_format("%1 DCC failed: %2", CL_IRCConnection::extract_nick(nick), exception.message), color_text);
 			}
 		}
 		else if (tokens.size() == 4 && tokens[0] == "CHAT" && tokens[1] == "chat")
@@ -331,7 +335,7 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 		}
 		else
 		{
-			add_line(CL_String::format("%1 FINGER REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
+			add_line(cl_format("%1 FINGER REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
 		}
 	}
 	else if (command == "VERSION")
@@ -346,7 +350,7 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 		}
 		else
 		{
-			add_line(CL_String::format("%1 VERSION REPLY: %2", CL_IRCConnection::extract_nick(nick), data), color_text);
+			add_line(cl_format("%1 VERSION REPLY: %2", CL_IRCConnection::extract_nick(nick), data), color_text);
 		}
 	}
 	else if (command == "USERINFO")
@@ -357,7 +361,7 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 		}
 		else
 		{
-			add_line(CL_String::format("%1 USERINFO REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
+			add_line(cl_format("%1 USERINFO REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
 		}
 	}
 	else if (command == "CLIENTINFO")
@@ -368,7 +372,7 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 		}
 		else
 		{
-			add_line(CL_String::format("%1 CLIENTINFO REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
+			add_line(cl_format("%1 CLIENTINFO REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
 		}
 	}
 	else if (command == "PING")
@@ -383,20 +387,20 @@ void Chat::on_connection_privmsg_ctcp(const std::string &prefix, const std::stri
 		}
 		else
 		{
-			add_line(CL_String::format("%1 TIME REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
+			add_line(cl_format("%1 TIME REPLY: %2", CL_IRCConnection::extract_nick(nick), data.substr(1)), color_text);
 		}
 	}
 	else
 	{
-		add_line(CL_String::format("%1 CTCP %2: %3", CL_IRCConnection::extract_nick(nick), command, data), color_text);
+		add_line(cl_format("%1 CTCP %2: %3", CL_IRCConnection::extract_nick(nick), command, data), color_text);
 	}
 }
 
-void Chat::on_connection_notice_ctcp(const std::string &prefix, const std::string &receiver, const std::string &command, const std::string &data)
+void Chat::on_connection_notice_ctcp(const CL_String &prefix, const CL_String &receiver, const CL_String &command, const CL_String &data)
 {
 	if (command == "PING")
 	{
-		add_line(CL_String::format("%1 PING: %2 ms", CL_IRCConnection::extract_nick(prefix), CL_String::from_int(CL_System::get_time()-CL_String::to_int(data))), color_text);
+		add_line(cl_format("%1 PING: %2 ms", CL_IRCConnection::extract_nick(prefix), CL_StringHelp::int_to_text(CL_System::get_time()-CL_StringHelp::text_to_int(data))), color_text);
 	}
 	else if (filter.empty())
 	{
@@ -404,12 +408,11 @@ void Chat::on_connection_notice_ctcp(const std::string &prefix, const std::strin
 	}
 }
 
-void Chat::on_connection_ping(const std::string &daemon1, const std::string &daemon2)
+void Chat::on_connection_ping(const CL_String &daemon1, const CL_String &daemon2)
 {
-	add_line("Ping...uh pong!? - we gotta clone mirc's most important feature ;)", color_system);
 }
 
-void Chat::on_typepacket(const std::string &from, const std::string &receiver, const std::string &text)
+void Chat::on_typepacket(const CL_String &from, const CL_String &receiver, const CL_String &text)
 {
 	if (receiver == filter)
 	{

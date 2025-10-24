@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,70 +27,80 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_directory_scanner_win32
-#define header_directory_scanner_win32
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../Generic/directory_scanner_generic.h"
+#include "../directory_scanner_impl.h"
 
 #include <io.h>
 #include <direct.h>
 
-class CL_DirectoryScanner_Win32: public CL_DirectoryScanner_Generic
+class CL_DirectoryScanner_Win32: public CL_DirectoryScanner_Impl
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Construct initial directory scanner.
+	/// \brief Construct initial directory scanner.
 	CL_DirectoryScanner_Win32();
 
-	//: Copy constructor.
+	/// \brief Copy constructor.
 	CL_DirectoryScanner_Win32(const CL_DirectoryScanner_Win32 &copy);
 
 	virtual ~CL_DirectoryScanner_Win32();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Scan for files in a directory.
-	virtual bool scan (const std::string &pathname);
+	/// \brief Scan for files in a directory.
+	virtual bool scan (const CL_String &pathname);
 
-	//: Scan for files matching a pattern.
-	virtual bool scan (const std::string &pathname, const std::string &pattern);
+	/// \brief Scan for files matching a pattern.
+	virtual bool scan (const CL_String &pathname, const CL_String &pattern);
 
-	//: Returns the path of the directory being scanned.
-	virtual std::string get_directory_path();
+	/// \brief Returns the path of the directory being scanned.
+	virtual CL_String get_directory_path();
 
-	//: Returns the size of the current found file.
+	/// \brief Returns the size of the current found file.
 	virtual int get_size();
 
-	//: Returns the name of the current found file.
-	virtual std::string get_name();
-	
-	//: Returns the name of the current found file, including the directory path.
-	virtual std::string get_pathname();
-	
-	//: Returns true if filename is a directory.
+	/// \brief Returns the name of the current found file.
+	virtual CL_String get_name();
+
+	/// \brief Returns the name of the current found file, including the directory path.
+	virtual CL_String get_pathname();
+
+	/// \brief Returns true if filename is a directory.
 	virtual bool is_directory();
 
-	//: Returns true if filename is hidden.
+	/// \brief Returns true if filename is hidden.
 	virtual bool is_hidden();
 
-	//: Returns true if filename is readable.
+	/// \brief Returns true if filename is readable.
 	virtual bool is_readable();
 
-	//: Returns true if filename is writable.
+	/// \brief Returns true if filename is writable.
 	virtual bool is_writable();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Find next file in directory scan. Returns false if no more files was found.
+	/// \brief Find next file in directory scan. Returns false if no more files was found.
 	virtual bool next();
 
 //! Implementation
 private:
-	std::string path_with_ending_slash(const std::string &path);
+	CL_String path_with_ending_slash(const CL_String &path);
 
 	WIN32_FIND_DATA fileinfo;
 
@@ -98,9 +108,10 @@ private:
 
 	bool first_next;
 
-	std::string scan_exp;
+	CL_String scan_exp;
 
-	std::string directory_path;
+	CL_String directory_path;
+/// \}
 };
 
-#endif
+

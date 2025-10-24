@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,24 +31,29 @@
 #include "world.h"
 #include "gameobject_ghost.h"
 #include "gameobject_pacman.h"
+#include "fontblowup.h"
+#include "framerate_counter.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // World construction:
 
-World::World(CL_ResourceManager *resources) :
+World::World(CL_ResourceManager *resources, CL_DisplayWindow &window) :
 	resources(resources), map(0), player(0), score(0)
 {
+	gc = window.get_gc();
+
 	// Load all resources in the game section now. This isn't a
 	// requirement, but prevents game from loading them when object is
 	// first time created.
-	resources->load_section("Game");
+//FIXME:	resources->load_section("Game");
 
-	fnt_clansoft = CL_Font("Game/fnt_clansoft", resources);
-	fnt_clansoft.set_alpha(0.5f);
+//FIXME:	fnt_clansoft = CL_Font("Game/fnt_clansoft", resources);
+//FIXME:	fnt_clansoft.set_alpha(0.5f);
+	fnt_clansoft = CL_Font_Texture(gc, L"Tahoma", 32);
 
-	sample = CL_SoundBuffer("resources/ancient.mod");
+//	sample = CL_SoundBuffer("resources/ancient.mod");
 
-	map = new Map(resources);
+	map = new Map(resources, gc);
 }
 
 World::~World()
@@ -62,7 +67,7 @@ World::~World()
 	}
 	objects.clear();
 	
-	resources->unload_section("Game");
+//FIXME:	resources->unload_section("Game");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,18 +78,23 @@ World::~World()
 
 void World::run(CL_DisplayWindow &window)
 {
+	game_display_window = window;
+
+	gc = window.get_gc();
+
 	quit = false;
-	CL_Slot slot_key_down = window.get_ic()->get_keyboard().sig_key_down().connect(this, &World::on_key_down);
-	
+	CL_Slot slot_key_down = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::on_key_down);
+
 	// Create map:
 	map->generate_level(51, 51, 20);
 
 	// Populate map with pacman:
 	player = new GameObject_Pacman(map->get_width()/2, map->get_height()/2, this);
+	player->AttachKeyboard(game_display_window);
 	objects.push_back(player);
 
 	// Create four ghosts in each corner of map:
-	for (int i=0; i<4; i++)
+//FIXME: (why was this loop in place?)	for (int i=0; i<4; i++)
 	{
 		objects.push_back(new GameObject_Ghost(1, 1, this));
 		objects.push_back(new GameObject_Ghost(map->get_width()-2, 1, this));
@@ -92,14 +102,14 @@ void World::run(CL_DisplayWindow &window)
 		objects.push_back(new GameObject_Ghost(map->get_width()-2, map->get_height()-2, this));
 	}
 
+
 	// Prepare the music
-	CL_SoundBuffer_Session playback(sample.prepare());
-	playback.set_looping(true);
-	playback.play();
+//	CL_SoundBuffer_Session playback(sample.prepare());
+//	playback.set_looping(true);
+//	playback.play();
 
 	// Start the game simulation:
 	int start_time = CL_System::get_time();
-	int cur_frame = 0;
 
 	int begin_time = CL_System::get_time();
 	int score_time = CL_System::get_time();
@@ -107,13 +117,14 @@ void World::run(CL_DisplayWindow &window)
 	int center_x = 0;
 	int center_y = 0;
 
-	CL_FramerateCounter frameratecounter;
+	bool welcome_shown = false;
+
+	FramerateCounter frameratecounter;
 
 	while (!quit)
 	{
 		float time_elapsed = (CL_System::get_time() - begin_time)/(float) 1000;
 		begin_time = CL_System::get_time();
-		cur_frame++;
 
 		if (CL_System::get_time()-score_time > 1000 && player != NULL)
 		{
@@ -127,15 +138,30 @@ void World::run(CL_DisplayWindow &window)
 
 		if (player != NULL)
 		{
-			center_x = int((player->get_x()+0.5)*width-window.get_width()/2);
-			center_y = int((player->get_y()+0.5)*height-window.get_height()/2);
-			if (center_x < 0) center_x = 0;
-			if (center_y < 0) center_y = 0;
-			if (center_x > map->get_width()*width-window.get_width()) center_x = map->get_width()*width-window.get_width();
-			if (center_y > map->get_height()*height-window.get_height()) center_y = map->get_height()*height-window.get_height();
+			if (gc.get_width() > map->get_width()*width)
+			{
+				center_x = -(gc.get_width()/2-map->get_width()*width/2);
+			}
+			else
+			{
+				center_x = int((player->get_x()+0.5)*width-gc.get_width()/2);
+				if (center_x < 0) center_x = 0;
+				if (center_x > map->get_width()*width-gc.get_width()) center_x = map->get_width()*width-gc.get_width();
+			}
+			if (gc.get_height() > map->get_height()*height)
+			{
+				center_y = -(gc.get_height()/2-map->get_height()*height/2);
+			}
+			else
+			{
+				center_y = int((player->get_y()+0.5)*height-gc.get_height()/2);
+				if (center_y < 0) center_y = 0;
+				if (center_y > map->get_height()*height-gc.get_height()) center_y = map->get_height()*height-gc.get_height();
+			}
 		}
 		
-		map->draw(center_x, center_y, window.get_gc());
+		gc.clear();
+		map->draw(center_x, center_y, gc);
 
 		std::list<GameObject*>::iterator it;
 		for (
@@ -144,17 +170,17 @@ void World::run(CL_DisplayWindow &window)
 			it++)
 		{
 			GameObject *cur = *it;
-			cur->show(center_x, center_y, window.get_gc());
+			cur->show(center_x, center_y, gc);
 		}
+
+		gc.flush_batcher();
 
 		float time_elapsed2 = time_elapsed;
 		while (time_elapsed2 > 0)
 		{
 			float turn_time = (time_elapsed2 > 0.05f) ? 0.05f : time_elapsed2;
-			for (
-				it = objects.begin();
-				it != objects.end();
-				)
+			it = objects.begin();
+			while (it != objects.end())
 			{
 				if ((*it)->turn(turn_time) == false)
 				{
@@ -163,7 +189,9 @@ void World::run(CL_DisplayWindow &window)
 					it = objects.erase(it);
 				}
 				else
-					++it;
+				{
+					it++;
+				}
 			}
 			
 			time_elapsed2 -= 0.05f;
@@ -171,73 +199,80 @@ void World::run(CL_DisplayWindow &window)
 
 		if (player == NULL)
 		{
-			fnt_clansoft.set_alignment(origin_bottom_center);
-			fnt_clansoft.draw(window.get_width()/2, 320, "YOU ARE DEAD", window.get_gc());
-			fnt_clansoft.draw(window.get_width()/2, 360, "Press space to restart", window.get_gc());
+			CL_String text1 = "YOU ARE DEAD";
+			CL_String text2 = "Press space to restart";
+			CL_Size size1 = fnt_clansoft.get_text_size(gc, text1);
+			CL_Size size2 = fnt_clansoft.get_text_size(gc, text2);
+			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size1.width/2, gc.get_width()/2 - size1.height, text1, CL_Colorf::firebrick);
+			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size2.width/2, gc.get_height()*3/4 - size2.height, text2, CL_Colorf::lightgrey);
 		}
 		
-		if ((CL_System::get_time()-start_time) <= 3000) // 5 sec
+		if ((CL_System::get_time()-start_time) <= 3000) // 3 sec
 		{
-			fnt_clansoft.set_alignment(origin_bottom_center);
-			fnt_clansoft.draw(window.get_width()/2, window.get_height() - 20, "Welcome to the ClanSoft Pacman Game", window.get_gc());
+			CL_String text1 = "Welcome to the Pacman Game";
+			CL_Size size1 = fnt_clansoft.get_text_size(gc, text1);
+			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size1.width/2, gc.get_height() - 20 - size1.height, text1, CL_Colorf::lightgoldenrodyellow);
 		}
-/*		else if (welcome_shown == false && blowups.size() < 10)
+		else if (welcome_shown == false && blowups.size() < 10)
 		{
-			blowups.push_back(new FontBlowUp("Welcome to the ClanSoft Pacman Game", 320, 20, fnt_clansoft));
+			blowups.push_back(new FontBlowUp(gc, "Welcome to the Pacman Game", gc.get_width()/2, gc.get_height() - 20, fnt_clansoft, CL_Colorf::lightgoldenrodyellow));
 			welcome_shown = true;
-		}*/
-		
-		int fps = frameratecounter.get_fps();
-		fnt_clansoft.set_alignment(origin_top_left);
-		fnt_clansoft.draw(20, 20, CL_String::from_int(fps) + " fps");
+		}
 
-		fnt_clansoft.set_alignment(origin_top_right);
-		fnt_clansoft.draw(window.get_width()-20, 20, CL_String::format("%1 bonus bananas", score), window.get_gc());
-/*
+		CL_String fps = cl_format("%1 fps", frameratecounter.get_framerate());
+		fnt_clansoft.draw_text(gc, 20, 30, fps);
+
+		CL_String text2 = cl_format("%1 bonus bananas", score);
+		CL_Size size2 = fnt_clansoft.get_text_size(gc, text2);
+		fnt_clansoft.draw_text(gc, gc.get_width() - 20 - size2.width, 30, text2);
+
 		{ // vc++ needs this scope to ensure for() is scoped...
 			for (
 				std::list<FontBlowUp*>::iterator it = blowups.begin();
 				it != blowups.end();
 				)
 			{
-				if ((*it)->show(time_elapsed) == false)
+				if ((*it)->show(gc, time_elapsed) == false)
 				{
 					delete *it;
 					it = blowups.erase(it);
 				}
 				else
-					++it;
+				{
+					it++;
+				}
 			}
 		}
-*/
-		window.flip();
+
+		window.flip(0);
+		frameratecounter.frame_shown();
 
 		if (map->get_eggs_left() == 0) break; // level completed
 
-		CL_System::keep_alive();
+		if (CL_DisplayMessageQueue::has_messages())
+			CL_DisplayMessageQueue::process();
 	}
 
-	float delta_time = (CL_System::get_time()-start_time)/(float) 1000;
-	std::cout << "Frames per second: " << cur_frame / delta_time << std::endl;
+	CL_Console::write_line("Frames per second: %1", frameratecounter.get_framerate());
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // World implementation:
 
-void World::on_key_down(const CL_InputEvent &key)
+void World::on_key_down(const CL_InputEvent &key, const CL_InputState &state)
 {
 	if (key.id == CL_KEY_ESCAPE) quit = true;
 
 	if (key.id == CL_KEY_SPACE && player == NULL)
 	{
 		player = new GameObject_Pacman(map->get_width()/2, map->get_height()/2, this);
+		player->AttachKeyboard(game_display_window);
 		objects.push_back(player);
-/*
+
 		if (blowups.size() < 10)
 		{
-			blowups.push_back(new FontBlowUp("YOU ARE DEAD", 320, 320, fnt_clansoft));
-			blowups.push_back(new FontBlowUp("Press space to restart", 320, 360, fnt_clansoft));
+			blowups.push_back(new FontBlowUp(gc, "YOU ARE DEAD", 320, 320, fnt_clansoft, CL_Colorf::firebrick));
+			blowups.push_back(new FontBlowUp(gc, "Press space to restart", 320, 360, fnt_clansoft, CL_Colorf::lightgrey));
 		}
-*/		
 	}
 }

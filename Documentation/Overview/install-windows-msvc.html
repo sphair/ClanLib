@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Visual C++ on Windows - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Visual C++ on Windows
+</h2>
+
+<h3>Getting started</h3>
+
+<p>First step is to make sure your Visual Studio system is up to date. As of
+this writing, the latest service packs are:</p>
+
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/vstudio/products/cc533447.aspx">Visual
+Studio 2008 (9.0) Service Pack 1</li>
+
+<li><a href="http://msdn2.microsoft.com/en-us/vstudio/bb265237.aspx">Visual
+Studio 2005 (8.0) Service Pack 1</li>
+
+<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=69d2219f-ce82-46a5-8aec-072bd4bb955e&displaylang=en">
+Visual Studio 2003 (7.1) Service Pack 1</li>
+
+<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=c41d8159-b42f-4d06-a797-e510494976ee&displaylang=en">
+Visual Studio 2002 (7.0) Service Pack 1</li>
+
+<li><a href="http://msdn2.microsoft.com/en-us/vstudio/aa718364.aspx">
+Visual Studio 6.0 Service Pack 6</a></li>
+</ul>
+
+<p>You also need to install the latest version of DirectX:</p>
+
+<ul>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=09F7578C-24AA-4E0A-BF91-5FEC24C8C7BF&displaylang=en">
+February 2007 DirectX SDK</a></li>
+</ul>
+
+<p>If your compiler is old, particular relevant for Visual Studio 6.0 users,
+you also need to install a recent version of the platform SDK:</p>
+
+<ul>
+<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=C2B1E300-F358-4523-B479-F53D234CDCCF&displaylang=en">
+Windows SDK for Windows Vista</a></li>
+</ul>
+
+<p>If you are using the free Visual Studio Express, you need to normalize
+your build environment.  Codeproject.com got a nice guide for this:</p>
+
+<ul><li><a
+href="http://www.codeproject.com/useritems/FreeVS2005Win32.asp">Using the
+Free Visual C++ 2005 Express Edition to Develop Win32 Applications</a></li>
+</ul>
+
+<p>Finally when you are done with tweaking around with your compiler, you
+need to download the precompiled binaries we've created for you.  They save
+you the trouble of compiling all the ClanLib dependency libraries:</p>
+
+<ul>
+<li><a href="http://clanlib.org/download-binaries-win32-vc80.html">Visual
+Studio 2005/2008 binaries</a></li>
+<li><a href="http://clanlib.org/download-binaries-win32-vc70.html">Visual
+Sutdio 2002 and 2003 binaries</a></li>
+</ul>
+
+<p>Unfortunately none of our main developers use Visual Studio 6.0 anymore,
+so if you use that version of Visual Studio you will have to compile the
+dependency libraries yourself.</p>
+
+<p>After you downloaded the binaries, install these libraries in a
+directory.  Remember which one, because you need to enter that information
+in the next section.</p>
+
+
+<h3>Preparing installation</h3>
+
+<p>The first step in using ClanLib under Windows is to setup a sane build
+environment. This involves two things:</p>
+
+<ol>
+<li>ClanLib must be able to locate the libraries it uses.</li>
+<li>ClanLib must know where to install itself.</li>
+</ol>
+
+<p>My personal build environment is setup as follows using
+<span class="code">c:\Development\Environment</span>
+as base path:</p>
+
+<ul>
+<li><span class="code">c:\Development\Environment\lib</span> contains all .lib files that didn't come along with
+msvc++ and that are needed by ClanLib.</li>
+<li><span class="code">c:\Development\Environment\include</span> contains all include files needed by the
+libs.</li>
+</ul>
+
+<p>(You don't need to follow the same scheme, put your libraries
+where it fits you)</p>
+
+<p>Here is how it looks like after I've installed Zlib (from the precompiled
+binaries download or if you built zlib from source):</p>
+
+<ul>
+<li>c:\Development\Environment\include\zlib.h</li>
+<li>c:\Development\Environment\include\zconf.h</li>
+<li>c:\Development\Environment\lib\zlib-static-mt.lib</li>
+<li>c:\Development\Environment\lib\zlib-static-mt.pdb
+<li>c:\Development\Environment\lib\zlib-static-mt-debug.lib
+<li>c:\Development\Environment\lib\zlib-static-mt-debug.pdb
+<li>c:\Development\Environment\lib\zlib-x64-static-mt.lib
+<li>c:\Development\Environment\lib\zlib-x64-static-mt.pdb
+<li>c:\Development\Environment\lib\zlib-x64-static-mt-debug.lib
+<li>c:\Development\Environment\lib\zlib-x64-static-mt-debug.pdb
+</ul>
+
+<p>The configure wizard tool in ClanLib will prompt you for the paths to the
+include and lib directories, but generally it is recommended you configure
+Visual C++ to know where to find these libraries.  If you do not, you will
+have to explicitly add the paths to your applications project files or you
+will get include errors.</p>
+
+<p>To add the paths to Visual Studio:</p>
+
+<ul>
+<li>Go through the Tools menu and select Options...</li>
+<li>Open the Projects and Solutions node and pick VC++ Directories</li>
+<li>Select Include Files in the 'Show directories for' combo box. Fill in the include directory (<span
+class="code">c:\Development\Environment\Include</span>).</li>
+<li>Select Library Files in the combo box. Fill in the libraries directory (<span
+class="code">c:\Development\Environment\Lib</span>).</li>
+</ul>
+
+<p><b>Important</b>: If you need to add the DirectX or Platform SDK paths to the VC++
+Directories, make sure they are listed on the <i>top</i> of the lists. 
+Otherwise it may find the older versions that may have been distributed with
+your version of Visual Studio.</p>
+
+
+<h3>Configuring ClanLib</h3>
+
+<p>When you initially download a ClanLib source package, it will only
+include solutions for the ClanLib Configure Wizard:</p>
+
+<ul>
+<li>configure-vc90.sln (Visual Studio 2008)</li>
+<li>configure-vc80.sln (Visual Studio 2005)</li>
+<li>configure.dsw (Visual Studio 6.0, 2002 and 2003)</li>
+</ul>
+
+<p>You have to compile and run this wizard and answer its questions carefully.
+Incorrect information will give you problems during the compilation.</p>
+
+<p>When the configure wizard asks me where to install the header and library
+files, I specify those paths from section 2: <span
+class="code">C:\Development\Environment\include</span> and <span
+class="code">C:\Development\Environment\lib</span>.</p>
+
+<p>When this is done, open the ClanLib.dsw file if you are using Developer
+Studio 6.0, or the ClanLib.sln file if you are using the newer versions.</p>
+
+<p><b>Important:</b> Make sure you launch the configure wizard from within
+Visual Studio, since the configure tool expects the current directory to be
+the root of the ClanLib package.  If you launch configure.exe
+manually from Explorer, the current working directory will be the Debug or
+Release directory and the configure process will fail.</p>
+
+<h3>Compiling ClanLib</h3>
+
+<p>After loading the ClanLib solution, the project view will show many different
+projects; clanApp, clanCore, clanDisplay etc...</p>
+
+<p>Start with making clanCore the active project, if its not active already.
+You do this by right-clicking it, and select 'Set as Active Project'.
+Select Debug or Release in the toolbar. If you can't find this option
+anywhere, right click on the toolbar, and make sure Build is selected,
+and deselect the Build Minibar. Press F7 to compile the active project.</p>
+
+<p>You need to compile at least these projects:</p>
+
+<ul>
+<li>clanApp</li>
+<li>clanCore</li>
+<li>clanDisplay</li>
+<li>clanGL</li>
+</ul>
+
+<p>Optionally, you can compile the others if you need them. Menu item 
+Build->Batch Build is handy here.</p>
+
+<p>Each library in ClanLib can be built in multiple different versions. 
+With or without unicode support, x86 or x64, debug or release, static or as
+a DLL and so on.  The version is reflected in the library name:</p>
+
+<ul>
+<li>clanCore-static-mt.lib: static library, multithreaded runtime, release
+build</li>
+<li>clanCore-static-mt-debug.lib: static library, multithreaded runtime,
+debug build
+<li>clanCore-static-mt-uc.lib: static library, multithreaded runtime,
+unicode, release build</li>
+</ul>
+
+<p>The ClanLib headers automatically detect which version is to be used.
+This is done by looking at defines set by Visual Studio.  For example, the
+define <span class="code">_DEBUG</span> is set by the compiler when you
+build debug versions of your application, which causes the <span
+class="code">ClanLib/core.h</span> header to issue a <span
+class="code">#pragma comment(lib, "clanCore-static-mt-debug.lib")</span>
+statement, which makes the linker automatically link with that specific
+version of the library.</p>
+
+<p>After a successful compilation of ClanLib, it will automatically run a
+batch file that will install all headers and lib files in the path you
+specified in the wizard. In my case, that is <span
+class="code">c:\Development\Environment\lib</span> and <span
+class="code">c:\Development\Environment\include</span>. So the following files will be
+added:</p>
+
+<pre>
+c:\Development\Environment\lib\clanCore-static-mt.lib
+c:\Development\Environment\lib\clanCore-static-mt-debug.lib
+c:\Development\Environment\lib\clanGL-static-mt.lib
+c:\Development\Environment\lib\clanGL-static-mt-debug.lib
+...
+c:\Development\Environment\include\ClanLib\core.h
+c:\Development\Environment\include\ClanLib\gl.h
+...
+</pre>
+<!--
+<h3>Testing ClanLib</h3>
+
+<p>To have a look at some examples of various parts of ClanLib, open the
+Examples.dsw/.sln file in your ClanLib root directory. This was created after
+you ran the Configure application.</p>
+
+<p>Select any example, and compile it. You'll find examples covering most
+parts of the ClanLib API.</p>
+
+<p>Once you're done and ready for some coding, proceed to next section.</p>
+-->
+<!--
+<h3>Creating applications with ClanLib</h3>
+
+<p>Note that MSVC will know what .lib file to link into your application, based
+upon the ClanLib headers you include in your application.</p>
+
+<p>Example:</p>
+<p>
+	If you include &lt;ClanLib/core.h&gt; then depending on whether you are
+	building release or debug binaries the clanCore.lib or clanCored.lib
+	library will be automatically linked into your executable. 
+</p>
+-->
+<h3>Creating a solution for your application</h3>
+
+<p>Follow these steps to create a solution for a ClanLib application
+under Visual Studio 2005:</p>
+
+<ol>
+<li>  Select File->New...</li>
+<li>  Select Projects->Win32 Application, and specify where you want it
+located.</li>
+<li>  Select "An empty project", and press OK till you're finished with the
+wizard.</li>
+<li>  Select Project->Settings...<br>
+     Notice there are several configurations in which you can modify settings.
+     Normally, these are 'Win32 Debug' and 'Win32 Release'. You switch between
+     these in the 'Settings for:' droplist. 
+     In section 6 and 7 below, you need to modify both these settings
+     (sections a for release setting, and sections b for debug
+settings).</li>
+<li> Select the 'C/C++' tab, and then Category 'Code Generation'</li>
+<li> For Release version, change the 'Use run-time library' to
+Multithreaded.</li>
+<li> For Debug version, change the 'Use run-time library' to Debug
+Multithreaded.</li>
+</ol>
+
+<p>Follow these steps to create a solution for a ClanLib application
+under Visual Studio 2008:</p>
+
+<ol>
+<li>  Select File->New...</li>
+<li>  Find Visual C++ group in the Project Types, and select Win32 Project, 
+and specify where you want it located, and click OK.</li>
+<li>  Under Application Settings, select "Empty project" , and press Finish.</li>
+<li>  Add a new c++ file to your project (Add new item->C++ File, or Add class..)
+	 (If you do not do this first, you will not see the C++ / Code Generation settings
+	 required for step 6).
+<li>  Right click your Project (not the solution) and select Properties.<br>
+	 Select the Configuration Properties section.<br>
+     Notice there are several configurations in which you can modify settings.
+     Normally, these are 'Debug' and 'Release'. You switch between
+     these in the 'Configuration:' droplist. 
+     In section 7 and 8 below, you need to modify both these settings
+     (sections a for release setting, and sections b for debug
+settings).</li>
+<li> Select the 'C/C++' tab, and then Category 'Code Generation'</li>
+<li> For Release version, change the 'Use run-time library' to
+Multithreaded.</li>
+<li> For Debug version, change the 'Use run-time library' to Debug
+Multithreaded.</li>
+</ol>
+
+<!--
+<li> Select Project->Add To Project->New...</li>
+<li> Select C++ Source File, and enter a name for the file, for example 'app.cpp'</li>
+<li> Enter a skeleton for your code:
+<pre>
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+
+class MyApp : public CL_ClanApplication
+{
+public:
+	virtual int main(int argc, char **argv)
+	{
+		// Create a console window for text-output if not available
+		// Use printf or cout to display some text in your program
+		CL_ConsoleWindow console("Console");
+		console.redirect_stdio();
+
+		try
+		{
+			// Initialize ClanLib base components
+			CL_SetupCore setup_core;
+
+			// Initialize the ClanLib display component
+			CL_SetupDisplay setup_display;
+
+			// Initialize the ClanLib GL component
+			CL_SetupGL setup_gl;
+
+			// Create a display window
+			CL_DisplayWindow window("ClanLib application", 640, 480);
+
+			// Run until someone presses escape
+			while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE))
+			{
+				// Clear the display in a dark blue nuance
+				// The four arguments are red, green, blue and alpha (defaults to 255)
+				// All color nuances in ClanLib are measured in the interval 0->255
+				CL_Display::clear(CL_Color(0, 0, 50));
+
+				// Flip the display (using a double-buffer),
+				// showing on the screen what we have drawed
+				// since last call to flip()
+				CL_Display::flip();
+
+				// This call updates input and performs other "housekeeping"
+				// Call this each frame
+				// Also, gives the CPU a rest for 10 milliseconds to catch up
+				CL_System::keep_alive(10);
+			}
+		}
+		// Catch any errors from ClanLib
+		catch (CL_Error err)
+		{
+			// Display the error message
+			std::cout << err.message.c_str() << std::endl;
+		}
+
+		// Display console close message and wait for a key
+		console.display_close_message();
+
+		return 0;
+	}
+} app;
+</pre></li>
+-->
+<h3>Problems?</h3>
+
+<p>The most common problems encountered with building ClanLib
+applications:</p>
+
+<ol>
+<li>
+<p><b>Problem</b>: You get a lot of linker errors complaining about multiple
+definitions of functions like <span class="code">_exit</span></p>
+
+<p>This is almost always caused by mixing runtime versions.  Your project is
+most likely set to <span class="code">Multithreaded Debug DLL</span>, while
+ClanLib expects it to be <span class="code">Multithreaded Debug</span>. 
+Fixed by going to the project settings of your project and set it to what
+ClanLib expects.</p>
+</li>
+
+<li>
+<p><b>Problem</b>: You are using Visual Studio Express and get a lot of
+linker errors complaining about missing symbols such as <span
+class="code">__imp__MessageBoxW@16</span>.</p>
+
+<p>Generally caused by your Visual Studio not linking with the correct default
+link libraries.  To fix this, see the Default Link Libraries sections in the <a
+href="http://www.codeproject.com/useritems/FreeVS2005Win32.asp">Using the
+Free Visual C++ 2005 Express Edition to Develop Win32 Applications</a>
+guide. If this does not fix your problem, look up the function (i.e.
+MessageBox in the above example) in MSDN and add the appropriate missing
+library to your linker settings.</p>
+</li>
+</ol>
+
+</div>
+
+</body>
+</html>

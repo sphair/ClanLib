@@ -1,6 +1,6 @@
 $Id: INSTALL.win32,v 1.11 2004/03/28 00:13:14 sphair Exp $
 
-Readme file for ClanLib 1.0.x under Win32
+Readme file for ClanLib 0.7.x under Win32
 ---------------------------------------------------------------------------
 This readme will guide you with installing, compiling ClanLib and creating
 your first ClanLib application.
@@ -19,15 +19,15 @@ If you have downloaded the binaries, you can skip section 3 and 4.
 
 1. Getting started
 ---------------------------------------------------------------------------
-Microsoft Developer Studio 7.x or 8.x is the recommended versions
-to use with ClanLib. Visual Studio Express will also work, but it requires
-a bit more manual configuration for each ClanLib project. 
-Microsoft Developer Studio 6.0 might also work, but we don't provide
-precompiled binaries for external libraries for that.
+You need Microsoft Developer Studio 6.0 or 7.x/200x (.NET) with MFC
+installed to follow this installation guide (see INSTALL.borland for
+Borland specific instructions). The instructions here are mostly based
+on VC 6.0, but you will be able to easily find the same options in VC 7.0.
 
-Go to http://clanlib.org/download.html and download the precompiled binaries,
-at least libjpeg and libpng multithreaded libraries. If you need more
+Go to http://clanlib.org/download.html and download at least the zlib,
+libjpeg and libpng multithreaded libraries. If you need more
 functionality in ClanLib, you can download those other libraries you need.
+(Check out the handy Windows External Libraries section!)
 
 Install these libraries in a directory - remember which one, because you
 need to enter that information in the next section.
@@ -37,17 +37,11 @@ http://msdn.microsoft.com/vstudio/downloads/updates/sp/vs6/sp5/
 
 It is also recommended to install latest Microsoft Platform SDK, which
 will give you a much newer set of include files and libraries, making it
-possible to use things Microsoft invented since 1998.  If you are using
-VS.Net Express, then you will HAVE to do this.
+possible to use things Microsoft invented since 1998.
 
 The Microsoft Platform SDK is available at:
 http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 
-Windows builds of ClanLib use DirectX's DirectInput8 for input, so you'll
-also need to install a recent version (8+) of the DirectX SDK.
-
-DirectX SDK Downloads
-http://msdn.microsoft.com/directx/sdk/
 
 2. Preparing installation
 ---------------------------------------------------------------------------
@@ -73,44 +67,38 @@ c:\My Documents\include\zlib.h
 c:\My Documents\include\zconf.h
 
 You must configure Visual C++ so it knows where to find the include and 
-library files.  This is done through the Tools -> Options -> Projects 
--> VC++ Directories.  Fill in the include directory
+library files. This is done through the Tools menu, the Options... item.
+Select the Directories tab, and fill in the include directory
 ("c:\My Documents\include") under the Include Files listbox,
 and the library directory ("c:\My Documents\lib") under the Library Files
 listbox. 
 
 IMPORTANT: Put the new include and library paths on the TOP of the lists
-(to avoid it using dx3 for instance) UNLESS you are using VS.Net 2005.
-In that case, make sure the PlatformSDK include folder is at the top of
-the list.
+(to avoid it using dx3 for instance).
 
 
 3. Configuring ClanLib
 ---------------------------------------------------------------------------
-A freshly downloaded ClanLib source package will include a workspace/solution
-and project for either MSVC6 (configure.dsw), or Visual Studio .NET 2005
-(configure-vs80.sln).  This is a configuration tool that
+A freshly downloaded ClanLib source package will only include one workspace
+and project: configure.dsw. This is a little MFC configuration tool that
 will generate the real ClanLib workspace and project files. If you are using
-Visual Studio .NET below 2005, use the configure.dsw file and answer yes
-to the conversion.
+Developer Studio .NET, answer yes to the conversion.
 
 You have to compile and run this wizard and answer its questions carefully.
 Incorrect information will give you problems during the compilation.
-After you've compiled the app, just run it from inside of the compiler.
 
 When the configure wizard asks me where to install the header and library
 files, I specify those paths from section 2 (C:\My Documents\include and
 C:\My Documents\lib).
 
 When this is done, open the ClanLib.dsw file if you are using Developer
-Studio 6, or the ClanLib.sln file if you are using .NET version.  Answer
-Yes to convert the file to your MSVC version if prompted.
+Studio 6, or the ClanLib.sln file if you are using .NET version.
 
 
 4. Compiling ClanLib
 ---------------------------------------------------------------------------
-After loading the ClanLib workspace, the project view will show many 
-different projects; clanApp, clanCore, clanDisplay etc...
+After loading the ClanLib workspace, the project view will show many different
+projects; clanApp, clanCore, clanDisplay etc...
 
 Start with making clanCore the active project, if its not active already.
 You do this by right-clicking it, and select 'Set as Active Project'.
@@ -183,10 +171,6 @@ Example:
 	If you include <ClanLib/core.h> then depending on whether you are
 	building release or debug binaries the clanCore.lib or clanCored.lib
 	library will be automatically linked into your executable. 
-
-If you use Visual Studio Express, you need to include some additional libraries,
-user32.lib gdi32.lib and ole32.lib. Put them in the Additional Dependencies
-under the Linker setting in your project settings.
 
 
 7. Creating a workspace for your application
@@ -272,8 +256,7 @@ public:
 
 8. Problems ?
 ---------------------------------------------------------------------------
-Please read the FAQ on http://clanlib.org for common errors and explanations,
-or ask in the Forums.
+Please read the FAQ on http://clanlib.org for common errors and explanations!
 
 
 --

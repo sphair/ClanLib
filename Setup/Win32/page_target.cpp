@@ -36,10 +36,14 @@ typedef HRESULT (WINAPI *FolderPathFunc)(HWND, LPTSTR, int, BOOL);
 PageTarget::PageTarget()
 {
 	target_version = 710;
+	include_unicode = false;
+	include_mtdll = false;
+	include_dll = false;
+	include_x64 = false;
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(
-		HKEY_CURRENT_USER, TEXT("Software\\ClanSoft\\ClanLib Configure\\InstallLocation"),
+		HKEY_CURRENT_USER, TEXT("Software\\Clanlib.org\\ClanLib Configure\\InstallLocation"),
 		0, KEY_READ, &hKey);
 	if (result == ERROR_SUCCESS)
 	{
@@ -54,6 +58,34 @@ PageTarget::PageTarget()
 			target_version = value;
 		}
 
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeUnicode"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_unicode = (value != 0);
+		}
+
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeMTDLL"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_mtdll = (value != 0);
+		}
+
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeDLL"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_dll = (value != 0);
+		}
+
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeX64"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_x64 = (value != 0);
+		}
+
 		RegCloseKey(hKey);
 	}
 
@@ -61,14 +93,14 @@ PageTarget::PageTarget()
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
 	propsheetpage.dwFlags = PSP_USEHEADERTITLE|PSP_USEHEADERSUBTITLE;
 	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_TARGET_PAGE);
-	propsheetpage.pfnDlgProc = (DLGPROC) &PageTarget::dialog_proc;
+	propsheetpage.pfnDlgProc = (DLGPROC)&PageTarget::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
 	propsheetpage.pszHeaderTitle = TEXT("Project Setup");
 	propsheetpage.pszHeaderSubTitle = TEXT("Development environment");
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
 
-LRESULT CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -80,13 +112,21 @@ LRESULT CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR) self);
 
 			if (self->target_version == 600)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC80, IDC_RADIO_VC60);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC60);
 			else if (self->target_version == 700)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC80, IDC_RADIO_VC70);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC70);
 			else if (self->target_version == 710)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC80, IDC_RADIO_VC71);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC71);
 			else if (self->target_version == 800)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC80, IDC_RADIO_VC80);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC80);
+			else if (self->target_version == 900)
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC90);
+
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_NONUNICODE), BM_SETCHECK, BST_CHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_SETCHECK, self->include_unicode ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_SETCHECK, self->include_mtdll ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_SETCHECK, self->include_dll ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_SETCHECK, self->include_x64 ? BST_CHECKED : BST_UNCHECKED, 0);
 
 			// return FALSE if we set the focus
 			return TRUE;
@@ -103,7 +143,7 @@ LRESULT CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	}
 }
 
-LRESULT PageTarget::on_notify(HWND hWnd, NMHDR *header)
+INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 {
 	// Don't go to next page yet:
 	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);
@@ -132,6 +172,12 @@ LRESULT PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_version = 710;
 		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC80) == BST_CHECKED)
 			target_version = 800;
+		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC90) == BST_CHECKED)
+			target_version = 900;
+		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_dll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		return TRUE;
 	case PSN_WIZFINISH:
 	default:

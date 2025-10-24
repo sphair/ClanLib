@@ -5,25 +5,30 @@
 #include "tankvehicle.h"
 #include "building.h"
 
-World::World()
+World::World(CL_DisplayWindow &display_window) : window(display_window), quit(false)
 {
-	// Setup resources
-	resources = new CL_ResourceManager("resources.xml");
+	CL_Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
 
-	background = new CL_Surface("background", resources);
+	gc = window.get_gc();
+
+	// Setup resources
+	resources = CL_ResourceManager("resources.xml");
+
+	background = CL_Texture("background", &resources, gc);
 	
 	// Receive mouse clicks
-	slotKeyDown = CL_Keyboard::sig_key_down().connect(this, &World::onKeyDown);
-	slotMouseDown = CL_Mouse::sig_key_down().connect(this, &World::onMouseDown);
-	slotMouseUp = CL_Mouse::sig_key_up().connect(this, &World::onMouseUp);
-	slotMouseMove = CL_Mouse::sig_move().connect(this, &World::onMouseMove);
+	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
+	slotMouseDown = window.get_ic().get_mouse().sig_key_down().connect(this, &World::onMouseDown);
+	slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseUp);
+	slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
 
 	dragging = mouseDown = false;
 	
-	quit = false;
-
 	// Add some tanks
 	initLevel();
+
+	// Run the main loop
+	run();
 }
 
 World::~World()
@@ -33,8 +38,6 @@ World::~World()
 	for(it = objects.begin(); it != objects.end(); ++it)
 		delete (*it);
 
-	delete background;
-	delete resources;
 }
 
 void World::initLevel()
@@ -79,7 +82,7 @@ bool World::hitCheck(CL_CollisionOutline *outline, GameObject *other)
 	return false;
 }
 
-void World::onKeyDown(const CL_InputEvent &key)
+void World::onKeyDown(const CL_InputEvent &key, const CL_InputState &state)
 {
 	// Fire missile on space
 	if(key.id == CL_KEY_SPACE)
@@ -90,7 +93,7 @@ void World::onKeyDown(const CL_InputEvent &key)
 	}
 }
 
-void World::onMouseDown(const CL_InputEvent &key)
+void World::onMouseDown(const CL_InputEvent &key, const CL_InputState &state)
 {
 	// Start dragging on left click
 	if(key.id == CL_MOUSE_LEFT)
@@ -114,9 +117,9 @@ void World::onMouseDown(const CL_InputEvent &key)
 				bool fire = false;
 
 				// Force firing
-				if(CL_Keyboard::get_keycode(CL_KEY_SHIFT))
+				if(key.shift)
 				{
-					if(CL_Keyboard::get_keycode(CL_KEY_CONTROL))	// Nuke when ctrl and shift is pressed
+					if(key.ctrl)	// Nuke when ctrl and shift is pressed
 						tank1->fire(true);
 					else
 						tank1->fire(false);
@@ -147,7 +150,7 @@ void World::onMouseDown(const CL_InputEvent &key)
 	}
 }
 
-void World::onMouseUp(const CL_InputEvent &key)
+void World::onMouseUp(const CL_InputEvent &key, const CL_InputState &state)
 {
 	if(key.id == CL_MOUSE_LEFT)
 	{
@@ -166,7 +169,7 @@ void World::onMouseUp(const CL_InputEvent &key)
 			if(tank->hitCheck(dragArea))
 				tank->select();
 			else
-				if(!CL_Keyboard::get_keycode(CL_KEY_SHIFT))
+				if(!key.shift)
 					tank->deselect();
 		}
 		
@@ -176,7 +179,7 @@ void World::onMouseUp(const CL_InputEvent &key)
 	mouseDown = false;
 }
 
-void World::onMouseMove(const CL_InputEvent &key)
+void World::onMouseMove(const CL_InputEvent &key, const CL_InputState &state)
 {
 	// Expand drag area
 	if(mouseDown)
@@ -200,13 +203,16 @@ void World::onMouseMove(const CL_InputEvent &key)
 
 void World::run()
 {
-	while(!CL_Keyboard::get_keycode(CL_KEY_ESCAPE) && quit == false)
+	while(!window.get_ic().get_keyboard().get_keycode(CL_KEY_ESCAPE))
 	{
+		if (quit)
+			break;
+
 		update();
 		draw();
 
-		CL_Display::flip(1);
-		CL_System::keep_alive(1);
+		window.flip(1);
+		CL_DisplayMessageQueue::process();
 	};
 }
 
@@ -247,8 +253,11 @@ float World::calcTimeElapsed()
 void World::draw()
 {
 	// Draw background 
-	background->draw();
-	
+	CL_Rect window_rect = window.get_viewport();
+	gc.set_texture(0, background);
+	CL_Draw::texture(gc, window_rect);	
+	gc.reset_texture(0);
+
 	// Draw all gameobjects
 	std::list<GameObject *>::iterator it;
 	for(it = objects.begin(); it != objects.end(); ++it)
@@ -259,14 +268,21 @@ void World::draw()
 	{
 		float s = (sinf(CL_System::get_time() / 200.0f) + 3.0f) / 4.0f;
 
-		CL_Display::draw_rect(
-			CL_Rect(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
-			CL_Color(0, 255, 0, int(100 * s)));
-		CL_Display::draw_rect(
-			dragArea,
-			CL_Color(0, 255, 0, int(200 * s)));
-		CL_Display::draw_rect(
-			CL_Rect(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
-			CL_Color(0, 255, 0, int(100 * s)));
+		
+		CL_Draw::box(gc,
+			CL_Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
+			CL_Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+		CL_Draw::box(gc,
+			CL_Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
+			CL_Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
+		CL_Draw::box(gc,
+			CL_Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
+			CL_Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
 	}
 }
+
+void World::on_window_close()
+{
+	quit = true;
+}
+

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,11 +27,12 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanCore="I/O Data"
-//! header=core.h
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
-#ifndef header_iotypes
-#define header_iotypes
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -57,4 +58,5 @@ typedef long long          cl_int64;
 typedef unsigned long long cl_uint64;
 #endif
 
-#endif
+
+/// \}

@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundoutput_macosx
-#define header_soundoutput_macosx
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,31 +41,45 @@
 
 class CL_SoundOutput_MacOSX : public CL_SoundOutput_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_SoundOutput_MacOSX(int mixing_frequency);
-	
+	CL_SoundOutput_MacOSX(int mixing_frequency, int mixing_latency);
+
 	~CL_SoundOutput_MacOSX();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called when we have no samples to play - and wants to tell the soundcard
-	//: about this possible event.
+	/// \brief Called when we have no samples to play - and wants to tell the soundcard
+	/// \brief about this possible event.
 	virtual void silence();
 
-	//: Returns the buffer size used by device (returned as num [stereo] samples).
+	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
 	virtual int get_fragment_size();
 
-	//: Writes a fragment to the soundcard.
+	/// \brief Writes a fragment to the soundcard.
 	virtual void write_fragment(short *data);
 
-	//: Waits until output source isn't full anymore.
+	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	// Callback handler for CoreAudio HAL.
 	static OSStatus audio_handler(
@@ -85,14 +99,15 @@ private:
 
 	// Format description for the device.
 	AudioStreamBasicDescription device_format;
-	
+
 	// True if CoreAudio HAL successfully was put to play audio.
 	bool playing;
-	
+
 	// Ring buffer for audio fragments
 	std::vector<float*> fragment_buffer;
 	unsigned int fragment_insert_position;
 	unsigned int fragment_play_position;
+/// \}
 };
 
-#endif
+

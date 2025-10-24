@@ -43,25 +43,25 @@ public:
 				argp.print_help();
 				break;
 			case 'f':
-				std::cout << "file: " << argp.get_argument() << std::endl;
+				CL_Console::write_line("file: " + argp.get_argument());
 				break;
 			case 'c':
-				std::cout << "config: " << argp.get_argument() << std::endl;
+				CL_Console::write_line("config: " + argp.get_argument());
 				break;
 			case 'a':
-				std::cout << "a" << std::endl;
+				CL_Console::write_line("a: " + argp.get_argument());
 				break;
 			case 'z':
-				std::cout << "zero" << std::endl;
+				CL_Console::write_line("zero: " + argp.get_argument());
 				break;
 			case ARG_ARG:
-				std::cout << "arg" << std::endl;
+				CL_Console::write_line("arg: " + argp.get_argument());
 				break;
 			case CL_CommandLine::REST_ARG:
-				std::cout << "rest: " << argp.get_argument() << std::endl;
+				CL_Console::write_line("REST: " + argp.get_argument());
 				break;
 			default:
-				std::cout << "Got " << argp.get_key() << " " << argp.get_argument() << std::endl;
+				CL_Console::write_line(cl_format("GOT: %1", argp.get_key()) + " " + argp.get_argument());
 				break;
 			}
 		}
@@ -70,14 +70,24 @@ public:
 
 int main(int argc, char** argv)
 {
+	CL_SetupCore setup_core;
+	CL_ConsoleWindow console("Console");
+
+	CL_Console::write_line("(Call this program with \"-h\" for help)");
+
 	try 
 	{
 		MyCommandLine args(argc, argv);
 		args.read_options();
 	} 
-	catch (CL_Error& err) 
+	catch (CL_Exception& exception) 
 	{
-		std::cout << argv[0] << err.message << std::endl;
+		CL_Console::write_line("Exception caught:");
+		CL_Console::write_line(exception.message);
 	}
+
+	console.display_close_message();
+
 	return 0;
 }
+

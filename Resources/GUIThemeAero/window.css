@@ -1,0 +1,76 @@
+
+window
+{
+	bg-color: #f0f0f0;
+}
+
+window caption
+{
+	bg-image: WindowActive;
+	bg-image-sizing-left:28;
+	bg-image-sizing-right:35;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:17;
+	bg-image-sizing:stretch; 
+	preferred-height:28;
+}
+
+window frameleft
+{
+	bg-image: WindowFrameLeftActive;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:91;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:8;
+}
+
+window frameright
+{
+	bg-image: WindowFrameRightActive;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:91;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:8;
+}
+
+window framebottom
+{
+	bg-image: WindowFrameBottomActive;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;    /* why doesn't this work with 2, as uxtheme uses */
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	preferred-height:8;
+}
+
+window buttonclose
+{
+	preferred-width:25;
+	preferred-height:15;
+	bg-image-sizing:center; 
+}
+
+window buttonclose:normal
+{
+	bg-image:WindowCloseButtonActiveNormal; 
+}
+
+window buttonclose:hot
+{
+	bg-image:WindowCloseButtonActiveHot; 
+}
+
+window buttonclose:pressed
+{
+	bg-image:WindowCloseButtonActivePressed; 
+}
+
+window buttonclose:disabled
+{
+	bg-image:WindowCloseButtonActiveDisabled; 
+}

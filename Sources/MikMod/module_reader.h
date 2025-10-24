@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_module_reader
-#define header_module_reader
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,25 +40,23 @@
  * field of MCLANLIBREADER (core) is an MREADER, and this way the MikMod
  * code can access correctly all the fields of the MREADER core struct,
  * while we provide an additionnal pointer (input) to handle the file,
- * which is a CL_InputSource in ClanLib's case.
+ * which is a CL_IODevice in ClanLib's case.
  * This method might look like an ugly hack but MikMod does this internally,
  * with an MFILEREADER struct casted an into a plain MREADER.
  */
 
 
-#ifdef __APPLE__
-#include <mikmod/mikmod.h>
-#else
-#include <mikmod.h>
-#endif
 
-typedef struct MCLANLIBREADER {
+#include <mikmod.h>
+
+typedef struct MCLANLIBREADER
+{
 	MREADER core;
 	void *input;
 } MCLANLIBREADER;
 
 
-#define CLANLIB_READER_CHANNELS     32 
+#define CLANLIB_READER_CHANNELS     32
 
 extern BOOL clanlib_reader_feof(MREADER* reader);
 extern BOOL clanlib_reader_read(MREADER* reader,void* ptr,size_t size);
@@ -68,5 +66,5 @@ extern long clanlib_reader_tell(MREADER* reader);
 extern MREADER *new_clanlib_reader(void *input);
 extern void delete_clanlib_reader (MREADER* reader);
 
-#endif
+
 

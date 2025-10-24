@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,17 +34,17 @@
 #pragma once
 #endif
 
-/*
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
 
 class FontBlowUp
 {
 protected:
-	CL_Font *font;
+	CL_Font font;
 	int initial_x;
 	int initial_y;
 	CL_String text;
+	CL_Colorf color;
 
 	float *letters_x;
 	float *letters_y;
@@ -53,13 +53,13 @@ protected:
 	float *letters_delta_y;
 	float *letters_delta_z;
 
-	void create_letters();
+	void create_letters(CL_GraphicContext &gc);
 
 public:
-	FontBlowUp(const char *text, int x, int y, CL_Font *font);
+	FontBlowUp(CL_GraphicContext &gc, const char *text, int x, int y, CL_Font font, CL_Colorf color);
 	virtual ~FontBlowUp();
 
-	bool show(float time_elapsed);
+	bool show(CL_GraphicContext &gc, float time_elapsed);
 };
-*/
+
 #endif

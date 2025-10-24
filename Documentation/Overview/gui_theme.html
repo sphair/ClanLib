@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Theming Model - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Theming Model
+</h2>
+
+<h3>Theme Parts</h3>
+
+<p>The most important class in the clanGUI theming model is the <span
+class="code">CL_ThemePart</span> class. Essentially clanGUI themes are built
+around the concept that you can divide any component into areas which are
+then styled. A theme part is a rectangular area that is rendered in a
+certain way and may contain properties that hint how text and other things
+should be rendered within this area.</p>
+
+<p>Typically theme parts are used in a nested way by the GUI components. For
+example, <span class="code">CL_ScrollBar</span> contains the following theme
+parts:</p>
+
+<ul>
+	<li>background part</li>
+	<ul>
+		<li>up button part</li>
+		<li>upper track area part</li>
+		<li>thumb button part</li>
+		<li>lower track area part</li>
+		<li>down button part</li>
+	</ul>
+</ul>
+
+<p>One of the key features of a theme part is that it defines a <i>content
+area</i> within a <i>render area</i>. The render area is the
+rectangular area covering the entire part and the content area is the area the component
+may want to place additional content. <span class="code">CL_ThemePart</span>
+contains functions that allow you to map from render area to content area
+and the other way. <span class="code">CL_ScrollBar</span> in the above
+example uses these functions to position the scrollbar parts within the
+background part and in the same manner it uses the preferred size
+properties of the button parts to position the scroll track areas.</p>
+
+<p>In code, the above scrollbar may have been placed like this:</p>
+
+<pre>
+CL_ThemePart background_part(component);
+CL_ThemePart up_button_part(component, "button.up");
+CL_ThemePart upper_track_part(component, "track.up");
+CL_ThemePart thumb_part(component, "thumb");
+CL_ThemePart lower_track_part(component, "track.down");
+CL_ThemePart down_button_part(component, "button.down");
+
+CL_Size component_size = component->get_size();
+CL_Rect background_render_area(CL_Point(0,0), component_size);
+CL_Rect background_content_area = background_part.get_content_area(background_render_area);
+CL_Rect up_button_area(
+	background_content_area.left,
+	background_content_area.top,
+	background_content_area.right,
+	background_content_area.top + up_button_part.get_preferred_height());
+CL_Rect button_button_area(
+	background_content_area.left,
+	background_content_area.bottom - down_button_part.get_preferred_height(),
+	background_content_area.right,
+	background_content_area.bottom);
+...
+</pre>
+
+<p>The rectangles are used during the rendering. <span
+class="code">CL_ThemePart</span> itself does not contain any information
+about the placement of a part:</p>
+
+<pre>
+background_part.render(gc, background_render_area);
+up_button_part.render(gc, up_button_area);
+down_button_part.render(gc, button_button_area);
+...
+</pre>
+
+<p>Each theme part can have multiple states set, which may affect how the
+part is rendered and the size of its content area. Typically the standard
+components uses certain states such as <i>hot</i> and <i>disabled</i>, but
+they may also include their own states. States are set like this:</p>
+
+<pre>
+background_part.set_state("disabled", true);
+background_part.set_state("hot", false);
+</pre>
+
+<h3>The Default Theme</h3>
+
+<p>All theme parts are rendered by the current <span
+class="code">CL_GUITheme</span> set on the <span
+class="code">CL_GUIManager</span> object. You can implement your own theme
+rendering by implementing the <span class="code">CL_GUITheme</span> class,
+but in most situations the easier way is to use the default theme provided
+by <span class="code">CL_GUIThemeDefault</span>.</p>
+
+<p>The default theme uses CSS properties for the theme. Each theme part has
+a fully qualified CSS name that is generated based on the <i>type name</i>,
+<i>class name</i> and <i>identifier</i> of the <span
+class="code">CL_GUIComponent</span> that owns the theme part and the
+<i>name</i> and <i>states</i> of the theme part itself.</p>
+
+<p>Imagine a GUI component layout as follows:</p>
+
+<ul>
+	<li><span class="code">CL_Window</span>, type=<span class="code">window</span></li>
+	<ul>
+		<li><span class="code">CL_Frame</span>, type=<span class="code">frame</span>, class=<span class="code">myframe</span></li>
+		<ul>
+			<li><span class="code">CL_ScrollBar</span>, type=<span class="code">scrollbar</span>, id=<span class="code">scroll0</span></li>
+			<ul>
+				<li><span class="code">CL_ThemePart 'button.up'</span>, states: <span class="code">hot</span></li>
+				<li><span class="code">CL_ThemePart 'track.up'</span></li>
+				<li><span class="code">CL_ThemePart 'thumb'</span></li>
+				<li><span class="code">CL_ThemePart 'track.down'</span></li>
+				<li><span class="code">CL_ThemePart 'button.down'</span></li>
+			</ul>
+		</ul>
+	</ul>
+</ul>
+
+<p>The CSS selector name for the button up part is then: <span
+class="code">window frame.myframe scrollbar#scroll0 button.up:hot</span></p>
+
+<pre>
+button
+{
+	font = "tahoma";
+}
+
+button.up
+{
+	font-size = 18;
+}
+
+button:hot
+{
+	bg-color: yellow;
+	font = "arial";
+}
+
+frame scrollbar button
+{
+	bg-image: image1;
+}
+
+frame scrollbar#scroll0 button.up:hot
+{
+	bg-image: image2;
+}
+</pre>
+
+<p>The property set actually being chosen amongst the above CSS examples is
+<span class="code">frame scrollbar#scroll0 button.up:hot</span>. This is because
+this is the CSS selector with the highest precedence according to the CSS
+selector rules, which mostly is determined by the number of elements in the
+selector and the order in which they are presented in the file.</p>
+
+<p>Some CSS properties are cascading, which means that when the chosen
+property set does not include a property (e.g. font), it is inherited by the
+first property set with a matching CSS selector, in the usual order of
+precedence. So in this example the font will be Arial since <span
+class="code">button:hot</span> has a higher precedence than <span
+class="code">button</span>.</p>
+
+<h3>Standard CSS Properties</h3>
+
+<p>For further information about the CSS properties used by the standard
+components and the default theme engine, see the overview for the <a
+href="components.html">standard components</a>.</p>
+
+</div>
+
+</body>
+</html>

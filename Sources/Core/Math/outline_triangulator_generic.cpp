@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,13 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "outline_triangulator_generic.h"
 #include "API/Core/Math/delauney_triangulator.h"
 #include "API/Core/Math/line_math.h"
+#include <list>
+#include <algorithm>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineTriangulator_Generic construction:
@@ -491,8 +492,8 @@ void CL_OutlineTriangulator_Generic::create_ordered_vertex_list(std::vector<CL_O
 	// Remove duplicates:
 	std::vector<CL_OutlineTriangulator_Vertex *>::iterator it = vertices.begin();
 	if (it == vertices.end()) return;
-	double last_x = (*it)->x;
-	double last_y = (*it)->y;
+	float last_x = (*it)->x;
+	float last_y = (*it)->y;
 	++it;
 	while (it != vertices.end())
 	{
@@ -510,26 +511,26 @@ void CL_OutlineTriangulator_Generic::create_ordered_vertex_list(std::vector<CL_O
 }
 
 bool CL_OutlineTriangulator_Generic::intersects( 
-	double Ax,
-	double Ay,
-	double Bx,
-	double By,
-	double Cx,
-	double Cy,
-	double Dx,
-	double Dy)
+	float Ax,
+	float Ay,
+	float Bx,
+	float By,
+	float Cx,
+	float Cy,
+	float Dx,
+	float Dy)
 {
-	double denominator = ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));	
+	float denominator = ((Bx-Ax)*(Dy-Cy)-(By-Ay)*(Dx-Cx));	
 	
 	if( denominator == 0 ) // parallell
 	{
 		return false;
 	}
 
-	double r = ((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) / denominator;
-	double s = ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) / denominator;
+	float r = ((Ay-Cy)*(Dx-Cx)-(Ax-Cx)*(Dy-Cy)) / denominator;
+	float s = ((Ay-Cy)*(Bx-Ax)-(Ax-Cx)*(By-Ay)) / denominator;
 
-	if( (s > 0.0f && s < 1.0f) && (r > 0.0f && r < 1.0f) )
+	if( (s > 0.0 && s < 1.0) && (r > 0.0 && r < 1.0) )
 		return true;
 
 	return false;

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -63,7 +63,7 @@ void CL_OutlineTriangulator::next_polygon()
 	impl->current_polygon = CL_OutlineTriangulator_Polygon();
 }
 
-void CL_OutlineTriangulator::add_vertex(double x, double y, void *data)
+void CL_OutlineTriangulator::add_vertex(float x, float y, void *data)
 {
 	CL_OutlineTriangulator_Vertex vertex;
 	vertex.x = x;

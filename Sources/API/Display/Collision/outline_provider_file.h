@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -25,14 +25,14 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_outline_provider_file
-#define header_outline_provider_file
+
+#pragma once
+
 
 #ifdef CL_API_DLL
 #ifdef CL_DISPLAY_EXPORT
@@ -49,39 +49,53 @@
 #endif
 
 #include "outline_provider.h"
-#include <string>
+#include "../../Core/Text/string_types.h"
+#include "../../Core/IOData/virtual_directory.h"
 
 class CL_OutlineProviderFile_Generic;
 class CL_InputSourceProvider;
 
-//: File outline provider is used to load precompiled outlines.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>A CL_OutlineProviderFile is used to load precompiled outlines.</p>
+/// \brief File outline provider is used to load precompiled outlines.
+///
+/// <p>A CL_OutlineProviderFile is used to load precompiled outlines.</p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CL_OutlineProviderFile : public CL_OutlineProvider
 {
-//! Construction:
+/// \name Construction
+/// \{
+
  public:
-	//: Construct a outline provider
-	//param std::string filename : Name of file to load.
-	//param CL_InputSourceProvider *provider : (optional) Use this input source provider as source of data.
-	CL_OutlineProviderFile(const std::string &filename, CL_InputSourceProvider *provider=0);
+	/// \brief Construct a outline provider
+	///
+	/// \param CL_StringRef filename  Name of file to load.
+	/// \param CL_InputSourceProvider *provider  (optional) Use this input source provider as source of data.
+	CL_OutlineProviderFile(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory());
 	~CL_OutlineProviderFile();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
  public:
-	//: return the countours that make up the outline
+	/// \brief return the countours that make up the outline
 	virtual std::vector<CL_Contour> get_contours();
 
-	//: Not used for file provider. Returns -1.
+	/// \brief Not used for file provider. Returns -1.
 	virtual int get_width();
 
-	//: Not used for file provider. Returns -1.
+	/// \brief Not used for file provider. Returns -1.
 	virtual int get_height();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
  private:
 	CL_OutlineProviderFile_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

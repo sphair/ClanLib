@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,50 +24,50 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="System"
-//! header=sound.h
+/// \addtogroup clanSound_System clanSound System
+/// \{
 
-#ifndef header_setupsound
-#define header_setupsound
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: ClanSound initialization functions.
-//- !group=Sound/System!
-//- !header=sound.h!
+#include "api_sound.h"
+
+/// \brief ClanSound initialization functions.
+///
+/// \xmlonly !group=Sound/System! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SetupSound
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Initializes clanSound.
-	//- <p>Constructing a CL_SetupSound object is equalent to calling CL_SetupSound::init().</p>
-	//- <p>When the CL_SetupSound instance is destroyed, CL_SetupSound::deinit() is called.</p>
+	/// \brief Initializes clanSound.
+	/** <p>Constructing a CL_SetupSound object is equalent to calling CL_SetupSound::init().</p>
+	    <p>When the CL_SetupSound instance is destroyed, CL_SetupSound::deinit() is called.</p>*/
 	CL_SetupSound(bool register_resources_only = false);
 
 	~CL_SetupSound();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Initialize the clanSound library.
+	/// \brief Initialize the clanSound library.
 	static void init(bool register_resources_only = false);
-	
-	//: Deinitialize the clanSound library.
+
+	/// \brief Deinitialize the clanSound library.
 	static void deinit();
+/// \}
 };
 
-#endif
+
+/// \}

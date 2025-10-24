@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_precomp
-#define header_precomp
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,19 +39,10 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#include <process.h>
 #include <dsound.h>
-#include <stdlib.h>
-#include <math.h>
-#include <conio.h>
 #endif
 
-#include "API/signals.h"
-#include "API/Core/System/error.h"
-
-#ifndef DEFAULT_DSP
-#define DEFAULT_DSP "/dev/dsp"
-#endif
+#include "API/Core/System/exception.h"
 
 #ifdef __BORLANDC__
 #define BAD_MATH
@@ -75,4 +65,4 @@
 #define BREAKPOINT asm("int $03");
 #endif
 
-#endif
+

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,38 +24,42 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_xml_token
-#define header_xml_token
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//#include <map>
-#include <string>
+#include "../api_core.h"
+#include "../Text/string_types.h"
+#include <vector>
+#include <utility>
 
-//class CL_XMLToken_Generic;
-
-//: XML token in a XML file.
-//- !group=Core/XML!
-//- !header=core.h!
-class CL_XMLToken
+/// \brief XML token in a XML file.
+///
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
+class CL_API_CORE CL_XMLToken
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-//	CL_XMLToken();
-//	
-//	CL_XMLToken(const CL_XMLToken &copy);
-	
-	virtual ~CL_XMLToken() {};
-	
-//! Attributes:
+	CL_XMLToken() : type(NULL_TOKEN), variant(SINGLE)
+	{
+	}
+
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	enum TokenType
 	{
@@ -70,7 +74,7 @@ public:
 		DOCUMENT_TYPE_TOKEN            = 10,
 		NOTATION_TOKEN                 = 12
 	};
-	
+
 	enum TokenVariant
 	{
 		BEGIN  = 1,
@@ -78,53 +82,39 @@ public:
 		SINGLE = 3
 	};
 
-	//: Returns the token type.
-	virtual TokenType get_type() const = 0;
-	
-	//: Returns the token variant.
-	virtual TokenVariant get_variant() const = 0;
-	
-	//: Returns the name of the token.
-	virtual std::string get_name() const = 0;
-	
-	//: Returns the value of the token.
-	virtual std::string get_value() const = 0;
-	
-/*
-	//: Returns all the attributes attached to the token.
-	const std::vector< std::pair<std::string, std::string> > &get_attributes() const;
-*/
-	virtual int get_attributes_number() const = 0;
+	// Attribute name/value pair.
+	typedef std::pair<CL_StringRef, CL_StringRef> Attribute;
 
-	//: Returns the attribute name and value for attribute with specified index.
-	virtual std::pair<std::string, std::string> get_attribute(int attribute_num) const = 0;
+	/// \brief The token type.
+	TokenType type;
 
-	//: Returns the value of a named attribute.
-//	virtual std::string get_attribute(const std::string &name) const = 0;
+	/// \brief The token variant.
+	TokenVariant variant;
 
-//! Operations:
-//public:
-	//: Copy assignment operator.
-//	CL_XMLToken &operator =(const CL_XMLToken &copy);
+	/// \brief The name of the token.
+	CL_StringRef name;
 
-//	//: Sets the type of the token.
-//	void set_type(TokenType type);
-//
-//	//: Sets if token ends with a slash.
-//	void set_variant(TokenVariant variant);
-//
-//	//: Sets the name of the token.
-//	void set_name(const std::string &name);
-//
-//	//: Sets the value of the token.
-//	void set_value(const std::string &value);
-//	
-//	//: Attaches attribute to token.
-//	void set_attribute(const std::string &name, const std::string &value);
+	/// \brief Returns the value of the token.
+	CL_StringRef value;
 
-//! Implementation:
-//private:
-//	CL_XMLToken_Generic *impl;
+	/// \brief All the attributes attached to the token.
+	std::vector<Attribute> attributes;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+/// \}
 };
 
-#endif
+
+/// \}

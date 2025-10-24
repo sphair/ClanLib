@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,74 +29,11 @@
 
 #include "Core/precomp.h"
 
-#include "API/Core/Math/origin.h"
+#include "API/Core/Math/point.h"
+#include "API/Core/Math/size.h"
 
-CL_Point calc_origin(CL_Origin origin, const CL_Size &size)
-{
-	switch(origin)
-	{
-	case origin_top_left:
-	default:
-		return CL_Point(0, 0);
-		break;
-	case origin_top_center:
-		return CL_Point(size.width / 2, 0);
-		break;
-	case origin_top_right:
-		return CL_Point(size.width, 0);
-		break;
-	case origin_center_left:
-		return CL_Point(0, size.height / 2);
-		break;
-	case origin_center:
-		return CL_Point(size.width / 2, size.height / 2);
-		break;
-	case origin_center_right:
-		return CL_Point(size.width, size.height / 2);
-		break;
-	case origin_bottom_left:
-		return CL_Point(0, size.height);
-		break;
-	case origin_bottom_center:
-		return CL_Point(size.width / 2, size.height);
-		break;
-	case origin_bottom_right:
-		return CL_Point(size.width, size.height);
-		break;
-	}
-}
+// Explicit instantiate the versions we use:
 
-CL_Pointf calc_origin(CL_Origin origin, const CL_Sizef &size)
-{
-	switch(origin)
-	{
-	case origin_top_left:
-	default:
-		return CL_Pointf(0, 0);
-		break;
-	case origin_top_center:
-		return CL_Pointf(size.width / 2, 0);
-		break;
-	case origin_top_right:
-		return CL_Pointf(size.width, 0);
-		break;
-	case origin_center_left:
-		return CL_Pointf(0, size.height / 2);
-		break;
-	case origin_center:
-		return CL_Pointf(size.width / 2, size.height / 2);
-		break;
-	case origin_center_right:
-		return CL_Pointf(size.width, size.height / 2);
-		break;
-	case origin_bottom_left:
-		return CL_Pointf(0, size.height);
-		break;
-	case origin_bottom_center:
-		return CL_Pointf(size.width / 2, size.height);
-		break;
-	case origin_bottom_right:
-		return CL_Pointf(size.width, size.height);
-		break;
-	}
-}
+template class CL_Pointx<int>;
+template class CL_Pointx<float>;
+template class CL_Pointx<double>;

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -36,7 +35,7 @@
 
 static CL_SoundOutput *cl_current_output = 0;
 
-const std::string &CL_Sound::get_name()
+const CL_String8 &CL_Sound::get_name()
 {
 	return get_current_output()->get_name();
 }

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,12 +37,15 @@
 #include "gameobject.h"
 #include "gameobject_pacman.h"
 #include "map.h"
+#include <list>
+
+class FontBlowUp;
 
 class World
 {
 //!Construction:
 public:
-	World(CL_ResourceManager *resources);
+	World(CL_ResourceManager *resources, CL_DisplayWindow &window);
 
 	~World();
 
@@ -51,6 +54,7 @@ public:
 	CL_ResourceManager *resources;
 	
 	Map *map;
+	CL_GraphicContext gc;
 
 	std::list<GameObject*> objects;
 
@@ -71,13 +75,17 @@ public:
 
 //!Implementation:
 private:
-	void on_key_down(const CL_InputEvent &key);
+	void on_key_down(const CL_InputEvent &key, const CL_InputState &state);
 
 	int view_x, view_y;
 
-	CL_Font fnt_clansoft;
+	std::list<FontBlowUp *> blowups;
+
+	CL_Font_Texture fnt_clansoft;
 	
-	CL_SoundBuffer sample;
+	CL_DisplayWindow game_display_window;
+
+	//CL_SoundBuffer sample;
 };
 
 #endif

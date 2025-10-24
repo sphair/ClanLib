@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,76 +24,83 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_text
-#define header_dom_text
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_character_data.h"
 
-//: DOM Text class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>The Text interface represents the textual content (termed character data
-//- in XML) of an Element or Attr. If there is no markup inside an element's content,
-//- the text is contained in a single object implementing the Text interface that is
-//- the only child of the element. If there is markup, it is parsed into a list of
-//- elements and Text nodes that form the list of children of the element.</p>
-//- <p>When a document is first made available via the DOM, there is only one Text
-//- node for each block of text. Users may create adjacent Text nodes that represent
-//- the contents of a given element without any intervening markup, but should be aware
-//- that there is no way to represent the separations between these nodes in XML or HTML,
-//- so they will not (in general) persist between DOM editing sessions. The normalize()
-//- method on Element merges any such adjacent Text objects into a single node for each
-//- block of text; this is recommended before employing operations that depend on a
-//- particular document structure, such as navigation with XPointers.</p>
+/// \brief DOM Text class.
+///
+///    <p>The Text interface represents the textual content (termed character data
+///    in XML) of an Element or Attr. If there is no markup inside an element's content,
+///    the text is contained in a single object implementing the Text interface that is
+///    the only child of the element. If there is markup, it is parsed into a list of
+///    elements and Text nodes that form the list of children of the element.</p>
+///    <p>When a document is first made available via the DOM, there is only one Text
+///    node for each block of text. Users may create adjacent Text nodes that represent
+///    the contents of a given element without any intervening markup, but should be aware
+///    that there is no way to represent the separations between these nodes in XML or HTML,
+///    so they will not (in general) persist between DOM editing sessions. The normalize()
+///    method on Element merges any such adjacent Text objects into a single node for each
+///    block of text; this is recommended before employing operations that depend on a
+///    particular document structure, such as navigation with XPointers.</p>
+/// \xmlonly !group=Core/XML! !header=core.h!  \endxmlonly
 class CL_API_CORE CL_DomText : public CL_DomCharacterData
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Text handle.
+	/// \brief Constructs a DOM Text handle.
 	CL_DomText();
 
-	CL_DomText(CL_DomDocument &doc, const std::string &data);
+	CL_DomText(CL_DomDocument &doc, const CL_DomString &data);
 
 	CL_DomText(const CL_SharedPtr<CL_DomNode_Generic> &impl);
-	
+
 	~CL_DomText();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
-public:
-	//: Breaks this Text node into two Text nodes at the specified offset, keeping both in the tree as siblings.
-	//- <p>node then only contains all the content up to the offset point. And a new Text node, which
-	//- is inserted as the next sibling of this node, contains all the content at and after the offset
-	//- point.</p>
-	//param offset: The offset at which to split.
-	//retval: The new Text node.
-	CL_DomText splitText(unsigned long offset);
 
-//! Implementation:
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief Breaks this Text node into two Text nodes at the specified offset, keeping both in the tree as siblings.
+	/** <p>node then only contains all the content up to the offset point. And a new Text node, which
+	    is inserted as the next sibling of this node, contains all the content at and after the offset
+	    point.</p>
+	    \param offset The offset at which to split.
+	    retval: The new Text node.*/
+	CL_DomText split_text(unsigned long offset);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 protected:
 	CL_DomText(CL_DomDocument &doc, unsigned short node_type);
+/// \}
 };
 
-#endif
+
+/// \}

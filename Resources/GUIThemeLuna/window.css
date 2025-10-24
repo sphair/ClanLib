@@ -1,0 +1,50 @@
+
+window
+{
+/*	bg-color: #e0dfe3;*/
+	bg-color: #f3f2e7;
+}
+
+window caption
+{
+	bg-image: WindowActive;
+	bg-image-sizing-left:28;
+	bg-image-sizing-right:35;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:17;
+	bg-image-sizing:stretch; 
+	preferred-height:30;
+}
+
+window frameleft
+{
+	bg-image: WindowFrameLeftActive;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:4;
+}
+
+window frameright
+{
+	bg-image: WindowFrameRightActive;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+	preferred-width:4;
+}
+
+window framebottom
+{
+	bg-image: WindowFrameBottomActive;
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	preferred-height:4;
+}

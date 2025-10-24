@@ -1,0 +1,65 @@
+
+Please read the normal README and INSTALL.win32 for general installation
+guidelines.
+
+When debugging with Microsoft Visual C++ 6,7 or 8, the auto expand keywords
+will provide better Watch and Variable information for common ClanLib types.
+Add the following to autoexp.dat (located in C:\Program Files\Microsoft
+Visual Studio .NET\Common7\Packages\Debugger on my computer):
+
+[AutoExpand]
+; from ClanLib
+CL_SharedPtr<*> =<ptr>
+CL_WeakPtr<*> =<ptr>
+CL_UnknownPtr =<ptr>
+CL_BasicString<char,CL_String8Traits,std::basic_string<char,std::char_traits<char>,std::allocator<char> > > =<data_ptr,s> length=<data_length>
+CL_BasicString<unsigned short,CL_String16Traits,std::basic_string<unsigned short,std::char_traits<unsigned short>,std::allocator<unsigned short> > > =<data_ptr,su> length=<data_length>
+CL_BasicString<wchar_t,CL_String16Traits,std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t> > > =<data_ptr,su> length=<data_length>
+CL_Rect =top=<top> bottom=<bottom> left=<left> right=<right>
+CL_Rectf =top=<top> bottom=<bottom> left=<left> right=<right>
+CL_Point =x=<x> y=<y>
+CL_Pointf =x=<x> y=<y>
+CL_Size =width=<width> height=<height>
+CL_Sizef =width=<width> height=<height>
+CL_Vector =x=<x> y=<y> z=<z> w=<w>
+CL_Vector2 =x=<x> y=<y>
+CL_Color =<color,x>
+
+It is also possible disable that it steps into certain commonly used
+classes:
+
+In Visual C++ 6.0, add the following to autoexp.dat:
+
+[ExecutionControl]
+CL_BasicString<*>::*=NoStepInto
+CL_SharedPtr_Link::*=NoStepInto
+CL_SharedPtr<*>::*=NoStepInto
+CL_WeakPtr<*>::*=NoStepInto
+CL_UnknownPtr::*=NoStepInto
+
+In Visual C++ 7 they moved this to the registry:
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\7.0\NativeDE\StepOver]
+"10"=".*CL_BasicString.*=NoStepInto"
+"15"=".*CL_String.*=NoStepInto"
+"20"=".*CL_SharedPtr.*=NoStepInto"
+"25"=".*CL_WeakPtr.*=NoStepInto"
+"30"=".*CL_UnknownPtr.*=NoStepInto"
+
+Be careful not to just apply this .reg as-is, since the key names (10, 15,
+25 etc) could conflict with existing NoStepInto directives from other 3rd
+party software.
+
+In Visual C++ 8 (2005 beta 2) they moved this to HKEY_LOCAL_MACHINE,
+and instead of using numbers you can now name them properly:
+
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\7.0\NativeDE\StepOver]
+"ClanLib BasicString"=".*CL_BasicString.*=NoStepInto"
+"ClanLib String"=".*CL_String.*=NoStepInto"
+"ClanLib SharedPtr"=".*CL_SharedPtr.*=NoStepInto"
+"ClanLib WeakPtr"=".*CL_WeakPtr.*=NoStepInto"
+"ClanLib UnknownPtr"=".*CL_UnknownPtr.*=NoStepInto"

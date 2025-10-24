@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,26 +24,29 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_soundformat
-#define header_soundformat
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: Sound Format Enums
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
+#include "api_sound.h"
+
+/// \brief Sound Format Enums
+///
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 enum CL_SoundFormat
 {
 	sf_8bit_signed,
 	sf_16bit_signed
 };
 
-#endif
+
+/// \}

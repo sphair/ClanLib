@@ -1,5 +1,0 @@
-#!/bin/sh
-
-exec @xslt_exec@
-
-# EOF #

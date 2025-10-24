@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,12 +37,12 @@
 GameObject_Pacman::GameObject_Pacman(int x, int y, World *world) :
 	GameObject_Moving(x, y, world)
 {
-	spr_pacman = CL_Sprite("Game/spr_pacman", world->resources);
+	spr_pacman = CL_Sprite(world->gc, "Game/spr_pacman", world->resources);
 	
-	sfx_start = CL_SoundBuffer("Game/sfx_start", world->resources);
-	sfx_namnam = CL_SoundBuffer("Game/sfx_namnam", world->resources);
-	sfx_powerup = CL_SoundBuffer("Game/sfx_powerup", world->resources);
-	sfx_dead = CL_SoundBuffer("Game/sfx_dead", world->resources);
+	//sfx_start = CL_SoundBuffer("Game/sfx_start", world->resources);
+	//sfx_namnam = CL_SoundBuffer("Game/sfx_namnam", world->resources);
+	//sfx_powerup = CL_SoundBuffer("Game/sfx_powerup", world->resources);
+	//sfx_dead = CL_SoundBuffer("Game/sfx_dead", world->resources);
 
 	move_dir = 1;
 	wanted_dir = -1;
@@ -54,10 +54,9 @@ GameObject_Pacman::GameObject_Pacman(int x, int y, World *world) :
 
 	set_speed(4.0);
 	
-	sfx_start.play();
-
-	slots.connect(CL_Keyboard::sig_key_down(), this, &GameObject_Pacman::on_key_down);
+	//sfx_start.play();
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Pacman attributes:
@@ -65,17 +64,16 @@ GameObject_Pacman::GameObject_Pacman(int x, int y, World *world) :
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Pacman operations:
 
-void GameObject_Pacman::show(int view_x, int view_y, CL_GraphicContext *gc)
+void GameObject_Pacman::show(int view_x, int view_y, CL_GraphicContext &gc)
 {
 	int width = world->map->get_tile_width() - 6;
 	int height = world->map->get_tile_height() - 6;
 	int anim_length = spr_pacman.get_frame_count() / 4;
 
 	spr_pacman.set_frame(anim_pos+anim_length*move_dir);
-	spr_pacman.draw(
+	spr_pacman.draw(gc,
 		(int) (x*width)-view_x,
-		(int) (y*height)-view_y,
-		gc);
+		(int) (y*height)-view_y);
 }
 
 bool GameObject_Pacman::turn(float time_elapsed)
@@ -87,7 +85,7 @@ bool GameObject_Pacman::turn(float time_elapsed)
 
 	if (i_am_dead) 
 	{
-		sfx_dead.play();
+//		sfx_dead.play();
 
 		world->score -= 5000;
 		if (world->score < 0) world->score = 0;
@@ -108,6 +106,11 @@ bool GameObject_Pacman::hit_check(float hit_x, float hit_y)
 	return false;
 }
 
+void GameObject_Pacman::AttachKeyboard(CL_DisplayWindow &window)
+{
+	slots.connect(window.get_ic().get_keyboard().sig_key_down(), this, &GameObject_Pacman::on_key_down);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Pacman implementation:
 
@@ -117,7 +120,7 @@ bool GameObject_Pacman::event_reached_dest()
 	{
 		world->score += 125;
 		world->map->eat_egg(dest_x, dest_y);
-		sfx_namnam.play();
+//		sfx_namnam.play();
 	}
 	if (world->map->get_tile_type(dest_x, dest_y) == Map::tile_powerup) // powerup
 	{
@@ -125,7 +128,7 @@ bool GameObject_Pacman::event_reached_dest()
 		world->map->eat_egg(dest_x, dest_y);
 		got_powerup = true;
 		powerup_starttime = CL_System::get_time();
-		sfx_powerup.play();
+//		sfx_powerup.play();
 	}
 	world->map->leave_trail(dest_x, dest_y);
 /*
@@ -209,7 +212,7 @@ bool GameObject_Pacman::event_reached_dest()
 	return true;
 }
 
-void GameObject_Pacman::on_key_down(const CL_InputEvent &key)
+void GameObject_Pacman::on_key_down(const CL_InputEvent &key, const CL_InputState &state)
 {
 	switch (move_dir)
 	{

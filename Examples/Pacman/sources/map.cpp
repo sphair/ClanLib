@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,13 +29,14 @@
 
 #include "precomp.h"
 #include "map.h"
+#include <stdlib.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // Map construction:
 
-Map::Map(CL_ResourceManager *resources) : width(0), height(0), tiles(0), eggs_left(0)
+Map::Map(CL_ResourceManager *resources, CL_GraphicContext &gc) : width(0), height(0), tiles(0), eggs_left(0)
 {
-	tile_images = CL_Sprite("Game/spr_maptiles", resources);
+	tile_images = CL_Sprite(gc, "Game/spr_maptiles", resources);
 }
 	
 Map::~Map()
@@ -98,12 +99,12 @@ void Map::generate_level(int map_width, int map_height, int num_connections)
 
 	// 3. build tunnels in level
 	num_tiles = width * height;
-	int *tunnel_x[4];
-	int *tunnel_y[4];
+	std::vector<int> tunnel_x[4];
+	std::vector<int> tunnel_y[4];
 	for (i=0; i<4; i++)
 	{
-		tunnel_x[i] = new int[num_tiles];
-		tunnel_y[i] = new int[num_tiles];
+		tunnel_x[i].resize(num_tiles);
+		tunnel_y[i].resize(num_tiles);
 	}
 
 	// Set the four tunnel starting points:
@@ -169,13 +170,6 @@ void Map::generate_level(int map_width, int map_height, int num_connections)
 		if (filled_level == 4) break;
 	}
 	
-	// Clean up.
-	for (i=0; i<4; i++)
-	{
-		delete[] tunnel_x[i];
-		delete[] tunnel_y[i];
-	}
-
 	// 4. connect gaps random in the tunnels:
 	for (i=0; i<num_connections; i++)
 	{
@@ -263,7 +257,7 @@ void Map::eat_trail(int x, int y)
 	set_tile_type(x, y, tile_empty);
 }
 
-void Map::draw(int center_x, int center_y, CL_GraphicContext *gc)
+void Map::draw(int center_x, int center_y, CL_GraphicContext &gc)
 {
 	static int start_time = -1;
 	if (start_time == -1) start_time = CL_System::get_time();
@@ -284,7 +278,7 @@ void Map::draw(int center_x, int center_y, CL_GraphicContext *gc)
 			if (frame == 2) frame = powerup_spr + 1; // powerup blinking.
 
 			tile_images.set_frame(frame);
-			tile_images.draw(scr_x, scr_y, gc);
+			tile_images.draw(gc, scr_x, scr_y);
 		}
 	}
 }

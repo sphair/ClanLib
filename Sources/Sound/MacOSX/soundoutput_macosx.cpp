@@ -25,21 +25,18 @@
 **
 **    Magnus Norddahl
 **    Sean Heber - implemented ring buffer
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundoutput_macosx.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/cl_assert.h"
+#include "API/Core/System/exception.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/log.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_MacOSX construction:
 
 CL_SoundOutput_MacOSX::CL_SoundOutput_MacOSX(int frequency) :
-	CL_SoundOutput_Generic(frequency), playing(false)
+	CL_SoundOutput_Generic(frequency, latency), playing(false)
 {
 	UInt32 size;
 	OSStatus result;

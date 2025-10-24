@@ -28,8 +28,7 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundoutput_alsa
-#define header_soundoutput_alsa
+#pragma once
 
 #ifdef __linux__
 
@@ -45,7 +44,7 @@ class CL_SoundOutput_alsa : public CL_SoundOutput_Generic
 {
 //! Construction:
 public:
-	CL_SoundOutput_alsa(int mixing_frequency);
+	CL_SoundOutput_alsa(int mixing_frequency, int mixing_latency);
 	
 	~CL_SoundOutput_alsa();
 
@@ -78,4 +77,4 @@ private:
 };
 
 #endif
-#endif
+

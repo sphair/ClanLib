@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_delauney_triangulator_generic
-#define header_delauney_triangulator_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,19 +38,29 @@
 
 class CL_DelauneyTriangulator_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_DelauneyTriangulator_Generic();
 
 	~CL_DelauneyTriangulator_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	std::vector<CL_DelauneyTriangulator_Vertex> input_vertices;
 
 	std::vector<CL_DelauneyTriangulator_Triangle> triangles;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	void triangulate();
 
@@ -68,6 +78,7 @@ public:
 
 	CL_DelauneyTriangulator_Vertex find_circumcenter(
 		const CL_DelauneyTriangulator_Triangle &triangle);
+/// \}
 };
 
-#endif
+

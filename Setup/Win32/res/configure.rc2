@@ -14,10 +14,8 @@
 #define RT_MANIFEST 24
 #endif
 
-#ifndef VC8MANIFEST
 #ifdef _UNICODE
-IDR_MANIFEST	RT_MANIFEST	"res\\configure.manifest"
-#endif
+//IDR_MANIFEST	RT_MANIFEST	"res\\configure.manifest"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

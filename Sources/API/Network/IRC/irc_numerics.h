@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #ifndef irc_numerics
@@ -38,6 +37,7 @@
 	D=DALnet bahamut 1.4.8
 */
 
+/// \xmlonly !group=Network/Internet Relay Chat! !header=network.h! \endxmlonly
 enum CL_IRCNumerics
 {
 	RPL_WELCOME = 1, // IEUD

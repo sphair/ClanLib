@@ -24,15 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "API/Sound/soundformat.h"
-#include <API/Core/System/error.h>
-#include "API/Core/System/cl_assert.h"
+#include "API/Core/System/exception.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/log.h"
+#include "API/Core/Text/logger.h"
 #include "soundprovider_recorder_oss.h"
 #include <unistd.h>
 #include <fcntl.h>
@@ -50,6 +48,7 @@
 #include <sys/select.h>
 #endif
 
+#define DEFAULT_DSP "/dev/dsp"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Recorder_OSS_Session construction:
@@ -72,7 +71,7 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 
 	if (ioctl(dev_dsp_fd, SNDCTL_DSP_SETFRAGMENT, &frag_settings))
 	{
-		CL_Log::log("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
+		cl_log_event("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
 	}
 
 #endif
@@ -82,7 +81,7 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 	if (format != AFMT_S16_NE)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("Requires 16 bit soundcard. No sound input will be available.");
+		throw CL_Exception("Requires 16 bit soundcard. No sound input will be available.");
 	}
 
 	int stereo = 0;
@@ -90,7 +89,7 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 	if (stereo != 0)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("ClanSound: Requires 16 bit mono input. No sound will be available.");
+		throw CL_Exception("ClanSound: Requires 16 bit mono input. No sound will be available.");
 	}
 
 	int speed = frequency;
@@ -100,7 +99,7 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 	if (percent_wrong < 0.90 || percent_wrong > 1.10)
 	{
 		close(dev_dsp_fd);
-		throw CL_Error("ClanSound: Mixing rate is not supported by soundcard.");
+		throw CL_Exception("ClanSound: Mixing rate is not supported by soundcard.");
 	}
 
 	// Try to improve mixing performance by using the same mixing buffer size
@@ -108,7 +107,7 @@ CL_SoundProvider_Recorder_OSS_Session::CL_SoundProvider_Recorder_OSS_Session(int
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETBLKSIZE, &frag_size);
 	if (err == -1)
 	{
-		CL_Log::log("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
+		cl_log_event("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
 		frag_size = frequency/4; // 0.25 sec mixing buffer used.
 	}
 
@@ -178,7 +177,7 @@ int CL_SoundProvider_Recorder_OSS_Session::get_data(void **data_ptr, int data_re
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETISPACE, &info);
 	if (err == -1)
 	{
-		CL_Log::log("debug", "ClanSound: fragments free not supported by device!?");
+		cl_log_event("debug", "ClanSound: fragments free not supported by device!?");
 		position = 0;
 	}
 	if(info.fragments == 0)

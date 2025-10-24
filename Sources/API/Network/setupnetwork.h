@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,50 +24,45 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="System"
-//! header=network.h
+/// \addtogroup clanNetwork_System clanNetwork System
+/// \{
 
-#ifndef header_setupnetwork
-#define header_setupnetwork
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: Initialization class for clanNetwork.
-//- !group=Network/System!
-//- !header=network.h!
+#include "api_network.h"
+
+/// \brief Initialization class for clanNetwork.
+///
+/// \xmlonly !group=Network/System! !header=network.h! \endxmlonly
 class CL_API_NETWORK CL_SetupNetwork
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Initializes clanNetwork.
-	//- <p>Constructing a CL_SetupNetwork object is equalent to calling CL_SetupNetwork::init().</p>
-	//- <p>When the CL_SetupNetwork instance is destroyed, CL_SetupNetwork::deinit() is called.</p>
+	/// \brief Initializes clanNetwork.
+	/** <p>Constructing a CL_SetupNetwork object is equalent to calling CL_SetupNetwork::init().</p>
+	    <p>When the CL_SetupNetwork instance is destroyed, CL_SetupNetwork::deinit() is called.</p>*/
 	CL_SetupNetwork(bool register_resources_only = false);
 
 	~CL_SetupNetwork();
 
-//! Operations:
-public:
-	//: Initialize network.
-	static void init(bool register_resources_only = false);
 
-	//: Deinitialize network.
-	static void deinit();
+/// \}
+/// \name Operations
+/// \{
+
+public:
+/// \}
 };
 
-#endif
+
+/// \}

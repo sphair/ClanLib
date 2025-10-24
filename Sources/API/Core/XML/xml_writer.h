@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,66 +24,73 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_xml_writer
-#define header_xml_writer
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
 
-class CL_OutputSource;
-class CL_XMLTokenSave;
+class CL_IODevice;
+class CL_XMLToken;
 class CL_XMLWriter_Generic;
 
-//: The XML Writer writes a XML file based on XML tokens.
-//- !group=Core/XML!
-//- !header=core.h!
+/// \brief The XML Writer writes a XML file based on XML tokens.
+///
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_XMLWriter
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_XMLWriter();
-	
+
 	CL_XMLWriter(const CL_XMLWriter &copy);
-	
-	CL_XMLWriter(CL_OutputSource *output, bool delete_output = false);
-	
+
+	CL_XMLWriter(CL_IODevice &output);
+
 	virtual ~CL_XMLWriter();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the insert whitespace flag.
+	/// \brief Returns the insert whitespace flag.
 	bool get_insert_whitespace() const;
 
-	//: Inserts whitespace between tags if enabled.
+	/// \brief Inserts whitespace between tags if enabled.
 	void set_insert_whitespace(bool enable);
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Write token to file.
-	void write(const CL_XMLTokenSave &token);
-	
-//! Implementation:
+	/// \brief Write token to file.
+	void write(const CL_XMLToken &token);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SharedPtr<CL_XMLWriter_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

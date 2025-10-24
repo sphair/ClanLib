@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@ public:
 //!Construction:
 public:
 	//:  Constructor. Loads the resources needed to display the map.
-	Map(CL_ResourceManager *resources);
+	Map(CL_ResourceManager *resources, CL_GraphicContext &gc);
 	
 	//: Destructor.
 	~Map();
@@ -93,7 +93,7 @@ public:
 	void eat_trail(int x, int y);
 	
 	//: Draw the map on graphic context, looking from (view_x, view_y).
-	void draw(int view_x, int view_y, CL_GraphicContext *gc = 0);
+	void draw(int view_x, int view_y, CL_GraphicContext &gc);
 
 //!Implementation:
 private:

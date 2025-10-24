@@ -1,0 +1,88 @@
+<map>
+  <areas>
+    <area id="1">
+      <position>
+        <x>278</x>
+        <y>310</y>
+      </position>
+      <connections>2,6</connections>
+    </area>
+    <area id="2">
+      <position>
+        <x>676</x>
+        <y>276</y>
+      </position>
+      <connections>1,3,7</connections>
+    </area>
+    <area id="3">
+      <position>
+        <x>1050</x>
+        <y>346</y>
+      </position>
+      <connections>2,4,7,11</connections>
+    </area>
+    <area id="4">
+      <position>
+        <x>1434</x>
+        <y>308</y>
+      </position>
+      <connections>3,5,11</connections>
+    </area>
+    <area id="5">
+      <position>
+        <x>1746</x>
+        <y>378</y>
+      </position>
+      <connections>4,12</connections>
+    </area>
+    <area id="6">
+      <position>
+        <x>368</x>
+        <y>618</y>
+      </position>
+      <connections>1,7,8,9</connections>
+    </area>
+    <area id="7">
+      <position>
+        <x>782</x>
+        <y>554</y>
+      </position>
+      <connections>2,3,6,9,10,11</connections>
+    </area>
+    <area id="8">
+      <position>
+        <x>194</x>
+        <y>836</y>
+      </position>
+      <connections>6,9</connections>
+    </area>
+    <area id="9">
+      <position>
+        <x>550</x>
+        <y>826</y>
+      </position>
+      <connections>6,7,8,10</connections>
+    </area>
+    <area id="10">
+      <position>
+        <x>920</x>
+        <y>814</y>
+      </position>
+      <connections>7,9,11</connections>
+    </area>
+    <area id="11">
+      <position>
+        <x>1238</x>
+        <y>694</y>
+      </position>
+      <connections>3,4,7,10,12</connections>
+    </area>
+    <area id="12">
+      <position>
+        <x>1748</x>
+        <y>816</y>
+      </position>
+      <connections>5,11</connections>
+    </area>
+  </areas>
+</map>

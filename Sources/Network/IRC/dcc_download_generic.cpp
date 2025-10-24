@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,19 +24,18 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "dcc_download_generic.h"
-#include "API/Core/IOData/outputsource_provider.h"
-#include "API/Core/IOData/outputsource_file.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/file.h"
 #include "API/Core/System/system.h"
-#include "API/Core/System/event_listener.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/log.h"
-#ifdef WIN32
-#include "winsock.h"
-#else
+#include "API/Core/System/event.h"
+#include "API/Core/System/exception.h"
+#include "API/Network/Socket/socket_name.h"
+#ifndef WIN32
 #include <netinet/in.h>
 #endif
 
@@ -44,26 +43,22 @@
 // CL_DCCDownload_Generic Construction:
 
 CL_DCCDownload_Generic::CL_DCCDownload_Generic(
-	const std::string &server,
-	const std::string &port,
-	const std::string &filename,
+	const CL_String &server,
+	const CL_String &port,
+	const CL_String &filename,
 	int total_size,
-	CL_OutputSourceProvider *provider,
-	bool delete_provider)
-	:
-	server(server), port(port), filename(filename), total_size(total_size),
-	provider(provider), delete_provider(delete_provider), status(CL_DCCDownload::connecting),
+	CL_VirtualDirectory directory)
+: server(server), port(port), filename(filename), total_size(total_size),
+	directory(directory), status(CL_DCCDownload::connecting),
 	send_signal(no_signal)
 {
-	thread = CL_Thread(this);
-	thread.start();
+	thread.start(this, &CL_DCCDownload_Generic::thread_main);
 }
 
 CL_DCCDownload_Generic::~CL_DCCDownload_Generic()
 {
-	shutdown_trigger.set_flag();
-	thread.wait();
-	if (delete_provider) delete provider;
+	event_shutdown.set();
+	thread.join();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -72,23 +67,12 @@ CL_DCCDownload_Generic::~CL_DCCDownload_Generic()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DCCDownload_Generic Operations:
 
-void CL_DCCDownload_Generic::add_ref()
-{
-	ref_count++;
-}
-
-void CL_DCCDownload_Generic::release_ref()
-{
-	ref_count--;
-	if (ref_count == 0) delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_DCCDownload_Generic Implementation:
 
-void CL_DCCDownload_Generic::run()
+void CL_DCCDownload_Generic::thread_main()
 {
-	while (shutdown_trigger.get_flag() == false)
+	while (event_shutdown.wait(0) == false)
 	{
 		CL_MutexSection mutex_lock(&mutex);
 		if (status != CL_DCCDownload::connecting)
@@ -100,78 +84,78 @@ void CL_DCCDownload_Generic::run()
 		try
 		{
 			status = CL_DCCDownload::connecting;
-			mutex_lock.leave();
+			mutex_lock.unlock();
 		
-			CL_Socket sock(CL_Socket::tcp);
-			sock.connect(CL_IPAddress(server, port));
-			sock.set_nodelay();
+			CL_TCPConnection connection(CL_SocketName(server, port));
+			connection.set_nodelay();
 			
-			mutex_lock.enter();
+			mutex_lock.lock();
 			status = CL_DCCDownload::downloading;
-			mutex_lock.leave();
+			mutex_lock.unlock();
 			
 			int total_read = 0;
 
-			CL_OutputSource_File outputfile(filename);
+			CL_File outputfile(filename, CL_File::create_always);
 			char buffer[64*1024];
 			while (true)
 			{
-				CL_EventListener listener;
-				listener.add_trigger(sock.get_read_trigger());
-				listener.add_trigger(&shutdown_trigger);
-				listener.add_trigger(&reconnect_trigger);
-				listener.wait();
-				if (shutdown_trigger.get_flag()) break;
-				if (reconnect_trigger.get_flag())
+				CL_Event read_event = connection.get_read_event();
+				int result = CL_Event::wait(read_event, event_shutdown, event_reconnect);
+				if (result == 0)
 				{
-					reconnect_trigger.reset();
-					mutex_lock.enter();
+					int data_read = connection.read(buffer, 64*1024);
+					if (data_read == 0) break;
+					total_read += data_read;
+					outputfile.write(buffer, data_read);
+					unsigned int total_read_network_order = htonl(total_read);
+					connection.write(&total_read_network_order, 4);
+				}
+				else if (result == 2)
+				{
+					event_reconnect.reset();
+					mutex_lock.lock();
 					status = CL_DCCDownload::connecting;
-					mutex_lock.leave();
-					sock = CL_Socket(CL_Socket::tcp);
-					sock.connect(CL_IPAddress(server, port));
+					mutex_lock.unlock();
+					connection = CL_TCPConnection(CL_SocketName(server, port));
 					continue;
 				}
-
-				int data_read = sock.input.read(buffer, 64*1024);
-				if (data_read == 0) break;
-				total_read += data_read;
-				outputfile.write(buffer, data_read);
-				unsigned int total_read_network_order = htonl(total_read);
-				sock.output.write(&total_read_network_order, 4);
+				else
+				{
+					break;
+				}
 			}
 			
-			mutex_lock.enter();
+			mutex_lock.lock();
 			status = CL_DCCDownload::finished;
 			send_signal = complete_signal;
-			mutex_lock.leave();
+			mutex_lock.unlock();
 			break;
 		}
-		catch (CL_Error err)
+		catch (CL_Exception err)
 		{
-			mutex_lock.enter();
+			mutex_lock.lock();
 			status = CL_DCCDownload::connection_lost;
 			send_signal = lost_signal;
 			error = err.message;
-			mutex_lock.leave();
+			mutex_lock.unlock();
 		}
 	}
 }
 	
-void CL_DCCDownload_Generic::keep_alive()
+void CL_DCCDownload_Generic::update()
 {
 	CL_MutexSection mutex_lock(&mutex);
 	if (send_signal == complete_signal)
 	{
 		send_signal = no_signal;
-		mutex_lock.leave();
-		sig_download_complete();
+		mutex_lock.unlock();
+		sig_download_complete.invoke();
 	}
 	else if (send_signal == lost_signal)
 	{
-		std::string err = error;
+		CL_String err = error;
 		send_signal = no_signal;
-		mutex_lock.leave();
-		sig_connection_lost(err);
+		mutex_lock.unlock();
+		sig_connection_lost.invoke(err);
 	}
 }

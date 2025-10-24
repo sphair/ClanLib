@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,40 +24,47 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_soundoutput_generic
-#define header_soundoutput_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include <vector>
-#include <string>
 #include <list>
+#include "API/Core/Text/string_types.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/mutex.h"
-#include "API/Core/System/event_trigger.h"
-#include "API/Core/System/mutexsharedptr.h"
+#include "API/Core/System/event.h"
+#include "API/Core/System/sharedptr.h"
 
 class CL_SoundFilter;
 class CL_SoundBuffer_Session_Generic;
 
 class CL_SoundOutput_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_SoundOutput_Generic(int mixing_frequency);
-	
+	CL_SoundOutput_Generic(int mixing_frequency, int mixing_latency);
+
 	virtual ~CL_SoundOutput_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	std::string name;
+	CL_String8 name;
 
 	int mixing_frequency;
+
+	int mixing_latency;
 
 	float volume;
 
@@ -69,9 +76,9 @@ public:
 
 	CL_Thread thread;
 
-	CL_EventTrigger stop_mixer;
+	CL_Event stop_mixer;
 
-	std::list< CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> > sessions;
+	std::list< CL_SharedPtr<CL_SoundBuffer_Session_Generic> > sessions;
 
 	CL_Mutex mutex;
 
@@ -83,47 +90,54 @@ public:
 
 	short *stereo_buffer;
 
-	bool has_sound;
 
-//! Operations:
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	void add_ref();
-	
+
 	void release_ref();
 
-	void play_session(CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> session);
+	void play_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session);
 
-	void stop_session(CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> session);
+	void stop_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session);
 
 protected:
-	//: Called when we have no samples to play - and wants to tell the soundcard
-	//: about this possible event.
+	/// \brief Called when we have no samples to play - and wants to tell the soundcard
+	/// \brief about this possible event.
 	virtual void silence() = 0;
 
-	//: Returns the buffer size used by device (returned as num [stereo] samples).
+	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
 	virtual int get_fragment_size() = 0;
 
-	//: Writes a fragment to the soundcard.
+	/// \brief Writes a fragment to the soundcard.
 	virtual void write_fragment(short *data) = 0;
 
-	//: Waits until output source isn't full anymore.
+	/// \brief Waits until output source isn't full anymore.
 	virtual void wait() = 0;
 
-	//: Starts a thread and call mix_fragment() and wait() continueously.
+	/// \brief Starts a thread and call mix_fragment() and wait() continueously.
 	void start_mixer_thread();
 
-	//: Stops the mixer thread.
+	/// \brief Stops the mixer thread.
 	void stop_mixer_thread();
 
-	//: Mixes a single fragment and stores the result in stereo_buffer.
+	/// \brief Mixes a single fragment and stores the result in stereo_buffer.
 	void mix_fragment();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	//: Worker thread for output device. Mixes the audio and sends it to write_fragment.
+	/// \brief Worker thread for output device. Mixes the audio and sends it to write_fragment.
 	void mixer_thread();
 
 	int ref_count;
+/// \}
 };
 
-#endif
+

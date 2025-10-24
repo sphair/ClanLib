@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,64 +27,68 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanVorbis="Sound Providers"
-//! header=vorbis.h
+/// \addtogroup clanVorbis_Sound_Providers clanVorbis Sound Providers
+/// \{
 
-#ifndef header_sound_provider_vorbis
-#define header_sound_provider_vorbis
 
-#ifdef CL_API_DLL
-#ifdef CL_VORBIS_EXPORT
-#define CL_API_VORBIS __declspec(dllexport)
-#else
-#define CL_API_VORBIS __declspec(dllimport)
-#endif
-#else
-#define CL_API_VORBIS
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "../Sound/soundprovider.h"
-#include <string>
+#include "../Core/IOData/virtual_directory.h"
 
 class CL_InputSourceProvider;
 class CL_SoundProvider_Vorbis_Generic;
 
-//: Module format (.mod, .s3m, .xm, etc) sound provider.
-//- !group=Vorbis/Sound Providers!
-//- !header=vorbis.h!
-class CL_API_VORBIS CL_SoundProvider_Vorbis : public CL_SoundProvider
+/// \brief Ogg Vorbis format sound provider.
+///
+/// \xmlonly !group=Vorbis/Sound Providers! !header=vorbis.h! \endxmlonly
+class CL_SoundProvider_Vorbis : public CL_SoundProvider
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a sound provider based on an ogg vorbis (.ogg) file.
-	//param filename: Filename of module file.
-	//param provider: Input source provider used to retrieve module file.
-	//param stream: If true, will stream from disk. If false, will load it to memory.
+	/// \brief Constructs a sound provider based on an ogg vorbis (.ogg) file.
+	///
+	/// \param filename Filename of module file.
+	/// \param provider Input source provider used to retrieve module file.
+	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	CL_SoundProvider_Vorbis(
-		const std::string &filename,
-		CL_InputSourceProvider *provider = 0,
+		const CL_String &filename,
+		CL_VirtualDirectory directory,
 		bool stream = false);
 
 	virtual ~CL_SoundProvider_Vorbis();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called by CL_SoundBuffer when a new session starts.
-	//return: The soundbuffer session to be attached to the newly started session.
+	/// \brief Called by CL_SoundBuffer when a new session starts.
+	/** \return The soundbuffer session to be attached to the newly started session.*/
 	virtual CL_SoundProvider_Session *begin_session();
 
-	//: Called by CL_SoundBuffer when a session has finished. After this call,
-	//- <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
-	//- here (and in most cases should be delete here).</p>
+	/// \brief Called by CL_SoundBuffer when a session has finished. After this call,
+	/** <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
+	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundProvider_Vorbis_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

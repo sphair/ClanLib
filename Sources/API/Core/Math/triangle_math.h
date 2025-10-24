@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,43 +23,101 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Harry Storbacka
+**    Mark Page
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_triangle_math
-#define header_triangle_math
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
 
-#include "point.h"
+#include "../api_core.h"
+#include "vec3.h"
 
-//: Math operations on triangles.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_API_CORE CL_TriangleMath
+/// \brief Triangles
+///
+/// These triangle templates are defined for: int (CL_Triangle), float (CL_Trianglef), double (CL_Triangled)
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+template<typename Type>
+class CL_Trianglex
 {
- public:
-// Operations:
+public:
+	/// \brief First triangle point
+	CL_Vec2<Type> p;
 
-	//: Return true if the point is inside the triangle.
-	//param CL_Pointf P: point to test
-	//param float *vertices: Pointer to triangle vertices {x1,y1,x2,y2,x3,y3}.
-	//param bool on_edge_is_outside: are points exactly on a edge in or out.
-	static bool point_inside_triangle(const CL_Pointf &P, float *vertices, bool on_edge_is_outside);
-	static bool point_inside_triangle(float px, float py, float *vertices, bool on_edge_is_outside);
+	// \brief Second triangle point
+	CL_Vec2<Type> q;
 
+	// \brief Third triangle point
+	CL_Vec2<Type> r;
+
+	CL_Trianglex() { }
+	CL_Trianglex(const CL_Trianglex<Type> &copy) { p = copy.p; q = copy.q; r = copy.r;}
+	CL_Trianglex(const CL_Vec2<Type> &point_p, const CL_Vec2<Type> &point_q, const CL_Vec2<Type> &point_r) { p = point_p; q = point_q; r = point_r;}
+
+
+/// \name Attributes
+/// \{
+
+public:
+
+	/// \brief Return true if the point is inside the triangle.
+	///
+	/// \param point = point to test.
+	/// \return true if the point is inside the triangle
+	bool point_inside(const CL_Vec2<Type> &point) const;
+
+/// \}
+/// \name Operators
+/// \{
+
+public:
+
+	/// \brief = operator.
+	CL_Trianglex<Type> &operator = (const CL_Trianglex<Type>& copy) { p = copy.p; q = copy.q; r = copy.r; return *this; }
+
+	/// \brief == operator.
+	bool operator == (const CL_Trianglex<Type>& triangle) const {return ((p == triangle.p) && (q == triangle.q) && (r == triangle.r));}
+
+	/// \brief != operator.
+	bool operator != (const CL_Trianglex<Type>& triangle) const {return ((p != triangle.p) || (q != triangle.q) || (r != triangle.r));}
+/// \}
 };
 
-#endif
+/// \brief Triangles - Integer
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Triangle : public CL_Trianglex<int>
+{
+public:
+	CL_Triangle() { }
+	CL_Triangle(const CL_Trianglex<int> &copy) : CL_Trianglex<int>(copy) {}
+	CL_Triangle(const CL_Vec2<int> &point_p, const CL_Vec2<int> &point_q, const CL_Vec2<int> &point_r) : CL_Trianglex<int>(point_p, point_q, point_r) {}
+};
+
+/// \brief Triangles - Float
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Trianglef : public CL_Trianglex<float>
+{
+public:
+	CL_Trianglef() { }
+	CL_Trianglef(const CL_Trianglex<float> &copy) : CL_Trianglex<float>(copy) {}
+	CL_Trianglef(const CL_Vec2<float> &point_p, const CL_Vec2<float> &point_q, const CL_Vec2<float> &point_r) : CL_Trianglex<float>(point_p, point_q, point_r) {}
+};
+
+/// \brief Triangles - Double
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Triangled : public CL_Trianglex<double>
+{
+public:
+	CL_Triangled() { }
+	CL_Triangled(const CL_Trianglex<double> &copy) : CL_Trianglex<double>(copy) {}
+	CL_Triangled(const CL_Vec2<double> &point_p, const CL_Vec2<double> &point_q, const CL_Vec2<double> &point_r) : CL_Trianglex<double>(point_p, point_q, point_r) {}
+};
+
+/// \}
+

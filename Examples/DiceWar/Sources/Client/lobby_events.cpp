@@ -1,0 +1,188 @@
+
+#include "precomp.h"
+#include "lobby_events.h"
+#include "lobby_player.h"
+#include "lobby_game.h"
+#include "client.h"
+#include "lobby_view.h"
+#include "lobby_player_collection.h"
+#include "lobby_game_collection.h"
+
+LobbyEvents::LobbyEvents(Client *client)
+: client(client)
+{
+	lobby_events.func_event("lobby-player-logged-in").set(this, &LobbyEvents::on_event_player_logged_in);
+	lobby_events.func_event("lobby-player-logged-out").set(this, &LobbyEvents::on_event_player_logged_out);
+	lobby_events.func_event("lobby-game-created").set(this, &LobbyEvents::on_event_game_created);
+	lobby_events.func_event("lobby-game-removed").set(this, &LobbyEvents::on_event_game_removed);
+	lobby_events.func_event("lobby-game-info").set(this, &LobbyEvents::on_event_game_info);
+	lobby_events.func_event("lobby-no-games-available").set(this, &LobbyEvents::on_event_no_games_available);
+	lobby_events.func_event("lobby-player-joined-game").set(this, &LobbyEvents::on_event_player_joined_game);
+	lobby_events.func_event("lobby-player-left-game").set(this, &LobbyEvents::on_event_player_left_game);
+	lobby_events.func_event("lobby-game-started").set(this, &LobbyEvents::on_event_game_started);
+	lobby_events.func_event("lobby-player-message").set(this, &LobbyEvents::on_event_player_message);
+	lobby_events.func_event("lobby-error-message").set(this, &LobbyEvents::on_event_error_message);
+
+	player_collection.reset(new LobbyPlayerCollection());
+	game_collection.reset(new LobbyGameCollection());
+}
+
+LobbyEvents::~LobbyEvents()
+{
+}
+
+void LobbyEvents::on_event_game_created(const CL_NetGameEvent &e)
+{
+	int game_id = e.get_argument(0);
+	CL_String game_name = e.get_argument(1);
+	CL_String map_name = e.get_argument(2);
+	int max_players = e.get_argument(3);
+
+	LobbyGame *game = game_collection->create_game(game_id, game_name, map_name, max_players, LobbyGame::lobby);
+	if(game)
+	{
+		if (client->get_lobby_view())
+		{
+			client->get_lobby_view()->add_game(game);
+			client->get_lobby_view()->create_game(game);
+		}
+	}
+}
+
+void LobbyEvents::on_event_game_info(const CL_NetGameEvent &e)
+{
+	int game_id = e.get_argument(0);
+	CL_String game_name = e.get_argument(1);
+	CL_String map_name = e.get_argument(2);
+	int max_players = e.get_argument(3);
+	int int_state = e.get_argument(4);
+	LobbyGame::State state = (LobbyGame::State)int_state;
+	LobbyGame *game = game_collection->create_game(game_id, game_name, map_name, max_players, state);
+
+	if(game)
+	{
+		if (client->get_lobby_view())
+		{
+			client->get_lobby_view()->add_game(game);
+		}
+	}
+}
+
+void LobbyEvents::on_event_game_removed(const CL_NetGameEvent &e)
+{
+	int game_id = e.get_argument(0);
+	LobbyGame *game = game_collection->get_game(game_id);
+
+	if(game)
+	{
+		if (client->get_lobby_view())
+			client->get_lobby_view()->remove_game(game);
+
+		game_collection->remove_game(game_id);
+	}
+}
+
+void LobbyEvents::on_event_no_games_available(const CL_NetGameEvent &e)
+{
+//	if (client->get_lobby_view())
+//		client->get_lobby_view()->add_info_message("No games available on server");
+}
+
+void LobbyEvents::on_event_game_started(const CL_NetGameEvent &e)
+{
+	int game_id = e.get_argument(0);
+	LobbyGame *game = game_collection->get_game(game_id);
+	if(game)
+	{
+		game->set_state(LobbyGame::playing);
+		client->get_lobby_view()->update_game(game);
+	}
+}
+
+LobbyPlayer *LobbyEvents::get_player(int player_id) const
+{
+	return player_collection->get_player(player_id);
+}
+
+void LobbyEvents::on_event_player_logged_in(const CL_NetGameEvent &e)
+{
+	int player_id = e.get_argument(0);
+	CL_String player_name = e.get_argument(1);
+
+	LobbyPlayer *player = player_collection->create_player(player_id, player_name);
+
+	if (client->get_lobby_view())
+		client->get_lobby_view()->player_logged_in(player);
+}
+
+void LobbyEvents::on_event_player_logged_out(const CL_NetGameEvent &e)
+{
+	int player_id = e.get_argument(0);
+
+	LobbyPlayer *player = player_collection->get_player(player_id);
+
+	if(player)
+	{
+		if (client->get_lobby_view())
+			client->get_lobby_view()->player_logged_out(player);
+
+		game_collection->remove_player(player);
+		player_collection->remove_player(player_id);
+	}
+}
+
+void LobbyEvents::on_event_player_joined_game(const CL_NetGameEvent &e)
+{
+	int player_id = e.get_argument(0);
+	int game_id = e.get_argument(1);
+
+	LobbyPlayer *player = player_collection->get_player(player_id);
+	LobbyGame *game = game_collection->get_game(game_id);
+
+	if(game && player)
+	{
+		if(game->contains_player(player) == false)
+		{
+			game->add_player(player);
+
+			if (client->get_lobby_view())
+				client->get_lobby_view()->player_joined_game(game, player);
+		}
+	}
+}
+
+void LobbyEvents::on_event_player_left_game(const CL_NetGameEvent &e)
+{
+	int player_id = e.get_argument(0);
+	int game_id = e.get_argument(1);
+
+	LobbyPlayer *player = player_collection->get_player(player_id);
+	LobbyGame *game = game_collection->get_game(game_id);
+
+	if(game && player)
+	{
+		game->remove_player(player);
+
+		if (client->get_lobby_view())
+			client->get_lobby_view()->player_left_game(game, player);
+	}
+}
+
+void LobbyEvents::on_event_player_message(const CL_NetGameEvent &e)
+{
+	int player_id = e.get_argument(0);
+	CL_String message = e.get_argument(1);
+
+	LobbyPlayer *player = player_collection->get_player(player_id);
+
+	if(client->get_lobby_view() && player)
+		client->get_lobby_view()->add_chat_message(player, message);
+}
+
+void LobbyEvents::on_event_error_message(const CL_NetGameEvent &e)
+{
+	CL_String message = e.get_argument(0);
+
+	if(client->get_lobby_view())
+		client->get_lobby_view()->add_info_message(message);
+}

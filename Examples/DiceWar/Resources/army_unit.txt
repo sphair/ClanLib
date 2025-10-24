@@ -1,0 +1,21 @@
+------------------
+DesertAPC 26.02.02
+------------------
+
+------------------
+Statistics
+------------------
+------------------
+Polygon Count: 
+1041 triangles
+------------------
+Textures: 
+body.tga 256x256x8
+wheel.tga 128x128x8
+turret.tga 64x64x8
+------------------
+------------------
+Design, Mesh and Texture: (c) Nick Cooper 2002
+http://www.subdivision.btinternet.co.uk
+------------------
+

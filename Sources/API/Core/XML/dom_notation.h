@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,64 +24,67 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_notation
-#define header_dom_notation
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_node.h"
 
-//: DOM Notation class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>This interface represents a notation declared in the DTD. A notation either declares,
-//- by name, the format of an unparsed entity (see section 4.7 of the XML 1.0 specification),
-//- or is used for formal declaration of Processing Instruction targets (see section 2.6 of
-//- the XML 1.0 specification). The node name attribute inherited from Node is set to the
-//- declared name of the notation.</p>
-//- <p>The DOM Level 1 does not support editing Notation nodes; they are therefore readonly.</p>
-//- <p>A Notation node does not have any parent.</p>
+/// \brief DOM Notation class.
+///
+///    <p>This interface represents a notation declared in the DTD. A notation either declares,
+///    by name, the format of an unparsed entity (see section 4.7 of the XML 1.0 specification),
+///    or is used for formal declaration of Processing Instruction targets (see section 2.6 of
+///    the XML 1.0 specification). The node name attribute inherited from Node is set to the
+///    declared name of the notation.</p>
+///    <p>The DOM Level 1 does not support editing Notation nodes; they are therefore readonly.</p>
+///    <p>A Notation node does not have any parent.</p> 
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomNotation : public CL_DomNode
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Notation handle.
+	/// \brief Constructs a DOM Notation handle.
 	CL_DomNotation();
-	
+
 	CL_DomNotation(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomNotation();
-	
-//! Attributes:
-public:
-	//: The public identifier of this notation.
-	//- <p>If the public identifier was not specified, this is null.</p>
-	std::string get_public_id() const;
 
-	//: The system identifier of this notation.
-	//- <p>If the system identifier was not specified, this is null.</p>
-	std::string get_system_id() const;
 
-//! Operations:
+/// \}
+/// \name Attributes
+/// \{
+
 public:
+	/// \brief The public identifier of this notation.
+	/** <p>If the public identifier was not specified, this is null.</p>*/
+	CL_DomString get_public_id() const;
+
+	/// \brief The system identifier of this notation.
+	/** <p>If the system identifier was not specified, this is null.</p>*/
+	CL_DomString get_system_id() const;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+/// \}
 };
 
-#endif
+
+/// \}

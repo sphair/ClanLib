@@ -1,0 +1,180 @@
+
+scrollbar 
+{
+	no-draw:true;
+	preferred-height:17;
+}
+
+scrollbar scrolltrack.left
+{
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.left:normal
+{
+	bg-image:ScrollbarHoriTrackNormal; 
+}
+
+scrollbar scrolltrack.left:hot
+{
+	bg-image:ScrollbarHoriTrackHot; 
+}
+
+scrollbar scrolltrack.left:pressed
+{  
+	bg-image:ScrollbarHoriTrackPressed; 
+}
+
+scrollbar scrolltrack.left:disabled
+{
+	bg-image:ScrollbarHoriTrackDisabled; 
+}
+
+scrollbar scrolltrack.right
+{
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.right:normal
+{
+	bg-image:ScrollbarHoriTrackNormal; 
+}
+
+scrollbar scrolltrack.right:hot
+{
+	bg-image:ScrollbarHoriTrackHot; 
+}
+
+scrollbar scrolltrack.right:pressed
+{
+	bg-image:ScrollbarHoriTrackPressed; 
+}
+
+scrollbar scrolltrack.right:disabled
+{
+	bg-image:ScrollbarHoriTrackDisabled; 
+}
+
+scrollbar scrollthumb.horizontal
+{
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrollthumb.horizontal:normal
+{
+	bg-image:ScrollbarHoriThumbNormal; 
+}
+
+scrollbar scrollthumb.horizontal:hot
+{
+	bg-image:ScrollbarHoriThumbHot; 
+}
+
+scrollbar scrollthumb.horizontal:pressed
+{
+	bg-image:ScrollbarHoriThumbPressed; 
+}
+
+scrollbar scrollthumb.horizontal:disabled
+{
+	bg-image:ScrollbarHoriThumbDisabled; 
+}
+
+scrollbar scrollthumbgripper.horizontal
+{
+	bg-image-sizing:center; 
+}
+
+scrollbar scrollthumbgripper.horizontal:normal
+{
+	bg-image:ScrollbarHoriThumbGripperNormal; 
+}
+
+scrollbar scrollthumbgripper.horizontal:hot
+{
+	bg-image:ScrollbarHoriThumbGripperHot; 
+}
+
+scrollbar scrollthumbgripper.horizontal:pressed
+{
+	bg-image:ScrollbarHoriThumbGripperPressed; 
+}
+
+scrollbar scrollthumbgripper.horizontal:disabled
+{
+	bg-image:; 
+}
+
+scrollbar scrollbutton.left
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch;
+}
+
+scrollbar scrollbutton.left:normal
+{
+	bg-image:ScrollbarHoriButtonLeftNormal;
+}
+
+scrollbar scrollbutton.left:hot
+{
+	bg-image:ScrollbarHoriButtonLeftHot; 
+}
+
+scrollbar scrollbutton.left:pressed
+{
+	bg-image:ScrollbarHoriButtonLeftPressed; 
+}
+
+scrollbar scrollbutton.left:disabled
+{
+	bg-image:ScrollbarHoriButtonLeftDisabled; 
+}
+
+scrollbar scrollbutton.right
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch;
+}
+
+scrollbar scrollbutton.right:normal
+{
+	bg-image:ScrollbarHoriButtonRightNormal; 
+}
+
+scrollbar scrollbutton.right:hot
+{
+	bg-image:ScrollbarHoriButtonRightHot; 
+}
+
+scrollbar scrollbutton.right:pressed
+{
+	bg-image:ScrollbarHoriButtonRightPressed; 
+}
+
+scrollbar scrollbutton.right:disabled
+{
+	bg-image:ScrollbarHoriButtonRightDisabled; 
+}

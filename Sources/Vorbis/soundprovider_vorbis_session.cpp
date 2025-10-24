@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,9 @@
 #include "soundprovider_vorbis_session.h"
 #include "soundprovider_vorbis_generic.h"
 #include "API/Sound/soundformat.h"
-#include "API/Core/IOData/inputsource.h"
-#include "API/Core/IOData/inputsource_memory.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/log.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/System/exception.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Vorbis_Session construction:
@@ -43,7 +41,7 @@
 CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis_Generic *data) :
 	data(data), num_samples(0), position(0), input(0), stream_eof(false)
 {
-	input = new CL_InputSource_Memory(data->buffer, data->buffer_size, false);
+	input = new CL_IODevice_Memory(data->buffer);
 
 	ogg_sync_init(&oy); /* Now we can read pages */
 
@@ -58,7 +56,7 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 	if (ogg_sync_pageout(&oy,&og) !=1)
 	{
 		/* error case.  Must not be Vorbis data */
-		throw CL_Error("Input does not appear to be an Ogg bitstream.");
+		throw CL_Exception(cl_text("Input does not appear to be an Ogg bitstream."));
 	}
 	
 	/* Get the serial number and set up the rest of decode. */
@@ -70,20 +68,20 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 	if (ogg_stream_pagein(&os,&og)<0)
 	{ 
 		/* error; stream version mismatch perhaps */
-		throw CL_Error("Error reading first page of Ogg bitstream data.");
+		throw CL_Exception(cl_text("Error reading first page of Ogg bitstream data."));
 	}
 	
 	if (ogg_stream_packetout(&os,&op)!=1)
 	{ 
 		/* no page? must not be vorbis */
-		throw CL_Error("Error reading initial header packet.");
+		throw CL_Exception(cl_text("Error reading initial header packet."));
 	}
     
 	if (vorbis_synthesis_headerin(&vi,&vc,&op)<0)
 	{ 
 		/* error case; not a vorbis header */
-		throw CL_Error("This Ogg bitstream does not contain Vorbis "
-		      "audio data.");
+		throw CL_Exception(cl_text("This Ogg bitstream does not contain Vorbis ")
+		      cl_text("audio data."));
 	}
     
 	/* At this point, we're sure we're Vorbis.  We've set up the logical
@@ -120,7 +118,7 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 					{
 						/* Uh oh; data at some point was corrupted or missing!
 						We can't tolerate that in a header.  Die. */
-						throw CL_Error("Corrupt secondary header.");
+						throw CL_Exception(cl_text("Corrupt secondary header."));
 					}
 					vorbis_synthesis_headerin(&vi,&vc,&op);
 					i++;
@@ -132,7 +130,7 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 		bytes=input->read(buffer,4096);
 		if(bytes==0 && i<2)
 		{
-			throw CL_Error("End of file before finding all Vorbis headers!");
+			throw CL_Exception(cl_text("End of file before finding all Vorbis headers!"));
 		}
 		ogg_sync_wrote(&oy,bytes);
 	}
@@ -236,7 +234,7 @@ bool CL_SoundProvider_Vorbis_Session::set_position(int pos)
 	// Currently only support seeking to beginning of stream.
 	if (pos != 0) return false;
 
-	input->seek(0, CL_InputSource::seek_set);
+	input->seek(0, CL_IODevice::seek_set);
 	stream_eof = false;
 	return true;
 }

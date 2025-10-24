@@ -9,7 +9,6 @@ class GameObject
 // Construction
 public:
 	GameObject(World *world) { this->world = world; }
-	virtual ~GameObject() {}
 
 // Attributes
 public:

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,158 +24,137 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="Resources"
-//! header=core.h
+/// \addtogroup clanCore_Resources clanCore Resources
+/// \{
 
-#ifndef header_resource_manager
-#define header_resource_manager
-
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-#include "../System/sharedptr.h"
-#include "../../signals.h"
-#include <list>
-#include <string>
+#include "../api_core.h"
+#include "../Resources/resource.h"
+#include "../System/weakptr.h"
+#include "../IOData/virtual_directory.h"
+#include <vector>
 
+class CL_IODevice;
 class CL_Resource;
-class CL_InputSourceProvider;
-class CL_ResourceManager_Generic;
+class CL_VirtualDirectory;
+class CL_ResourceManager_Impl;
 
+/// \brief Resource Manager.
+///
+/// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
 class CL_API_CORE CL_ResourceManager
-//: The ClanLib resource manager.
-//- !group=Core/Resources!
-//- !header=core.h!
-//- <p>The resource manager is used to retrieve resources from a given
-//- resource source.</p>
-//-
-//- <p>This can either be a resource script file (used as input to the
-//- datafile compiler), or a datafile with all the resources included into
-//- one large gzipped resource file.</p>
-//-
-//- <p>To speedup loading of resources in a game, you can load entire sections
-//- of resources at once. When a resource in the section is requested, it is
-//- returned instantly without having to access the disk. This is especially
-//- useful to make sure all the game resources are loaded before the game is
-//- started.</p>
-//-
-//- <p>Resources are normally not retrieved using the get_resource() function.
-//- Instead, you should load the resource using the appropiate resource type
-//- class. For instance, a surface is easiest loaded like this:</p>
-//-
-//- <pre>
-//- CL_ResourceManager res_manager("my_datafile.dat", true);
-//- CL_Surface my_surface("my_surface", &res_manager);
-//- </pre>
-//-
-//- <p>Getting the same resource twice won't create a new instance of the
-//- resource; they are reference counted.</p>
 {
-//! Construction:
+/// \name Construction
+/// \{
 public:
-	//: Resource Manager constructor.
-	//param config_file: The name of the file in which the resources are defined.
-	//param provider: The optional inputprovider in which, the resource file is stored.
-	//param delete_inputsource_provider: If true, deletes the provider when CL_ResourceManager is destroyed.
-	CL_ResourceManager(
-		const std::string &config_file,
-		CL_InputSourceProvider *provider = 0,
-		bool delete_inputsource_provider = false);
-
-	CL_ResourceManager(const CL_ResourceManager &copy);
-
+	/// \brief Construct a resource manager.
 	CL_ResourceManager();
 
-	//: Resource Manager destructor.
+	CL_ResourceManager(const CL_String &filename);
+
+	CL_ResourceManager(const CL_String &filename, CL_VirtualDirectory directory);
+
+	CL_ResourceManager(CL_IODevice file, CL_VirtualDirectory directory = CL_VirtualDirectory());
+
+	CL_ResourceManager(const CL_ResourceManager &other);
+
 	~CL_ResourceManager();
 
-//! Attributes:
+/// \}
+/// \name Attributes
+/// \{
 public:
-	//: Returns true if a resource exists.
-	bool exists(const std::string &res_id);
-	
-	//: Returns a pointer to the CL_Resource representing the given resource.
-	CL_Resource &get_resource(const std::string &res_id, bool resolve_alias = true, int reserved = 0);
+	/// \brief Returns true if a resource exists.
+	bool resource_exists(const CL_String &resource_id) const;
 
-	//: Returns a list of all resources available.
-	//return: The list of resources available, in the form [section/subsection/.../]resourcename.
-	std::vector<std::string> get_all_resources();
+	/// \brief Returns all the resource sections available.
+	std::vector<CL_String> get_section_names() const;
 
-	//: Returns a list of all resources available matching a given section. 
-	//return: The list of resources available, in the form [section/subsection/.../]resourcename.
-	std::vector<std::string> get_all_resources(const std::string &section_name);
+	/// \brief Returns a list of all resources available.
+	/** <p>The returned resources are in the form "section/subsection/.../resourcename".</p>*/
+	std::vector<CL_String> get_resource_names() const;
 
-	//: Returns a list of all resource sections available.
-	//return: The list of resource sections available, in the form [section/subsection/.../].
-	std::vector<std::string> get_all_sections();
+	std::vector<CL_String> get_resource_names(const CL_String &section) const;
 
-	//: Returns a list of the resource sections immediately under the given secion.
-	//return: The list of sections immediately available under the given section.
-	std::vector<std::string> get_sections(const std::string &section_name);
-	
-	//: Returns a list of all resources available matching a given type. 
-	//return: The list of resources available.
-	std::vector<std::string> get_resources_of_type(const std::string &type_id);
+	/// \brief Returns a list of all resources available matching a given type.
+	/** <p>The returned resources are in the form "section/subsection/.../resourcename".</p>*/
+	std::vector<CL_String> get_resource_names_of_type(const CL_String &type) const;
 
-	//: Returns a list of all resources available matching a given type in a given section. 
-	//return: The list of resources available.
-	std::vector<std::string> get_resources_of_type(const std::string &type_id, const std::string &section_name);
+	std::vector<CL_String> get_resource_names_of_type(
+		const CL_String &type,
+		const CL_String &section) const;
 
-	//: Returns a pointer to the input source provider, in which all resources are stored.
-	//- <p>This can be a file provider or a datafile provider depending
-	//- on method used to load the script file.</p>
-	//return: Pointer to inputsourceprovider containing resource data.
-	CL_InputSourceProvider *get_resource_provider() const;
+	/// \brief Returns CL_Resource representing the given resource.
+	CL_Resource get_resource(
+		const CL_String &resource_id,
+		bool resolve_alias = true,
+		int reserved = 0);
 
-//! Signals:
+	/// \brief Returns the directory to load resource data from.
+	CL_VirtualDirectory get_directory(const CL_Resource &resource) const;
+
+	/// \brief Returns the value of a boolean resource.
+	bool get_boolean_resource(
+		const CL_String &resource_id,
+		bool default_value);
+
+	/// \brief Returns the value of an integer resource.
+	int get_integer_resource(
+		const CL_String &resource_id,
+		int default_value);
+
+/// \}
+/// \name Operations
+/// \{
 public:
-	//: Signal invoked when a resource is added during loading of a resource file.
-	static CL_Signal_v1<CL_Resource &> &sig_resource_added();
+	CL_ResourceManager &operator =(const CL_ResourceManager &copy);
 
-//! Operations:
-public:
-	//: Returns true resource managers handles the same object.
-	bool operator == (const CL_ResourceManager &other) const;
+	bool operator ==(const CL_ResourceManager &manager) const;
 
-	//: Add resources from an other resource manager.
-	void add_resources(const CL_ResourceManager &additional_resources);
+	/// \brief Set the resource data directory.
+	void set_directory(const CL_VirtualDirectory &directory);
 
-	//: Remove resources from an other resource manager.
-	void remove_resources(const CL_ResourceManager &additional_resources);
+	/// \brief Add resources from an other resource manager.
+	/** <p>This function only makes the resource manager search other managers, it
+	    does not copy the resources into this manager.</p>*/
+	void add_resources(const CL_ResourceManager& additional_resources);
 
-	//: Loads all resources into memory.
-	void load_all();
+	/// \brief Remove resources from an other resource manager.
+	void remove_resources(const CL_ResourceManager& additional_resources);
 
-	//: Unloads all resources from memory.
-	void unload_all();
+	/// \brief Construct a new resource object.
+	CL_Resource create_resource(const CL_String &resource_id, const CL_String &type);
 
-	//: Loads all resources in a given section into memory.
-	void load_section(const std::string &section_name);
+	/// \brief Destroy resource object.
+	void destroy_resource(const CL_String &resource_id);
 
-	//: Unloads all resources in a given section into memory.
-	void unload_section(const std::string &section_name);
+	/// \brief Save resource XML tree to file.
+	void save(const CL_String &filename);
 
-//! Implementation:
+	void save(const CL_String &filename, CL_VirtualDirectory directory);
+
+	void save(CL_IODevice file);
+
+	/// \brief Load resource XML tree from file.
+	void load(const CL_String &filename);
+
+	void load(const CL_String &filename, CL_VirtualDirectory directory);
+
+	void load(CL_IODevice file, CL_VirtualDirectory directory = CL_VirtualDirectory());
+
+/// \}
+/// \name Implementation
+/// \{
 private:
-	CL_ResourceManager(const CL_SharedPtr<CL_ResourceManager_Generic> &impl);
+	CL_ResourceManager(CL_WeakPtr<CL_ResourceManager_Impl> &impl);
 
-	//: Pointer to the implementation.
-	CL_SharedPtr<CL_ResourceManager_Generic> impl;
+	CL_SharedPtr<CL_ResourceManager_Impl> impl;
 
 	friend class CL_Resource;
+/// \}
 };
-#endif
+
+/// \}

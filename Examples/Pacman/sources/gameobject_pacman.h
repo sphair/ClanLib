@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@ public:
 //!Operations:
 public:
 	//: Draw pacman onto graphic context.
-	virtual void show(int view_x, int view_y, CL_GraphicContext *gc = 0);
+	virtual void show(int view_x, int view_y, CL_GraphicContext &gc);
 
 	//: Move pacman.
 	virtual bool turn(float time_elapsed);
@@ -62,12 +62,15 @@ public:
 	//: Check if pacman is at specified location.
 	virtual bool hit_check(float x, float y);
 
+	//: Attach a keyboard handler
+	void AttachKeyboard(CL_DisplayWindow &window);
+
 //!Implementation:
 private:
 	//: Called when pacman reaches its destination.
 	virtual bool event_reached_dest();
 
-	void on_key_down(const CL_InputEvent &key);
+	void on_key_down(const CL_InputEvent &key, const CL_InputState &state);
 	
 	int anim_pos, anim_dir;
 
@@ -85,16 +88,16 @@ private:
 	CL_Sprite spr_pacman;
 
 	//: Sound effect played when pacman is created.
-	CL_SoundBuffer sfx_start;
+	//CL_SoundBuffer sfx_start;
 	
 	//: Sound effect of pacman eating an egg.
-	CL_SoundBuffer sfx_namnam;
+	//CL_SoundBuffer sfx_namnam;
 
 	//: Sound effect of pacman eating a powerup.
-	CL_SoundBuffer sfx_powerup;
+	//CL_SoundBuffer sfx_powerup;
 	
 	//: Sound effect of pacman dieing.
-	CL_SoundBuffer sfx_dead;
+	//CL_SoundBuffer sfx_dead;
 
 	CL_SlotContainer slots;
 };

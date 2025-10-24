@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,24 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_wave_generic
-#define header_soudn_provider_wave_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "API/Sound/soundformat.h"
-#include <string>
 
 class CL_InputSourceProvider;
 
 class CL_SoundProvider_Wave_Generic
 {
-//! Attributes:
+/// \name Attributes
+/// \{
+
 public:
 	struct WAVE_FORMAT
 	{
@@ -51,10 +51,6 @@ public:
 		int nAvgBytesPerSec;
 		short nBlockAlign;
 	};
-
-	CL_InputSourceProvider *provider;
-
-	std::string filename;
 
 	bool stream;
 
@@ -67,6 +63,7 @@ public:
 	int num_samples;
 
 	int frequency;
+/// \}
 };
 
-#endif
+

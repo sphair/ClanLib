@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -25,14 +25,14 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_outline_provider
-#define header_outline_provider
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,28 +40,36 @@
 
 #include "contour.h"
 
-//: Collision detection contour.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>Abstract Base class for outline providers. Don't use this!</p>
+/// \brief Collision detection contour.
+///
+/// <p>Abstract Base class for outline providers. Don't use this!</p>
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_OutlineProvider
 {
-//! Construction:
- public:
-	//: Construct a outline provider
-	CL_OutlineProvider() {};
-	virtual ~CL_OutlineProvider() {}; 
+/// \name Construction
+/// \{
 
-//! Attributes:
  public:
-	//: return the countours that make up the outline
+	/// \brief Construct a outline provider
+	CL_OutlineProvider() {};
+	virtual ~CL_OutlineProvider() {};
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+ public:
+	/// \brief return the countours that make up the outline
 	virtual std::vector<CL_Contour> get_contours()=0;
 
-	//: return the width of the image used as basis for outline creation, or -1 when loading a precompiled outline.
+	/// \brief return the width of the image used as basis for outline creation, or -1 when loading a precompiled outline.
 	virtual int get_width()=0;
 
-	//: return the height of the image used as basis for outline creation, or -1 when loading a precompiled outline.
+	/// \brief return the height of the image used as basis for outline creation, or -1 when loading a precompiled outline.
 	virtual int get_height()=0;
+/// \}
 };
 
-#endif
+
+/// \}

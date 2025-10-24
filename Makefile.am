@@ -1,6 +1,8 @@
-SUBDIRS = Sources Setup pkgconfig @ClanLib_docs@
+SUBDIRS = Sources Setup Setup/pkgconfig @ClanLib_docs@
 
 # EXAMPLE_SRC_PREFIX = $(datadir)/doc/ClanLib-docs-@version_minor@/Examples
+
+ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 CODING_STYLE CREDITS COPYING \
@@ -9,3 +11,4 @@ README README.distros README.kdevelop \
 README.upgrade
 
 # EOF #
+

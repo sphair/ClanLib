@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,42 +24,47 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 //! l2_component="Resources"
 
-#ifndef header_resourcetype_sample
-#define header_resourcetype_sample
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "API/Core/Resources/resourcedata.h"
-
 class CL_SoundBuffer;
 class CL_InputSourceProvider;
 class CL_OutputSourceProvider;
 
-class CL_ResourceData_Sample : public CL_ResourceData
+class CL_ResourceData_Sample
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_ResourceData_Sample(class CL_Resource &resource);
 
-	virtual ~CL_ResourceData_Sample();
+	~CL_ResourceData_Sample();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	// Loaded soundbuffer for this resource.
 	CL_SoundBuffer *soundbuffer;
 
-//! Implementation:
-private:
-	void on_load();
 
-	void on_unload();
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+/// \}
 };
 
-#endif
+

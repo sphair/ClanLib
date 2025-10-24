@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,12 +34,12 @@
 #pragma once
 #endif
 
-class Application : public CL_ClanApplication
+class Application
 {
 //!Operations:
 public:
 	//: Main function for the application.
-	virtual int main(int argc, char **argv);
+	virtual int main(const std::vector<CL_String> &args);
 
 //!Implementation:
 private:

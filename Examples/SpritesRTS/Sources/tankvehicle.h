@@ -19,7 +19,6 @@ public:
 // Construction
 public:
 	TankVehicle(TankType type, World *world);
-	virtual ~TankVehicle() {}
 
 // Attributes:
 public:

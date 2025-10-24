@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GNU C++ (gcc) on Linux - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>GNU C++ on Linux
+</h2>
+
+<p>Installing using Ubuntu (7.10 (Gutsy Gibbon) to Ubuntu 8.10 (Intrepid Ibex))</p>
+
+<p>
+Note: The standard freetype 2.3.7 package that comes with Ubuntu 8.10 (Intrepid Ibex) has very poor quality. It is recommended to reinstall the package from the source code as follows:
+</p>
+<pre>
+	(from: http://download.savannah.gnu.org/releases/freetype/ )
+	tar -xvzf freetype-2.3.7.tar.gz
+	cd freetype-2.3.7
+	./configure --prefix=/usr
+	make
+	sudo make install
+</pre>
+
+<p>Use the "Synaptic Package Manager", or overwise, ensure that the latest versions of these programs exist:</p>
+
+<pre>	automake
+	autoconf
+	autotools-dev
+	m4
+	libtool
+	libc6-dev
+	linux-libc-dev
+	g++ (g++-4.1 or later)
+	libstdc++6-4.1-dev (or later)
+	zlib1g
+	zlib1g-dev</pre>
+
+<p>These packages are required to install the following ClanLib Modules:</p>
+
+<li>ClanDisplay:</li>
+<pre>	libpng12-0
+	libpng12-dev
+	libjpeg62-dev
+	libfreetype6  (unless compiled manually)
+	libfreetype6-dev (unless compiled manually)
+	libfontconfig1-dev
+	freeglut3
+	freeglut3-dev (select all the required development packages that freeglut requires)
+		libgl1-mesa-dev
+		libglu1-mesa-dev
+		libice-dev
+		libsm-dev
+		libx11-dev
+		libxau-dev
+		libxdmcp-dev
+		libxext-dev
+		libxt-dev
+		mesa-common-dev
+		x11proto-core-dev
+		x11proto-input-dev
+		x11proto-kb-dev
+		x11proto-xext-dev
+		xlibmesa-gl-dev
+		xtrans-dev</pre>
+
+<li>ClanGL:</li>
+<pre>	libxi-dev
+	libxxf86misc-dev
+	libxxf86vm-dev
+	x11proto-xf86misc-dev
+	x11proto-xf86vidmode-dev</pre>
+
+<li>ClanSound:</li>
+<pre>	libasound2-dev  (for alsa)</pre>
+<li>ClanMikmod:</li>
+<pre>	libmikmod2
+	libmikmod2-dev</pre>
+<li>ClanVorbis:</li>
+<pre>	libvorbis0a
+	libvorbis-dev
+	libogg-dev</pre>
+<li>ClanMySQL:</li>
+<pre>	libmysql++2c2a
+	libmysqlclient15-dev
+	libmysqlclient15off
+	mysql-common
+	libmysql++-dev</pre>
+<li>ClanSqlite:</li>
+<pre>	libsqlite3-0
+	libsqlite3-dev</pre>
+
+<li>ClanRegExp:</li>
+<pre>	libpcre3
+	libpcre3-dev
+</pre>
+<p>From the terminal prompt, at the base the the clanlib source code package, enter:</p>
+
+<p>(Check for errors after each line)</p>
+
+<pre>
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+	sudo make install
+</pre>
+
+<p>(Developers may prefer to add --enable-debug to the ./configure line)</p>
+
+<p>To ensure that all is well, run the Example2D example, as follows:</p>
+
+<pre>
+	cd Examples/Basic2D
+	make
+	./basic2d
+</pre>
+
+<p>If you want to compile the API documentation:(Ensure the doxygen package exists)</p>
+
+<pre>
+	./configure --prefix=/usr --enable-docs
+	make html
+	sudo make install-html
+
+</pre>
+<p>The documentation will be placed at "/usr/share/doc/clanlib-0.9/index.html". If you prefer doxygen style API documentation, look in "Documentation/Reference/doxyoutput/index.html"
+</pre>
+
+</div>
+
+</body>
+</html>
+

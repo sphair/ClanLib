@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,41 +24,59 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_xml_writer_generic
-#define header_xml_writer_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "API/Core/IOData/outputsource.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/Text/string_allocator.h"
 
 class CL_XMLWriter_Generic
 {
-//! Construction:
-public:
-	CL_XMLWriter_Generic() : output(0), delete_output(false), insert_whitespace(true), indent(0) { return; }
+/// \name Construction
+/// \{
 
-	~CL_XMLWriter_Generic() { if (delete_output) delete output; }
-
-//! Attributes:
 public:
-	CL_OutputSource *output;
-	
-	bool delete_output;
+	CL_XMLWriter_Generic() : insert_whitespace(true), indent(0) { return; }
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	CL_IODevice output;
 
 	bool insert_whitespace;
 
 	int indent;
 
-//! Operations:
-public:
+	CL_StringAllocator string_allocator;
 
-//! Implementation:
+	CL_String str;
+
+	CL_String escaped_string;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	CL_StringRef insert_escapes_fast(const CL_StringRef &str);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

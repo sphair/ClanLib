@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,62 +24,70 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_soundfilter
-#define header_soundfilter
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "api_sound.h"
+
 class CL_SoundFilter_Generic;
 
-//: Sound Filter Class
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
+/// \brief Sound Filter Class
+///
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundFilter
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Sound filter constructor.
+	/// \brief Sound filter constructor.
 	CL_SoundFilter();
 
 	CL_SoundFilter(const CL_SoundFilter &copy);
 
-	//: Sound Filter Destructor
+	/// \brief Sound Filter Destructor
 	virtual ~CL_SoundFilter();
-	
-//! Operations:
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignment operator.
+	/// \brief Copy assignment operator.
 	CL_SoundFilter &operator =(const CL_SoundFilter &copy);
 
-//! Overridables:
-	//: Filter callback.
-	//- <p>All sound data is passed through this function,
-	//- which modifies the sample data accordingly to the function of the
-	//- filter.</p>
-	//- <p>The format of the sample data is always 16 bit stereo. </p>
+
+/// \}
+/// \name Overridables
+/// \{
+
+	/// \brief Filter callback.
+	/** <p>All sound data is passed through this function,
+	    which modifies the sample data accordingly to the function of the
+	    filter.</p>
+	    <p>The format of the sample data is always 16 bit stereo. </p>*/
 	virtual void filter(int **sample_data, int num_samples, int channels)=0;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 public:
 	CL_SoundFilter_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

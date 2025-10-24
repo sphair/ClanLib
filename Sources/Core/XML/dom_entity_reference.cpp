@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,12 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/dom_entity_reference.h"
+#include "API/Core/XML/dom_document.h"
 #include "dom_node_generic.h"
+#include "dom_tree_node.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomEntityReference construction:
@@ -38,10 +39,11 @@ CL_DomEntityReference::CL_DomEntityReference()
 {
 }
 
-CL_DomEntityReference::CL_DomEntityReference(CL_DomDocument &doc, const std::string &name)
+CL_DomEntityReference::CL_DomEntityReference(CL_DomDocument &doc, const CL_DomString &name)
 : CL_DomNode(doc, ENTITY_REFERENCE_NODE)
 {
-	impl->node_name = name;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	impl->get_tree_node()->set_node_name(doc_impl, name);
 }
 
 CL_DomEntityReference::CL_DomEntityReference(const CL_SharedPtr<CL_DomNode_Generic> &impl) : CL_DomNode(impl)

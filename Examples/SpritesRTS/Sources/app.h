@@ -4,14 +4,12 @@
 #include <ClanLib/application.h>
 #include <ClanLib/core.h>
 
-class Application : public CL_ClanApplication
+class Application
 {
 public:
 	Application() {};
 
-	virtual int main(int argc, char** argv);
+	virtual int main(const std::vector<CL_String> &args);
 };
-
-extern Application app;
 
 #endif

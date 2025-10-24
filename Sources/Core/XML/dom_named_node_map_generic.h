@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,40 +24,71 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_dom_named_node_map_generic
-#define header_dom_named_node_map_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "API/Core/System/sharedptr.h"
+#include "API/Core/System/weakptr.h"
+#include "API/Core/System/block_allocator.h"
 #include "API/Core/XML/dom_node.h"
+#include <vector>
 
-class CL_DomNamedNodeMap_Generic
+class CL_DomNode_Generic;
+class CL_DomTreeNode;
+
+class CL_DomNamedNodeMap_Generic : public CL_BlockAllocated
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_DomNamedNodeMap_Generic()
+	CL_DomNamedNodeMap_Generic();
+
+	~CL_DomNamedNodeMap_Generic();
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	enum MapType
 	{
-	}
+		type_null,
+		type_attributes,
+		type_entities,
+		type_notations
+	};
 
-	virtual ~CL_DomNamedNodeMap_Generic()
-	{
-	}
+	MapType map_type;
 
-//! Attributes:
+	unsigned int node_index;
+
+	CL_WeakPtr<CL_DomNode_Generic> owner_document;
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	std::vector<std::pair<std::string, CL_DomNode> > attributes;
+	CL_DomTreeNode *get_tree_node();
 
-//! Operations:
-public:
+	const CL_DomTreeNode *get_tree_node() const;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+

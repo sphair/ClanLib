@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,27 +27,34 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_mikmod_generic
-#define header_sound_provider_mikmod_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "API/Sound/soundformat.h"
+#include "API/Core/System/databuffer.h"
+#include "API/Core/IOData/virtual_directory.h"
 #include <string>
 
 class CL_InputSourceProvider;
 
 class CL_SoundProvider_MikMod_Generic
 {
-//! Attributes:
-public:
-	CL_InputSourceProvider *provider;
+/// \name Attributes
+/// \{
 
-	std::string filename;
+public:
+	CL_String filename;
+
+	CL_VirtualDirectory directory;
 
 	bool stream;
+
+	CL_DataBuffer buffer;
+/// \}
 };
 
-#endif
+

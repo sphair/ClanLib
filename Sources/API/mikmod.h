@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,12 +27,12 @@
 **    (if your name is missing here, please add it)
 */
 
-//: <p>MikMod module playback support. Supports all the module formats of
-//: MikMod, which includes MOD, XM, S3M, IT and more.</p>
+/// \brief <p>MikMod module playback support. Supports all the module formats of
+/// \brief MikMod, which includes MOD, XM, S3M, IT and more.</p>
 //! Global=MikMod
 
-#ifndef header_mikmod
-#define header_mikmod
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -42,17 +42,71 @@
 #pragma warning( disable : 4786)
 #endif
 
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
+#endif
+
 #include "MikMod/setupmikmod.h"
 #include "MikMod/soundprovider_mikmod.h"
 
-#if defined (_MSC_VER)
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanMikMod-static-mt.lib")
-#pragma comment(lib, "mikmod-static-mt.lib")
-#else
-#pragma comment(lib, "clanMikMod-static-mt-debug.lib")
-#pragma comment(lib, "mikmod-static-mt-debug.lib")
-#endif
+#ifdef __cplusplus_cli
+#pragma managed(pop)
 #endif
 
+#if defined (_MSC_VER)
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-dll.lib")
+				#pragma comment(lib, "mikmod-dll.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-dll-debug.lib")
+				#pragma comment(lib, "mikmod-dll-debug.lib")
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-static-mtdll.lib")
+			#pragma comment(lib, "mikmod-static-mtdll.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-static-mtdll-debug.lib")
+			#pragma comment(lib, "mikmod-static-mtdll-debug.lib")
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-static-mt.lib")
+				#pragma comment(lib, "mikmod-static-mt.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-static-mt-debug.lib")
+				#pragma comment(lib, "mikmod-static-mt-debug.lib")
+			#endif
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-dll-uc.lib")
+				#pragma comment(lib, "mikmod-dll-uc.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-dll-uc-debug.lib")
+				#pragma comment(lib, "mikmod-dll-uc-debug.lib")
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-static-mtdll-uc.lib")
+				#pragma comment(lib, "mikmod-static-mtdll-uc.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-static-mtdll-uc-debug.lib")
+				#pragma comment(lib, "mikmod-static-mtdll-uc-debug.lib")
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanMikMod-static-mt-uc.lib")
+				#pragma comment(lib, "mikmod-static-mt-uc.lib")
+			#else
+				#pragma comment(lib, "clanMikMod-static-mt-uc-debug.lib")
+				#pragma comment(lib, "mikmod-static-mt-uc-debug.lib")
+			#endif
+		#endif
+	#endif
 #endif
+
+

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    (if your name is missing here, please add it)
 */
 
@@ -55,16 +54,16 @@ std::vector<CL_CDDrive> &CL_CDDrive::get_drives()
 	return drives;
 }
 
-std::string CL_CDDrive::get_drive_path()
+CL_String8 CL_CDDrive::get_drive_path()
 {
 	if (impl) return impl->get_drive_path();
-	return std::string();
+	return CL_String8();
 }
 
-std::string CL_CDDrive::get_cd_name()
+CL_String8 CL_CDDrive::get_cd_name()
 {
 	if (impl) return impl->get_cd_name();
-	return std::string();
+	return CL_String8();
 }
 
 int CL_CDDrive::get_num_tracks()

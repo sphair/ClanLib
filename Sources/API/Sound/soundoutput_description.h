@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,61 +24,75 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_soundoutput_description
-#define header_soundoutput_description
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "api_sound.h"
+
 class CL_SoundOutput_Description_Generic;
 
-//: Sound output description class.
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
+/// \brief Sound output description class.
+///
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundOutput_Description
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a sound output description.
+	/// \brief Constructs a sound output description.
 	CL_SoundOutput_Description();
 
 	CL_SoundOutput_Description(const CL_SoundOutput_Description &copy);
 
 	~CL_SoundOutput_Description();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the mixing frequency for the sound output device.
+	/// \brief Returns the mixing frequency for the sound output device.
 	int get_mixing_frequency() const;
 
-//! Operations:
+	/// \brief Returns the mixing latency in milliseconds.
+	int get_mixing_latency() const;
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignment operator.
+	/// \brief Copy assignment operator.
 	CL_SoundOutput_Description &operator =(const CL_SoundOutput_Description &copy);
 
-	//: Sets the mixing frequency for the sound output device.
+	/// \brief Sets the mixing frequency for the sound output device.
 	void set_mixing_frequency(int frequency);
 
-//! Implementation:
+	/// \brief Sets the mixing latency in milliseconds.
+	void set_mixing_latency(int latency);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundOutput_Description_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

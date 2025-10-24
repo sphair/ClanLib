@@ -1,0 +1,96 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Harry Storbacka
+*/
+
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
+
+
+#pragma once
+
+
+#include "api_gui.h"
+#include "../Core/System/sharedptr.h"
+#include "../Core/Signals/callback_v2.h"
+#include "../GUI/gui_message.h"
+#include "../GUI/gui_message_input.h"
+#include <vector>
+
+class CL_AcceleratorKey_Impl;
+
+/// \brief GUI Accelerator Table Entry.
+///
+/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
+class CL_AcceleratorKey
+{
+/// \name Construction
+/// \{
+
+public:
+	CL_AcceleratorKey();
+
+	CL_AcceleratorKey(int id, int mod1=-1, int mod2=-1, int mod3=-1);
+
+	~CL_AcceleratorKey();
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	CL_Callback_v2<CL_GUIMessage, CL_AcceleratorKey> &func_pressed();
+
+	bool get_shift() const;
+
+	bool get_alt() const;
+
+	bool get_ctrl() const;
+
+	int get_id() const;
+
+	bool is_null() const;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+	CL_SharedPtr<CL_AcceleratorKey_Impl> impl;
+/// \}
+};
+
+
+/// \}

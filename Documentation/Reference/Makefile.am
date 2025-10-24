@@ -1,39 +1,30 @@
-EXTRA_DIST = $(wildcart images/*.png) \
- pce2.txt pce2.in \
- class.plg  cross.plg  desc.plg	init.plg  input.plg  namespace.plg  output.plg
+EXTRA_DIST = $(wildcart images/*.png)
 
-HTML_PREFIX = $(datadir)/doc/@PACKAGE@
+HTML_PREFIX = $(datadir)/doc/@PACKAGE@-@LT_RELEASE@
 
-HEADERS_API = $(shell find @top_srcdir@/Sources/API -name '*.h')
-HEADERS_ALL = $(shell find @top_srcdir@/Sources -name '*.h')
+all-local:
 
-all-local: html/
+html:
+	if [ -d doxyoutput ]; then rm -rf doxyoutput; fi
+	if [ -d reftest ]; then rm -rf reftest; fi
+	mkdir doxyoutput;
+	mkdir reftest
+	doxygen ./clanlib.doxygen
+	make -C ../Utilities/ReferenceDocs
+	../Utilities/ReferenceDocs/ReferenceDocs
 
-PLGS = class.plg cross.plg desc.plg init.plg input.plg namespace.plg output.plg
-
-
-dev_ref: $(PLGS) $(HEADERS_ALL)
-	if [ ! -d html ]; then mkdir html; fi
-	chmod +x ./pce2
-	./pce2 --plgdir $(srcdir) $(HEADERS_ALL)
-
-html/: $(PLGS) $(HEADERS_API)
-	if [ ! -d html ]; then mkdir html; fi
-	chmod +x ./pce2
-	./pce2 --plgdir $(srcdir) $(HEADERS_API)
-
-$(PLGS):
-	$(LN_S) $(srcdir)/$@ $@
-
-install-data-hook: html/
+install-html:
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)/Reference
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)/Reference/images
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)/Reference/html
 	$(INSTALL) -m 0644 $(srcdir)/images/*.png $(DESTDIR)$(HTML_PREFIX)/Reference/images
-	find html/ -name "*.html" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
+
+	find reftest/ -name "*.html" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
 
 clean-local:
-	rm -rf html
+	rm -rf doxyoutput
+	rm -rf reftest
 
 # EOF #
+

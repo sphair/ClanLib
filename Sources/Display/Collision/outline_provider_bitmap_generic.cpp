@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,19 +28,19 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
+#include "Display/precomp.h"
 #include "API/Display/Collision/outline_accuracy.h"
 #include "API/Display/Collision/outline_circle.h"
-#include "API/Display/pixel_buffer.h"
-#include "API/Display/pixel_format.h"
+#include "API/Display/Image/pixel_buffer.h"
+#include "API/Display/Image/pixel_format.h"
 #include "API/Core/IOData/cl_endian.h"
-#include "API/Core/System/clanstring.h"
-#include "API/Core/System/error.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/Text/string_format.h"
 #include "outline_provider_bitmap_generic.h"
 #include "collision_outline_generic.h"
 
 CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
-	CL_PixelBuffer pbuf,
+	const CL_PixelBufferRef &pbuf,
 	int alpha_limit,
 	bool get_insides)
 :
@@ -60,10 +60,10 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 		// the image contains no alpha - add only a rectangle
 		CL_Contour contour;
 		
-		contour.points.push_back( CL_Pointf(0.0f,0.0f) );
-		contour.points.push_back( CL_Pointf(0.0f,(float)height) );
-		contour.points.push_back( CL_Pointf((float)width,(float)height) );
-		contour.points.push_back( CL_Pointf((float)width,0.0f) );
+		contour.points.push_back( CL_Pointf(0.0f, 0.0f) );
+		contour.points.push_back( CL_Pointf(0.0f, float(height)) );
+		contour.points.push_back( CL_Pointf(float(width), float(height)) );
+		contour.points.push_back( CL_Pointf(float(width), 0.0f) );
 		
 		contours.push_back(contour);
 		
@@ -82,7 +82,6 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 	data = new unsigned char[(height+1)*(width+1)];
 
 	// The image part
-	pbuf.lock();
 	for(int y = 0; y <= height; y++)
 	{
 		for(int x = 0; x <= width; x++)
@@ -98,7 +97,6 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 				get_corner(x,y) |= 0x8;
 		}
 	}
-	pbuf.unlock();
 
 	find_contours();
 }
@@ -119,7 +117,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 		contour.points.push_back(start_point);
 
 		// initialize outline finder algorithm (get_next_point)
-		last_point = CL_Point(start_point);
+		last_point = CL_Pointf(start_point);
 		last_corner = get_corner(last_point.x,last_point.y); // can be 0x8 or 0xe
 		if(last_corner == 0x8)
 		{
@@ -134,7 +132,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 			contour.is_inside_contour = true;
 		}
 		else
-			throw CL_Error("Arg, the start corner is not of any of the two known types: 0x8, 0x7\n");
+			throw CL_Exception(cl_text("Arg, the start corner is not of any of the two known types: 0x8, 0x7\n"));
 			
 		while( true )
 		{
@@ -150,7 +148,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 					break;
 				}
 				else
-					throw CL_Error(CL_String::format("Error: front() == back(), but only %1  points in list", (int)contour.points.size()));
+					throw CL_Exception(cl_format(cl_text("Error: front() == back(), but only %1 points in list"), (int)contour.points.size()));
 			}
 
 			if( contour.points.size() > 10000 ) break; // Sanity ?
@@ -265,7 +263,7 @@ CL_Pointf CL_OutlineProviderBitmap_Generic::find_next_contour_start(unsigned int
 			{
 				// Lets check that it has not already been used
 				if( !point_in_outline(x,y) )
-					return CL_Pointf((float)x,(float)y);
+					return CL_Pointf(float(x),float(y));
 			}
 		}
 		sx = 0;
@@ -273,8 +271,6 @@ CL_Pointf CL_OutlineProviderBitmap_Generic::find_next_contour_start(unsigned int
 	
 	return CL_Pointf(-1.0f,-1.0f);
 }
-
-
 
 void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &points)
 {
@@ -320,7 +316,7 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		else if(last_dir == DIR_DOWN)
 			next_dir = DIR_LEFT;
 		else
-			throw CL_Error(CL_String::format("Came to a corner-type: 0x6, but last direction was: %1",last_dir));
+			throw CL_Exception(cl_format(cl_text("Came to a corner-type: 0x6, but last direction was: %1"),last_dir));
 		break;
 	// XX
 	// X0
@@ -340,7 +336,7 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		else if(last_dir == DIR_LEFT)
 			next_dir = DIR_UP;
 		else
-			throw CL_Error(CL_String::format("Came to a corner-type: 0x9, but last direction was: %1", last_dir));
+			throw CL_Exception(cl_format(cl_text("Came to a corner-type: 0x9, but last direction was: %1"), last_dir));
 		break;
 	// 0X
 	// 0X
@@ -369,28 +365,28 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		break;
 	
 	default:
-		throw CL_Error(CL_String::format("Unknown corner-type: %1", last_corner));
+		throw CL_Exception(cl_format(cl_text("Unknown corner-type: %1"), last_corner));
 		break;
 	}
 	
-	CL_Point next_point(0,0);
+	CL_Pointf next_point(0.0f,0.0f);
 	switch (next_dir)
 	{
 	case DIR_UP:
 		//printf("up (%x)\n", last_corner);
-		next_point = CL_Point(last_point.x, last_point.y-1);
+		next_point = CL_Pointf(last_point.x, last_point.y-1);
 		break;
 	case DIR_DOWN:
 		//printf("down (%x)\n", last_corner);
-		next_point = CL_Point(last_point.x, last_point.y+1);
+		next_point = CL_Pointf(last_point.x, last_point.y+1);
 		break;
 	case DIR_LEFT:
 		//printf("left (%x)\n", last_corner);
-		next_point = CL_Point(last_point.x-1, last_point.y);
+		next_point = CL_Pointf(last_point.x-1.0f, last_point.y);
 		break;
 	case DIR_RIGHT:
 		//printf("right (%x)\n", last_corner);
-		next_point = CL_Point(last_point.x+1, last_point.y);
+		next_point = CL_Pointf(last_point.x+1.0f, last_point.y);
 		break;
 	}
 	last_point = next_point;

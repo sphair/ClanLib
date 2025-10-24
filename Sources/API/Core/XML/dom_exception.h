@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,45 +24,42 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_exception
-#define header_dom_exception
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../System/error.h"
+#include "../api_core.h"
+#include "../System/exception.h"
 
-//: DOM Exception class.
-//- !group=Core/XML!
-//- !header=core.h!
-class CL_API_CORE CL_DomException : public CL_Error
+/// \brief DOM Exception class.
+///
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
+class CL_API_CORE CL_DomException : public CL_Exception
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_DomException(unsigned short code);
 
 	CL_DomException(
-		const std::string &message,
+		const CL_StringRef &message,
 		unsigned short code);
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	enum ExceptionCodes
 	{
@@ -75,13 +72,24 @@ public:
 		NO_MODIFICATION_ALLOWED_ERR  = 7,
 		NOT_FOUND_ERR                = 8,
 		NOT_SUPPORTED_ERR            = 9,
-		INUSE_ATTRIBUTE_ERR          = 10
+		INUSE_ATTRIBUTE_ERR          = 10,
+		INVALID_STATE_ERR            = 11,
+		SYNTAX_ERR                   = 12,
+		INVALID_MODIFICATION_ERR     = 13,
+		NAMESPACE_ERR                = 14,
+		INVALID_ACCESS_ERR           = 15
 	};
 
 	unsigned short code;
-	
-//! Implementation:
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
+/// \}
 };
 
-#endif
+
+/// \}

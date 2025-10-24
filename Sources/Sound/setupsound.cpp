@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -32,6 +31,7 @@
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Signals/slot.h"
 #include "resourcetype_sample.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -40,13 +40,6 @@
 static int ref_count = 0;
 static CL_Slot slot_resource_added;
 static CL_SoundProviderType *providertype_wave = 0;
-
-static void clansound_resource_added(CL_Resource &resource)
-{
-	std::string type = resource.get_type();
-
-	if (type == "sample") new CL_ResourceData_Sample(resource);
-}
 
 CL_SetupSound::CL_SetupSound(bool register_resources_only)
 {
@@ -61,20 +54,19 @@ CL_SetupSound::~CL_SetupSound()
 void CL_SetupSound::init(bool register_resources_only)
 {
 	ref_count++;
-	if (ref_count > 1) return;
-
-	slot_resource_added = CL_ResourceManager::sig_resource_added().connect(&clansound_resource_added);
-	providertype_wave = new CL_SoundProviderType_Register<CL_SoundProvider_Wave>("wav");
-
-	if (register_resources_only) return;
+	if (ref_count > 1)
+		return;
+	providertype_wave = new CL_SoundProviderType_Register<CL_SoundProvider_Wave>(cl_text("wav"));
+	if (register_resources_only)
+		return;
 }
 
 void CL_SetupSound::deinit()
 {
 	ref_count--;
-	if (ref_count > 0) return;	// Wait until final call to deinit
+	if (ref_count > 0)
+		return;	// Wait until final call to deinit
 
 	delete providertype_wave;
 	providertype_wave = 0;
-	slot_resource_added = CL_Slot();
 }

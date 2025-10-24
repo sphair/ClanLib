@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,31 +24,27 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundoutput_directsound.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/cl_assert.h"
-#include "API/Core/System/log.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/Text/logger.h"
 #include "Core/System/Win32/init_win32.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_DirectSound construction:
 
-CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
-	CL_SoundOutput_Generic(mixing_frequency),
-	directsound(0), soundbuffer(0),
-	frag_size(0), buffer_size(0), bytes_per_sample(0),
-	sleep_event(0), notify(0), last_write_pos(-1)
+CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency, int mixing_latency)
+: CL_SoundOutput_Generic(mixing_frequency, mixing_latency), directsound(0),
+  soundbuffer(0), frag_size(0), buffer_size(0), bytes_per_sample(0),
+  sleep_event(0), notify(0), has_sound(true), last_write_pos(-1)
 {
 	HRESULT err;
 	err = DirectSoundCreate(NULL, &directsound, NULL);
-	
 	if (FAILED(err))
 	{
-		// throw CL_Error("Cannot open sound device.");
+		cl_log_event("mixer", "Cannot get direct sound interface.");
 		frag_size = mixing_frequency/2;
 		has_sound = false;
 		return;
@@ -65,18 +61,18 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 		wndclass.lpfnWndProc = DefWindowProc;
 		wndclass.cbClsExtra = 0;
 		wndclass.cbWndExtra = 0;
-		wndclass.hInstance = CL_System_Win32::hInstance;
+		wndclass.hInstance = GetModuleHandle(0);
 		wndclass.hIcon = NULL;
 		wndclass.hCursor = LoadCursor (NULL,IDC_ARROW);
 		wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-		wndclass.lpszMenuName = "ClanSound";
-		wndclass.lpszClassName = "ClanSound";
+		wndclass.lpszMenuName = TEXT("ClanSound");
+		wndclass.lpszClassName = TEXT("ClanSound");
 
 		RegisterClass(&wndclass);
 
 		hwnd = CreateWindow(
-			"ClanSound",
-			"ClanSound",
+			TEXT("ClanSound"),
+			TEXT("ClanSound"),
 			0, // WS_POPUP,
 			0,
 			0,
@@ -84,14 +80,25 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 			1,
 			NULL,
 			NULL,
-			CL_System_Win32::hInstance,
+			GetModuleHandle(0),
 			NULL);
 	}
-	cl_assert(hwnd != NULL);
+	if (hwnd == NULL)
+	{
+		cl_log_event("mixer", cl_text("Failed to create sound window."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	err = directsound->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
-	cl_assert(SUCCEEDED(err));
-
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Unable to set direct sound cooperative level to DSSCL_NORMAL."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	// Create mixing buffer.
 	WAVEFORMATEX format;
@@ -105,9 +112,7 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 
 	bytes_per_sample = format.nBlockAlign;
 
-	frag_size = 3072;  //changed from 2048 to fix buffer overrun problems that happen with some drivers,
-	//including an Audigy2 under Vista64 -SAR 2-13-2008
-	
+	frag_size = mixing_frequency * mixing_latency / 1000;
 	int num_fragments = 8;
 
 	DSBUFFERDESC desc;
@@ -119,7 +124,13 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 	desc.lpwfxFormat = &format; 
 
 	err = directsound->CreateSoundBuffer(&desc, &soundbuffer, NULL);
-	if (FAILED(err)) throw CL_Error("Cannot get primary sound buffer.");
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Cannot get primary sound buffer."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	// Find size of buffer:
 
@@ -128,31 +139,56 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 	caps.dwSize = sizeof(DSBCAPS);
 	
 	err = soundbuffer->GetCaps(&caps);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Could not retrieve direct sound buffer capabilities."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	buffer_size = caps.dwBufferBytes;
-	cl_assert(buffer_size == frag_size * bytes_per_sample * num_fragments);
+	if (buffer_size != frag_size * bytes_per_sample * num_fragments)
+	{
+		cl_log_event("mixer", cl_text("Direct sound buffer size does not match our request."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 	
 	// Clear buffer at beginning (good for debugging):
 	DWORD size1, size2;
 	void *ptr1;
 	void *ptr2;
 	err = soundbuffer->Lock(0, buffer_size, &ptr1, &size1, &ptr2, &size2, 0);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Unable to lock direct sound buffer."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	memset(ptr1, 0, size1);
-	if (ptr2 != NULL) memset(ptr2, 0, size2);
+	if (ptr2 != NULL)
+		memset(ptr2, 0, size2);
 
-	soundbuffer->Unlock(ptr1, size1, ptr2, size2);
+	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Could not unlock direct sound buffer."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 
 	// Setup some sleeping :)
 	sleep_event = CreateEvent(NULL, TRUE, FALSE, NULL);
 
 	err = soundbuffer->QueryInterface(IID_IDirectSoundNotify, (void **) &notify);
-//	cl_assert(SUCCEEDED(err));
 	if (FAILED(err)) // directsoundnotify doesnt exist on nt4 with dx3. No sound avail.
 	{
-		// throw CL_Error("Cannot open sound device.");
+		cl_log_event("mixer", cl_text("Direct sound buffer does not support needed IDirectSoundNotify interface."));
 		frag_size = mixing_frequency/2;
 		has_sound = false;
 		return;
@@ -170,12 +206,18 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 	start_mixer_thread();
 
 	err = soundbuffer->Play(0, 0, DSBPLAY_LOOPING);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", cl_text("Could not start sound buffer playback."));
+		frag_size = mixing_frequency/2;
+		has_sound = false;
+		return;
+	}
 }
 	
 CL_SoundOutput_DirectSound::~CL_SoundOutput_DirectSound()
 {
-	if (has_sound) stop_mixer_thread();
+	stop_mixer_thread();
 
 	if (notify) notify->Release();
 	if (soundbuffer) soundbuffer->Release();
@@ -207,7 +249,11 @@ void CL_SoundOutput_DirectSound::write_fragment(short *data)
 
 	DWORD play, write;
 	err = soundbuffer->GetCurrentPosition(&play, &write);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", "soundbuffer->GetCurrentPosition failed.");
+		return;
+	}
 
 	int frag_bytes = frag_size*bytes_per_sample;
 
@@ -224,9 +270,13 @@ void CL_SoundOutput_DirectSound::write_fragment(short *data)
 		(void **) &ptr2,
 		&size2,
 		0);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", "soundbuffer->Lock failed.");
+		return;
+	}
 /*
-	CL_Log::log(
+	cl_log_event(
 		"debug", "#%1 play ptr: %2, write ptr: %3, pos: %4, size1: %5, size2: %6",
 		pos / frag_bytes, play, write, pos, size1, size2);
 */
@@ -235,7 +285,11 @@ void CL_SoundOutput_DirectSound::write_fragment(short *data)
 	if (ptr2 != NULL) memcpy(ptr2, _data+size1, size2);
 
 	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
-	cl_assert(SUCCEEDED(err));
+	if (FAILED(err))
+	{
+		cl_log_event("mixer", "soundbuffer->Unlock failed.");
+		return;
+	}
 }
 
 void CL_SoundOutput_DirectSound::wait()
@@ -259,7 +313,8 @@ void CL_SoundOutput_DirectSound::wait()
 		HRESULT err;
 		DWORD write;
 		err = soundbuffer->GetCurrentPosition(NULL, &write);
-		cl_assert(SUCCEEDED(err));
+		if (FAILED(err))
+			throw CL_Exception(cl_text("DSSOUNDBUFFER GetCurrentPosition failed"));
 
 		pos = (write / frag_bytes + 1) * frag_bytes;
 		if (pos >= buffer_size) pos -= buffer_size;

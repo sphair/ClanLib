@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Raster Graphics - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Raster Graphics
+</h2>
+
+<p>Raster graphics in ClanLib are managed by four types of objects:</p>
+
+<ul>
+<li>Pixel buffers</li>
+<li>Image providers</li>
+<li>Texture objects</li>
+<li>Sprites</li>
+</ul>
+
+<h3>Pixel Buffers</h3>
+
+<p>A pixel buffer, managed by <span class="code">CL_PixelBuffer</span>, is a
+container object for a raster image stored in system memory.  A pixel buffer
+consists of a pixel format description (<span
+class="code">CL_PixelFormat</span>) and then a pointer to the memory in
+which the image is stored.</p>
+
+<p>The following example creates a pixel buffer and fills it with a raster
+image that looks like a gradient shade from red to blue:</p>
+
+<pre>
+CL_PixelBuffer create_gradient_image()
+{
+	CL_PixelBuffer buffer(256, 256, 256*4, CL_PixelFormat::rgba8888);
+	unsigned int *pixel_data = (unsigned int *) buffer.get_data();
+	for (int y = 0; y < 256; y++)
+	{
+		for (int x = 0; x < 256; x++)
+		{
+			unsigned int red = 255-x;
+			unsigned int green = 0;
+			unsigned int blue = x;
+			unsigned int alpha = 255;
+			pixel_data[x + y * 256] =
+				(red << 24) + (green << 16) + (blue << 8) + alpha;
+		}
+	}
+	return buffer;
+}
+</pre>
+
+<p>To draw a pixel buffer on a graphic context, simply call <span
+class="code">CL_GraphicContext::draw_pixels</span>:
+
+<pre>
+CL_DisplayWindow window(256, 256, "Raster Example");
+CL_GraphicContext gc = window.get_gc();
+CL_InputContext ic = window.get_ic();
+CL_PixelBuffer buffer = create_gradient_image();
+
+while (ic.get_keyboard().get_keycode(CL_KEY_ESCAPE) == false)
+{
+	gc.draw_pixels(0, 0, buffer);
+	window.flip();
+	CL_DisplayMessageQueue::process();
+}
+</pre>
+
+<h3>Image Providers</h3>
+
+<p>Image providers are classes that can load or save pixel buffers.  The
+interface which all the image providers implement is called <span
+class="code">CL_ImageProviderType</span>. The interface is simple:</p>
+
+<pre>
+class CL_ImageProviderType
+{
+public:
+	//: Called to load an image with this provider type.
+	virtual CL_PixelBuffer load(
+		const CL_String &filename,
+		CL_VirtualDirectory directory)=0;
+
+	//: Called to save a given PixelBuffer to a file
+	virtual void save(
+		CL_PixelBuffer buffer,
+		const CL_String &filename,
+		CL_VirtualDirectory directory)=0;
+};
+</pre>
+
+<p>ClanLib itself implements a few image providers for common image formats:
+<span class="code">CL_PNGProvider</span>, <span
+class="code">CL_JPEGProvider</span>, <span
+class="code">CL_PCXProvider</span> and <span
+class="code">CL_TargaProvider</span>.  Each of those providers implement
+static function versions of the above functions, so to load a PNG image the
+following syntax would work:</p>
+
+<pre>
+CL_PixelBuffer png_image = CL_PNGProvider::load("test.png");
+</pre>
+
+<p>If you do not know the type of the image format, or if you want to load
+an image from any of the formats known by ClanLib, you can use the <span
+class="code">CL_ImageProviderFactory</span> class.  All image providers in
+ClanLib are registered in the factory, allowing you to load images like
+this:</p>
+
+<pre>
+CL_PixelBuffer image1 = CL_ImageProviderFactory::load("test.png");
+CL_PixelBuffer image2 = CL_ImageProviderFactory::load("test.jpg");
+</pre>
+
+<h3>Texture Objects</h3>
+
+<p>Pixel buffers are images stored in system memory, in a format that can be
+freely specified.  This gives certain limitations - the images can basically
+only be rendered using <span
+class="code">CL_GraphicContext::draw_pixels</span>.  If an image needs to be
+drawn in more complex ways, it needs to be placed in a texture object.  A
+texture is an image stored in video memory in a format native to the
+graphics card's processing unit, and is used by texturing units or fragment
+shader programs as image sources.</p>
+
+<p>Texture objects are managed by <span class="code">CL_Texture</span> in
+ClanLib. Textures have many properties that affect how a texture unit may
+calculate the texels used as input for its texture functions. For example,
+<span class="code">CL_Texture::set_wrap_mode</span> configures what happens
+if the texel is located outside the dimensions of the texture.  If the
+wrapping mode is set to <span class="code">cl_wrap_clamp_to_edge</span> it
+will use the pixel at the edge, or if it is set to <span
+class="code">cl_wrap_repeat</span> it will set it to tx/width, for example.</p>
+
+<p>To load a pixel buffer into a texture, the following code could be
+used:</p>
+
+<pre>
+CL_PixelBuffer buffer = create_gradient_image();
+CL_Texture texture(gc, cl_texture_2d);
+texture.set_image(buffer);
+</pre>
+
+<p>Modern graphics cards are very fast at rendering things, however each
+time you change the state of the graphic context, such as changing the
+currently set texture for a texture unit, you lose a lot of performance. It
+isn't really that important what you change, the key to getting a high speed
+is to set up the states, then render a lot, then change states, then render
+a lot, etc.</p>
+
+<p>Since drawing 2D usually means drawing a lot of different images, having
+a seperate texture for each image will produce a large performance drop. A
+solution to this problem is to store several images in the same texture,
+thus avoiding you have to change the state of the graphic context between
+your images drawn. <span class="code">CL_TextureGroup</span> is a class that
+help you store images in the same texture:</p>
+
+<pre>
+// Load images:
+CL_PixelBuffer image1 = CL_ImageProviderFactory::load("test.png");
+CL_PixelBuffer image2 = CL_ImageProviderFactory::load("test.jpg");
+
+// Create a texture of 256x256
+CL_TextureGroup texture_group(CL_Size(256, 256));
+
+// Retrieve areas in the texture for our images:
+CL_Subtexture subtexture_image1 = texture_group.add(image1.get_size());
+CL_Subtexture subtexture_image2 = texture_group.add(image2.get_size());
+
+// Upload images to texture:
+subtexture_image1.get_texture().set_subimage(
+	subtexture_image1.get_geometry().left,
+	subtexture_image1.get_geometry().top,
+	image1);
+subtexture_image2.get_texture().set_subimage(
+	subtexture_image2.get_geometry().left,
+	subtexture_image2.get_geometry().top,
+	image2);
+</pre>
+
+<h3>Sprites</h3>
+
+<p><span class="code">CL_Sprite</span> is a high-level interface that
+automatically stores images in textures and supports advanced features such
+as animation. For further information on sprites, see the <a
+href="sprites.html">sprite overview</a>.</p>
+
+</div>
+
+</body>
+</html>

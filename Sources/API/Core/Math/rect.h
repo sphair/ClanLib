@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,367 +24,452 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
+**    Harry Storbacka
+**    Mark Page
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_rect
-#define header_rect
-
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
+#include "../api_core.h"
+#include "vec2.h"
 #include "size.h"
 #include "point.h"
 #include "origin.h"
+#include "math.h"
 
-class CL_Rectf;
-
-//: 2D (left,top,right,bottom) rectangle structure.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_API_CORE CL_Rect
+/// \brief 2D (left,top,right,bottom) rectangle structure.
+///
+/// These line templates are defined for: int (CL_Rect), float (CL_Rectf), double (CL_Rectd)
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+template<typename Type>
+class CL_API_CORE CL_Rectx
 {
-//! Construction:
+/// \name Construction
+/// \{
 public:
-	//: Constructs an rectangle.
-	//param left: Initial left position of rectangle.
-	//param top: Initial top position of rectangle.
-	//param right: Initial right position of rectangle.
-	//param bottom: Initial bottom position of rectangle.
-	//param point: Initial top-left position of rectangle.
-	//param size: Initial size of rectangle.
-	//param rect: Initial rectangle position and size.
-	CL_Rect() { left = right = top = bottom = 0; }
+	/// \brief Constructs an rectangle.
+	///
+	/// Initialised to zero
+	CL_Rectx() { left = right = top = bottom = 0; }
 
-	explicit CL_Rect(const CL_Rectf& rect);
+	/// \brief Constructs an rectangle.
+	///
+	/// \param left Initial left position of rectangle.
+	/// \param top Initial top position of rectangle.
+	/// \param size Initial size of rectangle.
+	CL_Rectx(const CL_Sizex<Type> &s) { left = 0; top = 0; right = s.width; bottom = s.height; }
 
-	CL_Rect(int new_left, int new_top, int new_right, int new_bottom)
+	/// \brief Constructs an rectangle.
+	///
+	/// \param left Initial left position of rectangle.
+	/// \param top Initial top position of rectangle.
+	/// \param right Initial right position of rectangle.
+	/// \param bottom Initial bottom position of rectangle.
+	CL_Rectx(Type new_left, Type new_top, Type new_right, Type new_bottom)
 	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
 
-	CL_Rect(const CL_Point &p, const CL_Size &size)
+	/// \brief Constructs an rectangle.
+	///
+	/// \param point Initial top-left position of rectangle.
+	/// \param size Initial size of rectangle.
+	CL_Rectx(const CL_Pointx<Type> &p, const CL_Sizex<Type> &size)
 	{ left = p.x; top = p.y; right = left + size.width; bottom = top + size.height; }
 
-	CL_Rect(const CL_Rect &rect)
-	{ left = rect.left; top = rect.top; right = rect.right; bottom = rect.bottom; }
+	/// \brief Constructs an rectangle.
+	///
+	/// \param left Initial left position of rectangle.
+	/// \param top Initial top position of rectangle.
+	/// \param size Initial size of rectangle.
+	CL_Rectx(Type new_left, Type new_top, const CL_Sizex<Type> &size)
+	{ left = new_left; top = new_top; right = left + size.width; bottom = top + size.height; }
 
-	//: Rect += Rect operator.
-	CL_Rect &operator+=(const CL_Rect &r)
-	{ left += r.left; top += r.top; right += r.right; bottom += r.bottom; return *this; }
+	/// \brief Constructs an rectangle.
+	///
+	/// \param rect Initial rectangle position and size.
+	CL_Rectx(const CL_Rectx<int> &rect);
 
-	//: Rect -= Rect operator.
-	CL_Rect &operator-=(const CL_Rect &r)
-	{ left -= r.left; top -= r.top; right -= r.right; bottom -= r.bottom; return *this; }
-	
-	//: Rect += Point operator.
-	CL_Rect &operator+=(const CL_Point &p)
-	{ left += p.x; top += p.y; right += p.x; bottom += p.y; return *this; }
+	/// \brief Constructs an rectangle.
+	///
+	/// \param rect Initial rectangle position and size.
+	CL_Rectx(const CL_Rectx<float> &rect);
 
-	//: Rect -= Point operator.
-	CL_Rect &operator-=(const CL_Point &p)
-	{ left -= p.x; top -= p.y; right -= p.x; bottom -= p.y; return *this; }
+	/// \brief Constructs an rectangle.
+	///
+	/// \param rect Initial rectangle position and size.
+	CL_Rectx(const CL_Rectx<double> &rect);
 
-	//: Rect + Rect operator.
-	CL_Rect operator+(const CL_Rect &r) const
-	{ return CL_Rect(left + r.left, top + r.top, right + r.right, bottom + r.bottom); }
-
-	//: Rect - Rect operator.
-	CL_Rect operator-(const CL_Rect &r) const
-	{ return CL_Rect(left - r.left, top - r.top, right - r.right, bottom - r.bottom); }
-
-	//: Rect + Point operator.
-	CL_Rect operator+(const CL_Point &p) const
-	{ return CL_Rect(left + p.x, top + p.y, right + p.x, bottom + p.y); }
-
-	//: Rect - Point operator.
-	CL_Rect operator-(const CL_Point &p) const
-	{ return CL_Rect(left - p.x, top - p.y, right - p.x, bottom - p.y); }
-
-	//: Rect == Rect operator.
-	bool operator==(const CL_Rect &r) const
+	/// \brief Rect == Rect operator.
+	bool operator==(const CL_Rectx<Type> &r) const
 	{ return (left == r.left && top == r.top && right == r.right && bottom == r.bottom); }
 
-	//: Rect != Rect operator.
-	bool operator!=(const CL_Rect &r) const
+	/// \brief Rect != Rect operator.
+	bool operator!=(const CL_Rectx<Type> &r) const
 	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
 
-//! Attributes:
+/// \}
+/// \name Attributes
+/// \{
 public:
-	//: X1-coordinate.
-	int left;
-	
-	//: Y1-coordinate.
-	int top;
-	
-	//: X2-coordinate.
-	int right;
-	
-	//: Y2-coordinate.
-	int bottom;
-	
-	//: Returns the width of the rectangle.
-	int get_width() const { return right - left; }
-	
-	//: Returns the height of the rectangle.
-	int get_height() const { return bottom - top; }
+	/// \brief X1-coordinate.
+	Type left;
 
-	//: Returns the size of the rectangle.
-	CL_Size get_size() const { return CL_Size(right - left, bottom - top); }
-	
-	//: Returns true if point is inside the rectangle.
-	bool is_inside(const CL_Point &p) const { return (p.x >= left && p.y >= top && p.x <= right && p.y <= bottom); }
+	/// \brief Y1-coordinate.
+	Type top;
 
-	//: Returns true if rectangle passed is overlapping or inside this rectangle.
-	bool is_overlapped(const CL_Rect &r) const 
+	/// \brief X2-coordinate.
+	Type right;
+
+	/// \brief Y2-coordinate.
+	Type bottom;
+
+	/// \brief Returns the width of the rectangle.
+	Type get_width() const { return right - left; }
+
+	/// \brief Returns the height of the rectangle.
+	Type get_height() const { return bottom - top; }
+
+	/// \brief Returns the size of the rectangle.
+	CL_Sizex<Type> get_size() const { return CL_Sizex<Type>(right - left, bottom - top); }
+
+	/// \brief Returns true if the rectangle contains the point.
+	bool contains(const CL_Vec2<Type> &p) const
+	{
+		return ((p.x >= left && p.x <= right) || (p.x <= left && p.x >= right))
+		    && ((p.y >= top && p.y <= bottom) || (p.y <= top && p.y >= bottom));
+	}
+
+	/// \brief Returns the top-left point of the rectangle
+	CL_Pointx<Type> get_top_left() const
+	{
+		return CL_Pointx<Type>(left, top);
+	}
+
+	/// \brief Returns the top-right point of the rectangle
+	CL_Pointx<Type> get_top_right() const
+	{
+		return CL_Pointx<Type>(right, top);
+	}
+
+	/// \brief Returns the bottom-right point of the rectangle
+	CL_Pointx<Type> get_bottom_right() const
+	{
+		return CL_Pointx<Type>(right, bottom);
+	}
+
+	/// \brief Returns the bottom-left point of the rectangle
+	CL_Pointx<Type> get_bottom_left() const
+	{
+		return CL_Pointx<Type>(left, bottom);
+	}
+
+	/// \brief Returns true if rectangle passed is overlapping or inside this rectangle.
+	bool is_overlapped(const CL_Rectx<Type> &r) const
 	{
 		return (r.left < right && r.right > left && r.top < bottom && r.bottom > top);
 	}
-	
-	//: Returns another CL_Rect containing a rotated version of this one.
-	//param hotspot: Point to rotate around.
-	//param origin: Determines the hotspot point within the rectangle
-	//param x, y: Offsets applied negatively to the hotspot point
-	//param angle: Angle to rotate in degrees.
-	CL_Rect get_rot_bounds(const CL_Point &hotspot, float angle) const;
-	CL_Rect get_rot_bounds(CL_Origin origin, int x, int y, float angle) const;
-	
-//! Operations:
+
+	/// \brief Returns another CL_Rectx<Type> containing a rotated version of this one.
+	///
+	/// \param hotspot Point to rotate around.
+	/// \param origin Determines the hotspot point within the rectangle
+	/// \param x, y Offsets applied negatively to the hotspot point
+	/// \param angle Angle to rotate.
+	CL_Rectx<Type> get_rot_bounds(const CL_Vec2<Type> &hotspot, const CL_Angle &angle) const;
+	CL_Rectx<Type> get_rot_bounds(CL_Origin origin, Type x, Type y, const CL_Angle &angle) const;
+
+	/// \brief Returns the center point of the rectangle.
+	CL_Pointx<Type> get_center() const
+	{
+		return CL_Pointx<Type>( (left + right)/2, ( top + bottom)/2 );
+	}
+
+/// \}
+/// \name Operations
+/// \{
 public:
-	//: Sets the size of the rectangle, maintaining top/left position.
-	void set_size(const CL_Size &size)
+	/// \brief Sets the top-left point of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_top_left(const CL_Vec2<Type>& p)
+	{
+		left = p.x;
+		top = p.y;
+		return *this;
+	}
+
+	/// \brief Sets the top-right point of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_top_right(const CL_Vec2<Type>& p)
+	{
+		right = p.x;
+		top = p.y;
+		return *this;
+	}
+
+	/// \brief Sets the bottom-right point of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_bottom_right(const CL_Vec2<Type>& p)
+	{
+		right = p.x;
+		bottom = p.y;
+		return *this;
+	}
+
+	/// \brief Sets the bottom-left point of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_bottom_left(const CL_Vec2<Type>& p)
+	{
+		left = p.x;
+		bottom = p.y;
+		return *this;
+	}
+
+	/// \brief Sets the width of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_width(Type width)
+	{
+		right = left + width;
+		return *this;
+	}
+
+	/// \brief Sets the height of the rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_height(Type height)
+	{
+		bottom = top + height;
+		return *this;
+	}
+
+	/// \brief Shrink the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &shrink(const CL_Rectx<Type> &r)
+	{
+		left += r.left; top += r.top; right -= r.right; bottom -= r.bottom;
+		return *this;
+	};
+
+	/// \brief Expand the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &expand(const CL_Rectx<Type> &r)
+	{
+		left -= r.left; top -= r.top; right += r.right; bottom += r.bottom;
+		return *this;
+	};
+
+	/// \brief Translate the rect
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &translate(const CL_Point &p)
+	{
+		left += p.x; top += p.y; right += p.x; bottom += p.y;
+		return *this;
+	};
+
+	/// \brief Translate the rect by another rect (only uses the left and top coords).
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &translate(const CL_Rectx<Type> &p)
+	{
+		left += p.left; top += p.top; right += p.left; bottom += p.top;
+		return *this;
+	};
+
+	/// \brief Translate the rect
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &translate(Type x, Type y)
+	{
+		left += x; top += y; right += x; bottom += y;
+		return *this;
+	};
+
+	/// \brief Sets the size of the rectangle, maintaining top/left position.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &set_size(const CL_Sizex<Type> &size)
 	{
 		right = left + size.width;
 		bottom = top + size.height;
+		return *this;
 	}
 
-	//: Calculates and returns the union of two rectangles.
-	CL_Rect calc_union(const CL_Rect &rect)
+	/// \brief Calculates the union of two rectangles.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &overlap(const CL_Rectx<Type> &rect)
 	{
-		CL_Rect result;
-		if (left   > rect.left)   result.left   = left;   else result.left   = rect.left;
-		if (right  < rect.right)  result.right  = right;  else result.right  = rect.right;
-		if (top    > rect.top)    result.top    = top;    else result.top    = rect.top;
-		if (bottom < rect.bottom) result.bottom = bottom; else result.bottom = rect.bottom;
-		return result;
+		CL_Rectx<Type> result;
+		result.left   = cl_max(left, rect.left);
+		result.right  = cl_min(right, rect.right);
+		result.top    = cl_max(top, rect.top);
+		result.bottom = cl_min(bottom, rect.bottom);
+		*this = result;
+		return *this;
 	}
 
-	//: Normalize rectangle. Ensures that left is less than right and top is less than bottom.
-	void normalize()
+	/// \brief Calculates the bounding rectangle of the rectangles.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &bounding_rect(const CL_Rectx<Type> &rect)
+	{
+		CL_Rectx<Type> result;
+		result.left   = cl_min(left, rect.left);
+		result.right  = cl_max(right, rect.right);
+		result.top    = cl_min(top, rect.top);
+		result.bottom = cl_max(bottom, rect.bottom);
+		*this = result;
+		return *this;
+	}
+
+	/// \brief Normalize rectangle. Ensures that left is less than right and top is less than bottom.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &normalize()
 	{
 		if (left > right)
 		{
-			int temp = right;
+			Type temp = right;
 			right = left;
 			left = temp;
 		}
 
 		if (top > bottom)
 		{
-			int temp = bottom;
+			Type temp = bottom;
 			bottom = top;
 			top = temp;
 		}
+		return *this;
 	}
-	
-	//: Applies an origin and offset pair to this rectangle
-	//param origin: The new origin to adjust to from default upper-left position
-	//param x, y: Offsets applied negatively to each corner of the rectangle
-	void apply_alignment(CL_Origin origin, int x, int y)
+
+	/// \brief Applies an origin and offset pair to this rectangle
+	///
+	/// \param origin The new origin to adjust to from default upper-left position
+	/// \param x, y Offsets applied negatively to each corner of the rectangle
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &apply_alignment(CL_Origin origin, Type x, Type y)
 	{
-		CL_Point offset = calc_origin(origin, get_size());
+		CL_Vec2<Type> offset = CL_Vec2<Type>::calc_origin(origin, get_size());
 		offset.x -= x;
 		offset.y -= y;
-		
+
 		left += offset.x;
 		top += offset.y;
 		right += offset.x;
 		bottom += offset.y;
+		return *this;
 	}
+
+	/// \brief Clip according to the specified clip rectangle.
+	///
+	/// \return reference to this object
+	CL_Rectx<Type> &clip(const CL_Rectx<Type> &cr)
+	{
+		top = cl_max(top, cr.top);
+		left = cl_max(left, cr.left);
+		right = cl_min(right, cr.right);
+		bottom = cl_min(bottom, cr.bottom);
+		top = cl_min(top, bottom);
+		left = cl_min(left, right);
+		return *this;
+	}
+/// \}
 };
 
-//: 2D (left,top,right,bottom) floating point rectangle structure.
-class CL_Rectf
+template<>
+inline CL_Rectx<int>::CL_Rectx(const CL_Rectx<float> &rect)
+{ left = (int) (floor(rect.left + 0.5f)); top = (int) (floor(rect.top + 0.5f)); right = (int) (floor(rect.right + 0.5f)); bottom = (int) (floor(rect.bottom+0.5f)); }
+
+template<>
+inline CL_Rectx<int>::CL_Rectx(const CL_Rectx<double> &rect)
+{ left = (int) (floor(rect.left + 0.5)); top = (int) (floor(rect.top + 0.5)); right = (int) (floor(rect.right + 0.5)); bottom = (int) (floor(rect.bottom + 0.5)); }
+
+template<typename Type>
+inline CL_Rectx<Type>::CL_Rectx(const CL_Rectx<int> &rect)
+{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+
+template<typename Type>
+inline CL_Rectx<Type>::CL_Rectx(const CL_Rectx<float> &rect)
+{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+
+template<typename Type>
+inline CL_Rectx<Type>::CL_Rectx(const CL_Rectx<double> &rect)
+{ left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
+
+/// \brief 2D (left,top,right,bottom) rectangle structure - Integer
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Rect : public CL_Rectx<int>
 {
-//! Construction:
 public:
-	//: Constructs an rectangle.
-	//param left: Initial left position of rectangle.
-	//param top: Initial top position of rectangle.
-	//param right: Initial right position of rectangle.
-	//param bottom: Initial bottom position of rectangle.
-	//param point: Initial top-left position of rectangle.
-	//param size: Initial size of rectangle.
-	//param rect: Initial rectangle position and size.
-	CL_Rectf() { left = right = top = bottom = 0.0f; }
-
-	CL_Rectf(const CL_Rect& rect)
-		: left((float)rect.left), 
-		  top((float)rect.top), 
-		  right((float)rect.right), 
-		  bottom((float)rect.bottom)
-	{}
-
-	CL_Rectf(float new_left, float new_top, float new_right, float new_bottom)
-	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
-
-	CL_Rectf(const CL_Pointf &p, const CL_Sizef &size)
-	{ left = p.x; top = p.y; right = left + size.width; bottom = top + size.height; }
-
-	CL_Rectf(const CL_Rectf &rect)
-	{ left = rect.left; top = rect.top; right = rect.right; bottom = rect.bottom; }
-
-	//: Rect += Rect operator.
-	CL_Rectf &operator+=(const CL_Rectf &r)
-	{ left += r.left; top += r.top; right += r.right; bottom += r.bottom; return *this; }
-
-	//: Rect -= Rect operator.
-	CL_Rectf &operator-=(const CL_Rectf &r)
-	{ left -= r.left; top -= r.top; right -= r.right; bottom -= r.bottom; return *this; }
-	
-	//: Rect += Point operator.
-	CL_Rectf &operator+=(const CL_Pointf &p)
-	{ left += p.x; top += p.y; right += p.x; bottom += p.y; return *this; }
-
-	//: Rect -= Point operator.
-	CL_Rectf &operator-=(const CL_Pointf &p)
-	{ left -= p.x; top -= p.y; right -= p.x; bottom -= p.y; return *this; }
-
-	//: Rect + Rect operator.
-	CL_Rectf operator+(const CL_Rectf &r) const
-	{ return CL_Rectf(left + r.left, top + r.top, right + r.right, bottom + r.bottom); }
-
-	//: Rect - Rect operator.
-	CL_Rectf operator-(const CL_Rectf &r) const
-	{ return CL_Rectf(left - r.left, top - r.top, right - r.right, bottom - r.bottom); }
-
-	//: Rect + Point operator.
-	CL_Rectf operator+(const CL_Pointf &p) const
-	{ return CL_Rectf(left + p.x, top + p.y, right + p.x, bottom + p.y); }
-
-	//: Rect - Point operator.
-	CL_Rectf operator-(const CL_Pointf &p) const
-	{ return CL_Rectf(left - p.x, top - p.y, right - p.x, bottom - p.y); }
-
-	//: Rect == Rect operator.
-	bool operator==(const CL_Rectf &r) const
-	{ return (left == r.left && top == r.top && right == r.right && bottom == r.bottom); }
-
-	//: Rect != Rect operator.
-	bool operator!=(const CL_Rect &r) const
-	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
-
-//! Attributes:
-public:
-	//: X1-coordinate.
-	float left;
-	
-	//: Y1-coordinate.
-	float top;
-	
-	//: X2-coordinate.
-	float right;
-	
-	//: Y2-coordinate.
-	float bottom;
-	
-	//: Returns the width of the rectangle.
-	float get_width() const { return right - left; }
-	
-	//: Returns the height of the rectangle.
-	float get_height() const { return bottom - top; }
-
-	//: Returns the size of the rectangle.
-	CL_Sizef get_size() const { return CL_Sizef(right - left, bottom - top); }
-	
-	//: Returns true if point is inside the rectangle.
-	bool is_inside(const CL_Pointf &p) const { return (p.x >= left && p.y >= top && p.x <= right && p.y <= bottom); }
-	
-	//: Returns true if rectangle passed is overlapping or inside this rectangle.
-	bool is_overlapped(const CL_Rectf &r) const 
-	{
-		return (r.left < right && r.right > left && r.top < bottom && r.bottom > top);
-	}
-
-	//: Returns another CL_Rectf containing a rotated version of this one.
-	//param hotspot: Point to rotate around.
-	//param origin: Determines the hotspot point within the rectangle
-	//param x, y: Offsets applied negatively to the hotspot point
-	//param angle: Angle to rotate in degrees.
-	CL_Rectf get_rot_bounds(const CL_Pointf &hotspot, float angle) const;
-	CL_Rectf get_rot_bounds(CL_Origin origin, float x, float y, float angle) const;
-	
-//! Operations:
-public:
-	//: Sets the size of the rectangle, maintaining top/left position.
-	void set_size(const CL_Size &size)
-	{
-		right = left + size.width;
-		bottom = top + size.height;
-	}
-
-	//: Calculates and returns the union of two rectangles.
-	CL_Rectf calc_union(const CL_Rectf &rect)
-	{
-		CL_Rectf result;
-		if (left   > rect.left)   result.left   = left;   else result.left   = rect.left;
-		if (right  < rect.right)  result.right  = right;  else result.right  = rect.right;
-		if (top    > rect.top)    result.top    = top;    else result.top    = rect.top;
-		if (bottom < rect.bottom) result.bottom = bottom; else result.bottom = rect.bottom;
-		return result;
-	}
-
-	//: Normalize rectangle. Ensures that left<right and top<bottom.
-	void normalize()
-	{
-		if (left > right)
-		{
-			float temp = right;
-			right = left;
-			left = temp;
-		}
-
-		if (top > bottom)
-		{
-			float temp = bottom;
-			bottom = top;
-			top = temp;
-		}
-	}
-	
-	//: Applies an origin and offset pair to this rectangle
-	//param origin: The new origin to adjust to from default upper-left position
-	//param x, y: Offsets applied negatively to each corner of the rectangle
-	void apply_alignment(CL_Origin origin, float x, float y)
-	{
-		CL_Pointf offset = calc_origin(origin, get_size());
-		offset.x -= x;
-		offset.y -= y;
-		
-		left += offset.x;
-		top += offset.y;
-		right += offset.x;
-		bottom += offset.y;
-	}
+	CL_Rect() : CL_Rectx<int>() {}
+	CL_Rect(const CL_Sizex<int> &s) : CL_Rectx<int>(s) {}
+	CL_Rect(int new_left, int new_top, int new_right, int new_bottom) : CL_Rectx<int>(new_left, new_top, new_right, new_bottom) {}
+	CL_Rect(const CL_Pointx<int> &p, const CL_Sizex<int> &size) : CL_Rectx<int>(p, size) {}
+	CL_Rect(const CL_Rectx<int> &rect) : CL_Rectx<int>(rect) {}
+	CL_Rect(const CL_Rectx<float> &rect) : CL_Rectx<int>(rect) {}
+	CL_Rect(const CL_Rectx<double> &rect) : CL_Rectx<int>(rect) {}
+	CL_Rect(int new_left, int new_top, const CL_Sizex<int> &size) : CL_Rectx<int>(new_left, new_top, size) {}
 };
 
-inline CL_Rect::CL_Rect(const CL_Rectf& rect)
-	: left(static_cast<int>(rect.left)), 
-	  top(static_cast<int>(rect.top)), 
-	  right(static_cast<int>(rect.right)), 
-	  bottom(static_cast<int>(rect.bottom))
-{}
+/// \brief 2D (left,top,right,bottom) rectangle structure - Float
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Rectf : public CL_Rectx<float>
+{
+public:
+	CL_Rectf() : CL_Rectx<float>() {}
+	CL_Rectf(const CL_Sizex<float> &s) : CL_Rectx<float>(s) {}
+	CL_Rectf(float new_left, float new_top, float new_right, float new_bottom) : CL_Rectx<float>(new_left, new_top, new_right, new_bottom) {}
+	CL_Rectf(const CL_Pointx<float> &p, const CL_Sizex<float> &size) : CL_Rectx<float>(p, size) {}
+	CL_Rectf(const CL_Rectx<int> &rect) : CL_Rectx<float>(rect) {}
+	CL_Rectf(const CL_Rectx<float> &rect) : CL_Rectx<float>(rect) {}
+	CL_Rectf(const CL_Rectx<double> &rect) : CL_Rectx<float>(rect) {}
+	CL_Rectf(float new_left, float new_top, const CL_Sizex<float> &size) : CL_Rectx<float>(new_left, new_top, size) {}
+};
 
-#endif
+/// \brief 2D (left,top,right,bottom) rectangle structure - Double
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Rectd : public CL_Rectx<double>
+{
+public:
+	CL_Rectd() : CL_Rectx<double>() {}
+	CL_Rectd(const CL_Sizex<double> &s) : CL_Rectx<double>(s) {}
+	CL_Rectd(double new_left, double new_top, double new_right, double new_bottom) : CL_Rectx<double>(new_left, new_top, new_right, new_bottom) {}
+	CL_Rectd(const CL_Pointx<double> &p, const CL_Sizex<double> &size) : CL_Rectx<double>(p, size) {}
+	CL_Rectd(const CL_Rectx<int> &rect) : CL_Rectx<double>(rect) {}
+	CL_Rectd(const CL_Rectx<float> &rect) : CL_Rectx<double>(rect) {}
+	CL_Rectd(const CL_Rectx<double> &rect) : CL_Rectx<double>(rect) {}
+	CL_Rectd(double new_left, double new_top, const CL_Sizex<double> &size) : CL_Rectx<double>(new_left, new_top, size) {}
+};
+
+inline CL_Rect CL_RectPS(int x, int y, int width, int height)
+{
+	return CL_Rect(x, y, x+width, y+height);
+}
+
+inline CL_Rectf CL_RectfPS(float x, float y, float width, float height)
+{
+	return CL_Rectf(x, y, x+width, y+height);
+}
+
+inline CL_Rectd CL_RectdPS(double x, double y, double width, double height)
+{
+	return CL_Rectd(x, y, x+width, y+height);
+}
+
+/// \}

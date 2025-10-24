@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -84,11 +83,6 @@ void CL_FadeFilter::fade_to_volume(float new_volume, int duration)
 
 void CL_FadeFilter::filter(int **sample_data, int num_samples, int channels)
 {
-	if (impl->speed == 0 && impl->cur_volume == 1)
-	{
-		return; //no reason to waste processor power here, we've already faded to our target
-	}
-
 	float &cur_volume = impl->cur_volume;
 	float &new_volume = impl->new_volume;
 	float &speed = impl->speed;

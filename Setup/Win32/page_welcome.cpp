@@ -36,13 +36,13 @@ PageWelcome::PageWelcome()
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
 	propsheetpage.dwFlags = PSP_HIDEHEADER;
 	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_WELCOME_PAGE);
-	propsheetpage.pfnDlgProc = (DLGPROC) &PageWelcome::dialog_proc;
+	propsheetpage.pfnDlgProc = &PageWelcome::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
 
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
 
-LRESULT CALLBACK PageWelcome::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PageWelcome::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -78,7 +78,7 @@ LRESULT CALLBACK PageWelcome::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, L
 	}
 }
 
-LRESULT PageWelcome::on_notify(HWND hWnd, NMHDR *header)
+INT_PTR PageWelcome::on_notify(HWND hWnd, NMHDR *header)
 {
 	// Don't go to next page yet:
 	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);

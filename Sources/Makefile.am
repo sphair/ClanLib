@@ -2,16 +2,18 @@ SUBDIRS = API @ClanLib_Modules@
 
 DIST_SUBDIRS = \
   API            \
-  Application    \
+  App            \
   Core           \
+  Database       \
   Display        \
   GL             \
   GUI            \
-  GUIStyleSilver \
+  GDI            \
   MikMod         \
   Network        \
+  RegExp         \
   Sound          \
-  SDL            \
+  Sqlite         \
   Vorbis
 
 # EOF #

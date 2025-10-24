@@ -12,7 +12,7 @@ CXXFLAGS += `pkg-config --cflags $(PACKAGES)`
 all: $(EXAMPLE_BIN)@EXEEXT@
 
 $(EXAMPLE_BIN)@EXEEXT@: $(OBJF)
-	$(CXX) $(CXXFLAGS) $(OBJF) -o $(EXAMPLE_BIN)@EXEEXT@ `pkg-config --libs $(PACKAGES)`
+	$(CXX) $(CXXFLAGS) $(OBJF) -o $(EXAMPLE_BIN)@EXEEXT@ `pkg-config --libs $(PACKAGES)` $(EXTRA_LIBS)
 
 clean:
 	rm -f $(OBJF) $(EXAMPLE_BIN)@EXEEXT@

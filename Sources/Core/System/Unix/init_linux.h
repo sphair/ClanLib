@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_init_linux
-#define header_init_linux
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,4 +41,4 @@ class CL_System_Unix
 public:
 };
 
-#endif
+

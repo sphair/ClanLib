@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,65 +24,68 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_entity
-#define header_dom_entity
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_node.h"
 
-//: DOM Entity class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>This interface represents an entity, either parsed or unparsed, in an
-//- XML document. Note that this models the entity itself not the entity
-//- declaration. Entity declaration modeling has been left for a later Level
-//- of the DOM specification.</p>
+/// \brief DOM Entity class.
+///
+///   <p>This interface represents an entity, either parsed or unparsed, in an
+///    XML document. Note that this models the entity itself not the entity
+///    declaration. Entity declaration modeling has been left for a later Level
+///    of the DOM specification.</p>
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomEntity : public CL_DomNode
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Entity handle.
+	/// \brief Constructs a DOM Entity handle.
 	CL_DomEntity();
-	
+
 	CL_DomEntity(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomEntity();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: The public identifier associated with the entity.
-	//- <p>If the public identifier was not specified, this is null.</p>
-	std::string get_public_id() const;
+	/// \brief The public identifier associated with the entity.
+	/** <p>If the public identifier was not specified, this is null.</p>*/
+	CL_DomString get_public_id() const;
 
-	//: The system identifier associated with the entity.
-	//- <p>If the system identifier was not specified, this is null.</p>
-	std::string get_system_id() const;
+	/// \brief The system identifier associated with the entity.
+	/** <p>If the system identifier was not specified, this is null.</p>*/
+	CL_DomString get_system_id() const;
 
-	//: For unparsed entities, the name of the notation for the entity.
-	//- <p>For parsed entities, this is null.</p>
-	std::string get_notation_name() const;
+	/// \brief For unparsed entities, the name of the notation for the entity.
+	/** <p>For parsed entities, this is null.</p>*/
+	CL_DomString get_notation_name() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
+/// \}
 };
 
-#endif
+
+/// \}

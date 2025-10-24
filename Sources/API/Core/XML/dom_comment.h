@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,55 +24,58 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_comment
-#define header_dom_comment
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_character_data.h"
 
-//: DOM Comment class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>This represents the content of a comment, i.e., all the characters between the starting
-//- '&lt;!--' and ending '--&gt;'. Note that this is the definition of a comment in XML, and,
-//- in practice, HTML, although some HTML tools may implement the full SGML comment structure.</p>
+/// \brief DOM Comment class.
+///
+///    <p>This represents the content of a comment, i.e., all the characters between the starting
+///    '&lt;!--' and ending '--&gt;'. Note that this is the definition of a comment in XML, and,
+///    in practice, HTML, although some HTML tools may implement the full SGML comment structure.</p>
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomComment : public CL_DomCharacterData
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Comment handle.
+	/// \brief Constructs a DOM Comment handle.
 	CL_DomComment();
 
-	CL_DomComment(CL_DomDocument &doc, const std::string &data);
+	CL_DomComment(CL_DomDocument &doc, const CL_DomString &data);
 
 	CL_DomComment(const CL_SharedPtr<CL_DomNode_Generic> &impl);
-	
+
 	~CL_DomComment();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
+/// \}
 };
 
-#endif
+
+/// \}

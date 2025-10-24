@@ -27,21 +27,22 @@
 **    (if your name is missing here, please add it)
 */
 
-#include <API/Core/System/error.h>
+#include "Core/precomp.h"
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
 #endif
 #include <fnmatch.h>
 #include <unistd.h>
-#include <cstring>
 #include "directory_scanner_unix.h"
+
+#include <string.h>
 
 CL_DirectoryScanner_Unix::CL_DirectoryScanner_Unix ()
 	: dir_temp (NULL), entry (NULL)
 {
 }
 
-bool CL_DirectoryScanner_Unix::scan (const std::string& arg_path_name)
+bool CL_DirectoryScanner_Unix::scan (const CL_String& arg_path_name)
 {
 	path_name   = arg_path_name;
 	use_pattern = false;
@@ -59,8 +60,8 @@ bool CL_DirectoryScanner_Unix::scan (const std::string& arg_path_name)
 		return true;
 }
 
-bool CL_DirectoryScanner_Unix::scan (const std::string& arg_path_name, 
-				     const std::string& arg_file_pattern)
+bool CL_DirectoryScanner_Unix::scan (const CL_String& arg_path_name, 
+				     const CL_String& arg_file_pattern)
 {
 	path_name    = arg_path_name;
 	file_pattern = arg_file_pattern;
@@ -85,9 +86,9 @@ CL_DirectoryScanner_Unix::~CL_DirectoryScanner_Unix()
 		closedir(dir_temp);
 }
 
-std::string CL_DirectoryScanner_Unix::get_directory_path()
+CL_String CL_DirectoryScanner_Unix::get_directory_path()
 {
-	return path_name;
+	return path_name + cl_text("/");
 }
 
 int CL_DirectoryScanner_Unix::get_size()
@@ -95,14 +96,14 @@ int CL_DirectoryScanner_Unix::get_size()
 	return (int)statbuf.st_size;
 }
 
-std::string CL_DirectoryScanner_Unix::get_name()
+CL_String CL_DirectoryScanner_Unix::get_name()
 {
 	return file_name;
 }
 
-std::string CL_DirectoryScanner_Unix::get_pathname()
+CL_String CL_DirectoryScanner_Unix::get_pathname()
 {
-	return path_name + "/" + file_name;
+	return path_name + cl_text("/") + file_name;
 }
 
 bool CL_DirectoryScanner_Unix::is_directory()
@@ -128,10 +129,7 @@ bool CL_DirectoryScanner_Unix::is_writable()
 bool CL_DirectoryScanner_Unix::next()
 {	
 	if(!dir_temp)
-	{
-		return false; //I removed the throw CL_Error() that was here, an invalid directory should return false instead of throw an exception,
-					  //to match the win32 version functionality -mrfun
-	}
+		throw CL_Exception(cl_text("Directory scanner not initialized"));
 
 	entry = readdir(dir_temp);
 

@@ -1,0 +1,68 @@
+GAME SERVER->CLIENT 
+-------------------------------------------------------------------------------
+	// The game is starting, client does initialization 
+	game-is-starting()
+
+	// The game has started -> ready to play!
+	game-has-started()
+	
+	// A new player has joined the active game
+	// Sent-to: All lobby players
+	game-player-joined-game(int player_id, string player_name, int visual_id)
+
+	// A player has left the active game
+	// Sent-to: All lobby players
+	game-player-left-game(int player_id)
+  
+	// A map area has a new player ownership
+	game-set-maparea-ownership(int map_area_id, int player_id)
+
+	// A map area has a new army strength
+	game-set-maparea-army-strength(int map_area_id, int army_strength)
+
+	// An attack was invalid
+	game-invalid-attack()
+
+	// A map area was attacked (marks start of an attack)
+	game-attacked-area(int map_area_from_id, int map_area_to_id)
+
+	// The result of an attack
+	game-attack-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)
+
+	// The result of an attack also marks the end of an attack
+	game-defense-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)
+
+	// An attack was completed (on all clients)
+	game-attack-done()
+	
+	// A player started his turn
+	game-player-turn-started(int player_id)
+
+	// The game is over
+	game-over(string title, string message)
+	
+	// A player sent a game message
+	game-player-message(int player_id, string message)
+	
+	// The system sent an system message
+	game-system-message(string message)
+		
+GAME CLIENT->SERVER
+-------------------------------------------------------------------------------
+	// Attack an area
+	// Response: game-attacked-area, game-attack-dice-result, game-defense-dice-result, 
+	//           game-set-maparea-ownership, game-set-maparea-army-strength,
+	//			 game-attack-done, game-invalid-attack
+	game-attack-area(int map_area_from_id, int map_area_to_id)
+	
+	// End player turn
+	// Response: game-player-turn-started
+	game-end-turn()
+	
+	// Notify battle view is done
+	// Response: None
+	game-battle-view-over()
+	
+	// Send a chat message to game chat
+	// Response: game-player-message
+	game-add-message(string message)

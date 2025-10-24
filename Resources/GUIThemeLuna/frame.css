@@ -1,0 +1,72 @@
+frame
+{
+	preferred-width:100;
+	preferred-height:100;
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+
+	text-color:blue;
+}
+
+frame header
+{
+	preferred-height:16;
+	
+	bg-image:FrameHeader; 
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+}
+
+frame headerleft
+{
+	preferred-width:10;
+	preferred-height:16;
+	
+	bg-image:FrameHeaderLeft;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+}
+
+frame headerright
+{
+	bg-image:FrameHeaderRight;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+}
+
+frame headercaption
+{
+	bg-image:FrameHeaderCaption;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:13;
+	bg-image-sizing:stretch; 
+	
+	border-left:4;
+	border-right:4;
+}
+
+frame body
+{
+	bg-image:Frame; 
+	
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+}

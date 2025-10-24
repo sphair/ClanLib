@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,82 +29,72 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/IOData/inputsource.h"
-#include "API/Core/System/clanstring.h"
-#include "API/Core/System/error.h"
+#include "Display/precomp.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/Text/string_format.h"
 #include "outline_provider_file_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderFile_Generic construction:
 
 CL_OutlineProviderFile_Generic::CL_OutlineProviderFile_Generic(
-	const std::string &filename,
-	CL_InputSourceProvider *_provider)
+	const CL_StringRef &filename,
+	CL_VirtualDirectory directory)
+: directory(directory)
 {
-	if( _provider == 0 )
-		provider = CL_InputSourceProvider::create_file_provider(".");
-	else
-		provider = _provider->clone();
-	
 	load(filename);
 }
 
 CL_OutlineProviderFile_Generic::~CL_OutlineProviderFile_Generic()
 {
-	delete provider;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderFile_Generic operations:
 
-void CL_OutlineProviderFile_Generic::load(const std::string &filename)
+void CL_OutlineProviderFile_Generic::load(const CL_StringRef &filename)
 {
-	CL_InputSource *input_source = provider->open_source(filename);
+	CL_IODevice input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
 
 	// file type & version identifiers
-	int type = input_source->read_uint32();
-	unsigned char version = input_source->read_uint8();
+	int type = input_source.read_uint32();
+	unsigned char version = input_source.read_uint8();
 
 	if( type != 0x16082004  )
-		throw CL_Error(CL_String::format("File is not a collision outline file: '%1'", filename) );
+		throw CL_Exception(cl_format(cl_text("File is not a collision outline file: '%1'"), filename) );
 	if( version != 1 )
-		throw CL_Error(CL_String::format("Unsupported version of outline format: %1 in file '%2'. Supported versions: 1.", version, filename) );
+		throw CL_Exception(cl_format(cl_text("Unsupported version of outline format: %1 in file '%2'. Supported versions: 1."), version, filename) );
 
 	// read in width and height
-	width = input_source->read_int32();
-	height = input_source->read_int32();
+	width = input_source.read_int32();
+	height = input_source.read_int32();
 
 	// x-pos of enclosing disc
-	minimum_enclosing_disc.position.x = input_source->read_float32();
+	minimum_enclosing_disc.position.x = input_source.read_float();
 	// y-pos of enclosing disc
-	minimum_enclosing_disc.position.y = input_source->read_float32();
+	minimum_enclosing_disc.position.y = input_source.read_float();
 	// radius of enclosing disc
-	minimum_enclosing_disc.radius = input_source->read_float32();
+	minimum_enclosing_disc.radius = input_source.read_float();
 	
 	// num contours
-	int num_contours = input_source->read_uint32();
+	int num_contours = input_source.read_uint32();
 
 	for( int cc=0; cc < num_contours; ++cc )
 	{
 		CL_Contour contour;
 
-		int num_points = input_source->read_uint32();
+		int num_points = input_source.read_uint32();
 
 		for( int pp=0; pp < num_points; ++pp )
 		{
 			CL_Pointf point(0,0);
-			point.x = input_source->read_float32();
-			point.y = input_source->read_float32();
+			point.x = input_source.read_float();
+			point.y = input_source.read_float();
 
 			contour.points.push_back(point);
 		}
 		
 		contours.push_back(contour);
 	}
-
-	input_source->close();
-
-	delete input_source;
 }

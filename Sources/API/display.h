@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,77 +24,262 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
+**    Harry Storbacka
 */
 
-//: <p>ClanLib display and input library. This provide you with 2D display
-//: support, and the input devices attached to that display.</p>
+/// \brief <p>ClanLib display and input library.</p>
 //! Global=Display
 
-#ifndef header_display_include
-#define header_display_include
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "Display/blend_func.h"
-#include "Display/color.h"
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
+#endif
+
 #include "Display/display.h"
-#include "Display/display_iostream.h"
-#include "Display/display_mode.h"
-#include "Display/display_window.h"
-#include "Display/display_window_description.h"
-#include "Display/font.h"
-#include "Display/frameratecounter.h"
-#include "Display/glyph_buffer.h"
-#include "Display/gradient.h"
-#include "Display/graphic_context.h"
-#include "Display/input_buffer.h"
-#include "Display/input_button.h"
-#include "Display/input_context.h"
-#include "Display/input_device.h"
-#include "Display/input_event.h"
-#include "Display/joystick.h"
-#include "Display/key_binding.h"
-#include "Display/keyboard.h"
-#include "Display/keys.h"
-#include "Display/mouse.h"
-#include "Display/palette.h"
-#include "Display/pixel_buffer.h"
-#include "Display/pixel_format.h"
-#include "Display/pixel_format_type.h"
-#include "Display/rle_surface.h"
-#include "Display/setupdisplay.h"
-#include "Display/sprite.h"
-#include "Display/sprite_description.h"
-#include "Display/sprite_packer.h"
-#include "Display/surface.h"
-#include "Display/canvas.h"
-#include "Display/text_styler.h"
-#include "Display/Providers/jpeg_provider.h"
-#include "Display/Providers/pcx_provider.h"
-#include "Display/Providers/bmp_provider.h"
-#include "Display/Providers/png_provider.h"
-#include "Display/Providers/targa_provider.h"
-#include "Display/Providers/provider_factory.h"
-#include "Display/Providers/provider_type.h"
+#include "Display/display_target.h"
+#include "Display/setup_display.h"
+#include "Display/2D/color.h"
+#include "Display/2D/draw.h"
+#include "Display/2D/gradient.h"
+#include "Display/2D/image.h"
+#include "Display/2D/rounded_rect.h"
+#include "Display/2D/sprite.h"
+#include "Display/2D/sprite_description.h"
+#include "Display/2D/subtexture.h"
+#include "Display/2D/texture_group.h"
+#include "Display/2D/span_layout.h"
 #include "Display/Collision/collision_outline.h"
+#include "Display/Collision/contour.h"
 #include "Display/Collision/outline_accuracy.h"
+#include "Display/Collision/outline_circle.h"
+#include "Display/Collision/outline_math.h"
+#include "Display/Collision/outline_provider.h"
+#include "Display/Collision/outline_provider_bitmap.h"
+#include "Display/Collision/outline_provider_file.h"
+#include "Display/Image/palette.h"
+#include "Display/Image/pixel_buffer.h"
+#include "Display/Image/pixel_format.h"
+#include "Display/Image/pixel_format_type.h"
+#include "Display/ImageProviders/jpeg_provider.h"
+#include "Display/ImageProviders/pcx_provider.h"
+#include "Display/ImageProviders/png_provider.h"
+#include "Display/ImageProviders/provider_factory.h"
+#include "Display/ImageProviders/provider_type.h"
+#include "Display/ImageProviders/provider_type_register.h"
+#include "Display/ImageProviders/targa_provider.h"
+#include "Display/Render/blend_mode.h"
+#include "Display/Render/buffer_control.h"
+#include "Display/Render/compare_function.h"
+#include "Display/Render/element_array_buffer.h"
+#include "Display/Font/font.h"
+#include "Display/Font/font_texture.h"
+#include "Display/Font/font_native.h"
+#include "Display/Font/font_metrics.h"
+#include "Display/Font/font_freetype.h"
+#include "Display/Font/vector_font.h"
+#include "Display/Render/frame_buffer.h"
+#include "Display/Render/graphic_context.h"
+#include "Display/Render/render_batcher.h"
+#include "Display/Render/occlusion_query.h"
+#include "Display/Render/pen.h"
+#include "Display/Render/polygon_rasterizer.h"
+#include "Display/Render/primitives_array.h"
+#include "Display/Render/primitives_array_builder.h"
+#include "Display/Render/program_attribute.h"
+#include "Display/Render/program_object.h"
+#include "Display/Render/program_uniform.h"
+#include "Display/Render/render_buffer.h"
+#include "Display/Render/shader_object.h"
+#include "Display/Render/texture.h"
+#include "Display/Render/vertex_array_buffer.h"
+#include "Display/TargetProviders/cursor_provider.h"
+#include "Display/TargetProviders/display_message_queue_provider.h"
+#include "Display/TargetProviders/display_target_provider.h"
+#include "Display/TargetProviders/display_window_provider.h"
+#include "Display/TargetProviders/font_provider.h"
+#include "Display/TargetProviders/frame_buffer_provider.h"
+#include "Display/TargetProviders/render_buffer_provider.h"
+#include "Display/TargetProviders/graphic_context_provider.h"
+#include "Display/TargetProviders/input_device_provider.h"
+#include "Display/TargetProviders/render_window_provider.h"
+#include "Display/TargetProviders/texture_provider.h"
+#include "Display/TargetProviders/vertex_array_buffer_provider.h"
+#include "Display/TargetProviders/element_array_buffer_provider.h"
+#include "Display/TargetProviders/timer_provider.h"
+#include "Display/Window/cursor.h"
+#include "Display/Window/display_message_queue.h"
+#include "Display/Window/display_window.h"
+#include "Display/Window/display_window_description.h"
+#include "Display/Window/display_window_message.h"
+#include "Display/Window/display_window_mode.h"
+#include "Display/Window/input_context.h"
+#include "Display/Window/input_device.h"
+#include "Display/Window/input_event.h"
+#include "Display/Window/input_state.h"
+#include "Display/Window/keys.h"
+#include "Display/Window/timer.h"
+
+#ifdef __cplusplus_cli
+#pragma managed(pop)
+#endif
 
 #if defined (_MSC_VER)
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanDisplay-static-mt.lib")
-#pragma comment(lib, "libjpeg-static-mt.lib")
-#pragma comment(lib, "libpng-static-mt.lib")
-#else
-#pragma comment(lib, "libjpeg-static-mt-debug.lib")
-#pragma comment(lib, "clanDisplay-static-mt-debug.lib")
-#pragma comment(lib, "libpng-static-mt-debug.lib")
-#endif
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-dll.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-dll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-dll-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-dll-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mtdll.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mtdll.lib")
+					#pragma comment(lib, "libpng-x64-static-mtdll.lib")
+					#pragma comment(lib, "freetype-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mtdll.lib")
+					#pragma comment(lib, "libjpeg-static-mtdll.lib")
+					#pragma comment(lib, "libpng-static-mtdll.lib")
+					#pragma comment(lib, "freetype-static-mtdll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "libpng-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "freetype-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mtdll-debug.lib")
+					#pragma comment(lib, "libjpeg-static-mtdll-debug.lib")
+					#pragma comment(lib, "libpng-static-mtdll-debug.lib")
+					#pragma comment(lib, "freetype-static-mtdll-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mt.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mt.lib")
+					#pragma comment(lib, "libpng-x64-static-mt.lib")
+					#pragma comment(lib, "freetype-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mt.lib")
+					#pragma comment(lib, "libjpeg-static-mt.lib")
+					#pragma comment(lib, "libpng-static-mt.lib")
+					#pragma comment(lib, "freetype-static-mt.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mt-debug.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mt-debug.lib")
+					#pragma comment(lib, "libpng-x64-static-mt-debug.lib")
+					#pragma comment(lib, "freetype-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mt-debug.lib")
+					#pragma comment(lib, "libjpeg-static-mt-debug.lib")
+					#pragma comment(lib, "libpng-static-mt-debug.lib")
+					#pragma comment(lib, "freetype-static-mt-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-dll-uc.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-dll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-dll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-dll-uc-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mtdll-uc.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mtdll.lib")
+					#pragma comment(lib, "libpng-x64-static-mtdll.lib")
+					#pragma comment(lib, "freetype-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mtdll-uc.lib")
+					#pragma comment(lib, "libjpeg-static-mtdll.lib")
+					#pragma comment(lib, "libpng-static-mtdll.lib")
+					#pragma comment(lib, "freetype-static-mtdll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mtdll-uc-debug.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "libpng-x64-static-mtdll-debug.lib")
+					#pragma comment(lib, "freetype-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mtdll-uc-debug.lib")
+					#pragma comment(lib, "libjpeg-static-mtdll-debug.lib")
+					#pragma comment(lib, "libpng-static-mtdll-debug.lib")
+					#pragma comment(lib, "freetype-static-mtdll-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mt-uc.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mt.lib")
+					#pragma comment(lib, "libpng-x64-static-mt.lib")
+					#pragma comment(lib, "freetype-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mt-uc.lib")
+					#pragma comment(lib, "libjpeg-static-mt.lib")
+					#pragma comment(lib, "libpng-static-mt.lib")
+					#pragma comment(lib, "freetype-static-mt.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanDisplay-x64-static-mt-uc-debug.lib")
+					#pragma comment(lib, "libjpeg-x64-static-mt-debug.lib")
+					#pragma comment(lib, "libpng-x64-static-mt-debug.lib")
+					#pragma comment(lib, "freetype-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanDisplay-static-mt-uc-debug.lib")
+					#pragma comment(lib, "libjpeg-static-mt-debug.lib")
+					#pragma comment(lib, "libpng-static-mt-debug.lib")
+					#pragma comment(lib, "freetype-static-mt-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+		#endif
+	#endif
 #endif
 
-#endif
+

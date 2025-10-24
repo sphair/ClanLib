@@ -29,17 +29,14 @@ case $AUTOMAKE_VERSION in
             echo ""
             echo "But automake >= 1.5b is required, you can find it at:"
             echo ""
-            echo " Source for automake 1.6"
-            echo " - ftp://ftp.gnu.org/gnu/automake/"
-            echo ""
-            echo " Debian Pakages for automake 1.6 are in unstable"
+            echo " - http://sources.redhat.com/automake/"
             echo ""
             exit 0
         fi
 	;;
 esac
 
-$ACLOCAL
+$ACLOCAL -I m4
 
 libtoolize --force --copy
 

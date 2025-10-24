@@ -50,7 +50,7 @@ public:
 	BOOL finish();
 
 	PageWelcome page_welcome;
-	
+
 	PageTarget page_target;
 
 	PageSystem page_system;
@@ -61,7 +61,7 @@ public:
 
 	PROPSHEETHEADER propsheetheader;
 
-	HPROPSHEETPAGE pages[6];
+	HPROPSHEETPAGE pages[5];
 };
 
 #endif

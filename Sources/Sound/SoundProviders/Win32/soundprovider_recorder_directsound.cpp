@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,13 +24,12 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundprovider_recorder_directsound.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/cl_assert.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/Text/logger.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DirectSoundRecorder_Session construction:
@@ -42,7 +41,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	
 	// Create sound capture:
 	result = DirectSoundCaptureCreate8(0, &dsoundcapture, 0);
-	if (FAILED(result)) throw CL_Error("Failed to create DirectSound capture!");
+	if (FAILED(result)) throw CL_Exception(cl_text("Failed to create DirectSound capture!"));
 
 	DSCCAPS caps;
 	memset(&caps, 0, sizeof(DSCCAPS));
@@ -51,7 +50,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	if (FAILED(result))
 	{
 		dsoundcapture->Release();
-		throw CL_Error("Failed to query for DirectSound capture capabilities!");
+		throw CL_Exception(cl_text("Failed to query for DirectSound capture capabilities!"));
 	}
 
 	// Setup sound format and create capture buffer:
@@ -78,7 +77,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	if (FAILED(result))
 	{
 		dsoundcapture->Release();
-		throw CL_Error("Failed to create capture buffer!");
+		throw CL_Exception(cl_text("Failed to create capture buffer!"));
 	}
 
 	// Setup notify events for each record fragment:
@@ -87,7 +86,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	{
 		capturebuffer->Release();
 		dsoundcapture->Release();
-		throw CL_Error("Failed to create notify events for capture buffer!");
+		throw CL_Exception(cl_text("Failed to create notify events for capture buffer!"));
 	}
 
 	notify_event = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -105,14 +104,13 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 		notify->Release();
 		capturebuffer->Release();
 		dsoundcapture->Release();
-		throw CL_Error("Failed to create notification positions for capture buffer!");
+		throw CL_Exception(cl_text("Failed to create notification positions for capture buffer!"));
 	}
 	delete[] notify_pos;
 
 	// Start worker thread:
 	stop_thread = false;
-	thread = CL_Thread(this);
-	thread.start();
+	thread.start(this);
 }
 
 CL_SoundProvider_Recorder_DirectSound_Session::~CL_SoundProvider_Recorder_DirectSound_Session()
@@ -120,7 +118,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::~CL_SoundProvider_Recorder_Direct
 	// Shut down worker thread.
 	stop_thread = true;
 	SetEvent(notify_event);
-	thread.wait();
+	thread.join();
 
 	// Clean up.
 	delete[] buffer;
@@ -230,7 +228,11 @@ void CL_SoundProvider_Recorder_DirectSound_Session::run()
 		// Figure out what to copy:
 		DWORD capture_pos, read_pos;
 		result = capturebuffer->GetCurrentPosition(&capture_pos, &read_pos);
-		cl_assert(SUCCEEDED(result));
+		if (FAILED(result))
+		{
+			cl_log_event("mixer", "capturebuffer->GetCurrentPosition failed!");
+			break;
+		}
 
 		DWORD avail_bytes = read_pos - cur_pos;
 		if (read_pos <= cur_pos) avail_bytes = capturebuffer_size - cur_pos + read_pos;
@@ -242,7 +244,11 @@ void CL_SoundProvider_Recorder_DirectSound_Session::run()
 
 		result = capturebuffer->Lock(
 			cur_pos, avail_bytes, &buf1, &size1, &buf2, &size2, 0);
-		cl_assert(SUCCEEDED(result));
+		if (FAILED(result))
+		{
+			cl_log_event("mixer", "capturebuffer->Lock failed!");
+			break;
+		}
 
 		// Append new data to buffer:
 		char *old_buffer = buffer;
@@ -254,7 +260,11 @@ void CL_SoundProvider_Recorder_DirectSound_Session::run()
 		buffer_size += avail_bytes;
 
 		result = capturebuffer->Unlock(buf1, size1, buf2, size2);
-		cl_assert(SUCCEEDED(result));
+		if (FAILED(result))
+		{
+			cl_log_event("mixer", "capturebuffer->Unlock failed!");
+			break;
+		}
 
 		cur_pos += avail_bytes;
 		if (cur_pos >= capturebuffer_size) cur_pos -= capturebuffer_size;

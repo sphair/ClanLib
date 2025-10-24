@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,12 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_outline_circle
-#define header_outline_circle
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,50 +42,63 @@
 #include "../../Core/Math/point.h"
 #include <cmath>
 
-//: Collision detection outline segmentation circle.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>Outline circles split the line segments into groups for faster collision detection.
-//- If two circles encapsulating the lines don't collide, none of the lines inside them can 
-//- collide either. </p>
+/// \brief Collision detection outline segmentation circle.
+///
+/// <p>Outline circles split the line segments into groups for faster collision detection.
+///    If two circles encapsulating the lines don't collide, none of the lines inside them can
+///    collide either. </p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_OutlineCircle
 {
-//! Construction:
+/// \name Construction
+/// \{
+
  public:
-	//: Construct a outline circle
+	/// \brief Construct a outline circle
 	CL_OutlineCircle() :
-		position(-1.0f,-1.0f),
+		position(-1.0,-1.0),
 		radius(0),
 		start(0),
 		end(0)
 	{
 		return;
 	}
-	
-//! Operations:
+
+
+/// \}
+/// \name Operations
+/// \{
+
  public:
-	//: Construct a outline circle
-	//param CL_OutlineCircle &other : Other circle to test.
+	/// \brief Construct a outline circle
+	///
+	/// \param CL_OutlineCircle &other  Other circle to test.
 	bool collide(const CL_OutlineCircle &other) const
 	{
 		if( &other == this )
 			return false;
 
 		CL_Pointf pos = position - other.position;
-		float dist = (float) sqrt( pos.x*pos.x+pos.y*pos.y );	
-		
+		float dist = float(sqrt( pos.x*pos.x+pos.y*pos.y ));
+
 		if( dist > (radius + other.radius) )
 			return false;
 
 		return true;
 	}
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
  public:
 	CL_Pointf position;
 	float radius;
 	unsigned int start;
 	unsigned int end;
+/// \}
 };
 
-#endif
+
+/// \}

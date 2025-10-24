@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -38,10 +37,10 @@ CL_DomText::CL_DomText()
 {
 }
 
-CL_DomText::CL_DomText(CL_DomDocument &doc, const std::string &data)
+CL_DomText::CL_DomText(CL_DomDocument &doc, const CL_DomString &data)
 : CL_DomCharacterData(doc, TEXT_NODE)
 {
-	impl->node_value = data;
+	set_node_value(data);
 }
 
 CL_DomText::CL_DomText(CL_DomDocument &doc, unsigned short node_type)
@@ -63,7 +62,7 @@ CL_DomText::~CL_DomText()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomText operations:
 
-CL_DomText CL_DomText::splitText(unsigned long offset)
+CL_DomText CL_DomText::split_text(unsigned long offset)
 {
 	return CL_DomText();
 }

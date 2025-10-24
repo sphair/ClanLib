@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Strings and Text Services - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Strings and Text Services
+</h2>
+
+<p>ClanLib includes its own string classes and text manipulation helper
+classes.  The string classes CL_String, CL_String8 and CL_String16 uses the
+same API as the STL template class std::basic_string.  A simple example of
+that syntax:</p>
+
+<pre>
+CL_String8 str = "text";
+str += "text2";
+str[3] = 'a';
+const char *null_terminated_c_string = str.c_str();
+char *data_ptr = str.data();
+CL_String8::size_type size = str.size();
+</pre>
+
+<p>Generally you should look at the documentation for the STL string
+class (std::string / std::basic_string) to learn about the various
+operations possible to perform on the ClanLib string classes.</p>
+
+<p>In most normal situations you just use CL_String, instead of CL_String8,
+CL_String16 or the string reference classes.</p>
+
+<h3>String References</h3>
+
+<p>You might be wondering why ClanLib includes its own string class when the
+API of CL_String is exactly the same as std::string.  The answer is that the
+STL string class gives you a very limited control on how the memory required
+to hold a string is allocated.  ClanLib introduces a string reference class
+called CL_StringRef, which is essentially a pointer to a string and the
+length of the string.  A string ref is roughly equivalent to a std::pair of
+two std::string iterators, but where the syntax still remain nice.</p>
+
+<p>A simple example of the differences between std::string and CL_String is
+when you request a substring of a string:</p>
+
+<pre>
+CL_String8 str = "hello text world";
+CL_StringRef8 substring = str.substr(6, 4);
+CL_Console::write_line(substring);
+</pre>
+
+<p>The returned substring is returned as a reference, not as a new string. 
+This means that it will not have to copy the string, and thus won't risk
+needing to allocate additional memory to perform the operation.  This also
+mean, however, that when <span class="code">str</span> is destroyed, the
+string that <span class="code">substring</span> points at will become
+invalid.  To keep the substring around, the following syntax will copy the
+string:</p>
+
+<pre>
+CL_String8 str = "hello text world";
+CL_String8 substring = str.substr(6, 4);
+CL_Console::write_line(substring);
+</pre>
+
+<p>The effect of seperating string references from string containers is that
+an application can much better fine-tune how strings are allocated, when
+that special requirement is needed.  The DOM classes in ClanLib is an
+example of this, where a XML file easilly contains over 100,000 text
+strings.  When working with this high amount of strings, the memory
+allocation factor becomes very significant.  However, in most normal cases
+you can stick to CL_String only.</p>
+
+<h3>Unicode Support</h3>
+
+<p>The string classes in ClanLib come in three different flavors: 8 bit, 16
+bit and text:</p>
+
+<pre>
+CL_String8 str8 = "8 bit";
+CL_String16 str16 = L"16 bit";
+CL_String str = cl_text("text");
+</pre>
+
+<p>The 8 bit and 16 bit versions are pretty much self-explanatory.  The text
+version differs based on whether <span class="code">UNICODE</span> is
+defined or not.  When <span class="code">UNICODE</span> is defined CL_String
+maps to CL_String16, and otherwise it maps to CL_String8.  This allows you,
+at compile time, to decide if your text strings should target 8 bit or 16
+bit strings.  The cl_text() macro also generates either 8 bit or 16 bit
+strings based on the <span class="code">UNICODE</span> define.  This system
+is similar to the Win32 API defines for <span class="code">CHAR</span>,
+<span class="code">WCHAR</span>, <span class="code">TCHAR</span> and the <span
+class="code">TEXT()</span> macro.</p>
+
+<h3>String Formatting</h3>
+
+<p>To help format strings, ClanLib provides the CL_StringFormat class.  It
+takes a string, searches for a list of string insertion points; marked as
+%n, where n is an argument number.  You then specify the strings to be
+inserted and the final string is generated:</p>
+
+<pre>
+CL_StringFormat format(cl_text("Hello %1, why did %2 reply %3?"));
+format.set_arg(1, cl_text("Buddy"));
+format.set_arg(2, "you");
+format.set_arg(3, 42);
+CL_String result = format.get_result();
+</pre>
+
+<p>This syntax can be shortened down by using the cl_format template
+function:</p>
+
+<pre>
+CL_String result = cl_format("Hello %1, why did %2 reply %3?", "Buddy", "you", 42);
+</pre>
+
+<h3>String Helpers</h3>
+
+<p>In addition to the above classes, the class CL_StringHelp includes a
+number of static helper functions that help you do certain common string
+operations.  For example, to convert from the local 8 bit character set to
+UCS-2 and then from UCS-2 to Latin-9, do the following:</p>
+
+<pre>
+CL_String8 local8 = "blabla";
+CL_String16 ucs2 = CL_StringHelp::local8_to_ucs2(local8);
+CL_String8 latin9 = CL_StringHelp::ucs2_to_latin9(ucs2);
+</pre>
+
+<p>A few other simple examples:</p>
+
+<pre>
+CL_String str = cl_text("16");
+int value = CL_StringHelp::text_to_int(str);
+
+CL_String mixed = cl_text("MiXeD CaSe");
+CL_String upper = CL_StringHelp::text_to_upper(mixed);
+CL_String lower = CL_StringHelp::text_to_lower(mixed);
+</pre>
+
+<h3>Console Output and Logging</h3>
+
+<p>If you need to write to standard output, you can use CL_Console:</p>
+
+<pre>
+CL_Console::write_line("Hello %1 world!", "console");
+</pre>
+
+<p>The text services also offer a simple logging interface:</p>
+
+<pre>
+CL_FileLogger file_logger("logfile.txt");
+file_logger.enable();
+
+cl_log_event("system", "System log message");
+cl_log_event("info", "Info log message %1", 42);
+</pre>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<map>
+  <client-settings>
+    <terrain>
+      <scale>0.17</scale>
+    </terrain>
+  </client-settings>
+  <areas>
+    <area id="1">
+      <position>
+        <x>638</x>
+        <y>702</y>
+      </position>
+      <connections>2,4</connections>
+    </area>
+    <area id="2">
+      <position>
+        <x>936</x>
+        <y>720</y>
+      </position>
+      <connections>1,3,4,5</connections>
+    </area>
+    <area id="3">
+      <position>
+        <x>1304</x>
+        <y>568</y>
+      </position>
+      <connections>2</connections>
+    </area>
+    <area id="4">
+      <position>
+        <x>738</x>
+        <y>924</y>
+      </position>
+      <connections>1,2,5,10,12</connections>
+    </area>
+    <area id="5">
+      <position>
+        <x>994</x>
+        <y>984</y>
+      </position>
+      <connections>2,4,6,9,10</connections>
+    </area>
+    <area id="6">
+      <position>
+        <x>1342</x>
+        <y>1112</y>
+      </position>
+      <connections>5,7,8,9</connections>
+    </area>
+    <area id="7">
+      <position>
+        <x>1518</x>
+        <y>1252</y>
+      </position>
+      <connections>6,8</connections>
+    </area>
+    <area id="8">
+      <position>
+        <x>1446</x>
+        <y>1380</y>
+      </position>
+      <connections>6,7</connections>
+    </area>
+    <area id="9">
+      <position>
+        <x>1164</x>
+        <y>1138</y>
+      </position>
+      <connections>5,6,10,11</connections>
+    </area>
+    <area id="10">
+      <position>
+        <x>824</x>
+        <y>1166</y>
+      </position>
+      <connections>4,5,9,11,12</connections>
+    </area>
+    <area id="11">
+      <position>
+        <x>832</x>
+        <y>1376</y>
+      </position>
+      <connections>9,10,12</connections>
+    </area>
+    <area id="12">
+      <position>
+        <x>690</x>
+        <y>1272</y>
+      </position>
+      <connections>4,10,11,3</connections>
+    </area>
+    <area id="13">
+      <position>
+        <x>502</x>
+        <y>1304</y>
+      </position>
+      <connections>12</connections>
+    </area>
+  </areas>
+
+</map>

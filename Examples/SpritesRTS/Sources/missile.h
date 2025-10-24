@@ -11,7 +11,7 @@ class Missile : public GameObject
 // Construction
 public:
 	Missile(World *world, GameObject *owner);
-	virtual ~Missile();
+	~Missile();
 	
 // Attributes
 public:

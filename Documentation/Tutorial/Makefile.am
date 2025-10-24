@@ -1,13 +1,7 @@
-pkgdatadir  = $(datadir)/doc/@PACKAGE@/Tutorial
-htmldir = $(datadir)/doc/@PACKAGE@/Tutorial/
-
-SUBDIRS = Kavanek
+pkgdatadir  = $(datadir)/doc/@PACKAGE@-@LT_RELEASE@/Tutorial
+htmldir = $(datadir)/doc/@PACKAGE@-@LT_RELEASE@/Tutorial/
 
 nobase_dist_html_DATA = \
-Quickflash/index.html \
-Quickflash/tutorial1.html \
-Quickflash/tutorial2.html \
-Quickflash/tutorial3.html \
 TicTacToe/clanlib-tutorial-part2.zip \
 TicTacToe/clanlib-tutorial-part3.zip \
 TicTacToe/clanlib-tutorial-workspace.zip \
@@ -27,8 +21,5 @@ TicTacToe/part-2.html \
 TicTacToe/part-3.html \
 TicTacToe/tictactoe.zip \
 index.html
-
-index.html:
-	../Utilities/webbuilder.pl $(srcdir)/../documentation.theme $(srcdir)/../Tutorial/index.xml
 
 # EOF #

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -34,14 +33,12 @@
 #endif
 
 #include "resourcetype_sample.h"
-#include "API/Core/System/cl_assert.h"
-#include "API/Core/System/error.h"
+#include "API/Core/System/exception.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Core/IOData/inputsource.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/IOData/outputsource.h"
-#include "API/Core/IOData/outputsource_provider.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/XML/dom_element.h"
 #include "API/Sound/soundbuffer.h"
 #include "API/Sound/soundprovider.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
@@ -51,37 +48,20 @@
 // CL_ResourceData_Sample Construction:
 
 CL_ResourceData_Sample::CL_ResourceData_Sample(class CL_Resource &resource)
-: CL_ResourceData(resource)
 {
-	resource.attach_data("sample", this);
-}
-
-CL_ResourceData_Sample::~CL_ResourceData_Sample()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_ResourceData_Sample Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_ResourceData_Sample Implementation:
-
-void CL_ResourceData_Sample::on_load()
-{
-	CL_Resource resource = get_resource();
 	CL_DomElement &element = resource.get_element();
 
 	CL_SoundProvider *provider = 0;
 
-	std::string name = resource.get_element().get_attribute("file");
-	std::string sound_format = resource.get_element().get_attribute("format");
-	bool streamed = (element.get_attribute("stream", "no") == "yes");
+	CL_String name = resource.get_element().get_attribute(cl_text("file"));
+	CL_String sound_format = resource.get_element().get_attribute(cl_text("format"));
+	bool streamed = (element.get_attribute(cl_text("stream"), cl_text("no")) == cl_text("yes"));
 
 	provider = CL_SoundProviderFactory::load(
 		name,
 		streamed,
 		sound_format,
-		resource.get_manager().get_resource_provider());
+		resource.get_manager().get_directory(resource));
 
 	if (provider)
 	{
@@ -89,12 +69,18 @@ void CL_ResourceData_Sample::on_load()
 	}
 	else
 	{
-		throw CL_Error("Unknown sample format");
+		throw CL_Exception(cl_text("Unknown sample format"));
 	}
 }
 
-void CL_ResourceData_Sample::on_unload()
+CL_ResourceData_Sample::~CL_ResourceData_Sample()
 {
 	delete soundbuffer;
-	soundbuffer = NULL;
+	soundbuffer = 0;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_ResourceData_Sample Attributes:
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_ResourceData_Sample Implementation:

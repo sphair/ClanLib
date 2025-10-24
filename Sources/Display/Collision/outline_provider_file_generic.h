@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,30 +27,31 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_outline_provider_file_generic
-#define header_outline_provider_file_generic
+#pragma once
+
 
 #include "API/Display/Collision/contour.h"
 #include "API/Core/Math/circle.h"
+#include "API/Core/IOData/virtual_directory.h"
 
 #include <vector>
-#include <string>
 
 class CL_InputSourceProvider;
 
 class CL_OutlineProviderFile_Generic
 {
- public:
-	CL_OutlineProviderFile_Generic(const std::string &filename, CL_InputSourceProvider *provider);
+public:
+	CL_OutlineProviderFile_Generic(const CL_StringRef &filename, CL_VirtualDirectory directory);
 	~CL_OutlineProviderFile_Generic();
 
 	std::vector<CL_Contour> contours;
 	int width, height;
 	CL_Circlef minimum_enclosing_disc;
 
- private:
-	void load(const std::string &filename);	
-	CL_InputSourceProvider *provider;
+private:
+	void load(const CL_StringRef &filename);
+
+	CL_VirtualDirectory directory;
 };
 
-#endif
+

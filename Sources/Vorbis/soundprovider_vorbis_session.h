@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,8 +27,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_vorbis_session
-#define header_sound_provider_vorbis_session
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -38,17 +38,23 @@
 #include "vorbis/codec.h"
 
 class CL_SoundProvider_Vorbis_Generic;
-class CL_InputSource;
+class CL_IODevice;
 
 class CL_SoundProvider_Vorbis_Session : public CL_SoundProvider_Session
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis_Generic *data);
 
 	~CL_SoundProvider_Vorbis_Session();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	virtual int get_num_samples() const;
 
@@ -60,19 +66,27 @@ public:
 
 	virtual int get_position() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool eof() const;
-	
+
 	virtual void stop();
 
 	virtual bool play();
-		
+
 	virtual bool set_position(int pos);
-	
+
 	virtual int get_data(void **data_ptr, int data_requested);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	void stream_data();
 
@@ -82,33 +96,34 @@ private:
 
 	int position;
 
-	CL_InputSource *input;
+	CL_IODevice *input;
 
 	bool stream_eof;
 
-	//: Sync and verify incoming physical bitstream.
+	/// \brief Sync and verify incoming physical bitstream.
 	ogg_sync_state oy;
 
-	//: Take physical pages, weld into a logical stream of packets.
+	/// \brief Take physical pages, weld into a logical stream of packets.
 	ogg_stream_state os;
 
-	//: One Ogg bitstream page.  Vorbis packets are inside.
+	/// \brief One Ogg bitstream page.  Vorbis packets are inside.
 	ogg_page og;
 
-	//: One raw packet of data for decode.
+	/// \brief One raw packet of data for decode.
 	ogg_packet op;
 
-	//: Struct that stores all the static vorbis bitstream settings.
+	/// \brief Struct that stores all the static vorbis bitstream settings.
 	vorbis_info vi;
 
-	//: Struct that stores all the bitstream user comments.
+	/// \brief Struct that stores all the bitstream user comments.
 	vorbis_comment vc;
 
-	//: Central working state for the packet->PCM decoder.
+	/// \brief Central working state for the packet->PCM decoder.
 	vorbis_dsp_state vd;
 
-	//: Local working space for packet->PCM decode.
+	/// \brief Local working space for packet->PCM decode.
 	vorbis_block vb;
+/// \}
 };
 
-#endif
+

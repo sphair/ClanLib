@@ -48,6 +48,9 @@ tstring local8_to_text(const std::string &local8);
 class WorkspaceGenerator_MSVC
 {
 protected:
+	void install_mkdir(std::ofstream &dsp, const std::string &dest_dir);
+	// Adds a directory to the install batch file.
+
 	void install_mkdir(std::ofstream &dsp, const std::string &src_dir, const std::string &dest_dir, const Project *project);
 	// Adds a directory to the install batch file.
 
@@ -105,7 +108,7 @@ private:
 	void end_group(std::ofstream &dsp);
 	// Writes the 'end_group' text of a project file.
 
-	void add_file(std::ofstream &dsp, const std::string &filename, const Project &project);
+	void add_file(std::ofstream &dsp, const std::string &filename);
 	// Adds a file to a group.
 
 	void generate_source_files(std::ofstream &dsp, const Project &project);

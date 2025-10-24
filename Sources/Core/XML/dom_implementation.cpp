@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,12 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/dom_implementation.h"
-#include "API/Core/System/clanstring.h"
+#include "API/Core/XML/dom_document.h"
+#include "API/Core/XML/dom_document_type.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomImplementation construction:
@@ -54,13 +55,30 @@ CL_DomImplementation::~CL_DomImplementation()
 // CL_DomImplementation operations:
 
 bool CL_DomImplementation::has_feature(
-	const std::string &feature,
-	const std::string &version)
+	const CL_DomString &feature,
+	const CL_DomString &version)
 {
-	if (CL_String::to_lower(feature) == "xml" && (version == "1.0" || version.empty()))
+	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0 && (version == cl_text("1.0") || version.empty()))
 		return true;
-
+	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0 && (version == cl_text("2.0") || version.empty()))
+		return true;
 	return false;
+}
+
+CL_DomDocumentType CL_DomImplementation::create_document_type(
+	const CL_DomString &qualified_name,
+	const CL_DomString &public_id,
+	const CL_DomString &system_id)
+{
+	return CL_DomDocumentType(qualified_name, public_id, system_id);
+}
+
+CL_DomDocument CL_DomImplementation::create_document(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &qualified_name,
+	const CL_DomDocumentType &doctype)
+{
+	return CL_DomDocument(namespace_uri, qualified_name, doctype);
 }
 
 /////////////////////////////////////////////////////////////////////////////

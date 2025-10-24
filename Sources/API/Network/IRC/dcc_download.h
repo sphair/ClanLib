@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,105 +24,113 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="Internet Relay Chat"
-//! header=network.h
+/// \addtogroup clanNetwork_Internet_Relay_Chat clanNetwork Internet Relay Chat
+/// \{
 
-#ifndef header_dcc_download
-#define header_dcc_download
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../../signals.h"
-#include <string>
+#include "../api_network.h"
+#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal_v1.h"
+#include "../../Core/System/sharedptr.h"
+#include "../../Core/IOData/virtual_directory.h"
 
 class CL_DCCDownload_Generic;
-class CL_OutputSourceProvider;
+class CL_VirtualDirectory;
 
-//: IRC DCC download session object.
-//- !group=Network/Internet Relay Chat!
-//- !header=network.h!
-//- <p>This class connects to an IRC client listening for an incoming DCC
-//- connection and then downloads the file offered. Should be used in
-//- response to a DCC SEND CTCP command.</p>
+/// \brief IRC DCC download session object.
+///
+///    <p>This class connects to an IRC client listening for an incoming DCC
+///    connection and then downloads the file offered. Should be used in
+///    response to a DCC SEND CTCP command.</p> 
+/// \xmlonly !group=Network/Internet Relay Chat! !header=network.h! \endxmlonly
 class CL_API_NETWORK CL_DCCDownload
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a new DCC download session.
+	/// \brief Constructs a new DCC download session.
 	CL_DCCDownload();
-	
+
 	CL_DCCDownload(const CL_DCCDownload &copy);
 
 	CL_DCCDownload(
-		const std::string &server,
-		const std::string &port,
-		const std::string &filename,
-		int total_size = 0,
-		CL_OutputSourceProvider *output = 0,
-		bool delete_provider = false);
-	
+		const CL_String &server,
+		const CL_String &port,
+		const CL_String &filename,
+		int total_size,
+		CL_VirtualDirectory directory = CL_VirtualDirectory());
+
 	virtual ~CL_DCCDownload();
-	
-//! Attributes:
+
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	// cannot use "Status" due to brain dead Xlib header #define'ing it to an "int"
 	enum DCCStatus
 	{
-		//: Connecting to DCC server.
+		/// \brief Connecting to DCC server.
 		connecting,
-		
-		//: Currently downloading.
+
+		/// \brief Currently downloading.
 		downloading,
-		
-		//: Connection was lost to DCC server.
+
+		/// \brief Connection was lost to DCC server.
 		connection_lost,
-		
-		//: Download was completed.
+
+		/// \brief Download was completed.
 		finished
 	};
 
-	//: Returns the number of bytes transfered so far.
+	/// \brief Returns the number of bytes transfered so far.
 	int get_bytes_transfered();
-	
-	//: Returns the total size of file.
-	//- <p>If the total size is unknown, it returns 0.</p>
+
+	/// \brief Returns the total size of file.
+	/** <p>If the total size is unknown, it returns 0.</p>*/
 	int get_total_size();
-	
-	//: Returns the current status of the download.
+
+	/// \brief Returns the current status of the download.
 	DCCStatus get_status();
 
-	//: sig_connection_lost(error_message)
-	CL_Signal_v1<const std::string &> &sig_connection_lost();
+	/// \brief sig_connection_lost(error_message)
+	CL_Signal_v1<const CL_String &> &sig_connection_lost();
 
-	//: sig_download_complete()
+	/// \brief sig_download_complete()
 	CL_Signal_v0 &sig_download_complete();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignment operator.
+	/// \brief Copy assignment operator.
 	CL_DCCDownload &operator =(const CL_DCCDownload &copy);
 
-	//: Attemp to reconnect and resume download.
+	/// \brief Attemp to reconnect and resume download.
 	void reconnect();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_DCCDownload_Generic *impl;
+	CL_SharedPtr<CL_DCCDownload_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

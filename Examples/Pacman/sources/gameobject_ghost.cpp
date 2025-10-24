@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,6 +30,7 @@
 #include "precomp.h"
 #include "gameobject_ghost.h"
 #include "world.h"
+#include <stdlib.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Ghost construction:
@@ -37,10 +38,9 @@
 GameObject_Ghost::GameObject_Ghost(int x, int y, World *world) :
 	GameObject_Moving(x, y, world)
 {
-	spr_ghost = CL_Sprite("Game/spr_ghost", world->resources);
-
-	sfx_ghost = CL_SoundBuffer("Game/sfx_ghost", world->resources);
-	sfx_ghost_dead = CL_SoundBuffer("Game/sfx_ghost_dead", world->resources);
+	spr_ghost = CL_Sprite(world->gc, "Game/spr_ghost", world->resources);
+	//sfx_ghost = CL_SoundBuffer("Game/sfx_ghost", world->resources);
+	//sfx_ghost_dead = CL_SoundBuffer("Game/sfx_ghost_dead", world->resources);
 
 	move_dir = rand()%4;
 	
@@ -61,7 +61,7 @@ GameObject_Ghost::GameObject_Ghost(int x, int y, World *world) :
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Ghost operations:
 
-void GameObject_Ghost::show(int center_x, int center_y, CL_GraphicContext *gc)
+void GameObject_Ghost::show(int center_x, int center_y, CL_GraphicContext &gc)
 {
 	int width = world->map->get_tile_width()-6;
 	int height = world->map->get_tile_height()-6;
@@ -70,10 +70,9 @@ void GameObject_Ghost::show(int center_x, int center_y, CL_GraphicContext *gc)
 	{
 		spr_ghost.set_frame(anim_pos);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(
+		spr_ghost.draw(gc, 
 			(int) (x*width)-center_x,
-			(int) (y*height)-center_y,
-			gc);
+			(int) (y*height)-center_y);
 
 		return;
 	}
@@ -83,19 +82,17 @@ void GameObject_Ghost::show(int center_x, int center_y, CL_GraphicContext *gc)
 	{
 		spr_ghost.set_frame(anim_pos + 6);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(
+		spr_ghost.draw(gc,
 			(int) (x*width)-center_x,
-			(int) (y*height)-center_y,
-			gc);
+			(int) (y*height)-center_y);
 	}
 	else
 	{
 		spr_ghost.set_frame(anim_pos);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(
+		spr_ghost.draw(gc,
 			(int) (x*width)-center_x,
-			(int) (y*height)-center_y,
-			gc);
+			(int) (y*height)-center_y);
 	}
 }
 
@@ -113,7 +110,7 @@ bool GameObject_Ghost::turn(float time_elapsed)
 		{
 			if (world->player->get_got_powerup()) // ARRRG! He's got a powerup!
 			{
-				sfx_ghost_dead.play();
+//				sfx_ghost_dead.play();
 				world->score += 1000;
 				return false;
 			}
@@ -172,9 +169,9 @@ bool GameObject_Ghost::event_reached_dest()
 			if (div < 10 && div > 0.1)
 			{
 				float vol = 1/div;
-				CL_SoundBuffer_Session ses = sfx_ghost.prepare();
-				ses.set_volume(vol);
-				ses.play();
+				//CL_SoundBuffer_Session ses = sfx_ghost.prepare();
+				//ses.set_volume(vol);
+				//ses.play();
 			}
 		}
 
@@ -186,7 +183,7 @@ bool GameObject_Ghost::event_reached_dest()
 		// don't follow trail if player got power up or is dead
 	}
 	
-//	if (follow_trail) cout << "ghost in follow trail mode" << endl;
+//	if (follow_trail) CL_Console::write_line("ghost in follow trail mode");
 
 	int dirs_avail = 0;
 	for (int i=0; i<3; i++)

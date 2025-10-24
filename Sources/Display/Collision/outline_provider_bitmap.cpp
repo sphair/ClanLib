@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,8 +28,8 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
-#include "API/Display/pixel_buffer.h"
+#include "Display/precomp.h"
+#include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Collision/outline_provider_bitmap.h"
 #include "API/Display/Collision/outline_accuracy.h"
 #include "outline_provider_bitmap_generic.h"
@@ -38,7 +38,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderBitmap construction:
 
-CL_OutlineProviderBitmap::CL_OutlineProviderBitmap(CL_PixelBuffer pbuf, int alpha_limit, bool get_insides)
+CL_OutlineProviderBitmap::CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit, bool get_insides)
 {
 	impl = new CL_OutlineProviderBitmap_Generic( pbuf, alpha_limit, get_insides);
 }

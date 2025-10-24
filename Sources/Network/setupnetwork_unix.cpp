@@ -24,55 +24,22 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "API/Network/setupnetwork.h"
-#include "Socket/event_trigger_socket.h"
-#include "Socket/socket_select.h"
 #include <signal.h>
 
-#ifndef sighandler_t
-#define sighandler_t sig_t
-#endif
-
 static int ref_count = 0;
-static sighandler_t old_handler = 0;
 
 CL_SetupNetwork::CL_SetupNetwork(bool register_resources_only)
 {
-	CL_SetupNetwork::init(register_resources_only);
+	ref_count++;
+	if (ref_count > 1) return;
 }
 
 CL_SetupNetwork::~CL_SetupNetwork()
 {
-	CL_SetupNetwork::deinit();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Initialize network.
-
-void CL_SetupNetwork::init(bool register_resources_only)
-{
-	ref_count++;
-	if (ref_count > 1) return;
-
-	// Dont make broken pipes terminate the program (doh):
-	old_handler = signal(13, SIG_IGN); // 13 = SIGPIPE
-
-	CL_EventTrigger_Socket::socket_select = new CL_SocketSelect();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Deinitialize network.
-
-void CL_SetupNetwork::deinit()
-{
 	ref_count--;
 	if (ref_count > 0) return;
-
-	delete CL_EventTrigger_Socket::socket_select;
-	CL_EventTrigger_Socket::socket_select = 0;
-	
-	signal(13, old_handler);
 }

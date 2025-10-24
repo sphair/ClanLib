@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,26 +27,118 @@
 **    (if your name is missing here, please add it)
 */
 
-//: <p>Application bootstrapping library. When booting your application,
-//: you can either use the low level, platform dependent approach in clanCore,
-//: or you can use the CL_ClanApplication interface in clanApp.</p>
+/// \brief <p>Application bootstrapping library. When booting your application,
+/// \brief you can either use the low level, platform dependent approach in clanCore,
+/// \brief or you can use the CL_clanApp interface in clanApp.</p>
 //! Global=App
 
-#ifndef header_application
-#define header_application
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "Application/clanapp.h"
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
+#endif
+
+#include "App/clanapp.h"
+
+#ifdef __cplusplus_cli
+#pragma managed(pop)
+#endif
 
 #if defined (_MSC_VER)
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanApp-static-mt.lib")
-#else
-#pragma comment(lib, "clanApp-static-mt-debug.lib")
-#endif
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-dll.lib")
+				#else
+					#pragma comment(lib, "clanApp-dll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-dll-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-dll-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mtdll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mtdll-debug.lib")
+				#endif
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mt.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mt-debug.lib")
+				#endif
+			#endif
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-dll-uc.lib")
+				#else
+					#pragma comment(lib, "clanApp-dll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-dll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-dll-uc-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mtdll-uc.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mtdll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mtdll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mtdll-uc-debug.lib")
+				#endif
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mt-uc.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mt-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanApp-x64-static-mt-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanApp-static-mt-uc-debug.lib")
+				#endif
+			#endif
+		#endif
+	#endif
 #endif
 
-#endif
+

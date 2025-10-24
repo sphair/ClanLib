@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -52,7 +52,7 @@ public:
 //!Operations:
 public:
 	//: Draw object on graphic context, where map is at (view_x, view_y).
-	virtual void show(int view_x, int view_y, CL_GraphicContext *gc = 0) = 0;
+	virtual void show(int view_x, int view_y, CL_GraphicContext &gc) = 0;
 
 	//: Moves the object around.
 	virtual bool turn(float time_elapsed) = 0;

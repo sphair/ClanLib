@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,15 +27,14 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_mikmod_session
-#define header_sound_provider_mikmod_session
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "API/Sound/soundprovider_session.h"
-
 #ifdef __APPLE__
 #include <mikmod/mikmod.h>
 #else
@@ -43,16 +42,23 @@
 #endif
 
 class CL_SoundProvider_MikMod_Generic;
+class CL_IODevice;
 
 class CL_SoundProvider_MikMod_Session : public CL_SoundProvider_Session
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod_Generic *data);
 
 	~CL_SoundProvider_MikMod_Session();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	virtual int get_num_samples() const;
 
@@ -64,21 +70,29 @@ public:
 
 	virtual int get_position() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool set_looping(bool loop);
 
 	virtual bool eof() const;
-	
+
 	virtual void stop();
 
 	virtual bool play();
-		
+
 	virtual bool set_position(int pos);
-	
+
 	virtual int get_data(void **data_ptr, int data_requested);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundProvider_MikMod_Generic *data;
 
@@ -90,11 +104,14 @@ private:
 
 	int position;
 
+	bool stream_eof;
+
 	int frequency;
 
 	MODULE *module;
 
 	SBYTE buffer[64*1024];
+/// \}
 };
 
-#endif
+

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_sound_provider_raw_session
-#define header_sound_provider_raw_session
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -40,13 +39,19 @@ class CL_SoundProvider_Raw_Generic;
 
 class CL_SoundProvider_Raw_Session : public CL_SoundProvider_Session
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider_Raw_Session(CL_SoundProvider_Raw_Generic *data);
 
 	~CL_SoundProvider_Raw_Session();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	virtual int get_num_samples() const;
 
@@ -58,25 +63,34 @@ public:
 
 	virtual int get_position() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	virtual bool eof() const;
-	
+
 	virtual void stop();
 
 	virtual bool play();
-		
+
 	virtual bool set_position(int pos);
-	
+
 	virtual int get_data(void **data_ptr, int data_requested);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundProvider_Raw_Generic *data;
 
 	int position;
 
 	bool reached_end;
+/// \}
 };
 
-#endif
+

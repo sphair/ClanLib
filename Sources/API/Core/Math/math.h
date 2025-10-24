@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,30 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_math
-#define header_math
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
+
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include <cmath>
-#include <math.h>
+#include "../IOData/datatypes.h"
 
-#ifndef PI
-#ifndef M_PI
-#define M_PI 3.1415926535897932384626433832795	// maybe more accuracy than needed ;-)
-#endif
-#define PI M_PI
+#ifndef CL_PI
+#define CL_PI 3.141592653589793238462643383279f
 #endif
 
-#endif
+template<typename T> inline T cl_pow2(T value) { return value*value; }
+template<typename T> T cl_min(T a, T b) { if(a < b) return a; return b; }
+template<typename T> T cl_max(T a, T b) { if(a > b) return a; return b; }
+
+
+/// \}

@@ -1,0 +1,62 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Magnus Norddahl
+*/
+
+#pragma once
+
+
+#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "API/Display/Font/font.h"
+#include "API/Core/Math/mat4.h"
+#include "Display/2D/sprite_render_batch.h"
+#include <list>
+
+class CL_RenderBatcher;
+class CL_PrimitivesArray_Impl;
+
+class CL_GraphicContext_Impl
+{
+public:
+	CL_GraphicContext_Impl(CL_GraphicContextProvider *provider);
+	~CL_GraphicContext_Impl();
+
+	void flush_batcher(CL_GraphicContext &gc);
+	void update_batcher_modelview();
+	void set_batcher(CL_GraphicContext &gc, CL_RenderBatcher *batcher);
+
+	CL_SharedPtr<CL_PrimitivesArray_Impl> create_prim_array();
+	void free_prim_array(CL_PrimitivesArray_Impl *prim_array);
+
+	CL_GraphicContextProvider *provider;
+	std::list<CL_Rect> cliprects;
+	std::list<CL_Mat4f> modelviews;
+	std::vector<CL_PrimitivesArray_Impl *> free_prim_arrays;
+	int max_attributes;
+	bool modelview_changed;
+	CL_RenderBatcher *active_batcher;
+	CL_SpriteRenderBatch sprite_batcher;
+};

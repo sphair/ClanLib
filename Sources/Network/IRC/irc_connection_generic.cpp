@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,27 +24,31 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "irc_connection_generic.h"
-#include "API/Core/System/event_listener.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/log.h"
+#include "API/Network/Socket/tcp_connection.h"
+#include "API/Network/Socket/socket_name.h"
+#include "API/Core/System/event.h"
+#include "API/Core/System/exception.h"
+
+#ifndef WIN32
+#include "stdlib.h"
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_IRCConnection_Generic construction:
 
-CL_IRCConnection_Generic::CL_IRCConnection_Generic(const std::string &server, const std::string &port) :
-	sock(CL_Socket::tcp), server(server), port(port), signal_error(false), ref_count(0)
+CL_IRCConnection_Generic::CL_IRCConnection_Generic(const CL_String &server, const CL_String &port)
+: server(server), port(port), signal_error(false), ref_count(0)
 {
-	thread = CL_Thread(this);
-	thread.start();
+	thread.start(this, &CL_IRCConnection_Generic::thread_main);
 }
 
 CL_IRCConnection_Generic::~CL_IRCConnection_Generic()
 {
-	thread.wait();
+	thread.join();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,101 +69,34 @@ void CL_IRCConnection_Generic::release_ref()
 	if (ref_count == 0) delete this;
 }
 
-void CL_IRCConnection_Generic::send_data(const std::string &data)
+void CL_IRCConnection_Generic::send_data(const CL_String8 &data)
 {
 	CL_MutexSection mutex_lock(&mutex);
 	send_queue.push(data);
-	send_trigger.set_flag();
+	event_send.set();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_IRCConnection_Generic implementation:
-
-void CL_IRCConnection_Generic::run()
-{
-	try
-	{
-		sock.connect(CL_IPAddress(server, port));
-
-		std::string last_line;
-
-		char buffer[512];
-		while (true)
-		{
-			CL_EventListener events;
-			events.add_trigger(sock.get_read_trigger());
-			events.add_trigger(&quit_trigger);
-			events.add_trigger(&send_trigger);
-			events.wait();
-
-			if (quit_trigger.get_flag())
-				break;
-				
-			if (send_trigger.get_flag())
-			{
-				CL_MutexSection mutex_lock(&mutex);
-				if (!send_queue.empty())
-				{
-					sock.send(send_queue.front());
-					send_queue.pop();
-				}
-				if (!send_queue.empty())
-					send_trigger.set_flag();
-				else
-					send_trigger.reset();
-			}
-
-			if (sock.get_read_trigger()->get_flag())
-			{
-				int received = sock.recv(buffer, 512);
-				if (received == 0) break;
-		
-				int start = 0;
-				for (int i=0; i<received; i++)
-				{
-					if (buffer[i] == '\n')
-					{
-						last_line.append(buffer+start, i-start+1);
-						start = i+1;
-
-		 				CL_MutexSection mutex_lock(&mutex);
-						received_queue.push(last_line);
-				
-						last_line = std::string();
-					}
-				}
-				last_line.append(buffer+start, received-start);
-			}
-		}
-	}
-	catch (CL_Error error)
-	{
-		signal_error = true;
-		error_message = error.message;
-	}
-}
-	
-void CL_IRCConnection_Generic::keep_alive()
+void CL_IRCConnection_Generic::process_data()
 {
 	CL_MutexSection mutex_lock(&mutex);
 	while (!received_queue.empty())
 	{
-		std::string line = received_queue.front();
+		CL_String8 line = received_queue.front();
 		received_queue.pop();
 		
 		// Parse line:
-		std::string prefix, command;
-		std::vector<std::string> args;
+		CL_String8 prefix, command;
+		std::vector<CL_String8> args;
 		line = line.substr(0, line.length()-2); // cut off CR-LF
 		line.append(" "); // whitespace at end. Makes parsing easier.
 
 		// Find low level message escapes:
-		std::string::size_type pos = 0;
+		CL_String8::size_type pos = 0;
 		pos = 0;
-		while (pos != std::string::npos)
+		while (pos != CL_String8::npos)
 		{
 			pos = line.find('\020', pos);
-			if (pos == std::string::npos || pos+1 == std::string::npos) break;
+			if (pos == CL_String8::npos || pos+1 == CL_String8::npos) break;
 			switch (line[pos+1])
 			{
 			case '\020':
@@ -183,7 +120,7 @@ void CL_IRCConnection_Generic::keep_alive()
 
 		// Split line prefix and command:
 		pos = 0;
-		std::string::size_type endpos;
+		CL_String8::size_type endpos;
 		if (line[0] == ':') // prefix
 		{
 			pos = line.find(" ", 1)+1;
@@ -211,70 +148,70 @@ void CL_IRCConnection_Generic::keep_alive()
 		int numeric_value = atoi(command.c_str());
 		if (numeric_value != 0)
 		{
-			sig_numeric_reply(prefix, numeric_value, args);
+			sig_numeric_reply.invoke(prefix, numeric_value, args);
 			
 			if (numeric_value == RPL_NAMREPLY)
 			{
-				const std::string &self = args[0];
-				const std::string &channel = args[2];
-				const std::string &users = args[3];
-				std::vector<std::string> nicks;
+				const CL_String8 &self = args[0];
+				const CL_String8 &channel = args[2];
+				const CL_String8 &users = args[3];
+				std::vector<CL_String8> nicks;
 
-				std::string::size_type pos = 0;
+				CL_String8::size_type pos = 0;
 				while (pos < users.length())
 				{
-					std::string::size_type new_pos = users.find(" ", pos);
+					CL_String8::size_type new_pos = users.find(" ", pos);
 					if (new_pos == users.npos) new_pos = users.length();
 					nicks.push_back(users.substr(pos, new_pos-pos));
 					pos = new_pos+1;
 				}
 				
-				sig_name_reply(self, channel, nicks);
+				sig_name_reply.invoke(self, channel, nicks);
 			}
 			
 			continue;
 		}
 		
-		sig_command_received(prefix, command, args);
+		sig_command_received.invoke(prefix, command, args);
 
 		int num_args = args.size();
-		if (command == "NICK" && num_args == 1) sig_nick(prefix, args[0]);
-		else if (command == "JOIN" && num_args == 1) sig_join(prefix, args[0]);
+		if (command == "NICK" && num_args == 1) sig_nick.invoke(prefix, args[0]);
+		else if (command == "JOIN" && num_args == 1) sig_join.invoke(prefix, args[0]);
 		else if (command == "PART" && num_args >= 1)
 		{
 			if (num_args == 1) // No part reason
 			{
-				std::string empty;
-				sig_part(prefix, args[0], empty);
+				CL_String8 empty;
+				sig_part.invoke(prefix, args[0], empty);
 			}
 			else // User made comment about why it left
 			{
-				sig_part(prefix, args[0], args[1]);
+				sig_part.invoke(prefix, args[0], args[1]);
 			}
 		}
 		else if (command == "MODE")
 		{
-			std::vector<std::string> params;
+			std::vector<CL_String8> params;
 			for (int i=2; i<num_args; i++) params.push_back(args[i]);
-			sig_mode(prefix, args[0], args[1], params);
+			sig_mode.invoke(prefix, args[0], args[1], params);
 		}
-		else if (command == "TOPIC" && num_args == 2) sig_topic(prefix, args[0], args[1]);
-		else if (command == "INVITE" && num_args == 2) sig_invite(prefix, args[0], args[1]);
-		else if (command == "KICK" && num_args == 2) sig_kick(prefix, args[0], args[1], "");
-		else if (command == "KICK" && num_args == 3) sig_kick(prefix, args[0], args[1], args[2]);
+		else if (command == "TOPIC" && num_args == 2) sig_topic.invoke(prefix, args[0], args[1]);
+		else if (command == "INVITE" && num_args == 2) sig_invite.invoke(prefix, args[0], args[1]);
+		else if (command == "KICK" && num_args == 2) sig_kick.invoke(prefix, args[0], args[1], "");
+		else if (command == "KICK" && num_args == 3) sig_kick.invoke(prefix, args[0], args[1], args[2]);
 		else if (command == "PRIVMSG" && num_args == 2)
 		{
 			if (args[1][0] == '\001') // ctcp
 			{
-				std::string line = args[1].substr(1, args[1].length()-2);
+				CL_String8 line = args[1].substr(1, args[1].length()-2);
 
 				// Find ctcp level message escapes:
-				std::string::size_type pos = 0;
+				CL_String8::size_type pos = 0;
 				pos = 0;
-				while (pos != std::string::npos)
+				while (pos != CL_String8::npos)
 				{
 					pos = line.find('\\', pos);
-					if (pos == std::string::npos || pos+1 == std::string::npos) break;
+					if (pos == CL_String8::npos || pos+1 == CL_String8::npos) break;
 					switch (line[pos+1])
 					{
 					case '\\':
@@ -288,9 +225,9 @@ void CL_IRCConnection_Generic::keep_alive()
 					pos++;
 				}
 
-				std::string command, data;
-				std::string::size_type data_pos = line.find(' ');
-				if (data_pos == std::string::npos)
+				CL_String8 command, data;
+				CL_String8::size_type data_pos = line.find(' ');
+				if (data_pos == CL_String8::npos)
 				{
 					command = line;
 				}
@@ -300,26 +237,26 @@ void CL_IRCConnection_Generic::keep_alive()
 					data = line.substr(data_pos+1);
 				}
 
-				sig_privmsg_ctcp(prefix, args[0], command, data);
+				sig_privmsg_ctcp.invoke(prefix, args[0], command, data);
 			}
 			else
 			{
-				sig_privmsg(prefix, args[0], args[1]);
+				sig_privmsg.invoke(prefix, args[0], args[1]);
 			}
 		}
 		else if (command == "NOTICE" && num_args == 2)
 		{
 			if (args[1][0] == '\001') // ctcp
 			{
-				std::string line = args[1].substr(1, args[1].length()-2);
+				CL_String8 line = args[1].substr(1, args[1].length()-2);
 
 				// Find ctcp level message escapes:
-				std::string::size_type pos = 0;
+				CL_String8::size_type pos = 0;
 				pos = 0;
-				while (pos != std::string::npos)
+				while (pos != CL_String8::npos)
 				{
 					pos = line.find('\\', pos);
-					if (pos == std::string::npos || pos+1 == std::string::npos) break;
+					if (pos == CL_String8::npos || pos+1 == CL_String8::npos) break;
 					switch (line[pos+1])
 					{
 					case '\\':
@@ -333,9 +270,9 @@ void CL_IRCConnection_Generic::keep_alive()
 					pos++;
 				}
 
-				std::string command, data;
-				std::string::size_type data_pos = line.find(' ');
-				if (data_pos == std::string::npos)
+				CL_String8 command, data;
+				CL_String8::size_type data_pos = line.find(' ');
+				if (data_pos == CL_String8::npos)
 				{
 					command = line;
 				}
@@ -345,21 +282,89 @@ void CL_IRCConnection_Generic::keep_alive()
 					data = line.substr(data_pos+1);
 				}
 
-				sig_notice_ctcp(prefix, args[0], command, data);
+				sig_notice_ctcp.invoke(prefix, args[0], command, data);
 			}
 			else
 			{
-				sig_notice(prefix, args[0], args[1]);
+				sig_notice.invoke(prefix, args[0], args[1]);
 			}
 		}
-		else if (command == "PING" && num_args == 1) sig_ping(args[0], "");
-		else if (command == "PING" && num_args == 2) sig_ping(args[0], args[1]);
-		else sig_unknown_command_received(prefix, command, args);
+		else if (command == "PING" && num_args == 1) sig_ping.invoke(args[0], "");
+		else if (command == "PING" && num_args == 2) sig_ping.invoke(args[0], args[1]);
+		else sig_unknown_command_received.invoke(prefix, command, args);
 	}
 	
 	if (signal_error)
 	{
-		sig_socket_error(error_message);
+		sig_socket_error.invoke(error_message);
 		signal_error = false;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_IRCConnection_Generic implementation:
+
+void CL_IRCConnection_Generic::thread_main()
+{
+	try
+	{
+		bool result = connection.connect(CL_SocketName(server, port));
+		if (result == false)
+			throw CL_Exception(cl_text("Connection failed!"));
+
+		CL_String8 last_line;
+
+		char buffer[512];
+		while (true)
+		{
+			CL_Event event_read = connection.get_read_event();
+			int wait_result = CL_Event::wait(event_read, event_quit, event_send);
+			if (wait_result < 0)
+				throw CL_Exception(cl_text("Unexpected return value from CL_Event::wait!"));
+
+			if (wait_result == 1) // event_quit
+				break;
+				
+			if (wait_result == 2) // event_send
+			{
+				CL_MutexSection mutex_lock(&mutex);
+				if (!send_queue.empty())
+				{
+					connection.send(send_queue.front().data(), send_queue.front().size());
+					send_queue.pop();
+				}
+				if (!send_queue.empty())
+					event_send.set();
+				else
+					event_send.reset();
+			}
+
+			if (wait_result == 0) // connection.get_read_event()
+			{
+				int received = connection.receive(buffer, 512, false);
+				if (received == 0) break;
+		
+				int start = 0;
+				for (int i=0; i<received; i++)
+				{
+					if (buffer[i] == '\n')
+					{
+						last_line.append(buffer+start, i-start+1);
+						start = i+1;
+
+		 				CL_MutexSection mutex_lock(&mutex);
+						received_queue.push(last_line);
+				
+						last_line = CL_String8();
+					}
+				}
+				last_line.append(buffer+start, received-start);
+			}
+		}
+	}
+	catch (CL_Exception error)
+	{
+		signal_error = true;
+		error_message = error.message;
 	}
 }

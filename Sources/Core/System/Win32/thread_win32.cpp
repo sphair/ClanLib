@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,219 +24,63 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
-
-#include "API/Core/System/thread.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/crash_reporter.h"
 #include "thread_win32.h"
-#include "API/Core/System/cl_assert.h"
+#include "API/Core/System/runnable.h"
+#include "API/Core/System/thread_local_storage.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Thread_Helper win32 implementation:
+// CL_Thread_Win32 Construction:
 
-class CL_Thread_Helper : public CL_Runnable
+CL_Thread_Win32::CL_Thread_Win32()
+: handle(INVALID_HANDLE_VALUE)
 {
-public:
-	CL_Thread_Helper(int (*func)(void*), void *value)
-		: func(func), value(value)
-	{
-	}
+}
 
-	virtual void run()
-	{
-		func(value);
-	}
-
-private:
-	int (*func)(void*);
-
-	void *value;
-};
+CL_Thread_Win32::~CL_Thread_Win32()
+{
+	if (handle != INVALID_HANDLE_VALUE)
+		CloseHandle(handle);
+}
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_Thread win32 implementation:
+// CL_Thread_Win32 Attributes:
 
-CL_Thread::CL_Thread()
-: impl(0)
-{
-}
+/////////////////////////////////////////////////////////////////////////////
+// CL_Thread_Win32 Operations:
 
-CL_Thread::CL_Thread(int (*func)(void*), void *value)
-: impl(new CL_Thread_Generic)
+void CL_Thread_Win32::start(CL_Runnable *runnable)
 {
-	impl->runnable = new CL_Thread_Helper(func, value);
-	impl->delete_runnable = true;
-	impl->thread_handle = NULL;
-	impl->ref_count = 1;
-}
+	if (handle != INVALID_HANDLE_VALUE)
+		CloseHandle(handle);
 
-CL_Thread::CL_Thread(CL_Runnable *runnable, bool delete_runnable)
-: impl(new CL_Thread_Generic)
-{
-	impl->runnable = runnable;
-	impl->delete_runnable = delete_runnable;
-	impl->thread_handle = NULL;
-	impl->ref_count = 1;
-}
-
-CL_Thread::CL_Thread(const CL_Thread &copy)
-: impl(copy.impl)
-{
-	if (impl) impl->ref_count++;
-}
-
-CL_Thread::~CL_Thread()
-{
-	if (impl)
+	DWORD threadId = 0;
+	handle = CreateThread(0, 0, &CL_Thread_Win32::thread_main, runnable, 0, &threadId);
+	if (handle == INVALID_HANDLE_VALUE)
 	{
-		impl->ref_count--;
-		if (impl->ref_count == 0)
-		{
-			if (impl->thread_handle != NULL) terminate();
-			if (impl->delete_runnable) delete impl->runnable;
-			delete impl;
-		}
+		throw CL_Exception(cl_text("Unable to create new thread"));
 	}
 }
 
-unsigned long __stdcall CL_Thread_Generic::func_proxy(void *arg)
+void CL_Thread_Win32::join()
 {
-#ifndef _DEBUG
-	// Create minidumps when not in debug mode.
-	CL_CrashReporter crash_reporter;
-#endif
+	if (handle != INVALID_HANDLE_VALUE)
+	{
+		WaitForSingleObject(handle, INFINITE);
+		CloseHandle(handle);
+		handle = INVALID_HANDLE_VALUE;
+	}
+}
 
-	CL_Thread_Generic *self = (CL_Thread_Generic *) arg;
-	self->runnable->run();
+/////////////////////////////////////////////////////////////////////////////
+// CL_Thread_Win32 Implementation:
 
+DWORD CL_Thread_Win32::thread_main(void *data)
+{
+	CL_Runnable *runnable = (CL_Runnable *) data;
+	CL_ThreadLocalStorage tls;
+	runnable->run();
 	return 0;
-}
-
-CL_Thread &CL_Thread::operator =(const CL_Thread &copy)
-{
-	if (impl)
-	{
-		impl->ref_count--;
-		if (impl->ref_count == 0)
-		{
-			if (impl->thread_handle != NULL) terminate();
-			if (impl->delete_runnable) delete impl->runnable;
-			delete impl;
-		}
-	}
-
-	impl = copy.impl;
-	if (impl) impl->ref_count++;
-	return *this;
-}
-
-void CL_Thread::start()
-{
-	cl_assert(impl != NULL);
-
-	impl->thread_handle = CreateThread(
-		NULL,
-		0,
-		impl->func_proxy,
-		impl,
-		0,
-		&impl->thread_id);
-
-	if (impl->thread_handle == NULL)
-		throw CL_Error("Failed to create thread");
-}
-
-void CL_Thread::terminate()
-{
-	cl_assert(impl != NULL);
-
-	TerminateThread(impl->thread_handle, 0);
-	CloseHandle(impl->thread_handle);
-	impl->thread_handle = NULL;
-}
-
-void CL_Thread::wait()
-{
-	cl_assert(impl != NULL);
-
-	if (impl->thread_handle == NULL) return;
-
-	WaitForSingleObject(impl->thread_handle, INFINITE);
-	CloseHandle(impl->thread_handle);
-	impl->thread_handle = NULL;
-}
-
-void CL_Thread::set_priority(EThreadPriority priority)
-{
-	cl_assert(impl != NULL);
-
-	if (impl->thread_handle == NULL) return;
-
-	int prio = THREAD_PRIORITY_NORMAL;
-	switch (priority)
-	{
-	case cl_priority_above_normal:  prio = THREAD_PRIORITY_ABOVE_NORMAL;  break;
-	case cl_priority_below_normal:  prio = THREAD_PRIORITY_BELOW_NORMAL;  break;
-	case cl_priority_highest:       prio = THREAD_PRIORITY_HIGHEST;       break;
-	case cl_priority_idle:          prio = THREAD_PRIORITY_IDLE;          break;
-	case cl_priority_lowest:        prio = THREAD_PRIORITY_LOWEST;        break;
-	case cl_priority_normal:        prio = THREAD_PRIORITY_NORMAL;        break;
-	case cl_priority_time_critical: prio = THREAD_PRIORITY_TIME_CRITICAL; break;
-	}
-
-	BOOL result = SetThreadPriority(impl->thread_handle, prio);
-	if (result == FALSE) throw CL_Error("Failed to set thread priority");
-}
-
-CL_ThreadId CL_Thread::get_current_id()
-{
-	return CL_ThreadId();
-}
-
-unsigned int CL_Thread::get_thread_id() const
-{
-	return impl->thread_id;
-}
-
-
-CL_ThreadId::CL_ThreadId()
-:impl(new CL_ThreadId_Generic)
-{
-	impl->thread_id = GetCurrentThreadId();
-}
-
-CL_ThreadId::CL_ThreadId(const CL_ThreadId &copy)
-:impl(new CL_ThreadId_Generic)
-{
-	*this = copy;
-}
-
-CL_ThreadId::~CL_ThreadId()
-{
-	delete impl;
-}
-
-CL_ThreadId &CL_ThreadId::operator=(const CL_ThreadId &copy)
-{
-	impl->thread_id = copy.impl->thread_id;
-	return *this;
-}
-
-bool CL_ThreadId::operator ==(const CL_ThreadId &cmp) const
-{
-	return impl->thread_id == cmp.impl->thread_id;
-}
-
-bool CL_ThreadId::operator !=(const CL_ThreadId &cmp) const
-{
-	return !operator ==(cmp);
-}
-
-bool CL_ThreadId::operator <(const CL_ThreadId &cmp) const
-{
-	return impl->thread_id < cmp.impl->thread_id;
 }

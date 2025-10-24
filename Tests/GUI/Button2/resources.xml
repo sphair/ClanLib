@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <sprite name="ButtonDefaulted">
+    <image file="..\Images\button_defaulted.png" />
+  </sprite>
+  <sprite name="ButtonDisabled">
+    <image file="..\Images\button_disabled.png" />
+  </sprite>
+  <sprite name="ButtonHot">
+    <image file="..\Images\button_hot.png" />
+  </sprite>
+  <sprite name="ButtonNormal">
+    <image file="..\Images\button_normal.png" />
+  </sprite>
+  <sprite name="ButtonPressed">
+    <image file="..\Images\button_pressed.png" />
+  </sprite>
+  <sprite name="GroupBox">
+    <image file="..\Images\groupbox.png" />
+  </sprite>
+</resources>

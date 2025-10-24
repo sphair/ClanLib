@@ -1,0 +1,21 @@
+ 
+@import "../../../Resources/GUIThemeLuna/theme.css";
+
+
+button.redtext
+{
+	font-family: ClanLib Font;
+	font-size: 32;
+	text-color: #FF4444;
+}
+
+
+lineedit.greentext
+{
+	font-family: ClanLib Font;
+	font-size: 32;
+	text-color: #AAFFAA;
+}
+
+
+

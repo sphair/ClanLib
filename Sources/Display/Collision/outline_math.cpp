@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,15 +27,14 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
+#include "Display/precomp.h"
 #include "API/Display/Collision/outline_math.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/pointset_math.h"
 #include "API/Core/Math/point.h"
 
-
-//    Variant of minimum enclosing disc routines, now with radius cap.
+// Variant of minimum enclosing disc routines, now with radius cap.
 
 void CL_OutlineMath::minimum_enclosing_sub_circle(
 	CL_OutlineCircle &smalldisc,
@@ -111,10 +110,9 @@ void CL_OutlineMath::minimum_enclosing_sub_circle_with_2points(
 			tmp_disc.radius = smalldisc.radius;
 			CL_PointSetMath::minimum_disc_with_3points(tmp_disc, points, real_i_indx, j, real_k_indx);
 			smalldisc.position = tmp_disc.position;
-			smalldisc.radius = float(tmp_disc.radius);
+			smalldisc.radius = tmp_disc.radius;
 		}
 	}
 }
-
 
 

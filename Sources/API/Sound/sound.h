@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,58 +24,52 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_sound
-#define header_sound
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <string>
+#include "api_sound.h"
+#include "../Core/Text/string_types.h"
 
 class CL_SoundOutput;
 
+/// \brief Sound interface in ClanLib.
+///
+//    <p>All the functions that share name with those in CL_SoundOutput have the
+//    same functionality. The only difference is, that the ones CL_Sound
+//    operate on a selected sound output. This saves the trouble of passing around
+//    a pointer to the sound output, when only a single one is used anyway.</p>
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_Sound
-//: Sound interface in ClanLib.
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
-//- <p>All the functions that share name with those in CL_SoundOutput have the
-//- same functionality. The only difference is, that the ones CL_Sound
-//- operate on a selected sound output. This saves the trouble of passing around
-//- a pointer to the sound output, when only a single one is used anyway.</p>
-//also: CL_SoundOutput - Sound Output interface class.
-//also: CL_SoundBuffer - Sample class in ClanLib.
 {
-//! Selected CL_SoundOutput accessors:
-public:
-	//: Returns the name of the current sound output:
-	static const std::string &get_name();
+/// \name Selected CL_SoundOutput accessors
+/// \{
 
-	//: Returns the mixing frequency of the current sound output.
+public:
+	/// \brief Returns the name of the current sound output:
+	static const CL_String8 &get_name();
+
+	/// \brief Returns the mixing frequency of the current sound output.
 	static int get_mixing_frequency();
 
-	//: Returns the current selected sound output.
+	/// \brief Returns the current selected sound output.
 	static CL_SoundOutput *get_current_output();
 
-	//: Change the current selected sound output.
-	//param output: The new current selected sound output.
+	/// \brief Change the current selected sound output.
+	///
+	/// \param output The new current selected sound output.
 	static void select_output(CL_SoundOutput *output);
+/// \}
 };
 
-#endif
+
+/// \}

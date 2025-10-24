@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <resources>
-	<surface name="background" file="Gfx/background.png"/>
+	<texture name="background" file="Gfx/background.png"/>
 
 	<sprite name="SpaceShootSelected" base_angle="180">
 		<image file="Gfx/spaceshoot_selected.png" />
@@ -45,13 +45,13 @@
 		<image file="Gfx/spaceshoot_turret_shooting6.png" />
 		<image file="Gfx/spaceshoot_turret_shooting7.png" />
 		
-		<frame nr="1" y="0"/>
-		<frame nr="2" y="-1"/>
-		<frame nr="3" y="-2"/>
-		<frame nr="4" y="-3"/>
-		<frame nr="5" y="-2"/>
-		<frame nr="6" y="-1"/>
-		<frame nr="7" y="0"/>
+		<frame nr="0" y="0"/>
+		<frame nr="1" y="-1"/>
+		<frame nr="2" y="-2"/>
+		<frame nr="3" y="-3"/>
+		<frame nr="4" y="-2"/>
+		<frame nr="5" y="-1"/>
+		<frame nr="6" y="0"/>
 		
 		<translation origin="center" y="5"/>
 		<rotation origin="center" y="5"/>

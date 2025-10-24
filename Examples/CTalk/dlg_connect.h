@@ -1,6 +1,5 @@
 
-#ifndef file_dlg_connect
-#define file_dlg_connect
+#pragma once
 
 class MainFrame;
 
@@ -14,15 +13,11 @@ public:
 
 //! Attributes:
 public:
-	const std::string &get_server();
-
-	const std::string &get_nick();
-
-	const std::string &get_username();
-
-	const std::string &get_fullname();
-
-	const std::string &get_password();
+	CL_String get_server();
+	CL_String get_nick();
+	CL_String get_username();
+	CL_String get_fullname();
+	CL_String get_password();
 
 //! Operations:
 public:
@@ -30,36 +25,25 @@ public:
 //! Implementation:
 private:
 	void on_button_ok_clicked();
-
 	void on_button_cancel_clicked();
 
+	static CL_Rect get_initial_geometry(MainFrame *mainframe);
+	static CL_GUITopLevelDescription get_window_description();
+
 	MainFrame *mainframe;
-
-	CL_ComponentManager *components;
-
 	CL_Label *label_title;
-
 	CL_Label *label_server;
-
 	CL_Label *label_fullname;
-
 	CL_Label *label_username;
-
 	CL_Label *label_password;
 
-	CL_InputBox *inputbox_server;
+	CL_LineEdit *inputbox_server;
+	CL_LineEdit *inputbox_fullname;
+	CL_LineEdit *inputbox_username;
+	CL_LineEdit *inputbox_password;
 
-	CL_InputBox *inputbox_fullname;
-
-	CL_InputBox *inputbox_username;
-
-	CL_InputBox *inputbox_password;
-
-	CL_Button *button_ok;
-
-	CL_Button *button_cancel;
+	CL_PushButton *button_ok;
+	CL_PushButton *button_cancel;
 
 	CL_SlotContainer slots;
 };
-
-#endif

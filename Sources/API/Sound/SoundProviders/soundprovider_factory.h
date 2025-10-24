@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,60 +24,59 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Sound Providers"
-//! header=sound.h
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
-#ifndef header_soundprovider_factory
-#define header_soundprovider_factory
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_sound.h"
 #include <map>
-#include <string>
 
 class CL_SoundProvider;
 class CL_InputSourceProvider;
 class CL_SoundProviderType;
+class CL_VirtualDirectory;
 
-//: Sound Provider Factor class.
-//- !group=Sound/Sound Providers!
-//- !header=sound.h!
+/// \brief Sound Provider Factor class.
+///
+/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundProviderFactory
 {
-//! Attributes:
-public:
-	//: Map of the class factories for each sound provider type.
-	static std::map<std::string, CL_SoundProviderType *> types;
+/// \name Attributes
+/// \{
 
-//! Operations:
 public:
-	//: Loads an sample file from 'filename', using the provider
-	//: identified by 'type'.
-	//- <p>If the type is an empty string, it
-	//- uses the extension of the filename to determine what type
-	//- it is.</p>
-	//- <p>The input provider will be used as a the source for filename,
-	//- if specified.</p>
+	/// \brief Map of the class factories for each sound provider type.
+	static std::map<CL_String, CL_SoundProviderType *> types;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief Loads an sample file from 'filename', using the provider
+	/// \brief identified by 'type'.
+	/** <p>If the type is an empty string, it
+	    uses the extension of the filename to determine what type
+	    it is.</p>
+	    <p>The input provider will be used as a the source for filename,
+	    if specified.</p>*/
 	static CL_SoundProvider *load(
-		const std::string &filename,
-		bool streamed = false,
-		const std::string &type = "",
-		CL_InputSourceProvider *input_provider = 0);
+		const CL_String &filename,
+		bool streamed,
+		const CL_String &type,
+		CL_VirtualDirectory directory);
+/// \}
 };
 
-#endif
+
+/// \}

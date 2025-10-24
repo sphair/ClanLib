@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,17 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/xml_writer.h"
-#include "API/Core/XML/xml_token_save.h"
-#include "API/Core/System/clanstring.h"
+#include "API/Core/XML/xml_token.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 #include "xml_writer_generic.h"
-
-//static std::string insert_escapes(std::string str);
-static std::string insert_escapes_fast(std::string str);
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLWriter construction:
@@ -47,10 +44,11 @@ CL_XMLWriter::CL_XMLWriter(const CL_XMLWriter &copy) : impl(copy.impl)
 {
 }
 
-CL_XMLWriter::CL_XMLWriter(CL_OutputSource *output, bool delete_output) : impl(new CL_XMLWriter_Generic)
+CL_XMLWriter::CL_XMLWriter(CL_IODevice &output) : impl(new CL_XMLWriter_Generic)
 {
 	impl->output = output;
-	impl->delete_output = delete_output;
+	impl->str.reserve(4096);
+	impl->escaped_string.reserve(4096);
 }
 
 CL_XMLWriter::~CL_XMLWriter()
@@ -73,49 +71,73 @@ void CL_XMLWriter::set_insert_whitespace(bool enable)
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLWriter operations:
 
-void CL_XMLWriter::write(const CL_XMLTokenSave &token)
+void CL_XMLWriter::write(const CL_XMLToken &token)
 {
 	if (!impl) return;
+	
+	// We are reusing a CL_String here to build up a capacity that fits
+	// all strings we write.
+	CL_String &str = impl->str;
+	str.clear();
 
-	std::string str;
-	switch (token.get_type())
+	if (token.variant == CL_XMLToken::END)
+	{
+		impl->indent--;
+	}
+
+	if (impl->insert_whitespace)
+	{
+		str.append(impl->indent, L'\t');
+	}
+
+	switch (token.type)
 	{
 	case CL_XMLToken::NULL_TOKEN:
 		return; // should this throw exception instead?
 		
 	case CL_XMLToken::ELEMENT_TOKEN:
-		if (token.get_variant() == CL_XMLToken::END)
+		if (token.variant == CL_XMLToken::END)
 		{
-			str = CL_String::format("</%1>", insert_escapes_fast(token.get_name()));
+			str.append(cl_text("</"));
+			str.append(impl->insert_escapes_fast(token.name));
+			str.append(cl_text(">"));
 		}
 		else
 		{
-			str = CL_String::format("<%1", insert_escapes_fast(token.get_name()));
+			str.append(cl_text("<"));
+			str.append(impl->insert_escapes_fast(token.name));
 
-			int size = token.get_attributes_number();
+			int size = (int) token.attributes.size();
 			for (int i=0; i<size; i++)
 			{
-				std::pair<std::string, std::string> attribute(token.get_attribute(i));
-				str.append(CL_String::format(" %1=\"%2\"", insert_escapes_fast(attribute.first), insert_escapes_fast(attribute.second)));
+				str.append(cl_text(" "));
+				str.append(token.attributes[i].first);
+				str.append(cl_text("=\""));
+				str.append(impl->insert_escapes_fast(token.attributes[i].second));
+				str.append(cl_text("\""));
 			}
 
-			if (token.get_variant() == CL_XMLToken::SINGLE)
-				str.append("/>");
+			if (token.variant == CL_XMLToken::SINGLE)
+				str.append(cl_text("/>"));
 			else
-				str.append(">");
+				str.append(cl_text(">"));
 		}
 		break;
 		
 	case CL_XMLToken::TEXT_TOKEN:
-		str = insert_escapes_fast(token.get_value());
+		str.append(impl->insert_escapes_fast(token.value));
 		break;
 		
 	case CL_XMLToken::CDATA_SECTION_TOKEN:
-		str = CL_String::format("<![CDATA[%1]]>", token.get_value());
+		str.append(cl_text("<![CDATA["));
+		str.append(token.value);
+		str.append(cl_text("]]>"));
 		break;
 
 	case CL_XMLToken::COMMENT_TOKEN:
-		str = CL_String::format("<!--%1-->", token.get_value());
+		str.append(cl_text("<!--"));
+		str.append(token.value);
+		str.append(cl_text("-->"));
 		break;
 
 	case CL_XMLToken::ENTITY_REFERENCE_TOKEN:
@@ -126,122 +148,63 @@ void CL_XMLWriter::write(const CL_XMLTokenSave &token)
 		return; // not implemented yet.
 	}
 
-	if (token.get_variant() == CL_XMLToken::END)
-	{
-		impl->indent--;
-	}
-
-	if (impl->insert_whitespace)
-	{
-		std::string indent_tabs(impl->indent, '\t');
-		impl->output->write(indent_tabs.data(), indent_tabs.size());
-	}
-
-	impl->output->write(str.data(), str.size());
-
 	if (impl->insert_whitespace)
 	{
 #ifdef WIN32
-		impl->output->write("\r\n", 2);
+		str.append(cl_text("\r\n"));
 #else
-		impl->output->write("\n", 1);
+		str.append(cl_text("\n"));
 #endif
 	}
 
-	if (token.get_variant() == CL_XMLToken::BEGIN)
+	if (token.variant == CL_XMLToken::BEGIN)
 	{
 		impl->indent++;
 	}
+
+#ifdef UNICODE
+	CL_String8 utf8 = CL_StringHelp::text_to_utf8(str);
+	impl->output.send(utf8.data(), utf8.size());
+#else
+	impl->output.send(str.data(), str.size());
+#endif
 }
 	
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLWriter implementation:
 
-#if 0
-static std::string insert_escapes(std::string str)
+CL_StringRef CL_XMLWriter_Generic::insert_escapes_fast(const CL_StringRef &str)
 {
-	std::string::size_type pos;
+	static CL_StringRef const amp(cl_text("&amp;"));
+	static CL_StringRef const quot(cl_text("&quot;"));
+	static CL_StringRef const apos(cl_text("&apos;"));
+	static CL_StringRef const lt(cl_text("&lt;"));
+	static CL_StringRef const gt(cl_text("&gt;"));
 
-	pos = 0;
-	while (pos != std::string::npos)
+	escaped_string = str;
+	CL_StringRef::size_type pos = 0;
+	while (pos < escaped_string.size())
 	{
-		pos = str.find("&", pos);
-		if (pos == std::string::npos) break;
-		str.replace( pos, 1, "&amp;" );
-		pos++;
-	}
-	
-	pos = 0;
-	while (pos != std::string::npos)
-	{
-		pos = str.find("\"", pos);
-		if (pos == std::string::npos) break;
-		str.replace( pos, 1, "&quot;" );
-		pos++;
-	}
-
-	pos = 0;
-	while (pos != std::string::npos)
-	{
-		pos = str.find("\'", pos);
-		if (pos == std::string::npos) break;
-		str.replace( pos, 1, "&apos;" );
-		pos++;
-	}
-
-	pos = 0;
-	while (pos != std::string::npos)
-	{
-		pos = str.find("<", pos);
-		if (pos == std::string::npos) break;
-		str.replace( pos, 1, "&lt;" );
-		pos++;
-	}
-
-	pos = 0;
-	while (pos != std::string::npos)
-	{
-		pos = str.find(">", pos);
-		if (pos == std::string::npos) break;
-		str.replace( pos, 1, "&gt;" );
-		pos++;
-	}
-
-	return str;
-}
-#endif 
-
-static std::string insert_escapes_fast(std::string str)
-{
-	static std::string const amp("&amp;");
-	static std::string const quot("&quot;");
-	static std::string const apos("&apos;");
-	static std::string const lt("&lt;");
-	static std::string const gt("&gt;");
-
-	std::string::size_type pos = 0;
-	while (pos < str.size())
-	{
-		switch(str[pos])
+		switch(escaped_string[pos])
 		{
-		case '&':
-			str.replace(pos, 1, amp);
+		case cl_text('&'):
+			escaped_string.replace(pos, 1, amp);
 			pos += amp.size();
 			break;
-		case '\'':
-			str.replace(pos, 1, apos);
+		case cl_text('\''):
+			escaped_string.replace(pos, 1, apos);
 			pos += apos.size();
 			break;
-		case '\"':
-			str.replace(pos, 1, quot);
+		case cl_text('\"'):
+			escaped_string.replace(pos, 1, quot);
 			pos += quot.size();
 			break;
-		case '<':
-			str.replace(pos, 1, lt);
+		case cl_text('<'):
+			escaped_string.replace(pos, 1, lt);
 			pos += lt.size();
 			break;
-		case '>':
-			str.replace(pos, 1, gt);
+		case cl_text('>'):
+			escaped_string.replace(pos, 1, gt);
 			pos += gt.size();
 			break;
 		default:
@@ -249,5 +212,5 @@ static std::string insert_escapes_fast(std::string str)
 			break;
 		}
 	}
-	return str;
+	return escaped_string;
 }

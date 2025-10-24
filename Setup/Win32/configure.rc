@@ -106,8 +106,7 @@ STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "ClanLib Setup Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Please specify the include and library directories where libs used by ClanLib are installed:\n(jpeg, png, zlib and then possibly any of the add-on libs supported)",
-                    IDC_STATIC,8,7,290,19
+    LTEXT           "Please specify the include and library directories where libs used by ClanLib are installed:\n(jpeg, png, zlib and then possibly any of the add-on libs supported)",IDC_STATIC,8,7,290,19
     LTEXT           "Library directory:",IDC_STATIC,8,34,147,9
     EDITTEXT        IDC_INPUT_LIB,7,46,262,12,ES_AUTOHSCROLL
     PUSHBUTTON      "Browse",IDC_INPUT_LIB_BROWSE,273,45,37,15
@@ -129,8 +128,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "ClanLib Setup Wizard"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Please enter where ClanLib should be installed:",
-                    IDC_STATIC,7,7,303,11
+    LTEXT           "Please enter where ClanLib should be installed:",IDC_STATIC,7,7,303,11
     LTEXT           "Library directory:",IDC_STATIC,7,24,147,9
     EDITTEXT        IDC_OUTPUT_LIB,7,34,262,12,ES_AUTOHSCROLL
     PUSHBUTTON      "Browse",IDC_OUTPUT_LIB_BROWSE,273,33,37,15
@@ -139,22 +137,22 @@ BEGIN
     PUSHBUTTON      "Browse",IDC_OUTPUT_INCLUDE_BROWSE,273,66,37,15
 END
 
-IDD_TARGET_PAGE DIALOGEX 0, 0, 317, 143
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
+IDD_TARGET_PAGE DIALOGEX 0, 0, 317, 168
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "ClanLib Setup Wizard"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "Select the development environment to generate project files for:",
-                    IDC_STATIC,7,7,303,8
-    CONTROL         "Visual &C++ 6.0",IDC_RADIO_VC60,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP,16,21,64,10
-    CONTROL         "Visual C++ .NET 200&2 (7.0)",IDC_RADIO_VC70,"Button",
-                    BS_AUTORADIOBUTTON,16,34,105,10
-    CONTROL         "Visual C++ .NET 200&3 (7.1)",IDC_RADIO_VC71,"Button",
-                    BS_AUTORADIOBUTTON,16,47,105,10
-    CONTROL         "Visual C++ .NET 200&5 (8.0)",IDC_RADIO_VC80,"Button",
-                    BS_AUTORADIOBUTTON | NOT WS_VISIBLE,16,60,105,10
+    LTEXT           "Select the development environment to generate project files for:",IDC_STATIC,7,7,303,8
+    CONTROL         "Visual &C++ 6.0",IDC_RADIO_VC60,"Button",BS_AUTORADIOBUTTON | WS_GROUP,16,21,64,10
+    CONTROL         "Visual C++ .NET 200&2 (7.0)",IDC_RADIO_VC70,"Button",BS_AUTORADIOBUTTON,16,34,105,10
+    CONTROL         "Visual C++ .NET 200&3 (7.1)",IDC_RADIO_VC71,"Button",BS_AUTORADIOBUTTON,16,47,105,10
+    CONTROL         "Visual C++ .NET 200&5 (8.0)",IDC_RADIO_VC80,"Button",BS_AUTORADIOBUTTON,16,60,105,10
+    CONTROL         "Include Unicode configurations",IDC_CHECK_INCLUDE_UNICODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,103,173,10
+    CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,131,173,10
+    CONTROL         "Include static libraries using DLL runtime configurations",IDC_CHECK_INCLUDE_MTDLL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,117,188,10
+    CONTROL         "Include DLL library configurations",IDC_CHECK_INCLUDE_DLL,"Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_DISABLED | WS_TABSTOP,27,131,173,10
+    CONTROL         "Visual C++ .NET 200&8 (9.0)",IDC_RADIO_VC90,"Button",BS_AUTORADIOBUTTON,16,74,105,10
+    CHECKBOX        "Include Non-Unicode configurations",IDC_CHECK_INCLUDE_NONUNICODE,27,89,173,10,WS_DISABLED
 END
 
 
@@ -203,7 +201,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 310
         TOPMARGIN, 7
-        BOTTOMMARGIN, 136
+        BOTTOMMARGIN, 161
     END
 END
 #endif    // APSTUDIO_INVOKED

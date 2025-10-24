@@ -20,89 +20,89 @@ int main(int argc, char **argv)
 {
 	FILE *file = fopen("Makefile", "wb");
 	writestr("all: ", file);
-	writestr("clanSignals ", file);
+//	writestr("clanSignals ", file);
 	writestr("clanCore ", file);
 	writestr("clanApp ", file);
 	writestr("clanNetwork ", file);
 	writestr("clanDisplay ", file);
 	writestr("clanGL ", file);
-	writestr("clanSDL ", file);
+	// writestr("clanSDL ", file);
 	writestr("clanSound ", file);
 	writestr("clanMikMod ", file);
 	writestr("clanVorbis ", file);
 	writestr("clanGUI ", file);
-	writestr("clanGUIStyleSilver ", file);
+	// writestr("clanGUIStyleSilver ", file);
 	writestr("ClanLib\n", file);
 	writestr("\t@echo Build complete!\n\n", file);
-
+/*
 	std::vector<std::string> signalsDeps;
 	std::string signalsLinkExtra;
 	create_project_targets(file, "clanSignals", scan_dir("Sources/Signals", true), scan_dir("Sources/API", true), signalsDeps, signalsLinkExtra);
-	
+*/	
 	std::vector<std::string> coreDeps;
 	std::string coreLinkExtra = "-lz -lpthread -framework Carbon";
-	coreDeps.push_back("clanSignals");
+//	coreDeps.push_back("clanSignals");
 	create_project_targets(file, "clanCore", scan_dir("Sources/Core", true), scan_dir("Sources/API", true), coreDeps, coreLinkExtra);
 
 	std::vector<std::string> appDeps;
 	std::string appLinkExtra;
 	appDeps.push_back("clanCore");
-	appDeps.push_back("clanSignals");
+//	appDeps.push_back("clanSignals");
 	create_project_targets(file, "clanApp", scan_dir("Sources/Application", true), scan_dir("Sources/API", true), appDeps, appLinkExtra);
 
 	std::vector<std::string> networkDeps;
 	std::string networkLinkExtra;
-	networkDeps.push_back("clanSignals");
+//	networkDeps.push_back("clanSignals");
 	networkDeps.push_back("clanCore");
 	create_project_targets(file, "clanNetwork", scan_dir("Sources/Network", true), scan_dir("Sources/API", true), networkDeps, networkLinkExtra);
 
 	std::vector<std::string> displayDeps;
 	std::string displayLinkExtra = "-lpng -ljpeg";
-	displayDeps.push_back("clanSignals");
+//	displayDeps.push_back("clanSignals");
 	displayDeps.push_back("clanCore");
 	create_project_targets(file, "clanDisplay", scan_dir("Sources/Display", true), scan_dir("Sources/API", true), displayDeps, displayLinkExtra);
 
 	std::vector<std::string> glDeps;
 	std::string glLinkExtra = "-framework OpenGL -framework AGL -framework Carbon";
-	glDeps.push_back("clanSignals");
+//	glDeps.push_back("clanSignals");
 	glDeps.push_back("clanCore");
 	glDeps.push_back("clanDisplay");
 	create_project_targets(file, "clanGL", scan_dir("Sources/GL", true), scan_dir("Sources/API", true), glDeps, glLinkExtra);
-
+/*
 	std::vector<std::string> sdlDeps;
 	std::string sdlLinkExtra = "-lsdl -lobjc";
 	sdlDeps.push_back("clanSignals");
 	sdlDeps.push_back("clanCore");
 	sdlDeps.push_back("clanDisplay");
 	create_project_targets(file, "clanSDL", scan_dir("Sources/SDL", true), scan_dir("Sources/API", true), sdlDeps, sdlLinkExtra);
-
+*/
 	std::vector<std::string> soundDeps;
 	std::string soundLinkExtra = "-framework CoreAudio";
-	soundDeps.push_back("clanSignals");
+//	soundDeps.push_back("clanSignals");
 	soundDeps.push_back("clanCore");
 	create_project_targets(file, "clanSound", scan_dir("Sources/Sound", true), scan_dir("Sources/API", true), soundDeps, soundLinkExtra);
 
 	std::vector<std::string> mikmodDeps;
 	std::string mikmodLinkExtra = "-lmikmod";
-	mikmodDeps.push_back("clanSignals");
+//	mikmodDeps.push_back("clanSignals");
 	mikmodDeps.push_back("clanCore");
 	mikmodDeps.push_back("clanSound");
 	create_project_targets(file, "clanMikMod", scan_dir("Sources/MikMod", true), scan_dir("Sources/API", true), mikmodDeps, mikmodLinkExtra);
 
 	std::vector<std::string> vorbisDeps;
 	std::string vorbisLinkExtra = "-logg -lvorbis";
-	vorbisDeps.push_back("clanSignals");
+//	vorbisDeps.push_back("clanSignals");
 	vorbisDeps.push_back("clanCore");
 	vorbisDeps.push_back("clanSound");
 	create_project_targets(file, "clanVorbis", scan_dir("Sources/Vorbis", true), scan_dir("Sources/API", true), vorbisDeps, vorbisLinkExtra);
 
 	std::vector<std::string> GUIDeps;
 	std::string GUILinkExtra;
-	GUIDeps.push_back("clanSignals");
+//	GUIDeps.push_back("clanSignals");
 	GUIDeps.push_back("clanCore");
 	GUIDeps.push_back("clanDisplay");
 	create_project_targets(file, "clanGUI", scan_dir("Sources/GUI", true), scan_dir("Sources/API", true), GUIDeps, GUILinkExtra);
-
+/*
 	std::vector<std::string> GUIStyleSilverDeps;
 	std::string GUIStyleSilverLinkExtra;
 	GUIStyleSilverDeps.push_back("clanSignals");
@@ -110,18 +110,18 @@ int main(int argc, char **argv)
 	GUIStyleSilverDeps.push_back("clanDisplay");
 	GUIStyleSilverDeps.push_back("clanGUI");
 	create_project_targets(file, "clanGUIStyleSilver", scan_dir("Sources/GUIStyleSilver", true), scan_dir("Sources/API", true), GUIStyleSilverDeps, GUIStyleSilverLinkExtra);
-
+*/
 	std::vector<std::string> umbrellaDeps;
-	umbrellaDeps.push_back("clanSignals");
+//	umbrellaDeps.push_back("clanSignals");
 	umbrellaDeps.push_back("clanCore");
 	umbrellaDeps.push_back("clanDisplay");
 	umbrellaDeps.push_back("clanGUI");
-	umbrellaDeps.push_back("clanGUIStyleSilver");
+//	umbrellaDeps.push_back("clanGUIStyleSilver");
 	umbrellaDeps.push_back("clanSound");
 	umbrellaDeps.push_back("clanApp");
 	umbrellaDeps.push_back("clanNetwork");
 	umbrellaDeps.push_back("clanGL");
-	umbrellaDeps.push_back("clanSDL");
+//	umbrellaDeps.push_back("clanSDL");
 	umbrellaDeps.push_back("clanVorbis");
 	umbrellaDeps.push_back("clanMikMod");
 	create_umbrella_project(file, scan_dir("Sources/API", true), umbrellaDeps);
@@ -218,7 +218,7 @@ void create_umbrella_project(FILE *file, std::vector<std::string> headers, const
 
 	writestr("ClanLib : Setup/OSX/clanlib.cpp\n", file);
 	
-	std::string clversion = "0.8.0";
+	std::string clversion = "0.9.0";
 	std::string bundle = "Frameworks/ClanLib.framework";
 	std::string version = bundle+"/Versions/"+clversion;
 	writestr("\t@install -d "+version+"\n", file);
@@ -285,7 +285,7 @@ void create_project_targets(
 
 	write_project_resources(project);
 	
-	std::string version = "0.8.0";
+	std::string version = "0.9.0";
 //	std::string bundle = "$(HOME)/Library/Frameworks/ClanLib.framework";
 	std::string subbundle = "Frameworks/"+project+".framework";
 	std::string subversion = subbundle+"/Versions/"+version;
@@ -354,7 +354,7 @@ void write_project_resources(const std::string &project)
 	std::string bundle_info_dictionary_version = "6.0";
 	std::string bundle_package_type = "FMWK";
 	std::string bundle_signature = "????";
-	std::string bundle_version = "0.8.0";
+	std::string bundle_version = "0.9.0";
 	bool resources_file_mapped = true;
 
 	FILE *file = fopen(std::string(project+"-Info.plist").c_str(), "wb");
@@ -400,10 +400,10 @@ ClanLib.framework/Frameworks/ClanCore.framework/ClanCore
 ClanLib.framework/Frameworks/ClanCore.framework/Headers
 ClanLib.framework/Frameworks/ClanCore.framework/Resources
 ClanLib.framework/Frameworks/ClanCore.framework/Versions
-ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.8.0
-ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.8.0/ClanCore
-ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.8.0/Headers
-ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.8.0/Resources
+ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.9.0
+ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.9.0/ClanCore
+ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.9.0/Headers
+ClanLib.framework/Frameworks/ClanCore.framework/Versions/0.9.0/Resources
 ClanLib.framework/Frameworks/ClanCore.framework/Versions/Current
 ClanLib.framework/Frameworks/ClanDisplay.framework
 ClanLib.framework/Frameworks/ClanGL.framework
@@ -419,9 +419,9 @@ ClanLib.framework/Headers
 ClanLib.framework/Resources
 ClanLib.framework/Umbrella
 ClanLib.framework/Versions
-ClanLib.framework/Versions/0.8.0
-ClanLib.framework/Versions/0.8.0/Headers
-ClanLib.framework/Versions/0.8.0/Resources
-ClanLib.framework/Versions/0.8.0/Umbrella
+ClanLib.framework/Versions/0.9.0
+ClanLib.framework/Versions/0.9.0/Headers
+ClanLib.framework/Versions/0.9.0/Resources
+ClanLib.framework/Versions/0.9.0/Umbrella
 ClanLib.framework/Versions/Current
 */

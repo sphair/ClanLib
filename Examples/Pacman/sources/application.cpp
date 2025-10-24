@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,30 +30,52 @@
 #include "precomp.h"
 #include "application.h"
 #include "world.h"
+#include <ClanLib/gdi.h>
 
-Application app;
+// This is the Program class that is called by CL_ClanApplication
+class Program
+{
+public:
+	static int main(const std::vector<CL_String> &args)
+	{
+		// Initialize ClanLib base components
+		CL_SetupCore setup_core;
 
-int Application::main(int argc, char** argv)
+		// Initialize the ClanLib display component
+		CL_SetupDisplay setup_display;
+
+		// Initilize the OpenGL drivers
+		CL_SetupGL setup_gl;
+		//CL_SetupGDI setup_gl;
+
+//		CL_SetupSound setup_sound;
+//		CL_SetupMikMod setup_mikmod;
+
+		// Start the Application
+		Application app;
+		int retval = app.main(args);
+		return retval;
+	}
+};
+
+// Instantiate CL_ClanApplication, informing it where the Program is located
+CL_ClanApplication app(&Program::main);
+
+int Application::main(const std::vector<CL_String> &args)
 {
 	CL_ConsoleWindow console("Debug console window", 80, 25);
-	console.redirect_stdio();
 
 	try
 	{
-		std::cout << "ClanLib Pacman game, written by Magnus Norddahl" << std::endl;
+		CL_Console::write("ClanLib Pacman game, written by Magnus Norddahl\n");
 		
-		CL_SetupCore setup_core;
-		CL_SetupDisplay setup_display;
-		CL_SetupGL setup_gl;
-		CL_SetupSound setup_sound;
-		CL_SetupMikMod setup_mikmod;
+		//CL_SoundOutput sound_output(44100);
+		CL_DisplayWindow window("The ClanLib Pacman game!", 640, 480, false, true);
 
-		CL_SoundOutput sound_output(44100);
-		CL_DisplayWindow window("The ClanLib Pacman game!", 640, 480, false);
+		CL_ResourceManager resources;
+		resources.load("pacman.xml");
 
-		CL_ResourceManager resources("pacman.xml");
-
-		World world(&resources);
+		World world(&resources, window);
 
 		// Connect the Window close event
 		CL_Slot slot_quit = window.sig_window_close().connect(&world, &World::on_quit);
@@ -61,11 +83,13 @@ int Application::main(int argc, char** argv)
 		// Enter the amazing pacman world
 		world.run(window);
 	}
-	catch (CL_Error err)
+	catch(CL_Exception& exception)
 	{
-		std::cout << "Exeception caught: " << err.message.c_str() << std::endl;
-		console.wait_for_key();
+		CL_Console::write_line(exception.message);
+		console.display_close_message();
+		return -1;
 	}
 	
+	console.display_close_message();
 	return 0;
 }

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -25,22 +25,22 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_outline_accuracy
-#define header_outline_accuracy
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: Outline optimization accuracy.
-//- !group=Display/Collision!
-//- !header=display.h!
+/// \brief Outline optimization accuracy.
+///
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 enum CL_OutlineAccuracy
 {
 	accuracy_raw,
@@ -50,4 +50,5 @@ enum CL_OutlineAccuracy
 	accuracy_poor
 };
 
-#endif
+
+/// \}

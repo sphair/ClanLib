@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,64 +24,73 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_outline_triangulator
-#define header_outline_triangulator
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
 
 class CL_OutlineTriangulator_Generic;
 
-//: Polygon Tesselator.
-//- <p>This class uses constrained delauney triangulation to convert polygon outlines into triangles.</p>
+/// \brief Polygon Tesselator.
+///
+/// This class uses constrained delauney triangulation to convert polygon outlines into triangles.
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE CL_OutlineTriangulator
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Creates a tessellation object.
+	/// \brief Creates a tessellation object.
 	CL_OutlineTriangulator();
 
 	virtual ~CL_OutlineTriangulator();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 
-//! Operations:
-public:
-	//: This function specifies a vertex on a polygon.
-	void add_vertex(double x, double y, void *data);
 
-	//: Mark next contour in polygon path.
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief This function specifies a vertex on a polygon.
+	void add_vertex(float x, float y, void *data);
+
+	/// \brief Mark next contour in polygon path.
 	void next_contour();
 
-	//: Mark next polygon.
+	/// \brief Mark next polygon.
 	void next_polygon();
 
-	//: Converts passed polygons into triangles.
+	/// \brief Converts passed polygons into triangles.
 	void generate();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SharedPtr<CL_OutlineTriangulator_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

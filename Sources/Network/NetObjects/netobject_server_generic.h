@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,58 +24,64 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_netobject_server_generic
-#define header_netobject_server_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "API/signals.h"
+#include "API/Core/Signals/signal_v2.h"
 #include <map>
+
 class CL_NetComputer;
-class CL_NetPacket;
+class CL_DataBuffer;
 class CL_NetGroup;
 class CL_NetObject_Controller_Generic;
 
 class CL_NetObject_Server_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_NetObject_Server_Generic(CL_NetObject_Controller_Generic *controller);
 
 	~CL_NetObject_Server_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	int obj_id;
 
 	CL_NetObject_Controller_Generic *controller;
 
-	std::map< int, CL_Signal_v2<CL_NetComputer &, CL_NetPacket &> > sig_received_message;
+	std::map< int, CL_Signal_v2<CL_NetComputer &, CL_DataBuffer &> > sig_received_message;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	void receive(int msg_type, CL_NetComputer &from, CL_NetPacket &packet);
+	void receive(int msg_type, CL_NetComputer &from, CL_DataBuffer &packet);
 
-	void send(CL_NetGroup &group, int msg_type, const CL_NetPacket &message, bool reliable);
-	void send(CL_NetComputer &computer, int msg_type, const CL_NetPacket &message, bool reliable);
+	void send(CL_NetGroup &group, int msg_type, const CL_DataBuffer &message);
 
-	int add_ref() { return ++ref_count; }
+	void send(CL_NetComputer &computer, int msg_type, const CL_DataBuffer &message);
 
-	int release_ref()
-	{
-		ref_count--;
-		if (ref_count == 0) { delete this; return 0; }
-		return ref_count;
-	}
 
-//! Implementation:
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	int ref_count;
+/// \}
 };
 
-#endif
+

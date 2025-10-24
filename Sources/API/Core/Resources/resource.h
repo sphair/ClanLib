@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,102 +24,95 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="Resources"
-//! header=core.h
+/// \addtogroup clanCore_Resources clanCore Resources
+/// \{
 
-#ifndef header_resource
-#define header_resource
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
+
+#include "../api_core.h"
+#include "../Resources/resource_manager.h"
 #include "../System/sharedptr.h"
-#include "../../signals.h"
-#include <string>
+#include "../Text/string_types.h"
 
+class CL_DomElement;
 class CL_ResourceManager;
-class CL_ResourceData;
-class CL_Resource_Generic;
+class CL_Resource_Impl;
 
-#include "../XML/dom_element.h"
-
-//: Interface for accessing a resource in the resource manager.
-//- !group=Core/Resources!
-//- !header=core.h!
+/// \brief Resource Manager resource.
+///
+/// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
 class CL_API_CORE CL_Resource
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Resource constructor.
-	CL_Resource(
-		CL_DomElement &element,
-		CL_ResourceManager *manager);
-
-	CL_Resource(const CL_Resource &copy);
-
 	CL_Resource();
 
-	//: Resource destructor.
-	virtual ~CL_Resource();
+	~CL_Resource();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the type of the resource.
-	std::string get_type() const;
+	/// \brief Returns the resource type.
+	CL_String get_type() const;
 
-	//: Returns the name of the resource.
-	std::string get_name() const;
+	/// \brief Returns the name of the resource.
+	CL_String get_name() const;
 
-	//: Returns the resource DOM element.
+	/// \brief Returns the DOM element describing the resource.
 	CL_DomElement &get_element();
 
-	//: Returns the resource manager.
+	/// \brief Returns the resource manager owning the resource.
 	CL_ResourceManager get_manager();
 
-	//: Returns the data with the matching name.
-	CL_ResourceData *get_data(const std::string &name);
+	/// \brief Returns the object stored in the given data name.
+	CL_UnknownSharedPtr get_data(const CL_String &data_name);
 
-	//: Returns the current reference count.
-	int get_reference_count() const;
+	/// \brief Returns the number of CL_ResourceDataSession objects using this resource.
+	int get_data_session_count(const CL_String &data_name);
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Attach some data to the resource.
-	void attach_data(const std::string &name, CL_ResourceData *data);
+	/// \brief Compares this resource to another resource.
+	bool operator ==(const CL_Resource &other) const;
 
-	//: Detach some data from the resource.
-	void detach_data(CL_ResourceData *data);
+	/// \brief Store object in resource.
+	void set_data(const CL_String &data_name, const CL_UnknownSharedPtr &ptr);
 
-	//: Unloads the resource from memory.
-	void unload();
+	/// \brief Remove object stored with the given data name.
+	void clear_data(const CL_String &data_name);
 
-	//: Loads the resource, using the prefered source as specified by
-	//: the resource manager.
-	void load();
+	/// \brief Increment the usage session count for the resource.
+	int add_data_session(const CL_String &data_name);
 
-//! Implementation:
+	/// \brief Decrement the usage session count for the resource.
+	int remove_data_session(const CL_String &data_name);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_Resource(const CL_SharedPtr<CL_Resource_Generic> &impl);
+	CL_Resource(CL_DomElement element, CL_ResourceManager &resource_manager);
 
-	//: Pointer to implementation
-	CL_SharedPtr<CL_Resource_Generic> impl;
+	CL_SharedPtr<CL_Resource_Impl> impl;
 
-	friend class CL_ResourceData;
-	friend class CL_ResourceManager_Generic;
+	friend class CL_ResourceManager;
+/// \}
 };
 
-#endif
+
+/// \}

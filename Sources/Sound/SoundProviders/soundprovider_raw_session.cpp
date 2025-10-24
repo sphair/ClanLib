@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,14 +24,12 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundprovider_raw_session.h"
 #include "soundprovider_raw_generic.h"
 #include "API/Sound/soundformat.h"
-#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Raw_Session construction:
@@ -69,7 +67,7 @@ CL_SoundFormat CL_SoundProvider_Raw_Session::get_format() const
 		return sf_16bit_signed;
 
 	default:
-		throw CL_Error("Unsupported sample format");
+		throw CL_Exception(cl_text("Unsupported sample format"));
 	}
 }
 

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,42 +24,34 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_soundprovider
-#define header_soundprovider
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../Core/System/mutexsharedptr.h"
+#include "api_sound.h"
+#include "../Core/System/sharedptr.h"
 
 class CL_SoundProvider_Session;
 class CL_SoundProvider_Generic;
 
-//: Sound provider.
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
-//- <p>Interface to sound sources. Used by the CL_SoundBuffer class to
-//- start and stop playback.</p>
+/// \brief Sound provider.
+///
+/// Interface to sound sources. Used by the CL_SoundBuffer class to start and stop playback.
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundProvider
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_SoundProvider();
 
@@ -67,20 +59,30 @@ public:
 
 	virtual ~CL_SoundProvider();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called by CL_SoundBuffer when a new session starts.
-	//return: The soundbuffer session to be attached to the newly started session.
+	/// \brief Called by CL_SoundBuffer when a new session starts.
+	/** \return The soundbuffer session to be attached to the newly started session.*/
 	virtual CL_SoundProvider_Session *begin_session() = 0;
 
-	//: Called by CL_SoundBuffer when a session has finished. After this call,
-	//- <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
-	//- here (and in most cases should be delete here).</p>
+	/// \brief Called by CL_SoundBuffer when a session has finished. After this call,
+	/** <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
+	    here (and in most cases should be delete here).</p>*/
 	virtual void end_session(CL_SoundProvider_Session *session) = 0;
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_MutexSharedPtr<CL_SoundProvider_Generic> impl;
+	CL_SharedPtr<CL_SoundProvider_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

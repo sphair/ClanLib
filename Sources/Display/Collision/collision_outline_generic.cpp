@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,28 +27,26 @@
 **    Magnus Norddahl
 **    James Wynn
 **    Emanuel Greisen
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
+**    Trigve Siver
 */
 
-#include "Display/display_precomp.h"
-#include "API/Core/IOData/outputsource.h"
-#include "API/Core/IOData/outputsource_provider.h"
+#include "Display/precomp.h"
 #include "collision_outline_generic.h"
 #include "API/Display/Collision/collision_outline.h"
 #include "API/Display/Collision/outline_provider.h"
 #include "API/Display/Collision/outline_accuracy.h"
 #include "API/Display/Collision/outline_math.h"
+#include "API/Core/IOData/file.h"
 #include "API/Core/Math/line_math.h"
+#include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/circle.h"
 #include "API/Core/Math/pointset_math.h"
-#include "API/Core/Math/cl_vector.h"
-#include "API/Core/Math/vector2.h"
-#include "API/Core/IOData/outputsource_file.h"
-#include "API/Core/System/log.h"
+#include "API/Core/Math/vec3.h"
+#include "API/Core/Math/angle.h"
 #include <float.h>
+#include <iostream>
 
-template<typename T> inline T cl_min(T a, T b) { if(a < b) return a; return b; }
-template<typename T> inline T cl_max(T a, T b) { if(a > b) return a; return b; }
 template<typename T> inline T pow2(T a) { return a*a; }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -109,16 +107,16 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
 	switch( accuracy )
 	{
 	 case accuracy_high:
-		optimize(check_distance, float(M_PI/7.0f));
+		optimize(check_distance, CL_PI / 7.0f);
 		break;
 	 case accuracy_medium:
-		optimize(check_distance, float(M_PI/6.0f));
+		optimize(check_distance, CL_PI / 6.0f);
 		break;
 	 case accuracy_low:
-		optimize(check_distance, float(M_PI/5.0f));
+		optimize(check_distance, CL_PI / 5.0f);
 		break;
 	 case accuracy_poor:
-		optimize(check_distance, float(M_PI/4.0f));
+		optimize(check_distance, CL_PI / 4.0f);
 		break;
 	 case accuracy_raw:
 		break;
@@ -129,7 +127,6 @@ CL_CollisionOutline_Generic::CL_CollisionOutline_Generic(
 	calculate_radius();
 	calculate_sub_circles();
 }
-
 
 CL_CollisionOutline_Generic::~CL_CollisionOutline_Generic()
 {
@@ -158,80 +155,84 @@ void CL_CollisionOutline_Generic::set_translation(float x, float y, bool offset_
 	else
 		translation = (position - old_position);
 
-	std::vector<CL_Contour>::iterator it;
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_Pointf>::iterator ita;
-		for( ita = (*it).points.begin(); ita != (*it).points.end(); ++ita )
-			(*ita) += translation;
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
+		{
+			contour_ptr->points[inner_cnt] += translation;
+		}
 	}
 
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_OutlineCircle>::iterator ita;
-		for( ita = (*it).sub_circles.begin(); ita != (*it).sub_circles.end(); ++ita )
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			(*ita).position += translation;
+			contour_ptr->sub_circles[inner_cnt].position += translation;
 		}
 	}
 
 	minimum_enclosing_disc.position += translation;
 }
 
-void CL_CollisionOutline_Generic::rotate(float add_angle)
+void CL_CollisionOutline_Generic::rotate(const CL_Angle &add_angle)
 {
-	angle += add_angle;
+	angle += add_angle.to_degrees();
 
-	std::vector<CL_Contour>::iterator it;
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_Pointf>::iterator ita;
-		for( ita = (*it).points.begin(); ita != (*it).points.end(); ++ita )
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			(*ita) = (*ita).rotate(position+rotation_hotspot, add_angle);
+			contour_ptr->points[inner_cnt].rotate(position+rotation_hotspot, add_angle);
 		}
 	}
 
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_OutlineCircle>::iterator ita;
-		for( ita = (*it).sub_circles.begin(); ita != (*it).sub_circles.end(); ++ita )
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
 		{
-			(*ita).position = (*ita).position.rotate(position+rotation_hotspot, add_angle);
+			contour_ptr->sub_circles[inner_cnt].position.rotate(position+rotation_hotspot, add_angle);
 		}
 	}
 
 	// Rotate our "radius" too
-	minimum_enclosing_disc.position = minimum_enclosing_disc.position.rotate(position+rotation_hotspot, add_angle);
+	minimum_enclosing_disc.position.rotate(position+rotation_hotspot, add_angle);
 }
 
-void CL_CollisionOutline_Generic::set_angle(float angle)
+void CL_CollisionOutline_Generic::set_angle(const CL_Angle &angle)
 {
-	float rotate_angle = angle - this->angle;
-	this->angle = angle;
+	float rotate_angle = angle.to_degrees() - this->angle;
+	this->angle = angle.to_degrees();
 
-	std::vector<CL_Contour>::iterator it;
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_Pointf>::iterator ita;
-		for( ita = (*it).points.begin(); ita != (*it).points.end(); ++ita )
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			(*ita) = (*ita).rotate(position+rotation_hotspot, rotate_angle);
+			contour_ptr->points[inner_cnt].rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
 		}
 	}
 
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_OutlineCircle>::iterator ita;
-		for( ita = (*it).sub_circles.begin(); ita != (*it).sub_circles.end(); ++ita )
-		{	
-			(*ita).position = (*ita).position.rotate(position+rotation_hotspot, rotate_angle);
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->sub_circles.size();
+		for (int inner_cnt = 0; inner_cnt < sub_circles_size; inner_cnt++)
+		{
+			contour_ptr->sub_circles[inner_cnt].position.rotate(position+rotation_hotspot, CL_Angle(rotate_angle, cl_degrees));
 		}
 	}
 
 	// Rotate our "radius" too
-	minimum_enclosing_disc.position = minimum_enclosing_disc.position.rotate(position+rotation_hotspot, rotate_angle);
-	
+	minimum_enclosing_disc.position.rotate(position+rotation_hotspot, CL_Angle(rotate_angle,cl_degrees));
 }
 
 void CL_CollisionOutline_Generic::set_scale(float new_scale_x, float new_scale_y)
@@ -245,14 +246,14 @@ void CL_CollisionOutline_Generic::set_scale(float new_scale_x, float new_scale_y
 	float scale_x = new_scale_x / scale_factor.x;
 	float scale_y = new_scale_y / scale_factor.y;
 	
-	std::vector<CL_Contour>::iterator it;
-	for( it = contours.begin(); it != contours.end(); ++it )
+	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
-		std::vector<CL_Pointf>::iterator ita;
-		for( ita = (*it).points.begin(); ita != (*it).points.end(); ++ita )
+		CL_Contour *contour_ptr = &contours[outer_cnt];
+		std::vector<CL_Pointf>::size_type point_size = contour_ptr->points.size();
+		for (int inner_cnt = 0; inner_cnt < point_size; inner_cnt++)
 		{
-			(*ita).x = position.x + (((*ita).x-position.x)*scale_x);
-			(*ita).y = position.y + (((*ita).y-position.y)*scale_y);
+			contour_ptr->points[inner_cnt].x = position.x + ((contour_ptr->points[inner_cnt].x-position.x)*scale_x);
+			contour_ptr->points[inner_cnt].y = position.y + ((contour_ptr->points[inner_cnt].y-position.y)*scale_y);
 		}
 	}
 	
@@ -275,7 +276,6 @@ void CL_CollisionOutline_Generic::set_scale(float new_scale_x, float new_scale_y
 	scale_factor.x = new_scale_x;
 	scale_factor.y = new_scale_y;
 }
-
 
 void CL_CollisionOutline_Generic::calculate_radius()
 {
@@ -312,12 +312,10 @@ void CL_CollisionOutline_Generic::calculate_sub_circles(float radius_multiplier)
 		(*it).sub_circles.clear();
 
 		const std::vector<CL_Pointf> &points = (*it).points;
+
 		// Test that we have at least 2 points
 		if(points.size() < 2)
-		{
-			CL_Log::log("ClanCollision", "Error: contour has less than 2 points");
-			continue;
-		}
+			throw CL_Exception(cl_text("Error: contour has less than 2 points"));
 
 		// sub_radius = average of line lenghts in the contour * 3.5
 		float sub_radius = 0.0f;
@@ -357,7 +355,7 @@ void CL_CollisionOutline_Generic::calculate_smallest_enclosing_discs()
 		CL_Circlef tmpdisc = CL_PointSetMath::minimum_enclosing_disc((*it).points);
 		CL_OutlineCircle mindisc;
 		mindisc.position = tmpdisc.position;
-		mindisc.radius = (float)tmpdisc.radius;
+		mindisc.radius = tmpdisc.radius;
 		mindisc.radius += 0.01f; // Just to make sure.
 		mindisc.start = 0;
 		mindisc.end   = (*it).points.size(); // This is actualy the first point, but this is how to start and end the same place
@@ -421,13 +419,13 @@ void CL_CollisionOutline_Generic::optimize(unsigned char check_distance, float c
 			CL_Pointf &B = points[i];
 			CL_Pointf &C = points[B_index];
 
-			CL_Vector AB(B.x-A.x, B.y-A.y);
-			CL_Vector BC(C.x-B.x, C.y-B.y);
+			CL_Vec4f AB(B.x-A.x, B.y-A.y);
+			CL_Vec4f BC(C.x-B.x, C.y-B.y);
 
-			if( check_distance != 1 && AB.norm() < 2 )
+			if( check_distance != 1 && AB.length3() < 2 )
 				continue;
 
-			float angle = AB.angle(BC);
+			float angle = AB.angle3(BC).to_radians(); // If things stopped working, it's because this should be degrees, not radians. Added when introducing CL_Angle. -- HS 12.12.2008
 			
 			if( angle > corner_angle )
 			{
@@ -439,7 +437,7 @@ void CL_CollisionOutline_Generic::optimize(unsigned char check_distance, float c
 	}
 }
 
-void CL_CollisionOutline_Generic::save(const std::string &filename, CL_OutputSourceProvider *provider) const
+void CL_CollisionOutline_Generic::save(const CL_StringRef &filename, CL_VirtualDirectory directory) const
 {
 /*	fileformat:
 
@@ -464,56 +462,47 @@ void CL_CollisionOutline_Generic::save(const std::string &filename, CL_OutputSou
 			... contour N data ...
 */
 
-/*	if( provider == 0 )
-		provider = new CL_OutputSourceProvider::open_source(".");
-	else
-		provider = _provider->clone();
-*/
-
-	CL_OutputSource *output_source = new CL_OutputSource_File(filename); // provider->open_source(filename);
-
-	// file type identifyer
-	output_source->write_uint32( 0x16082004 );
+	CL_IODevice output_source = CL_File(directory.get_path() + cl_text("/") + filename, CL_File::create_always);
+	
+	// file type identifier
+	output_source.write_uint32( 0x16082004 );
 
 	// fileformat version
-	output_source->write_uint8(1);
+	output_source.write_uint8(1);
 
 	// width
-	output_source->write_int32(width);
+	output_source.write_int32(width);
 
 	// height
-	output_source->write_int32(height);
+	output_source.write_int32(height);
 
 	// x-pos of enclosing disc
-	output_source->write_float32(minimum_enclosing_disc.position.x);
+	output_source.write_float((float)minimum_enclosing_disc.position.x);
+	
 	// y-pos of enclosing disc
-	output_source->write_float32(minimum_enclosing_disc.position.y);
+	output_source.write_float((float)minimum_enclosing_disc.position.y);
+
 	// radius of enclosing disc
-	output_source->write_float32(float(minimum_enclosing_disc.radius));
+	output_source.write_float((float)minimum_enclosing_disc.radius);
 	
 	// number of contours
-	output_source->write_uint32(contours.size());
+	output_source.write_uint32(contours.size());
 	
 	std::vector<CL_Contour>::const_iterator it_cont;
 	for( it_cont = contours.begin(); it_cont != contours.end(); ++it_cont )
 	{
 		// number of points in contours
-		output_source->write_uint32((*it_cont).points.size());
+		output_source.write_uint32((*it_cont).points.size());
 		
 		std::vector<CL_Pointf>::const_iterator it;
 		for( it = (*it_cont).points.begin(); it != (*it_cont).points.end(); ++it )
 		{
 			// x,y of points
-			output_source->write_float32((*it).x);
-			output_source->write_float32((*it).y);
+			output_source.write_float((float)(*it).x);
+			output_source.write_float((float)(*it).y);
 		}
 	}
-
-	output_source->close();
-
-	delete output_source;
 }
-
 
 bool CL_CollisionOutline_Generic::collide( const CL_CollisionOutline &outline, bool remove_old_collision_info)
 {
@@ -527,7 +516,6 @@ bool CL_CollisionOutline_Generic::collide( const CL_CollisionOutline &outline, b
 	
 	if( dist > (minimum_enclosing_disc.radius + outline.get_minimum_enclosing_disc().radius ))
 		return false;
-
 
 	bool any_collisions = false;
 	// collision sub circle test
@@ -615,11 +603,7 @@ bool CL_CollisionOutline_Generic::point_inside_contour( const CL_Pointf &point, 
 	if(contour.is_inside_contour)
 		return false;
 	
-	float lineX[4];
-	lineX[0] = point.x;
-	lineX[1] = point.y+0.000f;
-	lineX[2] = point.x+99999.0f; // contour.get_radius()*4;
-	lineX[3] = point.y+0.000f;
+	CL_LineSegment2f lineX( CL_Pointf(point.x, point.y+0.000f), CL_Pointf(point.x+99999.0f, point.y+0.000f) );
 
 	// collide the line with the outline.
 	int num_intersections_x = 0;
@@ -641,13 +625,9 @@ bool CL_CollisionOutline_Generic::point_inside_contour( const CL_Pointf &point, 
 		
 			for( unsigned int i=circle.start; i != circle.end; ++i )
 			{
-				float line2[4];
-				line2[0] = points[ i    % points.size()].x;
-				line2[1] = points[ i    % points.size()].y;
-				line2[2] = points[(i+1) % points.size()].x;
-				line2[3] = points[(i+1) % points.size()].y;
+				CL_LineSegment2f line2(points[ i    % points.size()], points[(i+1) % points.size()]);
 
-				if( CL_LineMath::intersects(lineX, line2, false) )
+				if( lineX.intersects(line2, false) )
 				{
 					num_intersections_x++;
 				}
@@ -709,19 +689,13 @@ bool CL_CollisionOutline_Generic::contours_collide(const CL_Contour &contour1, c
 						
 						if( line_bounding_box_overlap(points1, points2, i, j, i2, j2) )
 						{
-							float line1[4];
-							line1[0] = points1[i].x;
-							line1[1] = points1[i].y;
-							line1[2] = points1[i2].x;
-							line1[3] = points1[i2].y;
-							
-							float line2[4];
-							line2[0] = points2[j].x;
-							line2[1] = points2[j].y;
-							line2[2] = points2[j2].x;
-							line2[3] = points2[j2].y;
+							CL_LineSegment2f line1(points1[i], points1[i2]);
+							CL_LineSegment2f line2(points2[j], points2[j2]);
+							CL_Pointf dest_intercept;
 
-							if( CL_LineMath::intersects( line1, line2 ) )
+							bool did_intersect;
+							dest_intercept = line1.get_intersection( line2, did_intersect );
+							if( did_intersect )
 							{
 								if( collision_info_collect )
 								{
@@ -729,12 +703,12 @@ bool CL_CollisionOutline_Generic::contours_collide(const CL_Contour &contour1, c
 									
 									if ( collision_info_points )
 									{
-										collisionpoint.point = CL_LineMath::get_intersection(line1,line2);
+										collisionpoint.point = dest_intercept;
 									}
 									
 									if( collision_info_normals )
 									{
-										collisionpoint.normal = CL_LineMath::normal(line2);
+										collisionpoint.normal = line2.normal();
 									}
 									
 									if( collision_info_meta )
@@ -761,6 +735,7 @@ bool CL_CollisionOutline_Generic::contours_collide(const CL_Contour &contour1, c
 			}
 		}
 	}
+
 	if( collision_info_collect && metadata.points.size() > 0)
 	{
 		// Add this info
@@ -806,7 +781,7 @@ void CL_CollisionOutline_Generic::calculate_penetration_depth( std::vector< CL_C
 		}
 		// First calculate one common normal for the whole thing
 		// FIXME: oposing normals might generate (0,0) as normal, and that can not be right.
-		CL_Vector2 normal(0.0,0.0);
+		CL_Vec4f normal(0.0,0.0);
 		unsigned int cp;
 		for(cp = 0; cp < cc.points.size(); cp+=2)
 		{
@@ -821,7 +796,7 @@ void CL_CollisionOutline_Generic::calculate_penetration_depth( std::vector< CL_C
 			normal.x += -(p1.point - p2.point).y;
 			normal.y += (p1.point - p2.point).x;
 		}
-		normal.unitize();
+		normal.normalize3();
 		cc.penetration_normal = CL_Pointf(normal.x, normal.y);
 
 		// Now look at each and every overlapping region

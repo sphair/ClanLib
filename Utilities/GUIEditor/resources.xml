@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="MainMenuBg">
+    <image file="editor_bg.png" />
+  </image>
+</resources>

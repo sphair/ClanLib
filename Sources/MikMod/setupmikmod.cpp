@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,12 +31,7 @@
 #include "API/MikMod/soundprovider_mikmod.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/resource_manager.h"
-
-#ifdef __APPLE__
-#include <mikmod/mikmod.h>
-#else
 #include <mikmod.h>
-#endif
 
 static int ref_count = 0;
 

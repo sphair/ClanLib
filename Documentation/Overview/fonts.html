@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Sprites - ClanLib SDK</title>
+<link rel="stylesheet" media="screen" type="text/css" href="clanlib.css"/>
+<link rel="icon" href="gfx/favicon.png" type="image/png"/>
+</head>
+<body>
+<div id="content">
+<h1><a href="."><img src="gfx/clanlib.png" alt="ClanLib SDK" /></a></h1>
+<!--
+<div style="float: right;">
+<a href="download.html">Download</a> :
+<a href="docs.html">Documentation</a> :
+<a href="development.html">Development</a> :
+<a href="donations.html">Donations</a> :
+<a href="http://www.rtsoft.com/clanlib">Forum</a> :
+<a href="contributions.html">Contributions</a>
+</div>
+-->
+<h2>
+<img src="gfx/overview.png"/>Fonts
+</h2>
+
+<p>A Font is a collection of images that can be used to represent text on a screen.</p>
+
+<p>There are various font classes that you can use, each with it's own advantages and disadvantages</p>
+
+<li>Default Font</li>
+<p>
+The Default Font (provided by <codelink>CL_Font</codelink> ) uses the current ClanLib default font provider. Currently this is CL_Font_Bitmap
+</p>
+  
+<li>Native Font</li>
+<p>The Native Font (provided by <codelink>CL_Font_Native</codelink> ) uses the operating system font, stored
+in a pixel buffer ( <codelink>CL_PixelBuffer</codelink> ). On Windows, this is the standard window font. On Linux,
+this is a FreeType Font )
+</p>
+
+<li>Freetype Font</li>
+<p>The Freetype Font (provided by <codelink>CL_Font_FreeType</codelink> ) uses a truetype font, stored
+in a pixel buffer ( <codelink>CL_PixelBuffer</codelink> ).
+</p>
+
+<li>Texture Font</li>
+<p>The texture font (provided by <codelink>CL_Font_Texture</codelink> ) uses a font based on a pixel buffer (for example, a png file).
+This font imports the pixel buffer, and stores the result a texture group <codelink>CL_TextureGroup</codelink>.
+The Texture Font is faster than the Native Font and the Freetype Font.
+You can also import a Native font, which can be used to provide missing font glpyhs.
+</p>
+
+<li>Vector Font</li>
+<p>The vector font (provided by <codelink>CL_Font_Vector</codelink> ) uses a truetype font, stored
+as triangle primitives (drawn using <codelink>CL_PrimitivesArray </codelink> )
+</p>
+
+<h3>Constructing fonts</h3>
+
+<p>All fonts use a common font description class <codelink>CL_FontDescription</codelink> that is passed to the constructor of the desired font</p>
+
+<li>Native Font</li>
+<pre>
+	CL_FontDescription desc;
+	font_desc.set_typeface_name("tahoma");
+	CL_Font_Native native_font(gc, font_desc);
+	native_font.draw_text(gc, 100, 100, "Hello World");
+</pre>
+
+<li>Freetype Font</li>
+<pre>
+  CL_FontDescription desc;
+  font_desc.set_typeface_name("myfont.ttf");
+  CL_Font_Freetype freetype_font(font_desc);
+  freetype_font.draw_text(gc, 100, 100, "Hello World");
+</pre>
+
+<li>Texture Font</li>
+<pre>
+  // To use a native font as CL_Textures's
+
+  CL_FontDescription desc;
+  font_desc.set_typeface_name("tahoma");
+  CL_Font_Texture texture_font(gc, font_desc);
+  texture_font.draw_text(gc, 100, 100, "Hello World");
+
+  // To use a font from a png
+
+  CL_FontDescription desc;
+  font_desc.set_typeface_name("tahoma");
+  CL_Font_Texture texture_font(gc, &amp;pixel_buffer_font, font_positions);
+  texture_font.load_font(gc, font_desc);	// Use tahoma for unknown glyphs
+  texture_font.draw_text(gc, 100, 100, "Hello World");
+
+</pre>
+
+<li>Vector Font</li>
+<pre>
+  CL_FontDescription desc;
+  font_desc.set_typeface_name("myfont.ttf");
+  CL_Font_Vector vector_font(font_desc);
+  vector_font.draw_text(gc, 100, 100, "Hello World");
+</pre>
+
+<h3>ClanGUI and Fonts</h3>
+
+<p>If you want ClanGUI to use a custom font, instead of a native font, you will first need to register the font as follows</p>
+<pre>
+	CL_FontDescription font_desc;
+	font_desc.set_typeface_name("GUI Font Name");
+	font_desc.set_height(-21);
+	font_desc.set_weight(700);
+	CL_Font_Texture font_texture(gc, font_desc);
+	font_desc.set_typeface_name("Custom Font Name (usually the same)");
+	gui->set_named_font(font_texture, font_desc);
+
+</pre>
+
+</div>
+
+</body>
+</html>
+

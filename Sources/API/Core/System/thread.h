@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,154 +24,158 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="System"
-//! header=core.h
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
-#ifndef header_thread
-#define header_thread
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-class CL_Thread_Generic;
-class CL_ThreadId_Generic;
 
-//: Thread callback interface.
-//- !group=Core/System!
-//- !header=core.h!
-//- <p>When a thread is created, it will call run() in its attached CL_Runnable interface.</p>
-class CL_Runnable
-{
-//! Construction:
-public:
-	virtual ~CL_Runnable() { return; }
+#include "../api_core.h"
+#include "sharedptr.h"
+#include "runnable.h"
+#include "exception.h"
 
-public:
-//! Overrideables:
-	//: Called when a thread is run.
-	virtual void run()=0;
-};
+class CL_Thread_Impl;
 
-//: Thread Priority Enum
-//- !group=Core/System!
-//- !header=core.h!
-enum EThreadPriority
-{
-	cl_priority_above_normal,
-	cl_priority_below_normal,
-	cl_priority_highest,
-	cl_priority_idle,
-	cl_priority_lowest,
-	cl_priority_normal,
-	cl_priority_time_critical
-};
-
-//: ThreadId Class
-//- !group=Core/System!
-//- !header=core.h!
-class CL_API_CORE CL_ThreadId
-{
-//! Construction:
-public:
-	//: Create a ThreadId.
-	CL_ThreadId();
-
-	CL_ThreadId(const CL_ThreadId &copy);
-
-	//: Destructor.
-	~CL_ThreadId();
-
-//! Operations:
-public:
-	CL_ThreadId &operator =(const CL_ThreadId &copy);
-
-	bool operator ==(const CL_ThreadId &cmp) const;
-
-	bool operator !=(const CL_ThreadId &cmp) const;
-
-	bool operator <(const CL_ThreadId &cmp) const;
-	
-//! Implementation:
-private:
-	CL_ThreadId_Generic *impl;
-};
-
-//: Thread Class
-//- !group=Core/System!
-//- !header=core.h!
+/// \brief Thread class.
+///
+/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE CL_Thread
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Create a thread.
-	//param runnable: CL_Runnable object to be used as the thread run function.
-	//param delete_runnable: If true, deletes the CL_Runnable object, when CL_Thread is destroyed.
-	//param func: Callback function used as the thread run function. Example: int my_callback(void *value).
-	//param value: Value parameter passed to callback function.
-	CL_Thread(CL_Runnable *runnable, bool delete_runnable = false);
-
-	CL_Thread(int (*func)(void*), void *value);
-
-	CL_Thread(const CL_Thread &copy);
-
+	/// \brief Constructs a thread object.
 	CL_Thread();
 
-	inline bool is_initialized() {
-		return impl != 0;
-	}
-	
-	//: Destructor.
 	~CL_Thread();
-	
-//! Attributes:
+
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the thread ID of the calling thread.
-	static CL_ThreadId get_current_id();
-	
-	//: Returns the thread ID of this thread.
-	unsigned int get_thread_id() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignement operator.
-	CL_Thread &operator =(const CL_Thread &copy);
+	/// \brief Starts a thread.
+	void start(CL_Runnable *runnable);
 
-	//: Starts the thread.
-	void start();
+	template<class C>
+	void start(C *instance, void (C::*member)())
+	{
+		CL_Runnable *r = new CL_RunnableMember_v0<C>(instance, member);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
 
-	//: Terminate the thread. (use with caution under win98)
-	void terminate();
+	template<class C, class P1>
+	void start(C *instance, void (C::*member)(P1 p1), P1 p1)
+	{
+		CL_Runnable *r = new CL_RunnableMember_v1<C, P1>(instance, member, p1);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
 
-	//: Wait until the thread finishes its execution.
-	void wait();
+	template<class C, class P1, class P2>
+	void start(C *instance, void (C::*member)(P1 p1, P2 p2), P1 p1, P2 p2)
+	{
+		CL_Runnable *r = new CL_RunnableMember_v2<C, P1, P2>(instance, member, p1, p2);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
 
-	//: Set the thread priority.
-	void set_priority(EThreadPriority priority);
+	template<class C, class P1, class P2, class P3>
+	void start(C *instance, void (C::*member)(P1 p1, P2 p2, P3 p3), P1 p1, P2 p2, P3 p3)
+	{
+		CL_Runnable *r = new CL_RunnableMember_v3<C, P1, P2, P3>(instance, member, p1, p2, p3);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
 
-//! Implementation:
+	template<class C, class P1, class P2, class P3, class P4>
+	void start(C *instance, void (C::*member)(P1 p1, P2 p2, P3 p3, P4 p4), P1 p1, P2 p2, P3 p3, P4 p4)
+	{
+		CL_Runnable *r = new CL_RunnableMember_v4<C, P1, P2, P3, P4>(instance, member, p1, p2, p3, p4);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
+
+	template<class C, class P1, class P2, class P3, class P4, class P5>
+	void start(C *instance, void (C::*member)(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5), P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	{
+		CL_Runnable *r = new CL_RunnableMember_v5<C, P1, P2, P3, P4, P5>(instance, member, p1, p2, p3, p4, p5);
+		try
+		{
+			start(r);
+		}
+		catch (CL_Exception)
+		{
+			delete r;
+			throw;
+		}
+	}
+
+	/// \brief Blocks until thread has completed its execution.
+	void join();
+
+	/// \brief Sets the name (displayed in debuggers) of the calling thread.
+	/** <p>Currently this only works with the Visual Studio compiler and debugger.</p>*/
+	static void set_thread_name(const char *name);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	CL_Thread_Generic *impl;
+	CL_SharedPtr<CL_Thread_Impl> impl;
+/// \}
 };
 
-// Add support for doing cross platform Thread Local Storage variables:
-#ifdef MSVC
-	#define CL_TLS __declspec(thread)
-#else
-	#define CL_TLS __thread
-#endif
 
-#endif
+/// \}

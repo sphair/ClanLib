@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,25 +24,17 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "API/Core/XML/xml_tokenizer.h"
-#include "API/Core/XML/xml_token_load.h"
-#include "API/Core/System/clanstring.h"
-#include "API/Core/System/error.h"
+#include "API/Core/XML/xml_token.h"
+#include "API/Core/System/databuffer.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 #include "xml_tokenizer_generic.h"
-#include "API/Core/XML/xml_token_string.h"
-
 #include <algorithm>
 #include <utility>
-//#include <iterator>
-
-//std::string replace_escapes(std::string str);
-
-//template <typename Iter>
-//std::string replace_escapes_fast(Iter begin, Iter end);
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLTokenizer construction:
@@ -55,14 +47,15 @@ CL_XMLTokenizer::CL_XMLTokenizer(const CL_XMLTokenizer &copy) : impl(copy.impl)
 {
 }
 
-CL_XMLTokenizer::CL_XMLTokenizer(CL_InputSource *input, bool delete_input) : impl(new CL_XMLTokenizer_Generic)
+CL_XMLTokenizer::CL_XMLTokenizer(CL_IODevice &input) : impl(new CL_XMLTokenizer_Generic)
 {
 	impl->input = input;
-	impl->delete_input = delete_input;
-	impl->size = input->size();
-	impl->data.resize(impl->size);
-	input->read(&impl->data[0], impl->size);
+	impl->size = input.get_size();
 	impl->pos = 0;
+
+	CL_DataBuffer buffer(impl->size);
+	input.receive(buffer.get_data(), buffer.get_size(), true);
+	impl->data = CL_StringHelp::utf8_to_text(CL_StringRef8(buffer.get_data(), buffer.get_size(), false));
 }
 
 CL_XMLTokenizer::~CL_XMLTokenizer()
@@ -85,317 +78,439 @@ void CL_XMLTokenizer::set_eat_whitespace(bool enable)
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLTokenizer operations:
 
-CL_XMLTokenLoad CL_XMLTokenizer::next()
+void CL_XMLTokenizer::next(CL_XMLToken *out_token)
 {
-	if (impl == 0)
-		return CL_XMLTokenLoad();
+	out_token->type = CL_XMLToken::NULL_TOKEN;
+	out_token->variant = CL_XMLToken::SINGLE;
+//	out_token->attributes.clear();
+	while (!out_token->attributes.empty())
+		out_token->attributes.pop_back();
 
-	if (impl->pos == impl->size)
-		return CL_XMLTokenLoad(); // EOF, return null token.
-
-	bool is_need_escape = true;
-
-	if (impl->data[impl->pos] != '<') // Text node
+	if (impl != 0)
 	{
-		std::string::size_type start_pos = impl->pos;
-		std::string::size_type end_pos = impl->data.find('<', start_pos);
-		if (end_pos == impl->data.npos) end_pos = impl->size;
-		impl->pos = end_pos;
-
-		CL_XMLTokenString text(&impl->data[start_pos], end_pos-start_pos, is_need_escape);
-		if (impl->eat_whitespace)
-		{
-			text = trim_whitespace(text);
-			if (text.empty())
-				return next();
-		}
-
-		CL_XMLTokenLoad token;
-		token.set_type(CL_XMLToken::TEXT_TOKEN);
-		token.set_value(text);
-
-		return token;
+		if (impl->next_text_node(out_token))
+			return;
+		impl->next_tag_node(out_token);
 	}
-	else // Tag node
-	{
-		impl->pos++;
-		if (impl->pos == impl->size)
-			throw CL_Error("Premature end of XML data!");
+}
 
-		// Try to early predict what sort of node it might be:
-		bool closing = false;
-		bool questionMark = false;
-		bool exclamationMark = false;
-		if (impl->data[impl->pos] == '/')
-			closing = true;
-		else
-			if (impl->data[impl->pos] == '?')
-				questionMark = true;
-			else
-				if (impl->data[impl->pos] == '!')
-					exclamationMark = true;
-
-		if (closing || questionMark || exclamationMark)
-		{
-			impl->pos++;
-			if (impl->pos == impl->size) throw CL_Error("Premature end of XML data!");
-		}
-
-		if (exclamationMark) // check for cdata section or comments
-		{
-			if (impl->data.compare(impl->pos, 2, "--") == 0) // comment block
-			{
-				std::string::size_type start_pos = impl->pos+2;
-				std::string::size_type end_pos = impl->data.find("-->", start_pos);
-				if (end_pos == impl->data.npos)
-					throw CL_Error("Premature end of XML data!");
-				impl->pos = end_pos+3;
-
-				CL_XMLTokenLoad token;
-				token.set_type(CL_XMLToken::COMMENT_TOKEN);
-				token.set_variant(CL_XMLToken::SINGLE);
-				token.set_value(CL_XMLTokenString(&impl->data[start_pos], end_pos-start_pos, is_need_escape));
-				return token;
-			}
-
-			if (impl->data.compare(impl->pos, 7, "[CDATA[") != 0)
-				throw CL_Error(CL_String::format("Error in XML stream at position %1", static_cast<int>(impl->pos)));
-			std::string::size_type start_pos = impl->pos+7;
-			std::string::size_type end_pos = impl->data.find("]]>", start_pos);
-			if (end_pos == impl->data.npos)
-				throw CL_Error("Premature end of XML data!");
-			impl->pos = end_pos+3;
-
-			CL_XMLTokenLoad token;
-			token.set_type(CL_XMLToken::CDATA_SECTION_TOKEN);
-			token.set_variant(CL_XMLToken::SINGLE);
-			token.set_value(CL_XMLTokenString(&impl->data[start_pos], end_pos-start_pos, is_need_escape));
-			return token;
-		}
-
-		// Extract the tag name:
-		std::string::size_type start_pos = impl->pos;
-		std::string::size_type end_pos = impl->data.find_first_of(" \r\n\t?/>", start_pos);
-		if (end_pos == impl->data.npos)
-			throw CL_Error("Premature end of XML data!");
-		impl->pos = end_pos;
-
-		CL_XMLTokenLoad token;
-		token.set_type(questionMark ? CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN : CL_XMLToken::ELEMENT_TOKEN);
-		token.set_variant(closing ? CL_XMLToken::END : CL_XMLToken::BEGIN);
-		token.set_name(CL_XMLTokenString(&impl->data[start_pos], end_pos-start_pos, is_need_escape));
-		//token.set_name(replace_escapes_fast(impl->data.begin() + start_pos, impl->data.begin() + end_pos));
-
-		// Check for possible attributes:
-		while (true)
-		{
-			// Strip whitespace:
-			impl->pos = impl->data.find_first_not_of(" \r\n\t", impl->pos);
-			if (impl->pos == impl->data.npos)
-				throw CL_Error("Premature end of XML data!");
-
-			// End of tag, stop searching for more attributes:
-			if (impl->data[impl->pos] == '/' || impl->data[impl->pos] == '?' || impl->data[impl->pos] == '>')
-				break;
-
-			// Extract attribute name:
-			std::string::size_type start_pos = impl->pos;
-			std::string::size_type end_pos = impl->data.find_first_of(" \r\n\t=", start_pos);
-			if (end_pos == impl->data.npos)
-				throw CL_Error("Premature end of XML data!");
-			impl->pos = end_pos;
-
-			CL_XMLTokenString attributeName(&impl->data[start_pos], end_pos-start_pos, is_need_escape);
-
-			// Find seperator:
-			impl->pos = impl->data.find_first_not_of(" \r\n\t", impl->pos);
-			if (impl->pos == impl->data.npos || impl->pos == impl->size-1)
-				throw CL_Error("Premature end of XML data!");
-			if (impl->data[impl->pos++] != '=')
-				throw CL_Error(CL_String::format("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)", impl->get_line_number(), token.get_name(), attributeName.to_string()));
-
-			// Strip whitespace:
-			impl->pos = impl->data.find_first_not_of(" \r\n\t", impl->pos);
-			if (impl->pos == impl->data.npos)
-				throw CL_Error("Premature end of XML data!");
-
-			// Extract attribute value:
-			char const * first_of = " \r\n\t";
-			if (impl->data[impl->pos] == '"')
-			{
-				first_of = "\"";
-				impl->pos++;
-				if (impl->pos == impl->size)
-					throw CL_Error("Premature end of XML data!");
-			}
-			else
-				if (impl->data[impl->pos] == '\'')
-				{
-					first_of = "'";
-					impl->pos++;
-					if (impl->pos == impl->size)
-						throw CL_Error("Premature end of XML data!");
-				}
-
-			start_pos = impl->pos;
-			end_pos = impl->data.find_first_of(first_of, start_pos);
-			if (end_pos == impl->data.npos)
-				throw CL_Error("Premature end of XML data!");
-			
-			CL_XMLTokenString attributeValue(CL_XMLTokenString(&impl->data[start_pos], end_pos-start_pos, is_need_escape));
-
-			impl->pos = end_pos + 1;
-			if (impl->pos == impl->size)
-				throw CL_Error("Premature end of XML data!");
-
-			// Finally apply attribute to token:
-			token.set_attribute(attributeName, attributeValue);
-		}
-
-		// Check if its singular:
-		if (impl->data[impl->pos] == '/' || impl->data[impl->pos] == '?')
-		{
-			token.set_variant(CL_XMLToken::SINGLE);
-			impl->pos++;
-			if (impl->pos == impl->size)
-				throw CL_Error("Premature end of XML data!");
-		}
-
-		// Data stream should be ending now.
-		if (impl->data[impl->pos] != '>')
-			throw CL_Error(CL_String::format("Error in XML stream, line %1 (expected end of tag)", impl->get_line_number()));
-		impl->pos++;
-
-		return token;
-	}
+CL_XMLToken CL_XMLTokenizer::next()
+{
+	CL_XMLToken token;
+	next(&token);
+	return token;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_XMLTokenizer implementation:
 
-/*
-inline bool try_replace(std::string & str, std::string::size_type pos, std::string const & escape, char const * escape_char)
+bool CL_XMLTokenizer_Generic::next_text_node(CL_XMLToken *out_token)
 {
-	if (pos + escape.size() <= str.size())
-		if (std::equal(escape.begin(), escape.end(), str.begin() + pos))
+	CL_String::char_type *data_ptr = data.data();
+	while (pos < size && data_ptr[pos] != cl_text('<'))
+	{
+		CL_String::size_type start_pos = pos;
+		CL_String::size_type end_pos = data.find(cl_text('<'), start_pos);
+		if (end_pos == data.npos) end_pos = size;
+		pos = end_pos;
+
+		CL_StringRef text, text_orig(data_ptr + start_pos, end_pos-start_pos, false);
+		unescape(text, text_orig);
+		if (eat_whitespace)
 		{
-			str.replace(pos, escape.size(), escape_char);
-			return true;
+			text = trim_whitespace(text);
+			if (text.empty())
+				continue;
 		}
+
+		out_token->type = CL_XMLToken::TEXT_TOKEN;
+		out_token->value = text;
+		return true;
+	}
 	return false;
 }
 
-std::string replace_escapes(std::string str)
+bool CL_XMLTokenizer_Generic::next_tag_node(CL_XMLToken *out_token)
 {
-	std::string::size_type pos;
+	CL_String::char_type *data_ptr = data.data();
+	if (pos == size || data_ptr[pos] != cl_text('<'))
+		return false;
 
-	static std::string const amp("&amp");
-	static std::string const quot("&quot");
-	static std::string const apos("&apos");
-	static std::string const lt("&lt");
-	static std::string const gt("&gt");
+	pos++;
+	if (pos == size)
+		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
 
-	pos = 0;
-	while (pos != std::string::npos)
+	// Try to early predict what sort of node it might be:
+	bool closing = (data_ptr[pos] == cl_text('/'));
+	bool questionMark = (data_ptr[pos] == cl_text('?'));
+	bool exclamationMark = (data_ptr[pos] == cl_text('!'));
+
+	if (closing || questionMark || exclamationMark)
 	{
-		pos = str.find('&', pos);
-		if (pos == std::string::npos)
-			break;
-
-		if (	try_replace(str, pos, amp, "&")
-			||	try_replace(str, pos, quot, "\"")
-			||	try_replace(str, pos, apos, "\'")
-			||	try_replace(str, pos, gt, ">")
-			||	try_replace(str, pos, lt, "<") )
-		{
-		}
 		pos++;
+		if (pos == size)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
 	}
 
-	return str;
-}
-*/
-
-//std::string & replace_escapes(std::string & str)
-//{
-//	std::string::size_type pos;
-//
-//	static std::string const amp("&amp");
-//	static std::string const quot("&quot");
-//	static std::string const apos("&apos");
-//	static std::string const lt("&lt");
-//	static std::string const gt("&gt");
-//
-//	pos = 0;
-//	while (pos != std::string::npos)
-//	{
-//		pos = str.find('&', pos);
-//		if (pos == std::string::npos)
-//			break;
-//
-//		if (	try_replace(str, pos, amp, "&")
-//			||	try_replace(str, pos, quot, "\"")
-//			||	try_replace(str, pos, apos, "\'")
-//			||	try_replace(str, pos, gt, ">")
-//			||	try_replace(str, pos, lt, "<") )
-//		{
-//		}
-//		pos++;
-//	}
-//
-//	return str;
-//}
-
-/*
-template <typename Container, typename Iter>
-inline bool append_escape(Container & buff, Iter & begin, Iter end, std::string const & escape, char escape_char)
-{
-	if (static_cast<ptrdiff_t>(escape.size()) <= std::distance(begin, end))
-		if (std::equal(escape.begin(), escape.end(), begin))
-		{
-			buff.insert(buff.end(), 1, escape_char);
-			std::advance(begin, escape.size());
-			return true;
-		}
-	return false;
-}
-
-template <typename Iter>
-std::string replace_escapes_fast(Iter begin, Iter end)
-{
-	static std::string const amp("&amp");
-	static std::string const quot("&quot");
-	static std::string const apos("&apos");
-	static std::string const lt("&lt");
-	static std::string const gt("&gt");
-
-	std::size_t size = std::distance(begin, end);
-//	static std::string str;
-//	str.reserve(size);
-//	str.resize(0);
-
-	static std::vector<char> buff;
-//	buff.reserve(size);
-	buff.resize(0);
-
-	while(begin != end)
+	if (exclamationMark) // check for cdata section, comments or doctype
 	{
-		Iter pos = std::find(begin, end, '&');
-		buff.insert(buff.end(), begin, pos);
-		if (pos == end)
+		if (next_exclamation_mark_node(out_token))
+			return true;
+	}
+
+	// Extract the tag name:
+	CL_String::size_type start_pos = pos;
+	CL_String::size_type end_pos = data.find_first_of(cl_text(" \r\n\t?/>"), start_pos);
+	if (end_pos == data.npos)
+		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+	pos = end_pos;
+
+	out_token->type = questionMark ? CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN : CL_XMLToken::ELEMENT_TOKEN;
+	out_token->variant = closing ? CL_XMLToken::END : CL_XMLToken::BEGIN;
+	out_token->name = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
+
+	// Check for possible attributes:
+	while (true)
+	{
+		// Strip whitespace:
+		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		if (pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+		// End of tag, stop searching for more attributes:
+		if (data_ptr[pos] == cl_text('/') || data_ptr[pos] == cl_text('?') || data_ptr[pos] == cl_text('>'))
 			break;
 
-		begin = pos;
-		if (	append_escape(buff, begin, end, amp, '&')
-			||	append_escape(buff, begin, end, quot, '\"')
-			||	append_escape(buff, begin, end, apos, '\'')
-			||	append_escape(buff, begin, end, gt, '>')
-			||	append_escape(buff, begin, end, lt, '<'))
+		// Extract attribute name:
+		CL_String::size_type start_pos = pos;
+		CL_String::size_type end_pos = data.find_first_of(cl_text(" \r\n\t="), start_pos);
+		if (end_pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		pos = end_pos;
+
+		CL_StringRef attributeName = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
+
+		// Find seperator:
+		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		if (pos == data.npos || pos == size-1)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		if (data_ptr[pos++] != cl_text('='))
+			CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)"), get_line_number(), out_token->name, attributeName));
+
+		// Strip whitespace:
+		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		if (pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+		// Extract attribute value:
+		CL_String::char_type const * first_of = cl_text(" \r\n\t");
+		if (data_ptr[pos] == cl_text('"'))
 		{
+			first_of = cl_text("\"");
+			pos++;
+			if (pos == size)
+				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
 		}
 		else
-			++begin;
+			if (data_ptr[pos] == cl_text('\''))
+			{
+				first_of = cl_text("'");
+				pos++;
+				if (pos == size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			}
+
+		start_pos = pos;
+		end_pos = data.find_first_of(first_of, start_pos);
+		if (end_pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		
+		CL_StringRef attributeValue, attributeValueOrig(data_ptr + start_pos, end_pos-start_pos, false);
+		unescape(attributeValue, attributeValueOrig);
+
+		pos = end_pos + 1;
+		if (pos == size)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+		// Finally apply attribute to token:
+		out_token->attributes.push_back(CL_XMLToken::Attribute(attributeName, attributeValue));
 	}
-	return std::string(&buff[0], buff.size());
+
+	// Check if its singular:
+	if (data_ptr[pos] == cl_text('/') || data_ptr[pos] == cl_text('?'))
+	{
+		out_token->variant = CL_XMLToken::SINGLE;
+		pos++;
+		if (pos == size)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+	}
+
+	// Data stream should be ending now.
+	if (data_ptr[pos] != cl_text('>'))
+		CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of tag)"), get_line_number()));
+	pos++;
+
+	return true;
 }
-*/
+
+bool CL_XMLTokenizer_Generic::next_exclamation_mark_node(CL_XMLToken *out_token)
+{
+	CL_String::char_type *data_ptr = data.data();
+	if (pos+2 >= size)
+		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+	
+	if (data.compare(pos, 2, cl_text("--")) == 0) // comment block
+	{
+		CL_String::size_type start_pos = pos+2;
+		CL_String::size_type end_pos = data.find(cl_text("-->"), start_pos);
+		if (end_pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		pos = end_pos+3;
+
+		CL_StringRef text, text_orig(data_ptr + start_pos, end_pos-start_pos, false);
+		unescape(text, text_orig);
+		if (eat_whitespace)
+			text = trim_whitespace(text);
+
+		out_token->type = CL_XMLToken::COMMENT_TOKEN;
+		out_token->variant = CL_XMLToken::SINGLE;
+		out_token->value = text;
+		return true;
+	}
+
+	if (pos+7 >= size)
+		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+	
+	if (data.compare(pos, 7, cl_text("DOCTYPE")) == 0)
+	{
+		// Strip whitespace:
+		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos+7);
+		if (pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+		// Find doctype name:				
+		CL_String::size_type name_start = pos;
+		CL_String::size_type name_end = data.find_first_of(cl_text(" \r\n\t?/>"), name_start);
+		if (name_end == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		pos = name_end;
+		
+		// Strip whitespace:
+		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		if (pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+		CL_String::size_type public_start = data.npos;
+		CL_String::size_type public_end = data.npos;
+		CL_String::size_type system_start = data.npos;
+		CL_String::size_type system_end = data.npos;
+		CL_String::size_type subset_start = data.npos;
+		CL_String::size_type subset_end = data.npos;
+
+		// Look for possible external id:
+		if (data_ptr[pos] != cl_text('[') && data_ptr[pos] != cl_text('>'))
+		{
+			if (pos+6 >= size)
+				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+			if (data.compare(pos, 6, cl_text("SYSTEM")) == 0)
+			{
+				pos+=6;
+				if (pos == size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Strip whitespace:
+				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				if (pos == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Read system literal:
+				CL_String::char_type literal_char = data_ptr[pos];
+				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				system_start = pos+1;
+				system_end = data.find(literal_char, system_start);
+				if (system_end == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				pos = system_end + 1;
+				if (pos >= size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			}
+			else if (data.compare(pos, 6, cl_text("PUBLIC")) == 0)
+			{
+				pos+=6;
+				if (pos == size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Strip whitespace:
+				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				if (pos == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Read public literal:
+				CL_String::char_type literal_char = data_ptr[pos];
+				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				public_start = pos+1;
+				public_end = data.find(literal_char, public_start);
+				if (public_end == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				pos = public_end + 1;
+				if (pos >= size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Strip whitespace:
+				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				if (pos == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				// Read system literal:
+				literal_char = data_ptr[pos];
+				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+
+				system_start = pos+1;
+				system_end = data.find(literal_char, system_start);
+				if (system_end == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				pos = system_end + 1;
+				if (pos >= size)
+					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			}
+			else
+				CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (unknown external identifier type in DOCTYPE)"), get_line_number()));
+		
+			// Strip whitespace:
+			pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+			if (pos == data.npos)
+				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		}
+		
+		// Look for possible internal subset:
+		if (data_ptr[pos] == cl_text('['))
+		{
+			subset_start = pos + 1;
+		
+			// Search for the end of the internal subset:
+			// (to avoid parsing it, we search backwards)
+			CL_String::size_type end_pos = data.find(cl_text('>'), pos+1);
+			if (end_pos == data.npos)
+				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			
+			subset_end = data.rfind(cl_text(']'), end_pos);
+			if (subset_end == data.npos)
+				CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of internal subset in DOCTYPE)"), get_line_number()));
+				
+			pos = end_pos;
+		}
+		
+		// Expect DOCTYPE tag to end now:
+		if (data_ptr[pos] != cl_text('>'))
+			CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of DOCTYPE)"), get_line_number()));
+		pos++;
+
+		out_token->type = CL_XMLToken::DOCUMENT_TYPE_TOKEN;
+		return true;
+	}
+	else if (data.compare(pos, 7, cl_text("[CDATA[")) == 0)
+	{
+		CL_String::size_type start_pos = pos+7;
+		CL_String::size_type end_pos = data.find(cl_text("]]>"), start_pos);
+		if (end_pos == data.npos)
+			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		pos = end_pos+3;
+
+		CL_StringRef value = string_allocator.alloc(
+			data_ptr + start_pos, end_pos-start_pos);
+
+		out_token->type = CL_XMLToken::CDATA_SECTION_TOKEN;
+		out_token->variant = CL_XMLToken::SINGLE;
+		out_token->value = value;
+		return true;
+	}
+	else
+	{
+		CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream at position %1"), static_cast<int>(pos)));
+		return false;
+	}
+}
+
+void CL_XMLTokenizer_Generic::throw_exception(const CL_StringRef &str)
+{
+	throw CL_Exception(str);
+}
+
+int CL_XMLTokenizer_Generic::get_line_number()
+{
+	int line = 1;
+	CL_String::size_type tmp_pos = 0;
+
+	CL_String::const_iterator it;
+	for( it = data.begin(); it != data.end() && tmp_pos <= pos; ++it, tmp_pos++ )
+	{
+		if( (*it) == cl_text('\n') )
+			line++;
+	}
+
+	return line;
+}
+
+inline void CL_XMLTokenizer_Generic::unescape(CL_StringRef &unescaped, const CL_StringRef &text)
+{
+	static const CL_StringRef quot(cl_text("&quot;"));
+	static const CL_StringRef apos(cl_text("&apos;"));
+	static const CL_StringRef lt(cl_text("&lt;"));
+	static const CL_StringRef gt(cl_text("&gt;"));
+	static const CL_StringRef amp(cl_text("&amp;"));
+
+	unescaped = string_allocator.alloc(text);
+	unescape(unescaped, quot, cl_text('"'));
+	unescape(unescaped, apos, cl_text('\''));
+	unescape(unescaped, lt, cl_text('<'));
+	unescape(unescaped, gt, cl_text('>'));
+	unescape(unescaped, amp, cl_text('&'));
+}
+
+inline void CL_XMLTokenizer_Generic::unescape(CL_StringRef &text, const CL_StringRef &search, CL_String::char_type replace)
+{
+	CL_StringRef::size_type read_pos = 0;
+	CL_StringRef::size_type length = text.length();
+	CL_StringRef::size_type search_length = search.length();
+	CL_StringRef::char_type *data = text.data();
+	while (true)
+	{
+		CL_StringRef::size_type next_match = text.find(search, read_pos);
+		if (next_match == CL_StringRef::npos)
+			break;
+
+		CL_StringRef::size_type copy_size = length - (next_match + search_length);
+		memcpy(data + next_match + 1, data + next_match + search_length, copy_size * sizeof(CL_StringRef::char_type));
+		data[next_match] = replace;
+		length -= search_length - 1;
+		read_pos = next_match + 1;
+		if (read_pos > length)
+			break;
+	}
+	text.set_length(length);
+}
+
+inline CL_StringRef CL_XMLTokenizer_Generic::trim_whitespace(const CL_StringRef &text)
+{
+	CL_StringRef::size_type pos_start = text.find_first_not_of(cl_text(" \t\r\n"));
+	if (pos_start == CL_StringRef::npos)
+		return CL_StringRef();
+	CL_StringRef::size_type pos_end = text.find_last_not_of(cl_text(" \t\r\n"), pos_start);
+	if (pos_end == CL_StringRef::npos)
+	{
+		if (pos_start == 0)
+			return text;
+		else
+			return string_allocator.alloc(text.substr(pos_start));
+	}
+	else
+	{
+		return string_allocator.alloc(text.substr(pos_start, pos_end - pos_start + 1));
+	}
+}

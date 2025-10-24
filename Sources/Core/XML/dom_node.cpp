@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -43,8 +42,12 @@
 #include "API/Core/XML/dom_document_type.h"
 #include "API/Core/XML/dom_document_fragment.h"
 #include "API/Core/XML/dom_notation.h"
+#include "API/Core/XML/xpath_evaluator.h"
+#include "API/Core/Text/string_help.h"
 #include "dom_node_generic.h"
 #include "dom_document_generic.h"
+#include "dom_tree_node.h"
+#include "dom_named_node_map_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNode construction:
@@ -53,19 +56,27 @@ CL_DomNode::CL_DomNode()
 {
 }
 
-CL_DomNode::CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl) : impl(impl)
+CL_DomNode::CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl)
+: impl(impl)
 {
 }
 
-CL_DomNode::CL_DomNode(const CL_DomNode &copy) : impl(copy.impl)
+CL_DomNode::CL_DomNode(const CL_DomNode &copy)
+: impl(copy.impl)
 {
 }
 
-CL_DomNode::CL_DomNode(CL_DomDocument &doc, unsigned short node_type)
-: impl(new CL_DomNode_Generic)
+CL_DomNode::CL_DomNode(CL_DomDocument doc, unsigned short node_type)
 {
-	impl->owner_document = doc.impl;
-	impl->node_type = node_type;
+	CL_DomDocument_Generic *doc_impl = static_cast<CL_DomDocument_Generic *>(doc.impl.get());
+	impl = CL_SharedPtr<CL_DomNode_Generic>(
+		doc_impl->allocate_dom_node(),
+		doc_impl, &CL_DomDocument_Generic::free_dom_node,
+		0);
+
+	impl->node_index = doc_impl->allocate_tree_node();
+	CL_DomTreeNode *tree_node = impl->get_tree_node();
+	tree_node->node_type = node_type;
 }
 
 CL_DomNode::~CL_DomNode()
@@ -75,22 +86,23 @@ CL_DomNode::~CL_DomNode()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNode attributes:
 
-std::string CL_DomNode::get_node_name() const
+CL_DomString CL_DomNode::get_node_name() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
-		switch (impl->node_type)
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		switch (tree_node->node_type)
 		{
 		case CDATA_SECTION_NODE:
-			return "#cdata-section";
+			return cl_text("#cdata-section");
 		case COMMENT_NODE:
-			return "#comment";
+			return cl_text("#comment");
 		case DOCUMENT_NODE:
-			return "#document";
+			return cl_text("#document");
 		case DOCUMENT_FRAGMENT_NODE:
-			return "#document-fragment";
+			return cl_text("#document-fragment");
 		case TEXT_NODE:
-			return "#text";
+			return cl_text("#text");
 		case ATTRIBUTE_NODE:
 		case DOCUMENT_TYPE_NODE:
 		case ELEMENT_NODE:
@@ -99,17 +111,18 @@ std::string CL_DomNode::get_node_name() const
 		case NOTATION_NODE:
 		case PROCESSING_INSTRUCTION_NODE:
 		default:
-			return impl->node_name;
+			return tree_node->get_node_name();
 		}
 	}
-	return std::string();
+	return CL_DomString();
 }
 
-std::string CL_DomNode::get_node_value() const
+CL_DomString CL_DomNode::get_node_value() const
 {
-	if (!impl.is_null())
+	if (impl)
 	{
-		switch (impl->node_type)
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		switch (tree_node->node_type)
 		{
 		case DOCUMENT_NODE:
 		case DOCUMENT_FRAGMENT_NODE:
@@ -118,81 +131,213 @@ std::string CL_DomNode::get_node_value() const
 		case ENTITY_NODE:
 		case ENTITY_REFERENCE_NODE:
 		case NOTATION_NODE:
-			return std::string();
+			return CL_DomString();
 
 		case TEXT_NODE:
 		case ATTRIBUTE_NODE:
 		case PROCESSING_INSTRUCTION_NODE:
 		default:
-			return impl->node_value;
+			return tree_node->get_node_value();
 		}
 	}
-	return std::string();
+	return CL_DomString();
 }
 
-void CL_DomNode::set_node_value(const std::string &value)
+CL_DomString CL_DomNode::get_namespace_uri() const
 {
-	if (!impl.is_null()) impl->node_value = value;
+	if (impl)
+		return impl->get_tree_node()->get_namespace_uri();
+	return CL_DomString();
+}
+
+CL_DomString CL_DomNode::get_prefix() const
+{
+	if (impl)
+	{
+		CL_DomString node_name = impl->get_tree_node()->get_node_name();
+		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		if (pos != CL_DomString::npos)
+			return node_name.substr(0, pos);
+	}
+	return CL_DomString();
+}
+
+void CL_DomNode::set_prefix(const CL_DomString &prefix)
+{
+	if (impl)
+	{
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomString node_name = impl->get_tree_node()->get_node_name();
+		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		if (pos == CL_DomString::npos)
+			impl->get_tree_node()->set_node_name(doc_impl, prefix + cl_text(':') + node_name);
+		else
+			impl->get_tree_node()->set_node_name(doc_impl, prefix + node_name.substr(pos));
+	}
+}
+
+CL_DomString CL_DomNode::get_local_name() const
+{
+	if (impl)
+	{
+		CL_DomString node_name = impl->get_tree_node()->get_node_name();
+		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		if (pos != CL_DomString::npos)
+			return node_name.substr(pos + 1);
+		else
+			return node_name;
+	}
+	return CL_DomString();
+}
+
+void CL_DomNode::set_node_value(const CL_DomString &value)
+{
+	if (impl)
+	{
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		impl->get_tree_node()->set_node_value(doc_impl, value);
+	}
 }
 
 unsigned short CL_DomNode::get_node_type() const
 {
-	if (!impl.is_null()) return impl->node_type;
+	if (impl)
+		return impl->get_tree_node()->node_type;
 	return NULL_NODE;
 }
 
 CL_DomNode CL_DomNode::get_parent_node() const
 {
-	if (!impl.is_null()) return CL_DomNode(impl->parent);
+	if (impl)
+	{
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		if (tree_node->parent != cl_null_node_index)
+		{
+			CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = tree_node->parent;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+	}
 	return CL_DomNode();
 }
 
 CL_DomNodeList CL_DomNode::get_child_nodes() const
 {
-	CL_DomNodeList lst;
+	CL_DomNodeList list;
 	CL_DomNode node = get_first_child();
-	while(!node.is_null()) 
+	while(!node.is_null())
 	{
-		lst.add_item(node);
+		list.add_item(node);
 		node = node.get_next_sibling();
 	}
-	return lst;
+	return list;
 }
 
 CL_DomNode CL_DomNode::get_first_child() const
 {
-	if (!impl.is_null()) return CL_DomNode(impl->first_child);
+	if (impl)
+	{
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		if (tree_node->first_child != cl_null_node_index)
+		{
+			CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = tree_node->first_child;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+	}
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNode::get_last_child() const
 {
-	if (!impl.is_null()) return CL_DomNode(impl->last_child);
+	if (impl)
+	{
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		if (tree_node->last_child != cl_null_node_index)
+		{
+			CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = tree_node->last_child;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+	}
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNode::get_previous_sibling() const
 {
-	if (!impl.is_null()) return CL_DomNode(impl->previous_sibling);
+	if (impl)
+	{
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		if (tree_node->previous_sibling != cl_null_node_index)
+		{
+			CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = tree_node->previous_sibling;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+	}
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNode::get_next_sibling() const
 {
-	if (!impl.is_null()) return CL_DomNode(impl->next_sibling);
+	if (impl)
+	{
+		const CL_DomTreeNode *tree_node = impl->get_tree_node();
+		if (tree_node->next_sibling != cl_null_node_index)
+		{
+			CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+			CL_DomNode_Generic *dom_node = doc_impl->allocate_dom_node();
+			dom_node->node_index = tree_node->next_sibling;
+			return CL_DomNode(
+				CL_SharedPtr<CL_DomNode_Generic>(
+					dom_node,
+					doc_impl, &CL_DomDocument_Generic::free_dom_node,
+					0));
+		}
+	}
 	return CL_DomNode();
 }
 
-CL_DomNamedNodeMap CL_DomNode::get_attributes()
+CL_DomNamedNodeMap CL_DomNode::get_attributes() const
 {
-	if (!impl.is_null() && impl->node_type == ELEMENT_NODE)
-		return impl->attributes;
+	if (impl && impl->get_tree_node()->node_type == ELEMENT_NODE)
+	{
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomNamedNodeMap_Generic *map = doc_impl->allocate_named_node_map();
+		map->node_index = impl->node_index;
+		return CL_DomNamedNodeMap(
+			CL_SharedPtr<CL_DomNamedNodeMap_Generic>(
+				map,
+				doc_impl, &CL_DomDocument_Generic::free_named_node_map,
+				0));
+	}
 	return CL_DomNamedNodeMap();
 }
 
-CL_DomDocument CL_DomNode::get_owner_document()
+CL_DomDocument CL_DomNode::get_owner_document() const
 {
-	if (!impl.is_null()) return CL_DomDocument(impl->owner_document);
+	if (impl)
+		return CL_DomDocument(impl->owner_document);
 	return CL_DomDocument();
 }
 
@@ -261,6 +406,32 @@ bool CL_DomNode::is_notation() const
 	return get_node_type() == NOTATION_NODE;
 }
 
+bool CL_DomNode::is_supported(
+	const CL_DomString &feature,
+	const CL_DomString &version) const
+{
+	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0)
+	{
+		if (version.empty() || version == cl_text("1.0") || version == cl_text("2.0"))
+			return true;
+	}
+	return false;
+}
+
+bool CL_DomNode::has_attributes() const
+{
+	if (!impl)
+		return false;
+	return (impl->get_tree_node()->first_attribute != cl_null_node_index);
+}
+
+bool CL_DomNode::has_child_nodes() const
+{
+	if (impl)
+		return (impl->get_tree_node()->first_child != cl_null_node_index);
+	return false;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNode operations:
 
@@ -275,17 +446,33 @@ bool CL_DomNode::operator ==(const CL_DomNode &other) const
 	return (impl == other.impl);
 }
 
+void CL_DomNode::normalize()
+{
+}
+
 CL_DomNode CL_DomNode::insert_before(CL_DomNode &new_child, CL_DomNode &ref_child)
 {
-	if (!impl.is_null())
+	if (ref_child.impl.is_null())
 	{
-		new_child.impl->previous_sibling = ref_child.impl->previous_sibling;
-		new_child.impl->next_sibling = ref_child.impl;
-		ref_child.impl->previous_sibling = new_child.impl;
-		if (!new_child.impl->previous_sibling.is_null())
-			new_child.impl->previous_sibling->next_sibling = new_child.impl;
-		if (impl->first_child == ref_child.impl) impl->first_child = new_child.impl;
-		new_child.impl->parent = impl;
+		append_child(new_child);
+		return new_child;
+	}
+
+	if (impl && new_child.impl && ref_child.impl)
+	{
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomTreeNode *tree_node = impl->get_tree_node();
+		CL_DomTreeNode *new_tree_node = new_child.impl->get_tree_node();
+		CL_DomTreeNode *ref_tree_node = ref_child.impl->get_tree_node();
+
+		new_tree_node->previous_sibling = ref_tree_node->previous_sibling;
+		new_tree_node->next_sibling = ref_child.impl->node_index;
+		ref_tree_node->previous_sibling = new_child.impl->node_index;
+		if (new_tree_node->previous_sibling != cl_null_node_index)
+			new_tree_node->get_previous_sibling(doc_impl)->next_sibling = new_child.impl->node_index;
+		if (tree_node->first_child == ref_child.impl->node_index)
+			tree_node->first_child = new_child.impl->node_index;
+		new_tree_node->parent = impl->node_index;
 
 		return new_child;
 	}
@@ -294,28 +481,23 @@ CL_DomNode CL_DomNode::insert_before(CL_DomNode &new_child, CL_DomNode &ref_chil
 
 CL_DomNode CL_DomNode::replace_child(CL_DomNode &new_child, CL_DomNode &old_child)
 {
-	if (!impl.is_null())
+	if (impl && new_child.impl && old_child.impl)
 	{
-		CL_SharedPtr<CL_DomNode_Generic> &prev = old_child.impl->previous_sibling;
-		CL_SharedPtr<CL_DomNode_Generic> &next = old_child.impl->next_sibling;
+		CL_DomTreeNode *tree_node = impl->get_tree_node();
+		CL_DomTreeNode *new_tree_node = new_child.impl->get_tree_node();
+		CL_DomTreeNode *old_tree_node = old_child.impl->get_tree_node();
 
-		// update child siblings
-		if (!next.is_null()) next->previous_sibling = new_child.impl;
-		if (!prev.is_null()) prev->next_sibling = new_child.impl;
+		new_tree_node->previous_sibling = old_tree_node->previous_sibling;
+		new_tree_node->next_sibling = old_tree_node->next_sibling;
+		new_tree_node->parent = impl->node_index;
+		if (tree_node->first_child == old_child.impl->node_index)
+			tree_node->first_child = new_child.impl->node_index;
+		if (tree_node->last_child == old_child.impl->node_index)
+			tree_node->last_child = new_child.impl->node_index;
+		old_tree_node->previous_sibling = cl_null_node_index;
+		old_tree_node->next_sibling = cl_null_node_index;
+		old_tree_node->parent = cl_null_node_index;
 
-		// update new child
-		new_child.impl->previous_sibling = prev;
-		new_child.impl->next_sibling = next;
-		new_child.impl->parent = impl;
-
-		// update self (parent)
-		if (impl->first_child == old_child.impl) impl->first_child = new_child.impl;
-		if (impl->last_child == old_child.impl) impl->last_child = new_child.impl;
-
-		// update old child
-		old_child.impl->previous_sibling = CL_SharedPtr<CL_DomNode_Generic>();
-		old_child.impl->next_sibling = CL_SharedPtr<CL_DomNode_Generic>();
-		old_child.impl->parent = CL_WeakPtr<CL_DomNode_Generic>();
 		return new_child;
 	}
 	return CL_DomNode();
@@ -323,46 +505,53 @@ CL_DomNode CL_DomNode::replace_child(CL_DomNode &new_child, CL_DomNode &old_chil
 
 CL_DomNode CL_DomNode::remove_child(CL_DomNode &old_child)
 {
-	if (!impl.is_null())
+	if (impl && old_child.impl)
 	{
-		CL_SharedPtr<CL_DomNode_Generic> &prev = old_child.impl->previous_sibling;
-		CL_SharedPtr<CL_DomNode_Generic> &next = old_child.impl->next_sibling;
-		if (!next.is_null()) next->previous_sibling = prev;
-		if (!prev.is_null()) prev->next_sibling = next;
-		if (impl->first_child == old_child.impl) impl->first_child = next;
-		if (impl->last_child == old_child.impl) impl->last_child = prev;
-		old_child.impl->previous_sibling = CL_SharedPtr<CL_DomNode_Generic>();
-		old_child.impl->next_sibling = CL_SharedPtr<CL_DomNode_Generic>();
-		old_child.impl->parent = CL_WeakPtr<CL_DomNode_Generic>();
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomTreeNode *tree_node = impl->get_tree_node();
+		CL_DomTreeNode *old_tree_node = old_child.impl->get_tree_node();
+		unsigned int prev_index = old_tree_node->previous_sibling;
+		unsigned int next_index = old_tree_node->next_sibling;
+		CL_DomTreeNode *prev = old_tree_node->get_previous_sibling(doc_impl);
+		CL_DomTreeNode *next = old_tree_node->get_next_sibling(doc_impl);
+		if (next)
+			next->previous_sibling = prev_index;
+		if (prev)
+			prev->next_sibling = next_index;
+		if (tree_node->first_child == old_child.impl->node_index)
+			tree_node->first_child = next_index;
+		if (tree_node->last_child == old_child.impl->node_index)
+			tree_node->last_child = prev_index;
+		old_tree_node->previous_sibling = cl_null_node_index;
+		old_tree_node->next_sibling = cl_null_node_index;
+		old_tree_node->parent = cl_null_node_index;
 	}
 	return CL_DomNode();
 }
 
 CL_DomNode CL_DomNode::append_child(CL_DomNode new_child)
 {
-	if (!impl.is_null())
+	if (impl && new_child.impl)
 	{
-		if (!impl->last_child.is_null())
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+		CL_DomTreeNode *tree_node = impl->get_tree_node();
+		CL_DomTreeNode *new_tree_node = new_child.impl->get_tree_node();
+		if (tree_node->last_child != cl_null_node_index)
 		{
-			impl->last_child->next_sibling = new_child.impl;
-			new_child.impl->previous_sibling = impl->last_child;
-			impl->last_child = new_child.impl;
+			CL_DomTreeNode *last_tree_node = tree_node->get_last_child(doc_impl);
+			last_tree_node->next_sibling = new_child.impl->node_index;
+			new_tree_node->previous_sibling = tree_node->last_child;
+			tree_node->last_child = new_child.impl->node_index;
 		}
 		else
 		{
-			impl->first_child = new_child.impl;
-			impl->last_child = new_child.impl;
+			tree_node->first_child = new_child.impl->node_index;
+			tree_node->last_child = new_child.impl->node_index;
 		}
-		new_child.impl->parent = impl;
+		new_tree_node->parent = impl->node_index;
 		return new_child;
 	}
 	return CL_DomNode();
-}
-
-bool CL_DomNode::has_child_nodes() const
-{
-	if (!impl.is_null()) return !impl->first_child.is_null();
-	return false;
 }
 
 CL_DomNode CL_DomNode::clone_node(bool deep) const
@@ -370,84 +559,91 @@ CL_DomNode CL_DomNode::clone_node(bool deep) const
 	return CL_DomNode();
 }
 
-bool CL_DomNode::is_same_node(const CL_DomNode &node) const
-{
-	return impl.get() == node.impl.get();
-}
-
 CL_DomElement CL_DomNode::to_element() const
 {
-	if (is_element()) return CL_DomElement(impl);
+	if (is_element())
+		return CL_DomElement(impl);
 	return CL_DomElement();
 }
 
 CL_DomAttr CL_DomNode::to_attr() const
 {
-	if (is_attr()) return CL_DomAttr(impl);
+	if (is_attr())
+		return CL_DomAttr(impl);
 	return CL_DomAttr();
 }
 
 CL_DomText CL_DomNode::to_text() const
 {
-	if (is_text()) return CL_DomText(impl);
+	if (is_text())
+		return CL_DomText(impl);
 	return CL_DomText();
 }
 
 CL_DomCDATASection CL_DomNode::to_cdata_section() const
 {
-	if (is_cdata_section()) return CL_DomCDATASection(impl);
+	if (is_cdata_section())
+		return CL_DomCDATASection(impl);
 	return CL_DomCDATASection();
 }
 
 CL_DomEntityReference CL_DomNode::to_entity_reference() const
 {
-	if (is_entity_reference()) return CL_DomEntityReference(impl);
+	if (is_entity_reference())
+		return CL_DomEntityReference(impl);
 	return CL_DomEntityReference();
 }
 
 CL_DomEntity CL_DomNode::to_entity() const
 {
-	if (is_entity()) return CL_DomEntity(impl);
+	if (is_entity())
+		return CL_DomEntity(impl);
 	return CL_DomEntity();
 }
 
 CL_DomProcessingInstruction CL_DomNode::to_processing_instruction() const
 {
-	if (is_processing_instruction()) return CL_DomProcessingInstruction(impl);
+	if (is_processing_instruction())
+		return CL_DomProcessingInstruction(impl);
 	return CL_DomProcessingInstruction();
 }
 
 CL_DomComment CL_DomNode::to_comment() const
 {
-	if (is_comment()) return CL_DomComment(impl);
+	if (is_comment())
+		return CL_DomComment(impl);
 	return CL_DomComment();
 }
 
 CL_DomDocument CL_DomNode::to_document() const
 {
-	if (is_document()) return CL_DomDocument(impl);
+	if (is_document())
+		return CL_DomDocument(impl);
 	return CL_DomDocument();
 }
 
 CL_DomDocumentType CL_DomNode::to_document_type() const
 {
-	if (is_document_type()) return CL_DomDocumentType(impl);
+	if (is_document_type())
+		return CL_DomDocumentType(impl);
 	return CL_DomDocumentType();
 }
 
 CL_DomDocumentFragment CL_DomNode::to_document_fragment() const
 {
-	if (is_document_fragment()) return CL_DomDocumentFragment(impl);
+	if (is_document_fragment())
+		return CL_DomDocumentFragment(impl);
 	return CL_DomDocumentFragment();
 }
 
 CL_DomNotation CL_DomNode::to_notation() const
 {
-	if (is_notation()) return CL_DomNotation(impl);
+	if (is_notation())
+		return CL_DomNotation(impl);
 	return CL_DomNotation();
 }
 
-CL_DomNode CL_DomNode::named_item(const std::string &name) const
+CL_DomNode CL_DomNode::named_item(const CL_DomString &name) const
 {
 	CL_DomNode node = get_first_child();
 	while (node.is_null() == false)
@@ -458,5 +654,120 @@ CL_DomNode CL_DomNode::named_item(const std::string &name) const
 	return CL_DomNode();
 }
 
+CL_DomNode CL_DomNode::named_item_ns(
+	const CL_DomString &namespace_uri,
+	const CL_DomString &local_name) const
+{
+	CL_DomNode node = get_first_child();
+	while (node.is_null() == false)
+	{
+		if (node.get_namespace_uri() == namespace_uri && node.get_local_name() == local_name)
+			return node;
+		node = node.get_next_sibling();
+	}
+	return CL_DomNode();
+}
+
+CL_DomString CL_DomNode::find_namespace_uri(const CL_DomString &qualified_name) const
+{
+	static CL_DomString xmlns_prefix(cl_text("xmlns:"));
+	static CL_DomString xmlns_xml(cl_text("xml"));
+	static CL_DomString xmlns_xml_uri(cl_text("http://www.w3.org/XML/1998/namespace"));
+	static CL_DomString xmlns_xmlns(cl_text("xmlns"));
+	static CL_DomString xmlns_xmlns_uri(cl_text("http://www.w3.org/2000/xmlns/"));
+
+	CL_DomString prefix;
+	CL_DomString::size_type pos = qualified_name.find(cl_text(':'));
+	if (pos != CL_DomString::npos)
+		prefix = qualified_name.substr(0, pos);
+
+	if (prefix == xmlns_xml)
+		return xmlns_xml;
+	else if (prefix == xmlns_xmlns || qualified_name == xmlns_xmlns)
+		return xmlns_xmlns;
+
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
+	const CL_DomTreeNode *cur = impl->get_tree_node();
+	while (cur)
+	{
+		const CL_DomTreeNode *cur_attr = cur->get_first_attribute(doc_impl);
+		while (cur_attr)
+		{
+			CL_StringRef node_name = cur_attr->get_node_name();
+			if (prefix.empty())
+			{
+				if (node_name == xmlns_xmlns)
+					return cur_attr->get_node_value();
+			}
+			else
+			{
+				if (node_name.substr(0, 6) == xmlns_prefix && node_name.substr(6) == prefix)
+					return cur_attr->get_node_value();
+			}
+			cur_attr = cur_attr->get_next_sibling(doc_impl);
+		}
+		cur = cur->get_parent(doc_impl);
+	}
+	return CL_DomString();
+}
+
+CL_DomString CL_DomNode::find_prefix(const CL_DomString &namespace_uri) const
+{
+	CL_DomElement cur = to_element();
+	while (!cur.is_null())
+	{
+		CL_DomNamedNodeMap attributes = cur.get_attributes();
+		int size = attributes.get_length();
+		for (int index = 0; index < size; index++)
+		{
+			CL_DomNode attribute = attributes.item(index);
+			if (attribute.get_prefix() == cl_text("xmlns") &&
+				attribute.get_node_value() == namespace_uri)
+			{
+				return attribute.get_local_name();
+			}
+		}
+		cur = cur.get_parent_node().to_element();
+	}
+	return CL_DomString();
+}
+
+std::vector<CL_DomNode> CL_DomNode::select_nodes(const CL_DomString &xpath_expression) const
+{
+	CL_XPathEvaluator evaluator;
+	return evaluator.evaluate(xpath_expression, *this).get_node_set();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomNode implementation:
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_DomNode_Generic construction:
+
+CL_DomNode_Generic::CL_DomNode_Generic()
+: node_index(cl_null_node_index)
+{
+}
+
+CL_DomNode_Generic::~CL_DomNode_Generic()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_DomNode_Generic operations:
+
+CL_DomTreeNode *CL_DomNode_Generic::get_tree_node()
+{
+	if (node_index == cl_null_node_index)
+		return 0;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	return doc_impl->nodes[node_index];
+}
+
+const CL_DomTreeNode *CL_DomNode_Generic::get_tree_node() const
+{
+	if (node_index == cl_null_node_index)
+		return 0;
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) owner_document.get();
+	return doc_impl->nodes[node_index];
+}

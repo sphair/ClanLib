@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,25 +24,84 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_dom_document_generic
-#define header_dom_document_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include "dom_node_generic.h"
+#include "API/Core/Text/string_allocator.h"
+#include "API/Core/System/block_allocator.h"
+#include <vector>
+#include <stack>
+
+class CL_DomTreeNode;
+class CL_XMLToken;
+class CL_DomNamedNodeMap_Generic;
 
 class CL_DomDocument_Generic : public CL_DomNode_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_DomDocument_Generic();
 
 	~CL_DomDocument_Generic();
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	CL_String qualified_name;
+
+	CL_String public_id;
+
+	CL_String system_id;
+
+	CL_String internal_subset;
+
+	CL_StringAllocator string_allocator;
+
+	CL_BlockAllocator node_allocator;
+
+	std::vector<CL_DomTreeNode *> nodes;
+
+	std::vector<int> free_nodes;
+
+	std::vector<CL_DomNode_Generic *> free_dom_nodes;
+
+	std::vector<CL_DomNamedNodeMap_Generic *> free_named_node_maps;
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	static CL_DomString find_namespace_uri(
+		const CL_DomString &qualified_name,
+		const CL_XMLToken &search_token,
+		const CL_DomNode &search_node);
+
+	unsigned int allocate_tree_node();
+
+	void free_tree_node(unsigned int node_index);
+
+	CL_DomNode_Generic *allocate_dom_node();
+
+	void free_dom_node(CL_DomNode_Generic *node);
+
+	CL_DomNamedNodeMap_Generic *allocate_named_node_map();
+
+	void free_named_node_map(CL_DomNamedNodeMap_Generic *map);
+/// \}
 };
 
-#endif
+

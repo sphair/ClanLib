@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,28 +32,28 @@
 #include "soundprovider_mikmod_generic.h"
 #include "module_reader.h"
 #include "API/Sound/soundformat.h"
-#include "API/Core/IOData/inputsource.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/System/error.h"
-#include <cstring>
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/System/autoptr.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod_Session construction:
 
 CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod_Generic *data) :
-	data(data), num_samples(0), position(0)
+	data(data), num_samples(0), position(0), stream_eof(false)
 {
-	CL_InputSource *source = data->provider->open_source(data->filename);
+	CL_AutoPtr<CL_IODevice_Memory> input_autoptr(new CL_IODevice_Memory(data->buffer));
+	CL_IODevice_Memory *input = input_autoptr;
 
-	MREADER *reader = new_clanlib_reader((void *) source);
-	if (reader == 0) throw CL_Error("new_clanlib_reader failed!");
+	MREADER *reader = new_clanlib_reader((void *) input);
+	if (reader == 0) throw CL_Exception(cl_text("new_clanlib_reader failed!"));
 
 	module = Player_LoadGeneric(reader,CLANLIB_READER_CHANNELS,0);
 	if (module == 0)
 	{
 		delete_clanlib_reader(reader);
-		delete source;
-		throw CL_Error(MikMod_strerror(MikMod_errno));
+		throw CL_Exception(MikMod_strerror(MikMod_errno));
 	}
 
 	module->wrap = false;
@@ -61,7 +61,6 @@ CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvide
 	module->fadeout = true;
 
 	delete_clanlib_reader(reader);
-	delete source;
 
 	frequency = md_mixfreq;
 	format = (md_mode & DMODE_16BITS) ? sf_16bit_signed : sf_8bit_signed;

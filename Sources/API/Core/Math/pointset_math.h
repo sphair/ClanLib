@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,48 +24,42 @@
 **  File Author(s):
 **
 **    Emanuel Griesen
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_pointset_math
-#define header_pointset_math
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
 
+
+#include "../api_core.h"
 #include <vector>
 #include "point.h"
 #include "circle.h"
 
-//: Math operations related to point sets.
-//- !group=Core/Math!
-//- !header=core.h!
+/// \brief Math operations related to point sets.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE CL_PointSetMath
 {
 	public:
-//! Operations:
+/// \name Operations
+/// \{
+
  public:
-	//: Find minimum spanning circle for the set of points
-	//param std::vector<CL_Pointf> &points: the points to calulate on
+	/// \brief Find minimum spanning circle for the set of points
+	///
+	/// \param std::vector<CL_Pointf> &points the points to calulate on
 	static CL_Circlef minimum_enclosing_disc(
 		const std::vector<CL_Pointf> &points);
 
-	//: Return the convex hull of the given set of points
-	//param std::vector<CL_Pointf> P: the set of points
+	/// \brief Return the convex hull of the given set of points
+	///
+	/// \param std::vector<CL_Pointf> P the set of points
 	static std::vector<CL_Pointf> convex_hull_from_polygon(std::vector<CL_Pointf> &points);
 
  private:
-
 	static void calculate_minimum_enclosing_disc(
 		CL_Circlef &smalldisc,
 		const std::vector<CL_Pointf> &points,
@@ -93,6 +87,8 @@ class CL_API_CORE CL_PointSetMath
 		unsigned int k);
 
 	friend class CL_OutlineMath;
+/// \}
 };
 
-#endif
+
+/// \}

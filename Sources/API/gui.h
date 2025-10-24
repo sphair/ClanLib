@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,76 +24,168 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
+**    Harry Storbacka
 */
 
-//: <p>Graphical User Interface API. Provides a themeable and very flexible GUI
-//: framework.</p>
+/// \brief <p>ClanLib GUI library.</p>
 //! Global=GUI
 
-#ifndef header_gui
-#define header_gui
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#ifdef _MSC_VER
-#pragma warning( disable : 4786)
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
 #endif
 
-// Framework
-#include "GUI/component.h"
-#include "GUI/component_manager.h"
-#include "GUI/component_type.h"
-#include "GUI/component_move_handler.h"
-#include "GUI/component_resize_handler.h"
-#include "GUI/component_style.h"
+#include "GUI/setup_gui.h"
+#include "GUI/accelerator_table.h"
+#include "GUI/accelerator_key.h"
+#include "GUI/gui_component.h"
+#include "GUI/gui_component_description.h"
+#include "GUI/gui_layout.h"
+#include "GUI/gui_layout_corners.h"
+#include "GUI/gui_message.h"
+#include "GUI/gui_message_input.h"
+#include "GUI/gui_message_resize.h"
+#include "GUI/gui_message_focus_change.h"
+#include "GUI/gui_message_activation_change.h"
+#include "GUI/gui_message_close.h"
+#include "GUI/gui_message_pointer.h"
 #include "GUI/gui_manager.h"
-#include "GUI/setupgui.h"
-#include "GUI/stylemanager.h"
-#include "GUI/layout.h"
-#include "GUI/deck.h"
+#include "GUI/gui_window_manager.h"
+#include "GUI/gui_window_manager_system.h"
+#include "GUI/gui_window_manager_texture.h"
+#include "GUI/gui_theme.h"
+#include "GUI/gui_theme_default.h"
+#include "GUI/gui_theme_part.h"
+#include "GUI/gui_theme_part_property.h"
+#include "GUI/Components/checkbox.h"
+#include "GUI/Components/combobox.h"
+#include "GUI/Components/frame.h"
+#include "GUI/Components/groupbox.h"
+#include "GUI/Components/imageview.h"
+#include "GUI/Components/label.h"
+#include "GUI/Components/lineedit.h"
+#include "GUI/Components/listview.h"
+#include "GUI/Components/listview_header.h"
+#include "GUI/Components/listview_column_data.h"
+#include "GUI/Components/main_window.h"
+#include "GUI/Components/menubar.h"
+#include "GUI/Components/popupmenu.h"
+#include "GUI/Components/progressbar.h"
+#include "GUI/Components/push_button.h"
+#include "GUI/Components/radiobutton.h"
+#include "GUI/Components/scrollbar.h"
+#include "GUI/Components/spin.h"
+#include "GUI/Components/statusbar.h"
+#include "GUI/Components/tab.h"
+#include "GUI/Components/tab_page.h"
+#include "GUI/Components/textedit.h"
+#include "GUI/Components/toolbar.h"
+#include "GUI/Components/toolbar_item.h"
+#include "GUI/Components/tooltip.h"
+#include "GUI/Components/slider.h"
+#include "GUI/Components/window.h"
 
-// Components
-#include "GUI/button.h"
-#include "GUI/checkbox.h"
-#include "GUI/frame.h"
-#include "GUI/image.h"
-#include "GUI/inputbox.h"
-#include "GUI/richedit.h"
-#include "GUI/richedit_paragraph.h"
-#include "GUI/label.h"
-#include "GUI/listbox.h"
-#include "GUI/listitem.h"
-#include "GUI/progressbar.h"
-#include "GUI/radiobutton.h"
-#include "GUI/radiogroup.h"
-#include "GUI/scrollbar.h"
-#include "GUI/treeview.h"
-#include "GUI/treeitem.h"
-#include "GUI/treenode.h"
-#include "GUI/window.h"
-#include "GUI/menu.h"
-#include "GUI/menu_node.h"
-#include "GUI/menu_item.h"
-
-// Dialogs
-#include "GUI/messagebox.h"
-#include "GUI/filedialog.h"
-#include "GUI/inputdialog.h"
+#ifdef __cplusplus_cli
+#pragma managed(pop)
+#endif
 
 #if defined (_MSC_VER)
-#if !defined (CL_GUI_EXPORT)		
-// Test CL_GUI_EXPORT to prevent recursive linker refs
-// see menu.cpp, menu_generic.cpp, menu_node_generic.h 
-// for the offending #includes
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanGUI-static-mt.lib")
-#else
-#pragma comment(lib, "clanGUI-static-mt-debug.lib")
-#endif
-#endif
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-dll.lib")
+				#else
+					#pragma comment(lib, "clanGUI-dll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-dll-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-dll-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mtdll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mtdll-debug.lib")
+				#endif
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mt.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mt-debug.lib")
+				#endif
+			#endif
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-dll-uc.lib")
+				#else
+					#pragma comment(lib, "clanGUI-dll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-dll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-dll-uc-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mtdll-uc.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mtdll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mtdll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mtdll-uc-debug.lib")
+				#endif
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mt-uc.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mt-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGUI-x64-static-mt-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGUI-static-mt-uc-debug.lib")
+				#endif
+			#endif
+		#endif
+	#endif
 #endif
 
-#endif
+

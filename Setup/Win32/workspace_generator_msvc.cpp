@@ -33,13 +33,13 @@
 #ifdef UNICODE
 std::string text_to_local8(const tstring &text)
 {
-	int local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), text.length(), 0, 0, 0, 0);
+	int local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), 0, 0, 0, 0);
 	if (local8_length <= 0)
 		return std::string();
 	char *buffer = new char[local8_length];
 	if (buffer == 0)
 		return std::string();
-	local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), text.length(), buffer, local8_length, 0, 0);
+	local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), buffer, local8_length, 0, 0);
 	if (local8_length <= 0)
 	{
 		delete[] buffer;
@@ -52,13 +52,13 @@ std::string text_to_local8(const tstring &text)
 
 tstring local8_to_text(const std::string &local8)
 {
-	int text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), local8.length(), 0, 0);
+	int text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), 0, 0);
 	if (text_length <= 0)
 		return tstring();
 	WCHAR *buffer = new WCHAR[text_length];
 	if (buffer == 0)
 		return tstring();
-	text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), local8.length(), buffer, text_length);
+	text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), buffer, text_length);
 	if (text_length <= 0)
 	{
 		delete[] buffer;
@@ -82,6 +82,31 @@ tstring local8_to_text(const std::string &local8)
 
 /////////////////////////////////////////////////////////////////////////////
 // WorkspaceGenerator_MSVC construction:
+
+void WorkspaceGenerator_MSVC::install_mkdir(
+	std::ofstream &dsp,
+	const std::string &dest_dir)
+{
+	static OSVERSIONINFO versionInfo;
+	static bool firstCall = true;
+	if (firstCall)
+	{
+		memset(&versionInfo, 0, sizeof(OSVERSIONINFO));
+		GetVersionEx(&versionInfo);
+		firstCall = false;
+	}
+
+	bool win9x = (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
+
+	if (win9x)
+	{
+		dsp << "if not exist \"" << dest_dir << "\\nul\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
+	}
+	else
+	{
+		dsp << "if not exist \"" << dest_dir << "\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
+	}
+}
 
 void WorkspaceGenerator_MSVC::install_mkdir(
 	std::ofstream &dsp,
@@ -160,13 +185,8 @@ void WorkspaceGenerator_MSVC::install_mkdir(
 	{
 		bool skip = false;
 
-#if _MSC_VER < 1500
 		for (int i=0; exclude_from_build[i] != NULL; i++)
 			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
-#else
-		for (int i=0; exclude_from_build[i] != NULL; i++)
-			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
-#endif
 
 		if (skip) continue;
 
@@ -232,13 +252,8 @@ void WorkspaceGenerator_MSVC::install_copydir(
 	{
 		bool skip = false;
 
-#if _MSC_VER < 1500
 		for (int i=0; exclude_from_build[i] != NULL; i++)
 			if (stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
-#else
-		for (int i=0; exclude_from_build[i] != NULL; i++)
-			if (_stricmp(data.cFileName, exclude_from_build[i]) == 0) skip = true;
-#endif
 
 		if (skip) continue;
 
@@ -291,9 +306,9 @@ void WorkspaceGenerator_MSVC6::write(const Workspace &workspace)
 void WorkspaceGenerator_MSVC6::write_dsw(const Workspace &workspace)
 {
 	write_dsw_clanlib(workspace);
-	write_dsw_utilities(workspace);
-	write_dsw_examples(workspace);
-	write_dsw_tests(workspace);
+	// write_dsw_utilities(workspace);
+	// write_dsw_examples(workspace);
+	// write_dsw_tests(workspace);
 }
 
 void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
@@ -342,7 +357,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanNetwork");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanGL");
@@ -359,7 +373,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -414,7 +427,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -424,7 +436,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -434,7 +445,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanGL");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
@@ -444,7 +454,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -454,7 +463,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -473,7 +481,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -483,7 +490,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -564,13 +570,13 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanGL");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanSound");
+	add_project_dependency(dsw, "clanMikMod");
 	end_project(dsw);
 
 	begin_project(dsw, "ExamplePilotsPuzzle", ".\\Examples\\PilotsPuzzle\\PilotsPuzzle.dsp");
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	add_project_dependency(dsw, "clanGL");
@@ -613,6 +619,8 @@ void WorkspaceGenerator_MSVC6::write_dsw_examples(const Workspace &workspace)
 	add_project_dependency(dsw, "clanGL");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
+	add_project_dependency(dsw, "clanSound");
+	add_project_dependency(dsw, "clanMikMod");
 	end_project(dsw);
 
 	begin_project(dsw, "ExampleStencil", ".\\Examples\\Stencil\\Stencil.dsp");
@@ -721,7 +729,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_utilities(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanSignals");
 	end_project(dsw);
@@ -738,6 +745,13 @@ void WorkspaceGenerator_MSVC6::write_dsw_tests(const Workspace &workspace)
 	begin_project(dsw, "CoreTest", ".\\Tests\\CoreTest\\CoreTest.dsp");
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
+	end_project(dsw);
+
+	begin_project(dsw, "DrawTest", ".\\Tests\\DrawTest\\DrawTest.dsp");
+	add_project_dependency(dsw, "clanApp");
+	add_project_dependency(dsw, "clanCore");
+	add_project_dependency(dsw, "clanDisplay");
+	add_project_dependency(dsw, "clanGL");
 	end_project(dsw);
 
 	begin_project(dsw, "RegExpTest", ".\\Tests\\RegExpTest\\RegExpTest.dsp");
@@ -795,7 +809,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_tests(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanGL");
 	add_project_dependency(dsw, "clanSignals");
@@ -805,7 +818,6 @@ void WorkspaceGenerator_MSVC6::write_dsw_tests(const Workspace &workspace)
 	add_project_dependency(dsw, "clanApp");
 	add_project_dependency(dsw, "clanCore");
 	add_project_dependency(dsw, "clanGUI");
-	add_project_dependency(dsw, "clanGUIStyleSilver");
 	add_project_dependency(dsw, "clanDisplay");
 	add_project_dependency(dsw, "clanGL");
 	add_project_dependency(dsw, "clanSignals");
@@ -1059,9 +1071,7 @@ void WorkspaceGenerator_MSVC6::write_dsp(const Workspace &workspace, const Proje
 				has_precomp = true;
 				precomp_header = *it;
 				std::string::size_type pos = precomp_header.find_last_of("/\\");
-				if (project.name == "GUI")
-					precomp_header = precomp_header.substr(pos+1);
-				else if (pos == std::string::npos)
+				if (pos == std::string::npos)
 					precomp_header = project.name + "/" + precomp_header;
 				else
 					precomp_header = project.name + "/" + precomp_header.substr(pos+1);
@@ -1138,6 +1148,8 @@ void WorkspaceGenerator_MSVC6::write_dsp(const Workspace &workspace, const Proje
 		bat_file += ".bat";
 
 		std::ofstream bat(bat_file.c_str());
+
+		install_mkdir(bat, workspace.output_lib_dir);
 
 		std::string instdir = workspace.output_include_dir.c_str();
 		instdir += "\\ClanLib";
@@ -1248,7 +1260,7 @@ void WorkspaceGenerator_MSVC6::write_dsp(const Workspace &workspace, const Proje
 void WorkspaceGenerator_MSVC6::generate_source_files(std::ofstream &dsp, const Project &project)
 {
 	std::string chop_str = "Sources\\";
-	unsigned int chop_length = chop_str.length();
+	size_t chop_length = chop_str.length();
 
 	std::list<std::string>::iterator itCur, itNew;
 	std::list<std::string> cur_path;
@@ -1292,7 +1304,7 @@ void WorkspaceGenerator_MSVC6::generate_source_files(std::ofstream &dsp, const P
 
 		cur_path = new_path;
 
-		add_file(dsp, file, project);
+		add_file(dsp, file);
 	}
 
 	for (itCur = cur_path.begin(); itCur != cur_path.end(); itCur++) end_group(dsp);
@@ -1301,12 +1313,12 @@ void WorkspaceGenerator_MSVC6::generate_source_files(std::ofstream &dsp, const P
 std::list<std::string> WorkspaceGenerator_MSVC6::extract_path(const std::string &fullname)
 {
 	std::list<std::string> path;
-	int pos = 0;
-	int old_pos = 0;
+//	int pos = 0;
+	size_t old_pos = 0;
 
 	while (true)
 	{
-		int pos = fullname.find("\\", old_pos);
+		size_t pos = fullname.find("\\", old_pos);
 		if (pos == std::string::npos) break;
 
 		path.push_back(fullname.substr(old_pos, pos-old_pos));
@@ -1329,7 +1341,7 @@ void WorkspaceGenerator_MSVC6::end_group(std::ofstream &dsp)
 	dsp << "# End Group" << std::endl;
 }
 
-void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &filename, const Project &project)
+void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &filename)
 {
 	dsp << "# Begin Source File" << std::endl;
 	dsp << std::endl;
@@ -1338,11 +1350,12 @@ void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &f
 	if (filename.find("precomp.cpp") != std::string::npos)
 	{
 		std::string filename_header = filename.substr(0, filename.length()-4) + ".h";
-		std::string::size_type pos = filename_header.find_last_of("/\\");
-		if (project.name == "GUI")
-			filename_header = filename_header.substr(pos+1);
-
 		dsp << "# ADD CPP /Yc\"" << filename_header << "\"" << std::endl;
+	}
+	else if (filename.length() > 2 && filename.substr(filename.length()-2) == ".c")
+	{
+		std::string filename_header = filename.substr(0, filename.length()-4) + ".h";
+		dsp << "# ADD CPP /Y-" << std::endl;
 	}
 
 	dsp << "# End Source File" << std::endl;
@@ -1407,8 +1420,12 @@ void WorkspaceGenerator_MSVC7::write(const Workspace &param_workspace)
 	sln << "	GlobalSection(SolutionConfiguration) = preSolution" << std::endl;
 	sln << "		ConfigName.0 = Static MT Debug" << std::endl;
 	sln << "		ConfigName.1 = Static MT Release" << std::endl;
-	sln << "		ConfigName.2 = Static MTDLL Debug" << std::endl;
-	sln << "		ConfigName.3 = Static MTDLL Release" << std::endl;
+	sln << "		ConfigName.2 = Static MT Unicode Debug" << std::endl;
+	sln << "		ConfigName.3 = Static MT Unicode Release" << std::endl;
+	sln << "		ConfigName.4 = Static MTDLL Debug" << std::endl;
+	sln << "		ConfigName.5 = Static MTDLL Release" << std::endl;
+	sln << "		ConfigName.6 = Static MTDLL Unicode Debug" << std::endl;
+	sln << "		ConfigName.7 = Static MTDLL Unicode Release" << std::endl;
 	sln << "	EndGlobalSection" << std::endl;
 	if (target_version == 700)
 	{
@@ -1422,11 +1439,20 @@ void WorkspaceGenerator_MSVC7::write(const Workspace &param_workspace)
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Debug.Build.0 = Static MT Debug|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Release.ActiveCfg = Static MT Release|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Release.Build.0 = Static MT Release|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Unicode Debug.ActiveCfg = Static MT Unicode Debug|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Unicode Debug.Build.0 = Static MT Unicode Debug|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Unicode Release.ActiveCfg = Static MT Unicode Release|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MT Unicode Release.Build.0 = Static MT Unicode Release|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Debug.ActiveCfg = Static MTDLL Debug|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Debug.Build.0 = Static MTDLL Debug|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Release.ActiveCfg = Static MTDLL Release|Win32" << std::endl;
 		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Release.Build.0 = Static MTDLL Release|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Unicode Debug.ActiveCfg = Static MTDLL Unicode Debug|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Unicode Debug.Build.0 = Static MTDLL Unicode Debug|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Unicode Release.ActiveCfg = Static MTDLL Unicode Release|Win32" << std::endl;
+		sln << "		" << projectGUIDs[i].c_str() << ".Static MTDLL Unicode Release.Build.0 = Static MTDLL Unicode Release|Win32" << std::endl;
 	}
+	sln << "	EndGlobalSection" << std::endl;
 	if (target_version == 800)
 	{
 		sln << "	GlobalSection(SolutionProperties) = preSolution" << std::endl;
@@ -1435,7 +1461,6 @@ void WorkspaceGenerator_MSVC7::write(const Workspace &param_workspace)
 	}
 	else
 	{
-		sln << "	EndGlobalSection" << std::endl;
 		sln << "	GlobalSection(ExtensibilityGlobals) = postSolution" << std::endl;
 		sln << "	EndGlobalSection" << std::endl;
 		sln << "	GlobalSection(ExtensibilityAddIns) = postSolution" << std::endl;
@@ -1454,7 +1479,7 @@ std::string WorkspaceGenerator_MSVC7::get_project_guid(const std::string &projec
 	// Check if we already made a GUID earlier. Reuse it if we did.
 	LONG result;
 	HKEY key = 0;
-	result = RegCreateKeyA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Clansoft\\ClanLib\\ProjectGUIDs", &key);
+	result = RegCreateKeyA(HKEY_CURRENT_USER, "SOFTWARE\\Clanlib.org\\ClanLib\\ProjectGUIDs", &key);
 	if (result != ERROR_SUCCESS)
 		key = 0;
 	if (key)
@@ -1494,7 +1519,7 @@ std::string WorkspaceGenerator_MSVC7::get_project_guid(const std::string &projec
 			0,
 			REG_SZ,
 			(LPBYTE) returnGUID.c_str(),
-			returnGUID.length()+1);
+			int(returnGUID.length()) + 1);
 		RegCloseKey(key);
 	}
 
@@ -1530,26 +1555,46 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 	std::string precompiledHeaderThrough;
 	std::string precompiledHeaderFileMTDebug;
 	std::string precompiledHeaderFileMTRelease;
+	std::string precompiledHeaderFileMTUnicodeDebug;
+	std::string precompiledHeaderFileMTUnicodeRelease;
 	std::string precompiledHeaderFileMTDLLDebug;
 	std::string precompiledHeaderFileMTDLLRelease;
+	std::string precompiledHeaderFileMTDLLUnicodeDebug;
+	std::string precompiledHeaderFileMTDLLUnicodeRelease;
 	std::string assemblerListingLocationMTDebug = ".\\../Debug/"+projectName+"-static-mt/";
 	std::string assemblerListingLocationMTRelease = ".\\../Release/"+projectName+"-static-mt/";
+	std::string assemblerListingLocationMTUnicodeDebug = ".\\../Debug/"+projectName+"-static-mt-uc/";
+	std::string assemblerListingLocationMTUnicodeRelease = ".\\../Release/"+projectName+"-static-mt-uc/";
 	std::string assemblerListingLocationMTDLLDebug = ".\\../Debug/"+projectName+"-static-mtdll/";
 	std::string assemblerListingLocationMTDLLRelease = ".\\../Release/"+projectName+"-static-mtdll/";
+	std::string assemblerListingLocationMTDLLUnicodeDebug = ".\\../Debug/"+projectName+"-static-mtdll-uc/";
+	std::string assemblerListingLocationMTDLLUnicodeRelease = ".\\../Release/"+projectName+"-static-mtdll-uc/";
 	std::string objectFileMTDebug = ".\\../Debug/"+projectName+"-static-mt/";
 	std::string objectFileMTRelease = ".\\../Release/"+projectName+"-static-mt/";
+	std::string objectFileMTUnicodeDebug = ".\\../Debug/"+projectName+"-static-mt-uc/";
+	std::string objectFileMTUnicodeRelease = ".\\../Release/"+projectName+"-static-mt-uc/";
 	std::string objectFileMTDLLDebug = ".\\../Debug/"+projectName+"-static-mtdll/";
 	std::string objectFileMTDLLRelease = ".\\../Release/"+projectName+"-static-mtdll/";
+	std::string objectFileMTDLLUnicodeDebug = ".\\../Debug/"+projectName+"-static-mtdll-uc/";
+	std::string objectFileMTDLLUnicodeRelease = ".\\../Release/"+projectName+"-static-mtdll-uc/";
 	std::string programDataBaseFileNameMTDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-debug.pdb"; // ".\\../Debug/"+projectName+"-static-mt/";
 	std::string programDataBaseFileNameMTRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mt.pdb"; // ".\\../Release/"+projectName+"-static-mt/";
+	std::string programDataBaseFileNameMTUnicodeDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-uc-debug.pdb"; // ".\\../Debug/"+projectName+"-static-mt-uc/";
+	std::string programDataBaseFileNameMTUnicodeRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-uc.pdb"; // ".\\../Release/"+projectName+"-static-mt-uc/";
 	std::string programDataBaseFileNameMTDLLDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-debug.pdb"; // ".\\../Debug/"+projectName+"-static-mtdll/";
 	std::string programDataBaseFileNameMTDLLRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll.pdb"; // ".\\../Release/"+projectName+"-static-mtdll/";
+	std::string programDataBaseFileNameMTDLLUnicodeDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-uc-debug.pdb"; // ".\\../Debug/"+projectName+"-static-mtdll-uc/";
+	std::string programDataBaseFileNameMTDLLUnicodeRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-uc.pdb"; // ".\\../Release/"+projectName+"-static-mtdll-uc/";
 	std::string additionalOptionsDebug;
 	std::string additionalOptionsRelease;
 	std::string outputFileMTDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-debug.lib";
 	std::string outputFileMTRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mt.lib";
+	std::string outputFileMTUnicodeDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-uc-debug.lib";
+	std::string outputFileMTUnicodeRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mt-uc.lib";
 	std::string outputFileMTDLLDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-debug.lib";
 	std::string outputFileMTDLLRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll.lib";
+	std::string outputFileMTDLLUnicodeDebug = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-uc-debug.lib";
+	std::string outputFileMTDLLUnicodeRelease = workspace.output_lib_dir + "\\" + project.libname + "-static-mtdll-uc.lib";
 	std::string commandLine = "call install_" + project.libname + ".bat";
 
 	// Precompiled headers
@@ -1564,9 +1609,7 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 				has_precomp = true;
 				precomp_header = *it;
 				std::string::size_type pos = precomp_header.find_last_of("/\\");
-				if (project.name == "GUI")
-					precomp_header = precomp_header.substr(pos+1);
-				else if (pos == std::string::npos)
+				if (pos == std::string::npos)
 					precomp_header = project.name + "\\" + precomp_header;
 				else
 					precomp_header = project.name + "\\" + precomp_header.substr(pos+1);
@@ -1580,8 +1623,12 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		precompiledHeaderThrough = precomp_header;
 		precompiledHeaderFileMTDebug = ".\\../Debug/"+projectName+"-static-mt/"+projectName+".pch";
 		precompiledHeaderFileMTRelease = ".\\../Release/"+projectName+"-static-mt/"+projectName+".pch";
+		precompiledHeaderFileMTUnicodeDebug = ".\\../Debug/"+projectName+"-static-mt-uc/"+projectName+".pch";
+		precompiledHeaderFileMTUnicodeRelease = ".\\../Release/"+projectName+"-static-mt-uc/"+projectName+".pch";
 		precompiledHeaderFileMTDLLDebug = ".\\../Debug/"+projectName+"-static-mtdll/"+projectName+".pch";
 		precompiledHeaderFileMTDLLRelease = ".\\../Release/"+projectName+"-static-mtdll/"+projectName+".pch";
+		precompiledHeaderFileMTDLLUnicodeDebug = ".\\../Debug/"+projectName+"-static-mtdll-uc/"+projectName+".pch";
+		precompiledHeaderFileMTDLLUnicodeRelease = ".\\../Release/"+projectName+"-static-mtdll-uc/"+projectName+".pch";
 	}
 
 	{
@@ -1636,6 +1683,95 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		vcproj << "	</ToolFiles>" << std::endl;
 	}
 	vcproj << "	<Configurations>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MT Unicode Debug|Win32
+
+	vcproj << "		<Configuration" << std::endl;
+	vcproj << "			Name=\"Static MT Unicode Debug|Win32\"" << std::endl;
+	vcproj << "			OutputDirectory=\".\\../Debug\"" << std::endl;
+	vcproj << "			IntermediateDirectory=\".\\../Debug/" << project.libname.c_str() << "-static-mt-uc\"" << std::endl;
+	vcproj << "			ConfigurationType=\"4\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "			InheritedPropertySheets=\"$(VCInstallDir)VCProjectDefaults\\UpgradeFromVC71.vsprops\"" << std::endl;
+	}
+	vcproj << "			UseOfMFC=\"0\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"false\">" << std::endl;
+	else
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"FALSE\">" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCLCompilerTool\"" << std::endl;
+	vcproj << "				Optimization=\"0\"" << std::endl;
+	vcproj << "				AdditionalIncludeDirectories=\"" << includePath.c_str() << "\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"DEBUG,UNICODE,_UNICODE," << defines.c_str() << "\"" << std::endl;
+	vcproj << "				BasicRuntimeChecks=\"3\"" << std::endl;
+	vcproj << "				RuntimeLibrary=\"1\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				RuntimeTypeInfo=\"true\"" << std::endl;
+	else
+		vcproj << "				RuntimeTypeInfo=\"TRUE\"" << std::endl;
+	if (precompiledHeaderThrough.empty())
+	{
+		vcproj << "				UsePrecompiledHeader=\"2\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				UsePrecompiledHeader=\"3\"" << std::endl;
+		vcproj << "				PrecompiledHeaderThrough=\"" << precompiledHeaderThrough.c_str() << "\"" << std::endl;
+		vcproj << "				PrecompiledHeaderFile=\"" << precompiledHeaderFileMTUnicodeDebug.c_str() << "\"" << std::endl;
+	}
+	vcproj << "				AssemblerListingLocation=\"" << assemblerListingLocationMTUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				ObjectFile=\"" << objectFileMTUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				ProgramDataBaseFileName=\"" << programDataBaseFileNameMTUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				WarningLevel=\"3\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"" << std::endl;
+	vcproj << "				DebugInformationFormat=\"3\"" << std::endl;
+	vcproj << "				CompileAs=\"0\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCustomBuildTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCLibrarianTool\"" << std::endl;
+	vcproj << "				AdditionalOptions=\"" << additionalOptionsDebug.c_str() << "\"" << std::endl;
+	vcproj << "				OutputFile=\"" << outputFileMTUnicodeDebug.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"/>" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCMIDLTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPostBuildEventTool\"" << std::endl;
+	vcproj << "				Description=\"Installing library and API headers...\"" << std::endl;
+	vcproj << "				CommandLine=\"" << commandLine.c_str() << "\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreBuildEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreLinkEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCResourceCompilerTool\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"_DEBUG\"" << std::endl;
+	vcproj << "				Culture=\"1033\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCWebServiceProxyGeneratorTool\"/>" << std::endl;
+	if (target_version == 710)
+	{
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCXMLDataGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCManagedWrapperGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
+	}
+	vcproj << "		</Configuration>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MT Debug|Win32
+
 	vcproj << "		<Configuration" << std::endl;
 	vcproj << "			Name=\"Static MT Debug|Win32\"" << std::endl;
 	vcproj << "			OutputDirectory=\".\\../Debug\"" << std::endl;
@@ -1717,6 +1853,96 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
 	}
 	vcproj << "		</Configuration>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MTDLL Unicode Debug|Win32
+
+	vcproj << "		<Configuration" << std::endl;
+	vcproj << "			Name=\"Static MTDLL Unicode Debug|Win32\"" << std::endl;
+	vcproj << "			OutputDirectory=\".\\../Debug\"" << std::endl;
+	vcproj << "			IntermediateDirectory=\".\\../Debug/" << project.libname.c_str() << "-static-mtdll-uc\"" << std::endl;
+	vcproj << "			ConfigurationType=\"4\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "			InheritedPropertySheets=\"$(VCInstallDir)VCProjectDefaults\\UpgradeFromVC71.vsprops\"" << std::endl;
+	}
+	vcproj << "			UseOfMFC=\"0\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"false\">" << std::endl;
+	else
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"FALSE\">" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCLCompilerTool\"" << std::endl;
+	vcproj << "				Optimization=\"0\"" << std::endl;
+	vcproj << "				AdditionalIncludeDirectories=\"" << includePath.c_str() << "\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"DEBUG,UNICODE,_UNICODE," << defines.c_str() << "\"" << std::endl;
+	vcproj << "				BasicRuntimeChecks=\"3\"" << std::endl;
+	vcproj << "				RuntimeLibrary=\"3\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				RuntimeTypeInfo=\"true\"" << std::endl;
+	else
+		vcproj << "				RuntimeTypeInfo=\"TRUE\"" << std::endl;
+	if (precompiledHeaderThrough.empty())
+	{
+		vcproj << "				UsePrecompiledHeader=\"2\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				UsePrecompiledHeader=\"3\"" << std::endl;
+		vcproj << "				PrecompiledHeaderThrough=\"" << precompiledHeaderThrough.c_str() << "\"" << std::endl;
+		vcproj << "				PrecompiledHeaderFile=\"" << precompiledHeaderFileMTDLLUnicodeDebug.c_str() << "\"" << std::endl;
+	}
+	vcproj << "				AssemblerListingLocation=\"" << assemblerListingLocationMTDLLUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				ObjectFile=\"" << objectFileMTDLLUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				ProgramDataBaseFileName=\"" << programDataBaseFileNameMTDLLUnicodeDebug.c_str() << "\"" << std::endl;
+	vcproj << "				WarningLevel=\"3\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"" << std::endl;
+	vcproj << "				DebugInformationFormat=\"3\"" << std::endl;
+	vcproj << "				CompileAs=\"0\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCustomBuildTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCLibrarianTool\"" << std::endl;
+	vcproj << "				AdditionalOptions=\"" << additionalOptionsDebug.c_str() << "\"" << std::endl;
+	vcproj << "				OutputFile=\"" << outputFileMTDLLUnicodeDebug.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"/>" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCMIDLTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPostBuildEventTool\"" << std::endl;
+	vcproj << "				Description=\"Installing library and API headers...\"" << std::endl;
+	vcproj << "				CommandLine=\"" << commandLine.c_str() << "\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreBuildEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreLinkEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCResourceCompilerTool\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"_DEBUG\"" << std::endl;
+	vcproj << "				Culture=\"1033\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCWebServiceProxyGeneratorTool\"/>" << std::endl;
+	if (target_version == 710)
+	{
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCXMLDataGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCManagedWrapperGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
+	}
+	vcproj << "		</Configuration>" << std::endl;
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MTDLL Debug|Win32
+
 	vcproj << "		<Configuration" << std::endl;
 	vcproj << "			Name=\"Static MTDLL Debug|Win32\"" << std::endl;
 	vcproj << "			OutputDirectory=\".\\../Debug\"" << std::endl;
@@ -1798,6 +2024,104 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
 	}
 	vcproj << "		</Configuration>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MT Unicode Release|Win32
+
+	vcproj << "		<Configuration" << std::endl;
+	vcproj << "			Name=\"Static MT Unicode Release|Win32\"" << std::endl;
+	vcproj << "			OutputDirectory=\".\\../Release\"" << std::endl;
+	vcproj << "			IntermediateDirectory=\".\\../Release/" << project.libname.c_str() << "-static-mt-uc\"" << std::endl;
+	vcproj << "			ConfigurationType=\"4\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "			InheritedPropertySheets=\"$(VCInstallDir)VCProjectDefaults\\UpgradeFromVC71.vsprops\"" << std::endl;
+	}
+	vcproj << "			UseOfMFC=\"0\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"false\">" << std::endl;
+	else
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"FALSE\">" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCLCompilerTool\"" << std::endl;
+	vcproj << "				InlineFunctionExpansion=\"1\"" << std::endl;
+	vcproj << "				AdditionalIncludeDirectories=\"" << includePath.c_str() << "\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"NDEBUG,UNICODE,_UNICODE," << defines.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "				StringPooling=\"true\"" << std::endl;
+		vcproj << "				RuntimeLibrary=\"0\"" << std::endl;
+		vcproj << "				EnableFunctionLevelLinking=\"true\"" << std::endl;
+		vcproj << "				RuntimeTypeInfo=\"true\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				StringPooling=\"TRUE\"" << std::endl;
+		vcproj << "				RuntimeLibrary=\"0\"" << std::endl;
+		vcproj << "				EnableFunctionLevelLinking=\"TRUE\"" << std::endl;
+		vcproj << "				RuntimeTypeInfo=\"TRUE\"" << std::endl;
+	}
+	if (precompiledHeaderThrough.empty())
+	{
+		vcproj << "				UsePrecompiledHeader=\"2\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				UsePrecompiledHeader=\"3\"" << std::endl;
+		vcproj << "				PrecompiledHeaderThrough=\"" << precompiledHeaderThrough.c_str() << "\"" << std::endl;
+		vcproj << "				PrecompiledHeaderFile=\"" << precompiledHeaderFileMTUnicodeRelease.c_str() << "\"" << std::endl;
+	}
+	vcproj << "				AssemblerListingLocation=\"" << assemblerListingLocationMTUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				ObjectFile=\"" << objectFileMTUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				ProgramDataBaseFileName=\"" << programDataBaseFileNameMTUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				WarningLevel=\"3\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"" << std::endl;
+	vcproj << "				DebugInformationFormat=\"3\"" << std::endl;
+	vcproj << "				CompileAs=\"0\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCustomBuildTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCLibrarianTool\"" << std::endl;
+	vcproj << "				AdditionalOptions=\"" << additionalOptionsRelease.c_str() << "\"" << std::endl;
+	vcproj << "				OutputFile=\"" << outputFileMTUnicodeRelease.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"/>" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCMIDLTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPostBuildEventTool\"" << std::endl;
+	vcproj << "				Description=\"Installing library and API headers...\"" << std::endl;
+	vcproj << "				CommandLine=\"" << commandLine.c_str() << "\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreBuildEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreLinkEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCResourceCompilerTool\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"NDEBUG\"" << std::endl;
+	vcproj << "				Culture=\"1033\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCWebServiceProxyGeneratorTool\"/>" << std::endl;
+	if (target_version == 710)
+	{
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCXMLDataGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCManagedWrapperGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
+	}
+	vcproj << "		</Configuration>" << std::endl;
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MT Release|Win32
+
 	vcproj << "		<Configuration" << std::endl;
 	vcproj << "			Name=\"Static MT Release|Win32\"" << std::endl;
 	vcproj << "			OutputDirectory=\".\\../Release\"" << std::endl;
@@ -1887,6 +2211,103 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
 	}
 	vcproj << "		</Configuration>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MTDLL Unicode Release|Win32
+
+	vcproj << "		<Configuration" << std::endl;
+	vcproj << "			Name=\"Static MTDLL Unicode Release|Win32\"" << std::endl;
+	vcproj << "			OutputDirectory=\".\\../Release\"" << std::endl;
+	vcproj << "			IntermediateDirectory=\".\\../Release/" << project.libname.c_str() << "-static-mtdll-uc\"" << std::endl;
+	vcproj << "			ConfigurationType=\"4\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "			InheritedPropertySheets=\"$(VCInstallDir)VCProjectDefaults\\UpgradeFromVC71.vsprops\"" << std::endl;
+	}
+	vcproj << "			UseOfMFC=\"0\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"false\">" << std::endl;
+	else
+		vcproj << "			ATLMinimizesCRunTimeLibraryUsage=\"FALSE\">" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCLCompilerTool\"" << std::endl;
+	vcproj << "				InlineFunctionExpansion=\"1\"" << std::endl;
+	vcproj << "				AdditionalIncludeDirectories=\"" << includePath.c_str() << "\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"NDEBUG,UNICODE,_UNICODE," << defines.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+	{
+		vcproj << "				StringPooling=\"true\"" << std::endl;
+		vcproj << "				RuntimeLibrary=\"2\"" << std::endl;
+		vcproj << "				EnableFunctionLevelLinking=\"true\"" << std::endl;
+		vcproj << "				RuntimeTypeInfo=\"true\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				StringPooling=\"TRUE\"" << std::endl;
+		vcproj << "				RuntimeLibrary=\"2\"" << std::endl;
+		vcproj << "				EnableFunctionLevelLinking=\"TRUE\"" << std::endl;
+		vcproj << "				RuntimeTypeInfo=\"TRUE\"" << std::endl;
+	}
+	if (precompiledHeaderThrough.empty())
+	{
+		vcproj << "				UsePrecompiledHeader=\"2\"" << std::endl;
+	}
+	else
+	{
+		vcproj << "				UsePrecompiledHeader=\"3\"" << std::endl;
+		vcproj << "				PrecompiledHeaderThrough=\"" << precompiledHeaderThrough.c_str() << "\"" << std::endl;
+		vcproj << "				PrecompiledHeaderFile=\"" << precompiledHeaderFileMTDLLUnicodeRelease.c_str() << "\"" << std::endl;
+	}
+	vcproj << "				AssemblerListingLocation=\"" << assemblerListingLocationMTDLLUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				ObjectFile=\"" << objectFileMTDLLUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				ProgramDataBaseFileName=\"" << programDataBaseFileNameMTDLLUnicodeRelease.c_str() << "\"" << std::endl;
+	vcproj << "				WarningLevel=\"3\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"" << std::endl;
+	vcproj << "				DebugInformationFormat=\"3\"" << std::endl;
+	vcproj << "				CompileAs=\"0\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCCustomBuildTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCLibrarianTool\"" << std::endl;
+	vcproj << "				AdditionalOptions=\"" << additionalOptionsRelease.c_str() << "\"" << std::endl;
+	vcproj << "				OutputFile=\"" << outputFileMTDLLUnicodeRelease.c_str() << "\"" << std::endl;
+	if (target_version == 800)
+		vcproj << "				SuppressStartupBanner=\"true\"/>" << std::endl;
+	else
+		vcproj << "				SuppressStartupBanner=\"TRUE\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCMIDLTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPostBuildEventTool\"" << std::endl;
+	vcproj << "				Description=\"Installing library and API headers...\"" << std::endl;
+	vcproj << "				CommandLine=\"" << commandLine.c_str() << "\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreBuildEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCPreLinkEventTool\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCResourceCompilerTool\"" << std::endl;
+	vcproj << "				PreprocessorDefinitions=\"NDEBUG\"" << std::endl;
+	vcproj << "				Culture=\"1033\"/>" << std::endl;
+	vcproj << "			<Tool" << std::endl;
+	vcproj << "				Name=\"VCWebServiceProxyGeneratorTool\"/>" << std::endl;
+	if (target_version == 710)
+	{
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCXMLDataGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCManagedWrapperGeneratorTool\"/>" << std::endl;
+		vcproj << "			<Tool" << std::endl;
+		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
+	}
+	vcproj << "		</Configuration>" << std::endl;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Static MTDLL Release|Win32
+
 	vcproj << "		<Configuration" << std::endl;
 	vcproj << "			Name=\"Static MTDLL Release|Win32\"" << std::endl;
 	vcproj << "			OutputDirectory=\".\\../Release\"" << std::endl;
@@ -1976,6 +2397,9 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		vcproj << "				Name=\"VCAuxiliaryManagedWrapperGeneratorTool\"/>" << std::endl;
 	}
 	vcproj << "		</Configuration>" << std::endl;
+
+
+
 	vcproj << "	</Configurations>" << std::endl;
 	if (target_version == 710)
 	{
@@ -2011,7 +2435,7 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 void WorkspaceGenerator_MSVC7::generate_source_files(std::ofstream &vcproj, const Project &project)
 {
 	std::string chop_str = "Sources\\";
-	unsigned int chop_length = chop_str.length();
+	size_t chop_length = chop_str.length();
 
 	std::list<std::string>::iterator itCur, itNew;
 	std::list<std::string> cur_path;
@@ -2064,12 +2488,12 @@ void WorkspaceGenerator_MSVC7::generate_source_files(std::ofstream &vcproj, cons
 std::list<std::string> WorkspaceGenerator_MSVC7::extract_path(const std::string &fullname)
 {
 	std::list<std::string> path;
-	int pos = 0;
-	int old_pos = 0;
+//	int pos = 0;
+	size_t old_pos = 0;
 
 	while (true)
 	{
-		int pos = fullname.find("\\", old_pos);
+		size_t pos = fullname.find("\\", old_pos);
 		if (pos == std::string::npos) break;
 
 		path.push_back(fullname.substr(old_pos, pos-old_pos));
@@ -2115,6 +2539,18 @@ void WorkspaceGenerator_MSVC7::add_file(std::ofstream &vcproj, const std::string
 		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
 		vcproj << "				</FileConfiguration>" << std::endl;
 		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Unicode Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Unicode Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
 		vcproj << "					Name=\"Static MT Release|Win32\">" << std::endl;
 		vcproj << "					<Tool" << std::endl;
 		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
@@ -2125,6 +2561,69 @@ void WorkspaceGenerator_MSVC7::add_file(std::ofstream &vcproj, const std::string
 		vcproj << "					<Tool" << std::endl;
 		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
 		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Unicode Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Unicode Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"1\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+	}
+	else if (filename.length() > 2 && filename.substr(filename.length()-2) == ".c")
+	{
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Unicode Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Unicode Debug|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MT Unicode Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
+		vcproj << "				</FileConfiguration>" << std::endl;
+		vcproj << "				<FileConfiguration" << std::endl;
+		vcproj << "					Name=\"Static MTDLL Unicode Release|Win32\">" << std::endl;
+		vcproj << "					<Tool" << std::endl;
+		vcproj << "						Name=\"VCCLCompilerTool\"" << std::endl;
+		vcproj << "						UsePrecompiledHeader=\"0\"/>" << std::endl;
 		vcproj << "				</FileConfiguration>" << std::endl;
 	}
 

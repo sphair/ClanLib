@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,22 +24,24 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "netobject_controller_generic.h"
 #include "netobject_server_generic.h"
 #include "netobject_client_generic.h"
 #include "API/Network/NetObjects/netobject_client.h"
-#include "API/Network/NetSession/netpacket.h"
+#include "API/Network/NetSession/netsession.h"
+#include "API/Core/System/databuffer.h"
+#include "API/Core/IOData/iodevice_memory.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetObject_Controller_Generic construction:
 
 CL_NetObject_Controller_Generic::CL_NetObject_Controller_Generic(
 	CL_NetSession *netsession,
-	const std::string &channel)
-: netsession(netsession), channel(channel), obj_id_counter(0), ref_count(0)
+	const CL_String &channel)
+: netsession(netsession), channel(channel), obj_id_counter(0)
 {
 	slot_received_netpacket = netsession->sig_netpacket_receive(channel).connect(
 		this, &CL_NetObject_Controller_Generic::on_received_netpacket);
@@ -61,14 +63,25 @@ CL_NetObject_Controller_Generic::~CL_NetObject_Controller_Generic()
 // CL_NetObject_Controller_Generic implementation:
 
 void CL_NetObject_Controller_Generic::on_received_netpacket(
-	CL_NetPacket &packet,
+	CL_DataBuffer &packet,
 	CL_NetComputer &from)
 {
-	bool server_obj = packet.input.read_bool8();
-	int obj_id = packet.input.read_int32();
-	int msg_type = packet.input.read_int32();
-	int sub_pos = packet.input.tell();
-	CL_NetPacket subpacket(packet.get_data()+sub_pos, packet.get_size()-sub_pos);
+	CL_IODevice_Memory input(packet);
+
+	bool server_obj;
+	if (input.read_int8())
+	{
+		server_obj = true;
+	}
+	else
+	{
+		server_obj = false;
+	}
+
+	int obj_id = input.read_int32();
+	int msg_type = input.read_int32();
+	int sub_pos = input.get_position();
+	CL_DataBuffer subpacket(packet, sub_pos);
 
 	if (server_obj)
 	{
@@ -97,7 +110,7 @@ void CL_NetObject_Controller_Generic::on_received_netpacket(
 			// No such client object. Construct new one and inform application.
 
 			CL_NetObject_Client netobj(obj_id, from, this);
-			sig_create_object(netobj, msg_type, subpacket);
+			sig_create_object.invoke(netobj, msg_type, subpacket);
 		}
 	}
 }

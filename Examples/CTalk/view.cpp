@@ -6,10 +6,9 @@
 /////////////////////////////////////////////////////////////////////////////
 // View construction:
 
-View::View(MainFrame *mainframe, const std::string &title)
-: CL_Component(mainframe), mainframe(mainframe), title(title)
+View::View(CL_GUIComponent *parent, MainFrame *mainframe, const CL_String &title)
+: CL_GUIComponent(parent), mainframe(mainframe), title(title)
 {
-	show(false);
 }
 
 View::~View()

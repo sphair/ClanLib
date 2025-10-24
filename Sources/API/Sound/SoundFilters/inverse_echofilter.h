@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,55 +24,58 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Filters"
-//! header=sound.h
+/// \addtogroup clanSound_Filters clanSound Filters
+/// \{
 
-#ifndef header_inverse_echofilter
-#define header_inverse_echofilter
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_sound.h"
 #include "../soundfilter.h"
 
 class CL_InverseEchoFilter_Generic;
 
-//: Inverse Echo Filter Class
-//- !group=Sound/Filters!
-//- !header=sound.h!
+/// \brief Inverse Echo Filter Class
+///
+/// \xmlonly !group=Sound/Filters! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_InverseEchoFilter : public CL_SoundFilter
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Inverse Echo Filter Constructor
+	/// \brief Inverse Echo Filter Constructor
 	CL_InverseEchoFilter(int buffer_size = 64*1024);
 
-	//: Inverse Echo Filter Destructor
+	/// \brief Inverse Echo Filter Destructor
 	virtual ~CL_InverseEchoFilter();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Filter
+	/// \brief Filter
 	virtual void filter(int **sample_data, int num_samples, int channels);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_InverseEchoFilter(const CL_InverseEchoFilter &copy) { return; } // disallow copy construction.
 	CL_InverseEchoFilter_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

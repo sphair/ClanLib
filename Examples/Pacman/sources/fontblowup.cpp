@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,19 +27,21 @@
 **    (if your name is missing here, please add it)
 */
 
-/*
 #include "precomp.h"
 #include "fontblowup.h"
 
-FontBlowUp::FontBlowUp(const char *_text, int x, int y, CL_Font *_font)
+#include <stdlib.h>
+
+FontBlowUp::FontBlowUp(CL_GraphicContext &gc, const char *_text, int x, int y, CL_Font _font, CL_Colorf _color)
 {
 	text = _text;
 	initial_x = x;
 	initial_y = y;
 
 	font = _font;
+	color = _color;
 
-	create_letters();
+	create_letters(gc);
 }
 
 FontBlowUp::~FontBlowUp()
@@ -52,12 +54,12 @@ FontBlowUp::~FontBlowUp()
 	delete[] letters_delta_z;
 }
 
-void FontBlowUp::create_letters()
+void FontBlowUp::create_letters(CL_GraphicContext &gc)
 {
-	const char *letters = text;
-	int num = text.get_length();
+	const char *letters = text.data();
+	int num = text.length();
 
-	int total_length = font->get_text_width(text.get_string());
+	int total_length = font.get_text_size(gc, text).width;
 	int x = initial_x - total_length/2;
 
 	letters_x = new float[num];
@@ -72,8 +74,8 @@ void FontBlowUp::create_letters()
 
 	for (int i=0; i<num; i++)
 	{
-		letters_x[i] = x;
-		letters_y[i] = initial_y;
+		letters_x[i] = (float) x;
+		letters_y[i] = (float) initial_y;
 		letters_z[i] = 1.0f;
 		letters_delta_x[i] = (rand()%2000-1000)/(float) 20;
 		letters_delta_y[i] = -(rand()%2000)/(float) 20;
@@ -81,18 +83,18 @@ void FontBlowUp::create_letters()
 
 		output[0] = letters[i];
 
-		x += font->get_text_width(output);
+		x += font.get_text_size(gc, output).width;
 	}
 }
 
-bool FontBlowUp::show(float time_elapsed)
+bool FontBlowUp::show(CL_GraphicContext &gc, float time_elapsed)
 {
 	bool still_visible = false;
 
 	time_elapsed *= 5; // scott, more power on the warp engines...
 
-	const char *letters = text;
-	int num = text.get_length();
+	const char *letters = text.data();
+	int num = text.length();
 
 	char output[2];
 	output[1] = 0;
@@ -100,12 +102,13 @@ bool FontBlowUp::show(float time_elapsed)
 	for (int i=0; i<num; i++)
 	{
 		output[0] = letters[i];
-		font->print_left(
+		font.draw_text(gc,
 			(int) letters_x[i],
 			(int) letters_y[i],
-			letters_z[i],
-			letters_z[i],
-			output);
+//			letters_z[i],
+//			letters_z[i],
+			output,
+			color);
 
 		letters_x[i] += letters_delta_x[i]*time_elapsed;
 		letters_y[i] += letters_delta_y[i]*time_elapsed;
@@ -113,9 +116,8 @@ bool FontBlowUp::show(float time_elapsed)
 
 		letters_delta_y[i] += time_elapsed*20;
 
-		if (letters_y[i] < CL_Display::get_height()) still_visible = true;
+		if (letters_y[i] < gc.get_height()) still_visible = true;
 	}
 
 	return still_visible;
 }
-*/

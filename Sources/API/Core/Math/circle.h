@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,36 +27,44 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_circle
-#define header_circle
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "point.h"
+
 class CL_Circlef;
 
-//: Circle (point,radius) structure.
-//- !group=Core/Math!
-//- !header=core.h!
+/// \brief Circle (point,radius) structure.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_Circle
 {
 // Construction:
 public:
-	//: Constructs a Circle.
-	//param x: Initial x value.
-	//param y: Initial y value.
-	//param radius: Circle radius.
-	//param p: Point to use for initial values.
+	/// \brief Constructs a Circle.
 	CL_Circle()
 	{ return; }
 
+	/// \brief Constructs a Circle.
+	///
+	/// \param x = Initial x value.
+	/// \param y = Initial y value.
+	/// \param radius = Circle radius.
 	CL_Circle(int x, int y, int radius)
 	: position(x,y), radius(radius) { return; }
 
+	/// \brief Constructs a Circle.
+	///
+	/// \param p = Point to use for initial values.
+	/// \param radius = Circle radius.
 	CL_Circle(const CL_Point &p, int radius)
 	: position(p), radius(radius) { return; }
 
@@ -64,40 +72,48 @@ public:
 
 // Attributes:
 public:
-	//: Circle center point
+	/// \brief Circle center point
 	CL_Point position;
 
-	//: Circle radius
+	/// \brief Circle radius
 	int radius;
 };
 
-
+/// \brief Circle (point,radius) structure.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_Circlef
 {
 // Construction:
 public:
-	//: Constructs a Circle.
-	//param x: Initial x value.
-	//param y: Initial y value.
-	//param radius: Circle radius.
-	//param p: Point to use for initial values.
+	/// \brief Constructs a Circle.
 	CL_Circlef()
 	{ return; }
 
-	CL_Circlef(double x, double y, double radius)
+	/// \brief Constructs a Circle.
+	///
+	/// \param x = Initial x value.
+	/// \param y = Initial y value.
+	/// \param radius = Circle radius.
+	CL_Circlef(float x, float y, float radius)
 	: position((float)x,(float)y), radius(radius) { return; }
 
-	CL_Circlef(const CL_Pointf &p, double radius)
+	/// \brief Constructs a Circle.
+	///
+	/// \param p = Point to use for initial values.
+	/// \param radius = Circle radius.
+	CL_Circlef(const CL_Pointf &p, float radius)
 	: position(p), radius(radius) { return; }
 
 // Attributes:
 public:
-	//: Circle center point
+	/// \brief Circle center point
 	CL_Pointf position;
 
-	//: Circle radius
-	double radius;
+	/// \brief Circle radius
+	float radius;
 };
+
 
 inline CL_Circle::CL_Circle(const CL_Circlef &other)
 : position(other.position), radius(int(other.radius+0.5))
@@ -105,4 +121,5 @@ inline CL_Circle::CL_Circle(const CL_Circlef &other)
 	return;
 }
 
-#endif
+
+/// \}

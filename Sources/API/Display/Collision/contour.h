@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -25,14 +25,14 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_contour
-#define header_contour
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,19 +41,25 @@
 #include <vector>
 #include "outline_circle.h"
 
-//: Collision detection contour.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>A outline consists of contours, which hold the actual outline geometry</p>
+/// \brief Collision detection contour.
+///
+/// <p>A outline consists of contours, which hold the actual outline geometry</p>
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_Contour
 {
-//! Construction:
+/// \name Construction
+/// \{
+
  public:
-	//: Construct a contour
+	/// \brief Construct a contour
 	CL_Contour() : is_inside_contour(false) {};
 	~CL_Contour() {};
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
  public:
 	// Points forming the countour.
 	std::vector<CL_Pointf> points;
@@ -67,6 +73,8 @@ class CL_Contour
 	// If two circles arent intersecting, none of the lines inside them
 	// collide either.
 	std::vector<CL_OutlineCircle> sub_circles;
+/// \}
 };
 
-#endif
+
+/// \}

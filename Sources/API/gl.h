@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,60 +24,143 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
 */
 
-//: <p>ClanLib OpenGL support. Contains OpenGL binding code and 3D helper
-//: frameworks.</p>
+/// \brief <p>ClanLib OpenGL target library.</p>
 //! Global=GL
 
-#ifndef header_gl
-#define header_gl
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#ifdef _MSC_VER
-	#pragma warning (disable:4786)
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
 #endif
 
-#ifdef WIN32
-	#include <windows.h>
-#endif
-
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
-#include "GL/setupgl.h"
 #include "GL/opengl.h"
-#include "GL/opengl_window.h"
+#include "GL/opengl_target.h"
 #include "GL/opengl_window_description.h"
-#include "GL/opengl_surface.h"
-#include "GL/opengl_state.h"
-#include "GL/opengl_state_data.h"
 #include "GL/opengl_wrap.h"
-#include "GL/viewpoint.h"
-#include "GL/light_source.h"
-#include "GL/shader_object.h"
-#include "GL/program_object.h"
-#include "GL/program_uniform.h"
-#include "GL/program_attribute.h"
-#include "GL/texture.h"
+#include "GL/setup_gl.h"
+
+#ifdef __cplusplus_cli
+#pragma managed(pop)
+#endif
 
 #if defined (_MSC_VER)
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanGL-static-mt.lib")
-#else
-#pragma comment(lib, "clanGL-static-mt-debug.lib")
-#endif
-#pragma comment(lib, "OpenGL32.lib")
-#pragma comment(lib, "GLU32.lib")
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-dll.lib")
+				#else
+					#pragma comment(lib, "clanGL-dll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-dll-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-dll-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mtdll.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mtdll.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mtdll-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mtdll-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "OpenGL32.lib")
+			#pragma comment(lib, "GLU32.lib")
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mt.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mt.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mt-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mt-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "OpenGL32.lib")
+			#pragma comment(lib, "GLU32.lib")
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-dll-uc.lib")
+				#else
+					#pragma comment(lib, "clanGL-dll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-dll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-dll-uc-debug.lib")
+				#endif
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mtdll-uc.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mtdll-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mtdll-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mtdll-uc-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "OpenGL32.lib")
+			#pragma comment(lib, "GLU32.lib")
+		#else
+			#if !defined (_DEBUG)
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mt-uc.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mt-uc.lib")
+				#endif
+			#else
+				#if defined(_M_X64)
+					#pragma comment(lib, "clanGL-x64-static-mt-uc-debug.lib")
+				#else
+					#pragma comment(lib, "clanGL-static-mt-uc-debug.lib")
+				#endif
+			#endif
+			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "dinput8.lib")
+			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "OpenGL32.lib")
+			#pragma comment(lib, "GLU32.lib")
+		#endif
+	#endif
 #endif
 
-#endif
+

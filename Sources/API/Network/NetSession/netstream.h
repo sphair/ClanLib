@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanNetwork="NetSessions"
-//! header=network.h
+/// \addtogroup clanNetwork_NetSessions clanNetwork NetSessions
+/// \{
 
-#ifndef header_netstream
-#define header_netstream
 
-#ifdef CL_API_DLL
-#ifdef CL_NETWORK_EXPORT
-#define CL_API_NETWORK __declspec(dllexport)
-#else
-#define CL_API_NETWORK __declspec(dllimport)
-#endif
-#else
-#define CL_API_NETWORK
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -51,66 +41,63 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include "inputsource_netstream.h"
-#include "outputsource_netstream.h"
-#include <string>
+#include "../api_network.h"
+#include "../../Core/IOData/iodevice.h"
 
+class CL_Event;
 class CL_NetSession;
 class CL_NetComputer;
-class CL_EventTrigger;
-class CL_NetStream_Generic;
 
-//: Net stream class.
-//- !group=Network/NetSessions!
-//- !header=network.h!
-class CL_API_NETWORK CL_NetStream
+/// \brief Net stream class.
+///
+/// \xmlonly !group=Network/NetSessions! !header=network.h! \endxmlonly
+class CL_API_NETWORK CL_NetStream : public CL_IODevice
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Connects to a remote netstream.
-	//param stream_channel: Channel identifier establishing connection to.
-	//param dest: Remote computer on which to connect.
+	/// \brief Connects to a remote netstream.
+	///
+	/// \param stream_channel Channel identifier establishing connection to.
+	/// \param dest Remote computer on which to connect.
 	CL_NetStream(
-		const std::string &stream_channel,
+		const CL_String &stream_channel,
 		CL_NetComputer &dest);
 
 	CL_NetStream(const CL_NetStream &copy);
 
-	virtual ~CL_NetStream();
+	~CL_NetStream();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Input source interface for netstream.
-	CL_InputSource_NetStream input;
+	/// \brief Event trigger for reading.
+	CL_Event get_read_event();
 
-	//: Output source interface for netstream.
-	CL_OutputSource_NetStream output;
+	/// \brief Event trigger for writing.
+	CL_Event get_write_event();
 
-	//: Event trigger for reading.
-	CL_EventTrigger *get_read_trigger();
 
-	//: Event trigger for writing.
-	CL_EventTrigger *get_write_trigger();
+/// \}
+/// \name Operations
+/// \{
 
-	//: Get remote computer
-	CL_NetComputer get_computer();
-
-//! Operations:
 public:
-	//: Copy constructor.
+	/// \brief Copy constructor.
 	CL_NetStream &operator =(const CL_NetStream &copy);
 
-	//: Send data onto stream.
-	int send(const void *data, int size);
 
-	//: Receive data from stream.
-	int recv(void *data, int size);
+/// \}
+/// \name Implementation
+/// \{
 
-//! Implementation:
-public:
-	CL_NetStream(CL_NetStream_Generic *impl);
-
-	CL_NetStream_Generic *impl;
+private:
+/// \}
 };
 
-#endif
+
+/// \}

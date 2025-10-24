@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,95 +24,115 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_delauney_triangulator
-#define header_delauney_triangulator
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
+#include <vector>
 
-//: Vertex in the delauney triangulation.
+/// \brief Vertex in the delauney triangulation.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DelauneyTriangulator_Vertex
 {
-//! Attributes:
+/// \name Attributes
+/// \{
+
 public:
-	//: Data pointer given when adding the vertex.
+	/// \brief Data pointer given when adding the vertex.
 	void *data;
 
-	//: X position of vertex.
-	double x;
-	
-	//: Y position of vertex.
-	double y;
+	/// \brief X position of vertex.
+	float x;
+
+	/// \brief Y position of vertex.
+	float y;
+/// \}
 };
 
-//: Triangle generated from a delauney triangulation.
+/// \brief Triangle generated from a delauney triangulation.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_DelauneyTriangulator_Triangle
 {
-//! Attributes:
+/// \name Attributes
+/// \{
+
 public:
-	//: First point in the triangle.
+	/// \brief First point in the triangle.
 	CL_DelauneyTriangulator_Vertex *vertex_A;
 
-	//: Second point in the triangle.
+	/// \brief Second point in the triangle.
 	CL_DelauneyTriangulator_Vertex *vertex_B;
 
-	//: Third point in the triangle.
+	/// \brief Third point in the triangle.
 	CL_DelauneyTriangulator_Vertex *vertex_C;
+/// \}
 };
 
 class CL_DelauneyTriangulator_Generic;
 
-//: Delauney triangulator.
-//- <p>This class uses the <a href="http://astronomy.swin.edu.au/~pbourke/terrain/triangulate/">
-//- delauney triangulation algorithm</a> to produce
-//- triangles between a list of points.</p>
+/// \brief Delauney triangulator.
+///
+///    <p>This class uses the <a href="http://astronomy.swin.edu.au/~pbourke/terrain/triangulate/">
+///    delauney triangulation algorithm</a> to produce
+///    triangles between a list of points.</p>
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_DelauneyTriangulator
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Creates a triangulator object.
+	/// \brief Creates a triangulator object.
 	CL_DelauneyTriangulator();
 
 	virtual ~CL_DelauneyTriangulator();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the list of vertices in the triangulation.
+	/// \brief Returns the list of vertices in the triangulation.
 	const std::vector<CL_DelauneyTriangulator_Vertex> &get_vertices() const;
 
-	//: Returns the resulting triangles produced from triangulation.
+	/// \brief Returns the resulting triangles produced from triangulation.
 	const std::vector<CL_DelauneyTriangulator_Triangle> &get_triangles() const;
 
-//! Operations:
-public:
-	//: This function specifies a point to be used in the triangulation.
-	void add_vertex(double x, double y, void *data);
 
-	//: Converts passed points into triangles.
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief This function specifies a point to be used in the triangulation.
+	void add_vertex(float x, float y, void *data);
+
+	/// \brief Converts passed points into triangles.
 	void generate();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SharedPtr<CL_DelauneyTriangulator_Generic> impl;
+/// \}
 };
 
-#endif
+
+/// \}

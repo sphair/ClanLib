@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -25,14 +25,14 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Collision"
-//! header=display.h
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
-#ifndef header_outline_provider_bitmap
-#define header_outline_provider_bitmap
+
+#pragma once
+
 
 #ifdef CL_API_DLL
 #ifdef CL_DISPLAY_EXPORT
@@ -49,42 +49,54 @@
 #endif
 
 #include <vector>
-#include <string>
 
 #include "outline_provider.h"
 #include "outline_accuracy.h"
 
 class CL_OutlineProviderBitmap_Generic;
-class CL_PixelBuffer;
+class CL_PixelBufferRef;
 
-//: Bitmap outline provider.
-//- !group=Display/Collision !
-//- !header=display.h!
-//- <p>A CL_OutlineProviderBitmap is used to find outlines based on the alpha channel of images.</p>
+/// \brief Bitmap outline provider.
+///
+///  <p>A CL_OutlineProviderBitmap is used to find outlines based on the alpha channel of images.</p> 
+/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CL_OutlineProviderBitmap : public CL_OutlineProvider
 {
-//! Construction:
+/// \name Construction
+/// \{
+
  public:
-	//: Construct a contour
-	//param CL_PixelBuffer *pbuf : PixelBuffer containing image data.
-	//param int alpha_limit : Minimum alpha value for a colliding pixel
-	CL_OutlineProviderBitmap(CL_PixelBuffer pbuf, int alpha_limit=128, bool get_insides=true);
+	/// \brief Construct a contour
+	///
+	/// \param CL_PixelBufferRef *pbuf  PixelBuffer containing image data.
+	/// \param int alpha_limit  Minimum alpha value for a colliding pixel
+	CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit=128, bool get_insides=true);
 	~CL_OutlineProviderBitmap();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
  public:
-	//: return the countours that make up the outline
+	/// \brief return the countours that make up the outline
 	virtual std::vector<CL_Contour> get_contours();
 
-	//: return the width of the image used as basis for outline creation.
+	/// \brief return the width of the image used as basis for outline creation.
 	virtual int get_width();
 
-	//: return the height of the image used as basis for outline creation.
+	/// \brief return the height of the image used as basis for outline creation.
 	virtual int get_height();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
  private:
 	CL_OutlineProviderBitmap_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

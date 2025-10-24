@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,14 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Sound Providers"
-//! header=sound.h
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
-#ifndef header_soundprovider_type_register
-#define header_soundprovider_type_register
+
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -39,29 +39,37 @@
 
 #include "soundprovider_type.h"
 
-//: Class template to register a sound provider type.
-//- !group=Sound/Sound Providers!
-//- !header=sound.h!
+/// \brief Class template to register a sound provider type.
+///
+/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 template<class SoundProviderClass>
 class CL_SoundProviderType_Register : public CL_SoundProviderType
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Registers sound provider type in the CL_SoundProviderFactory.
-	CL_SoundProviderType_Register(const std::string &type) : CL_SoundProviderType(type)
+	/// \brief Registers sound provider type in the CL_SoundProviderFactory.
+	CL_SoundProviderType_Register(const CL_String &type) : CL_SoundProviderType(type)
 	{
 	}
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Called to load static with this sound provider type.
+	/// \brief Called to load static with this sound provider type.
 	virtual CL_SoundProvider *load(
-		const std::string &filename,
-		CL_InputSourceProvider *input_provider,
+		const CL_String &filename,
+		CL_VirtualDirectory directory,
 		bool stream)
 	{
-		return new SoundProviderClass(filename, input_provider, stream);
+		return new SoundProviderClass(filename, directory, stream);
 	}
+/// \}
 };
 
-#endif
+
+/// \}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,12 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "netobject_server_generic.h"
 #include "netobject_controller_generic.h"
-#include "API/Network/NetSession/netpacket.h"
+#include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/System/databuffer.h"
 #include "API/Network/NetSession/netgroup.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,7 +38,7 @@
 
 CL_NetObject_Server_Generic::CL_NetObject_Server_Generic(
 	CL_NetObject_Controller_Generic *controller)
-: obj_id(controller->obj_id_counter++), controller(controller), ref_count(0)
+: obj_id(controller->obj_id_counter++), controller(controller)
 {
 	controller->server_objects[obj_id] = this;
 }
@@ -54,13 +55,13 @@ CL_NetObject_Server_Generic::~CL_NetObject_Server_Generic()
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetObject_Server_Generic operations:
 
-void CL_NetObject_Server_Generic::receive(int msg_type, CL_NetComputer &from, CL_NetPacket &packet)
+void CL_NetObject_Server_Generic::receive(int msg_type, CL_NetComputer &from, CL_DataBuffer &packet)
 {
-	std::map< int, CL_Signal_v2<CL_NetComputer &, CL_NetPacket &> >::iterator it;
+	std::map< int, CL_Signal_v2<CL_NetComputer &, CL_DataBuffer &> >::iterator it;
 	it = sig_received_message.find(msg_type);
 	if (it != sig_received_message.end())
 	{
-		it->second(from, packet);
+		it->second.invoke(from, packet);
 	}
 	else
 	{
@@ -69,24 +70,24 @@ void CL_NetObject_Server_Generic::receive(int msg_type, CL_NetComputer &from, CL
 	}
 }
 
-void CL_NetObject_Server_Generic::send(CL_NetGroup &group, int msg_type, const CL_NetPacket &message, bool reliable)
+void CL_NetObject_Server_Generic::send(CL_NetGroup &group, int msg_type, const CL_DataBuffer &message)
 {
-	CL_NetPacket netpacket;
-	netpacket.output.write_bool8(false);
-	netpacket.output.write_int32(obj_id);
-	netpacket.output.write_int32(msg_type);
-	netpacket.output.write(message.get_data(), message.get_size());
-	group.send(controller->channel, netpacket, reliable);
+	CL_IODevice_Memory netpacket;
+	netpacket.write_int8(0);
+	netpacket.write_int32(obj_id);
+	netpacket.write_int32(msg_type);
+	netpacket.write(message.get_data(), message.get_size());
+	group.send(controller->channel, netpacket.get_data());
 }
 
-void CL_NetObject_Server_Generic::send(CL_NetComputer &computer, int msg_type, const CL_NetPacket &message, bool reliable)
+void CL_NetObject_Server_Generic::send(CL_NetComputer &computer, int msg_type, const CL_DataBuffer &message)
 {
-	CL_NetPacket netpacket;
-	netpacket.output.write_bool8(false);
-	netpacket.output.write_int32(obj_id);
-	netpacket.output.write_int32(msg_type);
-	netpacket.output.write(message.get_data(), message.get_size());
-	computer.send(controller->channel, netpacket, reliable);
+	CL_IODevice_Memory netpacket;
+	netpacket.write_int8(0);
+	netpacket.write_int32(obj_id);
+	netpacket.write_int32(msg_type);
+	netpacket.write(message.get_data(), message.get_size());
+	computer.send(controller->channel, netpacket.get_data());
 }
 
 /////////////////////////////////////////////////////////////////////////////

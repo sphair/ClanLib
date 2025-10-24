@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,83 +24,88 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_dcc_download_generic
-#define header_dcc_download_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "API/Network/Socket/socket.h"
+#include "API/Network/Socket/tcp_connection.h"
 #include "API/Network/IRC/dcc_download.h"
 #include "API/Core/System/thread.h"
-#include "API/Core/System/keep_alive.h"
 #include "API/Core/System/mutex.h"
-#include "API/Core/System/event_trigger.h"
+#include "API/Core/System/event.h"
+#include "API/Core/IOData/virtual_directory.h"
 
-class CL_DCCDownload_Generic : private CL_Runnable, private CL_KeepAlive
+class CL_DCCDownload_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_DCCDownload_Generic(
-		const std::string &server,
-		const std::string &port,
-		const std::string &filename,
+		const CL_String &server,
+		const CL_String &port,
+		const CL_String &filename,
 		int total_size,
-		CL_OutputSourceProvider *provider,
-		bool delete_provider);
+		CL_VirtualDirectory directory);
 
 	~CL_DCCDownload_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	CL_Thread thread;
-	
-	CL_Mutex mutex;
-	
-	std::string server, port, filename;
-	
-	int total_size;
-	
-	CL_OutputSourceProvider *provider;
 
-	bool delete_provider;
-	
+	CL_Mutex mutex;
+
+	CL_String server, port, filename;
+
+	int total_size;
+
+	CL_VirtualDirectory directory;
+
 	CL_DCCDownload::DCCStatus status;
-	
-	CL_EventTrigger shutdown_trigger, reconnect_trigger;
-	
+
+	CL_Event event_shutdown, event_reconnect;
+
 	enum
 	{
 		no_signal,
 		lost_signal,
 		complete_signal
 	} send_signal;
-	
-	std::string error;
 
-	//: sig_connection_lost(error_message)
-	CL_Signal_v1<const std::string &> sig_connection_lost;
+	CL_String error;
 
-	//: sig_download_complete()
+	/// \brief sig_connection_lost(error_message)
+	CL_Signal_v1<const CL_String &> sig_connection_lost;
+
+	/// \brief sig_download_complete()
 	CL_Signal_v0 sig_download_complete;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	void add_ref();
+	void update();
 
-	void release_ref();
 
-//! Implementation:
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	virtual void run();
-	
-	virtual void keep_alive();
-	
-	int ref_count;
+	void thread_main();
+/// \}
 };
 
-#endif
+

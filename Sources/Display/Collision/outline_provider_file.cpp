@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,7 @@
 **    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
+#include "Display/precomp.h"
 #include "API/Display/Collision/outline_provider_file.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "outline_provider_file_generic.h"
@@ -36,9 +36,9 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderFile Construction:
 
-CL_OutlineProviderFile::CL_OutlineProviderFile(const std::string &filename, CL_InputSourceProvider *provider)
+CL_OutlineProviderFile::CL_OutlineProviderFile(const CL_StringRef &filename, CL_VirtualDirectory directory)
 {
-	impl = new CL_OutlineProviderFile_Generic( filename, provider );
+	impl = new CL_OutlineProviderFile_Generic( filename, directory );
 }
 
 CL_OutlineProviderFile::~CL_OutlineProviderFile()
@@ -63,4 +63,3 @@ int CL_OutlineProviderFile::get_height()
 {
 	return impl->height;
 }
-

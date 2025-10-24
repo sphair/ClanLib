@@ -11,7 +11,7 @@ OBJF=\
 	precomp.o       \
 	view.o
 
-LIBS=clanCore clanApp clanDisplay clanGUI clanNetwork clanGUIStyleSilver clanGL
+LIBS=clanCore clanApp clanDisplay clanGUI clanNetwork clanGL
 
 include ../Makefile.conf
 

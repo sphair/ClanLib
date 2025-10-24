@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
@@ -32,61 +33,85 @@
 
 #include <cmath>
 
-#define cl_min(a,b) ((a < b) ? a : b)
-#define cl_max(a,b) ((a > b) ? a : b)
-
-int CL_Quad::get_width() const
+template<typename Type>
+Type CL_Quadx<Type>::get_width() const
 {
-	return cl_max(cl_max(cl_max(x1, x2), x3), x4) 
-		- cl_min(cl_min(cl_min(x1, x2), x3), x4);
+	return cl_max(cl_max(cl_max(p.x, q.x), r.x), s.x) 
+		- cl_min(cl_min(cl_min(p.x, q.x), r.x), s.x);
 }
 
-int CL_Quad::get_height() const
+template<typename Type>
+Type CL_Quadx<Type>::get_height() const
 {
-	return cl_max(cl_max(cl_max(y1, y2), y3), y4) 
-		- cl_min(cl_min(cl_min(y1, y2), y3), y4);
+	return cl_max(cl_max(cl_max(p.y, q.y), r.y), s.y) 
+		- cl_min(cl_min(cl_min(p.y, q.y), r.y), s.y);
 }
 
-CL_Rect CL_Quad::get_bounds() const
+template<typename Type>
+CL_Rect CL_Quadx<Type>::get_bounds() const
 { return CL_Rect( 
-		cl_min(cl_min(cl_min(x1, x2), x3), x4), 
-		cl_min(cl_min(cl_min(y1, y2), y3), y4), 
-		cl_max(cl_max(cl_max(x1, x2), x3), x4), 
-		cl_max(cl_max(cl_max(y1, y2), y3), y4)); 
+		cl_min(cl_min(cl_min(p.x, q.x), r.x), s.x), 
+		cl_min(cl_min(cl_min(p.y, q.y), r.y), s.y), 
+		cl_max(cl_max(cl_max(p.x, q.x), r.x), s.x), 
+		cl_max(cl_max(cl_max(p.y, q.y), r.y), s.y)); 
 }
 
-void CL_Quad::rotate(const CL_Point &hotspot, float angle)
+template<typename Type>
+CL_Quadx<Type> &CL_Quadx<Type>::rotate(const CL_Vec2<Type> &hotspot, const CL_Angle &angle)
 {
-	//Find the rotated positions of each corner
-	CL_Point p1 = CL_Point(x1, y1).rotate(hotspot, angle);
-	CL_Point p2 = CL_Point(x2, y2).rotate(hotspot, angle);
-	CL_Point p3 = CL_Point(x3, y3).rotate(hotspot, angle);
-	CL_Point p4 = CL_Point(x4, y4).rotate(hotspot, angle);
-	
-	x1 = p1.x; y1 = p1.y;
-	x2 = p2.x; y2 = p2.y;
-	x3 = p3.x; y3 = p3.y;
-	x4 = p4.x; y4 = p4.y;
+	p.rotate(hotspot, angle);
+	q.rotate(hotspot, angle);
+	r.rotate(hotspot, angle);
+	s.rotate(hotspot, angle);
+	return *this;
 }
 
-void CL_Quad::scale(const CL_Point &hotspot, float sx, float sy)
+template<typename Type>
+CL_Quadx<Type> &CL_Quadx<Type>::scale(const CL_Vec2<Type> &hotspot, float sx, float sy)
 {
-	x1 = (int)((x1-hotspot.x)*sx+hotspot.x); y1 = (int)((y1-hotspot.y)*sy+hotspot.y);
-	x2 = (int)((x2-hotspot.x)*sx+hotspot.x); y2 = (int)((y2-hotspot.y)*sy+hotspot.y);
-	x3 = (int)((x3-hotspot.x)*sx+hotspot.x); y3 = (int)((y3-hotspot.y)*sy+hotspot.y);
-	x4 = (int)((x4-hotspot.x)*sx+hotspot.x); y4 = (int)((y4-hotspot.y)*sy+hotspot.y);
+	p.x = (Type)((p.x-hotspot.x)*sx+hotspot.x); p.y = (Type)((p.y-hotspot.y)*sy+hotspot.y);
+	q.x = (Type)((q.x-hotspot.x)*sx+hotspot.x); q.y = (Type)((q.y-hotspot.y)*sy+hotspot.y);
+	r.x = (Type)((r.x-hotspot.x)*sx+hotspot.x); r.y = (Type)((r.y-hotspot.y)*sy+hotspot.y);
+	s.x = (Type)((s.x-hotspot.x)*sx+hotspot.x); s.y = (Type)((s.y-hotspot.y)*sy+hotspot.y);
+	return *this;
 }
 
-void CL_Quad::scale(float sx, float sy)
+template<typename Type>
+CL_Quadx<Type> &CL_Quadx<Type>::scale(float sx, float sy)
 {
-	x1 = (int)(x1*sx); y1 = (int)(y1*sy);
-	x2 = (int)(x2*sx); y2 = (int)(y2*sy);
-	x3 = (int)(x3*sx); y3 = (int)(y3*sy);
-	x4 = (int)(x4*sx); y4 = (int)(y4*sy);
+	p.x = (Type)(p.x*sx); p.y = (Type)(p.y*sy);
+	q.x = (Type)(q.x*sx); q.y = (Type)(q.y*sy);
+	r.x = (Type)(r.x*sx); r.y = (Type)(r.y*sy);
+	s.x = (Type)(s.x*sx); s.y = (Type)(s.y*sy);
+	return *this;
 }
 
-CL_Point CL_Quad::center() const
+template<typename Type>
+CL_Vec2<Type> CL_Quadx<Type>::center() const
 {
 	CL_Rect r = get_bounds();
-	return CL_Point((r.left+r.right)/2, (r.top+r.bottom)/2);
+	return CL_Vec2<Type>((r.left+r.right)/2, (r.top+r.bottom)/2);
 }
+
+template<typename Type>
+CL_Quadx<Type> &CL_Quadx<Type>::apply_alignment(CL_Origin origin, Type x, Type y)
+{
+	CL_Vec2<Type> offset = CL_Vec2<Type>::calc_origin(origin, get_size());
+	offset.x -= x;
+	offset.y -= y;
+
+	p.x += offset.x;
+	p.y += offset.y;
+	q.x += offset.x;
+	q.y += offset.y;
+	r.x += offset.x;
+	r.y += offset.y;
+	s.x += offset.x;
+	s.y += offset.y;
+	return *this;
+}
+
+// Explicit instantiate the versions we use:
+template class CL_Quadx<int>;
+template class CL_Quadx<float>;
+template class CL_Quadx<double>;

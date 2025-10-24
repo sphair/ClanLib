@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,21 +24,19 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
 #include "soundoutput_generic.h"
 #include "soundbuffer_session_generic.h"
-#include "API/Core/System/threadfunc_v0.h"
 #include "API/Sound/soundfilter.h"
-#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Generic construction:
 
-CL_SoundOutput_Generic::CL_SoundOutput_Generic(int mixing_frequency) :
-	mixing_frequency(mixing_frequency), volume(1.0f), pan(0.0f), mix_buffer_size(0), has_sound(true), ref_count(0)
+CL_SoundOutput_Generic::CL_SoundOutput_Generic(int mixing_frequency, int latency)
+: mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
+  pan(0.0f), mix_buffer_size(0), ref_count(0)
 {
 	mix_buffers[0] = 0;
 	mix_buffers[1] = 0;
@@ -77,13 +75,13 @@ void CL_SoundOutput_Generic::release_ref()
 		delete this;
 }
 
-void CL_SoundOutput_Generic::play_session(CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> session)
+void CL_SoundOutput_Generic::play_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session)
 {
 	CL_MutexSection mutex_lock(&mutex);
 	sessions.push_back(session);
 }
 
-void CL_SoundOutput_Generic::stop_session(CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> session)
+void CL_SoundOutput_Generic::stop_session(CL_SharedPtr<CL_SoundBuffer_Session_Generic> session)
 {
 	CL_MutexSection mutex_lock(&mutex);
 	sessions.remove(session);
@@ -91,20 +89,16 @@ void CL_SoundOutput_Generic::stop_session(CL_MutexSharedPtr<CL_SoundBuffer_Sessi
 
 void CL_SoundOutput_Generic::start_mixer_thread()
 {
-	thread = CL_Thread(new CL_ThreadFunc_Runnable_v0<CL_SoundOutput_Generic>(this, &CL_SoundOutput_Generic::mixer_thread));
-	thread.start();
-	thread.set_priority(cl_priority_highest);
+	thread.start(this, &CL_SoundOutput_Generic::mixer_thread);
+//	thread.set_priority(cl_priority_highest);
 }
 
 void CL_SoundOutput_Generic::stop_mixer_thread()
 {
 	CL_MutexSection mutex_lock(&mutex);
-	stop_mixer.set_flag();
-	mutex_lock.leave();
-	if (thread.is_initialized()) 
-	{
-		thread.wait();
-	}
+	stop_mixer.set();
+	mutex_lock.unlock();
+	thread.join();
 	thread = CL_Thread();
 }
 
@@ -133,11 +127,11 @@ void CL_SoundOutput_Generic::mix_fragment()
 
 	// Mix playing soundbuffers into mixing buffers:
 	CL_MutexSection mutex_lock(&mutex);
-	std::vector< CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> > ended_sessions;
-	std::list< CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> >::iterator it;
+	std::vector< CL_SharedPtr<CL_SoundBuffer_Session_Generic> > ended_sessions;
+	std::list< CL_SharedPtr<CL_SoundBuffer_Session_Generic> >::iterator it;
 	for (it = sessions.begin(); it != sessions.end(); ++it)
 	{
-		CL_MutexSharedPtr<CL_SoundBuffer_Session_Generic> session = *it;
+		CL_SharedPtr<CL_SoundBuffer_Session_Generic> session = *it;
 		bool playing = session->mix_to(mix_buffers, temp_buffers, mix_buffer_size, 2);
 		if (!playing) ended_sessions.push_back(session);
 	}
@@ -153,7 +147,7 @@ void CL_SoundOutput_Generic::mix_fragment()
 	// Release any sessions pending for removal:
 	int size_ended_sessions = ended_sessions.size();
 	for (i = 0; i < size_ended_sessions; i++) stop_session(ended_sessions[i]);
-	mutex_lock.leave();
+	mutex_lock.unlock();
 
 	// Make sure values stay inside 16 bit range:
 	for (int chan = 0; chan < 2; chan++)
@@ -196,8 +190,9 @@ void CL_SoundOutput_Generic::mixer_thread()
 	while (true)
 	{
 		CL_MutexSection mutex_lock(&mutex);
-		if (stop_mixer.get_flag()) break;
-		mutex_lock.leave();
+		if (stop_mixer.wait(0))
+			break;
+		mutex_lock.unlock();
 
 		// Mix some audio:
 		mix_fragment();

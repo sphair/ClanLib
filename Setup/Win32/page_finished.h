@@ -40,9 +40,9 @@ public:
 
 	HPROPSHEETPAGE handle_propsheetpage;
 
-	static LRESULT CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
+	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
 
-	LRESULT on_notify(HWND hWnd, NMHDR *header);
+	INT_PTR on_notify(HWND hWnd, NMHDR *header);
 
 	Wizard *wizard;
 };

@@ -30,18 +30,20 @@
 
 #include "Sound/precomp.h"
 #include "soundoutput_alsa.h"
-#include "API/Core/System/error.h"
-#include "API/Core/System/cl_assert.h"
+#include <API/Core/System/exception.h>
 #include "API/Core/System/system.h"
-#include "API/Core/System/log.h"
+#include "API/Core/Text/logger.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
 
 #ifdef __linux__
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_alsa construction:
 
-CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency) :
-	CL_SoundOutput_Generic(mixing_frequency), frames_in_buffer(4096),
+CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
+	CL_SoundOutput_Generic(mixing_frequency, mixing_latency), frames_in_buffer(4096),
 	frames_in_period(1024)
 {
 	int rc;
@@ -50,7 +52,7 @@ CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency) :
 	rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (rc < 0)
 	{
-		CL_Log::log("warn", "ClanSound: Couldn't open sound device, disabling sound");
+		cl_log_event("warn", "ClanSound: Couldn't open sound device, disabling sound");
 		handle = NULL;
 		return;
 	}
@@ -69,7 +71,7 @@ CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency) :
 	rc = snd_pcm_hw_params(handle, hwparams);
 	if (rc < 0)
 	{
-		CL_Log::log("warn", "ClanSound: Couldn't initialize sound device, disabling sound");
+		cl_log_event("warn", "ClanSound: Couldn't initialize sound device, disabling sound");
 		snd_pcm_close(handle);
 		handle = NULL;
 		return;
@@ -108,7 +110,7 @@ bool CL_SoundOutput_alsa::is_full()
 	
 	rc = snd_pcm_delay(handle, &delay);
 	if (rc < 0) {
-		CL_Log::log("debug", "ClanSound: snd_pcm_delay() failed!?");
+		cl_log_event("debug", "ClanSound: snd_pcm_delay() failed!?");
 		return false;
 	}
 
@@ -141,7 +143,7 @@ void CL_SoundOutput_alsa::write_fragment(short *data)
 
 	rc = snd_pcm_writei(handle, data, frames_in_period);
 	if (rc < 0)
-		CL_Log::log("debug", "ClanSound: snd_pcm_writei() failed!");
+		cl_log_event("debug", "ClanSound: snd_pcm_writei() failed!");
 }
 
 void CL_SoundOutput_alsa::wait()

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,56 +24,44 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="System"
-//! header=core.h
-
-#ifndef header_keepalive
-#define header_keepalive
-
-#include "thread.h"
-
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-//: Keep alive callback interface.
-//- !group=Core/System!
-//- !header=core.h!
-//- <p>If you want to add something that gets called in a
-//- CL_System::keep_alive() call, inherit this class and create an instance
-//- of it.</p>
+
+#include "../api_core.h"
+
+class CL_Event;
+class CL_KeepAliveObject;
+
+/// \brief CL_KeepAlive application loop helper
+///
+/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE CL_KeepAlive
 {
-//! Construction:
 public:
-	//: Constructs and registers the object as a keep_alive listener.
-	CL_KeepAlive();
-	
-	//: Unregisters the object as a keep_alive listener.
-	virtual ~CL_KeepAlive();
+	/// \brief Processes and dispatches keep alive events until the specified timeout period has passed
+	static void process(int timeout = 0);
 
-//! Operations:
-public:
-	//: Called when CL_System::keep_alive() is called.
-	virtual void keep_alive()=0;
-
-//! Implementation:
-private:
-	//: Thread ID of thread this keep alive object was created in.
-	CL_ThreadId create_thread_id;
+	/// \brief Returns all the current keep alive objects available for this thread
+	static std::vector<CL_KeepAliveObject *> get_objects();
 };
 
-#endif
+/// \brief Interface for objects participating in the thread keep-alive processing loop
+///
+/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
+class CL_API_CORE CL_KeepAliveObject
+{
+public:
+	/// \brief Registers a keep alive object
+	CL_KeepAliveObject();
+
+	/// \brief Unregisters a keep alive object
+	virtual ~CL_KeepAliveObject();
+
+	/// \brief Returns a CL_Event object that is signaled when the keep alive object got data to process
+	virtual CL_Event get_wakeup_event() = 0;
+
+	/// \brief Called by CL_KeepAlive::process when the wakeup event is flagged
+	virtual void process() = 0;
+};

@@ -1,0 +1,15 @@
+
+statusbar
+{
+	preferred-width:100;
+	preferred-height:23;
+
+	bg-image:StatusBar; 
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;    /* why doesn't this work with 1, as uxtheme uses */
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;   /* why doesn't this work with 1, as uxtheme uses */
+	bg-image-sizing:stretch; 
+
+	text-color:black;
+}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,40 +24,50 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_thread_win32
-#define header_thread_win32
-
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-#include "API/Core/System/thread.h"
-#include <windows.h>
 
-class CL_Thread_Generic
+#include "../thread_impl.h"
+
+class CL_Thread_Win32 : public CL_Thread_Impl
 {
-//! Attributes:
+/// \name Construction
+/// \{
+
 public:
-	static unsigned long __stdcall func_proxy(void *arg);
+	CL_Thread_Win32();
 
-	HANDLE thread_handle;
+	~CL_Thread_Win32();
 
-	DWORD thread_id;
-	
-	CL_Runnable *runnable;
-	
-	bool delete_runnable;
-	
-	int ref_count;
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	void start(CL_Runnable *runnable);
+
+	void join();
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+	static DWORD WINAPI thread_main(void *data);
+
+	HANDLE handle;
+/// \}
 };
 
-class CL_ThreadId_Generic
-{
-public:
-	DWORD thread_id;
-};
 
-#endif

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,69 +24,90 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_document_type
-#define header_dom_document_type
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_node.h"
 
 class CL_DomNamedNodeMap;
 
-//: DOM Document Type class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>Each Document has a doctype attribute whose value is either null
-//- or a DocumentType object. The DocumentType interface in the DOM Level 1
-//- Core provides an interface to the list of entities that are defined for
-//- the document, and little else because the effect of namespaces and the
-//- various XML scheme efforts on DTD representation are not clearly understood
-//- as of this writing.</p>
-//- <p>The DOM Level 1 doesn't support editing DocumentType nodes.</p>
+/// \brief DOM Document Type class.
+///
+///    <p>Each Document has a doctype attribute whose value is either null
+///    or a DocumentType object. The DocumentType interface in the DOM Level 1
+///    Core provides an interface to the list of entities that are defined for
+///    the document, and little else because the effect of namespaces and the
+///    various XML scheme efforts on DTD representation are not clearly understood
+///    as of this writing.</p>
+///    <p>The DOM Level 1 doesn't support editing DocumentType nodes.</p> 
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomDocumentType : public CL_DomNode
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Document Type handle.
+	/// \brief Constructs a DOM Document Type handle.
 	CL_DomDocumentType();
 
+	CL_DomDocumentType(
+		const CL_DomString &qualified_name,
+		const CL_DomString &public_id,
+		const CL_DomString &system_id);
+
 	CL_DomDocumentType(CL_DomDocument &doc);
-	
+
 	CL_DomDocumentType(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocumentType();
 
-//! Attributes:
-public:
-	//: The name of DTD; i.e., the name immediately following the DOCTYPE keyword.
-	std::string get_name() const;
 
-	//: A NamedNodeMap containing the general entities, both external and internal, declared in the DTD.
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	/// \brief The name of DTD; i.e., the name immediately following the DOCTYPE keyword.
+	CL_DomString get_name() const;
+
+	/// \brief A NamedNodeMap containing the general entities, both external and internal, declared in the DTD.
 	CL_DomNamedNodeMap get_entities() const;
 
-	//: A NamedNodeMap containing the notations declared in the DTD.
+	/// \brief A NamedNodeMap containing the notations declared in the DTD.
 	CL_DomNamedNodeMap get_notations() const;
 
-//! Operations:
+	/// \brief The public identifier of the external subset.
+	CL_DomString get_public_id() const;
+
+	/// \brief The system identifier of the external subset.
+	CL_DomString get_system_id() const;
+
+	/// \brief The internal subset as a string.
+	/** <p><b>Note:</b> The actual content returned depends on how much
+	    information is available to the implementation. This may vary
+	    depending on various parameters, including the XML processor
+	    used to build the document.</p>*/
+	CL_DomString get_internal_subset() const;
+
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
+/// \}
 };
 
-#endif
+
+/// \}

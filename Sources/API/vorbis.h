@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,14 +27,14 @@
 **    (if your name is missing here, please add it)
 */
 
-//: <p>Ogg Vorbis playback. With this library, you can play music with the same
-//: quality as todays mp3, but with a completely open sound format (mp3 is
-//: patented by some greedy companies that want money for each mp3 you use in a
-//: commercial product).</p>
+/// \brief <p>Ogg Vorbis playback. With this library, you can play music with the same
+/// \brief quality as todays mp3, but with a completely open sound format (mp3 is
+/// \brief patented by some greedy companies that want money for each mp3 you use in a
+/// \brief commercial product).</p>
 //! Global=Vorbis
 
-#ifndef header_vorbis
-#define header_vorbis
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -44,19 +44,83 @@
 #pragma warning( disable : 4786)
 #endif
 
+#ifdef __cplusplus_cli
+#pragma managed(push, off)
+#endif
+
 #include "Vorbis/soundprovider_vorbis.h"
 #include "Vorbis/setupvorbis.h"
 
-#if defined (_MSC_VER)
-#if !defined (_DEBUG)
-#pragma comment(lib, "clanVorbis-static-mt.lib")
-#pragma comment(lib, "libvorbis-static-mt.lib")
-#pragma comment(lib, "libogg-static-mt.lib")
-#else
-#pragma comment(lib, "clanVorbis-static-mt-debug.lib")
-#pragma comment(lib, "libvorbis-static-mt-debug.lib")
-#pragma comment(lib, "libogg-static-mt-debug.lib")
-#endif
+#ifdef __cplusplus_cli
+#pragma managed(pop)
 #endif
 
+#if defined (_MSC_VER)
+	#if !defined (UNICODE)
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-dll.lib")
+				#pragma comment(lib, "libvorbis-dll.lib")
+				#pragma comment(lib, "libogg-dll.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-dll-debug.lib")
+				#pragma comment(lib, "libvorbis-dll-debug.lib")
+				#pragma comment(lib, "libogg-dll-debug.lib")
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-static-mtdll.lib")
+				#pragma comment(lib, "libvorbis-static-mtdll.lib")
+				#pragma comment(lib, "libogg-static-mtdll.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-static-mtdll-debug.lib")
+				#pragma comment(lib, "libvorbis-static-mtdll-debug.lib")
+				#pragma comment(lib, "libogg-static-mtdll-debug.lib")
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-static-mt.lib")
+				#pragma comment(lib, "libvorbis-static-mt.lib")
+				#pragma comment(lib, "libogg-static-mt.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-static-mt-debug.lib")
+				#pragma comment(lib, "libvorbis-static-mt-debug.lib")
+				#pragma comment(lib, "libogg-static-mt-debug.lib")
+			#endif
+		#endif
+	#else
+		#if defined (CL_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-dll-uc.lib")
+				#pragma comment(lib, "libvorbis-dll.lib")
+				#pragma comment(lib, "libogg-dll.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-dll-uc-debug.lib")
+				#pragma comment(lib, "libvorbis-dll-debug.lib")
+				#pragma comment(lib, "libogg-dll-debug.lib")
+			#endif
+		#elif defined (_DLL)
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-static-mtdll-uc.lib")
+				#pragma comment(lib, "libvorbis-static-mtdll.lib")
+				#pragma comment(lib, "libogg-static-mtdll.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-static-mtdll-uc-debug.lib")
+				#pragma comment(lib, "libvorbis-static-mtdll-debug.lib")
+				#pragma comment(lib, "libogg-static-mtdll-debug.lib")
+			#endif
+		#else
+			#if !defined (_DEBUG)
+				#pragma comment(lib, "clanVorbis-static-mt-uc.lib")
+				#pragma comment(lib, "libvorbis-static-mt.lib")
+				#pragma comment(lib, "libogg-static-mt.lib")
+			#else
+				#pragma comment(lib, "clanVorbis-static-mt-uc-debug.lib")
+				#pragma comment(lib, "libvorbis-static-mt-debug.lib")
+				#pragma comment(lib, "libogg-static-mt-debug.lib")
+			#endif
+		#endif
+	#endif
 #endif
+
+

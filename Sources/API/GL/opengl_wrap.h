@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,24 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanGL="System"
-//! header=gl.h
+/// \addtogroup clanGL_System clanGL System
+/// \{
 
-#ifndef header_opengl_wrap
-#define header_opengl_wrap
 
-#ifdef CL_API_DLL
-#ifdef CL_GL_EXPORT
-#define CL_API_GL __declspec(dllexport)
-#else
-#define CL_API_GL __declspec(dllimport)
-#endif
-#else
-#define CL_API_GL
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -55,9 +45,9 @@
 #define CL_GLFUNC
 #endif
 
-//: OpenGL 2.0 defines
-//- !group=GL/System!
-//- !header=gl.h!
+/// \brief OpenGL 2.0 defines
+///
+/// \xmlonly !group=GL/System! !header=gl.h! \endxmlonly
 enum CL_GLDefines
 {
 	// AccumOp:
@@ -118,7 +108,7 @@ enum CL_GLDefines
 
 	// BlendEquationMode:
 
-	// CL_LOGIC_OP
+	CL_LOGIC_OP                       = 0x0BF1,
 	// CL_FUNC_ADD
 	// CL_MIN
 	// CL_MAX
@@ -1388,7 +1378,7 @@ enum CL_GLDefines
 	CL_TEXTURE_3D_BINDING           = 0x806A,
 
 	// vertex_array:
-	
+
 	CL_VERTEX_ARRAY                 = 0x8074,
 	CL_NORMAL_ARRAY                 = 0x8075,
 	CL_COLOR_ARRAY                  = 0x8076,
@@ -1797,7 +1787,7 @@ enum CL_GLDefines
 	CL_FOG_COORDINATE_ARRAY_STRIDE = 0x8455,
 	CL_FOG_COORDINATE_ARRAY_POINTER = 0x8456,
 	CL_FOG_COORDINATE_ARRAY        = 0x8457,
-	
+
 	// OpenGL 1.5 token renames:
 	CL_FOG_COORD_SRC               = CL_FOG_COORDINATE_SOURCE,
 	CL_FOG_COORD                   = CL_FOG_COORDINATE,
@@ -1806,11 +1796,11 @@ enum CL_GLDefines
 	CL_FOG_COORD_ARRAY_STRIDE      = CL_FOG_COORDINATE_ARRAY_STRIDE,
 	CL_FOG_COORD_ARRAY_POINTER     = CL_FOG_COORDINATE_ARRAY_POINTER,
 	CL_FOG_COORD_ARRAY             = CL_FOG_COORDINATE_ARRAY,
-	
+
 	// ARB_point_parameters:
 
 	CL_POINT_SIZE_MIN              = 0x8126,
-	CL_POINT_SIZE_MAX_ARB          = 0x8127,
+	CL_POINT_SIZE_MAX              = 0x8127,
 	CL_POINT_FADE_THRESHOLD_SIZE   = 0x8128,
 	CL_POINT_DISTANCE_ATTENUATION  = 0x8129,
 
@@ -1843,7 +1833,7 @@ enum CL_GLDefines
 	CL_TEXTURE_LOD_BIAS            = 0x8501,
 
 	// ARB_vertex_buffer_object:
-	
+
 	CL_ARRAY_BUFFER                        = 0x8892,
 	CL_ELEMENT_ARRAY_BUFFER                = 0x8893,
 	CL_ARRAY_BUFFER_BINDING                = 0x8894,
@@ -1886,7 +1876,7 @@ enum CL_GLDefines
 	CL_QUERY_RESULT_AVAILABLE              = 0x8867,
 
 	// ARB_shader_objects:
-	
+
 	CL_PROGRAM_OBJECT                      = 0x8B40,
 	CL_TYPE                                = 0x8B4E,
 	CL_SUBTYPE                             = 0x8B4F,
@@ -1899,6 +1889,7 @@ enum CL_GLDefines
 	CL_ACTIVE_UNIFORMS                     = 0x8B86,
 	CL_ACTIVE_UNIFORM_MAX_LENGTH           = 0x8B87,
 	CL_SHADER_SOURCE_LENGTH                = 0x8B88,
+	CL_CURRENT_PROGRAM                     = 0x8B8D,
 	CL_OBJECT_TYPE                         = CL_TYPE,
 	CL_OBJECT_SUBTYPE                      = CL_SUBTYPE,
 	CL_OBJECT_DELETE_STATUS                = CL_DELETE_STATUS,
@@ -1998,7 +1989,9 @@ enum CL_GLDefines
 
 	CL_POINT_SPRITE                        = 0x8861,
 	CL_COORD_REPLACE                       = 0x8862,
-	// CL_POINT_SPRITE_COORD_ORIGIN           = cant find this token value anywhere :/
+	CL_POINT_SPRITE_COORD_ORIGIN           = 0x8CA0,
+	CL_LOWER_LEFT                          = 0x8CA1,
+	CL_UPPER_LEFT                          = 0x8CA2,
 
 	// ATI_separate_stencil:
 
@@ -2023,19 +2016,95 @@ enum CL_GLDefines
 	CL_STENCIL_BACK_FAIL                   = 0x8801,
 	CL_STENCIL_BACK_PASS_DEPTH_FAIL        = 0x8802,
 	CL_STENCIL_BACK_PASS_DEPTH_PASS        = 0x8803,
-	
+
 	// EXT_stencil_two_side additional states:
 
 	CL_STENCIL_TEST_TWO_SIDE               = 0x8910,
-	CL_ACTIVE_STENCIL_FACE                 = 0x8911
+	CL_ACTIVE_STENCIL_FACE                 = 0x8911,
+
+	// EXT_framebuffer_object:
+
+	CL_FRAMEBUFFER                         = 0x8D40,
+	CL_RENDERBUFFER                        = 0x8D41,
+	CL_STENCIL_INDEX1                      = 0x8D46,
+	CL_STENCIL_INDEX4                      = 0x8D47,
+	CL_STENCIL_INDEX8                      = 0x8D48,
+	CL_STENCIL_INDEX16                     = 0x8D49,
+	CL_RENDERBUFFER_WIDTH                  = 0x8D42,
+	CL_RENDERBUFFER_HEIGHT                 = 0x8D43,
+	CL_RENDERBUFFER_INTERNAL_FORMAT        = 0x8D44,
+	CL_RENDERBUFFER_RED_SIZE               = 0x8D50,
+	CL_RENDERBUFFER_GREEN_SIZE             = 0x8D51,
+	CL_RENDERBUFFER_BLUE_SIZE              = 0x8D52,
+	CL_RENDERBUFFER_ALPHA_SIZE             = 0x8D53,
+	CL_RENDERBUFFER_DEPTH_SIZE             = 0x8D54,
+	CL_RENDERBUFFER_STENCIL_SIZE           = 0x8D55,
+	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE              = 0x8CD0,
+	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME              = 0x8CD1,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL            = 0x8CD2,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE    = 0x8CD3,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET       = 0x8CD4,
+	CL_COLOR_ATTACHMENT0                   = 0x8CE0,
+	CL_COLOR_ATTACHMENT1                   = 0x8CE1,
+	CL_COLOR_ATTACHMENT2                   = 0x8CE2,
+	CL_COLOR_ATTACHMENT3                   = 0x8CE3,
+	CL_COLOR_ATTACHMENT4                   = 0x8CE4,
+	CL_COLOR_ATTACHMENT5                   = 0x8CE5,
+	CL_COLOR_ATTACHMENT6                   = 0x8CE6,
+	CL_COLOR_ATTACHMENT7                   = 0x8CE7,
+	CL_COLOR_ATTACHMENT8                   = 0x8CE8,
+	CL_COLOR_ATTACHMENT9                   = 0x8CE9,
+	CL_COLOR_ATTACHMENT10                  = 0x8CEA,
+	CL_COLOR_ATTACHMENT11                  = 0x8CEB,
+	CL_COLOR_ATTACHMENT12                  = 0x8CEC,
+	CL_COLOR_ATTACHMENT13                  = 0x8CED,
+	CL_COLOR_ATTACHMENT14                  = 0x8CEE,
+	CL_COLOR_ATTACHMENT15                  = 0x8CEF,
+	CL_DEPTH_ATTACHMENT                    = 0x8D00,
+	CL_STENCIL_ATTACHMENT                  = 0x8D20,
+	CL_FRAMEBUFFER_COMPLETE                            = 0x8CD5,
+	CL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT               = 0x8CD6,
+	CL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT       = 0x8CD7,
+	CL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS               = 0x8CD9,
+	CL_FRAMEBUFFER_INCOMPLETE_FORMATS                  = 0x8CDA,
+	CL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER              = 0x8CDB,
+	CL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER              = 0x8CDC,
+	CL_FRAMEBUFFER_UNSUPPORTED                         = 0x8CDD,
+	CL_FRAMEBUFFER_BINDING                 = 0x8CA6,
+	CL_RENDERBUFFER_BINDING                = 0x8CA7,
+	CL_MAX_COLOR_ATTACHMENTS               = 0x8CDF,
+	CL_MAX_RENDERBUFFER_SIZE               = 0x84E8,
+	CL_INVALID_FRAMEBUFFER_OPERATION       = 0x0506,
+
+	// EXT_texture_compression_s3tc:
+
+	CL_COMPRESSED_RGB_S3TC_DXT1_EXT        = 0x83F0,
+	CL_COMPRESSED_RGBA_S3TC_DXT1_EXT       = 0x83F1,
+	CL_COMPRESSED_RGBA_S3TC_DXT3_EXT       = 0x83F2,
+	CL_COMPRESSED_RGBA_S3TC_DXT5_EXT       = 0x83F3,
+
+	// EXT_framebuffer_blit:
+
+	CL_READ_FRAMEBUFFER                    = 0x8CA8,
+	CL_DRAW_FRAMEBUFFER                    = 0x8CA9,
+	CL_DRAW_FRAMEBUFFER_BINDING            = 0x8CA6, // alias CL_FRAMEBUFFER_BINDING
+	CL_READ_FRAMEBUFFER_BINDING            = 0x8CAA
 };
 
-//! OpenGL 2.0 binds:
-//- !group=GL/System!
-//- !header=gl.h!
-class CL_API_GL CL_GLFunctions
+/// \name OpenGL 2.0 binds
+/// \{
+
+/// \brief CL_GLFunctions
+///
+/// \xmlonly !group=GL/System! !header=gl.h! \endxmlonly
+class CL_GLFunctions
 {
-//! Typedefs:
+
+/// \}
+
+/// \name Typedefs
+/// \{
+
 public:
 	typedef void (CL_GLFUNC *ptr_glAccum)(CLenum op, CLfloat value);
 	typedef void (CL_GLFUNC *ptr_glAlphaFunc)(CLenum func, CLclampf ref);
@@ -2046,7 +2115,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glBitmap)(CLsizei width, CLsizei height, CLfloat xorig, CLfloat yorig, CLfloat xmove, CLfloat ymove, const CLubyte *bitmap);
 	typedef void (CL_GLFUNC *ptr_glBlendFunc)(CLenum sfactor, CLenum dfactor);
 	typedef void (CL_GLFUNC *ptr_glCallList)(CLuint list);
-	typedef void (CL_GLFUNC *ptr_glCallLists)(CLsizei n, CLenum type, const void *lists);
+	typedef void (CL_GLFUNC *ptr_glCallLists)(CLsizei n, CLenum type, const CLvoid *lists);
 	typedef void (CL_GLFUNC *ptr_glClear)(CLbitfield mask);
 	typedef void (CL_GLFUNC *ptr_glClearAccum)(CLfloat red, CLfloat green, CLfloat blue, CLfloat alpha);
 	typedef void (CL_GLFUNC *ptr_glClearColor)(CLclampf red, CLclampf green, CLclampf blue, CLclampf alpha);
@@ -2088,7 +2157,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glColor4usv)(const CLushort *v);
 	typedef void (CL_GLFUNC *ptr_glColorMask)(CLboolean red, CLboolean green, CLboolean blue, CLboolean alpha);
 	typedef void (CL_GLFUNC *ptr_glColorMaterial)(CLenum face, CLenum mode);
-	typedef void (CL_GLFUNC *ptr_glColorPointer)(CLint size, CLenum type, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glColorPointer)(CLint size, CLenum type, CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glCopyPixels)(CLint x, CLint y, CLsizei width, CLsizei height, CLenum type);
 	typedef void (CL_GLFUNC *ptr_glCopyTexImage1D)(CLenum target, CLint level, CLenum internalformat, CLint x, CLint y, CLsizei width, CLint border);
 	typedef void (CL_GLFUNC *ptr_glCopyTexImage2D)(CLenum target, CLint level, CLenum internalformat, CLint x, CLint y, CLsizei width, CLsizei height, CLint border);
@@ -2104,15 +2173,15 @@ public:
 	typedef void (CL_GLFUNC *ptr_glDisableClientState)(CLenum array);
 	typedef void (CL_GLFUNC *ptr_glDrawArrays)(CLenum mode, CLint first, CLsizei count);
 	typedef void (CL_GLFUNC *ptr_glDrawBuffer)(CLenum mode);
-	typedef void (CL_GLFUNC *ptr_glDrawElements)(CLenum mode, CLsizei count, CLenum type, const void *indices);
-	typedef void (CL_GLFUNC *ptr_glDrawPixels)(CLsizei width, CLsizei height, CLenum format, CLenum type, const void *pixels);
+	typedef void (CL_GLFUNC *ptr_glDrawElements)(CLenum mode, CLsizei count, CLenum type, const CLvoid *indices);
+	typedef void (CL_GLFUNC *ptr_glDrawPixels)(CLsizei width, CLsizei height, CLenum format, CLenum type, const CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glEdgeFlag)(CLboolean flag);
-	typedef void (CL_GLFUNC *ptr_glEdgeFlagPointer)(CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glEdgeFlagPointer)(CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glEdgeFlagv)(const CLboolean *flag);
 	typedef void (CL_GLFUNC *ptr_glEnable)(CLenum cap);
 	typedef void (CL_GLFUNC *ptr_glEnableClientState)(CLenum array);
-	typedef void (CL_GLFUNC *ptr_glEnd)();
-	typedef void (CL_GLFUNC *ptr_glEndList)();
+	typedef void (CL_GLFUNC *ptr_glEnd)(void);
+	typedef void (CL_GLFUNC *ptr_glEndList)(void);
 	typedef void (CL_GLFUNC *ptr_glEvalCoord1d)(CLdouble u);
 	typedef void (CL_GLFUNC *ptr_glEvalCoord1dv)(const CLdouble *u);
 	typedef void (CL_GLFUNC *ptr_glEvalCoord1f)(CLfloat u);
@@ -2126,8 +2195,8 @@ public:
 	typedef void (CL_GLFUNC *ptr_glEvalPoint1)(CLint i);
 	typedef void (CL_GLFUNC *ptr_glEvalPoint2)(CLint i, CLint j);
 	typedef void (CL_GLFUNC *ptr_glFeedbackBuffer)(CLsizei size, CLenum type, CLfloat *buffer);
-	typedef void (CL_GLFUNC *ptr_glFinish)();
-	typedef void (CL_GLFUNC *ptr_glFlush)();
+	typedef void (CL_GLFUNC *ptr_glFinish)(void);
+	typedef void (CL_GLFUNC *ptr_glFlush)(void);
 	typedef void (CL_GLFUNC *ptr_glFogf)(CLenum pname, CLfloat param);
 	typedef void (CL_GLFUNC *ptr_glFogfv)(CLenum pname, const CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glFogi)(CLenum pname, CLint param);
@@ -2139,7 +2208,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glGetBooleanv)(CLenum pname, CLboolean *params);
 	typedef void (CL_GLFUNC *ptr_glGetClipPlane)(CLenum plane, CLdouble *equation);
 	typedef void (CL_GLFUNC *ptr_glGetDoublev)(CLenum pname, CLdouble *params);
-	typedef CLenum (CL_GLFUNC *ptr_glGetError)();
+	typedef CLenum (CL_GLFUNC *ptr_glGetError)(void);
 	typedef void (CL_GLFUNC *ptr_glGetFloatv)(CLenum pname, CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glGetIntegerv)(CLenum pname, CLint *params);
 	typedef void (CL_GLFUNC *ptr_glGetLightfv)(CLenum light, CLenum pname, CLfloat *params);
@@ -2152,7 +2221,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glGetPixelMapfv)(CLenum map, CLfloat *values);
 	typedef void (CL_GLFUNC *ptr_glGetPixelMapuiv)(CLenum map, CLuint *values);
 	typedef void (CL_GLFUNC *ptr_glGetPixelMapusv)(CLenum map, CLushort *values);
-	typedef void (CL_GLFUNC *ptr_glGetPointerv)(CLenum pname, void* *params);
+	typedef void (CL_GLFUNC *ptr_glGetPointerv)(CLenum pname, CLvoid* *params);
 	typedef void (CL_GLFUNC *ptr_glGetPolygonStipple)(CLubyte *mask);
 	typedef const CLubyte *(CL_GLFUNC *ptr_glGetString)(CLenum name);
 	typedef void (CL_GLFUNC *ptr_glGetTexEnvfv)(CLenum target, CLenum pname, CLfloat *params);
@@ -2160,14 +2229,14 @@ public:
 	typedef void (CL_GLFUNC *ptr_glGetTexGendv)(CLenum coord, CLenum pname, CLdouble *params);
 	typedef void (CL_GLFUNC *ptr_glGetTexGenfv)(CLenum coord, CLenum pname, CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glGetTexGeniv)(CLenum coord, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetTexImage)(CLenum target, CLint level, CLenum format, CLenum type, void *pixels);
+	typedef void (CL_GLFUNC *ptr_glGetTexImage)(CLenum target, CLint level, CLenum format, CLenum type, CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glGetTexLevelParameterfv)(CLenum target, CLint level, CLenum pname, CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glGetTexLevelParameteriv)(CLenum target, CLint level, CLenum pname, CLint *params);
 	typedef void (CL_GLFUNC *ptr_glGetTexParameterfv)(CLenum target, CLenum pname, CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glGetTexParameteriv)(CLenum target, CLenum pname, CLint *params);
 	typedef void (CL_GLFUNC *ptr_glHint)(CLenum target, CLenum mode);
 	typedef void (CL_GLFUNC *ptr_glIndexMask)(CLuint mask);
-	typedef void (CL_GLFUNC *ptr_glIndexPointer)(CLenum type, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glIndexPointer)(CLenum type, CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glIndexd)(CLdouble c);
 	typedef void (CL_GLFUNC *ptr_glIndexdv)(const CLdouble *c);
 	typedef void (CL_GLFUNC *ptr_glIndexf)(CLfloat c);
@@ -2178,8 +2247,8 @@ public:
 	typedef void (CL_GLFUNC *ptr_glIndexsv)(const CLshort *c);
 	typedef void (CL_GLFUNC *ptr_glIndexub)(CLubyte c);
 	typedef void (CL_GLFUNC *ptr_glIndexubv)(const CLubyte *c);
-	typedef void (CL_GLFUNC *ptr_glInitNames)();
-	typedef void (CL_GLFUNC *ptr_glInterleavedArrays)(CLenum format, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glInitNames)(void);
+	typedef void (CL_GLFUNC *ptr_glInterleavedArrays)(CLenum format, CLsizei stride, const CLvoid *pointer);
 	typedef CLboolean (CL_GLFUNC *ptr_glIsEnabled)(CLenum cap);
 	typedef CLboolean (CL_GLFUNC *ptr_glIsList)(CLuint list);
 	typedef CLboolean (CL_GLFUNC *ptr_glIsTexture)(CLuint texture);
@@ -2194,7 +2263,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glLineStipple)(CLint factor, CLushort pattern);
 	typedef void (CL_GLFUNC *ptr_glLineWidth)(CLfloat width);
 	typedef void (CL_GLFUNC *ptr_glListBase)(CLuint base);
-	typedef void (CL_GLFUNC *ptr_glLoadIdentity)();
+	typedef void (CL_GLFUNC *ptr_glLoadIdentity)(void);
 	typedef void (CL_GLFUNC *ptr_glLoadMatrixd)(const CLdouble *m);
 	typedef void (CL_GLFUNC *ptr_glLoadMatrixf)(const CLfloat *m);
 	typedef void (CL_GLFUNC *ptr_glLoadName)(CLuint name);
@@ -2225,7 +2294,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glNormal3iv)(const CLint *v);
 	typedef void (CL_GLFUNC *ptr_glNormal3s)(CLshort nx, CLshort ny, CLshort nz);
 	typedef void (CL_GLFUNC *ptr_glNormal3sv)(const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glNormalPointer)(CLenum type, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glNormalPointer)(CLenum type, CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glOrtho)(CLdouble left, CLdouble right, CLdouble bottom, CLdouble top, CLdouble zNear, CLdouble zFar);
 	typedef void (CL_GLFUNC *ptr_glPassThrough)(CLfloat token);
 	typedef void (CL_GLFUNC *ptr_glPixelMapfv)(CLenum map, CLint mapsize, const CLfloat *values);
@@ -2240,14 +2309,14 @@ public:
 	typedef void (CL_GLFUNC *ptr_glPolygonMode)(CLenum face, CLenum mode);
 	typedef void (CL_GLFUNC *ptr_glPolygonOffset)(CLfloat factor, CLfloat units);
 	typedef void (CL_GLFUNC *ptr_glPolygonStipple)(const CLubyte *mask);
-	typedef void (CL_GLFUNC *ptr_glPopAttrib)();
-	typedef void (CL_GLFUNC *ptr_glPopClientAttrib)();
-	typedef void (CL_GLFUNC *ptr_glPopMatrix)();
-	typedef void (CL_GLFUNC *ptr_glPopName)();
+	typedef void (CL_GLFUNC *ptr_glPopAttrib)(void);
+	typedef void (CL_GLFUNC *ptr_glPopClientAttrib)(void);
+	typedef void (CL_GLFUNC *ptr_glPopMatrix)(void);
+	typedef void (CL_GLFUNC *ptr_glPopName)(void);
 	typedef void (CL_GLFUNC *ptr_glPrioritizeTextures)(CLsizei n, const CLuint *textures, const CLclampf *priorities);
 	typedef void (CL_GLFUNC *ptr_glPushAttrib)(CLbitfield mask);
 	typedef void (CL_GLFUNC *ptr_glPushClientAttrib)(CLbitfield mask);
-	typedef void (CL_GLFUNC *ptr_glPushMatrix)();
+	typedef void (CL_GLFUNC *ptr_glPushMatrix)(void);
 	typedef void (CL_GLFUNC *ptr_glPushName)(CLuint name);
 	typedef void (CL_GLFUNC *ptr_glRasterPos2d)(CLdouble x, CLdouble y);
 	typedef void (CL_GLFUNC *ptr_glRasterPos2dv)(const CLdouble *v);
@@ -2274,7 +2343,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glRasterPos4s)(CLshort x, CLshort y, CLshort z, CLshort w);
 	typedef void (CL_GLFUNC *ptr_glRasterPos4sv)(const CLshort *v);
 	typedef void (CL_GLFUNC *ptr_glReadBuffer)(CLenum mode);
-	typedef void (CL_GLFUNC *ptr_glReadPixels)(CLint x, CLint y, CLsizei width, CLsizei height, CLenum format, CLenum type, void *pixels);
+	typedef void (CL_GLFUNC *ptr_glReadPixels)(CLint x, CLint y, CLsizei width, CLsizei height, CLenum format, CLenum type, CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glRectd)(CLdouble x1, CLdouble y1, CLdouble x2, CLdouble y2);
 	typedef void (CL_GLFUNC *ptr_glRectdv)(const CLdouble *v1, const CLdouble *v2);
 	typedef void (CL_GLFUNC *ptr_glRectf)(CLfloat x1, CLfloat y1, CLfloat x2, CLfloat y2);
@@ -2293,6 +2362,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glShadeModel)(CLenum mode);
 	typedef void (CL_GLFUNC *ptr_glStencilFunc)(CLenum func, CLint ref, CLuint mask);
 	typedef void (CL_GLFUNC *ptr_glStencilMask)(CLuint mask);
+	typedef void (CL_GLFUNC *ptr_glStencilMaskSeparate)(CLenum face, CLuint mask);
 	typedef void (CL_GLFUNC *ptr_glStencilOp)(CLenum fail, CLenum zfail, CLenum zpass);
 	typedef void (CL_GLFUNC *ptr_glTexCoord1d)(CLdouble s);
 	typedef void (CL_GLFUNC *ptr_glTexCoord1dv)(const CLdouble *v);
@@ -2326,7 +2396,7 @@ public:
 	typedef void (CL_GLFUNC *ptr_glTexCoord4iv)(const CLint *v);
 	typedef void (CL_GLFUNC *ptr_glTexCoord4s)(CLshort s, CLshort t, CLshort r, CLshort q);
 	typedef void (CL_GLFUNC *ptr_glTexCoord4sv)(const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glTexCoordPointer)(CLint size, CLenum type, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glTexCoordPointer)(CLint size, CLenum type, CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glTexEnvf)(CLenum target, CLenum pname, CLfloat param);
 	typedef void (CL_GLFUNC *ptr_glTexEnvfv)(CLenum target, CLenum pname, const CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glTexEnvi)(CLenum target, CLenum pname, CLint param);
@@ -2337,14 +2407,14 @@ public:
 	typedef void (CL_GLFUNC *ptr_glTexGenfv)(CLenum coord, CLenum pname, const CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glTexGeni)(CLenum coord, CLenum pname, CLint param);
 	typedef void (CL_GLFUNC *ptr_glTexGeniv)(CLenum coord, CLenum pname, const CLint *params);
-	typedef void (CL_GLFUNC *ptr_glTexImage1D)(CLenum target, CLint level, CLint internalformat, CLsizei width, CLint border, CLenum format, CLenum type, const void *pixels);
-	typedef void (CL_GLFUNC *ptr_glTexImage2D)(CLenum target, CLint level, CLint internalformat, CLsizei width, CLsizei height, CLint border, CLenum format, CLenum type, const void *pixels);
+	typedef void (CL_GLFUNC *ptr_glTexImage1D)(CLenum target, CLint level, CLint internalformat, CLsizei width, CLint border, CLenum format, CLenum type, const CLvoid *pixels);
+	typedef void (CL_GLFUNC *ptr_glTexImage2D)(CLenum target, CLint level, CLint internalformat, CLsizei width, CLsizei height, CLint border, CLenum format, CLenum type, const CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glTexParameterf)(CLenum target, CLenum pname, CLfloat param);
 	typedef void (CL_GLFUNC *ptr_glTexParameterfv)(CLenum target, CLenum pname, const CLfloat *params);
 	typedef void (CL_GLFUNC *ptr_glTexParameteri)(CLenum target, CLenum pname, CLint param);
 	typedef void (CL_GLFUNC *ptr_glTexParameteriv)(CLenum target, CLenum pname, const CLint *params);
-	typedef void (CL_GLFUNC *ptr_glTexSubImage1D)(CLenum target, CLint level, CLint xoffset, CLsizei width, CLenum format, CLenum type, const void *pixels);
-	typedef void (CL_GLFUNC *ptr_glTexSubImage2D)(CLenum target, CLint level, CLint xoffset, CLint yoffset, CLsizei width, CLsizei height, CLenum format, CLenum type, const void *pixels);
+	typedef void (CL_GLFUNC *ptr_glTexSubImage1D)(CLenum target, CLint level, CLint xoffset, CLsizei width, CLenum format, CLenum type, const CLvoid *pixels);
+	typedef void (CL_GLFUNC *ptr_glTexSubImage2D)(CLenum target, CLint level, CLint xoffset, CLint yoffset, CLsizei width, CLsizei height, CLenum format, CLenum type, const CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glTranslated)(CLdouble x, CLdouble y, CLdouble z);
 	typedef void (CL_GLFUNC *ptr_glTranslatef)(CLfloat x, CLfloat y, CLfloat z);
 	typedef void (CL_GLFUNC *ptr_glVertex2d)(CLdouble x, CLdouble y);
@@ -2371,29 +2441,29 @@ public:
 	typedef void (CL_GLFUNC *ptr_glVertex4iv)(const CLint *v);
 	typedef void (CL_GLFUNC *ptr_glVertex4s)(CLshort x, CLshort y, CLshort z, CLshort w);
 	typedef void (CL_GLFUNC *ptr_glVertex4sv)(const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexPointer)(CLint size, CLenum type, CLsizei stride, const void *pointer);
+	typedef void (CL_GLFUNC *ptr_glVertexPointer)(CLint size, CLenum type, CLsizei stride, const CLvoid *pointer);
 	typedef void (CL_GLFUNC *ptr_glViewport)(CLint x, CLint y, CLsizei width, CLsizei height);
 
-	typedef void (CL_GLFUNC *ptr_glDrawRangeElementsEXT)(CLenum mode, CLuint start, CLuint end, CLsizei count, CLenum type, const void *indices);
-	typedef void (CL_GLFUNC *ptr_glTexImage3DEXT)(CLenum target, CLint level, CLenum internalformat, CLsizei width, CLsizei height, CLsizei depth, CLint border, CLenum format, CLenum type, const void* pixels);
-	typedef void (CL_GLFUNC *ptr_glTexSubImage3DEXT)(CLenum target, CLint level, CLint xoffset, CLint yoffset, CLint zoffset, CLsizei width, CLsizei height, CLsizei depth, CLenum format, CLenum type, const void *pixels);
+	typedef void (CL_GLFUNC *ptr_glDrawRangeElementsEXT)(CLenum mode, CLuint start, CLuint end, CLsizei count, CLenum type, const CLvoid *indices);
+	typedef void (CL_GLFUNC *ptr_glTexImage3DEXT)(CLenum target, CLint level, CLenum internalformat, CLsizei width, CLsizei height, CLsizei depth, CLint border, CLenum format, CLenum type, const CLvoid* pixels);
+	typedef void (CL_GLFUNC *ptr_glTexSubImage3DEXT)(CLenum target, CLint level, CLint xoffset, CLint yoffset, CLint zoffset, CLsizei width, CLsizei height, CLsizei depth, CLenum format, CLenum type, const CLvoid *pixels);
 	typedef void (CL_GLFUNC *ptr_glCopyTexSubImage3DEXT)(CLenum target, CLint level, CLint xoffset, CLint yoffset, CLint zoffset, CLint x, CLint y, CLsizei width, CLsizei height);
-	typedef void (CL_GLFUNC *ptr_glColorTableSGI)(CLenum target, CLenum internalformat, CLsizei width, CLenum format, CLenum type, const void* table);
+	typedef void (CL_GLFUNC *ptr_glColorTableSGI)(CLenum target, CLenum internalformat, CLsizei width, CLenum format, CLenum type, const CLvoid* table);
 	typedef void (CL_GLFUNC *ptr_glCopyColorTableSGI)(CLenum target, CLenum internalformat, CLint x, CLint y, CLsizei width);
 	typedef void (CL_GLFUNC *ptr_glColorTableParameterivSGI)(CLenum target, CLenum pname, const CLint* params);
 	typedef void (CL_GLFUNC *ptr_glColorTableParameterfvSGI)(CLenum target, CLenum pname, const CLfloat* params);
-	typedef void (CL_GLFUNC *ptr_glGetColorTableSGI)(CLenum target, CLenum format, CLenum type, void* table);
+	typedef void (CL_GLFUNC *ptr_glGetColorTableSGI)(CLenum target, CLenum format, CLenum type, CLvoid* table);
 	typedef void (CL_GLFUNC *ptr_glGetColorTableParameterivSGI)(CLenum target, CLenum pname, CLint* params);
 	typedef void (CL_GLFUNC *ptr_glGetColorTableParameterfvSGI)(CLenum target, CLenum pname, CLfloat* params);
-	typedef void (CL_GLFUNC *ptr_glColorSubTableEXT)(CLenum target, CLsizei start, CLsizei count, CLenum format, CLenum type, const void *data);
+	typedef void (CL_GLFUNC *ptr_glColorSubTableEXT)(CLenum target, CLsizei start, CLsizei count, CLenum format, CLenum type, const CLvoid *data);
 	typedef void (CL_GLFUNC *ptr_glCopyColorSubTableEXT)(CLenum target, CLsizei start, CLint x, CLint y, CLsizei width);
-	typedef void (CL_GLFUNC *ptr_glConvolutionFilter1DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLenum format, CLenum type, const void* image);
-	typedef void (CL_GLFUNC *ptr_glConvolutionFilter2DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLsizei height, CLenum format, CLenum type, const void* image);
+	typedef void (CL_GLFUNC *ptr_glConvolutionFilter1DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLenum format, CLenum type, const CLvoid* image);
+	typedef void (CL_GLFUNC *ptr_glConvolutionFilter2DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLsizei height, CLenum format, CLenum type, const CLvoid* image);
 	typedef void (CL_GLFUNC *ptr_glCopyConvolutionFilter1DEXT)(CLenum target, CLenum internalformat, CLint x, CLint y, CLsizei width);
 	typedef void (CL_GLFUNC *ptr_glCopyConvolutionFilter2DEXT)(CLenum target, CLenum internalformat, CLint x, CLint y, CLsizei width, CLsizei height);
-	typedef void (CL_GLFUNC *ptr_glGetConvolutionFilterEXT)(CLenum target, CLenum format, CLenum type, void* image);
-	typedef void (CL_GLFUNC *ptr_glSeparableFilter2DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLsizei height, CLenum format, CLenum type, const void* row, const void* column);
-	typedef void (CL_GLFUNC *ptr_glGetSeparableFilterEXT)(CLenum target, CLenum format, CLenum type, void* row, void* column, void* span);
+	typedef void (CL_GLFUNC *ptr_glGetConvolutionFilterEXT)(CLenum target, CLenum format, CLenum type, CLvoid* image);
+	typedef void (CL_GLFUNC *ptr_glSeparableFilter2DEXT)(CLenum target, CLenum internalformat, CLsizei width, CLsizei height, CLenum format, CLenum type, const CLvoid* row, const CLvoid* column);
+	typedef void (CL_GLFUNC *ptr_glGetSeparableFilterEXT)(CLenum target, CLenum format, CLenum type, CLvoid* row, CLvoid* column, CLvoid* span);
 	typedef void (CL_GLFUNC *ptr_glConvolutionParameteriEXT)(CLenum target, CLenum pname, CLint param);
 	typedef void (CL_GLFUNC *ptr_glConvolutionParameterivEXT)(CLenum target, CLenum pname, const CLint* params);
 	typedef void (CL_GLFUNC *ptr_glConvolutionParameterfEXT)(CLenum target, CLenum pname, CLfloat param);
@@ -2402,1945 +2472,2024 @@ public:
 	typedef void (CL_GLFUNC *ptr_glGetConvolutionParameterfvEXT)(CLenum target, CLenum pname, CLfloat* params);
 	typedef void (CL_GLFUNC *ptr_glHistogramEXT)(CLenum target, CLsizei width, CLenum internalformat, CLboolean sink);
 	typedef void (CL_GLFUNC *ptr_glResetHistogramEXT)(CLenum target);
-	typedef void (CL_GLFUNC *ptr_glGetHistogramEXT)(CLenum target, CLboolean reset, CLenum format, CLenum type, void* values);
+	typedef void (CL_GLFUNC *ptr_glGetHistogramEXT)(CLenum target, CLboolean reset, CLenum format, CLenum type, CLvoid* values);
 	typedef void (CL_GLFUNC *ptr_glGetHistogramParameterivEXT)(CLenum target, CLenum pname, CLint* params);
 	typedef void (CL_GLFUNC *ptr_glGetHistogramParameterfvEXT)(CLenum target, CLenum pname, CLfloat* params);
 	typedef void (CL_GLFUNC *ptr_glMinmaxEXT)(CLenum target, CLenum internalformat, CLboolean sink);
 	typedef void (CL_GLFUNC *ptr_glResetMinmaxEXT)(CLenum target);
-	typedef void (CL_GLFUNC *ptr_glGetMinmaxEXT)(CLenum target, CLboolean reset, CLenum format, CLenum type, void* values);
+	typedef void (CL_GLFUNC *ptr_glGetMinmaxEXT)(CLenum target, CLboolean reset, CLenum format, CLenum type, CLvoid* values);
 	typedef void (CL_GLFUNC *ptr_glGetMinmaxParameterivEXT)(CLenum target, CLenum pname, CLint* params);
 	typedef void (CL_GLFUNC *ptr_glGetMinmaxParameterfvEXT)(CLenum target, CLenum pname, CLfloat* params);
 	typedef void (CL_GLFUNC *ptr_glBlendColorEXT)(CLclampf red, CLclampf green, CLclampf blue, CLclampf alpha);
 	typedef void (CL_GLFUNC *ptr_glBlendEquationEXT)(CLenum mode);
-	typedef void (CL_GLFUNC *ptr_glActiveTextureARB)(CLenum);
-	typedef void (CL_GLFUNC *ptr_glClientActiveTextureARB)(CLenum);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1dARB)(CLenum, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1dvARB)(CLenum, CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1fARB)(CLenum, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1fvARB)(CLenum, CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1iARB)(CLenum, CLint);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1ivARB)(CLenum, CLint const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1sARB)(CLenum, CLshort);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord1svARB)(CLenum, CLshort const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2dARB)(CLenum, CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2dvARB)(CLenum, CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2fARB)(CLenum, CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2fvARB)(CLenum, CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2iARB)(CLenum, CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2ivARB)(CLenum, CLint const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2sARB)(CLenum, CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord2svARB)(CLenum, CLshort const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3dARB)(CLenum, CLdouble, CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3dvARB)(CLenum, CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3fARB)(CLenum, CLfloat, CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3fvARB)(CLenum, CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3iARB)(CLenum, CLint, CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3ivARB)(CLenum, CLint const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3sARB)(CLenum, CLshort, CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord3svARB)(CLenum, CLshort const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4dARB)(CLenum, CLdouble, CLdouble, CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4dvARB)(CLenum, CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4fARB)(CLenum, CLfloat, CLfloat, CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4fvARB)(CLenum, CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4iARB)(CLenum, CLint, CLint, CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4ivARB)(CLenum, CLint const *);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4sARB)(CLenum, CLshort, CLshort, CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glMultiTexCoord4svARB)(CLenum, CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glActiveTextureARB)(CLenum);
+	typedef CLvoid (CL_GLFUNC *ptr_glClientActiveTextureARB)(CLenum);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1dARB)(CLenum, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1dvARB)(CLenum, CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1fARB)(CLenum, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1fvARB)(CLenum, CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1iARB)(CLenum, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1ivARB)(CLenum, CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1sARB)(CLenum, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord1svARB)(CLenum, CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2dARB)(CLenum, CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2dvARB)(CLenum, CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2fARB)(CLenum, CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2fvARB)(CLenum, CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2iARB)(CLenum, CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2ivARB)(CLenum, CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2sARB)(CLenum, CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord2svARB)(CLenum, CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3dARB)(CLenum, CLdouble, CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3dvARB)(CLenum, CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3fARB)(CLenum, CLfloat, CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3fvARB)(CLenum, CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3iARB)(CLenum, CLint, CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3ivARB)(CLenum, CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3sARB)(CLenum, CLshort, CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord3svARB)(CLenum, CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4dARB)(CLenum, CLdouble, CLdouble, CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4dvARB)(CLenum, CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4fARB)(CLenum, CLfloat, CLfloat, CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4fvARB)(CLenum, CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4iARB)(CLenum, CLint, CLint, CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4ivARB)(CLenum, CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4sARB)(CLenum, CLshort, CLshort, CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiTexCoord4svARB)(CLenum, CLshort const *);
 
-	typedef void (CL_GLFUNC *ptr_glCompressedTexImage1DARB)(CLenum, CLint, CLenum, CLsizei, CLint, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glCompressedTexImage2DARB)(CLenum, CLint, CLenum, CLsizei, CLsizei, CLint, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glCompressedTexImage3DARB)(CLenum, CLint, CLenum, CLsizei, CLsizei, CLsizei, CLint, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glCompressedTexSubImage1DARB)(CLenum, CLint, CLint, CLsizei, CLenum, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glCompressedTexSubImage2DARB)(CLenum, CLint, CLint, CLint, CLsizei, CLsizei, CLenum, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glCompressedTexSubImage3DARB)(CLenum, CLint, CLint, CLint, CLint, CLsizei, CLsizei, CLsizei, CLenum, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glGetCompressedTexImageARB)(CLenum, CLint, void *);
-	typedef void (CL_GLFUNC *ptr_glSampleCoverageARB)(CLclampf, CLboolean);
-	typedef void (CL_GLFUNC *ptr_glLoadTransposeMatrixdARB)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glLoadTransposeMatrixfARB)(CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glMultTransposeMatrixdARB)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glMultTransposeMatrixfARB)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexImage1DARB)(CLenum, CLint, CLenum, CLsizei, CLint, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexImage2DARB)(CLenum, CLint, CLenum, CLsizei, CLsizei, CLint, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexImage3DARB)(CLenum, CLint, CLenum, CLsizei, CLsizei, CLsizei, CLint, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexSubImage1DARB)(CLenum, CLint, CLint, CLsizei, CLenum, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexSubImage2DARB)(CLenum, CLint, CLint, CLint, CLsizei, CLsizei, CLenum, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompressedTexSubImage3DARB)(CLenum, CLint, CLint, CLint, CLint, CLsizei, CLsizei, CLsizei, CLenum, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetCompressedTexImageARB)(CLenum, CLint, CLvoid *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSampleCoverageARB)(CLclampf, CLboolean);
+	typedef CLvoid (CL_GLFUNC *ptr_glLoadTransposeMatrixdARB)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glLoadTransposeMatrixfARB)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultTransposeMatrixdARB)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultTransposeMatrixfARB)(CLfloat const *);
 
-	typedef void (CL_GLFUNC *ptr_glFogCoorddEXT)(CLdouble);
-	typedef void (CL_GLFUNC *ptr_glFogCoorddvEXT)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glFogCoordfEXT)(CLfloat);
-	typedef void (CL_GLFUNC *ptr_glFogCoordfvEXT)(CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glFogCoordPointerEXT)(CLenum, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glMultiDrawArraysEXT)(CLenum, CLint *, CLsizei *, CLsizei);
-	typedef void (CL_GLFUNC *ptr_glMultiDrawElementsEXT)(CLenum, CLsizei const *, CLenum, void const * *, CLsizei);
-	typedef void (CL_GLFUNC *ptr_glPointParameterfARB)(CLenum, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glPointParameterfvARB)(CLenum, CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3bEXT)(CLbyte, CLbyte, CLbyte);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3bvEXT)(CLbyte const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3dEXT)(CLdouble, CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3dvEXT)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3fEXT)(CLfloat, CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3fvEXT)(CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3iEXT)(CLint, CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3ivEXT)(CLint const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3sEXT)(CLshort, CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3svEXT)(CLshort const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3ubEXT)(CLubyte, CLubyte, CLubyte);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3ubvEXT)(CLubyte const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3uiEXT)(CLuint, CLuint, CLuint);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3uivEXT)(CLuint const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3usEXT)(CLushort, CLushort, CLushort);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColor3usvEXT)(CLushort const *);
-	typedef void (CL_GLFUNC *ptr_glSecondaryColorPointerEXT)(CLint, CLenum, CLsizei, void const *);
-	typedef void (CL_GLFUNC *ptr_glBlendFuncSeparateEXT)(CLenum, CLenum, CLenum, CLenum);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2dARB)(CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2dvARB)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2fARB)(CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2fvARB)(CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2iARB)(CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2ivARB)(CLint const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2sARB)(CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glWindowPos2svARB)(CLshort const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3dARB)(CLdouble, CLdouble, CLdouble);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3dvARB)(CLdouble const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3fARB)(CLfloat, CLfloat, CLfloat);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3fvARB)(CLfloat const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3iARB)(CLint, CLint, CLint);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3ivARB)(CLint const *);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3sARB)(CLshort, CLshort, CLshort);
-	typedef void (CL_GLFUNC *ptr_glWindowPos3svARB)(CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glFogCoorddEXT)(CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glFogCoorddvEXT)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glFogCoordfEXT)(CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glFogCoordfvEXT)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glFogCoordPointerEXT)(CLenum, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiDrawArraysEXT)(CLenum, CLint *, CLsizei *, CLsizei);
+	typedef CLvoid (CL_GLFUNC *ptr_glMultiDrawElementsEXT)(CLenum, CLsizei const *, CLenum, CLvoid const * *, CLsizei);
+	typedef CLvoid (CL_GLFUNC *ptr_glPointParameterfARB)(CLenum, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glPointParameterfvARB)(CLenum, CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3bEXT)(CLbyte, CLbyte, CLbyte);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3bvEXT)(CLbyte const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3dEXT)(CLdouble, CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3dvEXT)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3fEXT)(CLfloat, CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3fvEXT)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3iEXT)(CLint, CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3ivEXT)(CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3sEXT)(CLshort, CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3svEXT)(CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3ubEXT)(CLubyte, CLubyte, CLubyte);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3ubvEXT)(CLubyte const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3uiEXT)(CLuint, CLuint, CLuint);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3uivEXT)(CLuint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3usEXT)(CLushort, CLushort, CLushort);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColor3usvEXT)(CLushort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glSecondaryColorPointerEXT)(CLint, CLenum, CLsizei, CLvoid const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glBlendFuncSeparateEXT)(CLenum, CLenum, CLenum, CLenum);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2dARB)(CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2dvARB)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2fARB)(CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2fvARB)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2iARB)(CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2ivARB)(CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2sARB)(CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos2svARB)(CLshort const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3dARB)(CLdouble, CLdouble, CLdouble);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3dvARB)(CLdouble const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3fARB)(CLfloat, CLfloat, CLfloat);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3fvARB)(CLfloat const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3iARB)(CLint, CLint, CLint);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3ivARB)(CLint const *);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3sARB)(CLshort, CLshort, CLshort);
+	typedef CLvoid (CL_GLFUNC *ptr_glWindowPos3svARB)(CLshort const *);
 
-	typedef void (CL_GLFUNC *ptr_glBindBufferARB)(CLenum target, CLuint buffer);
-	typedef void (CL_GLFUNC *ptr_glDeleteBuffersARB)(CLsizei n, const CLuint *buffers);
-	typedef void (CL_GLFUNC *ptr_glGenBuffersARB)(CLsizei n, CLuint *buffers);
+	typedef CLvoid (CL_GLFUNC *ptr_glBindBufferARB)(CLenum target, CLuint buffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glDeleteBuffersARB)(CLsizei n, const CLuint *buffers);
+	typedef CLvoid (CL_GLFUNC *ptr_glGenBuffersARB)(CLsizei n, CLuint *buffers);
 	typedef CLboolean (CL_GLFUNC *ptr_glIsBufferARB)(CLuint buffer);
-	typedef void (CL_GLFUNC *ptr_glBufferDataARB)(CLenum target, CLsizeiptr size, const void *data, CLenum usage);
-	typedef void (CL_GLFUNC *ptr_glBufferSubDataARB)(CLenum target, CLintptr offset, CLsizeiptr size, const void *data);
-	typedef void (CL_GLFUNC *ptr_glGetBufferSubDataARB)(CLenum target, CLintptr offset, CLsizeiptr size, void *data);
-	typedef void (CL_GLFUNC *ptr_glMapBufferARB)(CLenum target, CLenum access);
+	typedef CLvoid (CL_GLFUNC *ptr_glBufferDataARB)(CLenum target, CLsizeiptr size, const CLvoid *data, CLenum usage);
+	typedef CLvoid (CL_GLFUNC *ptr_glBufferSubDataARB)(CLenum target, CLintptr offset, CLsizeiptr size, const CLvoid *data);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetBufferSubDataARB)(CLenum target, CLintptr offset, CLsizeiptr size, CLvoid *data);
+	typedef CLvoid *(CL_GLFUNC *ptr_glMapBufferARB)(CLenum target, CLenum access);
 	typedef CLboolean (CL_GLFUNC *ptr_glUnmapBufferARB)(CLenum target);
-	typedef void (CL_GLFUNC *ptr_glGetBufferParameterivARB)(CLenum target, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetBufferPointervARB)(CLenum target, CLenum pname, void **params);
-	typedef void (CL_GLFUNC *ptr_glGenQueriesARB)(CLsizei n, CLuint *ids);
-	typedef void (CL_GLFUNC *ptr_glDeleteQueriesARB)(CLsizei n, const CLuint *ids);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetBufferParameterivARB)(CLenum target, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetBufferPointervARB)(CLenum target, CLenum pname, CLvoid **params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGenQueriesARB)(CLsizei n, CLuint *ids);
+	typedef CLvoid (CL_GLFUNC *ptr_glDeleteQueriesARB)(CLsizei n, const CLuint *ids);
 	typedef CLboolean (CL_GLFUNC *ptr_glIsQueryARB)(CLuint id);
-	typedef void (CL_GLFUNC *ptr_glBeginQueryARB)(CLenum target, CLuint id);
-	typedef void (CL_GLFUNC *ptr_glEndQueryARB)(CLenum target);
-	typedef void (CL_GLFUNC *ptr_glGetQueryivARB)(CLenum target, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetQueryObjectivARB)(CLuint id, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetQueryObjectuivARB)(CLuint id, CLenum pname, CLuint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glBeginQueryARB)(CLenum target, CLuint id);
+	typedef CLvoid (CL_GLFUNC *ptr_glEndQueryARB)(CLenum target);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetQueryivARB)(CLenum target, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetQueryObjectivARB)(CLuint id, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetQueryObjectuivARB)(CLuint id, CLenum pname, CLuint *params);
 
-	typedef void (CL_GLFUNC *ptr_glDeleteObjectARB)(CLuint obj);
+	typedef CLvoid (CL_GLFUNC *ptr_glDeleteObjectARB)(CLuint obj);
 	typedef CLuint (CL_GLFUNC *ptr_glGetHandleARB)(CLenum pname);
-	typedef void (CL_GLFUNC *ptr_glDetachObjectARB)(CLuint containerObj, CLuint attachedObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glDetachObjectARB)(CLuint containerObj, CLuint attachedObj);
 	typedef CLuint (CL_GLFUNC *ptr_glCreateShaderObjectARB )(CLenum shaderType);
-	typedef void (CL_GLFUNC *ptr_glShaderSourceARB)(CLuint shaderObj, CLsizei count, const CLchar* *string, const CLint *length);
-	typedef void (CL_GLFUNC *ptr_glCompileShaderARB)(CLuint shaderObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glShaderSourceARB)(CLuint shaderObj, CLsizei count, const CLchar* *string, const CLint *length);
+	typedef CLvoid (CL_GLFUNC *ptr_glCompileShaderARB)(CLuint shaderObj);
 	typedef CLuint (CL_GLFUNC *ptr_glCreateProgramObjectARB)();
-	typedef void (CL_GLFUNC *ptr_glAttachObjectARB)(CLuint containerObj, CLuint attachedObj);
-	typedef void (CL_GLFUNC *ptr_glLinkProgramARB)(CLuint programObj);
-	typedef void (CL_GLFUNC *ptr_glUseProgramObjectARB)(CLuint programObj);
-	typedef void (CL_GLFUNC *ptr_glValidateProgramARB)(CLuint programObj);
-	typedef void (CL_GLFUNC *ptr_glUniform1fARB)(CLint location, CLfloat v0);
-	typedef void (CL_GLFUNC *ptr_glUniform2fARB)(CLint location, CLfloat v0, CLfloat v1);
-	typedef void (CL_GLFUNC *ptr_glUniform3fARB)(CLint location, CLfloat v0, CLfloat v1, CLfloat v2);
-	typedef void (CL_GLFUNC *ptr_glUniform4fARB)(CLint location, CLfloat v0, CLfloat v1, CLfloat v2, CLfloat v3);
-	typedef void (CL_GLFUNC *ptr_glUniform1iARB)(CLint location, CLint v0);
-	typedef void (CL_GLFUNC *ptr_glUniform2iARB)(CLint location, CLint v0, CLint v1);
-	typedef void (CL_GLFUNC *ptr_glUniform3iARB)(CLint location, CLint v0, CLint v1, CLint v2);
-	typedef void (CL_GLFUNC *ptr_glUniform4iARB)(CLint location, CLint v0, CLint v1, CLint v2, CLint v3);
-	typedef void (CL_GLFUNC *ptr_glUniform1fvARB)(CLint location, CLsizei count, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniform2fvARB)(CLint location, CLsizei count, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniform3fvARB)(CLint location, CLsizei count, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniform4fvARB)(CLint location, CLsizei count, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniform1ivARB)(CLint location, CLsizei count, const CLint *value);
-	typedef void (CL_GLFUNC *ptr_glUniform2ivARB)(CLint location, CLsizei count, const CLint *value);
-	typedef void (CL_GLFUNC *ptr_glUniform3ivARB)(CLint location, CLsizei count, const CLint *value);
-	typedef void (CL_GLFUNC *ptr_glUniform4ivARB)(CLint location, CLsizei count, const CLint *value);
-	typedef void (CL_GLFUNC *ptr_glUniformMatrix2fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniformMatrix3fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glUniformMatrix4fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
-	typedef void (CL_GLFUNC *ptr_glGetObjectParameterfvARB)(CLuint obj, CLenum pname, CLfloat *params);
-	typedef void (CL_GLFUNC *ptr_glGetObjectParameterivARB)(CLuint obj, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetInfoLogARB)(CLuint obj, CLsizei maxLength, CLsizei *length, CLchar *infoLog);
-	typedef void (CL_GLFUNC *ptr_glGetAttachedObjectsARB)(CLuint containerObj, CLsizei maxCount, CLsizei *count, CLuint *obj);
+	typedef CLvoid (CL_GLFUNC *ptr_glAttachObjectARB)(CLuint containerObj, CLuint attachedObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glLinkProgramARB)(CLuint programObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glUseProgramObjectARB)(CLuint programObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glValidateProgramARB)(CLuint programObj);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform1fARB)(CLint location, CLfloat v0);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform2fARB)(CLint location, CLfloat v0, CLfloat v1);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform3fARB)(CLint location, CLfloat v0, CLfloat v1, CLfloat v2);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform4fARB)(CLint location, CLfloat v0, CLfloat v1, CLfloat v2, CLfloat v3);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform1iARB)(CLint location, CLint v0);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform2iARB)(CLint location, CLint v0, CLint v1);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform3iARB)(CLint location, CLint v0, CLint v1, CLint v2);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform4iARB)(CLint location, CLint v0, CLint v1, CLint v2, CLint v3);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform1fvARB)(CLint location, CLsizei count, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform2fvARB)(CLint location, CLsizei count, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform3fvARB)(CLint location, CLsizei count, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform4fvARB)(CLint location, CLsizei count, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform1ivARB)(CLint location, CLsizei count, const CLint *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform2ivARB)(CLint location, CLsizei count, const CLint *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform3ivARB)(CLint location, CLsizei count, const CLint *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniform4ivARB)(CLint location, CLsizei count, const CLint *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniformMatrix2fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniformMatrix3fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glUniformMatrix4fvARB)(CLint location, CLsizei count, CLboolean transpose, const CLfloat *value);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetObjectParameterfvARB)(CLuint obj, CLenum pname, CLfloat *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetObjectParameterivARB)(CLuint obj, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetInfoLogARB)(CLuint obj, CLsizei maxLength, CLsizei *length, CLchar *infoLog);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetAttachedObjectsARB)(CLuint containerObj, CLsizei maxCount, CLsizei *count, CLuint *obj);
 	typedef CLint (CL_GLFUNC *ptr_glGetUniformLocationARB)(CLuint programObj, const CLchar *name);
-	typedef void (CL_GLFUNC *ptr_glGetActiveUniformARB)(CLuint programObj, CLuint index, CLsizei maxLength, CLsizei *length, CLsizei *size, CLenum *type, CLchar *name);
-	typedef void (CL_GLFUNC *ptr_glGetUniformfvARB)(CLuint programObj, CLint location, CLfloat *params);
-	typedef void (CL_GLFUNC *ptr_glGetUniformivARB)(CLuint programObj, CLint location, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetShaderSourceARB)(CLuint obj, CLsizei maxLength, CLsizei *length, CLchar *source);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1fARB)(CLuint index, CLfloat v0);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1sARB)(CLuint index, CLshort v0);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1dARB)(CLuint index, CLdouble v0);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2fARB)(CLuint index, CLfloat v0, CLfloat v1);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2sARB)(CLuint index, CLshort v0, CLshort v1);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2dARB)(CLuint index, CLdouble v0, CLdouble v1);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3fARB)(CLuint index, CLfloat v0, CLfloat v1, CLfloat v2);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3sARB)(CLuint index, CLshort v0, CLshort v1, CLshort v2);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3dARB)(CLuint index, CLdouble v0, CLdouble v1, CLdouble v2);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4fARB)(CLuint index, CLfloat v0, CLfloat v1, CLfloat v2, CLfloat v3);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4sARB)(CLuint index, CLshort v0, CLshort v1, CLshort v2, CLshort v3);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4dARB)(CLuint index, CLdouble v0, CLdouble v1, CLdouble v2, CLdouble v3);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NubARB)(CLuint index, CLubyte x, CLubyte y, CLubyte z, CLubyte w);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1fvARB)(CLuint index, const CLfloat *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1svARB)(CLuint index, const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib1dvARB)(CLuint index, const CLdouble *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2fvARB)(CLuint index, const CLfloat *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2svARB)(CLuint index, const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib2dvARB)(CLuint index, const CLdouble *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3fvARB)(CLuint index, const CLfloat *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3svARB)(CLuint index, const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib3dvARB)(CLuint index, const CLdouble *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4fvARB)(CLuint index, const CLfloat *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4svARB)(CLuint index, const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4dvARB)(CLuint index, const CLdouble *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4ivARB)(CLuint index, const CLint *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4bvARB)(CLuint index, const CLbyte *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4ubvARB)(CLuint index, const CLubyte *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4usvARB)(CLuint index, const CLushort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4uivARB)(CLuint index, const CLuint *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NbvARB)(CLuint index, const CLbyte *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NsvARB)(CLuint index, const CLshort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NivARB)(CLuint index, const CLint *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NubvARB)(CLuint index, const CLubyte *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NusvARB)(CLuint index, const CLushort *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttrib4NuivARB)(CLuint index, const CLuint *v);
-	typedef void (CL_GLFUNC *ptr_glVertexAttribPointerARB)(CLuint index, CLint size, CLenum type, CLboolean normalized, CLsizei stride, const void *pointer);
-	typedef void (CL_GLFUNC *ptr_glEnableVertexAttribArrayARB)(CLuint index);
-	typedef void (CL_GLFUNC *ptr_glDisableVertexAttribArrayARB)(CLuint index);
-	typedef void (CL_GLFUNC *ptr_glBindAttribLocationARB)(CLuint programObj, CLuint index, const char *name);
-	typedef void (CL_GLFUNC *ptr_glGetActiveAttribARB)(CLuint programObj, CLuint index, CLsizei maxLength, CLsizei *length, CLint *size, CLenum *type, char *name);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetActiveUniformARB)(CLuint programObj, CLuint index, CLsizei maxLength, CLsizei *length, CLsizei *size, CLenum *type, CLchar *name);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetUniformfvARB)(CLuint programObj, CLint location, CLfloat *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetUniformivARB)(CLuint programObj, CLint location, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetShaderSourceARB)(CLuint obj, CLsizei maxLength, CLsizei *length, CLchar *source);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1fARB)(CLuint index, CLfloat v0);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1sARB)(CLuint index, CLshort v0);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1dARB)(CLuint index, CLdouble v0);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2fARB)(CLuint index, CLfloat v0, CLfloat v1);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2sARB)(CLuint index, CLshort v0, CLshort v1);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2dARB)(CLuint index, CLdouble v0, CLdouble v1);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3fARB)(CLuint index, CLfloat v0, CLfloat v1, CLfloat v2);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3sARB)(CLuint index, CLshort v0, CLshort v1, CLshort v2);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3dARB)(CLuint index, CLdouble v0, CLdouble v1, CLdouble v2);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4fARB)(CLuint index, CLfloat v0, CLfloat v1, CLfloat v2, CLfloat v3);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4sARB)(CLuint index, CLshort v0, CLshort v1, CLshort v2, CLshort v3);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4dARB)(CLuint index, CLdouble v0, CLdouble v1, CLdouble v2, CLdouble v3);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NubARB)(CLuint index, CLubyte x, CLubyte y, CLubyte z, CLubyte w);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1fvARB)(CLuint index, const CLfloat *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1svARB)(CLuint index, const CLshort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib1dvARB)(CLuint index, const CLdouble *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2fvARB)(CLuint index, const CLfloat *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2svARB)(CLuint index, const CLshort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib2dvARB)(CLuint index, const CLdouble *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3fvARB)(CLuint index, const CLfloat *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3svARB)(CLuint index, const CLshort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib3dvARB)(CLuint index, const CLdouble *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4fvARB)(CLuint index, const CLfloat *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4svARB)(CLuint index, const CLshort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4dvARB)(CLuint index, const CLdouble *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4ivARB)(CLuint index, const CLint *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4bvARB)(CLuint index, const CLbyte *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4ubvARB)(CLuint index, const CLubyte *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4usvARB)(CLuint index, const CLushort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4uivARB)(CLuint index, const CLuint *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NbvARB)(CLuint index, const CLbyte *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NsvARB)(CLuint index, const CLshort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NivARB)(CLuint index, const CLint *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NubvARB)(CLuint index, const CLubyte *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NusvARB)(CLuint index, const CLushort *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttrib4NuivARB)(CLuint index, const CLuint *v);
+	typedef CLvoid (CL_GLFUNC *ptr_glVertexAttribPointerARB)(CLuint index, CLint size, CLenum type, CLboolean normalized, CLsizei stride, const CLvoid *pointer);
+	typedef CLvoid (CL_GLFUNC *ptr_glEnableVertexAttribArrayARB)(CLuint index);
+	typedef CLvoid (CL_GLFUNC *ptr_glDisableVertexAttribArrayARB)(CLuint index);
+	typedef CLvoid (CL_GLFUNC *ptr_glBindAttribLocationARB)(CLuint programObj, CLuint index, const char *name);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetActiveAttribARB)(CLuint programObj, CLuint index, CLsizei maxLength, CLsizei *length, CLint *size, CLenum *type, char *name);
 	typedef CLint (CL_GLFUNC *ptr_glGetAttribLocationARB)(CLuint programObj, const char *name);
-	typedef void (CL_GLFUNC *ptr_glGetVertexAttribdvARB)(CLuint index, CLenum pname, CLdouble *params);
-	typedef void (CL_GLFUNC *ptr_glGetVertexAttribfvARB)(CLuint index, CLenum pname, CLfloat *params);
-	typedef void (CL_GLFUNC *ptr_glGetVertexAttribivARB)(CLuint index, CLenum pname, CLint *params);
-	typedef void (CL_GLFUNC *ptr_glGetVertexAttribPointervARB)(CLuint index, CLenum pname, void **pointer);
-	typedef void (CL_GLFUNC *ptr_glDrawBuffersARB)(CLsizei n, const CLenum *bufs);
-	typedef void (CL_GLFUNC *ptr_glStencilFuncSeparateATI)(CLenum frontfunc, CLenum backfunc, CLint ref, CLuint mask);
-	typedef void (CL_GLFUNC *ptr_glStencilOpSeparateATI)(CLenum face, CLenum sfail, CLenum dpfail, CLenum dppass);
-	typedef void (CL_GLFUNC *ptr_glActiveStencilFaceEXT)(CLenum face);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetVertexAttribdvARB)(CLuint index, CLenum pname, CLdouble *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetVertexAttribfvARB)(CLuint index, CLenum pname, CLfloat *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetVertexAttribivARB)(CLuint index, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetVertexAttribPointervARB)(CLuint index, CLenum pname, CLvoid **pointer);
+	typedef CLvoid (CL_GLFUNC *ptr_glDrawBuffersARB)(CLsizei n, const CLenum *bufs);
+	typedef CLvoid (CL_GLFUNC *ptr_glStencilFuncSeparateATI)(CLenum frontfunc, CLenum backfunc, CLint ref, CLuint mask);
+	typedef CLvoid (CL_GLFUNC *ptr_glStencilOpSeparateATI)(CLenum face, CLenum sfail, CLenum dpfail, CLenum dppass);
 
-//! Functions:
+	typedef CLboolean (CL_GLFUNC *ptr_glIsRenderbufferEXT)(CLuint renderbuffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glBindRenderbufferEXT)(CLenum target, CLuint renderbuffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glDeleteRenderbuffersEXT)(CLsizei n, const CLuint *renderbuffers);
+	typedef CLvoid (CL_GLFUNC *ptr_glGenRenderbuffersEXT)(CLsizei n, CLuint *renderbuffers);
+	typedef CLvoid (CL_GLFUNC *ptr_glRenderbufferStorageEXT)(CLenum target, CLenum internalformat, CLsizei width, CLsizei height);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetRenderbufferParameterivEXT)(CLenum target, CLenum pname, CLint *params);
+	typedef CLboolean (CL_GLFUNC *ptr_glIsFramebufferEXT)(CLuint framebuffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glBindFramebufferEXT)(CLenum target, CLuint framebuffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glDeleteFramebuffersEXT)(CLsizei n, const CLuint *framebuffers);
+	typedef CLvoid (CL_GLFUNC *ptr_glGenFramebuffersEXT)(CLsizei n, CLuint *framebuffers);
+	typedef CLenum (CL_GLFUNC *ptr_glCheckFramebufferStatusEXT)(CLenum target);
+	typedef CLvoid (CL_GLFUNC *ptr_glFramebufferTexture1DEXT)(CLenum target, CLenum attachment, CLenum textarget, CLuint texture, CLint level);
+	typedef CLvoid (CL_GLFUNC *ptr_glFramebufferTexture2DEXT)(CLenum target, CLenum attachment, CLenum textarget, CLuint texture, CLint level);
+	typedef CLvoid (CL_GLFUNC *ptr_glFramebufferTexture3DEXT)(CLenum target, CLenum attachment, CLenum textarget, CLuint texture, CLint level, CLint zoffset);
+	typedef CLvoid (CL_GLFUNC *ptr_glFramebufferRenderbufferEXT)(CLenum target, CLenum attachment, CLenum renderbuffertarget, CLuint renderbuffer);
+	typedef CLvoid (CL_GLFUNC *ptr_glGetFramebufferAttachmentParameterivEXT)(CLenum target, CLenum attachment, CLenum pname, CLint *params);
+	typedef CLvoid (CL_GLFUNC *ptr_glGenerateMipmapEXT)(CLenum target);
+
+	typedef CLvoid (CL_GLFUNC *ptr_glBlitFramebufferEXT)(CLint srcX0, CLint srcY0, CLint srcX1, CLint srcY1, CLint dstX0, CLint dstY0, CLint dstX1, CLint dstY1, CLbitfield mask, CLenum filter);
+
+/// \}
+
+/// \name Functions
+/// \{
+
 public:
-	//: glAccum binding
+	/// \brief glAccum binding
 	ptr_glAccum accum;
 
-	//: glAplhaFunc binding
+	/// \brief glAplhaFunc binding
 	ptr_glAlphaFunc alphaFunc;
 
-	//: glAreTexturesResident binding
+	/// \brief glAreTexturesResident binding
 	ptr_glAreTexturesResident areTexturesResident;
 
-	//: glArrayElement binding
+	/// \brief glArrayElement binding
 	ptr_glArrayElement arrayElement;
 
-	//: glBegin binding
+	/// \brief glBegin binding
 	ptr_glBegin begin;
 
-	//: glBindTexture binding
+	/// \brief glBindTexture binding
 	ptr_glBindTexture bindTexture;
 
-	//: glBitmap binding
+	/// \brief glBitmap binding
 	ptr_glBitmap bitmap;
 
-	//: glBlendFunc binding
+	/// \brief glBlendFunc binding
 	ptr_glBlendFunc blendFunc;
 
-	//: glCallList binding
+	/// \brief glCallList binding
 	ptr_glCallList callList;
 
-	//: glCallLists binding
+	/// \brief glCallLists binding
 	ptr_glCallLists callLists;
 
-	//: glClear binding
+	/// \brief glClear binding
 	ptr_glClear clear;
 
-	//: glClearAccum binding
+	/// \brief glClearAccum binding
 	ptr_glClearAccum clearAccum;
 
-	//: glClearColor binding
+	/// \brief glClearColor binding
 	ptr_glClearColor clearColor;
 
-	//: glClearDepth binding
+	/// \brief glClearDepth binding
 	ptr_glClearDepth clearDepth;
 
-	//: glClearIndex binding
+	/// \brief glClearIndex binding
 	ptr_glClearIndex clearIndex;
 
-	//: glClearStencil binding
+	/// \brief glClearStencil binding
 	ptr_glClearStencil clearStencil;
 
-	//: glClipPlane binding
+	/// \brief glClipPlane binding
 	ptr_glClipPlane clipPlane;
 
-	//: glColor3b binding
+	/// \brief glColor3b binding
 	ptr_glColor3b color3b;
 
-	//: glColor3bv binding
+	/// \brief glColor3bv binding
 	ptr_glColor3bv color3bv;
 
-	//: glColor3d binding
+	/// \brief glColor3d binding
 	ptr_glColor3d color3d;
 
-	//: glColor3dv binding
+	/// \brief glColor3dv binding
 	ptr_glColor3dv color3dv;
 
-	//: glColor3f binding
+	/// \brief glColor3f binding
 	ptr_glColor3f color3f;
 
-	//: glColor3fv binding
+	/// \brief glColor3fv binding
 	ptr_glColor3fv color3fv;
 
-	//: glColor3i binding
+	/// \brief glColor3i binding
 	ptr_glColor3i color3i;
 
-	//: glColor3iv binding
+	/// \brief glColor3iv binding
 	ptr_glColor3iv color3iv;
 
-	//: glColor3s binding
+	/// \brief glColor3s binding
 	ptr_glColor3s color3s;
 
-	//: glColor3sv binding
+	/// \brief glColor3sv binding
 	ptr_glColor3sv color3sv;
 
-	//: glColor3ub binding
+	/// \brief glColor3ub binding
 	ptr_glColor3ub color3ub;
 
-	//: glColor3ubv binding
+	/// \brief glColor3ubv binding
 	ptr_glColor3ubv color3ubv;
 
-	//: glColor3ui binding
+	/// \brief glColor3ui binding
 	ptr_glColor3ui color3ui;
 
-	//: glColor3uiv binding
+	/// \brief glColor3uiv binding
 	ptr_glColor3uiv color3uiv;
 
-	//: glColor3us binding
+	/// \brief glColor3us binding
 	ptr_glColor3us color3us;
 
-	//: glColor3usv binding
+	/// \brief glColor3usv binding
 	ptr_glColor3usv color3usv;
 
-	//: glColor4b binding
+	/// \brief glColor4b binding
 	ptr_glColor4b color4b;
 
-	//: glColor4bv binding
+	/// \brief glColor4bv binding
 	ptr_glColor4bv color4bv;
 
-	//: glColor4d binding
+	/// \brief glColor4d binding
 	ptr_glColor4d color4d;
 
-	//: glColor4dv binding
+	/// \brief glColor4dv binding
 	ptr_glColor4dv color4dv;
 
-	//: glColor4f binding
+	/// \brief glColor4f binding
 	ptr_glColor4f color4f;
 
-	//: glColor4fv binding
+	/// \brief glColor4fv binding
 	ptr_glColor4fv color4fv;
 
-	//: glColor4i binding
+	/// \brief glColor4i binding
 	ptr_glColor4i color4i;
 
-	//: glColor4iv binding
+	/// \brief glColor4iv binding
 	ptr_glColor4iv color4iv;
 
-	//: glColor4s binding
+	/// \brief glColor4s binding
 	ptr_glColor4s color4s;
 
-	//: glColor4sv binding
+	/// \brief glColor4sv binding
 	ptr_glColor4sv color4sv;
 
-	//: glColor4ub binding
+	/// \brief glColor4ub binding
 	ptr_glColor4ub color4ub;
 
-	//: glColor4ubv binding
+	/// \brief glColor4ubv binding
 	ptr_glColor4ubv color4ubv;
 
-	//: glColor4ui binding
+	/// \brief glColor4ui binding
 	ptr_glColor4ui color4ui;
 
-	//: glColor4uiv binding
+	/// \brief glColor4uiv binding
 	ptr_glColor4uiv color4uiv;
 
-	//: glColor4us binding
+	/// \brief glColor4us binding
 	ptr_glColor4us color4us;
 
-	//: glColor4usv binding
+	/// \brief glColor4usv binding
 	ptr_glColor4usv color4usv;
 
-	//: glColorMask binding
+	/// \brief glColorMask binding
 	ptr_glColorMask colorMask;
 
-	//: glColorMaterial binding
+	/// \brief glColorMaterial binding
 	ptr_glColorMaterial colorMaterial;
 
-	//: glColorPointer binding
+	/// \brief glColorPointer binding
 	ptr_glColorPointer colorPointer;
 
-	//: glCopyPixels binding
+	/// \brief glCopyPixels binding
 	ptr_glCopyPixels copyPixels;
 
-	//: glCopyTexImage1D binding
+	/// \brief glCopyTexImage1D binding
 	ptr_glCopyTexImage1D copyTexImage1D;
 
-	//: glCopyTexImage2D binding
+	/// \brief glCopyTexImage2D binding
 	ptr_glCopyTexImage2D copyTexImage2D;
 
-	//: glCopyTexSubImage1D binding
+	/// \brief glCopyTexSubImage1D binding
 	ptr_glCopyTexSubImage1D copyTexSubImage1D;
 
-	//: glCopyTexSubImage2D binding
+	/// \brief glCopyTexSubImage2D binding
 	ptr_glCopyTexSubImage2D copyTexSubImage2D;
 
-	//: glCullFace binding
+	/// \brief glCullFace binding
 	ptr_glCullFace cullFace;
 
-	//: glDeleteLists binding
+	/// \brief glDeleteLists binding
 	ptr_glDeleteLists deleteLists;
 
-	//: glDeleteTextures binding
+	/// \brief glDeleteTextures binding
 	ptr_glDeleteTextures deleteTextures;
 
-	//: glDepthFunc binding
+	/// \brief glDepthFunc binding
 	ptr_glDepthFunc depthFunc;
 
-	//: glDepthMask binding
+	/// \brief glDepthMask binding
 	ptr_glDepthMask depthMask;
 
-	//: glDepthRange binding
+	/// \brief glDepthRange binding
 	ptr_glDepthRange depthRange;
 
-	//: glDisable binding
+	/// \brief glDisable binding
 	ptr_glDisable disable;
 
-	//: glDisableClientState binding
+	/// \brief glDisableClientState binding
 	ptr_glDisableClientState disableClientState;
 
-	//: glDrawArrays binding
+	/// \brief glDrawArrays binding
 	ptr_glDrawArrays drawArrays;
 
-	//: glDrawBuffer binding
+	/// \brief glDrawBuffer binding
 	ptr_glDrawBuffer drawBuffer;
 
-	//: glDrawElements binding
+	/// \brief glDrawElements binding
 	ptr_glDrawElements drawElements;
 
-	//: glDrawPixels binding
+	/// \brief glDrawPixels binding
 	ptr_glDrawPixels drawPixels;
 
-	//: glEdgeFlag binding
+	/// \brief glEdgeFlag binding
 	ptr_glEdgeFlag edgeFlag;
 
-	//: glEdgeFlagPointer binding
+	/// \brief glEdgeFlagPointer binding
 	ptr_glEdgeFlagPointer edgeFlagPointer;
 
-	//: glEdgeFlagv binding
+	/// \brief glEdgeFlagv binding
 	ptr_glEdgeFlagv edgeFlagv;
 
-	//: glEnable binding
+	/// \brief glEnable binding
 	ptr_glEnable enable;
 
-	//: glEnableClientState binding
+	/// \brief glEnableClientState binding
 	ptr_glEnableClientState enableClientState;
 
-	//: glEnd binding
+	/// \brief glEnd binding
 	ptr_glEnd end;
 
-	//: glEndList binding
+	/// \brief glEndList binding
 	ptr_glEndList endList;
 
-	//: glEvalCoord1d binding
+	/// \brief glEvalCoord1d binding
 	ptr_glEvalCoord1d evalCoord1d;
 
-	//: glEvalCoord1dv binding
+	/// \brief glEvalCoord1dv binding
 	ptr_glEvalCoord1dv evalCoord1dv;
 
-	//: glEvalCoord1f binding
+	/// \brief glEvalCoord1f binding
 	ptr_glEvalCoord1f evalCoord1f;
 
-	//: glEvalCoord1fv binding
+	/// \brief glEvalCoord1fv binding
 	ptr_glEvalCoord1fv evalCoord1fv;
 
-	//: glEvalCoord2d binding
+	/// \brief glEvalCoord2d binding
 	ptr_glEvalCoord2d evalCoord2d;
 
-	//: glEvalCoord2dv binding
+	/// \brief glEvalCoord2dv binding
 	ptr_glEvalCoord2dv evalCoord2dv;
 
-	//: glEvalCoord2f binding
+	/// \brief glEvalCoord2f binding
 	ptr_glEvalCoord2f evalCoord2f;
 
-	//: glEvalCoord2fv binding
+	/// \brief glEvalCoord2fv binding
 	ptr_glEvalCoord2fv evalCoord2fv;
 
-	//: glEvalMesh1 binding
+	/// \brief glEvalMesh1 binding
 	ptr_glEvalMesh1 evalMesh1;
 
-	//: glEvalMesh2 binding
+	/// \brief glEvalMesh2 binding
 	ptr_glEvalMesh2 evalMesh2;
 
-	//: glEvalPoint1 binding
+	/// \brief glEvalPoint1 binding
 	ptr_glEvalPoint1 evalPoint1;
 
-	//: glEvalPoint2 binding
+	/// \brief glEvalPoint2 binding
 	ptr_glEvalPoint2 evalPoint2;
 
-	//: glFeedbackBuffer binding
+	/// \brief glFeedbackBuffer binding
 	ptr_glFeedbackBuffer feedbackBuffer;
 
-	//: glFinish binding
+	/// \brief glFinish binding
 	ptr_glFinish finish;
 
-	//: glFlush binding
+	/// \brief glFlush binding
 	ptr_glFlush flush;
 
-	//: glFogf binding
+	/// \brief glFogf binding
 	ptr_glFogf fogf;
 
-	//: glFogfv binding
+	/// \brief glFogfv binding
 	ptr_glFogfv fogfv;
 
-	//: glFogi binding
+	/// \brief glFogi binding
 	ptr_glFogi fogi;
 
-	//: glFogiv binding
+	/// \brief glFogiv binding
 	ptr_glFogiv fogiv;
 
-	//: glFrontFace binding
+	/// \brief glFrontFace binding
 	ptr_glFrontFace frontFace;
 
-	//: glFrustum binding
+	/// \brief glFrustum binding
 	ptr_glFrustum frustum;
 
-	//: glGenLists binding
+	/// \brief glGenLists binding
 	ptr_glGenLists genLists;
 
-	//: glGenTextures binding
+	/// \brief glGenTextures binding
 	ptr_glGenTextures genTextures;
 
-	//: glGetBooleanv binding
+	/// \brief glGetBooleanv binding
 	ptr_glGetBooleanv getBooleanv;
 
-	//: glGetClipPlane binding
+	/// \brief glGetClipPlane binding
 	ptr_glGetClipPlane getClipPlane;
 
-	//: glGetDoublev binding
+	/// \brief glGetDoublev binding
 	ptr_glGetDoublev getDoublev;
 
-	//: glGetError binding
+	/// \brief glGetError binding
 	ptr_glGetError getError;
 
-	//: glGetFloatv binding
+	/// \brief glGetFloatv binding
 	ptr_glGetFloatv getFloatv;
 
-	//: glGetIntegerv binding
+	/// \brief glGetIntegerv binding
 	ptr_glGetIntegerv getIntegerv;
 
-	//: glGetLightfv binding
+	/// \brief glGetLightfv binding
 	ptr_glGetLightfv getLightfv;
 
-	//: glGetLightiv binding
+	/// \brief glGetLightiv binding
 	ptr_glGetLightiv getLightiv;
 
-	//: glGetMapdv binding
+	/// \brief glGetMapdv binding
 	ptr_glGetMapdv getMapdv;
 
-	//: glGetMapfv binding
+	/// \brief glGetMapfv binding
 	ptr_glGetMapfv getMapfv;
 
-	//: glGetMapiv binding
+	/// \brief glGetMapiv binding
 	ptr_glGetMapiv getMapiv;
 
-	//: glGetMaterialfv binding
+	/// \brief glGetMaterialfv binding
 	ptr_glGetMaterialfv getMaterialfv;
 
-	//: glGetMaterialiv binding
+	/// \brief glGetMaterialiv binding
 	ptr_glGetMaterialiv getMaterialiv;
 
-	//: glGetPixelMapfv binding
+	/// \brief glGetPixelMapfv binding
 	ptr_glGetPixelMapfv getPixelMapfv;
 
-	//: glGetPixelMapuiv binding
+	/// \brief glGetPixelMapuiv binding
 	ptr_glGetPixelMapuiv getPixelMapuiv;
 
-	//: glGetPixelMapusv binding
+	/// \brief glGetPixelMapusv binding
 	ptr_glGetPixelMapusv getPixelMapusv;
 
-	//: glGetPointerv binding
+	/// \brief glGetPointerv binding
 	ptr_glGetPointerv getPointerv;
 
-	//: glGetPolygonStipple binding
+	/// \brief glGetPolygonStipple binding
 	ptr_glGetPolygonStipple getPolygonStipple;
 
-	//: glGetString binding
+	/// \brief glGetString binding
 	ptr_glGetString getString;
 
-	//: glGetTexEnvfv binding
+	/// \brief glGetTexEnvfv binding
 	ptr_glGetTexEnvfv getTexEnvfv;
 
-	//: glGetTexEnviv binding
+	/// \brief glGetTexEnviv binding
 	ptr_glGetTexEnviv getTexEnviv;
 
-	//: glGetTexGendv binding
+	/// \brief glGetTexGendv binding
 	ptr_glGetTexGendv getTexGendv;
 
-	//: glGetTexGenfv binding
+	/// \brief glGetTexGenfv binding
 	ptr_glGetTexGenfv getTexGenfv;
 
-	//: glGetTexGeniv binding
+	/// \brief glGetTexGeniv binding
 	ptr_glGetTexGeniv getTexGeniv;
 
-	//: glGetTexImage binding
+	/// \brief glGetTexImage binding
 	ptr_glGetTexImage getTexImage;
 
-	//: glGetTexLevelParameterfv binding
+	/// \brief glGetTexLevelParameterfv binding
 	ptr_glGetTexLevelParameterfv getTexLevelParameterfv;
 
-	//: glGetTexLevelParameteriv binding
+	/// \brief glGetTexLevelParameteriv binding
 	ptr_glGetTexLevelParameteriv getTexLevelParameteriv;
 
-	//: glGetTexParameterfv binding
+	/// \brief glGetTexParameterfv binding
 	ptr_glGetTexParameterfv getTexParameterfv;
 
-	//: glGetTexParameteriv binding
+	/// \brief glGetTexParameteriv binding
 	ptr_glGetTexParameteriv getTexParameteriv;
 
-	//: glHint binding
+	/// \brief glHint binding
 	ptr_glHint hint;
 
-	//: glIndexMask binding
+	/// \brief glIndexMask binding
 	ptr_glIndexMask indexMask;
 
-	//: glIndexPointer binding
+	/// \brief glIndexPointer binding
 	ptr_glIndexPointer indexPointer;
 
-	//: glIndexd binding
+	/// \brief glIndexd binding
 	ptr_glIndexd indexd;
 
-	//: glIndexdv binding
+	/// \brief glIndexdv binding
 	ptr_glIndexdv indexdv;
 
-	//: glIndexf binding
+	/// \brief glIndexf binding
 	ptr_glIndexf indexf;
 
-	//: glIndexfv binding
+	/// \brief glIndexfv binding
 	ptr_glIndexfv indexfv;
 
-	//: glIndexi binding
+	/// \brief glIndexi binding
 	ptr_glIndexi indexi;
 
-	//: glIndexiv binding
+	/// \brief glIndexiv binding
 	ptr_glIndexiv indexiv;
 
-	//: glIndexs binding
+	/// \brief glIndexs binding
 	ptr_glIndexs indexs;
 
-	//: glIndexsv binding
+	/// \brief glIndexsv binding
 	ptr_glIndexsv indexsv;
 
-	//: glIndexub binding
+	/// \brief glIndexub binding
 	ptr_glIndexub indexub;
 
-	//: glIndexubv binding
+	/// \brief glIndexubv binding
 	ptr_glIndexubv indexubv;
 
-	//: glInitNames binding
+	/// \brief glInitNames binding
 	ptr_glInitNames initNames;
 
-	//: glInterleavedArrays binding
+	/// \brief glInterleavedArrays binding
 	ptr_glInterleavedArrays interleavedArrays;
 
-	//: glIsEnabled binding
+	/// \brief glIsEnabled binding
 	ptr_glIsEnabled isEnabled;
 
-	//: glIsList binding
+	/// \brief glIsList binding
 	ptr_glIsList isList;
 
-	//: glIsTexture binding
+	/// \brief glIsTexture binding
 	ptr_glIsTexture isTexture;
 
-	//: glLightModelf binding
+	/// \brief glLightModelf binding
 	ptr_glLightModelf lightModelf;
 
-	//: glLightModelfv binding
+	/// \brief glLightModelfv binding
 	ptr_glLightModelfv lightModelfv;
 
-	//: glLightModeli binding
+	/// \brief glLightModeli binding
 	ptr_glLightModeli lightModeli;
 
-	//: glLightModeliv binding
+	/// \brief glLightModeliv binding
 	ptr_glLightModeliv lightModeliv;
 
-	//: glLightf binding
+	/// \brief glLightf binding
 	ptr_glLightf lightf;
 
-	//: glLightfv binding
+	/// \brief glLightfv binding
 	ptr_glLightfv lightfv;
 
-	//: glLighti binding
+	/// \brief glLighti binding
 	ptr_glLighti lighti;
 
-	//: glLightiv binding
+	/// \brief glLightiv binding
 	ptr_glLightiv lightiv;
 
-	//: glLineStipple binding
+	/// \brief glLineStipple binding
 	ptr_glLineStipple lineStipple;
 
-	//: glLineWidth binding
+	/// \brief glLineWidth binding
 	ptr_glLineWidth lineWidth;
 
-	//: glListBase binding
+	/// \brief glListBase binding
 	ptr_glListBase listBase;
 
-	//: glLoadIdentity binding
+	/// \brief glLoadIdentity binding
 	ptr_glLoadIdentity loadIdentity;
 
-	//: glLoadMatrixd binding
+	/// \brief glLoadMatrixd binding
 	ptr_glLoadMatrixd loadMatrixd;
 
-	//: glLoadMatrixf binding
+	/// \brief glLoadMatrixf binding
 	ptr_glLoadMatrixf loadMatrixf;
 
-	//: glLoadName binding
+	/// \brief glLoadName binding
 	ptr_glLoadName loadName;
 
-	//: glLogicOp binding
+	/// \brief glLogicOp binding
 	ptr_glLogicOp logicOp;
 
-	//: glMap1d binding
+	/// \brief glMap1d binding
 	ptr_glMap1d map1d;
 
-	//: glMap1f binding
+	/// \brief glMap1f binding
 	ptr_glMap1f map1f;
 
-	//: glMap2d binding
+	/// \brief glMap2d binding
 	ptr_glMap2d map2d;
 
-	//: glMap2f binding
+	/// \brief glMap2f binding
 	ptr_glMap2f map2f;
 
-	//: glMapGrid1d binding
+	/// \brief glMapGrid1d binding
 	ptr_glMapGrid1d mapGrid1d;
 
-	//: glMapGrid1f binding
+	/// \brief glMapGrid1f binding
 	ptr_glMapGrid1f mapGrid1f;
 
-	//: glMapGrid2d binding
+	/// \brief glMapGrid2d binding
 	ptr_glMapGrid2d mapGrid2d;
 
-	//: glMapGrid2f binding
+	/// \brief glMapGrid2f binding
 	ptr_glMapGrid2f mapGrid2f;
 
-	//: glMaterialf binding
+	/// \brief glMaterialf binding
 	ptr_glMaterialf materialf;
 
-	//: glMaterialfv binding
+	/// \brief glMaterialfv binding
 	ptr_glMaterialfv materialfv;
 
-	//: glMateriali binding
+	/// \brief glMateriali binding
 	ptr_glMateriali materiali;
 
-	//: glMaterialiv binding
+	/// \brief glMaterialiv binding
 	ptr_glMaterialiv materialiv;
 
-	//: glMatrixMode binding
+	/// \brief glMatrixMode binding
 	ptr_glMatrixMode matrixMode;
 
-	//: glMultMatrixd binding
+	/// \brief glMultMatrixd binding
 	ptr_glMultMatrixd multMatrixd;
 
-	//: glMultMatrixf binding
+	/// \brief glMultMatrixf binding
 	ptr_glMultMatrixf multMatrixf;
 
-	//: glNewList binding
+	/// \brief glNewList binding
 	ptr_glNewList newList;
 
-	//: glNormal3b binding
+	/// \brief glNormal3b binding
 	ptr_glNormal3b normal3b;
 
-	//: glNormal3bv binding
+	/// \brief glNormal3bv binding
 	ptr_glNormal3bv normal3bv;
 
-	//: glNormal3d binding
+	/// \brief glNormal3d binding
 	ptr_glNormal3d normal3d;
 
-	//: glNormal3dv binding
+	/// \brief glNormal3dv binding
 	ptr_glNormal3dv normal3dv;
 
-	//: glNormal3f binding
+	/// \brief glNormal3f binding
 	ptr_glNormal3f normal3f;
 
-	//: glNormal3fv binding
+	/// \brief glNormal3fv binding
 	ptr_glNormal3fv normal3fv;
 
-	//: glNormal3i binding
+	/// \brief glNormal3i binding
 	ptr_glNormal3i normal3i;
 
-	//: glNormal3iv binding
+	/// \brief glNormal3iv binding
 	ptr_glNormal3iv normal3iv;
 
-	//: glNormal3s binding
+	/// \brief glNormal3s binding
 	ptr_glNormal3s normal3s;
 
-	//: glNormal3sv binding
+	/// \brief glNormal3sv binding
 	ptr_glNormal3sv normal3sv;
 
-	//: glNormalPointer binding
+	/// \brief glNormalPointer binding
 	ptr_glNormalPointer normalPointer;
 
-	//: glOrtho binding
+	/// \brief glOrtho binding
 	ptr_glOrtho ortho;
 
-	//: glPassThrough binding
+	/// \brief glPassThrough binding
 	ptr_glPassThrough passThrough;
 
-	//: glPixelMapfv binding
+	/// \brief glPixelMapfv binding
 	ptr_glPixelMapfv pixelMapfv;
 
-	//: glPixelMapuiv binding
+	/// \brief glPixelMapuiv binding
 	ptr_glPixelMapuiv pixelMapuiv;
 
-	//: glPixelMapusv binding
+	/// \brief glPixelMapusv binding
 	ptr_glPixelMapusv pixelMapusv;
 
-	//: glPixelStoref binding
+	/// \brief glPixelStoref binding
 	ptr_glPixelStoref pixelStoref;
 
-	//: glPixelStorei binding
+	/// \brief glPixelStorei binding
 	ptr_glPixelStorei pixelStorei;
 
-	//: glPixelTransferf binding
+	/// \brief glPixelTransferf binding
 	ptr_glPixelTransferf pixelTransferf;
 
-	//: glPixelTransferi binding
+	/// \brief glPixelTransferi binding
 	ptr_glPixelTransferi pixelTransferi;
 
-	//: glPixelZoom binding
+	/// \brief glPixelZoom binding
 	ptr_glPixelZoom pixelZoom;
 
-	//: glPointSize binding
+	/// \brief glPointSize binding
 	ptr_glPointSize pointSize;
 
-	//: glPolygonMode binding
+	/// \brief glPolygonMode binding
 	ptr_glPolygonMode polygonMode;
 
-	//: glPolygonOffset binding
+	/// \brief glPolygonOffset binding
 	ptr_glPolygonOffset polygonOffset;
 
-	//: glPolygonStipple binding
+	/// \brief glPolygonStipple binding
 	ptr_glPolygonStipple polygonStipple;
 
-	//: glPopAttrib binding
+	/// \brief glPopAttrib binding
 	ptr_glPopAttrib popAttrib;
 
-	//: glPopClientAttrib binding
+	/// \brief glPopClientAttrib binding
 	ptr_glPopClientAttrib popClientAttrib;
 
-	//: glPopMatrix binding
+	/// \brief glPopMatrix binding
 	ptr_glPopMatrix popMatrix;
 
-	//: glPopName binding
+	/// \brief glPopName binding
 	ptr_glPopName popName;
 
-	//: glPrioritizeTextures binding
+	/// \brief glPrioritizeTextures binding
 	ptr_glPrioritizeTextures prioritizeTextures;
 
-	//: glPushAttrib binding
+	/// \brief glPushAttrib binding
 	ptr_glPushAttrib pushAttrib;
 
-	//: glPushClientAttrib binding
+	/// \brief glPushClientAttrib binding
 	ptr_glPushClientAttrib pushClientAttrib;
 
-	//: glPushMatrix binding
+	/// \brief glPushMatrix binding
 	ptr_glPushMatrix pushMatrix;
 
-	//: glPushName binding
+	/// \brief glPushName binding
 	ptr_glPushName pushName;
 
-	//: glRasterPos2d binding
+	/// \brief glRasterPos2d binding
 	ptr_glRasterPos2d rasterPos2d;
 
-	//: glRasterPos2dv binding
+	/// \brief glRasterPos2dv binding
 	ptr_glRasterPos2dv rasterPos2dv;
 
-	//: glRasterPos2f binding
+	/// \brief glRasterPos2f binding
 	ptr_glRasterPos2f rasterPos2f;
 
-	//: glRasterPos2fv binding
+	/// \brief glRasterPos2fv binding
 	ptr_glRasterPos2fv rasterPos2fv;
 
-	//: glRasterPos2i binding
+	/// \brief glRasterPos2i binding
 	ptr_glRasterPos2i rasterPos2i;
 
-	//: glRasterPos2iv binding
+	/// \brief glRasterPos2iv binding
 	ptr_glRasterPos2iv rasterPos2iv;
 
-	//: glRasterPos2s binding
+	/// \brief glRasterPos2s binding
 	ptr_glRasterPos2s rasterPos2s;
 
-	//: glRasterPos2sv binding
+	/// \brief glRasterPos2sv binding
 	ptr_glRasterPos2sv rasterPos2sv;
 
-	//: glRasterPos3d binding
+	/// \brief glRasterPos3d binding
 	ptr_glRasterPos3d rasterPos3d;
 
-	//: glRasterPos3dv binding
+	/// \brief glRasterPos3dv binding
 	ptr_glRasterPos3dv rasterPos3dv;
 
-	//: glRasterPos3f binding
+	/// \brief glRasterPos3f binding
 	ptr_glRasterPos3f rasterPos3f;
 
-	//: glRasterPos3fv binding
+	/// \brief glRasterPos3fv binding
 	ptr_glRasterPos3fv rasterPos3fv;
 
-	//: glRasterPos3i binding
+	/// \brief glRasterPos3i binding
 	ptr_glRasterPos3i rasterPos3i;
 
-	//: glRasterPos3iv binding
+	/// \brief glRasterPos3iv binding
 	ptr_glRasterPos3iv rasterPos3iv;
 
-	//: glRasterPos3s binding
+	/// \brief glRasterPos3s binding
 	ptr_glRasterPos3s rasterPos3s;
 
-	//: glRasterPos3sv binding
+	/// \brief glRasterPos3sv binding
 	ptr_glRasterPos3sv rasterPos3sv;
 
-	//: glRasterPos4d binding
+	/// \brief glRasterPos4d binding
 	ptr_glRasterPos4d rasterPos4d;
 
-	//: glRasterPos4dv binding
+	/// \brief glRasterPos4dv binding
 	ptr_glRasterPos4dv rasterPos4dv;
 
-	//: glRasterPos4f binding
+	/// \brief glRasterPos4f binding
 	ptr_glRasterPos4f rasterPos4f;
 
-	//: glRasterPos4fv binding
+	/// \brief glRasterPos4fv binding
 	ptr_glRasterPos4fv rasterPos4fv;
 
-	//: glRasterPos4i binding
+	/// \brief glRasterPos4i binding
 	ptr_glRasterPos4i rasterPos4i;
 
-	//: glRasterPos4iv binding
+	/// \brief glRasterPos4iv binding
 	ptr_glRasterPos4iv rasterPos4iv;
 
-	//: glRasterPos4s binding
+	/// \brief glRasterPos4s binding
 	ptr_glRasterPos4s rasterPos4s;
 
-	//: glRasterPos4sv binding
+	/// \brief glRasterPos4sv binding
 	ptr_glRasterPos4sv rasterPos4sv;
 
-	//: glReadBuffer binding
+	/// \brief glReadBuffer binding
 	ptr_glReadBuffer readBuffer;
 
-	//: glReadPixels binding
+	/// \brief glReadPixels binding
 	ptr_glReadPixels readPixels;
 
-	//: glRectd binding
+	/// \brief glRectd binding
 	ptr_glRectd rectd;
 
-	//: glRectdv binding
+	/// \brief glRectdv binding
 	ptr_glRectdv rectdv;
 
-	//: glRectf binding
+	/// \brief glRectf binding
 	ptr_glRectf rectf;
 
-	//: glRectfv binding
+	/// \brief glRectfv binding
 	ptr_glRectfv rectfv;
 
-	//: glRecti binding
+	/// \brief glRecti binding
 	ptr_glRecti recti;
 
-	//: glRectiv binding
+	/// \brief glRectiv binding
 	ptr_glRectiv rectiv;
 
-	//: glRects binding
+	/// \brief glRects binding
 	ptr_glRects rects;
 
-	//: glRectsv binding
+	/// \brief glRectsv binding
 	ptr_glRectsv rectsv;
 
-	//: glRenderMode binding
+	/// \brief glRenderMode binding
 	ptr_glRenderMode renderMode;
 
-	//: glRotated binding
+	/// \brief glRotated binding
 	ptr_glRotated rotated;
 
-	//: glRotatef binding
+	/// \brief glRotatef binding
 	ptr_glRotatef rotatef;
 
-	//: glScaled binding
+	/// \brief glScaled binding
 	ptr_glScaled scaled;
 
-	//: glScalef binding
+	/// \brief glScalef binding
 	ptr_glScalef scalef;
 
-	//: glScissor binding
+	/// \brief glScissor binding
 	ptr_glScissor scissor;
 
-	//: glSelectBuffer binding
+	/// \brief glSelectBuffer binding
 	ptr_glSelectBuffer selectBuffer;
 
-	//: glShadeModel binding
+	/// \brief glShadeModel binding
 	ptr_glShadeModel shadeModel;
 
-	//: glStencilFunc binding
+	/// \brief glStencilFunc binding
 	ptr_glStencilFunc stencilFunc;
 
-	//: glStencilMask binding
+	/// \brief glStencilMask binding
 	ptr_glStencilMask stencilMask;
 
-	//: glStencilOp binding
+	/// \brief glStencilMaskSeparate binding
+	ptr_glStencilMaskSeparate stencilMaskSeparate;
+
+	/// \brief glStencilOp binding
 	ptr_glStencilOp stencilOp;
 
-	//: glTexCoord1d binding
+	/// \brief glTexCoord1d binding
 	ptr_glTexCoord1d texCoord1d;
 
-	//: glTexCoord1dv binding
+	/// \brief glTexCoord1dv binding
 	ptr_glTexCoord1dv texCoord1dv;
 
-	//: glTexCoord1f binding
+	/// \brief glTexCoord1f binding
 	ptr_glTexCoord1f texCoord1f;
 
-	//: glTexCoord1fv binding
+	/// \brief glTexCoord1fv binding
 	ptr_glTexCoord1fv texCoord1fv;
 
-	//: glTexCoord1i binding
+	/// \brief glTexCoord1i binding
 	ptr_glTexCoord1i texCoord1i;
 
-	//: glTexCoord1iv binding
+	/// \brief glTexCoord1iv binding
 	ptr_glTexCoord1iv texCoord1iv;
 
-	//: glTexCoord1s binding
+	/// \brief glTexCoord1s binding
 	ptr_glTexCoord1s texCoord1s;
 
-	//: glTexCoord1sv binding
+	/// \brief glTexCoord1sv binding
 	ptr_glTexCoord1sv texCoord1sv;
 
-	//: glTexCoord2d binding
+	/// \brief glTexCoord2d binding
 	ptr_glTexCoord2d texCoord2d;
 
-	//: glTexCoord2dv binding
+	/// \brief glTexCoord2dv binding
 	ptr_glTexCoord2dv texCoord2dv;
 
-	//: glTexCoord2f binding
+	/// \brief glTexCoord2f binding
 	ptr_glTexCoord2f texCoord2f;
 
-	//: glTexCoord2fv binding
+	/// \brief glTexCoord2fv binding
 	ptr_glTexCoord2fv texCoord2fv;
 
-	//: glTexCoord2i binding
+	/// \brief glTexCoord2i binding
 	ptr_glTexCoord2i texCoord2i;
 
-	//: glTexCoord2iv binding
+	/// \brief glTexCoord2iv binding
 	ptr_glTexCoord2iv texCoord2iv;
 
-	//: glTexCoord2s binding
+	/// \brief glTexCoord2s binding
 	ptr_glTexCoord2s texCoord2s;
 
-	//: glTexCoord2sv binding
+	/// \brief glTexCoord2sv binding
 	ptr_glTexCoord2sv texCoord2sv;
 
-	//: glTexCoord3d binding
+	/// \brief glTexCoord3d binding
 	ptr_glTexCoord3d texCoord3d;
 
-	//: glTexCoord3dv binding
+	/// \brief glTexCoord3dv binding
 	ptr_glTexCoord3dv texCoord3dv;
 
-	//: glTexCoord3f binding
+	/// \brief glTexCoord3f binding
 	ptr_glTexCoord3f texCoord3f;
 
-	//: glTexCoord3fv binding
+	/// \brief glTexCoord3fv binding
 	ptr_glTexCoord3fv texCoord3fv;
 
-	//: glTexCoord3i binding
+	/// \brief glTexCoord3i binding
 	ptr_glTexCoord3i texCoord3i;
 
-	//: glTexCoord3iv binding
+	/// \brief glTexCoord3iv binding
 	ptr_glTexCoord3iv texCoord3iv;
 
-	//: glTexCoord3s binding
+	/// \brief glTexCoord3s binding
 	ptr_glTexCoord3s texCoord3s;
 
-	//: glTexCoord3sv binding
+	/// \brief glTexCoord3sv binding
 	ptr_glTexCoord3sv texCoord3sv;
 
-	//: glTexCoord4d binding
+	/// \brief glTexCoord4d binding
 	ptr_glTexCoord4d texCoord4d;
 
-	//: glTexCoord4dv binding
+	/// \brief glTexCoord4dv binding
 	ptr_glTexCoord4dv texCoord4dv;
 
-	//: glTexCoord4f binding
+	/// \brief glTexCoord4f binding
 	ptr_glTexCoord4f texCoord4f;
 
-	//: glTexCoord4fv binding
+	/// \brief glTexCoord4fv binding
 	ptr_glTexCoord4fv texCoord4fv;
 
-	//: glTexCoord4i binding
+	/// \brief glTexCoord4i binding
 	ptr_glTexCoord4i texCoord4i;
 
-	//: glTexCoord4iv binding
+	/// \brief glTexCoord4iv binding
 	ptr_glTexCoord4iv texCoord4iv;
 
-	//: glTexCoord4s binding
+	/// \brief glTexCoord4s binding
 	ptr_glTexCoord4s texCoord4s;
 
-	//: glTexCoord4sv binding
+	/// \brief glTexCoord4sv binding
 	ptr_glTexCoord4sv texCoord4sv;
 
-	//: glTexCoordPointer binding
+	/// \brief glTexCoordPointer binding
 	ptr_glTexCoordPointer texCoordPointer;
 
-	//: glTexEnvf binding
+	/// \brief glTexEnvf binding
 	ptr_glTexEnvf texEnvf;
 
-	//: glTexEnvfv binding
+	/// \brief glTexEnvfv binding
 	ptr_glTexEnvfv texEnvfv;
 
-	//: glTexEnvi binding
+	/// \brief glTexEnvi binding
 	ptr_glTexEnvi texEnvi;
 
-	//: glTexEnviv binding
+	/// \brief glTexEnviv binding
 	ptr_glTexEnviv texEnviv;
 
-	//: glTexGend binding
+	/// \brief glTexGend binding
 	ptr_glTexGend texGend;
 
-	//: glTexGendv binding
+	/// \brief glTexGendv binding
 	ptr_glTexGendv texGendv;
 
-	//: glTexGenf binding
+	/// \brief glTexGenf binding
 	ptr_glTexGenf texGenf;
 
-	//: glTexGenfv binding
+	/// \brief glTexGenfv binding
 	ptr_glTexGenfv texGenfv;
 
-	//: glTexGeni binding
+	/// \brief glTexGeni binding
 	ptr_glTexGeni texGeni;
 
-	//: glTexGeniv binding
+	/// \brief glTexGeniv binding
 	ptr_glTexGeniv texGeniv;
 
-	//: glTexImage1D binding
+	/// \brief glTexImage1D binding
 	ptr_glTexImage1D texImage1D;
 
-	//: glTexImage2D binding
+	/// \brief glTexImage2D binding
 	ptr_glTexImage2D texImage2D;
 
-	//: glTexParameterf binding
+	/// \brief glTexParameterf binding
 	ptr_glTexParameterf texParameterf;
 
-	//: glTexParameterfv binding
+	/// \brief glTexParameterfv binding
 	ptr_glTexParameterfv texParameterfv;
 
-	//: glTexParameteri binding
+	/// \brief glTexParameteri binding
 	ptr_glTexParameteri texParameteri;
 
-	//: glTexParameteriv binding
+	/// \brief glTexParameteriv binding
 	ptr_glTexParameteriv texParameteriv;
 
-	//: glTexSubImage1D binding
+	/// \brief glTexSubImage1D binding
 	ptr_glTexSubImage1D texSubImage1D;
 
-	//: glTexSubImage2D binding
+	/// \brief glTexSubImage2D binding
 	ptr_glTexSubImage2D texSubImage2D;
 
-	//: glTranslated binding
+	/// \brief glTranslated binding
 	ptr_glTranslated translated;
 
-	//: glTranslatef binding
+	/// \brief glTranslatef binding
 	ptr_glTranslatef translatef;
 
-	//: glVertex2d binding
+	/// \brief glVertex2d binding
 	ptr_glVertex2d vertex2d;
 
-	//: glVertex2dv binding
+	/// \brief glVertex2dv binding
 	ptr_glVertex2dv vertex2dv;
 
-	//: glVertex2f binding
+	/// \brief glVertex2f binding
 	ptr_glVertex2f vertex2f;
 
-	//: glVertex2fv binding
+	/// \brief glVertex2fv binding
 	ptr_glVertex2fv vertex2fv;
 
-	//: glVertex2i binding
+	/// \brief glVertex2i binding
 	ptr_glVertex2i vertex2i;
 
-	//: glVertex2iv binding
+	/// \brief glVertex2iv binding
 	ptr_glVertex2iv vertex2iv;
 
-	//: glVertex2s binding
+	/// \brief glVertex2s binding
 	ptr_glVertex2s vertex2s;
 
-	//: glVertex2sv binding
+	/// \brief glVertex2sv binding
 	ptr_glVertex2sv vertex2sv;
 
-	//: glVertex3d binding
+	/// \brief glVertex3d binding
 	ptr_glVertex3d vertex3d;
 
-	//: glVertex3dv binding
+	/// \brief glVertex3dv binding
 	ptr_glVertex3dv vertex3dv;
 
-	//: glVertex3f binding
+	/// \brief glVertex3f binding
 	ptr_glVertex3f vertex3f;
 
-	//: glVertex3fv binding
+	/// \brief glVertex3fv binding
 	ptr_glVertex3fv vertex3fv;
 
-	//: glVertex3i binding
+	/// \brief glVertex3i binding
 	ptr_glVertex3i vertex3i;
 
-	//: glVertex3iv binding
+	/// \brief glVertex3iv binding
 	ptr_glVertex3iv vertex3iv;
 
-	//: glVertex3s binding
+	/// \brief glVertex3s binding
 	ptr_glVertex3s vertex3s;
 
-	//: glVertex3sv binding
+	/// \brief glVertex3sv binding
 	ptr_glVertex3sv vertex3sv;
 
-	//: glVertex4d binding
+	/// \brief glVertex4d binding
 	ptr_glVertex4d vertex4d;
 
-	//: glVertex4dv binding
+	/// \brief glVertex4dv binding
 	ptr_glVertex4dv vertex4dv;
 
-	//: glVertex4f binding
+	/// \brief glVertex4f binding
 	ptr_glVertex4f vertex4f;
 
-	//: glVertex4fv binding
+	/// \brief glVertex4fv binding
 	ptr_glVertex4fv vertex4fv;
 
-	//: glVertex4i binding
+	/// \brief glVertex4i binding
 	ptr_glVertex4i vertex4i;
 
-	//: glVertex4iv binding
+	/// \brief glVertex4iv binding
 	ptr_glVertex4iv vertex4iv;
 
-	//: glVertex4s binding
+	/// \brief glVertex4s binding
 	ptr_glVertex4s vertex4s;
 
-	//: glVertex4sv binding
+	/// \brief glVertex4sv binding
 	ptr_glVertex4sv vertex4sv;
 
-	//: glVertexPointer binding
+	/// \brief glVertexPointer binding
 	ptr_glVertexPointer vertexPointer;
 
-	//: glViewport binding
+	/// \brief glViewport binding
 	ptr_glViewport viewport;
 
-	//: glDrawRangeElements binding (OpenGL 1.2, EXT_draw_range_elements)
+	/// \brief glDrawRangeElements binding (OpenGL 1.2, EXT_draw_range_elements)
 	ptr_glDrawRangeElementsEXT drawRangeElements;
 
-	//: glTexImage3D binding (OpenGL 1.2, EXT_texture3D)
+	/// \brief glTexImage3D binding (OpenGL 1.2, EXT_texture3D)
 	ptr_glTexImage3DEXT texImage3D;
 
-	//: glTexSubImage3D binding (OpenGL 1.2, EXT_texture3D)
+	/// \brief glTexSubImage3D binding (OpenGL 1.2, EXT_texture3D)
 	ptr_glTexSubImage3DEXT texSubImage3D;
 
-	//: glCopyTexSubImage3D binding (OpenGL 1.2, EXT_texture3D)
+	/// \brief glCopyTexSubImage3D binding (OpenGL 1.2, EXT_texture3D)
 	ptr_glCopyTexSubImage3DEXT copyTexSubImage3D;
 
-	//: glColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glColorTableSGI colorTable;
 
-	//: glCopyColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glCopyColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glCopyColorTableSGI copyColorTable;
 
-	//: glColorTableParameteriv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glColorTableParameteriv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glColorTableParameterivSGI colorTableParameteriv;
 
-	//: glColorTableParameterfv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glColorTableParameterfv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glColorTableParameterfvSGI colorTableParameterfv;
 
-	//: glGetColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glGetColorTable (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glGetColorTableSGI getColorTable;
 
-	//: glGetColorTableParameteriv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glGetColorTableParameteriv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glGetColorTableParameterivSGI getColorTableParameteriv;
 
-	//: glGetColorTableParameterfv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
+	/// \brief glGetColorTableParameterfv (OpenGL 1.2 Imaging subset, EXT_color_table, SGI_color_table)
 	ptr_glGetColorTableParameterfvSGI getColorTableParameterfv;
 
-	//: glColorSubTable (OpenGL 1.2 Imaging subset, EXT_color_subtable)
+	/// \brief glColorSubTable (OpenGL 1.2 Imaging subset, EXT_color_subtable)
 	ptr_glColorSubTableEXT colorSubTable;
 
-	//: glCopyColorSubTable (OpenGL 1.2 Imaging subset, EXT_color_subtable)
+	/// \brief glCopyColorSubTable (OpenGL 1.2 Imaging subset, EXT_color_subtable)
 	ptr_glCopyColorSubTableEXT copyColorSubTable;
 
-	//: glConvolutionFilter1D (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionFilter1D (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionFilter1DEXT convolutionFilter1D;
 
-	//: glConvolutionFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionFilter2DEXT convolutionFilter2D;
 
-	//: glCopyConvolutionFilter1D (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glCopyConvolutionFilter1D (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glCopyConvolutionFilter1DEXT copyConvolutionFilter1D;
 
-	//: glCopyConvolutionFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glCopyConvolutionFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glCopyConvolutionFilter2DEXT copyConvolutionFilter2D;
 
-	//: glGetConvolutionFilter (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glGetConvolutionFilter (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glGetConvolutionFilterEXT getConvolutionFilter;
 
-	//: glSeparableFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glSeparableFilter2D (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glSeparableFilter2DEXT separableFilter2D;
 
-	//: glGetSeparableFilter (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glGetSeparableFilter (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glGetSeparableFilterEXT getSeparableFilter;
 
-	//: glConvolutionParameteri (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionParameteri (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionParameteriEXT convolutionParameteri;
 
-	//: glConvolutionParameterv (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionParameterv (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionParameterivEXT convolutionParameteriv;
 
-	//: glConvolutionParameterf (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionParameterf (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionParameterfEXT convolutionParameterf;
 
-	//: glConvolutionParameterfv (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glConvolutionParameterfv (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glConvolutionParameterfvEXT convolutionParameterfv;
 
-	//: glGetConvolutionParameteriv (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glGetConvolutionParameteriv (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glGetConvolutionParameterivEXT getConvolutionParameteriv;
 
-	//: glGetConvolutionParameterfv (OpenGL 1.2 Imaging subset, EXT_convolution)
+	/// \brief glGetConvolutionParameterfv (OpenGL 1.2 Imaging subset, EXT_convolution)
 	ptr_glGetConvolutionParameterfvEXT getConvolutionParameterfv;
 
-	//: glHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glHistogramEXT histogram;
 
-	//: glResetHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glResetHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glResetHistogramEXT resetHistogram;
 
-	//: glGetHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glGetHistogram (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetHistogramEXT getHistogram;
 
-	//: glHistogramParameteriv (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glHistogramParameteriv (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetHistogramParameterivEXT getHistogramParameteriv;
 
-	//: glHistogramParameterfv (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glHistogramParameterfv (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetHistogramParameterfvEXT getHistogramParameterfv;
 
-	//: glMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glMinmaxEXT minmax;
 
-	//: glResetMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glResetMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glResetMinmaxEXT resetMinmax;
 
-	//: glGetMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glGetMinmax (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetMinmaxEXT getMinmax;
 
-	//: glGetMinmaxParameteriv (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glGetMinmaxParameteriv (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetMinmaxParameterivEXT getMinmaxParameteriv;
 
-	//: glGetMinmaxParameterfv (OpenGL 1.2 Imaging subset, EXT_histogram)
+	/// \brief glGetMinmaxParameterfv (OpenGL 1.2 Imaging subset, EXT_histogram)
 	ptr_glGetMinmaxParameterfvEXT getMinmaxParameterfv;
 
-	//: glBlendColor (OpenGL 1.2 Imaging subset, OpenGL 1.4, EXT_blend_color)
+	/// \brief glBlendColor (OpenGL 1.2 Imaging subset, OpenGL 1.4, EXT_blend_color)
 	ptr_glBlendColorEXT blendColor;
 
-	//: glBlendEquation (OpenGL 1.2 Imaging subset, EXT_blend_minmax)
+	/// \brief glBlendEquation (OpenGL 1.2 Imaging subset, EXT_blend_minmax)
 	ptr_glBlendEquationEXT blendEquation;
 
-	//: glActiveTexture (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glActiveTexture (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glActiveTextureARB activeTexture;
 
-	//: glClientActiveTexture (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glClientActiveTexture (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glClientActiveTextureARB clientActiveTexture;
 
-	//: glMultiTexCoord1d (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1d (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1dARB multiTexCoord1d;
 
-	//: glMultiTexCoord1dv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1dv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1dvARB multiTexCoord1dv;
 
-	//: glMultiTexCoord1f (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1f (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1fARB multiTexCoord1f;
 
-	//: glMultiTexCoord1fv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1fv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1fvARB multiTexCoord1fv;
 
-	//: glMultiTexCoord1i (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1i (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1iARB multiTexCoord1i;
 
-	//: glMultiTexCoord1iv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1iv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1ivARB multiTexCoord1iv;
 
-	//: glMultiTexCoord1s (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1s (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1sARB multiTexCoord1s;
 
-	//: glMultiTexCoord1sv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord1sv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord1svARB multiTexCoord1sv;
 
-	//: glMultiTexCoord2d (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2d (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2dARB multiTexCoord2d;
 
-	//: glMultiTexCoord2dv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2dv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2dvARB multiTexCoord2dv;
 
-	//: glMultiTexCoord2f (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2f (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2fARB multiTexCoord2f;
 
-	//: glMultiTexCoord2fv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2fv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2fvARB multiTexCoord2fv;
 
-	//: glMultiTexCoord2i (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2i (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2iARB multiTexCoord2i;
 
-	//: glMultiTexCoord2iv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2iv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2ivARB multiTexCoord2iv;
 
-	//: glMultiTexCoord2s (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2s (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2sARB multiTexCoord2s;
 
-	//: glMultiTexCoord2sv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord2sv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord2svARB multiTexCoord2sv;
 
-	//: glMultiTexCoord3d (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3d (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3dARB multiTexCoord3d;
 
-	//: glMultiTexCoord3dv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3dv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3dvARB multiTexCoord3dv;
 
-	//: glMultiTexCoord3f (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3f (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3fARB multiTexCoord3f;
 
-	//: glMultiTexCoord3fv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3fv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3fvARB multiTexCoord3fv;
 
-	//: glMultiTexCoord3i (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3i (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3iARB multiTexCoord3i;
 
-	//: glMultiTexCoord3iv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3iv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3ivARB multiTexCoord3iv;
 
-	//: glMultiTexCoord3s (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3s (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3sARB multiTexCoord3s;
 
-	//: glMultiTexCoord3sv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord3sv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord3svARB multiTexCoord3sv;
 
-	//: glMultiTexCoord4d (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4d (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4dARB multiTexCoord4d;
 
-	//: glMultiTexCoord4dv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4dv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4dvARB multiTexCoord4dv;
 
-	//: glMultiTexCoord4f (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4f (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4fARB multiTexCoord4f;
 
-	//: glMultiTexCoord4fv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4fv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4fvARB multiTexCoord4fv;
 
-	//: glMultiTexCoord4i (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4i (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4iARB multiTexCoord4i;
 
-	//: glMultiTexCoord4iv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4iv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4ivARB multiTexCoord4iv;
 
-	//: glMultiTexCoord4s (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4s (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4sARB multiTexCoord4s;
 
-	//: glMultiTexCoord4sv (OpenGL 1.2.1, ARB_multitexture)
+	/// \brief glMultiTexCoord4sv (OpenGL 1.2.1, ARB_multitexture)
 	ptr_glMultiTexCoord4svARB multiTexCoord4sv;
 
-	//: glCompressedTexImage1D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexImage1D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexImage1DARB compressedTexImage1D;
 
-	//: glCompressedTexImage2D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexImage2D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexImage2DARB compressedTexImage2D;
 
-	//: glCompressedTexImage3D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexImage3D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexImage3DARB compressedTexImage3D;
 
-	//: glCompressedTexSubImage1D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexSubImage1D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexSubImage1DARB compressedTexSubImage1D;
 
-	//: glCompressedTexSubImage2D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexSubImage2D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexSubImage2DARB compressedTexSubImage2D;
 
-	//: glCompressedTexSubImage3D (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glCompressedTexSubImage3D (OpenGL 1.3, ARB_texture_compression)
 	ptr_glCompressedTexSubImage3DARB compressedTexSubImage3D;
 
-	//: glGetCompressedTexImage (OpenGL 1.3, ARB_texture_compression)
+	/// \brief glGetCompressedTexImage (OpenGL 1.3, ARB_texture_compression)
 	ptr_glGetCompressedTexImageARB getCompressedTexImage;
 
-	//: glSampleCoverage (OpenGL 1.3, ARB_multisample)
+	/// \brief glSampleCoverage (OpenGL 1.3, ARB_multisample)
 	ptr_glSampleCoverageARB sampleCoverage;
 
-	//: glLoadTransposeMatrixd (OpenGL 1.3, ARB_transpose_matrix)
+	/// \brief glLoadTransposeMatrixd (OpenGL 1.3, ARB_transpose_matrix)
 	ptr_glLoadTransposeMatrixdARB glLoadTransposeMatrixd;
 
-	//: glLoadTransposeMatrixf (OpenGL 1.3, ARB_transpose_matrix)
+	/// \brief glLoadTransposeMatrixf (OpenGL 1.3, ARB_transpose_matrix)
 	ptr_glLoadTransposeMatrixfARB glLoadTransposeMatrixf;
 
-	//: glMultTransposeMatrixd (OpenGL 1.3, ARB_transpose_matrix)
+	/// \brief glMultTransposeMatrixd (OpenGL 1.3, ARB_transpose_matrix)
 	ptr_glMultTransposeMatrixdARB glMultTransposeMatrixd;
 
-	//: glMultTransposeMatrixf (OpenGL 1.3, ARB_transpose_matrix)
+	/// \brief glMultTransposeMatrixf (OpenGL 1.3, ARB_transpose_matrix)
 	ptr_glMultTransposeMatrixfARB glMultTransposeMatrixf;
 
-	//: glFogCoordd (OpenGL 1.4, EXT_fog_coord)
+	/// \brief glFogCoordd (OpenGL 1.4, EXT_fog_coord)
 	ptr_glFogCoorddEXT fogCoordd;
 
-	//: glFogCoorddv (OpenGL 1.4, EXT_fog_coord)
+	/// \brief glFogCoorddv (OpenGL 1.4, EXT_fog_coord)
 	ptr_glFogCoorddvEXT fogCoorddv;
 
-	//: glFogCoordf (OpenGL 1.4, EXT_fog_coord)
+	/// \brief glFogCoordf (OpenGL 1.4, EXT_fog_coord)
 	ptr_glFogCoordfEXT fogCoordf;
 
-	//: glFogCoordfv (OpenGL 1.4, EXT_fog_coord)
+	/// \brief glFogCoordfv (OpenGL 1.4, EXT_fog_coord)
 	ptr_glFogCoordfvEXT fogCoordfv;
 
-	//: glFogCoordPointer (OpenGL 1.4, EXT_fog_coord)
+	/// \brief glFogCoordPointer (OpenGL 1.4, EXT_fog_coord)
 	ptr_glFogCoordPointerEXT fogCoordPointer;
 
-	//: glMultiDrawArrays (OpenGL 1.4, EXT_multi_draw_arrays)
+	/// \brief glMultiDrawArrays (OpenGL 1.4, EXT_multi_draw_arrays)
 	ptr_glMultiDrawArraysEXT multiDrawArrays;
 
-	//: glMultiDrawElements (OpenGL 1.4, EXT_multi_draw_arrays)
+	/// \brief glMultiDrawElements (OpenGL 1.4, EXT_multi_draw_arrays)
 	ptr_glMultiDrawElementsEXT multiDrawElementsEXT;
 
-	//: glPointParameterf (OpenGL 1.4, ARB_point_parameters)
+	/// \brief glPointParameterf (OpenGL 1.4, ARB_point_parameters)
 	ptr_glPointParameterfARB pointParameterf;
 
-	//: glPointParameterfv (OpenGL 1.4, ARB_point_parameters)
+	/// \brief glPointParameterfv (OpenGL 1.4, ARB_point_parameters)
 	ptr_glPointParameterfvARB pointParameterfv;
 
-	//: glSecondaryColor3b (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3b (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3bEXT secondaryColor3b;
 
-	//: glSecondaryColor3bv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3bv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3bvEXT secondaryColor3bv;
 
-	//: glSecondaryColor3d (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3d (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3dEXT secondaryColor3d;
 
-	//: glSecondaryColor3dv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3dv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3dvEXT secondaryColor3dv;
 
-	//: glSecondaryColor3f (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3f (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3fEXT secondaryColor3f;
 
-	//: glSecondaryColor3fv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3fv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3fvEXT secondaryColor3fv;
 
-	//: glSecondaryColor3i (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3i (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3iEXT secondaryColor3i;
 
-	//: glSecondaryColor3iv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3iv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3ivEXT secondaryColor3iv;
 
-	//: glSecondaryColor3s (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3s (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3sEXT secondaryColor3s;
 
-	//: glSecondaryColor3sv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3sv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3svEXT secondaryColor3sv;
 
-	//: glSecondaryColor3ub (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3ub (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3ubEXT secondaryColor3ub;
 
-	//: glSecondaryColor3ubv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3ubv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3ubvEXT secondaryColor3ubv;
 
-	//: glSecondaryColor3ui (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3ui (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3uiEXT secondaryColor3ui;
 
-	//: glSecondaryColor3uiv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3uiv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3uivEXT secondaryColor3uiv;
 
-	//: glSecondaryColor3us (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3us (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3usEXT secondaryColor3us;
 
-	//: glSecondaryColor3usv (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColor3usv (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColor3usvEXT secondaryColor3usv;
 
-	//: glSecondaryColorPointer (OpenGL 1.4, EXT_secondary_color)
+	/// \brief glSecondaryColorPointer (OpenGL 1.4, EXT_secondary_color)
 	ptr_glSecondaryColorPointerEXT secondaryColorPointer;
 
-	//: glBlendFuncSeparate (OpenGL 1.4, EXT_blend_func_separate)
+	/// \brief glBlendFuncSeparate (OpenGL 1.4, EXT_blend_func_separate)
 	ptr_glBlendFuncSeparateEXT blendFuncSeparate;
 
-	//: glWindowPos2d (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2d (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2dARB windowPos2d;
 
-	//: glWindowPos2dv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2dv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2dvARB windowPos2dv;
 
-	//: glWindowPos2f (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2f (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2fARB windowPos2f;
 
-	//: glWindowPos2fv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2fv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2fvARB windowPos2fv;
 
-	//: glWindowPos2i (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2i (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2iARB windowPos2i;
 
-	//: glWindowPos2iv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2iv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2ivARB windowPos2iv;
 
-	//: glWindowPos2s (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2s (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2sARB windowPos2s;
 
-	//: glWindowPos2sv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos2sv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos2svARB windowPos2sv;
 
-	//: glWindowPos3d (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3d (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3dARB windowPos3d;
 
-	//: glWindowPos3dv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3dv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3dvARB windowPos3dv;
 
-	//: glWindowPos3f (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3f (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3fARB windowPos3f;
 
-	//: glWindowPos3fv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3fv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3fvARB windowPos3fv;
 
-	//: glWindowPos3i (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3i (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3iARB windowPos3i;
 
-	//: glWindowPos3iv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3iv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3ivARB windowPos3iv;
 
-	//: glWindowPos3s (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3s (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3sARB windowPos3s;
 
-	//: glWindowPos3sv (OpenGL 1.4, ARB_window_pos)
+	/// \brief glWindowPos3sv (OpenGL 1.4, ARB_window_pos)
 	ptr_glWindowPos3svARB windowPos3sv;
 
-	//: glBindBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glBindBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glBindBufferARB bindBuffer;
 
-	//: glDeleteBuffers (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glDeleteBuffers (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glDeleteBuffersARB deleteBuffers;
 
-	//: glGenBuffers (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glGenBuffers (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glGenBuffersARB genBuffers;
 
-	//: glIsBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glIsBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glIsBufferARB isBuffer;
 
-	//: glBufferData (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glBufferData (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glBufferDataARB bufferData;
 
-	//: glBufferData (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glBufferData (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glBufferSubDataARB bufferSubData;
 
-	//: glBufferSubData (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glBufferSubData (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glGetBufferSubDataARB getBufferSubData;
 
-	//: glMapBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glMapBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glMapBufferARB mapBuffer;
 
-	//: glUnmapBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
+	/// \brief glUnmapBuffer (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glUnmapBufferARB unmapBuffer;
-	
-	//: glGetBufferParameteriv (OpenGL 1.5, ARB_vertex_buffer_object)
+
+	/// \brief glGetBufferParameteriv (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glGetBufferParameterivARB getBufferParameteriv;
-	
-	//: glGetBufferPointerv (OpenGL 1.5, ARB_vertex_buffer_object)
+
+	/// \brief glGetBufferPointerv (OpenGL 1.5, ARB_vertex_buffer_object)
 	ptr_glGetBufferPointervARB getBufferPointerv;
-	
-	//: glGenQueries (OpenGL 1.5, ARB_occlusion_query)
+
+	/// \brief glGenQueries (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glGenQueriesARB genQueries;
 
-	//: glDeleteQueries (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glDeleteQueries (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glDeleteQueriesARB deleteQueries;
 
-	//: glIsQuery (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glIsQuery (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glIsQueryARB isQuery;
 
-	//: glBeginQuery (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glBeginQuery (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glBeginQueryARB beginQuery;
 
-	//: glEndQuery (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glEndQuery (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glEndQueryARB endQuery;
 
-	//: glGetQueryiv (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glGetQueryiv (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glGetQueryivARB getQueryiv;
 
-	//: glGetQueryObjectiv (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glGetQueryObjectiv (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glGetQueryObjectivARB getQueryObjectiv;
 
-	//: glGenQueryObjectuiv (OpenGL 1.5, ARB_occlusion_query)
+	/// \brief glGetQueryObjectuiv (OpenGL 1.5, ARB_occlusion_query)
 	ptr_glGetQueryObjectuivARB getQueryObjectuiv;
 
-	//: glDeleteShader (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glDeleteShader (OpenGL 2.0, ARB_shader_objects)
 	ptr_glDeleteObjectARB deleteShader;
 
-	//: glDeleteProgram (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glDeleteProgram (OpenGL 2.0, ARB_shader_objects)
 	ptr_glDeleteObjectARB deleteProgram;
 
-	//: glGetHandle (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetHandle (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetHandleARB getHandle;
 
-	//: glDetachObject (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glDetachObject (OpenGL 2.0, ARB_shader_objects)
 	ptr_glDetachObjectARB detachShader;
 
-	//: glCreateShader (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glCreateShader (OpenGL 2.0, ARB_shader_objects)
 	ptr_glCreateShaderObjectARB createShader;
 
-	//: glShaderSource (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glShaderSource (OpenGL 2.0, ARB_shader_objects)
 	ptr_glShaderSourceARB shaderSource;
 
-	//: glCompileShader (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glCompileShader (OpenGL 2.0, ARB_shader_objects)
 	ptr_glCompileShaderARB compileShader;
 
-	//: glCreateProgramObject (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glCreateProgramObject (OpenGL 2.0, ARB_shader_objects)
 	ptr_glCreateProgramObjectARB createProgram;
 
-	//: glAttachObject (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glAttachObject (OpenGL 2.0, ARB_shader_objects)
 	ptr_glAttachObjectARB attachShader;
 
-	//: glLinkProgram (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glLinkProgram (OpenGL 2.0, ARB_shader_objects)
 	ptr_glLinkProgramARB linkProgram;
 
-	//: glUseProgramObject (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUseProgramObject (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUseProgramObjectARB useProgram;
 
-	//: glValidateProgram (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glValidateProgram (OpenGL 2.0, ARB_shader_objects)
 	ptr_glValidateProgramARB validateProgram;
 
-	//: glUniform1f (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform1f (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform1fARB uniform1f;
 
-	//: glUniform2f (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform2f (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform2fARB uniform2f;
 
-	//: glUniform3f (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform3f (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform3fARB uniform3f;
 
-	//: glUniform4f (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform4f (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform4fARB uniform4f;
 
-	//: glUniform1i (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform1i (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform1iARB uniform1i;
 
-	//: glUniform2i (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform2i (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform2iARB uniform2i;
 
-	//: glUniform3i (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform3i (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform3iARB uniform3i;
 
-	//: glUniform4i (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform4i (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform4iARB uniform4i;
 
-	//: glUniform1fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform1fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform1fvARB uniform1fv;
 
-	//: glUniform2fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform2fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform2fvARB uniform2fv;
 
-	//: glUniform3fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform3fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform3fvARB uniform3fv;
 
-	//: glUniform4fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform4fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform4fvARB uniform4fv;
 
-	//: glUniform1iv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform1iv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform1ivARB uniform1iv;
 
-	//: glUniform2iv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform2iv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform2ivARB uniform2iv;
 
-	//: glUniform3iv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform3iv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform3ivARB uniform3iv;
 
-	//: glUniform4iv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniform4iv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniform4ivARB uniform4iv;
 
-	//: glUniformMatrix2fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniformMatrix2fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniformMatrix2fvARB uniformMatrix2fv;
 
-	//: glUniformMatrix3fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniformMatrix3fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniformMatrix3fvARB uniformMatrix3fv;
 
-	//: glUniformMatrix4fv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glUniformMatrix4fv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glUniformMatrix4fvARB uniformMatrix4fv;
 
-	//: glGetProgramfv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetProgramfv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetObjectParameterfvARB getProgramfv;
 
-	//: glGetProgramiv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetProgramiv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetObjectParameterivARB getProgramiv;
 
-	//: glGetShaderfv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetShaderfv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetObjectParameterfvARB getShaderfv;
 
-	//: glGetShaderiv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetShaderiv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetObjectParameterivARB getShaderiv;
 
-	//: glGetShaderInfoLog (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetShaderInfoLog (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetInfoLogARB getShaderInfoLog;
 
-	//: glGetProgramInfoLog (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetProgramInfoLog (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetInfoLogARB getProgramInfoLog;
 
-	//: glGetAttachedObjects (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetAttachedObjects (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetAttachedObjectsARB getAttachedShaders;
 
-	//: glGetUniformLocation (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetUniformLocation (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetUniformLocationARB getUniformLocation;
 
-	//: glGetActiveUniform (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetActiveUniform (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetActiveUniformARB getActiveUniform;
 
-	//: glGetUniformfv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetUniformfv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetUniformfvARB getUniformfv;
 
-	//: glGetUniformiv (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetUniformiv (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetUniformivARB getUniformiv;
 
-	//: glGetShaderSource (OpenGL 2.0, ARB_shader_objects)
+	/// \brief glGetShaderSource (OpenGL 2.0, ARB_shader_objects)
 	ptr_glGetShaderSourceARB getShaderSource;
 
-	//: glVertexAttrib1f (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1f (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1fARB vertexAttrib1f;
 
-	//: glVertexAttrib1s (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1s (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1sARB vertexAttrib1s;
 
-	//: glVertexAttrib1d (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1d (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1dARB vertexAttrib1d;
 
-	//: glVertexAttrib2f (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2f (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2fARB vertexAttrib2f;
 
-	//: glVertexAttrib2s (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2s (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2sARB vertexAttrib2s;
 
-	//: glVertexAttrib2d (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2d (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2dARB vertexAttrib2d;
 
-	//: glVertexAttrib3f (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3f (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3fARB vertexAttrib3f;
 
-	//: glVertexAttrib3s (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3s (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3sARB vertexAttrib3s;
 
-	//: glVertexAttrib3d (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3d (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3dARB vertexAttrib3d;
 
-	//: glVertexAttrib4f (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4f (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4fARB vertexAttrib4f;
 
-	//: glVertexAttrib4s (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4s (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4sARB vertexAttrib4s;
 
-	//: glVertexAttrib4d (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4d (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4dARB vertexAttrib4d;
 
-	//: glVertexAttrib4Nub (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nub (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NubARB vertexAttrib4Nub;
 
-	//: glVertexAttrib1fv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1fv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1fvARB vertexAttrib1fv;
 
-	//: glVertexAttrib1sv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1sv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1svARB vertexAttrib1sv;
 
-	//: glVertexAttrib1dv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib1dv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib1dvARB vertexAttrib1dv;
 
-	//: glVertexAttrib2fv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2fv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2fvARB vertexAttrib2fv;
 
-	//: glVertexAttrib2sv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2sv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2svARB vertexAttrib2sv;
 
-	//: glVertexAttrib2dv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib2dv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib2dvARB vertexAttrib2dv;
 
-	//: glVertexAttrib3fv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3fv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3fvARB vertexAttrib3fv;
 
-	//: glVertexAttrib3sv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3sv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3svARB vertexAttrib3sv;
 
-	//: glVertexAttrib3dv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib3dv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib3dvARB vertexAttrib3dv;
 
-	//: glVertexAttrib4fv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4fv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4fvARB vertexAttrib4fv;
 
-	//: glVertexAttrib4sv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4sv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4svARB vertexAttrib4sv;
 
-	//: glVertexAttrib4dv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4dv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4dvARB vertexAttrib4dv;
 
-	//: glVertexAttrib4iv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4iv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4ivARB vertexAttrib4iv;
 
-	//: glVertexAttrib4bv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4bv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4bvARB vertexAttrib4bv;
 
-	//: glVertexAttrib4ubv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4ubv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4ubvARB vertexAttrib4ubv;
 
-	//: glVertexAttrib4usv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4usv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4usvARB vertexAttrib4usv;
 
-	//: glVertexAttrib4uiv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4uiv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4uivARB vertexAttrib4uiv;
 
-	//: glVertexAttrib4Nbv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nbv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NbvARB vertexAttrib4Nbv;
 
-	//: glVertexAttrib4Nsv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nsv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NsvARB vertexAttrib4Nsv;
 
-	//: glVertexAttrib4Niv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Niv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NivARB vertexAttrib4Niv;
 
-	//: glVertexAttrib4Nubv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nubv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NubvARB vertexAttrib4Nubv;
 
-	//: glVertexAttrib4Nusv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nusv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NusvARB vertexAttrib4Nusv;
 
-	//: glVertexAttrib4Nuiv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttrib4Nuiv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttrib4NuivARB vertexAttrib4Nuiv;
 
-	//: glVertexAttribPointer (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glVertexAttribPointer (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glVertexAttribPointerARB vertexAttribPointer;
 
-	//: glEnableVertexAttribArray (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glEnableVertexAttribArray (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glEnableVertexAttribArrayARB enableVertexAttribArray;
 
-	//: glDisableVertexAttribArray (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glDisableVertexAttribArray (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glDisableVertexAttribArrayARB disableVertexAttribArray;
 
-	//: glBindAttribLocation (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glBindAttribLocation (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glBindAttribLocationARB bindAttribLocation;
 
-	//: glGetActiveAttrib (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetActiveAttrib (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetActiveAttribARB getActiveAttrib;
 
-	//: glGetAttribLocation (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetAttribLocation (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetAttribLocationARB getAttribLocation;
 
-	//: glGetVertexAttribdv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetVertexAttribdv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetVertexAttribdvARB getVertexAttribdv;
 
-	//: glGetVertexAttribfv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetVertexAttribfv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetVertexAttribfvARB getVertexAttribfv;
 
-	//: glGetVertexAttribiv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetVertexAttribiv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetVertexAttribivARB getVertexAttribiv;
 
-	//: glGetVertexAttribPointerv (OpenGL 2.0, ARB_vertex_shader)
+	/// \brief glGetVertexAttribPointerv (OpenGL 2.0, ARB_vertex_shader)
 	ptr_glGetVertexAttribPointervARB getVertexAttribPointerv;
 
-	//: glDrawBuffers (OpenGL 2.0, ARB_draw_buffers)
+	/// \brief glDrawBuffers (OpenGL 2.0, ARB_draw_buffers)
 	ptr_glDrawBuffersARB drawBuffers;
 
-	//: glStencilFuncSeparate (OpenGL 2.0, ATI_separate_stencil)
+	/// \brief glStencilFuncSeparate (OpenGL 2.0, ATI_separate_stencil)
 	ptr_glStencilFuncSeparateATI stencilFuncSeparate;
 
-	//: glStencilOpSeparate (OpenGL 2.0, ATI_separate_stencil)
+	/// \brief glStencilOpSeparate (OpenGL 2.0, ATI_separate_stencil)
 	ptr_glStencilOpSeparateATI stencilOpSeparate;
 
-	//: glActiveStencilFace (EXT_stencil_two_side)
-	ptr_glActiveStencilFaceEXT activeStencilFaceEXT;
+	/// \brief glIsRenderbuffer (EXT_framebuffer_object)
+	ptr_glIsRenderbufferEXT isRenderbuffer;
+
+	/// \brief glBindRenderbuffer (EXT_framebuffer_object)
+	ptr_glBindRenderbufferEXT bindRenderbuffer;
+
+	/// \brief glDeleteRenderbuffer (EXT_framebuffer_object)
+	ptr_glDeleteRenderbuffersEXT deleteRenderbuffers;
+
+	/// \brief glGenRenderbuffers (EXT_framebuffer_object)
+	ptr_glGenRenderbuffersEXT genRenderbuffers;
+
+	/// \brief glRenderbufferStorage (EXT_framebuffer_object)
+	ptr_glRenderbufferStorageEXT renderbufferStorage;
+
+	/// \brief glGetRenderbufferParameteriv (EXT_framebuffer_object)
+	ptr_glGetRenderbufferParameterivEXT getRenderbufferParameteriv;
+
+	/// \brief glIsFramebuffer (EXT_framebuffer_object)
+	ptr_glIsFramebufferEXT isFramebuffer;
+
+	/// \brief glBindFramebuffer (EXT_framebuffer_object)
+	ptr_glBindFramebufferEXT bindFramebuffer;
+
+	/// \brief glDeleteFramebuffers (EXT_framebuffer_object)
+	ptr_glDeleteFramebuffersEXT deleteFramebuffers;
+
+	/// \brief glGenFramebuffers (EXT_framebuffer_object)
+	ptr_glGenFramebuffersEXT genFramebuffers;
+
+	/// \brief glCheckFramebufferStatus (EXT_framebuffer_object)
+	ptr_glCheckFramebufferStatusEXT checkFramebufferStatus;
+
+	/// \brief glFramebufferTexture1D (EXT_framebuffer_object)
+	ptr_glFramebufferTexture1DEXT framebufferTexture1D;
+
+	/// \brief glFramebufferTexture2D (EXT_framebuffer_object)
+	ptr_glFramebufferTexture2DEXT framebufferTexture2D;
+
+	/// \brief glFramebufferTexture3D (EXT_framebuffer_object)
+	ptr_glFramebufferTexture3DEXT framebufferTexture3D;
+
+	/// \brief glFramebufferRenderbuffer (EXT_framebuffer_object)
+	ptr_glFramebufferRenderbufferEXT framebufferRenderbuffer;
+
+	/// \brief glGetFramebufferAttachmentParameteriv (EXT_framebuffer_object)
+	ptr_glGetFramebufferAttachmentParameterivEXT getFramebufferAttachmentParameteriv;
+
+	/// \brief glGenerateMipmap (EXT_framebuffer_object)
+	ptr_glGenerateMipmapEXT generateMipmap;
+
+	/// \brief glGenerateMipmap (EXT_framebuffer_blit)
+	ptr_glBlitFramebufferEXT blitFramebuffer;
+
 };
+/// \}
 
 #define clAccum CL_OpenGL::functions->accum
 #define clAlphaFunc CL_OpenGL::functions->alphaFunc
@@ -4599,6 +4748,7 @@ public:
 #define clShadeModel CL_OpenGL::functions->shadeModel
 #define clStencilFunc CL_OpenGL::functions->stencilFunc
 #define clStencilMask CL_OpenGL::functions->stencilMask
+#define clStencilMaskSeparate CL_OpenGL::functions->stencilMaskSeparate
 #define clStencilOp CL_OpenGL::functions->stencilOp
 #define clTexCoord1d CL_OpenGL::functions->texCoord1d
 #define clTexCoord1dv CL_OpenGL::functions->texCoord1dv
@@ -4823,7 +4973,7 @@ public:
 #define clEndQuery CL_OpenGL::functions->endQuery
 #define clGetQueryiv CL_OpenGL::functions->getQueryiv
 #define clGetQueryObjectiv CL_OpenGL::functions->getQueryObjectiv
-#define clGenQueryObjectuiv CL_OpenGL::functions->getQueryObjectuiv
+#define clGetQueryObjectuiv CL_OpenGL::functions->getQueryObjectuiv
 #define clDeleteShader CL_OpenGL::functions->deleteShader
 #define clDeleteProgram CL_OpenGL::functions->deleteProgram
 #define clGetHandle CL_OpenGL::functions->getHandle
@@ -4916,5 +5066,25 @@ public:
 #define clDrawBuffers CL_OpenGL::functions->drawBuffers
 #define clStencilFuncSeparate CL_OpenGL::functions->stencilFuncSeparate
 #define clStencilOpSeparate CL_OpenGL::functions->stencilOpSeparate
+#define clIsRenderbuffer CL_OpenGL::functions->isRenderbuffer
+#define clBindRenderbuffer CL_OpenGL::functions->bindRenderbuffer
+#define clDeleteRenderbuffers CL_OpenGL::functions->deleteRenderbuffers
+#define clGenRenderbuffers CL_OpenGL::functions->genRenderbuffers
+#define clRenderbufferStorage CL_OpenGL::functions->renderbufferStorage
+#define clGetRenderbufferParameteriv CL_OpenGL::functions->getRenderbufferParameteriv
+#define clIsFramebuffer CL_OpenGL::functions->isFramebuffer
+#define clBindFramebuffer CL_OpenGL::functions->bindFramebuffer
+#define clDeleteFramebuffers CL_OpenGL::functions->deleteFramebuffers
+#define clGenFramebuffers CL_OpenGL::functions->genFramebuffers
+#define clCheckFramebufferStatus CL_OpenGL::functions->checkFramebufferStatus
+#define clFramebufferTexture1D CL_OpenGL::functions->framebufferTexture1D
+#define clFramebufferTexture2D CL_OpenGL::functions->framebufferTexture2D
+#define clFramebufferTexture3D CL_OpenGL::functions->framebufferTexture3D
+#define clFramebufferRenderbuffer CL_OpenGL::functions->framebufferRenderbuffer
+#define clGetFramebufferAttachmentParameteriv CL_OpenGL::functions->getFramebufferAttachmentParameteriv
+#define clGenerateMipmap CL_OpenGL::functions->generateMipmap
+#define clBlitFramebuffer CL_OpenGL::functions->blitFramebuffer
 
-#endif
+
+/// \}
+

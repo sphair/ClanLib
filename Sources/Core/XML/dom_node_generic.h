@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_dom_node_generic
-#define header_dom_node_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
@@ -36,64 +35,50 @@
 
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/System/weakptr.h"
-#include "API/Core/XML/dom_named_node_map.h"
-
+#include "API/Core/Text/string_types.h"
+#include "API/Core/System/block_allocator.h"
 #include <map>
-#include <string>
 
+class CL_DomTreeNode;
 class CL_DomDocument_Generic;
 
 class CL_DomNode_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	CL_DomNode_Generic()
-	{
-	}
+	CL_DomNode_Generic();
 
-	virtual ~CL_DomNode_Generic()
-	{
-		CL_SharedPtr<CL_DomNode_Generic> temp = last_child;
+	virtual ~CL_DomNode_Generic();
 
-		while (!temp.is_null ())
-		{ 
-			temp->free_refs ();
 
-			temp = temp->previous_sibling;
-		}
-	}
+/// \}
+/// \name Attributes
+/// \{
 
-//! Attributes:
 public:
-	std::string node_name;
-
-	std::string node_value;
-
-	unsigned short node_type;
-
-	CL_WeakPtr<CL_DomNode_Generic> parent;
-
-	CL_SharedPtr<CL_DomNode_Generic> first_child;
-
-	CL_SharedPtr<CL_DomNode_Generic> last_child;
-
-	CL_SharedPtr<CL_DomNode_Generic> previous_sibling;
-
-	CL_SharedPtr<CL_DomNode_Generic> next_sibling;
+	unsigned int node_index;
 
 	CL_WeakPtr<CL_DomNode_Generic> owner_document;
 
-	CL_DomNamedNodeMap attributes;
 
-//! Operations:
+/// \}
+/// \name Operations
+/// \{
+
 public:
+	CL_DomTreeNode *get_tree_node();
 
-//! Implementation:
+	const CL_DomTreeNode *get_tree_node() const;
+
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	void free_refs (void)
-	{
-		next_sibling.release ();
-	};
+/// \}
 };
 
-#endif
+

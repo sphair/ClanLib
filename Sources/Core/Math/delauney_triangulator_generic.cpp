@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,11 +24,11 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
 #include "delauney_triangulator_generic.h"
+#include <algorithm>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DelauneyTriangulator_Generic construction:
@@ -94,8 +94,8 @@ void CL_DelauneyTriangulator_Generic::create_ordered_vertex_list(std::vector<CL_
 	// Remove duplicates:
 	std::vector<CL_DelauneyTriangulator_Vertex *>::iterator it = vertices.begin();
 	if (it == vertices.end()) return;
-	double last_x = (*it)->x;
-	double last_y = (*it)->y;
+	float last_x = (*it)->x;
+	float last_y = (*it)->y;
 	++it;
 	while (it != vertices.end())
 	{
@@ -116,10 +116,10 @@ void CL_DelauneyTriangulator_Generic::calculate_supertriangle(std::vector<CL_Del
 {
 	// Find min and max values:
 
-	double min_x = 0.0;
-	double max_x = 0.0;
-	double min_y = 0.0;
-	double max_y = 0.0;
+	float min_x = 0.0;
+	float max_x = 0.0;
+	float min_y = 0.0;
+	float max_y = 0.0;
 	bool first_point = true;
 
 	std::vector<CL_DelauneyTriangulator_Vertex *>::size_type index_vertices, num_vertices;
@@ -222,14 +222,14 @@ void CL_DelauneyTriangulator_Generic::perform_delauney_triangulation(
 
 			// todo: cache circumcenter in triangle?
 			CL_DelauneyTriangulator_Vertex circumcenter = find_circumcenter(cur_triangle);
-			double radius_x = cur_triangle.vertex_A->x-circumcenter.x;
-			double radius_y = cur_triangle.vertex_A->y-circumcenter.y;
-			double radius2 = radius_x*radius_x + radius_y*radius_y;
+			float radius_x = cur_triangle.vertex_A->x-circumcenter.x;
+			float radius_y = cur_triangle.vertex_A->y-circumcenter.y;
+			float radius2 = radius_x*radius_x + radius_y*radius_y;
 
 			// Check if the point lies in the triangle circumcircle:
-			double dist_x = insertion_point->x - circumcenter.x;
-			double dist_y = insertion_point->y - circumcenter.y;
-			double dist2 = dist_x*dist_x + dist_y*dist_y;
+			float dist_x = insertion_point->x - circumcenter.x;
+			float dist_y = insertion_point->y - circumcenter.y;
+			float dist2 = dist_x*dist_x + dist_y*dist_y;
 			if (dist2 < radius2)
 			{
 				// Add triangle edges to edge buffer:
@@ -320,25 +320,25 @@ CL_DelauneyTriangulator_Vertex CL_DelauneyTriangulator_Generic::find_circumcente
 	// Subject 1.04: How do I generate a circle through three points?
 	// http://www.faqs.org/faqs/graphics/algorithms-faq/
 
-	double a_0 = triangle.vertex_A->x;
-	double a_1 = triangle.vertex_A->y;
-	double b_0 = triangle.vertex_B->x;
-	double b_1 = triangle.vertex_B->y;
-	double c_0 = triangle.vertex_C->x;
-	double c_1 = triangle.vertex_C->y;
+	float a_0 = triangle.vertex_A->x;
+	float a_1 = triangle.vertex_A->y;
+	float b_0 = triangle.vertex_B->x;
+	float b_1 = triangle.vertex_B->y;
+	float c_0 = triangle.vertex_C->x;
+	float c_1 = triangle.vertex_C->y;
 
-	double A = b_0 - a_0;
-	double B = b_1 - a_1;
-	double C = c_0 - a_0;
-	double D = c_1 - a_1;
+	float A = b_0 - a_0;
+	float B = b_1 - a_1;
+	float C = c_0 - a_0;
+	float D = c_1 - a_1;
 
-	double E = A*(a_0 + b_0) + B*(a_1 + b_1);
-	double F = C*(a_0 + c_0) + D*(a_1 + c_1);
+	float E = A*(a_0 + b_0) + B*(a_1 + b_1);
+	float F = C*(a_0 + c_0) + D*(a_1 + c_1);
 
-	double G = 2.0*(A*(c_1 - b_1)-B*(c_0 - b_0));
+	float G = 2.0f*(A*(c_1 - b_1)-B*(c_0 - b_0));
 
-	double p_0 = (D*E - B*F) / G;
-	double p_1 = (A*F - C*E) / G;
+	float p_0 = (D*E - B*F) / G;
+	float p_1 = (A*F - C*E) / G;
 
 	CL_DelauneyTriangulator_Vertex circumcenter;
 	circumcenter.data = 0;

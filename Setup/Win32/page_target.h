@@ -40,9 +40,11 @@ public:
 
 	int target_version;
 
-	static LRESULT CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
+	bool include_unicode, include_mtdll, include_dll, include_x64;
 
-	LRESULT on_notify(HWND hWnd, NMHDR *header);
+	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
+
+	INT_PTR on_notify(HWND hWnd, NMHDR *header);
 };
 
 #endif

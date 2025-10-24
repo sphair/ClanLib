@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,69 +24,84 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Ingo Ruhnke
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_node_list
-#define header_dom_node_list
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
+#include "dom_string.h"
 #include <vector>
 
 class CL_DomNode;
 class CL_DomNodeList_Generic;
 class CL_DomDocument;
 
-//: DOM Node List class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
-//- without defining or constraining how this collection is implemented.</p>
+/// \brief DOM Node List class.
+///
+///    <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
+///    without defining or constraining how this collection is implemented.</p> 
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomNodeList
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM NodeList handle.
+	/// \brief Constructs a DOM NodeList handle.
 	CL_DomNodeList();
-	
-	CL_DomNodeList(CL_DomNode &node, const std::string &tag_name);
+
+	CL_DomNodeList(CL_DomNode &node, const CL_DomString &tag_name);
+
+	CL_DomNodeList(
+		CL_DomNode &node,
+		const CL_DomString &namespace_uri,
+		const CL_DomString &name,
+		bool local_name = false);
 
 	~CL_DomNodeList();
-	
-//! Attributes:
+
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: The number of nodes in the list.
+	/// \brief The number of nodes in the list.
 	int get_length() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Returns the indexth item in the collection.
-	//- <p>If index is greater than or equal to the number of nodes in the list, this returns an empty node.</p>
+	/// \brief Returns the indexth item in the collection.
+	/** <p>If index is greater than or equal to the number of nodes in the list, this returns an empty node.</p>*/
 	CL_DomNode item(unsigned long index) const;
-	
-	//: Adds a CL_DomNode to the list.
+
+	/// \brief Adds a CL_DomNode to the list.
 	void add_item(CL_DomNode &to_add);
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	//CL_SharedPtr<CL_DomNodeList_Generic> impl;
+	/** CL_SharedPtr<CL_DomNodeList_Generic> impl;*/
 	std::vector<CL_DomNode> node_list;
+/// \}
 };
 
-#endif
+
+/// \}

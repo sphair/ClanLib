@@ -1,4 +1,3 @@
-$Id: CODING_STYLE,v 1.7 2004/02/07 23:11:42 mbn Exp $
 
 ClanLib coding style and conventions:
 --------------------------------------
@@ -78,7 +77,7 @@ size 8:
 
 Not very nice, is it?
 
-Many unix editors use a "smart" indenting algorithm which will fuck things
+Many unix editors use a "smart" indenting algorithm which will mess things
 even more up. They exchange spaces with tabs when reaching a given size
 (normally 8 or 4), but that just isn't very smart. The result is that some
 sections are spaces, and others are tabbed - all messed into one pile of
@@ -108,40 +107,44 @@ figure out what it stands for. :) Yes we don't all speak english natively.
 
 8. The API documentation
 
-ClanLib uses a reference documentation system called pce2. It builds the
-reference by parsing the API header files where it looks for the
-documentation. There are the following types of documentation:
+ClanLib uses a reference documentation system called "ReferenceDocs".
+It builds the reference by parsing the API header files using Doxygen to output
+the documentation as xml. Then Utilities/ReferenceDocs creates the html pages in
+the ClanLib documentation style.
+
+ There are the following types of documentation:
 
 1) Short description.
 
-The marker for short description is //:
+The marker for short description is /// \brief 
 
-The short description is used at top of the class reference pages and
-function pages. Its supposed to be "a one sentence description". Example:
+The short description is supposed to be "a one sentence description". Example:
 
-	//: Sprite image class.
+	/// \brief Sprite image class.
 	class CL_Sprite
 	{ ...
 
-Short descriptions do not support markup and should not include any further
-markup tags (bold, italic, paragraph, etc etc).
+Short descriptions should not include any further markup tags (bold, italic,
+paragraph, etc etc).
 
 2) Long description.
 
-The marker for long description is //-
+This follows a short description to provide further information.
+
+The marker for long description is ///
+
+A line just containing "///" must follow the short description.
 
 The long description is also known as the "Detailed description:" part of
 the reference pages. This is where the class/functions purpose and
-functional details are explained.
+functional details are explained. Example:
 
-Long descriptions are supposed to put everything into html markup tags. Use
-the paragraph (<p>Text</p>) tag for text. Example:
-
-	//: Sprite image class.
-	//- <p>CL_Sprite is the image class of ClanLib. A sprite is a serie
-	//- of images (each called a frame) that somehow have a connection
-	//- to each others. It could be all the images needed to animate a
-	//- man, or it could be all the different tiles of a tile map.</p>
+	/// \brief Sprite image class.
+	///
+	/// CL_Sprite is the image class of ClanLib. A sprite is a series
+	/// of images (each called a frame) that somehow have a connection
+	/// to each others. It could be all the images needed to animate a
+	/// man, or it could be all the different tiles of a tile map.
 	class CL_Sprite
 	{ ...
 
@@ -151,87 +154,83 @@ Functions in a class is grouped into different sections. The typical ones
 are Construction, Attributes, Operations and Implementation. These groups
 are marked up like this:
 
-	//! Construction:
-	//! Attributes:
-	//! Operations:
-	//! Implementation:
+	/// \name Construction
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Attributes
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Operations
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Implementation
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
 
 Any functions following such a group markup will belong to that group. The
 group markups are placed at the beginning of the line:
 
-	//! Construction:
-	public:
-		//: Constructs a sprite object.
-		//- <p>Blah blah, this will make a sprite, surprise!</p>
-		CL_Sprite();
-
 4) Function parameters.
-
-The marker for a function parameter is //param name: description
 
 Parameters of a function are desired to have a parameter description. An example:
 
-	//! Operations:
-	public:
-		//: Draws the sprite onto back buffer.
-		//- <p>The draw function will draw the current frame of the
-		//- sprite at the specified position, using the alignment
-		//- and other attributes specified for the sprite.</p>
-		//param x: x position of where to draw the sprite.
-		//param y: y position of where to draw the sprite.
-		//param gc: Graphic context used as target. If null, current
-		//param gc: selected display window will be used.
-		void draw(int x, int y, CL_GraphicContext *gc = 0);
+		/// \brief Draws the sprite onto back buffer
+		///
+		/// The draw function will draw the current frame of the
+		/// sprite at the specified position, using the alignment
+		/// and other attributes specified for the sprite.
+		///
+		/// param x = x position of where to draw the sprite.
+		/// param y = y position of where to draw the sprite.
+		/// param gc = Graphic context used as target. If null, current selected display window will be used.
+		///
+		/// return The number of pixels written
+		int draw(int x, int y, CL_GraphicContext *gc = 0);
 
-5) See also.
+5) Class groups and header file info.
 
-The marker for adding a "See also" reference is //also: text
+Each header file should contain below the ClanLib SDK license:
+/// \addtogroup {Identifier} {Group} {Section}
+/// \{
 
-Example:
+{Identifier} is used for doxygen to specify the group identifier
+{Group} denotes the ClanLib group (eg clanCore, clanDisplay, clanGUI)
+{Section} denotes the group section (eg "Controls" for GUI)
 
-	//: Sprite image class.
-	//- <p>CL_Sprite is the image class of ClanLib. A sprite is a serie
-	//- of images (each called a frame) that somehow have a connection
-	//- to each others. It could be all the images needed to animate a
-	//- man, or it could be all the different tiles of a tile map.</p>
-	//also: <a href="../../overview/sprite.html">Sprite overview</a>
-	//also: CL_SpriteDescription
-	class CL_Sprite
-	{ ...
+Each class should contain at the end of the long description:
+/// \xmlonly !group={Group2}/{Section}! !header={header}! \endxmlonly
 
-6) Polymorph functions.
+{Group2} this is the same as {Group} without the "clan" prefix
+{Header} denotes the base header file that includes this class
 
-If there exist several functions with the same name, then they share one
-common reference page for all of them. The documentation of them should be
-placed in front of the first function:
+If the class should not appear in the documentation, use "!hide!"
 
-	//! Operations:
-	public:
-		//: Draws the sprite onto back buffer.
-		//- <p>The draw function will draw the current frame of the
-		//- sprite at the specified position, using the alignment
-		//- and other attributes specified for the sprite.</p>
-		//param x: x position of where to draw the sprite.
-		//param y: y position of where to draw the sprite.
-		//param dest: Destination rectangle of where to draw sprite.
-		//param gc: Graphic context used as target. If null, current
-		//param gc: selected display window will be used.
-		void draw(int x, int y, CL_GraphicContext *gc = 0);
+For Example:
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
-		void draw(CL_Rect &dest, CL_GraphicContext *gc = 0);
-
-7) Class groups and header file info.
-
-Each header file should contain below the GPL notice:
-//! clan{group}="{section}"
-{group} denotes the ClanLib group (eg Core, Display, GUI)
-{section} denotes the group section (eg "Controls" for GUI)
-
-To denote which base header file a class belongs to:
-//! header={fname}.h
-{fname} denotes the base header file name eg "display"
-
+/// \brief Interface to drawing graphics.
+///
+/// The long description
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
+class CL_API_DISPLAY CL_GraphicContext
+{
+...
+}
 
 
 There is more things than there - but I think this summarizes the most
 important issues. In general, just do like the other source files do.
+

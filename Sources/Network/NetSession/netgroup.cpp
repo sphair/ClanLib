@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,9 +24,9 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
+#include "Network/precomp.h"
 #include "API/Network/NetSession/netgroup.h"
 #include "API/Network/NetSession/netcomputer.h"
 
@@ -42,14 +42,14 @@ CL_NetGroup::CL_NetGroup(const CL_NetComputer &computer)
 	push_back(computer);
 }
 
-CL_NetGroup::CL_NetGroup(const std::list<CL_NetComputer> &group) : std::list<CL_NetComputer>(group)
+CL_NetGroup::CL_NetGroup(const std::vector<CL_NetComputer> &group) : std::vector<CL_NetComputer>(group)
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetGroup operations:
 
-void CL_NetGroup::send(const std::string &packet_channel, const CL_NetPacket &packet, bool reliable)
+void CL_NetGroup::send(const CL_String &packet_channel, const CL_DataBuffer &packet, bool reliable)
 {
 	for (iterator it = begin(); it != end(); it++)
 	{
@@ -57,11 +57,11 @@ void CL_NetGroup::send(const std::string &packet_channel, const CL_NetPacket &pa
 	}
 }
 
-void CL_NetGroup::disconnect()
+void CL_NetGroup::disconnect(const CL_String &reason)
 {
 	for (iterator it = begin(); it != end(); it++)
 	{
-		(*it).disconnect();
+		(*it).disconnect(reason);
 	}
 }
 

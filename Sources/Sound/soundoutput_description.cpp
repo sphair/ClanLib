@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
 #include "Sound/precomp.h"
@@ -38,6 +37,8 @@ class CL_SoundOutput_Description_Generic
 //! Attributes:
 public:
 	int mixing_frequency;
+
+	int mixing_latency;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,7 @@ public:
 CL_SoundOutput_Description::CL_SoundOutput_Description() : impl(new CL_SoundOutput_Description_Generic)
 {
 	impl->mixing_frequency = 44100;
+	impl->mixing_latency = 50;
 }
 
 CL_SoundOutput_Description::CL_SoundOutput_Description(const CL_SoundOutput_Description &copy) : impl(new CL_SoundOutput_Description_Generic)
@@ -66,6 +68,11 @@ int CL_SoundOutput_Description::get_mixing_frequency() const
 	return impl->mixing_frequency;
 }
 
+int CL_SoundOutput_Description::get_mixing_latency() const
+{
+	return impl->mixing_latency;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Description operations:
 
@@ -78,6 +85,11 @@ CL_SoundOutput_Description &CL_SoundOutput_Description::operator =(const CL_Soun
 void CL_SoundOutput_Description::set_mixing_frequency(int frequency)
 {
 	impl->mixing_frequency = frequency;
+}
+
+void CL_SoundOutput_Description::set_mixing_latency(int latency)
+{
+	impl->mixing_latency = latency;
 }
 
 // CL_SoundOutput_Description implementation:

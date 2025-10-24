@@ -13,13 +13,15 @@ class World
 {
 // Construction
 public:
-	World();
+	World(CL_DisplayWindow &display_window);
 	~World();
 	
 // Attributes:
 public:
-	CL_ResourceManager *resources;
+	CL_ResourceManager resources;
 	
+	CL_GraphicContext get_gc() { return gc; }
+
 // Operations:
 public:
 	void initLevel();
@@ -31,10 +33,6 @@ public:
 
 	void run();
 
-// Slots:
-public:
-	void on_quit() { quit = true; }
-
 // Implementation:
 private:
 	void draw();
@@ -42,20 +40,19 @@ private:
 
 	float calcTimeElapsed();
 
-	void onKeyDown(const CL_InputEvent &key);
-	void onMouseDown(const CL_InputEvent &key);
-	void onMouseUp(const CL_InputEvent &key);
-	void onMouseMove(const CL_InputEvent &key);
+	void onKeyDown(const CL_InputEvent &key, const CL_InputState &state);
+	void onMouseDown(const CL_InputEvent &key, const CL_InputState &state);
+	void onMouseUp(const CL_InputEvent &key, const CL_InputState &state);
+	void onMouseMove(const CL_InputEvent &key, const CL_InputState &state);
+	void on_window_close();
 
 	CL_Slot slotMouseDown;
 	CL_Slot slotMouseUp;
 	CL_Slot slotMouseMove;
 	CL_Slot slotKeyDown;
 	
-	CL_Surface *background;
-
-	bool quit;
-
+	CL_Texture background;
+	
 	bool dragging;
 	bool mouseDown;
 	CL_Rect dragArea;
@@ -63,6 +60,11 @@ private:
 		
 	std::list<GameObject *> objects;
 	std::list<TankVehicle *> tanks;
+
+	CL_DisplayWindow window;
+	CL_GraphicContext gc;
+
+	bool quit;
 };
 
 #endif

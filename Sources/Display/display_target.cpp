@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,41 +24,75 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-#include "Display/display_precomp.h"
-#include "display_target.h"
-#include "API/Core/System/error.h"
+#include "Display/precomp.h"
+#include "API/Display/display_target.h"
+#include "API/Display/TargetProviders/display_target_provider.h"
+#include "API/Display/display.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_DisplayTarget construction:
+// CL_DisplayTarget_Impl class:
+
+class CL_DisplayTarget_Impl
+{
+public:
+	CL_DisplayTarget_Impl()
+	: provider(0)
+	{
+	}
+
+	~CL_DisplayTarget_Impl()
+	{
+		delete provider;
+	}
+
+	CL_DisplayTargetProvider *provider;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_DisplayTarget Construction:
 
 CL_DisplayTarget::CL_DisplayTarget()
 {
-	current_target = this;
+	if (CL_Display::get_current_target().is_null() == false)
+		*this = CL_Display::get_current_target();
+}
+
+CL_DisplayTarget::CL_DisplayTarget(CL_DisplayTargetProvider *provider)
+: impl(new CL_DisplayTarget_Impl)
+{
+	impl->provider = provider;
+	CL_Display::set_current_target(*this, true);
+}
+
+CL_DisplayTarget::CL_DisplayTarget(const CL_WeakPtr<CL_DisplayTarget_Impl> impl)
+: impl(impl.to_sharedptr())
+{
 }
 
 CL_DisplayTarget::~CL_DisplayTarget()
 {
-	current_target = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_DisplayTarget attributes:
+// CL_DisplayTarget Attributes:
 
-CL_DisplayTarget *CL_DisplayTarget::current_target = 0;
-
-CL_DisplayTarget *CL_DisplayTarget::current()
+CL_DisplayTargetProvider *CL_DisplayTarget::get_provider()
 {
-	if (current_target == 0) 
-		throw CL_Error ("You need a create a display target first.");
+	if (!impl.is_null())
+		return impl->provider;
+	else
+		return 0;
+}
 
-	return current_target;
+bool CL_DisplayTarget::is_null() const
+{
+	return impl.is_null();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_DisplayTarget operations:
+// CL_DisplayTarget Operations:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_DisplayTarget implementation:
+// CL_DisplayTarget Implementation:

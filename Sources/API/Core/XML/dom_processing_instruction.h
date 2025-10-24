@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,65 +24,68 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanCore="XML"
-//! header=core.h
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
-#ifndef header_dom_processing_instruction
-#define header_dom_processing_instruction
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "dom_node.h"
 
-//: DOM Processing Instruction class.
-//- !group=Core/XML!
-//- !header=core.h!
-//- <p>The ProcessingInstruction interface represents a "processing instruction", used in
-//- XML as a way to keep processor-specific information in the text of the document.</p>
+/// \brief DOM Processing Instruction class.
+///
+///    <p>The ProcessingInstruction interface represents a "processing instruction", used in
+///    XML as a way to keep processor-specific information in the text of the document.</p> 
+/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DomProcessingInstruction : public CL_DomNode
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a DOM Processing Instruction handle.
+	/// \brief Constructs a DOM Processing Instruction handle.
 	CL_DomProcessingInstruction();
-	
-	CL_DomProcessingInstruction(CL_DomDocument &doc, const std::string &target, const std::string &data);
+
+	CL_DomProcessingInstruction(CL_DomDocument &doc, const CL_DomString &target, const CL_DomString &data);
 
 	CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomProcessingInstruction();
-	
-//! Attributes:
-public:
-	//: The target of this processing instruction.
-	//- <p>XML defines this as being the first token following the markup that begins
-	//- the processing instruction.</p>
-	std::string get_target() const;
 
-	//: The content of this processing instruction.
-	//- <p>This is from the first non white space character after the target to the
-	//- character immediately preceding the ?&gt;.</p>
-	std::string get_data() const;
-	
-	void set_data(const std::string &data);
 
-//! Operations:
+/// \}
+/// \name Attributes
+/// \{
+
 public:
+	/// \brief The target of this processing instruction.
+	/** <p>XML defines this as being the first token following the markup that begins
+	    the processing instruction.</p>*/
+	CL_DomString get_target() const;
+
+	/// \brief The content of this processing instruction.
+	/** <p>This is from the first non white space character after the target to the
+	    character immediately preceding the ?&gt;.</p>*/
+	CL_DomString get_data() const;
+
+	void set_data(const CL_DomString &data);
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+/// \}
 };
 
-#endif
+
+/// \}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -46,7 +46,7 @@ public:
 //!Operations:
 public:
 	//: Draw ghost on graphic context.
-	virtual void show(int view_x, int view_y, CL_GraphicContext *gc = 0);
+	virtual void show(int view_x, int view_y, CL_GraphicContext &gc);
 
 	//: Move ghost.
 	virtual bool turn(float time_elapsed);
@@ -64,9 +64,9 @@ private:
 
 	CL_Sprite spr_ghost;
 
-	CL_SoundBuffer sfx_ghost;
+	//CL_SoundBuffer sfx_ghost;
 
-	CL_SoundBuffer sfx_ghost_dead;
+	//CL_SoundBuffer sfx_ghost_dead;
 };
 
 #endif

@@ -38,13 +38,13 @@ PageFinished::PageFinished()
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
 	propsheetpage.dwFlags = PSP_HIDEHEADER;
 	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_FINISHED_PAGE);
-	propsheetpage.pfnDlgProc = (DLGPROC) &PageFinished::dialog_proc;
+	propsheetpage.pfnDlgProc = &PageFinished::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
 
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
 
-LRESULT CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -58,14 +58,11 @@ LRESULT CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 				TEXT("Congratulations!\n")
 				TEXT("\n")
 				TEXT("You have finished the ClanLib configuration. Now press finish to finally ")
-				TEXT("produce the ClanLib workspace and its project files. \n")
+				TEXT("produce the ClanLib solution and project files. \n")
 				TEXT("\n")
-				TEXT("When the installation process is completed, please open the ClanLib.dsw ")
-				TEXT("workspace that this wizard has produced for you. ")
+				TEXT("When the installation process is completed, please open the ")
+				TEXT("ClanLib.sln / ClanLib.dsw file this wizard has produced for you. ")
 				TEXT("It contains all the ClanLib libraries.\n")
-				TEXT("\n")
-				TEXT("To check out the examples after compiling ClanLib, ")
-				TEXT("open the Examples.dsw workspace.\n")
 				TEXT("\n");
 			SendMessage(GetDlgItem(hWnd, IDC_FINISHED_TEXT), WM_SETTEXT, 0, (LPARAM) finished_text);
 
@@ -84,7 +81,7 @@ LRESULT CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 	}
 }
 
-LRESULT PageFinished::on_notify(HWND hWnd, NMHDR *header)
+INT_PTR PageFinished::on_notify(HWND hWnd, NMHDR *header)
 {
 	// Don't go to next page yet:
 	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);

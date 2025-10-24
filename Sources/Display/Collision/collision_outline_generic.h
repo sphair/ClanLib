@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,40 +23,45 @@
 **
 **  File Author(s):
 **
+**    Harry Storbacka
 **    Magnus Norddahl
 **    Emanuel Greisen
-**    (if your name is missing here, please add it)
 */
 
-#ifndef header_surface_outline_generic
-#define header_surface_outline_generic
+#pragma once
+
 
 #include "API/Display/Collision/collision_outline.h"
-#include "Display/Collision/collision_outline_generic.h"
 #include "API/Display/Collision/contour.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "API/Display/Collision/outline_accuracy.h"
-#include "API/Core/Math/rect.h"
+#include "API/Core/IOData/virtual_directory.h"
 
 class CL_OutlineProvider;
 
 class CL_CollisionOutline_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_CollisionOutline_Generic();
 	CL_CollisionOutline_Generic( CL_OutlineProvider *provider, CL_OutlineAccuracy accuracy );
-	
+
 	~CL_CollisionOutline_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	std::vector<CL_Contour> contours;
 	bool do_inside_test;
 
 	int width, height;
 	float angle;
-	//float radius;
+	/** float radius;*/
 	CL_Circlef minimum_enclosing_disc;
 
 	CL_Pointf position;
@@ -75,15 +80,19 @@ public:
 
 	std::vector<CL_CollidingContours> collision_info;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
  public:
 	void set_translation(float x, float y, bool offset_points=false);
 	void set_scale(float sx, float sy);
-	void set_angle(float angle);
-	void rotate(float angle);
+	void set_angle(const CL_Angle &angle);
+	void rotate(const CL_Angle &angle);
 
 	void optimize(unsigned char check_distance, float corner_angle);
-	void save(const std::string &filename, CL_OutputSourceProvider *provider) const;
+	void save(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory()) const;
 
 	bool collide( const CL_CollisionOutline &outline, bool remove_old_collision_info);
 	bool point_inside( const CL_Pointf &point ) const;
@@ -97,6 +106,7 @@ public:
 	void calculate_convex_hulls();
 
 	inline bool line_bounding_box_overlap( const std::vector<CL_Pointf> &rect1, const std::vector<CL_Pointf> &rect2, int i, int j, int i2, int j2 ) const;
+/// \}
 };
 
-#endif
+

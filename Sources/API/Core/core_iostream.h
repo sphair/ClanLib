@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,40 +24,70 @@
 **  File Author(s):
 **
 **    Ingo Ruhnke
-**    Dieter Buys
 */
 
-#ifndef header_core_iostream
-#define header_core_iostream
+#pragma once
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
 
 #include <iosfwd>
-
+#include <iostream>
 
 class CL_Rect;
 class CL_Rectf;
+class CL_Rectd;
 class CL_Point;
 class CL_Pointf;
+class CL_Pointd;
 class CL_Size;
 class CL_Sizef;
-class CL_Error;
+class CL_Sized;
 
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Rect& rect);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Rectf& rect);
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Rectd& rect);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Point& point);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Pointf& point);
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Pointd& point);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Size& size);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Sizef& size);
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Error& error);
+
+template<typename T>
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Vec1<T>& vec)
+{
+	s << vec.x;
+	return s;
+}
+
+template<typename T>
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Vec2<T>& vec)
+{
+	s << "["
+	  << vec.x   << ", "
+	  << vec.y << "]";
+	return s;
+}
+
+template<typename T>
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Vec3<T>& vec)
+{
+	s << "["
+	  << vec.x << ", "
+	  << vec.y << ", "
+	  << vec.z << "]";
+	return s;
+}
+
+template<typename T>
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Vec4<T>& vec)
+{
+	s << "["
+	  << vec.x << ", "
+	  << vec.y << ", "
+	  << vec.z << ", "
+	  << vec.w << "]";
+	return s;
+}
 
 
-#endif
+
+

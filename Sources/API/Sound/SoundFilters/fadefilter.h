@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,68 +24,79 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Filters"
-//! header=sound.h
+/// \addtogroup clanSound_Filters clanSound Filters
+/// \{
 
-#ifndef header_fadefilter
-#define header_fadefilter
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_sound.h"
 #include "../soundfilter.h"
 
 class CL_FadeFilter_Generic;
 
-//: Fade Filter Class
-//- !group=Sound/Filters!
-//- !header=sound.h!
+/// \brief Fade Filter Class
+///
+/// \xmlonly !group=Sound/Filters! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_FadeFilter : public CL_SoundFilter
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Fade Filter Constructor
+	/// \brief Fade Filter Constructor
 	CL_FadeFilter(float initial_volume);
 
-	//: Fade Filter Destructor
+	/// \brief Fade Filter Destructor
 	virtual ~CL_FadeFilter();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Returns the current volume of the fade filter, from 0.0f (no volume) to 1.0f (full volume).
+	/// \brief Returns the current volume of the fade filter, from 0.0f (no volume) to 1.0f (full volume).
 	float get_volume() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Sets the volume instant.
+	/// \brief Sets the volume instant.
 	void set_volume(float new_volume);
-	
-	//: Fade to volume, from 0.0f (no volume) to 1.0f (full volume).
+
+	/// \brief Fade to volume, from 0.0f (no volume) to 1.0f (full volume).
 	void fade_to_volume(float new_volume, int duration = 1000);
 
-//! Overridables:
+
+/// \}
+/// \name Overridables
+/// \{
+
 protected:
 	virtual void filter(int **sample_data, int num_samples, int channels);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_FadeFilter(const CL_FadeFilter &copy) { return; } // disallow copy construction.
 
 	CL_FadeFilter_Generic *impl;
+/// \}
 };
 
-#endif
+
+/// \}

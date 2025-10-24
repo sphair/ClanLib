@@ -1,0 +1,101 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Magnus Norddahl
+*/
+
+/// \addtogroup clanNetwork_Socket clanNetwork Socket
+/// \{
+
+
+#pragma once
+
+
+#include "../api_network.h"
+#include "../../Core/System/sharedptr.h"
+
+class CL_Event;
+class CL_SocketName;
+class CL_UDPSocket_Impl;
+
+/// \brief UDP socket.
+///
+/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
+class CL_API_NETWORK CL_UDPSocket
+{
+/// \name Construction
+/// \{
+
+public:
+	CL_UDPSocket();
+
+	CL_UDPSocket(const CL_SocketName &local_name, bool force_bind = true);
+
+	CL_UDPSocket(int socket, bool close_socket);
+
+	~CL_UDPSocket();
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	int get_handle() const;
+
+	CL_SocketName get_local_name() const;
+
+	CL_Event get_read_event();
+
+	CL_Event get_write_event();
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	bool bind(const CL_SocketName &local_name, bool force_bind = true);
+
+	void set_handle(int socket, bool close_socket);
+
+	int send(const void *data, int len, const CL_SocketName &to);
+
+	int receive(void *data, int len, CL_SocketName &out_from);
+
+	int peek(void *data, int len, CL_SocketName &out_from);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+	CL_SharedPtr<CL_UDPSocket_Impl> impl;
+/// \}
+};
+
+
+/// \}

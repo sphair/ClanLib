@@ -3,6 +3,36 @@
 #include "application.h"
 #include "mainframe.h"
 #include <iostream>
+#include <ClanLib/gdi.h>
+
+// This is the Program class that is called by CL_ClanApplication
+class Program
+{
+public:
+	static int main(const std::vector<CL_String> &args)
+	{
+		// Initialize ClanLib base components
+		CL_SetupCore setup_core;
+
+		// Initialize the ClanLib display component
+		CL_SetupDisplay setup_display;
+
+		// Initilize the OpenGL drivers
+		CL_SetupGL setup_gl;
+		//CL_SetupGDI setup_gdi;
+
+		// Initialize the network
+		CL_SetupNetwork setup_network;
+
+		// Start the Application
+		Application app;
+		int retval = app.main(args);
+		return retval;
+	}
+};
+
+// Instantiate CL_ClanApplication, informing it where the Program is located
+CL_ClanApplication app(&Program::main);
 
 /////////////////////////////////////////////////////////////////////////////
 // Application construction:
@@ -28,39 +58,30 @@ Application *Application::instance = 0;
 /////////////////////////////////////////////////////////////////////////////
 // Application implementation:
 
-Application app;
-
-int Application::main(int argc, char **argv)
+int Application::main(const std::vector<CL_String> &args)
 {
-	// Create a console window for text-output if not available
-	CL_ConsoleWindow console("Console");
-	console.redirect_stdio();
-
-	CL_SetupCore setup_core;
-	CL_SetupDisplay setup_display;
-	CL_SetupGL setup_gl;
-	CL_SetupGUI setup_gui;
-	CL_SetupNetwork setup_network;
-
 	try
 	{
-		CL_DisplayWindow window("CTalk IRC Client", 800, 600, false, true);
+		CL_ResourceManager resources("../../Resources/GUIThemeAeroPacked/resources.xml");
+		CL_GUIThemeDefault theme;
+		theme.set_resources(resources);
+		CL_GUIWindowManagerSystem wm;
+		CL_GUIManager gui;
+		gui.set_window_manager(&wm);
+		gui.set_theme(&theme);
+		gui.set_css_document("theme.css");
 
-		CL_ResourceManager resources((const std::string)"resources.xml");
-#ifdef __APPLE__
-		resources.add_resources(CL_ResourceManager((const std::string)"GUIStyleSilver/gui.xml"));
-#else
-		resources.add_resources(CL_ResourceManager((const std::string)"../../Resources/GUIStyleSilver/gui.xml"));
-#endif
-
-		CL_StyleManager_Silver style(&resources);
-		CL_GUIManager gui(&style);
 		MainFrame mainframe(&gui, &resources);
-		gui.run(0);
+		gui.exec();
 	}
-	catch (CL_Error error)
+	catch (CL_Exception& exception)
 	{
-		std::cout << error.message.c_str() << std::endl;
+		// Create a console window for text output if not available
+		CL_ConsoleWindow console("Console");
+		CL_Console::write_line(exception.message);
+		std::vector<CL_String> trace = exception.get_stack_trace();
+		for (std::vector<CL_String>::size_type i = 0; i < trace.size(); i++)
+			CL_Console::write_line(trace[i]);
 
 		// Display console close message and wait for a key
 		console.display_close_message();

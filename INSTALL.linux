@@ -1,6 +1,6 @@
 $Id: INSTALL.linux,v 1.17 2004/03/17 14:22:06 sphair Exp $
 
-Readme file for ClanLib 0.8.x under Linux
+Readme file for ClanLib 0.7.x under Linux
 ---------------------------------------------------------------------------
 This readme will guide you with compiling, installing ClanLib and creating
 your first ClanLib application.
@@ -73,7 +73,7 @@ Doing so will reduce the compile size by a half.
 A simple makefile used to compile ClanLib under Linux could look like
 this:
 
-PACKAGES = clanCore-0.8 clanDisplay-0.8 clanApp-0.8 clanGL-0.8
+PACKAGES = clanCore-0.7 clanDisplay-0.7 clanApp-0.7 clanGL-0.7
 CPPFLAGS = `pkg-config --cflags $(PACKAGES)`
 LIBS = `pkg-config --libs $(PACKAGES)`
 OBJS = simple.o

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Release Build"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		Optimization="2"
+		InlineFunctionExpansion="2"
+		EnableIntrinsicFunctions="true"
+		FavorSizeOrSpeed="1"
+		PreprocessorDefinitions="NDEBUG"
+	/>
+	<Tool
+		Name="VCMIDLTool"
+		PreprocessorDefinitions="NDEBUG"
+	/>
+	<Tool
+		Name="VCResourceCompilerTool"
+		PreprocessorDefinitions="NDEBUG"
+	/>
+</VisualStudioPropertySheet>

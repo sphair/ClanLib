@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,137 +24,138 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Kenneth Gangstoe
 */
 
-//! clanCore="Math"
-//! header=core.h
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
-#ifndef header_size
-#define header_size
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
 
-class CL_Sizef;
+#include "../api_core.h"
 
-//: 2D (width,height) size structure.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_Size
+template<typename Type>
+class CL_Vec2;
+
+template<typename Type>
+class CL_Vec3;
+
+template<typename Type>
+class CL_Vec4;
+
+/// \brief 2D (width,height) size structure.
+///
+/// These line templates are defined for: int (CL_Size), float (CL_Sizef), double (CL_Sized)
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+template<typename Type>
+class CL_API_CORE CL_Sizex
 {
-//! Construction:
-public:
-	//: Constructs a size structure.
-	//param width: Initial width of size structure.
-	//param height: Initial height of size structure.
-	//param size: Size structure to construct this one from.
-	CL_Size() { return; }
+/// \name Construction
+/// \{
 
-	CL_Size(int width, int height)
+public:
+	/// \brief Constructs a size structure.
+	CL_Sizex() { return; }
+
+	/// \brief Constructs a size structure.
+	///
+	/// \param width Initial width of size structure.
+	/// \param height Initial height of size structure.
+	CL_Sizex(Type width, Type height)
 	: width(width), height(height) { }
 
-	CL_Size(const CL_Size &s)
+	/// \brief Constructs a size structure.
+	///
+	/// \param s = Size structure to construct this one from.
+	CL_Sizex(const CL_Sizex<Type> &s)
 	{ width = s.width; height = s.height; }
 
-	explicit CL_Size(const CL_Sizef& s);
+/// \}
+/// \name Attributes
+/// \{
 
-//! Attributes:
 public:
-	//: Size width.
-	int width;
+	/// \brief Size width.
+	Type width;
 
-	//: Size height.
-	int height;
+	/// \brief Size height.
+	Type height;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Size += Size operator.
-	CL_Size &operator+=(const CL_Size &s)
+	/// \brief Size += Size operator.
+	CL_Sizex<Type> &operator+=(const CL_Sizex<Type> &s)
 	{ width += s.width; height += s.height; return *this; }
 
-	//: Size -= Size operator.
-	CL_Size &operator-=(const CL_Size &s)
+	/// \brief Size -= Size operator.
+	CL_Sizex<Type> &operator-=(const CL_Sizex<Type> &s)
 	{ width -= s.width; height -= s.height; return *this; }
-	
-	//: Size + Size operator.
-	CL_Size operator+(const CL_Size &s) const
-	{ return CL_Size(width + s.width, height + s.height); }
 
-	//: Size - Size operator.
-	CL_Size operator-(const CL_Size &s) const
-	{ return CL_Size(width - s.width, height - s.height); }
+	/// \brief Size + Size operator.
+	CL_Sizex<Type> operator+(const CL_Sizex<Type> &s) const
+	{ return CL_Sizex<Type>(width + s.width, height + s.height); }
 
-	//: Size == Size operator (deep compare).
-	bool operator==(const CL_Size &s) const
+	/// \brief Size - Size operator.
+	CL_Sizex<Type> operator-(const CL_Sizex<Type> &s) const
+	{ return CL_Sizex<Type>(width - s.width, height - s.height); }
+
+	/// \brief Size == Size operator (deep compare).
+	bool operator==(const CL_Sizex<Type> &s) const
 	{ return (width == s.width) && (height == s.height); }
 
-	//: Size != Size operator (deep compare).
-	bool operator!=(const CL_Size &s) const
+	/// \brief Size != Size operator (deep compare).
+	bool operator!=(const CL_Sizex<Type> &s) const
 	{ return (width != s.width) || (height != s.height); }
+/// \}
 };
 
-//: 2D (width,height) floating point size structure.
-class CL_Sizef
+/// \brief 2D (width,height) size structure - Integer
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Size : public CL_Sizex<int>
 {
-//! Construction:
 public:
-	//: Constructs a size structure.
-	//param width: Initial width of size structure.
-	//param height: Initial height of size structure.
-	//param size: Size structure to construct this one from.
-	CL_Sizef() { return; }
+	CL_Size() : CL_Sizex<int>() {}
+	CL_Size(int width, int height) : CL_Sizex<int>(width, height) {}
+	CL_Size(const CL_Sizex<int> &s) : CL_Sizex<int>(s) {}
 
-	CL_Sizef(const CL_Size& s) 
-		: width((float)s.width),
-		  height((float)s.height)
-	{}
-
-	CL_Sizef(float width, float height)
-	: width(width), height(height) { }
-
-	CL_Sizef(const CL_Sizef &s)
-	{ width = s.width; height = s.height; }
-
-//! Attributes:
-public:
-	//: Size width.
-	float width;
-
-	//: Size height.
-	float height;
-
-//! Operations:
-public:
-	//: Size += Size operator.
-	CL_Sizef &operator+=(const CL_Sizef &s)
-	{ width += s.width; height += s.height; return *this; }
-
-	//: Size -= Size operator.
-	CL_Sizef &operator-=(const CL_Sizef &s)
-	{ width -= s.width; height -= s.height; return *this; }
-	
-	//: Size + Size operator.
-	CL_Sizef operator+(const CL_Sizef &s) const
-	{ return CL_Sizef(width + s.width, height + s.height); }
-
-	//: Size - Size operator.
-	CL_Sizef operator-(const CL_Sizef &s) const
-	{ return CL_Sizef(width - s.width, height - s.height); }
-
-	//: Size == Size operator (deep compare).
-	bool operator==(const CL_Sizef &s) const
-	{ return (width == s.width) && (height == s.height); }
-
-	//: Size != Size operator (deep compare).
-	bool operator!=(const CL_Size &s) const
-	{ return (width != s.width) || (height != s.height); }
+	explicit CL_Size(const CL_Sizex<float> &copy) { width = (int)(copy.width+0.5f); height = (int)(copy.height+0.5f); }
+	explicit CL_Size(const CL_Sizex<double> &copy) { width = (int)(copy.width+0.5); height = (int)(copy.height+0.5); }
 };
 
-inline CL_Size::CL_Size(const CL_Sizef& s)
-	: width(static_cast<int>(s.width)),
-	  height(static_cast<int>(s.height))
-{}
+/// \brief 2D (width,height) size structure - Float
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Sizef : public CL_Sizex<float>
+{
+public:
+	CL_Sizef() : CL_Sizex<float>() {}
+	CL_Sizef(float width, float height) : CL_Sizex<float>(width, height) {}
+	CL_Sizef(const CL_Sizex<float> &s) : CL_Sizex<float>(s) {}
 
-#endif
+	CL_Sizef(const CL_Sizex<int> &copy) { width = (float)copy.width; height = (float)copy.height; }
+	explicit CL_Sizef(const CL_Sizex<double> &copy) { width = (float)copy.width; height = (float)copy.height; }
+};
+
+/// \brief 2D (width,height) size structure - Double
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Sized : public CL_Sizex<double>
+{
+public:
+	CL_Sized() : CL_Sizex<double>() {}
+	CL_Sized(double width, double height) : CL_Sizex<double>(width, height) {}
+	CL_Sized(const CL_Sizex<double> &s) : CL_Sizex<double>(s) {}
+
+	CL_Sized(const CL_Sizex<int> &copy) { width = (double)copy.width; height = (double)copy.height; }
+	CL_Sized(const CL_Sizex<float> &copy) { width = (double)copy.width; height = (double)copy.height; }
+};
+
+/// \}
+

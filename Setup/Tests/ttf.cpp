@@ -23,12 +23,18 @@
 **
 **  File Author(s):
 **
+**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
-#include <freetype/freetype.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 int main()
 {
+	FT_Library lib;
+	if (FT_Init_FreeType(&lib)) return 1;
+	FT_Done_FreeType(lib);
 	return 0;
 }
+

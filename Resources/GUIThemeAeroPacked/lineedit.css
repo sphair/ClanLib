@@ -1,0 +1,84 @@
+
+lineedit
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+
+	text-color:black;
+}
+
+lineedit:normal
+{
+	bg-image:LineEditNormal; 
+}
+
+lineedit:hot
+{
+	bg-image:LineEditHot;
+}
+
+lineedit:disabled
+{
+	bg-image:LineEditDisabled; 
+	text-color:gray;
+}
+
+lineedit cursor
+{
+	preferred-width:1;
+
+	bg-color: black;
+
+	blink-time-on:1000;
+	blink-time-off:1000;
+	bg-image:;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit cursor:blink_on
+{
+	bg-color: black;
+}
+
+lineedit cursor:blink_off
+{
+	bg-color: white;
+}
+
+lineedit selection
+{
+    text-color: white;
+	expand-top:-2;
+	expand-bottom:-1;
+	bg-image:;
+	bg-color: #316ac5;
+
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit selection:disabled
+{
+	bg-image:;
+	bg-color: #7a96df;
+}
+
+lineedit selection:unfocused
+{
+	bg-image:;
+	bg-color: #7a96df;
+}

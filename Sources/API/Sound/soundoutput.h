@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,49 +24,42 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    (if your name is missing here, please add it)
 */
 
-//! clanSound="Audio Mixing"
-//! header=sound.h
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
-#ifndef header_soundoutput
-#define header_soundoutput
 
-#ifdef CL_API_DLL
-#ifdef CL_SOUND_EXPORT
-#define CL_API_SOUND __declspec(dllexport)
-#else
-#define CL_API_SOUND __declspec(dllimport)
-#endif
-#else
-#define CL_API_SOUND
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include <string>
+#include "api_sound.h"
+#include "../Core/Text/string_types.h"
 
 class CL_SoundFilter;
 class CL_SoundBuffer;
 class CL_SoundOutput_Description;
 class CL_SoundOutput_Generic;
 
-//: SoundOutput interface in ClanLib.
-//- !group=Sound/Audio Mixing!
-//- !header=sound.h!
-//- <p>CL_SoundOutput is the interface to a sound output device. It is used to
-//- control the main mixer volume and other global settings.</p>
+/// \brief SoundOutput interface in ClanLib.
+///
+///   <p>CL_SoundOutput is the interface to a sound output device. It is used to
+///    control the main mixer volume and other global settings.</p>
+/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND CL_SoundOutput
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs a sound output object.
+	/// \brief Constructs a sound output object.
 	CL_SoundOutput();
 
-	CL_SoundOutput(int mixing_frequency);
+	CL_SoundOutput(int mixing_frequency, int latency = 50);
 
 	CL_SoundOutput(const CL_SoundOutput_Description &desc);
 
@@ -74,50 +67,65 @@ public:
 
 	virtual ~CL_SoundOutput();
 
-//! Attributes:
-public:
-	//: True if the sound system has been properly initialized
-	bool has_sound() const;
-	
-	//: Name of the output device.
-	const std::string &get_name() const;
 
-	//: Returns the mixing frequency for the sound output device.
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+	/// \brief Name of the output device.
+	const CL_String8 &get_name() const;
+
+	/// \brief Returns the mixing frequency for the sound output device.
 	int get_mixing_frequency() const;
 
-	//: Returns the main volume of the sound output.
+	/// \brief Returns the mixing latency in milliseconds.
+	int get_mixing_latency() const;
+
+	/// \brief Returns the main volume of the sound output.
 	float get_global_volume() const;
 
-	//: Returns the main panning position of the sound output.
+	/// \brief Returns the main panning position of the sound output.
 	float get_global_pan() const;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Copy assignment operator.
+	/// \brief Copy assignment operator.
 	CL_SoundOutput &operator =(const CL_SoundOutput &copy);
 
-	//: Stops all sample playbacks on the sound output.
+	/// \brief Stops all sample playbacks on the sound output.
 	void stop_all();
-	
-	//: Sets the main/mixer volume on the sound output.
+
+	/// \brief Sets the main/mixer volume on the sound output.
 	void set_global_volume(float volume);
 
-	//: Sets the main panning position on the sound output.
+	/// \brief Sets the main panning position on the sound output.
 	void set_global_pan(float pan);
 
-	//: Adds the sound filter to the sound output.
-	//param filter: Sound filter to pass sound through.
-	//param delete_filter: If true, the filter will be deleted when the sound output is destroyed.
+	/// \brief Adds the sound filter to the sound output.
+	///
+	/// \param filter Sound filter to pass sound through.
+	/// \param delete_filter If true, the filter will be deleted when the sound output is destroyed.
 	void add_filter(CL_SoundFilter *filter, bool delete_filter = false);
 
-	//: Remove the sound filter from the session.
+	/// \brief Remove the sound filter from the session.
 	void remove_filter(CL_SoundFilter *filter);
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
 	CL_SoundOutput_Generic *impl;
 
 	friend class CL_SoundBuffer;
+/// \}
 };
 
-#endif
+
+/// \}

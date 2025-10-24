@@ -1,4 +1,4 @@
-pkgdatadir  = $(datadir)/doc/@PACKAGE@/Overview
+pkgdatadir  = $(datadir)/doc/@PACKAGE@-@LT_RELEASE@/Overview
 
 XML_FILES  = $(wildcard $(srcdir)/*.xml)
 HTML_FILES = $(patsubst %.xml,%.html, $(notdir $(XML_FILES)))
@@ -14,6 +14,6 @@ CLEANFILES  = $(HTML_FILES)
 install-data-hook: $(HTML_FILES)
 	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/Images
 	$(INSTALL) -m 0644 *.html $(DESTDIR)$(pkgdatadir)
-	$(INSTALL) -m 0644 $(srcdir)/Images/*.png $(DESTDIR)$(pkgdatadir)/Images
+	$(INSTALL) -m 0644 $(srcdir)/gfx/*.png $(DESTDIR)$(pkgdatadir)/Images
 
 # EOF #

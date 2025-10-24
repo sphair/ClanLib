@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,7 +51,7 @@ void CL_SetupVorbis::init( bool register_resources_only )
 	cl_vorbis_init++;
 	if (cl_vorbis_init == 1)
 	{
-		providertype_ogg = new CL_SoundProviderType_Register<CL_SoundProvider_Vorbis>("ogg");
+		providertype_ogg = new CL_SoundProviderType_Register<CL_SoundProvider_Vorbis>(cl_text("ogg"));
 	}
 }
 

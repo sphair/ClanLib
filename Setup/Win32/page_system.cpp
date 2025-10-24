@@ -68,7 +68,7 @@ PageSystem::PageSystem()
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(
-		HKEY_CURRENT_USER, TEXT("Software\\ClanSoft\\ClanLib Configure\\InstallLocation"),
+		HKEY_CURRENT_USER, TEXT("Software\\Clanlib.org\\ClanLib Configure\\InstallLocation"),
 		0, KEY_READ, &hKey);
 	if (result == ERROR_SUCCESS)
 	{
@@ -99,14 +99,14 @@ PageSystem::PageSystem()
 	propsheetpage.dwSize = sizeof(PROPSHEETPAGE);
 	propsheetpage.dwFlags = PSP_USEHEADERTITLE|PSP_USEHEADERSUBTITLE;
 	propsheetpage.pszTemplate = MAKEINTRESOURCE(IDD_SYSTEM_PAGE);
-	propsheetpage.pfnDlgProc = (DLGPROC) &PageSystem::dialog_proc;
+	propsheetpage.pfnDlgProc = &PageSystem::dialog_proc;
 	propsheetpage.lParam = (LPARAM) this;
 	propsheetpage.pszHeaderTitle = TEXT("Input Library Setup");
 	propsheetpage.pszHeaderSubTitle = TEXT("Search paths for headers and libraries");
 	handle_propsheetpage = CreatePropertySheetPage(&propsheetpage);
 }
 
-LRESULT CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
@@ -150,7 +150,7 @@ LRESULT CALLBACK PageSystem::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	}
 }
 
-LRESULT PageSystem::on_notify(HWND hWnd, NMHDR *header)
+INT_PTR PageSystem::on_notify(HWND hWnd, NMHDR *header)
 {
 	// Don't go to next page yet:
 	// SetWindowLong(hwnd, DWL_MSGRESULT, -1);

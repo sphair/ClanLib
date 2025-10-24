@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,47 +27,46 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanVorbis="System"
-//! header=vorbis.h
+/// \addtogroup clanVorbis_System clanVorbis System
+/// \{
 
-#ifndef header_setupvorbis
-#define header_setupvorbis
 
-#ifdef CL_API_DLL
-#ifdef CL_VORBIS_EXPORT
-#define CL_API_VORBIS __declspec(dllexport)
-#else
-#define CL_API_VORBIS __declspec(dllimport)
-#endif
-#else
-#define CL_API_VORBIS
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-//: ClanVorbis initialization functions
-//- !group=Vorbis/System!
-//- !header=vorbis.h!
-class CL_API_VORBIS CL_SetupVorbis
+/// \brief ClanVorbis initialization functions
+///
+/// \xmlonly !group=Vorbis/System! !header=vorbis.h! \endxmlonly
+class CL_SetupVorbis
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Initializes clanVorbis.
-	//- <p>Constructing a CL_SetupVorbis object is equalent to calling CL_SetupVorbis::init().</p>
-	//- <p>When the CL_SetupVorbis instance is destroyed, CL_SetupVorbis::deinit() is called.</p>
+	/// \brief Initializes clanVorbis.
+	/** <p>Constructing a CL_SetupVorbis object is equalent to calling CL_SetupVorbis::init().</p>
+	    <p>When the CL_SetupVorbis instance is destroyed, CL_SetupVorbis::deinit() is called.</p>*/
 	CL_SetupVorbis(bool register_resources_only = false);
 
 	~CL_SetupVorbis();
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
-	//: Initialize the Vorbis library
+	/// \brief Initialize the Vorbis library
 	static void init(bool register_resources_only = false);
 
-	//: Deinitialize the Vorbis library
+	/// \brief Deinitialize the Vorbis library
 	static void deinit();
+/// \}
 };
 
-#endif
+
+/// \}

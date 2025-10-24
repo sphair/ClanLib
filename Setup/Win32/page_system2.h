@@ -42,9 +42,9 @@ public:
 
 	TCHAR path_output_lib[MAX_PATH];
 
-	static LRESULT CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
+	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
 
-	LRESULT on_notify(HWND hWnd, NMHDR *header);
+	INT_PTR on_notify(HWND hWnd, NMHDR *header);
 
 	void on_output_lib_browse_clicked(HWND hWnd);
 

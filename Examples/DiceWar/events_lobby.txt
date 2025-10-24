@@ -1,0 +1,89 @@
+LOGIN SERVER->CLIENT 
+-------------------------------------------------------------------------------
+
+	// Login was successful
+	// Sent-to: Single player
+	login-successful(int player_id)
+
+	// Login failed
+	// Sent-to: Single player
+	login-failed(string reason)
+
+LOGIN CLIENT->SERVER 
+-------------------------------------------------------------------------------
+	// Login to server
+	// Response: login-successful, login-failed
+	login(string name)
+
+LOBBY SERVER->CLIENT
+-------------------------------------------------------------------------------
+	// New player logged in to server
+	// Sent-to: All server players
+	lobby-player-logged-in(int player_id, string name)
+
+	// Player logged out from server
+	// Sent-to: All server players
+	lobby-player-logged-out(int player_id, string reason)
+  
+	// A game was created
+	// Sent-to: All lobby players
+	lobby-game-created(int game_id, string name, string map_name, int max_players)
+
+	// A game was removed
+	// Sent-to: All lobby players
+	lobby-game-removed(int game_id)
+
+	// Information about an existing game
+	// Sent-to: Single player
+	lobby-game-info(int game_id, string name, string map_name, int max_players, int state)
+
+	// No games are available (if a list was requested)
+	// Sent-to: Single player
+	lobby-no-games-available()
+
+	// A new player has joined the game
+	// Sent-to: All lobby players
+	lobby-player-joined-game(int player_id, int game_id)
+
+	// A player has left the game
+	// Sent-to: All lobby players
+	lobby-player-left-game(int player_id, int game_id)
+
+	// A lobby game was started
+	// Sent-to: All lobby players
+	lobby-game-started(int game_id)
+
+	// A player sent a lobby message
+	lobby-player-message(int player_id, string message)
+	
+	// The system sent an error message
+	lobby-error-message(string message)
+	
+LOBBY CLIENT->SERVER
+-------------------------------------------------------------------------------
+	// Create a new game 
+	// Response: lobby-game-created, lobby-game-info, lobby-player-joined-game
+	lobby-create-game()
+
+	// Change game settings
+	lobby-change-game-settings(string game_name, string map_name, int max_players)
+	
+	// Request all available games 
+	// Response: lobby-game-info, lobby-no-games-available
+	lobby-get-available-games()
+
+	// Join a game
+	// Response: lobby-player-joined-game
+	lobby-join-game(int game_id)
+
+	// Leave a game
+	// Response: lobby-player-left-game, lobby-game-removed
+	lobby-leave-game()
+
+	// Start a self-created game
+	// Response: game-is-starting, game-load-map, game-set-maparea-ownership, game-set-maparea-army-strength
+	lobby-start-game()
+
+	// Send a chat message to lobby chat
+	// Response: lobby-player-message
+	lobby-add-message(string message)

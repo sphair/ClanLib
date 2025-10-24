@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,58 +23,29 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Harry Storbacka
+**    Mark Page
 */
 
 #include "Core/precomp.h"
-#include <cmath>
 #include "API/Core/Math/triangle_math.h"
 
-/*
-	---- from comp.graphics.algorithms FAQ ----
-
-	calculate the barycentric coordinates
-	for a triangle {(x1,y1), (x2,y2), (x3,y3)} and some point (x0,y0)
-
-	Then if b1, b2, and b3 are all > 0, (x0,y0) is strictly inside the triangle;
-
-	if bi = 0 and the other two coordinates are positive,
-	(x0,y0) lies on the edge opposite (xi,yi);
-	
-	if bi and bj = 0, (x0,y0) lies on (xk,yk); if bi < 0,
-	(x0,y0) lies outside the edge opposite (xi,yi);
-
-	if all three coordinates are negative, something else is wrong.
-*/
-
-bool CL_TriangleMath::point_inside_triangle(const CL_Pointf &P, float *vertices, bool on_edge_is_outside)
+template<typename Type>
+bool CL_Trianglex<Type>::point_inside( const CL_Vec2<Type> &point ) const
 {
-	return point_inside_triangle(P.x, P.y, vertices, on_edge_is_outside);
-}
-
-bool CL_TriangleMath::point_inside_triangle( float px, float py, float *vertices, bool on_edge_is_outside)
-{
-	const float &tx0 = vertices[0];
-	const float &ty0 = vertices[1];
-	const float &tx1 = vertices[2];
-	const float &ty1 = vertices[3];
-	const float &tx2 = vertices[4];
-	const float &ty2 = vertices[5];
-
-	float b0 =  (tx1 - tx0) * (ty2 - ty0) - (tx2 - tx0) * (ty1 - ty0);
-	float b1 = ((tx1 - px)  * (ty2 - py)  - (tx2 - px)  * (ty1 - py)) / b0;
-	float b2 = ((tx2 - px)  * (ty0 - py)  - (tx0 - px)  * (ty2 - py)) / b0;
-	float b3 = ((tx0 - px)  * (ty1 - py)  - (tx1 - px)  * (ty0 - py)) / b0;
+	Type b0 =  (q.x - p.x) * (r.y - p.y) - (r.x - p.x) * (q.y - p.y);
+	Type b1 = ((q.x - point.x)  * (r.y - point.y)  - (r.x - point.x)  * (q.y - point.y)) / b0;
+	Type b2 = ((r.x - point.x)  * (p.y - point.y)  - (p.x - point.x)  * (r.y - point.y)) / b0;
+	Type b3 = ((p.x - point.x)  * (q.y - point.y)  - (q.x - point.x)  * (p.y - point.y)) / b0;
 	
-	if( (b1 > 0 && b2 > 0 && b3 > 0) ) // strictly inside
-	{
+	Type zero = (Type) 0;
+	if( (b1>zero && b2>zero && b3>zero) || ((b1>=zero && b2>=zero && b3>=zero) && b1+b2+b3 > zero) )
 		return true;
-	}
-	
-	if( on_edge_is_outside == false ) // on edge?
-		if( (b1>=0 && b2>=0 && b3>=0) && (b1+b2+b3) >= 0 )  
-			return true;
 	
 	return false;
 }
+
+// Explicit instantiate the versions we use:
+template class CL_Trianglex<int>;
+template class CL_Trianglex<float>;
+template class CL_Trianglex<double>;

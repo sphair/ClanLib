@@ -44,6 +44,13 @@
 #define IDC_RADIO_VC70                  1022
 #define IDC_RADIO_VC71                  1023
 #define IDC_RADIO_VC80                  1024
+#define IDC_CHECK_INCLUDE_UNICODE       1025
+#define IDC_CHECK_INCLUDE_MTDLL         1026
+#define IDC_CHECK3                      1027
+#define IDC_CHECK_INCLUDE_DLL           1027
+#define IDC_RADIO_VC90                  1028
+#define IDC_CHECK_INCLUDE_NONUNICODE    1029
+#define IDC_CHECK_INCLUDE_X64           1030
 
 // Next default values for new objects
 // 
@@ -51,18 +58,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1025
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif
-
-#if _MSC_VER < 1300
-//1300 = VC7, defines here for VC6 and smaller
-#ifndef SetWindowLongPtr
-#define SetWindowLongPtr SetWindowLong
-#endif
-#ifndef GetWindowLongPtr
-#define GetWindowLongPtr GetWindowLong
-#endif
-#endif
-

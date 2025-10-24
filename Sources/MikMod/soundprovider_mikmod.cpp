@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,8 +29,7 @@
 
 #include "Sound/precomp.h"
 #include "API/MikMod/soundprovider_mikmod.h"
-#include "API/Core/IOData/inputsource_provider.h"
-#include "API/Core/System/clanstring.h"
+#include "API/Core/IOData/iodevice.h"
 #include "soundprovider_mikmod_generic.h"
 #include "soundprovider_mikmod_session.h"
 
@@ -38,21 +37,23 @@
 // CL_SoundProvider_MikMod construction:
 
 CL_SoundProvider_MikMod::CL_SoundProvider_MikMod(
-	const std::string &filename,
-	CL_InputSourceProvider *provider,
+	const CL_String &filename,
+	CL_VirtualDirectory directory,
 	bool stream) : impl(new CL_SoundProvider_MikMod_Generic)
 {
-	if (provider == 0) provider = CL_InputSourceProvider::create_file_provider(".");
-	else provider = provider->clone();
-
-	impl->provider = provider;
 	impl->filename = filename;
+	impl->directory = directory;
 	impl->stream = stream;
+
+	CL_IODevice input = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
+	int size = input.get_size();
+	impl->buffer = CL_DataBuffer(size);
+	int bytes_read = input.read(impl->buffer.get_data(), impl->buffer.get_size());
+	impl->buffer.set_size(bytes_read);
 }
 
 CL_SoundProvider_MikMod::~CL_SoundProvider_MikMod()
 {
-	delete impl->provider;
 	delete impl;
 }
 

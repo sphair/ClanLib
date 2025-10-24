@@ -1,0 +1,10 @@
+component.root
+{
+	bg-color: white;
+}
+
+label
+{
+	bg-image: TestImage;
+	bg-image-sizing: stretch;
+}

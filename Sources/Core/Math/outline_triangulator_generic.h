@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,12 +27,14 @@
 **    (if your name is missing here, please add it)
 */
 
-#ifndef header_outline_triangulator_generic
-#define header_outline_triangulator_generic
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
+
+#include <vector>
 
 class CL_DelauneyTriangulator;
 class CL_DelauneyTriangulator_Triangle;
@@ -40,7 +42,7 @@ class CL_DelauneyTriangulator_Triangle;
 struct CL_OutlineTriangulator_Vertex
 {
 	void *data;
-	double x, y;
+	float x, y;
 	int num_triangles;
 	int extra;
 	CL_DelauneyTriangulator_Triangle const **triangles;
@@ -65,13 +67,19 @@ struct CL_OutlineTriangulator_Collision
 
 class CL_OutlineTriangulator_Generic
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
 	CL_OutlineTriangulator_Generic();
 
 	~CL_OutlineTriangulator_Generic();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
 	CL_OutlineTriangulator_Polygon current_polygon;
 
@@ -81,7 +89,11 @@ public:
 
 //	std::vector<CL_OutlineTriangulator_Triangle> triangles;
 
-//! Operations:
+
+/// \}
+/// \name Operations
+/// \{
+
 public:
 	void insert_points();
 
@@ -101,14 +113,15 @@ public:
 		CL_DelauneyTriangulator &d2);
 
 	bool intersects(
-		double Ax,
-		double Ay,
-		double Bx,
-		double By,
-		double Cx,
-		double Cy,
-		double Dx,
-		double Dy);
+		float Ax,
+		float Ay,
+		float Bx,
+		float By,
+		float Cx,
+		float Cy,
+		float Dx,
+		float Dy);
+/// \}
 };
 
-#endif
+

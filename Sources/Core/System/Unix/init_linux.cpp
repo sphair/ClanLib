@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,20 +38,11 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include "implementation.h"
 #include "init_linux.h"
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
 #include <sys/stat.h>
-
-#if defined(HAVE_SYS_SYSCTL_H) && \
-    !defined(_SC_NPROCESSORS_ONLN) && !defined(_SC_NPROC_ONLN)
-#include <sys/param.h>
-#include <sys/sysctl.h>
-#endif
-
-#include "API/Core/System/setupcore.h"
+#include "API/Core/System/setup_core.h"
 #include "API/Core/System/system.h"
 
 #ifdef __APPLE__
@@ -59,16 +50,11 @@
 #endif
 
 static int init_ref_count = 0;
-long _begin_time;
 
 void init_system()
 {
 	init_ref_count++;
 	if (init_ref_count > 1) return;
-
-	timeval tv;
-	gettimeofday(&tv, NULL);
-	_begin_time = (long) tv.tv_sec*(long) 1000+(long) tv.tv_usec/(long) 1000;
 
 	#ifdef NDEBUG
 	signal(SIGSEGV, deinit);
@@ -85,47 +71,16 @@ void deinit_system()
 	#endif
 }
 
-unsigned int CL_System::sys_time()
+unsigned int CL_System::get_time()
 {
 	timeval tv;
 	gettimeofday(&tv, NULL);
-
-	return (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000 - _begin_time;
+	return (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000;
 }
 
-void CL_System::sleep(int millis)
+CL_String CL_System::get_exe_path()
 {
-	timeval tv;
-	tv.tv_sec = millis/1000;
-	tv.tv_usec = (millis%1000)*1000;
-	select(0, 0, 0, 0, &tv);
-}
-
-
-int CL_System::get_num_cores() {
-	long cpus =  -1;
-# if defined(_SC_NPROCESSORS_ONLN)
-	cpus = sysconf(_SC_NPROCESSORS_ONLN);
-# elif defined(_SC_NPROC_ONLN)
-	cpus = sysconf(_SC_NPROC_ONLN);
-# elif defined(HAVE_SYS_SYSCTL_H)
-	int mib[2];
-	size_t len;
-
-	mib[0] = CTL_HW;
-	mib[1] = HW_NCPU;
-
-	len = sizeof(cpus);
-	(void)sysctl(mib, 2, &cpus, &len, NULL, 0);
-# endif
-	
-	return (cpus < 1)?-1 : static_cast<int>(cpus);
-}
-
-
-std::string CL_System::get_exe_path()
-{
-	char exe_file[PATH_MAX + 1];
+	char exe_file[PATH_MAX];
 #ifdef __APPLE__
 	CFBundleRef mainBundle = CFBundleGetMainBundle();
 	if (mainBundle) 
@@ -140,12 +95,12 @@ std::string CL_System::get_exe_path()
 			
 			if (ok)
 			{
-				return std::string(exe_file) + "/";
+				return CL_StringRef(exe_file) + "/";
 			}
 		}
 	}
 	
-	throw CL_Error("get_exe_path failed");	
+	throw CL_Exception(cl_text("get_exe_path failed"));
 
 #else
 #ifndef PROC_EXE_PATH
@@ -192,11 +147,11 @@ std::string CL_System::get_exe_path()
 			}
 		}
 		if (!exe_file[0])
-			throw CL_Error("get_exe_path: could not find path");
+			throw CL_Exception("get_exe_path: could not find path");
 		else
-			return std::string(exe_file);
+			return CL_StringRef(exe_file);
 #else
-		throw CL_Error("get_exe_path: proc file system not accesible");
+		throw CL_Exception("get_exe_path: proc file system not accesible");
 #endif
 	}
 	else
@@ -204,12 +159,12 @@ std::string CL_System::get_exe_path()
 		size = readlink(PROC_EXE_PATH, exe_file, PATH_MAX);
 		if (size < 0)
 		{
-			throw CL_Error(strerror(errno));
+			throw CL_Exception(strerror(errno));
 		}
 		else
 		{
 			exe_file[size] = '\0';
-			return std::string(dirname(exe_file)) + "/";
+			return CL_StringRef(dirname(exe_file)) + "/";
 		}
 	}
 #endif

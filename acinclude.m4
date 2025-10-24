@@ -1,13 +1,19 @@
-dnl CLANLIB_CHECK_LIB(lib, testprog, module, failed_message, other_libs) library test macro
+dnl thread-local storage support macro
+m4_include(m4/tls.m4)
+
+dnl CLANLIB_CHECK_LIB(lib, testprog, module, failed_message, use_libs, use_cflags) library test macro
 define([CLANLIB_CHECK_LIB],[if test "$enable_$3" != "no"; then
-    OLDLIBS="$LIBS"; LIBS="$5 -l$1"; AC_MSG_CHECKING(for $1)
+    OLDLIBS="$LIBS"; LIBS="$5"; AC_MSG_CHECKING(for $1)
+    OLD_CXXFLAGS="$CXXFLAGS"; CXXFLAGS="$6";
     AC_RUN_IFELSE($2, [CL_RESULT=yes], [CL_RESULT=no], [AC_LINK_IFELSE($2, [CL_RESULT="yes, linked"],[CL_RESULT=no])])
     AC_MSG_RESULT([$CL_RESULT])
     if test "$CL_RESULT" = "no"; then
         CLANLIB_DISABLE_MODULE([$3],[$4])
     else
+        $3_CXXFLAGS="$$3_CXXFLAGS $CXXFLAGS"
         $3_LIBS="$$3_LIBS $LIBS"
     fi
+    CXXFLAGS="$OLD_CXXFLAGS"
     LIBS="$OLDLIBS"
 fi])
 
@@ -24,7 +30,7 @@ define([CLANLIB_ENABLE_MODULES],[
 ClanLib_Modules="$ClanLib_Modules $1"
 ClanLib_pkgconfig="$ClanLib_pkgconfig m4_bpatsubst($1,\w+,[clan\&.pc])"
 ClanLib_API_Modules="$ClanLib_API_Modules m4_bpatsubst($1,\w+,[\\$(clan\&_includes)])"
-AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile pkgconfig/clan\&.pc))])
+AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile Setup/pkgconfig/clan\&.pc))])
 
 dnl CLANLIB_FILE_LIST(dir, file glob, awk program) gnu m4 specific hack to generate file list at autoconf time
 define([CLANLIB_FILE_LIST],["esyscmd(cd $1 && ls $2|awk -v ORS=' ' $3)"])

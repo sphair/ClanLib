@@ -5,36 +5,39 @@
 #include "view.h"
 #include "ircconnection.h"
 #include "chatview.h"
-#include "dlg_connect.h"
+#include "server_list_view.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // MainFrame construction:
 
-MainFrame::MainFrame(CL_Component *parent, CL_ResourceManager *resources) :
-	CL_Frame(CL_Rect(0, 0, CL_Display::get_width(), CL_Display::get_height()), parent),
-	resources(resources),
-	document(0),
-	active_view(-1)
+MainFrame::MainFrame(CL_GUIManager *gui, CL_ResourceManager *resources)
+: CL_Window(CL_Rect(-1, -1, 740, 580), gui, get_window_description()), resources(resources), document(0), tab(0)
 {
-	document = new Document;
-	slots.connect(sig_paint(), this, &MainFrame::on_paint);
+	tab = new CL_Tab(this);
+	tab->set_geometry(CL_Rect(CL_Point(0,0), get_size()));
 
-	DlgConnect dlg(this);
-	dlg.run();
+	func_resized().set(this, &MainFrame::on_resized);
+	func_close().set(this, &MainFrame::on_close);
 
-	IRCConnection *connection = new IRCConnection(dlg.get_server());
-	document->connections.push_back(connection);
-	add_view(new ChatView(connection, std::string(), this));
-	connection->send_nick(dlg.get_nick());
-	connection->send_user(dlg.get_username(), "localhost", dlg.get_server(), dlg.get_fullname());
-	connection->set_nick(dlg.get_nick());
-	slots.connect(connection->sig_join(), this, &MainFrame::on_connection_join, connection);
-	if (!dlg.get_password().empty()) connection->send_pass(dlg.get_password());
+	document.reset(new Document);
+
+	add_server_list_view();
+
+	timer = create_timer();
+	timer.func_expired().set(this, &MainFrame::on_timer_expired);
+	timer.start(250);
 }
 
 MainFrame::~MainFrame()
 {
-	delete document;
+}
+
+CL_GUITopLevelDescription MainFrame::get_window_description()
+{
+	CL_GUITopLevelDescription desc;
+	desc.set_title("CTalk IRC Client");
+	desc.set_allow_resize(true);
+	return desc;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -42,7 +45,7 @@ MainFrame::~MainFrame()
 
 Document *MainFrame::get_document()
 {
-	return document;
+	return document.get();
 }
 
 int MainFrame::get_num_views()
@@ -52,18 +55,18 @@ int MainFrame::get_num_views()
 
 View *MainFrame::get_view(int index)
 {
-	return views[index].second;
+	return views[index];
 }
 
 View *MainFrame::get_active_view()
 {
-	if (active_view == -1) return 0;
-	return views[active_view].second;
+	return views[tab->get_current_page_index()];
 }
 
 CL_Rect MainFrame::get_view_area()
 {
-	return CL_Rect(8, 8+16, get_width()-8, get_height()-8);
+	//return CL_Rect(8, 8+16, get_width()-8, get_height()-8);
+	return CL_Rect(0, 22, get_width(), get_height());
 }
 
 CL_ResourceManager *MainFrame::get_resources()
@@ -81,28 +84,35 @@ void MainFrame::set_active_view(View *view)
 
 void MainFrame::set_active_view(int index)
 {
-	if (active_view != -1) views[active_view].second->show(false);
-	active_view = index;
-
-	views[active_view].second->set_position(get_view_area());
-	views[active_view].second->show(true);
+	tab->show_page(index);
 }
 
-void MainFrame::add_view(View *view)
+void MainFrame::add_server_list_view()
 {
-	CL_Button *button = new CL_Button(view->get_title(), this);
-	slots.connect(button->sig_clicked(), this, &MainFrame::on_view_button_clicked, view);
-	views.push_back(std::pair<CL_Button *, View *>(button, view));
-	arrange_buttons();
-	set_active_view(views.size()-1);
+	CL_TabPage *page = tab->add_page("");
+	View *view = new ServerListView(page, this);
+	views.push_back(view);
+	tab->set_label(views.size()-1, view->get_title());
+	tab->show_page(views.size()-1);
+	view->set_geometry(CL_Rect(CL_Point(0,0), page->get_size()));
+}
+
+void MainFrame::add_view(const CL_String &channel, IRCConnection *connection)
+{
+	CL_TabPage *page = tab->add_page("");
+	View *view = new ChatView(connection, channel, page, this);
+	views.push_back(view);
+	tab->set_label(views.size()-1, view->get_title());
+	tab->show_page(views.size()-1);
+	view->set_geometry(CL_Rect(CL_Point(0,0), page->get_size()));
 }
 
 void MainFrame::remove_view(View *view)
 {
 	int index = find_view_index(view);
-	delete views[index].first;
+	delete views[index];
+	tab->remove_page(index);
 	views.erase(views.begin() + index);
-	arrange_buttons();
 }
 
 int MainFrame::find_view_index(View *view)
@@ -110,54 +120,43 @@ int MainFrame::find_view_index(View *view)
 	int size = views.size();
 	for (int i=0; i<size; i++)
 	{
-		if (views[i].second == view)
+		if (views[i] == view)
 		{
 			return i;
 		}
 	}
+	throw CL_Exception("View not found in collection");
+}
 
-	return -1;
+void MainFrame::connect_to_server(const CL_String &server_name, const CL_String &nick, const CL_String &username, const CL_String &full_name, const CL_String &password)
+{
+	IRCConnection *connection = new IRCConnection(server_name);
+	get_document()->connections.push_back(connection);
+	add_view(CL_String(), connection);
+	connection->send_nick(nick);
+	connection->send_user(username, "localhost", server_name, full_name);
+	connection->set_nick(nick);
+	slots.connect(connection->sig_join(), this, &MainFrame::on_connection_join, connection);
+	if (!password.empty())
+		connection->send_pass(password);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // MainFrame implementation:
 
-void MainFrame::arrange_buttons()
+void MainFrame::on_close()
 {
-	int pos = 0;
-	int size = views.size();
-	for (int i=0; i<size; i++)
-	{
-		views[i].first->set_position(pos, 0);
-		pos += views[i].first->get_width();
-	}
+	exit_with_code(0);
 }
 
-void MainFrame::on_paint()
+void MainFrame::on_resized()
 {
-	CL_Display::clear(CL_Color(240, 242, 244));
-
-/*
-	if (active_view == -1)
-	{
-		CL_Display::clear(CL_Color(80, 128, 80));
-	}
-	else
-	{
-		CL_Gradient gradient(
-			CL_Color::aliceblue, CL_Color::lightskyblue, CL_Color::aqua, CL_Color::deepskyblue);
-		CL_Display::fill_rect(CL_Rect(0, 0, get_width(), 16), gradient);
-	}
-*/
+	tab->set_geometry(CL_Rect(CL_Point(0,0), get_size()));
+	int index = tab->get_current_page_index();
+	views[index]->set_geometry(tab->get_page(index)->get_size());
 }
 
-void MainFrame::on_view_button_clicked(View *view)
-{
-	set_active_view(view);
-	view->set_focus();
-}
-
-void MainFrame::on_connection_join(const std::string &nick, const std::string &channel, IRCConnection *connection)
+void MainFrame::on_connection_join(const CL_String &nick, const CL_String &channel, IRCConnection *connection)
 {
 	// Check if we got a view for this channel yet:
 	int num_views = get_num_views();
@@ -172,5 +171,13 @@ void MainFrame::on_connection_join(const std::string &nick, const std::string &c
 	}
 
 	// Ok no view, create new one:
-	add_view(new ChatView(connection, channel, this));
+	add_view(channel, connection);
+}
+
+void MainFrame::on_timer_expired()
+{
+	for (std::list<IRCConnection *>::iterator it = document->connections.begin(); it != document->connections.end(); ++it)
+	{
+		(*it)->process_data();
+	}
 }

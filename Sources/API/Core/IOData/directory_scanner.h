@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,113 +27,125 @@
 **    (if your name is missing here, please add it)
 */
 
-//! clanCore="I/O Data"
-//! header=core.h
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
-#ifndef header_directory_scanner
-#define header_directory_scanner
 
-#ifdef CL_API_DLL
-#ifdef CL_CORE_EXPORT
-#define CL_API_CORE __declspec(dllexport)
-#else
-#define CL_API_CORE __declspec(dllimport)
-#endif
-#else
-#define CL_API_CORE
-#endif
+#pragma once
+
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
+#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include <string>
+#include "../Text/string_types.h"
 
-class CL_DirectoryScanner_Generic;
+class CL_DirectoryScanner_Impl;
 
-//: Directory scanning class.
-//- !group=Core/IO Data!
-//- !header=core.h!
-//- <p>CL_DirectoryScanner is used to parse through directory trees and return information about files.</p>
-//-
-//- <p>Example that prints all files and directories found in the root directory:</p>
-//- <pre>
-//- CL_DirectoryScanner scanner;
-//- if (scanner.scan("/", "*"))
-//- {
-//- 		while (scanner.next())
-//- 		{
-//- 				std::cout << scanner.get_name() << std::endl;
-//- 		}
-//- }
-//- </pre>
+/// \brief Directory scanning class.
+///
+///    <p>CL_DirectoryScanner is used to parse through directory trees and return information about files.</p>
+///    -
+///    <p>Example that prints all files and directories found in the root directory:</p>
+///    <pre>
+///    CL_DirectoryScanner scanner;
+///    if (scanner.scan("/", "*"))
+///    {
+///    		while (scanner.next())
+///    		{
+///    				cl_console_write_line(scanner.get_name());
+///    		}
+///    }
+///    </pre> 
+/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE CL_DirectoryScanner
 {
-//! Construction:
+/// \name Construction
+/// \{
+
 public:
-	//: Constructs directory scanner for iterating over a directory.
+	/// \brief Constructs directory scanner for iterating over a directory.
 	CL_DirectoryScanner();
 
 	CL_DirectoryScanner(const CL_DirectoryScanner &copy);
 
-	//: Destructor.
+	/// \brief Destructor.
 	~CL_DirectoryScanner();
 
-//! Attributes:
+
+/// \}
+/// \name Attributes
+/// \{
+
 public:
-	//: Gets the directory being scanned.
-	//return: Directory being scanned.
-	std::string get_directory_path();
+	/// \brief Gets the directory being scanned.
+	/** \return Directory being scanned. (including the trailing slash)*/
+	CL_String get_directory_path();
 
-	//: Gets the name of the current file.
-	//return: The name of the current found file.
-	std::string get_name();
+	/// \brief Gets the name of the current file.
+	/** \return The name of the current found file.*/
+	CL_String get_name();
 
-	//: Gets the size of the current file.
-	//return: The size of the current found file.
+	/// \brief Gets the size of the current file.
+	/** \return The size of the current found file.*/
 	int get_size();
 
-	//: Gets the pathname of the current file.
-	//return: The name of the current found file, including the directory path.
-	std::string get_pathname();
+	/// \brief Gets the pathname of the current file.
+	/** \return The name of the current found file, including the directory path.*/
+	CL_String get_pathname();
 
-	//: Returns true if the current file is a directory.
-	//return: True if filename is a directory.
+	/// \brief Returns true if the current file is a directory.
+	/** \return True if filename is a directory.*/
 	bool is_directory();
 
-	//: Returns true if the file is hidden.
-	//return: True if filename is hidden.
+	/// \brief Returns true if the file is hidden.
+	/** \return True if filename is hidden.*/
 	bool is_hidden();
 
-	//: Returns true if the file is readable by the current user.
-	//return: True if the file is readable.
+	/// \brief Returns true if the file is readable by the current user.
+	/** \return True if the file is readable.*/
 	bool is_readable();
 
-	//: Returns true if the file is writable by the current user.
-	//return: True if the file is writable.
+	/// \brief Returns true if the file is writable by the current user.
+	/** \return True if the file is writable.*/
 	bool is_writable();
 
-//! Operations:
-public:       
-	//: Selects the directory to scan through.
-	//- <p>Selects the directory to scan through and use a matching pattern on the files.
-	//The pattern is normal DOS pattern matching (*.*).</p>
-	//param pathname: Path to the directory to scan.
-	//param pattern: Pattern to match files against.
-	//return: true if the directory can be accessed.
-	bool scan(const std::string& pathname);
 
-	bool scan(const std::string& pathname, const std::string& pattern);
+/// \}
+/// \name Operations
+/// \{
 
-	//: Find next file in directory scan. 
-	//return: false if no more files was found.
+public:
+	/// \brief Selects the directory to scan through.
+	/** <p>Selects the directory to scan through</p>
+	    \param pathname Path to the directory to scan (without trailing slash)
+	    \return true if the directory can be accessed.*/
+	bool scan(const CL_String& pathname);
+
+	/// \brief Selects the directory to scan through.
+	/** <p>Selects the directory to scan through and use a matching pattern on the files.</p>
+	    WIN32: The pattern is normal DOS pattern matching ("*.*", ?)
+	    Unix: The pattern is normal pattern matching (*, ?)
+	    \param pathname Path to the directory to scan (without trailing slash)
+	    \param pattern Pattern to match files against.
+	    \return true if the directory can be accessed.*/
+	bool scan(const CL_String& pathname, const CL_String& pattern);
+
+	/// \brief Find next file in directory scan.
+	/** \return false if no more files was found.*/
 	bool next();
 
-//! Implementation:
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	// Yada yada, usual data hiding.
-	CL_SharedPtr<CL_DirectoryScanner_Generic> impl;
+	CL_SharedPtr<CL_DirectoryScanner_Impl> impl;
+/// \}
 };
 
-#endif
+
+/// \}

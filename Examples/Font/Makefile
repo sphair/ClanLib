@@ -1,6 +1,6 @@
 EXAMPLE_BIN=font
-OBJF = font.o
-LIBS=clanCore clanApp clanDisplay clanGL
+OBJF = Font.o data.o settings.o
+LIBS=clanApp clanDisplay clanCore clanGL clanGUI
 
 include ../Makefile.conf
 

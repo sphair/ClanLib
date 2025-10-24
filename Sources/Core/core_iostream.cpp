@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,8 +23,8 @@
 **
 **  File Author(s):
 **
-**    Ingo Ruhnke
-**    Dieter Buys
+**    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 #include "Core/precomp.h"
@@ -32,8 +32,6 @@
 #include "API/Core/Math/rect.h"
 #include "API/Core/Math/size.h"
 #include "API/Core/Math/point.h"
-#include "API/Core/System/error.h"
-#include "API/Core/core_iostream.h"
 
 std::ostream& operator<<(std::ostream& s, const CL_Rect& rect)
 {
@@ -55,10 +53,20 @@ std::ostream& operator<<(std::ostream& s, const CL_Rectf& rect)
 	return s;
 }
 
+std::ostream& operator<<(std::ostream& s, const CL_Rectd& rect)
+{
+	s << "["
+	  << rect.left   << ", "
+	  << rect.top    << ", "
+	  << rect.right  << ", "
+	  << rect.bottom << "]";
+	return s;
+}
+
 std::ostream& operator<<(std::ostream& s, const CL_Point& point)
 {
 	s << "["
-	  << point.x   << ", "
+	  << point.x << ", "
 	  << point.y << "]";
 	return s;
 }
@@ -66,7 +74,15 @@ std::ostream& operator<<(std::ostream& s, const CL_Point& point)
 std::ostream& operator<<(std::ostream& s, const CL_Pointf& point)
 {
 	s << "["
-	  << point.x   << ", "
+	  << point.x << ", "
+	  << point.y << "]";
+	return s;
+}
+
+std::ostream& operator<<(std::ostream& s, const CL_Pointd& point)
+{
+	s << "["
+	  << point.x << ", "
 	  << point.y << "]";
 	return s;
 }
@@ -80,12 +96,6 @@ std::ostream& operator<<(std::ostream& s, const CL_Size& size)
 std::ostream& operator<<(std::ostream& s, const CL_Sizef& size)
 {
 	s << size.width << "x" << size.height;
-	return s;
-}
-
-std::ostream& operator<<(std::ostream& s, const CL_Error& error)
-{
-	s << error.message;
 	return s;
 }
 

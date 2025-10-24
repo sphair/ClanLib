@@ -26,13 +26,14 @@
 **    Magnus Norddahl
 */
 
-// disable debug info truncation warnings caused by STL
-#if defined(_MSC_VER)
-#pragma warning(disable: 4786)
+#ifdef WIN32
+#pragma warning(disable : 4786)
+#include <windows.h>
 #endif
 
-#ifdef WIN32
-#include <windows.h>
+#if defined(_MSC_VER)
+// deprecated API and security warnings (configure has to be backwards compatible to older msvcs)
+#pragma warning(disable: 4996)
 #endif
 
 #include "project.h"

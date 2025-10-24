@@ -1,71 +1,354 @@
 /*
-	Font Example
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/application.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gl.h>
+#include "font.h"
 
-class FontApp : public CL_ClanApplication
+// This is the Program class that is called by CL_ClanApplication
+class Program
 {
 public:
-	int main(int, char **)
+	static int main(const std::vector<CL_String> &args)
 	{
-		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console",80,1000);
-		console.redirect_stdio();
+		// Initialize ClanLib base components
+		CL_SetupCore setup_core;
 
-		try
-		{
-			CL_SetupCore setup_core;
-			CL_SetupDisplay setup_display;
-			CL_SetupGL setup_gl;
+		// Initialize the ClanLib display component
+		CL_SetupDisplay setup_display;
 
+		// Initilize the OpenGL drivers
+		CL_SetupGL setup_gl;
+
+		// Start the Application
+		App app;
+		int retval = app.start(args);
+		return retval;
+	}
+};
+// Instantiate CL_ClanApplication, informing it where the Program is located
+CL_ClanApplication app(&Program::main);
+
+// The start of the Application
+int App::start(const std::vector<CL_String> &args)
+{
+	quit = false;
+
+	// Create a console window for text-output if not available
+	CL_ConsoleWindow console("Console", 80, 100);
+
+	try
+	{
+			CL_DisplayWindowDescription win_desc;
+			win_desc.set_allow_resize(true);
+			win_desc.set_title("Font Example Application");
+			win_desc.set_size(CL_Size( 1000, 700 ), false);
+
+			CL_DisplayWindow window(win_desc);
+			window_ptr = &window;
+			CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+			CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+
+			CL_ResourceManager resources("../../Resources/GUIThemeLuna/resources.xml");
+
+			// Load the texture font
+			CL_VirtualFileSystem vfs("./");
+			CL_VirtualDirectory vdir = vfs.get_root_directory();
+
+			pb_font = CL_PNGProvider::load("clanfont.png", vdir);
+
+			CL_GUIManager gui;
+
+			CL_GUIWindowManagerTexture wm(window);
+			wm_ptr = &wm;
+			gui.set_window_manager(&wm);
+
+			CL_GUIThemeDefault theme;
+			theme.set_resources(resources);
+			gui.set_theme(&theme); 
+			gui.set_css_document("theme.css");
+
+			CL_GUITopLevelDescription gui_desc;
+			gui_desc.set_title("Options");
+			CL_Window gui_window( CL_Rect(10, 10, 250, 400), &gui, gui_desc );
+			gui_window_ptr = &gui_window;
+
+			int offset_x = 10;
+			int offset_y = 40;
+			int width = 200;
+			int height = 20;
+			const int gap = 26;
+
+			CL_PushButton button_class_native(&gui_window);
+			button_class_native.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_native.func_clicked().set(this, &App::on_button_clicked_class_native, &button_class_native);
+			button_class_native.set_text("Class: Native");
+			offset_y += gap;
+
+			CL_PushButton button_class_freetype(&gui_window);
+			button_class_freetype.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_freetype.func_clicked().set(this, &App::on_button_clicked_class_freetype, &button_class_freetype);
+			button_class_freetype.set_text("Class: Freetype");
+			offset_y += gap;
+
+			CL_PushButton button_class_texture(&gui_window);
+			button_class_texture.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_texture.func_clicked().set(this, &App::on_button_clicked_class_texture, &button_class_texture);
+			button_class_texture.set_text("Class: Texture");
+			offset_y += gap;
+
+			CL_PushButton button_class_vector(&gui_window);
+			button_class_vector.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
+			button_class_vector.set_text("Class: Vector");
+			offset_y += gap;
+
+			CL_PushButton button_typeface_tahoma(&gui_window);
+			button_typeface_tahoma_ptr = &button_typeface_tahoma;
+			button_typeface_tahoma.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_typeface_tahoma.func_clicked().set(this, &App::on_button_clicked_typeface_tahoma, &button_typeface_tahoma);
+			button_typeface_tahoma.set_text("Typeface: Tahoma");
+			offset_y += gap;
+
+			CL_PushButton button_typeface_sans(&gui_window);
+			button_typeface_sans_ptr = &button_typeface_sans;
+			button_typeface_sans.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
+			button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
+			offset_y += gap;
+
+			CL_PushButton button_typeface_texture(&gui_window);
+			button_typeface_texture_ptr = &button_typeface_texture;
+			button_typeface_texture.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+			button_typeface_texture.func_clicked().set(this, &App::on_button_clicked_typeface_texture, &button_typeface_texture);
+			button_typeface_texture.set_text("Typeface: Texture");
+			button_typeface_texture.set_enabled(false);
+			offset_y += gap;
+
+			CL_CheckBox checkbox1(&gui_window);
+			checkbox1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
+			checkbox1.func_state_changed().set(this, &App::on_checkbox_state_underline, &checkbox1);
+			checkbox1.set_text("Underline");
+
+			CL_CheckBox checkbox2(&gui_window);
+			checkbox2.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
+			checkbox2.func_state_changed().set(this, &App::on_checkbox_state_strikeout, &checkbox2);
+			checkbox2.set_text("Strikeout");
+			offset_y += gap;
+
+			CL_CheckBox checkbox3(&gui_window);
+			checkbox3.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
+			checkbox3.func_state_changed().set(this, &App::on_checkbox_state_italic, &checkbox3);
+			checkbox3.set_text("Italic");
+
+			CL_CheckBox checkbox4(&gui_window);
+			checkbox4.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
+			checkbox4.func_state_changed().set(this, &App::on_checkbox_state_antialias, &checkbox4);
+			checkbox4.set_text("Anti Alias");
+			offset_y += gap;
+
+			CL_PushButton button_weight_light(&gui_window);
+			button_weight_light.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
+			button_weight_light.func_clicked().set(this, &App::on_button_clicked_weight_light, &button_weight_light);
+			button_weight_light.set_text("Light");
+			CL_PushButton button_weight_normal(&gui_window);
+			button_weight_normal.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
+			button_weight_normal.func_clicked().set(this, &App::on_button_clicked_weight_normal, &button_weight_normal);
+			button_weight_normal.set_text("Normal");
+			CL_PushButton button_weight_bold(&gui_window);
+			button_weight_bold.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
+			button_weight_bold.func_clicked().set(this, &App::on_button_clicked_weight_bold, &button_weight_bold);
+			button_weight_bold.set_text("Bold");
+			offset_y += gap;
+
+			CL_PushButton button_size_16(&gui_window);
+			button_size_16.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
+			button_size_16.func_clicked().set(this, &App::on_button_clicked_size_16, &button_size_16);
+			button_size_16.set_text("Size 16");
+			CL_PushButton button_size_32(&gui_window);
+			button_size_32.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
+			button_size_32.func_clicked().set(this, &App::on_button_clicked_size_32, &button_size_32);
+			button_size_32.set_text("Size 32");
+			CL_PushButton button_size_64(&gui_window);
+			button_size_64.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
+			button_size_64.func_clicked().set(this, &App::on_button_clicked_size_64, &button_size_64);
+			button_size_64.set_text("Size 64");
+			offset_y += gap;
+
+			font_text = "(The quick brown fox 0123456789)";
+
+			CL_LineEdit lineedit1(&gui_window);
+			lineedit_text_ptr = &lineedit1;
+			lineedit1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
+			lineedit1.set_text(font_text); 
+			lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
+
+			last_fps = 0.0f;
+			texture_typeface_flag = false;
+			selected_fontclass = native;
+			font_desc.set_typeface_name("Microsoft Sans Serif");
+			font_desc.set_height(32);
+			font_desc.set_weight(400);
+			select_font();
+
+			CL_GraphicContext gc = window_ptr->get_gc();
+			small_font = CL_Font_Texture(gc, "Tahoma", 16);
+
+			wm.func_repaint().set(this, &App::gui_repaint);
+			do
 			{
-				CL_DisplayWindow window("ClanLib Font Example", 640, 480);
+				render();
+			}while(!gui.exec(false) && !quit);
 
-				CL_ResourceManager resources("font.xml");
-            			
-				// Load some fonts from the resource file
-				CL_Font font1("Font1", &resources);
-				CL_Font font2("Font2", &resources);
-				
-				// Connect the Window close event
-				CL_Slot slot_quit = window.sig_window_close().connect(this, &FontApp::on_window_close);
-				quit = false;
+			small_font = CL_Font_Texture();
+			selected_font = CL_Font();
 
-				while (!CL_Keyboard::get_keycode(CL_KEY_ESCAPE) && !quit)
-				{
-					CL_Display::clear(CL_Color::red);
+	}
+	catch(CL_Exception& exception)
+	{
+		CL_Console::write_line("Exception caught:");
+		CL_Console::write_line(exception.message);
 
-					font1.draw(25, 25, "ClanLib: Phear the Power!");
-					
-					font2.draw(3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\";.,:;*?");
-					
-					CL_Display::flip();
-					CL_System::keep_alive(15);
-				}
+		// Display the stack trace (if available)
+		std::vector<CL_String> stacktrace = exception.get_stack_trace();
+		int size = stacktrace.size();
+		if (size > 0)
+		{
+			CL_Console::write_line("Stack Trace:");
+			for (int cnt=0; cnt < size; cnt++)
+			{
+				CL_Console::write_line(stacktrace[cnt]);
 			}
 		}
-		catch (CL_Error err)
-		{
-			std::cout << "Exception caught: " << err.message.c_str() << std::endl;
 
-			// Display console close message and wait for a key
-			console.display_close_message();
+		console.display_close_message();
 
-			return -1;
-		}
-		
-		return 0;
+		return -1;
 	}
+	return 0;
+}
 
-private:
-	void on_window_close()
+
+
+// A key was pressed
+void App::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
+{
+	if(key.id == CL_KEY_ESCAPE)
 	{
 		quit = true;
 	}
+}
 
-	bool quit;
-} app;
+// The window was closed
+void App::on_window_close()
+{
+	quit = true;
+}
+
+void App::render()
+{
+	int start_time = CL_System::get_time();
+
+	CL_GraphicContext gc = window_ptr->get_gc();
+	gc.set_map_mode(CL_MapMode(cl_map_2d_upper_left));
+
+	gc.clear(CL_Colorf(0.0f,0.0f,0.2f));
+
+	std::vector<CL_GUIWindowManagerTextureWindow> windows = wm_ptr->get_windows();
+	std::vector<CL_GUIWindowManagerTextureWindow>::size_type index, size;
+	size = windows.size();
+	for (index = 0; index < size; index++)
+	{
+		CL_GUIWindowManagerTextureWindow window = windows[index];
+		CL_Subtexture subtexture = window.get_texture();
+		CL_Image image(gc, subtexture);
+		image.draw(gc, window.get_geometry().left, window.get_geometry().top);
+	}
+
+	draw_font_example();
+	draw_font_info();
+
+	last_fps = 1000.0f / (CL_System::get_time()-start_time);
+
+	window_ptr->flip(1);
+
+}
+
+void App::gui_repaint()
+{
+}
+
+void App::select_font()
+{
+	CL_GraphicContext gc = window_ptr->get_gc();
+	switch (selected_fontclass)
+	{
+		case native:
+			selected_font = CL_Font_Native(gc, font_desc);
+			break;
+		case freetype:
+			selected_font = CL_Font_Freetype(font_desc);
+			break;
+		case texture:
+			if (texture_typeface_flag)
+			{
+				CL_Font_Texture bmfont(gc, &pb_font, TextureFont_Positions);
+				bmfont.load_font(gc, font_desc);
+				selected_font = bmfont;
+			}else
+			{
+				selected_font = CL_Font_Texture(gc, font_desc);
+			}
+			break;
+		case vector:
+			selected_font = CL_Font_Vector(font_desc);
+			break;
+
+	}
+
+	font_metrics = selected_font.get_font_metrics(gc);
+	font_size = selected_font.get_text_size(gc, font_text);
+}
+
+void App::draw_font_example()
+{
+	int offset_x = 10;
+	int offset_y = 600;
+	int descender = (int) font_metrics.get_descent();
+
+	CL_GraphicContext gc = window_ptr->get_gc();
+	
+	CL_Draw::fill(gc, CL_Rect(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height), CL_Colorf(0.0f, 0.0f, 0.0f));
+	CL_Draw::line(gc, offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender, CL_Colorf(1.0f, 0.0f, 0.0f));
+	CL_Draw::line(gc, offset_x, offset_y+descender- font_size.height, offset_x + font_size.width, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
+	CL_Draw::line(gc, offset_x + font_size.width, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
+	CL_Draw::line(gc, offset_x, offset_y+descender, offset_x, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
+
+	CL_Draw::line(gc, offset_x, offset_y, offset_x + font_size.width, offset_y, CL_Colorf(0.0f, 1.0f, 0.0f));
+
+	selected_font.draw_text(gc, offset_x, offset_y, font_text,  CL_Colorf::white);
+}
+

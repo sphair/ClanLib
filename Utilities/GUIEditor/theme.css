@@ -1,0 +1,106 @@
+ 
+@import "../../Resources/GUIThemeLuna/theme.css";
+
+window#editor
+{
+	bg-image:MainMenuBg;
+}
+
+viewborder
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+	border-left:4;
+	border-right:4;
+	border-top:4;
+	border-bottom:4;
+	bg-image:ButtonPressed; 
+}
+
+label.properties_header
+{
+	text-color:white;
+	bg-color:#316ac5;
+	preferred-height:16;
+	padding-left:4;
+}
+
+label.properties_info
+{
+	text-color:gray;
+	bg-color:#eeee53;
+	preferred-height:16;
+	padding-left:4;
+	padding-top:5;
+	padding-bottom:5;
+	padding-right:5;
+}
+
+label.properties
+{
+	bg-color:white;
+	preferred-width:80;
+	preferred-height:22;
+	padding-left:4;
+	text-color:blue;
+
+	border-color:gray;
+	border-bottom:1;
+	border-left:1;
+	border-top:1;
+}
+
+lineedit.properties
+{
+	bg-image:;
+	bg-color:white;
+	preferred-height:22;
+
+	padding-left:4;
+	padding-right:16;
+	
+	border-color:gray;
+	border-left:1;
+	border-bottom:1;
+	border-right:1;
+	border-top:1;
+}
+
+checkbox.properties
+{
+	bg-image:;
+	bg-color:white;
+	preferred-height:22;
+
+	padding-top:3;
+	padding-left:4;
+	padding-right:16;
+	
+	border-color:gray;
+	border-left:1;
+	border-bottom:1;
+	border-right:1;
+	border-top:1;
+}
+
+
+toolbar.vertical#tools
+{
+	layout:left;
+	padding-left:6;
+}
+
+toolbar.vertical#tools item
+{
+	padding-top:1;
+	padding-bottom:0;
+	padding-left:3;
+	text-gap:4;
+	icon-width:24;
+	icon-height:24;
+	preferred-height:26;
+}
+
