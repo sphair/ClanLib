@@ -72,9 +72,21 @@ public:
 
 			if(initial_directory16.length() > 0)
 			{
+				LPITEMIDLIST item_id_list = NULL;
+				SFGAOF flags = 0;
+				result = SHParseDisplayName(initial_directory16.c_str(), NULL, &item_id_list, SFGAO_FILESYSTEM, &flags);
+				throw_if_failed(result, "SHParseDisplayName failed");
+
+				CL_ComPtr<IShellItem> folder_item;
+				result = SHCreateShellItem(NULL, NULL, item_id_list, folder_item.output_variable());
+				ILFree(item_id_list);
+				throw_if_failed(result, "SHCreateItemFromParsingName failed");
+
+				/* This code requires Windows Vista or newer:
 				CL_ComPtr<IShellItem> folder_item;
 				result = SHCreateItemFromParsingName(initial_directory16.c_str(), NULL, IID_PPV_ARGS(folder_item.output_variable()));
 				throw_if_failed(result, "SHCreateItemFromParsingName failed");
+				*/
 
 				if(!folder_item.is_null())
 				{

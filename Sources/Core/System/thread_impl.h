@@ -56,6 +56,7 @@ public:
 
 	virtual void join() = 0;
 
+	virtual void kill() = 0;
 
 /// \}
 /// \name Implementation

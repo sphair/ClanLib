@@ -28,33 +28,27 @@
 
 #pragma once
 
-class ShaderTexture
+#include "scene_object.h"
+
+class Scene;
+class GraphicStore;
+
+class ParticleObject : public SceneObject
 {
 public:
-	ShaderTexture(CL_GraphicContext &gc);
+	ParticleObject(CL_GraphicContext &gc, Scene &scene_owner, SceneObject *parent_object);
+	virtual ~ParticleObject();
 
-	void Use(CL_GraphicContext &gc);
+	void Draw(CL_GraphicContext &gc, const CL_Mat4f &current_modelview);
+private:
+	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix);
 
-	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
-	void SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse);
-	void SetSpotLight(const CL_Vec3f &new_light_position, const CL_Vec3f &new_light_direction, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse, float new_spot_exponent, float new_spot_cutoff);
-	void SetModelViewNormalMatrix(const CL_Mat3f &matrix);
+public:
+	static const int num_points = 40000;
 
 private:
 
-	bool material_updated;
-	float material_shininess;
-	CL_Vec4f material_emission;
-	CL_Vec4f material_ambient;
-	CL_Vec4f material_specular;
-
-	bool light_updated;
-	CL_Vec4f light_vector;
-	CL_Vec4f light_specular;
-	CL_Vec4f light_diffuse;
-
-	static char vertex[];
-	static char fragment[];
-	CL_ProgramObject program_object;
-
+	CL_VertexArrayBuffer object_positions_vbo;
+	CL_VertexArrayBuffer object_colours_vbo;
 };
+

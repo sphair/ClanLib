@@ -204,9 +204,10 @@ void App::create_scene(CL_GraphicContext &gc)
 {
 	std::vector<CL_Collada_Image> library_images;
 
-	Model model_teapot("../Clan3D/Resources/teapot.dae", library_images);
-	Model model_landscape("Resources/land.dae", library_images);
-	Model model_tree("Resources/tree.dae", library_images);
+	Model model_teapot("../Clan3D/Resources/teapot.dae", "Mesh_Object", library_images);
+	Model model_landscape("Resources/land.dae", "Mesh_Object", library_images);
+	Model model_tree("Resources/tree.dae", "Mesh_Object", library_images);
+	Model model_gear("../Clan3D/Resources/gear.dae", "", library_images);
 
 	model_teapot.SetMaterial(
 		32.0f,	// shininess
@@ -254,6 +255,12 @@ void App::create_scene(CL_GraphicContext &gc)
 	object_tree = new SceneObject(scene, object_landscape);
 	object_tree->model = model_tree;
 	object_tree->position = CL_Vec3f(0.0f, 29.4237f, 0.0f);
+
+	object_gear = new SceneObject(scene, object_landscape);
+	object_gear->model = model_gear;
+	object_gear->position = CL_Vec3f(10.0f, 40.58f, 10.0);
+	object_gear->scale = CL_Vec3f(3.0f, 3.0f, 3.0f);
+
 
 	scene.gs->LoadImages(gc, library_images);
 
@@ -331,5 +338,8 @@ void App::rotate_teapot()
 	object_teapot1->rotation_y = CL_Angle(object_teapot1->rotation_y.to_degrees() + delta, cl_degrees);
 
 	object_teapot2->rotation_y = CL_Angle(object_teapot2->rotation_y.to_degrees() - delta, cl_degrees);
+
+	object_gear->rotation_z = CL_Angle(object_gear->rotation_z.to_degrees() + delta, cl_degrees);
+
 
 }

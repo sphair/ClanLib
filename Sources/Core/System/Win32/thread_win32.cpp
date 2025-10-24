@@ -30,18 +30,19 @@
 #include "thread_win32.h"
 #include "API/Core/System/runnable.h"
 #include "API/Core/System/thread_local_storage.h"
+#include <process.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Thread_Win32 Construction:
 
 CL_Thread_Win32::CL_Thread_Win32()
-: handle(INVALID_HANDLE_VALUE)
+: handle(NULL)
 {
 }
 
 CL_Thread_Win32::~CL_Thread_Win32()
 {
-	if (handle != INVALID_HANDLE_VALUE)
+	if (handle != NULL)
 		CloseHandle(handle);
 }
 
@@ -53,33 +54,41 @@ CL_Thread_Win32::~CL_Thread_Win32()
 
 void CL_Thread_Win32::start(CL_Runnable *runnable)
 {
-	if (handle != INVALID_HANDLE_VALUE)
+	if (handle != NULL)
 		CloseHandle(handle);
 
-	DWORD threadId = 0;
-	handle = CreateThread(0, 0, &CL_Thread_Win32::thread_main, runnable, 0, &threadId);
-	if (handle == INVALID_HANDLE_VALUE)
-	{
+	// MSDN Docs say to use _beginthreadex instead of CreateThread if using the CRT in the thread
+	handle = (HANDLE)_beginthreadex(NULL, 0, &CL_Thread_Win32::thread_main, runnable, 0, NULL);
+	if (handle == NULL)
 		throw CL_Exception("Unable to create new thread");
-	}
 }
 
 void CL_Thread_Win32::join()
 {
-	if (handle != INVALID_HANDLE_VALUE)
+	if (handle != NULL)
 	{
 		WaitForSingleObject(handle, INFINITE);
 		CloseHandle(handle);
-		handle = INVALID_HANDLE_VALUE;
+		handle = NULL;
+	}
+}
+
+void CL_Thread_Win32::kill()
+{
+	if (handle != NULL)
+	{
+		TerminateThread(handle, 0);
+		CloseHandle(handle);
+		handle = NULL;
 	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Thread_Win32 Implementation:
 
-DWORD CL_Thread_Win32::thread_main(void *data)
+unsigned CL_Thread_Win32::thread_main(void *data)
 {
-	CL_Runnable *runnable = (CL_Runnable *) data;
+	CL_Runnable *runnable = (CL_Runnable *)data;
 	CL_ThreadLocalStorage tls;
 	runnable->run();
 	return 0;

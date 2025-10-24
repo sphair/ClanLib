@@ -28,27 +28,40 @@
 
 #pragma once
 
-class Model_Impl;
-class ShaderDepth;
-class ShaderColor;
-class GraphicStore;
+#include "model.h"
 
-class Model
+class Scene;
+
+class SceneObject
 {
 public:
-	Model();
-	Model(const char *filename, std::vector<CL_Collada_Image> &library_images);
-	Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
+	SceneObject(Scene &scene_owner, SceneObject *parent_object);
+	virtual ~SceneObject();
 
-	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool use_geometry_shader = false);
+	void Draw(CL_GraphicContext &gc, const CL_Mat4f &current_modelview);
 
-	bool is_null();
-	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
+	void GetWorldMatrix(CL_Mat4f &world_matrix);
 
-private:
-	CL_SharedPtr<Model_Impl> impl;
+protected:
+	void UpdateOrientationMatrix();
+	void UpdateModelViewMatrix(const CL_Mat4f &current_modelview);
 
+public:
+	std::vector<SceneObject *> child_objects;
+
+	CL_Vec3f pivot;		// Translation after rotation
+	CL_Vec3f position;	// Translation before rotation
+	CL_Angle rotation_x;
+	CL_Angle rotation_y;
+	CL_Angle rotation_z;
+	CL_Vec3f scale;		// Scale
+
+	CL_Mat4f orientation_matrix;	// Calculated by UpdateOrientationMatrix (Excludes pivot)
+	CL_Mat4f modelview_matrix;		// Calculated by UpdateModelViewMatrix (Uses the orientation_matrix)
+
+	Model model;		// The model (shared resource, that also may be null if not required)
+
+	Scene *scene;		// The scene that this object belongs to
+	SceneObject *parent;	// The parent object. NULL = Top of the tree
 };
-
-
 

@@ -44,7 +44,7 @@
 #include "menubar_impl.h"
 
 CL_MenuModalLoop::CL_MenuModalLoop(CL_GUIManager manager)
-: owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true)
+: owner(0), menubar(0), running(false), ignore_menubar_mouse_up(true), popup(false)
 {
 	slot_filter = manager.sig_filter_message().connect(this, &CL_MenuModalLoop::on_filter_message);
 }
@@ -61,6 +61,7 @@ void CL_MenuModalLoop::start(CL_GUIComponent *owner, CL_PopupMenu menu, const CL
 	this->owner = owner;
 	create_popup_window(menu, pos);
 	owner->capture_mouse(true);
+	popup = true;
 }
 
 void CL_MenuModalLoop::start(CL_GUIComponent *owner, CL_MenuBar *menubar)
@@ -250,7 +251,7 @@ void CL_MenuModalLoop::on_keyboard_input(CL_InputEvent e)
 
 	if (e.type == CL_InputEvent::pressed)
 	{
-		if (e.id == CL_KEY_LEFT)
+		if (e.id == CL_KEY_LEFT && !popup)
 		{
 			CL_PopupMenuWindow *window = popup_windows.back();
 			popup_windows.pop_back();
@@ -267,7 +268,7 @@ void CL_MenuModalLoop::on_keyboard_input(CL_InputEvent e)
 				window->request_repaint();
 			}
 		}
-		else if (e.id == CL_KEY_RIGHT)
+		else if (e.id == CL_KEY_RIGHT && !popup)
 		{
 			CL_PopupMenuItem pmi = window->get_selected_item();
 			if (!pmi.is_null() && pmi.has_submenu())

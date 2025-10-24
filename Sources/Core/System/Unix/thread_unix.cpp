@@ -43,8 +43,6 @@ CL_Thread_Unix::~CL_Thread_Unix()
 {
 	if (handle_valid)
 		pthread_detach(handle);
-	handle = 0;
-	handle_valid = false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,13 +60,9 @@ void CL_Thread_Unix::start(CL_Runnable *runnable)
 		handle_valid = false;
 	}
 
-	int result = pthread_create(&handle, 0, &CL_Thread_Unix::thread_main, runnable);
+	int result = pthread_create(&handle, NULL, &CL_Thread_Unix::thread_main, runnable);
 	if (result != 0)
-	{
-		handle = 0;
-		handle_valid = false;
 		throw CL_Exception("Unable to create new thread");
-	}
 	handle_valid = true;
 }
 
@@ -76,7 +70,17 @@ void CL_Thread_Unix::join()
 {
 	if (handle_valid)
 	{
-		pthread_join(handle, 0);
+		pthread_join(handle, NULL);
+		handle = 0;
+		handle_valid = false;
+	}
+}
+
+void CL_Thread_Unix::kill()
+{
+	if (handle_valid)
+	{
+		pthread_cancel(handle);
 		handle = 0;
 		handle_valid = false;
 	}
@@ -87,12 +91,11 @@ void CL_Thread_Unix::join()
 
 void *CL_Thread_Unix::thread_main(void *data)
 {
-	// kill thread immidiately - no cancelation point
-	// (is this really needed? we never actually cancel any threads in cl)
-	// pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
+	// kill thread immediately - no cancellation point
+	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-	CL_Runnable *runnable = (CL_Runnable *) data;
+	CL_Runnable *runnable = (CL_Runnable *)data;
 	CL_ThreadLocalStorage tls;
 	runnable->run();
-	return 0;
+	return NULL;
 }

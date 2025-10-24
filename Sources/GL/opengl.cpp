@@ -440,7 +440,7 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, CLenum &f
 		case cl_r32f:
 		{
 			valid = true;
-			type = CL_HALF_FLOAT;
+			type = CL_FLOAT;
 			format = CL_RED;
 			break;
 		}

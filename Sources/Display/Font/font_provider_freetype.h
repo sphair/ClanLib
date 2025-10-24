@@ -29,13 +29,7 @@
 #pragma once
 
 #include "API/Display/TargetProviders/font_provider.h"
-#include "API/Display/Font/font_freetype.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/Render/texture.h"
 #include "API/Display/2D/texture_group.h"
-#include <list>
-#include <map>
-
 #include "glyph_cache.h"
 
 class CL_Colorf;
@@ -84,6 +78,7 @@ public:
 	void load_font(const CL_FontDescription &desc);
 	void load_font(const CL_FontDescription &desc, CL_IODevice &file);
 	void load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
+	void load_font(const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
 	/// \brief Destroys the font provider.
 	virtual void destroy();

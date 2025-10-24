@@ -65,6 +65,7 @@ public:
 
 	void join();
 
+	void kill();
 
 /// \}
 /// \name Implementation

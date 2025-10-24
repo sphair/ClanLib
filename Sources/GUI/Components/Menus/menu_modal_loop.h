@@ -75,5 +75,7 @@ private:
 	bool running;
 	bool ignore_menubar_mouse_up;
 	CL_Slot slot_filter;
+
+	bool popup;
 };
 

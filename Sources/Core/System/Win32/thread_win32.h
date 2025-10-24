@@ -48,7 +48,6 @@ public:
 
 public:
 
-
 /// \}
 /// \name Operations
 /// \{
@@ -58,16 +57,16 @@ public:
 
 	void join();
 
+	void kill();
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	static DWORD WINAPI thread_main(void *data);
+	static unsigned __stdcall thread_main(void *data);
 
 	HANDLE handle;
 /// \}
 };
-
 

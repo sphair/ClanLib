@@ -38,6 +38,7 @@
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Core/System/sharedptr.h"
+#include "API/Core/System/event.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
 #include "API/Core/IOData/datatypes.h"
@@ -139,6 +140,7 @@ public:
 
 private:
 	void update_layered_worker_thread();
+	void update_layered_worker_thread_process();
 	void update_layered_process_alpha(int y_start, int y_stop);
 
 	void create_direct_input();
@@ -216,7 +218,11 @@ private:
 	bool maximized;
 
 	CL_Thread update_window_worker_thread;
+	bool update_window_worker_thread_started;
 	CL_PixelBuffer update_window_image;
+	CL_Event update_window_event_stop;
+	CL_Event update_window_event_start;
+	CL_Event update_window_event_completed;
 
 	friend class CL_InputDeviceProvider_DirectInput;
 };

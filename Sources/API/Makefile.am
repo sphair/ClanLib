@@ -371,6 +371,7 @@ clanDisplay_includes = \
 	Display/Image/image_import_description.h \
 	Display/Image/pixel_format.h \
 	Display/Image/palette.h \
+	Display/Image/perlin_noise.h \
 	Display/Image/buffer_usage.h \
 	Display/Image/texture_format.h \
 	Display/Image/pixel_buffer.h \

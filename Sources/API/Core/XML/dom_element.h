@@ -245,6 +245,12 @@ public:
 	/// \brief Returns the boolean value of the attribute node with the given local name and namespace
 	bool get_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &local_name, bool default_value = false) const;
 
+	/// \brief Returns the floating-point value of the attribute node with the given tag name
+	float get_attribute_float(const CL_DomString &name, float default_value = 0.0f) const;
+
+	/// \brief Returns the floating-point value of the attribute node with the given local name and namespace
+	float get_attribute_float_ns(const CL_DomString &namespace_uri, const CL_DomString &local_name, float default_value = 0.0f) const;
+
 	/// \brief Sets the attribute node with the specified tag name to the given integer value
 	void set_attribute_int(const CL_DomString &name, int value);
 
@@ -256,6 +262,12 @@ public:
 
 	/// \brief Sets the attribute node with the specified qualified name and namespace to the given boolean value
 	void set_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, bool value);
+
+	/// \brief Sets the attribute node with the specified tag name to the given floating-point value
+	void set_attribute_float(const CL_DomString &name, float value, int num_decimal_places = 6);
+
+	/// \brief Sets the attribute node with the specified qualified name and namespace to the given floating-point value
+	void set_attribute_float_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, float value, int num_decimal_places = 6);
 /// \}
 };
 

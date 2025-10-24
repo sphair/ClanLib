@@ -310,40 +310,28 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_R
 {
 	SpriteFrame &frame = frames[current_frame];
 
-	CL_Surface_DrawParams1 params1;
-
-	float texture_width = frame.texture.get_width();
-	float texture_height = frame.texture.get_height();
-
-	CL_Rectf new_src(
-		(src.left) / texture_width,
-		(src.top) / texture_height,
-		(src.right) / texture_width,
-		(src.bottom) / texture_height
-		);
-
-	params1.texture_position[0].x = new_src.left;
-	params1.texture_position[1].x = new_src.right;
-	params1.texture_position[2].x = new_src.left;
-	params1.texture_position[3].x = new_src.right;
-	params1.texture_position[0].y = new_src.top;
-	params1.texture_position[1].y = new_src.top;
-	params1.texture_position[2].y = new_src.bottom;
-	params1.texture_position[3].y = new_src.bottom;
-	params1.dest_position[0].x = dest.left;
-	params1.dest_position[1].x = dest.right;
-	params1.dest_position[2].x = dest.left;
-	params1.dest_position[3].x = dest.right;
-	params1.dest_position[0].y = dest.top;
-	params1.dest_position[1].y = dest.top;
-	params1.dest_position[2].y = dest.bottom;
-	params1.dest_position[3].y = dest.bottom;
-	for (int i = 0; i < 4; i++)
-	{
-		params1.color[i] = color;
-	}
-	params1.destZ = 1.0;
-	draw(gc, params1);
+	CL_Surface_DrawParams2 params2;
+	params2.srcX = frame.position.left + src.left;
+	params2.srcY = frame.position.top + src.top;
+	params2.srcWidth = src.get_width();
+	params2.srcHeight = src.get_height();
+	params2.destX = dest.left;
+	params2.destY = dest.top;
+	params2.destZ = 1.0;
+	params2.color = color;
+	params2.scale_x = dest.get_width() / src.get_width();
+	params2.scale_y = dest.get_height() / src.get_height();
+	params2.translate_origin = translation_origin;
+	params2.translate_x = translation_hotspot.x + frame.offset.x;
+	params2.translate_y = translation_hotspot.y + frame.offset.y;
+	params2.rotate_angle = angle - base_angle;
+	params2.rotate_pitch = angle_pitch;
+	params2.rotate_yaw = angle_yaw;
+	params2.rotate_origin = rotation_origin;
+	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
+	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
+	params2.sub_pixel_accuracy = true;
+	draw(gc, params2);
 }
 
 void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &dest)

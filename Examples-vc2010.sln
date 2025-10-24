@@ -130,6 +130,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayeredWindow", "Examples\D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LayeredWindow2", "Examples\Display\LayeredWindow2\LayeredWindow2-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA23EA32F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Water", "Examples\3D\Water\Water-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6AEEE3FE769}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Perlin_Noise", "Examples\Display\PerlinNoise\perlin_noise-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFA2233354A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -508,6 +512,18 @@ Global
 		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Release|Win32.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Release|Win32.Build.0 = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6ACA23EA32F}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6AEEE3FE769}.Release|x64.ActiveCfg = Release|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Debug|Win32.Build.0 = Debug|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Debug|x64.ActiveCfg = Debug|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Release|Win32.ActiveCfg = Release|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Release|Win32.Build.0 = Release|Win32
+		{BAB64109-DBA5-439B-A821-5AFA2233354A}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

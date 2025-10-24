@@ -30,29 +30,13 @@
 #include "Display/precomp.h"
 #include "font_provider_freetype.h"
 #include "FontEngine/font_engine_freetype.h"
-#include "font_provider_freetype.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/iodevice.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
-#include "API/Display/2D/subtexture.h"
-#include "API/Display/2D/texture_group.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/2D/draw.h"
-#include "API/Core/Text/string_help.h"
-
-#include "../2D/render_batch2d.h"
-#include "../Render/graphic_context_impl.h"
-
-#ifndef WIN32
-#include "../X11/font_config.h"
-#endif
+#include "API/Core/XML/dom_element.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Freetype Construction:
@@ -136,13 +120,44 @@ void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc, const C
 	load_font(desc, file);
 }
 
+void CL_FontProvider_Freetype::load_font(const CL_StringRef &resource_id, CL_ResourceManager *resources)
+{
+	CL_Resource resource = resources->get_resource(resource_id);
+	if (resource.get_type() != "font")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'font'", resource.get_name()));
+
+	CL_DomElement freetype_element = resource.get_element().named_item("freetype").to_element();
+	if (freetype_element.is_null())
+		throw CL_Exception(cl_format("Font resource '%1' has no 'freetype' child element", resource.get_name()));
+
+	CL_FontDescription desc;
+
+	if (freetype_element.has_attribute("file"))
+		desc.set_typeface_name(freetype_element.get_attribute("file"));
+	else
+		throw CL_Exception(cl_format("Font resource '%1' has no 'file' attribute", resource.get_name()));
+
+	if (freetype_element.has_attribute("height"))
+		desc.set_height(freetype_element.get_attribute_int("height", 0));
+	else
+		throw CL_Exception(cl_format("Font resource '%1' has no 'height' attribute", resource.get_name()));
+
+	if (freetype_element.has_attribute("average_width"))
+		desc.set_average_width(freetype_element.get_attribute_int("average_width", 0));
+
+	if (freetype_element.has_attribute("anti_alias"))
+		desc.set_anti_alias(freetype_element.get_attribute_bool("anti_alias", true));
+
+	load_font(desc, resources->get_directory(resource));
+}
+
 void CL_FontProvider_Freetype::load_font(const CL_FontDescription &desc, CL_IODevice &io_dev)
 {
 	free_font();
 
 	glyph_cache.anti_alias = true;	// Default, anti_alias enabled
 
-	 // Load font from the opened file.
+	// Load font from the opened file.
 	font_engine = new CL_FontEngine_Freetype(io_dev, desc.get_height(), desc.get_average_width());
 
 	if (desc.get_anti_alias_set())	// Anti-alias was set

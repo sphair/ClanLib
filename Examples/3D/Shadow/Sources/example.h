@@ -60,6 +60,7 @@ private:
 	SceneObject *light;
 	SceneObject *object_teapot1;
 	SceneObject *object_teapot2;
+	SceneObject *object_gear;
 	float camera_angle;
 
 	int time_delta;

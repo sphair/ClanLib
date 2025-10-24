@@ -95,6 +95,13 @@ public:
 	/// \param directory = Virtual Directory
 	CL_Font_Freetype( CL_GraphicContext &gc, const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
 
+	/// \brief Constructs a Font Freetype
+	///
+	/// \param gc = Graphic Context
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	CL_Font_Freetype(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+
 	~CL_Font_Freetype();
 
 /// \}

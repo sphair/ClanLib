@@ -36,10 +36,12 @@ public:
 	CL_Collada_Effect_ColorTexture_Impl() {}
 
 	void load_color(CL_DomElement &color_element);
+	void load_float(CL_DomElement &float_element);
 	void load_texture(CL_DomElement &texture_element, std::vector<CL_Collada_Effect_Texture> &samplers);
 
 	bool color_set;
 	CL_Colorf color;
+
 	CL_Collada_Effect_Texture texture;
 };
 
@@ -63,7 +65,17 @@ CL_Collada_Effect_ColorTexture::CL_Collada_Effect_ColorTexture(CL_DomElement &co
 		impl->load_texture(texture_element, samplers);
 		return;
 	}
-	throw CL_Exception("color or texture not found. If you want param, then fixme :)");
+
+	CL_DomElement float_element = color_texture_element.named_item("float").to_element();
+	if (!float_element.is_null())
+	{
+		impl->load_float(float_element);
+		return;
+	}
+
+
+
+	throw CL_Exception("color, texture, float not found. If you want param, then fixme :)");
 }
 
 void CL_Collada_Effect_ColorTexture_Impl::load_texture(CL_DomElement &texture_element, std::vector<CL_Collada_Effect_Texture> &samplers)
@@ -117,6 +129,13 @@ void CL_Collada_Effect_ColorTexture_Impl::load_color(CL_DomElement &color_elemen
 
 	color_set = true;
 	color = CL_Colorf(colours[0], colours[1], colours[2], colours[3]);
+}
+
+void CL_Collada_Effect_ColorTexture_Impl::load_float(CL_DomElement &float_element)
+{
+	float value = CL_StringHelp::text_to_float(float_element.get_text());
+	color_set = true;
+	color = CL_Colorf(value, value, value, 1.0f);
 }
 
 bool CL_Collada_Effect_ColorTexture::is_color_set()

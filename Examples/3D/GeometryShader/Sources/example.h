@@ -32,7 +32,7 @@
 
 class ShaderDepth;
 class ShaderColor;
-class GeometryObject;
+class ParticleObject;
 class Options;
 
 class Model;
@@ -49,18 +49,17 @@ private:
 
 private:
 	void render(CL_GraphicContext &gc);
+	void render_depth_buffer(CL_GraphicContext &gc);
 	void create_scene(CL_GraphicContext &gc);
-	void update_light(CL_GraphicContext &gc);
 	void calculate_matricies(CL_GraphicContext &gc);
 	void control_camera();
 private:
 	Scene scene;
 
 	SceneObject *camera;
-	SceneObject *light_distant;
 	float camera_angle;
 
-	GeometryObject *object_teapot;
+	ParticleObject *object_particles;
 
 	int time_delta;
 	bool quit;

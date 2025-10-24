@@ -79,31 +79,12 @@ void SceneObject::UpdateOrientationMatrix()
 void SceneObject::UpdateModelViewMatrix(const CL_Mat4f &current_modelview)
 {
 	modelview_matrix = orientation_matrix * current_modelview;
-
-	if ( (pivot.x != 0.0f) || (pivot.y != 0.0f) || (pivot.z != 0.0f) )
-	{
-		CL_Mat4f pivot_matrix;
-		pivot_matrix[ (4*0) + 0 ] = 1.0f;
-		pivot_matrix[ (4*1) + 1 ] = 1.0f;
-		pivot_matrix[ (4*2) + 2 ] = 1.0f;
-		pivot_matrix[ (4*3) + 3 ] = 1.0f;
-
-		pivot_matrix[ (4*3) + 0 ] = -pivot.x;
-		pivot_matrix[ (4*3) + 1 ] = -pivot.y;
-		pivot_matrix[ (4*3) + 2 ] = -pivot.z;
-
-		//TODO: pivot position not checked, the line below may be the wrong way round
-		modelview_matrix = pivot_matrix * modelview_matrix;
-	}
 }
 
 void SceneObject::Draw(CL_GraphicContext &gc, const CL_Mat4f &current_modelview)
 {
 	UpdateOrientationMatrix();
 	UpdateModelViewMatrix(current_modelview);
-
-	if (!model.is_null())
-		model.Draw(gc, scene->gs, modelview_matrix);
 
 	std::vector<SceneObject *>::size_type size, cnt;
 	size = child_objects.size();
@@ -121,20 +102,4 @@ void SceneObject::GetWorldMatrix(CL_Mat4f &world_matrix)
 	UpdateOrientationMatrix();
 
 	world_matrix = orientation_matrix * world_matrix;
-
-	if ( (pivot.x != 0.0f) || (pivot.y != 0.0f) || (pivot.z != 0.0f) )
-	{
-		CL_Mat4f pivot_matrix;
-		pivot_matrix[ (4*0) + 0 ] = 1.0f;
-		pivot_matrix[ (4*1) + 1 ] = 1.0f;
-		pivot_matrix[ (4*2) + 2 ] = 1.0f;
-		pivot_matrix[ (4*3) + 3 ] = 1.0f;
-
-		pivot_matrix[ (4*3) + 0 ] = -pivot.x;
-		pivot_matrix[ (4*3) + 1 ] = -pivot.y;
-		pivot_matrix[ (4*3) + 2 ] = -pivot.z;
-
-		//TODO: pivot position not checked, the line below may be the wrong way round
-		world_matrix = pivot_matrix * world_matrix;
-	}
 }

@@ -28,9 +28,7 @@
 
 #pragma once
 
-#include "shader_color.h"
 #include "shader_color_geometry.h"
-#include "shader_texture.h"
 
 class GraphicStore
 {
@@ -38,18 +36,14 @@ public:
 	GraphicStore(CL_GraphicContext &gc);
 	~GraphicStore();
 
-	void LoadImages( CL_GraphicContext &gc, std::vector<CL_Collada_Image> &library_images );
-
 public:
-	ShaderColor shader_color;
 	ShaderColorGeometry shader_color_geometry;
-	ShaderTexture shader_texture;
 
-	CL_Texture texture_brick;
+	CL_Texture texture_alpha_ball;
+	CL_Texture texture_depth;
+	CL_FrameBuffer framebuffer_depth;
 
 	CL_Mat4f camera_projection;
 	CL_Mat4f camera_modelview;
-	CL_Mat4f light_projection;
-	CL_Mat4f light_modelview;
 
 };

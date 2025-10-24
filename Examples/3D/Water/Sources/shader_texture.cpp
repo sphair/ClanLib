@@ -30,12 +30,14 @@
 
 #include "shader_texture.h"
 
+float ShaderTexture::main_time = 0.0f;
+
 char ShaderTexture::vertex[] =
 	"\n"
 	"#version 120\n"
 	"\n"
-	"attribute vec4 InPosition;\n"
-	"attribute vec3 InNormal;\n"
+	"attribute vec3 InPosition;"
+	"attribute vec3 InNormal;"
 	"attribute vec2 InTexCoord0;\n"
 	"uniform mat4 cl_ModelViewMatrix;"
 	"uniform mat4 cl_ModelViewProjectionMatrix;"
@@ -44,15 +46,16 @@ char ShaderTexture::vertex[] =
 	"varying vec3 WorldSpaceNormal; \n"
 	"varying vec3 WorldSpacePosition; \n"
 	"varying vec4 ObjPos;\n"
+	"varying vec4 MaterialAmbient;\n"
 	"varying vec2 TexCoord0;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
 	"	gl_Position = cl_ModelViewProjectionMatrix * in_position;\n"
-	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal );\n"
-	"	WorldSpacePosition = InPosition.xyz;\n"
-	"	ObjPos = vec4(cl_ModelViewMatrix * in_position);\n"
+	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
+	"	WorldSpacePosition = InPosition;\n"
+	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
 	"	TexCoord0 = InTexCoord0;\n"
 	"}\n"
 	;
@@ -67,6 +70,7 @@ char ShaderTexture::fragment[] =
 	"varying vec2 TexCoord0;\n"
 	"\n"
 	"uniform sampler2D Texture0;\n"
+	"uniform sampler2D Texture1;\n"
 	"\n"
 	"uniform float MaterialShininess;\n"
 	"uniform vec4 MaterialEmission;\n"
@@ -77,19 +81,75 @@ char ShaderTexture::fragment[] =
 	"uniform vec4 LightHalfVector;\n"
 	"uniform vec4 LightSpecular;\n"
 	"uniform vec4 LightDiffuse;\n"
+	"uniform vec4 LightAmbient;\n"
+	"uniform float Time;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
-	"	const vec4 ambient_light = vec4(0.2, 0.2, 0.2, 1.0);\n"
-	"	vec4 texture_color = texture2D(Texture0, TexCoord0.xy);\n"
+	"   vec2 coord = TexCoord0.xy;\n"
+
+	"   float amplitude = 0.008;\n"
+
+	"   float speed = 6.0;\n"
+	"   float speed2 = 7.0;\n"
+	"   float speed3 = 8.0;\n"
+	"   float speed4 = 9.0;\n"
+	"   vec2 direction = vec2(1.0, 0.0);\n"
+	"   vec2 direction2 = vec2(0.0, -1.0);\n"
+	"   vec2 direction3 = vec2(0.3, -0.7);\n"
+	"   vec2 direction4 = vec2(0.6, -0.4);\n"
+	"	float wavelength = 20.0;\n"
+	"	float wavelength2 = 19.0;\n"
+	"	float wavelength3 = 18.0;\n"
+	"	float wavelength4 = 17.0;\n"
+
+	"	float frequency = 2*3.14159/wavelength;\n"
+	"	float phase = speed * frequency;\n"
+	"	float height = sin(dot(ObjPos.xz, direction) * frequency + Time * phase);\n"
+
+	"	frequency = 2*3.14159/wavelength2;\n"
+	"	phase = speed2 * frequency;\n"
+	"	height += sin( dot(ObjPos.xz, direction2) * frequency + Time * phase);\n"
+
+	"	frequency = 2*3.14159/wavelength3;\n"
+	"	phase = speed3 * frequency;\n"
+	"	height += sin(dot(ObjPos.xz, direction3) * frequency + Time * phase);\n"
+
+	"	frequency = 2*3.14159/wavelength4;\n"
+	"	phase = speed4 * frequency;\n"
+	"	height += sin(dot(ObjPos.xz, direction4) * frequency + Time * phase);\n"
+	"	height /= 4.0;\n"
+
+	"	vec3 water_normal = vec3( -height, -height, 1.0);\n"
+
+	"	height *= amplitude;\n"
+
+	"	vec2 coord2 = coord;"
+	"   coord.x -= height;\n"
+	"   coord.y -= height;\n"
+
+	"   coord2.x += height;\n"
+	"   coord2.y += height;\n"
+
+	// Colour the underwater texture
+	"	vec4 texture_color = texture2D(Texture0, coord);\n"
+	"	texture_color.r = texture_color.r / 2.0 + 0.4;\n"
+	"	texture_color.g = texture_color.g / 2.0 + 0.4;\n"
+	"	texture_color.b = texture_color.b / 2.0 + 0.8;\n"
+
+	// Add on the reflected texture
+	"	vec4 background_color = texture2D(Texture1, coord2);\n"
+	"	texture_color.r = texture_color.r + background_color.r / 2.0;\n"
+	"	texture_color.g = texture_color.g + background_color.g / 2.0;\n"
+	"	texture_color.b = texture_color.b + background_color.b / 2.0;\n"
+
 	"\n"
 	"   if (texture_color.a < 0.01) discard;\n"
-	"\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
 	"	vec4 diff = vec4(0); \n"
 	"	vec4 spec = vec4(0); \n"
 	"\n"
-	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
+	"	vec3 world_space_normal = normalize(WorldSpaceNormal + water_normal);\n"
 	"	float nDotL = max(0.0, dot(world_space_normal, LightVector.xyz)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
@@ -100,13 +160,11 @@ char ShaderTexture::fragment[] =
 	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector.xyz));\n"
 	"			pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
-	"	\n"
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
-	"\n"
 	"	vec4 final_texture_color = vec4(texture_color.rgb,1.0);\n"
-	"	gl_FragColor = ambient_light * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
-	"	gl_FragColor.a = texture_color.a - (1.0 - MaterialAmbient.a);\n"
+	"	gl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	gl_FragColor.a = MaterialAmbient.a;\n"
 	"}\n"
 	;
 
@@ -130,29 +188,34 @@ ShaderTexture::ShaderTexture(CL_GraphicContext &gc)
 	program_object.bind_attribute_location(0, "InPosition");
 	program_object.bind_attribute_location(1, "InNormal");
 	program_object.bind_attribute_location(2, "InTexCoord0");
-
 	if (!program_object.link())
 	{
 		throw CL_Exception(cl_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
+
 
 	material_updated = false;
 	light_updated = false;
 
 	material_shininess = 64.0f;
 	material_emission = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	material_ambient =  CL_Vec4f(0.9f, 0.2f, 0.2f, 1.0f);
+	material_ambient =  CL_Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
 	material_specular = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 
+	light_ambient = CL_Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
 	light_vector = CL_Vec4f(0.0f, 0.0f, 1.0f, 0.0f);
 	light_specular = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	light_diffuse = CL_Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 
 	program_object.set_uniform1i("Texture0", 0);
+	program_object.set_uniform1i("Texture1", 1);
+
 }
 
 void ShaderTexture::Use(CL_GraphicContext &gc)
 {
+	program_object.set_uniform1f("Time", main_time);
+
 	if (!material_updated)
 	{
 		material_updated = true;
@@ -172,14 +235,10 @@ void ShaderTexture::Use(CL_GraphicContext &gc)
 		program_object.set_uniform4f("LightHalfVector", light_halfvector);
 		program_object.set_uniform4f("LightSpecular", light_specular);
 		program_object.set_uniform4f("LightDiffuse", light_diffuse);
+		program_object.set_uniform4f("LightAmbient", light_ambient);
 	}
 
 	gc.set_program_object(program_object);
-}
-
-void ShaderTexture::SetModelViewNormalMatrix(const CL_Mat3f &matrix)
-{
-	program_object.set_uniform_matrix("ModelViewNormalMatrix", matrix);
 }
 
 void ShaderTexture::SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular)
@@ -209,7 +268,7 @@ void ShaderTexture::SetMaterial(float new_material_shininess, const CL_Vec4f &ne
 	}
 }
 
-void ShaderTexture::SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse)
+void ShaderTexture::SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse, CL_Vec4f &new_light_ambient)
 {
 	if (new_light_vector != light_vector)
 	{
@@ -226,7 +285,10 @@ void ShaderTexture::SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_spe
 		light_updated = false;
 		light_diffuse = new_light_diffuse;
 	}
+	if (new_light_ambient != light_ambient)
+	{
+		light_updated = false;
+		light_ambient = new_light_ambient;
+	}
 }
-
-
 

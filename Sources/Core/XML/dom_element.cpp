@@ -445,6 +445,24 @@ bool CL_DomElement::get_attribute_bool_ns(const CL_DomString &namespace_uri, con
 		return default_value;
 }
 
+float CL_DomElement::get_attribute_float(const CL_DomString &name, float default_value) const
+{
+	CL_DomString value = get_attribute(name);
+	if (!value.empty())
+		return CL_StringHelp::text_to_float(value);
+	else
+		return default_value;
+}
+
+float CL_DomElement::get_attribute_float_ns(const CL_DomString &namespace_uri, const CL_DomString &local_name, float default_value) const
+{
+	CL_DomString value = get_attribute_ns(namespace_uri, local_name);
+	if (!value.empty())
+		return CL_StringHelp::text_to_float(value);
+	else
+		return default_value;
+}
+
 void CL_DomElement::set_attribute_int(const CL_DomString &name, int value)
 {
 	set_attribute(name, CL_StringHelp::int_to_text(value));
@@ -463,6 +481,16 @@ void CL_DomElement::set_attribute_bool(const CL_DomString &name, bool value)
 void CL_DomElement::set_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, bool value)
 {
 	set_attribute_ns(namespace_uri, qualified_name, value ? "true" : "false");
+}
+
+void CL_DomElement::set_attribute_float(const CL_DomString &name, float value, int num_decimal_places)
+{
+	set_attribute(name, CL_StringHelp::float_to_text(value, num_decimal_places));
+}
+
+void CL_DomElement::set_attribute_float_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, float value, int num_decimal_places)
+{
+	set_attribute_ns(namespace_uri, qualified_name, CL_StringHelp::float_to_text(value, num_decimal_places));
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -28,30 +28,18 @@
 
 #pragma once
 
-class ShaderColor
+class SceneObject;
+class GraphicStore;
+
+class Scene
 {
 public:
-	ShaderColor(CL_GraphicContext &gc);
+	Scene();
+	~Scene();
 
-	void Use(CL_GraphicContext &gc);
+	void Draw(CL_Mat4f &modelview_matrix, CL_GraphicContext &gc);
 
-	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
-	void SetLight(CL_Vec4f &new_light_vector, CL_Vec4f &new_light_specular, CL_Vec4f &new_light_diffuse);
-
-private:
-
-	bool material_updated;
-	float material_shininess;
-	CL_Vec4f material_emission;
-	CL_Vec4f material_ambient;
-	CL_Vec4f material_specular;
-
-	bool light_updated;
-	CL_Vec4f light_vector;
-	CL_Vec4f light_specular;
-	CL_Vec4f light_diffuse;
-
-	static char vertex[];
-	static char fragment[];
-	CL_ProgramObject program_object;
+public:
+	SceneObject *base;
+	GraphicStore *gs;
 };

@@ -70,6 +70,11 @@ void CL_Thread::join()
 	impl->join();
 }
 
+void CL_Thread::kill()
+{
+	impl->kill();
+}
+
 #if defined(_MSC_VER)
 typedef struct tagTHREADNAME_INFO
 {

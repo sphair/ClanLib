@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,2,9)
-#define CL_VERSION_STRING "2.2.9"
+#define CL_CURRENT_VERSION	CL_VERSION(2,2,10)
+#define CL_VERSION_STRING "2.2.10"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -68,6 +68,11 @@
 #include "Core/System/datetime.h"
 #include "Core/System/disposable_object.h"
 #include "Core/System/event.h"
+
+#ifdef WIN32
+#include "Core/System/comptr.h"
+#endif
+
 #include "Core/System/event_provider.h"
 #include "Core/System/exception.h"
 #include "Core/System/mutex.h"
@@ -198,6 +203,7 @@
 #include "Core/Math/line.h"
 #include "Core/Math/line_ray.h"
 #include "Core/Math/line_segment.h"
+#include "Core/Math/hash_functions.h"
 #include "Core/core_iostream.h"
 
 #ifdef __cplusplus_cli

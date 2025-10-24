@@ -35,7 +35,7 @@ class Model_Impl
 public:
 	Model_Impl();
 
-	void Load(const char *filename, std::vector<CL_Collada_Image> &library_images);
+	void Load(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
 	void Load(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
 
 	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool is_draw_shadow);
@@ -66,9 +66,9 @@ Model::Model()
 {
 }
 
-Model::Model(const char *filename, std::vector<CL_Collada_Image> &library_images): impl(new Model_Impl())
+Model::Model(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images): impl(new Model_Impl())
 {
-	impl->Load(filename, library_images);
+	impl->Load(filename, geometry_name, library_images);
 }
 
 Model::Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images): impl(new Model_Impl())
@@ -108,7 +108,7 @@ void Model_Impl::SetMaterial(float new_material_shininess, const CL_Vec4f &new_m
 	material_specular = new_material_specular;
 }
 
-void Model_Impl::Load(const char *filename, std::vector<CL_Collada_Image> &library_images)
+void Model_Impl::Load(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images)
 {
 	CL_File file;
 	CL_DomDocument doc;
@@ -116,7 +116,7 @@ void Model_Impl::Load(const char *filename, std::vector<CL_Collada_Image> &libra
 	file = CL_File(filename);
 	doc = CL_DomDocument(file);
 
-	Load(doc, "Mesh_Object", library_images);
+	Load(doc, geometry_name, library_images);
 }
 
 void Model_Impl::Load(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images)

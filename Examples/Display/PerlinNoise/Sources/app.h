@@ -26,35 +26,24 @@
 **    Mark Page
 */
 
-#include "precomp.h"
-#include "geometry_object.h"
-#include "scene.h"
-#include "shader_color_geometry.h"
-#include "graphic_store.h"
+#pragma once
 
-GeometryObject::GeometryObject(Scene &scene_owner, SceneObject *parent_object) : SceneObject(scene_owner, parent_object)
+class Options;
+
+// This is the Application class (That is instantiated by the Program Class)
+class App
 {
-}
+public:
+	App();
 
-GeometryObject::~GeometryObject()
-{
-}
+	int start(const std::vector<CL_String> &args);
 
-void GeometryObject::Draw(CL_GraphicContext &gc, const CL_Mat4f &current_modelview)
-{
-	UpdateOrientationMatrix();
-	UpdateModelViewMatrix(current_modelview);
+private:
+	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
+	void on_window_close();
+	void set_user_projection(CL_GraphicContext &gc, CL_Sizef &area_size, Options *options);
+private:
+	bool quit;
 
-	if (!model.is_null())
-	{
-		model.Draw(gc, scene->gs, modelview_matrix, true);
-	}
 
-	std::vector<SceneObject *>::size_type size, cnt;
-	size = child_objects.size();
-	for (cnt=0; cnt< size; cnt++)
-	{
-		child_objects[cnt]->Draw(gc, modelview_matrix);
-	}
-}
-
+};

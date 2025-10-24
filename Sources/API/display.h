@@ -75,6 +75,7 @@
 #include "Display/Image/pixel_buffer_help.h"
 #include "Display/Image/pixel_format.h"
 #include "Display/Image/icon_set.h"
+#include "Display/Image/perlin_noise.h"
 #include "Display/Image/image_import_description.h"
 #include "Display/ImageProviders/jpeg_compressor.h"
 #include "Display/ImageProviders/jpeg_decompressor.h"

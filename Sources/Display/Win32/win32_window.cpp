@@ -74,7 +74,8 @@
 CL_Win32Window::CL_Win32Window()
 : hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
   directinput(0), direct8_module(0),
-  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false), allow_dropshadow(false), minimized(false), maximized(false)
+  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false), allow_dropshadow(false), minimized(false), maximized(false),
+  update_window_worker_thread_started(false)
 {
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = CL_InputDevice(new CL_InputDeviceProvider_Win32Keyboard(this));
@@ -88,7 +89,11 @@ CL_Win32Window::CL_Win32Window()
 
 CL_Win32Window::~CL_Win32Window()
 {
-	update_window_worker_thread.join();
+	if (update_window_worker_thread_started)
+	{
+		update_window_event_stop.set();
+		update_window_worker_thread.join();
+	}
 
 	CL_DisplayMessageQueue_Win32::message_queue.remove_client(this);
 	if (!ic.impl.is_null())
@@ -1921,16 +1926,18 @@ RECT CL_Win32Window::get_window_geometry_from_description(const CL_DisplayWindow
 
 void CL_Win32Window::update_layered(CL_PixelBuffer &image)
 {
-	// Note that the APIs use pre-multiplied alpha, which means that the red,
-	// green and blue channel values in the bitmap must be pre-multiplied with
-	// the alpha channel value. For example, if the alpha channel value is x,
-	// the red, green and blue channels must be multiplied by x and divided by
-	// 0xff prior to the call.
-
-
-	update_window_worker_thread.join();
+	if (!update_window_worker_thread_started)
+	{
+		update_window_worker_thread.start(this, &CL_Win32Window::update_layered_worker_thread);
+		update_window_worker_thread_started = true;
+	}
+	else
+	{
+		update_window_event_completed.wait();
+		update_window_event_completed.reset();
+	}
 	update_window_image = image;
-	update_window_worker_thread.start(this, &CL_Win32Window::update_layered_worker_thread);
+	update_window_event_start.set();
 
 }
 
@@ -2041,6 +2048,27 @@ void CL_Win32Window::update_layered_process_alpha(int y_start, int y_stop)
 
 void CL_Win32Window::update_layered_worker_thread()
 {
+	while (true)
+	{
+		int wakeup_reason = CL_Event::wait(update_window_event_start, update_window_event_stop);
+
+		if (wakeup_reason != 0)
+			break;
+
+		update_window_event_start.reset();
+		update_layered_worker_thread_process();
+		update_window_event_completed.set();
+	}
+}
+
+void CL_Win32Window::update_layered_worker_thread_process()
+{
+	// Note that the APIs use pre-multiplied alpha, which means that the red,
+	// green and blue channel values in the bitmap must be pre-multiplied with
+	// the alpha channel value. For example, if the alpha channel value is x,
+	// the red, green and blue channels must be multiplied by x and divided by
+	// 0xff prior to the call.
+
 	update_layered_process_alpha(0, update_window_image.get_height());
 
 	BITMAPV5HEADER bmp_header;

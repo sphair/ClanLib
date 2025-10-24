@@ -259,7 +259,7 @@ CL_PixelBuffer CL_PixelBuffer::copy(const CL_Rect &rect) const
 
 	CL_PixelBuffer pbuf(new_width, new_height, get_format(), *get_palette(), 0);
 	cl_uint8 *dst_data = (cl_uint8 *)pbuf.get_data();
-	cl_uint8 *src_data = (cl_uint8 *)get_data();
+	cl_uint8 *src_data = (cl_uint8 *)get_data() + (rect.top*impl->width + rect.left)*get_bytes_per_pixel();
 
 	int byte_width = new_width * get_bytes_per_pixel();
 	int src_pitch = get_pitch();

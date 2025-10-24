@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "model.h"
-
 class Scene;
 
 class SceneObject
@@ -49,7 +47,6 @@ protected:
 public:
 	std::vector<SceneObject *> child_objects;
 
-	CL_Vec3f pivot;		// Translation after rotation
 	CL_Vec3f position;	// Translation before rotation
 	CL_Angle rotation_x;
 	CL_Angle rotation_y;
@@ -58,8 +55,6 @@ public:
 
 	CL_Mat4f orientation_matrix;	// Calculated by UpdateOrientationMatrix (Excludes pivot)
 	CL_Mat4f modelview_matrix;		// Calculated by UpdateModelViewMatrix (Uses the orientation_matrix)
-
-	Model model;		// The model (shared resource, that also may be null if not required)
 
 	Scene *scene;		// The scene that this object belongs to
 	SceneObject *parent;	// The parent object. NULL = Top of the tree

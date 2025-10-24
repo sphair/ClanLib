@@ -48,6 +48,7 @@ libclan22Display_la_SOURCES = \
 	Image/pixel_buffer_impl.cpp \
 	Image/pixel_buffer_impl.h \
 	Image/pixel_format.cpp \
+	Image/perlin_noise.cpp \
 	Image/image_import_description.cpp \
 	Image/image_import_description_impl.h \
 	ImageProviders/targa_provider_impl.h \

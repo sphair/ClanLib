@@ -109,7 +109,7 @@ public:
 	CL_Rect content_rect;
 
 	void move(int steps, CL_InputEvent &e);
-	void insert_text(int pos, const CL_StringRef &str);
+	bool insert_text(int pos, const CL_StringRef &str);
 	void backspace();
 	void del();
 	int get_character_index(int mouse_x_wincoords);

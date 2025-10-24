@@ -28,18 +28,34 @@
 
 #pragma once
 
-#include "scene_object.h"
+#include "scene.h"
 
-class Scene;
+class ShaderDepth;
+class ShaderColor;
 
-class GeometryObject : public SceneObject
+class Model;
+
+// This is the Application class (That is instantiated by the Program Class)
+class App
 {
 public:
-	GeometryObject(Scene &scene_owner, SceneObject *parent_object);
-	virtual ~GeometryObject();
+	int start(const std::vector<CL_String> &args);
 
-	void Draw(CL_GraphicContext &gc, const CL_Mat4f &current_modelview);
+private:
+	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
+	void on_window_close();
+	
+private:
+	void render(CL_GraphicContext &gc);
+	void create_scene(CL_GraphicContext &gc);
+	void update_light(CL_GraphicContext &gc);
+	void calculate_matricies(CL_GraphicContext &gc);
+private:
+	Scene scene;
 
-public:
+	SceneObject *camera;
+	SceneObject *light_distant;
+
+	int time_delta;
+	bool quit;
 };
-

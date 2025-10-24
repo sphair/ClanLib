@@ -38,7 +38,7 @@ public:
 	void Load(const char *filename, std::vector<CL_Collada_Image> &library_images);
 	void Load(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
 
-	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool use_geometry_shader);
+	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix);
 	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
 
 private:
@@ -59,11 +59,6 @@ private:
 	CL_Vec4f material_ambient;
 	CL_Vec4f material_specular;
 
-	bool update_vbo;
-
-	CL_VertexArrayBuffer object_positions_vbo;
-	CL_VertexArrayBuffer object_normals_vbo;
-	CL_VertexArrayBuffer object_texcoords_vbo;
 };
 
 
@@ -83,17 +78,16 @@ Model::Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Coll
 
 bool Model::is_null()
 {
-	return impl.is_null();
+	return !impl;
 }
 
-void Model::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool use_geometry_shader)
+void Model::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix)
 {
-	impl->Draw(gc, gs, modelview_matrix, use_geometry_shader);
+	impl->Draw(gc, gs, modelview_matrix);
 }
 
 Model_Impl::Model_Impl()
 {
-	update_vbo = true;
 	material_shininess = 64.0f;
 	material_emission = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	material_ambient =  CL_Vec4f(0.9f, 0.2f, 0.2f, 1.0f);
@@ -130,8 +124,6 @@ void Model_Impl::Load(CL_DomDocument &doc, const char *geometry_name, std::vecto
 	CL_Collada object;
 	object = CL_Collada(doc, library_images);
 	insert_object(object, geometry_name, library_images, CL_Angle(89.53f, cl_degrees));
-
-	update_vbo = true;
 }
 
 void Model_Impl::insert_object(CL_Collada &object, const CL_String &geometry_name, std::vector<CL_Collada_Image> &library_images, const CL_Angle &smooth_threshold)
@@ -202,64 +194,33 @@ void Model_Impl::invert_uvmap(CL_Vec2f *points_ptr, int size)
 	}
 }
 
-void Model_Impl::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool use_geometry_shader)
+void Model_Impl::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix)
 {
-	if (!object_positions.size())
-		return;
-
-	if (update_vbo)
-	{
-		update_vbo = false;
-		if (object_texcoords.size())
-		{
-			object_texcoords_vbo = CL_VertexArrayBuffer(gc, &object_texcoords[0], sizeof(CL_Vec2f) * object_texcoords.size());
-		}
-		object_positions_vbo = CL_VertexArrayBuffer(gc, &object_positions[0], sizeof(CL_Vec3f) * object_positions.size());
-		object_normals_vbo = CL_VertexArrayBuffer(gc, &object_normals[0], sizeof(CL_Vec3f) * object_normals.size());
-
-	}
-
 	gc.set_modelview(modelview_matrix);
 
 	CL_PrimitivesArray prim_array(gc);
 
-	prim_array.set_attributes(0, object_positions_vbo, 3, cl_type_float, (void *) 0);
-	prim_array.set_attributes(1, object_normals_vbo, 3, cl_type_float, (void *) 0);
+	prim_array.set_attributes(0, &object_positions[0]);
+	prim_array.set_attributes(1, &object_normals[0]);
 
-	if (!use_geometry_shader)
+	if (object_texcoords.size())
 	{
-		if (object_texcoords.size())
-		{
-			prim_array.set_attributes(2, object_texcoords_vbo, 2, cl_type_float, (void *) 0);
-			gc.set_texture(0, gs->texture_brick);
-			gs->shader_texture.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
-			gs->shader_texture.Use(gc);
-		}
-		else
-		{
-			gs->shader_color.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
-			gs->shader_color.Use(gc);
-		}
+		prim_array.set_attributes(2, &object_texcoords[0]);
+		gc.set_texture(0, gs->texture_underwater);
+		gc.set_texture(1, gs->texture_background);
+		gs->shader_texture.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
+		gs->shader_texture.Use(gc);
 	}
 	else
 	{
-		if (object_texcoords.size())
-			throw CL_Exception("Shader not supported");
-
-		gs->shader_color_geometry.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
-		gs->shader_color_geometry.Use(gc);
-
-		clDisable(CL_CULL_FACE);	// For for example, so you can see inside the teapot
-
+		throw CL_Exception("What! no texure coordinates?");
 	}
 
 	gc.draw_primitives(cl_triangles, object_positions.size(), prim_array);
 
-	if (use_geometry_shader)
-		clEnable(CL_CULL_FACE);
-
 	if (object_texcoords.size())
 	{
+		gc.reset_texture(0);
 		gc.reset_texture(0);
 	}
 }

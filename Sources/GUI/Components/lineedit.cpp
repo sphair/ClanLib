@@ -544,8 +544,10 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				else if (e.id == CL_KEY_V && e.ctrl)
 				{
 					CL_String str = lineedit->get_gui_manager().get_clipboard_text();
-					std::remove(str.begin(), str.end(), '\n');
-					std::remove(str.begin(), str.end(), '\r');
+					CL_String::const_iterator end_str = std::remove(str.begin(), str.end(), '\n');
+					str.resize(end_str - str.begin());
+					end_str = std::remove(str.begin(), str.end(), '\r');
+					str.resize(end_str - str.begin());
 					lineedit->delete_selected_text();
 
 					if (input_mask.empty())
@@ -568,8 +570,8 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 										CL_String::size_type decimal_point_pos;
 										if((decimal_point_pos = str.find_first_not_of(numeric_mode_characters, str[0] == '-' ? 1 : 0)) == CL_String::npos) //no decimal char inside string to paste
 										{ //we don't look at the position of decimal char inside of text in the textbox, if it's present
-											insert_text(cursor_pos, str);
-											lineedit->set_cursor_pos(cursor_pos + str.length());
+											if(insert_text(cursor_pos, str))
+												lineedit->set_cursor_pos(cursor_pos + str.length());
 										}
 										else
 										{
@@ -577,8 +579,8 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 												str[decimal_point_pos] == decimal_char[0] &&
 												str.find_first_not_of(numeric_mode_characters, decimal_point_pos + 1) == CL_String::npos) //allow only one decimal char in the string to paste
 											{
-												insert_text(cursor_pos, str);
-												lineedit->set_cursor_pos(cursor_pos + str.length());
+												if(insert_text(cursor_pos, str))
+													lineedit->set_cursor_pos(cursor_pos + str.length());
 											}
 										}
 									}
@@ -586,8 +588,8 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 									{
 										if(str.find_first_not_of(numeric_mode_characters, str[0] == '-' ? 1 : 0) == CL_String::npos)
 										{
-											insert_text(cursor_pos, str);
-											lineedit->set_cursor_pos(cursor_pos + str.length());
+											if(insert_text(cursor_pos, str))
+												lineedit->set_cursor_pos(cursor_pos + str.length());
 										}
 									}
 								}
@@ -595,16 +597,16 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 						}
 						else
 						{
-							insert_text(cursor_pos, str);
-							lineedit->set_cursor_pos(cursor_pos + str.length());
+							if(insert_text(cursor_pos, str))
+								lineedit->set_cursor_pos(cursor_pos + str.length());
 						}
 					}
 					else
 					{
 						if (input_mask_accepts_input(cursor_pos, str))
 						{
-							insert_text(cursor_pos, str);
-							lineedit->set_cursor_pos(cursor_pos + str.length());
+							if(insert_text(cursor_pos, str))
+								lineedit->set_cursor_pos(cursor_pos + str.length());
 						}
 					}
 
@@ -631,36 +633,36 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 							// '-' can only be added once, and only as the first character.
 							if (e.str == "-" && cursor_pos == 0 && text.find("-") == CL_StringRef::npos) 
 							{
-								insert_text(cursor_pos, e.str);
-								cursor_pos += e.str.size();
+								if(insert_text(cursor_pos, e.str))
+									cursor_pos += e.str.size();
 							}
 							else if (numeric_mode_decimals && e.str == decimal_char && cursor_pos > 0) // add decimal char 
 							{
 								if (text.find(decimal_char) == CL_StringRef::npos) // allow only one decimal char.
 								{
-									insert_text(cursor_pos, e.str);
-									cursor_pos += e.str.size();
+									if(insert_text(cursor_pos, e.str))
+										cursor_pos += e.str.size();
 								}
 							}
 							else if (numeric_mode_characters.find(e.str) != CL_StringRef::npos) // 0-9
 							{
-								insert_text(cursor_pos, e.str);
-								cursor_pos += e.str.size();
+								if(insert_text(cursor_pos, e.str))
+									cursor_pos += e.str.size();
 							}
 						}
 						else
 						{
 							// not in any special mode, just insert the string.
-							insert_text(cursor_pos, e.str);
-							cursor_pos += e.str.size();
+							if(insert_text(cursor_pos, e.str))
+								cursor_pos += e.str.size();
 						}
 					}
 					else
 					{
 						if (input_mask_accepts_input(cursor_pos, e.str))
 						{
-							insert_text(cursor_pos, e.str);
-							cursor_pos += e.str.size();
+							if(insert_text(cursor_pos, e.str))
+								cursor_pos += e.str.size();
 						}
 					}
 					update_text_clipping();
@@ -889,7 +891,7 @@ void CL_LineEdit_Impl::move(int steps, CL_InputEvent &e)
 	undo_info.first_text_insert = true;
 }
 
-void CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
+bool CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
 {
 	undo_info.first_erase = false;
 	if (undo_info.first_text_insert)
@@ -901,12 +903,13 @@ void CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
 	// checking if insert exceeds max length
 	if(text.length() + str.length() > max_length)
 	{
-		return;
+		return false;
 	}
 	text.insert(pos, str);
 
 	update_text_clipping();
 	lineedit->request_repaint();
+	return true;
 }
 
 void CL_LineEdit_Impl::backspace()
