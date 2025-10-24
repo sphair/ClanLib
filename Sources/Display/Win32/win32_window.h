@@ -207,6 +207,8 @@ private:
 	UINT png_clipboard_format;
 	CL_String class_name;
 	bool allow_dropshadow;
+	bool minimized;
+	bool maximized;
 
 	friend class CL_InputDeviceProvider_DirectInput;
 };

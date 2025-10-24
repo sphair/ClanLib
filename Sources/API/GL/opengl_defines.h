@@ -40,8 +40,6 @@
 
 #include <cstddef>
 
-#ifndef __APPLE__
-// Win32 and linux
 typedef unsigned int CLenum;
 typedef unsigned char CLboolean;
 typedef unsigned int CLbitfield;
@@ -63,27 +61,6 @@ typedef char CLchar;
 typedef ptrdiff_t CLintptr;
 typedef ptrdiff_t CLsizeiptr;
 typedef struct __CLsync *CLsync;
-#else
-typedef struct __CLsync *CLsync;
-typedef unsigned long CLenum;
-typedef unsigned char CLboolean;
-typedef unsigned long CLbitfield;
-typedef signed char CLbyte;
-typedef short CLshort;
-typedef long CLint;
-typedef long CLsizei;
-typedef unsigned char CLubyte;
-typedef unsigned short CLushort;
-typedef unsigned long CLuint;
-typedef float CLfloat;
-typedef float CLclampf;
-typedef double CLdouble;
-typedef double CLclampd;
-typedef void CLvoid;
-typedef char CLchar;
-typedef ptrdiff_t CLintptr;
-typedef ptrdiff_t CLsizeiptr;
-#endif
 
 /// \brief Display Defines
 ///

@@ -39,7 +39,7 @@
 
 #ifdef WIN32
 #include "Display/Win32/cursor_provider_win32.h"
-#else
+#else if !defined(__APPLE__)
 #include "Display/X11/cursor_provider_x11.h"
 #endif
 
@@ -169,7 +169,7 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 
 #ifdef WIN32
 	window.create(site, description);
-#else
+#elif !defined(__APPLE__)
 	window.open_screen();
 	Display *disp = window.get_display();
 
@@ -201,7 +201,7 @@ CL_CursorProvider *CL_SWRenderDisplayWindowProvider::create_cursor(const CL_Spri
 {
 #ifdef WIN32
 	return new CL_CursorProvider_Win32(sprite_description, hotspot);
-#else
+#elif !defined(__APPLE__)
 	return new CL_CursorProvider_X11(sprite_description, hotspot);
 #endif
 }
@@ -210,7 +210,7 @@ void CL_SWRenderDisplayWindowProvider::set_cursor(CL_CursorProvider *cursor)
 {
 #ifdef WIN32
 	window.set_cursor(static_cast<CL_CursorProvider_Win32 *>(cursor));
-#else
+#elif !defined(__APPLE__)
 	window.set_cursor(static_cast<CL_CursorProvider_X11 *>(cursor));
 #endif
 }
@@ -294,7 +294,7 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 	HDC hdc = GetDC(hwnd);
 	draw_image(hdc, get_viewport(), canvas->to_pixelbuffer());
 	ReleaseDC(hwnd, hdc);
-#else
+#elif !defined(__APPLE__)
 	CL_PixelBuffer &image = canvas->to_pixelbuffer();
 	draw_image(get_viewport(), image, CL_Rect(0, 0, image.get_width(), image.get_height()));
 #endif
@@ -346,7 +346,7 @@ void CL_SWRenderDisplayWindowProvider::update(const CL_Rect &rect)
 	HDC hdc = GetDC(hwnd);
 	draw_image(hdc, rect, canvas->to_pixelbuffer(), rect);
 	ReleaseDC(hwnd, hdc);
-#else
+#elif !defined(__APPLE__)
 	CL_PixelBuffer &image = canvas->to_pixelbuffer();
 	draw_image(rect, image, rect);
 #endif
@@ -419,7 +419,7 @@ void CL_SWRenderDisplayWindowProvider::draw_image(HDC hdc, const CL_Rect &dest, 
 	//StretchDIBits(hdc, dest.left, dest.top, dest.get_width(), dest.get_height(), src.left, src.top, src.get_width(), src.get_height(), image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS, SRCCOPY);
 	SetDIBitsToDevice(hdc, dest.left, dest.top, dest.get_width(), dest.get_height(), src.left, image.get_height()-src.bottom, 0, image.get_height(), image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 }
-#else
+#elif !defined(__APPLE__)
 void CL_SWRenderDisplayWindowProvider::draw_image(const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src)
 {
 	XImage ximage;

@@ -91,7 +91,7 @@ namespace
 		HGLRC wgl_context;
 		bool own_context;
 
-		friend class CL_OpenGLWindowProvider_WGL;
+		friend class ::CL_OpenGLWindowProvider_WGL;
 	};
 }
 

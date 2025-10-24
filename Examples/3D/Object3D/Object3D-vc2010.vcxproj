@@ -160,6 +160,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Sources\program.cpp" />
+    <ClCompile Include="Sources\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Clan3D\Collada\collada.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Sources\example.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
+    <ClInclude Include="Sources\shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.txt" />

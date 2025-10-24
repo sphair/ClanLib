@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.2.6)
+AC_INIT(ClanLib, 2.2.7)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=2
-CLANLIB_MICRO_VERSION=6
+CLANLIB_MICRO_VERSION=7
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -109,6 +109,7 @@ case $target in
 	*mingw*)
 		X11="no"
 		WIN32="yes"
+		CXXFLAGS="$CXXFLAGS -DWIN32 -DUNICODE"
 		;;
 	*)
 		X11="yes"
@@ -118,6 +119,21 @@ esac
 
 dnl Extra flags that are needed to compile (for pkg-config)
 if test "$WIN32" = "yes"; then
+	case $target in
+	*mingw*)
+		extra_CFLAGS_clanApp="-mwindows"
+		extra_LIBS_clanApp="-gdi32 -luser32 -lkernel32 -lmsvcrt"
+		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -limagehlp -lmingwex"
+		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -ljpeg -lpng -lfreetype"
+		extra_LIBS_clanGL="-lopengl32"
+		extra_LIBS_clanGL1="-lopengl32"
+		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
+		extra_LIBS_clanMikMod="-lmikmod"
+		extra_LIBS_clanVorbis="-lvorbis -logg"
+		extra_LIBS_clanNetwork="-lws2_32"
+		extra_LIBS_clanSWRender="-lmsvcrt"
+		;;
+	*)
 	extra_CFLAGS_clanApp="-mwindows"
 	extra_LIBS_clanCore="-lz"
 	extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32 -ljpeg -lpng"
@@ -127,6 +143,8 @@ if test "$WIN32" = "yes"; then
 	extra_LIBS_clanMikMod="-lmikmod"
 	extra_LIBS_clanVorbis="-lvorbis -logg"
 	extra_LIBS_clanNetwork="-lws2_32"
+	;;
+esac
 fi
 
 extra_LIBS_clanRegExp="-lpcre"
@@ -305,8 +323,9 @@ if test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(png,  [`cat $srcdir/Setup/Tests/png.cpp`],  clanDisplay, [ *** Cannot find png (See http://www.libpng.org ) (Try libpng12-dev or better) ], [-lz -lpng])
 	CLANLIB_CHECK_LIB(jpeg, [`cat $srcdir/Setup/Tests/jpeg.cpp`], clanDisplay, [ *** Cannot find jpeg (See http://www.ijg.org ) (Try libjpeg62-dev or better) ], [ -ljpeg ])
 	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
+	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
-
+	fi
 	if test "$WIN32" = "yes" && test "$enable_clanDisplay" != "no"; then
 		CLANLIB_CHECK_LIB(gdi32,[#include <windows.h>
 			int main(){} void used_stuff(){ CreateCompatibleDC(NULL); }],

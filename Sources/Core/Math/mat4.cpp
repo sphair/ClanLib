@@ -34,8 +34,8 @@
 #include <limits>
 
 #ifndef CL_DISABLE_SSE2
-#include <mmintrin.h>
-#include <xmmintrin.h>
+//#include <mmintrin.h> /*Dont need it*/
+#include <emmintrin.h>/*it's included here*/
 #endif
 
 #ifndef FLT_EPSILON
@@ -48,7 +48,7 @@
 template<>
 CL_Mat4<float> &CL_Mat4<float>::multiply(const CL_Mat4<float> &mult)
 {
-#ifndef CL_DISABLE_SSE2
+#if !defined CL_DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
 	__m128 m1col0 = _mm_loadu_ps(matrix);
 	__m128 m1col1 = _mm_loadu_ps(matrix+4);
 	__m128 m1col2 = _mm_loadu_ps(matrix+8);

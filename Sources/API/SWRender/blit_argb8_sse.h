@@ -51,7 +51,7 @@ public:
 	static void set_color(__m128i &xmm, unsigned short red, unsigned short green, unsigned short blue, unsigned short alpha);
 	static void set_color(__m128i &xmm, unsigned short r1, unsigned short g1, unsigned short b1, unsigned short a1, unsigned short r2, unsigned short g2, unsigned short b2, unsigned short a2);
 
-#ifdef WIN32
+#ifdef _MSC_VER
 	static void multiply_color(__m128i &src, __m128i &primcolor);
 #else
 	// Fix to compile on gcc
@@ -132,7 +132,7 @@ inline void CL_BlitARGB8SSE::set_color(__m128i &xmm, unsigned short r1, unsigned
 	xmm = _mm_set_epi16(a2, r2, g2, b2, a1, r1, g1, b1);
 }
 
-#ifdef WIN32
+#ifdef _MSC_VER
 inline void CL_BlitARGB8SSE::multiply_color(__m128i &src, __m128i &primcolor)
 {
 	src = _mm_mullo_epi16(src, primcolor);
@@ -257,7 +257,7 @@ inline void CL_BlitARGB8SSE::channels_to_pixels(__m128i &dest0, __m128i &dest1, 
 	dest1 = _mm_or_si128(dest1, _mm_and_si128(blue_mask, blue));
 }
 
-#ifdef WIN32
+#ifdef _MSC_VER
 
 #define cl_blitargb8sse_sample_nearest(out0, tx, ty, data, width) \
 { \

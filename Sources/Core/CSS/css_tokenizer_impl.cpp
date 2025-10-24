@@ -431,7 +431,11 @@ size_t CL_CSSTokenizer_Impl::read_nmstart(size_t p, CL_String::char_type &out_c)
 		if (doc[p] == '_' ||
 			(doc[p] >= 'a' && doc[p] <= 'z') ||
 			(doc[p] >= 'A' && doc[p] <= 'Z') ||
+#ifdef __APPLE__
+			(unsigned char)(doc[p]) > 177)
+#else
 			doc[p] > 177)
+#endif
 		{
 			out_c = doc[p];
 			return 1;

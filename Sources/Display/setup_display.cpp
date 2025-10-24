@@ -35,7 +35,9 @@
 #include "API/Display/ImageProviders/png_provider.h"
 
 #ifndef WIN32
+#ifndef __APPLE__
 #include <X11/Xlib.h>
+#endif
 #endif
 
 static CL_ProviderType_Register<CL_JPEGProvider> *jpeg_provider = NULL;
@@ -51,9 +53,11 @@ static CL_ProviderType_Register<CL_TargaProvider> *tga_provider = NULL;
 CL_SetupDisplay::CL_SetupDisplay()
 {
 #ifndef WIN32
+#ifndef __APPLE__
 	// The XInitThreads() function initializes Xlib support for concurrent threads.
 	// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
 	XInitThreads();
+#endif
 #endif
 	jpeg_provider  = new CL_ProviderType_Register<CL_JPEGProvider>("jpeg");
 	jpg_provider   = new CL_ProviderType_Register<CL_JPEGProvider>("jpg");

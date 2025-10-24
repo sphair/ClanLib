@@ -28,13 +28,14 @@
 
 #include "precomp.h"
 #include "example.h"
+#include "shader.h"
 
 // The start of the Application
 int App::start(const std::vector<CL_String> &args)
 {
 	quit = false;
+    CL_GL1WindowDescription desc;
 
-	CL_GL1WindowDescription desc;
 	desc.set_title("ClanLib Object 3D Example");
 	desc.set_size(CL_Size(640, 480), true);
 	desc.set_multisampling(4);
@@ -50,7 +51,10 @@ int App::start(const std::vector<CL_String> &args)
 
 	// Get the graphic context
 	CL_GraphicContext gc = window.get_gc();
-	CL_GraphicContext_GL1 gc_gl1 = gc;
+
+#ifdef USE_OPENGL_1
+    CL_GraphicContext_GL1 gc_gl1 = gc;
+#endif
 
 	// Prepare the display
 	gc.set_map_mode(cl_user_projection);
@@ -67,6 +71,7 @@ int App::start(const std::vector<CL_String> &args)
 	buffer_control.enable_depth_write(true);
 	gc.set_buffer_control(buffer_control);
 
+#ifdef USE_OPENGL_1
 	// Set the lights
 	CL_LightModel_GL1 light_model;
 	light_model.enable_lighting(true);
@@ -79,6 +84,11 @@ int App::start(const std::vector<CL_String> &args)
 	light_distant.set_diffuse_intensity(CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 	light_distant.set_position(CL_Vec4f(0.0f, -2.0f, 30.0f, 0.0f).normalize3());
 	gc_gl1.set_light(0, light_distant);
+#endif
+
+#ifdef USE_OPENGL_2
+    Shader shader(gc);
+#endif
 
 	// Create the objects
 	Model scene_model;
@@ -108,6 +118,7 @@ int App::start(const std::vector<CL_String> &args)
 
 		// Draw object_positions_1
 		CL_PrimitivesArray prim_array(gc);
+        
 
 		gc.push_modelview();
 		gc.set_modelview(CL_Mat4f::identity());
@@ -115,15 +126,25 @@ int App::start(const std::vector<CL_String> &args)
 		gc.mult_translate(0.0f, 0.0f, 2.0f);
 		gc.mult_rotate(CL_Angle(angle, cl_degrees), 0.0f, 1.0f, 0.0f, false);
 
-		prim_array.set_attributes(0, &scene_model.object_positions[0]);
-		prim_array.set_attribute(1, CL_Colorf::white);
-		prim_array.set_attributes(4, &scene_model.object_normals[0]);
+#ifdef USE_OPENGL_2
+        shader.Set(gc);
+        shader.Use(gc);
+#endif
+#ifdef USE_OPENGL_2
+        prim_array.set_attributes(0, &scene_model.object_positions[0]);
+        prim_array.set_attributes(1, &scene_model.object_normals[0]);
+        prim_array.set_attribute(2, CL_Colorf::white);
+#endif
+#ifdef USE_OPENGL_1
+        prim_array.set_attributes(0, &scene_model.object_positions[0]);
+        prim_array.set_attribute(1, CL_Colorf::white);
+        prim_array.set_attributes(4, &scene_model.object_normals[0]);
+#endif
 		gc.draw_primitives(cl_triangles, scene_model.object_positions.size(), prim_array);
 
 		gc.pop_modelview();
 
 		// Draw object_positions_2
-
 		gc.push_modelview();
 		gc.set_modelview(CL_Mat4f::identity());
 		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
@@ -131,12 +152,25 @@ int App::start(const std::vector<CL_String> &args)
 		gc.mult_rotate(CL_Angle(angle * 4.0f, cl_degrees), 0.0f, 1.0f, 0.0f, false);
 
 		gc.set_texture(0, tux);
-		prim_array.set_attributes(0, &scene_model2.object_positions[0]);
-		prim_array.set_attribute(1, CL_Colorf::white);
-		prim_array.set_attributes(2, &scene_model2.object_texcoords[0]);
-		prim_array.set_attributes(4, &scene_model2.object_normals[0]);
-		gc.draw_primitives(cl_triangles, scene_model2.object_positions.size(), prim_array);
-		gc.reset_texture(0);
+#ifdef USE_OPENGL_2
+        gc.reset_program_object();
+        shader.Set(gc, 0);
+        shader.Use(gc);
+        prim_array.set_attributes(0, &scene_model2.object_positions[0]);
+        prim_array.set_attributes(1, &scene_model2.object_normals[0]);
+        prim_array.set_attribute(2, CL_Colorf::white);
+        prim_array.set_attributes(3, &scene_model2.object_texcoords[0]);
+#endif
+#ifdef USE_OPENGL_1
+        gc.set_program_object(cl_program_single_texture);
+        prim_array.set_attributes(0, &scene_model2.object_positions[0]);
+        prim_array.set_attribute(1, CL_Colorf::white);
+        prim_array.set_attributes(2, &scene_model2.object_texcoords[0]);
+        prim_array.set_attributes(4, &scene_model2.object_normals[0]);
+#endif
+        gc.draw_primitives(cl_triangles, scene_model2.object_positions.size(), prim_array);
+        gc.reset_texture(0);
+        gc.reset_program_object();
 
 		gc.pop_modelview();
 

@@ -76,7 +76,8 @@ int TestApp::main(const std::vector<CL_String> &args)
 		accel_fullscreen.func_pressed().set(this, &TestApp::on_accelerator_callback);
 		accel_table.add_accelerator(accel_fullscreen);
 
-		gui.exec(accel_table);
+		gui.set_accelerator_table(accel_table);
+		gui.exec();
 	}
 	catch(CL_Exception error)
 	{

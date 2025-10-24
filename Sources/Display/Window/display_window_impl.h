@@ -55,6 +55,7 @@ public:
 		site.sig_window_destroy = &sig_window_destroy;
 		site.sig_window_minimized = &sig_window_minimized;
 		site.sig_window_maximized = &sig_window_maximized;
+		site.sig_window_restored = &sig_window_restored;
 		site.func_window_resize = &func_window_resize;
 		site.func_minimize_clicked = &func_minimize_clicked;
 		site.sig_window_moved = &sig_window_moved;
@@ -77,6 +78,7 @@ public:
 	CL_Signal_v0 sig_window_destroy;
 	CL_Signal_v0 sig_window_minimized;
 	CL_Signal_v0 sig_window_maximized;
+	CL_Signal_v0 sig_window_restored;
 	CL_Signal_v0 sig_window_moved;
 	CL_Callback_v1<CL_Rect &> func_window_resize;
 	CL_Callback_0<bool> func_minimize_clicked;

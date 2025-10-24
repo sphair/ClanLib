@@ -46,6 +46,9 @@
 #include "API/Core/System/system.h"
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
+#if defined UNICODE && !defined _UNICODE
+#define _UNICODE
+#endif
 #include <tchar.h>
 
 // Win32 implementation of CL_System functions:

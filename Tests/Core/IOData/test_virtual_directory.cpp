@@ -177,7 +177,6 @@ void TestApp::test_virtual_directory_part1(void)
 
 void TestApp::test_virtual_directory_part2(void)
 {
-
 	CL_Console::write_line("  (Using CL_VirtualFileSystem)");
 
 	CL_String str;
@@ -204,6 +203,19 @@ void TestApp::test_virtual_directory_part2(void)
 		str = listing.get_filename();
 	}while(str != "test_virtual_directory.cpp");
 
+	//*** testing for empty filenames in get_directory_listing()
+	CL_Console::write_line("   Function: CL_VirtualDirectoryListing get_directory_listing() checking for empty filenames");
+	listing = dir.get_directory_listing();
+	while(listing.next())
+	{
+		if(listing.get_filename().empty())
+			fail();
+		if(listing.is_directory())
+			continue;
+		if(!listing.is_readable())
+			continue;
+	}
+
 //*** testing open_directory()
 	CL_Console::write_line("   Function: CL_VirtualDirectory CL_VirtualDirectory::open_directory(const CL_String &path)");
 	CL_VirtualDirectory dir2 = dir.open_directory("ABC/DEF");
@@ -229,7 +241,6 @@ void TestApp::test_virtual_directory_part2(void)
 #else
 	if (str != "Core/IOData/ABC/DEF") fail();
 #endif
-
 
 //*** testing make_path_relative()
 	CL_Console::write_line("   Function: CL_String make_path_relative(const CL_String &absolute_path)");
@@ -303,8 +314,6 @@ void TestApp::test_virtual_directory_part2(void)
 		{
 		}
 		dir.open_file("test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-
 	}
-
 }
 

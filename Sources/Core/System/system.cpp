@@ -53,7 +53,7 @@
 #include <cstdlib>
 #endif
 
-#ifdef WIN32
+#ifdef _MSC_VER
 #ifdef DEBUG
 #include <crtdbg.h>
 #endif
@@ -61,16 +61,24 @@
 #pragma comment(lib, "dbghelp.lib")
 #endif
 
+#ifdef __MINGW32__
+#include <dbghelp.h>
+#include <malloc.h>
+#endif
 /////////////////////////////////////////////////////////////////////////////
 // CL_System Operations:
 
 void *CL_System::aligned_alloc(size_t size, size_t alignment)
 {
 	void *ptr;
-#ifdef _MSC_VER
+#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 	ptr = _aligned_malloc(size, alignment);
 	if (!ptr)
 		throw CL_Exception("Out of memory");
+#elif defined __MINGW32__
+	ptr = __mingw_aligned_malloc(size, alignment);
+	if (!ptr)
+		throw CL_Exception("Out of memory");	
 #else
 	// posix_memalign required alignment to be a min of sizeof(void *)
 	if (alignment < sizeof(void *))
@@ -88,8 +96,10 @@ void CL_System::aligned_free(void *ptr)
 {
 	if (ptr)
 	{
-#ifdef _MSC_VER
+#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 		_aligned_free(ptr);
+#elif defined __MINGW32__
+		__mingw_aligned_free (ptr);
 #else
 		free(ptr);
 #endif

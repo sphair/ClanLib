@@ -30,7 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/System/system.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(_WIN64)
+#if (defined(WIN32) || defined(_WIN32) || defined(_WIN64)) && !defined __MINGW32__
 #include <intrin.h>
 #endif
 #ifdef __GNUC__

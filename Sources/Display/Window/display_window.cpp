@@ -97,6 +97,8 @@ HWND CL_DisplayWindow::get_hwnd() const
 {
 	return impl->provider->get_hwnd();
 }
+#elif defined(__APPLE__)
+	// nothing
 #else
 Display *CL_DisplayWindow::get_display() const
 {
@@ -172,6 +174,11 @@ CL_Signal_v0 &CL_DisplayWindow::sig_window_minimized()
 CL_Signal_v0 &CL_DisplayWindow::sig_window_maximized()
 {
 	return impl->sig_window_maximized;
+}
+
+CL_Signal_v0 &CL_DisplayWindow::sig_window_restored()
+{
+	return impl->sig_window_restored;
 }
 
 CL_Callback_v1<CL_Rect &> &CL_DisplayWindow::func_window_resize()

@@ -36,7 +36,6 @@
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_message_focus_change.h"
-#include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/slider.h"
@@ -84,7 +83,6 @@ public:
 	void on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
 	void on_mouse_leave();
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
-	void on_timer_expired();
 	void on_resized();
 
 	void create_parts();
@@ -118,8 +116,6 @@ public:
 	CL_GUIThemePart part_track;
 	CL_GUIThemePart part_thumb;
 	CL_GUIThemePart part_focus;
-
-	CL_Timer mouse_down_timer;
 
 	int thumb_start_position;
 
@@ -331,26 +327,36 @@ void CL_Slider_Impl::on_process_message(CL_GUIMessage &msg)
 		}
 		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_LEFT || e.id == CL_KEY_UP))
 		{
+			int old_position = position;
 			slider->set_position(position - page_step);
-			if (!func_value_changed.is_null())
-				func_value_changed.invoke();
-			if (!func_slider_decrement.is_null())
-				func_slider_decrement.invoke();
-			if (!func_slider_moved.is_null())
-				func_slider_moved.invoke();
+
+			if (old_position != position)
+			{
+				if (!func_value_changed.is_null())
+					func_value_changed.invoke();
+				if (!func_slider_decrement.is_null())
+					func_slider_decrement.invoke();
+				if (!func_slider_moved.is_null())
+					func_slider_moved.invoke();
+			}
 
 			msg.set_consumed();
 		}
 		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_RIGHT || e.id == CL_KEY_DOWN))
 		{
+			int old_position = position;
 			slider->set_position(position + page_step);
 
-			if (!func_value_changed.is_null())
-				func_value_changed.invoke();
-			if (!func_slider_increment.is_null())
-				func_slider_increment.invoke();
-			if (!func_slider_moved.is_null())
-				func_slider_moved.invoke();
+			if (old_position != position)
+			{
+				if (!func_value_changed.is_null())
+					func_value_changed.invoke();
+				if (!func_slider_increment.is_null())
+					func_slider_increment.invoke();
+				if (!func_slider_moved.is_null())
+					func_slider_moved.invoke();
+			}
+
 			msg.set_consumed();
 		}
 	}
@@ -420,6 +426,12 @@ void CL_Slider_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &in
 		slider->request_repaint();
 	}
 
+	if (lock_to_ticks)
+	{
+		int remainder = (position - slider_min) % tick_count;
+		position = position - remainder;
+	}
+
 	if (position != original_slider_position)
 	{
 		if (!func_value_changed.is_null())
@@ -462,8 +474,6 @@ void CL_Slider_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputE
 			func_slider_increment.invoke();
 	}
 
-	mouse_down_timer.start(100,false);
-
 	slider->request_repaint();
 	slider->capture_mouse(true);
 
@@ -476,8 +486,6 @@ void CL_Slider_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputE
 
 void CL_Slider_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
 {
-	mouse_down_timer.stop();
-
 	if ((mouse_down_mode == mouse_down_thumb_drag) && (mouse_drag_start_value != position))
 		if (!func_slider_moved.is_null())
 			func_slider_moved.invoke();
@@ -618,18 +626,6 @@ void CL_Slider_Impl::update_part_positions()
 		rect_track_increment.top = content_rect.top;
 		rect_track_increment.bottom = content_rect.bottom;
 	}
-}
-
-void CL_Slider_Impl::on_timer_expired()
-{
-	if (mouse_down_mode == mouse_down_thumb_drag)
-		return;
-	mouse_down_timer.start(100, false);
-	position += last_step_size;
-	if (position < slider_min) position = slider_min;
-	if (position > slider_max) position = slider_max;
-
-	slider->request_repaint();
 }
 
 void CL_Slider_Impl::on_resized()

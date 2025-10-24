@@ -29,7 +29,11 @@
 
 #include "Display/precomp.h"
 #include "input_device_provider_win32keyboard.h"
+#ifdef __MINGW32__
+#include "API/Display/Window/display_window.h"
+#endif
 #include "win32_window.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_Win32Keyboard construction:

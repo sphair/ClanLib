@@ -29,7 +29,6 @@
 
 #include "test.h"
 
-
 // This is the Program class that is called by CL_ClanApplication
 class Program
 {
@@ -52,7 +51,7 @@ CL_ClanApplication app(&Program::main);
 int TestApp::main(const std::vector<CL_String> &args)
 {
 	// Create a console window for text-output if not available
-	CL_ConsoleWindow console("Console");
+	CL_ConsoleWindow console("Console", 160, 1000);
 
 	try
 	{
@@ -75,7 +74,8 @@ int TestApp::main(const std::vector<CL_String> &args)
 			location_dir[0] = working_dir[0];
 			location_dir[1] = ':';
 			location_dir[2] = 0;
-		}else
+		}
+		else
 		{
 			location_dir[0] = 0;
 		}
@@ -83,9 +83,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 		memset(working_dir, 0, 1024);
 		if (getcwd(working_dir, 1024) == 0)
 			throw CL_Exception("Working dir is more than legal length !");
-
 #endif
-
 
 		test_cl_endian();
 		test_path_help();
@@ -100,12 +98,12 @@ int TestApp::main(const std::vector<CL_String> &args)
 		CL_Console::write_line("All Tests Complete");
 		console.display_close_message();
 	}
-
 	catch(CL_Exception error)
 	{
 		CL_Console::write_line("Exception caught:");
 		CL_Console::write_line(error.message);
 		console.display_close_message();
+
 		return -1;
 	}
 

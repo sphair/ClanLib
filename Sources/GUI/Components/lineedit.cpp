@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include <algorithm>
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/utf8_reader.h"
 #include "API/GUI/gui_component.h"
@@ -282,7 +283,12 @@ void CL_LineEdit::set_text(int number)
 
 void CL_LineEdit::set_text(float number)
 {
-	impl->text = CL_StringHelp::float_to_text(number);
+	set_text(number, 6);
+}
+
+void CL_LineEdit::set_text(float number, int num_decimal_places)
+{
+	impl->text = CL_StringHelp::float_to_text(number, num_decimal_places);
 	impl->clip_start_offset = 0;
 	impl->update_text_clipping();
 	set_cursor_pos(impl->text.size());
@@ -317,7 +323,9 @@ void CL_LineEdit::delete_selected_text()
 	impl->text = impl->text.substr(0, sel_start) + impl->text.substr(sel_end, impl->text.size());
 	impl->cursor_pos = sel_start;
 	clear_selection();
-	request_repaint();
+	int old_pos = get_cursor_pos();
+	set_cursor_pos(0);
+	set_cursor_pos(old_pos);
 }
 
 void CL_LineEdit::set_cursor_pos(int pos)
@@ -536,6 +544,8 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				else if (e.id == CL_KEY_V && e.ctrl)
 				{
 					CL_String str = lineedit->get_gui_manager().get_clipboard_text();
+					std::remove(str.begin(), str.end(), '\n');
+					std::remove(str.begin(), str.end(), '\r');
 					lineedit->delete_selected_text();
 
 					if (input_mask.empty())
@@ -926,6 +936,10 @@ void CL_LineEdit_Impl::backspace()
 			lineedit->request_repaint();
 		}
 	}
+
+	int old_pos = lineedit->get_cursor_pos();
+	lineedit->set_cursor_pos(0);
+	lineedit->set_cursor_pos(old_pos);
 }
 
 void CL_LineEdit_Impl::del()

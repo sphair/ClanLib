@@ -32,8 +32,7 @@ Socket/tcp_connection.cpp \
 Socket/tcp_listen.cpp \
 Socket/tcp_listen_impl.cpp \
 Socket/udp_socket.cpp \
-Socket/udp_socket_impl.cpp \
-Socket/unix_socket.cpp
+Socket/udp_socket_impl.cpp 
 
 if WIN32
 libclan22Network_la_SOURCES += \
@@ -42,6 +41,7 @@ Socket/win32_socket.cpp \
 setupnetwork_win32.cpp
 else
 libclan22Network_la_SOURCES += \
+Socket/unix_socket.cpp\
 setupnetwork_unix.cpp
 endif
 

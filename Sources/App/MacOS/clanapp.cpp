@@ -54,4 +54,4 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////////////////////////////////////
 // CL_ClanApplication:
 
-CL_ClanApplication::MainFunction *CL_ClanApplication::app = 0;
+CL_ClanApplication::MainFunction *CL_ClanApplication::main = 0;

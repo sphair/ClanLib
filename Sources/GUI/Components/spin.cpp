@@ -45,7 +45,7 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
-#ifndef WIN32
+#ifndef _MSC_VER
 #include <climits>
 #endif
 

@@ -32,6 +32,9 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 
+#ifdef __MINGW32__
+#define _WIN32_IE 0x0500
+#endif
 #if defined(WIN32)
 #include <shlobj.h>
 #if defined(_MSC_VER)
@@ -57,6 +60,9 @@
 #endif
 #ifndef MAX_PATH
 #define _MAX_PATH MAX_PATH
+#endif
+#if defined UNICODE && !defined _UNICODE
+#define _UNICODE
 #endif
 #include <tchar.h>
 #endif

@@ -38,7 +38,14 @@
 #include <cstdio>
 #else
 #include <cstring>
+#if defined UNICODE && !defined _UNICODE
+#define _UNICODE
+#endif
 #include <tchar.h>
+#endif
+
+#ifdef __MINGW32__
+#include <cstdio>
 #endif
 
 // This function or variable may be unsafe. Consider using xxxx instead.

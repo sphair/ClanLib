@@ -80,7 +80,7 @@ CL_Vec3<Type> CL_Vec3<Type>::cross(const CL_Vec3<Type>& v1, const CL_Vec3<Type>&
 template<typename Type>
 CL_Vec3<Type> &CL_Vec3<Type>::cross(const CL_Vec3<Type>& v)
 {
-	cross(*this, v);
+	*this = cross(*this, v);
 	return *this;
 }
 

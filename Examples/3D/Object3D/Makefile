@@ -1,6 +1,7 @@
 EXAMPLE_BIN=object3d
 OBJF = ./Sources/example.o \
 ./Sources/program.o \
+./Sources/shader.o \
 ./Sources/precomp.o \
 ../Clan3D/Collada/collada_effect_float_param.o \
 ../Clan3D/Collada/collada_material.o \
@@ -17,7 +18,7 @@ OBJF = ./Sources/example.o \
 ../Clan3D/Collada/collada_mesh.o \
 ../Clan3D/Collada/collada_effect_color_texture.o
 
-LIBS=clanApp clanDisplay clanCore clanGL1
+LIBS=clanApp clanDisplay clanCore clanGL1 clanGL
 
 CXXFLAGS += -I./ -I../../Object3D/Collada -I Sources
 

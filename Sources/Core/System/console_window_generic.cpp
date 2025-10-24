@@ -37,6 +37,9 @@
 #ifdef WIN32
 #include <stdio.h>
 #include <conio.h>
+#if defined UNICODE && !defined _UNICODE
+#define _UNICODE
+#endif
 #include <tchar.h>
 static HANDLE scrbuf = NULL;
 #endif

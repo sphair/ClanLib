@@ -31,8 +31,12 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/logger.h"
+#ifdef __MINGW32__
+#include "API/Display/Window/display_window.h"
+#endif
 #include "input_device_provider_directinput.h"
 #include "win32_window.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_DirectInput construction:

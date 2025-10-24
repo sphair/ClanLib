@@ -60,6 +60,9 @@
     <ClCompile Include="Sources\program.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\shader.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Clan3D\Collada\collada.h">
@@ -111,6 +114,9 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Sources\program.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>

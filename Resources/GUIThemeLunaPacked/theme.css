@@ -1,3 +1,8 @@
+label
+{
+	padding-top: 2;
+}
+
 window
 {
 	bg-color: #f3f2e7;
@@ -156,6 +161,40 @@ combobox lineedit
 	
 	text-color:black;
 	text-color-selected:white;
+}
+
+combobox opener
+{
+	preferred-width:13;
+	preferred-height:13;
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
+
+}
+
+combobox opener:normal
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:hot
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:pressed
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:disabled
+{
+	bg-image:ComboBoxDownArrow; 
 }
 
 popupmenu.combobox
@@ -667,6 +706,8 @@ menubar
 
 menubar item
 {
+	padding-left:8;
+	padding-right:8;
 	preferred-width:50;
 	preferred-height:24;
 	align:center;

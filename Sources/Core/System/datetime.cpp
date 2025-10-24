@@ -244,7 +244,11 @@ CL_DateTime CL_DateTime::to_utc() const
 		local_time.wMinute = minute;
 		local_time.wSecond = seconds;
 		local_time.wMilliseconds = nanoseconds / 1000000;
+		#if _MSC_VER
 		BOOL result = TzSpecificLocalTimeToSystemTime(0, &local_time, &system_time);
+		#else
+		BOOL result = SystemTimeToTzSpecificLocalTime(0, &system_time, &local_time);
+		#endif
 		if (result == FALSE)
 			throw CL_Exception("TzSpecificLocalTimeToSystemTime failed");
 

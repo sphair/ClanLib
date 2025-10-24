@@ -34,18 +34,18 @@
 #pragma once
 #endif
 
-#include "../soundoutput_generic.h"
+#include "../soundoutput_impl.h"
 
 #include <CoreServices/CoreServices.h>
 #include <CoreAudio/AudioHardware.h>
 
-class CL_SoundOutput_MacOSX : public CL_SoundOutput_Generic
+class CL_SoundOutput_MacOSX : public CL_SoundOutput_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SoundOutput_MacOSX(int mixing_frequency, int mixing_latency);
+	CL_SoundOutput_MacOSX(int mixing_frequency, int mixing_latency=50);
 
 	~CL_SoundOutput_MacOSX();
 

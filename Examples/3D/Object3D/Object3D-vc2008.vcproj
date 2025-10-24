@@ -368,6 +368,14 @@
 				RelativePath=".\Sources\program.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Sources\shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\shader.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="README.txt"

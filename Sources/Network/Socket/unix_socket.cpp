@@ -39,6 +39,10 @@
 #include <netinet/tcp.h>
 #include <errno.h>
 
+#ifdef __APPLE__
+# define SOL_TCP IPPROTO_TCP    // Fix for BSD systems. --NDT
+#endif
+
 CL_UnixSocket::CL_UnixSocket()
 : handle(-1), close_handle_flag(true)
 {

@@ -30,6 +30,7 @@
 
 #include "GUI/precomp.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Core/System/timer.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -46,8 +47,9 @@ class CL_ProgressBar_Impl
 public:
 	CL_ProgressBar_Impl()
 	: progress_min(0), progress_max(100), step_size(1), position(0), marquee_mode(false),
-	  marquee_animation_speed(100)
+	  marquee_animation_speed(100), marquee_box_width(10), marquee_position(0), marquee_step_size(2)
 	{
+		marquee_timer.func_expired().set(this, &CL_ProgressBar_Impl::on_marquee_progress);
 	}
 
 	void check_range();
@@ -55,7 +57,9 @@ public:
 	void on_process_message(CL_GUIMessage &msg);
 
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
-
+	
+	void on_marquee_progress();
+	
 	CL_ProgressBar *progressbar;
 
 	int progress_min, progress_max, step_size, position;
@@ -64,9 +68,13 @@ public:
 
 	int marquee_animation_speed;
 
+	int marquee_box_width, marquee_position, marquee_step_size;
+	
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_progress;
 	CL_GUIThemePart part_chunk;
+
+	CL_Timer marquee_timer;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -137,6 +145,18 @@ int CL_ProgressBar::get_marquee_animation_speed() const
 	return impl->marquee_animation_speed;
 }
 
+int CL_ProgressBar::get_marquee_box_width() const
+{
+	return impl->marquee_box_width;
+}
+
+int CL_ProgressBar::get_marquee_step_size() const
+{
+	return impl->marquee_step_size;
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgressBar Operations:
 
@@ -197,17 +217,57 @@ void CL_ProgressBar::step_position()
 
 void CL_ProgressBar::set_marquee_mode(bool enable)
 {
-	impl->marquee_mode = enable;
-	request_repaint();
+	if (enable != impl->marquee_mode)
+	{
+		impl->marquee_mode = enable;
+
+		if (enable)
+		{
+			impl->marquee_position = 0;
+			impl->marquee_timer.start(impl->marquee_animation_speed, true);
+		}
+		else
+		{
+			impl->marquee_timer.stop();
+		}
+
+		request_repaint();
+	}
 }
 
 void CL_ProgressBar::set_marquee_animation_speed(int milliseconds)
 {
 	impl->marquee_animation_speed = milliseconds;
+
+	if (impl->marquee_mode)
+	{
+		impl->marquee_timer.stop();
+		impl->marquee_timer.start(impl->marquee_animation_speed, true);
+	}
+}
+
+void CL_ProgressBar::set_marquee_box_width(int width)
+{
+	impl->marquee_box_width = width;
+}
+
+void CL_ProgressBar::set_marquee_step_size(int size)
+{
+	impl->marquee_step_size = size;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgressBar Implementation:
+
+void CL_ProgressBar_Impl::on_marquee_progress()
+{
+	marquee_position += marquee_step_size;
+
+	if(marquee_position > progressbar->get_width())
+		marquee_position = -marquee_box_width;
+
+	progressbar->request_repaint();
+}
 
 void CL_ProgressBar_Impl::check_range()
 {
@@ -226,20 +286,49 @@ void CL_ProgressBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update
 	CL_Rect rect = progressbar->get_size();
 	part_component.render_box(gc, rect, update_rect);
 
-	if (progress_max >= progress_min && 
-		position >= progress_min &&
-		position <= progress_max &&
-		progress_min != progress_max &&
-		rect.get_width() > 0)
+	if (marquee_mode)
 	{
-		CL_Rect content_box = part_component.get_content_box(rect);
+		if (rect.get_width() > 0)
+		{
+			CL_Rect content_box = part_component.get_content_box(rect);
 
-		CL_Rect progress_rect;
-		progress_rect.left = content_box.left;
-		progress_rect.top = content_box.top;
-		progress_rect.bottom = content_box.bottom;
-		progress_rect.right = content_box.left + (position - progress_min) * content_box.get_width() / (progress_max - progress_min);
+			CL_Rect progress_rect;
+			progress_rect.left = content_box.left + marquee_position;
+			progress_rect.top = content_box.top;
+			progress_rect.bottom = content_box.bottom;
+			progress_rect.right = content_box.left + marquee_position + marquee_box_width;
 
-		part_progress.render_box(gc, progress_rect, update_rect);
+			if (progress_rect.left < content_box.left)
+			{
+				progress_rect.left = 0;
+				progress_rect.right -= (content_box.left - progress_rect.left);
+			}
+
+			if (progress_rect.right > content_box.right)
+			{
+				progress_rect.right -= (progress_rect.right - content_box.right);
+			}
+			
+			part_progress.render_box(gc, progress_rect, update_rect);
+		}
+	}
+	else
+	{
+		if (progress_max >= progress_min && 
+			position >= progress_min &&
+			position <= progress_max &&
+			progress_min != progress_max &&
+			rect.get_width() > 0)
+		{
+			CL_Rect content_box = part_component.get_content_box(rect);
+
+			CL_Rect progress_rect;
+			progress_rect.left = content_box.left;
+			progress_rect.top = content_box.top;
+			progress_rect.bottom = content_box.bottom;
+			progress_rect.right = content_box.left + (position - progress_min) * content_box.get_width() / (progress_max - progress_min);
+
+			part_progress.render_box(gc, progress_rect, update_rect);
+		}
 	}
 }

@@ -28,6 +28,7 @@
 */
 
 #pragma once
+#include <memory>
 
 
 struct CL_TopMenu
@@ -76,6 +77,7 @@ public:
 	int item_padding_right;
 	int item_border_right;
 
+	std::auto_ptr<CL_MenuModalLoop> menu_loop;
 };
 
 

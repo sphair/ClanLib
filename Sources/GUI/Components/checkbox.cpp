@@ -362,8 +362,8 @@ void CL_CheckBox_Impl::create_parts(bool checked, bool indeterminated)
 	part_checker.set_state(CssStr::normal, checkbox->is_enabled());
 	part_checker.set_state(CssStr::pressed, false);
 	part_checker.set_state(CssStr::indeterminated, indeterminated);
-	part_checker.set_state(CssStr::checked, checked);
-	part_checker.set_state(CssStr::unchecked, !checked);
+	part_checker.set_state(CssStr::checked, indeterminated ? false : checked);
+	part_checker.set_state(CssStr::unchecked, indeterminated ? false : !checked);
 	part_checker.set_state(CssStr::disabled, !checkbox->is_enabled());
 }
 
@@ -375,6 +375,6 @@ void CL_CheckBox_Impl::on_style_changed()
 
 void CL_CheckBox_Impl::on_enablemode_changed()
 {
-	create_parts(checkbox->is_checked());
+	create_parts(checkbox->is_checked(), checkbox->is_indeterminated());
 	checkbox->request_repaint();
 }

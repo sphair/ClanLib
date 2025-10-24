@@ -228,6 +228,9 @@ private:
 
 	void clear_structurenotify_events();
 
+	bool check_net_wm_state(Atom atom1, Atom atom2 = None) const;
+	bool modify_net_wm_state(bool add, Atom atom1, Atom atom2 = None);
+
 	CL_InputDeviceProvider_X11Keyboard *get_keyboard() const;
 	CL_InputDeviceProvider_X11Mouse *get_mouse() const;
 
@@ -236,11 +239,9 @@ private:
 
 	Colormap cmap;
 
-	CL_String title;
-
-	bool allow_resize;
-
-	bool layered;
+	bool minimized;
+	bool maximized;
+	bool restore_to_maximized;
 
 	bool fullscreen;
 
@@ -278,6 +279,15 @@ private:
 	std::vector<CL_Rect> last_repaint_rect;
 
 	XSizeHints *size_hints;
+
+	Atom wm_protocols;
+	Atom wm_delete_window;
+	Atom wm_state;
+	Atom net_wm_state;
+	Atom net_wm_state_maximized_vert;
+	Atom net_wm_state_maximized_horz;
+	Atom net_wm_state_hidden;
+	Atom net_wm_state_fullscreen;
 /// \}
 };
 

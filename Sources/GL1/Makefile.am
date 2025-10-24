@@ -26,14 +26,13 @@ libclan22GL1_la_SOURCES = \
 	pbuffer.h \
 	pbuffer.cpp \
 	precomp.h
-
 if WIN32
-	libclan22GL1_la_SOURCES += \
-	WGL/pbuffer_impl.h \
+libclan22GL1_la_SOURCES += \
 	WGL/pbuffer_impl.cpp \
+	WGL/pbuffer_impl.h \
 	WGL/gl1_creation_helper.cpp \
-	WGL/gl1_window_provider_wgl.cpp \
 	WGL/gl1_creation_helper.h \
+	WGL/gl1_window_provider_wgl.cpp \
 	WGL/gl1_window_provider_wgl.h
 else
 libclan22GL1_la_SOURCES += \
@@ -41,9 +40,7 @@ libclan22GL1_la_SOURCES += \
 	GLX/pbuffer_impl.cpp \
 	GLX/gl1_window_provider_glx.cpp \
 	GLX/gl1_window_provider_glx.h
-
 endif
-
 libclan22GL1_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGL1)

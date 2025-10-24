@@ -37,20 +37,17 @@ libclan22GL_la_SOURCES = \
 	opengl_vertex_array_buffer_provider.cpp \
 	opengl_vertex_array_buffer_provider.h \
 	opengl_render_buffer_provider.h
-
 if WIN32
-	libclan22GL_la_SOURCES += \
+libclan22GL_la_SOURCES += \
 	WGL/opengl_creation_helper.cpp \
-	WGL/opengl_window_provider_wgl.cpp \
 	WGL/opengl_creation_helper.h \
+	WGL/opengl_window_provider_wgl.cpp \
 	WGL/opengl_window_provider_wgl.h
 else
 libclan22GL_la_SOURCES += \
 	GLX/opengl_window_provider_glx.cpp \
 	GLX/opengl_window_provider_glx.h
-
 endif
-
 libclan22GL_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGL)

@@ -54,10 +54,17 @@
 #include <X11/XKBlib.h>
 #include <dlfcn.h>
 
+#define _NET_WM_STATE_REMOVE  0
+#define _NET_WM_STATE_ADD     1
+#define _NET_WM_STATE_TOGGLE  2
+
 CL_X11Window::CL_X11Window()
-: window(0), cmap(0), allow_resize(false), fullscreen(false),
+: window(0), cmap(0), minimized(false), maximized(false), restore_to_maximized(false), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
-  site(0), clipboard(this), dlopen_lib_handle(NULL), size_hints(NULL)
+  site(0), clipboard(this), dlopen_lib_handle(NULL), size_hints(NULL),
+  wm_protocols(None), wm_delete_window(None), wm_state(None), net_wm_state(None),
+  net_wm_state_maximized_vert(None), net_wm_state_maximized_horz(None),
+  net_wm_state_hidden(None), net_wm_state_fullscreen(None)
 {
 	last_repaint_rect.reserve(32);
 	keyboard = CL_InputDevice(new CL_InputDeviceProvider_X11Keyboard(this));
@@ -135,22 +142,33 @@ bool CL_X11Window::has_focus() const
 
 bool CL_X11Window::is_minimized() const
 {
-	XWindowAttributes attr;
+	unsigned long number_items;
+	int actual_format;
+	Atom actual_type;
 
-	XGetWindowAttributes(disp, window, &attr);
-	if (attr.map_state == IsViewable) return false;
-	return true;
+	// first check _NET_WM_STATE property if supported
+	if (net_wm_state != None)
+		return check_net_wm_state(net_wm_state_hidden);
+
+	// now check WM_STATE property
+	if (wm_state != None)
+	{
+		unsigned char *data = get_property(window, wm_state, &number_items, &actual_format, &actual_type);
+		if (data != NULL)
+		{
+			long state = *(long *)data;
+			XFree(data);
+			return state == IconicState;
+		}
+	}
+
+	return false;
 }
 
 bool CL_X11Window::is_maximized() const
 {
-	XWindowAttributes attr;
-
-	XGetWindowAttributes(disp, window, &attr);
-	if (attr.map_state == IsViewable) return false;
-	return true;
+	return check_net_wm_state(net_wm_state_maximized_vert, net_wm_state_maximized_horz);
 }
-
 
 bool CL_X11Window::is_visible() const
 {
@@ -319,27 +337,49 @@ void CL_X11Window::set_enabled(bool enable)
 
 void CL_X11Window::minimize()
 {
+	if (!is_minimized())
+		restore_to_maximized = is_maximized();
 	XIconifyWindow(disp, window, current_screen);
 }
 
 void CL_X11Window::wait_mapped()
 {
+	XWindowAttributes attr;
+	XGetWindowAttributes(disp, window, &attr);
+	if (attr.map_state != IsUnmapped)
+		return;
+
 	XEvent event;
 	do {
 		XMaskEvent(disp, StructureNotifyMask, &event);
 	}while ( (event.type != MapNotify) || (event.xmap.event != window) );
-
 }
 
 void CL_X11Window::restore()
 {
-	XMapWindow(disp, window);
-	wait_mapped();
+	if (is_minimized())
+	{
+		if (restore_to_maximized)
+		{
+			maximize();
+		}
+		else
+		{
+			XMapWindow(disp, window);
+			wait_mapped();
+		}
+	}
+	else if (is_maximized())
+	{
+		modify_net_wm_state(false, net_wm_state_maximized_vert, net_wm_state_maximized_horz);
+	}
 }
 
 void CL_X11Window::maximize()
 {
-//TODO:	ShowWindow(hwnd, SW_MAXIMIZE);
+	modify_net_wm_state(true, net_wm_state_maximized_vert, net_wm_state_maximized_horz);
+	XMapWindow(disp, window);
+	wait_mapped();
 }
 
 void CL_X11Window::show(bool activate)
@@ -376,6 +416,56 @@ void CL_X11Window::clear_structurenotify_events()
 	XEvent event;
 	while( XCheckMaskEvent(disp, StructureNotifyMask, &event));
 
+}
+
+bool CL_X11Window::check_net_wm_state(Atom atom1, Atom atom2) const
+{
+	unsigned long number_items;
+	int actual_format;
+	Atom actual_type;
+
+	// search for atom1 or atom2 in _NET_WM_STATE array
+	if (net_wm_state != None)
+	{
+		unsigned char *data = get_property(window, net_wm_state, &number_items, &actual_format, &actual_type);
+		if (data != NULL)
+		{
+			bool find = false;
+			for (unsigned i = 0; i < number_items; ++i)
+			{
+				long atom = ((long *)data)[i];
+				if (atom != None && (atom == atom1 || atom == atom2))
+				{
+					find = true;
+					break;
+				}
+			}
+			XFree(data);
+			return find;
+		}
+	}
+
+	return false;
+}
+
+bool CL_X11Window::modify_net_wm_state(bool add, Atom atom1, Atom atom2)
+{
+	// change _NET_WM_STATE property, see: http://standards.freedesktop.org/wm-spec/wm-spec-latest.html
+	if (net_wm_state != None)
+	{
+		XEvent xev;
+		memset(&xev, 0, sizeof(xev));
+		xev.xclient.type = ClientMessage;
+		xev.xclient.window = window;
+		xev.xclient.message_type = net_wm_state;
+		xev.xclient.format = 32;
+		xev.xclient.data.l[0] = add ? _NET_WM_STATE_ADD : _NET_WM_STATE_REMOVE;
+		xev.xclient.data.l[1] = atom1;
+		xev.xclient.data.l[2] = atom2;
+		return XSendEvent(disp, DefaultRootWindow(disp), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev) != 0;
+	}
+
+	return false;
 }
 
 CL_Rect CL_X11Window::get_screen_position() const
@@ -688,10 +778,19 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindow
 		size_hints->flags |= PMaxSize;
 	}
 	XSetWMNormalHints(disp, window, size_hints);
-	
-	// handle wm_delete_events if in windowed mode:
-	Atom wm_delete = XInternAtom(disp, "WM_DELETE_WINDOW", True);
-	XSetWMProtocols(disp, window, &wm_delete, 1);
+
+	// retrieve some useful atoms
+	wm_protocols = XInternAtom(disp, "WM_PROTOCOLS", True);
+	wm_delete_window = XInternAtom(disp, "WM_DELETE_WINDOW", True);
+	wm_state = XInternAtom(disp, "WM_STATE", True);
+	net_wm_state = XInternAtom(disp, "_NET_WM_STATE", True);
+	net_wm_state_maximized_vert = XInternAtom(disp, "_NET_WM_STATE_MAXIMIZED_VERT", True);
+	net_wm_state_maximized_horz = XInternAtom(disp, "_NET_WM_STATE_MAXIMIZED_HORZ", True);
+	net_wm_state_hidden = XInternAtom(disp, "_NET_WM_STATE_HIDDEN", True);
+	net_wm_state_fullscreen = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", True);
+
+	// subscribe to window manager events
+	XSetWMProtocols(disp, window, &wm_delete_window, 1);
 
 	// Create input devices for window:
 	ic.clear();
@@ -724,8 +823,11 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindow
 
 	if (desc.is_fullscreen()) set_fullscreen();
 
-	XSync(disp, True);
+	minimized = is_minimized();
+	maximized = is_maximized();
+	restore_to_maximized = maximized;
 
+	XSync(disp, True);
 }
 
 void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
@@ -770,8 +872,15 @@ void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 				break;
 			}
 			case ClientMessage:
-
-				if (site) site->sig_window_close->invoke();
+				// handle window manager messages
+				if (event.xclient.message_type == wm_protocols)
+				{
+					if (event.xclient.data.l[0] == wm_delete_window)
+					{
+						if (site)
+							site->sig_window_close->invoke();
+					}
+				}
 				break;
 			case Expose:
 				// Repaint notification
@@ -811,6 +920,64 @@ void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 					if (!has_focus())	// For an unknown reason, FocusOut is called when clicking on title bar of window
 					{
 						site->sig_lost_focus->invoke();
+					}
+				}
+				break;
+			case PropertyNotify:
+				if (net_wm_state != None)
+				{
+					if (event.xproperty.atom == net_wm_state && event.xproperty.state == PropertyNewValue)
+					{
+						if (is_minimized())
+						{
+							if (!minimized && site != NULL)
+								site->sig_window_minimized->invoke();
+							minimized = true;
+							maximized = false;
+						}
+						else if (is_maximized())
+						{
+							if (!maximized && site != NULL)
+								site->sig_window_maximized->invoke();
+							if (minimized && site != NULL)
+							{
+								// generate resize events for minimized -> maximized transition
+								CL_Rect rect = get_geometry();
+								site->sig_window_moved->invoke();
+								if (!site->func_window_resize->is_null())
+									site->func_window_resize->invoke(rect);
+								if (!callback_on_resized.is_null())
+									callback_on_resized.invoke();
+								site->sig_resize->invoke(rect.get_width(), rect.get_height());
+							}
+							minimized = false;
+							maximized = true;
+						}
+						else
+						{
+							if ((minimized || maximized) && site != NULL)
+								site->sig_window_restored->invoke();
+							minimized = false;
+							maximized = false;
+						}
+					}
+				}
+				else
+				{
+					if (event.xproperty.atom == wm_state && event.xproperty.state == PropertyNewValue)
+					{
+						if (is_minimized())
+						{
+							if (!minimized && site != NULL)
+								site->sig_window_minimized->invoke();
+							minimized = true;
+						}
+						else
+						{
+							if (minimized && site != NULL)
+								site->sig_window_restored->invoke();
+							minimized = false;
+						}
 					}
 				}
 				break;
@@ -983,19 +1150,8 @@ void CL_X11Window::setup_joysticks()
 
 void CL_X11Window::set_fullscreen()
 {
-	// Set fullscreen mode: http://standards.freedesktop.org/wm-spec/wm-spec-1.3.html
-	XEvent xev = { 0 };
-	xev.xclient.type = ClientMessage;
-	xev.xclient.send_event = True;
-	xev.xclient.message_type = XInternAtom(disp, "_NET_WM_STATE", False);
-	xev.xclient.window = window;
-	xev.xclient.format = 32;
-	xev.xclient.data.l[0] = 1;
-	xev.xclient.data.l[1] = XInternAtom(disp, "_NET_WM_STATE_FULLSCREEN", False);
-	// Send the event and set fullscreen to true if successful
-	fullscreen = XSendEvent(disp, DefaultRootWindow(disp), False, SubstructureRedirectMask | SubstructureNotifyMask, &xev);
+	fullscreen = modify_net_wm_state(true, net_wm_state_fullscreen);
 }
-
 
 void CL_X11Window::set_clipboard_text(const CL_StringRef &text)
 {

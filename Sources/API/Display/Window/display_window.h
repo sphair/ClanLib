@@ -44,7 +44,7 @@
 #include "../../Core/Text/string_types.h"
 #include "../display_target.h"
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
 #endif
 
@@ -171,6 +171,9 @@ public:
 	/// \brief Signal emitted when window is maximized.
 	CL_Signal_v0 &sig_window_maximized();
 
+	/// \brief Signal emitted when window is restored.
+	CL_Signal_v0 &sig_window_restored();
+
 	/// \brief Signal emitted after a window has been moved.
 	CL_Signal_v0 &sig_window_moved();
 
@@ -226,6 +229,8 @@ public:
 	///
 	/// \return hwnd
 	HWND get_hwnd() const;
+#elif defined(__APPLE__)
+	// nothing
 #else
 	/// \brief Returns the X11 display handle.
 	Display *get_display() const;

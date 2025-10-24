@@ -35,8 +35,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_MacOSX construction:
 
-CL_SoundOutput_MacOSX::CL_SoundOutput_MacOSX(int frequency) :
-	CL_SoundOutput_Generic(frequency, latency), playing(false)
+CL_SoundOutput_MacOSX::CL_SoundOutput_MacOSX(int frequency, int latency)
+:   CL_SoundOutput_Impl(frequency, latency), playing(false)
 {
 	UInt32 size;
 	OSStatus result;
@@ -126,13 +126,13 @@ int CL_SoundOutput_MacOSX::get_fragment_size()
 	return frag_size;
 }
 
-void CL_SoundOutput_MacOSX::write_fragment(short *data)
+void CL_SoundOutput_MacOSX::write_fragment(float *data)
 {
 	int frag_size = get_fragment_size();
 	float *frag_data = fragment_buffer[fragment_insert_position];
 
 	for (int i=0; i<frag_size*2; i++)
-		frag_data[i] = data[i]/32768.0f;
+		frag_data[i] = data[i];
 
 	fragment_insert_position++;
 	if (fragment_insert_position == fragment_buffer.size() )

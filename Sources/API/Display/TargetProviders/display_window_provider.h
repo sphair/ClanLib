@@ -43,7 +43,7 @@
 #include "../../Core/Signals/callback_v1.h"
 #include "../Window/display_window.h"
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
 #include <X11/Xlib.h>
 #endif
 
@@ -85,6 +85,9 @@ public:
 
 	/// \brief Pointer to window maximized signal.
 	CL_Signal_v0 *sig_window_maximized;
+
+	/// \brief Pointer to window restored signal.
+	CL_Signal_v0 *sig_window_restored;
 
 	/// \brief Pointer to window resize callback function.
 	CL_Callback_v1<CL_Rect &> *func_window_resize;
@@ -153,6 +156,8 @@ public:
 	///
 	/// \return hwnd
 	virtual HWND get_hwnd() const = 0;
+#elif defined(__APPLE__)
+	// nothing
 #else
 	/// \brief Returns the X11 display handle.
 	virtual Display *get_display() const = 0;

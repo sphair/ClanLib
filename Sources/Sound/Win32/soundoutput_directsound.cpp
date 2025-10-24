@@ -35,8 +35,14 @@
 
 // KSDATAFORMAT_SUBTYPE_IEEE_FLOAT is not available on some old headers
 #ifndef KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
+#ifdef _MSC_VER
 struct __declspec(uuid("00000003-0000-0010-8000-00aa00389b71")) KSDATAFORMAT_SUBTYPE_IEEE_FLOAT_STRUCT;
 #define KSDATAFORMAT_SUBTYPE_IEEE_FLOAT __uuidof(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT_STRUCT)
+#else
+#include <initguid.h>
+DEFINE_GUID(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT,0x00000003L, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71);
+DEFINE_GUID(GUID_NULL,0x00000000L, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+#endif
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

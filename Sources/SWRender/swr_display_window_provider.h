@@ -66,6 +66,8 @@ public:
 
 #ifdef WIN32
 	HWND get_hwnd() const;
+#elif defined(__APPLE__)
+	// nothing
 #else
 	/// \brief Returns the X11 display handle.
 	Display *get_display() const { return window.get_display(); }
@@ -136,10 +138,13 @@ private:
 	void draw_image(HDC hdc, const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src);
 	CL_Win32Window window;
 #else
+#if defined(__APPLE__)
+	CL_MacWindow window;
+#else
 	void draw_image(const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src);
 	CL_X11Window window;
 #endif
-
+#endif
 	CL_DisplayWindowSite *site;
 	CL_GraphicContext gc;
 

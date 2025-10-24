@@ -288,9 +288,9 @@ void Slider::on_apply_clicked(CL_PushButton *pushbutton)
 	slider_vertical->set_tick_count(value);
 	slider_horizontal->set_tick_count(value);
 
-	value = CL_StringHelp::text_to_int(lineedit_tick_count->get_text());
-	slider_vertical->set_tick_count(value);
-	slider_horizontal->set_tick_count(value);
+	value = CL_StringHelp::text_to_int(lineedit_page_step->get_text());
+	slider_vertical->set_page_step(value);
+	slider_horizontal->set_page_step(value);
 
 	value = CL_StringHelp::text_to_int(lineedit_max->get_text());
 	slider_vertical->set_max(value);

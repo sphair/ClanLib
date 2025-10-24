@@ -34,7 +34,12 @@
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Core/System/keep_alive.h"
 #include "display_message_queue_win32.h"
+#ifdef __MINGW32__
+#include "API/Display/Window/display_window.h"
+#endif
 #include "win32_window.h"
+
+
 
 CL_DisplayMessageQueue_Win32 CL_DisplayMessageQueue_Win32::message_queue;
 

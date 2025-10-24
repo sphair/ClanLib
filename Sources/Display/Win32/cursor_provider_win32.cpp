@@ -32,8 +32,10 @@
 #include "API/Core/IOData/iodevice_memory.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/sprite_description.h"
+#ifdef __MINGW32__
+#include "API/Display/Window/display_window.h"
+#endif
 #include "win32_window.h"
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_CursorProvider_Win32 Construction:
 

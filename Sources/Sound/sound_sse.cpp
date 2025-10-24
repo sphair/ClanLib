@@ -35,13 +35,21 @@
 #include <emmintrin.h>
 #endif
 
+#ifdef __MINGW32__
+#include <malloc.h>
+#endif
+
 void *CL_SoundSSE::aligned_alloc(int size)
 {
 	void *ptr;
-#ifdef _MSC_VER
+#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 	ptr = _aligned_malloc(size, 16);
 	if (!ptr)
 		throw CL_Exception("Out of memory");
+#elif defined __MINGW32__
+	ptr = __mingw_aligned_malloc(size, 16);
+	if (!ptr)
+		throw CL_Exception("Out of memory");	
 #else
 	if (posix_memalign( (void **) &ptr, 16, size))
 	{
@@ -55,8 +63,10 @@ void CL_SoundSSE::aligned_free(void *ptr)
 {
 	if (ptr)
 	{
-#ifdef _MSC_VER
+#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 		_aligned_free(ptr);
+#elif defined __MINGW32__
+		__mingw_aligned_free (ptr);
 #else
 		free(ptr);
 #endif

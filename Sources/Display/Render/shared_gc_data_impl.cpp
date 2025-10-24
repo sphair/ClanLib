@@ -78,6 +78,33 @@ CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_St
 	return texture;
 }
 
+bool CL_SharedGCData_Impl::add_texture(CL_Texture &texture, const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
+{
+	CL_String alpha_code = "A";
+	if (import_desc.get_premultiply_alpha())
+		alpha_code = "P";
+
+	CL_String key = virtual_directory.get_identifier() + filename + alpha_code;
+
+	for (std::vector<SharedTextureMap>::iterator it = textures.begin(); it != textures.end(); ++it)
+	{
+		if (it->key == key)
+		{
+			// Texture is no longer valid
+			if (it->texture_impl.is_invalid_weak_link())
+			{
+				// Remove from the cache
+				unload_texture(filename, virtual_directory, import_desc);
+				break;
+			}
+			return false;
+		}
+	}
+
+	textures.push_back(SharedTextureMap(key, texture));
+	return true;
+}
+
 void CL_SharedGCData_Impl::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
 {
 	CL_String alpha_code = "A";

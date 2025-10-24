@@ -33,6 +33,9 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #ifdef WIN32
+#if defined UNICODE && !defined _UNICODE
+#define _UNICODE
+#endif
 #include <tchar.h>
 #include <direct.h>
 #include <wchar.h>

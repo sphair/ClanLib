@@ -92,6 +92,16 @@ public:
 	/// \return Texture
 	static CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory(), const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
+	/// \brief Add texture to the shared texture cache
+	///
+	/// \param texture = Texture
+	/// \param filename = String
+	/// \param virtual_directory = Virtual Directory
+	/// \param import_desc = Import Description
+	///
+	/// \return True if the texture was added successfully, false if it's already in the cache
+	static bool add_texture(CL_Texture &texture, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory(), const CL_ImageImportDescription &import_desc = CL_ImageImportDescription());
+
 	/// \brief Unload texture
 	///
 	/// \param filename = String

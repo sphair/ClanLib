@@ -76,7 +76,7 @@ Spin::Spin(GUI *gui) :
 	lineedit_decimal_places = new CL_LineEdit(this);
 	lineedit_decimal_places->set_geometry(CL_Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_decimal_places->set_text("2");
-	lineedit_decimal_places->set_numeric_mode(true);
+	lineedit_decimal_places->set_numeric_mode(true, true);
 	lineedit_decimal_places->func_enter_pressed().set(this, &Spin::on_decimal_places_enter_pressed, lineedit_decimal_places);
 
 	lineedit_label_decimal_places = new CL_Label(this);
@@ -92,7 +92,7 @@ Spin::Spin(GUI *gui) :
 	lineedit_min = new CL_LineEdit(this);
 	lineedit_min->set_geometry(CL_Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_min->set_text("200");
-	lineedit_min->set_numeric_mode(true);
+	lineedit_min->set_numeric_mode(true, true);
 	lineedit_min->func_enter_pressed().set(this, &Spin::on_min_enter_pressed, lineedit_min);
 
 	lineedit_label_min = new CL_Label(this);
@@ -103,7 +103,7 @@ Spin::Spin(GUI *gui) :
 	lineedit_max = new CL_LineEdit(this);
 	lineedit_max->set_geometry(CL_Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_max->set_text("2000");
-	lineedit_max->set_numeric_mode(true);
+	lineedit_max->set_numeric_mode(true, true);
 	lineedit_max->func_enter_pressed().set(this, &Spin::on_max_enter_pressed, lineedit_max);
 
 	lineedit_label_max = new CL_Label(this);
@@ -114,7 +114,7 @@ Spin::Spin(GUI *gui) :
 	lineedit_step = new CL_LineEdit(this);
 	lineedit_step->set_geometry(CL_Rect(lineedit_xpos, lineedit_ypos, lineedit_size));
 	lineedit_step->set_text("50");
-	lineedit_step->set_numeric_mode(true);
+	lineedit_step->set_numeric_mode(true, true);
 	lineedit_step->func_enter_pressed().set(this, &Spin::on_step_enter_pressed, lineedit_step);
 
 	lineedit_label_step = new CL_Label(this);
@@ -149,7 +149,7 @@ void Spin::on_value_changed(CL_Spin *spin)
 {
 	if (spin1->get_floating_point_mode())
 	{
-		lineedit_value->set_text( spin1->get_value_float() );
+		lineedit_value->set_text( spin1->get_value_float(), 2 );
 	}
 	else
 	{

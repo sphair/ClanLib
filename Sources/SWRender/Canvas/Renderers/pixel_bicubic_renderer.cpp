@@ -29,6 +29,10 @@
 #include "SWRender/precomp.h"
 #include "pixel_bicubic_renderer.h"
 
+#ifdef __MINGW32__
+#include <malloc.h>
+#endif
+
 // Implementation of Michael J. Aramini's Efficient Image Magnification by Bicubic Spline Interpolation
 // http://members.bellatlantic.net/~vze2vrva/design.html
 // http://members.bellatlantic.net/~vze2vrva/magnify_c.txt
@@ -207,10 +211,14 @@ int CL_PixelBicubicRenderer::find_first_line_for_core(int y_start, int core, int
 void *CL_PixelBicubicRenderer::aligned_alloc(int size)
 {
 	void *ptr;
-#ifdef _MSC_VER
+#if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 	ptr = _aligned_malloc(size, 16);
 	if (!ptr)
 		throw CL_Exception("Out of memory");
+#elif defined __MINGW32__
+	ptr = __mingw_aligned_malloc(size, 16);
+	if (!ptr)
+		throw CL_Exception("Out of memory");	
 #else
 	if (posix_memalign( (void **) &ptr, 16, size))
 	{

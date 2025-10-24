@@ -180,8 +180,6 @@
 #else
 #ifdef __APPLE__
 
-#include <Carbon/carbon.h>
-
 // Seems like this platform dont have keysyms, or their docs suck so much I
 // can't find it.
 //

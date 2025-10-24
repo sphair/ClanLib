@@ -4,7 +4,6 @@ if WIN32
 else
 libclan22Display_la_LIBADD = -lpng -ljpeg
 endif
-
 libclan22Display_la_SOURCES = \
 	2D/color.cpp \
 	2D/color_hsv.cpp \
@@ -91,9 +90,15 @@ libclan22Display_la_SOURCES = \
 	Font/glyph_outline.h \
 	Font/glyph_cache.cpp \
 	Font/glyph_cache.h \
-	Font/FontEngine/font_engine.h \
+	Font/FontEngine/font_engine.h\
 	Font/FontEngine/font_engine_freetype.cpp \
-	Font/FontEngine/font_engine_freetype.h \
+	Font/FontEngine/font_engine_freetype.h
+if WIN32
+libclan22Display_la_SOURCES += \
+	Font/FontEngine/font_engine_win32.cpp \
+	Font/FontEngine/font_engine_win32.h
+endif
+libclan22Display_la_SOURCES += \
 	Render/blend_mode.cpp \
 	Render/buffer_control.cpp \
 	Render/element_array_buffer.cpp \
@@ -135,7 +140,27 @@ libclan22Display_la_SOURCES = \
 	screen_info.cpp \
 	precomp.cpp \
 	precomp.h \
-	setup_display.cpp \
+	setup_display.cpp
+if WIN32
+libclan22Display_la_SOURCES += \
+	Win32/win32_window.cpp\
+	Win32/win32_window.h\
+	Win32/screen_info_provider_win32.cpp\
+	Win32/screen_info_provider_win32.h\
+	Win32/cursor_provider_win32.cpp\
+	Win32/cursor_provider_win32.h\
+	Win32/display_message_queue_win32.cpp\
+	Win32/display_message_queue_win32.h\
+	Win32/input_device_provider_directinput.cpp\
+	Win32/input_device_provider_directinput.h\
+	Win32/input_device_provider_win32tablet.cpp\
+	Win32/input_device_provider_win32tablet.h\
+	Win32/input_device_provider_win32mouse.cpp\
+	Win32/input_device_provider_win32mouse.h\
+	Win32/input_device_provider_win32keyboard.cpp\
+	Win32/input_device_provider_win32keyboard.h
+else
+libclan22Display_la_SOURCES += \
 	X11/x11_window.cpp \
 	X11/x11_window.h \
 	X11/clipboard_x11.cpp \
@@ -156,8 +181,7 @@ endif
 libclan22Display_la_SOURCES += \
 	X11/font_config.cpp \
 	X11/font_config.h
-
-
+endif
 libclan22Display_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanDisplay)

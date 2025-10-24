@@ -5,7 +5,8 @@
 #
 
 PACKAGES = $(patsubst %,%-@LT_RELEASE@,$(LIBS))
-CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -pthread
+@WIN32_TRUE@ CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -mthreads
+@WIN32_FALSE@CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -pthread
 
 #EXAMPLE_BIN contains list of example binaries to build
 

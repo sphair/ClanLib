@@ -31,7 +31,6 @@
 #include "API/Core/IOData/virtual_file_source.h"
 #include "API/Core/IOData/virtual_directory_listing_entry.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_VirtualDirectoryListing_Impl Class:
 
@@ -48,20 +47,19 @@ public:
 			throw CL_Exception("Cannot scan directory to initialize CL_VirtualDirectoryListing");
 		}
 
-		bool next = true;
-		while (next)
+		bool next;
+		do 
 		{
 			CL_VirtualDirectoryListingEntry vdir_entry;
 			next = provider->next_file(vdir_entry);
-			list_entries.push_back(vdir_entry);
-		}
-
+			if(next)
+				list_entries.push_back(vdir_entry);
+		} while (next);
 	}
 
 	~CL_VirtualDirectoryListing_Impl()
 	{
 	}
-
 
 /// \}
 /// \name Attributes

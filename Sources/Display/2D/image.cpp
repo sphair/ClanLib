@@ -251,7 +251,6 @@ void CL_Image::throw_if_null() const
 		throw CL_Exception("CL_Image is null");
 }
 
-
 float CL_Image::get_scale_x() const
 {
 	return impl->scale_x;

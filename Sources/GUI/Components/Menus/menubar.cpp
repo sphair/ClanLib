@@ -145,8 +145,8 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 					hot_index = -1;
 					menubar->request_repaint();
 
-					CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(menubar->get_gui_manager());
-					menu_ptr->start(menubar, menubar);
+					menu_loop.reset(new CL_MenuModalLoop(menubar->get_gui_manager()));
+					menu_loop.get()->start(menubar, menubar);
 					return;
 				}
 			}

@@ -292,7 +292,12 @@ CL_Rect CL_ListViewLayoutDetails::get_lineedit_rect(CL_ListViewItem &item, const
 
 	// 2. Calculate text rect for 'str'.
 	CL_Rect text_rect = si.rect_text[0];
-	text_rect.right = text_rect.left + text_size.width + 3; // add a few pixels extra to allow cursor to be at end of string without scrolling.
+	int textfield_width = text_size.width;
+	int max_textfield_width = si.rect_cell[0].get_width() - (si.rect_icon.right + icon_gap);
+	if(textfield_width > max_textfield_width)
+		textfield_width = max_textfield_width;
+
+	text_rect.right = text_rect.left + textfield_width + 3; // add a few pixels extra to allow cursor to be at end of string without scrolling.
 
 	// 3. Expand text rect with line-edit-offset values defined in css.
 	text_rect.top -= lineedit_textrect_offset.top;

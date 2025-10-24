@@ -97,6 +97,16 @@ public:
 	/// \return marquee_animation_speed
 	int get_marquee_animation_speed() const;
 
+	/// \brief Get Marquee box width
+	///
+	/// \return marquee_box_width
+	int get_marquee_box_width() const;
+
+	/// \brief Get Marquee step size
+	///
+	/// \return marquee_step_size
+	int get_marquee_step_size() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -146,6 +156,16 @@ public:
 	///
 	/// \param milliseconds = value
 	void set_marquee_animation_speed(int milliseconds);
+
+	/// \brief Set marquee box width
+	///
+	/// \param width = value
+	void set_marquee_box_width(int width);
+	
+	/// \brief Set marquee step size
+	///
+	/// \param size = value
+	void set_marquee_step_size(int size);
 
 /// \}
 /// \name Implementation
