@@ -63,7 +63,7 @@ public:
 	CL_Point translation_hotspot;
 	CL_Origin translation_origin;
 
-	CL_Point translated_hotspot;	// Preculated from calc_hotspot()
+	CL_Point translated_hotspot;	// Precalculated from calc_hotspot()
 
 	CL_Texture texture;
 	CL_Rect texture_rect;

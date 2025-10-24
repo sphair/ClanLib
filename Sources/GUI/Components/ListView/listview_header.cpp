@@ -168,8 +168,28 @@ CL_ListViewColumnHeader CL_ListViewHeader::append(CL_ListViewColumnHeader column
 
 CL_ListViewColumnHeader CL_ListViewHeader::remove(const CL_StringRef &column_id)
 {
-	throw CL_Exception("CL_ListViewHeader::remove not implemented yet!");
-	return CL_ListViewColumnHeader();
+	CL_SharedPtr<CL_ListViewColumnHeader_Impl> cur = impl->first_column;
+	while (!cur.is_null())
+	{
+		if (cur->column_id == column_id)
+		{
+			CL_ListViewColumnHeader column(cur);
+			if (!impl->func_column_removed.is_null())
+				impl->func_column_removed.invoke(column);
+			if (!cur->prev_sibling.is_null())
+				cur->prev_sibling->next_sibling = cur->next_sibling;
+			if (!cur->next_sibling.is_null())
+				cur->next_sibling->prev_sibling = cur->prev_sibling;
+			if (impl->first_column == cur)
+				impl->first_column = cur->next_sibling;
+			if (impl->last_column == cur)
+				impl->last_column = cur->prev_sibling;
+
+			return column;
+		}
+		cur = cur->next_sibling;
+	}
+	throw CL_Exception(cl_format("No column found with column id: %1", column_id));
 }
 
 CL_ListViewColumnHeader CL_ListViewHeader::insert_after(const CL_StringRef &column_id, CL_ListViewColumnHeader new_column)

@@ -146,5 +146,6 @@ private:
 	bool flip_timer_set;
 	unsigned int flip_last_time;
 	int refresh_rate;
+	int swap_interval;
 /// \}
 };

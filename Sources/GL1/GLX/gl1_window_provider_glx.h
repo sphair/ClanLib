@@ -326,9 +326,7 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
-
-	int last_set_interval;	// Set to -1 when not set
-	bool glx_swap_interval_set;
+	int swap_interval;
 
 #ifdef CL_USE_DLOPEN
 	void *opengl_lib_handle;

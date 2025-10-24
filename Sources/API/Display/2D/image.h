@@ -144,8 +144,8 @@ public:
 
 	/// \brief Return the height of the image.
 	int get_height() const;
-/// \}
 
+/// \}
 /// \name Operators
 /// \{
 public:

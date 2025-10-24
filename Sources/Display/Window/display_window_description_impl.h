@@ -58,6 +58,7 @@ public:
 		fullscreen = false;
 		fullscreen_monitor = 0;
 		flipping_buffers = 2;
+		swap_interval = -1;
 		allow_resize = false;
 		refresh_rate = 0;
 		bpp = 0;
@@ -94,6 +95,7 @@ public:
 	int fullscreen_monitor;
 	bool allow_resize;
 	int flipping_buffers;
+	int swap_interval;
 	int bpp;
 	int refresh_rate;
 	CL_DisplayWindow owner;

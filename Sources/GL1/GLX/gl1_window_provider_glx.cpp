@@ -119,7 +119,7 @@ CL_GL1ProcAddress *CL_GL1_RenderWindowProvider_GLX::get_proc_address(const CL_St
 
 CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
 : x11_window(),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), glx_swap_interval_set(false), last_set_interval(-1)
+ opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1)
 #ifdef CL_USE_DLOPEN
 , opengl_lib_handle(NULL)
 #endif
@@ -316,9 +316,6 @@ void CL_GL1WindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_D
 
 		if (!glx.glXIsDirect(disp, opengl_context))
 			printf("No hardware acceleration available. I hope you got a really fast machine.\n");
-
-		last_set_interval = -1;
-
 	}
 
 	x11_window.create(opengl_visual_info, site, desc);
@@ -328,6 +325,20 @@ void CL_GL1WindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_D
 		gc = CL_GraphicContext(new CL_GL1GraphicContextProvider(new CL_GL1_RenderWindowProvider_GLX(*this, opengl_context, false)));
 		std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
 		gc_providers.push_back(gc.get_provider());
+	}
+
+	setup_swap_interval_pointers();
+	swap_interval = desc.get_swap_interval();
+	if (swap_interval != -1)
+	{
+		if (glXSwapIntervalSGI)
+		{
+			glXSwapIntervalSGI(swap_interval);
+		}
+		else if (glXSwapIntervalMESA)
+		{
+			glXSwapIntervalMESA(swap_interval);
+		}
 	}
 }
 
@@ -372,7 +383,6 @@ bool CL_GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-// Call when glx_swap_interval_set == false
 void CL_GL1WindowProvider_GLX::setup_swap_interval_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) CL_GL1::get_proc_address("glXSwapIntervalSGI");
@@ -388,8 +398,6 @@ void CL_GL1WindowProvider_GLX::setup_swap_interval_pointers()
 	{
 		glXSwapIntervalMESA = NULL;
 	}
-
-	glx_swap_interval_set = true;
 }
 
 GLXContext CL_GL1WindowProvider_GLX::get_share_context()
@@ -428,21 +436,16 @@ void CL_GL1WindowProvider_GLX::flip(int interval)
 	CL_GraphicContext gc = get_gc();
 	CL_GL1::set_active(gc);
 
-	if (interval != -1)
+	if (interval != -1 && interval != swap_interval)
 	{
-		if (last_set_interval != interval)
+		swap_interval = interval;
+		if (glXSwapIntervalSGI)
 		{
-			last_set_interval = interval;
-			if (!glx_swap_interval_set)
-				setup_swap_interval_pointers();
-
-			if (glXSwapIntervalSGI)
-			{
-				glXSwapIntervalSGI(interval);
-			}else if (glXSwapIntervalMESA)
-			{
-				glXSwapIntervalMESA(interval);
-			}
+			glXSwapIntervalSGI(swap_interval);
+		}
+		else if (glXSwapIntervalMESA)
+		{
+			glXSwapIntervalMESA(swap_interval);
 		}
 	}
 

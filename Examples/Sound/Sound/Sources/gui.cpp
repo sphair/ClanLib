@@ -238,7 +238,7 @@ CL_Spin *App::set_slide_and_spin(CL_Window &window, const char *slider_name, con
 
 	spin_slider_map_float[spin] = slider;
 
-	spin->set_floating_point_mode(false);
+	spin->set_floating_point_mode(true);
 	spin->set_ranges_float(min, max);
 	spin->set_value_float(start);
 	spin->set_step_size_float(1.0f);

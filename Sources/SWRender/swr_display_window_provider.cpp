@@ -165,6 +165,7 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 	refresh_rate = description.get_refresh_rate();
 	if (!refresh_rate)	// Default the refresh rate to 60 if not defined
 		refresh_rate = 60;
+	swap_interval = description.get_swap_interval();
 
 #ifdef WIN32
 	window.create(site, description);
@@ -297,6 +298,11 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 	CL_PixelBuffer &image = canvas->to_pixelbuffer();
 	draw_image(get_viewport(), image, CL_Rect(0, 0, image.get_width(), image.get_height()));
 #endif
+
+	if (interval == -1)
+		interval = swap_interval;    // use swap interval from the previous flip
+	else
+		swap_interval = interval;
 
 	if (interval<=0)
 	{

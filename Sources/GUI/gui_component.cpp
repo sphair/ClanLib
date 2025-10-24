@@ -976,7 +976,6 @@ void CL_GUIComponent::create_components(const CL_StringRef &fullname)
 	create_components(filename, vfs.get_root_directory());
 }
 
-
 void CL_GUIComponent::request_repaint(CL_Rect request_repaint)
 {
 	get_gui_manager().request_repaint(component_to_window_coords(request_repaint), get_top_level_component());

@@ -37,6 +37,8 @@
 #include "API/Core/System/sharedptr.h"
 #include "API/Display/TargetProviders/render_window_provider.h"
 
+typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
+
 class CL_GL1WindowDescription;
 class CL_PBuffer_GL1;
 class CL_GL1WindowProvider_WGL;
@@ -171,5 +173,8 @@ private:
 	bool shadow_window;
 	CL_DisplayWindowSite *site;
 	bool fullscreen;
+
+	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
+	int swap_interval;
 /// \}
 };

@@ -26,7 +26,6 @@
 **    Harry Storbacka
 */
 
-
 #include "GUI/precomp.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_layout_corners.h"
@@ -39,6 +38,7 @@
 #include "API/GUI/Components/radiobutton.h"
 #include "API/GUI/Components/label.h"
 #include "API/GUI/Components/listview.h"
+#include "API/GUI/Components/listview_header.h"
 #include "API/GUI/Components/progressbar.h"
 #include "API/GUI/Components/tab.h"
 #include "API/GUI/Components/tab_page.h"
@@ -168,7 +168,21 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		else if (tag == "listview")
 		{
 			CL_ListView *co = new CL_ListView(parent);
-			// load_listview(co);
+			CL_ListViewHeader *header = co->get_header();
+
+			std::vector<CL_DomNode> columns_nodes = e.select_nodes("listview_header/listview_column");
+			for(size_t i = 0; i < columns_nodes.size(); ++i)
+			{
+				CL_DomElement column_element = columns_nodes[i].to_element();
+				CL_String id = column_element.get_attribute("col_id");
+				CL_String caption = column_element.get_attribute("caption");
+				int width = column_element.get_attribute_int("width");
+
+				CL_ListViewColumnHeader column = header->create_column(id, caption);
+				column.set_width(width);
+				header->append(column);
+			}
+
 			new_comp = co;
 		}
 		else if (tag == "tab")
@@ -251,6 +265,7 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		{
 			new_comp->set_id_name(e.get_attribute("id"));
 			new_comp->set_class_name(e.get_attribute("class"));
+			new_comp->set_enabled(e.get_attribute_bool("enabled", true));
 
 			CL_String str = e.get_attribute("geom");
 			std::vector<CL_String> split = CL_StringHelp::split_text(str, ",");

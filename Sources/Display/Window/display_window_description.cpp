@@ -115,6 +115,11 @@ int CL_DisplayWindowDescription::get_flipping_buffers() const
 	return impl->flipping_buffers;
 }
 
+int CL_DisplayWindowDescription::get_swap_interval() const
+{
+	return impl->swap_interval;
+}
+
 bool CL_DisplayWindowDescription::get_allow_resize() const
 {
 	return impl->allow_resize;
@@ -317,6 +322,11 @@ void CL_DisplayWindowDescription::set_fullscreen(bool fullscreen, int monitor)
 void CL_DisplayWindowDescription::set_flipping_buffers(int num_buffers)
 {
 	impl->flipping_buffers = num_buffers;
+}
+
+void CL_DisplayWindowDescription::set_swap_interval(int interval)
+{
+	impl->swap_interval = interval;
 }
 
 void CL_DisplayWindowDescription::set_allow_resize(bool allow_resize)

@@ -1,40 +1,38 @@
 EXAMPLE_BIN=guieditor
 OBJF = \
-./Sources/component_types.o \
-./Sources/property_component.o \
-./Sources/property_component_edit_state_none.o \
-./Sources/source_generator_dialog.o \
-./Sources/custom_component.o \
-./Sources/dialog_document.o \
-./Sources/view_border.o \
-./Sources/holder_component.o \
-./Sources/grid_edit_state_create_tool.o \
-./Sources/grid_edit_state_boundary_sizing.o \
-./Sources/dialog_component.o \
-./Sources/callback_data.o \
-./Sources/grid_edit_state_none.o \
-./Sources/application.o \
-./Sources/grid_edit_state.o \
-./Sources/grid_component.o \
-./Sources/property_component_edit_state_node_opener.o \
-./Sources/grid_edit_state_object_moving.o \
-./Sources/main_window.o \
-./Sources/grid_edit_state_net_selecting.o \
-./Sources/property_component_edit_state_header_sizing.o \
-./Sources/property_component_edit_state.o \
+./Sources/ComponentTypes/PropertyItems/Popups/anchor_popup.o \
+./Sources/ComponentTypes/PropertyItems/Popups/line_edit_popup.o \
+./Sources/ComponentTypes/component_types.o \
+./Sources/ComponentTypes/custom_component.o \
 ./Sources/precomp.o \
-./Sources/callback_info.o \
-./Sources/grid_edit_state_object_sizing.o \
-./Sources/dialog_container.o \
-./Sources/snapline.o \
-./Sources/selection.o \
-./Sources/property_component_edit_state_revert_button.o \
-./Sources/anchor_popup.o \
-./Sources/main.o
+./Sources/PropertyComponent/property_component.o \
+./Sources/PropertyComponent/property_item_popup.o \
+./Sources/PropertyComponent/EditState/property_component_edit_state.o \
+./Sources/PropertyComponent/EditState/property_component_edit_state_revert_button.o \
+./Sources/PropertyComponent/EditState/property_component_edit_state_none.o \
+./Sources/PropertyComponent/EditState/property_component_edit_state_header_sizing.o \
+./Sources/PropertyComponent/EditState/property_component_edit_state_node_opener.o \
+./Sources/Selection/selection.o \
+./Sources/GridComponent/grid_object.o \
+./Sources/GridComponent/grid_component.o \
+./Sources/GridComponent/snapline.o \
+./Sources/GridComponent/EditState/grid_edit_state_boundary_sizing.o \
+./Sources/GridComponent/EditState/grid_edit_state.o \
+./Sources/GridComponent/EditState/grid_edit_state_create_tool.o \
+./Sources/GridComponent/EditState/grid_edit_state_net_selecting.o \
+./Sources/GridComponent/EditState/grid_edit_state_object_moving.o \
+./Sources/GridComponent/EditState/grid_edit_state_object_sizing.o \
+./Sources/GridComponent/EditState/grid_edit_state_none.o \
+./Sources/MainWindow/view_border.o \
+./Sources/MainWindow/application.o \
+./Sources/MainWindow/main.o \
+./Sources/MainWindow/main_window.o \
+./Sources/MainWindow/edit_columns_window.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanGUI
+LIBS=clanApp clanDisplay clanCore clanSWRender clanGUI
 
 #EXTRA_LIBS=-L/usr/share/qt3/lib -lqt-mt
+CXXFLAGS += -I./ -I Sources -I Sources/ComponentTypes -I Sources/GridComponent -I Sources/MainWindow -I Sources/PropertyComponent -I Sources/Selection
 
 include ../../Examples/Makefile.conf
 

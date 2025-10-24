@@ -300,6 +300,11 @@ public:
 
 private:
 
+	GLXContext create_context_glx_1_3(GLXContext shared_context);
+	GLXContext create_context_glx_1_2(GLXContext shared_context);
+	void create_glx_1_3(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc, Display *disp);
+	void create_glx_1_2(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc, Display *disp);
+
 	void on_window_resized();
 
 	bool is_glx_extension_supported(const char *ext_name);
@@ -317,14 +322,14 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
-	bool  glx_swap_interval_set;
-	int last_set_interval;	// Set to -1 when not set
+	int swap_interval;
 
 	GLXFBConfig fbconfig;
 
 #ifdef CL_USE_DLOPEN
 	void *opengl_lib_handle;
 #endif
+	bool glx_1_3;
 
 /// \}
 };

@@ -35,6 +35,8 @@
 #include "API/Core/System/weakptr.h"
 #include "API/Core/System/sharedptr.h"
 
+typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
+
 class CL_OpenGLWindowDescription;
 
 class CL_OpenGLWindowProvider_WGL : public CL_OpenGLWindowProvider
@@ -142,5 +144,8 @@ private:
 	bool shadow_window;
 	CL_DisplayWindowSite *site;
 	bool fullscreen;
+
+	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
+	int swap_interval;
 /// \}
 };

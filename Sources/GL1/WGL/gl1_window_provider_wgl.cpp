@@ -99,7 +99,8 @@ CL_GL1WindowProvider_WGL &CL_RenderWindowProvider_WGL::get_window()
 
 CL_GL1WindowProvider_WGL::CL_GL1WindowProvider_WGL()
 : win32_window(),
-  opengl_context(0), device_context(0), hwnd(0), shadow_window(false), site(0), fullscreen(false)
+  opengl_context(0), device_context(0), hwnd(0), shadow_window(false), site(0), fullscreen(false),
+  wglSwapIntervalEXT(0), swap_interval(-1)
 {
 	win32_window.func_on_resized().set(this, &CL_GL1WindowProvider_WGL::on_window_resized);
 }
@@ -283,6 +284,11 @@ void CL_GL1WindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const CL_D
 		gc = CL_GraphicContext(new CL_GL1GraphicContextProvider(new CL_RenderWindowProvider_WGL(*this, opengl_context, false)));
 		CL_SharedGCData::get_gc_providers().push_back(gc.get_provider());
 	}
+
+	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)CL_GL1::get_proc_address("wglSwapIntervalEXT");
+	swap_interval = desc.get_swap_interval();
+	if (wglSwapIntervalEXT && swap_interval != -1)
+		wglSwapIntervalEXT(swap_interval);
 }
 
 void CL_GL1WindowProvider_WGL::on_window_resized()
@@ -433,14 +439,11 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 	}
 	else
 	{
-		if (interval != -1)
+		if (interval != -1 && interval != swap_interval)
 		{
-			typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
-			ptr_wglSwapIntervalEXT wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT) wglGetProcAddress("wglSwapIntervalEXT");
+			swap_interval = interval;
 			if (wglSwapIntervalEXT)
-			{
-				wglSwapIntervalEXT(interval);
-			}
+				wglSwapIntervalEXT(swap_interval);
 		}
 
 		BOOL retval = SwapBuffers(get_device_context());

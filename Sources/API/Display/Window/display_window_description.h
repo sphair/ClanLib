@@ -97,6 +97,9 @@ public:
 	/// \brief Returns the amount of flipping buffers to be created.
 	int get_flipping_buffers() const;
 
+	/// \brief Returns the swap interval to be used for the window
+	int get_swap_interval() const;
+
 	/// \brief Returns true if window should be resizeable.
 	bool get_allow_resize() const;
 
@@ -226,6 +229,9 @@ public:
 
 	/// \brief Sets the amount of flipping buffers to be used.
 	void set_flipping_buffers(int num_buffers = 2);
+
+	/// \brief Sets the swap interval to be used for the window
+	void set_swap_interval(int interval = -1);
 
 	/// \brief Sets if windows should be resizable.
 	void set_allow_resize(bool allow_resize);

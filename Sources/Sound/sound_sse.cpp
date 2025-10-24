@@ -360,7 +360,7 @@ void CL_SoundSSE::mix_one_to_many(float *input, int size, float **output, float 
 		{
 			__m128 sample1 = _mm_loadu_ps(output[j]+i);
 			__m128 volume0 = _mm_set1_ps(volume[j]);
-			_mm_storeu_ps(output[j]+i, _mm_add_ps(_mm_mul_ps(sample1, volume0), sample0));
+			_mm_storeu_ps(output[j]+i, _mm_add_ps(_mm_mul_ps(sample0, volume0), sample1));
 		}
 	}
 
