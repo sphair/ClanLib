@@ -31,6 +31,7 @@
 #include "API/Core/Zip/zip_archive.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/iodevice_memory.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/System/mutex.h"
@@ -88,6 +89,10 @@ std::vector<CL_ZipFileEntry> CL_ZipArchive::get_file_list(const CL_StringRef &di
 	CL_String path = dirpath;
 	if (path.empty())
 		path = "/";
+
+	// Zip files expect the folders to be in the form of "/Folder/"
+	path = CL_PathHelp::make_absolute("/",	path, CL_PathHelp::path_type_virtual);
+	path = CL_PathHelp::add_trailing_slash(path, CL_PathHelp::path_type_virtual);
 
 	std::vector<CL_ZipFileEntry> files;
 	std::vector<CL_StringRef> added_directories;

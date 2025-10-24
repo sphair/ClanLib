@@ -146,6 +146,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Examples\Displ
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextFade", "Examples\Display_Text\TextFade\TextFade-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-12345676FFE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "alpha", "Examples\Display\Alpha\Alpha-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -572,6 +574,12 @@ Global
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|Win32.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|Win32.Build.0 = Release|Win32
 		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACAEDCFFE4}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

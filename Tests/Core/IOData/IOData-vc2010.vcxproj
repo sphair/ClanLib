@@ -137,6 +137,7 @@
     <ClCompile Include="test_iodevice.cpp" />
     <ClCompile Include="test_iodevice_memory.cpp" />
     <ClCompile Include="test_path_help.cpp" />
+    <ClCompile Include="test_vfs.cpp" />
     <ClCompile Include="test_virtual_directory.cpp" />
   </ItemGroup>
   <ItemGroup>

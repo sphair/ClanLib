@@ -59,6 +59,7 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/2D/image.h"
 #include "API/Core/System/uniqueptr.h"
+#include "API/GL/opengl_window_description.h"
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
 #include "AGL/opengl_window_provider_agl.h"
@@ -169,7 +170,7 @@ const CL_String::char_type *cl_glsl_fragment_sprite =
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLGraphicContextProvider Construction:
 
-CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_RenderWindowProvider * const render_window)
+CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_RenderWindowProvider * const render_window, const CL_OpenGLWindowDescription &gldesc)
 : render_window(render_window), map_mode(cl_map_2d_upper_left), projection(CL_Mat4f::identity()), modelview(CL_Mat4f::identity()),
   framebuffer_bound(false), prim_arrays_set(false), num_set_program_attribute_arrays(0), cur_prim_array(0),
   modelview_projection_matrix_valid(false), normal_matrix_valid(false),
@@ -181,11 +182,14 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 	int glsl_version_major;
 	int glsl_version_minor;
 	get_opengl_shading_language_version(glsl_version_major, glsl_version_minor);
-	if ( glsl_version_major >= 1)
+	if ( glsl_version_major == 1)
 	{
 		if ( glsl_version_minor >= 50)
 			use_glsl_1_50 = true;
 	}
+	if ( glsl_version_major > 1)
+			use_glsl_1_50 = true;
+
 
 	// Must write here, although CL_OpenGL::SetActive() updates it, because the version number is not available on the initial CL_OpenGL::SetActive() call
 	CL_OpenGL::opengl_version_major = opengl_version_major;
@@ -193,19 +197,20 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 	CL_OpenGL::glsl_version_major = shader_version_major;
 	CL_OpenGL::glsl_version_minor = shader_version_minor;
 
-	if (opengl_version_major < 3)
+	// We cannot use opengl_version_major or opengl_version_minor because OpenGL may still create a higher but compatible context
+	if (gldesc.get_version_major() < 3)
 	{
-		use_open_3_1 = false;
+		allow_vertex_array_without_buffer_object = true;
 	}
 	else
 	{
-		if ( (opengl_version_major == 3) && (opengl_version_minor == 0) )
+		if ( (gldesc.get_version_major() == 3) && (gldesc.get_version_minor() == 0) )
 		{
-			use_open_3_1 = false;
+			allow_vertex_array_without_buffer_object = true;
 		}
 		else
 		{
-			use_open_3_1 = true;
+			allow_vertex_array_without_buffer_object = false;
 		}
 	}
 
@@ -286,12 +291,32 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 
 CL_OpenGLGraphicContextProvider::~CL_OpenGLGraphicContextProvider()
 {
+	while (!disposable_objects.empty())
+		disposable_objects.front()->dispose();
+
 	current_program_object = CL_ProgramObject();
 	standard_programs.clear();
 
 	CL_OpenGL::remove_active(this);
 	delete render_window;
 
+}
+
+void CL_OpenGLGraphicContextProvider::add_disposable(CL_DisposableObject *disposable)
+{
+	disposable_objects.push_back(disposable);
+}
+
+void CL_OpenGLGraphicContextProvider::remove_disposable(CL_DisposableObject *disposable)
+{
+	for (size_t i = 0; i < disposable_objects.size(); i++)
+	{
+		if (disposable_objects[i] == disposable)
+		{
+			disposable_objects.erase(disposable_objects.begin() + i);
+			return;
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -635,15 +660,9 @@ void CL_OpenGLGraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &dra
 	if (draw_buffer_provider != read_buffer_provider)
 		read_buffer_provider->check_framebuffer_complete();
 
-	// Bind the framebuffers
-	GLuint draw_handle = draw_buffer_provider->get_handle();
-	glBindFramebuffer(GL_FRAMEBUFFER, draw_handle);
-
-	if (draw_buffer_provider != read_buffer_provider)
-	{
-		GLuint read_handle = read_buffer_provider->get_handle();
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, read_handle);
-	}
+	draw_buffer_provider->bind_framebuffer(true);
+	if (draw_buffer_provider != read_buffer_provider)		// You cannot read and write to the same framebuffer
+		read_buffer_provider->bind_framebuffer(false);
 
 	// Save the map mode before when the framebuffer was bound
 	if (!framebuffer_bound)	
@@ -667,6 +686,8 @@ void CL_OpenGLGraphicContextProvider::reset_frame_buffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 #endif
+	glDrawBuffer(GL_BACK);	// OpenGL default
+	glReadBuffer(GL_BACK);	// OpenGL default
 
 	if (framebuffer_bound)
 	{
@@ -711,7 +732,7 @@ void CL_OpenGLGraphicContextProvider::reset_program_object()
 void CL_OpenGLGraphicContextProvider::draw_primitives(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArrayData * const prim_array)
 {
 	// Client vertex arrays must have a vertex buffer object for opengl 3.1 and above (without compatibility option)
-	if (use_open_3_1)
+	if (!allow_vertex_array_without_buffer_object)
 	{
 		for (int i = 0; i < prim_array->num_attributes; i++)
 		{
@@ -949,7 +970,7 @@ void CL_OpenGLGraphicContextProvider::set_primitives_array(const CL_PrimitivesAr
 			// as will calling any array drawing command when no vertex array object is
 			// bound.
 
-			if (!use_open_3_1)
+			if (allow_vertex_array_without_buffer_object)
 			{
 				glEnableVertexAttribArray(prim_array->attribute_indexes[i]);
 				glVertexAttribPointer(
@@ -1162,7 +1183,6 @@ void CL_OpenGLGraphicContextProvider::on_window_resized()
 		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
 		set_projection(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
 		set_modelview(CL_Mat4f::identity());
-
 		if (glIsEnabled(GL_SCISSOR_TEST))
 			glScissor(
 				last_clip_rect.left,

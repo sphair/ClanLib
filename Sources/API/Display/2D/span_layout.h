@@ -208,6 +208,12 @@ public:
 	/// \param gc = Graphic Context
 	void draw_layout(CL_GraphicContext &gc);
 
+	/// \brief Draw layout generating ellipsis for clipped text
+	///
+	/// \param gc = Graphic Context
+	/// \param content_rect = Clipping rectangle
+	void draw_layout_ellipsis(CL_GraphicContext &gc, const CL_Rect &content_rect);
+
 	/// \brief Set component geometry
 	void set_component_geometry();
 
@@ -262,6 +268,13 @@ public:
 	///
 	/// \param align = The alignment
 	void set_align(CL_SpanAlign align);
+
+	/// \brief Returns the baseline offset for the first baseline
+	int get_first_baseline_offset();
+
+	/// \brief Returns the baseline offset for the last baseline
+	int get_last_baseline_offset();
+
 /// \}
 
 /// \name Implementation

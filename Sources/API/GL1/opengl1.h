@@ -71,6 +71,11 @@ public:
 	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
 	static bool to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, GLenum &format, GLenum &type);
 
+		/// \brief Get a OpenGL format out of a pixel format.
+	/** <p>The function returns false if pixelformat color depth is not convertible to
+	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
+	static bool to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &format, GLenum &type);
+
 	/// \brief To opengl textureformat
 	///
 	/// \param format = Texture Format

@@ -84,6 +84,11 @@ public:
 	/// \return width
 	int get_width();
 
+	/// \brief Returns the used width (last column expanded to the rest of the list view)
+	///
+	/// \return width
+	int get_used_width();
+
 	CL_ListViewColumnHeader::TextAlignment get_alignment();
 
 	/// \brief Get Next sibling

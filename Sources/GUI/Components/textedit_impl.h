@@ -59,6 +59,8 @@ public:
 		scroll_timer.stop();
 	}
 
+	void layout_lines(CL_GraphicContext &gc);
+
 	void on_process_message(CL_GUIMessage &msg);
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_style_changed();

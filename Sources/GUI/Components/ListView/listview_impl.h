@@ -88,6 +88,7 @@ public:
 
 	void on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
 	void on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
+	void on_mouse_lbutton_doubleclick(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
 
 	void on_mouse_rbutton_down(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
 	void on_mouse_rbutton_up(CL_GUIMessage_Input &input, CL_InputEvent &input_event);
@@ -151,6 +152,7 @@ public:
 	CL_ListViewHeader *header;
 
 	CL_Callback_v1<CL_ListViewSelection> func_selection_changed;
+	CL_Callback_v1<const CL_ListViewItem &> func_item_doubleclick;
 
 	CL_Callback_2<bool, CL_ListViewItem, CL_String &> func_item_edited;
 
@@ -195,7 +197,6 @@ private:
 	void update_scrollbar();
 
 	void edit_item(ListViewShownItem &si);
-
 
 	CL_Rect get_opener_rect(
 		const CL_Rect &cell_content_rect,

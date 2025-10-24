@@ -199,10 +199,12 @@ public:
 	/// \brief Sets if the window has a maximize button.
 	void show_maximize_button(bool value = true);
 
-	/// \brief Sets if the window has a border.
+	/// \brief Sets if the window has a border. DO NOT USE (This function is not implemented and is to be removed in ClanLib 2.4)
 	void show_border(bool value = true);
 
 	/// \brief Sets if windows should have decorations.
+	///
+	/// This is identical to show_caption()
 	void set_decorations(bool decorations);
 
 	/// \brief Toggles whether the window is created as initially visible.

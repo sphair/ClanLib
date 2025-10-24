@@ -70,9 +70,9 @@ CL_IODevice CL_VirtualFileSource_File::open_file(const CL_String &filename,
 	return CL_File(path + filename, mode, access, share, flags);
 }
 
-bool CL_VirtualFileSource_File::initialize_directory_listing(const CL_String &path)
+bool CL_VirtualFileSource_File::initialize_directory_listing(const CL_String &additionalpath)
 {
-	return dir_scanner.scan(path);
+	return dir_scanner.scan(CL_PathHelp::combine(this->path, additionalpath));
 }
 
 bool CL_VirtualFileSource_File::next_file(CL_VirtualDirectoryListingEntry &entry)

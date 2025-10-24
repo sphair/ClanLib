@@ -63,7 +63,7 @@ public:
 	CL_Point translation_hotspot;
 	CL_Origin translation_origin;
 
-	CL_Point translated_hotspot;	// Preculated from calc_hotspot()
+	CL_Point translated_hotspot;	// Precalculated from calc_hotspot()
 
 	CL_Texture texture;
 	CL_Rect texture_rect;
@@ -251,7 +251,6 @@ void CL_Image::throw_if_null() const
 		throw CL_Exception("CL_Image is null");
 }
 
-
 float CL_Image::get_scale_x() const
 {
 	return impl->scale_x;
@@ -296,6 +295,17 @@ CL_Size CL_Image::get_size() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Image Operations:
+
+void CL_Image::set_subimage(
+	int x,
+	int y,
+	const CL_PixelBuffer &image,
+	const CL_Rect &src_rect,
+
+	int level)
+{
+	impl->texture.set_subimage(x, y, image, src_rect, level);
+}
 
 void CL_Image::draw(CL_GraphicContext &gc, float x, float y) const
 {
@@ -356,4 +366,17 @@ void CL_Image::set_alignment(CL_Origin origin, int x, int y)
 	impl->translation_hotspot.x = x;
 	impl->translation_hotspot.y = y;
 	impl->calc_hotspot();
+}
+
+void CL_Image::set_wrap_mode(
+	CL_TextureWrapMode wrap_s,
+	CL_TextureWrapMode wrap_t)
+{
+	impl->texture.set_wrap_mode(wrap_s, wrap_t);
+}
+
+void CL_Image::set_linear_filter(bool linear_filter)
+{
+	impl->texture.set_mag_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
+	impl->texture.set_min_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 }

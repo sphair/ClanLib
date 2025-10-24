@@ -58,7 +58,7 @@ CL_String CL_Clipboard_X11::get_clipboard_text() const
 	XFlush(disp);
 
 	XEvent event;
-	if (!x11_window->get_xevent( event, SelectionNotify, true ))
+	if (!x11_window->get_xevent( event, SelectionNotify ))
 	{
 		return CL_String();
 	}

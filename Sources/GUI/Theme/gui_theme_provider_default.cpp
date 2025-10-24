@@ -89,6 +89,16 @@ CL_StringRef CL_GUIThemeProvider_Default::get_property(
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIThemeProvider_Default Operations:
 
+void CL_GUIThemeProvider_Default::add_resources(CL_ResourceManager new_resources)
+{
+	resources.add_resources(new_resources);
+}
+
+void CL_GUIThemeProvider_Default::set_resources(CL_ResourceManager new_resources)
+{
+	resources = new_resources;
+}
+
 void CL_GUIThemeProvider_Default::destroy()
 {
 	delete this;
@@ -132,8 +142,8 @@ void CL_GUIThemeProvider_Default::render_image_background(CL_GraphicContext &gc,
 	CL_String size_mode = part.get_property(prop_bg_image_sizing);
 	if (size_mode == "tile")
 		render_image_tile_background(gc, part, background_rect, clip_rect);
-	else if (size_mode == "center")
-		render_image_center_background(gc, part, background_rect, clip_rect);
+	else if (size_mode.find("center") != CL_String::npos || size_mode.find("left") != CL_String::npos || size_mode.find("right") != CL_String::npos)
+		render_image_fixed_background(gc, part, background_rect, clip_rect, size_mode);
 	else if (size_mode == "repeat")
 		render_image_repeat_background(gc, part, background_rect, clip_rect);
 	else
@@ -158,13 +168,60 @@ void CL_GUIThemeProvider_Default::render_image_tile_background(CL_GraphicContext
 	}
 }
 
-void CL_GUIThemeProvider_Default::render_image_center_background(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_Rect &rect, const CL_Rect &clip_rect)
+void CL_GUIThemeProvider_Default::render_image_fixed_background(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_Rect &rect, const CL_Rect &clip_rect, const CL_String &size_mode)
 {
 	CL_Image &image = get_background_image(gc, part);
 	int spr_width = image.get_width();
-	image.draw(gc, 
-		int((float)rect.left + rect.get_width()/2.0f - spr_width/2.0f),
-		int((float)rect.top + rect.get_height()/2.0f - image.get_height()/2.0f));
+
+	int x, y;
+
+	if (size_mode == "top left")
+	{
+		x = rect.left;
+		y = rect.top;
+	}
+	else if (size_mode == "top center")
+	{
+		x = int((float)rect.left + rect.get_width()/2.0f - spr_width/2.0f);
+		y = rect.top;
+	}
+	else if (size_mode == "top right")
+	{
+		x = int((float)rect.right - spr_width);
+		y = rect.top;
+	}
+	else if (size_mode == "left")
+	{
+		x = rect.left;
+		y = int((float)rect.top + rect.get_height()/2.0f - image.get_height()/2.0f);
+	}
+	else if (size_mode == "center")
+	{
+		x = int((float)rect.left + rect.get_width()/2.0f - spr_width/2.0f);
+		y = int((float)rect.top + rect.get_height()/2.0f - image.get_height()/2.0f);
+	}
+	else if (size_mode == "right")
+	{
+		x = int((float)rect.right - spr_width);
+		y = int((float)rect.top + rect.get_height()/2.0f - image.get_height()/2.0f);
+	}
+	else if (size_mode == "bottom left")
+	{
+		x = rect.left;
+		y = int((float)rect.top - image.get_height());
+	}
+	else if (size_mode == "bottom center")
+	{
+		x = int((float)rect.left + rect.get_width()/2.0f - spr_width/2.0f);
+		y = int((float)rect.top - image.get_height());
+	}
+	else if (size_mode == "bottom right")
+	{
+		x = int((float)rect.right - spr_width);
+		y = int((float)rect.top - image.get_height());
+	}
+
+	image.draw(gc, x, y);
 }
 
 void CL_GUIThemeProvider_Default::render_image_repeat_background(CL_GraphicContext &gc, CL_GUIThemePart &part, const CL_Rect &rect, const CL_Rect &clip_rect)

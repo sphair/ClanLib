@@ -58,6 +58,7 @@ CL_GUIWindowManagerProvider_Texture::CL_GUIWindowManagerProvider_Texture(CL_Disp
 	CL_InputContext& ic = display_window.get_ic();
 	slots.connect(ic.get_mouse().sig_key_up(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_up);
 	slots.connect(ic.get_mouse().sig_key_down(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_down);
+	slots.connect(ic.get_mouse().sig_key_dblclk(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_down);
 	slots.connect(ic.get_mouse().sig_pointer_move(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_move);
 
 	slots.connect(ic.get_keyboard().sig_key_up(), this, &CL_GUIWindowManagerProvider_Texture::on_input);
@@ -67,6 +68,7 @@ CL_GUIWindowManagerProvider_Texture::CL_GUIWindowManagerProvider_Texture(CL_Disp
 	{
 		slots.connect(ic.get_tablet(tc).sig_axis_move(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_move);
 		slots.connect(ic.get_tablet(tc).sig_key_down(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_down);
+		slots.connect(ic.get_tablet(tc).sig_key_dblclk(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_down);
 		slots.connect(ic.get_tablet(tc).sig_key_up(), this, &CL_GUIWindowManagerProvider_Texture::on_input);
 	}
 
@@ -223,9 +225,8 @@ void CL_GUIWindowManagerProvider_Texture::on_input_mouse_up(const CL_InputEvent 
 		func_input_intercept.invoke(new_input_event, new_input_state);
 
 	invoke_input_received(capture_mouse_window, new_input_event, new_input_state);
-
-
 }
+
 void CL_GUIWindowManagerProvider_Texture::on_input_mouse_down(const CL_InputEvent &input_event, const CL_InputState &input_state)
 {
 	CL_InputEvent new_input_event = input_event;

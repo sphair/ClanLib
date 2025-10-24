@@ -154,11 +154,18 @@ void ResourceViewerView::on_selection_changed(CL_ListViewSelection selection)
 void ResourceViewerView::show_resource(ResourceItem *resource_item)
 {
 	SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(resource_item);
+	ImageResourceItem *image_item = dynamic_cast<ImageResourceItem *>(resource_item);
 	if(sprite_item)
 	{
 		sprite_component->set_sprite(&sprite_item->sprite);
 //		button_edit_resource->set_enabled(true);
 		button_create_collision_data->set_enabled(true);
+	}
+	else if(image_item)
+	{
+		sprite_component->set_sprite_description(&image_item->sprite_description);
+		//button_edit_resource->set_enabled(true);
+		button_create_collision_data->set_enabled(false);
 	}
 	else
 	{

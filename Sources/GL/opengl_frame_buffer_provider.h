@@ -96,6 +96,8 @@ public:
 
 	void check_framebuffer_complete();
 
+	void bind_framebuffer(bool write_only);
+
 /// \}
 /// \name Implementation
 /// \{

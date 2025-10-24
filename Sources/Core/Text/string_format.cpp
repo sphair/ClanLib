@@ -151,6 +151,30 @@ void CL_StringFormat::set_arg(int index, unsigned int value, int min_length)
 	set_arg(index, t);
 }
 
+void CL_StringFormat::set_arg(int index, long long value, int min_length)
+{
+	CL_String t = CL_StringHelp::ll_to_text(value);
+	if ((int) t.length() < min_length)
+		t = CL_String(min_length-t.length(), '0') + t;
+	set_arg(index, t);
+}
+
+void CL_StringFormat::set_arg(int index, unsigned long long value, int min_length)
+{
+	CL_String t = CL_StringHelp::ull_to_text(value);
+	if ((int) t.length() < min_length)
+		t = CL_String(min_length-t.length(), '0') + t;
+	set_arg(index, t);
+}
+
+void CL_StringFormat::set_arg(int index, long unsigned int value, int min_length)
+{
+	CL_String t = CL_StringHelp::ull_to_text(value);
+	if ((int) t.length() < min_length)
+		t = CL_String(min_length-t.length(), '0') + t;
+	set_arg(index, t);
+}
+
 void CL_StringFormat::set_arg(int index, float value)
 {
 	set_arg(index, CL_StringHelp::float_to_text(value));

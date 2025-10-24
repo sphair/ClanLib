@@ -33,12 +33,22 @@
 
 class CL_CSSBoxWhiteSpace;
 class CL_CSSBoxText;
+class CL_CSSInlineGeneratedBox;
+
+class CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	virtual bool node(CL_CSSInlineGeneratedBox *box) { return true; }
+	virtual void close_node(CL_CSSInlineGeneratedBox *box) { }
+};
 
 class CL_CSSInlineGeneratedBox
 {
 public:
 	CL_CSSInlineGeneratedBox();
 	~CL_CSSInlineGeneratedBox();
+
+	void descendants(CL_CSSInlineGeneratedBoxVisitor *visitor) const;
 
 	void add_box(CL_CSSInlineGeneratedBox *child);
 	bool is_block_line() const { return first_child == 0; }
@@ -119,13 +129,14 @@ public:
 	bool get_cursor_box(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_CSSBoxText *text_node, CL_String::size_type pos, CL_Rect &out_box);
 	// CL_CSSLayoutHitTestResult hit_test(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resource_cache, const CL_Point &pos) const;
 
+
+	static void adjust_start_of_line_text_range(CL_CSSBoxText *text, size_t &text_start, size_t &text_end, bool &start_of_line);
+
 private:
 	void layout_inline_blocks_and_floats(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, LayoutStrategy strategy);
 	void create_linebreak_opportunities();
-	bool should_break_at_end_of_spaces(const CL_CSSBoxWhiteSpace &whitespace);
 	CL_CSSActualValue get_width(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_CSSInlinePosition start, CL_CSSInlinePosition end, bool &start_of_line);
 	bool place_floats(CL_CSSInlinePosition start, CL_CSSInlinePosition end, CL_CSSActualValue x, CL_CSSActualValue y, LayoutStrategy strategy);
-	void adjust_start_of_line_text_range(CL_CSSBoxText *text, size_t &text_start, size_t &text_end, bool &start_of_line) const;
 	void generate_line(CL_CSSInlinePosition start, CL_CSSInlinePosition end);
 	CL_CSSInlineGeneratedBox *begin_tree(CL_CSSInlinePosition start, CL_CSSInlineGeneratedBox *line);
 	void generate_block_line(CL_CSSInlinePosition pos);
@@ -144,4 +155,140 @@ private:
 
 	std::vector<CL_CSSInlineLineBreakOpportunity2> linebreak_opportunities;
 	CL_CSSInlineGeneratedBox boxes;
+
+	friend class CL_CSSInlineLayoutLayoutLine;
 };
+
+
+class CL_CSSInlineLayoutSetComponentGeometry : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	bool node(CL_CSSInlineGeneratedBox *box);
+};
+
+class CL_CSSInlineLayoutPrepareChildren : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutPrepareChildren(CL_CSSBlockFormattingContext *formatting_context, CL_CSSStackingContext *stacking_context);
+	bool node(CL_CSSInlineGeneratedBox *box);
+
+private:
+	CL_CSSBlockFormattingContext *formatting_context;
+	CL_CSSStackingContext *stacking_context;
+};
+
+class CL_CSSInlineLayoutCalculateTopDownHeights : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutCalculateTopDownHeights(CL_CSSUsedHeight height);
+	bool node(CL_CSSInlineGeneratedBox *box);
+
+private:
+	CL_CSSUsedHeight height;
+};
+
+class CL_CSSInlineLayoutAddContentMarginTop : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutAddContentMarginTop(CL_CSSLayoutCursor &cursor);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+	bool result;
+
+private:
+	CL_CSSLayoutCursor &cursor;
+	bool start_of_line;
+};
+
+class CL_CSSInlineLayoutIsEmpty : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutIsEmpty();
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+	bool result;
+
+private:
+	bool start_of_line;
+};
+
+class CL_CSSInlineLayoutLayoutAbsoluteAndFixedContent : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutLayoutAbsoluteAndFixedContent(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_Rect containing_block, const CL_Size &viewport_size);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	CL_CSSLayoutGraphics *graphics;
+	CL_CSSResourceCache *resources;
+	CL_Rect containing_block;
+	CL_Size viewport_size;
+};
+
+class CL_CSSInlineLayoutRenderLayerFloats : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutRenderLayerFloats(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_CSSStackingContext *stacking_context);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	CL_CSSLayoutGraphics *graphics;
+	CL_CSSResourceCache *resources;
+	CL_CSSStackingContext *stacking_context;
+};
+
+class CL_CSSInlineLayoutRenderLayerPositioned : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutRenderLayerPositioned(CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_CSSStackingContext *stacking_context);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	CL_CSSLayoutGraphics *graphics;
+	CL_CSSResourceCache *resources;
+	CL_CSSStackingContext *stacking_context;
+};
+
+class CL_CSSInlineLayoutCreateLinebreakOpportunities : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutCreateLinebreakOpportunities(std::vector<CL_CSSInlineLineBreakOpportunity2> &linebreak_opportunities);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	bool should_break_at_end_of_spaces(const CL_CSSBoxWhiteSpace &whitespace);
+
+	bool prev_space;
+	std::vector<CL_CSSInlineLineBreakOpportunity2> &linebreak_opportunities;
+};
+
+class CL_CSSInlineLayoutLayoutInlineBlocksAndFloats : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutLayoutInlineBlocksAndFloats(CL_CSSInlineLayout *layout, CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources, CL_CSSInlineLayout::LayoutStrategy strategy);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	CL_CSSInlineLayout *layout;
+	CL_CSSLayoutGraphics *graphics;
+	CL_CSSResourceCache *resources;
+	CL_CSSInlineLayout::LayoutStrategy strategy;
+};
+
+class CL_CSSInlineLayoutLayoutLine : public CL_CSSInlineGeneratedBoxVisitor
+{
+public:
+	CL_CSSInlineLayoutLayoutLine(CL_CSSInlineLayout *layout, CL_CSSInlineGeneratedBox *line, CL_Rect &line_box, CL_CSSLayoutGraphics *graphics, CL_CSSResourceCache *resources);
+	bool node(CL_CSSInlineGeneratedBox *cur);
+	void close_node(CL_CSSInlineGeneratedBox *cur);
+
+private:
+	CL_CSSInlineLayout *layout;
+	CL_CSSInlineGeneratedBox *line;
+	CL_Rect &line_box;
+	CL_CSSLayoutGraphics *graphics;
+	CL_CSSResourceCache *resources;
+	CL_CSSActualValue x;
+	CL_CSSActualValue baseline_offset;
+};
+

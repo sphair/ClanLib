@@ -158,8 +158,9 @@ void CL_OpenGLWindowProvider_AGL::create(CL_DisplayWindowSite *new_site, const C
 	if (!opengl_context)
 	{
         opengl_context = create_context();
-        
-		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_AGL(*this, opengl_context, false)));
+
+		CL_OpenGLWindowDescription gldesc(desc);
+   		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_AGL(*this, opengl_context, false), gldesc ));
         setup_default_framebuffer();
 		std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
 		gc_providers.push_back(gc.get_provider());

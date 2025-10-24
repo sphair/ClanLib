@@ -168,6 +168,7 @@ void CL_GUIWindowManagerProvider_System::create_window(
 	CL_InputContext& ic = top_level_window->window.get_ic();
 	top_level_window->slots.connect(ic.get_mouse().sig_key_up(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 	top_level_window->slots.connect(ic.get_mouse().sig_key_down(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
+	top_level_window->slots.connect(ic.get_mouse().sig_key_dblclk(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 	top_level_window->slots.connect(ic.get_mouse().sig_pointer_move(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 	top_level_window->slots.connect(ic.get_keyboard().sig_key_up(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 	top_level_window->slots.connect(ic.get_keyboard().sig_key_down(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
@@ -176,6 +177,7 @@ void CL_GUIWindowManagerProvider_System::create_window(
 	{
 		top_level_window->slots.connect(ic.get_tablet(i).sig_axis_move(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 		top_level_window->slots.connect(ic.get_tablet(i).sig_key_down(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
+		top_level_window->slots.connect(ic.get_tablet(i).sig_key_dblclk(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 		top_level_window->slots.connect(ic.get_tablet(i).sig_key_up(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 		top_level_window->slots.connect(ic.get_tablet(i).sig_proximity_change(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
 	}

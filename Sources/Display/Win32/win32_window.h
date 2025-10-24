@@ -141,15 +141,11 @@ public:
 private:
 	void update_layered_worker_thread();
 	void update_layered_worker_thread_process();
+	void update_layered_worker_thread_process_dwm();
 	void update_layered_process_alpha(int y_start, int y_stop);
 
 	void create_direct_input();
 
-	static LRESULT WINAPI static_window_try_proc(
-		HWND hWnd,
-		UINT uMsg,
-		WPARAM wParam,
-		LPARAM lParam);
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,
 		UINT uMsg,
@@ -223,6 +219,9 @@ private:
 	CL_Event update_window_event_stop;
 	CL_Event update_window_event_start;
 	CL_Event update_window_event_completed;
+	HRGN update_window_region;
+	unsigned int update_window_max_region_rects;
+
 
 	friend class CL_InputDeviceProvider_DirectInput;
 };

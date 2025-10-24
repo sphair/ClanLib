@@ -125,6 +125,14 @@ int CL_TextEdit::get_max_length() const
 	return impl->max_length;
 }
 
+CL_String CL_TextEdit::get_line_text(int line) const
+{
+	if (line >= 0 && line < (int)impl->lines.size())
+		return impl->lines[line].text;
+	else
+		return CL_String();
+}
+
 CL_String CL_TextEdit::get_text() const
 {
 	CL_String::size_type size = 0;
@@ -143,6 +151,11 @@ CL_String CL_TextEdit::get_text() const
 	}
 
 	return text;
+}
+
+int CL_TextEdit::get_line_count() const
+{
+	return impl->lines.size();
 }
 
 CL_String CL_TextEdit::get_selection() const
@@ -165,6 +178,11 @@ int CL_TextEdit::get_selection_length() const
 int CL_TextEdit::get_cursor_pos() const
 {
 	return impl->to_offset(impl->cursor_pos);
+}
+
+int CL_TextEdit::get_cursor_line_number() const
+{
+	return impl->cursor_pos.y;
 }
 
 CL_Size CL_TextEdit::get_preferred_size() const
@@ -255,6 +273,28 @@ void CL_TextEdit::set_text(const CL_StringRef &text)
 
 	impl->clip_start_offset = 0;
 	set_cursor_pos(0);
+	clear_selection();
+	request_repaint();
+}
+
+void CL_TextEdit::add_text(const CL_StringRef &text)
+{
+	CL_String::size_type start = 0;
+	CL_String::size_type end = text.find('\n');
+	while (end != CL_String::npos)
+	{
+		CL_TextEdit_Impl::Line line;
+		line.text = text.substr(start, end - start);
+		impl->lines.push_back(line);
+		start = end + 1;
+		end = text.find('\n', start);
+	}
+	CL_TextEdit_Impl::Line line;
+	line.text = text.substr(start);
+	impl->lines.push_back(line);
+
+//	impl->clip_start_offset = 0;
+//	set_cursor_pos(0);
 	clear_selection();
 	request_repaint();
 }
@@ -705,7 +745,6 @@ void CL_TextEdit_Impl::on_process_message(CL_GUIMessage &msg)
 			textedit->set_cursor(cl_cursor_arrow);
 		}
 	}
-
 }
 
 void CL_TextEdit_Impl::on_style_changed()
@@ -734,7 +773,6 @@ void CL_TextEdit_Impl::create_parts()
 	part_selection.set_state(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
-
 }
 
 void CL_TextEdit_Impl::move(int steps, CL_InputEvent &e)
@@ -974,7 +1012,6 @@ void CL_TextEdit_Impl::on_resized()
 	clip_start_offset = 0;
 }
 
-
 void CL_TextEdit_Impl::on_scroll_timer_expired()
 {
 	CL_GUIMessage_Input msg;
@@ -1042,11 +1079,23 @@ CL_Vec2i CL_TextEdit_Impl::from_offset(CL_String::size_type offset) const
 	return CL_Vec2i(lines.back().text.size(), lines.size() - 1);
 }
 
-void CL_TextEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
+int CL_TextEdit::get_total_height()
+{
+	CL_GraphicContext gc = get_gc();
+	impl->layout_lines(gc);
+	if (!impl->lines.empty())
+	{
+		return impl->lines.back().box.bottom + impl->part_component.get_content_shrink_box().bottom;
+	}
+	else
+	{
+		return impl->part_component.get_render_box(CL_Rect(0,0,0,0)).get_height();
+	}
+}
+
+void CL_TextEdit_Impl::layout_lines(CL_GraphicContext &gc)
 {
 	CL_Rect g = textedit->get_size();
-	part_component.render_box(gc, g, update_rect);
-
 	CL_Rect content_box = part_component.get_content_box(g);
 	CL_Font font = part_component.get_font();
 
@@ -1062,8 +1111,6 @@ void CL_TextEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 		sel_start = from_offset(to_offset(selection_start) + selection_length);
 		sel_end = selection_start;
 	}
-
-	textedit->set_cliprect(gc, content_box);
 
 	CL_Point draw_pos = content_box.get_top_left();
 	for (size_t i = 0; i < lines.size(); i++)
@@ -1102,11 +1149,21 @@ void CL_TextEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 
 		line.box.translate(draw_pos - line.box.get_top_left());
 		line.layout.set_position(line.box.get_top_left());
-		line.layout.draw_layout(gc);
 
 		draw_pos = line.box.get_bottom_left();
 	}
+}
 
+void CL_TextEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
+{
+	layout_lines(gc);
+	CL_Rect g = textedit->get_size();
+	CL_Rect content_box = part_component.get_content_box(g);
+
+	part_component.render_box(gc, g, update_rect);
+	textedit->set_cliprect(gc, content_box);
+	for (size_t i = 0; i < lines.size(); i++)
+		lines[i].layout.draw_layout(gc);
 	textedit->reset_cliprect(gc);
 }
 

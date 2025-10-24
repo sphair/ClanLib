@@ -59,12 +59,14 @@ private:
 	CL_Spin *spin_border;
 	CL_Label *label_border;
 
+	CL_CheckBox *check_sort;
+
 	CL_RadioButton *radio_texture32;
 	CL_RadioButton *radio_texture64;
 	CL_RadioButton *radio_texture128;
 	CL_RadioButton *radio_texture256;
 	CL_RadioButton *radio_texture512;
-	CL_RadioButton *radio_texture512x256;
+	CL_RadioButton *radio_texture1024x256;
 	CL_RadioButton *radio_texture1024;
 	CL_RadioButton *radio_texture2048;
 

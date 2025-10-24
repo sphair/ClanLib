@@ -66,23 +66,31 @@ int CL_GL1::get_textureformat_bits(CL_TextureFormat format)
 	switch (format)
 	{
 		case cl_r8: count = 8;	break; //RED 8
+		case cl_r8_snorm: count = 8; break; //RED, s8
 		case cl_r16: count = 16; break; //RED, 16
+		case cl_r16_snorm: count = 16; break; //RED, s16
 		case cl_rg8: count = 8 + 8; break; //RG, 8, 8
+		case cl_rg8_snorm: count = 8 + 8; break; //RG, s8, s8
 		case cl_rg16: count = 16 + 16; break; //RG, 16, 16
+		case cl_rg16_snorm: count = 16 + 16; break; //RG, s16, s16
 		case cl_r3_g3_b2: count = 3 + 3 + 2; break; //RGB, 3, 3, 2
 		case cl_rgb4: count = 4 + 4 + 4; break; //RGB, 4, 4, 4
 		case cl_rgb5: count = 5 + 5 + 5; break; //RGB, 5, 5, 5
 		case cl_rgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
+		case cl_rgb8_snorm: count = 8 + 8 + 8; break; //RGB, s8, s8, s8
 		case cl_rgb10: count = 10 + 10 + 10; break; //RGB, 10, 10, 10
 		case cl_rgb12: count = 12 + 12 + 12; break; //RGB, 12, 12, 12
 		case cl_rgb16: count = 16 + 16 + 16; break; //RGB, 16, 16, 16
+		case cl_rgb16_snorm: count = 16 + 16 + 16; break; //RGB, s16, s16, s16
 		case cl_rgba2: count = 2 + 2 + 2 + 2; break; //RGBA, 2, 2, 2, 2
 		case cl_rgba4: count = 4 + 4 + 4 + 4; break; //RGBA, 4, 4, 4, 4
 		case cl_rgb5_a1: count = 5 + 5 + 5 + 1; break; //RGBA, 5, 5, 5, 1
 		case cl_rgba8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
+		case cl_rgba8_snorm: count = 8 + 8 + 8 + 8; break; //RGBA, s8, s8, s8, s8
 		case cl_rgb10_a2: count = 10 + 10 + 10 + 2; break; //RGBA, 10, 10, 10, 2
 		case cl_rgba12: count = 12 + 12 + 12 + 12; break; //RGBA, 12, 12, 12, 12
 		case cl_rgba16: count = 16 + 16 + 16 + 16; break; //RGBA, 16, 16, 16, 16
+		case cl_rgba16_snorm: count = 16 + 16 + 16 + 16; break; //RGBA, s16, s16, s16, s16
 		case cl_srgb8: count = 8 + 8 + 8; break; //RGB, 8, 8, 8
 		case cl_srgb8_alpha8: count = 8 + 8 + 8 + 8; break; //RGBA, 8, 8, 8, 8
 		case cl_r16f: count = 16; break; //RED, f16
@@ -126,23 +134,75 @@ int CL_GL1::get_textureformat_bits(CL_TextureFormat format)
 		case cl_depth24_stencil8: count = 24 + 8; break; //DEPTH_STENCIL, 24, 8
 		case cl_depth32f_stencil8: count = 32 + 8; break; //DEPTH_STENCIL, f32, 8
 		default:
-			throw CL_Exception("cannot object pixel count for this CL_TextureFormat");
+			throw CL_Exception("cannot obtain pixel count for this CL_TextureFormat");
 	}
 	return count;
 }
 
+
 void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
 {
+#ifdef __APPLE__
+    
+    // OpenGL ES 2 only supports a very limited set of formats
+    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
+    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
+	switch (format)
+	{
+		case cl_rgb: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgb8ui: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
+		case cl_rgba: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_rgba8ui: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		default:
+			throw CL_Exception("Unsupported CL_TextureFormat");
+    }
+    
+    
+#else
+    
 	switch (format)
 	{
 	// base internal format
 		case cl_depth_component: gl_internal_format = GL_DEPTH_COMPONENT; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		//case cl_depth_stencil: gl_internal_format = GL_DEPTH_STENCIL; gl_pixel_format = GL_DEPTH_STENCIL; break;
 		case cl_red: gl_internal_format = GL_RED; gl_pixel_format = GL_RED; break;
+		case cl_green: gl_internal_format = GL_GREEN; gl_pixel_format = GL_GREEN; break;
+		case cl_blue: gl_internal_format = GL_BLUE; gl_pixel_format = GL_BLUE; break;
+		//case cl_rg: gl_internal_format = GL_RG; gl_pixel_format = GL_RG; break;
 		case cl_rgb: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
 		case cl_rgba: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
+		case cl_bgr: gl_internal_format = GL_BGR; gl_pixel_format = GL_BGR; break;
+		case cl_bgra: gl_internal_format = GL_BGRA; gl_pixel_format = GL_BGRA; break;
+		//case cl_red_integer: gl_internal_format = GL_RED_INTEGER; gl_pixel_format = GL_RED_INTEGER; break;
+		//case cl_green_integer: gl_internal_format = GL_GREEN_INTEGER; gl_pixel_format = GL_GREEN_INTEGER; break;
+		//case cl_blue_integer: gl_internal_format = GL_BLUE_INTEGER; gl_pixel_format = GL_BLUE_INTEGER; break;
+		//case cl_rg_integer: gl_internal_format = GL_RG_INTEGER; gl_pixel_format = GL_RG_INTEGER; break;
+		//case cl_rgb_integer: gl_internal_format = GL_RGB_INTEGER; gl_pixel_format = GL_RGB_INTEGER; break;
+		//case cl_rgba_integer: gl_internal_format = GL_RGBA_INTEGER; gl_pixel_format = GL_RGBA_INTEGER; break;
+		//case cl_bgr_integer: gl_internal_format = GL_BGR_INTEGER; gl_pixel_format = GL_BGR_INTEGER; break;
+		//case cl_bgra_integer: gl_internal_format = GL_BGRA_INTEGER; gl_pixel_format = GL_BGRA_INTEGER; break;
+
+		// TODO: Should this really be here?
 		case cl_stencil_index: gl_internal_format = GL_STENCIL_INDEX; gl_pixel_format = GL_STENCIL_INDEX; break;
 
 	// sized internal format
+
+		// TODO: Should this really be here?
+		case cl_stencil_index1: gl_internal_format = GL_STENCIL_INDEX1; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index4: gl_internal_format = GL_STENCIL_INDEX4; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index8: gl_internal_format = GL_STENCIL_INDEX8; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case cl_stencil_index16: gl_internal_format = GL_STENCIL_INDEX16; gl_pixel_format = GL_STENCIL_INDEX; break;
+
+		//case cl_r8: gl_internal_format = GL_R8; gl_pixel_format = GL_RED; break;
+		//case cl_r8_snorm: gl_internal_format = GL_R8_SNORM; gl_pixel_format = GL_RED; break;
+		//case cl_r16: gl_internal_format = GL_R16; gl_pixel_format = GL_RED; break;
+		//case cl_r16_snorm: gl_internal_format = GL_R16_SNORM; gl_pixel_format = GL_RED; break;
+		//case cl_rg8: gl_internal_format = GL_RG8; gl_pixel_format = GL_RG; break;
+		//case cl_rg8_snorm: gl_internal_format = GL_RG8_SNORM; gl_pixel_format = GL_RG; break;
+		//case cl_rg16: gl_internal_format = GL_RG16; gl_pixel_format = GL_RG; break;
+		//case cl_rg16_snorm: gl_internal_format = GL_RG16_SNORM; gl_pixel_format = GL_RG; break;
 		case cl_r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
 		case cl_rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
 		case cl_rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
@@ -150,284 +210,400 @@ void CL_GL1::to_opengl_textureformat(CL_TextureFormat format, GLint &gl_internal
 		case cl_rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
 		case cl_rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
 		case cl_rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb16_snorm: gl_internal_format = GL_RGB16_SNORM; gl_pixel_format = GL_RGB; break;
 		case cl_rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
 		case cl_rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
 		case cl_rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
 		case cl_rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba8_snorm: gl_internal_format = GL_RGBA8_SNORM; gl_pixel_format = GL_RGBA; break;
 		case cl_rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
 		case cl_rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
 		case cl_rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba16_snorm: gl_internal_format = GL_RGBA16_SNORM; gl_pixel_format = GL_RGBA; break;
+		//case cl_srgb8: gl_internal_format = GL_SRGB8; gl_pixel_format = GL_RGB; break;
+		//case cl_srgb8_alpha8: gl_internal_format = GL_SRGB8_ALPHA8; gl_pixel_format = GL_RGBA; break;
+		//case cl_r16f: gl_internal_format = GL_R16F; gl_pixel_format = GL_RED; break;
+		//case cl_rg16f: gl_internal_format = GL_RG16F; gl_pixel_format = GL_RG; break;
+		//case cl_rgb16f: gl_internal_format = GL_RGB16F; gl_pixel_format = GL_RGB; break;
+		//case cl_rgba16f: gl_internal_format = GL_RGBA16F; gl_pixel_format = GL_RGBA; break;
+		//case cl_r32f: gl_internal_format = GL_R32F; gl_pixel_format = GL_RED; break;
+		//case cl_rg32f: gl_internal_format = GL_RG32F; gl_pixel_format = GL_RG; break;
+		//case cl_rgb32f: gl_internal_format = GL_RGB32F; gl_pixel_format = GL_RGB; break;
+		//case cl_rgba32f: gl_internal_format = GL_RGBA32F; gl_pixel_format = GL_RGBA; break;
+		//case cl_r11f_g11f_b10f: gl_internal_format = GL_R11F_G11F_B10F; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb9_e5: gl_internal_format = GL_RGB9_E5; gl_pixel_format = GL_RGB; break;
+		//case cl_r8i: gl_internal_format = GL_R8I; gl_pixel_format = GL_RED; break;
+		//case cl_r8ui: gl_internal_format = GL_R8UI; gl_pixel_format = GL_RED; break;
+		//case cl_r16i: gl_internal_format = GL_R16I; gl_pixel_format = GL_RED; break;
+		//case cl_r16ui: gl_internal_format = GL_R16UI; gl_pixel_format = GL_RED; break;
+		//case cl_r32i: gl_internal_format = GL_R32I; gl_pixel_format = GL_RED; break;
+		//case cl_r32ui: gl_internal_format = GL_R32UI; gl_pixel_format = GL_RED; break;
+		//case cl_rg8i: gl_internal_format = GL_RG8I; gl_pixel_format = GL_RG; break;
+		//case cl_rg8ui: gl_internal_format = GL_RG8UI; gl_pixel_format = GL_RG; break;
+		//case cl_rg16i: gl_internal_format = GL_RG16I; gl_pixel_format = GL_RG; break;
+		//case cl_rg16ui: gl_internal_format = GL_RG16UI; gl_pixel_format = GL_RG; break;
+		//case cl_rg32i: gl_internal_format = GL_RG32I; gl_pixel_format = GL_RG; break;
+		//case cl_rg32ui: gl_internal_format = GL_RG32UI; gl_pixel_format = GL_RG; break;
+		//case cl_rgb8i: gl_internal_format = GL_RGB8I; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb8ui: gl_internal_format = GL_RGB8UI; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb16i: gl_internal_format = GL_RGB16I; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb16ui: gl_internal_format = GL_RGB16UI; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb32i: gl_internal_format = GL_RGB32I; gl_pixel_format = GL_RGB; break;
+		//case cl_rgb32ui: gl_internal_format = GL_RGB32UI; gl_pixel_format = GL_RGB; break;
+		//case cl_rgba8i: gl_internal_format = GL_RGBA8I; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba8ui: gl_internal_format = GL_RGBA8UI; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba16i: gl_internal_format = GL_RGBA16I; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba16ui: gl_internal_format = GL_RGBA16UI; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba32i: gl_internal_format = GL_RGBA32I; gl_pixel_format = GL_RGBA; break;
+		//case cl_rgba32ui: gl_internal_format = GL_RGBA32UI; gl_pixel_format = GL_RGBA; break;
 		case cl_depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
 		case cl_depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
 		case cl_depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		//case cl_depth_component32f: gl_internal_format = GL_DEPTH_COMPONENT32F; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		//case cl_depth24_stencil8: gl_internal_format = GL_DEPTH24_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+		//case cl_depth32f_stencil8: gl_internal_format = GL_DEPTH32F_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+
+		//case cl_compressed_red: gl_internal_format = GL_COMPRESSED_RED; gl_pixel_format = GL_RED; break;
+		//case cl_compressed_rg: gl_internal_format = GL_COMPRESSED_RG; gl_pixel_format = GL_RG; break;
 		case cl_compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
 		case cl_compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
+		//case cl_compressed_srgb: gl_internal_format = GL_COMPRESSED_SRGB; gl_pixel_format = GL_RGB; break;
+		//case cl_compressed_srgb_alpha: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = GL_RGBA; break;
+		//case cl_compressed_red_rgtc1: gl_internal_format = GL_COMPRESSED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		//case cl_compressed_signed_red_rgtc1: gl_internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		//case cl_compressed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+		//case cl_compressed_signed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = GL_RG; break;
 		default:
 			throw CL_Exception("Unknown CL_TextureFormat");
 	}
-
+#endif
 }
 
+bool CL_GL1::to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &format, GLenum &type)
+{
+	bool valid = false;
+
+#ifdef __APPLE__
+    
+    // OpenGL ES 2 only supports a very limited set of formats
+    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
+    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
+	switch (texture_format)
+	{
+		case cl_abgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_bgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+        default:
+            break;
+    }
+    
+    
+#else
+    
+	//TODO: We should really use CL_Endian::is_system_big()
+
+	//TODO: All the formats in this switch are not supported - Maybe they can be
+
+	switch (texture_format)
+	{
+		case cl_rgba8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_rgb8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case cl_bgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case cl_a1_rgb5: break;
+		case cl_argb8: break;
+		case cl_abgr8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8_REV;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_color_index: break;
+		case cl_stencil_index: break;
+		case cl_depth_component: break;
+		case cl_depth_stencil: break;
+		case cl_red: break;
+		case cl_green: break;
+		case cl_blue: break;
+		case cl_rg: break;
+		case cl_rgb: break;
+		case cl_rgba: break;
+		case cl_bgr: break;
+		case cl_bgra: break;
+		case cl_red_integer: break;
+		case cl_green_integer: break;
+		case cl_blue_integer: break;
+		case cl_rg_integer: break;
+		case cl_rgb_integer: break;
+		case cl_rgba_integer: break;
+		case cl_bgr_integer: break;
+		case cl_bgra_integer: break;
+		case cl_stencil_index1: break;
+		case cl_stencil_index4: break;
+		case cl_stencil_index8: break;
+		case cl_stencil_index16: break;
+		case cl_r8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case cl_r8_snorm:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case cl_r16:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case cl_r16_snorm:
+		{
+			valid = true;
+			type = GL_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case cl_rg8: break;
+		case cl_rg8_snorm: break;
+		case cl_rg16: break;
+		case cl_rg16_snorm: break;
+		case cl_r3_g3_b2:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE_3_3_2;
+			format = GL_RGB;
+			break;
+		}
+		case cl_rgb4: break;
+		case cl_rgb5: break;
+		case cl_rgb8_snorm:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case cl_rgb10: break;
+		case cl_rgb12: break;
+		case cl_rgb16: break;
+		case cl_rgb16_snorm: break;
+		case cl_rgba2: break;
+		case cl_rgba4:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT_4_4_4_4;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_rgb5_a1:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT_5_5_5_1;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_rgba8_snorm: break;
+		case cl_rgb10_a2: break;
+		case cl_rgba12: break;
+		case cl_rgba16: break;
+		case cl_rgba16_snorm: break;
+		case cl_srgb8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case cl_srgb8_alpha8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_r16f: break;
+		case cl_rg16f: break;
+		case cl_rgb16f: break;
+		case cl_rgba16f: break;
+
+		case cl_r32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RED;
+			break;
+		}
+		case cl_rg32f: break;
+		case cl_rgb32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RGB;
+			break;
+		}
+		
+		case cl_rgba32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RGBA;
+			break;
+		}
+		
+		case cl_r11f_g11f_b10f: break;
+		case cl_rgb9_e5: break;
+		case cl_r8i:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case cl_r8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case cl_r16i:
+		{
+			valid = true;
+			type = GL_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case cl_r16ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case cl_r32i:
+		{
+			valid = true;
+			type = GL_INT;
+			format = GL_RED;
+			break;
+		}
+		case cl_r32ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT;
+			format = GL_RED;
+			break;
+		}
+		case cl_rg8i: break;
+		case cl_rg8ui: break;
+		case cl_rg16i: break;
+		case cl_rg16ui: break;
+		case cl_rg32i: break;
+		case cl_rg32ui: break;
+		case cl_rgb8i:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case cl_rgb8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case cl_rgb16i: break;
+		case cl_rgb16ui: break;
+		case cl_rgb32i: break;
+		case cl_rgb32ui: break;
+		case cl_rgba8i:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_rgba8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
+			break;
+		}
+		case cl_rgba16i: break;
+		case cl_rgba16ui: break;
+		case cl_rgba32i: break;
+		case cl_rgba32ui: break;
+		case cl_depth_component16: break;
+		case cl_depth_component24: break;
+		case cl_depth_component32: break;
+		case cl_depth_component32f: break;
+		case cl_depth24_stencil8: break;
+		case cl_depth32f_stencil8: break;
+		case cl_compressed_red: break;
+		case cl_compressed_rg: break;
+		case cl_compressed_rgb: break;
+		case cl_compressed_rgba: break;
+		case cl_compressed_srgb: break;
+		case cl_compressed_srgb_alpha: break;
+		case cl_compressed_red_rgtc1: break;
+		case cl_compressed_signed_red_rgtc1: break;
+		case cl_compressed_rg_rgtc2: break;
+		case cl_compressed_signed_rg_rgtc2: break;
+	}
+
+#endif
+
+	return valid;
+}
 
 bool CL_GL1::to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, GLenum &format, GLenum &type)
 {
-/*
-	// Types:
-	GL_UNSIGNED_BYTE
-	GL_BITMAP
-	GL_BYTE
-	GL_UNSIGNED_SHORT
-	GL_SHORT
-	GL_UNSIGNED_INT
-	GL_INT
-	GL_FLOAT
-	GL_UNSIGNED_BYTE_3_3_2
-	GL_UNSIGNED_BYTE_2_3_3_REV
-	GL_UNSIGNED_SHORT_5_6_5
-	GL_UNSIGNED_SHORT_5_6_5_REV
-	GL_UNSIGNED_SHORT_4_4_4_4
-	GL_UNSIGNED_SHORT_4_4_4_4_REV
-	GL_UNSIGNED_SHORT_5_5_5_1
-	GL_UNSIGNED_SHORT_1_5_5_5_REV
-	GL_UNSIGNED_INT_8_8_8_8
-	GL_UNSIGNED_INT_8_8_8_8_REV
-	GL_UNSIGNED_INT_10_10_10_2
-	GL_UNSIGNED_INT_2_10_10_10_REV
-
-	// Formats:
-	GL_COLOR_INDEX
-	GL_STENCIL_INDEX
-	GL_DEPTH_COMPONENT
-	GL_RED
-	GL_GREEN
-	GL_BLUE
-	GL_ALPHA
-	GL_RGB
-	GL_RGBA
-	GL_BGR
-	GL_BGRA
-	GL_LUMINANCE
-	GL_LUMINANCE_ALPHA
-*/
 
 	// indexed modes and colorkey requires special conversion to alpha and
 	// therefore no OpenGL mode has a direct conversion format
 	if (pbuffer.has_colorkey() || pbuffer.get_format() == cl_color_index)
 		return false;
 
-	const unsigned int rm = pbuffer.get_red_mask();
-	const unsigned int gm = pbuffer.get_green_mask();
-	const unsigned int bm = pbuffer.get_blue_mask();
-	const unsigned int am = pbuffer.get_alpha_mask();
-	if (pbuffer.get_bytes_per_pixel() == 1)
-	{
-		if (rm == (0x7u << 5) && gm == (0x7u << 2) && bm == (0x3u))
-		{
-			type = GL_UNSIGNED_BYTE_3_3_2;
-			format = GL_RGB;
-			return true;
-		}
-		if (rm == (0x7u) && gm == (0x7u << 3) && bm == (0x3u << 6))
-		{
-			type = GL_UNSIGNED_BYTE_2_3_3_REV;
-			format = GL_RGB;
-			return true;
-		}
-	}
-	if (pbuffer.get_bytes_per_pixel() == 2)
-	{
-		if (rm == (0x1fu << 11) && gm == (0x3fu << 5) && bm == (0x1fu))
-		{
-			type = GL_UNSIGNED_SHORT_5_6_5;
-			format = GL_RGB;
-			return true;
-		}
-		if (rm == (0x1fu) && gm == (0x3fu << 5) && bm == (0x1fu << 11))
-		{
-			type = GL_UNSIGNED_SHORT_5_6_5_REV;
-			format = GL_RGB;
-			return true;
-		}
-		if (rm == (0x0fu << 12) && gm == (0x0fu << 8) && bm == (0x0fu << 4) && am == (0x0fu))
-		{
-			type = GL_UNSIGNED_SHORT_4_4_4_4;
-			format = GL_RGBA;
-			return true;
-		}
-		if (rm == (0x0fu) && gm == (0x0fu << 4) && bm == (0x0fu << 8) && am == (0x0fu << 12))
-		{
-			type = GL_UNSIGNED_SHORT_4_4_4_4_REV;
-			format = GL_RGBA;
-			return true;
-		}
-		if (rm == (0x1fu << 11) && gm == (0x1fu << 6) && bm == (0x1fu << 1) && am == (0x01u))
-		{
-			type = GL_UNSIGNED_SHORT_5_5_5_1;
-			format = GL_RGBA;
-			return true;
-		}
-		if (rm == (0x1fu) && gm == (0x1fu << 5) && bm == (0x1fu << 10) && am == (0x01u << 15))
-		{
-			type = GL_UNSIGNED_SHORT_1_5_5_5_REV;
-			format = GL_RGBA;
-			return true;
-		}
-	}
-	if (pbuffer.get_bytes_per_pixel() == 4)
-	{
-		if (rm == (0xfful << 24) && gm == (0xfful << 16) && bm == (0xfful << 8) && am == (0xfful))
-		{
-			type = GL_UNSIGNED_INT_8_8_8_8;
-			format = GL_RGBA;
-			return true;
-		}
-		if (rm == (0xfful) && gm == (0xfful << 8) && bm == (0xfful << 16) && am == (0xfful << 24))
-		{
-			type = GL_UNSIGNED_INT_8_8_8_8_REV;
-			format = GL_RGBA;
-			return true;
-		}
-		if (rm == (0x3fful << 22) && gm == (0x3fful << 12) && bm == (0x3fful << 2) && am == (0x03ul))
-		{
-			type = GL_UNSIGNED_INT_10_10_10_2;
-			format = GL_RGBA;
-		}
-		if (rm == (0x3fful) && gm == (0x3fful << 10) && bm == (0x3fful << 20) && am == (0x03ul << 30))
-		{
-			type = GL_UNSIGNED_INT_2_10_10_10_REV;
-			format = GL_RGBA;
-		}
-	}
-
-	bool big = CL_Endian::is_system_big();
-
-	if (pbuffer.get_format() == cl_color_index)
-	{
-		format = GL_COLOR_INDEX;
-		if (pbuffer.get_bytes_per_pixel() == 1)
-			type = GL_UNSIGNED_BYTE;
-		else if (pbuffer.get_bytes_per_pixel() == 2)
-			type = GL_UNSIGNED_SHORT;
-		else if (pbuffer.get_bytes_per_pixel() == 4)
-			type = GL_UNSIGNED_INT;
-		else
-			return false;
-	}
-	else
-	{
-		const int rms = CL_PixelFormat::get_mask_shift(rm),
-			gms = CL_PixelFormat::get_mask_shift(gm),
-			bms = CL_PixelFormat::get_mask_shift(bm),
-			ams = CL_PixelFormat::get_mask_shift(am);
-
-		const int rmb = CL_PixelFormat::get_mask_bits(rm),
-			gmb = CL_PixelFormat::get_mask_bits(gm),
-			bmb = CL_PixelFormat::get_mask_bits(bm),
-			amb = CL_PixelFormat::get_mask_bits(am);
-
-		typedef std::map<int, GLenum> BitsToTypeMap;
-		static BitsToTypeMap bits_to_type;
-		if (bits_to_type.empty())
-		{
-			// initialize it only once
-			bits_to_type[8] = GL_UNSIGNED_BYTE;
-			bits_to_type[16] = GL_UNSIGNED_SHORT;
-			bits_to_type[32] = GL_UNSIGNED_INT;
-		}
-
-		if (rm && gm && bm && am)
-		{
-			// the bit number must be 8, 16 or 32 for component
-			// they all must have the same number of bits
-			if ((!(rmb == 8 || rmb == 16 || rmb == 32)) ||
-				(rmb != gmb || rmb != bmb || rmb != amb))
-				return false;
-
-			const int bits = rmb; // they all have the same bits
-
-			if ((pbuffer.get_bytes_per_pixel() *8 ) != bits * 4)
-				return false;
-
-			type = bits_to_type[bits];
-
-			if (!big && rms == 0*bits && gms == 1*bits && bms == 2*bits && ams == 3*bits)
-				format = GL_RGBA;
-			else if (!big && ams == 0*bits && bms == 1*bits && gms == 2*bits && rms == 3*bits)
-				format = GL_ABGR;
-			else if (big && rms == 3*bits && gms == 2*bits && bms == 1*bits && ams == 0*bits)
-				format = GL_RGBA;
-			else if (big && ams == 3*bits && bms == 2*bits && gms == 1*bits && rms == 0*bits)
-				format = GL_ABGR;
-			else
-				return false;
-		}
-		else if (rm && gm && bm && !am)
-		{
-			// the bit number must be 8, 16 or 32 for component
-			// they all must have the same number of bits
-			if ((!(rmb == 8 || rmb == 16 || rmb == 32)) ||
-				(rmb != gmb || rmb != bmb))
-				return false;
-
-			const int bits = rmb; // they all have the same bits
-
-			if ((pbuffer.get_bytes_per_pixel() * 8) != bits * 3)
-				return false;
-
-			type = bits_to_type[bits];
-
-			if (!big && rms == 0*bits && gms == 1*bits && bms == 2*bits)
-				format = GL_RGB;
-			else if (!big && bms == 0*bits && gms == 1*bits && rms == 2*bits)
-				format = GL_BGR;
-			else if (big && rms == 2*bits && gms == 1*bits && bms == 0*bits)
-				format = GL_RGB;
-			else if (big && bms == 2*bits && gms == 1*bits && rms == 0*bits)
-				format = GL_BGR;
-			else
-				return false;
-		}
-		else if (rm && !gm && !bm && !am)
-		{
-			format = GL_RED;
-			if (rms != 0 || !bits_to_type.count(rmb))
-				return false;
-			if ((pbuffer.get_bytes_per_pixel() * 8) != rmb)
-				return false;
-			type = bits_to_type[rmb];
-		}
-		else if (!rm && gm && !bm && !am)
-		{
-			format = GL_GREEN;
-			if (gms != 0 || !bits_to_type.count(gmb))
-				return false;
-			if ((pbuffer.get_bytes_per_pixel() * 8) != gmb)
-				return false;
-			type = bits_to_type[gmb];
-		}
-		else if (!rm && !gm && bm && !am)
-		{
-			format = GL_BLUE;
-			if (bms != 0 || !bits_to_type.count(bmb))
-				return false;
-			if ((pbuffer.get_bytes_per_pixel() * 8) != bmb)
-				return false;
-			type = bits_to_type[bmb];
-		}
-		else if (!rm && !gm && !bm && am)
-		{
-			format = GL_ALPHA;
-			if (ams != 0 || !bits_to_type.count(amb))
-				return false;
-			if ((pbuffer.get_bytes_per_pixel() * 8) != amb)
-				return false;
-			type = bits_to_type[amb];
-		}
-		else
-			return false;
-	}
-
-	return true;
+	return to_opengl_pixelformat(pbuffer.get_format(), format, type);
 }
 
 /////////////////////////////////////////////////////////////////////////////

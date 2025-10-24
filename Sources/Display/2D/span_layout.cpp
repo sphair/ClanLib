@@ -74,6 +74,11 @@ void CL_SpanLayout::draw_layout(CL_GraphicContext &gc)
 	impl->draw_layout(gc);
 }
 
+void CL_SpanLayout::draw_layout_ellipsis(CL_GraphicContext &gc, const CL_Rect &content_rect)
+{
+	impl->draw_layout_ellipsis(gc, content_rect);
+}
+
 void CL_SpanLayout::set_position(const CL_Point &pos)
 {
 	impl->set_position(pos);
@@ -142,4 +147,14 @@ void CL_SpanLayout::set_cursor_overwrite_mode(bool enable)
 void CL_SpanLayout::set_cursor_color(const CL_Colorf &color)
 {
 	impl->cursor_color = color;
+}
+
+int CL_SpanLayout::get_first_baseline_offset()
+{
+	return impl->get_first_baseline_offset();
+}
+
+int CL_SpanLayout::get_last_baseline_offset()
+{
+	return impl->get_last_baseline_offset();
 }

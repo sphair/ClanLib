@@ -32,6 +32,7 @@
 #pragma once
 
 #include <string>
+#include <functional>
 #include "string_ref8.h"
 #include "string_ref16.h"
 #include "string8.h"
@@ -39,5 +40,36 @@
 
 typedef CL_StringRef8 CL_StringRef;
 typedef CL_String8 CL_String;
+
+#if defined(__APPLE__) || (defined(_MSC_VER) && _MSC_VER < 1600)
+	namespace std
+	{
+		namespace tr1
+		{
+			template<>
+			class hash<CL_String> : hash<const CL_String::char_type*>
+			{
+			public:
+					size_t operator()(const CL_String& keyval) const
+					{
+							return hash<const CL_String::char_type*>::operator()(keyval.c_str());
+					}
+			};
+		}
+	}
+#else
+	namespace std
+	{
+		template<>
+		class hash<CL_String> : hash<const CL_String::char_type*>
+		{
+		public:
+			size_t operator()(const CL_String& keyval) const
+			{
+				return hash<const CL_String::char_type*>::operator()(keyval.c_str());
+			}
+		};
+	}
+#endif
 
 /// \}

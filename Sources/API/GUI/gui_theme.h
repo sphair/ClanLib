@@ -101,6 +101,9 @@ public:
 	/// \brief Sets the resource manager to be used to retrieve resources.
 	void set_resources(CL_ResourceManager resources);
 
+	/// \brief Adds a resource manager to be used to retrieve resources.
+	void add_resources(CL_ResourceManager resources);
+
 	/// \brief Renders a background box for the given theme part.
 	void render_box(
 		CL_GraphicContext &gc,

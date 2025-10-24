@@ -42,6 +42,7 @@
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/Win32/cursor_provider_win32.h"
+#include "Display/Win32/dwm_functions.h"
 #include "../opengl_window_description_impl.h"
 #include "../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
@@ -95,7 +96,7 @@ namespace
 
 CL_OpenGLWindowProvider_WGL::CL_OpenGLWindowProvider_WGL()
 : win32_window(),
-  opengl_context(0), device_context(0), hwnd(0), shadow_window(false), site(0), fullscreen(false),
+  opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1)
 {
 	win32_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_WGL::on_window_resized);
@@ -260,13 +261,22 @@ void CL_OpenGLWindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const C
 
 	win32_window.create(site, desc);
 
+	CL_OpenGLWindowDescription gldesc(desc);
+
 	if (!opengl_context)
 	{
-		CL_OpenGLWindowDescription gldesc(desc);
-		if (desc.is_layered())
-			create_shadow_window(win32_window.get_hwnd());
-		else
-			hwnd = win32_window.get_hwnd();
+		hwnd = win32_window.get_hwnd();
+		dwm_layered = false;
+
+		if (desc.is_layered() && !DwmFunctions::is_composition_enabled())
+		{
+			create_shadow_window(hwnd);
+		}
+		else 
+		{
+			if (desc.is_layered())
+				dwm_layered = true;
+		}
 		device_context = GetDC(hwnd);
 
 		HGLRC share_context = get_share_context();
@@ -322,7 +332,7 @@ void CL_OpenGLWindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const C
 				opengl_context = helper.create_opengl2_context(share_context);
 		}
 
-		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_WGL(*this, opengl_context, false)));
+		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new RenderWindowProvider_WGL(*this, opengl_context, false), gldesc));
 		CL_SharedGCData::get_gc_providers().push_back(gc.get_provider());
 	}
 
@@ -455,7 +465,6 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer);
-
 	}
 	else
 	{
@@ -467,6 +476,24 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 		}
 
 		BOOL retval = SwapBuffers(get_device_context());
+
+		if (dwm_layered)
+		{
+			int width = get_viewport().get_width();
+			int height = get_viewport().get_height();
+
+			glReadBuffer(GL_FRONT);
+
+			CL_PixelBuffer pixelbuffer(width, height, cl_r8);
+			glReadPixels(
+				0, 0,
+				width, height,
+				GL_ALPHA,
+				GL_BYTE, // use GL_BITMAP here for even less transfer?
+				pixelbuffer.get_data());
+
+			win32_window.update_layered(pixelbuffer);
+		}
 	}
 }
 
@@ -547,9 +574,26 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 			glFlush();
 
 		}
+
+		if (dwm_layered)
+		{
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_FRONT);
+
+			// ** Currently update layered windows only supports full screen rect update **
+			rect = CL_Rect(0,0, width, height);
+
+			CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_r8);
+			glReadPixels(
+				rect.left, height - rect.bottom,
+				rect.right - rect.left, rect.bottom - rect.top,
+				GL_ALPHA,
+				GL_BYTE, // use GL_BITMAP here for even less transfer?
+				pixelbuffer.get_data());
+
+			win32_window.update_layered(pixelbuffer);
+		}
 	}
-
-
 }
 
 void CL_OpenGLWindowProvider_WGL::capture_mouse(bool capture)

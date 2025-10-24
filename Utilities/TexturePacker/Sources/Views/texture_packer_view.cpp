@@ -74,10 +74,10 @@ TexturePackerView::TexturePackerView(CL_GUIComponent *parent, MainWindow *mainwi
 	radio_texture2048->set_group_name("TextureSize");
 	radio_texture2048->set_selected(true);
 
-	radio_texture512x256 = new CL_RadioButton(this);
-	radio_texture512x256->set_text("512x256");
-	radio_texture512x256->set_group_name("TextureSize");
-	radio_texture512x256->set_selected(true);
+	radio_texture1024x256 = new CL_RadioButton(this);
+	radio_texture1024x256->set_text("1024x256");
+	radio_texture1024x256->set_group_name("TextureSize");
+	radio_texture1024x256->set_selected(true);
 
 	spin_border = new CL_Spin(this);
 	spin_border->set_value(1);
@@ -87,6 +87,9 @@ TexturePackerView::TexturePackerView(CL_GUIComponent *parent, MainWindow *mainwi
 
 	label_border = new CL_Label(this);
 	label_border->set_text("Pixel Border");
+
+	check_sort = new CL_CheckBox(this);
+	check_sort->set_text("Sort images by width");
 
 	button_pack = new CL_PushButton(this);
 	button_pack->set_text("Generate textures");
@@ -122,14 +125,14 @@ void TexturePackerView::on_resized()
 	radio_texture512->set_geometry(CL_Rect(80+80+80+80+10, 40, CL_Size(80, 21)));
 	radio_texture1024->set_geometry(CL_Rect(80+80+80+80+80+10, 40, CL_Size(80, 21)));
 	radio_texture2048->set_geometry(CL_Rect(80+80+80+80+80+80+10, 40, CL_Size(80, 21)));
-	radio_texture512x256->set_geometry(CL_Rect(80+80+80+80+80+80+80+10, 40, CL_Size(80, 21)));
-	spin_border->set_geometry(CL_Rect(650, 40, CL_Size(50, 21)));
-	label_border->set_geometry(CL_Rect(710, 40, CL_Size(100, 21)));
-
-	button_pack->set_geometry(CL_Rect(10, 70, CL_Size(120, 25)));
-	button_save->set_geometry(CL_Rect(size.width - 130, 70, CL_Size(120, 25)));
-	generation_result->set_geometry(CL_Rect(170, 74, size.width - 130, 90));
-	texturegroup_component->set_geometry(CL_Rect(10, 100, size.width - 10, size.height - 10));
+	radio_texture1024x256->set_geometry(CL_Rect(80+80+80+80+80+80+80+10, 40, CL_Size(80, 21)));
+	label_border->set_geometry(CL_Rect(10, 70, CL_Size(60, 21)));
+	spin_border->set_geometry(CL_Rect(70, 68, CL_Size(50, 21)));
+	check_sort->set_geometry(CL_Rect(140, 70, CL_Size(200, 21)));
+	button_pack->set_geometry(CL_Rect(10, 100, CL_Size(120, 25)));
+	button_save->set_geometry(CL_Rect(size.width - 130, 100, CL_Size(120, 25)));
+	generation_result->set_geometry(CL_Rect(170, 104, size.width - 130, 90));
+	texturegroup_component->set_geometry(CL_Rect(10, 130, size.width - 10, size.height - 10));
 }
 
 void TexturePackerView::on_button_browse_resource_file()
@@ -198,8 +201,8 @@ void TexturePackerView::on_button_generate_textures()
 		texture_size = CL_Size(256, 256);
 	if(radio_texture512->is_selected())
 		texture_size = CL_Size(512, 512);
-	if(radio_texture512x256->is_selected())
-		texture_size = CL_Size(512, 256);
+	if(radio_texture1024x256->is_selected())
+		texture_size = CL_Size(1024, 256);
 	if(radio_texture1024->is_selected())
 		texture_size = CL_Size(1024, 1024);
 	if(radio_texture2048->is_selected())
@@ -207,7 +210,7 @@ void TexturePackerView::on_button_generate_textures()
 
 	try
 	{
-		CL_TextureGroup *group = packer.pack(get_gc(), texture_size, spin_border->get_value());
+		CL_TextureGroup *group = packer.pack(get_gc(), texture_size, spin_border->get_value(), check_sort->is_checked());
 		texturegroup_component->set_texturegroup(group);
 		texturegroup_component->request_repaint();
 

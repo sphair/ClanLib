@@ -70,7 +70,8 @@ private:
 	void test_virtual_directory_part1(void);
 	void test_virtual_directory_part2(void);
 	void fail(void);
-
+	void test_vfs();
+	void test_vfs_internal(const char *message, int test_method, CL_VirtualFileSystem vfs);
 #ifdef WIN32
 	TCHAR working_dir[MAX_PATH];
 	char location_dir[4];

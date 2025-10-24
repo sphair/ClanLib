@@ -58,6 +58,7 @@ class CL_TextureUnit_GL1;
 class CL_GL1TextureProvider;
 class CL_GL1SelectedTexture;
 class CL_PBuffer_GL1;
+class CL_DisposableObject;
 
 class CL_GL1GraphicContextProvider : public CL_GraphicContextProvider
 {
@@ -168,6 +169,9 @@ public:
 
 	void set_active() const;
 
+	void add_disposable(CL_DisposableObject *disposable);
+	void remove_disposable(CL_DisposableObject *disposable);
+
 /// \}
 /// \name Implementation
 /// \{
@@ -236,6 +240,6 @@ private:
 	CL_PrimitivesArrayData::VertexData primitives_array_texindex;
 
 	std::vector<float> transformed_coords;
-
+	std::vector<CL_DisposableObject *> disposable_objects;
 /// \}
 };

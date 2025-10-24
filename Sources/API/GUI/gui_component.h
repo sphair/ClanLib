@@ -306,6 +306,9 @@ public:
 	/// \brief Returns true if this component will receive unhandled escape keypress messages.
 	bool is_cancel();
 
+	/// \brief Returns true if this component will generate double click messages.
+	bool is_double_click_enabled() const;
+
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	bool get_constant_repaint() const;
 
@@ -450,6 +453,9 @@ public:
 
 	/// \brief Sets the focus policy of the component.
 	void set_focus_policy(FocusPolicy policy);
+
+	/// \brief Modifies whether this component will generate double click messages or not.
+	void set_double_click_enabled(bool enable);
 
 	/// \brief Set group name
 	///

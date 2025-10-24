@@ -29,13 +29,11 @@
 
 #pragma once
 
-
 #include "GUI/precomp.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
-
 
 class CL_ListViewColumnHeader_Impl
 {

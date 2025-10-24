@@ -37,6 +37,7 @@
 #include "../../Core/Math/origin.h"
 #include "color.h"
 #include "../Image/image_import_description.h"
+#include "../Render/texture.h"
 
 class CL_GraphicContext;
 class CL_VirtualDirectory;
@@ -144,8 +145,8 @@ public:
 
 	/// \brief Return the height of the image.
 	int get_height() const;
-/// \}
 
+/// \}
 /// \name Operators
 /// \{
 public:
@@ -226,6 +227,24 @@ public:
 
 	/// \brief Sets translation hotspot.
 	void set_alignment(CL_Origin origin, int x = 0, int y = 0);
+
+	void set_wrap_mode(
+		CL_TextureWrapMode wrap_s,
+		CL_TextureWrapMode wrap_t);
+
+	/// \brief Set to true if a linear filter should be used for scaling up and down, false if a nearest-point filter should be used.
+	void set_linear_filter(bool linear_filter = true);
+
+	/// \brief Upload image to sub texture.
+	///
+	/// \param image Image to upload.
+	/// \param level Mipmap level-of-detail number.
+	void set_subimage(
+		int x,
+		int y,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
+		int level = 0);
 /// \}
 
 /// \name Implementation

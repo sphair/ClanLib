@@ -108,7 +108,7 @@ CL_VirtualDirectoryListing CL_VirtualDirectory::get_directory_listing()
 	if (impl->file_system.is_null())
 		throw CL_Exception("CL_VirtualDirectory::get_directory_listing only supported for virtual file systems");
 
-	return CL_VirtualDirectoryListing(get_file_system().get_provider(), get_file_system().get_provider()->get_path() + get_path());
+	return CL_VirtualDirectoryListing(get_file_system().get_provider(), get_path());
 }
 
 CL_String CL_VirtualDirectory::get_identifier() const

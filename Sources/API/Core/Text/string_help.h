@@ -295,6 +295,96 @@ public:
 
 	static unsigned int ucs2_to_uint(const CL_StringRef16 &value, int base = 10);
 
+	/// \brief Long long to text
+	///
+	/// \param value = value
+	///
+	/// \return Temp String
+	static CL_String ll_to_text(long long value);
+
+	/// \brief Long long to local8
+	///
+	/// \param value = value
+	///
+	/// \return Temp String8
+	static CL_String8 ll_to_local8(long long value);
+
+	/// \brief Long long to ucs2
+	///
+	/// \param value = value
+	///
+	/// \return Temp String16
+	static CL_String16 ll_to_ucs2(long long value);
+
+	/// \brief Text to long long
+	///
+	/// \param value = String Ref
+	/// \param base = value
+	///
+	/// \return long long
+	static long long text_to_ll(const CL_StringRef &value, int base = 10);
+
+	/// \brief Local8 to long long
+	///
+	/// \param value = String Ref8
+	/// \param base = value
+	///
+	/// \return long long
+	static long long local8_to_ll(const CL_StringRef8 &value, int base = 10);
+
+	/// \brief Ucs2 to long long
+	///
+	/// \param value = String Ref16
+	/// \param base = value
+	///
+	/// \return long long
+	static long long ucs2_to_ll(const CL_StringRef16 &value, int base = 10);
+
+	/// \brief Unsigned long long to text
+	///
+	/// \param value = value
+	///
+	/// \return Temp String
+	static CL_String ull_to_text(unsigned long long value);
+
+	/// \brief Unsigned long long to local8
+	///
+	/// \param value = value
+	///
+	/// \return Temp String8
+	static CL_String8 ull_to_local8(unsigned long long value);
+
+	/// \brief Unsigned long long to ucs2
+	///
+	/// \param value = value
+	///
+	/// \return Temp String16
+	static CL_String16 ull_to_ucs2(unsigned long long value);
+
+	/// \brief Text to unsigned long long
+	///
+	/// \param value = String Ref
+	/// \param base = value
+	///
+	/// \return unsigned long long
+	static unsigned long long text_to_ull(const CL_StringRef &value, int base = 10);
+
+	/// \brief Local8 to unsigned long long
+	///
+	/// \param value = String Ref8
+	/// \param base = value
+	///
+	/// \return unsigned long long
+	static unsigned long long local8_to_ull(const CL_StringRef8 &value, int base = 10);
+
+	/// \brief Ucs2 to unsigned long long
+	///
+	/// \param value = String Ref16
+	/// \param base = value
+	///
+	/// \return unsigned long long
+	static unsigned long long ucs2_to_ull(const CL_StringRef16 &value, int base = 10);
+
 	/// \brief Bool to text
 	///
 	/// \param value = bool

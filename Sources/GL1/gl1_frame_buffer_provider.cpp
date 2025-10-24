@@ -45,13 +45,12 @@
 CL_GL1FrameBufferProvider::CL_GL1FrameBufferProvider(CL_GL1GraphicContextProvider *gc_provider)
 : CL_FrameBufferProvider(), gc_provider(gc_provider)
 {
-	CL_SharedGCData::add_disposable(this);
+	gc_provider->add_disposable(this);
 }
 
 CL_GL1FrameBufferProvider::~CL_GL1FrameBufferProvider()
 {
 	dispose();
-	CL_SharedGCData::remove_disposable(this);
 }
 
 void CL_GL1FrameBufferProvider::on_dispose()
@@ -65,6 +64,8 @@ void CL_GL1FrameBufferProvider::on_dispose()
 			stop();
 		}
 	}
+	gc_provider->remove_disposable(this);
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

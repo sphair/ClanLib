@@ -37,7 +37,6 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
-#include <sstream>
 #else
 #include <cstring>
 #if defined UNICODE && !defined _UNICODE
@@ -45,6 +44,8 @@
 #endif
 #include <tchar.h>
 #endif
+
+#include <sstream>
 
 #ifdef __MINGW32__
 #include <cstdio>
@@ -513,20 +514,65 @@ CL_String16 CL_StringHelp::uint_to_ucs2(unsigned int value)
 #endif
 }
 
-unsigned int CL_StringHelp::text_to_uint(const CL_StringRef &value, int base)
+CL_String CL_StringHelp::ull_to_text(unsigned long long value)
 {
-	return local8_to_uint(value, base);
+	return uint_to_local8(value);
+}
+
+CL_String8 CL_StringHelp::ull_to_local8(unsigned long long value)
+{
+	std::ostringstream stream;
+	stream << value;
+	
+	return CL_String8(stream.str().c_str());
 }
 	
-unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
+CL_String16 CL_StringHelp::ull_to_ucs2(unsigned long long value)
+{
+	std::wostringstream stream;
+	stream << value;
+	
+	return CL_String16(stream.str().c_str());
+}
+
+CL_String CL_StringHelp::ll_to_text(long long value)
+{
+	return uint_to_local8(value);
+}
+
+CL_String8 CL_StringHelp::ll_to_local8(long long value)
+{
+	std::ostringstream stream;
+	stream << value;
+	
+	return CL_String8(stream.str().c_str());
+}
+	
+CL_String16 CL_StringHelp::ll_to_ucs2(long long value)
+{
+	std::wostringstream stream;
+	stream << value;
+	
+	return CL_String16(stream.str().c_str());
+}
+
+unsigned long long CL_StringHelp::text_to_ull(const CL_StringRef &value, int base)
+{
+	return local8_to_ull(value, base);
+}
+
+unsigned long long CL_StringHelp::local8_to_ull(const CL_StringRef8 &value, int base)
 {
 	if (base == 10)
 	{
-		return (unsigned int) atoi(value.c_str());
+		std::istringstream stream(value.c_str());
+		unsigned long long num;
+		stream >> num;
+		return num;
 	}
 	else if (base == 16)
 	{
-		int result = 0;
+		unsigned long long result = 0;
 		CL_String8::size_type i, length;
 		length = value.length();
 		for (i = 0; i < length; i++)
@@ -552,7 +598,178 @@ unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception("Unsupported base passed for local8_to_int");
+		throw CL_Exception("Unsupported base passed for local8_to_ull");
+	}
+}
+	
+unsigned long long CL_StringHelp::ucs2_to_ull(const CL_StringRef16 &value, int base)
+{
+	if (base == 10)
+	{
+		std::wistringstream stream(value.c_str());
+		unsigned long long num;
+		stream >> num;
+		return num;
+	}
+	else if (base == 16)
+	{
+		unsigned long long result = 0;
+		CL_String16::size_type i, length;
+		length = value.length();
+		for (i = 0; i < length; i++)
+		{
+			if (value[i] >= L'0' && value[i] <= L'9')
+			{
+				result = (result << 4) + (value[i] - L'0');
+			}
+			else if (value[i] >= L'a' && value[i] <= L'f')
+			{
+				result = (result << 4) + 10 + (value[i] - L'a');
+			}
+			else if (value[i] >= L'A' && value[i] <= L'F')
+			{
+				result = (result << 4) + 10 + (value[i] - L'A');
+			}
+			else
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	else
+	{
+		throw CL_Exception("Unsupported base passed for ucs2_to_ull");
+	}
+}
+
+long long CL_StringHelp::text_to_ll(const CL_StringRef &value, int base)
+{
+	return local8_to_ll(value, base);
+}
+
+long long CL_StringHelp::local8_to_ll(const CL_StringRef8 &value, int base)
+{
+	if (base == 10)
+	{
+		std::istringstream stream(value.c_str());
+		long long num;
+		stream >> num;
+		return num;
+	}
+	else if (base == 16)
+	{
+		long long result = 0;
+		CL_String8::size_type i, length;
+		length = value.length();
+		for (i = 0; i < length; i++)
+		{
+			if (value[i] >= '0' && value[i] <= '9')
+			{
+				result = (result << 4) + (value[i] - '0');
+			}
+			else if (value[i] >= 'a' && value[i] <= 'f')
+			{
+				result = (result << 4) + 10 + (value[i] - 'a');
+			}
+			else if (value[i] >= 'A' && value[i] <= 'F')
+			{
+				result = (result << 4) + 10 + (value[i] - 'A');
+			}
+			else
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	else
+	{
+		throw CL_Exception("Unsupported base passed for local8_to_ll");
+	}
+}
+	
+long long CL_StringHelp::ucs2_to_ll(const CL_StringRef16 &value, int base)
+{
+	if (base == 10)
+	{
+		std::wistringstream stream(value.c_str());
+		long long num;
+		stream >> num;
+		return num;
+	}
+	else if (base == 16)
+	{
+		long long result = 0;
+		CL_String16::size_type i, length;
+		length = value.length();
+		for (i = 0; i < length; i++)
+		{
+			if (value[i] >= L'0' && value[i] <= L'9')
+			{
+				result = (result << 4) + (value[i] - L'0');
+			}
+			else if (value[i] >= L'a' && value[i] <= L'f')
+			{
+				result = (result << 4) + 10 + (value[i] - L'a');
+			}
+			else if (value[i] >= L'A' && value[i] <= L'F')
+			{
+				result = (result << 4) + 10 + (value[i] - L'A');
+			}
+			else
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	else
+	{
+		throw CL_Exception("Unsupported base passed for ucs2_to_ll");
+	}
+}
+
+unsigned int CL_StringHelp::text_to_uint(const CL_StringRef &value, int base)
+{
+	return local8_to_uint(value, base);
+}
+	
+unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
+{
+	if (base == 10)
+	{
+		return (unsigned int) atoi(value.c_str());
+	}
+	else if (base == 16)
+	{
+		unsigned int result = 0;
+		CL_String8::size_type i, length;
+		length = value.length();
+		for (i = 0; i < length; i++)
+		{
+			if (value[i] >= '0' && value[i] <= '9')
+			{
+				result = (result << 4) + (value[i] - '0');
+			}
+			else if (value[i] >= 'a' && value[i] <= 'f')
+			{
+				result = (result << 4) + 10 + (value[i] - 'a');
+			}
+			else if (value[i] >= 'A' && value[i] <= 'F')
+			{
+				result = (result << 4) + 10 + (value[i] - 'A');
+			}
+			else
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	else
+	{
+		throw CL_Exception("Unsupported base passed for local8_to_uint");
 	}
 }
 	

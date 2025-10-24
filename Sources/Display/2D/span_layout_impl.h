@@ -49,6 +49,7 @@ public:
 	void layout(CL_GraphicContext &gc, int max_width);
 	CL_SpanLayout::HitTestResult hit_test(CL_GraphicContext &gc, const CL_Point &pos);
 	void draw_layout(CL_GraphicContext &gc);
+	void draw_layout_ellipsis(CL_GraphicContext &gc, const CL_Rect &content_rect);
 	void set_position(const CL_Point &pos) { position = pos; }
 	CL_Size get_size() const;
 	std::vector<CL_Rect> get_rect_by_id(int id) const;
@@ -62,6 +63,9 @@ public:
 	CL_String get_combined_text() const;
 
 	void set_component_geometry();
+
+	int get_first_baseline_offset();
+	int get_last_baseline_offset();
 
 	bool cursor_visible;
 	CL_String::size_type cursor_pos;
@@ -215,4 +219,7 @@ private:
 		CL_FontMetrics metrics;
 	};
 	LayoutCache layout_cache;
+
+	bool is_ellipsis_draw;
+	CL_Rect ellipsis_content_rect;
 };

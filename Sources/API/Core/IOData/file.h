@@ -33,6 +33,7 @@
 
 #include "../api_core.h"
 #include "iodevice.h"
+#include "../System/databuffer.h"
 
 class CL_SecurityDescriptor;
 
@@ -41,9 +42,18 @@ class CL_SecurityDescriptor;
 /// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE CL_File : public CL_IODevice
 {
+/// \name Static helper functions
+/// \{
+public:
+	/// \brief Loads an UTF-8 text file into a string.
+	static CL_String read_text(const CL_String &filename);
+
+	/// \brief Loads an file into a byte buffer.
+	static CL_DataBuffer read_bytes(const CL_String &filename);
+/// \}
+
 /// \name Enumerations
 /// \{
-
 public:
 	/// \brief Access flags.
 	/** <p>File access types available.</p>*/

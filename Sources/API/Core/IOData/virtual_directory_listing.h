@@ -44,6 +44,9 @@ class CL_VirtualDirectoryListing
 /// \{
 
 public:
+	/// \brief Constructs a null instance.
+	CL_VirtualDirectoryListing();
+
 	/// \brief Constructs a virtual directory listening object.
 	CL_VirtualDirectoryListing(CL_VirtualFileSource *provider, const CL_String &path);
 
@@ -54,6 +57,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the file name of the current item in the listing.
 	CL_String get_filename();
 

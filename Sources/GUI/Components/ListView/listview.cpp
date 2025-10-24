@@ -316,6 +316,11 @@ CL_Callback_v1<CL_ListViewSelection> &CL_ListView::func_selection_changed()
 	return impl->func_selection_changed;
 }
 
+CL_Callback_v1<const CL_ListViewItem &> &CL_ListView::func_item_doubleclick()
+{
+	return impl->func_item_doubleclick;
+}
+
 CL_Callback_2<bool, CL_ListViewItem, CL_String &> &CL_ListView::func_item_edited()
 {
 	return impl->func_item_edited;
@@ -370,6 +375,11 @@ void CL_ListView_Impl::on_process_message(CL_GUIMessage &msg)
 		else if (input_event.type == CL_InputEvent::released && input_event.id == CL_MOUSE_LEFT)
 		{
 			on_mouse_lbutton_up(input, input_event);
+			msg.set_consumed();
+		}
+		else if (input_event.type == CL_InputEvent::doubleclick && input_event.id == CL_MOUSE_LEFT)
+		{
+			on_mouse_lbutton_doubleclick(input, input_event);
 			msg.set_consumed();
 		}
 		else if (input_event.type == CL_InputEvent::pressed && input_event.id == CL_MOUSE_RIGHT)
@@ -625,7 +635,6 @@ bool CL_ListView_Impl::on_keyboard_released(CL_InputEvent &event)
 	return event_consumed;
 }
 
-
 void CL_ListView_Impl::on_mouse_lbutton_down(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
 {
 	listview->set_focus();
@@ -702,6 +711,13 @@ void CL_ListView_Impl::on_mouse_lbutton_up(CL_GUIMessage_Input &input, CL_InputE
 	CL_Point pos = input_event.mouse_pos;
 
 	listview->capture_mouse(false);
+}
+
+void CL_ListView_Impl::on_mouse_lbutton_doubleclick(CL_GUIMessage_Input &input, CL_InputEvent &input_event)
+{
+	if(!selection.get_first().is_null())
+		if (!func_item_doubleclick.is_null())
+			func_item_doubleclick.invoke(selection.get_first().get_item());
 }
 
 void CL_ListView_Impl::on_mouse_rbutton_down(CL_GUIMessage_Input &input, CL_InputEvent &input_event)

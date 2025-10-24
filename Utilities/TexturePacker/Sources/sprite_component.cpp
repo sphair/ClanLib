@@ -74,9 +74,7 @@ void SpriteComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 		}
 	}
 
-	pop_cliprect(gc);
-
-/*	if(sprite_description)
+	if(sprite_description)
 	{
 		const std::vector<CL_SpriteDescriptionFrame> &frames = sprite_description->get_frames();
 		std::vector<CL_SpriteDescriptionFrame>::const_iterator it;
@@ -84,14 +82,14 @@ void SpriteComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 		{
 			CL_SpriteDescriptionFrame frame = (*it);
 
-			gc.set_texture(0, frame.texture);
-			CL_Draw::texture(gc, update_rect);
-			gc.reset_texture(0);
+			CL_Draw::texture(gc, frame.texture, CL_Quadf(CL_Rect(0,0,frame.texture.get_size())));
 
 			break;
 		}
 	}
-*/}
+
+	pop_cliprect(gc);
+}
 
 void SpriteComponent::on_style_changed()
 {
@@ -145,6 +143,8 @@ void SpriteComponent::set_sprite_description(CL_SpriteDescription *sprite_descri
 	sprite_current_frame = -1;
 
 	update_buttons_enabled_state();
+
+	request_repaint();
 }
 
 void SpriteComponent::set_sprite(CL_Sprite *sprite)

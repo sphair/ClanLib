@@ -113,6 +113,7 @@ public:
 	CL_String group_name;
 	CL_CSSLayout css_layout;
 	CL_CSSLayoutElement css_element;
+	bool double_click_enabled;
 
 /// \}
 /// \name Operations

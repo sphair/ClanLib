@@ -106,8 +106,28 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
 
 CL_GL1GraphicContextProvider::~CL_GL1GraphicContextProvider()
 {
+	while (!disposable_objects.empty())
+		disposable_objects.front()->dispose();
+
 	CL_GL1::remove_active(this);
 	delete render_window;
+}
+
+void CL_GL1GraphicContextProvider::add_disposable(CL_DisposableObject *disposable)
+{
+	disposable_objects.push_back(disposable);
+}
+
+void CL_GL1GraphicContextProvider::remove_disposable(CL_DisposableObject *disposable)
+{
+	for (size_t i = 0; i < disposable_objects.size(); i++)
+	{
+		if (disposable_objects[i] == disposable)
+		{
+			disposable_objects.erase(disposable_objects.begin() + i);
+			return;
+		}
+	}
 }
 
 void CL_GL1GraphicContextProvider::check_opengl_version()
@@ -310,7 +330,7 @@ CL_ShaderObjectProvider *CL_GL1GraphicContextProvider::alloc_shader_object()
 
 CL_TextureProvider *CL_GL1GraphicContextProvider::alloc_texture(CL_TextureDimensions texture_dimensions)
 {
-	return new CL_GL1TextureProvider(this, texture_dimensions);
+	return new CL_GL1TextureProvider(texture_dimensions);
 }
 
 CL_FrameBufferProvider *CL_GL1GraphicContextProvider::alloc_frame_buffer()
@@ -342,23 +362,27 @@ CL_PixelBufferProvider *CL_GL1GraphicContextProvider::alloc_pixel_buffer()
 	return NULL;
 }
 
-CL_PixelBuffer CL_GL1GraphicContextProvider::get_pixeldata(const CL_Rect& rect, CL_TextureFormat pixel_format, bool clamp) const
+CL_PixelBuffer CL_GL1GraphicContextProvider::get_pixeldata(const CL_Rect& rect2, CL_TextureFormat pixel_format, bool clamp) const
 {
+	CL_Rect rect = rect2;
+	if (rect == CL_Rect())
+		rect = CL_Rect(0, 0, get_width(), get_height());
+
+	GLenum format;
+	GLenum type;
+	bool found = CL_GL1::to_opengl_pixelformat(pixel_format, format, type);
+	if (!found)
+		throw CL_Exception("Unsupported pixel format passed to CL_GraphicContext::get_pixeldata");
+
+	CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), pixel_format);
 	set_active();
-	if (!framebuffer_bound) cl1ReadBuffer(GL_BACK);
 
-	if( rect.left != rect.right )
-	{
-		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), cl_abgr8);
-		cl1ReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), GL_RGBA, GL_UNSIGNED_BYTE, pbuf.get_data());
-		pbuf.flip_vertical();
-		return pbuf;
-	}
-
-	CL_PixelBuffer pbuf( get_width(), get_height(), cl_abgr8);
-	cl1ReadPixels(0, 0, get_width(), get_height(), GL_RGBA, GL_UNSIGNED_BYTE, pbuf.get_data());
+	if (!framebuffer_bound)
+		glReadBuffer(GL_BACK);
+	//cl1ClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
+	cl1ReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), format, type, pbuf.get_data());
 	pbuf.flip_vertical();
-	return pbuf.to_format(pixel_format);
+	return pbuf;
 }
 
 void CL_GL1GraphicContextProvider::set_texture_unit(int unit_index, const CL_TextureUnit_GL1 &unit)

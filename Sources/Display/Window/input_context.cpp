@@ -124,51 +124,53 @@ CL_InputDevice &CL_InputContext::get_device(const CL_StringRef& devicename)
 
 CL_InputContext &CL_InputContext::operator =(CL_InputContext &copy)
 {
-	impl->throw_if_disposed();
 	impl = copy.impl;
 	return *this;
 }
 
 void CL_InputContext::clear()
 {
-	impl->throw_if_disposed();
 	impl->clear();
 }
 
 void CL_InputContext::add_keyboard(CL_InputDevice keyboard)
 {
-	impl->throw_if_disposed();
 	impl->add_keyboard(keyboard);
 }
 
 void CL_InputContext::add_mouse(CL_InputDevice mouse)
 {
-	impl->throw_if_disposed();
 	impl->add_mouse(mouse);
 }
 
 void CL_InputContext::add_joystick(CL_InputDevice joystick)
 {
-	impl->throw_if_disposed();
 	impl->add_joystick(joystick);
 }
 
 void CL_InputContext::add_tablet(CL_InputDevice tablet)
 {
-	impl->throw_if_disposed();
 	impl->add_tablet(tablet);
 }
 
 void CL_InputContext::process_messages()
 {
-	impl->throw_if_disposed();
 	impl->process_messages();
 }
 
 bool CL_InputContext::poll(bool peek_only)
 {
-	impl->throw_if_disposed();
 	return (impl->poll(peek_only));
+}
+
+void CL_InputContext::dispose()
+{
+	impl->dispose();
+}
+
+bool CL_InputContext::is_disposed() const
+{
+	return impl->is_disposed();
 }
 
 /////////////////////////////////////////////////////////////////////////////

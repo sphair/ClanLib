@@ -47,7 +47,7 @@ CL_OpenGLFrameBufferProvider::CL_OpenGLFrameBufferProvider(CL_OpenGLGraphicConte
 {
 	bind_target = cl_framebuffer_draw;
 	handle = 0; 
-	CL_SharedGCData::add_disposable(this);
+	gc_provider->add_disposable(this);
 
 	CL_OpenGL::set_active(gc_provider);
 
@@ -56,17 +56,11 @@ CL_OpenGLFrameBufferProvider::CL_OpenGLFrameBufferProvider(CL_OpenGLGraphicConte
 
 	glGenFramebuffers(1, &handle);
 
-	CL_FrameBufferStateTracker tracker(bind_target, handle, gc_provider);
-	// Default to no draw buffers  (the user may only want a depth buffer)
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-
 }
 
 CL_OpenGLFrameBufferProvider::~CL_OpenGLFrameBufferProvider()
 {
 	dispose();
-	CL_SharedGCData::remove_disposable(this);
 }
 
 void CL_OpenGLFrameBufferProvider::on_dispose()
@@ -74,9 +68,27 @@ void CL_OpenGLFrameBufferProvider::on_dispose()
 	if (handle)
 	{
 		// Note: set_active must be called with gc_provider here since it belongs to the OpenGL context and not the shared list
-		// To do: Improve infrastructure in clanGL so we will know if gc_provider has already been destroyed and in that case do nothing.
-		CL_OpenGL::set_active(gc_provider);
-		glDeleteFramebuffers(1, &handle);
+		// DONE - To do: Improve infrastructure in clanGL so we will know if gc_provider has already been destroyed and in that case do nothing.
+		bool provider_valid = false;
+		if (CL_SharedGCData::get_instance()) // Check that the cache hasn't been destroyed yet
+		{
+			std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
+			for (std::vector<CL_GraphicContextProvider*>::iterator it=gc_providers.begin(); it != gc_providers.end(); ++it)
+			{
+				if (gc_provider == (*it))
+				{
+					provider_valid = true;
+					break;
+				}
+			}
+		}
+
+		if (provider_valid)
+		{
+			CL_OpenGL::set_active(gc_provider);
+			glDeleteFramebuffers(1, &handle);
+		}
+		handle = 0;
 	}
 
 	// Detach all textures and renderbuffers
@@ -88,6 +100,8 @@ void CL_OpenGLFrameBufferProvider::on_dispose()
 		if (!attached_renderbuffers[cnt].is_null())
 			attached_renderbuffers[cnt] = CL_RenderBuffer();
 	}
+
+	gc_provider->remove_disposable(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -165,11 +179,6 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 
 	if (!replaced_object)
 	{
-		if (!count_color_attachments)
-		{
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			glReadBuffer(GL_COLOR_ATTACHMENT0);
-		}
 		count_color_attachments++;
 	}
 }
@@ -180,11 +189,6 @@ void CL_OpenGLFrameBufferProvider::detach_color_buffer(int attachment_index, con
 	detach_object(GL_COLOR_ATTACHMENT0+attachment_index, render_buffer);
 
 	count_color_attachments--;
-	if (!count_color_attachments)
-	{
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-	}
 }
 
 void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, const CL_Texture &texture, int level, int zoffset)
@@ -194,11 +198,6 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 
 	if (!replaced_object)
 	{
-		if (!count_color_attachments)
-		{
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			glReadBuffer(GL_COLOR_ATTACHMENT0);
-		}
 		count_color_attachments++;
 	}
 }
@@ -210,11 +209,6 @@ void CL_OpenGLFrameBufferProvider::attach_color_buffer(int attachment_index, con
 
 	if (!replaced_object)
 	{
-		if (!count_color_attachments)
-		{
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			glReadBuffer(GL_COLOR_ATTACHMENT0);
-		}
 		count_color_attachments++;
 	}
 }
@@ -225,11 +219,6 @@ void CL_OpenGLFrameBufferProvider::detach_color_buffer(int attachment_index, con
 	detach_object(GL_COLOR_ATTACHMENT0+attachment_index, texture);
 
 	count_color_attachments--;
-	if (!count_color_attachments)
-	{
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-	}
 }
 
 void CL_OpenGLFrameBufferProvider::attach_stencil_buffer(const CL_RenderBuffer &render_buffer)
@@ -335,7 +324,22 @@ void CL_OpenGLFrameBufferProvider::check_framebuffer_complete()
 	int error_code = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (error_code != GL_FRAMEBUFFER_COMPLETE)
 		throw CL_Exception(cl_format("FrameBuffer is : %1", get_error_message(error_code)));
+}
 
+void CL_OpenGLFrameBufferProvider::bind_framebuffer(bool write_only)
+{
+	glBindFramebuffer(write_only ? GL_FRAMEBUFFER : GL_READ_FRAMEBUFFER, handle);
+
+	if (count_color_attachments)
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
+	}
+	else
+	{
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

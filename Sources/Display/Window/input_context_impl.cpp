@@ -103,19 +103,18 @@ void CL_InputContext_Impl::process_messages()
 
 	std::vector< std::pair<CL_InputEvent, CL_WeakPtr<CL_InputDevice_Impl> > >::size_type pos, size;
 
-	// todo: process events from windowing system message queue
-
 	// Fetch latest events received:
 	CL_MutexSection mutex_lock(&mutex);
 	std::vector< std::pair<CL_InputEvent, CL_WeakPtr<CL_InputDevice_Impl> > > cur_events  = events;
 	events.clear();
 	mutex_lock.unlock();
 
-	// todo: sort received events by time
-
 	size = cur_events.size();
 	for (pos = 0; pos < size; pos++)
 	{
+		if (is_disposed())	// Exit the function now if a previous input event has caused the input context to be disposed
+			break;
+
 		CL_InputEvent event = cur_events[pos].first;
 		if (cur_events[pos].second.expired())
 			continue;

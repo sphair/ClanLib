@@ -45,7 +45,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1TextureProvider Construction:
 
-CL_GL1TextureProvider::CL_GL1TextureProvider(CL_GL1GraphicContextProvider *gc_provider, CL_TextureDimensions texture_dimensions)
+CL_GL1TextureProvider::CL_GL1TextureProvider(CL_TextureDimensions texture_dimensions)
 : width(0), height(0), depth(0), handle(0), texture_type(0)
 {
 	CL_SharedGCData::add_disposable(this);
@@ -66,7 +66,7 @@ CL_GL1TextureProvider::CL_GL1TextureProvider(CL_GL1GraphicContextProvider *gc_pr
 		break;
 	}
 
-	CL_GL1TextureStateTracker state_tracker(texture_type, 0, gc_provider);
+	CL_GL1TextureStateTracker state_tracker(texture_type, 0);
 	cl1GenTextures(1, &handle);
 	cl1BindTexture(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -137,7 +137,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 	width = new_width;
 	height = new_height;
 	depth = new_depth;
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	if (texture_type == GL_TEXTURE_1D)
 	{
@@ -258,25 +258,28 @@ CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_TextureFormat sized_forma
 {
 	throw_if_disposed();
 
-	// todo: be smart here and request the closest matching opengl1 format.
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-
-	CL_PixelBuffer buffer(
-		pot_width, pot_height,
-		cl_abgr8);
-
-	cl1GetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
-
-	CL_PixelBuffer buffer_ref(width, height, buffer.get_format(), buffer.get_data());
-
-	return buffer.to_format(sized_format);
+	GLenum gl_format = 0, gl_type = 0;
+	bool supported = CL_GL1::to_opengl_pixelformat(sized_format, gl_format, gl_type);
+	if (supported)
+	{
+		CL_PixelBuffer buffer(width, height, sized_format);
+		glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
+		return buffer;
+	}
+	else
+	{
+		CL_PixelBuffer buffer(width, height, cl_abgr8);
+		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
+		return buffer.to_format(sized_format);
+	}
 }
 
 void CL_GL1TextureProvider::set_image(CL_PixelBuffer &image, int level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	if (texture_type == GL_TEXTURE_2D)
 	{
 		set_texture_image2d(GL_TEXTURE_2D, image, level);
@@ -297,7 +300,7 @@ void CL_GL1TextureProvider::set_cube_map(
 	int level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	set_texture_image2d(GL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level);
 	set_texture_image2d(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level);
@@ -315,7 +318,7 @@ void CL_GL1TextureProvider::set_compressed_image(
 	CL_DataBuffer &image)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
@@ -337,7 +340,7 @@ void CL_GL1TextureProvider::set_subimage(
 		throw CL_Exception("Rectangle out of bounds");
 
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
@@ -470,7 +473,8 @@ void CL_GL1TextureProvider::copy_image_from(
 	CL_GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, static_cast<CL_GL1GraphicContextProvider*>(gc));
+	CL_GL1::set_active(static_cast<CL_GL1GraphicContextProvider*>(gc));
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
@@ -496,7 +500,8 @@ void CL_GL1TextureProvider::copy_subimage_from(
 	CL_GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, static_cast<CL_GL1GraphicContextProvider*>(gc));
+	CL_GL1::set_active(static_cast<CL_GL1GraphicContextProvider*>(gc));
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	cl1CopyTexSubImage2D( 
 		GL_TEXTURE_2D,
@@ -510,35 +515,35 @@ void CL_GL1TextureProvider::copy_subimage_from(
 void CL_GL1TextureProvider::set_min_lod(double min_lod)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 }
 
 void CL_GL1TextureProvider::set_max_lod(double max_lod)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 }
 
 void CL_GL1TextureProvider::set_lod_bias(double lod_bias)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 }
 
 void CL_GL1TextureProvider::set_base_level(int base_level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 }
 
 void CL_GL1TextureProvider::set_max_level(int max_level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 }
 
@@ -548,7 +553,7 @@ void CL_GL1TextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_r)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
@@ -559,7 +564,7 @@ void CL_GL1TextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_t)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
 }
@@ -568,21 +573,21 @@ void CL_GL1TextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_s)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 }
 
 void CL_GL1TextureProvider::set_min_filter(CL_TextureFilter filter)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
 }
 
 void CL_GL1TextureProvider::set_mag_filter(CL_TextureFilter filter)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
 }
 
@@ -593,7 +598,7 @@ void CL_GL1TextureProvider::set_max_anisotropy(float v)
 void CL_GL1TextureProvider::set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
 	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
 }
@@ -664,7 +669,7 @@ void CL_GL1TextureProvider::set_texture_image2d(
 	int level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
@@ -786,7 +791,7 @@ void CL_GL1TextureProvider::set_texture_image3d(
 	int level)
 {
 	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
@@ -935,17 +940,9 @@ GLenum CL_GL1TextureProvider::to_enum(CL_CompareFunction func)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CL_GL1TextureStateTracker::CL_GL1TextureStateTracker(GLuint texture_type, GLuint handle, CL_GL1GraphicContextProvider *gc_provider)
+CL_GL1TextureStateTracker::CL_GL1TextureStateTracker(GLuint texture_type, GLuint handle)
 {
-	// If the gc_provider is unknown, we need to use the first active provider
-	if (!gc_provider)
-	{
-		CL_GL1::set_active();
-	}
-	else
-	{
-		CL_GL1::set_active(gc_provider);
-	}
+	CL_GL1::set_active();
 
 	last_is_enabled_texture1d = cl1IsEnabled(GL_TEXTURE_1D);
 	last_is_enabled_texture2d = cl1IsEnabled(GL_TEXTURE_2D);

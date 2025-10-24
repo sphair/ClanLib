@@ -173,11 +173,13 @@ const CL_GraphicContextProvider * const CL_GraphicContext::get_provider() const
 
 CL_PixelBuffer CL_GraphicContext::get_pixeldata(const CL_Rect &rect, CL_TextureFormat pixel_format, bool clamp) const
 {
+	impl->flush_batcher( *( (CL_GraphicContext *) this) );	// Hack for ClanLib 2.3, fixed in ClanLib 2.4 (to avoid breaking changes)
 	return impl->provider->get_pixeldata(rect, pixel_format, clamp);
 }
 
 CL_PixelBuffer CL_GraphicContext::get_pixeldata(CL_TextureFormat pixel_format, bool clamp) const
 {
+	impl->flush_batcher( *( (CL_GraphicContext *) this) );	// Hack for ClanLib 2.3, fixed in ClanLib 2.4 (to avoid breaking changes)
 	return impl->provider->get_pixeldata(CL_Rect(0,0,0,0), pixel_format, clamp);
 }
 

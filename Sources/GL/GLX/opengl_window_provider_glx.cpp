@@ -58,6 +58,11 @@
 #define GL_LOAD_GLFUNC(x) &x
 #endif
 
+#ifdef HAVE_X11_EXTENSIONS_XRENDER_H
+#include <X11/extensions/Xrender.h>
+#endif
+
+
 CL_GL_RenderWindowProvider_GLX::CL_GL_RenderWindowProvider_GLX(CL_OpenGLWindowProvider_GLX & window, GLXContext glx_context, bool own_context)
 	: window(window), glx_context(glx_context), own_context(own_context)
 {
@@ -287,7 +292,8 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 
 	if (create_provider_flag)
 	{
-		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_GLX(*this, opengl_context, false)));
+		CL_OpenGLWindowDescription gldesc(desc);
+		gc = CL_GraphicContext(new CL_OpenGLGraphicContextProvider(new CL_GL_RenderWindowProvider_GLX(*this, opengl_context, false), gldesc));
 		std::vector<CL_GraphicContextProvider*> &gc_providers = CL_SharedGCData::get_gc_providers();
 		gc_providers.push_back(gc.get_provider());
 	}
@@ -322,6 +328,25 @@ void CL_OpenGLWindowProvider_GLX::create_glx_1_3(CL_DisplayWindowSite *new_site,
 		GLX_BUFFER_SIZE, 24,
 		None
 	};
+
+#ifdef HAVE_X11_EXTENSIONS_XRENDER_H
+	bool use_layered = desc.is_layered();
+	if (use_layered)
+	{
+		int render_event;
+		int render_error;
+
+		if (!XRenderQueryExtension(disp, &render_event, &render_error))
+		{
+			use_layered = false;
+		}
+		if (use_layered)
+		{
+			x11_window.func_on_clicked().set(this, &CL_OpenGLWindowProvider_GLX::on_clicked);
+		}
+
+	}
+#endif
 
 	CL_OpenGLWindowDescription gl_desc(desc);
 
@@ -370,6 +395,7 @@ void CL_OpenGLWindowProvider_GLX::create_glx_1_3(CL_DisplayWindowSite *new_site,
 		if (!glx.glXGetFBConfigAttrib)
 			throw CL_Exception("Cannot find function glXGetFBConfigAttrib");
 
+		bool got_desired_config = false;
 		int desired_config = 0;
 		int max_sample_buffers = 0;
 		int max_samples = 0;
@@ -377,6 +403,32 @@ void CL_OpenGLWindowProvider_GLX::create_glx_1_3(CL_DisplayWindowSite *new_site,
 		// Find the best fitting multisampling option
 		for (int i=0; i<fb_count; i++)
 		{
+#ifdef HAVE_X11_EXTENSIONS_XRENDER_H
+			if (use_layered)
+			{
+				// Only use visuals that contain an alpha mask.
+
+				XVisualInfo* visual_info = glx.glXGetVisualFromFBConfig(disp, fbc[i]);
+				if (!visual_info)
+					continue;
+
+				XRenderPictFormat *format = XRenderFindVisualFormat(disp, visual_info->visual);
+				XFree(visual_info);
+				if (!format)
+					continue;
+				if (format->direct.alphaMask < 255)
+				{
+					continue;
+				}
+				if (!got_desired_config)
+				{
+					desired_config = i;
+					got_desired_config = true;
+				}
+			}
+#endif
+
+
 			int samp_buf, samples;
 			glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf );
 			glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLES       , &samples  );
@@ -388,6 +440,7 @@ void CL_OpenGLWindowProvider_GLX::create_glx_1_3(CL_DisplayWindowSite *new_site,
 				{
 					max_samples = samples;
 					desired_config = i;
+					got_desired_config = true;
 				}
 			}
 
@@ -398,6 +451,7 @@ void CL_OpenGLWindowProvider_GLX::create_glx_1_3(CL_DisplayWindowSite *new_site,
 				{
 					max_sample_buffers = samp_buf;
 					desired_config = i;
+					got_desired_config = true;
 				}
 			}
 		}
@@ -820,5 +874,35 @@ void CL_OpenGLWindowProvider_GLX::set_small_icon(const CL_PixelBuffer &image)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_GLX Implementation:
+
+bool CL_OpenGLWindowProvider_GLX::on_clicked(XButtonEvent &event)
+{
+	if (event.button != 1)	// Left mouse button
+		return true;
+
+	int height = get_viewport().get_height();
+
+	glDrawBuffer(GL_BACK);
+	glReadBuffer(GL_FRONT);
+
+	CL_Rect rect = CL_Rect(event.x,event.y, CL_Size(1,1));
+
+	CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
+	glReadPixels(
+		rect.left, height - rect.bottom,
+		rect.right - rect.left, rect.bottom - rect.top,
+		GL_RGBA,
+		GL_UNSIGNED_INT_8_8_8_8,
+		pixelbuffer.get_data());
+
+	const cl_ubyte32 *xptr = (const cl_ubyte32 *) (pixelbuffer.get_data());
+	if (((*xptr) & 0xFF) < 10)
+	{
+		XLowerWindow(x11_window.get_display(), x11_window.get_window());
+		return false;
+	}
+
+	return true;
+}
 
 

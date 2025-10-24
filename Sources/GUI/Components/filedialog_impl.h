@@ -28,6 +28,7 @@
 
 #include "GUI/precomp.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/IOData/path_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FileDialog_Impl Class:
@@ -126,12 +127,13 @@ public:
 		else
 			ofn.hwndOwner = 0;
 
-		CL_String16::char_type filename_buffer[FILENAME_MAX] = { 0 };
+		CL_DataBuffer buffer(64 * 1024 * sizeof(CL_String16::char_type));
+		CL_String16::char_type *filename_buffer = (CL_String16::char_type *)buffer.get_data();
 		CL_String16 title16 = CL_StringHelp::utf8_to_ucs2(title);
 		CL_String16 filter16 = get_filter_string();
 		CL_String16 initial_directory16 = CL_StringHelp::utf8_to_ucs2(initial_directory);
 		ofn.lpstrFile = filename_buffer;
-		ofn.nMaxFile = FILENAME_MAX;
+		ofn.nMaxFile = 64 * 1024;
 
 		ofn.lpstrFilter = filter16.c_str();
 		ofn.nFilterIndex = filter_index + 1;
@@ -166,27 +168,21 @@ public:
 
 			if(multi_select)
 			{
-/*				CL_String path = CL_String(filename_buffer, ofn.nFileOffset);
-
-				int previous_offset = ofn.nFileOffset;	
+				CL_String path = CL_String(filename_buffer, ofn.nFileOffset - 1);
 				int offset = ofn.nFileOffset;
-				bool quit = false;
 				while(true)
 				{
-					if(filename_buffer[offset] == '\0' && filename_buffer[offset + 1] == '\0')
-					{
+					CL_String filename = filename_buffer + offset;
+					offset += filename.length() + 1;
+					if (filename.empty())
 						break;
-					}
-					if(filename_buffer[offset] == '\0')
-					{
-						CL_String filename;
-						filename.append(filename_buffer, offset);
-					}
-					offset++;
+					filenames.push_back(CL_PathHelp::combine(path, filename));
 				}
-*/			}
-
-			filenames.push_back(CL_StringHelp::ucs2_to_utf8(filename_buffer));
+			}
+			else
+			{
+				filenames.push_back(CL_StringHelp::ucs2_to_utf8(filename_buffer));
+			}
 		}
 
 		return success;

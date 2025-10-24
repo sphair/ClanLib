@@ -29,6 +29,7 @@
 #include "precomp.h"
 #include "texture_packer.h"
 #include <iostream>
+#include <algorithm>
 
 TexturePacker::TexturePacker()
 {
@@ -126,11 +127,72 @@ ResourceItem *TexturePacker::load_image(CL_GraphicContext &gc, CL_String &resour
 	return item;
 }
 
-CL_TextureGroup *TexturePacker::pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size)
+bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
+{
+	int max_width_d1 = 0;
+	int max_width_d2 = 0;
+
+	SpriteResourceItem *sprite_item1 = dynamic_cast<SpriteResourceItem *>(d1);
+	if(sprite_item1)
+	{
+		const std::vector<CL_SpriteDescriptionFrame> &frames = sprite_item1->sprite_description.get_frames();
+		std::vector<CL_SpriteDescriptionFrame>::size_type index;
+		for(index = 0; index < frames.size(); ++index)
+		{
+			CL_Rect frame_rect = frames[index].rect;
+			if(frame_rect.get_width() > max_width_d1)
+				max_width_d1 = frame_rect.get_width();
+		}
+	}
+	ImageResourceItem *image_item1 = dynamic_cast<ImageResourceItem *>(d1);
+	if(image_item1)
+	{
+		const std::vector<CL_SpriteDescriptionFrame> &frames = image_item1->sprite_description.get_frames();
+		std::vector<CL_SpriteDescriptionFrame>::size_type index;
+		for(index = 0; index < frames.size(); ++index)
+		{
+			CL_Rect frame_rect = frames[index].rect;
+			if(frame_rect.get_width() > max_width_d1)
+				max_width_d1 = frame_rect.get_width();
+		}
+	}
+	SpriteResourceItem *sprite_item2 = dynamic_cast<SpriteResourceItem *>(d2);
+	if(sprite_item2)
+	{
+		const std::vector<CL_SpriteDescriptionFrame> &frames = sprite_item2->sprite_description.get_frames();
+		std::vector<CL_SpriteDescriptionFrame>::size_type index;
+		for(index = 0; index < frames.size(); ++index)
+		{
+			CL_Rect frame_rect = frames[index].rect;
+			if(frame_rect.get_width() > max_width_d2)
+				max_width_d2 = frame_rect.get_width();
+		}
+	}
+	ImageResourceItem *image_item2 = dynamic_cast<ImageResourceItem *>(d2);
+	if(image_item2)
+	{
+		const std::vector<CL_SpriteDescriptionFrame> &frames = image_item2->sprite_description.get_frames();
+		std::vector<CL_SpriteDescriptionFrame>::size_type index;
+		for(index = 0; index < frames.size(); ++index)
+		{
+			CL_Rect frame_rect = frames[index].rect;
+			if(frame_rect.get_width() > max_width_d2)
+				max_width_d2 = frame_rect.get_width();
+		}
+	}
+
+	return max_width_d1 > max_width_d2;
+}
+
+CL_TextureGroup *TexturePacker::pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size, bool sort_on_width)
 {
 	CL_TextureGroup *group = new CL_TextureGroup(texture_size);
 
-	std::vector<ResourceItem *> &items = get_resource_items();
+	std::vector<ResourceItem *> items = get_resource_items();
+
+	if(sort_on_width)
+		std::sort(items.begin(), items.end(), ImageWidthSortPredicate);
+
 	std::vector<ResourceItem *>::size_type item_index, item_size;
 	item_size = items.size();
 	for(item_index = 0; item_index < item_size; ++item_index)

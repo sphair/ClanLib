@@ -34,7 +34,7 @@
 CL_SpanLayout_Impl::CL_SpanLayout_Impl()
 : cursor_visible(false), cursor_pos(0), cursor_overwrite_mode(false), cursor_color(CL_Colorf::black),
   sel_start(0), sel_end(0), sel_foreground(CL_Colorf::white), sel_background(CL_Colorf::darkslateblue),
-  alignment(cl_left)
+  alignment(cl_left), is_ellipsis_draw(false)
 {
 }
 
@@ -125,6 +125,22 @@ void CL_SpanLayout_Impl::draw_layout(CL_GraphicContext &gc)
 	}
 }
 
+void CL_SpanLayout_Impl::draw_layout_ellipsis(CL_GraphicContext &gc, const CL_Rect &content_rect)
+{
+	is_ellipsis_draw = true;
+	ellipsis_content_rect = content_rect;
+	try
+	{
+		is_ellipsis_draw = false;
+		draw_layout(gc);
+	}
+	catch (...)
+	{
+		is_ellipsis_draw = false;
+		throw;
+	}
+}
+
 void CL_SpanLayout_Impl::draw_layout_image(CL_GraphicContext &gc, Line &line, LineSegment &segment, int x, int y)
 {
 	segment.image.draw(gc, x+segment.x_position, y + line.ascender - segment.ascender);
@@ -156,12 +172,23 @@ void CL_SpanLayout_Impl::draw_layout_text(CL_GraphicContext &gc, Line &line, Lin
 
 		if (s1 > 0)
 		{
-			segment.font.draw_text(gc, xx, y + line.ascender, segment_text.substr(0, s1), segment.color);
+			if (is_ellipsis_draw)
+				segment.font.draw_text_ellipsis(gc, xx, y + line.ascender, ellipsis_content_rect, segment_text.substr(0, s1), segment.color);
+			else
+				segment.font.draw_text(gc, xx, y + line.ascender, segment_text.substr(0, s1), segment.color);
 		}
-		segment.font.draw_text(gc, xx0, y+line.ascender, segment_text.substr(s1, s2 - s1), sel_foreground);
+		if (is_ellipsis_draw)
+			segment.font.draw_text_ellipsis(gc, xx0, y+line.ascender, ellipsis_content_rect, segment_text.substr(s1, s2 - s1), sel_foreground);
+		else
+			segment.font.draw_text(gc, xx0, y+line.ascender, segment_text.substr(s1, s2 - s1), sel_foreground);
 		xx += sel_width;
 		if (s2 < length)
-			segment.font.draw_text(gc, xx1, y + line.ascender, segment_text.substr(s2), segment.color);
+		{
+			if (is_ellipsis_draw)
+				segment.font.draw_text_ellipsis(gc, xx1, y + line.ascender, ellipsis_content_rect, segment_text.substr(s2), segment.color);
+			else
+				segment.font.draw_text(gc, xx1, y + line.ascender, segment_text.substr(s2), segment.color);
+		}
 	}
 	else
 	{
@@ -172,7 +199,10 @@ void CL_SpanLayout_Impl::draw_layout_text(CL_GraphicContext &gc, Line &line, Lin
 			CL_Draw::fill(gc, cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
-		segment.font.draw_text(gc, x + segment.x_position, y + line.ascender, segment_text, segment.color);
+		if (is_ellipsis_draw)
+			segment.font.draw_text_ellipsis(gc, x + segment.x_position, y + line.ascender, ellipsis_content_rect, segment_text, segment.color);
+		else
+			segment.font.draw_text(gc, x + segment.x_position, y + line.ascender, segment_text, segment.color);
 	}
 }
 
@@ -804,5 +834,32 @@ void CL_SpanLayout_Impl::set_component_geometry()
 			}
 		}
 		y += lines[i].height;
+	}
+}
+
+int CL_SpanLayout_Impl::get_first_baseline_offset()
+{
+	if (!lines.empty())
+	{
+		return lines.front().ascender;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int CL_SpanLayout_Impl::get_last_baseline_offset()
+{
+	if (!lines.empty())
+	{
+		int y = 0;
+		for (size_t i = 0; i + 1 < lines.size(); i++)
+			y += lines[i].height;
+		return y + lines.back().ascender;
+	}
+	else
+	{
+		return 0;
 	}
 }

@@ -86,6 +86,11 @@ int CL_ListViewColumnHeader::get_width()
 	return impl->width;
 }
 
+int CL_ListViewColumnHeader::get_used_width()
+{
+	return impl->rect.get_width();
+}
+
 CL_ListViewColumnHeader::TextAlignment CL_ListViewColumnHeader::get_alignment()
 {
 	return impl->align;

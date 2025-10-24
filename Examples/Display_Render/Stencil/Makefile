@@ -4,7 +4,7 @@ OBJF = ./Sources/options.o \
 ./Sources/program.o \
 ./Sources/precomp.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanGUI
+LIBS=clanApp clanDisplay clanCore clanSWRender clanGL clanGL1 clanGUI
 CXXFLAGS += -I Sources -I ./
 
 include ../../Makefile.conf

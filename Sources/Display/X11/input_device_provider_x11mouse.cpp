@@ -38,7 +38,7 @@
 // CL_InputDeviceProvider_X11Mouse construction:
 
 CL_InputDeviceProvider_X11Mouse::CL_InputDeviceProvider_X11Mouse(CL_X11Window *window)
-: sig_provider_event(0), window(window), mouse_pos(-1,-1)
+: sig_provider_event(0), window(window), mouse_pos(-1,-1), time_at_last_press(0), last_press_id(-1)
 {
 	for (int i=0; i<32; i++) key_states[i] = false;
 }
@@ -169,8 +169,34 @@ void CL_InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 		case 5: id = CL_MOUSE_WHEEL_DOWN; break;	// Scroll down
 		case 6: id = CL_MOUSE_XBUTTON1; break;
 		case 7: id = CL_MOUSE_XBUTTON2; break;
-		default: return;	// Unknown press
+		default: id = -1;	// Unknown press
 	}
+
+	bool is_a_double_click_event = false;
+
+	// Handle double click timing
+	if (event.type == ButtonPress)
+	{
+		Time time_change = event.time - time_at_last_press;
+		time_at_last_press = event.time;
+
+		if (last_press_id == id)	// Same key pressed
+		{
+			if (time_change < 500)	// 500 ms is the default in Windows
+			{
+				is_a_double_click_event = true;
+				last_press_id = -1;	// Reset to avoid "tripple clicks"
+			}
+		}
+		else
+		{
+			last_press_id = id;
+		}
+	}
+
+	if (id == -1)
+		return;	// Ignore unknown mouse clicks
+
 	mouse_pos.x = event.x;
 	mouse_pos.y = event.y;
 
@@ -180,7 +206,14 @@ void CL_InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 	key.id = id;
 	if (event.type == ButtonPress)
 	{
-		key.type = CL_InputEvent::pressed;
+		if (is_a_double_click_event)
+		{
+			key.type = CL_InputEvent::doubleclick;
+		}
+		else
+		{
+			key.type = CL_InputEvent::pressed;
+		}
 		key_states[id] = 1;
 	}
 	else

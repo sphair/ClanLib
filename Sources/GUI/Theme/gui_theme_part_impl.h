@@ -38,7 +38,6 @@
 #include "API/Core/Text/string_allocator.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Math/rect.h"
-#include "API/Core/Math/sha1.h"
 #include "API/Core/CSS/css_property.h"
 #include "API/Core/CSS/css_document.h"
 #include "API/Core/Math/hash_functions.h"

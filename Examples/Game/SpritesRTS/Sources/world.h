@@ -75,6 +75,7 @@ private:
 
 	CL_Slot slotMouseDown;
 	CL_Slot slotMouseUp;
+	CL_Slot slotMouseDblClick;
 	CL_Slot slotMouseMove;
 	CL_Slot slotKeyDown;
 	

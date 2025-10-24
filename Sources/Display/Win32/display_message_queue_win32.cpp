@@ -206,6 +206,21 @@ void CL_DisplayMessageQueue_Win32::process_message()
 	//
 	// PeekMessage+PM_REMOVE equals to a non-blocking GetMessage call.
 
+	if (moduleKernel32 == 0)
+	{
+		// See http://support.microsoft.com/kb/976038
+		// Required for exceptions and access violations not to be caught by DispatchMessage.
+		moduleKernel32 = LoadLibrary(L"kernel32.dll");
+		ptrSetProcessUserModeExceptionPolicy = (FuncSetProcessUserModeExceptionPolicy *)GetProcAddress(moduleKernel32, "SetProcessUserModeExceptionPolicy");
+		ptrGetProcessUserModeExceptionPolicy = (FuncGetProcessUserModeExceptionPolicy *)GetProcAddress(moduleKernel32, "GetProcessUserModeExceptionPolicy");
+		if (ptrSetProcessUserModeExceptionPolicy && ptrGetProcessUserModeExceptionPolicy)
+		{
+			DWORD flags = 0;
+			if (ptrGetProcessUserModeExceptionPolicy(&flags))
+				ptrSetProcessUserModeExceptionPolicy(flags & ~WIN32_PROCESS_CALLBACK_FILTER_ENABLED);
+		}
+	}
+
 	MSG msg;
 	memset(&msg, 0, sizeof(MSG));
 	BOOL result = PeekMessage(&msg, 0, 0, 0, PM_REMOVE);
@@ -215,6 +230,12 @@ void CL_DisplayMessageQueue_Win32::process_message()
 	CL_SharedPtr<ThreadData> data = get_thread_data();
 	for (std::vector<CL_Win32Window *>::size_type i = 0; i < data->windows.size(); i++)
 	{
-		data->windows[i]->get_ic().process_messages();
+		CL_InputContext context = data->windows[i]->get_ic();
+		context.process_messages();
 	}
 }
+
+HMODULE CL_DisplayMessageQueue_Win32::moduleKernel32 = 0;
+CL_DisplayMessageQueue_Win32::FuncSetProcessUserModeExceptionPolicy *CL_DisplayMessageQueue_Win32::ptrSetProcessUserModeExceptionPolicy = 0;
+CL_DisplayMessageQueue_Win32::FuncGetProcessUserModeExceptionPolicy *CL_DisplayMessageQueue_Win32::ptrGetProcessUserModeExceptionPolicy = 0;
+

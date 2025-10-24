@@ -43,7 +43,7 @@ class CL_GL1TextureProvider : public CL_TextureProvider, CL_DisposableObject
 /// \name Construction
 /// \{
 public:
-	CL_GL1TextureProvider(CL_GL1GraphicContextProvider *gc_provider, CL_TextureDimensions texture_dimensions);
+	CL_GL1TextureProvider(CL_TextureDimensions texture_dimensions);
 	~CL_GL1TextureProvider();
 /// \}
 
@@ -174,7 +174,7 @@ private:
 class CL_GL1TextureStateTracker
 {
 public:
-	CL_GL1TextureStateTracker(GLuint texture_type, GLuint handle, CL_GL1GraphicContextProvider *gc_provider);
+	CL_GL1TextureStateTracker(GLuint texture_type, GLuint handle);
 	~CL_GL1TextureStateTracker();
 
 private:

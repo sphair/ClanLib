@@ -25,6 +25,7 @@ int DemoExplosion::run(CL_DisplayWindow &window)
 
 	CL_Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoExplosion::on_key_up);
 	CL_Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_down().connect(this, &DemoExplosion::on_mouse_down);
+	CL_Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &DemoExplosion::on_mouse_down);
 
 	window.hide_cursor();
 

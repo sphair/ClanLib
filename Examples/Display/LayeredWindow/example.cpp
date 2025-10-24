@@ -29,7 +29,7 @@
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
-#include <ClanLib/gl1.h>
+#include <ClanLib/gl.h>
 
 #include <cmath>
 
@@ -69,7 +69,7 @@ public:
 		CL_SetupDisplay setup_display;
 
 		// Initilize the OpenGL drivers
-		CL_SetupGL1 setup_gl1;
+		CL_SetupGL setup_gl;
 
 		// Start the Application
 		App app;
@@ -93,9 +93,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_DisplayWindowDescription desc_window;
 		desc_window.set_title("Layered Window Example");
 		desc_window.set_allow_resize(false);
-#ifdef WIN32
 		desc_window.set_layered(true);
-#endif
 		desc_window.set_decorations(false);
 		desc_window.set_size(CL_Size(600, 600), false);
 
@@ -103,6 +101,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_DisplayWindow window(desc_window);
 		CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close, &window);
 		CL_Slot slot_mouse_down = (window.get_ic().get_mouse()).sig_key_down().connect(this, &App::on_mouse_down);
+		CL_Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &App::on_mouse_down);
 		CL_Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_up().connect(this, &App::on_mouse_up);
 		CL_Slot slot_mouse_move = (window.get_ic().get_mouse()).sig_pointer_move().connect(this, &App::on_mouse_move, &window);
 		CL_Slot slot_lost_focus = window.sig_lost_focus().connect(this, &App::on_lost_focus);

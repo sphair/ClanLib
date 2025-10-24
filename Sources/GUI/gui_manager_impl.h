@@ -131,7 +131,6 @@ public:
 	bool exit_flag;
 	int exit_code;
 	CL_AcceleratorTable accel_table;
-	//CL_UnknownSharedPtr userdata;
 	CL_GUIWindowManagerSite wm_site;
 	CL_Callback_v1<CL_GUITopLevelWindow *> func_focus_lost;
 	CL_Callback_v1<CL_GUITopLevelWindow *> func_focus_gained;

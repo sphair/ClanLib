@@ -35,6 +35,8 @@
 #include "Win32/event_provider_win32.h"
 #else
 #include "Unix/event_provider_socketpair.h"
+#include <errno.h>
+#include <stdlib.h>
 #endif
 
 #ifndef WIN32
@@ -226,15 +228,20 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout)
 			}
 		}
 
-		int result = select(
-			highest_fd+1,
-			reads ? &rfds : 0,
-			writes ? &wfds : 0,
-			exceptions ? &efds : 0,
-			(timeout == -1) ? 0 : &tv);
+		int result;
+	rerun_eintr:
+		result = select(highest_fd+1,
+				reads ? &rfds : 0,
+				writes ? &wfds : 0,
+				exceptions ? &efds : 0,
+				(timeout == -1) ? 0 : &tv);
+		
 		if (result == -1) // Error occoured
 		{
-			throw CL_Exception("Event wait failed!");
+		  if(errno == EINTR) //The syscall was interrupted. Try again
+		    goto rerun_eintr;
+		  else
+		    throw CL_Exception(CL_String("Event wait failed! Unix Error: ") + strerror(errno));
 		}
 		else if (result == 0) // Timed out
 		{

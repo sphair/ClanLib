@@ -181,16 +181,22 @@ CL_PixelBuffer CL_OpenGLTextureProvider::get_pixeldata(CL_TextureFormat sized_fo
 {
 	throw_if_disposed();
 
-	// todo: be smart here and request the closest matching opengl format.
-
 	CL_TextureStateTracker state_tracker(texture_type, handle);
 
-	CL_PixelBuffer buffer(
-		width, height, cl_abgr8);
-
-	glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
-
-	return buffer.to_format(sized_format);
+	GLenum gl_format = 0, gl_type = 0;
+	bool supported = CL_OpenGL::to_opengl_pixelformat(sized_format, gl_format, gl_type);
+	if (supported)
+	{
+		CL_PixelBuffer buffer(width, height, sized_format);
+		glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
+		return buffer;
+	}
+	else
+	{
+		CL_PixelBuffer buffer(width, height, cl_abgr8);
+		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
+		return buffer.to_format(sized_format);
+	}
 }
 
 void CL_OpenGLTextureProvider::set_image(CL_PixelBuffer &image, int level)

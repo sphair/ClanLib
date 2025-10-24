@@ -206,7 +206,7 @@ std::vector<ListViewColumn> &CL_ListViewLayoutDetails::get_columns()
 	CL_ListViewColumnHeader it = header->get_first_column();
 	while (!it.is_null())
 	{
-		CL_Rect rect_column(xpos, rect_view.top, xpos + it.get_width(), rect_view.bottom);
+		CL_Rect rect_column(xpos, rect_view.top, xpos + it.get_used_width(), rect_view.bottom);
 
 		if (it.get_next_sibling().is_null())
 			rect_column.right = rect_view.right;
@@ -216,7 +216,7 @@ std::vector<ListViewColumn> &CL_ListViewLayoutDetails::get_columns()
 		col.rect = rect_column;
 		columns.push_back(col);
 
-		xpos += it.get_width();
+		xpos += it.get_used_width();
 		it = it.get_next_sibling();
 	}
 
@@ -357,7 +357,7 @@ void CL_ListViewLayoutDetails::update_shown_items_rows(CL_Font &font, CL_ListVie
 		CL_Rect rect_cell;
 		rect_cell.left = x;
 		rect_cell.top = rect_row.top;
-		rect_cell.right = x + col.get_width();
+		rect_cell.right = x + col.get_used_width();
 		rect_cell.bottom = rect_row.bottom;
 		if (col.get_next_sibling().is_null())
 			rect_cell.right = rect_view.right;
@@ -395,9 +395,9 @@ void CL_ListViewLayoutDetails::update_shown_items_rows(CL_Font &font, CL_ListVie
 			si.rect_text.push_back(CL_Rect(CL_Point(rect_cell_content.left, rect_cell_content.top), text_size));
 		}
 
-		si.rect_text.back().right = cl_min(si.rect_text.back().right, x + col.get_width());
+		si.rect_text.back().right = cl_min(si.rect_text.back().right, x + col.get_used_width());
 
-		x += col.get_width();
+		x += col.get_used_width();
 		col = col.get_next_sibling();
 	}
 

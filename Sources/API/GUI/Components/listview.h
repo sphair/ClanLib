@@ -197,6 +197,9 @@ public:
 	/// \brief Selected items are returned as children of the returned item.
 	CL_Callback_v1<CL_ListViewSelection> &func_selection_changed();
 
+	/// \brief Invoked on double clicking a listview item.
+	CL_Callback_v1<const CL_ListViewItem &> &func_item_doubleclick();
+
 	/// \brief Invoked when enter is pressed in the ListViews built-in LineEdit control.
 	/// The caller may change the passed string. Returning false from the callback cancels the edit.
 	CL_Callback_2<bool, CL_ListViewItem, CL_String &> &func_item_edited();

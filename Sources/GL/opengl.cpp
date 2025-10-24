@@ -474,7 +474,13 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &f
 			format = GL_BGR;
 			break;
 		}
-		case cl_srgb8_alpha8: break;
+		case cl_srgb8_alpha8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT_8_8_8_8;
+			format = GL_RGBA;
+			break;
+		}
 		case cl_r16f:
 		{
 			valid = true;
@@ -619,12 +625,6 @@ bool CL_OpenGL::to_opengl_pixelformat(CL_TextureFormat texture_format, GLenum &f
 		case cl_compressed_rg_rgtc2: break;
 		case cl_compressed_signed_rg_rgtc2: break;
 	}
-
-//	if (valid)
-//	{
-//		GLint gl_internal_format;
-//		to_opengl_textureformat(texture_format, gl_internal_format, format);
-//	}
     
 #endif
 

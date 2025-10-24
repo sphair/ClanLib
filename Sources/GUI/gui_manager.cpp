@@ -56,11 +56,26 @@ CL_GUIManager::CL_GUIManager()
 {
 	CL_GUIWindowManagerSystem window_manager;
 	set_window_manager(window_manager);
+
+	CL_GUIThemeDefault theme;
+	set_theme(theme);
 }
 
-CL_GUIManager::CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl)
-: impl(impl)
+CL_GUIManager::CL_GUIManager(const CL_DisplayWindow &display_window)
+	: impl(new CL_GUIManager_Impl)
 {
+	CL_GUIWindowManagerTexture window_manager(display_window);
+	set_window_manager(window_manager);
+
+	CL_GUIThemeDefault theme;
+	set_theme(theme);
+}
+
+CL_GUIManager::CL_GUIManager(const CL_String &path_to_theme)
+	: impl(new CL_GUIManager_Impl)
+{
+	CL_GUIWindowManagerSystem window_manager;
+	initialize(window_manager, path_to_theme);
 }
 
 CL_GUIManager::CL_GUIManager(const CL_DisplayWindow &display_window, const CL_String &path_to_theme)
@@ -70,17 +85,15 @@ CL_GUIManager::CL_GUIManager(const CL_DisplayWindow &display_window, const CL_St
 	initialize(window_manager, path_to_theme);
 }
 
-CL_GUIManager::CL_GUIManager(const CL_String &path_to_theme)
-: impl(new CL_GUIManager_Impl)
-{
-	CL_GUIWindowManagerSystem window_manager;
-	initialize(window_manager, path_to_theme);
-}
-
 CL_GUIManager::CL_GUIManager(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme)
 : impl(new CL_GUIManager_Impl)
 {
 	initialize(window_manager, path_to_theme);
+}
+
+CL_GUIManager::CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl)
+	: impl(impl)
+{
 }
 
 CL_GUIManager::~CL_GUIManager()
@@ -119,12 +132,7 @@ int CL_GUIManager::get_exit_code() const
 {
 	return impl->exit_code;
 }
-/*
-CL_UnknownSharedPtr CL_GUIManager::get_userdata()
-{
-	return impl->userdata;
-}
-*/
+
 CL_Font CL_GUIManager::get_registered_font(const CL_FontDescription &desc)
 {
 	return impl->get_registered_font(desc);
@@ -144,7 +152,6 @@ CL_String CL_GUIManager::get_clipboard_text() const
 	return impl->window_manager.get_display_window(cur).get_clipboard_text();
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager Events:
 
@@ -160,6 +167,18 @@ CL_Callback_0<int> &CL_GUIManager::func_exec_handler()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager Operations:
+
+void CL_GUIManager::add_theme(const CL_String &path_to_theme)
+{
+	CL_VirtualFileSystem vfs(path_to_theme);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+
+	CL_ResourceManager resources("resources.xml", dir);
+	impl->theme.add_resources(resources);
+
+	impl->css_document.load("theme.css", dir);
+	impl->reset_properties(); // Clear the properties cache
+}
 
 void CL_GUIManager::set_theme(CL_GUITheme &theme)
 {
@@ -324,12 +343,7 @@ void CL_GUIManager::render_windows()
 		cur->component->paint(CL_Rect(CL_Point(0,0), geometry.get_size()));
 	}
 }
-/*
-void CL_GUIManager::set_userdata(CL_UnknownSharedPtr ptr)
-{
-	impl->userdata = ptr;
-}
-*/
+
 void CL_GUIManager::register_font(const CL_Font &font, const CL_FontDescription &desc)
 {
 	impl->register_font(font, desc);

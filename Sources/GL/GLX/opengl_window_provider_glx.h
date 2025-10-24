@@ -299,6 +299,7 @@ public:
 /// \{
 
 private:
+	bool on_clicked(XButtonEvent &event);
 
 	GLXContext create_context_glx_1_3(const CL_OpenGLWindowDescription &gl_desc, GLXContext shared_context);
 	GLXContext create_context_glx_1_2(const CL_OpenGLWindowDescription &gl_desc, GLXContext shared_context);

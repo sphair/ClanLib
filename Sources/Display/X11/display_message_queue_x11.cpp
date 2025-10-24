@@ -382,8 +382,8 @@ void CL_DisplayMessageQueue_X11::process_message()
 	// Process all input context messages (done seperately, because of the mouse_capture hack)
 	for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
 	{
-		CL_X11Window *window = data->windows[i];
-		window->get_ic().process_messages();
+		CL_InputContext context = data->windows[i]->get_ic();
+		context.process_messages();
 	}
 }
 

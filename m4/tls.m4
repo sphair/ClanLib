@@ -4,14 +4,14 @@ dnl Check whether the target supports TLS.
 AC_DEFUN([GCC_CHECK_TLS], [
   AC_CACHE_CHECK([whether the target supports thread-local storage],
 		 gcc_cv_have_tls, [
-    AC_RUN_IFELSE([__thread int a; int b; int main() { return a = b; }],
+    AC_RUN_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
       [dnl If the test case passed with dynamic linking, try again with
        dnl static linking, but only if static linking is supported (not
        dnl on Solaris 10).  This fails with some older Red Hat releases.
       chktls_save_LDFLAGS="$LDFLAGS"
       LDFLAGS="-static $LDFLAGS"
-      AC_LINK_IFELSE([int main() { return 0; }],
-	AC_RUN_IFELSE([__thread int a; int b; int main() { return a = b; }],
+      AC_LINK_IFELSE([AC_LANG_SOURCE([int main() { return 0; }])],
+	AC_RUN_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
 		      [gcc_cv_have_tls=yes], [gcc_cv_have_tls=no],[]),
 	[gcc_cv_have_tls=yes])
       LDFLAGS="$chktls_save_LDFLAGS"
@@ -66,7 +66,7 @@ AC_DEFUN([GCC_CHECK_TLS], [
       [gcc_cv_have_tls=no],
       [dnl This is the cross-compiling case. Assume libc supports TLS if the
        dnl binutils and the compiler do.
-       AC_LINK_IFELSE([__thread int a; int b; int main() { return a = b; }],
+       AC_LINK_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
 		      [gcc_cv_have_tls=yes], [gcc_cv_have_tls=no])
       ]
     )])
@@ -80,7 +80,7 @@ dnl Check whether the target assembler supports TLS.
 AC_DEFUN([GCC_CHECK_CC_TLS], [
   AC_CACHE_CHECK([whether the target asssembler upports thread-local storage],
 		 gcc_cv_have_cc_tls, [
-    AC_COMPILE_IFELSE([__thread int a; int b; int main() { return a = b; }],
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([__thread int a; int b; int main() { return a = b; }])],
       [gcc_cv_have_cc_tls=yes], [gcc_cv_have_cc_tls=no])]
     )])
 #  if test "$enable_tls $gcc_cv_have_cc_tls" = "yes yes"; then

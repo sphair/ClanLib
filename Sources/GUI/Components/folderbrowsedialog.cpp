@@ -67,7 +67,7 @@ public:
 			result = open_dialog->SetTitle(title16.c_str());
 			throw_if_failed(result, "IFileOpenDialog.SetTitle failed");
 
-			result = open_dialog->SetOptions(FOS_PICKFOLDERS);
+			result = open_dialog->SetOptions(FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
 			throw_if_failed(result, "IFileOpenDialog.SetOptions((FOS_PICKFOLDERS) failed");
 
 			if(initial_directory16.length() > 0)

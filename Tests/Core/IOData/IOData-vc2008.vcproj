@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="IOData"
 	ProjectGUID="{95AE3D35-371F-4BF8-BD38-8F7FF7AD1BE1}"
 	TargetFrameworkVersion="131072"
@@ -236,6 +236,10 @@
 		</File>
 		<File
 			RelativePath="test_path_help.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\test_vfs.cpp"
 			>
 		</File>
 		<File

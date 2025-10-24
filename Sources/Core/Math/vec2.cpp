@@ -132,6 +132,36 @@ CL_Angle CL_Vec2<Type>::angle(const CL_Vec2<Type>& v) const
 	return CL_Angle((float)acosf(float(dot(v)/(length()*v.length()))), cl_radians);
 }
 
+template<>
+CL_Angle CL_Vec2<int>::angle(const CL_Vec2<int>& v) const
+{
+	float this_x = (float) x;
+	float this_y = (float) y;
+	float v_x = (float) v.x;
+	float v_y = (float) v.y;
+
+	float dot_v = this_x * v_x + this_y * v_y;
+	float this_length = sqrt(this_x * this_x + this_y * this_y);
+	float v_length = sqrt(v_x * v_x + v_y * v_y);
+	return CL_Angle(acosf(dot_v / (this_length * v_length)), cl_radians);
+}
+
+template<typename Type>
+CL_Angle CL_Vec2<Type>::angle_relative(const CL_Vec2<Type>& v) const
+{
+	return CL_Angle( atan2f(v.y, v.x) - atan2f(y, x), cl_radians);
+}
+
+template<>
+CL_Angle CL_Vec2<int>::angle_relative(const CL_Vec2<int>& v) const
+{
+	float this_x = (float) x;
+	float this_y = (float) y;
+	float v_x = (float) v.x;
+	float v_y = (float) v.y;
+
+	return CL_Angle( atan2f(v_y, v_x) - atan2f(this_y, this_x), cl_radians);
+}
 
 template<typename Type>
 CL_Vec2<Type> &CL_Vec2<Type>::round()

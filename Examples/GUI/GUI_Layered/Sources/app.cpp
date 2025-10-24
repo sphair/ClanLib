@@ -72,12 +72,10 @@ void App::create_window()
 	win_desc.set_title("GUI Example Application");
 	win_desc.set_size(CL_Size( 1100, 900 ), false);
 
-#ifdef WIN32
 	win_desc.set_fullscreen(true);
 	win_desc.set_allow_resize(false);
 	win_desc.set_layered(true);
 	win_desc.set_decorations(false);
-#endif
 
 	CL_DisplayWindow new_window = CL_DisplayWindow(win_desc);	// Don't destroy the window first, so the shared gc data is not lost
 	window = new_window;

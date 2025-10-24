@@ -125,12 +125,24 @@ CL_VirtualDirectoryListing::CL_VirtualDirectoryListing(CL_VirtualFileSource *pro
 {
 }
 
+CL_VirtualDirectoryListing::CL_VirtualDirectoryListing()
+{
+	// NULL instance
+}
+
+
 CL_VirtualDirectoryListing::~CL_VirtualDirectoryListing()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_VirtualDirectoryListing Attributes:
+
+void CL_VirtualDirectoryListing::throw_if_null() const
+{
+	if (!impl)
+		throw CL_Exception("CL_VirtualDirectoryListing is null");
+}
 
 CL_String CL_VirtualDirectoryListing::get_filename()
 {

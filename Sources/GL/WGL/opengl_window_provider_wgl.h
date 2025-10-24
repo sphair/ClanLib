@@ -142,6 +142,7 @@ private:
 	HDC device_context;
 	HWND hwnd;
 	bool shadow_window;
+	bool dwm_layered;
 	CL_DisplayWindowSite *site;
 	bool fullscreen;
 

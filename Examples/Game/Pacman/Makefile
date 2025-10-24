@@ -10,7 +10,7 @@ OBJF=./sources/world.o \
 ./sources/fontblowup.o \
 ./sources/precomp.o
 
-LIBS=clanCore clanDisplay clanApp clanSWRender
+LIBS=clanCore clanDisplay clanApp clanSWRender clanGL clanGL1
 
 include ../../Makefile.conf
 

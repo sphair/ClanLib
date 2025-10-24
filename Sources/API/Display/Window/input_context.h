@@ -117,6 +117,16 @@ public:
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only);
 
+	/// \brief Stop anyone accessing this input context
+	///
+	/// This should is only called internally by the display window destructor
+	void dispose();
+
+	/// \brief Has dispose() been called on this input context
+	///
+	/// \return true = Has been disposed
+	bool is_disposed() const;
+
 /// \}
 /// \name Implementation
 /// \{

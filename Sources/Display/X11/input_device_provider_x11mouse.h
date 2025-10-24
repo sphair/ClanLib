@@ -135,6 +135,9 @@ private:
 	CL_X11Window *window;
 
 	CL_Point mouse_pos;
+
+	Time time_at_last_press;
+	int last_press_id;
 /// \}
 };
 

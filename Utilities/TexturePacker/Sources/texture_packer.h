@@ -80,7 +80,7 @@ public:
 
 	std::vector<ResourceItem *> &get_resource_items() { return resource_items; }
 
-	CL_TextureGroup *pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size);
+	CL_TextureGroup *pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size, bool sort_on_width);
 	CL_Callback_v2<int, int> func_pack_progress;
 
 private:

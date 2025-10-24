@@ -90,6 +90,16 @@ public:
 	/// \return text
 	CL_String get_text() const;
 
+	/// \brief Get line count
+	///
+	/// \return line count
+	int get_line_count() const;
+
+	/// \brief Get line text
+	///
+	/// \return text
+	CL_String get_line_text(int line) const;
+
 	/// \brief Get Selection
 	///
 	/// \return selection
@@ -110,10 +120,18 @@ public:
 	/// \return cursor_pos
 	int get_cursor_pos() const;
 
+	/// \brief Get Cursor line number
+	///
+	/// \return cursor line number
+	int get_cursor_line_number() const;
+
 	/// \brief Get Preferred size
 	///
 	/// \return preferred_size
 	virtual CL_Size get_preferred_size() const;
+
+	/// \brief Returns the height required to display all lines with the current width of the control
+	int get_total_height();
 
 /// \}
 /// \name Operations
@@ -149,6 +167,11 @@ public:
 	///
 	/// \param text = String Ref
 	void set_text(const CL_StringRef &text);
+
+	/// \brief Add text to end 
+	///
+	/// \param text = String Ref
+	void add_text(const CL_StringRef &text);
 
 	/// \brief Set selection
 	///

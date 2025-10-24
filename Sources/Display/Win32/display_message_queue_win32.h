@@ -33,6 +33,7 @@
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread_local_storage.h"
 #include <vector>
+#include <WinNT.h>
 
 class CL_Win32Window;
 
@@ -55,6 +56,8 @@ public:
 	void add_client(CL_Win32Window *window);
 	void remove_client(CL_Win32Window *window);
 
+	static bool should_apply_vista_x64_workaround() { return ptrSetProcessUserModeExceptionPolicy == 0 || ptrGetProcessUserModeExceptionPolicy == 0; }
+
  /// \}
  /// \name Implementation
  /// \{
@@ -72,7 +75,69 @@ private:
 	};
 
 	CL_SharedPtr<ThreadData> get_thread_data();
+
+	#define WIN32_PROCESS_CALLBACK_FILTER_ENABLED 0x1
+	typedef BOOL (WINAPI FuncSetProcessUserModeExceptionPolicy)(DWORD dwFlags);
+	typedef BOOL (WINAPI FuncGetProcessUserModeExceptionPolicy)(LPDWORD lpFlags);
+	static HMODULE moduleKernel32;
+	static FuncSetProcessUserModeExceptionPolicy *ptrSetProcessUserModeExceptionPolicy;
+	static FuncGetProcessUserModeExceptionPolicy *ptrGetProcessUserModeExceptionPolicy;
  /// \}
 };
 
+struct WIN32_EXCEPTION_REGISTRATION_RECORD
+{
+	WIN32_EXCEPTION_REGISTRATION_RECORD *Next;
+	void *Handler;
+};
+
+// Workaround for the KB976038 bug on unpatched systems.
+class CL_SEHCatchAllWorkaround
+{
+public:
+	CL_SEHCatchAllWorkaround()
+	: was_patched(CL_DisplayMessageQueue_Win32::should_apply_vista_x64_workaround()), old_exception_handler(0)
+	{
+		if (was_patched)
+		{
+			// remove all exception handler with exception of the default handler
+			NT_TIB *tib = get_tib();
+			old_exception_handler = (WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList;
+			while (((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next != (WIN32_EXCEPTION_REGISTRATION_RECORD*)-1)
+				tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)((WIN32_EXCEPTION_REGISTRATION_RECORD*)tib->ExceptionList)->Next;
+		}
+	}
+
+	void unpatch()
+	{
+		if (was_patched)
+		{
+			// restore old exception handler
+			NT_TIB *tib = get_tib();
+			tib->ExceptionList = (_EXCEPTION_REGISTRATION_RECORD*)old_exception_handler;
+		}
+	}
+
+private:
+	// get thread information block
+	NT_TIB *get_tib()
+	{
+		NT_TIB * pTib = (NT_TIB *)NtCurrentTeb();
+		return pTib;
+		//#ifdef _MSC_VER
+		//return (NT_TIB *)__readfsdword(0x18);
+		//#else
+		//NT_TIB *tib = 0;
+		//__asm
+		//{
+		//	mov EAX, FS:[18h]
+		//	mov [tib], EAX
+		//}
+		//return tib;
+		//#endif
+	}
+
+	bool was_patched;
+	WIN32_EXCEPTION_REGISTRATION_RECORD* old_exception_handler;
+};
 

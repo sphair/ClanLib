@@ -85,6 +85,9 @@ public:
 	/// \brief Destroys the provider.
 	virtual void destroy() = 0;
 
+	/// \brief Adds a resource manager to be used to retrieve resources.
+	virtual void add_resources(CL_ResourceManager resources) = 0;
+
 	/// \brief Sets the resource manager to be used to retrieve resources.
 	virtual void set_resources(CL_ResourceManager resources) = 0;
 

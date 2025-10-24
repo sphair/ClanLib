@@ -71,7 +71,7 @@ public:
 		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
-	void on_process_message(CL_GUIMessage &msg);
+	bool on_input_doubleclick(const CL_InputEvent &input_event);
 	void on_resized();
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void position_parts();
@@ -102,10 +102,10 @@ CL_StatusBar::CL_StatusBar(CL_GUIComponent *parent)
 	set_type_name("statusbar");
 	impl->statusbar = this;
 
-	func_process_message().set(impl.get(), &CL_StatusBar_Impl::on_process_message);
 	func_resized().set(impl.get(), &CL_StatusBar_Impl::on_resized);
 	func_render().set(impl.get(), &CL_StatusBar_Impl::on_render);
 	func_style_changed().set(impl.get(), &CL_StatusBar_Impl::on_style_changed);
+	func_input_doubleclick().set(impl.get(), &CL_StatusBar_Impl::on_input_doubleclick);
 
 	impl->create_parts();
 }
@@ -206,28 +206,22 @@ void CL_StatusBar::show_size_grip(bool show)
 /////////////////////////////////////////////////////////////////////////////
 // CL_StatusBar Implementation:
 
-void CL_StatusBar_Impl::on_process_message(CL_GUIMessage &msg)
+bool CL_StatusBar_Impl::on_input_doubleclick(const CL_InputEvent &input_event)
 {
-	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
+	if (input_event.id == CL_MOUSE_LEFT)
 	{
-		CL_GUIMessage_Input input_msg = msg;
-		CL_InputEvent e = input_msg.get_event();
-
-		// to do: fix it to use double clicks instead!
-		if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
+		for (unsigned int index = 0; index < statusbar_parts.size(); index++)
 		{
-			for (unsigned int index = 0; index < statusbar_parts.size(); index++)
+			CL_StatusBar_Part &statusbar_part = statusbar_parts[index];
+			if (statusbar_part.position.contains(input_event.mouse_pos))
 			{
-				CL_StatusBar_Part &statusbar_part = statusbar_parts[index];
-				if (statusbar_part.position.contains(e.mouse_pos))
-				{
-					if (!statusbar_part.func_double_clicked.is_null())
-						statusbar_part.func_double_clicked.invoke();
-					return;
-				}
+				if (!statusbar_part.func_double_clicked.is_null())
+					statusbar_part.func_double_clicked.invoke();
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void CL_StatusBar_Impl::on_resized()

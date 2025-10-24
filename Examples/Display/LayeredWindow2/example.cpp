@@ -29,7 +29,7 @@
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
-#include <ClanLib/gl1.h>
+#include <ClanLib/gl.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -83,7 +83,7 @@ public:
 		CL_SetupDisplay setup_display;
 
 		// Initilize the OpenGL drivers
-		CL_SetupGL1 setup_gl1;
+		CL_SetupGL setup_gl;
 
 		// Start the Application
 		App app;
@@ -107,7 +107,7 @@ int App::start(const std::vector<CL_String> &args)
 		// Define the whole size
 		CL_Size entire_window_size(650, 650);
 		const int window_inner_offset = 128;
-		CL_Point window_initial_position(10, 10);
+		CL_Point window_initial_position(64, 64);
 
 		// Set the window description
 		CL_DisplayWindowDescription desc_window;
@@ -121,9 +121,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_DisplayWindow window_center(desc_window);
 
 		// Create the border layered windows
-#ifdef WIN32
 		desc_window.set_layered(true);
-#endif
 		desc_window.set_title("");
 		desc_window.set_owner_window(window_center);
 		desc_window.set_position(CL_Rect(window_initial_position.x, window_initial_position.y, CL_Size(entire_window_size.width, window_inner_offset)), false);
@@ -138,6 +136,7 @@ int App::start(const std::vector<CL_String> &args)
 		// Setup the slots
 		CL_Slot slot_quit = window_center.sig_window_close().connect(this, &App::on_window_close, &window_center);
 		CL_Slot slot_mouse_down = (window_center.get_ic().get_mouse()).sig_key_down().connect(this, &App::on_mouse_down);
+		CL_Slot slot_mouse_dblclk = (window_center.get_ic().get_mouse()).sig_key_dblclk().connect(this, &App::on_mouse_down);
 		CL_Slot slot_input_up = (window_center.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 		// Get the graphic context

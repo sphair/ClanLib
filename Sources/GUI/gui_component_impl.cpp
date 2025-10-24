@@ -41,7 +41,7 @@ CL_GUIComponent_Impl::CL_GUIComponent_Impl(const CL_SharedPtr<CL_GUIManager_Impl
 : gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(CL_GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
   visible(true), activated(false), default_handler(false), cancel_handler(false),
-  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false)
+  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), double_click_enabled(true)
 {
 	gui_manager_impl = gui_manager.lock().get();
 

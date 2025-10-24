@@ -36,6 +36,28 @@
 #include "iodevice_provider_file.h"
 
 /////////////////////////////////////////////////////////////////////////////
+// CL_File Statics:
+
+CL_String CL_File::read_text(const CL_String &filename)
+{
+	CL_File file(filename);
+	CL_String str;
+	str.resize(file.get_size());
+	file.read(str.data(), str.length());
+	file.close();
+	return str;
+}
+
+CL_DataBuffer CL_File::read_bytes(const CL_String &filename)
+{
+	CL_File file(filename);
+	CL_DataBuffer buffer(file.get_size());
+	file.read(buffer.get_data(), buffer.get_size());
+	file.close();
+	return buffer;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // CL_File Construction:
 
 CL_File::CL_File()

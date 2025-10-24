@@ -169,8 +169,15 @@ public:
 	///
 	/// \param vector = Second vector used to calculate angle.
 	///
-	/// \return The angle between the two vectors.
+	/// \return The angle between the two vectors (between 0 and PI)
 	CL_Angle angle(const CL_Vec2<Type>& vector) const;
+
+	/// \brief Calculate the angle between this vector relative to another vector.
+	///
+	/// \param vector = Second vector used to calculate angle.
+	///
+	/// \return The angle between the two vectors (between -PI and PI)
+	CL_Angle angle_relative(const CL_Vec2<Type>& vector) const;
 
 	/// \brief Calculate the distance between this vector and an other vector.
 	///

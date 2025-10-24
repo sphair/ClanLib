@@ -66,39 +66,39 @@ class CL_API_GUI CL_GUIManager
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a gui manager
-	///
-	/// It is created using the CL_GUIWindowManagerSystem.\n
-	/// You will still require to specify a theme by calling: set_theme()
+	/// \brief Constructs a gui manager with a system window manager. 
+	///	
+	/// Remember to add a theme using set_theme() or add_theme().
 	CL_GUIManager();
+
+	/// \brief Constructs a gui manager with a texture window manager. 
+	///	
+	/// Remember to add a theme using set_theme() or add_theme().
+	///
+	/// \param display_window = display window to attach gui to.
+	CL_GUIManager(const CL_DisplayWindow &display_window);
+
+	/// \brief Fully constructs a gui manager with a system window manager, a css theme and resources.
+	///
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	CL_GUIManager(const CL_String &path_to_theme);
+
+	/// \brief Fully constructs a gui manager with a texture window manager, a css theme and resources.
+	///
+	/// \param display_window = display window to attach gui to.
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	CL_GUIManager(const CL_DisplayWindow &display_window, const CL_String &path_to_theme);
+
+	/// \brief Fully constructs a gui manager with a custom window manager, a css theme and resources.
+	///
+	/// \param window_manager = Window manager
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	CL_GUIManager(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme);
 
 	/// \brief Constructs a GUIManager
 	///
 	/// \param impl = Shared Ptr
 	CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl);
-
-	/// \brief Fully initializes a gui manager with a texture window manager, a css theme and resources.
-	///
-	/// \param display_window = display window to attach gui to.
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	///
-	/// \return Fully initialized gui manager.
-	CL_GUIManager(const CL_DisplayWindow &display_window, const CL_String &path_to_theme);
-
-	/// \brief Fully initializes a gui manager with a system window manager, a css theme and resources.
-	///
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	///
-	/// \return Fully initialized gui manager.
-	CL_GUIManager(const CL_String &path_to_theme);
-
-	/// \brief Fully initializes a gui manager with a custom window manager, a css theme and resources.
-	///
-	/// \param window_manager = Window manager
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	///
-	/// \return Fully initialized gui manager.
-	CL_GUIManager(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme);
 
 	virtual ~CL_GUIManager();
 
@@ -130,9 +130,6 @@ public:
 	/// \brief Returns the dialog exit code.
 	int get_exit_code() const;
 
-	/// \brief Returns userdata.
-	//CL_UnknownSharedPtr get_userdata();
-
 	/// \brief Get a registered user defined GUI font (set with register_font()). Returns NULL if not found
 	CL_Font get_registered_font(const CL_FontDescription &desc);
 
@@ -155,6 +152,10 @@ public:
 /// \name Operations
 /// \{
 public:
+	/// \brief Adds a GUI theme directory.
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	void add_theme(const CL_String &path_to_theme);
+
 	/// \brief Sets the GUI theme.
 	void set_theme(CL_GUITheme &theme);
 
@@ -207,9 +208,6 @@ public:
 
 	/// \brief Mark the specified area to be redrawn.
 	void request_repaint(const CL_Rect &rect, CL_GUIComponent *root_component);
-
-	/// \brief Set userdata.
-	//void set_userdata(CL_UnknownSharedPtr ptr);
 
 	/// \brief Registers a user defined GUI font - referenced using the specified font description.
 	void register_font(const CL_Font &font, const CL_FontDescription &desc);

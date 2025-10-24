@@ -100,6 +100,11 @@ void CL_GUITheme::set_resources(CL_ResourceManager resources)
 	impl->provider->set_resources(resources);
 }
 
+void CL_GUITheme::add_resources(CL_ResourceManager resources)
+{
+	impl->provider->add_resources(resources);
+}
+
 void CL_GUITheme::render_box(
 	CL_GraphicContext &gc,
 	CL_GUIThemePart &part,

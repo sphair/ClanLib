@@ -26,7 +26,7 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_Framework clanGUI Framework
+/// \addtogroup clanGUI_Framework clanGUI System
 /// \{
 
 #pragma once
