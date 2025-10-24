@@ -64,7 +64,7 @@ CL_DomText::~CL_DomText()
 
 CL_DomText CL_DomText::split_text(unsigned long offset)
 {
-	return CL_DomText();
+	throw CL_Exception("Implement me");
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -41,6 +41,7 @@
 #include "opengl_render_buffer_provider.h"
 #include "opengl_vertex_array_buffer_provider.h"
 #include "opengl_element_array_buffer_provider.h"
+#include "opengl_pixel_buffer_provider.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Math/cl_math.h"
@@ -56,52 +57,56 @@
 #include "API/Display/TargetProviders/render_window_provider.h"
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
+#include "API/Display/2D/image.h"
 
 #ifndef WIN32
 #include "GLX/opengl_window_provider_glx.h"
 #endif
 
 const CL_String::char_type *cl_glsl_vertex_color_only = 
-	cl_text("attribute vec4 Position, Color0; ")
-	cl_text("varying vec4 Color; ")
-	cl_text("void main(void) { gl_Position = gl_ModelViewProjectionMatrix*Position; Color = Color0; }");
+	"attribute vec4 Position, Color0; "
+	"uniform mat4 cl_ModelViewProjectionMatrix;"
+	"varying vec4 Color; "
+	"void main(void) { gl_Position = cl_ModelViewProjectionMatrix*Position; Color = Color0; }";
 
 const CL_String::char_type *cl_glsl_fragment_color_only =
-	cl_text("varying vec4 Color; ")
-	cl_text("void main(void) { gl_FragColor = Color; }");
+	"varying vec4 Color; "
+	"void main(void) { gl_FragColor = Color; }";
 
 const CL_String::char_type *cl_glsl_vertex_single_texture =
-	cl_text("attribute vec4 Position, Color0; ")
-	cl_text("attribute vec2 TexCoord0; ")
-	cl_text("varying vec4 Color; ")
-	cl_text("varying vec2 TexCoord; ")
-	cl_text("void main(void) { gl_Position = gl_ModelViewProjectionMatrix*Position; Color = Color0; TexCoord = TexCoord0; }");
+	"attribute vec4 Position, Color0; "
+	"attribute vec2 TexCoord0; "
+	"uniform mat4 cl_ModelViewProjectionMatrix;"
+	"varying vec4 Color; "
+	"varying vec2 TexCoord; "
+	"void main(void) { gl_Position = cl_ModelViewProjectionMatrix*Position; Color = Color0; TexCoord = TexCoord0; }";
 
 const CL_String::char_type *cl_glsl_fragment_single_texture =
-	cl_text("uniform sampler2D Texture0; ")
-	cl_text("varying vec4 Color; ")
-	cl_text("varying vec2 TexCoord; ")
-	cl_text("void main(void) { gl_FragColor = Color*texture2D(Texture0, TexCoord); }");
+	"uniform sampler2D Texture0; "
+	"varying vec4 Color; "
+	"varying vec2 TexCoord; "
+	"void main(void) { gl_FragColor = Color*texture2D(Texture0, TexCoord); }";
 
 const CL_String::char_type *cl_glsl_vertex_sprite =
-	cl_text("attribute vec4 Position, Color0; ")
-	cl_text("attribute vec2 TexCoord0; ")
-	cl_text("attribute float TexIndex0; ")
-	cl_text("varying vec4 Color; ")
-	cl_text("varying vec2 TexCoord; ")
-	cl_text("varying float TexIndex; ")
-	cl_text("void main(void) { gl_Position = gl_ModelViewProjectionMatrix*Position; Color = Color0; TexCoord = TexCoord0; TexIndex = TexIndex0; }");
+	"attribute vec4 Position, Color0; "
+	"attribute vec2 TexCoord0; "
+	"attribute float TexIndex0; "
+	"uniform mat4 cl_ModelViewProjectionMatrix;"
+	"varying vec4 Color; "
+	"varying vec2 TexCoord; "
+	"varying float TexIndex; "
+	"void main(void) { gl_Position = cl_ModelViewProjectionMatrix*Position; Color = Color0; TexCoord = TexCoord0; TexIndex = TexIndex0; }";
 
 const CL_String::char_type *cl_glsl_fragment_sprite =
-	cl_text("uniform sampler2D Texture0; ")
-	cl_text("uniform sampler2D Texture1; ")
-	cl_text("uniform sampler2D Texture2; ")
-	cl_text("uniform sampler2D Texture3; ")
-	cl_text("varying vec4 Color; ")
-	cl_text("varying vec2 TexCoord; ")
-	cl_text("varying float TexIndex; ")
-	cl_text("vec4 sampleTexture(int index, vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }")
-	cl_text("void main(void) { gl_FragColor = Color*sampleTexture(int(TexIndex), TexCoord); } ");
+	"uniform sampler2D Texture0; "
+	"uniform sampler2D Texture1; "
+	"uniform sampler2D Texture2; "
+	"uniform sampler2D Texture3; "
+	"varying vec4 Color; "
+	"varying vec2 TexCoord; "
+	"varying float TexIndex; "
+	"vec4 sampleTexture(int index, vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
+	"void main(void) { gl_FragColor = Color*sampleTexture(int(TexIndex), TexCoord); } ";
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -109,66 +114,67 @@ const CL_String::char_type *cl_glsl_fragment_sprite =
 
 CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_RenderWindowProvider * const render_window)
 : render_window(render_window), map_mode(cl_map_2d_upper_left), projection(CL_Mat4f::identity()), modelview(CL_Mat4f::identity()),
-  framebuffer_bound(false), prim_arrays_set(false), num_set_program_attribute_arrays(0), cur_prim_array(0)
+  framebuffer_bound(false), prim_arrays_set(false), num_set_program_attribute_arrays(0), cur_prim_array(0),
+  modelview_projection_matrix_valid(false), normal_matrix_valid(false)
 {
 	check_opengl_version();
 
 	CL_ShaderObject vertex_color_only_shader(this, cl_shadertype_vertex, cl_glsl_vertex_color_only);
 	if(!vertex_color_only_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'vertex color only' Error:" + vertex_color_only_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'vertex color only' Error:" + vertex_color_only_shader.get_info_log());
 
 	CL_ShaderObject fragment_color_only_shader(this, cl_shadertype_fragment, cl_glsl_fragment_color_only);
 	if(!fragment_color_only_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'fragment color only' Error:" + fragment_color_only_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'fragment color only' Error:" + fragment_color_only_shader.get_info_log());
 
 	CL_ShaderObject vertex_single_texture_shader(this, cl_shadertype_vertex, cl_glsl_vertex_single_texture);
 	if(!vertex_single_texture_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'vertex single texture' Error:" + vertex_single_texture_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'vertex single texture' Error:" + vertex_single_texture_shader.get_info_log());
 
 	CL_ShaderObject fragment_single_texture_shader(this, cl_shadertype_fragment, cl_glsl_fragment_single_texture);
 	if(!fragment_single_texture_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'fragment single texture' Error:" + fragment_single_texture_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'fragment single texture' Error:" + fragment_single_texture_shader.get_info_log());
 
 	CL_ShaderObject vertex_sprite_shader(this, cl_shadertype_vertex, cl_glsl_vertex_sprite);
 	if(!vertex_sprite_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'vertex sprite' Error:" + vertex_sprite_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'vertex sprite' Error:" + vertex_sprite_shader.get_info_log());
 
 	CL_ShaderObject fragment_sprite_shader(this, cl_shadertype_fragment, cl_glsl_fragment_sprite);
 	if(!fragment_sprite_shader.compile())
-		throw CL_Exception(cl_text("Unable to compile the standard shader program: 'fragment sprite' Error:" + fragment_sprite_shader.get_info_log()));
+		throw CL_Exception("Unable to compile the standard shader program: 'fragment sprite' Error:" + fragment_sprite_shader.get_info_log());
 
 	CL_ProgramObject color_only_program(this);
 	color_only_program.attach(vertex_color_only_shader);
 	color_only_program.attach(fragment_color_only_shader);
-	color_only_program.bind_attribute_location(0, cl_text("Position"));
-	color_only_program.bind_attribute_location(1, cl_text("Color0"));
+	color_only_program.bind_attribute_location(0, "Position");
+	color_only_program.bind_attribute_location(1, "Color0");
 	if (!color_only_program.link())
-		throw CL_Exception(cl_text("Unable to link the standard shader program: 'color only' Error:" + color_only_program.get_info_log()));
+		throw CL_Exception("Unable to link the standard shader program: 'color only' Error:" + color_only_program.get_info_log());
 
 	CL_ProgramObject single_texture_program(this);
 	single_texture_program.attach(vertex_single_texture_shader);
 	single_texture_program.attach(fragment_single_texture_shader);
-	single_texture_program.bind_attribute_location(0, cl_text("Position"));
-	single_texture_program.bind_attribute_location(1, cl_text("Color0"));
-	single_texture_program.bind_attribute_location(2, cl_text("TexCoord0"));
+	single_texture_program.bind_attribute_location(0, "Position");
+	single_texture_program.bind_attribute_location(1, "Color0");
+	single_texture_program.bind_attribute_location(2, "TexCoord0");
 	if (!single_texture_program.link())
-		throw CL_Exception(cl_text("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program.get_info_log()));
-	single_texture_program.set_uniform1i(cl_text("Texture0"), 0);
+		throw CL_Exception("Unable to link the standard shader program: 'single texture' Error:" + single_texture_program.get_info_log());
+	single_texture_program.set_uniform1i("Texture0", 0);
 
 	CL_ProgramObject sprite_program(this);
 	sprite_program.attach(vertex_sprite_shader);
 	sprite_program.attach(fragment_sprite_shader);
-	sprite_program.bind_attribute_location(0, cl_text("Position"));
-	sprite_program.bind_attribute_location(1, cl_text("Color0"));
-	sprite_program.bind_attribute_location(2, cl_text("TexCoord0"));
-	sprite_program.bind_attribute_location(3, cl_text("TexIndex0"));
+	sprite_program.bind_attribute_location(0, "Position");
+	sprite_program.bind_attribute_location(1, "Color0");
+	sprite_program.bind_attribute_location(2, "TexCoord0");
+	sprite_program.bind_attribute_location(3, "TexIndex0");
 	if (!sprite_program.link())
-		throw CL_Exception(cl_text("Unable to link the standard shader program: 'sprite' Error:" + sprite_program.get_info_log()));
+		throw CL_Exception("Unable to link the standard shader program: 'sprite' Error:" + sprite_program.get_info_log());
 
-	sprite_program.set_uniform1i(cl_text("Texture0"), 0);
-	sprite_program.set_uniform1i(cl_text("Texture1"), 1);
-	sprite_program.set_uniform1i(cl_text("Texture2"), 2);
-	sprite_program.set_uniform1i(cl_text("Texture3"), 3);
+	sprite_program.set_uniform1i("Texture0", 0);
+	sprite_program.set_uniform1i("Texture1", 1);
+	sprite_program.set_uniform1i("Texture2", 2);
+	sprite_program.set_uniform1i("Texture3", 3);
 
 	standard_programs.push_back(color_only_program);
 	standard_programs.push_back(single_texture_program);
@@ -179,6 +185,7 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 
 CL_OpenGLGraphicContextProvider::~CL_OpenGLGraphicContextProvider()
 {
+	current_program_object = CL_ProgramObject();
 	standard_programs.clear();
 
 	CL_OpenGL::remove_active(this);
@@ -217,7 +224,7 @@ void CL_OpenGLGraphicContextProvider::get_opengl_version(int &version_major, int
 	version_minor = 0;
 	version_release = 0;
 
-	std::vector<CL_TempString> split_version = CL_StringHelp::split_text(version, ".");
+	std::vector<CL_String> split_version = CL_StringHelp::split_text(version, ".");
 	if(split_version.size() > 0)
 		version_major = CL_StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
@@ -237,7 +244,7 @@ void CL_OpenGLGraphicContextProvider::get_opengl_shading_language_version(int &v
 	version_minor = 0;
 	version_release = 0;
 
-	std::vector<CL_TempString> split_version = CL_StringHelp::split_text(version, ".");
+	std::vector<CL_String> split_version = CL_StringHelp::split_text(version, ".");
 	if(split_version.size() > 0)
 		version_major = CL_StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
@@ -265,9 +272,9 @@ std::vector<CL_String> CL_OpenGLGraphicContextProvider::get_extensions()
 {
 	CL_OpenGL::set_active(this);
 	CL_StringRef extension_string = (char*)clGetString(CL_EXTENSIONS);
-	std::vector<CL_TempString> tmp = CL_StringHelp::split_text(extension_string, " ");
+	std::vector<CL_String> tmp = CL_StringHelp::split_text(extension_string, " ");
 	std::vector<CL_String> extensions;
-	for (std::vector<CL_TempString>::size_type i=0; i<tmp.size(); i++)
+	for (std::vector<CL_String>::size_type i=0; i<tmp.size(); i++)
 		extensions.push_back(tmp[i]);
 	return extensions;
 }
@@ -291,7 +298,7 @@ CL_Size CL_OpenGLGraphicContextProvider::get_max_texture_size() const
 int CL_OpenGLGraphicContextProvider::get_width() const
 {
 	if (framebuffer_bound)
-		return framebuffer_provider->get_attachment_size(0).width;
+		return draw_buffer_provider->get_size().width;
 	else
 		return render_window->get_viewport_width();
 }
@@ -299,7 +306,7 @@ int CL_OpenGLGraphicContextProvider::get_width() const
 int CL_OpenGLGraphicContextProvider::get_height() const
 {
 	if (framebuffer_bound)
-		return framebuffer_provider->get_attachment_size(0).height;
+		return draw_buffer_provider->get_size().height;
 	else
 		return render_window->get_viewport_height();
 }
@@ -396,19 +403,24 @@ CL_ElementArrayBufferProvider *CL_OpenGLGraphicContextProvider::alloc_element_ar
 	return new CL_OpenGLElementArrayBufferProvider(this);
 }
 
+CL_PixelBufferProvider *CL_OpenGLGraphicContextProvider::alloc_pixel_buffer()
+{
+	return new CL_OpenGLPixelBufferProvider(this);
+}
+
 CL_PixelBuffer CL_OpenGLGraphicContextProvider::get_pixeldata(const CL_Rect& rect) const 
 {
 	CL_OpenGL::set_active(this);
 
 	if( rect.left != rect.right )
 	{
-		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::abgr8888);
+		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), cl_abgr8);
 		clReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
 		pbuf.flip_vertical();
 		return pbuf;
 	}
 
-	CL_PixelBuffer pbuf( get_width(), get_height(), get_width()*4, CL_PixelFormat::abgr8888);
+	CL_PixelBuffer pbuf( get_width(), get_height(), cl_abgr8);
 	clReadPixels(0, 0, get_width(), get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;
@@ -439,7 +451,7 @@ void CL_OpenGLGraphicContextProvider::set_texture(int unit_index, const CL_Textu
 	}
 }
 
-void CL_OpenGLGraphicContextProvider::reset_texture(int unit_index)
+void CL_OpenGLGraphicContextProvider::reset_texture(int unit_index, const CL_Texture &texture)
 {
 	CL_OpenGL::set_active(this);
 
@@ -455,18 +467,28 @@ void CL_OpenGLGraphicContextProvider::reset_texture(int unit_index)
 	clBindTexture(CL_TEXTURE_2D, 0);
 }
 
-void CL_OpenGLGraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &buffer)
+void CL_OpenGLGraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &draw_buffer, const CL_FrameBuffer &read_buffer)
 {
 	CL_OpenGL::set_active(this);
 
-	framebuffer_provider = dynamic_cast<CL_OpenGLFrameBufferProvider *>(buffer.get_provider());
-	if (framebuffer_provider->get_attachment_indexes().empty())
-		throw CL_Exception("A color/render/depth/stencil buffer must be attached to CL_FrameBuffer before calling CL_GraphicsContext::set_frame_buffer().");
+	draw_buffer_provider = dynamic_cast<CL_OpenGLFrameBufferProvider *>(draw_buffer.get_provider());
+	read_buffer_provider = dynamic_cast<CL_OpenGLFrameBufferProvider *>(read_buffer.get_provider());
 
-	CLuint draw_handle = framebuffer_provider->get_draw_handle();
-	CLuint read_handle = framebuffer_provider->get_read_handle();
+	// Check for framebuffer completeness
+	// (Ideally this should be before rendering)
+	draw_buffer_provider->check_framebuffer_complete();
+	if (draw_buffer_provider != read_buffer_provider)
+		read_buffer_provider->check_framebuffer_complete();
+
+	// Bind the framebuffers
+	CLuint draw_handle = draw_buffer_provider->get_handle();
 	clBindFramebuffer(CL_FRAMEBUFFER, draw_handle);
-	clBindFramebuffer(CL_READ_FRAMEBUFFER, read_handle);
+
+	if (draw_buffer_provider != read_buffer_provider)
+	{
+		CLuint read_handle = read_buffer_provider->get_handle();
+		clBindFramebuffer(CL_READ_FRAMEBUFFER, read_handle);
+	}
 
 	// Save the map mode before when the framebuffer was bound
 	if (!framebuffer_bound)	
@@ -496,11 +518,14 @@ void CL_OpenGLGraphicContextProvider::reset_frame_buffer()
 
 void CL_OpenGLGraphicContextProvider::set_program_object(CL_StandardProgram standard_program)
 {
-	set_program_object(standard_programs[(int)standard_program]);
+	set_program_object(standard_programs[(int)standard_program], cl_program_matrix_modelview_projection);
 }
 
-void CL_OpenGLGraphicContextProvider::set_program_object(const CL_ProgramObject &program)
+void CL_OpenGLGraphicContextProvider::set_program_object(const CL_ProgramObject &program, int program_matrix_flags)
 {
+	current_program_matrix_flags = program_matrix_flags;
+	current_program_object = CL_ProgramObject();
+
 	CL_OpenGL::set_active(this);
 	if (clUseProgram == 0)
 		return;
@@ -508,13 +533,18 @@ void CL_OpenGLGraphicContextProvider::set_program_object(const CL_ProgramObject 
 	if (program.is_null())
 		clUseProgram(0);
 	else
+	{
 		clUseProgram(program.get_handle());
+		current_program_object = program;
+		set_current_program_object_matricies();
+	}
 }
 
 void CL_OpenGLGraphicContextProvider::reset_program_object()
 {
 	CL_OpenGL::set_active(this);
 	clUseProgram(0);
+	current_program_object = CL_ProgramObject();
 }
 
 void CL_OpenGLGraphicContextProvider::draw_primitives(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArrayData * const prim_array)
@@ -649,6 +679,12 @@ void CL_OpenGLGraphicContextProvider::draw_primitives_array(CL_PrimitivesType ty
 //	}
 }
 
+void CL_OpenGLGraphicContextProvider::draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count)
+{
+	CL_OpenGL::set_active(this);
+	clDrawArraysInstanced(to_enum(type), offset, num_vertices, instance_count);
+}
+
 void CL_OpenGLGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices)
 {
 	CL_OpenGL::set_active(this);
@@ -684,6 +720,7 @@ void CL_OpenGLGraphicContextProvider::reset_primitives_array()
 {
 	CL_OpenGL::set_active(this);
 
+	/* Removed in OpenGL 3 ...
 	clDisableClientState(CL_VERTEX_ARRAY);
 	clDisableClientState(CL_COLOR_ARRAY);
 	if (clSecondaryColor3i)
@@ -691,6 +728,7 @@ void CL_OpenGLGraphicContextProvider::reset_primitives_array()
 	clDisableClientState(CL_NORMAL_ARRAY);
 	clDisableClientState(CL_EDGE_FLAG_ARRAY);
 	clDisableClientState(CL_TEXTURE_COORD_ARRAY);
+	*/
 
 	for (int i=0; i<num_set_program_attribute_arrays; ++i)
 	{
@@ -700,8 +738,8 @@ void CL_OpenGLGraphicContextProvider::reset_primitives_array()
 	prim_arrays_set = false;
 }
 
-void CL_OpenGLGraphicContextProvider::draw_pixels(
-	float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &image, const CL_Colorf &color)
+void CL_OpenGLGraphicContextProvider::draw_pixels(CL_GraphicContext &gc,
+	float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 	if (x + image.get_width() * zoom_x < 0 || y + image.get_height() * zoom_y < 0 ||
 		x + image.get_width() * zoom_x > get_width() || y + image.get_height() * zoom_y > get_height())
@@ -709,113 +747,9 @@ void CL_OpenGLGraphicContextProvider::draw_pixels(
 		return;
 	}
 
-	CL_PixelBufferRef subimage(image);
-	if (x < 0 || y < 0)
-	{
-		if (zoom_x == 0.0f || zoom_y == 0.0f)
-			return;
-		
-		float clip_left = (-1.0f*(x<0))*x;
-		float clip_top = (-1.0f*(y<0))*y;
-
-		subimage = image.get_subimage(CL_Rect(int(clip_left/zoom_x), int(clip_top/zoom_y), image.get_width(), image.get_height()));
-	}
-
-	CL_OpenGL::set_active(this);
-
-	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
-
-	CLenum format;
-	CLenum type;
-	bool conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
-
-	// also check for the pitch (OpenGL can only skip pixels, not bytes)
-	if (!conv_needed)
-	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
-		if (subimage.get_pitch() % bytesPerPixel != 0)
-			conv_needed = true;
-	}
-
-	// no conversion needed
-	if (!conv_needed)
-	{
-		// change alignment
-		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
-		clPixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-
-		char *data = (char *) subimage.get_data();
-
-		clRasterPos2f((x>0)*x, (y>0)*y);
-		if (map_mode == cl_map_2d_upper_left)
-			clPixelZoom((CLfloat) zoom_x, (CLfloat) -zoom_y);
-		else
-			clPixelZoom((CLfloat) zoom_x, (CLfloat) zoom_y);
-
-		clPixelTransferf(CL_RED_SCALE, (CLfloat) color.get_red());
-		clPixelTransferf(CL_GREEN_SCALE, (CLfloat) color.get_green());
-		clPixelTransferf(CL_BLUE_SCALE, (CLfloat) color.get_blue());
-
-		clDrawPixels(
-			subimage.get_width(),
-			subimage.get_height(),
-			format,
-			type,
-			data);
-
-		clPixelTransferf(CL_RED_SCALE, 1.0);
-		clPixelTransferf(CL_GREEN_SCALE, 1.0);
-		clPixelTransferf(CL_BLUE_SCALE, 1.0);
-	}
-	// conversion needed
-	else
-	{
-		bool big_endian = CL_Endian::is_system_big();
-
-		CL_PixelBuffer buffer;
-		if (!big_endian)
-			buffer = CL_PixelBuffer(
-				subimage.get_width(), subimage.get_height(),
-				subimage.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL RGB/RGBA is always big endian
-		else
-			buffer = CL_PixelBuffer(
-				subimage.get_width(), subimage.get_height(),
-				subimage.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
-	
-		CL_PixelBuffer(subimage).convert(buffer);
-
-		format = needs_alpha ? CL_RGBA : CL_RGB;
-
-		// change alignment
-		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
-		clPixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-
-		clRasterPos2d((x>0)*x, (y>0)*y);
-		if (map_mode == cl_map_2d_upper_left)
-			clPixelZoom((CLfloat) zoom_x, (CLfloat) -zoom_y);
-		else
-			clPixelZoom((CLfloat) zoom_x, (CLfloat) zoom_y);
-
-		clPixelTransferf(CL_RED_SCALE, (CLfloat) color.get_red());
-		clPixelTransferf(CL_GREEN_SCALE, (CLfloat) color.get_green());
-		clPixelTransferf(CL_BLUE_SCALE, (CLfloat) color.get_blue());
-
-		clDrawPixels(
-			subimage.get_width(),
-			subimage.get_height(),
-			format,
-			CL_UNSIGNED_BYTE,
-			buffer.get_data());
-
-		clPixelTransferf(CL_RED_SCALE, 1.0);
-		clPixelTransferf(CL_GREEN_SCALE, 1.0);
-		clPixelTransferf(CL_BLUE_SCALE, 1.0);
-	}
+	CL_Image texture_image(gc, image, src_rect);
+	texture_image.draw(gc, CL_Rectf(x, y, CL_Sizef( ((float) texture_image.get_width()) * zoom_x, ((float) texture_image.get_height()) * zoom_y) ));
+	gc.flush_batcher();
 }
 
 void CL_OpenGLGraphicContextProvider::set_clip_rect(const CL_Rect &rect)
@@ -882,21 +816,7 @@ void CL_OpenGLGraphicContextProvider::set_map_mode(CL_MapMode mode)
 	}
 
 	map_mode = mode;
-
-	switch (map_mode)
-	{
-	case cl_map_2d_upper_left:
-		on_window_resized();
-		break;
-	case cl_map_2d_lower_left:
-		on_window_resized();
-		break;
-	case cl_user_projection:
-		CL_OpenGL::set_active(this);
-		clMatrixMode(CL_PROJECTION);
-		clLoadMatrixf(projection.matrix);
-		break;
-	}
+	on_window_resized();
 }
 
 void CL_OpenGLGraphicContextProvider::on_window_resized()
@@ -908,26 +828,12 @@ void CL_OpenGLGraphicContextProvider::on_window_resized()
 	{
 	default:
 		break;
-	case cl_user_projection:
-		CL_OpenGL::set_active(this);
-		clViewport(0, 0, width, height);
-		if (clIsEnabled(CL_SCISSOR_TEST))
-			clScissor(
-				last_clip_rect.left,
-				last_clip_rect.top,
-				last_clip_rect.get_width(),
-				last_clip_rect.get_height());
-		break;
 	case cl_map_2d_upper_left:
 		CL_OpenGL::set_active(this);
-		clViewport(0, 0, width, height);
-		clMatrixMode(CL_PROJECTION);
-		clLoadIdentity();
-		clMultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, (float)height, 0.0f));
-		clMatrixMode(CL_MODELVIEW);
-		clLoadIdentity();
-		clTranslatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0f);
-		clMultMatrixf(modelview);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
+		set_projection(CL_Mat4f::ortho_2d(0.0f, (float)width, (float)height, 0.0f));
+		set_modelview(CL_Mat4f::identity());
+
 		if (clIsEnabled(CL_SCISSOR_TEST))
 			clScissor(
 				last_clip_rect.left,
@@ -937,14 +843,20 @@ void CL_OpenGLGraphicContextProvider::on_window_resized()
 		break;
 	case cl_map_2d_lower_left:
 		CL_OpenGL::set_active(this);
-		clViewport(0, 0, width, height);
-		clMatrixMode(CL_PROJECTION);
-		clLoadIdentity();
-		clMultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-		clMatrixMode(CL_MODELVIEW);
-		clLoadIdentity();
-		clTranslated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0f);
-		clMultMatrixf(modelview);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
+		set_projection(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
+		set_modelview(CL_Mat4f::identity());
+
+		if (clIsEnabled(CL_SCISSOR_TEST))
+			clScissor(
+				last_clip_rect.left,
+				last_clip_rect.top,
+				last_clip_rect.get_width(),
+				last_clip_rect.get_height());
+		break;
+	case cl_user_projection:
+		CL_OpenGL::set_active(this);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
 		if (clIsEnabled(CL_SCISSOR_TEST))
 			clScissor(
 				last_clip_rect.left,
@@ -957,43 +869,35 @@ void CL_OpenGLGraphicContextProvider::on_window_resized()
 
 void CL_OpenGLGraphicContextProvider::set_viewport(const CL_Rectf &viewport)
 {
-	if (map_mode == cl_user_projection)
-	{
-		int height = get_height();
-		CL_OpenGL::set_active(this);
-		clViewport(
-			CLsizei(viewport.left),
-			CLsizei(height - viewport.bottom),
-			CLsizei(viewport.right - viewport.left),
-			CLsizei(viewport.bottom - viewport.top));
-	}
+	int height = get_height();
+	CL_OpenGL::set_active(this);
+	clViewport(
+		CLsizei(viewport.left),
+		CLsizei(height - viewport.bottom),
+		CLsizei(viewport.right - viewport.left),
+		CLsizei(viewport.bottom - viewport.top));
 }
 
 void CL_OpenGLGraphicContextProvider::set_projection(const CL_Mat4f &matrix)
 {
-	projection = matrix;
-	if (map_mode == cl_user_projection)
+	if (projection != matrix)
 	{
-		CL_OpenGL::set_active(this);
-		clMatrixMode(CL_PROJECTION);
-		clLoadMatrixf(projection.matrix);
+		projection = matrix;
+		modelview_projection_matrix_valid = false;
+		set_current_program_object_matricies();
 	}
 }
 
 void CL_OpenGLGraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 {
-	modelview = matrix;
-	CL_OpenGL::set_active(this);
-	clMatrixMode(CL_MODELVIEW);
-	if (map_mode != cl_user_projection)
+	CL_Mat4f matrix_copy(matrix);
+
+	if (modelview != matrix_copy)
 	{
-		clLoadIdentity();
-		clTranslatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
-		clMultMatrixf(modelview);
-	}
-	else
-	{
-		clLoadMatrixf(modelview);
+		modelview = matrix_copy;
+		modelview_projection_matrix_valid = false;
+		normal_matrix_valid = false;
+		set_current_program_object_matricies();
 	}
 }
 
@@ -1017,8 +921,19 @@ void CL_OpenGLGraphicContextProvider::set_blend_mode(const CL_BlendMode &mode)
 			CLclampf(col.get_alpha()));
 	}
 
-	if (clBlendEquation)
-		clBlendEquation(to_enum(mode.get_blend_equation()));
+	if (mode.get_blend_equation() == mode.get_blend_equation_alpha())
+	{
+		if (clBlendEquation)
+			clBlendEquation(to_enum(mode.get_blend_equation()));
+	}
+	else
+	{
+		if (clBlendEquationSeparate)
+			clBlendEquationSeparate(
+				to_enum(mode.get_blend_equation()),
+				to_enum(mode.get_blend_equation_alpha()) );
+	}
+
 
 	if( mode.get_blend_function_src() == mode.get_blend_function_src_alpha() &&
 		mode.get_blend_function_dest() == mode.get_blend_function_dest_alpha() )
@@ -1041,48 +956,22 @@ void CL_OpenGLGraphicContextProvider::set_pen(const CL_Pen &pen)
 {
 	CL_OpenGL::set_active(this);
 
-	float attenuation_params[3];
-	pen.get_point_distance_attenuation(attenuation_params[0], attenuation_params[1], attenuation_params[2]);
-	if (clPointParameterfv)
-		clPointParameterfv(CL_POINT_DISTANCE_ATTENUATION, attenuation_params);
 	if (clPointParameterf)
 	{
-		clPointParameterf(CL_POINT_SIZE_MIN, (CLfloat)pen.get_min_point_size());
-		clPointParameterf(CL_POINT_SIZE_MAX, (CLfloat)pen.get_max_point_size());
 		clPointParameterf(CL_POINT_FADE_THRESHOLD_SIZE, (CLfloat)pen.get_point_fade_treshold_size());
 	}
 	clPointSize((CLfloat)pen.get_point_size());
 	clLineWidth((CLfloat)pen.get_line_width());
-
-	if (pen.is_point_antialiased())
-		clEnable(CL_POINT_SMOOTH);
-	else
-		clDisable(CL_POINT_SMOOTH);
 
 	if (pen.is_line_antialiased())
 		clEnable(CL_LINE_SMOOTH);
 	else
 		clDisable(CL_LINE_SMOOTH);
 
-	if (pen.is_line_stippled())
-	{
-		clEnable(CL_LINE_STIPPLE);
-		clLineStipple(pen.get_line_stipple_repeat_count(), pen.get_line_stipple_pattern());
-	}
-	else
-	{
-		clDisable(CL_LINE_STIPPLE);
-	}
-
 	if (pen.is_using_vertex_program_point_sizes())
 		clEnable(CL_VERTEX_PROGRAM_POINT_SIZE);
 	else
 		clDisable(CL_VERTEX_PROGRAM_POINT_SIZE);
-
-	if (pen.is_using_point_sprites())
-		clEnable(CL_POINT_SPRITE);
-	else
-		clDisable(CL_POINT_SPRITE);
 
 	if(clPointParameterf)
 	{
@@ -1233,10 +1122,6 @@ CLenum CL_OpenGLGraphicContextProvider::to_enum(CL_DrawBuffer buffer)
 {
 	switch(buffer)
 	{
-	case cl_buffer_aux0: return CL_AUX0;
-	case cl_buffer_aux1: return CL_AUX1;
-	case cl_buffer_aux2: return CL_AUX2;
-	case cl_buffer_aux3: return CL_AUX3;
 	case cl_buffer_back: return CL_BACK;
 	case cl_buffer_back_left: return CL_BACK_LEFT;
 	case cl_buffer_back_right: return CL_BACK_RIGHT;
@@ -1376,9 +1261,6 @@ CLenum CL_OpenGLGraphicContextProvider::to_enum(enum CL_PrimitivesType value)
 	case cl_triangle_strip: gl_mode = CL_TRIANGLE_STRIP; break;
 	case cl_triangle_fan: gl_mode = CL_TRIANGLE_FAN; break;
 	case cl_triangles: gl_mode = CL_TRIANGLES; break;
-	case cl_quad_strip: gl_mode = CL_QUAD_STRIP; break;
-	case cl_quads: gl_mode = CL_QUADS; break;
-	case cl_polygon: gl_mode = CL_POLYGON; break;
 	}
 	return gl_mode;
 }
@@ -1407,4 +1289,43 @@ CLenum CL_OpenGLGraphicContextProvider::to_enum(enum CL_LogicOp op)
 		default: break;
 	}
 	return gl_op;
+}
+
+void CL_OpenGLGraphicContextProvider::set_current_program_object_matricies()
+{
+	if (current_program_object.is_null())	// Exit now if the program object is not yet set
+		return;
+
+	if (current_program_matrix_flags & cl_program_matrix_modelview_projection)
+	{
+		if (!modelview_projection_matrix_valid)
+		{
+			modelview_projection_matrix = modelview * projection;
+			modelview_projection_matrix_valid = true;
+		}
+		current_program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", modelview_projection_matrix);
+
+	}
+
+	if (current_program_matrix_flags & cl_program_matrix_normal)
+	{
+		if (!normal_matrix_valid)
+		{
+			normal_matrix = modelview;
+			normal_matrix.inverse();
+			normal_matrix.transpose();
+			normal_matrix_valid = true;
+		}
+		current_program_object.set_uniform_matrix("cl_NormalMatrix", normal_matrix);
+	}
+
+	if (current_program_matrix_flags & cl_program_matrix_modelview)
+	{
+		current_program_object.set_uniform_matrix("cl_ModelViewMatrix", modelview);
+	}
+
+	if (current_program_matrix_flags & cl_program_matrix_projection)
+	{
+		current_program_object.set_uniform_matrix("cl_ProjectionMatrix", projection);
+	}
 }

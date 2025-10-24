@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -63,11 +64,11 @@ public:
 	: toolbar(0), need_layout_update(true), horizontal(false), single_select_mode(false), index_hot_item(-1), index_pressed_item(-1),
 	  mouse_mode(cl_mouse_mode_normal), size_icon(16,16), next_id(1)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 		prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width);
 		prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height);
-		prop_layout = CL_GUIThemePartProperty(CssStr::layout, cl_text("left"));
-		prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, cl_text("3"));
+		prop_layout = CL_GUIThemePartProperty(CssStr::layout, "left");
+		prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, "3");
 	}
 
 	void on_process_message(CL_GUIMessage &msg);
@@ -122,8 +123,8 @@ public:
 CL_ToolBar::CL_ToolBar(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_ToolBar_Impl)
 {
-	set_type_name(cl_text("toolbar"));
-	set_class_name(cl_text("horizontal"));
+	set_type_name("toolbar");
+	set_class_name("horizontal");
 	impl->toolbar = this;
 	func_process_message().set(impl.get(), &CL_ToolBar_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_ToolBar_Impl::on_render);
@@ -138,6 +139,18 @@ CL_ToolBar::~CL_ToolBar()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ToolBar Attributes:
+
+CL_ToolBar *CL_ToolBar::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ToolBar *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ToolBar*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ToolBar named item: %1", id));
+
+	return object;
+}
 
 CL_Size CL_ToolBar::get_preferred_size() const
 {
@@ -395,21 +408,26 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 void CL_ToolBar_Impl::on_resized()
 {
 	CL_Rect rect = toolbar->get_geometry();
-	bool old_horiz = part_component.get_state(cl_text("horizontal"));
-	horizontal = (rect.get_width() >= rect.get_height());
 
-//	part_component.set_state(cl_text("horizontal"), horizontal);
-//	part_component.set_state(cl_text("vertical"), !horizontal);
+	int rect_width = rect.get_width();
+	int rect_height = rect.get_height();
 
-	if (old_horiz != horizontal)
+	if ( (rect_width > 0) && (rect_height > 0) )	// Only update if the geometry is valid
 	{
-		if (horizontal)
-			toolbar->set_class_name(cl_text("horizontal"));
-		else 
-			toolbar->set_class_name(cl_text("vertical"));
-	}
+		bool old_horiz = part_component.get_state("horizontal");
 
-	need_layout_update = true;
+		horizontal = (rect_width >= rect_height);
+
+		if (old_horiz != horizontal)
+		{
+			if (horizontal)
+				toolbar->set_class_name("horizontal");
+			else 
+				toolbar->set_class_name("vertical");
+		}
+
+		need_layout_update = true;
+	}
 }
 
 void CL_ToolBar_Impl::unselect_all(CL_ToolBarItem_Impl *ignore)
@@ -452,7 +470,7 @@ void CL_ToolBar_Impl::create_parts()
 	size_icon.width = part_item_normal.get_property_int(prop_icon_width);
 	size_icon.height = part_item_normal.get_property_int(prop_icon_height);
 	CL_String str_alignment = part_component.get_property(prop_layout);
-	if (str_alignment == cl_text("center"))
+	if (str_alignment == "center")
 		layout = layout_center;
 	else
 		layout = layout_left;

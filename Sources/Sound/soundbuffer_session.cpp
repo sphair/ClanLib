@@ -40,10 +40,6 @@ CL_SoundBuffer_Session::CL_SoundBuffer_Session()
 {
 }
 
-CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_SoundBuffer_Session &copy) : impl(copy.impl)
-{
-}
-
 CL_SoundBuffer_Session::CL_SoundBuffer_Session(CL_SoundBuffer &soundbuffer, bool looping, CL_SoundOutput &output)
 : impl(new CL_SoundBuffer_Session_Impl(soundbuffer, looping, output))
 {
@@ -57,6 +53,12 @@ CL_SoundBuffer_Session::~CL_SoundBuffer_Session()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer_Session attributes:
+
+void CL_SoundBuffer_Session::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_SoundBuffer_Session is null");
+}
 
 int CL_SoundBuffer_Session::get_position() const
 {
@@ -116,6 +118,17 @@ bool CL_SoundBuffer_Session::set_position(int new_pos)
 	if (impl->provider_session->set_position(new_pos))
 	{
 		// instantly update position here?
+		return true;
+	}
+	return false;
+}
+
+bool CL_SoundBuffer_Session::set_end_position(int new_pos)
+{
+	CL_MutexSection mutex_lock(&impl->mutex);
+	if (impl->provider_session->set_end_position(new_pos))
+	{
+		// instantly update end position here?
 		return true;
 	}
 	return false;

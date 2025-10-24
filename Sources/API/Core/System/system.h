@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Animehunter
 */
 
 /// \addtogroup clanCore_System clanCore System
@@ -58,14 +59,11 @@ public:
 	/// \brief Get the current time (since system boot), in milliseconds.
 	static unsigned int get_time();
 
-	/// \brief Returns true if MMX technology is available on this CPU.
-	static bool detect_mmx();
+    enum CL_CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, sse5 };
+    enum CL_CPU_ExtensionPPC { altivec };
 
-	/// \brief Returns true if 3DNow! technology is available on this CPU.
-	static bool detect_3dnow();
-
-	/// \brief Returns true if extended 3DNow! is present on this CPU.
-	static bool detect_ext_3dnow();
+    static bool detect_cpu_extension(CL_CPU_ExtensionX86 ext);
+    static bool detect_cpu_extension(CL_CPU_ExtensionPPC ext);
 
 	/// \brief Returns the mutex used by CL_SharedPtr.
 	static CL_Mutex *get_sharedptr_mutex();
@@ -79,6 +77,12 @@ public:
 /// \{
 
 public:
+	/// \brief Allocates aligned memory
+	static void *aligned_alloc(size_t size, size_t alignment = 16);
+
+	/// \brief Frees aligned memory
+	static void aligned_free(void *ptr);
+
 	/// \brief Captures a stack back trace by walking up the stack and recording the information for each frame
 	static int capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash = 0);
 

@@ -80,7 +80,7 @@ void CL_KeepAlive::process(int timeout)
 		timeout = 0;	// Event found, reset the timeout
 
 		// Process the event
-		if (wakeup_reason < events.size())
+		if ( ((unsigned int) wakeup_reason) < events.size())	// (Note, wakeup_reason is >=0)
 		{
 			objects[wakeup_reason]->process();
 		}
@@ -135,7 +135,7 @@ void cl_alloc_tls_keep_alive_slot()
 		CL_MutexSection mutex_lock(&cl_tls_keep_alive_mutex);
 		cl_tls_keep_alive_index = TlsAlloc();
 		if (cl_tls_keep_alive_index == TLS_OUT_OF_INDEXES)
-			throw CL_Exception(cl_text("No TLS slots available!"));
+			throw CL_Exception("No TLS slots available!");
 		TlsSetValue(cl_tls_keep_alive_index, 0);
 	}
 }

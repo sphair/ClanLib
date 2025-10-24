@@ -4,15 +4,15 @@
 grid window-frame
 {
 	bg-image:WindowFrame; 
-	bg-image-sizing-left:9;
-	bg-image-sizing-right:9;
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:25;
 	bg-image-sizing-top:30;
-	bg-image-sizing-bottom:9;
+	bg-image-sizing-bottom:25;
 	bg-image-sizing:stretch; 
-	border-left:9;
-	border-right:9;
+	border-left:8;
+	border-right:16;
 	border-top:30;
-	border-bottom:9;
+	border-bottom:16;
 }
 
 window#editor

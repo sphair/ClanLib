@@ -265,7 +265,7 @@ void CL_SpanLayout_Impl::add_image(const CL_Image &image, int baseline_offset, i
 	object.start = text.length();
 	object.end = object.start + 1;
 	objects.push_back(object);
-	text += cl_text("*");
+	text += "*";
 }
 
 void CL_SpanLayout_Impl::add_component(CL_SpanComponent *component, int baseline_offset, int id)
@@ -278,7 +278,7 @@ void CL_SpanLayout_Impl::add_component(CL_SpanComponent *component, int baseline
 	object.start = text.length();
 	object.end = object.start + 1;
 	objects.push_back(object);
-	text += cl_text("*");
+	text += "*";
 }
 
 void CL_SpanLayout_Impl::layout(CL_GraphicContext &gc, int max_width)
@@ -295,7 +295,7 @@ void CL_SpanLayout_Impl::layout(CL_GraphicContext &gc, int max_width)
 	}
 }
 
-CL_SpanLayout_Impl::TextSizeResult CL_SpanLayout_Impl::find_text_size(CL_GraphicContext &gc, const TextBlock &block, int object_index, int forced_line_break)
+CL_SpanLayout_Impl::TextSizeResult CL_SpanLayout_Impl::find_text_size(CL_GraphicContext &gc, const TextBlock &block, unsigned int object_index)
 {
 	CL_Font font = objects[object_index].font;
 	if (layout_cache.object_index != object_index)
@@ -373,7 +373,7 @@ std::vector<CL_SpanLayout_Impl::TextBlock> CL_SpanLayout_Impl::find_text_blocks(
 				end_pos = text.find_first_not_of(text[pos], pos);
 				break;
 			default:
-				end_pos = text.find_first_of(cl_text(" \t\n"), pos);
+				end_pos = text.find_first_of(" \t\n", pos);
 				break;
 		}
 
@@ -516,15 +516,15 @@ void CL_SpanLayout_Impl::reflow_line(CurrentLine &step, int max_width)
 
 CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_left(FloatBox box, int max_width)
 {
-	return float_box_any(box, max_width, floats_left, floats_right);
+	return float_box_any(box, max_width, floats_left);
 }
 
 CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_right(FloatBox box, int max_width)
 {
-	return float_box_any(box, max_width, floats_right, floats_left);
+	return float_box_any(box, max_width, floats_right);
 }
 
-CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1, const std::vector<FloatBox> &floats2)
+CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1)
 {
 	bool restart;
 	do
@@ -540,7 +540,7 @@ CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_any(FloatBox box, int
 				box.rect.left = floats1[i].rect.left;
 				box.rect.right = box.rect.left+s.width;
 
-				if (!box_fits_on_line(box, max_width, floats2))
+				if (!box_fits_on_line(box, max_width))
 				{
 					box.rect.left = 0;
 					box.rect.right = s.width;
@@ -555,7 +555,7 @@ CL_SpanLayout_Impl::FloatBox CL_SpanLayout_Impl::float_box_any(FloatBox box, int
 	return box;
 }
 
-bool CL_SpanLayout_Impl::box_fits_on_line(const FloatBox &box, int max_width, const std::vector<FloatBox> &floats)
+bool CL_SpanLayout_Impl::box_fits_on_line(const FloatBox &box, int max_width)
 {
 	for (size_t i=0; i<floats_right.size(); i++)
 	{
@@ -614,7 +614,7 @@ void CL_SpanLayout_Impl::next_line(CurrentLine &current_line)
 		if (segment.type == object_text)
 		{
 			CL_StringRef s = text.substr(segment.start, segment.end-segment.start);
-			if (s.find_first_not_of(cl_text(" \t\r\n")) != CL_StringRef::npos)
+			if (s.find_first_not_of(" \t\r\n") != CL_StringRef::npos)
 			{
 				current_line.cur_line.width = segment.x_position + segment.width;
 				break;

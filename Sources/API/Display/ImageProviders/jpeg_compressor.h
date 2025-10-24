@@ -123,7 +123,7 @@ public:
 	/// \brief Write marker
 	///
 	/// \param marker = value
-	/// \param const = void
+	/// \param data = data
 	/// \param length = value
 	void write_marker(int marker, const void * const data, int length);
 

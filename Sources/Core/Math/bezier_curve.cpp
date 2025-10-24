@@ -65,9 +65,9 @@ void CL_BezierCurve::add_control_point(const CL_Pointf &value)
 	impl->control_points.push_back(value);
 }
 
-std::vector<CL_Pointf> CL_BezierCurve::generate_curve_points(float split_angle_deg)
+std::vector<CL_Pointf> CL_BezierCurve::generate_curve_points(const CL_Angle &split_angle)
 {
-	return impl->generate_curve_points(split_angle_deg);
+	return impl->generate_curve_points(split_angle);
 }
 
 CL_Pointf CL_BezierCurve::get_point_relative(float pos_0_to_1) const

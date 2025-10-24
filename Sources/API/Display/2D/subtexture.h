@@ -47,7 +47,7 @@ class CL_API_DISPLAY CL_Subtexture
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a sub texture description.
+	/// \brief Constructs a null instance.
 	CL_Subtexture();
 
 	/// \brief Constructs a Subtexture
@@ -62,6 +62,12 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the texture.
 	CL_Texture get_texture();
 

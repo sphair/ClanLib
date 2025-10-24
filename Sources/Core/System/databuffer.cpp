@@ -64,11 +64,6 @@ CL_DataBuffer::CL_DataBuffer()
 {
 }
 
-CL_DataBuffer::CL_DataBuffer(const CL_DataBuffer &copy)
-: impl(copy.impl)
-{
-}
-
 CL_DataBuffer::CL_DataBuffer(int new_size, CL_MemoryPool *pool)
 : impl(cl_new(pool) CL_DataBuffer_Impl, pool)
 {

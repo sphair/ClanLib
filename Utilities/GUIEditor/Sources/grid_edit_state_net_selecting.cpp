@@ -41,14 +41,31 @@ bool GridEditStateNetSelecting::on_input_pressed(const CL_InputEvent &e)
 	if (e.id == CL_MOUSE_LEFT)
 	{
 		grid->main_window->get_selection()->clear();
+		grid->capture_mouse(true);
 		grid->request_repaint();
+		start = e.mouse_pos;
+		return true;
 	}
-	return false;
+	else
+	{
+		return false;
+	}
 }
 
 bool GridEditStateNetSelecting::on_input_released(const CL_InputEvent &e)
 {
-	return false;
+	if (e.id == CL_MOUSE_LEFT)
+	{
+		grid->capture_mouse(false);
+		grid->edit_state.set_state(GridEditState::state_none);
+		grid->set_netselect_box(CL_Rect());
+		grid->select_objects(get_rect(e.mouse_pos));
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool GridEditStateNetSelecting::on_input_doubleclick(const CL_InputEvent &e)
@@ -58,5 +75,24 @@ bool GridEditStateNetSelecting::on_input_doubleclick(const CL_InputEvent &e)
 
 bool GridEditStateNetSelecting::on_input_pointer_moved(const CL_InputEvent &e)
 {
-	return false;
+	grid->set_netselect_box(get_rect(e.mouse_pos));
+	return true;
+}
+
+CL_Rect GridEditStateNetSelecting::get_rect(const CL_Point &end) const
+{
+	CL_Point p1 = start;
+	CL_Point p2 = end;
+	if (p1.x > p2.x)
+		swap(p1.x, p2.x);
+	if (p1.y > p2.y)
+		swap(p1.y, p2.y);
+	return CL_Rect(p1.x, p1.y, p2.x, p2.y);
+}
+
+void GridEditStateNetSelecting::swap(int &v1, int &v2)
+{
+	int temp = v1;
+	v1 = v2;
+	v2 = temp;
 }

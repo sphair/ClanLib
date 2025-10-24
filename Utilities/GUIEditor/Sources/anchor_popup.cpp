@@ -1,3 +1,30 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2010 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Magnus Norddahl
+*/
 
 #include "precomp.h"
 #include "anchor_popup.h"
@@ -44,11 +71,11 @@ void AnchorPopup::on_resized()
 		int top = 0;
 		int left = 20;
 
-		label_tl->set_text(cl_text("Top Left:"));
+		label_tl->set_text("Top Left:");
 		label_tl->set_geometry(CL_RectPS(left-10,top+6, 80,23));
 
-		tl->set_id_name(cl_text("tl")); tr->set_id_name(cl_text("tr")); bl->set_id_name(cl_text("bl")); br->set_id_name(cl_text("br"));
-		scale->set_id_name(cl_text("%"));
+		tl->set_id_name("tl"); tr->set_id_name("tr"); bl->set_id_name("bl"); br->set_id_name("br");
+		scale->set_id_name("%");
 
 		top += 20;
 
@@ -60,18 +87,18 @@ void AnchorPopup::on_resized()
 		br->set_geometry(CL_RectPS(     50+left, top+32, 20, 23));
 		scale->set_geometry(CL_RectPS(  25+left, top+16, 20, 23));
 
-		tl->set_group_name(cl_text("TL"));
-		tr->set_group_name(cl_text("TL"));
-		bl->set_group_name(cl_text("TL"));
-		br->set_group_name(cl_text("TL"));
-		scale->set_group_name(cl_text("TL"));
+		tl->set_group_name("TL");
+		tr->set_group_name("TL");
+		bl->set_group_name("TL");
+		br->set_group_name("TL");
+		scale->set_group_name("TL");
 
-		br_tl->set_id_name(cl_text("tl")); br_tr->set_id_name(cl_text("tr")); br_bl->set_id_name(cl_text("bl")); br_br->set_id_name(cl_text("br"));
-		br_scale->set_id_name(cl_text("%"));
+		br_tl->set_id_name("tl"); br_tr->set_id_name("tr"); br_bl->set_id_name("bl"); br_br->set_id_name("br");
+		br_scale->set_id_name("%");
 
 		top += 50;
 
-		label_br->set_text(cl_text("Bottom Right:"));
+		label_br->set_text("Bottom Right:");
 		label_br->set_geometry(CL_RectPS(left-10,top+6, 80,23));
 
 		top += 20;
@@ -82,11 +109,11 @@ void AnchorPopup::on_resized()
 		br_br->set_geometry(CL_RectPS(     left+50, top+32, 20, 23));
 		br_scale->set_geometry(CL_RectPS(  left+25, top+16, 20, 23));
 
-		br_tl->set_group_name(cl_text("BR"));
-		br_tr->set_group_name(cl_text("BR"));
-		br_bl->set_group_name(cl_text("BR"));
-		br_br->set_group_name(cl_text("BR"));
-		br_scale->set_group_name(cl_text("BR"));
+		br_tl->set_group_name("BR");
+		br_tr->set_group_name("BR");
+		br_bl->set_group_name("BR");
+		br_br->set_group_name("BR");
+		br_scale->set_group_name("BR");
 
 		scale->func_group_selection_changed().set(this, &AnchorPopup::on_anchoring_changed);
 		br_scale->func_group_selection_changed().set(this, &AnchorPopup::on_anchoring_changed);
@@ -120,48 +147,48 @@ void AnchorPopup::on_anchoring_changed(CL_RadioButton *rb)
 {
 	CL_String id = rb->get_id_name();
 
-	if (rb->get_group_name() == cl_text("TL"))
+	if (rb->get_group_name() == "TL")
 	{
-		if (id == cl_text("tl"))
+		if (id == "tl")
 		{
 			cap_tl = cl_anchor_top_left;
 		}
-		else if (id == cl_text("tr"))
+		else if (id == "tr")
 		{
 			cap_tl = cl_anchor_top_right;
 		}
-		else if (id == cl_text("bl"))
+		else if (id == "bl")
 		{
 			cap_tl = cl_anchor_bottom_left;
 		}
-		else if (id == cl_text("br"))
+		else if (id == "br")
 		{
 			cap_tl = cl_anchor_bottom_right;
 		}
-		else if (id == cl_text("%"))
+		else if (id == "%")
 		{
 			cap_tl = cl_anchor_relative;
 		}
 	}
 	else
 	{
-		if (id == cl_text("tl"))
+		if (id == "tl")
 		{
 			cap_br = cl_anchor_top_left;
 		}
-		else if (id == cl_text("tr"))
+		else if (id == "tr")
 		{
 			cap_br = cl_anchor_top_right;
 		}
-		else if (id == cl_text("bl"))
+		else if (id == "bl")
 		{
 			cap_br = cl_anchor_bottom_left;
 		}
-		else if (id == cl_text("br"))
+		else if (id == "br")
 		{
 			cap_br = cl_anchor_bottom_right;
 		}
-		else if (id == cl_text("%"))
+		else if (id == "%")
 		{
 			cap_br = cl_anchor_relative;
 		}

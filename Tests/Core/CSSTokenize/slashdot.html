@@ -1,0 +1,3469 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<script id="before-content" type="text/javascript">
+var pageload = {
+	pagemark: '264667402492274012',
+	before_content: (new Date).getTime()
+};
+function pageload_done( $, console, maybe ){
+	pageload.after_readycode	= (new Date).getTime();
+	pageload.content_ready_time	= pageload.content_ready - pageload.before_content;
+	pageload.script_ready_time	= pageload.after_readycode - pageload.content_ready;
+	pageload.ready_time		= pageload.after_readycode - pageload.before_content;
+	// Only report 1% of cases.
+	maybe || (Math.random()>0.01) || $.ajax({ data: {
+		op: 'page_profile',
+		pagemark: pageload.pagemark,
+		dom: pageload.content_ready_time,
+		js: pageload.script_ready_time
+	} });
+}
+</script>
+
+<title>Slashdot - News for nerds, stuff that matters</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+
+<meta property="fb:admins" content="100000696822412" />
+<meta property="fb:page_id" content="267995220856">
+
+
+
+
+<link rel="stylesheet" rev="stylesheet" href="//a.fsdn.com/sd/idlecore-tidied.css?T_2_5_0_295" media="screen">
+<link rel="stylesheet" rev="stylesheet" href="//a.fsdn.com/sd/print.css?T_2_5_0_295" media="print">
+
+
+
+<!--  -->
+
+
+
+
+
+
+
+<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="//a.fsdn.com/sd/ie7-idle.css?T_2_5_0_295" /><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" media="screen" href="//a.fsdn.com/sd/ie6-idle.css?T_2_5_0_295" /><![endif]-->
+<!--[if gte IE 8]><link rel="stylesheet" type="text/css" media="screen" href="//a.fsdn.com/sd/ie8-idle.css?T_2_5_0_295" /><![endif]-->
+
+
+
+<script src="//a.fsdn.com/sd/all-minified.js?T_2_5_0_295" type="text/javascript"></script>
+<script id="after-jquery" type="text/javascript">
+(function( $, pageload, pageload_done, console ){
+$ && pageload && $(function(){
+	pageload.content_ready = (new Date).getTime();
+	pageload_done && $(function(){ pageload_done($, console, 'maybe'); });
+});
+})(window.jQuery, window.pageload, window.pageload_done, window.console);
+</script>
+<script type="text/javascript">
+(function(){
+var regexp=/\s*(?:\d+|many)\s+more\s*/i;
+
+	
+	var auto_more_count = 2;
+
+	function auto_more(){
+		var $more_link = $('#more-experiment a');
+		$more_link.each(function(){
+			var $lastitem = $('#firehoselist>div.fhitem:visible:last');
+			if ( Bounds.intersect(window, $lastitem) ) {
+				// _any_ click can trigger, but click-specific ad will win
+				//setTimeout(function(){ inlineAdFirehose($lastitem, 1); }, 0);
+				setFirehoseAction();
+				$more_link.click();
+				!--auto_more_count && (auto_more=undefined);
+				// don't allow a call till the next paginate gets built and |more_possible|
+				$(document).unbind('scroll', call_auto_more);
+			}
+		});
+	};
+
+	function call_auto_more(){ auto_more && auto_more(); }
+	
+
+
+	
+
+
+$('#more-experiment a').
+	live('more-possible', function( event ){
+		var $more_link=$(this);
+		if ( regexp.test($more_link.text()) ) {
+		
+		
+			$(document).bind('scroll', call_auto_more);
+		} else {
+			$(document).unbind('scroll', call_auto_more);
+		
+		}
+	});
+})();
+</script>
+
+
+<script type="text/javascript">
+var suggestions_for_context = {
+	nod: 'fresh funny insightful interesting maybe ',
+	nix: 'binspam dupe notthebest offtopic slownewsday stale stupid ',
+
+	tagnod: 'descriptive',
+	feedback: 'typo dupe error',
+	metanod: 'insightful interesting informative funny underrated',
+	metanix: 'offtopic flamebait troll redundant overrated'
+};
+
+</script>
+
+
+<script id="lazyload-script" type="text/javascript">
+      $(function() {          
+         // $("img[src*='images.slashdot.org']").lazyload({ threshold   : 150 });
+      });
+</script>
+
+<meta http-equiv="X-XRDS-Location" content="http://slashdot.org/slashdot.xrds"><link rel="top"       title="News for nerds, stuff that matters" href="//slashdot.org/" >
+<link rel="search"    title="Search Slashdot" href="//slashdot.org/search.pl">
+<link rel="alternate" title="Slashdot RSS" href="http://rss.slashdot.org/Slashdot/slashdot" type="application/rss+xml">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<!-- DoubleClick Random Number -->
+<script type="text/javascript">
+   dfp_ord=Math.random()*10000000000000000;
+   dfp_tile = 1;
+</script>
+<!-- End DoubleClick Random Number -->
+
+
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-32013-5");
+pageTracker._setDomainName("slashdot.org");
+pageTracker._initData();
+</script>
+
+</head>
+<body>
+
+
+<div id="top_parent"></div>
+
+<div id="jump">
+        <a href="#main-articles">Stories</a>
+        <br>
+        <a href="#blocks">Slash Boxes</a>
+        <br>
+        <a href="#comments">Comments</a>
+
+</div>
+<a name="topothepage"></a>
+<div id="doc3" class="yui-t6 index2 slashdot ac   ">
+	<div id="hd" >
+		<div id="logo" >
+
+			
+			
+			<h1><a href="//slashdot.org"><span>Slashdot</span></a></h1>
+			<div id="slogan"><h2>News for nerds, stuff that matters</h2></div>
+		</div>
+		<a href="#articles" class="hidden">Jump to articles</a>
+
+		<div class="nav">
+			<ul>
+			
+				
+                                
+				<li class="submit"><a href="//slashdot.org/submission" title="Submit a story to Slashdot">Submit Story</a> </li>
+                                <li><a href="//slashdot.org/help" title="Frequently asked questions on Slashdot">Help</a></li>
+				<li><a href="//slashdot.org/my/login" class="loginlink" onclick="show_login_box(); return false;">Log In</a></li>
+			
+			</ul>
+		</div>
+
+	
+		
+
+		
+
+		<div id="fh_picker_search" style="display: block;">
+		<form method="get" action="//slashdot.org/index2.pl">
+			<fieldset class="mode-filter mode-anon">
+				<legend>Search</legend>
+				
+				
+				<input class="query" type="text" name="fhfilter" value="" id="searchquery">						<input type="button" class="setfhfilter searchfu" value="Filter" id="viewsearch" style="display:none">					<input type="submit" class="setsearchfilter" value="Search" id="fhsearch" style="display:none">
+					<noscript><input type="submit" class="setsearchfilter" value="Search"></noscript>
+					
+					<script type="text/javascript">
+					var slash_search;
+						$(function(){
+							if (has_hose()) {
+							var	$search_text	= $any('searchquery'),
+								$panel			= $search_text.closest('fieldset');
+								$search_buttons	= $('#viewsearch,#fhsearch'),
+								ws				= /\s+/;
+
+							
+
+							// The search buttons set the firehose option named by their class.
+							$search_buttons.
+								click(function(){
+									var which=this.className;
+									$search_text.each(function(){
+										firehose_set_options(which, this.value);
+									});
+									return false;
+								});
+
+							// Provide a globally available function that does whatever clicking the search button would do.
+							slash_search = function( query ){
+								query!==undefined && $search_text.val(query);
+								$search_buttons.filter(':visible:first').click();
+							};
+
+							$search_text.
+								keydown(function( e ){	// ESCAPE restores the filter in-effect.
+									if ( e.which == $.ui.keyCode.ESCAPE ) {
+										$search_text.val(firehose_settings.fhfilter||'');
+										return true;
+									}
+									if ( e.which == $.ui.keyCode.ENTER ) {
+										slash_search();
+										return false;
+									}
+								});
+	
+							$(document).
+								bind('firehose-setting-setfhfilter firehose-setting-setsearchfilter', function( e, new_query ){
+									$('fieldset input[type=text]').each(function(){
+										$(this).blur().val(new_query);
+									});
+								}).
+								bind('set-options.firehose', function( e, data ){
+									data.select_section && $panel.toggleClass('mode-filter', data.id!=='unsaved');
+								});
+						}
+					});
+					</script>
+
+					
+			</fieldset>
+			
+			<script type="text/javascript">
+			$(document).
+				one('unsaved.firehose', function(){
+					$any('searchquery').closest('fieldset').removeClass('mode-anon');
+				});
+			</script>
+			
+		</form>
+		</div>
+	
+	</div>
+	<div class="ad33 advertisement"><!-- placeholder for ad position 33 --></div>
+	<div id="bd" ><!-- body begin -->
+
+
+
+
+
+
+	
+	<style type="text/css">
+menu, menu * {
+	/*cursor:pointer;*/
+	color:inherit;
+	text-decoration:none;
+	font-family:sans-serif;
+}
+
+menu[type=context] {
+	display:none;
+	position:absolute;
+	z-index:10000;
+	background-color:#dfdfdf;
+	margin:0;
+	padding:2px 0.5em;
+	border-style:solid;
+	border-width:1px;
+	border-color:#eeeeee #aaaaaa #aaaaaa #eeeeee;
+}
+
+menu[type=context] {
+	-moz-border-radius-topright:.7em;
+	-webkit-border-top-right-radius: 0.7em 0.7em;
+}
+
+menu[type=context] > a.slash-hover:first-child {
+	-moz-border-radius-topright:.6em;
+	-webkit-border-top-right-radius: 0.6em 0.6em;
+}
+
+
+/* #tag-menu a, #feedback-menu a  { */
+menu.tag-menu a {
+	display:list-item;
+	list-style:none;
+	text-align:left;
+	font-weight:bold;
+	color:black;
+	padding:0.1em 0.5em;
+	margin:-0.1em -0.5em;
+}
+
+#tag-menu span.var-tag {
+font-weight:normal;
+color:#444444;
+}
+
+
+menu.reasons-menu {
+	display:none;
+	margin:0.5em 0 0 0.75em;
+	padding:0;
+}
+menu.reasons-menu a {
+	display:inline-block;
+	margin:-0.1em -0.25em;
+}
+
+div.fhitem h3 menu.reasons-menu {
+margin:0.25em 0 0;
+}
+
+div.fhitem h3 menu.reasons-menu a.tag {
+font-size:.8em;
+}
+
+#tag-menu a.slash-hover,
+#feedback-menu a.slash-hover,
+
+.tag-display span.tag:hover,
+.tag-display span.tag.trigger {
+	color:white;
+	background-color:rgb(0, 85, 85);
+}
+
+#tag-menu a.slash-hover span.var-tag {
+	color:#eee;
+}
+</style>
+
+<menu id="nix-reasons" style="display:none">
+	<a class="tag">binspam</a><a class="tag">dupe</a><a class="tag">notthebest</a><a class="tag">offtopic</a><a class="tag">slownewsday</a><a class="tag">stale</a><a class="tag">stupid</a>
+
+</menu>
+<menu id="nod-reasons" style="display:none">
+	<a class="tag">fresh</a><a class="tag">funny</a><a class="tag">insightful</a><a class="tag">interesting</a><a class="tag">maybe</a>
+</menu>
+<menu id="comment-nix-reasons" style="display:none">
+	<a class="tag">offtopic</a><a class="tag">flamebait</a><a class="tag">troll</a><a class="tag">redundant</a><a class="tag">overrated</a>
+
+</menu>
+<menu id="comment-nod-reasons" style="display:none">
+	<a class="tag">insightful</a><a class="tag">interesting</a><a class="tag">informative</a><a class="tag">funny</a><a class="tag">underrated</a>
+</menu>
+
+<menu id="tag-nod-reasons" style="display:none">
+	<a class="tag">descriptive</a>
+</menu>
+<menu id="feedback-menu" class="tag-menu" type="context">
+
+	<a class="tag">typo</a><a class="tag">dupe</a><a class="tag">error</a>
+</menu>
+<menu id="tag-menu" class="tag-menu" type="context">
+
+	<a data-op="-">delete <span class="var-tag"></span></a>
+	<a data-op="!">not <span class="var-tag"></span></a>
+	<a data-op="="><span class="var-tag"></span> in <span class="var-view"></span></a>
+
+</menu>
+
+<script type="text/javascript">
+$(function(){
+var $CURRENT_MENU, $TAG_MENU=$('#tag-menu'), NOTNOT=/^!!/, IE7=/^7\.0/, TAG_PREFIX=/^\/tag\//;
+
+function get_tag_name( $tag ){
+	return ($tag.attr('href') || '').replace(TAG_PREFIX, '') || $tag.text().toLowerCase();
+}
+
+function trigger_menu( e, selector, $menu, menu_content ){
+	var $target=$(original_target(e, selector)), in_use=$target.is('.trigger');
+	if ( $CURRENT_MENU ) {
+		$CURRENT_MENU.menu('cancel', e);
+		$CURRENT_MENU = null;
+	}
+
+	if ( !in_use ) {
+		menu_content && $menu.stop(true, true).hide().html(menu_content);
+		($CURRENT_MENU=$menu).menu('context', e);
+	}
+	return !in_use;
+}
+
+function open_menu( trigger, $menu ){
+	var $trigger=$(trigger), $fhitem=$trigger.closest('.fhitem');
+	$fhitem.length && user_intent('interest', $fhitem[0]);
+
+	$menu.appendTo(document.body).css({ opacity:0 }).show();
+
+	var 	right	= $fhitem.offset().left + $fhitem.width(),
+		global	= $trigger.offset(),
+		local	= $menu.offsetParent().offset();
+
+	// Ugly IE position hack required:
+	$.browser.msie && IE7.test($.browser.version) && (local.top = 0);
+
+	// pin the menu (horizontally) on-screen
+	global.left = Math.min(global.left, right-$menu.width());
+
+	$trigger.addClass('trigger');
+	$menu.css({
+		position:	'absolute',
+		top:		global.top - local.top + $trigger.height(),
+		left:		global.left - local.left,
+		opacity:	1
+	});
+}
+
+function close_menu( trigger, $menu ){
+	$menu.hide();
+	$(trigger).removeClass('trigger');
+	($CURRENT_MENU===$menu) && ($CURRENT_MENU=false);
+}
+
+
+
+/* T2 tag context-menu */
+
+var $TAG_MENU=$('#tag-menu'), NOTNOT=/^!!/;
+$('a[rel=tag]').
+	live('mousedown', function( e ){
+		var unhandled=true;
+		if ( logged_in || $(original_target(e)).is('div.fhitem-editor *') ) {
+			unhandled = trigger_menu(e, 'a[rel=tag]', $TAG_MENU);
+		}
+		return unhandled;
+	}).
+	live('click', function( e ){
+		if ( !logged_in ) {
+			var	target	= original_target(e),
+				tag	= $(target).text();
+			addfhfilter(tag);
+		}
+		e.preventDefault();
+		return false;
+	});
+
+$TAG_MENU.menu({
+	cssNamespace: 'slash',
+	liveTriggers: true,
+	clickDuration: 300,
+
+	start: function( e, ui ){
+		var	$tag	= $(ui.trigger),
+			tag	= get_tag_name($tag),
+			context	= firehose_settings && firehose_settings.viewtitle;
+
+		// Insert the tagname into the menu items where needed.
+		$TAG_MENU.find('span.var-tag').text(tag);
+
+			// non-admins may only delete their own tags
+		$TAG_MENU.find('a:[data-op="-"]').toggle($tag.is('.my'));
+	
+
+		// *tagname* in *viewtitle*
+		$TAG_MENU.find('a:[data-op="="]').toggle(!!context);
+		context && $TAG_MENU.find('span.var-view').text(context);
+
+		open_menu($tag, $TAG_MENU);
+	},
+
+	select: function( e, ui ){
+		var	$tag	= $(ui.trigger),
+			tag	= get_tag_name($tag),
+			op	= $(ui.select).attr('data-op'),
+			fhitem,
+			command;
+
+		// Global for positioning other things.
+		$related_trigger = $tag;
+
+		switch ( op ) {
+			case '=':
+				addfhfilter(tag);
+				break;
+
+			default:
+				fhitem = $tag.closest('div.fhitem')[0];
+				command = (op + tag).replace(NOTNOT, '');
+				try { Tags.submit(fhitem, command); } catch ( err ) {  }
+				break;
+		}
+	},
+
+	stop: function( e, ui ){ close_menu(ui.trigger, $TAG_MENU); }
+});
+
+
+
+
+/* T2 feedback context-menu */
+
+
+
+/* T2 datatype context-menu (admin-only) */
+
+
+
+
+
+
+});
+</script>
+	
+
+	<div class="nav">
+			<a id="toggleleftmenu" onclick="return false" href="//slashdot.org/login.pl" class="collapsed" href="//slashdot.org/faq/UI.shtml#ui700" title="Toggle left menu">Toggle left menu</a>
+			
+			<script type="text/javascript">
+			$(function(){
+				$("#toggleleftmenu").click(function(){
+					
+						show_login_box();
+					
+					return false;
+				});
+			});
+			</script>
+		
+	
+	<ul class="menu" id="fhtablist">
+
+			
+				
+				
+				
+				
+					
+				
+				
+				<li class="active Stories">
+
+				
+				<span class="ctab_rss"><a href="http://rss.slashdot.org/Slashdot/slashdot" title="RSS for stories">RSS</a></span>
+				
+				
+				<a href="//slashdot.org/stories" >Stories</a>
+				</li>
+				
+				
+				
+				
+				
+				<li class="Recent">
+				
+				<a href="//slashdot.org/recent" >Recent</a>
+				</li>
+				
+				
+				
+				
+				
+				<li class="Popular">
+
+				
+				<a href="//slashdot.org/popular" >Popular</a>
+				</li>
+				
+				
+				
+				
+				
+				<li class="Search">
+				
+				<a href="//slashdot.org/search" >Search</a>
+				</li>
+
+		
+	</ul>
+
+<script type="text/javascript">
+$(function(){ // on document ready
+
+$('input[id^=tab-input-]').
+	each(function(){
+		var tab_id = this.id.substr('tab-input-'.length);
+		$(this).
+			blur(function(){
+				firehose_save_tab(tab_id);
+			}).
+			keypress(function(event){
+				var RETURN=13, SPACE=32;
+
+				var $this = $(this);
+				switch ( event.which || event.keyCode ) {
+					case RETURN:
+					case SPACE:
+						firehose_save_tab(tab_id);
+						return false;
+					default:
+						return true;
+				}
+			});
+	})
+
+});
+
+</script>
+				<div id="fhupdatestatus">
+				<a href="//slashdot.org/my/newuser" onclick="javascript:getModalPrefs('newUserModal', 'Create Account', 1); return false;" title="">Create Account</a>
+				
+					<span class="busy spinner">*</span>
+					<a id="local_last_update_time" href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){firehose_more(1)});">20:38</a>
+					<a id="gmt_update_time"  href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){firehose_more(1)});"></a>
+				
+				</div>
+		
+				<div id="fhoptions" class="options">
+
+
+
+
+<ul>
+
+
+
+
+	
+		<li id="pref"><a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box();});" title="Toggle preferences">Preferences</a></li>
+	
+
+
+	<li id="slashboxen">
+		
+		<script type="text/javascript">
+		$(function(){
+			$("#slashboxen a").click(function(){
+				var hide = $(this).setClass(applyMap('expanded', 'collapsed')).is('.collapsed');
+	
+				$('div#yui-main div.yui-b, div#slashboxes, div#topfoot div.rightcontent, div#doc3 div.railad').toggleClass('hideslashboxes', hide);
+				firehose_set_options('noslashboxes', hide, 'global');
+				return false;
+			});
+		});
+		</script>
+
+	</li>
+
+</ul>
+
+</div>
+	</div>
+
+
+	<div class="ad1 advertisement"><!-- placeholder for ad position 1 --></div><div class="railad"><div class="ad6 advertisement"><!-- ad position 6 -->
+	<!-- DoubleClick Ad Tag -->
+		
+<script type="text/javascript">
+	var ad6 = 'active';
+</script>
+
+		
+
+<div id="fad6">
+		
+			
+	
+	<script type="text/javascript">
+	//<![CDATA[
+
+		var hint   = 'mainpage';
+
+		document.write('<script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.slashdot/mainpage_p6_imu;pg=index2;logged_in=0;tile='+dfp_tile+';ord='+dfp_ord+'?"><\/script>');
+		dfp_tile++;
+	//]]>
+	</script>
+			
+		
+</div>
+<!-- End DoubleClick Ad Tag --></div><div class="ad2 advertisement"><!-- placeholder for ad position 2 --></div></div>
+
+	<div id="yui-main">
+		
+		<div class="yui-b hideleftmenu">
+		
+			
+			
+			<div class="yui-gf" style="position: relative">
+				<div class="yui-u first" id="links">
+
+					<div class="block" id="links-sections">
+	<div class="title" id="links-sections-title">
+		
+		<h4  class='active'>
+			
+				<a class="data-title" href="//slashdot.org" >Slashdot</a>
+				<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box(); });" class="links-sections-edit">[e]</a>
+				
+				<script type="data">{ color: "", viewname: "stories", filter: "", name: "Main", id: 13 }</script>
+
+			
+		</h4>
+
+	</div>
+	<div class="content" id="links-sections-content">
+	
+		<ul id="firehose-sections">
+	<script type="data">{ active_id:13, default_id:1 }</script>
+	  		
+			
+			
+		
+		<li class="hide" id="fhsection-45">
+			<a id="fhsectiontitle-45" class="data-title" href="//amd.vendors.slashdot.org">AMD</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+
+		<script type="data">{ color: "", viewname: "stories", filter: "vendor_amd", name: "AMD", id: 45 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-11">
+			<a id="fhsectiontitle-11" class="data-title" href="//apache.slashdot.org">Apache</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "apache", name: "Apache", id: 11 }</script>
+		</li>
+
+	 		
+			
+			
+		
+		<li class="" id="fhsection-53">
+			<a id="fhsectiontitle-53" class="data-title" href="//apple.slashdot.org">Apple</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_apple.css?T_2_5_0_295\" title=\"apple\">", color: "", viewname: "stories", filter: "apple", name: "Apple", id: 53 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-63">
+			<a id="fhsectiontitle-63" class="data-title" href="//ask.slashdot.org">Ask Slashdot</a>
+
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_askslashdot.css?T_2_5_0_295\" title=\"askslashdot\">", color: "", viewname: "stories", filter: "askslashdot", name: "Ask Slashdot", id: 63 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-31">
+			<a id="fhsectiontitle-31" class="data-title" href="//backslash.slashdot.org">Backslash</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "backslash", name: "Backslash", id: 31 }</script>
+
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-49">
+			<a id="fhsectiontitle-49" class="data-title" href="//books.slashdot.org">Book Reviews</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "books", name: "Book Reviews", id: 49 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-5">
+
+			<a id="fhsectiontitle-5" class="data-title" href="//bsd.slashdot.org">BSD</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "bsd", name: "BSD", id: 5 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-61">
+			<a id="fhsectiontitle-61" class="data-title" href="//developers.slashdot.org">Developers</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_developers.css?T_2_5_0_295\" title=\"developers\">", color: "", viewname: "stories", filter: "developers", name: "Developers", id: 61 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-1">
+			<a id="fhsectiontitle-1" class="data-title" href="//entertainment.slashdot.org">Entertainment</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "entertainment", name: "Entertainment", id: 1 }</script>
+		</li>
+
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-55">
+			<a id="fhsectiontitle-55" class="data-title" href="//features.slashdot.org">Features</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "features", name: "Features", id: 55 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-33">
+			<a id="fhsectiontitle-33" class="data-title" href="//games.slashdot.org">Games</a>
+
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_games.css?T_2_5_0_295\" title=\"games\">", color: "", viewname: "stories", filter: "games", name: "Games", id: 33 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-43">
+			<a id="fhsectiontitle-43" class="data-title" href="//radio.slashdot.org">Geeks in Space</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "radio", name: "Geeks in Space", id: 43 }</script>
+
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-3">
+			<a id="fhsectiontitle-3" class="data-title" href="//hardware.slashdot.org">Hardware</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_hardware.css?T_2_5_0_295\" title=\"hardware\">", color: "", viewname: "stories", filter: "hardware", name: "Hardware", id: 3 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-25">
+
+			<a id="fhsectiontitle-25" class="data-title" href="//idle.slashdot.org">Idle</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_idle.css?T_2_5_0_295\" title=\"idle\">", color: "", viewname: "stories", filter: "idle", name: "Idle", id: 25 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-7">
+			<a id="fhsectiontitle-7" class="data-title" href="//intel.vendors.slashdot.org">Intel</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+
+		<script type="data">{ color: "", viewname: "stories", filter: "vendor_intel", name: "Intel", id: 7 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-39">
+			<a id="fhsectiontitle-39" class="data-title" href="//interviews.slashdot.org">Interviews</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "interviews", name: "Interviews", id: 39 }</script>
+		</li>
+
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-15">
+			<a id="fhsectiontitle-15" class="data-title" href="//it.slashdot.org">IT</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_it.css?T_2_5_0_295\" title=\"it\">", color: "", viewname: "stories", filter: "it", name: "IT", id: 15 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-65">
+			<a id="fhsectiontitle-65" class="data-title" href="//linux.slashdot.org">Linux</a>
+
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_linux.css?T_2_5_0_295\" title=\"linux\">", color: "", viewname: "stories", filter: "linux", name: "Linux", id: 65 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-21">
+			<a id="fhsectiontitle-21" class="data-title" href="//meta.slashdot.org">Meta</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "meta", name: "Meta", id: 21 }</script>
+
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-47">
+			<a id="fhsectiontitle-47" class="data-title" href="//mobile.slashdot.org">Mobile</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_mobile.css?T_2_5_0_295\" title=\"mobile\">", color: "", viewname: "stories", filter: "mobile", name: "Mobile", id: 47 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-35">
+
+			<a id="fhsectiontitle-35" class="data-title" href="//news.slashdot.org">News</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "news", name: "News", id: 35 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-23">
+			<a id="fhsectiontitle-23" class="data-title" href="//oracle.vendors.slashdot.org">Oracle</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+
+		<script type="data">{ color: "", viewname: "stories", filter: "vendor_oracle", name: "Oracle", id: 23 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-27">
+			<a id="fhsectiontitle-27" class="data-title" href="//politics.slashdot.org">Politics</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_politics.css?T_2_5_0_295\" title=\"politics\">", color: "", viewname: "stories", filter: "politics", name: "Politics", id: 27 }</script>
+		</li>
+
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-57">
+			<a id="fhsectiontitle-57" class="data-title" href="//polls.slashdot.org">Polls</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "polls", name: "Polls", id: 57 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-29">
+			<a id="fhsectiontitle-29" class="data-title" href="//science.slashdot.org">Science</a>
+
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "science", name: "Science", id: 29 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-59">
+			<a id="fhsectiontitle-59" class="data-title" href="//search.slashdot.org">Search</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "search", name: "Search", id: 59 }</script>
+
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-37">
+			<a id="fhsectiontitle-37" class="data-title" href="slashdot.sourceforge.net">SF.net Auth</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "sfauth", name: "SF.net Auth", id: 37 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-19">
+
+			<a id="fhsectiontitle-19" class="data-title" href="//slashdot.org">Taco Hell</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "tacohell", name: "Taco Hell", id: 19 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-17">
+			<a id="fhsectiontitle-17" class="data-title" href="//tech.slashdot.org">Technology</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+
+		<script type="data">{ color: "", viewname: "stories", filter: "tech", name: "Technology", id: 17 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-67">
+			<a id="fhsectiontitle-67" class="data-title" href="//slashdot.org">The 2000 Beanies</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "awards", name: "The 2000 Beanies", id: 67 }</script>
+		</li>
+
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-51">
+			<a id="fhsectiontitle-51" class="data-title" href="//thinkgeek.shill.slashdot.org">ThinkGeek</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_thinkgeek.css?T_2_5_0_295\" title=\"thinkgeek\">", color: "", viewname: "stories", filter: "thinkgeek", name: "ThinkGeek", id: 51 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="hide" id="fhsection-41">
+			<a id="fhsectiontitle-41" class="data-title" href="//vendors.slashdot.org">Vendors</a>
+
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ color: "", viewname: "stories", filter: "vendors", name: "Vendors", id: 41 }</script>
+		</li>
+	 		
+			
+			
+		
+		<li class="" id="fhsection-9">
+			<a id="fhsectiontitle-9" class="data-title" href="//yro.slashdot.org">YRO</a>
+			 <a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return nojscall(function(){show_login_box()});" class="links-sections-edit">[e]</a>
+		<script type="data">{ skin: "<link rel=\"alternate stylesheet\"  type=\"text/css\" media=\"screen, projection\" href=\"//a.fsdn.com/sd/yui_yro.css?T_2_5_0_295\" title=\"yro\">", color: "", viewname: "stories", filter: "yro", name: "YRO", id: 9 }</script>
+
+		</li>
+	
+</ul>
+<script type="text/javascript">
+
+var firehose_delete_section, update_section;
+
+(function(){
+var $section_menu = $any('firehose-sections');
+
+
+
+function save_menu(){
+	if ( !check_logged_in() ) { return false; }
+
+	// tell the server our current (ordered) list of sections
+	ajax_update({
+		op:	'firehose_save_section_menu',
+		reskey:	reskey_static,
+		fsids:	$section_menu.
+					children('li:not(#fhsection-unsaved)').
+						map(function(){ return this.id.slice(10); }).get().join(',')
+	});
+}
+
+
+function unsaved(){
+	var $unsaved = $any('fhsection-unsaved');
+	if ( !$unsaved.length ) {
+		($unsaved = $(unsaved.template).prependTo($section_menu)).metadata().id = 'unsaved';
+	}
+	return $unsaved;
+}
+
+var section_matching;
+(function(){
+var signatures={}, ids={}, ws=/\s+/, id_prefix=/^fhsection-/, default_color = {
+	stories: 'green',
+	recent: 'blue',
+	popular: 'green',
+	daddypants: 'indigo'
+};
+
+function init_metadata( el ){
+	var $el=$(el), result=$el.metadata({ type:'elem', name:'script' });
+	$el.find('script[type=data]').remove();
+	return result;
+}
+
+function signature( section ){
+	return section.viewname + ';'
+		+ (section.color||default_color[section.viewname]) + ';'
+		+ $.trim(section.filter).toLowerCase().split(ws).sort().join(' ');
+}
+
+section_matching = function( data ){
+	var	have_id			= $section_menu.metadata().active_id,
+		have			= signatures[have_id],
+		want			= signature(data),
+		want_id			= (have_id==='unsaved'||want!==have) ? ids[want] : have_id,
+		$want			= want_id && firehose_section_menu_item(want_id),
+		want_section	= want_id && $want.length && $want.metadata();
+
+
+	
+
+	return want_section;
+};
+
+update_section = function( el, update, opts ){
+	var section	= init_metadata(el),
+		id		= section.id, // assert(id);
+		oldsig	= signatures[id],
+		newsig	= signature($.extend(section,
+					// Make the color explicit.
+					!section.color && { color:default_color[section.viewname] },
+					// Roll-in the updated data, if any; but protect the id.
+					update, { id:id }
+				));
+
+	// Update the signatures that let us match properties to existing sections.
+	if ( id!=='unsaved' && newsig!==oldsig ) {
+		ids[ signatures[id]=newsig ] = id;
+		if ( oldsig ) {
+			delete ids[ oldsig ];
+			// Discard cached skin if the search has changed.
+			section.skin && oldsig.split(';')[2]!==newsig.split(';')[2] && delete section.skin;
+
+			// This must be a change to an existing menu item, so let's save the menu as a whole.
+			save_menu();
+		}
+	}
+
+	if ( opts ) {
+		opts.highlight && highlight_menu_item(id);
+		opts.make_default && ($section_menu.metadata().default_id=id);
+	}
+};
+
+// Force-initialize the metadata and build the section_matching map.
+var $sections=$any('links-sections').find('div.title,li');
+$sections.add($section_menu).each(function(){ init_metadata(this); });
+$('#links-sections-title').metadata().name = "Slashdot";
+$sections.each(function(){ update_section(this); });
+})();
+
+
+function highlight_menu_item( section_id ){
+	return firehose_section_menu_item(section_id).each(function(){
+		$('#links-sections .active').not(this).removeClass('active');
+		$( $('h4', this)[0] || this ).addClass('active');
+		$section_menu.metadata().active_id = section_id;
+		firehose_style_switch(section_id);
+	});
+}
+
+
+$any('links-sections').
+	mousedown(function( event ){	// "activate" a section (immediately) on mousedown in the section menu
+		$(event.originalTarget||event.target).	// mouseDown was on this element...
+			closest('li,div.title').not('.active,:has(.active)').
+				each(function(){
+					var section = $(this).metadata();
+					if ( section.id !== 'unsaved' ) {
+						
+					} else {
+						
+					}
+				});
+		// allow other handlers to run (by not returning false)
+	}).
+	click(function( event ){		// edit only for a click in the edit button
+		var handled;
+		$(event.originalTarget||event.target).	// mouseDown was on this element...
+			closest('a.links-sections-edit').	// ...in this edit icon (if any)
+				each(function(){
+					var id = $(this).closest('li,div.title').metadata().id;
+					id==='unsaved' && (id=void(0));
+					getModalPrefs('firehoseview', 'Save Custom Section', 0, { id: id });
+					handled = true;
+				});
+		return !handled;
+	});
+
+
+// Drag items in the section-menu to reorder it permanently.
+$section_menu.
+	sortable({
+		axis: 'y',
+		containment: '#links-sections',
+		opacity: 0.8,
+		update: save_menu
+	});
+
+
+$(document).
+	bind('firehose-setting-section', function( e, section_id ){
+		// Request to change sections is on its way to the server; update the UI now (don't wait for response)
+		var section = highlight_menu_item(section_id).metadata();
+		$(document).
+			trigger('firehose-setting-setfhfilter', section.filter).
+			trigger('firehose-setting-view', section.viewname).
+			trigger('firehose-setting-color', section.color);
+	}).
+	bind('set-options.firehose', function( e, data ){
+		// Changing some option (possibly even the 'section' option)
+		if ( !data.select_section ) {
+			// OK, _not_ the 'section' option.  Activate a section that matches the new options, or else "unsaved"
+			delete data.id;
+
+			data = section_matching(data)||data;
+			if ( !data.id ) {
+				var $unsaved = unsaved();
+				data = $.extend($unsaved.metadata(), data);
+				$(document).
+					one('update.firehose', function( e, updated ){
+						$unsaved.find('a span').text(updated.local_time);
+						if ( updated.skin ) {
+							data.skin = updated.skin;
+							firehose_style_switch('unsaved');
+						}
+					}).
+					trigger('unsaved.firehose', data);
+			}
+		}
+		highlight_menu_item(data.id);
+	});
+
+unsaved.template = (
+	'<li id="fhsection-unsaved">'
+		+ '<a><i class="data-title">unsaved</i> <span></span></a>'
+		+ '<a href="//slashdot.org/faq/UI.shtml#ui700"'
+			+ ' onclick="return nojscall(function(){show_login_box()});"'
+			+ ' class="links-sections-edit">'
+				+ '[e]'
+		+ '</a>'
+	+ '</li>'
+);
+
+})();
+</script>
+	
+	</div>
+	
+</div>
+<div class="block" id="links-help">
+	<div class="title" id="links-help-title">
+		<h4><a href="//slashdot.org/help">Site Info</a></h4>
+	</div>
+
+	<div class="content" id="links-help-content">
+		<ul>
+			<li><a href="//slashdot.org/faq/">FAQ</a></li>
+			<li><a href="http://sourceforge.net/tracker/?func=add&amp;group_id=4421&amp;atid=104421">Bugs</a></li>
+			<li><a href="//slashdot.org/code.shtml">Code</a></li>
+		</ul>
+	</div>
+
+</div>
+<div class="block" id="links-stories">
+	<div class="title" id="links-stories-title">
+		<h4>Stories</h4>
+	</div>
+	<div class="content" id="links-stories-content">
+		<ul>
+			<li><a href="//slashdot.org/search.pl">Old Stories</a></li>
+			<li><a href="//polls.slashdot.org/">Old Polls</a></li>
+
+			<li><a href="//slashdot.org/hof.shtml">Hall of Fame</a></li>
+			<li><a href="//slashdot.org/submission">Submit Story</a></li>
+		</ul>
+	</div>
+</div>
+				</div>
+			</div>
+			
+
+			<div class="yui-u maincol first">
+
+				
+				
+				<div id="firehose-message-tray" class="message">
+					
+						<p>Slashdot stories can be listened to in audio form via an RSS feed, as <a href="http://feeds.feedburner.com/slashdot/audio">read by our own robotic overlord</a>.</p>
+					
+				</div>
+				
+				
+				
+
+ 
+
+
+				<div id="firehose" class="nothumbs">
+					<div id="firehoselist" class="fhroot ">
+						<div id="firehose-11977538" data-fhid="11977538" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11977538</span>
+
+	<span class="type">story</span>
+	
+</span>
+
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+
+								<a href="//yro.slashdot.org/comments.pl?sid=1637578" class="commentcnt-11977538">3</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11977538" class="vote">
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11977538"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/yro">Your Rights Online:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//yro.slashdot.org/story/10/05/01/0023258/Why-Tor-Users-Should-Be-Cautious-About-P2P-Privacy" class="datitle">Why Tor Users Should Be Cautious About P2P Privacy</a> <span class="date">on Friday April 30, @08:30PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11977538"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="http://www.monkey.org/~timothy/" rel="nofollow">timothy</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11977538">on Friday April 30, @08:30PM</span>
+	
+	<br>
+	
+		from the but-this-computer's-in-a-safe-location dept.
+	
+	</small>
+
+	</div>
+							<div class="body" id="fhbody-11977538">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-83">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicprivacy.gif); width:71px; height:53px;</span>
+                        <a style="width:71px; height:53px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=privacy" onclick="return addfhfilter('privacy');" class="privacy"  >privacy</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11977538">
+										An anonymous reader writes <i>"I went across your post a few days ago saying that a machine connected to the Internet was <a href="https://tech.slashdot.org/story/10/04/28/1948257/Anyone-Can-Play-Big-Brother-With-BitTorrent">all one needed to spy on most BitTorrent users</a> of the Internet. I followed the link to find out that those researchers from INRIA claimed their attacks also worked for BitTorrent users on Tor. I didn't believe it at first, but then today I <a href="http://blog.torproject.org/blog/bittorrent-over-tor-isnt-good-idea">found this link on the Tor Project</a>. It seems their attacks don't only link your real IP to your BitTorrent files on Tor but also to the web pages that you're browsing! Tell me it's a joke."</i> No joke, but according to Jake Appelbaum (a Tor developer), the security flaw is more nuanced &mdash; and the fault of software outside of Tor. Read on for his explanation of how the privacy benefits of Tor can be easily lost.</div>
+
+										
+
+									
+
+									
+									<div class="article-foot  b">
+									<span class="reader">
+			
+									
+
+										<a href="//yro.slashdot.org/story/10/05/01/0023258/Why-Tor-Users-Should-Be-Cautious-About-P2P-Privacy" class="more">
+										
+											Read 1451 More Bytes...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://yro.slashdot.org/story/10/05/01/0023258/Why-Tor-Users-Should-Be-Cautious-About-P2P-Privacy" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Why+Tor+Users+Should+Be+Cautious+About+P2P+Privacy%3A+http%3A%2F%2Fbit.ly%2F9wvzBU" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//yro.slashdot.org/comments.pl?sid=1637578" class="commentcnt-11977538">3</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11977538" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/internet" target="_blank">internet</a>
+<a class="popular tag" rel="tag" href="/tag/p2p" target="_blank">p2p</a>
+<a class="popular tag" rel="tag" href="/tag/privacy" target="_blank">privacy</a>
+<a class="popular tag" rel="tag" href="/tag/security" target="_blank">security</a>
+<a class="popular tag" rel="tag" href="/tag/software" target="_blank">software</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11975622" data-fhid="11975622" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11975622</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//apple.slashdot.org/comments.pl?sid=1637538" class="commentcnt-11975622">98</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11975622" class="vote">
+
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11975622"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/apple">Apple:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//apple.slashdot.org/story/10/04/30/237238/Steve-Jobs-Hints-At-Theora-Lawsuit" class="datitle">Steve Jobs Hints At Theora Lawsuit</a> <span class="date">on Friday April 30, @07:44PM</span> <span class="nickname"></span></span>
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11975622"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="http://www.monkey.org/~timothy/" rel="nofollow">timothy</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11975622">on Friday April 30, @07:44PM</span>
+	
+	<br>
+	
+		from the fuddish-duddish dept.
+	
+	</small>
+	</div>
+
+							<div class="body" id="fhbody-11975622">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-38">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicapple.gif); width:52px; height:64px;</span>
+                        <a style="width:52px; height:64px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=apple" onclick="return addfhfilter('apple');" class="apple"  >apple</a>
+                </div>
+
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11975622">
+										netcrawler writes <i>"Steve Jobs' <a href="http://apple.slashdot.org/story/10/04/29/1356214/Steve-Jobs-Publishes-Some-Thoughts-On-Flash">open letter on Flash</a> has prompted someone at the Free Software Foundation Europe to ask him about <a href="http://blogs.fsfe.org/hugo/2010/04/open-letter-to-steve-jobs/">his support of proprietary format H.264 over Theora</a>. Jobs' <a href="http://blogs.fsfe.org/hugo/2010/04/open-letter-to-steve-jobs/#sjobs">pithy answer</a>  (<a href="http://hugoroy.eu/jobs-os.php">email with headers</a>) suggests Theora might infringe on existing patents and that 'a patent pool is being assembled to go after Theora and other "open source" codecs now.' Does he know something we don't?"</i></div>
+
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//apple.slashdot.org/story/10/04/30/237238/Steve-Jobs-Hints-At-Theora-Lawsuit" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://apple.slashdot.org/story/10/04/30/237238/Steve-Jobs-Hints-At-Theora-Lawsuit" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Steve+Jobs+Hints+At+Theora+Lawsuit%3A+http%3A%2F%2Fbit.ly%2FcC68bp" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//apple.slashdot.org/comments.pl?sid=1637538" class="commentcnt-11975622">98</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11975622" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/html5" target="_blank">html5</a>
+<a class="popular tag" rel="tag" href="/tag/ogg" target="_blank">ogg</a>
+<a class="popular tag" rel="tag" href="/tag/apple" target="_blank">apple</a>
+<a class="popular tag" rel="tag" href="/tag/h264" target="_blank">h264</a>
+<a class="popular tag" rel="tag" href="/tag/theora" target="_blank">theora</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11975940" data-fhid="11975940" data-fhtype="story" class="fhitem fhitem-story briefarticle usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11975940</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//science.slashdot.org/comments.pl?sid=1637550" class="commentcnt-11975940">35</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11975940" class="vote">
+
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11975940"><span class="sodify" onclick="firehose_set_options('color', 'orange')" title="Filter Firehose to entries rated orange or better" ></span><span class="soda pop2" title="Filter Firehose to entries rated orange or better" onclick="firehose_set_options('color', 'orange')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/science">Science:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//science.slashdot.org/story/10/04/30/2319232/Japanese-Researchers-Make-Plastic-Out-of-Water" class="datitle">Japanese Researchers Make Plastic Out of Water</a> <span class="date">on Friday April 30, @07:22PM</span> <span class="nickname"></span></span>
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11975940"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="http://www.monkey.org/~timothy/" rel="nofollow">timothy</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11975940">on Friday April 30, @07:22PM</span>
+	
+	<br>
+	
+		from the what's-kanji-for-boffin? dept.
+	
+	</small>
+	</div>
+
+							<div class="hide" id="fhbody-11975940">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-1446">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicearth.gif); width:77px; height:80px;</span>
+                        <a style="width:77px; height:80px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=earth" onclick="return addfhfilter('earth');" class="earth"  >earth</a>
+                </div>
+
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11975940">
+										greenrainbow writes with this excerpt from Inhabit: <i>"The material shown in the picture above is just ice, right? Look again. <a href="http://inhabitat.com/2010/04/30/japanese-researchers-make-elastic-plastic-out-of-water/">Elastic water</a>, a new substance invented by researchers at Tokyo University, is a jelly-like substance made up of 95% water along with two grams of clay and a small amount of organic materials. As is, the all-natural substance is perfect for medical procedures, because it's made of water, poses no harm to people and is perfect for mending tissue. And, if the research team can increase the density of this exciting new substance, it could be used in place of our current oil-based plastics for a host of other things."</i></div>
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//science.slashdot.org/story/10/04/30/2319232/Japanese-Researchers-Make-Plastic-Out-of-Water" class="more">
+										
+											Read More...
+										</a>
+
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://science.slashdot.org/story/10/04/30/2319232/Japanese-Researchers-Make-Plastic-Out-of-Water" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Japanese+Researchers+Make+Plastic+Out+of+Water%3A+http%3A%2F%2Fbit.ly%2F9ZzZbD" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//science.slashdot.org/comments.pl?sid=1637550" class="commentcnt-11975940">35</a> comments</span>
+
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11975940" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/japan" target="_blank">japan</a>
+<a class="popular tag" rel="tag" href="/tag/science" target="_blank">science</a>
+<a class="popular tag" rel="tag" href="/tag/technology" target="_blank">technology</a>
+
+<a class="popular tag" rel="tag" href="/tag/earth" target="_blank">earth</a>
+<a class="popular tag" rel="tag" href="/tag/edutokyo" target="_blank">edutokyo</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11975214" data-fhid="11975214" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11975214</span>
+	<span class="type">story</span>
+
+	
+</span>
+
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//apple.slashdot.org/comments.pl?sid=1637532" class="commentcnt-11975214">100</a>
+
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11975214" class="vote">
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11975214"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/apple">Apple:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//apple.slashdot.org/story/10/04/30/2251220/Apple-Raises-E-Book-Prices-For-Everyone" class="datitle">Apple Raises E-Book Prices For Everyone</a> <span class="date">on Friday April 30, @07:00PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11975214"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="http://www.monkey.org/~timothy/" rel="nofollow">timothy</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11975214">on Friday April 30, @07:00PM</span>
+	
+	<br>
+	
+		from the here-a-penny-there-a-penny dept.
+	
+	</small>
+
+	</div>
+							<div class="body" id="fhbody-11975214">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-172">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicbooks.gif); width:63px; height:38px;</span>
+                        <a style="width:63px; height:38px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=books" onclick="return addfhfilter('books');" class="books"  >books</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11975214">
+										Nom du Keyboard writes <i>"I was informed by my publisher this week that they would have to raise my eBook prices because they planned to sell them through the Apple iBooks store. How could this happen? A lot of my individual stories sell in the $1 to $3 range, which is well within the impulse purchase amount for many people. In this price range a 50 cent price difference may well be the difference between a purchase and a pass.  Meanwhile Apple is touting their new 'Agency Model' whereby the publishers set the prices. However, it seems that Apple requires books sold in their iBook store have prices ending in .99 &ndash; nothing else."</i>  (More below.)</div>
+										
+
+									
+
+									
+									<div class="article-foot  b">
+									<span class="reader">
+
+			
+									
+
+										<a href="//apple.slashdot.org/story/10/04/30/2251220/Apple-Raises-E-Book-Prices-For-Everyone" class="more">
+										
+											Read 782 More Bytes...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://apple.slashdot.org/story/10/04/30/2251220/Apple-Raises-E-Book-Prices-For-Everyone" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Apple+Raises+E-Book+Prices+For+Everyone%3A+http%3A%2F%2Fbit.ly%2FdstxVX" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//apple.slashdot.org/comments.pl?sid=1637532" class="commentcnt-11975214">100</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11975214" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+
+<a class="popular tag" rel="tag" href="/tag/apple" target="_blank">apple</a>
+<a class="popular tag" rel="tag" href="/tag/appstore" target="_blank">appstore</a>
+<a class="popular tag" rel="tag" href="/tag/books" target="_blank">books</a>
+<a class="popular tag" rel="tag" href="/tag/media" target="_blank">media</a>
+<a class="popular tag" rel="tag" href="/tag/ebooks" target="_blank">ebooks</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11973056" data-fhid="11973056" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+
+	<span class="sd-key-firehose-id">11973056</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//games.slashdot.org/comments.pl?sid=1637478" class="commentcnt-11973056">67</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11973056" class="vote">
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11973056"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/games">Games:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//games.slashdot.org/story/10/04/30/2126226/Kid-Health-Experts-Attack-Video-Game-Summer-Camp" class="datitle">Kid Health Experts Attack Video Game Summer Camp</a> <span class="date">on Friday April 30, @06:16PM</span> <span class="nickname"></span></span>
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11973056"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11973056">on Friday April 30, @06:16PM</span>
+	
+	<br>
+	
+		from the friendly-environment-to-frag-noobs dept.
+	
+	</small>
+	</div>
+							<div class="body" id="fhbody-11973056">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-990">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topiccanada.png); width:80px; height:82px;</span>
+                        <a style="width:80px; height:82px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=canada" onclick="return addfhfilter('canada');" class="canada"  >canada</a>
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11973056">
+										Jack Action writes <i>"The University of British Columbia runs a <a href="http://www.cbc.ca/canada/british-columbia/story/2010/04/30/bc-ubc-video-game-camp.html">summer camp where kids get to play computer games</a> for three hours a day.  The camp organizers say it is 'a good social opportunity for some kids who didn't fit into other programs.' However, health professionals declare they are 'troubled' by the camp.  A professor in UBC's department of medicine says kids should be outside and engaged in 'unstructured play,' while the CEO of an NGO that monitors kids' health chimes in that they already spend too much time in front of screens and not exercising. Do the health experts have a point, or are they just criticizing something they don't understand, or perhaps is not to their taste?"</i></div>
+
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//games.slashdot.org/story/10/04/30/2126226/Kid-Health-Experts-Attack-Video-Game-Summer-Camp" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://games.slashdot.org/story/10/04/30/2126226/Kid-Health-Experts-Attack-Video-Game-Summer-Camp" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Kid+Health+Experts+Attack+Video+Game+Summer+Camp%3A+http%3A%2F%2Fbit.ly%2FaIWQQL" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//games.slashdot.org/comments.pl?sid=1637478" class="commentcnt-11973056">67</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11973056" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/children" target="_blank">children</a>
+<a class="popular tag" rel="tag" href="/tag/edubc" target="_blank">edubc</a>
+<a class="popular tag" rel="tag" href="/tag/publichealth" target="_blank">publichealth</a>
+<a class="popular tag" rel="tag" href="/tag/canada" target="_blank">canada</a>
+<a class="popular tag" rel="tag" href="/tag/games" target="_blank">games</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11971878" data-fhid="11971878" data-fhtype="story" class="fhitem fhitem-story briefarticle usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11971878</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//news.slashdot.org/comments.pl?sid=1637452" class="commentcnt-11971878">23</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11971878" class="vote">
+
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11971878"><span class="sodify" onclick="firehose_set_options('color', 'orange')" title="Filter Firehose to entries rated orange or better" ></span><span class="soda pop2" title="Filter Firehose to entries rated orange or better" onclick="firehose_set_options('color', 'orange')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/news">News:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//news.slashdot.org/story/10/04/30/2051203/Philip-K-Dicks-Exegesis-To-Be-Published-In-2011" class="datitle">Philip K. Dick's <em>Exegesis</em> To Be Published In 2011</a> <span class="date">on Friday April 30, @05:55PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11971878"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11971878">on Friday April 30, @05:55PM</span>
+	
+	<br>
+	
+		from the that's-a-lot-of-pkd dept.
+	
+	</small>
+
+	</div>
+							<div class="hide" id="fhbody-11971878">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-172">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicbooks.gif); width:63px; height:38px;</span>
+                        <a style="width:63px; height:38px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=books" onclick="return addfhfilter('books');" class="books"  >books</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11971878">
+										Dynamoo writes <i>"The NYT reports that a <a href="http://artsbeat.blogs.nytimes.com/2010/04/29/philip-k-dicks-exegesis-will-receive-two-volume-release/">two-part edition of PKD's <em>Exegesis</em></a> will be published next year. This huge work, a combination of journal and philosophical treatise, has been published in part before, but this is the first time that the whole version will be made generally available."</i></div>
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+
+			
+									
+
+										<a href="//news.slashdot.org/story/10/04/30/2051203/Philip-K-Dicks-Exegesis-To-Be-Published-In-2011" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://news.slashdot.org/story/10/04/30/2051203/Philip-K-Dicks-Exegesis-To-Be-Published-In-2011" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Philip+K.+Dick's+Exegesis+To+Be+Published+In+2011%3A+http%3A%2F%2Fbit.ly%2Fa6MjSk" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//news.slashdot.org/comments.pl?sid=1637452" class="commentcnt-11971878">23</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11971878" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+
+<a class="popular tag" rel="tag" href="/tag/books" target="_blank">books</a>
+<a class="popular tag" rel="tag" href="/tag/scifi" target="_blank">scifi</a>
+<a class="popular tag" rel="tag" href="/tag/entertainment" target="_blank">entertainment</a>
+<a class="popular tag" rel="tag" href="/tag/apply" target="_blank">apply</a>
+<a class="popular tag" rel="tag" href="/tag/tags" target="_blank">tags</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11971700" data-fhid="11971700" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+
+	<span class="sd-key-firehose-id">11971700</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//science.slashdot.org/comments.pl?sid=1637448" class="commentcnt-11971700">75</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11971700" class="vote">
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11971700"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/science">Science:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//science.slashdot.org/story/10/04/30/2044235/Can-Oil-Eating-Bacteria-Help-Clean-Up-the-Gulf-Oil-Spill" class="datitle">Can Oil-Eating Bacteria Help Clean Up the Gulf Oil Spill?</a> <span class="date">on Friday April 30, @05:34PM</span> <span class="nickname"></span></span>
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11971700"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11971700">on Friday April 30, @05:34PM</span>
+	
+	<br>
+	
+		from the if-only-we-hadn't-converted-to-green-bacteria dept.
+	
+	</small>
+	</div>
+							<div class="body" id="fhbody-11971700">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-350">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicbiotech.gif); width:42px; height:65px;</span>
+                        <a style="width:42px; height:65px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=biotech" onclick="return addfhfilter('biotech');" class="biotech"  >biotech</a>
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11971700">
+										sciencehabit writes <i>"At this point it's unclear <a href="http://www.washingtonpost.com/wp-dyn/content/article/2010/04/30/AR2010043001788.html">how much of an environmental threat</a> oil spreading from the BP spill will cause, but the federal government is mobilizing thousands of workers to prepare for the worst. They have a potential ally: <a href="http://news.sciencemag.org/scienceinsider/2010/04/can-microbes-save-the-gulf-beach.html">microbes that have evolved an ability to break down oil</a> that seeps from the ocean bottom. It gets devoured by a variety of bacteria, which eat it by chemically transforming its compounds into useful cellular constituents."</i>
+
+Wired has some <a href="http://www.wired.com/wiredscience/2010/04/gulf_oil_spill-gallery/">pictures of the spill</a> from orbiting satellites.</div>
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//science.slashdot.org/story/10/04/30/2044235/Can-Oil-Eating-Bacteria-Help-Clean-Up-the-Gulf-Oil-Spill" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+
+<a href="http://www.facebook.com/sharer.php?u=http://science.slashdot.org/story/10/04/30/2044235/Can-Oil-Eating-Bacteria-Help-Clean-Up-the-Gulf-Oil-Spill" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Can+Oil-Eating+Bacteria+Help+Clean+Up+the+Gulf+Oil+Spill%3F%3A+http%3A%2F%2Fbit.ly%2FaaMrQB" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//science.slashdot.org/comments.pl?sid=1637448" class="commentcnt-11971700">75</a> comments</span>
+									</span>
+
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11971700" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/biotech" target="_blank">biotech</a>
+<a class="popular tag" rel="tag" href="/tag/science" target="_blank">science</a>
+<a class="popular tag" rel="tag" href="/tag/whatcouldpossiblygowrong" target="_blank">whatcouldpossiblygowrong</a>
+<a class="popular tag" rel="tag" href="/tag/bacteria" target="_blank">bacteria</a>
+
+<a class="popular tag" rel="tag" href="/tag/earth" target="_blank">earth</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11970938" data-fhid="11970938" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11970938</span>
+	<span class="type">story</span>
+
+	
+</span>
+
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//politics.slashdot.org/comments.pl?sid=1637424" class="commentcnt-11970938">201</a>
+
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11970938" class="vote">
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11970938"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/politics">Politics:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//politics.slashdot.org/story/10/04/30/2022210/Palin-Email-Snoop-Found-Guilty-On-2-Charges" class="datitle">Palin Email Snoop Found Guilty On 2 Charges</a> <span class="date">on Friday April 30, @04:49PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11970938"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11970938">on Friday April 30, @04:49PM</span>
+	
+	<br>
+	
+		from the sorry-about-your-luck dept.
+	
+	</small>
+
+	</div>
+							<div class="body" id="fhbody-11970938">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-543">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topiccommunications.gif); width:96px; height:62px;</span>
+                        <a style="width:96px; height:62px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=communications" onclick="return addfhfilter('communications');" class="communications"  >communications</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11970938">
+										netbuzz writes <i>"A federal jury in Knoxville today has convicted David Kernell, 22, of two charges &mdash; <a href="http://www.networkworld.com/community/node/60705">misdemeanor computer fraud and felony obstruction of justice</a> &mdash; in connection with the <a href="http://yro.slashdot.org/story/08/10/08/1445258/Palin-E-mail-Hacker-Indicted">2008 episode</a> where he accessed the personal Yahoo email account of Republican vice presidential candidate Sarah Palin and then initiated a worldwide rummaging of its contents. The obstruction charge carries a maximum prison term of 20 years."</i></div>
+
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//politics.slashdot.org/story/10/04/30/2022210/Palin-Email-Snoop-Found-Guilty-On-2-Charges" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://politics.slashdot.org/story/10/04/30/2022210/Palin-Email-Snoop-Found-Guilty-On-2-Charges" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Palin+Email+Snoop+Found+Guilty+On+2+Charges%3A+http%3A%2F%2Fbit.ly%2FcCiCc6" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//politics.slashdot.org/comments.pl?sid=1637424" class="commentcnt-11970938">201</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11970938" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/palin" target="_blank">palin</a>
+<a class="popular tag" rel="tag" href="/tag/privacy" target="_blank">privacy</a>
+<a class="popular tag" rel="tag" href="/tag/usatn" target="_blank">usatn</a>
+<a class="popular tag" rel="tag" href="/tag/court" target="_blank">court</a>
+<a class="popular tag" rel="tag" href="/tag/email" target="_blank">email</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11970172" data-fhid="11970172" data-fhtype="story" class="fhitem fhitem-story briefarticle usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11970172</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//games.slashdot.org/comments.pl?sid=1637404" class="commentcnt-11970172">51</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11970172" class="vote">
+
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11970172"><span class="sodify" onclick="firehose_set_options('color', 'orange')" title="Filter Firehose to entries rated orange or better" ></span><span class="soda pop2" title="Filter Firehose to entries rated orange or better" onclick="firehose_set_options('color', 'orange')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/games">Games:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//games.slashdot.org/story/10/04/30/1958201/Nostalgic-Elation-mdash-the-Super-Mario-Crossover" class="datitle">Nostalgic Elation &mdash; the <em>Super Mario Crossover</em></a> <span class="date">on Friday April 30, @04:28PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11970172"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11970172">on Friday April 30, @04:28PM</span>
+	
+	<br>
+	
+		from the it'sa-me-megaman dept.
+	
+	</small>
+
+	</div>
+							<div class="hide" id="fhbody-11970172">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-7304">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicgamesclassic.gif); width:55px; height:43px;</span>
+                        <a style="width:55px; height:43px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=classicgames" onclick="return addfhfilter('classicgames');" class="classicgames"  >classicgames</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11970172">
+										eldavojohn writes <i>"Sure, they're stepping all over proprietary rights and copyright, but something must be said about the amount of bliss-filled nostalgia inside Exploding Rabbit's <a href="http://www.joystiq.com/2010/04/28/super-mario-crossover-would-have-killed-us-in-1989/"> <em>Super Mario Crossover</em></a>.  If the plumbers never really did it for you, you can now <a href="http://www.newgrounds.com/portal/view/534416">kill those goombas as Link, Mega Man, Samus, Simon Belmont, or <em>Contra</em>'s Bill</a>.  Goodbye jumping and spitting; hello slicing, whipping, and shooting.  Is this one of the early firsts in the new genre of video game mashups?"</i></div>
+
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//games.slashdot.org/story/10/04/30/1958201/Nostalgic-Elation-mdash-the-Super-Mario-Crossover" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+<a href="http://www.facebook.com/sharer.php?u=http://games.slashdot.org/story/10/04/30/1958201/Nostalgic-Elation-mdash-the-Super-Mario-Crossover" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Nostalgic+Elation+%26mdash%3B+the+Super+Mario+Crossover%3A+http%3A%2F%2Fbit.ly%2FcgJ6sR" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//games.slashdot.org/comments.pl?sid=1637404" class="commentcnt-11970172">51</a> comments</span>
+									</span>
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11970172" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/games" target="_blank">games</a>
+<a class="popular tag" rel="tag" href="/tag/humor" target="_blank">humor</a>
+<a class="popular tag" rel="tag" href="/tag/mashup" target="_blank">mashup</a>
+<a class="popular tag" rel="tag" href="/tag/nes" target="_blank">nes</a>
+<a class="popular tag" rel="tag" href="/tag/nintendo" target="_blank">nintendo</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div><div id="firehose-11969058" data-fhid="11969058" data-fhtype="story" class="fhitem fhitem-story article usermode thumbs">
+<span class="sd-info-block" style="display: none">
+	<span class="sd-key-firehose-id">11969058</span>
+	<span class="type">story</span>
+	
+</span>
+
+
+
+	
+						
+						
+
+
+						<h3 class="story">
+
+
+
+				
+							<span class="vballoon-firehoselist-simple">
+								<span>Comments:</span>
+								<a href="//entertainment.slashdot.org/comments.pl?sid=1637378" class="commentcnt-11969058">267</a>
+							</span>
+				
+
+
+
+
+	
+
+	
+
+
+	
+
+
+
+
+
+								<span id="updown-11969058" class="vote">
+
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="up" title="Vote this item up">+</a>
+	<a href="//slashdot.org/faq/UI.shtml#ui700" onclick="return false" class="down" title="Vote this item down">-</a>
+</span>
+							
+							
+							
+							<span class="cnin" id="title-11969058"><span class="sodify" onclick="firehose_set_options('color', 'red')" title="Filter Firehose to entries rated red or better" ></span><span class="soda pop1" title="Filter Firehose to entries rated red or better" onclick="firehose_set_options('color', 'red')"><span>&nbsp;</span></span> <a class="skin topic main tag" rel="tag" href="/tag/entertainment">Entertainment:</a>  <a onclick="return toggle_fh_body_wrap_return(this);"  href="//entertainment.slashdot.org/story/10/04/30/1917203/Avatar-Blu-Ray-DRM-Issues" class="datitle"><em>Avatar</em> Blu-Ray DRM Issues</a> <span class="date">on Friday April 30, @04:06PM</span> <span class="nickname"></span></span>
+
+							
+
+
+				
+						</h3>
+
+							<div class="details" id="details-11969058"><small>
+		
+		Posted
+		by 
+	
+	
+		
+			<a href="mailto:soulskillatslashdotdotorg" rel="nofollow">Soulskill</a>
+		
+	
+	
+
+	
+	
+	<span id="fhtime-11969058">on Friday April 30, @04:06PM</span>
+	
+	<br>
+	
+		from the revolutionary-zero-d-technology dept.
+	
+	</small>
+
+	</div>
+							<div class="body" id="fhbody-11969058">
+								
+									<div class="media">
+
+
+
+        
+
+        
+                
+                
+
+                
+
+                <div class="maybe-sprite tid-359">
+                        <span class="no-sprite" style="display: none">background: url(//a.fsdn.com/sd/topics/topicmovies.gif); width:63px; height:70px;</span>
+                        <a style="width:63px; height:70px; display: block; text-indent:-99999px;" href="//slashdot.org/index2.pl?fhfilter=movies" onclick="return addfhfilter('movies');" class="movies"  >movies</a>
+
+                </div>
+                
+        
+
+
+</div>
+								
+									
+
+										<div id="text-11969058">
+										geekd writes <i>"Once again, DRM only hurts legit content purchasers: 'An unusual glitch has angered some <em>Avatar</em> Blu-ray owners. For these unlucky people, since <a href="http://movies.yahoo.com/feature/movie-talk-avatar-blu-ray-consumers-cant-watch-DVD.html">the disc won't play on their Blu-ray players</a>, their new <em>Avatar</em> DVD serves no real purpose other than to sit idly on the coffee table. ... It appears the main culprit concerning playback issues with <em>Avatar</em> is, ironically, the disc's DRM (digital rights management). ... Even with updated firmware, a lot of Blu-ray players weren't prepared for these security measures. Despite the security problems, bootleggers are having a field day. Pirated copies of <em>Avatar</em>, according to Los Angeles Times, were available as early as January.'"</i>
+
+Reader Murpster adds that this problem isn't specific to the Blu-ray version: "Got a regular <em>Avatar</em> DVD and it won't play on either of my DVD players. It will play on one computer DVD drive, if I want to watch it on a 12-inch screen."</div>
+										
+
+									
+
+									
+									<div class="article-foot  a">
+									<span class="reader">
+			
+									
+
+										<a href="//entertainment.slashdot.org/story/10/04/30/1917203/Avatar-Blu-Ray-DRM-Issues" class="more">
+										
+											Read More...
+										</a>
+									
+<span class="share">
+<span class="sharebar">
+
+<a href="http://www.facebook.com/sharer.php?u=http://entertainment.slashdot.org/story/10/04/30/1917203/Avatar-Blu-Ray-DRM-Issues" target="_blank" title="Share on Facebook"><img src="//a.fsdn.com/sd/facebook_icon.png"></a>
+
+
+
+<a href="http://twitter.com/home?status=Avatar+Blu-Ray+DRM+Issues%3A+http%3A%2F%2Fbit.ly%2F9Uveve" target="_blank" title="Share on Twitter"><img src="//a.fsdn.com/sd/twitter_icon.png"></a>
+
+</span>
+</span>
+
+									<span class="commentcnt"> <a href="//entertainment.slashdot.org/comments.pl?sid=1637378" class="commentcnt-11969058">267</a> comments</span>
+									</span>
+
+									<menu type="toolbar" class="edit-bar">
+	
+	<a class="edit-toggle"><span class="button collapse"></span></a>
+	<input class="tag-entry default" type="text" size="10" style="display:none" value="apply tags">
+
+	<span id="tagbar-11969058" class="tag-bar"><a class="topic main domain tag" rel="tag" href="/tag/slashdot" target="_blank">slashdot</a>
+<a class="popular tag" rel="tag" href="/tag/drm" target="_blank">drm</a>
+<a class="popular tag" rel="tag" href="/tag/bluray" target="_blank">bluray</a>
+<a class="popular tag" rel="tag" href="/tag/movies" target="_blank">movies</a>
+<a class="popular tag" rel="tag" href="/tag/yro" target="_blank">yro</a>
+
+<a class="popular tag" rel="tag" href="/tag/!ironic" target="_blank">!ironic</a>
+<a class="datatype pseudo-tag" target="_blank">story</a>
+</span>
+
+	<div class="spinner">
+	<span class="tag-server-busy spinner" style="display:none">*</span>
+	</div>
+		
+</menu>
+									</div>
+
+							</div>
+
+
+						<hr>
+
+
+</div>
+					</div>
+					<script id="init-sprites" type="text/javascript">
+sprite_rules({ "tid-350": ".tid-350 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -1020px; width: 42px; height: 65px; }", "tid-38": ".tid-38 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -556px; width: 52px; height: 64px; }", "tid-172": ".tid-172 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -800px; width: 63px; height: 38px; }", "tid-498": ".tid-498 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -103px; width: 71px; height: 37px; }", "tid-359": ".tid-359 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -1340px; width: 63px; height: 70px; }", "tid-83": ".tid-83 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px 0px; width: 71px; height: 53px; }", "tid-94": ".tid-94 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -433px; width: 70px; height: 73px; }", "tid-7304": ".tid-7304 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -1247px; width: 55px; height: 43px; }", "tid-165": ".tid-165 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -318px; width: 65px; height: 65px; }", "tid-76": ".tid-76 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -190px; width: 59px; height: 78px; }", "tid-543": ".tid-543 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -1135px; width: 96px; height: 62px; }", "tid-1446": ".tid-1446 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -670px; width: 77px; height: 80px; }", "tid-990": ".tid-990 { background: url(//a.fsdn.com/sd/firehose/011/977/11977538.png?1) no-repeat top left; background-position: 0px -888px; width: 80px; height: 82px; }" });
+use_sprites($dom("firehoselist"));
+$('script:last#init-sprites').remove();
+</script>
+					
+					<span id="itemsreturned">
+
+						
+					</span>
+				</div>
+
+				<div class="paginate" id="fh-pag-div">
+<div class="currcolor green ">&nbsp;</div>
+<div class="menu" id="fh-paginate">
+
+
+
+
+	
+
+	
+	<span class="active">
+		<a onclick="firehose_set_options('startdate','20100430'); return false;" href="//slashdot.org/index2.pl?section=&amp;color=green&amp;index=1&amp;view=stories&amp;duration=-1&amp;startdate=20100430">Today</a>
+
+	</span>
+		
+	<span class="inactive">
+		<a onclick="firehose_set_options('startdate','20100429'); return false;" href="//slashdot.org/index2.pl?section=&amp;color=green&amp;index=1&amp;view=stories&amp;duration=-1&amp;startdate=20100429">Yesterday</a>
+	</span>
+		
+	<span class="inactive">
+		<a onclick="firehose_set_options('startdate','20100428'); return false;" href="//slashdot.org/index2.pl?section=&amp;color=green&amp;index=1&amp;view=stories&amp;duration=-1&amp;startdate=20100428">Wednesday</a>
+	</span>
+		
+	
+	<span class="inactive more">
+
+		<span id="firehose_more">
+		
+		
+		
+		<span id="more-experiment" class=" present future "><a href="//slashdot.org/index2.pl?section=&amp;color=green&amp;index=1&amp;view=stories&amp;duration=-1&amp;startdate=20100430&amp;page=1" onclick=" firehose_more(); return false;">Many more <small>&darr;</small>
+<span class="busy spinner">*</span>
+</a></span>
+		<script type="text/javascript">more_possible('Many more');</script>
+		
+		</span>
+	</span>
+
+
+<span class="submit"><a onclick="show_submit_box('','submission'); return false;" href="//slashdot.org/submission">Submit Story</a></span>
+
+
+
+</div>
+</div>
+
+
+
+			</div>
+
+			
+		
+		</div>  <!-- yui-b -->
+		
+	</div>
+
+		
+		
+		<div id="slashboxes" class="yui-b">
+			
+			
+			<div class="block">
+	<div class="title" id="srandblock-title">
+		<h4>
+			<a href="/tags">Recent Tags</a>
+		</h4>
+	</div>
+	<div class="content" id="srandblock-content">
+
+		<ul><li><a href="/tags/privacy">privacy</a></li><li><a href="/tags/networking">networking</a></li><li><a href="/tags/bittorrent">bittorrent</a></li><li><a href="/tags/tor">tor</a></li><li><a href="/tags/security">security</a></li><li><a href="/tags/p2p">p2p</a></li><li><a href="/tags/yro">yro</a></li></ul>
+	</div>
+</div><div class="block" id="poll">
+        <div class="title" id="poll-title">
+        	<h4><a href="">Slashdot Poll</a></h4>
+
+	</div>
+
+        <div class="content" id="poll-content">
+                <form action="//slashdot.org/pollBooth.pl" method="post">
+			<fieldset>
+				<legend>Poll</legend>
+				<input type="hidden" name="qid" value="1976">
+			
+				<input type="hidden" name="section" value="slashdot">
+			
+				<b>I last bought 3.5" floppy disks ... </b>
+
+			
+				<br><input type="radio" name="aid" value="1">Within the last 12 months.
+			
+				<br><input type="radio" name="aid" value="2">Within the span of 1-5 years ago.
+			
+				<br><input type="radio" name="aid" value="3">Within the span 5-10 years ago.
+			
+				<br><input type="radio" name="aid" value="4">More than 10 years ago.
+			
+				<br><input type="radio" name="aid" value="5">My next order's in the mail.
+			
+				<br><input type="radio" name="aid" value="6">Never!
+			
+
+				<br><input type="submit" value="Vote">
+				
+				[ <a href="//slashdot.org/pollBooth.pl?qid=1976&amp;aid=-1"><b>Results</b></a> |
+				<a href="//slashdot.org/pollBooth.pl"><b>Polls</b></a> ] <br>
+
+				Comments:<b>415</b> | Votes:<b>22694</b>
+			</fieldset>
+		</form>
+		<div class="ad31 advertisement">
+<script type="text/javascript">
+                var ad6 = 'inactive';
+</script>
+
+<div id="fad31p">
+
+        <script type="text/javascript">
+
+        //<![CDATA[
+
+                var hint   = 'mainpage';
+
+                document.write('<script type="text/javascript" src="http://ad.doubleclick.net/adj/ostg.slashdot/mainpage_p31_lower_poll_spons;pg=index;logged_in=0;tile='+dfp_tile+';ord='+dfp_ord+'?"><\/script>');
+
+                dfp_tile++;
+        //]]>
+        </script>
+</div>
+</div>
+        </div>
+</div><div class="block" id="activetags">
+        <div class="title" id="activetags-title">
+        	<h4><a href="/tags">Recent Tags</a></h4>
+	</div>
+
+        <div class="content" id="activetags-content">
+
+                <ul><li><a href="/tags/privacy">privacy</a></li><li><a href="/tags/networking">networking</a></li><li><a href="/tags/bittorrent">bittorrent</a></li><li><a href="/tags/tor">tor</a></li><li><a href="/tags/security">security</a></li><li><a href="/tags/p2p">p2p</a></li><li><a href="/tags/yro">yro</a></li></ul>
+		
+        </div>
+</div><div class="block">
+	<div class="title" id="login-title">
+		<h4>
+			Slashdot Login
+		</h4>
+
+	</div>
+	<div class="content" id="login-content">
+		<form action="//slashdot.org/login.pl" method="post">
+<fieldset>
+	<legend>Log In</legend>
+	<label>
+		Nickname
+	</label>
+	<input type="text" name="unickname" size="20" value="">
+
+	<label>
+		Password
+	</label>
+	<input type="hidden" name="returnto" value="//slashdot.org/">
+	<input type="hidden" name="op" value="userlogin">
+	<input type="password" name="upasswd" size="20">
+	<label class="checkbox">
+		<input type="checkbox" name="login_temp" value="yes">
+		Public Terminal
+	</label>
+
+	<input type="submit" name="userlogin" value="Log in" class="button">
+	</fieldset>
+</form>
+
+
+
+<hr>
+
+
+<form action="//slashdot.org/login.pl" method="post">
+<fieldset>
+	<input type="hidden" name="slash_returnto" value="//slashdot.org/">
+	<input type="hidden" name="op" value="claim_openid">
+
+	<input type="hidden" name="openid_login" value="1">
+	<label for="openid_url" class="openid_url">
+	<input type="text" name="openid_url" value="http://" size="32" maxlength="255">
+	</label>
+	<input type="submit" value="Log in with OpenID" class="button">
+</fieldset>
+</form>
+
+
+<p>
+<b>
+<a href="//slashdot.org/my/newuser" onclick="javascript:getModalPrefs('newUserModal', 'Create Account', 1); return false;">Create Account</a>
+
+&nbsp;|&nbsp;
+<a href="//slashdot.org/my/mailpassword" onclick="javascript:getModalPrefs('sendPasswdModal', 'Retrieve Password', 1); return false;">Retrieve Password</a>
+</b>
+</p>
+	</div>
+</div><div class="block" id="srandblock_ostg">
+        <div class="title" id="srandblock_ostg-title">
+        	<h4><a href="http://fossfor.us/recent_reviews">Fossfor.us</a></h4>
+	</div>
+
+        <div class="content" id="srandblock_ostg-content">
+                <ul><li><a href="http://fossfor.us/software/name/Hugin?review=1806" rel="alternate">Hugin - <em>Great</em></a><br></li><li><a href="http://fossfor.us/software/name/Firefox?review=1804" rel="alternate">Firefox - <em>Great</em></a><br></li><li><a href="http://fossfor.us/software/name/SeaMonkey?review=1803" rel="alternate">SeaMonkey - <em>Great</em></a><br>All needed internet tools in one software. Can't beat this for daily usage. I...</li><li><a href="http://fossfor.us/software/name/Jedit?review=1798" rel="alternate">Jedit - <em>Great</em></a><br>I've been using it for over 10 years on numerous projects. That alone is...</li><li><a href="http://fossfor.us/software/name/Magic_Set_Editor?review=1797" rel="alternate">Magic Set Editor - <em>Great</em></a><br>It allows you to make your own randomized boosters.</li></ul>
+
+		
+        </div>
+</div><div class="block" id="books">
+        <div class="title" id="books-title">
+        	<h4><a href="//books.slashdot.org/">Book Reviews</a></h4>
+	</div>
+
+        <div class="content" id="books-content">
+                Recent reviews from Slashdot readers:
+
+<ul>
+
+<li> <a href="http://www.amazon.com/dp/0195152751/ref=nosim/?tag=slashdot0c-20"><cite>Advanced Excel for Scientific Data Analysis</cite></a> Learn to turn Excel into something that rivals Mathematica using VBA, brains, and a heaping helping of fortitude.(<a href="http://books.slashdot.org/article.pl?sid=08/10/01/1329243">Jack Herrington's review.</a>)</li>
+
+<li> <a
+href="http://www.amazon.com/dp/1597492671/ref=nosim/?tag=slashdot0c-20"><cite>Nagios 3 Enterprise Network Monitoring</cite></a> A great book for anyone using Nagios as more than a casual user.(<a href="http://books.slashdot.org/article.pl?sid=08/10/08/1328247">jgoguen's review.</a>)</li>
+
+<li> <a href="http://www.amazon.com/dp/0470395354/ref=nosim/?tag=slashdot0c-20"><cite>Schneier on Security</cite></a> Schneier argues that security is not something you can buy; it is something you must get.(<a href="http://books.slashdot.org/article.pl?sid=08/10/20/1344203">Ben Rothke's review.</a>)</li>
+</ul>
+
+<p><a href="https://slashdot.org/submit.pl">Submitting a review</a> for
+consideration is easy; please first read <a
+href="//slashdot.org/book.review.guidelines.shtml">Slashdot's
+book review guidelines</a>. Updated: 2008114 by samzenpus</p>
+
+		
+        </div>
+</div><div class="block" id="index_qlinks">
+        <div class="title" id="index_qlinks-title">
+        	<h4><a href="">Quick Links</a></h4>
+	</div>
+
+        <div class="content" id="index_qlinks-content">
+                <B>Cool Sites:</B>
+<br>&middot; <A href="http://www.xkcd.com">XKCD</A> (It's teh funz0rz)
+
+<br>&middot; <A href="http://www.animefu.com">AnimeFu</A> (Addicted to Anime?)
+<br>&middot; <A href="http://www.penny-arcade.com">Penny Arcade</A> (The First one is always Free)
+<br>&middot; <A href="http://everything2.com">Everything</A> (Blow your Mind)
+<br>&middot; <A href="http://themes.freshmeat.net">Themes.freshmeat.net</A> (Make X Perty)
+<br>&middot; <A href="http://slashdot.jp">Slashdot.jp</A> (So familiar...)
+
+<br>&middot; <A href="http://CmdrTaco.net">CmdrTaco.net</A> (I used to be in charge)
+<P><B>Support Slashdot:</B>
+<br>&middot; <A href="http://www.thinkgeek.com">ThinkGeek</A> (Clothe Yourself in Slashdot)
+		
+        </div>
+</div><div id="slug-Crown" class="block nosort slug"><div class="content"></div></div><div id="slug-Top" class="block nosort slug"><div class="content"></div></div>
+
+
+<div class="block" id="newslashbox-create">
+	<div class="title collapsed" id="newslashbox-title">
+
+		<h4><a href="#" id="newslashbox-edit" onclick="show_login_box(); return false">Add Slashbox<span class="addbox">+</span></a></h4>
+	</div>
+	
+</div>
+
+			
+
+		</div>
+		
+
+<script type="text/javascript">
+firehose_exists = 1;
+$(function(){
+$('#firehose-filter').
+	focus(function(event){
+		gFocusedText = this;
+	}).
+	blur(function(event){
+		if ( gFocusedText === this ) {
+			gFocusedText = null;
+		}
+	});
+
+
+apply_updates_when(		'at-end', true);
+});
+
+			
+					firehose_settings.startdate = "";
+					firehose_settings.mode = "mixed";
+					firehose_settings.fhfilter = "";
+					firehose_settings.orderdir = "DESC";
+					firehose_settings.orderby = "createtime";
+					firehose_settings.duration = -1;
+					firehose_settings.color = "green";
+					firehose_settings.view = "stories";
+					firehose_settings.viewtitle = "Stories";
+					firehose_settings.tab = "";
+					firehose_settings.base_filter = "";
+					firehose_settings.user_view_uid = "";
+					firehose_settings.sectionname = "Main";
+	
+	firehose_settings.issue = "";
+	firehose_settings.section = 13;
+	$('#searchquery').val(firehose_settings.fhfilter);
+
+	
+	firehose_sitename = "Slashdot";
+	firehose_slogan = "News for nerds, stuff that matters";
+	firehose_update_title_count();
+	firehose_smallscreen = 0;
+
+	fh_idle_skin = 1;
+	
+
+	
+	
+		firehose_settings.index = 1;
+	
+
+	
+
+	var firehose_action_time = 0;
+	var firehose_user_class = 0;
+	
+	
+	var fh_color = "green";
+	fh_colors = [ "red", "orange", "yellow", "green", "blue", "indigo", "violet", "black" ];
+	var fh_colors_hash = new Array(0);
+	for (var i=0; i< fh_colors.length; i++) {
+		fh_colors_hash[fh_colors[i]] = i;
+	}
+	var fh_view_mode = "mixed";
+	firehose_settings.page = 0;
+	
+	fh_is_admin = 0;
+	var updateIntervalType = 2;
+	var inactivity_timeout = 3600;
+	setFirehoseAction();
+	var update_time = "2010-05-01 00:38:32";
+
+	var maxtime = "2010-05-01 00:38:32";
+	var insert_new_at = "top";
+	firehose_play("init");
+
+
+	fh_adTimerUrl = '/images/iframe/firehose.html';
+
+
+fh_ticksize = 15;
+sitename = 'idle.slashdot.org';
+
+
+
+</script>
+
+
+
+<!-- body end --></div>
+<div id="ft" >
+		<div id="topfoot">
+	
+		<div class="search">
+		
+		<form method="get" action="//slashdot.org/search.pl">
+			<fieldset>
+				<legend>Search</legend>
+				<input type="text" name="query" value="" size="20">
+				<input type="submit" value="Search" class="button">
+
+			</fieldset>
+		</form>
+		
+		</div>
+	
+		<div class="rightcontent">
+			
+               	        <small>You look tired.</small>
+			
+		</div>	
+		<div id="slug-Bottom" class="slug"></div>
+		</div>
+		<div class="copyright">
+
+			<p>
+				All trademarks and copyrights on this page are owned by their respective owners. Comments are owned by the Poster. The Rest &copy; 1997-2010 <a href="http://geek.net/">Geeknet, Inc.</a>
+			</p>
+		</div>
+		<div id="login_cover" style="display:none" onclick="hide_login_box()"></div>
+<div id="login_box" style="display:none">
+<div class="generaltitle" >
+	<div class="title">
+
+		<h3 >
+			Please Log In to Continue<a href="#" onclick="hide_login_box(); return false" class="close" title="Close this box">x</a>
+			
+		</h3>
+	</div>
+</div>
+<div id="login_box_content">
+<form action="//slashdot.org/login.pl" method="post">
+<fieldset>
+	<legend>Log In</legend>
+
+	<label>
+		Nickname
+	</label>
+	<input type="text" name="unickname" size="20" value="">
+	<label>
+		Password
+	</label>
+	<input type="hidden" name="returnto" value="//slashdot.org/">
+	<input type="hidden" name="op" value="userlogin">
+	<input type="password" name="upasswd" size="20">
+
+	<label class="checkbox">
+		<input type="checkbox" name="login_temp" value="yes">
+		Public Terminal
+	</label>
+	<input type="submit" name="userlogin" value="Log in" class="button">
+	</fieldset>
+</form>
+
+
+
+<hr>
+
+<form action="//slashdot.org/login.pl" method="post">
+<fieldset>
+	<input type="hidden" name="slash_returnto" value="//slashdot.org/">
+	<input type="hidden" name="op" value="claim_openid">
+	<input type="hidden" name="openid_login" value="1">
+	<label for="openid_url" class="openid_url">
+	<input type="text" name="openid_url" value="http://" size="32" maxlength="255">
+	</label>
+	<input type="submit" value="Log in with OpenID" class="button">
+
+</fieldset>
+</form>
+
+
+<p>
+<b>
+<a href="//slashdot.org/my/newuser">Create Account</a>
+&nbsp;|&nbsp;
+<a href="//slashdot.org/my/mailpassword">Retrieve Password</a>
+</b>
+</p>
+</div></div>
+<script type="text/javascript">logged_in = 0</script>
+
+		<div class="nav">
+			<ul>
+				<li>
+					<a href="//slashdot.org/">home</a> 
+				</li>
+				<li class="submit">
+					<a href="//slashdot.org/submission">submit story</a> 
+				</li>
+				<li>
+
+					<a href="//slashdot.org/help">help</a> 
+				</li>
+				<li>
+					<a href="http://geek.net/advertising">advertise</a>
+				</li>
+				<li>
+					<a href="http://geek.net/terms.php">terms of service</a> 
+				</li>
+
+				<li>
+					<a href="http://geek.net/privacy.php">privacy</a> 
+				</li>
+				<li class="rss">
+					<a href="http://rss.slashdot.org/Slashdot/slashdot">rss</a> 
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</div>
+<a href="#topothepage" class="hidden">Jump to top of page</a> 
+<div id="modal_cover" style="display:none"></div>
+<div id="modal_box" style="display:none">
+        <div class="generaltitle" >
+                <div class="title"><h3><span id="preference_title"></span> <a href="#" onclick="hide_modal_box(); return false">Close</a></h3></div>
+        </div>
+        <div id="modal_box_content"></div>
+</div>
+
+
+<script type="text/javascript">
+pageTracker._trackPageview();
+COMSCORE.beacon({
+  c1:2,
+  c2:6035546,
+  c3:"",
+  c4:"",
+  c5:"",
+  c6:"",
+  c15:""
+});
+</script>
+<noscript><img src="http://b.scorecardresearch.com/p?c1=2&amp;c2=6035546&amp;c3=&amp;c4=&amp;c5=&amp;c6=&amp;c15=&amp;cj=1" alt="comScore2"></noscript>
+<script id="after-content" type="text/javascript">
+(function( $, fn, console ){
+	$ && fn && $(function(){ fn($, console); });
+})(window.jQuery, window.pageload_done, window.console);
+</script>
+</body>
+</html>

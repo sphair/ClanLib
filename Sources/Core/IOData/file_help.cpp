@@ -43,16 +43,16 @@
 void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool copy_always)
 {
 #ifdef WIN32
-	BOOL result = CopyFile(from.c_str(), to.c_str(), copy_always ? FALSE : TRUE);
+	BOOL result = CopyFile(CL_StringHelp::utf8_to_ucs2(from).c_str(), CL_StringHelp::utf8_to_ucs2(to).c_str(), copy_always ? FALSE : TRUE);
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to copy file"));
+		throw CL_Exception("Unable to copy file");
 #else
 	if (!copy_always)
 	{
 		try
 		{
 			CL_File input_file(to);
-			throw CL_Exception(cl_text("Destination file already exists"));
+			throw CL_Exception("Destination file already exists");
 		}
 		catch (CL_Exception error) {
 		}
@@ -72,7 +72,7 @@ void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool cop
 		{
 			output_file.close();
 			CL_FileHelp::delete_file(to);
-			throw CL_Exception(cl_text("Unable to copy file"));
+			throw CL_Exception("Unable to copy file");
 		}
 	}
 #endif
@@ -81,14 +81,14 @@ void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool cop
 void CL_FileHelp::delete_file(const CL_String &filename)
 {
 #ifdef WIN32
-	BOOL result = DeleteFile(filename.c_str());
+	BOOL result = DeleteFile(CL_StringHelp::utf8_to_ucs2(filename).c_str());
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to delete file"));
+		throw CL_Exception("Unable to delete file");
 #else
 	CL_String8 filename_local8 = CL_StringHelp::text_to_local8(filename);
 	int result = unlink(filename_local8.c_str());
 	if (result == -1)
-		throw CL_Exception(cl_text("Unable to delete file"));
+		throw CL_Exception("Unable to delete file");
 #endif
 }
 
@@ -96,7 +96,7 @@ bool CL_FileHelp::file_exists(const CL_String &filename)
 {
 #ifdef WIN32
 	HANDLE file = CreateFile(
-		filename.c_str(),	/* lpFileName */
+		CL_StringHelp::utf8_to_ucs2(filename).c_str(),	/* lpFileName */
 		0,					/* dwDesiredAccess */
 		FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,	/* dwShareMode */
 		0,					/* lpSecurityAttributes */

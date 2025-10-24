@@ -75,6 +75,10 @@ public:
 
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowSystem *> window_map;
 
+#ifdef _WIN32
+	std::map<CL_GUITopLevelWindow *, HWND> cache_window_handles;
+#endif
+
 	std::vector<CL_GUITopLevelWindowSystem*> cached_windows;
 
 	int used_cached_windows;
@@ -101,6 +105,8 @@ public:
 	void on_displaywindow_paint(const CL_Rect &rect, CL_GUITopLevelWindow *top_level_window);
 
 	void on_displaywindow_window_close(CL_GUITopLevelWindow *top_level_window);
+
+	void on_displaywindow_window_destroy(CL_GUITopLevelWindow *top_level_window);
 
 	void on_input(const CL_InputEvent &event, const CL_InputState &input_state, CL_GUITopLevelWindow *top_level_window);
 
@@ -145,11 +151,14 @@ public:
 
 	/// \brief Final completion for painting all top level windows
 	void complete_painting();
-/// \}
+
+	/// \}
 /// \name Implementation
 /// \{
 
 private:
+	void maintain_window_cache(CL_GUITopLevelWindow *top_level_window);
+
 /// \}
 };
 

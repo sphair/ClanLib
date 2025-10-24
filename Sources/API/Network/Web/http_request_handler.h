@@ -47,6 +47,7 @@ class CL_API_NETWORK CL_HTTPRequestHandler
 /// \{
 
 public:
+	/// \brief Constructs a null instance
 	CL_HTTPRequestHandler();
 
 	/// \brief Constructs a HTTPRequestHandler
@@ -61,6 +62,11 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get Provider
 	///

@@ -37,17 +37,8 @@ class CL_Pen_Impl
 public:
 	CL_Pen_Impl() :
 		point_size(1.0),
-		max_point_size(31337.0),
-		min_point_size(0.0),
 		point_fade_treshold_size(1.0),
-		distance_attenuation_a(1.0),
-		distance_attenuation_b(0.0),
-		distance_attenuation_c(0.0),
-		point_antialiased(false),
 		line_width(1.0),
-		line_stipple_pattern(0xFFFF),
-		line_stipple_repeat_count(1),
-		line_stippled(false),
 		line_antialiased(false),
 		point_sprites(false),
 		vertex_shader_point_sizes(false),
@@ -57,17 +48,8 @@ public:
 	}
 
 	float point_size;
-	float max_point_size;
-	float min_point_size;
 	float point_fade_treshold_size;
-	float distance_attenuation_a;
-	float distance_attenuation_b;
-	float distance_attenuation_c;
-	bool point_antialiased;
 	float line_width;
-	unsigned short line_stipple_pattern;
-	int line_stipple_repeat_count;
-	bool line_stippled;
 	bool line_antialiased;
 	bool point_sprites;
 	bool vertex_shader_point_sizes;
@@ -94,31 +76,9 @@ float CL_Pen::get_point_size() const
 	return impl->point_size;
 }
 
-float CL_Pen::get_max_point_size() const
-{
-	return impl->max_point_size;
-}
-
-float CL_Pen::get_min_point_size() const
-{
-	return impl->min_point_size;
-}
-
 float CL_Pen::get_point_fade_treshold_size() const
 {
 	return impl->point_fade_treshold_size;
-}
-
-void CL_Pen::get_point_distance_attenuation(float &a, float &b, float &c) const
-{
-	a = (float)impl->distance_attenuation_a;
-	b = (float)impl->distance_attenuation_b;
-	c = (float)impl->distance_attenuation_c;
-}
-
-bool CL_Pen::is_point_antialiased() const
-{
-	return impl->point_antialiased;
 }
 
 float CL_Pen::get_line_width() const
@@ -126,29 +86,9 @@ float CL_Pen::get_line_width() const
 	return impl->line_width;
 }
 
-unsigned short CL_Pen::get_line_stipple_pattern() const
-{
-	return impl->line_stipple_pattern;
-}
-
-int CL_Pen::get_line_stipple_repeat_count() const
-{
-	return impl->line_stipple_repeat_count;
-}
-
-bool CL_Pen::is_line_stippled() const
-{
-	return impl->line_stippled;
-}
-
 bool CL_Pen::is_line_antialiased() const
 {
 	return impl->line_antialiased;
-}
-
-bool CL_Pen::is_using_point_sprites() const
-{
-	return impl->point_sprites;
 }
 
 bool CL_Pen::is_using_vertex_program_point_sizes() const
@@ -169,51 +109,14 @@ void CL_Pen::set_point_size(float value)
 	impl->point_size = value;
 }
 
-void CL_Pen::set_max_point_size(float value)
-{
-	impl->max_point_size = value;
-}
-
-void CL_Pen::set_min_point_size(float value)
-{
-	impl->min_point_size = value;
-}
-
 void CL_Pen::set_point_fade_treshold_size(float value)
 {
 	impl->point_fade_treshold_size = value;
 }
 
-void CL_Pen::set_point_distance_attenuation(float a, float b, float c)
-{
-	impl->distance_attenuation_a = a;
-	impl->distance_attenuation_b = b;
-	impl->distance_attenuation_c = c;
-}
-
-void CL_Pen::enable_point_antialiasing(bool value)
-{
-	impl->point_antialiased = value;
-}
-
 void CL_Pen::set_line_width(float value)
 {
 	impl->line_width = value;
-}
-
-void CL_Pen::set_line_stipple_pattern(unsigned short value)
-{
-	impl->line_stipple_pattern = value;
-}
-
-void CL_Pen::set_line_stipple_repeat_count(int value)
-{
-	impl->line_stipple_repeat_count = value;
-}
-
-void CL_Pen::enable_line_stipple(bool value)
-{
-	impl->line_stippled = value;
 }
 
 void CL_Pen::enable_line_antialiasing(bool value)

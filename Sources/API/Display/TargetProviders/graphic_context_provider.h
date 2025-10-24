@@ -55,6 +55,7 @@ class CL_RenderBufferProvider;
 class CL_VertexArrayBufferProvider;
 class CL_ElementArrayBufferProvider;
 class CL_FontDescription;
+class CL_PixelBufferProvider;
 
 /// \brief Primitives array data supplied to clanDisplay provider objects.
 ///
@@ -157,11 +158,17 @@ public:
 	/// \brief Allocate element array buffer provider for this gc.
 	virtual CL_ElementArrayBufferProvider *alloc_element_array_buffer() = 0;
 
+	/// \brief Allocate pixel buffer provider for this gc.
+	virtual CL_PixelBufferProvider *alloc_pixel_buffer() = 0;
+
 	/// \brief Set active program object to the standard program specified.
 	virtual void set_program_object(CL_StandardProgram standard_program) = 0;
 
 	/// \brief Set active program object.
-	virtual void set_program_object(const CL_ProgramObject &program) = 0;
+	///
+	/// \param program = Program to set
+	/// \param program_matrix_flags = Which matricies will be set in the program object ( CL_ProgramMatrixFlags bitmask flags )
+	virtual void set_program_object(const CL_ProgramObject &program, int program_matrix_flags) = 0;
 
 	/// \brief Remove active program object.
 	virtual void reset_program_object() = 0;
@@ -170,10 +177,10 @@ public:
 	virtual void set_texture(int unit_index, const CL_Texture &texture) = 0;
 
 	/// \brief Remove texture from unit.
-	virtual void reset_texture(int unit_index) = 0;
+	virtual void reset_texture(int unit_index, const CL_Texture &texture) = 0;
 
 	/// \brief Set a frame buffer for off-screen rendering.
-	virtual void set_frame_buffer(const CL_FrameBuffer &buffer) = 0;
+	virtual void set_frame_buffer(const CL_FrameBuffer &write_buffer, const CL_FrameBuffer &read_buffer) = 0;
 
 	/// \brief Set the rendering buffer back to the screen.
 	virtual void reset_frame_buffer() = 0;
@@ -198,6 +205,9 @@ public:
 
 	/// \brief Draws primitives from the current assigned primitives array.
 	virtual void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices) = 0;
+
+	/// \brief Draws instanced primitives from the current assigned primitives array.
+	virtual void draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count) = 0;
 
 	/// \brief Draw primitives elements
 	///
@@ -236,7 +246,7 @@ public:
 	virtual void reset_primitives_array() = 0;
 
 	/// \brief Draw pixel buffer on gc.
-	virtual void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color) = 0;
+	virtual void draw_pixels(CL_GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color) = 0;
 
 	/// \brief Set clip rect.
 	virtual void set_clip_rect(const CL_Rect &rect) = 0;

@@ -52,7 +52,7 @@ class CL_API_SOUND CL_SoundOutput
 /// \{
 
 public:
-	/// \brief Constructs a sound output object.
+	/// \brief Constructs a null instance
 	CL_SoundOutput();
 
 	/// \brief Constructs a SoundOutput
@@ -66,11 +66,6 @@ public:
 	/// \param desc = Sound Output_ Description
 	CL_SoundOutput(const CL_SoundOutput_Description &desc);
 
-	/// \brief Constructs a SoundOutput
-	///
-	/// \param copy = Sound Output
-	CL_SoundOutput(const CL_SoundOutput &copy);
-
 	virtual ~CL_SoundOutput();
 
 /// \}
@@ -78,6 +73,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Name of the output device.
 	const CL_String8 &get_name() const;
 
@@ -123,7 +124,7 @@ private:
 
 	/// \brief Constructs a SoundOutput
 	///
-	/// \param CL_SoundOutput_Impl = Weak Ptr
+	/// \param impl = Weak Ptr
 	CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl);
 
 	CL_SharedPtr<CL_SoundOutput_Impl> impl;

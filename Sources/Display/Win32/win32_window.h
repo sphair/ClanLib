@@ -74,6 +74,9 @@ public:
 	bool is_minimized() const;
 	bool is_maximized() const;
 	bool is_visible() const;
+	CL_Size get_minimum_size(bool client_area) const;
+	CL_Size get_maximum_size(bool client_area) const;
+	CL_String get_title() const;
 	CL_Callback_v0 &func_on_resized() { return callback_on_resized; }
 	CL_InputContext &get_ic() { return ic; }
 	const CL_InputContext &get_ic() const { return ic; }
@@ -119,9 +122,9 @@ public:
 	CL_String get_clipboard_text() const;
 	CL_PixelBuffer get_clipboard_image() const;
 	void set_clipboard_image(const CL_PixelBuffer &image);
-	static CL_PixelBuffer create_bitmap_data(const CL_PixelBuffer &image);
+	static CL_PixelBuffer create_bitmap_data(const CL_PixelBuffer &image, const CL_Rect &rect);
 
-	static HBITMAP create_bitmap(HDC hdc, CL_PixelBuffer image);
+	static HBITMAP create_bitmap(HDC hdc, const CL_PixelBuffer &image);
 	HICON create_icon(const CL_PixelBuffer &image) const;
 
 	void request_repaint(const CL_Rect &rect);
@@ -130,10 +133,16 @@ public:
 
 	void update_layered(CL_PixelBuffer &image, const CL_Point &dest_offset, const CL_Colorf &colorkey, int window_alpha, bool use_colorkey);
 
+	void set_allow_drop_shadow(bool value) { allow_dropshadow = value; }
+
 private:
 	void create_direct_input();
-	void destroy_direct_input();
 
+	static LRESULT WINAPI static_window_try_proc(
+		HWND hWnd,
+		UINT uMsg,
+		WPARAM wParam,
+		LPARAM lParam);
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,
 		UINT uMsg,
@@ -155,7 +164,7 @@ private:
 	void received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam);
-	void received_joystick_input();
+	void received_joystick_input(UINT msg, WPARAM wparam, LPARAM lparam);
 
 	void setup_tablet();
 
@@ -181,6 +190,9 @@ private:
 	HICON small_icon;
 	bool cursor_set, cursor_hidden;
 	CL_DisplayWindowSite *site;
+	HMODULE direct8_module;
+	typedef HRESULT (WINAPI FuncDirectInput8Create)(HINSTANCE hinst, DWORD dwVersion, REFIID riidltf, LPVOID *ppvOut, LPUNKNOWN punkOuter);
+	FuncDirectInput8Create *ptr_DirectInput8Create;
 	LPDIRECTINPUT8 directinput;
 	CL_InputDevice keyboard, mouse, tablet;
 	std::vector<CL_InputDevice> joysticks;
@@ -194,6 +206,7 @@ private:
 	bool layered;
 	UINT png_clipboard_format;
 	CL_String class_name;
+	bool allow_dropshadow;
 
 	friend class CL_InputDeviceProvider_DirectInput;
 };

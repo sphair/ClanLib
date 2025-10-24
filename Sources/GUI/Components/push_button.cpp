@@ -30,6 +30,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_theme_part.h"
@@ -109,6 +110,18 @@ CL_PushButton::~CL_PushButton()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PushButton Attributes:
+
+CL_PushButton *CL_PushButton::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_PushButton *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_PushButton*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_PushButton named item: %1", id));
+
+	return object;
+}
 
 bool CL_PushButton::is_pushed() const
 {
@@ -214,7 +227,7 @@ void CL_PushButton_Impl::create_parts()
 	part.set_state(CssStr::disabled, !button->is_enabled());
 	part.set_state(CssStr::flat, button->is_flat());
 
-	part_focus = CL_GUIThemePart(button, cl_text("focus"));
+	part_focus = CL_GUIThemePart(button, "focus");
 }
 
 void CL_PushButton_Impl::on_style_changed()
@@ -367,6 +380,6 @@ void CL_PushButton_Impl::update_default_state(bool focus_gained)
 		}
 	}
 
-	part.set_state(cl_text("defaulted"), is_default); 
+	part.set_state("defaulted", is_default); 
 	button->request_repaint();
 }

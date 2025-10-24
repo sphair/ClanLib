@@ -42,8 +42,8 @@
 #include "API/Display/Font/font_system.h"
 #include "API/Display/2D/draw.h"
 #include "API/Core/Text/string_help.h"
-
-#include "../2D/sprite_render_batch.h"
+#include "API/Core/Text/utf8_reader.h"
+#include "../2D/render_batch2d.h"
 #include "../Render/graphic_context_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -82,9 +82,12 @@ CL_Size CL_GlyphCache::get_text_size(CL_FontEngine *font_engine, CL_GraphicConte
 {
 	int width = 0;
 
-	for (CL_String::size_type p = 0; p < text.length(); p++)
+	CL_UTF8_Reader reader(text);
+	while(!reader.is_end())
 	{
-		CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, text[p]);
+		unsigned int glyph = reader.get_char();
+		reader.next();
+		CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 		if (gptr == NULL) continue;
 		width += gptr->increment.x;
 	}
@@ -139,24 +142,31 @@ int CL_GlyphCache::get_character_index(CL_FontEngine *font_engine, CL_GraphicCon
 	int font_height = fm.get_height();
 	int font_external_leading = fm.get_external_leading();
 
-	std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
-	for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+	std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
+	for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
 	{
 		int xpos = dest_x;
 		int ypos = dest_y;
 
-		CL_TempString &textline = lines[i];
+		CL_String &textline = lines[i];
 		CL_String::size_type string_length = textline.length();
 
 		// Scan the string
-		for (CL_String::size_type p = 0; p < string_length; p++)
+
+		CL_UTF8_Reader reader(textline);
+		while(!reader.is_end())
 		{
-			CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, textline[p]);
+			unsigned int glyph = reader.get_char();
+			reader.next();
+
+			CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 			if (gptr == NULL) continue;
 
 			CL_Rect position(xpos, ypos - font_height, CL_Size(gptr->increment.x, gptr->increment.y + font_height + font_external_leading));
 			if (position.contains(point))
-				return ((int) p) + character_counter;
+			{
+				return (reader.get_position()) + character_counter;
+			}
 		
 			xpos += gptr->increment.x;
 			ypos += gptr->increment.y;
@@ -190,13 +200,13 @@ void CL_GlyphCache::insert_glyph(CL_GraphicContext &gc, CL_FontPixelBuffer &pb)
 
 	if (!pb.empty_buffer)
 	{
-		CL_PixelBuffer buffer_with_border = CL_PixelBufferHelp::add_border(pb.buffer, glyph_border_size);
+		CL_PixelBuffer buffer_with_border = CL_PixelBufferHelp::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 
 		font_glyph->empty_buffer = false;
 		font_glyph->subtexture = texture_group.add(gc, CL_Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
-		font_glyph->geometry = CL_Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, pb.buffer.get_size() );
+		font_glyph->geometry = CL_Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
 
-		font_glyph->subtexture.get_texture().set_subimage(font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border);
+		font_glyph->subtexture.get_texture().set_subimage(font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 	}
 }
 
@@ -229,15 +239,14 @@ void CL_GlyphCache::insert_glyph(CL_GraphicContext &gc, CL_Font_System_Position 
 
 	if ( (position.width > 0 ) && (position.height > 0) )
 	{
-
-		CL_PixelBuffer buffer = pixel_buffer.get_subimage(CL_Rect(position.x_pos, position.y_pos, position.width + position.x_pos, position.height + position.y_pos));
-		CL_PixelBuffer buffer_with_border = CL_PixelBufferHelp::add_border(buffer, glyph_border_size);
+		CL_Rect source_rect(position.x_pos, position.y_pos, position.width + position.x_pos, position.height + position.y_pos);
+		CL_PixelBuffer buffer_with_border = CL_PixelBufferHelp::add_border(pixel_buffer, glyph_border_size, source_rect);
 
 		font_glyph->empty_buffer = false;
 		font_glyph->subtexture = texture_group.add(gc, CL_Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
-		font_glyph->geometry = CL_Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, buffer.get_size() );
+		font_glyph->geometry = CL_Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, source_rect.get_size() );
 
-		font_glyph->subtexture.get_texture().set_subimage(font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border);
+		font_glyph->subtexture.get_texture().set_subimage(font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 
 	}
 	else
@@ -264,12 +273,16 @@ void CL_GlyphCache::draw_text(CL_FontEngine *font_engine, CL_GraphicContext &gc,
 		return;
 	}
 
-	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
+	CL_RenderBatcherSprite *batcher = gc.impl->current_internal_batcher;
 
 	// Scan the string
-	for (CL_String::size_type p = 0; p < string_length; p++)
+	CL_UTF8_Reader reader(text);
+	while(!reader.is_end())
 	{
-		CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, text[p]);
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		CL_Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 		if (gptr == NULL) continue;
 
 		if (!gptr->empty_buffer)
@@ -289,12 +302,12 @@ void CL_GlyphCache::set_texture_group(CL_TextureGroup &new_texture_group)
 {
 	if (new_texture_group.is_null())
 	{
-		throw CL_Exception(cl_text("Specified texture group is not valid"));
+		throw CL_Exception("Specified texture group is not valid");
 	}
 
 	if (!glyph_list.empty())
 	{
-		throw CL_Exception(cl_text("Cannot specify a new texture group after the font has been used"));
+		throw CL_Exception("Cannot specify a new texture group after the font has been used");
 	}
 
 	texture_group = new_texture_group;
@@ -307,3 +320,4 @@ void CL_GlyphCache::set_font_metrics(const CL_FontMetrics &metrics)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GlyphCache Implementation:
+

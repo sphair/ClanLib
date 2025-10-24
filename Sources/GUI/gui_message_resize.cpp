@@ -44,8 +44,8 @@ public:
 
 CL_GUIMessage_Resize::CL_GUIMessage_Resize()
 {
-	set_type(cl_text("resize"));
-	set_data(cl_text("resize"), CL_SharedPtr<CL_GUIMessage_ResizeData>(
+	set_type("resize");
+	set_data("resize", CL_SharedPtr<CL_GUIMessage_ResizeData>(
 		new CL_GUIMessage_ResizeData));
 }
 
@@ -63,12 +63,12 @@ CL_GUIMessage_Resize::~CL_GUIMessage_Resize()
 
 CL_StringRef CL_GUIMessage_Resize::get_type_name()
 {
-	return cl_text("resize");
+	return "resize";
 }
 
 CL_Rect CL_GUIMessage_Resize::get_geometry() const
 {
-	CL_SharedPtr<CL_GUIMessage_ResizeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ResizeData> >(get_data(cl_text("resize")));
+	CL_SharedPtr<CL_GUIMessage_ResizeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ResizeData> >(get_data("resize"));
 	if (d.is_null())
 		return CL_Rect();
 	return d->rect;
@@ -79,12 +79,12 @@ CL_Rect CL_GUIMessage_Resize::get_geometry() const
 
 void CL_GUIMessage_Resize::set_geometry(const CL_Rect &rect)
 {
-	CL_SharedPtr<CL_GUIMessage_ResizeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ResizeData> >(get_data(cl_text("resize")));
+	CL_SharedPtr<CL_GUIMessage_ResizeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ResizeData> >(get_data("resize"));
 	if (d.is_null())
 	{
 		d = CL_SharedPtr<CL_GUIMessage_ResizeData>(
 			new CL_GUIMessage_ResizeData);
-		set_data(cl_text("resize"), d);
+		set_data("resize", d);
 	}
 	d->rect = rect;
 }

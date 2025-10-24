@@ -170,7 +170,6 @@ CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 	glx.glXGetProcAddressARB = (CL_GL_GLXFunctions::ptr_glXGetProcAddressARB) CL_LOAD_GLFUNC(glXGetProcAddressARB);
 	glx.glXGetProcAddress = (CL_GL_GLXFunctions::ptr_glXGetProcAddress) CL_LOAD_GLFUNC(glXGetProcAddress);
 
-
 	if ( (glx.glXDestroyContext == NULL) ||
 		(glx.glXMakeCurrent == NULL) ||
 		(glx.glXGetCurrentContext == NULL) ||
@@ -180,12 +179,12 @@ CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 		(glx.glXQueryExtensionsString == NULL) ||
 		(glx.glXCreateContext == NULL) )
 	{
-		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+		throw CL_Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
 	if ((glx.glXGetProcAddressARB == NULL) && (glx.glXGetProcAddress == NULL))
 	{
-		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+		throw CL_Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
 	x11_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_GLX::on_window_resized);
@@ -270,10 +269,12 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 			None
 		};
 
-		int gl_attribs[32];
 		int i = 0;
 
 		CL_OpenGLWindowDescription gl_desc(desc);
+
+
+		int gl_attribs[32];	// WARNING - create() assumes this is 32 in size
 
 		// Note: gl_attribs[32] !!!!
 		gl_attribs[i++] = GLX_RGBA;
@@ -392,6 +393,39 @@ GLXContext CL_OpenGLWindowProvider_GLX::create_context()
 	if(context == NULL)
 		throw CL_Exception("glXCreateContext failed");
 
+	int attribs[] = {
+		GLX_CONTEXT_MAJOR_VERSION_ARB,
+		3,
+		GLX_CONTEXT_MINOR_VERSION_ARB,
+		0,
+		0
+	};
+
+	ptr_glXCreateContextAttribs glXCreateContextAttribs = NULL;
+
+	if (glx.glXGetProcAddressARB)
+		glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddressARB((GLubyte*) "glXCreateContextAttribsARB");
+	if (glx.glXGetProcAddress)
+		glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddress((GLubyte*) "glXCreateContextAttribsARB");
+
+	if (glXCreateContextAttribs && glx.glXChooseFBConfig)
+	{
+		int nitems = 0;
+		GLXFBConfig *framebuffer_config = glx.glXChooseFBConfig(x11_window.get_display(), DefaultScreen(x11_window.get_display()), NULL, &nitems); 
+
+		if (framebuffer_config)
+		{
+			GLXContext context_gl3;
+			context_gl3 = glXCreateContextAttribs(x11_window.get_display(), *framebuffer_config, shared_context, GL_TRUE, attribs);
+			if (context_gl3)
+			{
+				glx.glXDestroyContext(x11_window.get_display(), context);
+				context = context_gl3;
+			}
+			XFree(framebuffer_config);
+		}
+	}
+
 	return context;
 }
 
@@ -399,6 +433,7 @@ void CL_OpenGLWindowProvider_GLX::flip(int interval)
 {
 	CL_GraphicContext gc = get_gc();
 	CL_OpenGL::set_active(gc);
+	clFlush();
 
 	if (interval != -1)
 	{
@@ -439,47 +474,44 @@ void CL_OpenGLWindowProvider_GLX::update(const CL_Rect &_rect)
 		return;
 
 	CL_OpenGL::set_active(gc);
-
-	CLint old_viewport[4], old_matrix_mode;
-	CLdouble old_matrix_projection[16], old_matrix_modelview[16];
-	clGetIntegerv(CL_VIEWPORT, old_viewport);
-	clGetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-	clGetDoublev(CL_PROJECTION_MATRIX, old_matrix_projection);
-	clGetDoublev(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-
-	clViewport(0, 0, width, height);
-	clMatrixMode(CL_PROJECTION);
-	clLoadIdentity();
-	clMultMatrixf(CL_Mat4f::ortho_2d(0.0, width, 0.0, height));
-	clMatrixMode(CL_MODELVIEW);
-	clLoadIdentity();
-	clTranslated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
+	clFlush();
 
 	CLboolean isDoubleBuffered = CL_TRUE;
 	clGetBooleanv(CL_DOUBLEBUFFER, &isDoubleBuffered);
 	if (isDoubleBuffered)
 	{
+		CLint read_last_bound;
+		CLint draw_last_bound;
+
+		clGetIntegerv(CL_READ_FRAMEBUFFER_BINDING, &read_last_bound);
+		clGetIntegerv(CL_DRAW_FRAMEBUFFER_BINDING, &draw_last_bound);
+
+		clBindFramebuffer(CL_READ_FRAMEBUFFER, 0);
+	    clBindFramebuffer(CL_DRAW_FRAMEBUFFER, 0);
+
 		clReadBuffer(CL_BACK);
 		clDrawBuffer(CL_FRONT);
 
-		clRasterPos2i(rect.left, height - rect.bottom);
-
-		clPixelZoom(1.0f, 1.0f);
-
-		clCopyPixels(	rect.left, height - rect.bottom,
-				rect.right - rect.left, rect.bottom - rect.top,
-				CL_COLOR);
+		clBlitFramebuffer( 
+			rect.left, height - rect.bottom,
+			rect.right, height - rect.top,
+			rect.left, height - rect.bottom,
+			rect.right, height - rect.top,
+			CL_COLOR_BUFFER_BIT, CL_LINEAR);
 
 		clDrawBuffer(CL_BACK);
-		clFlush();
-	}
+		clReadBuffer(CL_FRONT);
 
-	clViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	clMatrixMode(CL_PROJECTION);
-	clLoadMatrixd(old_matrix_projection);
-	clMatrixMode(CL_MODELVIEW);
-	clLoadMatrixd(old_matrix_modelview);
-	clMatrixMode(old_matrix_mode);
+		if (read_last_bound)
+			clBindFramebuffer(CL_READ_FRAMEBUFFER, read_last_bound);
+
+		if (draw_last_bound)
+			clBindFramebuffer(CL_DRAW_FRAMEBUFFER, draw_last_bound);
+
+		clFlush();
+
+
+	}
 }
 
 

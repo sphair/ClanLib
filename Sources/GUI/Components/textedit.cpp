@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -54,7 +55,7 @@ public:
 CL_TextEdit::CL_TextEdit(const CL_GUIComponentDescription &desc, CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_TextEdit_Impl)
 {
-	set_type_name(cl_text("textedit"));
+	set_type_name("textedit");
 	impl->textedit = this;
 	func_process_message().set(impl.get(), &CL_TextEdit_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_TextEdit_Impl::on_render);
@@ -66,6 +67,18 @@ CL_TextEdit::~CL_TextEdit()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextEdit Attributes:
+
+CL_TextEdit *CL_TextEdit::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_TextEdit *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_TextEdit*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_TextEdit named item: %1", id));
+
+	return object;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextEdit Operations:

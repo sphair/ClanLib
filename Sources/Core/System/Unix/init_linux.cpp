@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,6 +38,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include "init_linux.h"
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)
 #include <sys/time.h>
@@ -100,7 +101,7 @@ CL_String CL_System::get_exe_path()
 		}
 	}
 	
-	throw CL_Exception(cl_text("get_exe_path failed"));
+	throw CL_Exception("get_exe_path failed");
 
 #else
 #ifndef PROC_EXE_PATH

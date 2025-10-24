@@ -129,7 +129,7 @@ public:
 	///    and specular lighting calculations are based on the actual location of the light
 	///    in eye coordinates, and attenuation is enabled.</p>
 	///    <p>The default position is (0,0,1,0); thus, the default light source is directional,
-	///    parallel to, and in the direction of the –z axis.</p>
+	///    parallel to, and in the direction of the x axis.</p>
 	void set_position(const CL_Vec4f &position);
 
 	/// \brief  Sets the light spot direction.

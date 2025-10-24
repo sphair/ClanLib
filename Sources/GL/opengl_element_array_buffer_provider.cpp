@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL/precomp.h"
@@ -36,29 +37,14 @@
 // CL_OpenGLElementArrayBufferProvider Construction:
 
 CL_OpenGLElementArrayBufferProvider::CL_OpenGLElementArrayBufferProvider(CL_OpenGLGraphicContextProvider *gc_provider)
-: gc_provider(gc_provider), handle(0), data_ptr(0)
+: buffer(gc_provider)
 {
-	CL_SharedGCData::add_disposable(this);
-	CL_OpenGL::set_active(gc_provider);
-	clGenBuffers(1, &handle);
 }
 
 CL_OpenGLElementArrayBufferProvider::~CL_OpenGLElementArrayBufferProvider()
 {
-	dispose();
-	CL_SharedGCData::remove_disposable(this);
 }
 
-void CL_OpenGLElementArrayBufferProvider::on_dispose()
-{
-	if (handle)
-	{
-		if (CL_OpenGL::set_active())
-		{
-			clDeleteBuffers(1, &handle);
-		}
-	}
-}
 
 void CL_OpenGLElementArrayBufferProvider::create(int size, CL_BufferUsage usage)
 {
@@ -67,97 +53,6 @@ void CL_OpenGLElementArrayBufferProvider::create(int size, CL_BufferUsage usage)
 
 void CL_OpenGLElementArrayBufferProvider::create(void *data, int size, CL_BufferUsage usage)
 {
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(CL_ELEMENT_ARRAY_BUFFER_BINDING, &last_buffer);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, handle);
-	clBufferData(CL_ELEMENT_ARRAY_BUFFER, size, data, to_enum(usage));
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, last_buffer);
+	buffer.create(data, size, usage, CL_ELEMENT_ARRAY_BUFFER_BINDING, CL_ELEMENT_ARRAY_BUFFER);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_OpenGLElementArrayBufferProvider Attributes:
-
-void *CL_OpenGLElementArrayBufferProvider::get_data()
-{
-	return data_ptr;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_OpenGLElementArrayBufferProvider Operations:
-
-void CL_OpenGLElementArrayBufferProvider::lock(CL_BufferAccess access)
-{
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(CL_ELEMENT_ARRAY_BUFFER_BINDING, &last_buffer);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, handle);
-	data_ptr = (void *) clMapBuffer(CL_ELEMENT_ARRAY_BUFFER, to_enum(access));
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, last_buffer);
-}
-
-void CL_OpenGLElementArrayBufferProvider::unlock()
-{
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(CL_ELEMENT_ARRAY_BUFFER_BINDING, &last_buffer);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, handle);
-	clUnmapBuffer(CL_ELEMENT_ARRAY_BUFFER);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, last_buffer);
-	data_ptr = 0;
-}
-
-void CL_OpenGLElementArrayBufferProvider::upload_data(int offset, void *data, int size)
-{
-	CL_OpenGL::set_active(gc_provider);
-	CLint last_buffer = 0;
-	clGetIntegerv(CL_ELEMENT_ARRAY_BUFFER_BINDING, &last_buffer);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, handle);
-	clBufferSubData(CL_ELEMENT_ARRAY_BUFFER, offset, size, data);
-	clBindBuffer(CL_ELEMENT_ARRAY_BUFFER, last_buffer);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_OpenGLElementArrayBufferProvider Implementation:
-
-CLenum CL_OpenGLElementArrayBufferProvider::to_enum(CL_BufferUsage usage) const
-{
-	switch (usage)
-	{
-	case cl_usage_stream_draw:
-		return CL_STREAM_DRAW;
-	case cl_usage_stream_read:
-		return CL_STREAM_READ;
-	case cl_usage_stream_copy:
-		return CL_STREAM_COPY;
-	case cl_usage_static_draw:
-		return CL_STATIC_DRAW;
-	case cl_usage_static_read:
-		return CL_STATIC_READ;
-	case cl_usage_static_copy:
-		return CL_STATIC_COPY;
-	case cl_usage_dynamic_draw:
-		return CL_DYNAMIC_DRAW;
-	case cl_usage_dynamic_read:
-		return CL_DYNAMIC_READ;
-	case cl_usage_dynamic_copy:
-		return CL_DYNAMIC_COPY;
-	default:
-		return CL_STATIC_DRAW;
-	}
-}
-
-CLenum CL_OpenGLElementArrayBufferProvider::to_enum(CL_BufferAccess access) const
-{
-	switch (access)
-	{
-	case cl_access_read_only:
-		return CL_READ_ONLY;
-	case cl_access_write_only:
-		return CL_WRITE_ONLY;
-	case cl_access_read_write:
-		return CL_READ_WRITE;
-	default:
-		return CL_READ_WRITE;
-	}
-};

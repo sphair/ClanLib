@@ -64,7 +64,7 @@ public:
 /// \{
 
 public:
-	/// \brief Constructs an input device.
+	/// \brief Constructs a null instance.
 	CL_InputDevice();
 
 	/// \brief Constructs a InputDevice
@@ -74,13 +74,8 @@ public:
 
 	/// \brief Constructs a InputDevice
 	///
-	/// \param CL_InputDevice_Impl = Weak Ptr
+	/// \param impl = Weak Ptr
 	CL_InputDevice(CL_WeakPtr<CL_InputDevice_Impl> impl);
-
-	/// \brief Constructs a InputDevice
-	///
-	/// \param copy = Input Device
-	CL_InputDevice(const CL_InputDevice &copy);
 
 	~CL_InputDevice();
 
@@ -89,6 +84,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the provider for this input device
 	CL_InputDeviceProvider *get_provider() const;
 
@@ -173,9 +174,6 @@ public:
 
 	/// \brief Signal emitted when pointer is moved (absolute movement).
 	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &sig_pointer_move();
-
-	/// \brief Signal emitted when pointer's ball is moved (relative movement).
-	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &sig_ball_move();
 
 	/// \brief Signal emitted when axis is moved.
 	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &sig_axis_move();

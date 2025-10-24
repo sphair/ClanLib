@@ -227,7 +227,7 @@ int CL_DNSPacket::get_question_type(int index) const
 	}
 	int end_pos = CL_DNSResourceRecord::find_domain_name_end(impl->data, pos);
 	if (impl->data.get_size() < end_pos + 2)
-		throw CL_Exception(cl_text("Premature end of DNS packet"));
+		throw CL_Exception("Premature end of DNS packet");
 	unsigned short qtype = ntohs(*(unsigned short*) (impl->data.get_data() + end_pos));
 	return qtype;
 }
@@ -244,7 +244,7 @@ int CL_DNSPacket::get_question_class(int index) const
 	}
 	int end_pos = CL_DNSResourceRecord::find_domain_name_end(impl->data, pos);
 	if (impl->data.get_size() < end_pos + 4)
-		throw CL_Exception(cl_text("Premature end of DNS packet"));
+		throw CL_Exception("Premature end of DNS packet");
 	unsigned short qclass = ntohs(*(unsigned short*) (impl->data.get_data() + end_pos + 2));
 	return qclass;
 }
@@ -265,7 +265,7 @@ CL_DNSResourceRecord CL_DNSPacket::get_answer(int index) const
 	}
 	int questions_end = pos;
 	if (impl->data.get_size() < questions_end)
-		throw CL_Exception(cl_text("Premature end of DNS packet"));
+		throw CL_Exception("Premature end of DNS packet");
 
 	// Find the requested resource record:
 	pos = questions_end;
@@ -275,11 +275,11 @@ CL_DNSResourceRecord CL_DNSPacket::get_answer(int index) const
 		// qname + [word] qtype + [word] qclass + [dword] ttl + [word] rdlength + [rdlength] rdata
 		int qname_end = CL_DNSResourceRecord::find_domain_name_end(impl->data, pos);
 		if (impl->data.get_size() < qname_end + 8)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		unsigned short rdlength = ntohs(*(unsigned short*) (impl->data.get_data() + qname_end + 8));
 		int rr_end = qname_end + 10 + rdlength;
 		if (impl->data.get_size() < rr_end)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		pos = rr_end;
 	}
 
@@ -305,7 +305,7 @@ CL_DNSResourceRecord CL_DNSPacket::get_nameserver(int index) const
 	}
 	int questions_end = pos;
 	if (impl->data.get_size() < questions_end)
-		throw CL_Exception(cl_text("Premature end of DNS packet"));
+		throw CL_Exception("Premature end of DNS packet");
 
 	// Find the requested resource record:
 	pos = questions_end;
@@ -315,11 +315,11 @@ CL_DNSResourceRecord CL_DNSPacket::get_nameserver(int index) const
 		// qname + [word] qtype + [word] qclass + [dword] ttl + [word] rdlength + [rdlength] rdata
 		int qname_end = CL_DNSResourceRecord::find_domain_name_end(impl->data, pos);
 		if (impl->data.get_size() < qname_end + 8)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		unsigned short rdlength = ntohs(*(unsigned short*) (impl->data.get_data() + qname_end + 8));
 		int rr_end = qname_end + 10 + rdlength;
 		if (impl->data.get_size() < rr_end)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		pos = rr_end;
 	}
 
@@ -346,7 +346,7 @@ CL_DNSResourceRecord CL_DNSPacket::get_additional(int index) const
 	}
 	int questions_end = pos;
 	if (impl->data.get_size() < questions_end)
-		throw CL_Exception(cl_text("Premature end of DNS packet"));
+		throw CL_Exception("Premature end of DNS packet");
 
 	// Find the requested resource record:
 	pos = questions_end;
@@ -356,11 +356,11 @@ CL_DNSResourceRecord CL_DNSPacket::get_additional(int index) const
 		// qname + [word] qtype + [word] qclass + [dword] ttl + [word] rdlength + [rdlength] rdata
 		int qname_end = CL_DNSResourceRecord::find_domain_name_end(impl->data, pos);
 		if (impl->data.get_size() < qname_end + 8)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		unsigned short rdlength = ntohs(*(unsigned short*) (impl->data.get_data() + qname_end + 8));
 		int rr_end = qname_end + 10 + rdlength;
 		if (impl->data.get_size() < rr_end)
-			throw CL_Exception(cl_text("Premature end of DNS packet"));
+			throw CL_Exception("Premature end of DNS packet");
 		pos = rr_end;
 	}
 

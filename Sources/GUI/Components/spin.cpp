@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
@@ -72,7 +73,7 @@ public:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
 	void on_style_changed();
-	void on_lineedit_modified(CL_InputEvent event);
+	void on_lineedit_modified(CL_InputEvent &event);
 	void on_enablemode_changed();
 
 	void create_components();
@@ -129,6 +130,18 @@ CL_Spin::~CL_Spin()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Spin Attributes:
+
+CL_Spin *CL_Spin::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_Spin *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_Spin*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_Spin named item: %1", id));
+
+	return object;
+}
 
 int CL_Spin::get_value() const
 {
@@ -353,7 +366,7 @@ void CL_Spin_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 void CL_Spin_Impl::create_components()
 {
 	lineedit = new CL_LineEdit(component);
-	lineedit->set_class_name(cl_text("spin"));
+	lineedit->set_class_name("spin");
 	lineedit->func_after_edit_changed().set(this, &CL_Spin_Impl::on_lineedit_modified);
 	lineedit->set_numeric_mode(true);
 
@@ -405,7 +418,7 @@ void CL_Spin_Impl::on_style_changed()
     	lineedit->set_text(value_i);
 }
 
-void CL_Spin_Impl::on_lineedit_modified(CL_InputEvent event)
+void CL_Spin_Impl::on_lineedit_modified(CL_InputEvent &event)
 {
 	if (floating_point_mode)
 	{

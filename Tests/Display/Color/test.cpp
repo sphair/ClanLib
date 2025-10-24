@@ -88,7 +88,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 void TestApp::fail(void)
 {
-	throw CL_Exception(cl_text("Failed Test"));
+	throw CL_Exception("Failed Test");
 }
 
 

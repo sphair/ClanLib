@@ -52,11 +52,6 @@ CL_InputDevice::CL_InputDevice(CL_InputDeviceProvider *provider)
 	provider->init(&impl->sig_provider_event);
 }
 
-CL_InputDevice::CL_InputDevice(const CL_InputDevice &copy)
-: impl(copy.impl)
-{
-}
-
 CL_InputDevice::CL_InputDevice(CL_WeakPtr<CL_InputDevice_Impl> impl)
 : impl(impl.to_sharedptr())
 {
@@ -68,6 +63,12 @@ CL_InputDevice::~CL_InputDevice()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDevice Attributes:
+
+void CL_InputDevice::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_InputDevice is null");
+}
 
 CL_InputDeviceProvider *CL_InputDevice::get_provider() const
 {
@@ -118,125 +119,125 @@ CL_String CL_InputDevice::keyid_to_string(int keycode) const
 
 		switch (keycode)
 		{
-		case CL_KEY_BACKSPACE: return cl_text("backspace");
-		case CL_KEY_TAB: return cl_text("tab");
-		case CL_KEY_CLEAR: return cl_text("clear");
-		case CL_KEY_RETURN: return cl_text("return");
+		case CL_KEY_BACKSPACE: return "backspace";
+		case CL_KEY_TAB: return "tab";
+		case CL_KEY_CLEAR: return "clear";
+		case CL_KEY_RETURN: return "return";
 		#ifdef WIN32
-		case CL_KEY_SHIFT: return cl_text("shift");
-		case CL_KEY_CONTROL: return cl_text("control");
+		case CL_KEY_SHIFT: return "shift";
+		case CL_KEY_CONTROL: return "control";
 		#endif
 		#if !defined(__CYGWIN__) && !defined(__MINGW32__)
-		case CL_KEY_KANJI: return cl_text("kanji");
-		case CL_KEY_CONVERT: return cl_text("convert");
-		case CL_KEY_NONCONVERT: return cl_text("nonconvert");
+		case CL_KEY_KANJI: return "kanji";
+		case CL_KEY_CONVERT: return "convert";
+		case CL_KEY_NONCONVERT: return "nonconvert";
 		#endif
-		case CL_KEY_MENU: return cl_text("menu");
-		case CL_KEY_PAUSE: return cl_text("pause");
-		case CL_KEY_ESCAPE: return cl_text("escape");
-		case CL_KEY_SPACE: return cl_text("space");
-		case CL_KEY_PRIOR: return cl_text("prior");
-		case CL_KEY_NEXT: return cl_text("next");
-		case CL_KEY_END: return cl_text("end");
-		case CL_KEY_HOME: return cl_text("home");
-		case CL_KEY_LEFT: return cl_text("left");
-		case CL_KEY_UP: return cl_text("up");
-		case CL_KEY_RIGHT: return cl_text("right");
-		case CL_KEY_DOWN: return cl_text("down");
-		case CL_KEY_SELECT: return cl_text("select");
-		case CL_KEY_PRINT: return cl_text("print");
-		case CL_KEY_EXECUTE: return cl_text("execute");
-		case CL_KEY_INSERT: return cl_text("insert");
-		case CL_KEY_DELETE: return cl_text("delete");
-		case CL_KEY_HELP: return cl_text("help");
-		case CL_KEY_0: return cl_text("0");
-		case CL_KEY_1: return cl_text("1");
-		case CL_KEY_2: return cl_text("2");
-		case CL_KEY_3: return cl_text("3");
-		case CL_KEY_4: return cl_text("4");
-		case CL_KEY_5: return cl_text("5");
-		case CL_KEY_6: return cl_text("6");
-		case CL_KEY_7: return cl_text("7");
-		case CL_KEY_8: return cl_text("8");
-		case CL_KEY_9: return cl_text("9");
-		case CL_KEY_A: return cl_text("a");
-		case CL_KEY_B: return cl_text("b");
-		case CL_KEY_C: return cl_text("c");
-		case CL_KEY_D: return cl_text("d");
-		case CL_KEY_E: return cl_text("e");
-		case CL_KEY_F: return cl_text("f");
-		case CL_KEY_G: return cl_text("g");
-		case CL_KEY_H: return cl_text("h");
-		case CL_KEY_I: return cl_text("i");
-		case CL_KEY_J: return cl_text("j");
-		case CL_KEY_K: return cl_text("k");
-		case CL_KEY_L: return cl_text("l");
-		case CL_KEY_M: return cl_text("m");
-		case CL_KEY_N: return cl_text("n");
-		case CL_KEY_O: return cl_text("o");
-		case CL_KEY_P: return cl_text("p");
-		case CL_KEY_Q: return cl_text("q");
-		case CL_KEY_R: return cl_text("r");
-		case CL_KEY_S: return cl_text("s");
-		case CL_KEY_T: return cl_text("t");
-		case CL_KEY_U: return cl_text("u");
-		case CL_KEY_V: return cl_text("v");
-		case CL_KEY_W: return cl_text("w");
-		case CL_KEY_X: return cl_text("x");
-		case CL_KEY_Y: return cl_text("y");
-		case CL_KEY_Z: return cl_text("z");
-		case CL_KEY_LWIN: return cl_text("lwin");
-		case CL_KEY_RWIN: return cl_text("rwin");
-		case CL_KEY_NUMPAD0: return cl_text("numpad0");
-		case CL_KEY_NUMPAD1: return cl_text("numpad1");
-		case CL_KEY_NUMPAD2: return cl_text("numpad2");
-		case CL_KEY_NUMPAD3: return cl_text("numpad3");
-		case CL_KEY_NUMPAD4: return cl_text("numpad4");
-		case CL_KEY_NUMPAD5: return cl_text("numpad5");
-		case CL_KEY_NUMPAD6: return cl_text("numpad6");
-		case CL_KEY_NUMPAD7: return cl_text("numpad7");
-		case CL_KEY_NUMPAD8: return cl_text("numpad8");
-		case CL_KEY_NUMPAD9: return cl_text("numpad9");
-		case CL_KEY_MULTIPLY: return cl_text("multiply");
-		case CL_KEY_ADD: return cl_text("add");
-		case CL_KEY_SEPARATOR: return cl_text("separator");
-		case CL_KEY_SUBTRACT: return cl_text("subtract");
-		case CL_KEY_DECIMAL: return cl_text("decimal");
-		case CL_KEY_DIVIDE: return cl_text("divide");
-		case CL_KEY_F1: return cl_text("f1");
-		case CL_KEY_F2: return cl_text("f2");
-		case CL_KEY_F3: return cl_text("f3");
-		case CL_KEY_F4: return cl_text("f4");
-		case CL_KEY_F5: return cl_text("f5");
-		case CL_KEY_F6: return cl_text("f6");
-		case CL_KEY_F7: return cl_text("f7");
-		case CL_KEY_F8: return cl_text("f8");
-		case CL_KEY_F9: return cl_text("f9");
-		case CL_KEY_F10: return cl_text("f10");
-		case CL_KEY_F11: return cl_text("f11");
-		case CL_KEY_F12: return cl_text("f12");
-		case CL_KEY_F13: return cl_text("f13");
-		case CL_KEY_F14: return cl_text("f14");
-		case CL_KEY_F15: return cl_text("f15");
-		case CL_KEY_F16: return cl_text("f16");
-		case CL_KEY_F17: return cl_text("f17");
-		case CL_KEY_F18: return cl_text("f18");
-		case CL_KEY_F19: return cl_text("f19");
-		case CL_KEY_F20: return cl_text("f20");
-		case CL_KEY_F21: return cl_text("f21");
-		case CL_KEY_F22: return cl_text("f22");
-		case CL_KEY_F23: return cl_text("f23");
-		case CL_KEY_F24: return cl_text("f24");
-		case CL_KEY_NUMLOCK: return cl_text("numlock");
-		case CL_KEY_SCROLL: return cl_text("scroll");
-		case CL_KEY_LSHIFT: return cl_text("lshift");
-		case CL_KEY_RSHIFT: return cl_text("rshift");
-		case CL_KEY_LCONTROL: return cl_text("lcontrol");
-		case CL_KEY_RCONTROL: return cl_text("rcontrol");
-		case CL_KEY_LMENU: return cl_text("lmenu");
-		case CL_KEY_RMENU: return cl_text("rmenu");
+		case CL_KEY_MENU: return "menu";
+		case CL_KEY_PAUSE: return "pause";
+		case CL_KEY_ESCAPE: return "escape";
+		case CL_KEY_SPACE: return "space";
+		case CL_KEY_PRIOR: return "prior";
+		case CL_KEY_NEXT: return "next";
+		case CL_KEY_END: return "end";
+		case CL_KEY_HOME: return "home";
+		case CL_KEY_LEFT: return "left";
+		case CL_KEY_UP: return "up";
+		case CL_KEY_RIGHT: return "right";
+		case CL_KEY_DOWN: return "down";
+		case CL_KEY_SELECT: return "select";
+		case CL_KEY_PRINT: return "print";
+		case CL_KEY_EXECUTE: return "execute";
+		case CL_KEY_INSERT: return "insert";
+		case CL_KEY_DELETE: return "delete";
+		case CL_KEY_HELP: return "help";
+		case CL_KEY_0: return "0";
+		case CL_KEY_1: return "1";
+		case CL_KEY_2: return "2";
+		case CL_KEY_3: return "3";
+		case CL_KEY_4: return "4";
+		case CL_KEY_5: return "5";
+		case CL_KEY_6: return "6";
+		case CL_KEY_7: return "7";
+		case CL_KEY_8: return "8";
+		case CL_KEY_9: return "9";
+		case CL_KEY_A: return "a";
+		case CL_KEY_B: return "b";
+		case CL_KEY_C: return "c";
+		case CL_KEY_D: return "d";
+		case CL_KEY_E: return "e";
+		case CL_KEY_F: return "f";
+		case CL_KEY_G: return "g";
+		case CL_KEY_H: return "h";
+		case CL_KEY_I: return "i";
+		case CL_KEY_J: return "j";
+		case CL_KEY_K: return "k";
+		case CL_KEY_L: return "l";
+		case CL_KEY_M: return "m";
+		case CL_KEY_N: return "n";
+		case CL_KEY_O: return "o";
+		case CL_KEY_P: return "p";
+		case CL_KEY_Q: return "q";
+		case CL_KEY_R: return "r";
+		case CL_KEY_S: return "s";
+		case CL_KEY_T: return "t";
+		case CL_KEY_U: return "u";
+		case CL_KEY_V: return "v";
+		case CL_KEY_W: return "w";
+		case CL_KEY_X: return "x";
+		case CL_KEY_Y: return "y";
+		case CL_KEY_Z: return "z";
+		case CL_KEY_LWIN: return "lwin";
+		case CL_KEY_RWIN: return "rwin";
+		case CL_KEY_NUMPAD0: return "numpad0";
+		case CL_KEY_NUMPAD1: return "numpad1";
+		case CL_KEY_NUMPAD2: return "numpad2";
+		case CL_KEY_NUMPAD3: return "numpad3";
+		case CL_KEY_NUMPAD4: return "numpad4";
+		case CL_KEY_NUMPAD5: return "numpad5";
+		case CL_KEY_NUMPAD6: return "numpad6";
+		case CL_KEY_NUMPAD7: return "numpad7";
+		case CL_KEY_NUMPAD8: return "numpad8";
+		case CL_KEY_NUMPAD9: return "numpad9";
+		case CL_KEY_MULTIPLY: return "multiply";
+		case CL_KEY_ADD: return "add";
+		case CL_KEY_SEPARATOR: return "separator";
+		case CL_KEY_SUBTRACT: return "subtract";
+		case CL_KEY_DECIMAL: return "decimal";
+		case CL_KEY_DIVIDE: return "divide";
+		case CL_KEY_F1: return "f1";
+		case CL_KEY_F2: return "f2";
+		case CL_KEY_F3: return "f3";
+		case CL_KEY_F4: return "f4";
+		case CL_KEY_F5: return "f5";
+		case CL_KEY_F6: return "f6";
+		case CL_KEY_F7: return "f7";
+		case CL_KEY_F8: return "f8";
+		case CL_KEY_F9: return "f9";
+		case CL_KEY_F10: return "f10";
+		case CL_KEY_F11: return "f11";
+		case CL_KEY_F12: return "f12";
+		case CL_KEY_F13: return "f13";
+		case CL_KEY_F14: return "f14";
+		case CL_KEY_F15: return "f15";
+		case CL_KEY_F16: return "f16";
+		case CL_KEY_F17: return "f17";
+		case CL_KEY_F18: return "f18";
+		case CL_KEY_F19: return "f19";
+		case CL_KEY_F20: return "f20";
+		case CL_KEY_F21: return "f21";
+		case CL_KEY_F22: return "f22";
+		case CL_KEY_F23: return "f23";
+		case CL_KEY_F24: return "f24";
+		case CL_KEY_NUMLOCK: return "numlock";
+		case CL_KEY_SCROLL: return "scroll";
+		case CL_KEY_LSHIFT: return "lshift";
+		case CL_KEY_RSHIFT: return "rshift";
+		case CL_KEY_LCONTROL: return "lcontrol";
+		case CL_KEY_RCONTROL: return "rcontrol";
+		case CL_KEY_LMENU: return "lmenu";
+		case CL_KEY_RMENU: return "rmenu";
 		default:
-			return cl_format(cl_text("key_%1"), keycode);
+			return cl_format("key_%1", keycode);
 		}
 	}
 	else
@@ -252,7 +253,7 @@ int CL_InputDevice::string_to_keyid(const CL_String &str) const
 		if (impl->provider->supports_keyid_mapping())
 			return impl->provider->string_to_keyid(str);
 
-		if (str.substr(0, 4) == cl_text("key_"))
+		if (str.substr(0, 4) == "key_")
 		{
 			return CL_StringHelp::text_to_int(str.substr(4));
 		}
@@ -492,11 +493,6 @@ CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &CL_InputDevice::sig_
 CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &CL_InputDevice::sig_pointer_move()
 {
 	return impl->sig_pointer_move;
-}
-
-CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &CL_InputDevice::sig_ball_move()
-{
-	return impl->sig_ball_move;
 }
 
 CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> &CL_InputDevice::sig_axis_move()

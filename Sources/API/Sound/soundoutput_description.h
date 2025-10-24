@@ -32,6 +32,7 @@
 #pragma once
 
 #include "api_sound.h"
+#include "../Core/System/sharedptr.h"
 
 class CL_SoundOutput_Description_Impl;
 
@@ -46,11 +47,6 @@ class CL_API_SOUND CL_SoundOutput_Description
 public:
 	/// \brief Constructs a sound output description.
 	CL_SoundOutput_Description();
-
-	/// \brief Constructs a SoundOutput Description
-	///
-	/// \param copy = Sound Output_ Description
-	CL_SoundOutput_Description(const CL_SoundOutput_Description &copy);
 
 	~CL_SoundOutput_Description();
 
@@ -70,9 +66,6 @@ public:
 /// \{
 
 public:
-	/// \brief Copy assignment operator.
-	CL_SoundOutput_Description &operator =(const CL_SoundOutput_Description &copy);
-
 	/// \brief Sets the mixing frequency for the sound output device.
 	void set_mixing_frequency(int frequency);
 
@@ -84,7 +77,7 @@ public:
 /// \{
 
 private:
-	CL_SoundOutput_Description_Impl *impl;
+	CL_SharedPtr<CL_SoundOutput_Description_Impl> impl;
 /// \}
 };
 

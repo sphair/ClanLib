@@ -104,7 +104,7 @@ CL_Vec2i CL_LineSegment2x<int>::normal() const
 */
 
 template<typename Type>
-CL_Vec2<Type> CL_LineSegment2x<Type>::get_intersection( const CL_LineSegment2x<Type> second, bool &intersect) const
+CL_Vec2<Type> CL_LineSegment2x<Type>::get_intersection( const CL_LineSegment2x<Type> &second, bool &intersect) const
 {
 	Type denominator = ((q.x-p.x)*(second.q.y-second.p.y)-(q.y-p.y)*(second.q.x-second.p.x));
 
@@ -140,7 +140,7 @@ CL_Vec2<Type> CL_LineSegment2x<Type>::get_intersection( const CL_LineSegment2x<T
 }
 
 template<typename Type>
-bool CL_LineSegment2x<Type>::intersects( const CL_LineSegment2x<Type> second,	bool collinear_intersect ) const
+bool CL_LineSegment2x<Type>::intersects( const CL_LineSegment2x<Type> &second,	bool collinear_intersect ) const
 {
 	Type denominator = ((q.x-p.x)*(second.q.y-second.p.y)-(q.y-p.y)*(second.q.x-second.p.x));
 	
@@ -177,7 +177,7 @@ bool CL_LineSegment2x<Type>::intersects( const CL_LineSegment2x<Type> second,	bo
 
 // Collinear points are points that all lie on the same line. 
 template<typename Type>
-bool CL_LineSegment2x<Type>::collinear(const CL_LineSegment2x<Type> second) const
+bool CL_LineSegment2x<Type>::collinear(const CL_LineSegment2x<Type> &second) const
 {
 	Type denominator = ((q.x-p.x)*(second.q.y-second.p.y)-(q.y-p.y)*(second.q.x-second.p.x));	
 	Type numerator = ((p.y-second.p.y)*(second.q.x-second.p.x)-(p.x-second.p.x)*(second.q.y-second.p.y));
@@ -375,7 +375,7 @@ CL_LineSegment2x<Type> &CL_LineSegment2x<Type>::clip(const CL_Rectx<Type> &rect,
 			y = p.y + (q.y - p.y) * (rect.right - p.x)/(q.x - p.x);
 			x = rect.right;
 		}
-		else if (region_code_out & CL_LINECLIP_LEFT)	// point is to the left of clip rectangle
+		else /* if (region_code_out & CL_LINECLIP_LEFT) */	// point is to the left of clip rectangle
 		{
 			y = p.y + (q.y - p.y) * (rect.left - p.x)/(q.x - p.x);
 			x = rect.left;

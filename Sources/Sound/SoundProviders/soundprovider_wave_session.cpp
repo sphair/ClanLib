@@ -39,7 +39,7 @@ CL_SoundProvider_Wave_Session::CL_SoundProvider_Wave_Session(CL_SoundProvider_Wa
 	source(source), position(0)
 {
 	frequency = source.impl->frequency;
-	num_samples = source.impl->num_samples;
+	end_position = num_samples = source.impl->num_samples;
 }
 
 CL_SoundProvider_Wave_Session::~CL_SoundProvider_Wave_Session()
@@ -59,11 +59,6 @@ int CL_SoundProvider_Wave_Session::get_frequency() const
 	return frequency;
 }
 
-CL_SoundFormat CL_SoundProvider_Wave_Session::get_format() const
-{
-	return source.impl->format;
-}
-
 int CL_SoundProvider_Wave_Session::get_num_channels() const
 {
 	return source.impl->num_channels;
@@ -79,7 +74,7 @@ int CL_SoundProvider_Wave_Session::get_position() const
 
 bool CL_SoundProvider_Wave_Session::eof() const
 {
-	return (position >= get_num_samples());
+	return (position >= end_position);
 }
 
 void CL_SoundProvider_Wave_Session::stop()
@@ -90,19 +85,29 @@ bool CL_SoundProvider_Wave_Session::play()
 {
 	return true;
 }
-	
+
 bool CL_SoundProvider_Wave_Session::set_position(int pos)
 {
 	position = pos;
 	return true;
 }
 
+bool CL_SoundProvider_Wave_Session::set_end_position(int pos)
+{
+	if (pos > num_samples)
+		throw CL_Exception("Attempted to set the sample end position higher than the number of samples");
+	end_position = pos;
+	return true;
+}
+
+
 int CL_SoundProvider_Wave_Session::get_data(float **data_ptr, int data_requested)
 {
 	int block_start = position;
 	int block_end = position + data_requested;
-	if (block_end > num_samples)
-		block_end = num_samples;
+	if (block_end > end_position)
+		block_end = end_position;
+
 	int retrieved = block_end-block_start;
 
 	if (source.impl->format == sf_16bit_signed)

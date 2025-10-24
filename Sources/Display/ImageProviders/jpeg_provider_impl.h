@@ -89,25 +89,12 @@ public:
 	/// \brief Returns the pixelformat used by the image.
 	// EPixelFormat get_pixel_format() const { return RGB888; }
 
-	/// \brief Returns the red color mask used by the target.
-	unsigned int get_red_mask() const;
-
-	/// \brief Returns the green color mask by the target.
-	unsigned int get_green_mask() const;
-
-	/// \brief Returns the blue color mask by the target.
-	unsigned int get_blue_mask() const;
-
-	/// \brief Returns the alpha mask by the target.
-	unsigned int get_alpha_mask() const;
-
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	CL_PixelFormat format;
+	CL_TextureFormat sized_format;
 
 	int pitch, width, height;
 

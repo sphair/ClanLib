@@ -63,10 +63,11 @@ public:
 /// \name Operations
 /// \{
 public:
+	void generate_mipmap();
 	void create(int width, int height, CL_TextureFormat internal_format, int depth);
 	void destroy();
-	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const;
-	void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
+	CL_PixelBuffer get_pixeldata(CL_TextureFormat sized_format, int level) const;
+	void set_image(CL_PixelBuffer &image, int level);
 
 	void set_cube_map(
 		CL_PixelBuffer &cube_map_positive_x,
@@ -75,8 +76,7 @@ public:
 		CL_PixelBuffer &cube_map_negative_y,
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
-		int level,
-		CL_TextureFormat internal_format);
+		int level);
 
 	void set_compressed_image(
 		int level,
@@ -88,7 +88,8 @@ public:
 	void set_subimage(
 		int x,
 		int y,
-		const CL_PixelBufferRef &image,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
 		int level);
 
 	void copy_image_from(
@@ -115,7 +116,6 @@ public:
 	void set_lod_bias(double lod_bias);
 	void set_base_level(int base_level);
 	void set_max_level(int max_level);
-	void set_generate_mipmap(bool generate_mipmap);
 
 	void set_wrap_mode(
 		CL_TextureWrapMode wrap_s,
@@ -132,7 +132,6 @@ public:
 	void set_min_filter(CL_TextureFilter filter);
 	void set_mag_filter(CL_TextureFilter filter);
 	void set_max_anisotropy(float v);
-	void set_depth_mode(CL_TextureDepthMode depth_mode);
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);
 
 	/// \brief Transform a non-power-of-two coordinate
@@ -150,14 +149,14 @@ public:
 /// \{
 private:
 	void on_dispose();
-	void set_texture_image2d(CLuint target, CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
+	void set_texture_image2d(CLuint target, CL_PixelBuffer &image, int level);
+	void set_texture_image3d(CLuint target, CL_PixelBuffer &image, int image_depth, int level);
 	int get_next_power_of_two(int value);
 
 	CLenum to_enum(CL_TextureFilter filter);
 	CLenum to_enum(CL_TextureWrapMode mode);
 	CLenum to_enum(CL_CompareFunction func);
 	CLenum to_enum(CL_TextureCompareMode mode);
-	CLenum to_enum(CL_TextureDepthMode mode);
 
 	int width, height, depth;
 	int pot_width, pot_height, pot_depth;

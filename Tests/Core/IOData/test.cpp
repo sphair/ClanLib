@@ -69,7 +69,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 #ifdef WIN32
 		if (_tgetcwd(working_dir, MAX_PATH) == NULL)
-			throw CL_Exception(cl_text("Working dir is more than legal length !"));
+			throw CL_Exception("Working dir is more than legal length !");
 		if (working_dir[1]==':')
 		{
 			location_dir[0] = working_dir[0];
@@ -82,7 +82,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 #else
 		memset(working_dir, 0, 1024);
 		if (getcwd(working_dir, 1024) == 0)
-			throw CL_Exception(cl_text("Working dir is more than legal length !"));
+			throw CL_Exception("Working dir is more than legal length !");
 
 #endif
 
@@ -114,7 +114,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 void TestApp::fail(void)
 {
-	throw CL_Exception(cl_text("Failed Test"));
+	throw CL_Exception("Failed Test");
 }
 
 

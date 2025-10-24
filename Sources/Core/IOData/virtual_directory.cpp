@@ -105,7 +105,7 @@ const CL_String &CL_VirtualDirectory::get_path() const
 CL_VirtualDirectoryListing CL_VirtualDirectory::get_directory_listing()
 {
 	if (impl->file_system.is_null())
-		throw CL_Exception(cl_text("CL_VirtualDirectory::get_directory_listing only supported for virtual file systems"));
+		throw CL_Exception("CL_VirtualDirectory::get_directory_listing only supported for virtual file systems");
 
 	return CL_VirtualDirectoryListing(get_file_system().get_provider(), get_file_system().get_provider()->get_path() + get_path());
 }
@@ -170,7 +170,7 @@ CL_String CL_VirtualDirectory::make_path_relative(const CL_String &absolute_path
 void CL_VirtualDirectory::mount(const CL_String &mount_point, CL_VirtualFileSystem &fs)
 {
 	if (impl->file_system.is_null())
-		throw CL_Exception(cl_text("CL_VirtualDirectory::mount only supported for virtual file systems"));
+		throw CL_Exception("CL_VirtualDirectory::mount only supported for virtual file systems");
 	else
 		impl->file_system.mount(make_path_absolute(mount_point), fs);
 }
@@ -178,7 +178,7 @@ void CL_VirtualDirectory::mount(const CL_String &mount_point, CL_VirtualFileSyst
 void CL_VirtualDirectory::mount(const CL_String &mount_point, const CL_String &path)
 {
 	if (impl->file_system.is_null())
-		throw CL_Exception(cl_text("CL_VirtualDirectory::mount only supported for virtual file systems"));
+		throw CL_Exception("CL_VirtualDirectory::mount only supported for virtual file systems");
 	else
 		impl->file_system.mount(make_path_absolute(mount_point), path);
 }
@@ -186,7 +186,7 @@ void CL_VirtualDirectory::mount(const CL_String &mount_point, const CL_String &p
 void CL_VirtualDirectory::unmount(const CL_String &mount_point)
 {
 	if (impl->file_system.is_null())
-		throw CL_Exception(cl_text("CL_VirtualDirectory::unmount only supported for virtual file systems"));
+		throw CL_Exception("CL_VirtualDirectory::unmount only supported for virtual file systems");
 	else
 		impl->file_system.unmount(make_path_absolute(mount_point));
 }

@@ -78,7 +78,7 @@ public:
 			CL_GUILayoutCorners layout;
 			window.set_layout(layout);
 
-			window.create_components(cl_text("dialog.xml"));
+			window.create_components("dialog.xml");
 
 			FPSLabel fps_label(&window);
 			fps_label.set_geometry(CL_Rect(10, 10, 100, 40));

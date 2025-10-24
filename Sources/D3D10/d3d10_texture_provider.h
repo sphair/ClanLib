@@ -54,12 +54,9 @@ public:
 /// \{
 
 public:
-	void destroy();
-
 	void create(int width, int height, CL_TextureFormat internal_format, int depth);
-
-	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const;
-
+	void destroy();
+	CL_PixelBuffer get_pixeldata(CL_TextureFormat sized_format, int level) const;
 	void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format);
 
 	void set_cube_map(
@@ -82,7 +79,8 @@ public:
 	void set_subimage(
 		int x,
 		int y,
-		const CL_PixelBufferRef &image,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
 		int level);
 
 	void copy_image_from(
@@ -105,16 +103,10 @@ public:
 		CL_GraphicContextProvider *gc);
 
 	void set_min_lod(double min_lod);
-
 	void set_max_lod(double max_lod);
-
 	void set_lod_bias(double lod_bias);
-
 	void set_base_level(int base_level);
-
 	void set_max_level(int max_level);
-
-	void set_generate_mipmap(bool generate_mipmap);
 
 	void set_wrap_mode(
 		CL_TextureWrapMode wrap_s,
@@ -129,15 +121,9 @@ public:
 		CL_TextureWrapMode wrap_s);
 
 	void set_min_filter(CL_TextureFilter filter);
-
 	void set_mag_filter(CL_TextureFilter filter);
-
 	void set_max_anisotropy(float v);
-
-	void set_depth_mode(CL_TextureDepthMode depth_mode);
-
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);
-
 
 /// \}
 /// \name Implementation

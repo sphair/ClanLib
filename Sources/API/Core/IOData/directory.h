@@ -52,7 +52,7 @@ public:
 	///
 	/// \param dir_name = Directory name for delete.
 	/// \param delete_files = If true, function will delete files.
-	/// \param delete_sub_directoies = If true, function will delete sub directories too.
+	/// \param delete_sub_directories = If true, function will delete sub directories too.
 	/// \return true on success or false on error.
 	static bool remove(
 		const CL_String &dir_name,

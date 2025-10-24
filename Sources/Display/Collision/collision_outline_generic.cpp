@@ -159,7 +159,7 @@ void CL_CollisionOutline_Generic::set_translation(float x, float y, bool offset_
 	else
 		translation = (position - old_position);
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
@@ -169,7 +169,7 @@ void CL_CollisionOutline_Generic::set_translation(float x, float y, bool offset_
 		}
 	}
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
@@ -186,7 +186,7 @@ void CL_CollisionOutline_Generic::rotate(const CL_Angle &add_angle)
 {
 	angle += add_angle.to_degrees();
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
@@ -196,7 +196,7 @@ void CL_CollisionOutline_Generic::rotate(const CL_Angle &add_angle)
 		}
 	}
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
@@ -215,7 +215,7 @@ void CL_CollisionOutline_Generic::set_angle(const CL_Angle &angle)
 	float rotate_angle = angle.to_degrees() - this->angle;
 	this->angle = angle.to_degrees();
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
@@ -225,7 +225,7 @@ void CL_CollisionOutline_Generic::set_angle(const CL_Angle &angle)
 		}
 	}
 
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type sub_circles_size = contour_ptr->get_sub_circles().size();
@@ -250,7 +250,7 @@ void CL_CollisionOutline_Generic::set_scale(float new_scale_x, float new_scale_y
 	float scale_x = new_scale_x / scale_factor.x;
 	float scale_y = new_scale_y / scale_factor.y;
 	
-	for (int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
+	for (unsigned int outer_cnt = 0; outer_cnt < contours.size(); outer_cnt++)
 	{
 		CL_Contour *contour_ptr = &contours[outer_cnt];
 		std::vector<CL_Pointf>::size_type point_size = contour_ptr->get_points().size();
@@ -319,7 +319,7 @@ void CL_CollisionOutline_Generic::calculate_sub_circles(float radius_multiplier)
 
 		// Test that we have at least 2 points
 		if(points.size() < 2)
-			throw CL_Exception(cl_text("Error: contour has less than 2 points"));
+			throw CL_Exception("Error: contour has less than 2 points");
 
 		// sub_radius = average of line lenghts in the contour * 3.5
 		float sub_radius = 0.0f;

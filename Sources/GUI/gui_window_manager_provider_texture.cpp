@@ -121,7 +121,14 @@ void CL_GUIWindowManagerProvider_Texture::update_paint()
 
 void CL_GUIWindowManagerProvider_Texture::draw_windows(CL_GraphicContext &gc)
 {
+	CL_BlendMode blendmode;
+	blendmode.enable_blending(true);
+	blendmode.set_blend_function(cl_blend_one, cl_blend_one_minus_src_alpha, cl_blend_one, cl_blend_one_minus_src_alpha);
+	gc.set_blend_mode(blendmode);
+
 	draw_all_windows(gc, root_window_z_order);
+
+	gc.reset_blend_mode();
 }
 
 void CL_GUIWindowManagerProvider_Texture::default_repaint()
@@ -286,7 +293,11 @@ void CL_GUIWindowManagerProvider_Texture::clear_frame_buffer(CL_GUITopLevelWindo
 	setup_frame_buffer(toplevel_window);
 	CL_GraphicContext &gc = display_window.get_gc();
 	gc.set_frame_buffer(frame_buffer);
+	CL_BlendMode blendmode;
+	blendmode.enable_blending(false);
+	gc.set_blend_mode(blendmode);
 	CL_Draw::fill(gc, toplevel_window->subtexture.get_geometry(), CL_Colorf::transparent);
+	gc.reset_blend_mode();
 	gc.reset_frame_buffer();
 }
 
@@ -307,7 +318,7 @@ void CL_GUIWindowManagerProvider_Texture::setup_frame_buffer(CL_GUITopLevelWindo
 	{
 		if (frame_buffer_depth_attached)
 		{
-			frame_buffer.detach_depth_buffer();
+			frame_buffer.detach_depth_buffer(toplevel_window->depth_buffer);
 			frame_buffer_depth_attached = false;
 		}
 	}
@@ -321,7 +332,7 @@ void CL_GUIWindowManagerProvider_Texture::setup_frame_buffer(CL_GUITopLevelWindo
 	{
 		if (frame_buffer_stencil_attached)
 		{
-			frame_buffer.detach_stencil_buffer();
+			frame_buffer.detach_stencil_buffer(toplevel_window->stencil_buffer);
 			frame_buffer_stencil_attached = false;
 		}
 	}
@@ -564,6 +575,7 @@ CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLeve
 	{
 		painting_set = true;
 		gc.set_frame_buffer(frame_buffer);
+
 	}
 
 	gc.set_map_mode(cl_map_2d_upper_left);
@@ -577,12 +589,15 @@ CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLeve
 	CL_BlendMode blendmode;
 	blendmode.enable_blending(false);
 	gc.set_blend_mode(blendmode);
+
 	// TODO: CL_Draw::fill() is slightly slower than gc.clear() - but it works with a cliprect on the GDI target
 	CL_Draw::fill(gc, clip_rect, CL_Colorf::transparent);
-	gc.set_cliprect(clip_rect);
-	//gc.clear(CL_Colorf::transparent);
+
 	blendmode.enable_blending(true);
 	gc.set_blend_mode(blendmode);
+
+	gc.set_cliprect(clip_rect);
+	//gc.clear(CL_Colorf::transparent);
 
 	// Translate model view matrix to the texture position
 	gc.push_modelview();
@@ -701,12 +716,12 @@ void CL_GUIWindowManagerProvider_Texture::set_texture_group(CL_TextureGroup &new
 {
 	if (new_texture_group.is_null())
 	{
-		throw CL_Exception(cl_text("Specified texture group is not valid"));
+		throw CL_Exception("Specified texture group is not valid");
 	}
 
 	if (!window_map.empty())
 	{
-		throw CL_Exception(cl_text("Cannot specify a new texture group when gui windows exist"));
+		throw CL_Exception("Cannot specify a new texture group when gui windows exist");
 	}
 
 	texture_group = new_texture_group;
@@ -817,7 +832,7 @@ CL_GUITopLevelWindowTexture *CL_GUIWindowManagerProvider_Texture::get_window_tex
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowTexture *>::iterator it;
 	it = window_map.find(handle);
 	if (it == window_map.end())
-		throw CL_Exception(cl_text("Invalid GUI Top Level Window requested"));
+		throw CL_Exception("Invalid GUI Top Level Window requested");
 	return it->second;
 }
 

@@ -41,11 +41,6 @@ CL_InputContext::CL_InputContext()
 	impl->input_context = impl;
 }
 
-CL_InputContext::CL_InputContext(const CL_InputContext &copy)
-: impl(copy.impl)
-{
-}
-
 CL_InputContext::~CL_InputContext()
 {
 }
@@ -121,7 +116,7 @@ CL_InputDevice &CL_InputContext::get_device(const CL_StringRef& devicename)
 		if (impl->tablets[i].get_device_name() == devicename)
 			return impl->tablets[i];
 
-	throw CL_Exception(cl_text("Couldn't find CL_InputDevice named '") + devicename + cl_text("'"));
+	throw CL_Exception("Couldn't find CL_InputDevice named '" + devicename + "'");
 }
 
 /////////////////////////////////////////////////////////////////////////////

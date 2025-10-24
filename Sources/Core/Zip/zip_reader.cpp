@@ -83,10 +83,10 @@ bool CL_ZipReader::read_local_file_header(bool allow_data_descriptor)
 	}
 
 	if (has_data_descriptor() && !allow_data_descriptor)
-		throw CL_Exception(cl_text("Zip file entry uses a data descriptor"));
+		throw CL_Exception("Zip file entry uses a data descriptor");
 	if ((impl->local_header.general_purpose_bit_flag & CL_ZIP_ENCRYPTED) ||
 		(impl->local_header.general_purpose_bit_flag & CL_ZIP_STRONG_ENCRYPTED))
-		throw CL_Exception(cl_text("Zip file entry is encrypted"));
+		throw CL_Exception("Zip file entry is encrypted");
 
 	if (impl->zstream_open)
 		inflateEnd(&impl->zs);
@@ -97,13 +97,13 @@ bool CL_ZipReader::read_local_file_header(bool allow_data_descriptor)
 		memset(&impl->zs, 0, sizeof(z_stream));
 		int result = inflateInit2(&impl->zs, -15); // Undocumented: if wbits is negative, zlib skips header check
 		if (result != Z_OK)
-			throw CL_Exception(cl_text("Zlib inflateInit failed for zip index!"));
+			throw CL_Exception("Zlib inflateInit failed for zip index!");
 		impl->zstream_open = true;
 		impl->compressed_pos = 0;
 	}
 	else if (impl->local_header.compression_method != zip_compress_store)
 	{
-		throw CL_Exception(cl_text("Zip file entry is compressed with an unsupported compression method"));
+		throw CL_Exception("Zip file entry is compressed with an unsupported compression method");
 	}
 
 	return true;
@@ -179,12 +179,12 @@ cl_int64 CL_ZipReader_Impl::deflate_read(void *data, cl_int64 size, bool read_al
 		// Decompress data:
 		int result = inflate(&zs, (compressed_pos == local_header.compressed_size) ? Z_FINISH : Z_NO_FLUSH);
 		if (result == Z_STREAM_END) break;
-		if (result == Z_NEED_DICT) throw CL_Exception(cl_text("Zlib inflate wants a dictionary!"));
-		if (result == Z_DATA_ERROR) throw CL_Exception(cl_text("Zip data stream is corrupted"));
-		if (result == Z_STREAM_ERROR) throw CL_Exception(cl_text("Zip stream structure was inconsistent!"));
-		if (result == Z_MEM_ERROR) throw CL_Exception(cl_text("Zlib did not have enough memory to decompress file!"));
-		if (result == Z_BUF_ERROR) throw CL_Exception(cl_text("Not enough data in buffer when Z_FINISH was used"));
-		if (result != Z_OK) throw CL_Exception(cl_text("Zlib inflate failed while decompressing zip file!"));
+		if (result == Z_NEED_DICT) throw CL_Exception("Zlib inflate wants a dictionary!");
+		if (result == Z_DATA_ERROR) throw CL_Exception("Zip data stream is corrupted");
+		if (result == Z_STREAM_ERROR) throw CL_Exception("Zip stream structure was inconsistent!");
+		if (result == Z_MEM_ERROR) throw CL_Exception("Zlib did not have enough memory to decompress file!");
+		if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
+		if (result != Z_OK) throw CL_Exception("Zlib inflate failed while decompressing zip file!");
 	}
 	return size - zs.avail_out;
 }

@@ -77,7 +77,7 @@ void CL_D3D9VertexArrayBufferProvider::create(int size, CL_BufferUsage usage)
 	}
 	HRESULT result = window->get_device()->CreateVertexBuffer(size, flags, 0, D3DPOOL_DEFAULT, vertex_buffer.output_variable(), 0);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to create vertex buffer"));
+		throw CL_Exception("Unable to create vertex buffer");
 }
 
 void CL_D3D9VertexArrayBufferProvider::create(void *data, int size, CL_BufferUsage usage)
@@ -120,14 +120,14 @@ void CL_D3D9VertexArrayBufferProvider::lock(CL_BufferAccess access)
 
 	HRESULT result = vertex_buffer->Lock(0, 0, &data_ptr, flags);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to lock vertex buffer"));
+		throw CL_Exception("Unable to lock vertex buffer");
 }
 
 void CL_D3D9VertexArrayBufferProvider::unlock()
 {
 	HRESULT result = vertex_buffer->Unlock();
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to unlock vertex buffer"));
+		throw CL_Exception("Unable to unlock vertex buffer");
 	data_ptr = 0;
 }
 
@@ -135,13 +135,13 @@ void CL_D3D9VertexArrayBufferProvider::upload_data(int offset, void *data, int s
 {
 	HRESULT result = vertex_buffer->Lock(offset, size, &data_ptr, 0);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to lock vertex buffer"));
+		throw CL_Exception("Unable to lock vertex buffer");
 
 	memcpy(data_ptr, data, size);
 
 	result = vertex_buffer->Unlock();
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to unlock vertex buffer"));
+		throw CL_Exception("Unable to unlock vertex buffer");
 	data_ptr = 0;
 }
 

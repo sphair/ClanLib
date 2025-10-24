@@ -56,8 +56,7 @@ public:
 /// \{
 
 public:
-	CL_PixelFormat format;
-
+	CL_TextureFormat sized_format;
 	int pitch, width, height;
 
 	CL_Palette palette;

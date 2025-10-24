@@ -52,6 +52,9 @@ public:
 
 	~CL_ThreadLocalStorage();
 
+private:
+	/// \brief Create the initial instance of CL_ThreadLocalStorage (Called by CL_SetupCore)
+	static void create_initial_instance();
 
 /// \}
 /// \name Attributes
@@ -77,6 +80,7 @@ public:
 
 private:
 /// \}
+	friend class CL_SetupCore;
 };
 
 

@@ -64,6 +64,38 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_System Operations:
 
+void *CL_System::aligned_alloc(size_t size, size_t alignment)
+{
+	void *ptr;
+#ifdef _MSC_VER
+	ptr = _aligned_malloc(size, alignment);
+	if (!ptr)
+		throw CL_Exception("Out of memory");
+#else
+	// posix_memalign required alignment to be a min of sizeof(void *)
+	if (alignment < sizeof(void *))
+		alignment = sizeof(void *);
+
+	if (posix_memalign( (void **) &ptr, alignment, size))
+	{
+		throw CL_Exception("Out of memory");
+	}
+#endif
+	return ptr;
+}
+
+void CL_System::aligned_free(void *ptr)
+{
+	if (ptr)
+	{
+#ifdef _MSC_VER
+		_aligned_free(ptr);
+#else
+		free(ptr);
+#endif
+	}
+}
+
 int CL_System::capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash)
 {
 #ifdef WIN32
@@ -75,10 +107,13 @@ int CL_System::capture_stack_trace(int frames_to_skip, int max_frames, void **ou
 	// RtlCaptureStackBackTrace is only available on Windows XP or newer versions of Windows
 	typedef WORD(NTAPI FuncRtlCaptureStackBackTrace)(DWORD, DWORD, PVOID *, PDWORD);
 	HMODULE module = LoadLibrary(TEXT("kernel32.dll"));
-	FuncRtlCaptureStackBackTrace *ptrRtlCaptureStackBackTrace = (FuncRtlCaptureStackBackTrace *) GetProcAddress(module, "RtlCaptureStackBackTrace");
-	if (ptrRtlCaptureStackBackTrace)
-		capturedFrames = ptrRtlCaptureStackBackTrace(frames_to_skip+1, max_frames, out_frames, (DWORD *) out_hash);
-	FreeLibrary(module);
+	if (module)
+	{
+		FuncRtlCaptureStackBackTrace *ptrRtlCaptureStackBackTrace = (FuncRtlCaptureStackBackTrace *) GetProcAddress(module, "RtlCaptureStackBackTrace");
+		if (ptrRtlCaptureStackBackTrace)
+			capturedFrames = ptrRtlCaptureStackBackTrace(frames_to_skip+1, max_frames, out_frames, (DWORD *) out_hash);
+		FreeLibrary(module);
+	}
 
 	if (capturedFrames == 0 && out_hash)
 		*out_hash = 0;
@@ -127,7 +162,7 @@ std::vector<CL_String> CL_System::get_stack_frames_text(void **frames, int num_f
 			{
 				backtrace_text.push_back(
 					cl_format(
-						cl_text("%1 (%2, line %3)"),
+						"%1 (%2, line %3)",
 						CL_StringHelp::local8_to_text(symbol64->Name),
 						CL_StringHelp::local8_to_text(line64.FileName),
 						(int) line64.LineNumber));
@@ -158,7 +193,7 @@ std::vector<CL_String> CL_System::get_stack_frames_text(void **frames, int num_f
 		// Decode the strings
 		char *ptr = strings[cnt];
 		char *filename = ptr;
-		char *function = "";
+		const char *function = "";
 
 		// Find function name
 		while(*ptr)
@@ -198,7 +233,7 @@ std::vector<CL_String> CL_System::get_stack_frames_text(void **frames, int num_f
 			function = new_function;
 		}
 
-		backtrace_text.push_back( cl_format(cl_text("%1 (%2)"), function, filename));
+		backtrace_text.push_back( cl_format("%1 (%2)", function, filename));
 
 		if (new_function)
 		{
@@ -297,7 +332,7 @@ public:
 #if defined(WIN32) && defined(_DEBUG)
 			DebugBreak();
 #endif
-			throw CL_Exception(cl_text("Thread temporary memory pool exhausted"));
+			throw CL_Exception("Thread temporary memory pool exhausted");
 		}
 
 #ifdef _DEBUG

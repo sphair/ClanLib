@@ -43,37 +43,37 @@ void TestApp::test_directory_scanner(void)
 
 //*** testing get_directory_path()
 	CL_Console::write_line("   Function: CL_String get_directory_path()");
-	result = scanner.scan(cl_text(".."));
+	result = scanner.scan("..");
 	if (!result) fail();
 	str = scanner.get_directory_path();
 #ifdef WIN32
-	str2 = cl_text("..\\");
+	str2 = "..\\";
 #else
-	str2 = cl_text("../");
+	str2 = "../";
 #endif
 	if (str != str2) fail();
 
 //*** testing get_name()
 	CL_Console::write_line("   Function: CL_String get_name()");
-	result = scanner.scan(cl_text(""), cl_text("Makefile"));
+	result = scanner.scan("", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
 	str = scanner.get_name();
-	str2 = cl_text("Makefile");
+	str2 = "Makefile";
 	if (str != str2) fail();
 
 //*** testing get_size()
 	CL_Console::write_line("   Function: int get_size()");
 
 	// Create a test file
-	CL_String filename = cl_text("temporary_file.tmp");
+	CL_String filename = "temporary_file.tmp";
 	CL_File output_file(filename, CL_File::create_always, CL_File::access_write);
 	char buffer[123];
 	output_file.write(buffer, 123);
 	output_file.close();
 
-	result = scanner.scan(cl_text(""), filename);
+	result = scanner.scan("", filename);
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -83,36 +83,36 @@ void TestApp::test_directory_scanner(void)
 
 //*** testing get_pathname()
 	CL_Console::write_line("   Function: CL_String get_pathname()");
-	result = scanner.scan(cl_text("."), cl_text("Makefile"));
+	result = scanner.scan(".", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
 	str = scanner.get_pathname();
 #ifdef WIN32
-	str2 = cl_text(".\\Makefile");
+	str2 = ".\\Makefile";
 #else
-	str2 = cl_text("./Makefile");
+	str2 = "./Makefile";
 #endif
 	if (str != str2) fail();
 
 //*** testing is_directory()
 	CL_Console::write_line("   Function: CL_String is_directory()");
-	result = scanner.scan(cl_text(".."), cl_text("IOData"));
+	result = scanner.scan("..", "IOData");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
 	str = scanner.get_name();
-	str2 = cl_text("IOData");
+	str2 = "IOData";
 	if (str != str2) fail();
 	result = scanner.is_directory();
 	if (!result) fail();
 
-	result = scanner.scan(cl_text("."), cl_text("Makefile"));
+	result = scanner.scan(".", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
 	str = scanner.get_name();
-	str2 = cl_text("Makefile");
+	str2 = "Makefile";
 	if (str != str2) fail();
 	result = scanner.is_directory();
 	if (result) fail();
@@ -120,7 +120,7 @@ void TestApp::test_directory_scanner(void)
 //*** testing is_hidden()
 	CL_Console::write_line("   Function: CL_String is_hidden()");
 
-	result = scanner.scan(cl_text("."), cl_text("Makefile"));
+	result = scanner.scan(".", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -132,11 +132,11 @@ void TestApp::test_directory_scanner(void)
 #ifdef WIN32
 	CL_Console::write_line("     *** Unable to fully test on WIN32 ***");
 #else
-	filename = cl_text(".temporary_file.tmp");
-	output_file.open(filename, CL_File::create_always);
+	filename = ".temporary_file.tmp";
+	output_file.open(filename, CL_File::create_always, CL_File::access_write);
 	output_file.close();
 
-	result = scanner.scan(cl_text(""), filename);
+	result = scanner.scan("", filename);
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -148,7 +148,7 @@ void TestApp::test_directory_scanner(void)
 //*** testing is_readable()
 	CL_Console::write_line("   Function: CL_String is_readable()");
 
-	result = scanner.scan(cl_text("."), cl_text("Makefile"));
+	result = scanner.scan(".", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -160,13 +160,13 @@ void TestApp::test_directory_scanner(void)
 #ifdef WIN32
 	CL_Console::write_line("     *** Unable to fully test on WIN32 ***");
 #else
-	filename = cl_text("temporary_file.tmp");
+	filename = "temporary_file.tmp";
 	CL_String8 filename_a = CL_StringHelp::text_to_local8(filename);
 	int handle = ::open(filename_a.c_str(), O_WRONLY | O_CREAT, S_IWUSR);
 	if (handle == -1) fail();
 	::close(handle);
 
-	result = scanner.scan(cl_text("."), filename);
+	result = scanner.scan(".", filename);
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -179,7 +179,7 @@ void TestApp::test_directory_scanner(void)
 //*** testing is_writable()
 	CL_Console::write_line("   Function: CL_String is_writable()");
 
-	result = scanner.scan(cl_text("."), cl_text("Makefile"));
+	result = scanner.scan(".", "Makefile");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -190,13 +190,13 @@ void TestApp::test_directory_scanner(void)
 #ifdef WIN32
 	CL_Console::write_line("     *** Unable to fully test on WIN32 ***");
 #else
-	filename = cl_text("temporary_file.tmp");
+	filename = "temporary_file.tmp";
 	filename_a = CL_StringHelp::text_to_local8(filename);
 	handle = ::open(filename_a.c_str(), O_WRONLY | O_CREAT, S_IRUSR);
 	if (handle == -1) fail();
 	::close(handle);
 
-	result = scanner.scan(cl_text("."), filename);
+	result = scanner.scan(".", filename);
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
@@ -209,9 +209,9 @@ void TestApp::test_directory_scanner(void)
 
 //*** testing scan(const CL_String& pathname)
 	CL_Console::write_line("   Function: bool scan(const CL_String& pathname)");
-	result = scanner.scan(cl_text(".."));
+	result = scanner.scan("..");
 	if (!result) fail();
-	str2 = cl_text("IOData");
+	str2 = "IOData";
 	do
 	{
 		result = scanner.next();
@@ -224,28 +224,28 @@ void TestApp::test_directory_scanner(void)
 
 //*** testing scan(const CL_String& pathname, const CL_String& pattern)
 	CL_Console::write_line("   Function: bool scan(const CL_String& pathname, const CL_String& pattern)");
-	result = scanner.scan(cl_text(".."), cl_text("IOData"));
+	result = scanner.scan("..", "IOData");
 	if (!result) fail();
-	str2 = cl_text("IOData");
+	str2 = "IOData";
 	result = scanner.next();
 	if (!result) fail();
 	str = scanner.get_name();
 	if (str != str2) fail();
 	result = scanner.is_directory();
 	if (!result) fail();
-	result = scanner.scan(cl_text(""), cl_text("*dir*c*ry_sca?ner*.cp?"));
+	result = scanner.scan("", "*dir*c*ry_sca?ner*.cp?");
 	if (!result) fail();
 	result = scanner.next();
 	if (!result) fail();
-	str2 = cl_text("test_directory_scanner.cpp");
+	str2 = "test_directory_scanner.cpp";
 	str = scanner.get_name();
 	if (str != str2) fail();
 
 //*** testing next()
 	CL_Console::write_line("   Function: bool next()");
-	result = scanner.scan(cl_text(""));
+	result = scanner.scan("");
 	if (!result) fail();
-	str2 = cl_text("test_directory_scanner.cpp");
+	str2 = "test_directory_scanner.cpp";
 	do
 	{
 		result = scanner.next();

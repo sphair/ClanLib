@@ -46,6 +46,7 @@ class CL_API_GUI CL_ListViewColumnHeader
 /// \{
 
 public:
+	// Construct a null instance
 	CL_ListViewColumnHeader();
 
 	~CL_ListViewColumnHeader();
@@ -62,10 +63,11 @@ public:
 		align_center
 	};
 
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get Column id
 	///

@@ -59,7 +59,7 @@ int App::start(const std::vector<CL_String> &args)
 		// If you require target specific control over the window, use the derived CL_OpenGLWindowDescription
 		// (This contains the multisampling options)
 		CL_OpenGLWindowDescription desc;
-		desc.set_title(cl_text("ClanLib 2D Test"));
+		desc.set_title("ClanLib 2D Test");
 		desc.set_size(CL_Size(800, 600), true);
 //		desc.set_multisampling(4);
 		CL_DisplayWindow window(desc);
@@ -75,13 +75,13 @@ int App::start(const std::vector<CL_String> &args)
 
 		CL_ResourceManager resources("resources.xml");
 
-		CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
+		CL_Font small_font = CL_Font(gc, "Tahoma", 12);
 
 		int num_windows_created = 0;
 		int start_time = CL_System::get_time();
 
 		CL_OpenGLWindowDescription desc2;
-		desc2.set_title(cl_text("test window"));
+		desc2.set_title("test window");
 		desc2.set_size(CL_Size(320, 200), true);
 
 		CL_DisplayWindow window2(desc2);
@@ -91,7 +91,7 @@ int App::start(const std::vector<CL_String> &args)
 		{
 			gc.clear(CL_Colorf(0.0f,0.0f,0.2f));
 
-			small_font.draw_text(gc, 420, 180, cl_text("Window Speed Test"));
+			small_font.draw_text(gc, 420, 180, "Window Speed Test");
 			small_font.draw_text(gc, 420, 200, cl_format("num windows: %1", num_windows_created));
 
 /*			CL_DisplayWindow window2(desc2);

@@ -45,8 +45,8 @@ public:
 
 CL_GUIMessage_Input::CL_GUIMessage_Input()
 {
-	set_type(cl_text("input"));
-	set_data(cl_text("input"), CL_SharedPtr<CL_GUIMessage_InputData>(
+	set_type("input");
+	set_data("input", CL_SharedPtr<CL_GUIMessage_InputData>(
 		new CL_GUIMessage_InputData));
 }
 
@@ -64,12 +64,12 @@ CL_GUIMessage_Input::~CL_GUIMessage_Input()
 
 CL_StringRef CL_GUIMessage_Input::get_type_name()
 {
-	return cl_text("input");
+	return "input";
 }
 
 CL_InputEvent CL_GUIMessage_Input::get_event() const
 {
-	CL_SharedPtr<CL_GUIMessage_InputData> d = static_cast<CL_SharedPtr<CL_GUIMessage_InputData> >(get_data(cl_text("input")));
+	CL_SharedPtr<CL_GUIMessage_InputData> d = static_cast<CL_SharedPtr<CL_GUIMessage_InputData> >(get_data("input"));
 	if (d.is_null())
 		return CL_InputEvent();
 	return d->input_event;
@@ -80,12 +80,12 @@ CL_InputEvent CL_GUIMessage_Input::get_event() const
 
 void CL_GUIMessage_Input::set_event(const CL_InputEvent &event)
 {
-	CL_SharedPtr<CL_GUIMessage_InputData> d = static_cast<CL_SharedPtr<CL_GUIMessage_InputData> >(get_data(cl_text("input")));
+	CL_SharedPtr<CL_GUIMessage_InputData> d = static_cast<CL_SharedPtr<CL_GUIMessage_InputData> >(get_data("input"));
 	if (d.is_null())
 	{
 		d = CL_SharedPtr<CL_GUIMessage_InputData>(
 			new CL_GUIMessage_InputData);
-		set_data(cl_text("input"), d);
+		set_data("input", d);
 	}
 	d->input_event = event;
 }

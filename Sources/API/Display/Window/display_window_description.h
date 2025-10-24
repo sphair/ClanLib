@@ -60,6 +60,9 @@ public:
 	/// \brief Constructs a window description with default values, a title and a position.
 	CL_DisplayWindowDescription(const CL_String &title, const CL_Rect &position, bool client_area);
 
+	/// \brief Constructs a window description with default values, a title and a size.
+	CL_DisplayWindowDescription(const CL_String &title, const CL_Size &size, bool client_area);
+
 	/// \brief Constructs a window description with default values and a position.
 	CL_DisplayWindowDescription(const CL_Rect &position, bool client_area);
 
@@ -159,6 +162,9 @@ public:
 	/// \brief Returns the minimum required stencil buffer.
 	int get_stencil_size() const;
 
+	/// \brief Returns the index of the monitor to go fullscreen on. See CL_ScreenInfo.
+	int get_fullscreen_monitor() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -211,12 +217,12 @@ public:
 	///
 	/// The default position, is centred on the screen. If this is wanted, use set_size() instead
 	///
-	/// \param size = Window size
+	/// \param position = Window position
 	/// \param client_area = false = include the window frame. true = exclude the window frame
 	void set_position(const CL_Rect &position, bool client_area);
 
 	/// \brief Makes the window initially fullscreen.
-	void set_fullscreen(bool fullscreen = true);
+	void set_fullscreen(bool fullscreen = true, int monitor = 0);
 
 	/// \brief Sets the amount of flipping buffers to be used.
 	void set_flipping_buffers(int num_buffers = 2);
@@ -241,7 +247,7 @@ public:
 		This setting is ignored unless the GUI and CL_GUIWindowManagerSystem are used.</p>*/
 	void set_using_gui_window_cache(bool value);
 
-	/// \brief Creates a layered window (complex shaped window) (black is transparent).
+	/// \brief Creates a layered window (complex shaped window)
 	void set_layered(bool layered);
 
 #ifdef WIN32

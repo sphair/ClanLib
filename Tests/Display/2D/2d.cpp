@@ -2,10 +2,10 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 
-//#define USE_GDI_BECAUSE_IT_IS_COOL
+#define USE_SWRENDER
 
-#ifdef USE_GDI_BECAUSE_IT_IS_COOL
-#include <ClanLib/gdi.h>
+#ifdef USE_SWRENDER
+#include <ClanLib/swrender.h>
 #else
 #include <ClanLib/gl.h>
 #endif
@@ -40,8 +40,8 @@ public:
 		CL_SetupDisplay setup_display;
 
 		// Initilize the OpenGL drivers
-#ifdef USE_GDI_BECAUSE_IT_IS_COOL
-		CL_SetupGDI setup_gdi;
+#ifdef USE_SWRENDER
+		CL_SetupSWRender setup_swrender;
 #else
 		CL_SetupGL setup_gl;
 #endif
@@ -71,13 +71,13 @@ int App::start(const std::vector<CL_String> &args)
 		// (This is useful to create a borderless window of a specific size)
 		// If you require target specific control over the window, use the derived CL_OpenGLWindowDescription
 		// (This contains the multisampling options)
-#ifdef USE_GDI_BECAUSE_IT_IS_COOL
+#ifdef USE_SWRENDER
 		CL_DisplayWindowDescription desc;
 #else
 		CL_OpenGLWindowDescription desc;
 //		desc.set_multisampling(4);
 #endif
-		desc.set_title(cl_text("ClanLib 2D Test"));
+		desc.set_title("ClanLib 2D Test");
 		desc.set_size(CL_Size(800, 600), true);
 		CL_DisplayWindow window(desc);
 
@@ -90,7 +90,7 @@ int App::start(const std::vector<CL_String> &args)
 		// Get the graphic context
 		CL_GraphicContext gc = window.get_gc();
 
-		CL_Texture texture_image(gc, cl_text("tux.png"));
+		CL_Texture texture_image(gc, "tux.png");
 		texture_image.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
 		texture_image.set_min_filter(cl_filter_linear);
 		texture_image.set_mag_filter(cl_filter_linear);
@@ -99,7 +99,7 @@ int App::start(const std::vector<CL_String> &args)
 		CL_Sprite sprite(gc, "test", &resources);
 		//sprite.set_linear_filter(true);
 
-		CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
+		CL_Font small_font = CL_Font(gc, "Tahoma", 12);
 
 		float test_base_angle = 0.0f;
 		float test_angle = 0.0f;
@@ -123,7 +123,7 @@ int App::start(const std::vector<CL_String> &args)
 					CL_Draw::point(gc, xcnt*2, ycnt*2, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
-			small_font.draw_text(gc, 32, 10, cl_text("8*6 Points (0 + 2x), (0 + 2y)"));
+			small_font.draw_text(gc, 32, 10, "8*6 Points (0 + 2x), (0 + 2y)");
 
 	// CL_Draw::line()
 			for (int xcnt=0; xcnt<4; xcnt++)
@@ -136,7 +136,7 @@ int App::start(const std::vector<CL_String> &args)
 					CL_Draw::line(gc, xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
-			small_font.draw_text(gc, 48, 30, cl_text("4*3 Lines (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)"));
+			small_font.draw_text(gc, 48, 30, "4*3 Lines (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
 
 	// CL_Draw::box()
 			for (int xcnt=0; xcnt<4; xcnt++)
@@ -149,7 +149,7 @@ int App::start(const std::vector<CL_String> &args)
 					CL_Draw::box(gc, xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
-			small_font.draw_text(gc, 48, 66, cl_text("4*3 Box (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)"));
+			small_font.draw_text(gc, 48, 66, "4*3 Box (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
 
 	// CL_Draw::fill()
 			for (int xcnt=0; xcnt<4; xcnt++)
@@ -162,7 +162,7 @@ int App::start(const std::vector<CL_String> &args)
 					CL_Draw::fill(gc, xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
-			small_font.draw_text(gc, 48, 90, cl_text("4*3 Fill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)"));
+			small_font.draw_text(gc, 48, 90, "4*3 Fill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
 
 	// CL_Draw::gradient_fill()
 			CL_Gradient gradient;
@@ -180,9 +180,9 @@ int App::start(const std::vector<CL_String> &args)
 					CL_Draw::gradient_fill(gc, xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, gradient);
 				}
 			}
-			small_font.draw_text(gc, 48, 115, cl_text("4*3 GradientFill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)"));
-			small_font.draw_text(gc, 48, 125, cl_text("top left = white. top right = red"));
-			small_font.draw_text(gc, 48, 135, cl_text("bottom left = blue. bottom right = green"));
+			small_font.draw_text(gc, 48, 115, "4*3 GradientFill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
+			small_font.draw_text(gc, 48, 125, "top left = white. top right = red");
+			small_font.draw_text(gc, 48, 135, "bottom left = blue. bottom right = green");
 
 	// CL_Draw::circle()
 			{
@@ -194,8 +194,8 @@ int App::start(const std::vector<CL_String> &args)
 				radius = 16;
 				CL_Draw::circle(gc, offset_x + radius, offset_y + radius, radius, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			}
-			small_font.draw_text(gc, 54, 149, cl_text("Circle (5, 145) Radius = 5"));
-			small_font.draw_text(gc, 54, 159, cl_text("Circle (32, 156) Radius = 16"));
+			small_font.draw_text(gc, 54, 149, "Circle (5, 145) Radius = 5");
+			small_font.draw_text(gc, 54, 159, "Circle (32, 156) Radius = 16");
 
 	// CL_Draw::gradient_circle()
 			{
@@ -218,9 +218,9 @@ int App::start(const std::vector<CL_String> &args)
 				CL_Draw::gradient_circle(gc, CL_Pointf( xpos, ypos), CL_Pointf(0.0f, radius/2.0), radius, gradient);
 			}
 
-			small_font.draw_text(gc, 80, 189, cl_text("Gradient Circle (16, 196) Radius = 17. Gradient right"));
-			small_font.draw_text(gc, 80, 199, cl_text("Gradient Circle (56, 196) Radius = 17. Gradient up"));
-			small_font.draw_text(gc, 80, 209, cl_text("centre = white, outer = red"));
+			small_font.draw_text(gc, 80, 189, "Gradient Circle (16, 196) Radius = 17. Gradient right");
+			small_font.draw_text(gc, 80, 199, "Gradient Circle (56, 196) Radius = 17. Gradient up");
+			small_font.draw_text(gc, 80, 209, "centre = white, outer = red");
 
 	// CL_Draw::triangle()
 			{
@@ -234,8 +234,8 @@ int App::start(const std::vector<CL_String> &args)
 				offset_x = 32.0f;
 				CL_Draw::triangle(gc, CL_Pointf(offset_x + size, offset_y + size), CL_Pointf(offset_x + 0.0f, offset_y), CL_Pointf(offset_x + 0.0f, offset_y + size), CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			}
-			small_font.draw_text(gc, 48, 229, cl_text("3 Triangles (12 pixel size) (Left vertical edge)."));
-			small_font.draw_text(gc, 48, 239, cl_text("Top Left: (0,220)  (16,220)  (32,220)"));
+			small_font.draw_text(gc, 48, 229, "3 Triangles (12 pixel size) (Left vertical edge).");
+			small_font.draw_text(gc, 48, 239, "Top Left: (0,220)  (16,220)  (32,220)");
 
 	// CL_Draw::texture()
 			gc.set_texture(0, texture_image);
@@ -254,8 +254,8 @@ int App::start(const std::vector<CL_String> &args)
 				CL_Draw::texture(gc, src_rect, color, texture_coords);
 			}
 			gc.reset_texture(0);
-			small_font.draw_text(gc, 76, 260, cl_text("Texture (0, 250) size=(31,47)"));
-			small_font.draw_text(gc, 76, 275, cl_text("Texture (33, 250) size=(31,47) (red, magnify*2)"));
+			small_font.draw_text(gc, 76, 260, "Texture (0, 250) size=(31,47)");
+			small_font.draw_text(gc, 76, 275, "Texture (33, 250) size=(31,47) (red, magnify*2)");
 
 	// CL_RoundedRect
 			{
@@ -292,14 +292,14 @@ int App::start(const std::vector<CL_String> &args)
 				roundedrect.fill(gc, CL_Pointf(offset_x, offset_y), gradient, origin);
 
 			}
-			small_font.draw_text(gc, 76, 310, cl_text("RoundedRect - draw (0, 300) size=(64,32)"));
-			small_font.draw_text(gc, 76, 325, cl_text("(RoundedRect - draw gradient - is not implemented)"));
-			small_font.draw_text(gc, 76, 350, cl_text("RoundedRect - fill (0, 340) size=(64,32)"));
-			small_font.draw_text(gc, 76, 390, cl_text("RoundedRect - fill gradient (0, 380) size=(64,32)"));
-			small_font.draw_text(gc, 76, 400, cl_text("top left = white. top right = red"));
-			small_font.draw_text(gc, 76, 410, cl_text("bottom left = blue. bottom right = green"));
-			small_font.draw_text(gc, 76, 430, cl_text("RoundedRect - fill gradient (0, 420) size=(64,32)"));
-			small_font.draw_text(gc, 76, 440, cl_text("Controling control / rounding points"));
+			small_font.draw_text(gc, 76, 310, "RoundedRect - draw (0, 300) size=(64,32)");
+			small_font.draw_text(gc, 76, 325, "(RoundedRect - draw gradient - is not implemented)");
+			small_font.draw_text(gc, 76, 350, "RoundedRect - fill (0, 340) size=(64,32)");
+			small_font.draw_text(gc, 76, 390, "RoundedRect - fill gradient (0, 380) size=(64,32)");
+			small_font.draw_text(gc, 76, 400, "top left = white. top right = red");
+			small_font.draw_text(gc, 76, 410, "bottom left = blue. bottom right = green");
+			small_font.draw_text(gc, 76, 430, "RoundedRect - fill gradient (0, 420) size=(64,32)");
+			small_font.draw_text(gc, 76, 440, "Controling control / rounding points");
 
 	// CL_Sprite
 			{
@@ -308,19 +308,19 @@ int App::start(const std::vector<CL_String> &args)
 				{
 					test_base_angle = 0.0f;
 				}
-#ifndef USE_GDI_BECAUSE_IT_IS_COOL
+#ifndef USE_SWRENDER
 				clEnable(GL_MULTISAMPLE);
 #endif
 				sprite.set_base_angle(CL_Angle(test_base_angle, cl_degrees));
 				sprite.draw(gc, 350, 20);
 				sprite.set_base_angle(CL_Angle(0, cl_degrees));
 
-#ifndef USE_GDI_BECAUSE_IT_IS_COOL
+#ifndef USE_SWRENDER
 				clDisable(GL_MULTISAMPLE);
 #endif
 			}
-			small_font.draw_text(gc, 370, 20, cl_text("Sprite - Base angle"));
-			small_font.draw_text(gc, 370, 35, cl_text("Multisampling enabled"));
+			small_font.draw_text(gc, 370, 20, "Sprite - Base angle");
+			small_font.draw_text(gc, 370, 35, "Multisampling enabled");
 
 			{
 				test_angle+=5.0f;
@@ -333,7 +333,7 @@ int App::start(const std::vector<CL_String> &args)
 				sprite.draw(gc, 350, 60);
 				sprite.set_angle(CL_Angle(0, cl_degrees));
 			}
-			small_font.draw_text(gc, 370, 60, cl_text("Sprite - Angle"));
+			small_font.draw_text(gc, 370, 60, "Sprite - Angle");
 
 			{
 				test_angle_pitch+=5.0f;
@@ -346,7 +346,7 @@ int App::start(const std::vector<CL_String> &args)
 				sprite.draw(gc, 350, 100);
 				sprite.set_angle_pitch(CL_Angle(0, cl_degrees));
 			}
-			small_font.draw_text(gc, 370, 100, cl_text("Sprite - Angle Pitch"));
+			small_font.draw_text(gc, 370, 100, "Sprite - Angle Pitch");
 
 			{
 				test_angle_yaw+=5.0f;
@@ -359,7 +359,7 @@ int App::start(const std::vector<CL_String> &args)
 				sprite.draw(gc, 350, 140);
 				sprite.set_angle_yaw(CL_Angle(0, cl_degrees));
 			}
-			small_font.draw_text(gc, 370, 140, cl_text("Sprite - Angle Yaw"));
+			small_font.draw_text(gc, 370, 140, "Sprite - Angle Yaw");
 
 			{
 				if (test_scale_dir)
@@ -386,7 +386,7 @@ int App::start(const std::vector<CL_String> &args)
 				sprite.draw(gc, 390, 180);
 				sprite.set_scale(1.0f, 1.0f);
 			}
-			small_font.draw_text(gc, 420, 180, cl_text("Sprite - Set Scale (x), (y)"));
+			small_font.draw_text(gc, 420, 180, "Sprite - Set Scale (x), (y)");
 
 			// Flip the display, showing on the screen what we have drawed
 			// since last call to flip()

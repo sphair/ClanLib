@@ -32,16 +32,18 @@
 
 #ifdef WIN32
 #include "FontEngine/font_engine_win32.h"
-#else
+#endif
+//#else
 #include "FontEngine/font_engine_freetype.h"
 #include "font_provider_freetype.h"
-#endif
+//#endif
 
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/iodevice_memory.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
@@ -52,7 +54,7 @@
 #include "API/Display/2D/draw.h"
 #include "API/Core/Text/string_help.h"
 
-#include "../2D/sprite_render_batch.h"
+#include "../2D/render_batch2d.h"
 #include "../Render/graphic_context_impl.h"
 
 #ifndef WIN32
@@ -144,14 +146,61 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 {
 	free_font();
 
-	glyph_cache.anti_alias = true;	// Default, anti_alias enabled (may be modified by WIN32 later)
+	if (desc.get_anti_alias_set())	// Anti-alias was set
+	{
+		glyph_cache.anti_alias = desc.get_anti_alias();	// Override the default
+	}
+	else
+	{
+#ifdef WIN32
+		glyph_cache.anti_alias = abs(desc.get_height()) >= 16;
+#else
+		glyph_cache.anti_alias = true;	// Default, anti_alias enabled (may be modified by WIN32 later)
+#endif
+	}
 
 #ifdef WIN32
+	// Seems the MS implementation does anti-aliasing really poorly (no subpixel rendering support
+	// in GetGlyphOutline), so we use FreeType to render our anti-aliased text. -- mbn 17. April 2010
+/*	if (glyph_cache.anti_alias)
+	{
+		HFONT handle = CreateFont(
+			desc.get_height(), desc.get_average_width(),
+			(int) (desc.get_escapement() * 10 + 0.5),
+			(int) (desc.get_orientation() * 10 + 0.5),
+			desc.get_weight(),
+			desc.get_italic() ? TRUE : FALSE,
+			desc.get_underline() ? TRUE : FALSE,
+			desc.get_strikeout() ? TRUE : FALSE,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			DEFAULT_QUALITY,
+			(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
+			desc.get_typeface_name().c_str());
+		if (handle == 0)
+			throw CL_Exception("CreateFont failed");
 
-	font_engine = new CL_FontEngine_Win32(desc);
+		HDC dc = GetDC(0);
+		HGDIOBJ old_font = SelectObject(dc, handle);
+		DWORD font_file_size = GetFontData(dc, 0, 0, 0, 0);
+		CL_DataBuffer font_file(font_file_size);
+		DWORD result = GetFontData(dc, 0, 0, font_file.get_data(), font_file.get_size());
+		SelectObject(dc, old_font);
+		ReleaseDC(0, dc);
+		DeleteObject(handle);
+		if (result == GDI_ERROR)
+			throw CL_Exception("GetFontData failed");
+
+		CL_IODevice_Memory font_iodevice(font_file);
+		font_engine = new CL_FontEngine_Freetype(font_iodevice, desc.get_height(), desc.get_average_width());
+	}
+	else*/
+	{
+		font_engine = new CL_FontEngine_Win32(desc);
+	}
+
 	glyph_cache.font_metrics = font_engine->get_metrics();
-
-	glyph_cache.anti_alias = glyph_cache.font_metrics.get_height() > 18;
 
 #else
 
@@ -167,7 +216,7 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 	}
 	catch(CL_Exception error)
 	{
-		throw CL_Exception(cl_text(cl_format("Cannot open font file: \"%1\"", font_file_path)));
+		throw CL_Exception(cl_format("Cannot open font file: \"%1\"", font_file_path));
 	}
 
 	float size_height =  new_desc.get_height();
@@ -178,19 +227,14 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 
 
 #endif
-	if (desc.get_anti_alias_set())	// Anti-alias was set
-	{
-		glyph_cache.anti_alias = desc.get_anti_alias();	// Override the default
-	}
-
 }
 
 void CL_FontProvider_System::register_font(const CL_StringRef &font_filename, const CL_StringRef &font_typeface)
 {
 #ifdef WIN32
-	int fonts_added = AddFontResourceEx(font_filename.c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+	int fonts_added = AddFontResourceEx(CL_StringHelp::utf8_to_ucs2(font_filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
 	if(fonts_added == 0)
-		throw CL_Exception(cl_text("Unable to register font " + font_filename));
+		throw CL_Exception("Unable to register font " + font_filename);
 #else
 	std::map<CL_String, CL_String >::iterator find_it;
 	find_it = font_register_cache.find(font_typeface);

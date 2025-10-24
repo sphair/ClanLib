@@ -48,6 +48,7 @@ class CL_PopupMenuItem
 /// \{
 
 public:
+	/// \brief Construct a null instance
 	CL_PopupMenuItem();
 
 	/// \brief Constructs a PopupMenuItem
@@ -83,10 +84,11 @@ public:
 	/// \return id
 	int get_id() const;
 
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Has submenu
 	///

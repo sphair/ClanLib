@@ -79,6 +79,12 @@ CL_ProgramUniform::~CL_ProgramUniform()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgramUniform Attributes:
 
+void CL_ProgramUniform::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_ProgramUniform is null");
+}
+
 CL_StringRef CL_ProgramUniform::get_name() const
 {
 	return impl->name;

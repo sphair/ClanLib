@@ -55,7 +55,7 @@ void CL_ZipDigitalSignature::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x05054b50)
 	{
-		throw CL_Exception(cl_text("Incorrect Digital Signature signature!"));
+		throw CL_Exception("Incorrect Digital Signature signature!");
 	}
 
 	size_of_data = input.read_int16();

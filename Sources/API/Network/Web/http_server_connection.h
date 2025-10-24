@@ -47,11 +47,12 @@ class CL_API_NETWORK CL_HTTPServerConnection : public CL_IODevice
 /// \{
 
 public:
+	/// \brief Construct a null instance
 	CL_HTTPServerConnection();
 
 	/// \brief Constructs a HTTPServerConnection
 	///
-	/// \param CL_HTTPServerConnection_Impl = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_HTTPServerConnection(const CL_SharedPtr<CL_HTTPServerConnection_Impl> &impl);
 
 	~CL_HTTPServerConnection();
@@ -61,6 +62,11 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get Request type
 	///

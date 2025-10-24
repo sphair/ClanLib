@@ -184,7 +184,7 @@ void CL_Base64Decoder::feed(const void *_data, int size, bool append_result)
 
 	int leftover = size-pos;
 	if (leftover > 4)
-		throw CL_Exception(cl_text("Base64 decoder is broken!"));
+		throw CL_Exception("Base64 decoder is broken!");
 	impl->chunk_filled = leftover;
 	memcpy(impl->chunk, data + pos, leftover);
 }

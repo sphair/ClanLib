@@ -17,6 +17,15 @@ define([CLANLIB_CHECK_LIB],[if test "$enable_$3" != "no"; then
     LIBS="$OLDLIBS"
 fi])
 
+dnl CLANLIB_CHECK_CPP(testprog, use_libs, use_cflags) library test macro
+define([CLANLIB_CHECK_CPP],[
+    OLDLIBS="$LIBS"; LIBS="$2";
+    OLD_CXXFLAGS="$CXXFLAGS"; CXXFLAGS="$3";
+    AC_RUN_IFELSE($1, [CL_RESULT=yes], [CL_RESULT=no], [CL_RESULT=no])
+    CXXFLAGS="$OLD_CXXFLAGS"
+    LIBS="$OLDLIBS"
+])
+
 dnl CLANLIB_DISABLE_MODULE(module, message)
 define([CLANLIB_DISABLE_MODULE],[
 if test "$enable_$1" = "yes"; then
@@ -31,9 +40,6 @@ ClanLib_Modules="$ClanLib_Modules $1"
 ClanLib_pkgconfig="$ClanLib_pkgconfig m4_bpatsubst($1,\w+,[clan\&.pc])"
 ClanLib_API_Modules="$ClanLib_API_Modules m4_bpatsubst($1,\w+,[\\$(clan\&_includes)])"
 AC_CONFIG_FILES(m4_bpatsubst($1,\w+,Sources/\&/Makefile Setup/pkgconfig/clan\&.pc))])
-
-dnl CLANLIB_FILE_LIST(dir, file glob, awk program) gnu m4 specific hack to generate file list at autoconf time
-define([CLANLIB_FILE_LIST],["esyscmd(cd $1 && ls $2|awk -v ORS=' ' $3)"])
 
 dnl CLANLIB_ARG_ENABLE(option, default, option label, checking message)
 define([CLANLIB_ARG_ENABLE],[AC_MSG_CHECKING($4)
@@ -69,49 +75,6 @@ define([CHECK_ENABLED],
   ])
 ])
 
-dnl ---------------------------------------------------
-dnl Library test macro that also runs a .cpp test on it
-dnl ---------------------------------------------------
-
-dnl CHECK_LIB(lib,testprog,success,failed)
-define([CHECK_LIB],
-[
-  OLDLIBS="$LIBS"
-  LIBS="$5 -l$1"
-  AC_MSG_CHECKING(for $1)
-  AC_TRY_RUN(
-    `cat $2`,
-    [
-      AC_MSG_RESULT([yes])
-      $3
-    ],
-    [
-      AC_MSG_RESULT([no])
-      $4
-    ],
-    [
-      AC_MSG_RESULT([crossplatform, assuming yes])
-      $3
-    ])
-  LIBS="$OLDLIBS"
-])
-
-dnl ----------------------------------------
-dnl Search for BeOS
-dnl ----------------------------------------
-
-dnl CHECK_BEOS(success,failed)
-define([CHECK_BEOS],
-[
-  AC_MSG_CHECKING(for BeOS)
-  if test "`uname`" = "BeOS"; then
-      AC_MSG_RESULT([yes])
-      $1
-  else
-      AC_MSG_RESULT([no])
-      $2
-  fi
-])
 
 dnl EOF dnl
 

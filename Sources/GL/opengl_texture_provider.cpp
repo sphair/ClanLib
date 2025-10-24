@@ -41,6 +41,8 @@
 #include "API/Core/Text/console.h"
 #endif
 
+#include "opengl_pixel_buffer_provider.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLTextureProvider Construction:
 
@@ -100,6 +102,13 @@ void CL_OpenGLTextureProvider::on_dispose()
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLTextureProvider Operations:
 
+void CL_OpenGLTextureProvider::generate_mipmap()
+{
+	throw_if_disposed();
+	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
+	clGenerateMipmap(texture_type);
+}
+
 void CL_OpenGLTextureProvider::create(int new_width, int new_height, CL_TextureFormat internal_format, int new_depth)
 {
 	throw_if_disposed();
@@ -158,7 +167,7 @@ void CL_OpenGLTextureProvider::destroy()
 	delete this;
 }
 
-CL_PixelBuffer CL_OpenGLTextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const 
+CL_PixelBuffer CL_OpenGLTextureProvider::get_pixeldata(CL_TextureFormat sized_format, int level) const 
 {
 	throw_if_disposed();
 
@@ -166,29 +175,26 @@ CL_PixelBuffer CL_OpenGLTextureProvider::get_pixeldata(CL_PixelFormat &format, i
 
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	CL_PixelFormat abgr_format;
-	abgr_format.set_depth(32);
-	abgr_format.enable_colorkey(false);
-	abgr_format.set_alpha_mask(0xFF000000);
-	abgr_format.set_blue_mask (0x00FF0000);
-	abgr_format.set_green_mask(0x0000FF00);
-	abgr_format.set_red_mask  (0x000000FF);
-
 	CL_PixelBuffer buffer(
-		width, height,
-		width * 4,
-		abgr_format);
+		width, height, cl_abgr8);
 
 	clGetTexImage(texture_type, level, CL_RGBA, CL_UNSIGNED_BYTE, buffer.get_data());
 
-	return buffer.to_format(format);
+	return buffer.to_format(sized_format);
 }
 
-void CL_OpenGLTextureProvider::set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format)
+void CL_OpenGLTextureProvider::set_image(CL_PixelBuffer &image, int level)
 {
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
-	set_texture_image2d(CL_TEXTURE_2D, image, level, internal_format);
+	if (texture_type == CL_TEXTURE_2D)
+	{
+		set_texture_image2d(CL_TEXTURE_2D, image, level);
+	}
+	else if (texture_type == CL_TEXTURE_3D)
+	{
+		set_texture_image3d(CL_TEXTURE_3D, image, image.get_height() / height, level);
+	}
 }
 
 void CL_OpenGLTextureProvider::set_cube_map(
@@ -198,18 +204,17 @@ void CL_OpenGLTextureProvider::set_cube_map(
 	CL_PixelBuffer &cube_map_negative_y,
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level, internal_format);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level);
 }
 
 void CL_OpenGLTextureProvider::set_compressed_image(
@@ -232,23 +237,28 @@ void CL_OpenGLTextureProvider::set_compressed_image(
 void CL_OpenGLTextureProvider::set_subimage(
 	int x,
 	int y,
-	const CL_PixelBufferRef &image,
+	const CL_PixelBuffer &image,
+	const CL_Rect &src_rect,
 	int level)
 {
+	if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image.get_width(), src_rect.bottom > image.get_height())
+		throw CL_Exception("Rectangle out of bounds");
+
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
 
 	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
 	CLenum format;
 	CLenum type;
-	bool conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
+	bool conv_needed = image.has_colorkey();
+	if (!conv_needed) conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
 
 	// also check for the pitch (OpenGL can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		if (image.get_pitch() % bytesPerPixel != 0)
 			conv_needed = true;
 	}
@@ -260,21 +270,55 @@ void CL_OpenGLTextureProvider::set_subimage(
 
 		// change alignment
 		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		clPixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, src_rect.left);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, src_rect.top);
 
-		char *data = (char *) image.get_data();
+		CL_OpenGLPixelBufferProvider *buffer_provider = NULL;
+		if (image.get_provider())
+			buffer_provider = dynamic_cast<CL_OpenGLPixelBufferProvider*>(image.get_provider());
 
-		// upload
-		clTexSubImage2D(
+		if (buffer_provider)		// Pixel Buffer Object texture
+		{
+			if (buffer_provider->get_target() != CL_PIXEL_UNPACK_BUFFER)
+				throw CL_Exception("PixelBuffer direction is set to cl_data_from_gpu");
+			CLint last_buffer = 0;
+			clGetIntegerv(buffer_provider->get_binding(), &last_buffer);
+			clBindBuffer(buffer_provider->get_target(), buffer_provider->get_handle());
+
+			// upload
+			clTexSubImage2D(
 			CL_TEXTURE_2D,            // target
 			level,                    // level
 			x, y,                     // xoffset, yoffset
-			image.get_width(),        // width
-			image.get_height(),       // height
+			src_rect.get_width(),        // width
+			src_rect.get_height(),       // height
+			format,					  // format
+			type,					  // type
+			NULL);                    // texels
+
+			clBindBuffer(buffer_provider->get_target(), last_buffer);
+
+		}
+		else					// CPU Texture
+		{
+			char *data = (char *) image.get_data();
+			// upload
+			clTexSubImage2D(
+			CL_TEXTURE_2D,            // target
+			level,                    // level
+			x, y,                     // xoffset, yoffset
+			src_rect.get_width(),        // width
+			src_rect.get_height(),       // height
 			format,					  // format
 			type,					  // type
 			data);                    // texels
+		}
+		// Restore these unpack values to the default
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+
 	}
 	// conversion needed
 	else
@@ -284,16 +328,14 @@ void CL_OpenGLTextureProvider::set_subimage(
 		CL_PixelBuffer buffer;
 		if (!big_endian)
 			buffer = CL_PixelBuffer(
-				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL RGB/RGBA is always big endian
+				src_rect.get_width(), src_rect.get_height(),
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
 		else
 			buffer = CL_PixelBuffer(
-				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
+				src_rect.get_width(), src_rect.get_height(),
+				needs_alpha ? cl_rgba8 : cl_rgb8);
 	
-		image.convert(buffer);
+		image.convert(buffer, CL_Rect(0, 0, buffer.get_size()), src_rect);
 
 		format = needs_alpha ? CL_RGBA : CL_RGB;
 
@@ -302,16 +344,17 @@ void CL_OpenGLTextureProvider::set_subimage(
 
 		// change alignment
 		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
 		clPixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 		// upload
 		clTexSubImage2D(
 			CL_TEXTURE_2D,            // target
 			level,                    // level
 			x, y,                     // xoffset, yoffset
-			image.get_width(),        // width
-			image.get_height(),       // height
+			buffer.get_width(),        // width
+			buffer.get_height(),       // height
 			format,                   // format
 			CL_UNSIGNED_BYTE,         // type
 			buffer.get_data());       // texels
@@ -401,13 +444,6 @@ void CL_OpenGLTextureProvider::set_max_level(int max_level)
 	clTexParameteri(texture_type, CL_TEXTURE_MAX_LEVEL, max_level);
 }
 
-void CL_OpenGLTextureProvider::set_generate_mipmap(bool generate_mipmap)
-{
-	throw_if_disposed();
-	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
-	clTexParameteri(texture_type, CL_GENERATE_MIPMAP, generate_mipmap);
-}
-
 void CL_OpenGLTextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_s,
 	CL_TextureWrapMode wrap_t,
@@ -449,6 +485,11 @@ void CL_OpenGLTextureProvider::set_mag_filter(CL_TextureFilter filter)
 {
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
+
+	// Validation (see opengl spec)
+	if ( ! ((filter == cl_filter_nearest) || (filter == cl_filter_linear)) )
+		throw CL_Exception("cl_filter_nearest, cl_filter_linear are only valid options for the mag filter");
+
 	clTexParameteri(texture_type, CL_TEXTURE_MAG_FILTER, to_enum(filter));
 }
 
@@ -456,14 +497,7 @@ void CL_OpenGLTextureProvider::set_max_anisotropy(float v)
 {
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
-	clTexParameterf(texture_type, CL_TEXTURE_MAX_ANISOTROPY, v);
-}
-
-void CL_OpenGLTextureProvider::set_depth_mode(CL_TextureDepthMode depth_mode)
-{
-	throw_if_disposed();
-	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
-	clTexParameteri(texture_type, CL_DEPTH_TEXTURE_MODE, to_enum(depth_mode));	
+	clTexParameterf(texture_type, CL_TEXTURE_MAX_ANISOTROPY_EXT, v);
 }
 
 void CL_OpenGLTextureProvider::set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func)
@@ -481,15 +515,14 @@ void CL_OpenGLTextureProvider::set_texture_compare(CL_TextureCompareMode mode, C
 void CL_OpenGLTextureProvider::set_texture_image2d(
 	CLuint target,
 	CL_PixelBuffer &image,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
 	throw_if_disposed();
 	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
 
 	CLint gl_internal_format;
 	CLenum gl_pixel_format;
-	CL_OpenGL::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
+	CL_OpenGL::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 /*
 	CL_UNPACK_SWAP_BYTES
@@ -504,16 +537,18 @@ void CL_OpenGLTextureProvider::set_texture_image2d(
 */
 
 	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
 	CLenum format;
 	CLenum type;
-	bool conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
+	bool conv_needed = image.has_colorkey();
+	if (!conv_needed) conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
 
 	// also check for the pitch (OpenGL can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
+
 		if (image.get_pitch() % bytesPerPixel != 0)
 			conv_needed = true;
 	}
@@ -525,8 +560,10 @@ void CL_OpenGLTextureProvider::set_texture_image2d(
 
 		// change alignment
 		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		clPixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
@@ -557,13 +594,11 @@ void CL_OpenGLTextureProvider::set_texture_image2d(
 		if (!big_endian)
 			buffer = CL_PixelBuffer(
 				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL RGB/RGBA is always big endian
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
 		else
 			buffer = CL_PixelBuffer(
 				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
+				needs_alpha ? cl_rgba8 : cl_rgb8);
 	
 		image.convert(buffer);
 
@@ -573,8 +608,10 @@ void CL_OpenGLTextureProvider::set_texture_image2d(
 
 		// change alignment
 		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
 		clPixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 		// upload
 		clTexImage2D(
@@ -594,6 +631,109 @@ void CL_OpenGLTextureProvider::set_texture_image2d(
 		clTexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_S, CL_CLAMP_TO_EDGE);
 		clTexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_T, CL_CLAMP_TO_EDGE);
 */
+	}
+}
+
+void CL_OpenGLTextureProvider::set_texture_image3d(
+	CLuint target,
+	CL_PixelBuffer &image,
+	int image_depth,
+	int level)
+{
+	throw_if_disposed();
+	CL_TextureStateTracker state_tracker(texture_type, handle, NULL);
+
+	CLint gl_internal_format;
+	CLenum gl_pixel_format;
+	CL_OpenGL::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+
+	// check out if the original texture needs or doesn't need an alpha channel
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
+
+	CLenum format;
+	CLenum type;
+	bool conv_needed = image.has_colorkey();
+	if (!conv_needed) conv_needed = !CL_OpenGL::to_opengl_pixelformat(image.get_format(), format, type);
+
+	// also check for the pitch (OpenGL can only skip pixels, not bytes)
+	if (!conv_needed)
+	{
+		const int bytesPerPixel = image.get_bytes_per_pixel();
+		if (image.get_pitch() % bytesPerPixel != 0)
+			conv_needed = true;
+	}
+
+	// no conversion needed
+	if (!conv_needed)
+	{
+		// Upload to OpenGL:
+
+		// change alignment
+		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		const int bytesPerPixel = image.get_bytes_per_pixel();
+		clPixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+
+		char *data = (char *) image.get_data();
+		int image_width = image.get_width();
+		int image_height = image.get_height() / image_depth;
+
+		clTexImage3D(
+			target,                   // target
+			level,                    // level
+			gl_internal_format,           // internalformat
+			image_width,              // width
+			image_height,             // height
+			image_depth,             // depth
+			0,                        // border
+			format,                   // format
+			type,                     // type
+			data);                    // texels
+	}
+	// conversion needed
+	else
+	{
+		bool big_endian = CL_Endian::is_system_big();
+
+		CL_PixelBuffer buffer;
+		if (!big_endian)
+			buffer = CL_PixelBuffer(
+				image.get_width(), image.get_height(),
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
+		else
+			buffer = CL_PixelBuffer(
+				image.get_width(), image.get_height(),
+				needs_alpha ? cl_rgba8 : cl_rgb8);
+	
+		image.convert(buffer);
+
+		format = needs_alpha ? CL_RGBA : CL_RGB;
+
+		// Upload to OpenGL:
+
+		// change alignment
+		clPixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
+		clPixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		clPixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		clPixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+
+		int image_width = image.get_width();
+		int image_height = image.get_height() / image_depth;
+
+		// upload
+		clTexImage3D(
+			target,                   // target
+			level,                    // level
+			gl_internal_format,           // internalformat
+			image_width,        // width
+			image_height,       // height
+			image_depth,       // depth
+			0,                        // border
+			format,                   // format
+			CL_UNSIGNED_BYTE,         // type
+			buffer.get_data());       // texels
 	}
 }
 
@@ -622,23 +762,12 @@ CLenum CL_OpenGLTextureProvider::to_enum(CL_TextureWrapMode mode)
 	}
 }
 
-CLenum CL_OpenGLTextureProvider::to_enum(CL_TextureDepthMode mode)
-{
- 	switch(mode)
-	{
-	case cl_depthmode_luminance: return CL_LUMINANCE;
-	case cl_depthmode_intensity: return CL_INTENSITY;
-	case cl_depthmode_alpha: return CL_ALPHA;
-	default: return CL_LUMINANCE;
-	}
-}
-
 CLenum CL_OpenGLTextureProvider::to_enum(CL_TextureCompareMode mode)
 {
  	switch(mode)
 	{
 	case cl_comparemode_none: return CL_NONE;
-	case cl_comparemode_compare_r_to_texture: return CL_COMPARE_R_TO_TEXTURE;		
+	case cl_comparemode_compare_r_to_texture: return CL_COMPARE_REF_TO_TEXTURE;		
 	default: return CL_NONE;
 	}
 }

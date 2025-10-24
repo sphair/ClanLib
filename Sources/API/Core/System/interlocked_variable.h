@@ -31,9 +31,15 @@
 
 #pragma once
 
+#include "../api_core.h"
+#include "system.h"
+
 #ifndef WIN32
 #include "../IOData/datatypes.h"
 #endif
+
+// __sync_val_compare_and_swap was not introduced until gcc 4.1
+#if defined(WIN32) || __GNUC__ > 4 ||  (__GNUC__ == 4 & __GNUC_MINOR__ >= 1)
 
 /// \brief Interlocked variable class
 ///
@@ -41,70 +47,113 @@
 class CL_InterlockedVariable
 {
 public:
+#ifdef WIN32
 	CL_InterlockedVariable()
+	: val((LONG*)CL_System::aligned_alloc(sizeof(LONG), 4))
 	{
 		set(0);
 	}
 
-#ifdef WIN32
-	LONG get()
+	CL_InterlockedVariable(const CL_InterlockedVariable &src)
+	: val((LONG*)CL_System::aligned_alloc(sizeof(LONG), 4))
 	{
-		return InterlockedCompareExchange(&val, 0, 0);
+		set(src.get());
+	}
+
+	~CL_InterlockedVariable()
+	{
+		CL_System::aligned_free((void*)val);
+	}
+
+	CL_InterlockedVariable &operator =(const CL_InterlockedVariable &src)
+	{
+		set(src.get());
+		return *this;
+	}
+
+	LONG get() const
+	{
+		return InterlockedCompareExchange(val, 0, 0);
 	}
 
 	void set(LONG new_value)
 	{
-		InterlockedExchange(&val, new_value);
+		InterlockedExchange(val, new_value);
 	}
 
 	LONG increment()
 	{
-		return InterlockedIncrement(&val);
+		return InterlockedIncrement(val);
 	}
 
 	LONG decrement()
 	{
-		return InterlockedDecrement(&val);
+		return InterlockedDecrement(val);
 	}
 
 	bool compare_and_swap(LONG expected_value, LONG new_value)
 	{
-		return InterlockedCompareExchange(&val, new_value, expected_value) == expected_value;
+		return InterlockedCompareExchange(val, new_value, expected_value) == expected_value;
 	}
 
 private:
-	__declspec(align(32)) volatile LONG val;
+	volatile LONG *val;
 
 #else
-	int get()
+	CL_InterlockedVariable()
+	: val((cl_int32*)CL_System::aligned_alloc(sizeof(cl_int32), 4))
 	{
-		return __sync_val_compare_and_swap(&val, 0, 0);
+		set(0);
+	}
+
+	CL_InterlockedVariable(const CL_InterlockedVariable &src)
+	: val((cl_int32*)CL_System::aligned_alloc(sizeof(cl_int32), 4))
+	{
+		set(src.get());
+	}
+
+	~CL_InterlockedVariable()
+	{
+		CL_System::aligned_free((void*)val);
+	}
+
+	CL_InterlockedVariable &operator =(const CL_InterlockedVariable &src)
+	{
+		set(src.get());
+		return *this;
+	}
+
+	int get() const
+	{
+		return __sync_val_compare_and_swap(val, 0, 0);
 	}
 
 	void set(int new_value)
 	{
-		__sync_lock_test_and_set(&val, new_value);
+		__sync_lock_test_and_set(val, new_value);
 	}
 
 	int increment()
 	{
-		return __sync_fetch_and_add(&val, 1) + 1;
+		return __sync_add_and_fetch(val, 1);
 	}
 
 	int decrement()
 	{
-		return __sync_fetch_and_add(&val, -1) - 1;
+		return __sync_sub_and_fetch(val, 1);
 	}
 
 	bool compare_and_swap(int expected_value, int new_value)
 	{
-		return __sync_val_compare_and_swap(&val, new_value, expected_value) == expected_value;
+		return __sync_bool_compare_and_swap(val, expected_value,  new_value);
 	}
 
 private:
-	__attribute__ ((aligned(32))) volatile cl_int32 val;
+	volatile cl_int32 *val;
 
 #endif
 };
+
+#endif
 
 /// \}

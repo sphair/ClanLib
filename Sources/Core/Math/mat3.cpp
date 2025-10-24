@@ -201,6 +201,14 @@ CL_Mat3<Type> CL_Mat3<Type>::inverse(const CL_Mat3<Type> &matrix)
 	return dest;
 }
 
+template<typename Type>
+CL_Mat3<Type> CL_Mat3<Type>::transpose(const CL_Mat3<Type> &matrix)
+{
+	CL_Mat3<Type> dest(matrix);
+	dest.transpose();
+	return dest;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Mat3 attributes:
 
@@ -344,6 +352,26 @@ CL_Mat3<Type> &CL_Mat3<Type>::inverse()
 
 		*this = result;
 	}
+	return *this;
+}
+
+template<typename Type>
+CL_Mat3<Type> &CL_Mat3<Type>::transpose()
+{
+	Type original[9];
+	for (int cnt=0; cnt<9; cnt++)
+		original[cnt] = matrix[cnt];
+
+	matrix[0] = original[0];
+	matrix[1] = original[3];
+	matrix[2] = original[6];
+	matrix[3] = original[1];
+	matrix[4] = original[4];
+	matrix[5] = original[7];
+	matrix[6] = original[2];
+	matrix[7] = original[5];
+	matrix[8] = original[8];
+
 	return *this;
 }
 

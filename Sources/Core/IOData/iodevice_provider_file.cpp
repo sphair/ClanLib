@@ -65,7 +65,7 @@ CL_IODeviceProvider_File::CL_IODeviceProvider_File(
 {
 	bool result = open(filename, open_mode, access, share, flags);
 	if (result == false)
-		throw CL_Exception(cl_format(cl_text("CL_IODeviceProvider_File::CL_IODeviceProvider_File(): Unable to open file '%1'"), filename));
+		throw CL_Exception(cl_format("CL_IODeviceProvider_File::CL_IODeviceProvider_File(): Unable to open file '%1'", filename));
 }
 
 CL_IODeviceProvider_File::CL_IODeviceProvider_File(
@@ -79,7 +79,7 @@ CL_IODeviceProvider_File::CL_IODeviceProvider_File(
 {
 	bool result = open(filename, mode, permissions, access, share, flags);
 	if (result == false)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::CL_IODeviceProvider_File(): Unable to open file"));
+		throw CL_Exception("CL_IODeviceProvider_File::CL_IODeviceProvider_File(): Unable to open file");
 }
 
 CL_IODeviceProvider_File::~CL_IODeviceProvider_File()
@@ -94,25 +94,25 @@ int CL_IODeviceProvider_File::get_size() const
 {
 #ifdef WIN32
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_size(): Unable to get file size, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_size(): Unable to get file size, no file open");
 
 	DWORD size = GetFileSize(handle, 0);
 	if (size == INVALID_FILE_SIZE)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_size(): Unable to get file size"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_size(): Unable to get file size");
 
 	return size;
 #else
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_size(): Unable to get file size, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_size(): Unable to get file size, no file open");
 
 	off_t old_pos = lseek(handle, 0, SEEK_CUR);
 	if (old_pos == (off_t) -1)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_size(): Unable to get file size"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_size(): Unable to get file size");
 	off_t size = lseek(handle, 0, SEEK_END);
 	lseek(handle, old_pos, SEEK_SET);
 
 	if (size == (off_t) -1)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_size(): Unable to get file size"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_size(): Unable to get file size");
 		
 	return (int) size;
 #endif
@@ -122,20 +122,20 @@ int CL_IODeviceProvider_File::get_position() const
 {
 #ifdef WIN32
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_position(): Unable to get file position pointer, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_position(): Unable to get file position pointer, no file open");
 
 	DWORD pos = SetFilePointer(handle, 0, 0, FILE_CURRENT);
 	if (pos == INVALID_SET_FILE_POINTER)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::get_position(): Unable to get file position pointer"));
+		throw CL_Exception("CL_IODeviceProvider_File::get_position(): Unable to get file position pointer");
 
 	return (int) pos;
 #else
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("Unable to get file position pointer, no file open"));
+		throw CL_Exception("Unable to get file position pointer, no file open");
 
 	off_t pos = lseek(handle, 0, SEEK_CUR);
 	if (pos == (off_t) -1)
-		throw CL_Exception(cl_text("Unable to get file position pointer"));
+		throw CL_Exception("Unable to get file position pointer");
 
 	return pos;
 #endif
@@ -205,7 +205,7 @@ bool CL_IODeviceProvider_File::open(
 		win32_flags |= FILE_FLAG_SEQUENTIAL_SCAN;
 
 	handle = CreateFile(
-		filename.c_str(),
+		CL_StringHelp::utf8_to_ucs2(filename).c_str(),
 		win32_desired_access,
 		win32_share_mode,
 		win32_security_attributes,
@@ -294,7 +294,7 @@ int CL_IODeviceProvider_File::read(void *buffer, int size, bool read_all)
 int CL_IODeviceProvider_File::write(const void *buffer, int size, bool write_all)
 {
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::write(): Unable to write to file, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::write(): Unable to write to file, no file open");
 
 #ifdef WIN32
 	DWORD written = 0;
@@ -302,7 +302,7 @@ int CL_IODeviceProvider_File::write(const void *buffer, int size, bool write_all
 	if (result == TRUE)
 		return written;
 	else
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::write(): WriteFile failed"));
+		throw CL_Exception("CL_IODeviceProvider_File::write(): WriteFile failed");
 #else
 	int result = ::write(handle, buffer, size);
 	return result;
@@ -348,7 +348,7 @@ int CL_IODeviceProvider_File::peek(void *data, int len)
 bool CL_IODeviceProvider_File::seek(int position, CL_IODevice::SeekMode seek_mode)
 {
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::seek(): Unable to get file position pointer, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::seek(): Unable to get file position pointer, no file open");
 
 #ifdef WIN32
 	DWORD moveMethod = FILE_BEGIN;
@@ -389,7 +389,7 @@ CL_IODeviceProvider *CL_IODeviceProvider_File::duplicate()
 int CL_IODeviceProvider_File::lowlevel_read(void *buffer, int size, bool read_all)
 {
 	if (handle == invalid_handle)
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::lowlevel_read(): Unable to read from file, no file open"));
+		throw CL_Exception("CL_IODeviceProvider_File::lowlevel_read(): Unable to read from file, no file open");
 
 #ifdef WIN32
 	DWORD bytes_read = 0;
@@ -397,7 +397,7 @@ int CL_IODeviceProvider_File::lowlevel_read(void *buffer, int size, bool read_al
 	if (result == TRUE)
 		return bytes_read;
 	else
-		throw CL_Exception(cl_text("CL_IODeviceProvider_File::lowlevel_read(): ReadFile failed"));
+		throw CL_Exception("CL_IODeviceProvider_File::lowlevel_read(): ReadFile failed");
 #else
 	int result = ::read(handle, buffer, size);
 	return result;

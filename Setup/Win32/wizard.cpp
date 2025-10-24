@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "wizard.h"
 #include "resource.h"
-#include "workspace_generator_msvc.h"
 #include "workspace_generator_msvc8.h"
 #include "../Generic/workspace.h"
 
@@ -131,24 +130,21 @@ BOOL Wizard::finish()
 
 	Workspace workspace = create_workspace(page_target.include_gl1);
 
-	if (page_target.target_version == 600)
-	{
-		WorkspaceGenerator_MSVC6 generator6;
-		generator6.write(workspace);
-	}
-	else if (page_target.target_version < 800)
-	{
-		WorkspaceGenerator_MSVC7 generator7;
-		generator7.target_version = page_target.target_version;
-		generator7.write(workspace);
-	}
-	else
+	if(page_target.target_version == 800 || page_target.target_version == 900)
 	{
 		WorkspaceGenerator_MSVC8 generator8;
 		generator8.set_target_version(page_target.target_version);
 		generator8.set_platforms(true, page_target.include_x64);
-		generator8.enable_configurations(page_target.include_unicode, page_target.include_mtdll, page_target.include_dll);
+		generator8.enable_configurations(page_target.include_mtdll, page_target.include_dll);
 		generator8.write(workspace);
+	}
+	else if(page_target.target_version == 1000)
+	{
+		WorkspaceGenerator_MSVC8 generator10;
+		generator10.set_target_version(page_target.target_version);
+		generator10.set_platforms(true, page_target.include_x64);
+		generator10.enable_configurations(page_target.include_mtdll, page_target.include_dll);
+		generator10.write(workspace);
 	}
 
 	return TRUE;
@@ -296,10 +292,10 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 		libs_list_debug,
 		defines_list);
 */
-	Project clanGDI(
-		"GDI",
-		"clanGDI",
-		"gdi.h",
+	Project clanSWRender(
+		"SWRender",
+		"clanSWRender",
+		"swrender.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug,
@@ -332,6 +328,15 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 		libs_list_debug,
 		defines_list);
 
+	Project clanCSSLayout(
+		"CSSLayout",
+		"clanCSSLayout",
+		"csslayout.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug,
+		defines_list);
+
 	// Add projects to workspace:
 	workspace.projects.push_back(clanCore);
 	workspace.projects.push_back(clanDatabase);
@@ -345,7 +350,8 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 	workspace.projects.push_back(clanGL);
 //	workspace.projects.push_back(clanD3D9);
 //	workspace.projects.push_back(clanD3D10);
-	workspace.projects.push_back(clanGDI);
+	workspace.projects.push_back(clanSWRender);
+	workspace.projects.push_back(clanCSSLayout);
 
 	if (include_target_gl1)
 		workspace.projects.push_back(clanGL1);
@@ -356,3 +362,53 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 
 	return workspace;
 }
+
+#ifdef UNICODE
+std::string Wizard::text_to_local8(const tstring &text)
+{
+	int local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), 0, 0, 0, 0);
+	if (local8_length <= 0)
+		return std::string();
+	char *buffer = new char[local8_length];
+	if (buffer == 0)
+		return std::string();
+	local8_length = WideCharToMultiByte(CP_ACP, 0, text.data(), int(text.length()), buffer, local8_length, 0, 0);
+	if (local8_length <= 0)
+	{
+		delete[] buffer;
+		return std::string();
+	}
+	std::string s(buffer, local8_length);
+	delete[] buffer;
+	return s;
+}
+
+Wizard::tstring Wizard::local8_to_text(const std::string &local8)
+{
+	int text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), 0, 0);
+	if (text_length <= 0)
+		return tstring();
+	WCHAR *buffer = new WCHAR[text_length];
+	if (buffer == 0)
+		return tstring();
+	text_length = MultiByteToWideChar(CP_ACP, 0, local8.data(), int(local8.length()), buffer, text_length);
+	if (text_length <= 0)
+	{
+		delete[] buffer;
+		return tstring();
+	}
+	tstring s(buffer, text_length);
+	delete[] buffer;
+	return s;
+}
+#else
+std::string Wizard::text_to_local8(const tstring &text)
+{
+	return text;
+}
+
+tstring Wizard::local8_to_text(const std::string &local8)
+{
+	return local8;
+}
+#endif

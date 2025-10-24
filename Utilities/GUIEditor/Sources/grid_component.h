@@ -55,6 +55,9 @@ public:
 	void save(const CL_StringRef &str);
 	void set_boundary_size(const CL_Size &size);
 
+	void set_netselect_box(CL_Rect netselect_box);
+	void select_objects(const CL_Rect &box);
+
 	CL_Callback_v0 func_boundary_resized;
 
 private:
@@ -92,6 +95,8 @@ private:
 	CL_Size boundary;
 	GridEditState edit_state;
 	CL_GUIThemePart part_windowframe;
+
+	CL_Rect netselect_box;
 
 	friend class GridEditStateNone;
 	friend class GridEditStateBoundarySizing;

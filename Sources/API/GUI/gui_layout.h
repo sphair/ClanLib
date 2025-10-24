@@ -57,11 +57,6 @@ public:
 	/// \param provider = The layout provider
 	CL_GUILayout(CL_GUILayoutProvider *provider);
 
-	/// \brief Constructs a GUILayout
-	///
-	/// \param copy = GUILayout
-	CL_GUILayout(const CL_GUILayout &copy);
-
 	~CL_GUILayout();
 
 /// \}

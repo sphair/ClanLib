@@ -47,11 +47,6 @@ class CL_API_REGEXP CL_RegExpMatch
 public:
 	CL_RegExpMatch();
 
-	/// \brief Constructs a RegExpMatch
-	///
-	/// \param other = Reg Exp Match
-	CL_RegExpMatch(const CL_RegExpMatch &other);
-
 	~CL_RegExpMatch();
 
 /// \}

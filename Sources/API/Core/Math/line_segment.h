@@ -135,27 +135,27 @@ public:
 	///
 	/// \param second = The second line to check with
 	/// \return true = They are collinear
-	bool collinear(const CL_LineSegment2x<Type> second) const;
+	bool collinear(const CL_LineSegment2x<Type> &second) const;
 
 	/// \brief Return true if two line segments intersect.
 	///
 	/// \param second = Second line.
 	/// \param collinear_intersect = true if a collision is reported when all points are on the same line.
 	/// \return true = Intersects
-	bool intersects( const CL_LineSegment2x<Type> second, bool collinear_intersect ) const;
+	bool intersects( const CL_LineSegment2x<Type> &second, bool collinear_intersect ) const;
 
 	/// \brief Return the intersection point of two lines.
 	///
 	/// \param second = Second line.
-	/// \param dest_intercept = On Return: The intercept. If the lines are parallel, this contains this line's first point
+	/// \param intersect = On Return: The intercept. If the lines are parallel, this contains this line's first point
 	/// \return true if the lines intersect, false if the lines are parallel
-	CL_Vec2<Type> get_intersection( const CL_LineSegment2x<Type> second, bool &intersect) const;
+	CL_Vec2<Type> get_intersection( const CL_LineSegment2x<Type> &second, bool &intersect) const;
 
 	/// \brief Return [<0, 0, >0] if the Point P is right, on or left of the line trough A,B
 	///
 	/// \param point = The point
 	/// \return Value representing - left (>0), centre (=0), or right (<0)
-	Type point_right_of_line( CL_Vec2<Type> point ) const {return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y);}
+	Type point_right_of_line( const CL_Vec2<Type> &point ) const {return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y);}
 
 	/// \brief Return the normal vector of the line from point A to point B.
 	///

@@ -56,7 +56,7 @@ CL_MenuModalLoop::~CL_MenuModalLoop()
 void CL_MenuModalLoop::start(CL_GUIComponent *owner, CL_PopupMenu menu, const CL_Point &pos)
 {
 	if (running)
-		throw CL_Exception(cl_text("Menu loop already running!"));
+		throw CL_Exception("Menu loop already running!");
 	running = true;
 	this->owner = owner;
 	create_popup_window(menu, pos);
@@ -66,7 +66,7 @@ void CL_MenuModalLoop::start(CL_GUIComponent *owner, CL_PopupMenu menu, const CL
 void CL_MenuModalLoop::start(CL_GUIComponent *owner, CL_MenuBar *menubar)
 {
 	if (running)
-		throw CL_Exception(cl_text("Menu loop already running!"));
+		throw CL_Exception("Menu loop already running!");
 	running = true;
 	this->owner = owner;
 	this->menubar = menubar;

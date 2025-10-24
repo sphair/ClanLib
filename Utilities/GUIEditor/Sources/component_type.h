@@ -196,8 +196,8 @@ public:
 		CL_Tab *component = new CL_Tab(parent);
 		component->set_geometry(CL_Rect(0, 0, 75, 23));
 
-		CL_TabPage *page1 = component->add_page(cl_text("Page 1"));
-		page1->set_id_name(cl_format(cl_text("%1%2"), page1->get_type_name(), tab_page_count++));
+		CL_TabPage *page1 = component->add_page("Page 1");
+		page1->set_id_name(cl_format("%1%2", page1->get_type_name(), tab_page_count++));
 
 		return component;
 	}

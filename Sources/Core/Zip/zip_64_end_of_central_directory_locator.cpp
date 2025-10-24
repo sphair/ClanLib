@@ -54,7 +54,7 @@ void CL_Zip64EndOfCentralDirectoryLocator::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x07064b50)
 	{
-		throw CL_Exception(cl_text("Incorrect Zip64 End of central directory locator signature!"));
+		throw CL_Exception("Incorrect Zip64 End of central directory locator signature!");
 	}
 	
 	number_of_disk_with_zip64_end_of_central_directory = input.read_int32();

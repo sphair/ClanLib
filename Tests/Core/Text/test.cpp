@@ -92,7 +92,7 @@ CL_StringRef TestApp::test_stringref()
 
 void TestApp::fail(void)
 {
-	throw CL_Exception(cl_text("Failed Test"));
+	throw CL_Exception("Failed Test");
 }
 
 

@@ -55,7 +55,7 @@ public:
 	{
 		for (int i = 0; i < source->num_attributes; i++)
 			if (array_data.attribute_indexes[i] != source->attribute_indexes[i])
-				throw CL_Exception(cl_text("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration"));
+				throw CL_Exception("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration");
 
 		for (int i = 0; i < source->num_attributes; i++)
 			copy_vertex_data(offset, array_data.attributes[i], offset_source, source->attributes[i], vertex_count);
@@ -103,7 +103,7 @@ private:
 			return;
 
 		if (source.type != dest.type || source.size != dest.size)
-			throw CL_Exception(cl_text("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration"));
+			throw CL_Exception("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration");
 
 		int data_length = 0;
 		switch (source.type)
@@ -211,6 +211,5 @@ void CL_PrimitivesArrayBuilder::draw(CL_GraphicContext &gc, CL_PrimitivesType ty
 
 CL_VertexArrayBuffer CL_PrimitivesArrayBuilder::create_buffer(CL_GraphicContext &gc, CL_BufferUsage usage)
 {
-	throw CL_Exception(cl_text("CL_PrimitivesArrayBuilder::create_buffer not implemented"));
-	return CL_VertexArrayBuffer();
+	throw CL_Exception("CL_PrimitivesArrayBuilder::create_buffer not implemented");
 }

@@ -51,9 +51,10 @@ CL_TextureGroup::~CL_TextureGroup()
 /////////////////////////////////////////////////////////////////////////////
 // CL_TextureGroup Attributes:
 
-bool CL_TextureGroup::is_null() const
+void CL_TextureGroup::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_TextureGroup is null");
 }
 
 int CL_TextureGroup::get_subtexture_count() const

@@ -76,6 +76,12 @@ CL_ProgramAttribute::~CL_ProgramAttribute()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgramAttribute Attributes:
 
+void CL_ProgramAttribute::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_ProgramAttribute is null");
+}
+
 CL_StringRef CL_ProgramAttribute::get_name() const
 {
 	return impl->name;

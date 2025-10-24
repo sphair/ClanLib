@@ -37,6 +37,7 @@
 #include "../../Core/IOData/virtual_directory.h"
 #include "../../Core/Signals/signal_v0.h"
 #include "texture.h"
+#include "../Image/image_import_description.h"
 #include <vector>
 #include <map>
 
@@ -89,13 +90,13 @@ public:
 	/// \param virtual_directory = Virtual Directory
 	///
 	/// \return Texture
-	static CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
+	static CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory(), const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Unload texture
 	///
 	/// \param filename = String
 	/// \param virtual_directory = Virtual Directory
-	static void unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
+	static void unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory(), const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Unload all textures
 	static void unload_all_textures();

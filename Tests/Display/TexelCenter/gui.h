@@ -87,6 +87,4 @@ private:
 	CL_TextureGroup font_texture_group;
 
 	CL_Mat4f last_modelview_matrix;
-	CL_Mat4f last_modelview_opengl;
-
 };

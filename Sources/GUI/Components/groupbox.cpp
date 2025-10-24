@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
@@ -68,6 +69,17 @@ CL_GroupBox::~CL_GroupBox()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GroupBox Attributes:
 
+CL_GroupBox *CL_GroupBox::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_GroupBox *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_GroupBox*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_GroupBox named item: %1", id));
+
+	return object;
+}
 /////////////////////////////////////////////////////////////////////////////
 // CL_GroupBox Operations:
 

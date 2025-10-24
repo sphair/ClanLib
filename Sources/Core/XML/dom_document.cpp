@@ -70,7 +70,7 @@ CL_DomDocument::CL_DomDocument(
 {
 	impl->owner_document = impl;
 	CL_DomElement element = create_element(qualified_name);
-	element.set_attribute(cl_text("xmlns:") + element.get_prefix(), qualified_name);
+	element.set_attribute("xmlns:" + element.get_prefix(), qualified_name);
 	append_child(element);
 
 	CL_DomDocument_Generic *doc = dynamic_cast<CL_DomDocument_Generic *>(impl.get());
@@ -198,14 +198,75 @@ CL_DomNodeList CL_DomDocument::get_elements_by_tag_name_ns(
 
 CL_DomElement CL_DomDocument::get_element_by_id(const CL_DomString &element_id)
 {
-	return CL_DomElement();
+	throw CL_Exception("Implement me");
 }
 
-CL_DomNode CL_DomDocument::import_node(
-	const CL_DomNode &node,
-	bool deep)
+CL_DomNode CL_DomDocument::import_node(const CL_DomNode &node, bool deep)
 {
-	return CL_DomNode();
+	CL_DomNode imported_node;
+	switch (node.get_node_type())
+	{
+	case NULL_NODE:
+		return imported_node;
+	case ELEMENT_NODE:
+		imported_node = create_element_ns(node.get_namespace_uri(), node.get_node_name());
+		break;
+	case ATTRIBUTE_NODE:
+		imported_node = create_attribute_ns(node.get_namespace_uri(), node.get_node_name());
+		imported_node.set_node_value(node.get_node_value());
+		break;
+	case TEXT_NODE:
+		imported_node = create_text_node(node.get_node_value());
+		break;
+	case CDATA_SECTION_NODE:
+		imported_node = create_cdata_section(node.get_node_value());
+		break;
+	case ENTITY_REFERENCE_NODE:
+		imported_node = create_entity_reference(node.get_node_name());
+		break;
+	case ENTITY_NODE:
+		return imported_node;
+	case PROCESSING_INSTRUCTION_NODE:
+		imported_node = create_processing_instruction(node.to_processing_instruction().get_target(), node.to_processing_instruction().get_data());
+		break;
+	case COMMENT_NODE:
+		imported_node = create_comment(node.get_node_value());
+		break;
+	case DOCUMENT_NODE:
+		imported_node = create_document_fragment();
+		break;
+	case DOCUMENT_TYPE_NODE:
+		return imported_node;
+	case DOCUMENT_FRAGMENT_NODE:
+		imported_node = create_document_fragment();
+		break;
+	case NOTATION_NODE:
+		return imported_node;
+	}
+
+	if (node.is_element())
+	{
+		CL_DomElement import_element = imported_node.to_element();
+		CL_DomNamedNodeMap node_attributes = node.get_attributes();
+		int size = node_attributes.get_length();
+		for (int index = 0; index < size; index++)
+		{
+			CL_DomNode attr = node_attributes.item(index);
+			import_element.set_attribute_node_ns(import_node(attr, deep).to_attr());
+		}
+	}
+
+	if (deep)
+	{
+		CL_DomNode cur = node.get_first_child();
+		while (!cur.is_null())
+		{
+			imported_node.append_child(import_node(cur, true));
+			cur = cur.get_next_sibling();
+		}
+	}
+
+	return imported_node;
 }
 
 std::vector<CL_DomNode> CL_DomDocument::load(
@@ -272,7 +333,7 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 				else
 				{
 					node_stack.pop_back();
-					if (node_stack.empty()) throw CL_Exception(cl_text("Malformed XML tree!"));
+					if (node_stack.empty()) throw CL_Exception("Malformed XML tree!");
 				}
 				break;
 

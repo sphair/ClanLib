@@ -24,12 +24,39 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
 
 #include "API/Display/Image/pixel_format.h"
 #include "API/Display/Image/palette.h"
+#include "API/Display/Image/pixel_buffer.h"
+
+class CL_GraphicContext;
+class CL_PixelBufferProvider;
+
+/// \brief Texture format datatypes.
+enum CL_TextureFormatDataType
+{
+	cl_unused,
+	cl_signed,
+	cl_unsigned,
+	cl_signed_normalised_fixed_point,
+	cl_unsigned_normalised_fixed_point,
+	cl_floating_point
+};
+
+enum CL_TextureFormatBase
+{
+	cl_formatbase_unknown,
+	cl_formatbase_red,
+	cl_formatbase_rg,
+	cl_formatbase_rgb,
+	cl_formatbase_rgba,
+	cl_formatbase_depth_component,
+	cl_formatbase_depth_stencil
+};
 
 /// \brief Pixel data implementation interface.
 class CL_PixelBuffer_Impl
@@ -41,11 +68,13 @@ public:
 	CL_PixelBuffer_Impl();
 
 	CL_PixelBuffer_Impl(
-		int width, int height, int pitch, const CL_PixelFormat &format, const void *data_ptr);
+		int width, int height, CL_TextureFormat sized_format, const void *data_ptr, bool only_reference_data);
 
 	CL_PixelBuffer_Impl(
-		int width, int height, int pitch, const CL_PixelFormat &format,
+		int width, int height, CL_TextureFormat sized_format,
 		const CL_Palette &palette, const void *data_ptr);
+
+	CL_PixelBuffer_Impl(CL_GraphicContext &gc, int new_width, int new_height, CL_PixelBufferDirection direction, CL_TextureFormat new_sized_format, const void *new_data, CL_BufferUsage new_usage);
 
 	~CL_PixelBuffer_Impl();
 
@@ -60,14 +89,10 @@ public:
 
 	const void *get_data() const { return data; }
 
-	/// \brief Buffer pixel format description.
-	CL_PixelFormat format;
+	CL_Colorf get_pixel(int x, int y);
 
 	/// \brief Palette, if 8 bpp pixel format.
 	CL_Palette palette;
-
-	/// \brief Buffer scanline pitch.
-	unsigned int pitch;
 
 	/// \brief Buffer width.
 	int width;
@@ -81,39 +106,110 @@ public:
 	/// \brief Pixel data.
 	unsigned char *data;
 
+	CL_PixelBufferProvider *provider;
+
+	/// \brief True if colorkeying is enabled in the pixel format.
+	bool colorkey_enabled;
+
+	/// \brief Colorkey value, if enabled.
+	unsigned int colorkey;
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+
+	/// \brief Returns the pixel format
+	CL_TextureFormat get_format() const { return sized_format; }
+
+	/// \brief Returns the number of bytes per pixel
+	int get_bytes_per_pixel() const { return bytes_per_pixel; }
+
+	/// \brief Returns the red component color mask.
+	unsigned int get_red_mask() const { return red_mask; }
+
+	/// \brief Returns the green component color mask.
+	unsigned int get_green_mask() const { return green_mask; }
+
+	/// \brief Returns the blue component color mask.
+	unsigned int get_blue_mask() const { return blue_mask; }
+
+	/// \brief Returns the alpha component color mask.
+	unsigned int get_alpha_mask() const { return alpha_mask; }
+
+	/// \brief Buffer scanline pitch.
+	unsigned int get_pitch() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Converts between two RGBA formats.
-	static void convert(
-		void* in_buffer,
-		const CL_PixelFormat& in_pf,
-		int in_pitch,
-		void* out_buffer,
-		const CL_PixelFormat& out_pf,
-		int out_pitch,
-		const CL_Size& size);
 
-	/// \brief Converts from palette format to RGBA.
-	static void convert_pal(
-		void* in_buffer,
-		const CL_PixelFormat& in_pf,
-		int in_pitch,
-		const CL_Palette* in_pal,
-		void* out_buffer,
-		const CL_PixelFormat& out_pf,
-		int out_pitch,
-		const CL_Size& size);
-
+	void convert(CL_PixelBuffer &target, const CL_Rect &dest_rect, const CL_Rect &src_rect) const;
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	bool check_supported_conversion_format() const;
+
+	void *aligned_alloc(int size) const;
+	void aligned_free(void *ptr) const;
+
+	/// \brief Sets the pixel format type
+	void set_format(CL_TextureFormat sized_format);
+
+	/// \brief Converts between two color formats.
+	void convert(
+		void* in_buffer,
+		int in_pitch,
+		void* out_buffer,
+		CL_PixelBuffer& target_buffer,
+		int out_pitch,
+		const CL_Size& size) const;
+
+	/// \brief Converts from palette format to color format.
+	void convert_pal(
+		void* in_buffer,
+		int in_pitch,
+		void* out_buffer,
+		CL_PixelBuffer& target_buffer,
+		int out_pitch,
+		const CL_Size& size) const;
+
+	/// \brief Pixel format type.
+	CL_TextureFormat sized_format;
+
+	/// \brief Pixel format base type.
+	CL_TextureFormatBase base_format;
+
+	/// \brief Number of bytes per pixel. 0 = Unknown
+	int bytes_per_pixel;
+
+	/// \brief Pixel information
+	CL_TextureFormatDataType datatype_color;
+	CL_TextureFormatDataType datatype_stencil;
+	CL_TextureFormatDataType datatype_depth;
+
+	/// \brief Component bits (0 = unknown or not used)
+	unsigned int red_bits;
+	unsigned int green_bits;
+	unsigned int blue_bits;
+	unsigned int alpha_bits;
+	unsigned int depth_bits;
+	unsigned int stencil_bits;
+
+	/// \brief Component mask (0 = unknown or not used)
+	unsigned int red_mask;
+	unsigned int green_mask;
+	unsigned int blue_mask;
+	unsigned int alpha_mask;
+	unsigned int depth_mask;
+	unsigned int stencil_mask;
+
 /// \}
 };
 

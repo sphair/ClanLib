@@ -134,7 +134,7 @@ private:
 	void add_anchor_radios();
 
 	CL_Rect get_child_rect(CL_GUIComponent *parent);
-	std::vector<CL_TempString> split_text_char( const CL_StringRef &text, const CL_StringRef &split_string, bool skip_empty=true);
+	std::vector<CL_String> split_text_char( const CL_StringRef &text, const CL_StringRef &split_string, bool skip_empty=true);
 	int parse_position_equation(const CL_String &equation, const CL_Size &component_size, const CL_Size &parent_size);
 	CL_Vec2i parse_position_equations(const CL_String &equ_x, const CL_String &equ_y, const CL_Size &component_size, const CL_Size &parent_size);
 	MainWindow *main_window;

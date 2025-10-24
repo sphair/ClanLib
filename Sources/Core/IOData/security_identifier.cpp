@@ -39,13 +39,13 @@
 CL_SecurityIdentifier::CL_SecurityIdentifier(const CL_String &name)
 : type(type_invalid)
 {
-	throw CL_Exception(cl_text("CL_SecurityIdentifier(const CL_String &name) not implemented"));
+	throw CL_Exception("CL_SecurityIdentifier(const CL_String &name) not implemented");
 }
 	
 CL_SecurityIdentifier::CL_SecurityIdentifier(const CL_String &name, Type type)
 : type(type)
 {
-	throw CL_Exception(cl_text("CL_SecurityIdentifier(const CL_String &name) not implemented"));
+	throw CL_Exception("CL_SecurityIdentifier(const CL_String &name) not implemented");
 }
 
 #ifdef WIN32
@@ -86,7 +86,7 @@ CL_SecurityIdentifier CL_SecurityIdentifier::get_thread_user()
 		0,
 		&securityDescriptor);
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_text("Unable to get thread user SID"));
+		throw CL_Exception("Unable to get thread user SID");
 
 	CL_SecurityIdentifier identifier(pSid);
 	LocalFree(securityDescriptor);
@@ -111,7 +111,7 @@ CL_SecurityIdentifier CL_SecurityIdentifier::get_thread_group()
 		0,
 		&securityDescriptor);
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_text("Unable to get thread user SID"));
+		throw CL_Exception("Unable to get thread user SID");
 
 	CL_SecurityIdentifier identifier(pSid);
 	LocalFree(securityDescriptor);

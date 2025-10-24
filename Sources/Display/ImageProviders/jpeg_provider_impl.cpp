@@ -67,29 +67,6 @@ CL_JPEGProvider_Impl::~CL_JPEGProvider_Impl()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_JPEGProvider_Impl attributes:
-
-unsigned int CL_JPEGProvider_Impl::get_red_mask() const
-{
-	return 0xff0000;
-}
-
-unsigned int CL_JPEGProvider_Impl::get_green_mask() const
-{
-	return 0x00ff00;
-}
-
-unsigned int CL_JPEGProvider_Impl::get_blue_mask() const
-{
-	return 0x0000ff;
-}
-
-unsigned int CL_JPEGProvider_Impl::get_alpha_mask() const
-{
-	return 0x000000;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // CL_JPEGProvider_Impl operations:
   
 void *CL_JPEGProvider_Impl::get_data()
@@ -171,7 +148,7 @@ void CL_JPEGProvider_Impl::init()
 	}
 	else
 	{
-		throw CL_Exception(cl_format(cl_text("CL_JPEGProvider: Unsupported color completion: %1"),  cinfo.output_components));
+		throw CL_Exception(cl_format("CL_JPEGProvider: Unsupported color completion: %1",  cinfo.output_components));
 	}
 	
 	jpeg_finish_decompress(&cinfo);
@@ -181,13 +158,7 @@ void CL_JPEGProvider_Impl::init()
 	// this could be integrated better, but I'm too tired, so I just hack CL_JPEGProvider
 	// support into it. -- mbn 21. feb 2002
 
-	CL_JPEGProvider_Impl::format.enable_colorkey(false);
-	CL_JPEGProvider_Impl::format.set_colorkey(0);
-	CL_JPEGProvider_Impl::format.set_depth(24);
-	CL_JPEGProvider_Impl::format.set_red_mask(get_red_mask());
-	CL_JPEGProvider_Impl::format.set_green_mask(get_green_mask());
-	CL_JPEGProvider_Impl::format.set_blue_mask(get_blue_mask());
-	CL_JPEGProvider_Impl::format.set_alpha_mask(get_alpha_mask());
+	CL_JPEGProvider_Impl::sized_format = cl_rgb8;
 	CL_JPEGProvider_Impl::pitch = get_pitch();
 	CL_JPEGProvider_Impl::width = get_width();
 	CL_JPEGProvider_Impl::height = get_height();
@@ -210,7 +181,7 @@ void CL_JPEGProvider_Impl::jpeg_local_error_exit (jpeg_common_struct* cinfo)
 	/* Let the memory manager delete any temp files before we die */
 	jpeg_destroy(cinfo);
 
-	throw CL_Exception(cl_format(cl_text("CL_JPEGProvider: Error: %1"),  cinfo->err->msg_code));
+	throw CL_Exception(cl_format("CL_JPEGProvider: Error: %1",  cinfo->err->msg_code));
 }
 
 void CL_JPEGProvider_Impl::jpeg_InputSource_src (j_decompress_ptr cinfo, CL_JPEGProvider_Impl* provider)

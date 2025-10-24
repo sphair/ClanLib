@@ -31,6 +31,64 @@
 #include "API/Core/Math/mat4.h"
 #include "API/Core/Math/vec4.h"
 #include "API/Core/Math/angle.h"
+#include <limits>
+
+#ifndef CL_DISABLE_SSE2
+#include <mmintrin.h>
+#include <xmmintrin.h>
+#endif
+
+#ifndef FLT_EPSILON
+#include "float.h"
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_Mat4 operations: That needs to be listed first because GCC is not very flexible handling templates
+
+template<>
+CL_Mat4<float> &CL_Mat4<float>::multiply(const CL_Mat4<float> &mult)
+{
+#ifndef CL_DISABLE_SSE2
+	__m128 m1col0 = _mm_loadu_ps(matrix);
+	__m128 m1col1 = _mm_loadu_ps(matrix+4);
+	__m128 m1col2 = _mm_loadu_ps(matrix+8);
+	__m128 m1col3 = _mm_loadu_ps(matrix+12);
+	_MM_TRANSPOSE4_PS(m1col0, m1col1, m1col2, m1col3);
+
+	for (int cur_row = 0; cur_row < 4; cur_row++)
+	{
+		__m128 m2row = _mm_loadu_ps(mult.matrix+cur_row*4);
+
+		__m128 cell0 = _mm_mul_ps(m1col0, m2row);
+		__m128 cell1 = _mm_mul_ps(m1col1, m2row);
+		__m128 cell2 = _mm_mul_ps(m1col2, m2row);
+		__m128 cell3 = _mm_mul_ps(m1col3, m2row);
+
+		_MM_TRANSPOSE4_PS(cell0, cell1, cell2, cell3);
+		__m128 row = _mm_add_ps(_mm_add_ps(_mm_add_ps(cell0, cell1), cell2), cell3);
+
+		_mm_storeu_ps(matrix+cur_row*4, row);
+	}
+
+	return *this;
+#else
+	CL_Mat4<float> result;
+	for (int x=0; x<4; x++)
+	{
+		for (int y=0; y<4; y++)
+		{
+			result.matrix[x+y*4] =
+				matrix[0*4 + x]*mult.matrix[y*4 + 0] +
+				matrix[1*4 + x]*mult.matrix[y*4 + 1] +
+				matrix[2*4 + x]*mult.matrix[y*4 + 2] +
+				matrix[3*4 + x]*mult.matrix[y*4 + 3];
+		}
+	}
+	*this = result;
+	return *this;
+#endif
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Mat4 construction:
@@ -214,6 +272,142 @@ CL_Mat4<Type> CL_Mat4<Type>::rotate(const CL_Angle &angle, Type x, Type y, Type 
 	return rotate_matrix;
 }
 
+template<typename Type>
+CL_Mat4<Type> CL_Mat4<Type>::rotate(const CL_Angle &angle_x, const CL_Angle &angle_y, const CL_Angle &angle_z, CL_EulerOrder order)
+{
+	CL_Mat4<Type> rotation_matrix_x = CL_Mat4<Type>::rotate(angle_x, 1.0f, 0.0f, 0.0f, false);
+	CL_Mat4<Type> rotation_matrix_y = CL_Mat4<Type>::rotate(angle_y, 0.0f, 1.0f, 0.0f, false);
+	CL_Mat4<Type> rotation_matrix_z = CL_Mat4<Type>::rotate(angle_z, 0.0f, 0.0f, 1.0f, false);
+
+	switch (order)
+	{
+		case cl_XYZ:
+			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
+		case cl_XZY:
+			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
+		case cl_YZX:
+			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
+		case cl_YXZ:
+			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
+		case cl_ZXY:
+			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
+		case cl_ZYX:
+			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
+		default:
+			throw CL_Exception("Unknown euler order");
+	}
+
+}
+
+template<typename Type>
+CL_Vec3<Type> CL_Mat4<Type>::get_euler(CL_EulerOrder order) const
+{
+	CL_Vec3<Type> angles;
+
+	int pos_i;
+	int pos_j;
+	int pos_k;
+
+	// Obtain the correct xyz rotation position from the original rotation order
+	switch (order)
+	{
+		case cl_XYZ:
+			pos_i = 0; pos_j = 1; pos_k = 2; break;
+		case cl_XZY:
+			pos_i = 0; pos_j = 2; pos_k = 1; break;
+		case cl_YZX:
+			pos_i = 2; pos_j = 0; pos_k = 1; break;
+		case cl_YXZ:
+			pos_i = 1; pos_j = 0; pos_k = 2; break;
+		case cl_ZXY:
+			pos_i = 1; pos_j = 2; pos_k = 0; break;
+		case cl_ZYX:
+			pos_i = 2; pos_j = 1; pos_k = 0; break;
+		default:
+			throw CL_Exception("Unknown euler order");
+	}
+
+	Type cy = sqrt(matrix[ (4*pos_i) + pos_i ]*matrix[ (4*pos_i) + pos_i ] + matrix[ (4*pos_j) + pos_i ]*matrix[ (4*pos_j) + pos_i ]);
+	if (cy > (Type) 16.0*FLT_EPSILON)
+	{
+		angles.x = atan2(matrix[ (4*pos_k) + pos_j ], matrix[ (4*pos_k) + pos_k ]);
+		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
+		angles.z = atan2(matrix[ (4*pos_j) + pos_i ], matrix[ (4*pos_i) + pos_i ]);
+	}
+	else
+	{
+		angles.x = atan2(-matrix[ (4*pos_j) + pos_k ], matrix[ (4*pos_j) + pos_j ]);
+		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
+		angles.z = 0;
+	}
+
+	// Swap the xyz value to the specified euler angle
+	switch (order)
+	{
+		case cl_XYZ:
+			break;
+		case cl_XZY:
+			angles = CL_Vec3<Type>(angles.x, angles.z, angles.y);
+			break;
+		case cl_YZX:
+			angles = CL_Vec3<Type>(angles.y, angles.z, angles.x);
+			break;
+		case cl_YXZ:
+			angles = CL_Vec3<Type>(angles.y, angles.x, angles.z);
+			break;
+		case cl_ZXY:
+			angles = CL_Vec3<Type>(angles.z, angles.x, angles.y);
+			break;
+		case cl_ZYX:
+			angles = CL_Vec3<Type>(angles.z, angles.y, angles.x);
+			break;
+	}
+
+	return angles;
+}
+
+template<typename Type>
+CL_Vec3<Type> CL_Mat4<Type>::get_transformed_point(const CL_Vec3<Type> &vector) const
+{
+	CL_Vec3<Type> dest;
+
+	dest.x = vector.x * matrix[0 + 0*4] +
+			vector.y * matrix[0 + 1*4] +
+			vector.z * matrix[0 + 2*4] +
+			matrix[0 + 3*4];
+
+	dest.y = vector.x * matrix[1 + 0*4] +
+			vector.y * matrix[1 + 1*4] +
+			vector.z * matrix[1 + 2*4] +
+			matrix[1 + 3*4];
+
+	dest.z = vector.x * matrix[2 + 0*4] +
+			vector.y * matrix[2 + 1*4] +
+			vector.z * matrix[2 + 2*4] +
+			matrix[2 + 3*4];
+
+	Type w = vector.x * matrix[3 + 0*4] +
+			vector.y * matrix[3 + 1*4] +
+			vector.z * matrix[3 + 2*4] +
+			matrix[3 + 3*4];
+
+	if (w != (Type) 0.0)
+	{
+		dest.x /= w;
+		dest.y /= w;
+		dest.z /= w;
+	}
+
+	return dest;
+}
+
+// For ints
+template<>
+CL_Vec3<int> CL_Mat4<int>::get_euler(CL_EulerOrder order) const
+{
+	throw CL_Exception("Function not supported for ints");
+}
+
 // For ints
 template<>
 CL_Mat4<int> CL_Mat4<int>::rotate(const CL_Angle &angle, int x, int y, int z, bool normalize)
@@ -389,6 +583,14 @@ CL_Mat4<Type> CL_Mat4<Type>::inverse(const CL_Mat4<Type> &matrix)
 	return dest;
 }
 
+template<typename Type>
+CL_Mat4<Type> CL_Mat4<Type>::transpose(const CL_Mat4<Type> &matrix)
+{
+	CL_Mat4<Type> dest(matrix);
+	dest.transpose();
+	return dest;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Mat4 attributes:
 
@@ -482,6 +684,45 @@ CL_Mat4<Type> &CL_Mat4<Type>::scale_self(Type x, Type y, Type z)
 	return *this;
 }
 
+template<>
+CL_Mat4<float> &CL_Mat4<float>::scale_self(float x, float y, float z)
+{
+	/*
+	// FIXME
+	__m128 row0 = _mm_loadu_ps(matrix);
+	__m128 row1 = _mm_loadu_ps(matrix+4);
+	__m128 row2 = _mm_loadu_ps(matrix+8);
+	__m128 row3 = _mm_loadu_ps(matrix+12);
+	__m128 vec = _mm_set_ps(x, y, z, 1.0f);
+
+	row0 = _mm_mul_ps(row0, vec);
+	row1 = _mm_mul_ps(row1, vec);
+	row2 = _mm_mul_ps(row2, vec);
+	row3 = _mm_mul_ps(row3, vec);
+
+	_mm_storeu_ps(matrix, row0);
+	_mm_storeu_ps(matrix+4, row1);
+	_mm_storeu_ps(matrix+8, row2);
+	_mm_storeu_ps(matrix+12, row3);
+*/
+	matrix[0+4*0] *= x;
+	matrix[0+4*1] *= y;
+	matrix[0+4*2] *= z;
+	
+	matrix[1+4*0] *= x;
+	matrix[1+4*1] *= y;
+	matrix[1+4*2] *= z;
+
+	matrix[2+4*0] *= x;
+	matrix[2+4*1] *= y;
+	matrix[2+4*2] *= z;
+
+	matrix[3+4*0] *= x;
+	matrix[3+4*1] *= y;
+	matrix[3+4*2] *= z;
+	return *this;
+}
+
 template<typename Type>
 CL_Mat4<Type> &CL_Mat4<Type>::translate_self(Type x, Type y, Type z)
 {
@@ -494,6 +735,39 @@ CL_Mat4<Type> &CL_Mat4<Type>::translate_self(Type x, Type y, Type z)
 	matrix[1+4*3] = translate_value_2;
 	matrix[2+4*3] = translate_value_3;
 	matrix[3+4*3] = translate_value_4;
+	return *this;
+}
+
+template<>
+CL_Mat4<float> &CL_Mat4<float>::translate_self(float x, float y, float z)
+{
+	/*
+	// FIXME
+
+	__m128 row0 = _mm_loadu_ps(matrix);
+	__m128 row1 = _mm_loadu_ps(matrix+4);
+	__m128 row2 = _mm_loadu_ps(matrix+8);
+	__m128 row3 = _mm_loadu_ps(matrix+12);
+
+	row0 = _mm_mul_ps(row0, _mm_set1_ps(x));
+	row1 = _mm_mul_ps(row1, _mm_set1_ps(y));
+	row2 = _mm_mul_ps(row2, _mm_set1_ps(z));
+
+	_MM_TRANSPOSE4_PS(row0, row1, row2, row3);
+
+	__m128 result = _mm_add_ps(_mm_add_ps(_mm_add_ps(row0, row1), row2), row3);
+	_mm_storeu_ps(matrix+12, result);
+*/
+	float translate_value_1 = (matrix[0+4*0] * x) + (matrix[0+4*1] * y) + (matrix[0+4*2] * z) + matrix[0+4*3];
+	float translate_value_2 = (matrix[1+4*0] * x) + (matrix[1+4*1] * y) + (matrix[1+4*2] * z) + matrix[1+4*3];
+	float translate_value_3 = (matrix[2+4*0] * x) + (matrix[2+4*1] * y) + (matrix[2+4*2] * z) + matrix[2+4*3];
+	float translate_value_4 = (matrix[3+4*0] * x) + (matrix[3+4*1] * y) + (matrix[3+4*2] * z) + matrix[3+4*3];
+
+	matrix[0+4*3] = translate_value_1;
+	matrix[1+4*3] = translate_value_2;
+	matrix[2+4*3] = translate_value_3;
+	matrix[3+4*3] = translate_value_4;
+
 	return *this;
 }
 
@@ -711,6 +985,33 @@ CL_Mat4<Type> &CL_Mat4<Type>::inverse()
 
 		*this = result;
 	}
+	return *this;
+}
+
+template<typename Type>
+CL_Mat4<Type> &CL_Mat4<Type>::transpose()
+{
+	Type original[16];
+	for (int cnt=0; cnt<16; cnt++)
+		original[cnt] = matrix[cnt];
+
+	matrix[0] = original[0];
+	matrix[1] = original[4];
+	matrix[2] = original[8];
+	matrix[3] = original[12];
+	matrix[4] = original[1];
+	matrix[5] = original[5];
+	matrix[6] = original[9];
+	matrix[7] = original[13];
+	matrix[8] = original[2];
+	matrix[9] = original[6];
+	matrix[10] = original[10];
+	matrix[11] = original[14];
+	matrix[12] = original[3];
+	matrix[13] = original[7];
+	matrix[14] = original[11];
+	matrix[15] = original[13];
+
 	return *this;
 }
 

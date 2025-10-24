@@ -43,7 +43,7 @@ public:
 	{
 	}
 
-	virtual void invoke() = 0;
+	virtual void invoke() const = 0;
 };
 
 /// (Internal ClanLib Class)
@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		static_func();
 	}
@@ -76,7 +76,7 @@ public:
 	{
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		static_func(user_data);
 	}
@@ -98,7 +98,7 @@ public:
 	{
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		(instance->*member_func)();
 	}
@@ -120,7 +120,7 @@ public:
 	{
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		(instance->*member_func)(user_data);
 	}
@@ -143,7 +143,7 @@ public:
 	{
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		functor();
 	}
@@ -222,7 +222,7 @@ public:
 		impl = CL_SharedPtr< CL_Callback_Impl_v0 >();
 	}
 
-	void invoke()
+	void invoke() const
 	{
 		impl->invoke();
 	}

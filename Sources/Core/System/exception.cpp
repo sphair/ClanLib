@@ -67,9 +67,9 @@ CL_String CL_Exception::get_message_and_stack_trace()
 	for (size_t i = 0; i < stack_trace.size(); i++)
 	{
 	#ifdef WIN32
-		text += cl_format(cl_text("\r\n#%1 %2"), (int)i, stack_trace[i]);
+		text += cl_format("\r\n#%1 %2", (int)i, stack_trace[i]);
 	#else
-		text += cl_format(cl_text("\n#%1 %2"), (int)i, stack_trace[i]);
+		text += cl_format("\n#%1 %2", (int)i, stack_trace[i]);
 	#endif
 	}
 

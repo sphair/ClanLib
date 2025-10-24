@@ -39,6 +39,8 @@
 #include "../../Core/Resources/resource_data_session.h"
 #include "graphic_context.h"
 #include "compare_function.h"
+#include "../Image/image_import_description.h"
+#include "../Image/texture_format.h"
 
 class CL_Color;
 class CL_Point;
@@ -72,16 +74,6 @@ enum CL_TextureFilter
 	cl_filter_linear_mipmap_linear
 };
 
-/// \brief Texture depth modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
-enum CL_TextureDepthMode
-{
-	cl_depthmode_luminance,
-	cl_depthmode_intensity,
-	cl_depthmode_alpha
-};
-
 /// \brief Texture compare modes.
 ///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
@@ -102,127 +94,6 @@ enum CL_TextureDimensions
 	cl_texture_cube_map
 };
 
-/// \brief Texture format.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
-enum CL_TextureFormat
-{
-	// base internal format
-	cl_alpha,
-	cl_depth_component,
-	cl_depth_stencil,
-	cl_intensity,
-	cl_luminance,
-	cl_luminance_alpha,
-	cl_red,
-	cl_rg,
-	cl_rgb,
-	cl_rgba,
-	cl_stencil_index,		// For CL_RenderBuffer
-
-	// sized internal format
-	cl_stencil_index1,		// For CL_RenderBuffer
-	cl_stencil_index4,		// For CL_RenderBuffer
-	cl_stencil_index8,		// For CL_RenderBuffer
-	cl_stencil_index16,		// For CL_RenderBuffer
-	cl_alpha4,
-	cl_alpha8,
-	cl_alpha12,
-	cl_alpha16,
-	cl_r8,
-	cl_r16,
-	cl_rg8,
-	cl_rg16,
-	cl_r3_g3_b2,
-	cl_rgb4,
-	cl_rgb5,
-	cl_rgb8,
-	cl_rgb10,
-	cl_rgb12,
-	cl_rgb16,
-	cl_rgba2,
-	cl_rgba4,
-	cl_rgb5_a1,
-	cl_rgba8,
-	cl_rgb10_a2,
-	cl_rgba12,
-	cl_rgba16,
-	cl_srgb8,
-	cl_srgb8_alpha8,
-	cl_r16f,
-	cl_rg16f,
-	cl_rgb16f,
-	cl_rgba16f,
-	cl_r32f,
-	cl_rg32f,
-	cl_rgb32f,
-	cl_rgba32f,
-	cl_r11f_g11f_b10f,
-	cl_rgb9_e5,
-	cl_r8i,
-	cl_r8ui,
-	cl_r16i,
-	cl_r16ui,
-	cl_r32i,
-	cl_r32ui,
-	cl_rg8i,
-	cl_rg8ui,
-	cl_rg16i,
-	cl_rg16ui,
-	cl_rg32i,
-	cl_rg32ui,
-	cl_rgb8i,
-	cl_rgb8ui,
-	cl_rgb16i,
-	cl_rgb16ui,
-	cl_rgb32i,
-	cl_rgb32ui,
-	cl_rgba8i,
-	cl_rgba8ui,
-	cl_rgba16i,
-	cl_rgba16ui,
-	cl_rgba32i,
-	cl_rgba32ui,
-	cl_luminance4,
-	cl_luminance8,
-	cl_luminance12,
-	cl_luminance16,
-	cl_luminance4_alpha4,
-	cl_luminance6_alpha2,
-	cl_luminance8_alpha8,
-	cl_luminance12_alpha4,
-	cl_luminance12_alpha12,
-	cl_luminance16_alpha16,
-	cl_intensity4,
-	cl_intensity8,
-	cl_intensity12,
-	cl_intensity16,
-	cl_depth_component16,
-	cl_depth_component24,
-	cl_depth_component32,
-	cl_depth_component32f,
-	cl_depth24_stencil8,
-	cl_depth32f_stencil8,
-	cl_sluminance,
-	cl_sluminance_alpha8,
-	cl_compressed_alpha,
-	cl_compressed_luminance,
-	cl_compressed_luminance_alpha,
-	cl_compressed_intensity,
-	cl_compressed_red,
-	cl_compressed_rg,
-	cl_compressed_rgb,
-	cl_compressed_rgba,
-	cl_compressed_srgb,
-	cl_compressed_srgb_alpha,
-	cl_compressed_sluminance,
-	cl_compressed_sluminance_alpha,
-	cl_compressed_red_rgtc1,
-	cl_compressed_signed_red_rgtc1,
-	cl_compressed_rg_rgtc2,
-	cl_compressed_signed_rg_rgtc2
-};
-
 /// \brief Texture object class.
 ///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
@@ -231,7 +102,7 @@ class CL_API_DISPLAY CL_Texture
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a texture.
+	/// \brief Constructs a null instance.
 	CL_Texture();
 
 	/// \brief Constructs a Texture
@@ -248,6 +119,15 @@ public:
 	/// \param internal_format = Texture Format
 	CL_Texture(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format = cl_rgba);
 
+	/// \brief Constructs a 3D Texture
+	///
+	/// \param context = Graphic Context
+	/// \param width = value
+	/// \param height = value
+	/// \param depth = value
+	/// \param internal_format = Texture Format
+	CL_Texture(CL_GraphicContext &context, int width, int height, int depth, CL_TextureFormat internal_format = cl_rgba);
+
 	/// \brief Constructs a Texture
 	///
 	/// \param context = Graphic Context
@@ -257,21 +137,21 @@ public:
 
 	CL_Texture(
 		CL_GraphicContext &context,
-		const CL_StringRef &fullname);
+		const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	CL_Texture(
 		CL_GraphicContext &context,
 		const CL_StringRef &filename,
-		const CL_VirtualDirectory &directory);
+		const CL_VirtualDirectory &directory, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	CL_Texture(
 		CL_GraphicContext &context,
-		CL_IODevice &file, const CL_String &image_type);
+		CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	CL_Texture(
 		const CL_StringRef &resource_id,
 		CL_ResourceManager *resources,
-		CL_GraphicContext &gc);
+		CL_GraphicContext &gc, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a texture from an implementation
 	///
@@ -306,18 +186,17 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if this is a null texture.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get the texture width.
-	///
-	/// \param level Mipmap level to get width for.
-	int get_width(int level = 0) const;
+	int get_width() const;
 
 	/// \brief Get the texture height.
-	///
-	/// \param level Mipmap level to get height for.
-	int get_height(int level = 0) const;
+	int get_height() const;
 
 	/// \brief Get the texture size.
 	CL_Size get_size() const;
@@ -334,7 +213,7 @@ public:
 	/// \param level = value
 	///
 	/// \return Pixel Buffer
-	CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level = 0) const;
+	CL_PixelBuffer get_pixeldata(CL_TextureFormat sized_format, int level = 0) const;
 
 	/// \brief Get the minimum level of detail.
 	float get_min_lod() const;
@@ -350,9 +229,6 @@ public:
 
 	/// \brief Get the texture max level.
 	int get_max_level() const;
-
-	/// \brief Get if automatic mipmap generation is enabled.
-	bool get_generate_mipmap() const;
 
 	/// \brief Get the texture wrap mode for the s coordinate.
 	CL_TextureWrapMode get_wrap_mode_s() const;
@@ -371,9 +247,6 @@ public:
 
 	/// \brief Returns true if texture is resident in texture memory.
 	bool is_resident() const;
-
-	/// \brief Get the texture depth mode.
-	CL_TextureDepthMode get_depth_mode() const;
 
 	/// \brief Get the texture compare mode.
 	CL_TextureCompareMode get_compare_mode() const;
@@ -395,15 +268,16 @@ public:
 /// \name Operations
 /// \{
 public:
+	/// \brief Generate the mipmap
+	void generate_mipmap();
+
 	/// \brief Upload image to texture.
 	///
 	/// \param image Image to upload.
 	/// \param level Mipmap level-of-detail number.
-	/// \param format Internal texture format of texture.
 	void set_image(
 		CL_PixelBuffer &image,
-		int level = 0,
-		CL_TextureFormat internal_format = cl_rgba);
+		int level = 0);
 
 	/// \brief Upload cube map.
 	void set_cube_map(
@@ -413,8 +287,7 @@ public:
 		CL_PixelBuffer &cube_map_negative_y,
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
-		int level = 0,
-		CL_TextureFormat internal_format = cl_rgba);
+		int level = 0);
 
 	void set_compressed_image(
 		int level,
@@ -430,12 +303,14 @@ public:
 	void set_subimage(
 		int x,
 		int y,
-		const CL_PixelBufferRef &image,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
 		int level = 0);
 
 	void set_subimage(
 		const CL_Point &point,
-		const CL_PixelBufferRef &image,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
 		int level = 0);
 
 	/// \brief Copy image data from a graphic context.
@@ -491,9 +366,6 @@ public:
 	/// \brief Sets the texture max level texture parameter.
 	void set_max_level(int max_level);
 
-	/// \brief Enables or disables automatic mipmap generation when uploading image data.
-	void set_generate_mipmap(bool generate_mipmap = true);
-
 	/// \brief Set the texture wrapping mode.
 	void set_wrap_mode(
 		CL_TextureWrapMode wrap_s,
@@ -515,9 +387,6 @@ public:
 
 	/// \brief Set the maximum degree of anisotropy.
 	void set_max_anisotropy(float max_anisotropy);
-
-	/// \brief Set the depth texture mode parameter.
-	void set_depth_mode(CL_TextureDepthMode depth_mode);
 
 	/// \brief Sets the texture compare mode and compare function texture parameters.
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);

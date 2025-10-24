@@ -168,19 +168,19 @@ CL_ListViewColumnHeader CL_ListViewHeader::append(CL_ListViewColumnHeader column
 
 CL_ListViewColumnHeader CL_ListViewHeader::remove(const CL_StringRef &column_id)
 {
-	throw CL_Exception(cl_text("CL_ListViewHeader::remove not implemented yet!"));
+	throw CL_Exception("CL_ListViewHeader::remove not implemented yet!");
 	return CL_ListViewColumnHeader();
 }
 
 CL_ListViewColumnHeader CL_ListViewHeader::insert_after(const CL_StringRef &column_id, CL_ListViewColumnHeader new_column)
 {
-	throw CL_Exception(cl_text("CL_ListViewHeader::insert_after not implemented yet!"));
+	throw CL_Exception("CL_ListViewHeader::insert_after not implemented yet!");
 	return CL_ListViewColumnHeader();
 }
 
 CL_ListViewColumnHeader CL_ListViewHeader::insert_before(const CL_StringRef &column_id, CL_ListViewColumnHeader new_column)
 {
-	throw CL_Exception(cl_text("CL_ListViewHeader::insert_before not implemented yet!"));
+	throw CL_Exception("CL_ListViewHeader::insert_before not implemented yet!");
 	return CL_ListViewColumnHeader();
 }
 
@@ -325,7 +325,7 @@ void CL_ListViewHeader_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &upd
 	part_component.render_box(gc, rect.get_size(), update_rect);
 	
 	// draw listview column headers and backgrounds
-	text_height = font.get_text_size(gc, cl_text("l")).height;
+	text_height = font.get_text_size(gc, "l").height;
 	int xpos = 0;
 	CL_ListViewColumnHeader col = first_column;
 	while (!col.is_null())
@@ -389,7 +389,7 @@ void CL_ListViewHeader_Impl::create_parts()
 CL_ListViewColumnHeader CL_ListViewHeader_Impl::create_column(const CL_StringRef &column_id, const CL_StringRef &caption)
 {
 	CL_SharedPtr<CL_ListViewColumnHeader_Impl> col_impl(new CL_ListViewColumnHeader_Impl());
-	col_impl->part = CL_GUIThemePart(listview_header, cl_text("columnheader"));
+	col_impl->part = CL_GUIThemePart(listview_header, "columnheader");
 	col_impl->part.set_state(CssStr::normal, true);
 	CL_ListViewColumnHeader new_column = CL_ListViewColumnHeader(col_impl);
 	new_column.set_caption(caption);

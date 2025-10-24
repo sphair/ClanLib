@@ -109,7 +109,8 @@ public:
 	///
 	/// Operates in the native datatype
 	///
-	/// \param vector Second vector used for the dot product.
+	/// \param vector1 First vector used for the dot product.
+	/// \param vector2 Second vector used for the dot product.
 	/// \return The resulting dot product of the two vectors.
 	static Type dot3(const CL_Vec4<Type>& vector1, const CL_Vec4<Type>& vector2) { return vector1.x*vector2.x + vector1.y*vector2.y + vector1.z*vector2.z; }
 
@@ -117,7 +118,8 @@ public:
 	///
 	/// Operates in the native datatype
 	///
-	/// \param vector Second vector used for the dot product.
+	/// \param vector1 First vector used for the dot product.
+	/// \param vector2 Second vector used for the dot product.
 	/// \return The resulting dot product of the two vectors.
 	static Type dot4(const CL_Vec4<Type>& vector1, const CL_Vec4<Type>& vector2) { return vector1.x*vector2.x + vector1.y*vector2.y + vector1.z*vector2.z + vector1.w*vector2.w; }
 

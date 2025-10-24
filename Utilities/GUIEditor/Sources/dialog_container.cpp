@@ -61,9 +61,9 @@ DialogContainer::~DialogContainer()
 
 DialogComponent *DialogContainer::create_component(const CL_StringRef &type, const CL_StringRef &name)
 {
-	CL_TempString prefix = element_gui.get_prefix();
+	CL_String prefix = element_gui.get_prefix();
 	if (!prefix.empty())
-		prefix.append(cl_text(":"));
+		prefix.append(":");
 	CL_DomElement element = element_gui.get_owner_document().create_element_ns(DialogDocument::namespace_uri, prefix + name);
 	element_gui.append_child(element);
 	DialogComponent *component = new DialogComponent(this, element, doc->next_free_id++);

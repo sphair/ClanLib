@@ -44,16 +44,16 @@ CL_SqliteTransactionProvider::CL_SqliteTransactionProvider(CL_SqliteConnectionPr
 	switch (type)
 	{
 	case CL_DBTransaction::deferred:
-		text = cl_text("BEGIN DEFERRED TRANSACTION");
+		text = "BEGIN DEFERRED TRANSACTION";
 		break;
 	case CL_DBTransaction::immediate:
-		text = cl_text("BEGIN IMMEDIATE TRANSACTION");
+		text = "BEGIN IMMEDIATE TRANSACTION";
 		break;
 	case CL_DBTransaction::exclusive:
-		text = cl_text("BEGIN EXCLUSIVE TRANSACTION");
+		text = "BEGIN EXCLUSIVE TRANSACTION";
 		break;
 	default:
-		throw CL_Exception(cl_text("Unknown transaction type"));
+		throw CL_Exception("Unknown transaction type");
 	}
 	std::auto_ptr<CL_DBCommandProvider> command(connection->create_command(text, CL_DBCommand::sql_statement));
 	connection->execute_non_query(command.get());
@@ -79,7 +79,7 @@ void CL_SqliteTransactionProvider::commit()
 {
 	if (connection && connection->active_transaction)
 	{
-		std::auto_ptr<CL_DBCommandProvider> command(connection->create_command(cl_text("COMMIT TRANSACTION"), CL_DBCommand::sql_statement));
+		std::auto_ptr<CL_DBCommandProvider> command(connection->create_command("COMMIT TRANSACTION", CL_DBCommand::sql_statement));
 		connection->execute_non_query(command.get());
 		command.reset();
 		connection->active_transaction = 0;
@@ -90,7 +90,7 @@ void CL_SqliteTransactionProvider::rollback()
 {
 	if (connection && connection->active_transaction)
 	{
-		std::auto_ptr<CL_DBCommandProvider> command(connection->create_command(cl_text("ROLLBACK TRANSACTION"), CL_DBCommand::sql_statement));
+		std::auto_ptr<CL_DBCommandProvider> command(connection->create_command("ROLLBACK TRANSACTION", CL_DBCommand::sql_statement));
 		try
 		{
 			connection->execute_non_query(command.get());

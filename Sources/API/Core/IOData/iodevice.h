@@ -69,7 +69,7 @@ public:
 /// \{
 
 public:
-	/// \brief Constructs an I/O device.
+	/// \brief Constructs a null instance
 	CL_IODevice();
 
 	/// \brief Constructs a IODevice
@@ -84,8 +84,11 @@ public:
 /// \{
 
 public:
-	/// \brief Returns true if the iodevice is null.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 	
 	/// \brief Returns the size of data stream.
 	/** <p>Returns -1 if the size is unknown.</p>
@@ -118,7 +121,7 @@ public:
 	///
 	/// \param data Data to receive
 	/// \param len Length to receive
-	/// \param send_all true to receive all the data. false = receive part of the data, if it would block
+	/// \param receive_all true to receive all the data. false = receive part of the data, if it would block
 	///
 	/// \return size of data received
 	int receive(void *data, int len, bool receive_all = true);
@@ -141,7 +144,7 @@ public:
 	///
 	/// \param data Data to receive
 	/// \param len Length to receive
-	/// \param send_all true to receive all the data. false = receive part of the data, if it would block
+	/// \param receive_all true to receive all the data. false = receive part of the data, if it would block
 	///
 	/// \return size of data received
 	int read(void *data, int len, bool receive_all = true);
@@ -270,12 +273,13 @@ public:
 
 	/// \brief  Reads a string from the input source where the source is a text file.
 	///
-	/// \param skip_initital_chars Ignore any of these characters at the start of the string. NULL = Do not ignore any characters
-	/// \param read_until_chars Read from the input until any of these characters are found. NULL = Read until the end of the file
-	/// \return The string read.
-	///
 	/// After reading the input source up to "read_until_chars", the file position is set to the first character that was not read.
 	/// If the file contains NUL characters, then the input is read up to the NUL character, and the file position is set AFTER the NUL)
+	///
+	/// \param skip_initial_chars Ignore any of these characters at the start of the string. NULL = Do not ignore any characters
+	/// \param read_until_chars Read from the input until any of these characters are found. NULL = Read until the end of the file
+	/// \param allow_eof Allow EOF
+	/// \return The string read.
 	CL_String8 read_string_text(const char *skip_initial_chars, const char *read_until_chars, bool allow_eof = true);
 
 	/// \brief Create a new CL_IODevice referencing the same resource.

@@ -126,7 +126,7 @@ public:
 
 	void reset_primitives_array();
 
-	void draw_pixels(double x, double y, double zoom_x, double zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color);
+	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color);
 
 	void set_clip_rect(const CL_Rect &rect);
 
@@ -134,7 +134,7 @@ public:
 
 	void clear(const CL_Colorf &color);
 
-	void clear_depth(double value);
+	void clear_depth(float value);
 
 	void clear_stencil(int value);
 

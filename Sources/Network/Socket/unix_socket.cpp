@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -132,6 +132,19 @@ void CL_UnixSocket::set_nodelay(bool enable)
 	int value = enable ? 1 : 0;
 	int result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char *) &value, sizeof(int));
 	throw_if_failed(result);
+}
+
+void CL_UnixSocket::set_keep_alive(bool enable, int timeout, int interval)
+{
+	int value = enable ? 1 : 0;
+	int result = setsockopt(handle, SOL_SOCKET, SO_KEEPALIVE, (const char *) &value, sizeof(int));
+	throw_if_failed(result);
+
+	if (enable && timeout != 0 && interval != 0)
+	{
+		setsockopt(handle, SOL_TCP, TCP_KEEPIDLE, (const char *) &timeout, sizeof(int));
+		setsockopt(handle, SOL_TCP, TCP_KEEPINTVL, (const char *) &interval, sizeof(int));
+	}
 }
 
 void CL_UnixSocket::bind(const CL_SocketName &socketname, bool reuse_address)

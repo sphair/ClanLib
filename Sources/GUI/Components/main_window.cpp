@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_close.h"
@@ -78,7 +79,7 @@ CL_MainWindow::CL_MainWindow(CL_GUIManager *owner, const CL_GUITopLevelDescripti
 	func_process_message().set(impl.get(), &CL_MainWindow_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_MainWindow_Impl::on_render);
 
-	set_type_name(cl_text("mainwindow"));
+	set_type_name("mainwindow");
 	
 	impl->menubar = new CL_MenuBar(this);
 	impl->statusbar = new CL_StatusBar(this);
@@ -95,7 +96,7 @@ CL_MainWindow::CL_MainWindow(CL_GUIManager *owner, const CL_GUITopLevelDescripti
 CL_MainWindow::CL_MainWindow(CL_GUIComponent *owner, const CL_GUITopLevelDescription &description)
 : CL_GUIComponent( owner, description), impl(new CL_MainWindow_Impl)
 {
-	set_type_name(cl_text("mainwindow"));
+	set_type_name("mainwindow");
 
 	impl->window = this;
 	impl->title = description.get_title();
@@ -135,6 +136,18 @@ CL_Callback_v1<CL_Rect&> &CL_MainWindow::func_resize()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_MainWindow Attributes:
+
+CL_MainWindow *CL_MainWindow::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_MainWindow *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_MainWindow*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_MainWindow named item: %1", id));
+
+	return object;
+}
 
 CL_StringRef CL_MainWindow::get_title() const 
 {

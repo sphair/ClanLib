@@ -35,12 +35,12 @@ public:
      	  
 			CL_GraphicContext gc = window.get_gc();
 
-			sprite = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"));
-			sprite2 = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png"));
-			sprite_olay = CL_Sprite(gc, cl_text("../../../Resources/GUIThemeLuna/Images/overlay_96x96.png"));
+			sprite = CL_Sprite(gc, "../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png");
+			sprite2 = CL_Sprite(gc, "../../../Resources/GUIThemeLuna/Images/icon_folder_32x32.png");
+			sprite_olay = CL_Sprite(gc, "../../../Resources/GUIThemeLuna/Images/overlay_96x96.png");
 
-//			CL_PixelBuffer pbuf = CL_PNGProvider::load(cl_text("../Images/icon_folder.png"));
-			//			CL_PixelBuffer pbuf2 = CL_PNGProvider::load(cl_text("../Images/icon_folder_32x32.png"));
+//			CL_PixelBuffer pbuf = CL_PNGProvider::load("../Images/icon_folder.png");
+			//			CL_PixelBuffer pbuf2 = CL_PNGProvider::load("../Images/icon_folder_32x32.png");
 
 			CL_ListView lv1(&window);
 			lv1.set_geometry(CL_Rect(10, 10, 630, 210));
@@ -79,7 +79,7 @@ public:
 
 		CL_ListViewIconList ico_list = lv.get_icon_list();
 
-//		CL_Colorf sel_color(cl_text("#316ac5"));
+//		CL_Colorf sel_color("#316ac5");
 //		ico_list.set_selected_color(CL_Colorf::cornflowerblue);
 
 		CL_ListViewIcon icon;
@@ -185,9 +185,9 @@ public:
 			CL_String node;
 			for (int j=0;j<pc;j++)
 			{
-				node += cl_text("\t");
+				node += "\t";
 			}
-			node += i.get_column(cl_text("col1_id")).get_text();
+			node += i.get_column("col1_id").get_text();
 			CL_Console::write_line(node);
 
 			if (item.has_children())

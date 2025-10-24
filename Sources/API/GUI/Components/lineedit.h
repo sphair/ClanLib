@@ -70,6 +70,13 @@ public:
 		align_right
 	};
 
+	using CL_GUIComponent::get_named_item;
+
+	/// \brief Find the child CL_LineEdit with the specified component ID name.
+	///
+	/// If it was not found, an exception is thrown.
+	static CL_LineEdit *get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id);
+
 	/// \brief Get Alignment
 	///
 	/// \return alignment
@@ -243,9 +250,9 @@ public:
 /// \{
 
 public:
-	CL_Callback_v1<CL_InputEvent> &func_before_edit_changed();
+	CL_Callback_v1<CL_InputEvent &> &func_before_edit_changed();
 
-	CL_Callback_v1<CL_InputEvent> &func_after_edit_changed();
+	CL_Callback_v1<CL_InputEvent &> &func_after_edit_changed();
 
 	/// \brief Func selection changed
 	///

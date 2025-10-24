@@ -6,7 +6,7 @@ int main(int, char**)
 	CL_SetupCore setup_core;
 	try
 	{
-		CL_File file(cl_text("test.xml"), CL_File::open_existing, CL_File::access_read);
+		CL_File file("test.xml", CL_File::open_existing, CL_File::access_read);
 		CL_DomDocument document;
 		document.load(file);
 		CL_XPathEvaluator evaluator;

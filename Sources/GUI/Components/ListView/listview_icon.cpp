@@ -195,7 +195,7 @@ void CL_ListViewIcon::draw(CL_GraphicContext &gc, const CL_Rect &rect, CL_ListVi
 
 		CL_Point offset = get_offset(mode);
 
-		gc.draw_pixels(rect.left + center_offset_x + offset.x, rect.top + center_offset_y + offset.y, scale, scale, pb, color);
+		gc.draw_pixels(rect.left + center_offset_x + offset.x, rect.top + center_offset_y + offset.y, scale, scale, pb, pb.get_size(), color);
 	}
 }
 

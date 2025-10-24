@@ -1,3 +1,0 @@
-This file describes breaking changes between versions. 
-
-See: http://clanlib.org/wiki/BreakingChanges

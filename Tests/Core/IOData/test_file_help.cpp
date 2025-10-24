@@ -40,7 +40,7 @@ void TestApp::test_file_help(void)
 	// Remove the files first (if they exist)
 	try
 	{
-		CL_FileHelp::delete_file(cl_text("temporary_file.tmp"));
+		CL_FileHelp::delete_file("temporary_file.tmp");
 	}
 	catch(CL_Exception)
 	{
@@ -48,20 +48,20 @@ void TestApp::test_file_help(void)
 
 	try
 	{
-		CL_FileHelp::delete_file(cl_text("temporary_file2.tmp"));
+		CL_FileHelp::delete_file("temporary_file2.tmp");
 	}
 	catch(CL_Exception)
 	{
 	}
 //*** testing copy_file()
-	CL_FileHelp::copy_file(cl_text("test.cpp"), cl_text("temporary_file.tmp"), false);
+	CL_FileHelp::copy_file("test.cpp", "temporary_file.tmp", false);
 	fptr = fopen("temporary_file.tmp", "rb");
 	if (!fptr) fail();
 	fclose(fptr);
 
 	try
 	{
-		CL_FileHelp::copy_file(cl_text("test.cpp"), cl_text("temporary_file.tmp"), false);
+		CL_FileHelp::copy_file("test.cpp", "temporary_file.tmp", false);
 		// Failed because an exception should have been thrown
 		fail();	// Already exists
 	}
@@ -69,20 +69,20 @@ void TestApp::test_file_help(void)
 	{
 	}
 
-	CL_FileHelp::copy_file(cl_text("test.cpp"), cl_text("temporary_file.tmp"), true);
+	CL_FileHelp::copy_file("test.cpp", "temporary_file.tmp", true);
 	fptr = fopen("temporary_file.tmp", "rb");
 	if (!fptr) fail();
 	fclose(fptr);
 
-	CL_FileHelp::copy_file(cl_text("test.cpp"), cl_text("temporary_file2.tmp"), true);
+	CL_FileHelp::copy_file("test.cpp", "temporary_file2.tmp", true);
 	fptr = fopen("temporary_file2.tmp", "rb");
 	if (!fptr) fail();
 	fclose(fptr);
 
 //*** testing delete_file()
 	CL_Console::write_line("   Function: delete_file()");
-	CL_FileHelp::delete_file(cl_text("temporary_file.tmp"));
-	CL_FileHelp::delete_file(cl_text("temporary_file2.tmp"));
+	CL_FileHelp::delete_file("temporary_file.tmp");
+	CL_FileHelp::delete_file("temporary_file2.tmp");
 	fptr = fopen("temporary_file.tmp", "rb");
 	if (fptr)
 	{

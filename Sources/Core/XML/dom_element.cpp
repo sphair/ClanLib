@@ -310,7 +310,7 @@ bool CL_DomElement::get_child_bool(const CL_DomString &name, bool default_value)
 {
 	CL_DomString value = get_child_string(name);
 	if (!value.empty())
-		return value == cl_text("true");
+		return value == "true";
 	else
 		return default_value;
 }
@@ -319,7 +319,7 @@ bool CL_DomElement::get_child_bool_ns(const CL_DomString &namespace_uri, const C
 {
 	CL_DomString value = get_child_string_ns(namespace_uri, local_name);
 	if (!value.empty())
-		return value == cl_text("true");
+		return value == "true";
 	else
 		return default_value;
 }
@@ -385,12 +385,12 @@ void CL_DomElement::set_child_int_ns(const CL_DomString &namespace_uri, const CL
 
 void CL_DomElement::set_child_bool(const CL_DomString &name, bool value)
 {
-	set_child_string(name, value ? cl_text("true") : cl_text("false"));
+	set_child_string(name, value ? "true" : "false");
 }
 
 void CL_DomElement::set_child_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, bool value)
 {
-	set_child_string_ns(namespace_uri, qualified_name, value ? cl_text("true") : cl_text("false"));
+	set_child_string_ns(namespace_uri, qualified_name, value ? "true" : "false");
 }
 
 CL_DomElement CL_DomElement::get_first_child_element() const
@@ -431,7 +431,7 @@ bool CL_DomElement::get_attribute_bool(const CL_DomString &name, bool default_va
 {
 	CL_DomString value = get_attribute(name);
 	if (!value.empty())
-		return value == cl_text("true");
+		return value == "true";
 	else
 		return default_value;
 }
@@ -440,7 +440,7 @@ bool CL_DomElement::get_attribute_bool_ns(const CL_DomString &namespace_uri, con
 {
 	CL_DomString value = get_attribute_ns(namespace_uri, local_name);
 	if (!value.empty())
-		return value == cl_text("true");
+		return value == "true";
 	else
 		return default_value;
 }
@@ -457,12 +457,12 @@ void CL_DomElement::set_attribute_int_ns(const CL_DomString &namespace_uri, cons
 
 void CL_DomElement::set_attribute_bool(const CL_DomString &name, bool value)
 {
-	set_attribute(name, value ? cl_text("true") : cl_text("false"));
+	set_attribute(name, value ? "true" : "false");
 }
 
 void CL_DomElement::set_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, bool value)
 {
-	set_attribute_ns(namespace_uri, qualified_name, value ? cl_text("true") : cl_text("false"));
+	set_attribute_ns(namespace_uri, qualified_name, value ? "true" : "false");
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -118,7 +118,7 @@ bool CL_VirtualFileSystem::is_mount(const CL_String &mount_point)
 CL_VirtualDirectoryListing CL_VirtualFileSystem::get_directory_listing(const CL_String &path_rel)
 {
 	CL_String path = CL_PathHelp::make_absolute(
-		cl_text("/"),
+		"/",
 		path_rel,
 		CL_PathHelp::path_type_virtual);
 
@@ -139,12 +139,12 @@ CL_VirtualDirectoryListing CL_VirtualFileSystem::get_directory_listing(const CL_
 		return CL_VirtualDirectoryListing(
 			impl->provider,
 			CL_PathHelp::make_relative(
-				cl_text("/"),
+				"/",
 				path,
 				CL_PathHelp::path_type_virtual));		
 	}
 	else
-		throw CL_Exception(cl_format(cl_text("Unable to list directory: %1"), path));
+		throw CL_Exception(cl_format("Unable to list directory: %1", path));
 
 }
 
@@ -155,7 +155,7 @@ CL_VirtualFileSource *CL_VirtualFileSystem::get_provider()
 
 CL_String CL_VirtualFileSystem::get_identifier() const
 {
-	CL_String internal_name = cl_text("/");
+	CL_String internal_name = "/";
 
 	// Add on the mount point names
 	int index, size;
@@ -180,7 +180,7 @@ CL_VirtualDirectory CL_VirtualFileSystem::open_directory(const CL_String &path)
 	return CL_VirtualDirectory(
 		*this,
 		CL_PathHelp::make_absolute(
-			cl_text("/"),
+			"/",
 			path,
 			CL_PathHelp::path_type_virtual));
 }
@@ -192,7 +192,7 @@ CL_IODevice CL_VirtualFileSystem::open_file(const CL_String &filename_rel,
 	unsigned int flags) const
 {
 	CL_String filename = CL_PathHelp::make_absolute(
-		cl_text("/"),
+		"/",
 		filename_rel,
 		CL_PathHelp::path_type_virtual);
 
@@ -212,13 +212,13 @@ CL_IODevice CL_VirtualFileSystem::open_file(const CL_String &filename_rel,
 	{
 		return impl->provider->open_file(
 			CL_PathHelp::make_relative(
-				cl_text("/"),
+				"/",
 				filename,
 				CL_PathHelp::path_type_virtual), mode, access, share, flags);
 	}
 	else
 	{
-		throw CL_Exception(cl_format(cl_text("Unable to open file: %1"), filename));
+		throw CL_Exception(cl_format("Unable to open file: %1", filename));
 	}
 }
 
@@ -226,7 +226,7 @@ void CL_VirtualFileSystem::mount(const CL_String &mount_point, CL_VirtualFileSys
 {
 	CL_String mount_point_slash = CL_PathHelp::add_trailing_slash(
 		CL_PathHelp::make_absolute(
-			cl_text("/"),
+			"/",
 			mount_point,
 			CL_PathHelp::path_type_virtual),
 		CL_PathHelp::path_type_virtual);
@@ -245,7 +245,7 @@ void CL_VirtualFileSystem::unmount(const CL_String &mount_point)
 {
 	CL_String mount_point_slash = CL_PathHelp::add_trailing_slash(
 		CL_PathHelp::make_absolute(
-			cl_text("/"),
+			"/",
 			mount_point,
 			CL_PathHelp::path_type_virtual),
 		CL_PathHelp::path_type_virtual);

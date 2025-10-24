@@ -3,7 +3,7 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
-//#include <ClanLib/gdi.h>
+//#include <ClanLib/swrender.h>
 #include "windows_theme.h"
 
 class App
@@ -77,7 +77,7 @@ public:
 		CL_SetupCore setup_core;
 		CL_SetupDisplay setup_display;
 		CL_SetupGL setup_gl;
-		//CL_SetupGDI setup_gdi;
+		//CL_SetupSWRender setup_swrender;
 
 		// Start the Application
 		App app;

@@ -69,7 +69,7 @@ CLuint CL_OpenGLRenderBufferProvider::get_handle()
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLRenderBufferProvider Operations:
 
-void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format)
+void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format, int multisample_samples)
 {
 	CL_OpenGL::set_active(gc_provider);
 	CLuint last_render_buffer = 0;
@@ -82,7 +82,7 @@ void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureForm
 
 	clGenRenderbuffers(1, &handle);
 	clBindRenderbuffer(CL_RENDERBUFFER, handle);
-	clRenderbufferStorage(CL_RENDERBUFFER, gl_pixel_format, width, height);
+	clRenderbufferStorageMultisample(CL_RENDERBUFFER, multisample_samples, gl_pixel_format, width, height);
 
 	clBindRenderbuffer(CL_RENDERBUFFER, last_render_buffer);
 }

@@ -124,7 +124,7 @@ public:
 		}
 		else
 		{
-			throw CL_Exception(cl_format(cl_text("Unknown transfer encoding: %1"), CL_StringHelp::local8_to_text(transfer_encoding)));
+			throw CL_Exception(cl_format("Unknown transfer encoding: %1", CL_StringHelp::local8_to_text(transfer_encoding)));
 		}
 	}
 
@@ -155,7 +155,7 @@ public:
 		{
 			CL_String8 str_chunk_size;
 			if (impl->read_line(str_chunk_size) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			CL_String::size_type size_length = str_chunk_size.find(';');
 			int chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 			if (chunk_size == 0)
@@ -184,7 +184,7 @@ public:
 		{
 			CL_String8 str_chunk_size;
 			if (impl->read_line(str_chunk_size) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			CL_String::size_type size_length = str_chunk_size.find(';');
 			int chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 			if (chunk_size == 0)
@@ -201,7 +201,7 @@ public:
 
 	CL_IODeviceProvider *duplicate()
 	{
-		throw CL_Exception(cl_text("CL_HTTPClientConnection_IODeviceProvider::duplicate() - duplicate() not supported."));
+		throw CL_Exception("CL_HTTPClientConnection_IODeviceProvider::duplicate() - duplicate() not supported.");
 		return 0;
 	}
 
@@ -241,6 +241,11 @@ CL_HTTPClientConnection::~CL_HTTPClientConnection()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_HTTPClientConnection Attributes:
+void CL_HTTPClientConnection::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_HTTPClientConnection is null");
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_HTTPClientConnection Operations:
@@ -289,7 +294,7 @@ void CL_HTTPClientConnection::send_post(
 	pos += post_data.get_size();
 
 	if (pos != message.get_size())
-		throw CL_Exception(cl_text("Buffer overrun in CL_HTTPClientConnection::send_post!"));
+		throw CL_Exception("Buffer overrun in CL_HTTPClientConnection::send_post!");
 
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->send_messages.push_back(message);
@@ -336,7 +341,7 @@ void CL_HTTPClientConnection::send_get(
 	pos += text_end_header.length();
 
 	if (pos != message.get_size())
-		throw CL_Exception(cl_text("Buffer overrun in CL_HTTPClientConnection::send_get!"));
+		throw CL_Exception("Buffer overrun in CL_HTTPClientConnection::send_get!");
 
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->send_messages.push_back(message);
@@ -376,7 +381,7 @@ int CL_HTTPClientConnection::receive_response(
 		out_data.set_size(0);
 		CL_String8 str_chunk_size;
 		if (impl->read_line(str_chunk_size) == false)
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 		CL_String8::size_type size_length = str_chunk_size.find(';');
 		int chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 		while (chunk_size > 0)
@@ -387,24 +392,24 @@ int CL_HTTPClientConnection::receive_response(
 			if (bytes_read != chunk_size)
 			{
 				out_data.set_size(0);
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			}
 			char crlf[2];
 			bytes_read = impl->connection.receive(crlf, 2, true);
 			if (bytes_read != 2)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			if (crlf[0] != '\r' || crlf[1] != '\n')
-				throw CL_Exception(cl_text("Expected CRLF after chunk in chunked encoding"));
+				throw CL_Exception("Expected CRLF after chunk in chunked encoding");
 
 			if (impl->read_line(str_chunk_size) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			CL_String8::size_type size_length = str_chunk_size.find(';');
 			chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 		}
 
 		CL_String8 trailer;
 		if (impl->read_lines(trailer) == false)
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 	}
 	else if (transfer_encoding.empty())
 	{
@@ -414,12 +419,12 @@ int CL_HTTPClientConnection::receive_response(
 		if (bytes_read != length)
 		{
 			out_data.set_size(0);
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 		}
 	}
 	else
 	{
-		throw CL_Exception(cl_format(cl_text("Unknown transfer encoding: %1"), CL_StringHelp::local8_to_text(transfer_encoding)));
+		throw CL_Exception(cl_format("Unknown transfer encoding: %1", CL_StringHelp::local8_to_text(transfer_encoding)));
 	}
 
 	return status;
@@ -463,7 +468,7 @@ int CL_HTTPClientConnection::receive_response(
 		out_data.set_size(0);
 		CL_String8 str_chunk_size;
 		if (impl->read_line(str_chunk_size) == false)
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 		CL_String8::size_type size_length = str_chunk_size.find(';');
 		int chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 		while (chunk_size > 0)
@@ -474,24 +479,24 @@ int CL_HTTPClientConnection::receive_response(
 			if (bytes_read != chunk_size)
 			{
 				out_data.set_size(0);
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			}
 			char crlf[2];
 			bytes_read = impl->connection.receive(crlf, 2, true);
 			if (bytes_read != 2)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			if (crlf[0] != '\r' || crlf[1] != '\n')
-				throw CL_Exception(cl_text("Expected CRLF after chunk in chunked encoding"));
+				throw CL_Exception("Expected CRLF after chunk in chunked encoding");
 
 			if (impl->read_line(str_chunk_size) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			CL_String8::size_type size_length = str_chunk_size.find(';');
 			chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 		}
 
 		CL_String8 trailer;
 		if (impl->read_lines(trailer) == false)
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 	}
 	else if (transfer_encoding.empty())
 	{
@@ -501,7 +506,7 @@ int CL_HTTPClientConnection::receive_response(
 		if (bytes_read != length)
 		{
 			out_data.set_size(0);
-			throw CL_Exception(cl_text("Premature end of HTTP response data"));
+			throw CL_Exception("Premature end of HTTP response data");
 		}
 	}
 	else
@@ -582,7 +587,7 @@ void CL_HTTPClientConnection_Impl::worker_thread_main()
 					if (result == 0)
 						return;
 					else if (result < 0 || result > 1)
-						throw CL_Exception(cl_text("Unexpected return value from CL_Event::wait"));
+						throw CL_Exception("Unexpected return value from CL_Event::wait");
 
 					int bytes_sent = connection.send(
 						message.get_data() + send_pos,

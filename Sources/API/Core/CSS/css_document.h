@@ -37,76 +37,47 @@
 
 class CL_IODevice;
 class CL_VirtualFileSystem;
-class CL_CSSImport;
-class CL_CSSRuleSet;
+class CL_CSSProperty;
 class CL_CSSDocument_Impl;
 class CL_VirtualDirectory;
 
 /// \brief Cascading Style Sheet (CSS) document.
-/** <p>Document class for cascading style sheets (CSS).  Provides access to
-    all import directives and rule sets available in a CSS document.</p>
-    !group=Core/CSS! !header=core.h!*/
+/// Document class for cascading style sheets (CSS).
+/// !group=Core/CSS! !header=core.h!
 class CL_API_CORE CL_CSSDocument
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a cascading style sheet document.
 	CL_CSSDocument();
-
 	~CL_CSSDocument();
-
 /// \}
-/// \name Attributes
-/// \{
 
-public:
-	/// \brief Retrieves all CSS import directives.
-	std::vector<CL_CSSImport> &get_imports();
-
-	/// \brief Retrieves all CSS rule set descriptions.
-	std::vector<CL_CSSRuleSet> &get_rulesets();
-
-/// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Find rule sets that match a given element.
 	/** <p>The syntax of element is the same as specifying contextual elements
 	    in a CSS selector, i.e. 'body div.class a#id:link'.</p>
-	    <p>The returned list is sorted with the most preferred ruleset returned
+	    <p>The returned list is sorted with the most preferred properties returned
 	    first in the list.</p>*/
-	std::vector<CL_CSSRuleSet> select(const CL_StringRef &element);
-
-	/// \brief Add CSS import directive to document.
-	void add_import(CL_CSSImport import);
-
-	/// \brief Add CSS rule set to document.
-	void add_ruleset(CL_CSSRuleSet ruleset);
-
-	/// \brief Remove CSS import directive from document.
-	void remove_import(CL_CSSImport import);
-
-	/// \brief Remove CSS rule set from document.
-	void remove_ruleset(CL_CSSRuleSet ruleset);
+	std::vector<CL_CSSProperty> select(const CL_StringRef &element);
 
 	/// \brief Load CSS document from an input source.
 	void load(const CL_String &filename, const CL_VirtualDirectory &directory);
 
-	/// \brief Load
+	/// \brief Load CSS document from disk.
 	///
 	/// \param fullname = full filename
 	void load(const CL_String &fullname);
 
-	/// \brief Save CSS document to an output source.
-	void save(CL_IODevice &output);
-
+	/// \brief Parses a text string and returns the CSS properties in it
+	static std::vector<CL_CSSProperty> parse_style_properties(const CL_StringRef &style_text);
 /// \}
+
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_CSSDocument_Impl> impl;
 /// \}

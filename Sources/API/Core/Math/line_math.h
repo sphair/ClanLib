@@ -50,14 +50,9 @@ public:
 	///
 	/// Also See CL_Line and CL_LineSegment
 	///
-	/// \param float x x coordinate of the point being tested.
-	/// \param float y y coordinate of the point being tested.
-	/// \param float *line The line. A pointer to a float array with the elements {x1,y1,x2,y2}.
-	/// \param float line_x1, line_y1 First point defining the line.
-	/// \param float line_x2, line_y2 Second point defining the line.
-	/// \param P = Test point.
-	/// \param A = First point defining the line.
-	/// \param B = Second point defining the line.
+	/// \param x = x coordinate of the point being tested.
+	/// \param y = y coordinate of the point being tested.
+	/// \param line = The line. A pointer to a float array with the elements {x1,y1,x2,y2}.
 	static float point_right_of_line( float x, float y, float *line );
 
 	/// \brief Point right of line
@@ -92,17 +87,16 @@ public:
 
 	/// \brief Return the Point on the line from A to B closest to point P
 	///
-	/// \param CL_Pointf P point P
-	/// \param CL_Pointf A point A
-	/// \param CL_Pointf B point B
-	/// \param float *line pointer to line vertices {x1, y1, x2, y2}
+	/// \param P point P
+	/// \param A point A
+	/// \param B point B
 	static CL_Pointf closest_point( const CL_Pointf &P, const CL_Pointf &A, const CL_Pointf &B );
 
 	/// \brief Return the relative position (0-1) of the point R on the line from A to B closest to point P
 	///
-	/// \param CL_Pointf P point P
-	/// \param CL_Pointf A point A
-	/// \param CL_Pointf B point B
+	/// \param P point P
+	/// \param A point A
+	/// \param B point B
 	static float closest_point_relative( const CL_Pointf &P, const CL_Pointf &A, const CL_Pointf &B );
 };
 

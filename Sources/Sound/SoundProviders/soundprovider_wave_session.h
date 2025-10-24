@@ -48,7 +48,6 @@ public:
 public:
 	int get_num_samples() const;
 	int get_frequency() const;
-	CL_SoundFormat get_format() const;
 	int get_num_channels() const;
 	int get_position() const;
 
@@ -61,6 +60,7 @@ public:
 	void stop();
 	bool play();
 	bool set_position(int pos);
+	bool set_end_position(int pos);
 	int get_data(float **data_ptr, int data_requested);
 
 /// \}
@@ -71,6 +71,7 @@ private:
 	CL_SoundProvider_Wave source;
 
 	int position;
+	int end_position;
 	int num_samples;
 	int frequency;
 /// \}

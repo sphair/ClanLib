@@ -28,6 +28,8 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/utf8_reader.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_manager.h"
@@ -55,7 +57,7 @@
 #include "stdlib.h"
 #endif
 
-const CL_StringRef numeric_mode_characters = cl_text("0123456789");
+const CL_StringRef numeric_mode_characters = "0123456789";
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_LineEdit Construction:
@@ -86,6 +88,18 @@ CL_LineEdit::~CL_LineEdit()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_LineEdit Attributes:
+
+CL_LineEdit *CL_LineEdit::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_LineEdit *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_LineEdit*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_LineEdit named item: %1", id));
+
+	return object;
+}
 
 bool CL_LineEdit::is_read_only() const
 {
@@ -334,12 +348,12 @@ void CL_LineEdit::resize_to_fit(int max_width)
 /////////////////////////////////////////////////////////////////////////////
 // CL_LineEdit Events:
 
-CL_Callback_v1<CL_InputEvent> &CL_LineEdit::func_before_edit_changed()
+CL_Callback_v1<CL_InputEvent &> &CL_LineEdit::func_before_edit_changed()
 {
 	return impl->func_before_edit_changed;
 }
 
-CL_Callback_v1<CL_InputEvent> &CL_LineEdit::func_after_edit_changed()
+CL_Callback_v1<CL_InputEvent &> &CL_LineEdit::func_after_edit_changed()
 {
 	return impl->func_after_edit_changed;
 }
@@ -546,7 +560,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 						if (numeric_mode)
 						{
 							// '-' can only be added once, and only as the first character.
-							if (e.str == cl_text("-") && cursor_pos == 0 && text.find(cl_text("-")) == CL_StringRef::npos) 
+							if (e.str == "-" && cursor_pos == 0 && text.find("-") == CL_StringRef::npos) 
 							{
 								insert_text(cursor_pos, e.str);
 								cursor_pos += e.str.size();
@@ -763,13 +777,30 @@ void CL_LineEdit_Impl::move(int steps, CL_InputEvent &e)
 			steps = find_previous_break_character(cursor_pos-1) - cursor_pos;
 		else 
 			steps = find_next_break_character(cursor_pos+1) - cursor_pos;
-	}
 
-	cursor_pos += steps;
-	if (cursor_pos < 0)
-		cursor_pos = 0;
-	if (cursor_pos > (int)text.size())
-		cursor_pos = text.size();
+		cursor_pos += steps;
+		if (cursor_pos < 0)
+			cursor_pos = 0;
+		if (cursor_pos > (int)text.size())
+			cursor_pos = text.size();
+	}
+	else
+	{
+		CL_UTF8_Reader utf8_reader(text);
+		utf8_reader.set_position(cursor_pos);
+		if (steps > 0)
+		{
+			for (int i = 0; i < steps; i++)
+				utf8_reader.next();
+		}
+		else if (steps < 0)
+		{
+			for (int i = 0; i < -steps; i++)
+				utf8_reader.prev();
+		}
+
+		cursor_pos = utf8_reader.get_position();
+	}
 
 	if (e.shift)
 	{
@@ -827,8 +858,12 @@ void CL_LineEdit_Impl::backspace()
 	{
 		if (cursor_pos > 0)
 		{
-			text.erase(cursor_pos-1, 1);
-			cursor_pos -= 1;
+			CL_UTF8_Reader utf8_reader(text);
+			utf8_reader.set_position(cursor_pos);
+			utf8_reader.prev();
+			int length = utf8_reader.get_char_length();
+			text.erase(cursor_pos-length, length);
+			cursor_pos -= length;
 			lineedit->request_repaint();
 		}
 	}
@@ -852,7 +887,10 @@ void CL_LineEdit_Impl::del()
 	{
 		if (cursor_pos < (int)text.size())
 		{
-			text.erase(cursor_pos,1);
+			CL_UTF8_Reader utf8_reader(text);
+			utf8_reader.set_position(cursor_pos);
+			int length = utf8_reader.get_char_length();
+			text.erase(cursor_pos,length);
 			lineedit->request_repaint();
 		}
 	}
@@ -867,6 +905,7 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
+	CL_UTF8_Reader utf8_reader(text);
 
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
 
@@ -874,8 +913,19 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	int seek_end = text.size();
 	int seek_center = (seek_start + seek_end) / 2;
 
-	while ((seek_end-seek_start) > 1)
+	while (true)
 	{
+		utf8_reader.set_position(seek_center);
+		utf8_reader.move_to_leadbyte();
+		if (seek_center != utf8_reader.get_position())
+			utf8_reader.next();
+		seek_center = utf8_reader.get_position();
+
+		utf8_reader.set_position(seek_start);
+		utf8_reader.next();
+		if (utf8_reader.get_position() == seek_end)
+			break;
+
 		CL_Size text_size = get_visual_text_size(gc, font, clip_start_offset, seek_center - clip_start_offset);
 
 		if (text_size.width > mouse_x)
@@ -887,7 +937,9 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 	CL_Size text_size = get_visual_text_size(gc, font, clip_start_offset, seek_center - clip_start_offset);
 
-	if (seek_center == text.size()-1 && mouse_x > text_size.width)
+	utf8_reader.set_position(seek_center);
+	utf8_reader.next();
+	if (utf8_reader.is_end() && mouse_x > text_size.width)
 		seek_center = text.size();
 
 	return seek_center;
@@ -905,10 +957,13 @@ void CL_LineEdit_Impl::update_text_clipping()
 
 	CL_Rect cursor_rect = get_cursor_rect();
 
+	CL_UTF8_Reader utf8_reader(text);
 	while (cursor_rect.right > content_rect.right)
 	{
-		clip_start_offset++;
-		if (clip_start_offset > text.size())
+		utf8_reader.set_position(clip_start_offset);
+		utf8_reader.next();
+		clip_start_offset = utf8_reader.get_position();
+		if (clip_start_offset == text.size())
 			break;
 		cursor_rect = get_cursor_rect();
 	}
@@ -920,6 +975,13 @@ void CL_LineEdit_Impl::update_text_clipping()
 	while (true)
 	{
 		int midpoint = (search_lower + search_upper) / 2;
+
+		utf8_reader.set_position(midpoint);
+		utf8_reader.move_to_leadbyte();
+		if (midpoint != utf8_reader.get_position())
+			utf8_reader.next();
+		midpoint = utf8_reader.get_position();
+
 		if (midpoint == search_lower || midpoint == search_upper)
 			break;
 
@@ -979,12 +1041,12 @@ CL_Rect CL_LineEdit_Impl::get_selection_rect()
 	// text before selection:
 	CL_Font font = part_component.get_font();
 
-	CL_TempString txt_before = get_visible_text_before_selection();
+	CL_String txt_before = get_visible_text_before_selection();
 	CL_Size text_size_before_selection = font.get_text_size(gc, txt_before);
 
 	// selection text:
 	font = part_selection.get_font();
-	CL_TempString txt_selected = get_visible_selected_text();
+	CL_String txt_selected = get_visible_selected_text();
 	CL_Size text_size_selection = font.get_text_size(gc, txt_selected);
 
 	CL_Rect selection_rect;
@@ -996,7 +1058,7 @@ CL_Rect CL_LineEdit_Impl::get_selection_rect()
 	return selection_rect;
 }
 
-CL_String CL_LineEdit_Impl::break_characters = cl_text(" ::;,.-");
+CL_String CL_LineEdit_Impl::break_characters = " ::;,.-";
 
 int CL_LineEdit_Impl::find_next_break_character(int search_start)
 {
@@ -1050,7 +1112,7 @@ void CL_LineEdit_Impl::on_resized()
 	update_text_clipping();
 }
 
-CL_TempString CL_LineEdit_Impl::get_visible_text_before_selection()
+CL_String CL_LineEdit_Impl::get_visible_text_before_selection()
 {
 	int sel_start = cl_min(selection_start, selection_start+selection_length);
 	int start = cl_min(sel_start, clip_start_offset);
@@ -1067,10 +1129,10 @@ CL_TempString CL_LineEdit_Impl::get_visible_text_before_selection()
 	return text.substr(start, end-start);
 }
 
-CL_TempString CL_LineEdit_Impl::get_visible_selected_text()
+CL_String CL_LineEdit_Impl::get_visible_selected_text()
 {
 	if (selection_length == 0)
-		return CL_TempString();
+		return CL_String();
 
 	int sel_start = cl_min(selection_start, selection_start+selection_length);
 	int sel_end = cl_max(selection_start, selection_start + selection_length);
@@ -1078,10 +1140,10 @@ CL_TempString CL_LineEdit_Impl::get_visible_selected_text()
 	int start = cl_max(clip_start_offset, sel_start);
 
 	if (start > end)
-		return CL_TempString();
+		return CL_String();
 
 	if (start == end)
-		return CL_TempString();
+		return CL_String();
 
 	// If we are in password mode, we gonna return the right characters
 	if ( password_mode )
@@ -1090,7 +1152,7 @@ CL_TempString CL_LineEdit_Impl::get_visible_selected_text()
 	return text.substr(start, end-start);
 }
 
-CL_TempString CL_LineEdit_Impl::get_visible_text_after_selection()
+CL_String CL_LineEdit_Impl::get_visible_text_after_selection()
 {
 	// returns the whole visible string if there is no selection.
 
@@ -1099,10 +1161,10 @@ CL_TempString CL_LineEdit_Impl::get_visible_text_after_selection()
 
 	int end = clip_end_offset;
 	if (start > end)
-		return CL_TempString();
+		return CL_String();
 
 	if (clip_end_offset == sel_end)
-		return CL_TempString();
+		return CL_String();
 
 	if (sel_end <= 0)
 		return CL_String();
@@ -1123,9 +1185,9 @@ void CL_LineEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 
 	CL_Font font = part_component.get_font();
 
-	CL_TempString txt_before = get_visible_text_before_selection();
-	CL_TempString txt_selected = get_visible_selected_text();
-	CL_TempString txt_after = get_visible_text_after_selection();
+	CL_String txt_before = get_visible_text_before_selection();
+	CL_String txt_selected = get_visible_selected_text();
+	CL_String txt_after = get_visible_text_after_selection();
 
 	if (txt_before.empty() && txt_selected.empty() && txt_after.empty())
 	{

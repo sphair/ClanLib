@@ -72,7 +72,9 @@ CL_PixelBuffer CL_PNGProvider::load(
 	const CL_VirtualDirectory &directory)
 {
 	CL_PNGProvider_Impl png(filename, directory);
-	return CL_PixelBuffer(png.width, png.height, png.pitch, png.format, png.palette, png.get_data());
+	CL_PixelBuffer pbuff(png.width, png.height, png.sized_format, png.palette, png.get_data());
+	pbuff.set_colorkey(png.uses_src_colorkey(), png.get_src_colorkey());
+	return pbuff;
 }
 
 CL_PixelBuffer CL_PNGProvider::load(
@@ -88,7 +90,9 @@ CL_PixelBuffer CL_PNGProvider::load(
 CL_PixelBuffer CL_PNGProvider::load(CL_IODevice &iodev)
 {
 	CL_PNGProvider_Impl png(iodev);
-	return CL_PixelBuffer(png.width, png.height, png.pitch, png.format, png.palette, png.get_data());
+	CL_PixelBuffer pbuff(png.width, png.height, png.sized_format, png.palette, png.get_data());
+	pbuff.set_colorkey(png.uses_src_colorkey(), png.get_src_colorkey());
+	return pbuff;
 }
 
 void CL_PNGProvider::save(
@@ -114,13 +118,12 @@ void CL_PNGProvider::save(
 
 void CL_PNGProvider::save(CL_PixelBuffer buffer, CL_IODevice &iodev)
 {
-	if (buffer.get_format() != CL_PixelFormat::abgr8888)
+	if (buffer.get_format() != cl_abgr8)
 	{
 		CL_PixelBuffer newbuf(
 			buffer.get_width(),
 			buffer.get_height(), 
-			buffer.get_width()*4,
-			CL_PixelFormat::abgr8888);
+			cl_abgr8);
 		buffer.convert(newbuf);
 		buffer = newbuf;
 	}

@@ -79,10 +79,10 @@ CL_EventProvider *CL_Event::get_event_provider() const
 bool CL_Event::wait(int timeout)
 {
 	CL_Event *event = this;
-	return wait(1, &event, timeout, false) == 0;
+	return wait(1, &event, timeout) == 0;
 }
 
-int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool wait_all)
+int CL_Event::wait(int count, CL_Event const * const * events, int timeout)
 {
 #ifdef WIN32
 	DWORD timeout_win32 = (timeout == -1) ? INFINITE : timeout;
@@ -133,7 +133,7 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 			if (result == WAIT_TIMEOUT)
 				break;
 			else if (result == WAIT_FAILED)
-				throw CL_Exception(cl_text("WaitForMultipleObjects failed"));
+				throw CL_Exception("WaitForMultipleObjects failed");
 			else if (result >= WAIT_OBJECT_0 && result < WAIT_OBJECT_0 + num_events)
 				index = result - WAIT_OBJECT_0;
 			else if (result >= WAIT_ABANDONED_0 && result < WAIT_ABANDONED_0 + num_events)
@@ -163,7 +163,7 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 	{
 		CL_EventProvider *provider = events[index_events]->impl->provider;
 		if (provider == 0)
-			throw CL_Exception(cl_text("CL_Event's CL_EventProvider is a null pointer!"));
+			throw CL_Exception("CL_Event's CL_EventProvider is a null pointer!");
 		bool flagged = provider->check_before_wait();
 		if (flagged)
 			return index_events;
@@ -197,7 +197,7 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 		{
 			CL_EventProvider *provider = events[index_events]->impl->provider;
 			if (provider == 0)
-				throw CL_Exception(cl_text("CL_Event's CL_EventProvider is a null pointer!"));
+				throw CL_Exception("CL_Event's CL_EventProvider is a null pointer!");
 			int num_handles = provider->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
 			{
@@ -234,7 +234,7 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 			(timeout == -1) ? 0 : &tv);
 		if (result == -1) // Error occoured
 		{
-			throw CL_Exception(cl_text("Event wait failed!"));
+			throw CL_Exception("Event wait failed!");
 		}
 		else if (result == 0) // Timed out
 		{
@@ -247,7 +247,7 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 			{
 				CL_EventProvider *provider = events[index_events]->impl->provider;
 				if (provider == 0)
-					throw CL_Exception(cl_text("CL_Event's CL_EventProvider is a null pointer!"));
+					throw CL_Exception("CL_Event's CL_EventProvider is a null pointer!");
 				int num_handles = provider->get_num_event_handles();
 				for (int i=0; i<num_handles; i++)
 				{
@@ -284,15 +284,15 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 #endif
 }
 
-int CL_Event::wait(const std::vector<CL_Event *> &events, int timeout, bool wait_all)
+int CL_Event::wait(const std::vector<CL_Event *> &events, int timeout)
 {
 	if (events.size() > 0)
-		return wait((int) events.size(), &events[0], timeout, wait_all);
+		return wait((int) events.size(), &events[0], timeout);
 	else
-		return wait(0, 0, timeout, wait_all);
+		return wait(0, 0, timeout);
 }
 
-int CL_Event::wait(const std::vector<CL_Event> &events, int timeout, bool wait_all)
+int CL_Event::wait(const std::vector<CL_Event> &events, int timeout)
 {
 	std::vector<CL_Event>::size_type i, size;
 	size = events.size();
@@ -300,7 +300,7 @@ int CL_Event::wait(const std::vector<CL_Event> &events, int timeout, bool wait_a
 	event_ptrs.reserve(size);
 	for (i = 0; i < size; i++)
 		event_ptrs.push_back((CL_Event *) &events[i]);
-	return wait(event_ptrs, timeout, wait_all);
+	return wait(event_ptrs, timeout);
 }
 
 int CL_Event::wait(CL_Event &event1, int timeout)
@@ -308,60 +308,60 @@ int CL_Event::wait(CL_Event &event1, int timeout)
 	return event1.wait(timeout) ? 0 : -1;
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, int timeout)
 {
 	CL_Event *events[2] = { &event1, &event2 };
-	return wait(2, events, timeout, wait_all);
+	return wait(2, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, int timeout)
 {
 	CL_Event *events[3] = { &event1, &event2, &event3 };
-	return wait(3, events, timeout, wait_all);
+	return wait(3, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, int timeout)
 {
 	CL_Event *events[4] = { &event1, &event2, &event3, &event4 };
-	return wait(4, events, timeout, wait_all);
+	return wait(4, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, int timeout)
 {
 	CL_Event *events[5] = { &event1, &event2, &event3, &event4, &event5 };
-	return wait(5, events, timeout, wait_all);
+	return wait(5, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, int timeout)
 {
 	CL_Event *events[6] = { &event1, &event2, &event3, &event4, &event5, &event6 };
-	return wait(6, events, timeout, wait_all);
+	return wait(6, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, int timeout)
 {
 	CL_Event *events[7] = { &event1, &event2, &event3, &event4, &event5, &event6, &event7 };
-	return wait(7, events, timeout, wait_all);
+	return wait(7, events, timeout);
 }
 
-int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, CL_Event &event8, int timeout, bool wait_all)
+int CL_Event::wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, CL_Event &event8, int timeout)
 {
 	CL_Event *events[8] = { &event1, &event2, &event3, &event4, &event5, &event6, &event7, &event8 };
-	return wait(8, events, timeout, wait_all);
+	return wait(8, events, timeout);
 }
 
 void CL_Event::set()
 {
 	bool result = impl->provider->set();
 	if (result == false)
-		throw CL_Exception(cl_text("Unable to set event to signalled state!"));
+		throw CL_Exception("Unable to set event to signalled state!");
 }
 
 void CL_Event::reset()
 {
 	bool result = impl->provider->reset();
 	if (result == false)
-		throw CL_Exception(cl_text("Unable to reset event!"));
+		throw CL_Exception("Unable to reset event!");
 }
 
 /////////////////////////////////////////////////////////////////////////////

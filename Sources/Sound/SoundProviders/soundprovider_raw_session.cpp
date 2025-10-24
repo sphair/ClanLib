@@ -59,21 +59,6 @@ int CL_SoundProvider_Raw_Session::get_frequency() const
 	return frequency;
 }
 
-CL_SoundFormat CL_SoundProvider_Raw_Session::get_format() const
-{
-	switch (source.impl->bytes_per_sample)
-	{
-	case 1:
-		return sf_8bit_unsigned;
-
-	case 2:
-		return sf_16bit_signed;
-
-	default:
-		throw CL_Exception(cl_text("Unsupported sample format"));
-	}
-}
-
 int CL_SoundProvider_Raw_Session::get_num_channels() const
 {
 	return (source.impl->stereo) ? 2 : 1;

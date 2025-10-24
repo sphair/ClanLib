@@ -64,8 +64,18 @@ CL_OcclusionQuery::~CL_OcclusionQuery()
 {
 }
 
+CL_OcclusionQuery::CL_OcclusionQuery()
+{
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_OcclusionQuery Attributes:
+
+void CL_OcclusionQuery::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_OcclusionQuery is null");
+}
 
 int CL_OcclusionQuery::get_result()
 {

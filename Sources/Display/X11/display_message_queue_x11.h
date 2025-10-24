@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2007 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -92,6 +92,7 @@ private:
 	CL_SharedPtr<ThreadData> get_thread_data();
 	bool has_internal_messages();
 	int msg_wait_for_multiple_objects(std::vector<CL_SocketMessage_X11> &event_handles, int timeout);
+	void process_queued_events();
 	CL_X11Window *current_mouse_capture_window;
 
 /// \}

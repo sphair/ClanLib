@@ -156,6 +156,18 @@ CL_Slider::~CL_Slider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Slider Attributes:
 
+CL_Slider *CL_Slider::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_Slider *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_Slider*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_Slider named item: %1", id));
+
+	return object;
+}
+
 bool CL_Slider::is_vertical() const
 {
 	return impl->vertical;
@@ -232,7 +244,7 @@ void CL_Slider::set_max(int slider_max)
 void CL_Slider::set_tick_count(int count)
 {
 	if (count < 2)
-		throw CL_Exception(cl_text("CL_Slider::set_tick_count: tick count in slider can not be < 2."));
+		throw CL_Exception("CL_Slider::set_tick_count: tick count in slider can not be < 2.");
 
 	impl->tick_count = count;
 	request_repaint();
@@ -241,7 +253,7 @@ void CL_Slider::set_tick_count(int count)
 void CL_Slider::set_ranges(int slider_min, int slider_max, unsigned int tick_count, int page_step)
 {
 	if (tick_count < 2)
-		throw CL_Exception(cl_format(cl_text("CL_Slider: invalid tick count: %1. Must be >= 2."), tick_count));
+		throw CL_Exception(cl_format("CL_Slider: invalid tick count: %1. Must be >= 2.", tick_count));
 
 	impl->slider_min = slider_min;
 	impl->slider_max = slider_max;

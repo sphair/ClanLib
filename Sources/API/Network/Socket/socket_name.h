@@ -61,11 +61,6 @@ public:
 	/// \param port = String
 	CL_SocketName(const CL_String &address, const CL_String &port);
 
-	/// \brief Constructs a SocketName
-	///
-	/// \param copy = Socket Name
-	CL_SocketName(const CL_SocketName &copy);
-
 /// \}
 /// \name Attributes
 /// \{

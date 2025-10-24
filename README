@@ -1,29 +1,21 @@
-Welcome
--------
-Welcome to ClanLib, a multi-platform toolkit library.
-
-
 Getting started
 ---------------
-Please read the INSTALL files for the platform/compiler you want to use.
-See INSTALL.win32, INSTALL.linux, INSTALL.whatever.
+There is an installation and getting started guide online at
+http://clanlib.org/wiki/MainDocs:Index
 
-If you are upgrading from an earlier version of ClanLib, read the UPGRADE.txt
-file for info on breaking changes.
-
+If you are upgrading from an earlier version of ClanLib, read the breaking changes document at 
+http://clanlib.org/wiki/BreakingChanges
 
 Documentation
 -------------
-Please read documentation online at http://clanlib.org/docs.html
+Please read documentation online at http://clanlib.org/wiki/Documentation
 
 In the Examples folder you find a selection of examples showing various
 features of ClanLib.
 
-
 IRC
 ---
 Our official IRC channel is located at irc.freenode.net, channel #clanlib.
-
 
 Making ClanLib even better
 --------------------------

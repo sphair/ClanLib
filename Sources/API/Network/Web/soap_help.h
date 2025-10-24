@@ -78,29 +78,29 @@ public:
 public:
 	static CL_DomDocument create_soap11_sender_fault(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"));
+		const CL_StringRef &lang = "en");
 
 	static CL_DomDocument create_soap12_sender_fault(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"));
+		const CL_StringRef &lang = "en");
 
 	static CL_DomDocument create_soap11_receiver_fault(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"));
+		const CL_StringRef &lang = "en");
 
 	static CL_DomDocument create_soap12_receiver_fault(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"));
+		const CL_StringRef &lang = "en");
 
 	static CL_DomDocument create_soap11_version_mismatch(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"),
+		const CL_StringRef &lang = "en",
 		bool supports_soap11 = true,
 		bool supports_soap12 = true);
 
 	static CL_DomDocument create_soap12_version_mismatch(
 		const CL_StringRef &reason,
-		const CL_StringRef &lang = cl_text("en"),
+		const CL_StringRef &lang = "en",
 		bool supports_soap11 = true,
 		bool supports_soap12 = true);
 

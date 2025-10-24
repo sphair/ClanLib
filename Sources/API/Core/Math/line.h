@@ -45,9 +45,6 @@ class CL_Rectx;
 template<typename Type>
 class CL_Vec2;
 
-template<typename Type>
-class CL_Vec3;
-
 class CL_Angle;
 
 /// \brief 3D line

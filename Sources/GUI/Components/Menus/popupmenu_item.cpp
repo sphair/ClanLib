@@ -96,9 +96,10 @@ int CL_PopupMenuItem::get_id() const
 	return impl->id;
 }
 
-bool CL_PopupMenuItem::is_null() const
+void CL_PopupMenuItem::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_PopupMenuItem is null");
 }
 
 bool CL_PopupMenuItem::is_separator() const

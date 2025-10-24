@@ -43,8 +43,8 @@ public:
 
 CL_GUIMessage_ActivationChange::CL_GUIMessage_ActivationChange()
 {
-	set_type(cl_text("activation change"));
-	set_data(cl_text("activation change"), CL_SharedPtr<CL_GUIMessage_ActivationChangeData>(
+	set_type("activation change");
+	set_data("activation change", CL_SharedPtr<CL_GUIMessage_ActivationChangeData>(
 		new CL_GUIMessage_ActivationChangeData));
 }
 
@@ -62,12 +62,12 @@ CL_GUIMessage_ActivationChange::~CL_GUIMessage_ActivationChange()
 
 CL_StringRef CL_GUIMessage_ActivationChange::get_type_name()
 {
-	return cl_text("activation change");
+	return "activation change";
 }
 
 CL_GUIMessage_ActivationChange::ActivationType CL_GUIMessage_ActivationChange::get_activation_type() const
 {
-	CL_SharedPtr<CL_GUIMessage_ActivationChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ActivationChangeData> >(get_data(cl_text("activation change")));
+	CL_SharedPtr<CL_GUIMessage_ActivationChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ActivationChangeData> >(get_data("activation change"));
 	if (d.is_null())
 		return activation_lost;
 	return d->activation_type;
@@ -78,12 +78,12 @@ CL_GUIMessage_ActivationChange::ActivationType CL_GUIMessage_ActivationChange::g
 
 void CL_GUIMessage_ActivationChange::set_activation_type(ActivationType activation_type)
 {
-	CL_SharedPtr<CL_GUIMessage_ActivationChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ActivationChangeData> >(get_data(cl_text("activation change")));
+	CL_SharedPtr<CL_GUIMessage_ActivationChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_ActivationChangeData> >(get_data("activation change"));
 	if (d.is_null())
 	{
 		d = CL_SharedPtr<CL_GUIMessage_ActivationChangeData>(
 			new CL_GUIMessage_ActivationChangeData);
-		set_data(cl_text("activation change"), d);
+		set_data("activation change", d);
 	}
 	d->activation_type = activation_type;
 }

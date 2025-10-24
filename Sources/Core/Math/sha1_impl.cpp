@@ -47,7 +47,7 @@ CL_SHA1_Impl::CL_SHA1_Impl()
 CL_String8 CL_SHA1_Impl::get_hash(bool uppercase)
 {
 	if (calculated == false)
-		throw CL_Exception(cl_text("SHA-1 hash has not been calculated yet!"));
+		throw CL_Exception("SHA-1 hash has not been calculated yet!");
 	
 	char digest[41];
 	memset(digest, 0, 41);
@@ -62,7 +62,7 @@ CL_String8 CL_SHA1_Impl::get_hash(bool uppercase)
 void CL_SHA1_Impl::get_hash(unsigned char out_hash[20])
 {
 	if (calculated == false)
-		throw CL_Exception(cl_text("SHA-1 hash has not been calculated yet!"));
+		throw CL_Exception("SHA-1 hash has not been calculated yet!");
 
 	out_hash[0] = (unsigned char) ((h0 >> 24) & 0xff);
 	out_hash[1] = (unsigned char) ((h0 >> 16) & 0xff);
@@ -160,7 +160,7 @@ void CL_SHA1_Impl::calculate()
 	add(end_data, size);
 	
 	if (chunk_filled != 0)
-		throw CL_Exception(cl_text("Error in CL_SHA1_Impl class. Still chunk data at end of calculate"));
+		throw CL_Exception("Error in CL_SHA1_Impl class. Still chunk data at end of calculate");
 
 	calculated = true;
 }

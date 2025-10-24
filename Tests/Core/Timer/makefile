@@ -1,5 +1,5 @@
 EXAMPLE_BIN=test
-OBJF = test.o utils.o timer.o
+OBJF = test.o timer.o
 LIBS=clanApp clanCore
 
 include ../../../Examples/Makefile.conf

@@ -56,7 +56,7 @@ CL_GraphicContext_GL::CL_GraphicContext_GL(CL_GraphicContext &gc) : CL_GraphicCo
 	impl->provider = dynamic_cast <CL_OpenGLGraphicContextProvider *> (CL_GraphicContext::get_provider());
 	if (!impl->provider)
 	{
-			throw CL_Exception(cl_text("Graphic Context is not from a GL target"));
+			throw CL_Exception("Graphic Context is not from a GL target");
 	}
 
 }
@@ -67,6 +67,12 @@ CL_GraphicContext_GL::~CL_GraphicContext_GL()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext_GL Attributes:
+
+void CL_GraphicContext_GL::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_GraphicContext_GL is null");
+}
 
 void CL_GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor, int &version_release)
 {

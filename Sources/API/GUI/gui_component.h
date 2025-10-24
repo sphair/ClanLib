@@ -421,7 +421,7 @@ public:
 	void set_enabled(bool enable = true);
 
 	/// \brief Sets the components children to be clipped to the parent component when drawn. 
-	void set_clip_children(bool clip = true);
+	void set_clip_children(bool clip = true, const CL_Rect &clip_rect=CL_Rect(0,0,0,0));
 
 	/// \brief Sets the component as visible or hidden.
 	///
@@ -504,7 +504,7 @@ public:
 
 	/// \brief Set cursor
 	///
-	/// \param CL_StandardCursor = enum
+	/// \param type = CL_StandardCursor
 	void set_cursor(enum CL_StandardCursor type);
 
 	/// \brief Set focus to the next component in tab order.

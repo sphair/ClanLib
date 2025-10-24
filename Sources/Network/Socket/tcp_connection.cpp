@@ -132,5 +132,11 @@ void CL_TCPConnection::set_nodelay(bool enable)
 	provider->set_nodelay(enable);
 }
 
+void CL_TCPConnection::set_keep_alive(bool enable, int timeout, int interval)
+{
+	CL_IODeviceProvider_TCPConnection *provider = dynamic_cast<CL_IODeviceProvider_TCPConnection*>(impl->provider);
+	provider->set_keep_alive(enable, timeout, interval);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_TCPConnection Implementation:

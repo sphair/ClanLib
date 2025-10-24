@@ -45,7 +45,7 @@ void CL_DisposableObject::dispose()
 void CL_DisposableObject::throw_if_disposed() const
 {
 	if (is_disposed())
-		throw CL_Exception(cl_text("Object was disposed"));
+		throw CL_Exception("Object was disposed");
 }
 
 bool CL_DisposableObject::is_disposed() const

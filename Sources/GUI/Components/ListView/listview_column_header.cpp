@@ -65,9 +65,10 @@ CL_ListViewColumnHeader::~CL_ListViewColumnHeader()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ListViewColumnHeader Attributes:
 
-bool CL_ListViewColumnHeader::is_null() const
+void CL_ListViewColumnHeader::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_ListViewColumnHeader is null");
 }
 
 CL_StringRef CL_ListViewColumnHeader::get_column_id() const

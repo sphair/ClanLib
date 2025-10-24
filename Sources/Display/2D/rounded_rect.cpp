@@ -119,15 +119,6 @@ void CL_RoundedRect::draw(
 	impl->draw(gc, position, color, origin);
 }
 
-void CL_RoundedRect::draw(
-	CL_GraphicContext &gc,
-	const CL_Pointf &position,
-	const CL_Gradient &gradient,
-	CL_Origin origin)
-{
-	impl->draw(gc, position, gradient, origin);
-}
-
 void CL_RoundedRect::fill(
 	CL_GraphicContext &gc,
 	const CL_Pointf &position,

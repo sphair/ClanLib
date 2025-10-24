@@ -98,7 +98,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+	CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a SpriteDescription
 	///
@@ -136,19 +136,19 @@ public:
 	/// \brief Add frame
 	///
 	/// \param fullname = String Ref
-	void add_frame(const CL_StringRef &fullname);
+	void add_frame(const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param file = IODevice
 	/// \param image_type = String
-	void add_frame(CL_IODevice &file, const CL_String &image_type);
+	void add_frame(CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(const CL_StringRef &filename, CL_VirtualDirectory &dir);
+	void add_frame(const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Add frames
 	///

@@ -60,8 +60,8 @@ CL_String CL_PathHelp::make_absolute(
 #ifdef WIN32
 			TCHAR absolute_base[MAX_PATH];
 			memset(absolute_base, 0, sizeof(TCHAR) * MAX_PATH);
-			if (_tfullpath(absolute_base, base.c_str(), MAX_PATH) == 0)
-				throw CL_Exception(cl_format(cl_text("Unable to make base path absolute: %1"), base_path));
+			if (_tfullpath(absolute_base, CL_StringHelp::utf8_to_ucs2(base).c_str(), MAX_PATH) == 0)
+				throw CL_Exception(cl_format("Unable to make base path absolute: %1", base_path));
 			base = absolute_base;
 #else
 			char working_dir[1024];
@@ -100,11 +100,11 @@ CL_String CL_PathHelp::make_absolute(
 				else if (relative_location[0] >= 'a' && relative_location[0] <= 'z')
 					drive = relative_location[0] - 'a' + 1;
 				else
-					throw CL_Exception(cl_format(cl_text("Invalid drive: %1"), relative_location));
+					throw CL_Exception(cl_format("Invalid drive: %1", relative_location));
 				TCHAR working_dir[MAX_PATH];
 				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
-					throw CL_Exception(cl_format(cl_text("Unable to get current working directory for %1!"), relative_location));
+					throw CL_Exception(cl_format("Unable to get current working directory for %1!", relative_location));
 
 				return add_trailing_slash(working_dir, path_type) + relative.substr(relative_location.length());
 			}
@@ -113,7 +113,7 @@ CL_String CL_PathHelp::make_absolute(
 				return relative; // UNC path
 			}
 #else
-			throw CL_Exception(cl_text("Error in CL_PathHelp::make_absolute"));
+			throw CL_Exception("Error in CL_PathHelp::make_absolute");
 #endif
 		}
 	}
@@ -150,11 +150,11 @@ CL_String CL_PathHelp::make_relative(
 				else if (base_location[0] >= 'a' && base_location[0] <= 'z')
 					drive = base_location[0] - 'a' + 1;
 				else
-					throw CL_Exception(cl_format(cl_text("Invalid drive: %1"), base_location));
+					throw CL_Exception(cl_format("Invalid drive: %1", base_location));
 				TCHAR working_dir[MAX_PATH];
 				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
-					throw CL_Exception(cl_format(cl_text("Unable to get current working directory for %1!"), base_location));
+					throw CL_Exception(cl_format("Unable to get current working directory for %1!", base_location));
 
 				base = add_trailing_slash(working_dir, path_type) + base;
 			}
@@ -163,13 +163,13 @@ CL_String CL_PathHelp::make_relative(
 				TCHAR working_dir[MAX_PATH];
 				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
-					throw CL_Exception(cl_format(cl_text("Unable to get current working directory for %1!"), base_location));
+					throw CL_Exception(cl_format("Unable to get current working directory for %1!", base_location));
 
 				base = add_trailing_slash(working_dir, path_type) + base;
 			}
 			else
 			{
-				throw CL_Exception(cl_format(cl_text("Error in make_relative with base path: %1"), base_path));
+				throw CL_Exception(cl_format("Error in make_relative with base path: %1", base_path));
 			}
 #else
 			char working_dir[1024];
@@ -190,11 +190,11 @@ CL_String CL_PathHelp::make_relative(
 				else if (absolute_location[0] >= 'a' && absolute_location[0] <= 'z')
 					drive = absolute_location[0] - 'a' + 1;
 				else
-					throw CL_Exception(cl_format(cl_text("Invalid drive: %1"), absolute_location));
+					throw CL_Exception(cl_format("Invalid drive: %1", absolute_location));
 				TCHAR working_dir[MAX_PATH];
 				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (_tgetdcwd(drive, working_dir, MAX_PATH) == 0)
-					throw CL_Exception(cl_format(cl_text("Unable to get current working directory for %1!"), absolute_location));
+					throw CL_Exception(cl_format("Unable to get current working directory for %1!", absolute_location));
 
 				absolute = add_trailing_slash(working_dir, path_type) + absolute;
 			}
@@ -203,13 +203,13 @@ CL_String CL_PathHelp::make_relative(
 				TCHAR working_dir[MAX_PATH];
 				memset(working_dir, 0, sizeof(TCHAR)*MAX_PATH);
 				if (GetCurrentDirectory(MAX_PATH, working_dir) == FALSE)
-					throw CL_Exception(cl_format(cl_text("Unable to get current working directory for %1!"), absolute_location));
+					throw CL_Exception(cl_format("Unable to get current working directory for %1!", absolute_location));
 
 				absolute = add_trailing_slash(working_dir, path_type) + absolute;
 			}
 			else
 			{
-				throw CL_Exception(cl_format(cl_text("Error in make_relative with absolute path: %1"), absolute_path));
+				throw CL_Exception(cl_format("Error in make_relative with absolute path: %1", absolute_path));
 			}
 #else
 			char working_dir[1024];
@@ -227,9 +227,9 @@ CL_String CL_PathHelp::make_relative(
 	}
 
 	if (is_relative(base, path_type))
-		throw CL_Exception(cl_format(cl_text("Relative path %1 used as base path for make_relative"), base_path));
+		throw CL_Exception(cl_format("Relative path %1 used as base path for make_relative", base_path));
 	if (is_relative(absolute, path_type))
-		throw CL_Exception(cl_format(cl_text("Relative path %1 used as absolute path for make_relative"), absolute_path));
+		throw CL_Exception(cl_format("Relative path %1 used as absolute path for make_relative", absolute_path));
 
 	CL_String relative;
 	CL_String relative_end;
@@ -240,11 +240,11 @@ CL_String CL_PathHelp::make_relative(
 	{
 		if (path_type == path_type_file)
 		{
-			end_pos = base.find_first_of(cl_text("\\/"), start_pos);
+			end_pos = base.find_first_of("\\/", start_pos);
 		}
 		else
 		{
-			end_pos = base.find(cl_text('/'), start_pos);
+			end_pos = base.find('/', start_pos);
 		}
 		if (end_pos == CL_String::npos)
 			break;
@@ -284,14 +284,14 @@ CL_String CL_PathHelp::make_relative(
 			if (path_type_file)
 			{
 #ifdef WIN32
-				relative += cl_text("..\\");
+				relative += "..\\";
 #else
-				relative += cl_text("../");
+				relative += "../";
 #endif
 			}
 			else
 			{
-				relative += cl_text("../");
+				relative += "../";
 			}
 		}
 
@@ -308,17 +308,17 @@ bool CL_PathHelp::is_absolute(const CL_String &path, PathType path_type)
 #ifdef WIN32
 		if (path.length() < 3)
 			return false;
-		if (path[1] == cl_text(':') && (path[2] == cl_text('\\') || path[2] == cl_text('/')))
+		if (path[1] == ':' && (path[2] == '\\' || path[2] == '/'))
 			return true;
-		if (path[0] == cl_text('\\') && path[1] == cl_text('\\'))
+		if (path[0] == '\\' && path[1] == '\\')
 			return true;
 		return false;
 #else
 		if (path.length() < 1)
 			return false;
-		if (path[0] == cl_text('/'))
+		if (path[0] == '/')
 			return true;
-		if (path[0] == cl_text('\\'))
+		if (path[0] == '\\')
 			return true;
 		return false;
 #endif
@@ -327,7 +327,7 @@ bool CL_PathHelp::is_absolute(const CL_String &path, PathType path_type)
 	{
 		if (path.length() < 1)
 			return false;
-		if (path[0] == cl_text('/'))
+		if (path[0] == '/')
 			return true;
 		return false;
 	}
@@ -350,8 +350,8 @@ CL_String CL_PathHelp::normalize(
 
 	bool ends_in_slash = false;
 
-	if (input_path[input_path.size()-1] == cl_text('/') ||
-		input_path[input_path.size()-1] == cl_text('\\'))
+	if (input_path[input_path.size()-1] == '/' ||
+		input_path[input_path.size()-1] == '\\')
 	{
 		ends_in_slash = true;
 		if (input_path.size() == 1)
@@ -359,10 +359,10 @@ CL_String CL_PathHelp::normalize(
 #ifdef WIN32
 			if (path_type == path_type_file)
 			{
-				return cl_text("\\");
+				return "\\";
 			}
 #endif
-			return cl_text("/");
+			return "/";
 		}
 	}
 
@@ -373,7 +373,7 @@ CL_String CL_PathHelp::normalize(
 
 	while (true)
 	{
-		pos = path.find_first_of(cl_text("/\\"), last_pos);
+		pos = path.find_first_of("/\\", last_pos);
 
 		if (pos == CL_String::npos)
 			pos = path.length();
@@ -386,31 +386,31 @@ CL_String CL_PathHelp::normalize(
 		{
 			CL_String element = path.substr(last_pos, pos-last_pos);
 			if (element.empty() && pos != path.length())
-				throw CL_Exception(cl_format(cl_text("Unable to normalize invalid path %1"), input_path));
+				throw CL_Exception(cl_format("Unable to normalize invalid path %1", input_path));
 
 			if (element.empty())
 			{
 			}
-			else if (element == cl_text("."))
+			else if (element == ".")
 			{
 			}
-			else if (element == cl_text(".."))
+			else if (element == "..")
 			{
 				level--;
 				if (!elements.empty())
 				{
-					if (elements[elements.size()-1] != cl_text(".."))
+					if (elements[elements.size()-1] != "..")
 						elements.erase(elements.begin() + elements.size() - 1);
 					else
-						elements.push_back(cl_text(".."));
+						elements.push_back("..");
 				}
 				else
 				{
-					elements.push_back(cl_text(".."));
+					elements.push_back("..");
 				}
 
 				if (absolute && level < 0)
-					throw CL_Exception(cl_format(cl_text("Unable to normalize invalid path %1"), input_path));
+					throw CL_Exception(cl_format("Unable to normalize invalid path %1", input_path));
 			}
 			else
 			{
@@ -431,11 +431,11 @@ CL_String CL_PathHelp::normalize(
 	{
 #ifdef WIN32
 		if (path_type == path_type_file)
-			normalized_path += cl_text("\\");
+			normalized_path += "\\";
 		else
-			normalized_path += cl_text("/");
+			normalized_path += "/";
 #else
-		normalized_path += cl_text("/");
+		normalized_path += "/";
 #endif
 	}
 
@@ -443,11 +443,11 @@ CL_String CL_PathHelp::normalize(
 	{
 #ifdef WIN32
 		if (path_type == path_type_file)
-			normalized_path += elements[i] + cl_text("\\");
+			normalized_path += elements[i] + "\\";
 		else
-			normalized_path += elements[i] + cl_text("/");
+			normalized_path += elements[i] + "/";
 #else
-		normalized_path += elements[i] + cl_text("/");
+		normalized_path += elements[i] + "/";
 #endif
 	}
 	if (!elements.empty() && !ends_in_slash)
@@ -464,22 +464,22 @@ CL_String CL_PathHelp::add_trailing_slash(const CL_String &path, PathType path_t
 	{
 #ifdef WIN32
 		if (path[path.length()-1] != '/' && path[path.length()-1] != '\\')
-			return path + cl_text("\\");
+			return path + "\\";
 #else
 		if (path[path.length()-1] != '/' && path[path.length()-1] != '\\')
-			return path + cl_text("/");
+			return path + "/";
 #endif
 		return path;
 	}
 	else
 	{
 		if (path[path.length()-1] != '/')
-			return path + cl_text("/");
+			return path + "/";
 		return path;
 	}
 }
 
-CL_String CL_PathHelp::remove_trailing_slash(const CL_String &path, PathType path_type)
+CL_String CL_PathHelp::remove_trailing_slash(const CL_String &path)
 {
 	if (path.empty())
 		return path;
@@ -498,12 +498,12 @@ CL_String CL_PathHelp::get_location(
 	CL_String path = get_fullpath(fullname, path_type);
 	if (path_type == path_type_file && path.length() >= 2)
 	{
-		if (path[1] == cl_text(':'))
+		if (path[1] == ':')
 			return path.substr(0, 2);
 
-		if (path[0] == cl_text('\\') && path[1] == cl_text('\\'))
+		if (path[0] == '\\' && path[1] == '\\')
 		{
-			CL_String::size_type pos = path.find_first_of(cl_text("/\\"), 2);
+			CL_String::size_type pos = path.find_first_of("/\\", 2);
 			if (pos == CL_String::npos)
 				return path;
 			else
@@ -522,12 +522,12 @@ CL_String CL_PathHelp::get_basepath(
 #ifdef WIN32
 	if (path_type == path_type_file && path.length() >= 2)
 	{
-		if (path[1] == cl_text(':'))
+		if (path[1] == ':')
 			return path.substr(2);
 
-		if (path[0] == cl_text('\\') && path[1] == cl_text('\\'))
+		if (path[0] == '\\' && path[1] == '\\')
 		{
-			CL_String::size_type pos = path.find_first_of(cl_text("/\\"), 2);
+			CL_String::size_type pos = path.find_first_of("/\\", 2);
 			if (pos == CL_String::npos)
 				return CL_String();
 			else
@@ -549,7 +549,7 @@ std::vector<CL_String> CL_PathHelp::split_basepath(
 		CL_String::size_type start_pos = 0, end_pos = 0;
 		while (true)
 		{
-			end_pos = basepath.find_first_of(cl_text("/\\"), start_pos);
+			end_pos = basepath.find_first_of("/\\", start_pos);
 
 			if (end_pos == CL_String::npos)
 			{
@@ -567,7 +567,7 @@ std::vector<CL_String> CL_PathHelp::split_basepath(
 		CL_String::size_type start_pos = 0, end_pos = 0;
 		while (true)
 		{
-			end_pos = basepath.find_first_of(cl_text('/'), start_pos);
+			end_pos = basepath.find_first_of('/', start_pos);
 			if (end_pos == CL_String::npos)
 			{
 				if (start_pos != basepath.length())
@@ -589,11 +589,11 @@ CL_String CL_PathHelp::get_fullpath(
 	if (path_type == path_type_file)
 	{
 
-		CL_String::size_type pos = filename.find_last_of(cl_text("/\\"));
+		CL_String::size_type pos = filename.find_last_of("/\\");
 		if (pos == CL_String::npos)
 		{
 #ifdef WIN32
-			if (filename.length() >= 2 && filename[1] == cl_text(':'))
+			if (filename.length() >= 2 && filename[1] == ':')
 				return filename.substr(0, 2);
 #endif
 			return CL_String();
@@ -602,7 +602,7 @@ CL_String CL_PathHelp::get_fullpath(
 	}
 	else
 	{
-		CL_String::size_type pos = filename.find_last_of(cl_text('/'));
+		CL_String::size_type pos = filename.find_last_of('/');
 		if (pos == CL_String::npos)
 			return CL_String();
 		return filename.substr(0, pos+1);
@@ -615,11 +615,11 @@ CL_String CL_PathHelp::get_filename(
 {
 	if (path_type == path_type_file)
 	{
-		CL_String::size_type pos = fullname.find_last_of(cl_text("/\\"));
+		CL_String::size_type pos = fullname.find_last_of("/\\");
 		if (pos == CL_String::npos)
 		{
 #ifdef WIN32
-			if (fullname.length() >= 2 && fullname[1] == cl_text(':'))
+			if (fullname.length() >= 2 && fullname[1] == ':')
 				return fullname.substr(2);
 #endif
 			return fullname;
@@ -628,7 +628,7 @@ CL_String CL_PathHelp::get_filename(
 	}
 	else
 	{
-		CL_String::size_type pos = fullname.find_last_of(cl_text('/'));
+		CL_String::size_type pos = fullname.find_last_of('/');
 		if (pos == CL_String::npos)
 			return fullname;
 		return fullname.substr(pos+1);
@@ -640,7 +640,7 @@ CL_String CL_PathHelp::get_basename(
 	PathType path_type)
 {
 	CL_String filename = get_filename(fullname, path_type);
-	CL_String::size_type pos = filename.find_last_of(cl_text('.'));
+	CL_String::size_type pos = filename.find_last_of('.');
 	if (pos == CL_String::npos)
 		return filename;
 #ifndef WIN32
@@ -659,7 +659,7 @@ CL_String CL_PathHelp::get_extension(
 	PathType path_type)
 {
 	CL_String filename = get_filename(fullname, path_type);
-	CL_String::size_type pos = filename.find_last_of(cl_text('.'));
+	CL_String::size_type pos = filename.find_last_of('.');
 	if (pos == CL_String::npos)
 		return CL_String();
 #ifndef WIN32
@@ -687,10 +687,10 @@ CL_String CL_PathHelp::get_fullname(
 	const CL_String &extension,
 	PathType path_type)
 {
-	if (!extension.empty() && extension[0] == cl_text('.'))
+	if (!extension.empty() && extension[0] == '.')
 		return add_trailing_slash(fullpath, path_type) + filename + extension;
 	else if (!extension.empty())
-		return add_trailing_slash(fullpath, path_type) + filename + cl_text(".") + extension;
+		return add_trailing_slash(fullpath, path_type) + filename + "." + extension;
 	else
 		return add_trailing_slash(fullpath, path_type) + filename;
 }
@@ -705,10 +705,10 @@ CL_String CL_PathHelp::get_fullname(
 	CL_String fullname = location;
 	fullname += add_trailing_slash(basepath, path_type);
 	fullname += filename;
-	if (!extension.empty() && extension[0] == cl_text('.'))
+	if (!extension.empty() && extension[0] == '.')
 		fullname += extension;
 	else if (!extension.empty())
-		fullname += cl_text(".") + extension;
+		fullname += "." + extension;
 	return fullname;
 }
 

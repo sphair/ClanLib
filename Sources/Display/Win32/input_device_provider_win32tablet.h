@@ -125,6 +125,9 @@ public:
 	/// \brief Raises the tablet context to the top of the tablet context stack and enables it, or disable the context if false.
 	void set_context_on_top(bool enable);
 
+	/// \brief Checks if tablet context should be moved to another screen.
+	void check_monitor_changed();
+
 	BOOL process_packet(WPARAM wParam, LPARAM lParam);
 
 	BOOL process_proximity(WPARAM wParam, LPARAM lParam);
@@ -177,17 +180,14 @@ private:
 	};
 
 	std::vector<AxisInfo> axis, old_axis;
-
 	bool styuls_in_proximity;
-
 	int num_keys;
-
 	CL_Point mouse_pos;
-
 	bool init_successfull;
-
 	char button_count;
 	bool key_states[32];
+	LOGCONTEXT logcontext;
+	HMONITOR previous_monitor;
 
 public:
 	typedef UINT (API *ptr_WTInfoA)(UINT, UINT, LPVOID);

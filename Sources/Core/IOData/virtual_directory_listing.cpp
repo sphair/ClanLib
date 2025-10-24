@@ -45,7 +45,7 @@ public:
 		bool init_ok = provider->initialize_directory_listing(path);
 		if (!init_ok)
 		{
-			throw CL_Exception(cl_text("Cannot scan directory to initialize CL_VirtualDirectoryListing"));
+			throw CL_Exception("Cannot scan directory to initialize CL_VirtualDirectoryListing");
 		}
 
 		bool next = true;
@@ -115,7 +115,7 @@ private:
 
 	std::vector<CL_VirtualDirectoryListingEntry> list_entries;
 
-	int index;
+	unsigned int index;
 /// \}
 };
 

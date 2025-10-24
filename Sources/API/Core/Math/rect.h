@@ -59,31 +59,29 @@ public:
 
 	/// \brief Constructs an rectangle.
 	///
-	/// \param left Initial left position of rectangle.
-	/// \param top Initial top position of rectangle.
-	/// \param size Initial size of rectangle.
+	/// \param s = Size
 	CL_Rectx(const CL_Sizex<Type> &s) { left = 0; top = 0; right = s.width; bottom = s.height; }
 
 	/// \brief Constructs an rectangle.
 	///
-	/// \param left Initial left position of rectangle.
-	/// \param top Initial top position of rectangle.
-	/// \param right Initial right position of rectangle.
-	/// \param bottom Initial bottom position of rectangle.
+	/// \param new_left Initial left position of rectangle.
+	/// \param new_top Initial top position of rectangle.
+	/// \param new_right Initial right position of rectangle.
+	/// \param new_bottom Initial bottom position of rectangle.
 	CL_Rectx(Type new_left, Type new_top, Type new_right, Type new_bottom)
 	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
 
 	/// \brief Constructs an rectangle.
 	///
-	/// \param point Initial top-left position of rectangle.
+	/// \param p = Initial top-left position of rectangle.
 	/// \param size Initial size of rectangle.
 	CL_Rectx(const CL_Pointx<Type> &p, const CL_Sizex<Type> &size)
 	{ left = p.x; top = p.y; right = left + size.width; bottom = top + size.height; }
 
 	/// \brief Constructs an rectangle.
 	///
-	/// \param left Initial left position of rectangle.
-	/// \param top Initial top position of rectangle.
+	/// \param new_left Initial left position of rectangle.
+	/// \param new_top Initial top position of rectangle.
 	/// \param size Initial size of rectangle.
 	CL_Rectx(Type new_left, Type new_top, const CL_Sizex<Type> &size)
 	{ left = new_left; top = new_top; right = left + size.width; bottom = top + size.height; }
@@ -173,13 +171,27 @@ public:
 		return (r.left < right && r.right > left && r.top < bottom && r.bottom > top);
 	}
 
+	/// \brief Returns true if rectangle passed is inside this rectangle
+	bool is_inside(const CL_Rectx<Type> &r) const
+	{
+		return ((left <= r.left)
+			&& (top <= r.top)
+			&& (right >= r.right)
+			&& (bottom >= r.bottom));
+	}
+
 	/// \brief Returns another CL_Rectx<Type> containing a rotated version of this one.
 	///
 	/// \param hotspot Point to rotate around.
-	/// \param origin Determines the hotspot point within the rectangle
-	/// \param x, y Offsets applied negatively to the hotspot point
 	/// \param angle Angle to rotate.
 	CL_Rectx<Type> get_rot_bounds(const CL_Vec2<Type> &hotspot, const CL_Angle &angle) const;
+
+	/// \brief Returns another CL_Rectx<Type> containing a rotated version of this one.
+	///
+	/// \param origin Determines the hotspot point within the rectangle
+	/// \param x Offsets applied negatively to the hotspot point
+	/// \param y Offsets applied negatively to the hotspot point
+	/// \param angle Angle
 	CL_Rectx<Type> get_rot_bounds(CL_Origin origin, Type x, Type y, const CL_Angle &angle) const;
 
 	/// \brief Returns the center point of the rectangle.

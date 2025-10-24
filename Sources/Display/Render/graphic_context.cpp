@@ -32,11 +32,7 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/texture.h"
-#include "API/Display/Render/blend_mode.h"
-#include "API/Display/Render/pen.h"
-#include "API/Display/Render/polygon_rasterizer.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/Render/buffer_control.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Image/pixel_format.h"
 #include "API/Display/display.h"
@@ -74,25 +70,53 @@ CL_GraphicContext::~CL_GraphicContext()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext Attributes:
 
-CL_Texture CL_GraphicContext::get_texture(int unit)
+void CL_GraphicContext::throw_if_null() const
 {
-	//TODO: Used "unit" parameter
-	return CL_Texture();
+	if (impl.is_null())
+		throw CL_Exception("CL_GraphicContext is null");
 }
 
-CL_BlendMode CL_GraphicContext::get_blend_mode()
+CL_Texture CL_GraphicContext::get_texture(int unit) const
 {
-	return CL_BlendMode();
+	if ((unit < 0) || (unit >= impl->selected_textures.size()))
+		return CL_Texture();
+
+	return impl->selected_textures[unit];
 }
 
-CL_Pen CL_GraphicContext::get_pen()
+std::vector<CL_Texture> CL_GraphicContext::get_textures() const
 {
-	return CL_Pen();
+	return impl->selected_textures;
 }
 
-CL_PolygonRasterizer CL_GraphicContext::get_polygon_rasterizer()
+CL_BlendMode CL_GraphicContext::get_blend_mode() const
 {
-	return CL_PolygonRasterizer();
+	return impl->selected_blend_mode;
+}
+
+CL_Pen CL_GraphicContext::get_pen() const
+{
+	return impl->selected_pen;
+}
+
+CL_BufferControl CL_GraphicContext::get_buffer_control() const
+{
+	return impl->selected_buffer_control;
+}
+
+CL_PolygonRasterizer CL_GraphicContext::get_polygon_rasterizer() const
+{
+	return impl->selected_polygon_rasterizer;
+}
+
+CL_FrameBuffer CL_GraphicContext::get_write_frame_buffer() const
+{
+	return impl->selected_write_frame_buffer;
+}
+
+CL_FrameBuffer CL_GraphicContext::get_read_frame_buffer() const
+{
+	return impl->selected_read_frame_buffer;
 }
 
 int CL_GraphicContext::get_width() const
@@ -159,14 +183,77 @@ CL_PixelBuffer CL_GraphicContext::get_pixeldata(const CL_Rect &rect) const
 
 void CL_GraphicContext::set_texture(int unit_index, const CL_Texture &texture)
 {
+	if (texture.is_null())
+	{
+		reset_texture(unit_index);
+	}
+	else
+	{
+		// Limit the number of unit index to 255, this should always be enough. This simplifies the saving of the texture
+		if ((unit_index < 0) || (unit_index > 255))
+			throw CL_Exception("Invalid texture unit index");
+
+		// Extend the selected textures array if required
+		if (unit_index >= impl->selected_textures.size())
+			impl->selected_textures.resize(unit_index+1);
+
+		impl->flush_batcher(*this);
+		impl->selected_textures[unit_index] = texture;
+		impl->provider->set_texture(unit_index, texture);
+	}
+}
+
+void CL_GraphicContext::set_textures(std::vector<CL_Texture> &textures)
+{
 	impl->flush_batcher(*this);
-	impl->provider->set_texture(unit_index, texture);
+
+	std::vector<CL_Texture>::size_type index,size;
+	size = textures.size();
+	for (index = 0; index < size; index++)
+	{
+		if (textures[index].is_null())		// Handle null textures here, to prevent reset_texture(unit, texture) throwing exception if out of selected range
+		{
+			if (index < impl->selected_textures.size())	
+				reset_texture(index);
+		}
+		else
+		{
+			set_texture(index, textures[index]);
+		}
+	}
 }
 
 void CL_GraphicContext::reset_texture(int unit_index)
 {
-	impl->flush_batcher(*this);
-	impl->provider->reset_texture(unit_index);
+	if ((unit_index < 0) || (unit_index >= impl->selected_textures.size()))
+		throw CL_Exception("texture unit index was not found");
+
+	if (!(impl->selected_textures[unit_index].is_null()))	// Only reset texture when required
+	{
+		impl->flush_batcher(*this);
+		impl->provider->reset_texture(unit_index, impl->selected_textures[unit_index]);
+		impl->selected_textures[unit_index] = CL_Texture();
+	}
+}
+
+void CL_GraphicContext::reset_textures()
+{
+	bool batcher_flushed = false;
+	std::vector<CL_Texture>::size_type index,size;
+	size = impl->selected_textures.size();
+	for (index = 0; index < size; index++)
+	{
+		if (!impl->selected_textures[index].is_null())
+		{
+			if (!batcher_flushed)
+			{
+				batcher_flushed = true;
+				impl->flush_batcher(*this);
+			}
+			impl->provider->reset_texture(index, impl->selected_textures[index]);
+			impl->selected_textures[index] = CL_Texture();
+		}
+	}
 }
 
 void CL_GraphicContext::set_program_object(CL_StandardProgram standard_program)
@@ -175,10 +262,10 @@ void CL_GraphicContext::set_program_object(CL_StandardProgram standard_program)
 	impl->provider->set_program_object(standard_program);
 }
 
-void CL_GraphicContext::set_program_object(const CL_ProgramObject &program)
+void CL_GraphicContext::set_program_object(const CL_ProgramObject &program, int program_matrix_flags)
 {
 	impl->flush_batcher(*this);
-	impl->provider->set_program_object(program);
+	impl->provider->set_program_object(program, program_matrix_flags);
 }
 
 void CL_GraphicContext::reset_program_object()
@@ -189,6 +276,7 @@ void CL_GraphicContext::reset_program_object()
 
 void CL_GraphicContext::set_buffer_control(const CL_BufferControl &buffer_control)
 {
+	impl->selected_buffer_control = buffer_control;
 	impl->flush_batcher(*this);
 	impl->provider->set_buffer_control(buffer_control);
 }
@@ -197,11 +285,13 @@ void CL_GraphicContext::reset_buffer_control()
 {
 	impl->flush_batcher(*this);
 	static CL_BufferControl buffer_control;
+	impl->selected_buffer_control = buffer_control;
 	impl->provider->set_buffer_control(buffer_control);
 }
 
 void CL_GraphicContext::set_blend_mode(const CL_BlendMode &blend_mode)
 {
+	impl->selected_blend_mode = blend_mode;
 	impl->flush_batcher(*this);
 	impl->provider->set_blend_mode(blend_mode);
 }
@@ -210,11 +300,13 @@ void CL_GraphicContext::reset_blend_mode()
 {
 	impl->flush_batcher(*this);
 	static CL_BlendMode blend_mode;
+	impl->selected_blend_mode = blend_mode;
 	impl->provider->set_blend_mode(blend_mode);
 }
 
 void CL_GraphicContext::set_pen(const CL_Pen &pen)
 {
+	impl->selected_pen = pen;
 	impl->flush_batcher(*this);
 	impl->provider->set_pen(pen);
 }
@@ -223,11 +315,13 @@ void CL_GraphicContext::reset_pen()
 {
 	impl->flush_batcher(*this);
 	static CL_Pen pen;
+	impl->selected_pen = pen;
 	impl->provider->set_pen(pen);
 }
 
 void CL_GraphicContext::set_polygon_rasterizer(const CL_PolygonRasterizer &raster)
 {
+	impl->selected_polygon_rasterizer = raster;
 	impl->flush_batcher(*this);
 	impl->provider->set_polygon_rasterizer(raster);
 }
@@ -236,6 +330,7 @@ void CL_GraphicContext::reset_polygon_rasterizer()
 {
 	impl->flush_batcher(*this);
 	static CL_PolygonRasterizer raster;
+	impl->selected_polygon_rasterizer = raster;
 	impl->provider->set_polygon_rasterizer(raster);
 }
 
@@ -276,6 +371,17 @@ void CL_GraphicContext::draw_primitives_array(CL_PrimitivesType type, int offset
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_array(type, offset, num_vertices);
+}
+
+void CL_GraphicContext::draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count)
+{
+	impl->flush_batcher(*this);
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+	impl->provider->draw_primitives_array_instanced(type, offset, num_vertices, instance_count);
 }
 
 void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices)
@@ -328,7 +434,7 @@ void CL_GraphicContext::reset_primitives_array()
 	impl->provider->reset_primitives_array();
 }
 
-void CL_GraphicContext::draw_pixels(float x, float y, const CL_PixelBufferRef &image, const CL_Colorf &color)
+void CL_GraphicContext::draw_pixels(float x, float y, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
@@ -336,10 +442,10 @@ void CL_GraphicContext::draw_pixels(float x, float y, const CL_PixelBufferRef &i
 		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
-	impl->provider->draw_pixels(x, y, 1.0, 1.0, image, color);
+	impl->provider->draw_pixels(*this, x, y, 1.0, 1.0, image, src_rect, color);
 }
 
-void CL_GraphicContext::draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &image, const CL_Colorf &color)
+void CL_GraphicContext::draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
@@ -347,7 +453,7 @@ void CL_GraphicContext::draw_pixels(float x, float y, float zoom_x, float zoom_y
 		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
-	impl->provider->draw_pixels(x, y, zoom_x, zoom_y, image, color);
+	impl->provider->draw_pixels(*this, x, y, zoom_x, zoom_y, image, src_rect, color);
 }
 
 void CL_GraphicContext::clear(const CL_Colorf &color)
@@ -414,7 +520,7 @@ void CL_GraphicContext::pop_cliprect()
 {
 	impl->flush_batcher(*this);
 	if (impl->cliprects.empty())
-		throw CL_Exception(cl_text("CL_GraphicContext::pop_cliprect - popped too many times!"));
+		throw CL_Exception("CL_GraphicContext::pop_cliprect - popped too many times!");
 
 	impl->cliprects.pop_front();
 
@@ -434,6 +540,8 @@ void CL_GraphicContext::reset_cliprect()
 void CL_GraphicContext::set_map_mode(CL_MapMode mode)
 {
 	impl->flush_batcher(*this);
+
+	impl->set_internal_batcher(mode);
 
 	if (impl->modelview_changed)
 	{
@@ -464,14 +572,25 @@ void CL_GraphicContext::mult_modelview(const CL_Mat4f &matrix)
 	impl->update_batcher_modelview();
 }
 
-void CL_GraphicContext::set_frame_buffer(const CL_FrameBuffer &frame_buffer)
+void CL_GraphicContext::set_frame_buffer(const CL_FrameBuffer &write_buffer)
 {
+	set_frame_buffer(write_buffer, write_buffer);
+}
+
+void CL_GraphicContext::set_frame_buffer(const CL_FrameBuffer &write_buffer, const CL_FrameBuffer &read_buffer)
+{
+	impl->selected_write_frame_buffer = write_buffer;
+	impl->selected_read_frame_buffer = read_buffer;
+
 	impl->flush_batcher(*this);
-	impl->provider->set_frame_buffer(frame_buffer);
+	impl->provider->set_frame_buffer(write_buffer, read_buffer);
 }
 
 void CL_GraphicContext::reset_frame_buffer()
 {
+	impl->selected_write_frame_buffer = CL_FrameBuffer();
+	impl->selected_read_frame_buffer = CL_FrameBuffer();
+
 	impl->flush_batcher(*this);
 	impl->provider->reset_frame_buffer();
 }
@@ -536,10 +655,6 @@ void CL_GraphicContext::push_scale(float x, float y, float z)
 
 void CL_GraphicContext::pop_modelview()
 {
-/*	impl->modelviews.pop_front();
-	if (impl->modelviews.empty())
-		impl->modelviews.push_front(CL_Mat4f::identity());
-*/
 	impl->modelviews.pop_back();
 	impl->modelview_index--;
 

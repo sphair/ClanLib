@@ -29,6 +29,7 @@
 #include "Core/precomp.h"
 #include "API/Core/System/registry_key.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 
 #ifdef WIN32
 
@@ -94,14 +95,14 @@ CL_RegistryKey::CL_RegistryKey(PredefinedKey key, const CL_StringRef &subkey, un
 	HKEY hkey = CL_RegistryKey_Impl::get_predefined_hkey(key);
 	DWORD disposition = 0;
 	HKEY new_key = 0;
-	LONG result = RegCreateKeyEx(hkey, subkey.c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
+	LONG result = RegCreateKeyEx(hkey, CL_StringHelp::utf8_to_ucs2(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to create registry key %1"), subkey));
+		throw CL_Exception(cl_format("Unable to create registry key %1", subkey));
 
 	if (disposition != REG_CREATED_NEW_KEY && (create_flags & create_new))
 	{
 		RegCloseKey(new_key);
-		throw CL_Exception(cl_format(cl_text("Key already exists: %1"), subkey));
+		throw CL_Exception(cl_format("Key already exists: %1", subkey));
 	}
 
 	impl = CL_SharedPtr<CL_RegistryKey_Impl>(new CL_RegistryKey_Impl(new_key));
@@ -118,6 +119,12 @@ CL_RegistryKey::~CL_RegistryKey()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RegistryKey Attributes:
+
+void CL_RegistryKey::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_RegistryKey is null");
+}
 
 HKEY CL_RegistryKey::get_key() const
 {
@@ -164,7 +171,7 @@ std::vector<CL_String> CL_RegistryKey::get_value_names() const
 int CL_RegistryKey::get_value_int(const CL_StringRef &name, int default_value) const
 {
 	DWORD type = 0, data = 0, size_data = sizeof(DWORD);
-	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, (LPBYTE) &data, &size_data);
+	LONG result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE) &data, &size_data);
 	if (result != ERROR_SUCCESS || type != REG_DWORD)
 		return default_value;
 	else
@@ -174,13 +181,13 @@ int CL_RegistryKey::get_value_int(const CL_StringRef &name, int default_value) c
 CL_DataBuffer CL_RegistryKey::get_value_binary(const CL_StringRef &name, const CL_DataBuffer &default_value) const
 {
 	DWORD type = 0, size_data = 0;
-	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
+	LONG result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
 	if (result != ERROR_SUCCESS || type != REG_BINARY)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);
 	size_data = buffer.get_size();
-	result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
+	result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
 	if (result != ERROR_SUCCESS || type != REG_BINARY)
 		return default_value;
 	return buffer;
@@ -189,13 +196,13 @@ CL_DataBuffer CL_RegistryKey::get_value_binary(const CL_StringRef &name, const C
 CL_String CL_RegistryKey::get_value_string(const CL_StringRef &name, const CL_StringRef &default_value) const
 {
 	DWORD type = 0, size_data = 0;
-	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
+	LONG result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
 	if (result != ERROR_SUCCESS || type != REG_SZ)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);
 	size_data = buffer.get_size();
-	result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
+	result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
 	if (result != ERROR_SUCCESS || type != REG_SZ)
 		return default_value;
 	return (TCHAR *) buffer.get_data();
@@ -204,13 +211,13 @@ CL_String CL_RegistryKey::get_value_string(const CL_StringRef &name, const CL_St
 std::vector<CL_String> CL_RegistryKey::get_value_multi_string(const CL_StringRef &name, const std::vector<CL_String> &default_value) const
 {
 	DWORD type = 0, size_data = 0;
-	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
+	LONG result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, 0, &size_data);
 	if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);
 	size_data = buffer.get_size();
-	result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
+	result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
 	if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 		return default_value;
 
@@ -232,9 +239,9 @@ std::vector<CL_String> CL_RegistryKey::get_value_multi_string(const CL_StringRef
 CL_RegistryKey CL_RegistryKey::open_key(const CL_StringRef &subkey, unsigned int access_rights)
 {
 	HKEY new_key = 0;
-	LONG result = RegOpenKeyEx(impl->key, subkey.c_str(), 0, access_rights, &new_key);
+	LONG result = RegOpenKeyEx(impl->key, CL_StringHelp::utf8_to_ucs2(subkey).c_str(), 0, access_rights, &new_key);
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to open registry key %1"), subkey));
+		throw CL_Exception(cl_format("Unable to open registry key %1", subkey));
 	return CL_RegistryKey(new_key);
 }
 
@@ -242,14 +249,14 @@ CL_RegistryKey CL_RegistryKey::create_key(const CL_StringRef &subkey, unsigned i
 {
 	DWORD disposition = 0;
 	HKEY new_key = 0;
-	LONG result = RegCreateKeyEx(impl->key, subkey.c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
+	LONG result = RegCreateKeyEx(impl->key, CL_StringHelp::utf8_to_ucs2(subkey).c_str(), 0, 0, (create_flags & create_volatile) ? REG_OPTION_VOLATILE : REG_OPTION_NON_VOLATILE, access_rights, 0, &new_key, &disposition);
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to create registry key %1"), subkey));
+		throw CL_Exception(cl_format("Unable to create registry key %1", subkey));
 
 	if (disposition != REG_CREATED_NEW_KEY && (create_flags & create_new))
 	{
 		RegCloseKey(new_key);
-		throw CL_Exception(cl_format(cl_text("Key already exists: %1"), subkey));
+		throw CL_Exception(cl_format("Key already exists: %1", subkey));
 	}
 
 	return CL_RegistryKey(new_key);
@@ -259,15 +266,15 @@ void CL_RegistryKey::delete_key(const CL_StringRef &subkey, bool recursive)
 {
 	if (recursive)
 	{
-		DWORD result = SHDeleteKey(impl->key, subkey.c_str());
+		DWORD result = SHDeleteKey(impl->key, CL_StringHelp::utf8_to_ucs2(subkey).c_str());
 		if (result != ERROR_SUCCESS)
-			throw CL_Exception(cl_format(cl_text("Unable to delete registry key %1"), subkey));
+			throw CL_Exception(cl_format("Unable to delete registry key %1", subkey));
 	}
 	else
 	{
-		LONG result = RegDeleteKey(impl->key, subkey.c_str());
+		LONG result = RegDeleteKey(impl->key, CL_StringHelp::utf8_to_ucs2(subkey).c_str());
 		if (result != ERROR_SUCCESS)
-			throw CL_Exception(cl_format(cl_text("Unable to delete registry key %1"), subkey));
+			throw CL_Exception(cl_format("Unable to delete registry key %1", subkey));
 	}
 }
 
@@ -276,38 +283,38 @@ void CL_RegistryKey::delete_key(PredefinedKey key, const CL_StringRef &subkey, b
 	HKEY hkey = CL_RegistryKey_Impl::get_predefined_hkey(key);
 	if (recursive)
 	{
-		DWORD result = SHDeleteKey(hkey, subkey.c_str());
+		DWORD result = SHDeleteKey(hkey, CL_StringHelp::utf8_to_ucs2(subkey).c_str());
 		if (result != ERROR_SUCCESS)
-			throw CL_Exception(cl_format(cl_text("Unable to delete registry key %1"), subkey));
+			throw CL_Exception(cl_format("Unable to delete registry key %1", subkey));
 	}
 	else
 	{
-		LONG result = RegDeleteKey(hkey, subkey.c_str());
+		LONG result = RegDeleteKey(hkey, CL_StringHelp::utf8_to_ucs2(subkey).c_str());
 		if (result != ERROR_SUCCESS)
-			throw CL_Exception(cl_format(cl_text("Unable to delete registry key %1"), subkey));
+			throw CL_Exception(cl_format("Unable to delete registry key %1", subkey));
 	}
 }
 
 void CL_RegistryKey::set_value_int(const CL_StringRef &name, int value)
 {
 	DWORD v = value;
-	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : name.c_str(), 0, REG_DWORD, (const BYTE *) &v, sizeof(DWORD));
+	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_DWORD, (const BYTE *) &v, sizeof(DWORD));
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to set registry key value %1"), name));
+		throw CL_Exception(cl_format("Unable to set registry key value %1", name));
 }
 
 void CL_RegistryKey::set_value_binary(const CL_StringRef &name, const CL_DataBuffer &value)
 {
-	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : name.c_str(), 0, REG_BINARY, (const BYTE *) value.get_data(), value.get_size());
+	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_BINARY, (const BYTE *) value.get_data(), value.get_size());
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to set registry key value %1"), name));
+		throw CL_Exception(cl_format("Unable to set registry key value %1", name));
 }
 
 void CL_RegistryKey::set_value_string(const CL_StringRef &name, const CL_StringRef &value)
 {
-	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : name.c_str(), 0, REG_SZ, (const BYTE *) value.c_str(), (value.length()+1) * sizeof(TCHAR));
+	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *) value.c_str(), (value.length()+1) * sizeof(TCHAR));
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_format(cl_text("Unable to set registry key value %1"), name));
+		throw CL_Exception(cl_format("Unable to set registry key value %1", name));
 }
 /*
 void CL_RegistryKey::set_value_multi_string(const CL_StringRef &name, const std::vector<CL_String> &value)
@@ -322,7 +329,7 @@ void CL_RegistryKey::set_value_multi_string(const CL_StringRef &name, const std:
 */
 void CL_RegistryKey::delete_value(const CL_StringRef &name)
 {
-	RegDeleteValue(impl->key, name.c_str());
+	RegDeleteValue(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str());
 }
 
 /////////////////////////////////////////////////////////////////////////////

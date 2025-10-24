@@ -146,7 +146,7 @@ void CL_NetGameEventValue::set_member(unsigned int index, const CL_NetGameEventV
 void CL_NetGameEventValue::throw_if_not_complex() const
 {
 	if (type != complex)
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not a complex type"));
+		throw CL_Exception("CL_NetGameEventValue is not a complex type");
 }
 
 unsigned int CL_NetGameEventValue::to_uinteger() const
@@ -154,7 +154,7 @@ unsigned int CL_NetGameEventValue::to_uinteger() const
 	if (is_uinteger())
 		return value_uint;
 	else
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not an unsigned integer"));
+		throw CL_Exception("CL_NetGameEventValue is not an unsigned integer");
 }
 
 int CL_NetGameEventValue::to_integer() const
@@ -162,7 +162,7 @@ int CL_NetGameEventValue::to_integer() const
 	if (is_integer())
 		return value_int;
 	else
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not an integer"));
+		throw CL_Exception("CL_NetGameEventValue is not an integer");
 }
 
 float CL_NetGameEventValue::to_number() const
@@ -170,7 +170,7 @@ float CL_NetGameEventValue::to_number() const
 	if (is_number())
 		return value_float;
 	else
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not a floating point number"));
+		throw CL_Exception("CL_NetGameEventValue is not a floating point number");
 }
 
 CL_String CL_NetGameEventValue::to_string() const
@@ -178,7 +178,7 @@ CL_String CL_NetGameEventValue::to_string() const
 	if (is_string())
 		return value_string;
 	else
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not a string"));
+		throw CL_Exception("CL_NetGameEventValue is not a string");
 }
 
 bool CL_NetGameEventValue::to_boolean() const
@@ -186,5 +186,5 @@ bool CL_NetGameEventValue::to_boolean() const
 	if (is_boolean())
 		return value_bool;
 	else
-		throw CL_Exception(cl_text("CL_NetGameEventValue is not a boolean"));
+		throw CL_Exception("CL_NetGameEventValue is not a boolean");
 }

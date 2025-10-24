@@ -29,6 +29,7 @@
 #include "Sound/precomp.h"
 #include "API/Sound/sound_sse.h"
 #include <cstdlib>
+#include <cstring>
 
 #ifndef CL_DISABLE_SSE2
 #include <emmintrin.h>
@@ -40,11 +41,11 @@ void *CL_SoundSSE::aligned_alloc(int size)
 #ifdef _MSC_VER
 	ptr = _aligned_malloc(size, 16);
 	if (!ptr)
-		throw CL_Exception(cl_text("Out of memory"));
+		throw CL_Exception("Out of memory");
 #else
 	if (posix_memalign( (void **) &ptr, 16, size))
 	{
-		throw CL_Exception(cl_text("Panic! posix_memalign failed"));
+		throw CL_Exception("Panic! posix_memalign failed");
 	}
 #endif
 	return ptr;
@@ -406,4 +407,52 @@ void CL_SoundSSE::mix_many_to_one(float **input, float *volume, int channels, in
 		}
 		output[i] = sample0;
 	}
+}
+
+void CL_SoundSSE::unpack_float_stereo(float *input, int size, float *output[2])
+{
+#ifndef CL_DISABLE_SSE2
+	int sse_size = (size/8)*8;
+
+	for (int i = 0; i < sse_size; i+=8)
+	{
+		__m128 samples0 = _mm_loadu_ps(input+i);
+		__m128 samples1 = _mm_loadu_ps(input+i+4);
+		__m128 tmp0 = _mm_shuffle_ps(samples0, samples1, _MM_SHUFFLE(2,0,2,0));
+		__m128 tmp1 = _mm_shuffle_ps(samples0, samples1, _MM_SHUFFLE(3,1,3,1));
+
+		_mm_storeu_ps(output[0]+i/2, tmp0);
+		_mm_storeu_ps(output[1]+i/2, tmp1);
+	}
+
+#else
+	const int sse_size = 0;
+#endif
+
+	// unpack remaining
+	for (int i = sse_size; i < size; i+=2)
+	{
+		output[0][i/2] = input[i];
+		output[1][i/2] = input[i+1];
+	}
+}
+
+void CL_SoundSSE::unpack_float_mono(float *input, int size, float *output)
+{
+#ifndef CL_DISABLE_SSE2
+	int sse_size = (size/4)*4;
+
+	for (int i = 0; i < sse_size; i+=4)
+	{
+		__m128 samples0 = _mm_loadu_ps(input+i);
+		_mm_storeu_ps(output+i, samples0);
+	}
+
+#else
+	const int sse_size = 0;
+#endif
+
+	// unpack remaining
+	if(sse_size < size)
+		memcpy(output, input, (size-sse_size)*sizeof(float));
 }

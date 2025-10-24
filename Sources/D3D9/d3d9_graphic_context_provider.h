@@ -92,13 +92,15 @@ public:
 
 	CL_RenderBufferProvider *alloc_render_buffer();
 
+	CL_PixelBufferProvider *alloc_pixel_buffer();
+
 	CL_VertexArrayBufferProvider *alloc_vertex_array_buffer();
 
 	CL_ElementArrayBufferProvider *alloc_element_array_buffer();
 
 	void set_program_object(CL_StandardProgram standard_program);
 
-	void set_program_object(const CL_ProgramObject &program);
+	void set_program_object(const CL_ProgramObject &program, int program_matrix_flags);
 
 	void reset_program_object();
 
@@ -106,7 +108,7 @@ public:
 
 	void reset_texture(int unit_index);
 
-	void set_frame_buffer(const CL_FrameBuffer &buffer);
+	void set_frame_buffer(const CL_FrameBuffer &w_buffer, const CL_FrameBuffer &r_buffer);
 
 	void reset_frame_buffer();
 
@@ -124,6 +126,8 @@ public:
 
 	void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices);
 
+	void draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count);
+
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
 
 	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
@@ -136,7 +140,7 @@ public:
 
 	void reset_primitives_array();
 
-	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color);
+	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color);
 
 	void set_clip_rect(const CL_Rect &rect);
 

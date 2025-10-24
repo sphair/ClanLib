@@ -96,6 +96,7 @@ public:
 	CL_String id_name;
 	bool allow_resize;
 	bool clip_children;
+	CL_Rect clip_children_rect;
 	bool enabled;
 	bool visible;
 	bool activated;

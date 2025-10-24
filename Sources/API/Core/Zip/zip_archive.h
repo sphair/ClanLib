@@ -98,7 +98,7 @@ public:
 	/// \brief Adds a file to zip archive.
 	/** <p>File is not added to zip file until it save() is called.</p>
 	    \param filename Filename of file.*/
-	void add_file(const CL_StringRef &input_filename, const CL_StringRef &filename_in_archive, bool compress = true);
+	void add_file(const CL_StringRef &input_filename, const CL_StringRef &filename_in_archive);
 
 	/// \brief Saves zip archive.
 	///

@@ -116,7 +116,7 @@ int CL_DisplayMessageQueue_Win32::wait(const std::vector<CL_Event> &events, int 
 			else if (result == WAIT_FAILED)
 			{
 				DWORD error_code = GetLastError();
-				throw CL_Exception(cl_format(cl_text("WaitForMultipleObjects failed : %1"), (int) error_code));
+				throw CL_Exception(cl_format("WaitForMultipleObjects failed : %1", (int) error_code));
 			}
 			else if (result >= WAIT_OBJECT_0 && result < WAIT_OBJECT_0 + num_events+1)
 				index = result - WAIT_OBJECT_0;
@@ -180,11 +180,11 @@ void CL_DisplayMessageQueue_Win32::remove_client(CL_Win32Window *window)
 
 CL_SharedPtr<CL_DisplayMessageQueue_Win32::ThreadData> CL_DisplayMessageQueue_Win32::get_thread_data()
 {
-	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable(cl_text("CL_DisplayMessageQueue_Win32::thread_data")));
+	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_Win32::thread_data"));
 	if (data.is_null())
 	{
 		data = CL_SharedPtr<ThreadData>(new ThreadData);
-		CL_ThreadLocalStorage::set_variable(cl_text("CL_DisplayMessageQueue_Win32::thread_data"), data);
+		CL_ThreadLocalStorage::set_variable("CL_DisplayMessageQueue_Win32::thread_data", data);
 	}
 	return data;
 }

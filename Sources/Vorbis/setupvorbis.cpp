@@ -51,7 +51,7 @@ void CL_SetupVorbis::init( bool register_resources_only )
 	cl_vorbis_init++;
 	if (cl_vorbis_init == 1)
 	{
-		providertype_ogg = new CL_SoundProviderType_Register<CL_SoundProvider_Vorbis>(cl_text("ogg"));
+		providertype_ogg = new CL_SoundProviderType_Register<CL_SoundProvider_Vorbis>("ogg");
 	}
 }
 

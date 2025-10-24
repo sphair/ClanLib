@@ -43,8 +43,8 @@ public:
 	void remove_disposable(CL_DisposableObject *disposable);
 
 	CL_Signal_v0 &func_gc_destruction_imminent();
-	CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
-	void unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory = CL_VirtualDirectory());
+	CL_Texture load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc);
+	void unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc);
 	void unload_all_textures();
 
 	int reference_count;

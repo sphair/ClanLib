@@ -65,11 +65,11 @@ CL_XMLTokenizer::CL_XMLTokenizer(CL_IODevice &input) : impl(new CL_XMLTokenizer_
 		break;
 	case CL_StringHelp::bom_utf32_be:
 	case CL_StringHelp::bom_utf32_le:
-		throw CL_Exception(cl_text("UTF-16 XML files not supported yet"));
+		throw CL_Exception("UTF-16 XML files not supported yet");
 		break;
 	case CL_StringHelp::bom_utf16_be:
 	case CL_StringHelp::bom_utf16_le:
-		throw CL_Exception(cl_text("UTF-32 XML files not supported yet"));
+		throw CL_Exception("UTF-32 XML files not supported yet");
 		break;
 	case CL_StringHelp::bom_utf8:
 		impl->data = CL_StringHelp::utf8_to_text(CL_StringRef8(buffer.get_data()+3, buffer.get_size()-3, false));
@@ -127,10 +127,10 @@ CL_XMLToken CL_XMLTokenizer::next()
 bool CL_XMLTokenizer_Generic::next_text_node(CL_XMLToken *out_token)
 {
 	CL_String::char_type *data_ptr = data.data();
-	while (pos < size && data_ptr[pos] != cl_text('<'))
+	while (pos < size && data_ptr[pos] != '<')
 	{
 		CL_String::size_type start_pos = pos;
-		CL_String::size_type end_pos = data.find(cl_text('<'), start_pos);
+		CL_String::size_type end_pos = data.find('<', start_pos);
 		if (end_pos == data.npos) end_pos = size;
 		pos = end_pos;
 
@@ -153,23 +153,23 @@ bool CL_XMLTokenizer_Generic::next_text_node(CL_XMLToken *out_token)
 bool CL_XMLTokenizer_Generic::next_tag_node(CL_XMLToken *out_token)
 {
 	CL_String::char_type *data_ptr = data.data();
-	if (pos == size || data_ptr[pos] != cl_text('<'))
+	if (pos == size || data_ptr[pos] != '<')
 		return false;
 
 	pos++;
 	if (pos == size)
-		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 	// Try to early predict what sort of node it might be:
-	bool closing = (data_ptr[pos] == cl_text('/'));
-	bool questionMark = (data_ptr[pos] == cl_text('?'));
-	bool exclamationMark = (data_ptr[pos] == cl_text('!'));
+	bool closing = (data_ptr[pos] == '/');
+	bool questionMark = (data_ptr[pos] == '?');
+	bool exclamationMark = (data_ptr[pos] == '!');
 
 	if (closing || questionMark || exclamationMark)
 	{
 		pos++;
 		if (pos == size)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 	}
 
 	if (exclamationMark) // check for cdata section, comments or doctype
@@ -180,9 +180,9 @@ bool CL_XMLTokenizer_Generic::next_tag_node(CL_XMLToken *out_token)
 
 	// Extract the tag name:
 	CL_String::size_type start_pos = pos;
-	CL_String::size_type end_pos = data.find_first_of(cl_text(" \r\n\t?/>"), start_pos);
+	CL_String::size_type end_pos = data.find_first_of(" \r\n\t?/>", start_pos);
 	if (end_pos == data.npos)
-		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 	pos = end_pos;
 
 	out_token->type = questionMark ? CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN : CL_XMLToken::ELEMENT_TOKEN;
@@ -193,81 +193,81 @@ bool CL_XMLTokenizer_Generic::next_tag_node(CL_XMLToken *out_token)
 	while (true)
 	{
 		// Strip whitespace:
-		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		pos = data.find_first_not_of(" \r\n\t", pos);
 		if (pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 		// End of tag, stop searching for more attributes:
-		if (data_ptr[pos] == cl_text('/') || data_ptr[pos] == cl_text('?') || data_ptr[pos] == cl_text('>'))
+		if (data_ptr[pos] == '/' || data_ptr[pos] == '?' || data_ptr[pos] == '>')
 			break;
 
 		// Extract attribute name:
 		CL_String::size_type start_pos = pos;
-		CL_String::size_type end_pos = data.find_first_of(cl_text(" \r\n\t="), start_pos);
+		CL_String::size_type end_pos = data.find_first_of(" \r\n\t=", start_pos);
 		if (end_pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		pos = end_pos;
 
 		CL_StringRef attributeName = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
 
 		// Find seperator:
-		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		pos = data.find_first_not_of(" \r\n\t", pos);
 		if (pos == data.npos || pos == size-1)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
-		if (data_ptr[pos++] != cl_text('='))
-			CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)"), get_line_number(), out_token->name, attributeName));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+		if (data_ptr[pos++] != '=')
+			CL_XMLTokenizer_Generic::throw_exception(cl_format("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)", get_line_number(), out_token->name, attributeName));
 
 		// Strip whitespace:
-		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		pos = data.find_first_not_of(" \r\n\t", pos);
 		if (pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 		// Extract attribute value:
-		CL_String::char_type const * first_of = cl_text(" \r\n\t");
-		if (data_ptr[pos] == cl_text('"'))
+		CL_String::char_type const * first_of = " \r\n\t";
+		if (data_ptr[pos] == '"')
 		{
-			first_of = cl_text("\"");
+			first_of = "\"";
 			pos++;
 			if (pos == size)
-				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		}
 		else
-			if (data_ptr[pos] == cl_text('\''))
+			if (data_ptr[pos] == '\'')
 			{
-				first_of = cl_text("'");
+				first_of = "'";
 				pos++;
 				if (pos == size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 			}
 
 		start_pos = pos;
 		end_pos = data.find_first_of(first_of, start_pos);
 		if (end_pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		
 		CL_StringRef attributeValue, attributeValueOrig(data_ptr + start_pos, end_pos-start_pos, false);
 		unescape(attributeValue, attributeValueOrig);
 
 		pos = end_pos + 1;
 		if (pos == size)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 		// Finally apply attribute to token:
 		out_token->attributes.push_back(CL_XMLToken::Attribute(attributeName, attributeValue));
 	}
 
 	// Check if its singular:
-	if (data_ptr[pos] == cl_text('/') || data_ptr[pos] == cl_text('?'))
+	if (data_ptr[pos] == '/' || data_ptr[pos] == '?')
 	{
 		out_token->variant = CL_XMLToken::SINGLE;
 		pos++;
 		if (pos == size)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 	}
 
 	// Data stream should be ending now.
-	if (data_ptr[pos] != cl_text('>'))
-		CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of tag)"), get_line_number()));
+	if (data_ptr[pos] != '>')
+		CL_XMLTokenizer_Generic::throw_exception(cl_format("Error in XML stream, line %1 (expected end of tag)", get_line_number()));
 	pos++;
 
 	return true;
@@ -277,14 +277,14 @@ bool CL_XMLTokenizer_Generic::next_exclamation_mark_node(CL_XMLToken *out_token)
 {
 	CL_String::char_type *data_ptr = data.data();
 	if (pos+2 >= size)
-		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 	
-	if (data.compare(pos, 2, cl_text("--")) == 0) // comment block
+	if (data.compare(pos, 2, "--") == 0) // comment block
 	{
 		CL_String::size_type start_pos = pos+2;
-		CL_String::size_type end_pos = data.find(cl_text("-->"), start_pos);
+		CL_String::size_type end_pos = data.find("-->", start_pos);
 		if (end_pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		pos = end_pos+3;
 
 		CL_StringRef text, text_orig(data_ptr + start_pos, end_pos-start_pos, false);
@@ -299,26 +299,26 @@ bool CL_XMLTokenizer_Generic::next_exclamation_mark_node(CL_XMLToken *out_token)
 	}
 
 	if (pos+7 >= size)
-		CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+		CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 	
-	if (data.compare(pos, 7, cl_text("DOCTYPE")) == 0)
+	if (data.compare(pos, 7, "DOCTYPE") == 0)
 	{
 		// Strip whitespace:
-		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos+7);
+		pos = data.find_first_not_of(" \r\n\t", pos+7);
 		if (pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 		// Find doctype name:				
 		CL_String::size_type name_start = pos;
-		CL_String::size_type name_end = data.find_first_of(cl_text(" \r\n\t?/>"), name_start);
+		CL_String::size_type name_end = data.find_first_of(" \r\n\t?/>", name_start);
 		if (name_end == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		pos = name_end;
 		
 		// Strip whitespace:
-		pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+		pos = data.find_first_not_of(" \r\n\t", pos);
 		if (pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 		CL_String::size_type public_start = data.npos;
 		CL_String::size_type public_end = data.npos;
@@ -328,118 +328,118 @@ bool CL_XMLTokenizer_Generic::next_exclamation_mark_node(CL_XMLToken *out_token)
 		CL_String::size_type subset_end = data.npos;
 
 		// Look for possible external id:
-		if (data_ptr[pos] != cl_text('[') && data_ptr[pos] != cl_text('>'))
+		if (data_ptr[pos] != '[' && data_ptr[pos] != '>')
 		{
 			if (pos+6 >= size)
-				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
-			if (data.compare(pos, 6, cl_text("SYSTEM")) == 0)
+			if (data.compare(pos, 6, "SYSTEM") == 0)
 			{
 				pos+=6;
 				if (pos == size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Strip whitespace:
-				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				pos = data.find_first_not_of(" \r\n\t", pos);
 				if (pos == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Read system literal:
 				CL_String::char_type literal_char = data_ptr[pos];
-				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				if (literal_char != '\'' && literal_char != '"')
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				system_start = pos+1;
 				system_end = data.find(literal_char, system_start);
 				if (system_end == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 				pos = system_end + 1;
 				if (pos >= size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 			}
-			else if (data.compare(pos, 6, cl_text("PUBLIC")) == 0)
+			else if (data.compare(pos, 6, "PUBLIC") == 0)
 			{
 				pos+=6;
 				if (pos == size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Strip whitespace:
-				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				pos = data.find_first_not_of(" \r\n\t", pos);
 				if (pos == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Read public literal:
 				CL_String::char_type literal_char = data_ptr[pos];
-				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				if (literal_char != '\'' && literal_char != '"')
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				public_start = pos+1;
 				public_end = data.find(literal_char, public_start);
 				if (public_end == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 				pos = public_end + 1;
 				if (pos >= size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Strip whitespace:
-				pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+				pos = data.find_first_not_of(" \r\n\t", pos);
 				if (pos == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				// Read system literal:
 				literal_char = data_ptr[pos];
-				if (literal_char != cl_text('\'') && literal_char != cl_text('"'))
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				if (literal_char != '\'' && literal_char != '"')
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
 				system_start = pos+1;
 				system_end = data.find(literal_char, system_start);
 				if (system_end == data.npos)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 				pos = system_end + 1;
 				if (pos >= size)
-					CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 			}
 			else
-				CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (unknown external identifier type in DOCTYPE)"), get_line_number()));
+				CL_XMLTokenizer_Generic::throw_exception(cl_format("Error in XML stream, line %1 (unknown external identifier type in DOCTYPE)", get_line_number()));
 		
 			// Strip whitespace:
-			pos = data.find_first_not_of(cl_text(" \r\n\t"), pos);
+			pos = data.find_first_not_of(" \r\n\t", pos);
 			if (pos == data.npos)
-				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		}
 		
 		// Look for possible internal subset:
-		if (data_ptr[pos] == cl_text('['))
+		if (data_ptr[pos] == '[')
 		{
 			subset_start = pos + 1;
 		
 			// Search for the end of the internal subset:
 			// (to avoid parsing it, we search backwards)
-			CL_String::size_type end_pos = data.find(cl_text('>'), pos+1);
+			CL_String::size_type end_pos = data.find('>', pos+1);
 			if (end_pos == data.npos)
-				CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 			
-			subset_end = data.rfind(cl_text(']'), end_pos);
+			subset_end = data.rfind(']', end_pos);
 			if (subset_end == data.npos)
-				CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of internal subset in DOCTYPE)"), get_line_number()));
+				CL_XMLTokenizer_Generic::throw_exception(cl_format("Error in XML stream, line %1 (expected end of internal subset in DOCTYPE)", get_line_number()));
 				
 			pos = end_pos;
 		}
 		
 		// Expect DOCTYPE tag to end now:
-		if (data_ptr[pos] != cl_text('>'))
-			CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream, line %1 (expected end of DOCTYPE)"), get_line_number()));
+		if (data_ptr[pos] != '>')
+			CL_XMLTokenizer_Generic::throw_exception(cl_format("Error in XML stream, line %1 (expected end of DOCTYPE)", get_line_number()));
 		pos++;
 
 		out_token->type = CL_XMLToken::DOCUMENT_TYPE_TOKEN;
 		return true;
 	}
-	else if (data.compare(pos, 7, cl_text("[CDATA[")) == 0)
+	else if (data.compare(pos, 7, "[CDATA[") == 0)
 	{
 		CL_String::size_type start_pos = pos+7;
-		CL_String::size_type end_pos = data.find(cl_text("]]>"), start_pos);
+		CL_String::size_type end_pos = data.find("]]>", start_pos);
 		if (end_pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception(cl_text("Premature end of XML data!"));
+			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 		pos = end_pos+3;
 
 		CL_StringRef value = string_allocator.alloc(
@@ -452,7 +452,7 @@ bool CL_XMLTokenizer_Generic::next_exclamation_mark_node(CL_XMLToken *out_token)
 	}
 	else
 	{
-		CL_XMLTokenizer_Generic::throw_exception(cl_format(cl_text("Error in XML stream at position %1"), static_cast<int>(pos)));
+		CL_XMLTokenizer_Generic::throw_exception(cl_format("Error in XML stream at position %1", static_cast<int>(pos)));
 		return false;
 	}
 }
@@ -470,7 +470,7 @@ int CL_XMLTokenizer_Generic::get_line_number()
 	CL_String::const_iterator it;
 	for( it = data.begin(); it != data.end() && tmp_pos <= pos; ++it, tmp_pos++ )
 	{
-		if( (*it) == cl_text('\n') )
+		if( (*it) == '\n' )
 			line++;
 	}
 
@@ -479,18 +479,18 @@ int CL_XMLTokenizer_Generic::get_line_number()
 
 inline void CL_XMLTokenizer_Generic::unescape(CL_StringRef &unescaped, const CL_StringRef &text)
 {
-	static const CL_StringRef quot(cl_text("&quot;"));
-	static const CL_StringRef apos(cl_text("&apos;"));
-	static const CL_StringRef lt(cl_text("&lt;"));
-	static const CL_StringRef gt(cl_text("&gt;"));
-	static const CL_StringRef amp(cl_text("&amp;"));
+	static const CL_StringRef quot("&quot;");
+	static const CL_StringRef apos("&apos;");
+	static const CL_StringRef lt("&lt;");
+	static const CL_StringRef gt("&gt;");
+	static const CL_StringRef amp("&amp;");
 
 	unescaped = string_allocator.alloc(text);
-	unescape(unescaped, quot, cl_text('"'));
-	unescape(unescaped, apos, cl_text('\''));
-	unescape(unescaped, lt, cl_text('<'));
-	unescape(unescaped, gt, cl_text('>'));
-	unescape(unescaped, amp, cl_text('&'));
+	unescape(unescaped, quot, '"');
+	unescape(unescaped, apos, '\'');
+	unescape(unescaped, lt, '<');
+	unescape(unescaped, gt, '>');
+	unescape(unescaped, amp, '&');
 }
 
 inline void CL_XMLTokenizer_Generic::unescape(CL_StringRef &text, const CL_StringRef &search, CL_String::char_type replace)
@@ -518,10 +518,10 @@ inline void CL_XMLTokenizer_Generic::unescape(CL_StringRef &text, const CL_Strin
 
 inline CL_StringRef CL_XMLTokenizer_Generic::trim_whitespace(const CL_StringRef &text)
 {
-	CL_StringRef::size_type pos_start = text.find_first_not_of(cl_text(" \t\r\n"));
+	CL_StringRef::size_type pos_start = text.find_first_not_of(" \t\r\n");
 	if (pos_start == CL_StringRef::npos)
 		return CL_StringRef();
-	CL_StringRef::size_type pos_end = text.find_last_not_of(cl_text(" \t\r\n"), pos_start);
+	CL_StringRef::size_type pos_end = text.find_last_not_of(" \t\r\n", pos_start);
 	if (pos_end == CL_StringRef::npos)
 	{
 		if (pos_start == 0)

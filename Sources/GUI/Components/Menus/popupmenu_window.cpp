@@ -69,7 +69,7 @@ CL_PopupMenuWindow::CL_PopupMenuWindow(const CL_PopupMenu &menu, const CL_Point 
 	set_type_name(CssStr::PopupMenuWindow::type_name);
 	set_class_name(menu.get_class_name());
 
-	prop_icon_column_width = CL_GUIThemePartProperty(cl_text("icon-column-width"), cl_text("30"));
+	prop_icon_column_width = CL_GUIThemePartProperty("icon-column-width", "30");
 
 	create_parts();
 

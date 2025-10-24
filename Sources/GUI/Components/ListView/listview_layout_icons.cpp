@@ -48,8 +48,8 @@ CL_ListViewLayoutIcons::CL_ListViewLayoutIcons(CL_ListView *listview)
   max_rows_visible(0), max_grid_cols_visible(0), row_draw_y_pos(0),
   columns_valid(false)
 {
-	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, cl_text("16"));
-	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, cl_text("16"));
+	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, "16");
+	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, "16");
 }
 
 CL_ListViewLayoutIcons::~CL_ListViewLayoutIcons()
@@ -161,11 +161,11 @@ std::vector<ListViewRow> &CL_ListViewLayoutIcons::get_rows()
 
 void CL_ListViewLayoutIcons::create_parts()
 {
-	part_row = CL_GUIThemePart(listview, cl_text("row"));
-	part_opener = CL_GUIThemePart(listview, cl_text("row_opener"));
-	part_cell = CL_GUIThemePart(listview, cl_text("cell"));
+	part_row = CL_GUIThemePart(listview, "row");
+	part_opener = CL_GUIThemePart(listview, "row_opener");
+	part_cell = CL_GUIThemePart(listview, "cell");
 
-	part_cell.set_state(cl_text("icons"), true);
+	part_cell.set_state("icons", true);
 	part_cell.set_state(CssStr::normal, true);
 	part_row.set_state(CssStr::normal, true);
 
@@ -173,7 +173,7 @@ void CL_ListViewLayoutIcons::create_parts()
 	size_icon.height = part_cell.get_property_int(prop_icon_height);
 
 	CL_Font font = part_cell.get_font();
-	height_text = font.get_text_size(gc, cl_text("l")).height;
+	height_text = font.get_text_size(gc, "l").height;
 
 	size_cell = part_cell.get_preferred_size();
 	height_row = size_cell.height;

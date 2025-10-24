@@ -69,9 +69,6 @@ public:
 	/// \brief Returns the target destination of the message.
 	CL_GUIComponent *get_target() const;
 
-	/// \brief Returns true if this is a null message.
-	bool is_null() const;
-
 	/// \brief Returns true if the message has been consumed by a component.
 	bool is_consumed() const;
 

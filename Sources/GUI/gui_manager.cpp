@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 #include "GUI/precomp.h"
@@ -35,11 +36,17 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_theme_default.h"
+#include "API/GUI/gui_window_manager_texture.h"
+#include "API/GUI/gui_window_manager_system.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/input_event.h"
-#include "gui_manager_impl.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/IOData/file_help.h"
+#include "API/CSSLayout/css_layout.h"
+#include "gui_manager_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager Construction:
@@ -47,11 +54,33 @@
 CL_GUIManager::CL_GUIManager()
 : impl(new CL_GUIManager_Impl)
 {
+	CL_GUIWindowManagerSystem window_manager;
+	set_window_manager(window_manager);
 }
 
 CL_GUIManager::CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl)
 : impl(impl)
 {
+}
+
+CL_GUIManager::CL_GUIManager(const CL_DisplayWindow &display_window, const CL_String &path_to_theme)
+: impl(new CL_GUIManager_Impl)
+{
+	CL_GUIWindowManagerTexture window_manager(display_window);
+	initialize(window_manager, path_to_theme);
+}
+
+CL_GUIManager::CL_GUIManager(const CL_String &path_to_theme)
+: impl(new CL_GUIManager_Impl)
+{
+	CL_GUIWindowManagerSystem window_manager;
+	initialize(window_manager, path_to_theme);
+}
+
+CL_GUIManager::CL_GUIManager(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme)
+: impl(new CL_GUIManager_Impl)
+{
+	initialize(window_manager, path_to_theme);
 }
 
 CL_GUIManager::~CL_GUIManager()
@@ -140,7 +169,7 @@ void CL_GUIManager::set_theme(CL_GUITheme &theme)
 void CL_GUIManager::set_css_document(CL_CSSDocument css)
 {
 	impl->css_document = css;
-	impl->reset_rulesets();	// Clear the ruleset cache
+	impl->reset_properties(); // Clear the properties cache
 }
 
 void CL_GUIManager::set_css_document(const CL_String &fullname)
@@ -155,6 +184,26 @@ void CL_GUIManager::set_css_document(const CL_String &filename, const CL_Virtual
 	CL_CSSDocument css;
 	css.load(filename, directory); 
 	set_css_document(css);
+}
+
+void CL_GUIManager::add_resources(const CL_ResourceManager &resources)
+{
+	get_theme().get_resources().add_resources(resources);
+}
+
+void CL_GUIManager::add_resources(const CL_String &filename)
+{
+	get_theme().get_resources().add_resources(CL_ResourceManager(filename));
+}
+
+void CL_GUIManager::add_resources(const CL_String &filename, const CL_VirtualDirectory &directory)
+{
+	get_theme().get_resources().add_resources(CL_ResourceManager(filename, directory));
+}
+
+void CL_GUIManager::initialize_layout_manager(const CL_String &xml_fullname, const CL_String &css_fullname)
+{
+	impl->layout_manager = CL_GUIThemeLayoutManager(xml_fullname, css_fullname);
 }
 
 void CL_GUIManager::set_window_manager(CL_GUIWindowManager &window_manager)
@@ -311,5 +360,32 @@ void CL_GUIManager::set_accelerator_table( const CL_AcceleratorTable &table )
 	impl->accel_table = table;
 }
 
+CL_CSSLayout CL_GUIManager::create_layout(CL_GUIComponent *component)
+{
+	return impl->layout_manager.create_layout(component->get_type_name());
+}
+
+bool CL_GUIManager::has_layout(CL_GUIComponent *component)
+{
+	return impl->layout_manager.has_layout(component->get_type_name());
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager Implementation:
+
+void CL_GUIManager::initialize(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme)
+{
+	CL_VirtualFileSystem vfs(path_to_theme);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+
+	CL_GUIThemeDefault theme;
+	CL_ResourceManager resources("resources.xml", dir);
+	theme.set_resources(resources);
+
+	set_theme(theme);
+	set_window_manager(window_manager);
+	set_css_document("theme.css", dir);
+
+	if(CL_FileHelp::file_exists(path_to_theme + "\\layout.xml") && CL_FileHelp::file_exists(path_to_theme + "\\layout.css"))
+		initialize_layout_manager(path_to_theme + "\\layout.xml", path_to_theme + "\\layout.css");
+}

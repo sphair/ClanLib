@@ -34,7 +34,7 @@
 
 CL_StringRef CL_URLHelp::get_protocol(const CL_StringRef &url)
 {
-	CL_StringRef::size_type pos = url.find(cl_text("://"));
+	CL_StringRef::size_type pos = url.find("://");
 	if (pos == CL_StringRef::npos)
 		return CL_StringRef();
 	else
@@ -43,8 +43,8 @@ CL_StringRef CL_URLHelp::get_protocol(const CL_StringRef &url)
 
 CL_StringRef CL_URLHelp::get_full_path(const CL_StringRef &url)
 {
-	CL_StringRef::size_type pos1 = url.find(cl_text("://"));
-	CL_StringRef::size_type pos2 = url.find(cl_text('?'));
+	CL_StringRef::size_type pos1 = url.find("://");
+	CL_StringRef::size_type pos2 = url.find('?');
 	if (pos1 == CL_StringRef::npos)
 		pos1 = 0;
 	else
@@ -59,10 +59,10 @@ CL_StringRef CL_URLHelp::get_full_path(const CL_StringRef &url)
 CL_StringRef CL_URLHelp::get_host(const CL_StringRef &url)
 {
 	CL_StringRef path = get_full_path(url);
-	if (path.substr(0, 2) != cl_text("//"))
+	if (path.substr(0, 2) != "//")
 		return CL_StringRef();
 
-	CL_StringRef::size_type pos1 = path.find_first_of(cl_text(":/"), 2);
+	CL_StringRef::size_type pos1 = path.find_first_of(":/", 2);
 	if (pos1 == CL_StringRef::npos)
 		return path.substr(2);
 	else
@@ -72,17 +72,17 @@ CL_StringRef CL_URLHelp::get_host(const CL_StringRef &url)
 CL_StringRef CL_URLHelp::get_port(const CL_StringRef &url)
 {
 	CL_StringRef path = get_full_path(url);
-	if (path.substr(0, 2) != cl_text("//"))
+	if (path.substr(0, 2) != "//")
 		return CL_StringRef();
 
-	CL_StringRef::size_type pos1 = path.find_first_of(cl_text(":/"), 2);
+	CL_StringRef::size_type pos1 = path.find_first_of(":/", 2);
 	if (pos1 == CL_StringRef::npos)
 		return CL_StringRef();
-	else if (path[pos1] == cl_text('/'))
+	else if (path[pos1] == '/')
 		return CL_StringRef();
 	pos1++;
 
-	CL_StringRef::size_type pos2 = path.find(cl_text('/'), pos1);
+	CL_StringRef::size_type pos2 = path.find('/', pos1);
 	if (pos2 == CL_StringRef::npos)
 		return path.substr(pos1);
 	else
@@ -92,9 +92,9 @@ CL_StringRef CL_URLHelp::get_port(const CL_StringRef &url)
 CL_StringRef CL_URLHelp::get_local_path(const CL_StringRef &url)
 {
 	CL_StringRef path = get_full_path(url);
-	if (path.substr(0, 2) != cl_text("//"))
+	if (path.substr(0, 2) != "//")
 		return path;
-	CL_StringRef::size_type pos1 = path.find(cl_text('/'), 2);
+	CL_StringRef::size_type pos1 = path.find('/', 2);
 	if (pos1 == CL_StringRef::npos)
 		return CL_StringRef();
 	else
@@ -103,7 +103,7 @@ CL_StringRef CL_URLHelp::get_local_path(const CL_StringRef &url)
 
 CL_StringRef CL_URLHelp::get_query(const CL_StringRef &url)
 {
-	CL_StringRef::size_type pos1 = url.find(cl_text('?'));
+	CL_StringRef::size_type pos1 = url.find('?');
 	if (pos1 == CL_StringRef::npos)
 		return CL_StringRef();
 	else

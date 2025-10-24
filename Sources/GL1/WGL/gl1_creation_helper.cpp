@@ -51,12 +51,12 @@ CL_GL1CreationHelper::CL_GL1CreationHelper(HWND window, HDC hdc)
 		window_info.rcWindow.bottom - window_info.rcWindow.top,
 		window, 0, GetModuleHandle(0), 0);
 	if (query_window == 0)
-		throw CL_Exception(cl_text("Unable to create OpenGL creation query window"));
+		throw CL_Exception("Unable to create OpenGL creation query window");
 	query_dc = GetDC(query_window);
 	if (query_dc == 0)
 	{
 		DestroyWindow(query_window);
-		throw CL_Exception(cl_text("Unable to retrieve OpenGL creation query device context"));
+		throw CL_Exception("Unable to retrieve OpenGL creation query device context");
 	}
 
 	PIXELFORMATDESCRIPTOR pfd;
@@ -75,7 +75,7 @@ CL_GL1CreationHelper::CL_GL1CreationHelper(HWND window, HDC hdc)
 	{
 		DeleteDC(query_dc);
 		DestroyWindow(query_window);
-		throw CL_Exception(cl_text("Unable to create OpenGL context for creation query window"));
+		throw CL_Exception("Unable to create OpenGL context for creation query window");
 	}
 }
 

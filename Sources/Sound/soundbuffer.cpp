@@ -55,12 +55,12 @@ CL_SoundBuffer::CL_SoundBuffer(
 {
 	CL_Resource resource = manager->get_resource(res_id);
 
-	CL_ResourceDataSession resource_data_session(cl_text("sample"), resource);
-	CL_SharedPtr<CL_ResourceData_Sample> data(resource.get_data(cl_text("sample")));
+	CL_ResourceDataSession resource_data_session("sample", resource);
+	CL_SharedPtr<CL_ResourceData_Sample> data(resource.get_data("sample"));
 	if (data.is_null())
 	{
 		data = CL_SharedPtr<CL_ResourceData_Sample>(new CL_ResourceData_Sample(resource));
-		resource.set_data(cl_text("sample"), data);
+		resource.set_data("sample", data);
 	}
 
 	impl = data->soundbuffer->impl;
@@ -102,11 +102,6 @@ CL_SoundBuffer::CL_SoundBuffer(
 	impl->provider = CL_SoundProviderFactory::load(file, streamed, type);
 }
 
-CL_SoundBuffer::CL_SoundBuffer(const CL_SoundBuffer &copy)
-: impl(copy.impl)
-{
-}
-
 CL_SoundBuffer::~CL_SoundBuffer()
 {
 }
@@ -121,11 +116,12 @@ CL_SoundProvider *CL_SoundBuffer::get_provider() const
 	return impl->provider;
 }
 
-bool CL_SoundBuffer::is_null()
-{
-	return impl.is_null();
-}
 
+void CL_SoundBuffer::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_SoundBuffer is null");
+}
 
 float CL_SoundBuffer::get_volume() const
 {

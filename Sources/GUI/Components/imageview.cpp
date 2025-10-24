@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -87,6 +88,18 @@ CL_ImageView::~CL_ImageView()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ImageView Attributes:
+
+CL_ImageView *CL_ImageView::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ImageView *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ImageView*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ImageView named item: %1", id));
+
+	return object;
+}
 
 CL_Sprite CL_ImageView::get_image() const
 {

@@ -55,7 +55,7 @@ CL_GraphicContext_GL1::CL_GraphicContext_GL1(CL_GraphicContext &gc) : CL_Graphic
 	impl->provider = dynamic_cast <CL_GL1GraphicContextProvider *> (CL_GraphicContext::get_provider());
 	if (!impl->provider)
 	{
-			throw CL_Exception(cl_text("Graphic Context is not from a GL1 target"));
+			throw CL_Exception("Graphic Context is not from a GL1 target");
 	}
 
 }
@@ -66,6 +66,12 @@ CL_GraphicContext_GL1::~CL_GraphicContext_GL1()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext_GL1 Attributes:
+
+void CL_GraphicContext_GL1::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_GraphicContext_GL1 is null");
+}
 
 int CL_GraphicContext_GL1::get_max_texture_coords()
 {

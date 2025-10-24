@@ -45,15 +45,16 @@ class CL_API_DISPLAY CL_Gradient
 
 public:
 	/// \brief Constructs a color gradient.
+	CL_Gradient()
+	{
+	}
+
+	/// \brief Constructs a color gradient.
 	///
 	/// \param top_left Top left color component.
 	/// \param top_right Top right color component.
 	/// \param bottom_left Bottom left color component.
 	/// \param bottom_right Bottom right color component.
-	CL_Gradient()
-	{
-	}
-
 	CL_Gradient(const CL_Colorf &top_left, const CL_Colorf &top_right,
 		const CL_Colorf &bottom_left, const CL_Colorf &bottom_right)
 	: top_left(top_left), top_right(top_right), bottom_left(bottom_left),

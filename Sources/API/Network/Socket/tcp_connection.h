@@ -130,6 +130,15 @@ public:
 	/// \brief Disables or enables buffering data before it is sent
 	void set_nodelay(bool enable = true);
 
+	/// \brief Enables or disables transmitting keep-alive packets
+	///
+	/// \param enable = True to enable keep-alive, false to disable
+	/// \param timeout = Specifies the timeout, in milliseconds, with no activity until the first keep-alive packet is sent.
+	/// \param interval = Specifies the interval, in milliseconds, between when successive keep-alive packets are sent if no acknowledgment is received.
+	///
+	/// Both timeout and interval must be set to a non-zero value before any of them are used.  They cannot be specified individually.
+	void set_keep_alive(bool enable, int timeout = 0, int interval = 0);
+
 /// \}
 /// \name Implementation
 /// \{

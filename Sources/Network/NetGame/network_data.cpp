@@ -66,31 +66,31 @@ CL_NetGameEvent CL_NetGameNetworkData::receive_data(CL_TCPConnection connection)
 
 CL_NetGameEventValue CL_NetGameNetworkData::create_event_value(CL_DomElement &value_element)
 {
-	if (value_element.get_tag_name() == cl_text("null"))
+	if (value_element.get_tag_name() == "null")
 	{
 		return CL_NetGameEventValue(CL_NetGameEventValue::null);
 	}
-	else if (value_element.get_tag_name() == cl_text("uinteger"))
+	else if (value_element.get_tag_name() == "uinteger")
 	{
 		return CL_NetGameEventValue(CL_StringHelp::text_to_uint(value_element.get_text()));
 	}
-	else if (value_element.get_tag_name() == cl_text("integer"))
+	else if (value_element.get_tag_name() == "integer")
 	{
 		return CL_NetGameEventValue(CL_StringHelp::text_to_int(value_element.get_text()));
 	}
-	else if (value_element.get_tag_name() == cl_text("number"))
+	else if (value_element.get_tag_name() == "number")
 	{
 		return CL_NetGameEventValue(CL_StringHelp::text_to_float(value_element.get_text()));
 	}
-	else if (value_element.get_tag_name() == cl_text("boolean"))
+	else if (value_element.get_tag_name() == "boolean")
 	{
-		return CL_NetGameEventValue(value_element.get_text() == cl_text("true"));
+		return CL_NetGameEventValue(value_element.get_text() == "true");
 	}
-	else if (value_element.get_tag_name() == cl_text("string"))
+	else if (value_element.get_tag_name() == "string")
 	{
 		return CL_NetGameEventValue(value_element.get_text());
 	}
-	else if (value_element.get_tag_name() == cl_text("complex"))
+	else if (value_element.get_tag_name() == "complex")
 	{
 		CL_NetGameEventValue value(CL_NetGameEventValue::complex);
 		CL_DomNode cur = value_element.get_first_child();
@@ -130,7 +130,7 @@ void CL_NetGameNetworkData::send_data(CL_TCPConnection connection, const CL_NetG
 	doc.save(iodevice_memory, false);
 	CL_DataBuffer buffer = iodevice_memory.get_data();
 	if (buffer.get_size() > packet_limit)
-		throw CL_Exception(cl_text("Outgoing message too big"));
+		throw CL_Exception("Outgoing message too big");
 
 	connection.write_uint16(buffer.get_size());
 	connection.write(buffer.get_data(), buffer.get_size());
@@ -142,37 +142,37 @@ CL_DomElement CL_NetGameNetworkData::create_event_value_element(CL_DomDocument &
 	switch (value.get_type())
 	{
 	case CL_NetGameEventValue::null:
-		value_element = doc.create_element(cl_text("null"));
+		value_element = doc.create_element("null");
 		break;
 	case CL_NetGameEventValue::uinteger:
-		value_element = doc.create_element(cl_text("uinteger"));
+		value_element = doc.create_element("uinteger");
 		value_element.append_child(doc.create_text_node(CL_StringHelp::uint_to_text(value.to_uinteger())));
 		break;
 	case CL_NetGameEventValue::integer:
-		value_element = doc.create_element(cl_text("integer"));
+		value_element = doc.create_element("integer");
 		value_element.append_child(doc.create_text_node(CL_StringHelp::int_to_text(value.to_integer())));
 		break;
 	case CL_NetGameEventValue::number:
-		value_element = doc.create_element(cl_text("number"));
+		value_element = doc.create_element("number");
 		value_element.append_child(doc.create_text_node(CL_StringHelp::float_to_text(value.to_number())));
 		break;
 	case CL_NetGameEventValue::boolean:
-		value_element = doc.create_element(cl_text("boolean"));
-		value_element.append_child(doc.create_text_node(value.to_boolean() ? cl_text("true") : cl_text("false")));
+		value_element = doc.create_element("boolean");
+		value_element.append_child(doc.create_text_node(value.to_boolean() ? "true" : "false"));
 		break;
 	case CL_NetGameEventValue::string:
-		value_element = doc.create_element(cl_text("string"));
+		value_element = doc.create_element("string");
 		value_element.append_child(doc.create_text_node(value.to_string()));
 		break;
 	case CL_NetGameEventValue::complex:
 		{
-			value_element = doc.create_element(cl_text("complex"));
+			value_element = doc.create_element("complex");
 			for (unsigned int i = 0; i < value.get_member_count(); i++)
 				value_element.append_child(create_event_value_element(doc, value.get_member(i)));
 		}
 		break;
 	default:
-		throw CL_Exception(cl_text("Unknown game event value type"));
+		throw CL_Exception("Unknown game event value type");
 	}
 	return value_element;
 }

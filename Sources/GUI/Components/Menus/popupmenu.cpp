@@ -57,10 +57,12 @@ CL_PopupMenu CL_PopupMenu::create_null_object()
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenu Attributes:
 
-bool CL_PopupMenu::is_null() const
+void CL_PopupMenu::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_PopupMenu is null");
 }
+
 
 CL_PopupMenuItem CL_PopupMenu::get_item(int id)
 {
@@ -119,7 +121,7 @@ void CL_PopupMenu::start(CL_GUIComponent *parent, const CL_Point &pos)
 
 CL_PopupMenuItem CL_PopupMenu::insert_item(const CL_StringRef &text, int id, int index)
 {
-	return insert_item_accel(text, cl_text(""), id, index);
+	return insert_item_accel(text, "", id, index);
 }
 
 CL_PopupMenuItem CL_PopupMenu::insert_item_accel(const CL_StringRef &text, const CL_StringRef &accel_text, int id, int index)

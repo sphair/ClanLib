@@ -56,6 +56,9 @@ public:
 	bool is_visible() const;
 	CL_GraphicContext& get_gc();
 	CL_InputContext& get_ic();
+	CL_String get_title() const;
+	CL_Size get_minimum_size(bool client_area) const;
+	CL_Size get_maximum_size(bool client_area) const;
 	HWND get_hwnd() const;
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;

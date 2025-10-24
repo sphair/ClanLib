@@ -34,7 +34,7 @@
 // CL_RectPacker_Impl construction:
 
 CL_RectPacker_Impl::CL_RectPacker_Impl(const CL_Size &max_group_size)
-: max_group_size(max_group_size), active_root_node(0), next_node_id(0)
+: active_root_node(0), next_node_id(0), max_group_size(max_group_size)
 {
 }
 
@@ -96,7 +96,7 @@ CL_RectPacker::AllocatedRect CL_RectPacker_Impl::add_new_node(const CL_Size &rec
 	{
 		if(allocation_policy == CL_RectPacker::fail_if_full && root_nodes.size() > 0)
 		{
-			throw CL_Exception(cl_text("Unable to pack rect into group: full"));
+			throw CL_Exception("Unable to pack rect into group: full");
 		}
 
 		if(allocation_policy == CL_RectPacker::search_previous_groups)
@@ -119,12 +119,12 @@ CL_RectPacker::AllocatedRect CL_RectPacker_Impl::add_new_node(const CL_Size &rec
 			}
 			else
 			{
-				throw CL_Exception(cl_text("Unable to pack rect into group: Larger than max_group_size"));
+				throw CL_Exception("Unable to pack rect into group: Larger than max_group_size");
 			}
 		}
 
 		if(node == 0)
-			throw CL_Exception(cl_text("Unable to pack rect into group: Unknown reason"));
+			throw CL_Exception("Unable to pack rect into group: Unknown reason");
 	}
 
 	next_node_id++;

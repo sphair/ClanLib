@@ -46,6 +46,7 @@ class CL_ProgramObject_Impl;
 class CL_GraphicContext;
 class CL_GraphicContextProvider;
 class CL_ResourceManager;
+class CL_ProgramObjectProvider;
 
 /// \brief OpenGL Program Object
 ///
@@ -72,10 +73,7 @@ class CL_API_DISPLAY CL_ProgramObject
 /// \{
 
 public:
-	/// \brief Construct OpenGL program object.
-	///
-	/// \param resource_id Name of program object resource.
-	/// \param vdir Virtual directory holding the file to load.
+	/// \brief Construct a null instance
 	CL_ProgramObject();
 
 	/// \brief Constructs a ProgramObject
@@ -87,6 +85,11 @@ public:
 	///
 	/// \param gc_provider = Graphic Context Provider
 	CL_ProgramObject(CL_GraphicContextProvider *gc_provider);
+
+	/// \brief Constructs a ProgramObject
+	///
+	/// \param provider = Font Provider
+	CL_ProgramObject(CL_ProgramObjectProvider *provider);
 
 	/// \brief Load
 	///
@@ -109,6 +112,16 @@ public:
 	/// \brief Load
 	///
 	/// \param gc = Graphic Context
+	/// \param vertex_fullname = String Ref
+	/// \param geometry_fullname = String Ref
+	/// \param fragment_fullname = String Ref
+	///
+	/// \return Program Object
+	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &vertex_fullname, const CL_StringRef &geometry_fullname, const CL_StringRef &fragment_fullname);
+
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
 	/// \param vertex_filename = String Ref
 	/// \param fragment_filename = String Ref
 	/// \param directory = Virtual Directory
@@ -119,11 +132,32 @@ public:
 	/// \brief Load
 	///
 	/// \param gc = Graphic Context
+	/// \param vertex_filename = String Ref
+	/// \param geometry_filename = String Ref
+	/// \param fragment_filename = String Ref
+	/// \param directory = Virtual Directory
+	///
+	/// \return Program Object
+	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &geometry_filename, const CL_StringRef &fragment_filename, const CL_VirtualDirectory &directory);
+
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
 	/// \param vertex_file = IODevice
 	/// \param fragment_file = IODevice
 	///
 	/// \return Program Object
 	static CL_ProgramObject load(CL_GraphicContext &gc, CL_IODevice &vertex_file, CL_IODevice &fragment_file);
+
+	/// \brief Load
+	///
+	/// \param gc = Graphic Context
+	/// \param vertex_file = IODevice
+	/// \param geometry_file = IODevice
+	/// \param fragment_file = IODevice
+	///
+	/// \return Program Object
+	static CL_ProgramObject load(CL_GraphicContext &gc, CL_IODevice &vertex_file, CL_IODevice &geometry_file, CL_IODevice &fragment_file);
 
 	/// \brief Load
 	///
@@ -162,6 +196,16 @@ public:
 	/// \brief Load and link
 	///
 	/// \param gc = Graphic Context
+	/// \param vertex_fullname = String Ref
+	/// \param geometry_fullname = String Ref
+	/// \param fragment_fullname = String Ref
+	///
+	/// \return Program Object
+	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &vertex_fullname, const CL_StringRef &geometry_fullname, const CL_StringRef &fragment_fullname);
+
+	/// \brief Load and link
+	///
+	/// \param gc = Graphic Context
 	/// \param vertex_filename = String Ref
 	/// \param fragment_filename = String Ref
 	/// \param directory = Virtual Directory
@@ -172,11 +216,32 @@ public:
 	/// \brief Load and link
 	///
 	/// \param gc = Graphic Context
+	/// \param vertex_filename = String Ref
+	/// \param geometry_filename = String Ref
+	/// \param fragment_filename = String Ref
+	/// \param directory = Virtual Directory
+	///
+	/// \return Program Object
+	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &geometry_filename, const CL_StringRef &fragment_filename, const CL_VirtualDirectory &directory);
+
+	/// \brief Load and link
+	///
+	/// \param gc = Graphic Context
 	/// \param vertex_file = IODevice
 	/// \param fragment_file = IODevice
 	///
 	/// \return Program Object
 	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, CL_IODevice &vertex_file, CL_IODevice &fragment_file);
+
+	/// \brief Load and link
+	///
+	/// \param gc = Graphic Context
+	/// \param vertex_file = IODevice
+	/// \param geometry_file = IODevice
+	/// \param fragment_file = IODevice
+	///
+	/// \return Program Object
+	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, CL_IODevice &vertex_file, CL_IODevice &geometry_file, CL_IODevice &fragment_file);
 
 	/// \brief Load and link
 	///
@@ -210,8 +275,14 @@ public:
 /// \{
 
 public:
-	/// \brief Returns true if the Program object is a dummy
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
+	/// \brief Retrieves the provider.
+	CL_ProgramObjectProvider *get_provider() const;
 
 	/// \brief Returns the OpenGL program object handle.
 	unsigned int get_handle() const;
@@ -264,21 +335,34 @@ public:
 	bool validate();
 
 	/// \brief Set uniform variable(s).
-	void set_uniform1i(const CL_StringRef &name, int);
+	///
+	/// \param name = String Ref
+	/// \param value_a = value
+	void set_uniform1i(const CL_StringRef &name, int value_a);
 
 	/// \brief Set uniform2i
 	///
 	/// \param name = String Ref
-	/// \param int = value
-	void set_uniform2i(const CL_StringRef &name, int, int);
-	void set_uniform3i(const CL_StringRef &name, int, int, int);
+	/// \param value_a = value
+	/// \param value_b = value
+	void set_uniform2i(const CL_StringRef &name, int value_a, int value_b);
+
+	/// \brief Set uniform2i
+	///
+	/// \param name = String Ref
+	/// \param value_a = value
+	/// \param value_b = value
+	/// \param value_c = value
+	void set_uniform3i(const CL_StringRef &name, int value_a, int value_b, int value_c);
 
 	/// \brief Set uniform4i
 	///
 	/// \param name = String Ref
-	/// \param int = value
-	/// \param int = value
-	void set_uniform4i(const CL_StringRef &name, int, int, int, int);
+	/// \param value_a = value
+	/// \param value_b = value
+	/// \param value_c = value
+	/// \param value_d = value
+	void set_uniform4i(const CL_StringRef &name, int value_a, int value_b, int value_c, int value_d);
 
 	/// \brief Set uniformiv
 	///
@@ -363,21 +447,35 @@ public:
 	/// \param data = Vec4i
 	void set_uniformiv(const CL_StringRef &name, int count, CL_Vec4i *data) {set_uniformiv(name, 4, count, *data);}
 
-	void set_uniform1f(const CL_StringRef &name, float);
+	/// \brief Set uniform1f
+	///
+	/// \param name = String Ref
+	/// \param value_a = value
+	void set_uniform1f(const CL_StringRef &name, float value_a);
 
 	/// \brief Set uniform2f
 	///
 	/// \param name = String Ref
-	/// \param float = value
-	void set_uniform2f(const CL_StringRef &name, float, float);
-	void set_uniform3f(const CL_StringRef &name, float, float, float);
+	/// \param value_a = value
+	/// \param value_b = value
+	void set_uniform2f(const CL_StringRef &name, float value_a, float value_b);
+
+	/// \brief Set uniform2f
+	///
+	/// \param name = String Ref
+	/// \param value_a = value
+	/// \param value_b = value
+	/// \param value_c = value
+	void set_uniform3f(const CL_StringRef &name, float value_a, float value_b, float value_c);
 
 	/// \brief Set uniform4f
 	///
 	/// \param name = String Ref
-	/// \param float = value
-	/// \param float = value
-	void set_uniform4f(const CL_StringRef &name, float, float, float, float);
+	/// \param value_a = value
+	/// \param value_b = value
+	/// \param value_c = value
+	/// \param value_d = value
+	void set_uniform4f(const CL_StringRef &name, float value_a, float value_b, float value_c, float value_d);
 
 	/// \brief Set uniformfv
 	///

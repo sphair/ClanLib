@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,6 +34,7 @@
 #include "page_system.h"
 #include "page_system2.h"
 #include "page_finished.h"
+#include <string>
 
 class Workspace;
 
@@ -44,23 +45,22 @@ private:
 
 public:
 	Wizard();
-
 	INT_PTR exec();
-
 	BOOL finish();
+#ifdef UNICODE
+	typedef std::wstring tstring;
+#else
+	typedef std::string tstring;
+#endif
+	std::string text_to_local8(const tstring &text);
+	tstring local8_to_text(const std::string &local8);
 
 	PageWelcome page_welcome;
-
 	PageTarget page_target;
-
 	PageSystem page_system;
-
 	PageSystem2 page_system2;
-
 	PageFinished page_finished;
-
 	PROPSHEETHEADER propsheetheader;
-
 	HPROPSHEETPAGE pages[5];
 };
 

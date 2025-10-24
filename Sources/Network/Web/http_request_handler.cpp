@@ -56,6 +56,12 @@ CL_HTTPRequestHandlerProvider *CL_HTTPRequestHandler::get_provider() const
 	return impl->provider;
 }
 
+void CL_HTTPRequestHandler::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_HTTPRequestHandler is null");
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_HTTPRequestHandler Operations:
 

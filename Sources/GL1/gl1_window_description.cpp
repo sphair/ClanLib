@@ -35,11 +35,11 @@
 
 CL_GL1WindowDescription::CL_GL1WindowDescription()
 {
-	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data("OpenGL"));
 	if (impl_gl.is_null())
 	{
 		impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(new CL_GL1WindowDescription_Impl);
-		set_data(cl_text("OpenGL"), impl_gl);
+		set_data("OpenGL", impl_gl);
 	}
 }
 
@@ -50,22 +50,22 @@ CL_GL1WindowDescription::~CL_GL1WindowDescription()
 CL_GL1WindowDescription::CL_GL1WindowDescription(const CL_DisplayWindowDescription &desc)
 {
 	CL_DisplayWindowDescription::operator=(desc);
-	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data("OpenGL"));
 	if (impl_gl.is_null())
 	{
 		impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(new CL_GL1WindowDescription_Impl);
-		set_data(cl_text("OpenGL"), impl_gl);
+		set_data("OpenGL", impl_gl);
 	}
 }
 
 CL_GL1WindowDescription &CL_GL1WindowDescription::operator=(CL_DisplayWindowDescription &desc)
 {
 	CL_DisplayWindowDescription::operator=(desc);
-	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data(cl_text("OpenGL")));
+	impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(get_data("OpenGL"));
 	if (impl_gl.is_null())
 	{
 		impl_gl = CL_SharedPtr<CL_GL1WindowDescription_Impl>(new CL_GL1WindowDescription_Impl);
-		set_data(cl_text("OpenGL"), impl_gl);
+		set_data("OpenGL", impl_gl);
 	}
 	return *this;
 }

@@ -52,7 +52,7 @@ public:
 
 	/// \brief Constructs a DomEntity
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomEntity(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomEntity();

@@ -44,7 +44,7 @@ public:
 	{
 	}
 
-	virtual RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) = 0;
+	virtual RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const = 0;
 };
 
 /// (Internal ClanLib Class)
@@ -58,7 +58,7 @@ public:
 	{
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return static_func(p1, p2, p3, p4);
 	}
@@ -78,7 +78,7 @@ public:
 	{
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return static_func(p1, p2, p3, p4, user_data);
 	}
@@ -100,7 +100,7 @@ public:
 	{
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return (instance->*member_func)(p1, p2, p3, p4);
 	}
@@ -122,7 +122,7 @@ public:
 	{
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return (instance->*member_func)(p1, p2, p3, p4, user_data);
 	}
@@ -145,7 +145,7 @@ public:
 	{
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return functor(p1, p2, p3, p4);
 	}
@@ -225,7 +225,7 @@ public:
 		impl = CL_SharedPtr< CL_Callback_Impl_4<RetVal, P1, P2, P3, P4> >();
 	}
 
-	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4)
+	RetVal invoke(P1 p1, P2 p2, P3 p3, P4 p4) const
 	{
 		return impl->invoke(p1, p2, p3, p4);
 	}

@@ -138,7 +138,7 @@ CL_Subtexture CL_TextureGroup_Impl::add_new_node(CL_GraphicContext &context, con
 		}
 
 		if(node == 0)
-			throw CL_Exception(cl_text("Unable to pack Texture into TextureGroup"));
+			throw CL_Exception("Unable to pack Texture into TextureGroup");
 	}
 
 	next_id++;
@@ -196,7 +196,7 @@ void CL_TextureGroup_Impl::remove(CL_Subtexture &subtexture)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Cannot find the SubTexture in the TextureGroup"));
+		throw CL_Exception("Cannot find the SubTexture in the TextureGroup");
 	}
 }
 

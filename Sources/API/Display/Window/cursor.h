@@ -36,7 +36,6 @@
 #include "../display_target.h"
 
 class CL_DisplayWindow;
-class CL_PixelBufferRef;
 class CL_CursorProvider;
 class CL_SpriteDescription;
 class CL_Point;
@@ -51,7 +50,7 @@ class CL_API_DISPLAY CL_Cursor
 /// \{
 
 public:
-	/// \brief Constructs a cursor.
+	/// \brief Constructs a null instance.
 	CL_Cursor();
 
 	/// \brief Constructs a Cursor
@@ -66,6 +65,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the cursor provider
 	CL_CursorProvider *get_provider() const;
 

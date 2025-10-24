@@ -37,7 +37,7 @@
 CL_GL1RenderBufferProvider::CL_GL1RenderBufferProvider(CL_GL1GraphicContextProvider *gc_provider)
 : gc_provider(gc_provider)
 {
-	throw CL_Exception(cl_text("CL_GL1RenderBuffer is not supported"));
+	throw CL_Exception("CL_GL1RenderBuffer is not supported");
 }
 
 CL_GL1RenderBufferProvider::~CL_GL1RenderBufferProvider()
@@ -55,7 +55,7 @@ CLuint CL_GL1RenderBufferProvider::get_handle()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1RenderBufferProvider Operations:
 
-void CL_GL1RenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format)
+void CL_GL1RenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format, int multisample_samples)
 {
 }
 

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,21 +35,14 @@ public:
 	PageSystem();
 
 	PROPSHEETPAGE propsheetpage;
-
 	HPROPSHEETPAGE handle_propsheetpage;
-
 	TCHAR path_input_include[MAX_PATH];
-
 	TCHAR path_input_lib[MAX_PATH];
 
 	static INT_PTR CALLBACK dialog_proc(HWND, UINT, WPARAM, LPARAM);
-
 	INT_PTR on_notify(HWND hWnd, NMHDR *header);
-
 	void on_input_lib_browse_clicked(HWND hWnd);
-
 	void on_input_include_browse_clicked(HWND hWnd);
-
 	static BOOL BrowseForFolder(HWND hOwner, TCHAR* szTitle, TCHAR* szRetval);
 };
 

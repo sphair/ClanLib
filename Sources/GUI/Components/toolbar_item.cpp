@@ -67,9 +67,10 @@ int CL_ToolBarItem::get_id() const
 	return impl->id;
 }
 
-bool CL_ToolBarItem::is_null() const
+void CL_ToolBarItem::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_ToolBarItem is null");
 }
 
 bool CL_ToolBarItem::is_disabled() const

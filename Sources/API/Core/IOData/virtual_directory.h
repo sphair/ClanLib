@@ -136,8 +136,8 @@ public:
 	    Filenames starting with "mount_point" at the start will be replaced by the filesystem specified by "fs"
 	    (ie the the base_path is ignored)
 	    For example:
-	     CL_VirtualFileSystem new_vfs(new MyFileSource(cl_text("Hello")));
-	     dir.mount(cl_text("ABC"), new_vfs);
+	     CL_VirtualFileSystem new_vfs(new MyFileSource("Hello"));
+	     dir.mount("ABC", new_vfs);
 	    param: mount_point = Mount alias name to use
 	    param: fs = Filesystem to use*/
 	void mount(const CL_String &mount_point, CL_VirtualFileSystem &fs);

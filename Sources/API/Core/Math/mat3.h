@@ -168,7 +168,7 @@ public:
 	/// \return The matrix
 	static CL_Mat3<Type> subtract(const CL_Mat3<Type> &matrix_1, const CL_Mat3<Type> &matrix_2);
 
-	/// \brief Calculate the adjoint (or known as adjugate) of a matrix
+	/// \brief Calculate the adjoint (or known as Adjugate or Conjugate Transpose) of a matrix
 	///
 	/// \param matrix = The matrix to use
 	/// \return The adjoint matrix
@@ -180,6 +180,12 @@ public:
 	/// \param matrix = The matrix to use
 	/// \return The inversed matrix
 	static CL_Mat3<Type> inverse(const CL_Mat3<Type> &matrix);
+
+	/// \brief Calculate the transpose of a matrix 
+	///
+	/// \param matrix = The matrix to use
+	/// \return The transposed matrix
+	static CL_Mat3<Type> transpose(const CL_Mat3<Type> &matrix);
 
 /// \}
 /// \name Attributes
@@ -232,6 +238,11 @@ public:
 	///
 	/// \return reference to this object
 	CL_Mat3<Type> &inverse();
+
+	/// \brief Calculate the transpose of this matrix 
+	///
+	/// \return reference to this object
+	CL_Mat3<Type> &transpose();
 
 /// \}
 /// \name Operators

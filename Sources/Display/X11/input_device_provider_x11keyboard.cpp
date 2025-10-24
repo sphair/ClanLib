@@ -91,12 +91,12 @@ float CL_InputDeviceProvider_X11Keyboard::get_axis(int index) const
 
 CL_String CL_InputDeviceProvider_X11Keyboard::get_name() const
 {
-	return cl_text("System Keyboard");
+	return "System Keyboard";
 }
 
 CL_String CL_InputDeviceProvider_X11Keyboard::get_device_name() const
 {
-	return cl_text("System Keyboard");
+	return "System Keyboard";
 }
 
 int CL_InputDeviceProvider_X11Keyboard::get_axis_count() const

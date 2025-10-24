@@ -40,7 +40,7 @@ public:
 	CL_BezierCurve_Impl();
 	~CL_BezierCurve_Impl();
 
-	std::vector<CL_Pointf> generate_curve_points(float split_angle_deg);
+	std::vector<CL_Pointf> generate_curve_points(const CL_Angle &split_angle);
 	std::vector<CL_Pointf> subdivide_bezier(float start_pos, float end_pos)  const;
 	CL_Pointf get_point_relative(float) const;
 

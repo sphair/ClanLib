@@ -47,7 +47,7 @@ class CL_API_DISPLAY CL_DisplayTarget
 /// \{
 
 public:
-	/// \brief Constructs a display target.
+	/// \brief Constructs a display target if a CL_Display current target exists. Else create a null instance
 	CL_DisplayTarget();
 
 	/// \brief Constructs a DisplayTarget
@@ -65,8 +65,11 @@ public:
 	/// \brief Returns the provider for the display target.
 	CL_DisplayTargetProvider *get_provider();
 
-	/// \brief Returns true if this display target is invalid.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 /// \}
 /// \name Operations

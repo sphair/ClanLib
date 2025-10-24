@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_manager.h"
@@ -64,8 +65,8 @@ public:
 	void on_style_changed();
 	void on_lineedit_message(CL_GUIMessage &msg);
 	void on_btn_arrow_clicked();
-	void on_lineedit_text_edited(CL_InputEvent event);
-	bool on_lineedit_unhandled_event(CL_InputEvent event);
+	void on_lineedit_text_edited(CL_InputEvent &event);
+	bool on_lineedit_unhandled_event(CL_InputEvent &event);
 	void on_popup_item_selected(CL_PopupMenuItem item);
 	void on_popup_menu_closed();
 
@@ -120,6 +121,18 @@ CL_ComboBox::~CL_ComboBox()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ComboBox Attributes:
+
+CL_ComboBox *CL_ComboBox::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ComboBox *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ComboBox*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ComboBox named item: %1", id));
+
+	return object;
+}
 
 bool CL_ComboBox::is_editable() const
 {
@@ -297,12 +310,12 @@ void CL_ComboBox_Impl::on_process_message(CL_GUIMessage &msg)
 				e.id != CL_KEY_TAB && 
 				e.id != CL_KEY_ENTER && 
 				e.id != CL_KEY_ESCAPE &&
-				msg.get_data(cl_text("No Loop Hack")).is_null())
+				msg.get_data("No Loop Hack").is_null())
 			{
 				CL_GUIMessage_Input input_msg;
 				input_msg.set_target(lineedit);
 				input_msg.set_event(e);
-				input_msg.set_data(cl_text("No Loop Hack"), CL_SharedPtr<int>(new int(1337)));
+				input_msg.set_data("No Loop Hack", CL_SharedPtr<int>(new int(1337)));
 				component->get_gui_manager().dispatch_message(input_msg);
 				msg.set_consumed();
 			}
@@ -385,8 +398,8 @@ void CL_ComboBox_Impl::on_style_changed()
 void CL_ComboBox_Impl::create_components()
 {
 	part_component = CL_GUIThemePart(component);
-	part_opener = CL_GUIThemePart(component, cl_text("opener"));
-	part_opener_glyph = CL_GUIThemePart(component, cl_text("opener_glyph"));
+	part_opener = CL_GUIThemePart(component, "opener");
+	part_opener_glyph = CL_GUIThemePart(component, "opener_glyph");
 
 	part_component.set_state(CssStr::normal, true);
 	part_opener.set_state(CssStr::normal, true);
@@ -402,7 +415,6 @@ void CL_ComboBox_Impl::create_components()
 	lineedit->set_focus_policy(CL_GUIComponent::focus_parent);
 	
 	CL_GraphicContext &gc = component->get_gc();
-	CL_ResourceManager resources = component->get_resources();
 
 	lineedit->func_after_edit_changed().set(this, &CL_ComboBox_Impl::on_lineedit_text_edited);
 	lineedit->func_filter_message().set(this, &CL_ComboBox_Impl::on_lineedit_message);
@@ -421,11 +433,11 @@ void CL_ComboBox_Impl::on_btn_arrow_clicked()
 	popup_menu.start(component, component->component_to_screen_coords(g.get_bottom_left()));
 }
 
-void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent event)
+void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent &event)
 {
 /*  What is this supposed to do?? - Harry 2009-07-29
 
-	CL_TempString text = lineedit->get_text();	
+	CL_String text = lineedit->get_text();	
 	int index = popup_menu.find_item(text);
 	selected_item = index;
 	if (selected_item != -1 && event.id != CL_KEY_BACKSPACE && 

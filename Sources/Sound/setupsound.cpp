@@ -56,7 +56,7 @@ void CL_SetupSound::init(bool register_resources_only)
 	ref_count++;
 	if (ref_count > 1)
 		return;
-	providertype_wave = new CL_SoundProviderType_Register<CL_SoundProvider_Wave>(cl_text("wav"));
+	providertype_wave = new CL_SoundProviderType_Register<CL_SoundProvider_Wave>("wav");
 	if (register_resources_only)
 		return;
 }

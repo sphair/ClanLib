@@ -58,7 +58,7 @@ void CL_ZipEndOfCentralDirectoryRecord::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x06054b50)
 	{
-		throw CL_Exception(cl_text("Incorrect End of Central Directory Record signature"));
+		throw CL_Exception("Incorrect End of Central Directory Record signature");
 	}
 	
 	number_of_this_disk = input.read_int16();

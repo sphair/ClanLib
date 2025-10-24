@@ -39,10 +39,6 @@ CL_FontDescription::CL_FontDescription() : impl(new CL_FontDescription_Impl)
 {
 }
 
-CL_FontDescription::CL_FontDescription(const CL_FontDescription &copy) : impl(copy.impl)
-{
-}
-
 CL_FontDescription::~CL_FontDescription()
 {
 }
@@ -57,9 +53,11 @@ CL_FontDescription CL_FontDescription::create_null_object()
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontDescription attributes:
 
-bool CL_FontDescription::is_null() const
+
+void CL_FontDescription::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("is null");
 }
 
 const CL_String &CL_FontDescription::get_typeface_name() const

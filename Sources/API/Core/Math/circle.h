@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
-**    (if your name is missing here, please add it)
+**    Mark Page
 */
 
 /// \addtogroup clanCore_Math clanCore Math
@@ -34,84 +34,80 @@
 
 #include "point.h"
 
-class CL_Circlef;
-
-/// \brief Circle (point,radius) structure.
+/// \brief Circle
 ///
+/// These circle templates are defined for: int (CL_Circle), float (CL_Circlef), double (CL_Circled)
 /// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
-class CL_Circle
+template<typename Type>
+class CL_Circlex
 {
-// Construction:
-public:
-	/// \brief Constructs a Circle.
-	CL_Circle()
-	{ return; }
-
-	/// \brief Constructs a Circle.
-	///
-	/// \param x = Initial x value.
-	/// \param y = Initial y value.
-	/// \param radius = Circle radius.
-	CL_Circle(int x, int y, int radius)
-	: position(x,y), radius(radius) { return; }
-
-	/// \brief Constructs a Circle.
-	///
-	/// \param p = Point to use for initial values.
-	/// \param radius = Circle radius.
-	CL_Circle(const CL_Point &p, int radius)
-	: position(p), radius(radius) { return; }
-
-	explicit CL_Circle(const CL_Circlef& other);
-
-// Attributes:
 public:
 	/// \brief Circle center point
-	CL_Point position;
+	CL_Vec2<Type> position;
 
 	/// \brief Circle radius
-	int radius;
+	Type radius;
+	
+	CL_Circlex(Type x, Type y, Type radius)	: position(x,y), radius(radius) { }
+	CL_Circlex(const CL_Vec2<Type> &p, Type radius) : position(p), radius(radius) { }
+	CL_Circlex() : radius( (Type) 0 )  { }
+	CL_Circlex(const CL_Circlex<Type> &copy) { position = copy.position; radius = copy.radius;}
+
+/// \name Attributes
+/// \{
+public:
+
+	bool is_inside( const CL_Vec2<Type> &point ) {return radius >= position.distance(point);}
+
+/// \}
+/// \name Operators
+/// \{
+public:
+	/// \brief = operator.
+	CL_Circlex<Type> &operator = (const CL_Circlex<Type>& copy) { position = copy.position; radius = copy.radius; return *this; }
+
+	/// \brief == operator.
+	bool operator == (const CL_Circlex<Type>& circle) const {return ((position == circle.position) && (radius == circle.radius));}
+
+	/// \brief != operator.
+	bool operator != (const CL_Circlex<Type>& circle) const {return ((position != circle.position) || (radius != circle.radius));}
+/// \}
 };
 
-/// \brief Circle (point,radius) structure.
+/// \brief Circle - Integer
 ///
 /// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
-class CL_Circlef
+class CL_Circle : public CL_Circlex<int>
 {
-// Construction:
 public:
-	/// \brief Constructs a Circle.
-	CL_Circlef()
-	{ return; }
-
-	/// \brief Constructs a Circle.
-	///
-	/// \param x = Initial x value.
-	/// \param y = Initial y value.
-	/// \param radius = Circle radius.
-	CL_Circlef(float x, float y, float radius)
-	: position((float)x,(float)y), radius(radius) { return; }
-
-	/// \brief Constructs a Circle.
-	///
-	/// \param p = Point to use for initial values.
-	/// \param radius = Circle radius.
-	CL_Circlef(const CL_Pointf &p, float radius)
-	: position(p), radius(radius) { return; }
-
-// Attributes:
-public:
-	/// \brief Circle center point
-	CL_Pointf position;
-
-	/// \brief Circle radius
-	float radius;
+	CL_Circle(int x, int y, int radius) : CL_Circlex<int>(x, y, radius) { }
+	CL_Circle(const CL_Vec2<int> &p, int radius) : CL_Circlex<int>(p, radius) { }
+	CL_Circle() : CL_Circlex<int>(){ }
+	CL_Circle(const CL_Circlex<int> &copy) : CL_Circlex<int>(copy){ }
 };
 
-inline CL_Circle::CL_Circle(const CL_Circlef &other)
-: position(other.position), radius(int(other.radius+0.5))
+/// \brief Circle - Float
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Circlef : public CL_Circlex<float>
 {
-	return;
-}
+public:
+	CL_Circlef(float x, float y, float radius) : CL_Circlex<float>(x, y, radius) { }
+	CL_Circlef(const CL_Vec2<float> &p, float radius) : CL_Circlex<float>(p, radius) { }
+	CL_Circlef() : CL_Circlex<float>(){ }
+	CL_Circlef(const CL_Circlex<float> &copy) : CL_Circlex<float>(copy){ }
+};
+
+/// \brief Circle - Double
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_Circled : public CL_Circlex<double>
+{
+public:
+	CL_Circled(double x, double y, double radius) : CL_Circlex<double>(x, y, radius) { }
+	CL_Circled(const CL_Vec2<double> &p, double radius) : CL_Circlex<double>(p, radius) { }
+	CL_Circled() : CL_Circlex<double>(){ }
+	CL_Circled(const CL_Circlex<double> &copy) : CL_Circlex<double>(copy){ }
+};
 
 /// \}

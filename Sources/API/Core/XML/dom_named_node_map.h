@@ -89,7 +89,7 @@ public:
 	    under, multiple nodes of certain types (those that have a "special" string value) cannot
 	    be stored as the names would clash. This is seen as preferable to allowing nodes to be
 	    aliased.</p>
-	    \param arg A node to store in a named node map. The node will later be accessible using the value of the node name attribute of the node. If a node with that name is already present in the map, it is replaced by the new one.
+	    \param node A node to store in a named node map. The node will later be accessible using the value of the node name attribute of the node. If a node with that name is already present in the map, it is replaced by the new one.
 	    retval: If the new Node replaces an existing node with the same name the previously existing Node is returned, otherwise null is returned.*/
 	CL_DomNode set_named_item(const CL_DomNode &node);
 
@@ -106,8 +106,7 @@ public:
 
 	/// \brief Removes a node specified by namespace URI and local name.
 	/** <p>If the removed node is an Attr with a default value it is immediately replaced.</p>
-	    \param name The name of a node to remove.
-	    retval: The node removed from the map or null if no node with such a name exists.*/
+	    \return The node removed from the map or null if no node with such a name exists.*/
 	CL_DomNode remove_named_item_ns(
 		const CL_DomString &namespace_uri,
 		const CL_DomString &local_name);
@@ -124,7 +123,7 @@ protected:
 
 	/// \brief Constructs a DomNamedNodeMap
 	///
-	/// \param CL_DomNamedNodeMap_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomNamedNodeMap(const CL_SharedPtr<CL_DomNamedNodeMap_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNamedNodeMap_Generic> impl;

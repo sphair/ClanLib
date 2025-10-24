@@ -33,7 +33,7 @@
 #include "API/Core/Signals/callback_1.h"
 #include "API/Core/Signals/callback_v2.h"
 #include "API/Core/CSS/css_document.h"
-#include "API/Core/CSS/css_ruleset.h"
+#include "API/Core/CSS/css_property.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
@@ -42,6 +42,7 @@
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/gui_theme.h"
 #include "gui_font_cache.h"
+#include "gui_theme_layout_manager.h"
 #include <vector>
 #include <map>
 
@@ -64,6 +65,7 @@ public:
 	CL_GUIComponent *owner;
 	CL_GUIComponent *proximity_component;
 	std::vector<CL_Rect> update_regions;
+
 private:
 	CL_SharedPtr<int> alive;	// Shared Pointer, used to determine if this class is active
 	friend class CL_GUITopLevelWindow_Alive;
@@ -120,6 +122,8 @@ public:
 	CL_Signal_v1<CL_GUIMessage &> sig_filter_message;
 	CL_Callback_1<int, bool> func_exec_handler;
 	CL_CSSDocument css_document;
+	CL_GUIThemeLayoutManager layout_manager;
+
 	CL_GUIComponent *mouse_capture_component;
 	CL_GUIComponent *mouse_over_component;
 	CL_GUITheme theme;
@@ -134,6 +138,7 @@ public:
 	CL_Callback_v2<CL_GUITopLevelWindow *, const CL_Size &> func_resize;
 	CL_Callback_v2<CL_GUITopLevelWindow *, const CL_Rect &> func_paint;
 	CL_Callback_v1<CL_GUITopLevelWindow *> func_close;
+	CL_Callback_v1<CL_GUITopLevelWindow *> func_destroy;
 	CL_Callback_v3<CL_GUITopLevelWindow *, const CL_InputEvent &, const CL_InputState &> func_input_received;
 	CL_GUIFontCache font_cache;
 
@@ -148,8 +153,8 @@ public:
 	void set_enabled(CL_GUIComponent *component, bool enable);
 	void dispatch_message(CL_GUIMessage &message);
 
-	std::vector<CL_CSSRuleSet> &get_rulesets(const CL_StringRef &element_name) const;
-	void reset_rulesets();
+	std::vector<CL_CSSProperty> &get_properties(const CL_StringRef &element_name) const;
+	void reset_properties();
 
 	void register_font(const CL_Font &font, const CL_FontDescription &desc);
 
@@ -170,10 +175,10 @@ private:
 	void on_resize(CL_GUITopLevelWindow *toplevel_window, const CL_Size &new_size);
 	void on_paint(CL_GUITopLevelWindow *toplevel_window, const CL_Rect &update_rect);
 	void on_close(CL_GUITopLevelWindow *toplevel_window);
+	void on_destroy(CL_GUITopLevelWindow *toplevel_window);
 	void on_input_received(CL_GUITopLevelWindow *toplevel_window, const CL_InputEvent &input_event, const CL_InputState &input_state);
 	void on_gc_destruction_imminent();
-
-	mutable std::map< CL_String, std::vector<CL_CSSRuleSet> > rulesets_cache;
+	mutable std::map< CL_String, std::vector<CL_CSSProperty> > properties_cache;
 
 	struct NamedFontCacheEntry
 	{

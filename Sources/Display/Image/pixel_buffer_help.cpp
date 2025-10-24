@@ -29,32 +29,41 @@
 #include "Display/precomp.h"
 #include "API/Display/Image/pixel_buffer_help.h"
 
-CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBufferRef &pb, int border_size)
+CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBuffer &pb, int border_size, const CL_Rect &rect)
 {
-	if (border_size <=0)
+	if (rect.left < 0 || rect.top < 0 || rect.right > pb.get_width(), rect.bottom > pb.get_height())
+		throw CL_Exception("Rectangle passed to CL_PixelBufferHelp::add_border() out of bounds");
+
+	if (border_size <0)
 	{
-		return CL_PixelBuffer(pb);
+		border_size = 0;
 	}
 
 	int old_width = pb.get_width();
 	int old_height = pb.get_height();
 
-	int new_width = old_width + border_size*2;
-	int new_height = old_height + border_size*2;
+	int new_width = rect.get_width() + border_size*2;
+	int new_height = rect.get_height() + border_size*2;
 
 	// Convert pixel buffer if in an unsupported format
 	CL_PixelBuffer work_buffer;
-	CL_PixelBufferRef work_pb = pb;
-	if (work_pb.get_format().get_depth() != 32)
+	CL_PixelBuffer work_pb = pb;
+	if (work_pb.get_format() != cl_rgba8)
 	{
-		work_buffer = pb.to_format(CL_PixelFormat::rgba8888);
+		work_buffer = pb.to_format(cl_rgba8);
 		work_pb = work_buffer;
 	}
 
-	CL_PixelBuffer new_pb(new_width, new_height, new_width *4, work_pb.get_format(), NULL);
+	CL_PixelBuffer new_pb(new_width, new_height, work_pb.get_format(), NULL);
 
 	int old_pitch = work_pb.get_pitch();
 	int new_pitch = new_pb.get_pitch();
+
+	cl_int32 *actual_src_data = (cl_int32 *) work_pb.get_data();
+	actual_src_data += (rect.top * new_pitch) / 4;
+	actual_src_data += rect.left;
+
+	cl_int32 *actual_dest_data = (cl_int32 *) new_pb.get_data();
 
 	for (int ypos = 0; ypos < new_height; ypos++)
 	{
@@ -65,10 +74,10 @@ CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBufferRef &pb, int b
 		if (real_ypos >= old_height)
 			real_ypos = old_height-1;
 
-		int *src_data = (int *) work_pb.get_data();
+		cl_int32 *src_data = actual_src_data;
 		src_data += (old_pitch * real_ypos)/4;
 
-		int *dest_data = (int *) new_pb.get_data();
+		cl_int32 *dest_data = actual_dest_data;
 		dest_data += (new_pitch * ypos)/4;
 
 		for (int xpos = 0; xpos < new_width; xpos++)

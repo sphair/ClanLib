@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -67,7 +67,7 @@ void CL_Thread_Unix::start(CL_Runnable *runnable)
 	{
 		handle = 0;
 		handle_valid = false;
-		throw CL_Exception(cl_text("Unable to create new thread"));
+		throw CL_Exception("Unable to create new thread");
 	}
 	handle_valid = true;
 }

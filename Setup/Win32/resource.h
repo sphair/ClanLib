@@ -39,6 +39,7 @@
 #define IDC_COMPILERTARGET1             1017
 #define IDC_COMPILERTARGET2             1018
 #define IDC_COMPILERTARGET3             1019
+#define IDC_OUTPUT_LIB_BROWSE64         1019
 #define IDC_COMPILERTARGET4             1020
 #define IDC_RADIO_VC60                  1021
 #define IDC_RADIO_VC70                  1022
@@ -51,7 +52,8 @@
 #define IDC_RADIO_VC90                  1028
 #define IDC_CHECK_INCLUDE_NONUNICODE    1029
 #define IDC_CHECK_INCLUDE_X64           1030
-#define IDC_CHECK_INCLUDE_GL1         1031
+#define IDC_CHECK_INCLUDE_GL1           1031
+#define IDC_RADIO_VC100                 1032
 
 // Next default values for new objects
 // 
@@ -59,7 +61,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

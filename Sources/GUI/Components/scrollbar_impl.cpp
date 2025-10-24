@@ -287,12 +287,12 @@ void CL_ScrollBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_r
 void CL_ScrollBar_Impl::create_parts()
 {
 	part_component = CL_GUIThemePart(scrollbar);
-	part_button_decrement = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrollbutton.up") : cl_text("scrollbutton.left"));
-	part_button_increment = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrollbutton.down") : cl_text("scrollbutton.right"));
-	part_track_decrement = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrolltrack.up") : cl_text("scrolltrack.left"));
-	part_track_increment = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrolltrack.down") : cl_text("scrolltrack.right"));
-	part_thumb = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrollthumb.vertical") : cl_text("scrollthumb.horizontal"));
-	part_thumb_gripper = CL_GUIThemePart(scrollbar, vertical ? cl_text("scrollthumbgripper.vertical") : cl_text("scrollthumbgripper.horizontal"));
+	part_button_decrement = CL_GUIThemePart(scrollbar, vertical ? "scrollbutton.up" : "scrollbutton.left");
+	part_button_increment = CL_GUIThemePart(scrollbar, vertical ? "scrollbutton.down" : "scrollbutton.right");
+	part_track_decrement = CL_GUIThemePart(scrollbar, vertical ? "scrolltrack.up" : "scrolltrack.left");
+	part_track_increment = CL_GUIThemePart(scrollbar, vertical ? "scrolltrack.down" : "scrolltrack.right");
+	part_thumb = CL_GUIThemePart(scrollbar, vertical ? "scrollthumb.vertical" : "scrollthumb.horizontal");
+	part_thumb_gripper = CL_GUIThemePart(scrollbar, vertical ? "scrollthumbgripper.vertical" : "scrollthumbgripper.horizontal");
 
 	part_component.set_state(CssStr::disabled, !scrollbar->is_enabled());
 	part_button_decrement.set_state(CssStr::disabled, !scrollbar->is_enabled());

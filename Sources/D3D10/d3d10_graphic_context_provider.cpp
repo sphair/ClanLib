@@ -208,7 +208,7 @@ void CL_D3D10GraphicContextProvider::reset_primitives_array()
 {
 }
 
-void CL_D3D10GraphicContextProvider::draw_pixels(double x, double y, double zoom_x, double zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color)
+void CL_D3D10GraphicContextProvider::draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 }
 
@@ -224,7 +224,7 @@ void CL_D3D10GraphicContextProvider::clear(const CL_Colorf &color)
 {
 }
 
-void CL_D3D10GraphicContextProvider::clear_depth(double value)
+void CL_D3D10GraphicContextProvider::clear_depth(float value)
 {
 }
 

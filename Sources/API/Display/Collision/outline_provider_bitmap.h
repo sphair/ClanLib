@@ -38,7 +38,6 @@
 #include <vector>
 
 class CL_OutlineProviderBitmap_Generic;
-class CL_PixelBufferRef;
 
 /// \brief Bitmap outline provider.
 ///
@@ -52,9 +51,10 @@ class CL_API_DISPLAY CL_OutlineProviderBitmap : public CL_OutlineProvider
  public:
 	/// \brief Construct a contour
 	///
-	/// \param CL_PixelBufferRef *pbuf  PixelBuffer containing image data.
-	/// \param int alpha_limit  Minimum alpha value for a colliding pixel
-	CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit=128, bool get_insides=true);
+	/// \param pbuf  PixelBuffer containing image data.
+	/// \param alpha_limit  Minimum alpha value for a colliding pixel
+	/// \param get_insides Get Insides
+	CL_OutlineProviderBitmap(const CL_PixelBuffer &pbuf, int alpha_limit=128, bool get_insides=true);
 	~CL_OutlineProviderBitmap();
 
 /// \}

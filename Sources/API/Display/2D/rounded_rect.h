@@ -112,12 +112,6 @@ public:
 		const CL_Colorf &color,
 		CL_Origin origin=origin_top_left);
 
-	void draw(
-		CL_GraphicContext &gc,
-		const CL_Pointf &position,
-		const CL_Gradient &gradient,
-		CL_Origin origin=origin_top_left);
-
 	/// \brief Fill the rectangle
 	void fill(
 		CL_GraphicContext &gc,

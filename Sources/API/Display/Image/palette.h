@@ -50,12 +50,11 @@ class CL_API_DISPLAY CL_Palette
 public:
 	/// \brief Constructs a palette.
 	///
-	/// \param copy Integer array of ARGB8888 color components to use as initial palette.
 	CL_Palette() { return; }
 
 	/// \brief Constructs a Palette
 	///
-	/// \param copy = value
+	/// \param copy Integer array of ARGB8888 color components to use as initial palette.
 	CL_Palette(const unsigned int *copy) { memcpy(colors, copy, sizeof(int)*256); }
 
 /// \}

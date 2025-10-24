@@ -48,13 +48,13 @@ CL_D3D9GraphicContextProvider::CL_D3D9GraphicContextProvider(CL_D3D9DisplayWindo
 	CL_ComPtr<IDirect3DSurface9> surface;
 	HRESULT result = window->get_device()->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, surface.output_variable());
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to get D3D back buffer"));
+		throw CL_Exception("Unable to get D3D back buffer");
 	result = surface->GetDesc(&backbuffer_desc);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to get D3D back buffer surface description"));
+		throw CL_Exception("Unable to get D3D back buffer surface description");
 	result = window->get_device()->GetDeviceCaps(&caps);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to get D3D device capabilities"));
+		throw CL_Exception("Unable to get D3D device capabilities");
 
 }
 
@@ -67,7 +67,7 @@ CL_D3D9GraphicContextProvider::~CL_D3D9GraphicContextProvider()
 
 int CL_D3D9GraphicContextProvider::get_max_attributes()
 {
-	return -1;
+	return 8;
 }
 
 CL_Size CL_D3D9GraphicContextProvider::get_max_texture_size() const
@@ -139,6 +139,11 @@ CL_RenderBufferProvider *CL_D3D9GraphicContextProvider::alloc_render_buffer()
 	return 0;
 }
 
+CL_PixelBufferProvider *CL_D3D9GraphicContextProvider::alloc_pixel_buffer()
+{
+	return NULL;
+}
+
 CL_VertexArrayBufferProvider *CL_D3D9GraphicContextProvider::alloc_vertex_array_buffer()
 {
 	return new CL_D3D9VertexArrayBufferProvider(window);
@@ -153,7 +158,7 @@ void CL_D3D9GraphicContextProvider::set_program_object(CL_StandardProgram standa
 {
 }
 
-void CL_D3D9GraphicContextProvider::set_program_object(const CL_ProgramObject &program)
+void CL_D3D9GraphicContextProvider::set_program_object(const CL_ProgramObject &program, int program_matrix_flags)
 {
 }
 
@@ -169,7 +174,7 @@ void CL_D3D9GraphicContextProvider::reset_texture(int unit_index)
 {
 }
 
-void CL_D3D9GraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &buffer)
+void CL_D3D9GraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &w_buffer, const CL_FrameBuffer &r_buffer)
 {
 }
 
@@ -227,19 +232,19 @@ void CL_D3D9GraphicContextProvider::set_buffer_control(const CL_BufferControl &b
 void CL_D3D9GraphicContextProvider::set_pen(const CL_Pen &pen)
 {
 	float point_size = pen.get_point_size();
-	float max_point_size = pen.get_max_point_size();
-	float min_point_size = pen.get_min_point_size();
-	float a, b, c;
-	pen.get_point_distance_attenuation(a, b, c);
+//	float max_point_size = pen.get_max_point_size();
+//	float min_point_size = pen.get_min_point_size();
+//	float a, b, c;
+//	pen.get_point_distance_attenuation(a, b, c);
 
 	window->get_device()->SetRenderState(D3DRS_POINTSIZE, *((DWORD*) &point_size));
-	window->get_device()->SetRenderState(D3DRS_POINTSIZE_MAX, *((DWORD*) &max_point_size));
-	window->get_device()->SetRenderState(D3DRS_POINTSIZE_MIN, *((DWORD*) &min_point_size));
+//	window->get_device()->SetRenderState(D3DRS_POINTSIZE_MAX, *((DWORD*) &max_point_size));
+//	window->get_device()->SetRenderState(D3DRS_POINTSIZE_MIN, *((DWORD*) &min_point_size));
 	window->get_device()->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
-	window->get_device()->SetRenderState(D3DRS_POINTSCALE_A, *((DWORD*) &a));
-	window->get_device()->SetRenderState(D3DRS_POINTSCALE_B, *((DWORD*) &b));
-	window->get_device()->SetRenderState(D3DRS_POINTSCALE_C, *((DWORD*) &c));
-	window->get_device()->SetRenderState(D3DRS_POINTSPRITEENABLE, pen.is_using_point_sprites() ? TRUE : FALSE);
+//	window->get_device()->SetRenderState(D3DRS_POINTSCALE_A, *((DWORD*) &a));
+//	window->get_device()->SetRenderState(D3DRS_POINTSCALE_B, *((DWORD*) &b));
+//	window->get_device()->SetRenderState(D3DRS_POINTSCALE_C, *((DWORD*) &c));
+//	window->get_device()->SetRenderState(D3DRS_POINTSPRITEENABLE, pen.is_using_point_sprites() ? TRUE : FALSE);
 	window->get_device()->SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, pen.is_line_antialiased() ? TRUE : FALSE);
 /*
 	float get_point_fade_treshold_size() const;
@@ -302,18 +307,22 @@ void CL_D3D9GraphicContextProvider::set_primitives_array(const CL_PrimitivesArra
 
 	HRESULT result = window->get_device()->CreateVertexDeclaration(&vertex_elements[0], vertex_declaration.output_variable());
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to create vertex declaration"));
+		throw CL_Exception("Unable to create vertex declaration");
 
 	std::vector<StreamSource>::size_type pos, size = streams.size();
 	for (pos = 0; pos < size; pos++)
 	{
 		result = window->get_device()->SetStreamSource(pos, streams[pos].buffer, streams[pos].offset, streams[pos].stride);
 		if (FAILED(result))
-			throw CL_Exception(cl_text("Unable to set stream source"));
+			throw CL_Exception("Unable to set stream source");
 	}
 	result = window->get_device()->SetVertexDeclaration(vertex_declaration);
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to set vertex declaration"));
+		throw CL_Exception("Unable to set vertex declaration");
+}
+
+void CL_D3D9GraphicContextProvider::draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count)
+{
 }
 
 void CL_D3D9GraphicContextProvider::add_vertelement(const CL_PrimitivesArrayData::VertexData &data, BYTE usage, BYTE usage_index)
@@ -375,12 +384,12 @@ void CL_D3D9GraphicContextProvider::add_vertelement(const CL_PrimitivesArrayData
 	else
 	{
 		// todo: fill data into a dynamic vertex buffer
-		// throw CL_Exception(cl_text("Currently only vertex array buffers are supported in primitive arrays"));
+		// throw CL_Exception("Currently only vertex array buffers are supported in primitive arrays");
 /*
 		CL_ComPtr<IDirect3DVertexDeclaration9> vertex_buffer;
 		HRESULT result = window->get_device()->CreateVertexBuffer(size, D3DUSAGE_DYNAMIC, D3DUSAGE_WRITEONLY, D3DPOOL_DEFAULT, vertex_buffer.output_variable(), 0);
 		if (FAILED(result))
-			throw CL_Exception(cl_text("Unable to create vertex buffer"));
+			throw CL_Exception("Unable to create vertex buffer");
 */
 	}
 }
@@ -410,15 +419,9 @@ void CL_D3D9GraphicContextProvider::draw_primitives_array(CL_PrimitivesType type
 	case cl_triangles:
 		result = window->get_device()->DrawPrimitive(D3DPT_TRIANGLESTRIP, offset, num_vertices/3);
 		break;
-	case cl_quad_strip:
-		break;
-	case cl_quads:
-		break;
-	case cl_polygon:
-		break;
 	}
 	if (FAILED(result))
-		throw CL_Exception(cl_text("Unable to draw primitives array"));
+		throw CL_Exception("Unable to draw primitives array");
 }
 
 void CL_D3D9GraphicContextProvider::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices)
@@ -456,7 +459,7 @@ void CL_D3D9GraphicContextProvider::reset_primitives_array()
 	streams.clear();
 }
 
-void CL_D3D9GraphicContextProvider::draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color)
+void CL_D3D9GraphicContextProvider::draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 }
 
@@ -635,8 +638,6 @@ DWORD CL_D3D9GraphicContextProvider::to_d3d_blend_op(CL_BlendEquation blend_equa
 		return D3DBLENDOP_MIN;
 	case cl_blend_equation_max:
 		return D3DBLENDOP_MAX;
-	case cl_blend_equation_logic_op:
-		// Not supported by d3d9.  Remove from API?
 	default:
 		return 0;
 	}

@@ -34,8 +34,9 @@
 #include "API/Core/System/databuffer.h"
 #include <vector>
 
-class CL_PixelBufferRef;
+class CL_PixelBuffer;
 class CL_Point;
+class CL_Rect;
 class CL_DataBuffer;
 class CL_SpriteDescription;
 
@@ -72,11 +73,11 @@ public:
 
 private:
 	static HCURSOR create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
-	static CL_DataBuffer create_ico_file(const CL_PixelBufferRef &image);
-	static CL_DataBuffer create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot);
+	static CL_DataBuffer create_ico_file(const CL_PixelBuffer &image);
+	static CL_DataBuffer create_cur_file(const CL_PixelBuffer &image, const CL_Rect &rect, const CL_Point &hotspot);
 	static CL_DataBuffer create_ani_file(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
-	static CL_DataBuffer create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot);
-	static CL_DataBuffer create_ico_helper(const std::vector<CL_PixelBufferRef> &images, WORD type, const std::vector<CL_Point> &hotspots);
+	static CL_DataBuffer create_ico_helper(const CL_PixelBuffer &image, const CL_Rect &rect, WORD type, const CL_Point &hotspot);
+	static CL_DataBuffer create_ico_helper(const std::vector<CL_PixelBuffer> &images, const std::vector<CL_Rect> &rect, WORD type, const std::vector<CL_Point> &hotspots);
 	static void set_riff_header(char *data, const char *type, DWORD size);
 
 	struct ANIHeader

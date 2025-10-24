@@ -86,6 +86,9 @@ public:
 	bool is_minimized() const;
 	bool is_maximized() const;
 	bool is_visible() const;
+	CL_String get_title() const;
+	CL_Size get_minimum_size(bool client_area) const;
+	CL_Size get_maximum_size(bool client_area) const;
 	HWND get_hwnd() const { return hwnd; }
 	HDC get_device_context() const { return device_context; }
 	HGLRC get_opengl_context() const { return opengl_context; }

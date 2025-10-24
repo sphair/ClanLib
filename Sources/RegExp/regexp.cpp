@@ -150,7 +150,7 @@ void CL_RegExp::search(
 	int captures_count = 0;
 	int r = pcre_fullinfo(impl->code, impl->extra, PCRE_INFO_CAPTURECOUNT, &captures_count);
 	if (r != 0)
-		throw CL_Exception(cl_text("Regular expression error: Unable to get captures count"));
+		throw CL_Exception("Regular expression error: Unable to get captures count");
 	result.set_vector_size((captures_count+1)*3);
 		
 	r = pcre_exec(
@@ -179,33 +179,33 @@ void CL_RegExp::search(
 		switch (r)
 		{
 		case PCRE_ERROR_NULL:
-			throw CL_Exception(cl_text("Regular expression error: NULL pointer passed"));
+			throw CL_Exception("Regular expression error: NULL pointer passed");
 		case PCRE_ERROR_BADOPTION:
-			throw CL_Exception(cl_text("Regular expression error: Unrecognized bit was set in the options argument"));
+			throw CL_Exception("Regular expression error: Unrecognized bit was set in the options argument");
 		case PCRE_ERROR_BADMAGIC:
-			throw CL_Exception(cl_text("Regular expression error: Bad Magic! Accessing deleted CL_RegExp object?"));
+			throw CL_Exception("Regular expression error: Bad Magic! Accessing deleted CL_RegExp object?");
 		case PCRE_ERROR_UNKNOWN_NODE:
-			throw CL_Exception(cl_text("Regular expression error: While running the pattern match, an unknown item was encountered in the compiled pattern"));
+			throw CL_Exception("Regular expression error: While running the pattern match, an unknown item was encountered in the compiled pattern");
 		case PCRE_ERROR_NOMEMORY:
-			throw CL_Exception(cl_text("Regular expression error: Out of memory"));
+			throw CL_Exception("Regular expression error: Out of memory");
 		case PCRE_ERROR_NOSUBSTRING:
-			throw CL_Exception(cl_text("Regular expression error: No sub string found"));
+			throw CL_Exception("Regular expression error: No sub string found");
 		case PCRE_ERROR_MATCHLIMIT:
-			throw CL_Exception(cl_text("Regular expression error: Match recursion limit reached"));
+			throw CL_Exception("Regular expression error: Match recursion limit reached");
 		case PCRE_ERROR_CALLOUT:
-			throw CL_Exception(cl_text("Regular expression error: Error signalled from callout handler"));
+			throw CL_Exception("Regular expression error: Error signalled from callout handler");
 		case PCRE_ERROR_BADUTF8:
-			throw CL_Exception(cl_text("Regular expression error: A string that contains an invalid UTF-8 byte sequence was passed as a subject"));
+			throw CL_Exception("Regular expression error: A string that contains an invalid UTF-8 byte sequence was passed as a subject");
 		case PCRE_ERROR_BADUTF8_OFFSET:
-			throw CL_Exception(cl_text("Regular expression error: Start offset did not point to the beginning of a UTF-8 character"));
+			throw CL_Exception("Regular expression error: Start offset did not point to the beginning of a UTF-8 character");
 		case PCRE_ERROR_BADPARTIAL:
-			throw CL_Exception(cl_text("Regular expression error: Expression includes items not supported by partial matching"));
+			throw CL_Exception("Regular expression error: Expression includes items not supported by partial matching");
 		case PCRE_ERROR_INTERNAL:
-			throw CL_Exception(cl_text("Regular expression error: An unexpected internal error has occurred."));
+			throw CL_Exception("Regular expression error: An unexpected internal error has occurred.");
 		case PCRE_ERROR_BADCOUNT:
-			throw CL_Exception(cl_text("Regular expression error: The value of the ovecsize argument is negative"));
+			throw CL_Exception("Regular expression error: The value of the ovecsize argument is negative");
 		default:
-			throw CL_Exception(cl_text("Regular expression error: Unknown error"));
+			throw CL_Exception("Regular expression error: Unknown error");
 		}
 	}
 }
@@ -262,7 +262,7 @@ void CL_RegExp_Impl::compile(const char *expression, int compile_flags, bool stu
 		tableptr);
 	if (code == 0)
 	{
-		CL_TempStringFormat s(cl_text("Error in regular expression: %1 (at position %2)"));
+		CL_StringFormat s("Error in regular expression: %1 (at position %2)");
 		s.set_arg(1, error);
 		s.set_arg(2, error_offset);
 		throw CL_Exception(s.get_result());
@@ -277,7 +277,7 @@ void CL_RegExp_Impl::compile(const char *expression, int compile_flags, bool stu
 		// extra can be null if there's no extra data gained by the study.
 		if (extra == 0 && error != 0)
 		{
-			CL_TempStringFormat s(cl_text("Error studying regular expression: %1"));
+			CL_StringFormat s("Error studying regular expression: %1");
 			s.set_arg(1, error);
 			pcre_free(code);
 			code = 0;

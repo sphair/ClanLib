@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanGUI_System clanGUI System
@@ -44,6 +45,7 @@
 class CL_Size;
 class CL_Rect;
 class CL_CSSDocument;
+class CL_CSSLayout;
 class CL_GUIComponent;
 class CL_GUIMessage;
 class CL_GUITheme;
@@ -52,6 +54,8 @@ class CL_GUIManager_Impl;
 class CL_Font;
 class CL_FontDescription;
 class CL_VirtualDirectory;
+class CL_DisplayWindow;
+class CL_ResourceManager;
 
 /// \brief GUI manager.
 ///
@@ -60,21 +64,46 @@ class CL_API_GUI CL_GUIManager
 {
 /// \name Construction
 /// \{
-
 public:
+	/// \brief Constructs a gui manager
+	///
+	/// It is created using the CL_GUIWindowManagerSystem.\n
+	/// You will still require to specify a theme by calling: set_theme()
 	CL_GUIManager();
 
 	/// \brief Constructs a GUIManager
 	///
-	/// \param CL_GUIManager_Impl = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_GUIManager(CL_SharedPtr<CL_GUIManager_Impl> impl);
+
+	/// \brief Fully initializes a gui manager with a texture window manager, a css theme and resources.
+	///
+	/// \param display_window = display window to attach gui to.
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	///
+	/// \return Fully initialized gui manager.
+	CL_GUIManager(const CL_DisplayWindow &display_window, const CL_String &path_to_theme);
+
+	/// \brief Fully initializes a gui manager with a system window manager, a css theme and resources.
+	///
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	///
+	/// \return Fully initialized gui manager.
+	CL_GUIManager(const CL_String &path_to_theme);
+
+	/// \brief Fully initializes a gui manager with a custom window manager, a css theme and resources.
+	///
+	/// \param window_manager = Window manager
+	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
+	///
+	/// \return Fully initialized gui manager.
+	CL_GUIManager(CL_GUIWindowManager &window_manager, const CL_String &path_to_theme);
 
 	virtual ~CL_GUIManager();
 
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns true if the parent is the GUI manager.
 	bool is_gui_manager() const { return true; }
@@ -140,6 +169,18 @@ public:
 	/// \param directory = Virtual Directory
 	void set_css_document(const CL_String &filename, const CL_VirtualDirectory &directory);
 
+	/// \brief Adds additional resources to the GUI resource manager
+	void add_resources(const CL_ResourceManager &resources);
+
+	/// \brief Adds additional resources to the GUI resource manager, by creating a ResourceManager from file automatically.
+	void add_resources(const CL_String &filename);
+
+	/// \brief Adds additional resources to the GUI resource manager
+	void add_resources(const CL_String &filename, const CL_VirtualDirectory &directory);
+
+	/// \brief Load layout.
+	void initialize_layout_manager(const CL_String &xml_fullname, const CL_String &css_fullname);
+
 	/// \brief Sets the windows manager.
 	void set_window_manager(CL_GUIWindowManager &window_manager);
 
@@ -184,10 +225,18 @@ public:
 	/// \brief Set the accelerator table.
 	void set_accelerator_table(const CL_AcceleratorTable &table);
 
+	/// \brief Creates a css layout for a given component.
+	CL_CSSLayout create_layout(CL_GUIComponent *component);
+
+	/// \brief Checks if a component type has layout information available.
+	bool has_layout(CL_GUIComponent *component);
+
 /// \}
 /// \name Implementation
 /// \{
 private:
+	void initialize(CL_GUIWindowManager &window_manager, const CL_String & path_to_theme);
+
 	CL_SharedPtr<CL_GUIManager_Impl> impl;
 
 	friend class CL_GUIComponent_Impl;

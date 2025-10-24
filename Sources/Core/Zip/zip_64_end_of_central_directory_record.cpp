@@ -54,7 +54,7 @@ void CL_Zip64EndOfCentralDirectoryRecord::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x06064b50)
 	{
-		throw CL_Exception(cl_text("Incorrect Zip64 End of Central Directory Record signature"));
+		throw CL_Exception("Incorrect Zip64 End of Central Directory Record signature");
 	}
 	
 	size_of_record = input.read_int64();

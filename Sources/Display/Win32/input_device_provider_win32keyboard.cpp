@@ -77,13 +77,13 @@ float CL_InputDeviceProvider_Win32Keyboard::get_axis(int index) const
 CL_String CL_InputDeviceProvider_Win32Keyboard::get_name() const
 {
 	throw_if_disposed();
-	return cl_text("System Keyboard");
+	return "System Keyboard";
 }
 
 CL_String CL_InputDeviceProvider_Win32Keyboard::get_device_name() const
 {
 	throw_if_disposed();
-	return cl_text("System Keyboard");
+	return "System Keyboard";
 }
 
 int CL_InputDeviceProvider_Win32Keyboard::get_axis_count() const

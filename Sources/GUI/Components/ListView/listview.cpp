@@ -65,7 +65,7 @@
 CL_ListView::CL_ListView(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_ListView_Impl)
 {
-	set_type_name(cl_text("listview"));
+	set_type_name("listview");
 	set_focus_policy(focus_local);
 	impl->listview = this;
 
@@ -96,6 +96,18 @@ CL_ListView::~CL_ListView()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ListView Attributes:
+
+CL_ListView *CL_ListView::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ListView *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ListView*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ListView named item: %1", id));
+
+	return object;
+}
 
 CL_ListViewItem CL_ListView::get_document_item() const
 {
@@ -772,8 +784,8 @@ void CL_ListView_Impl::create_components()
 void CL_ListView_Impl::create_parts()
 {
 	part_component = CL_GUIThemePart(listview);
-	part_mouse_selection = CL_GUIThemePart(listview, cl_text("mouse_selection"));
-	part_columns_bg = CL_GUIThemePart(listview, cl_text("columns_bg"));
+	part_mouse_selection = CL_GUIThemePart(listview, "mouse_selection");
+	part_columns_bg = CL_GUIThemePart(listview, "columns_bg");
 
 	update_part_positions();
 }
@@ -970,7 +982,7 @@ void CL_ListView_Impl::edit_item(ListViewShownItem &si)
 	listview->request_repaint();
 }
 
-void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
+void CL_ListView_Impl::on_before_edit_item(CL_InputEvent &e)
 {
 	if (edited_item.is_null())
 		return;
@@ -979,8 +991,8 @@ void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
 	{
 		if (e.id == CL_KEY_RETURN)
 		{
-			CL_TempString col_id = header->get_first_column().get_column_id();
-			CL_TempString new_text = lineedit->get_text();
+			CL_String col_id = header->get_first_column().get_column_id();
+			CL_String new_text = lineedit->get_text();
 
 			bool apply_change = true;
 			if (!func_item_edited.is_null())
@@ -995,7 +1007,7 @@ void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
 			edited_item.impl->selected = true;
 			edited_item = CL_ListViewItem();
 
-			lineedit->set_text(cl_text(""));
+			lineedit->set_text("");
 			lineedit->set_visible(false);
 			lineedit->request_repaint();
 			listview->set_focus();
@@ -1009,7 +1021,7 @@ void CL_ListView_Impl::on_before_edit_item(CL_InputEvent e)
 	}
 }
 
-void CL_ListView_Impl::on_after_edit_item(CL_InputEvent e)
+void CL_ListView_Impl::on_after_edit_item(CL_InputEvent &e)
 {
 	CL_Rect rect = layout->get_lineedit_rect(edited_item, lineedit->get_text_size());
 
@@ -1035,7 +1047,7 @@ void CL_ListView_Impl::cancel_edit()
 	{
 		edited_item.impl->selected = true;
 		edited_item = CL_ListViewItem();
-		lineedit->set_text(cl_text(""));
+		lineedit->set_text("");
 		lineedit->set_visible(false);
 		listview->request_repaint();
 	}

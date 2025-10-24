@@ -33,6 +33,8 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 
+class CL_DataBuffer;
+
 class CL_FontEngine_Win32 : public CL_FontEngine
 {
 public:
@@ -40,10 +42,14 @@ public:
 	~CL_FontEngine_Win32();
 
 	CL_FontMetrics get_metrics();
-
 	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color);
 
 private:
+	CL_FontPixelBuffer get_font_glyph_lcd(int glyph, const CL_Colorf &color);
+	CL_FontPixelBuffer get_font_glyph_gray8(int glyph, const CL_Colorf &color);
+	CL_FontPixelBuffer get_font_glyph_mono(int glyph, const CL_Colorf &color);
+	bool try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, CL_DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics);
+	CL_FontPixelBuffer get_empty_font_glyph(int glyph);
 
 	HFONT handle;
 	TEXTMETRIC metrics;

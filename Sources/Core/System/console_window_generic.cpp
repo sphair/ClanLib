@@ -51,7 +51,7 @@ CL_ConsoleWindow_Generic::CL_ConsoleWindow_Generic(
 {
 #ifdef WIN32
 	AllocConsole();
-	SetConsoleTitle(title.c_str());
+	SetConsoleTitle(CL_StringHelp::utf8_to_ucs2(title).c_str());
 	COORD coord;
 	coord.X = width;
 	coord.Y = height;
@@ -64,7 +64,7 @@ CL_ConsoleWindow_Generic::CL_ConsoleWindow_Generic(
 			NULL);
 
 	if(scrbuf == INVALID_HANDLE_VALUE)
-		throw CL_Exception(cl_text("Unable to allocate console screen buffer"));
+		throw CL_Exception("Unable to allocate console screen buffer");
 
 	SetStdHandle(STD_OUTPUT_HANDLE, scrbuf);
 	SetConsoleActiveScreenBuffer(scrbuf);
@@ -104,7 +104,7 @@ void CL_ConsoleWindow_Generic::wait_for_key()
 void CL_ConsoleWindow_Generic::display_close_message()
 {
 #ifdef WIN32
-	CL_Console::write_line(cl_text("(press any key to close this console window)"));
+	CL_Console::write_line("(press any key to close this console window)");
 	CL_Console::wait_for_key();
 #endif
 }

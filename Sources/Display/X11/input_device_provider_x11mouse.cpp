@@ -111,14 +111,14 @@ CL_String CL_InputDeviceProvider_X11Mouse::get_key_name(int id) const
 {
 	switch (id)
 	{
-	case 0: return cl_text("Mouse left");
-	case 1: return cl_text("Mouse right");
-	case 2: return cl_text("Mouse middle");
-	case 3: return cl_text("Mouse wheel up");
-	case 4: return cl_text("Mouse wheel down");
+	case 0: return "Mouse left";
+	case 1: return "Mouse right";
+	case 2: return "Mouse middle";
+	case 3: return "Mouse wheel up";
+	case 4: return "Mouse wheel down";
 	}
 
-	return cl_format(cl_text("Mouse button %1"), id);
+	return cl_format("Mouse button %1", id);
 }
 
 float CL_InputDeviceProvider_X11Mouse::get_axis(int index) const
@@ -128,12 +128,12 @@ float CL_InputDeviceProvider_X11Mouse::get_axis(int index) const
 
 CL_String CL_InputDeviceProvider_X11Mouse::get_name() const
 {
-	return cl_text("System Mouse");
+	return "System Mouse";
 }
 
 CL_String CL_InputDeviceProvider_X11Mouse::get_device_name() const
 {
-	return cl_text("System Mouse");
+	return "System Mouse";
 }
 
 int CL_InputDeviceProvider_X11Mouse::get_axis_count() const

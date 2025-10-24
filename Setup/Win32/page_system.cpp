@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,33 +38,8 @@ PageSystem::PageSystem()
 	memset(path_input_include, 0, sizeof(TCHAR) * MAX_PATH);
 	memset(path_input_lib, 0, sizeof(TCHAR) * MAX_PATH);
 
-	HINSTANCE dll = LoadLibrary(TEXT("shell32.dll"));
-	if (dll != NULL)
-	{
-#ifdef UNICODE
-		FARPROC func = GetProcAddress(dll, "SHGetSpecialFolderPathW");
-#else
-		FARPROC func = GetProcAddress(dll, "SHGetSpecialFolderPathA");
-#endif
-		if (func != NULL)
-		{
-			FolderPathFunc GetSpecialFolderPath = (FolderPathFunc) func;
-
-			TCHAR path[MAX_PATH];
-			GetSpecialFolderPath(
-				NULL,
-				path,
-				CSIDL_PERSONAL,
-				FALSE);
-
-			_tcscpy(path_input_include, path);
-			_tcscat(path_input_include, TEXT("\\include"));
-			_tcscpy(path_input_lib, path);
-			_tcscat(path_input_lib, TEXT("\\lib"));
-		}
-
-		FreeLibrary(dll);
-	}
+	_tcscpy(path_input_include, TEXT("C:\\Development\\Environment\\ClanLib\\Include"));
+	_tcscpy(path_input_lib, TEXT("C:\\Development\\Environment\\ClanLib\\Lib"));
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(

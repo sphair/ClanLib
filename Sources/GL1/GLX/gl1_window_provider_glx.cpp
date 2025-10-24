@@ -186,12 +186,12 @@ CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
 		(glx.glXQueryExtensionsString == NULL) ||
 		(glx.glXCreateContext == NULL) )
 	{
-		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+		throw CL_Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
 	if ((glx.glXGetProcAddressARB == NULL) && (glx.glXGetProcAddress == NULL))
 	{
-		throw CL_Exception(cl_text("Cannot obtain required OpenGL GLX functions"));
+		throw CL_Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
 	x11_window.func_on_resized().set(this, &CL_GL1WindowProvider_GLX::on_window_resized);
@@ -462,7 +462,6 @@ void CL_GL1WindowProvider_GLX::update(const CL_Rect &_rect)
 	cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0, width, 0.0, height));
 	cl1MatrixMode(CL_MODELVIEW);
 	cl1LoadIdentity();
-	cl1Translated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 
 	CLboolean isDoubleBuffered = CL_TRUE;
 	cl1GetBooleanv(CL_DOUBLEBUFFER, &isDoubleBuffered);

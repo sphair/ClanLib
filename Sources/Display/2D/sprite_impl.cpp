@@ -28,7 +28,7 @@
 
 #include "Display/precomp.h"
 #include "sprite_impl.h"
-#include "sprite_render_batch.h"
+#include "render_batch2d.h"
 #include "API/Display/2D/sprite_description.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/Math/cl_math.h"
@@ -37,14 +37,6 @@
 #include "API/Core/XML/dom_element.h"
 #include "Display/Render/graphic_context_impl.h"
 #include <list>
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_SpriteData implementation:
-
-CL_SpriteData::CL_SpriteData(const CL_StringRef &resource_id, CL_ResourceManager *resources)
-{
-	//TODO: Use the resources :)
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Sprite_Impl construction:
@@ -90,23 +82,21 @@ CL_Sprite_Impl::~CL_Sprite_Impl()
 	delete prim_array;
 }
 
-void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, CL_SharedPtr<CL_SpriteData> sprite_data)
+void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc)
 {
-	data = sprite_data;
-
-//	bool pack_texture = resource.get_element().get_attribute(cl_text("pack_texture"), cl_text("yes")) == cl_text("yes");
+//	bool pack_texture = resource.get_element().get_attribute("pack_texture", "yes") == "yes";
 	CL_Resource resource = resources->get_resource(resource_id);
 
 	// Create sprite from sprite description
-	CL_SpriteDescription desc(gc, resource_id, resources);
+	CL_SpriteDescription desc(gc, resource_id, resources, import_desc );
 	create_textures(gc, desc);
 
 	// Load base angle
-	float work_angle = CL_StringHelp::text_to_float(resource.get_element().get_attribute(cl_text("base_angle"), cl_text("0")));
+	float work_angle = CL_StringHelp::text_to_float(resource.get_element().get_attribute("base_angle", "0"));
 	base_angle= CL_Angle(work_angle, cl_degrees);
 
 	// Load id
-	id = CL_StringHelp::text_to_int(resource.get_element().get_attribute(cl_text("id"), cl_text("0")));
+	id = CL_StringHelp::text_to_int(resource.get_element().get_attribute("id", "0"));
 
 	// Load play options	
 	CL_DomNode cur_node = resource.get_element().get_first_child();
@@ -120,121 +110,121 @@ void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id
 		CL_String tag_name = cur_element.get_tag_name();
 
 		// <color red="float" green="float" blue="float" alpha="float" />
-		if (tag_name == cl_text("color"))
+		if (tag_name == "color")
 		{
-			color.r = (float)CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("red"), cl_text("1.0")));
-			color.g = (float)CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("green"), cl_text("1.0")));
-			color.b = (float)CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("blue"), cl_text("1.0")));
-			color.a = (float)CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("alpha"), cl_text("1.0")));
+			color.r = (float)CL_StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
+			color.g = (float)CL_StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
+			color.b = (float)CL_StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
+			color.a = (float)CL_StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
 		}
 		// <animation speed="integer" loop="[yes,no]" pingpong="[yes,no]" direction="[backward,forward]" on_finish="[blank,last_frame,first_frame]"/>
-		else if (tag_name == cl_text("animation"))
+		else if (tag_name == "animation")
 		{
-			int delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("speed"), cl_text("60")));
+			int delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute("speed", "60"));
 
 			int frame_count = frames.size();
 			for(int i=0; i<frame_count; ++i)
 				get_frame(i)->delay_ms = delay_ms;
 
-			play_loop = ((cur_element.get_attribute(cl_text("loop"), cl_text("yes"))) == cl_text("yes"));
-			play_pingpong = ((cur_element.get_attribute(cl_text("pingpong"), cl_text("no"))) == cl_text("yes"));
-			play_backward = ((cur_element.get_attribute(cl_text("direction"), cl_text("forward"))) == cl_text("backward"));
+			play_loop = ((cur_element.get_attribute("loop", "yes")) == "yes");
+			play_pingpong = ((cur_element.get_attribute("pingpong", "no")) == "yes");
+			play_backward = ((cur_element.get_attribute("direction", "forward")) == "backward");
 
-			CL_String on_finish = cur_element.get_attribute(cl_text("on_finish"), cl_text("blank"));
-			if (on_finish == cl_text("first_frame"))
+			CL_String on_finish = cur_element.get_attribute("on_finish", "blank");
+			if (on_finish == "first_frame")
 				show_on_finish = CL_Sprite::show_first_frame;
-			else if(on_finish == cl_text("last_frame"))
+			else if(on_finish == "last_frame")
 				show_on_finish = CL_Sprite::show_last_frame;
 			else
 				show_on_finish = CL_Sprite::show_blank;
 		}
 		// <scale x="float" y="float />
-		else if (tag_name == cl_text("scale"))
+		else if (tag_name == "scale")
 		{
-			scale_x = CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("x"), cl_text("1.0")));
-			scale_y = CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("y"), cl_text("1.0")));
+			scale_x = CL_StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
+			scale_y = CL_StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
 		}
 		// <translation origin="string" x="integer" y="integer" />
-		else if (tag_name == cl_text("translation"))
+		else if (tag_name == "translation")
 		{
-			CL_String hotspot = cur_element.get_attribute(cl_text("origin"), cl_text("top_left"));
+			CL_String hotspot = cur_element.get_attribute("origin", "top_left");
 			CL_Origin origin;
 
-			if(hotspot == cl_text("center"))
+			if(hotspot == "center")
 				origin = origin_center;
-			else if(hotspot == cl_text("top_center"))
+			else if(hotspot == "top_center")
 				origin = origin_top_center;
-			else if(hotspot == cl_text("top_right"))
+			else if(hotspot == "top_right")
 				origin = origin_top_right;
-			else if(hotspot == cl_text("center_left"))
+			else if(hotspot == "center_left")
 				origin = origin_center_left;
-			else if(hotspot == cl_text("center_right"))
+			else if(hotspot == "center_right")
 				origin = origin_center_right;
-			else if(hotspot == cl_text("bottom_left"))
+			else if(hotspot == "bottom_left")
 				origin = origin_bottom_left;
-			else if(hotspot == cl_text("bottom_center"))
+			else if(hotspot == "bottom_center")
 				origin = origin_bottom_center;
-			else if(hotspot == cl_text("bottom_right"))
+			else if(hotspot == "bottom_right")
 				origin = origin_bottom_right;
 			else
 				origin = origin_top_left;
 
-			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("x"), cl_text("0")));
-			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("y"), cl_text("0")));
+			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
 
 			translation_origin = origin;
 			translation_hotspot.x = xoffset;
 			translation_hotspot.y = yoffset;
 		}
 		// <rotation origin="string" x="integer" y="integer" />
-		else if (tag_name == cl_text("rotation"))
+		else if (tag_name == "rotation")
 		{
-			CL_String hotspot = cur_element.get_attribute(cl_text("origin"), cl_text("center"));
+			CL_String hotspot = cur_element.get_attribute("origin", "center");
 			CL_Origin origin;
 
-			if(hotspot == cl_text("top_left"))
+			if(hotspot == "top_left")
 				origin = origin_top_left;
-			else if(hotspot == cl_text("top_center"))
+			else if(hotspot == "top_center")
 				origin = origin_top_center;
-			else if(hotspot == cl_text("top_right"))
+			else if(hotspot == "top_right")
 				origin = origin_top_right;
-			else if(hotspot == cl_text("center_left"))
+			else if(hotspot == "center_left")
 				origin = origin_center_left;
-			else if(hotspot == cl_text("center_right"))
+			else if(hotspot == "center_right")
 				origin = origin_center_right;
-			else if(hotspot == cl_text("bottom_left"))
+			else if(hotspot == "bottom_left")
 				origin = origin_bottom_left;
-			else if(hotspot == cl_text("bottom_center"))
+			else if(hotspot == "bottom_center")
 				origin = origin_bottom_center;
-			else if(hotspot == cl_text("bottom_right"))
+			else if(hotspot == "bottom_right")
 				origin = origin_bottom_right;
 			else
 				origin = origin_center;
 
-			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("x"), cl_text("0")));
-			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("y"), cl_text("0")));
+			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
 
 			rotation_origin = origin;
 			rotation_hotspot.x = xoffset;
 			rotation_hotspot.y = yoffset;
 		}
 		// <frame nr="integer" speed="integer" x="integer" y="integer" />
-		else if (tag_name == cl_text("frame"))
+		else if (tag_name == "frame")
 		{
-			int nr = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("nr"), cl_text("0")));
+			int nr = CL_StringHelp::text_to_int(cur_element.get_attribute("nr", "0"));
 
-			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("y"), cl_text("0")));
-			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("x"), cl_text("0")));
+			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
 
 			SpriteFrame *sptr = get_frame(nr);
 			if (sptr == NULL)
 			{
-				throw CL_Exception(cl_text("Invalid sprite frame index specified"));
+				throw CL_Exception("Invalid sprite frame index specified");
 			}
 
-			if (cur_element.has_attribute(cl_text("speed"))) 
+			if (cur_element.has_attribute("speed")) 
 			{
-				sptr->delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("speed"), cl_text("60")));
+				sptr->delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute("speed", "60"));
 			}
 
 			sptr->offset = CL_Point(xoffset, yoffset);
@@ -332,13 +322,11 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_R
 	float texture_width = frame.texture.get_width();
 	float texture_height = frame.texture.get_height();
 
-	float pixel_center = linear_filter ? cl_pixelcenter_constant : 0.0f;
-
 	CL_Rectf new_src(
-		(src.left + pixel_center) / texture_width,
-		(src.top + pixel_center) / texture_height,
-		(src.right + pixel_center) / texture_width,
-		(src.bottom + pixel_center) / texture_height
+		(src.left) / texture_width,
+		(src.top) / texture_height,
+		(src.right) / texture_width,
+		(src.bottom) / texture_height
 		);
 
 	params1.texture_position[0].x = new_src.left;
@@ -395,7 +383,7 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 
 void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Surface_DrawParams1 &params1)
 {
-	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
+	CL_RenderBatcherSprite *batcher = gc.impl->current_internal_batcher;
 	batcher->draw_sprite(gc, &params1, frames[current_frame].texture);
 }
 
@@ -518,17 +506,15 @@ void CL_Sprite_Impl::draw_calcs_step2(
 	float texture_width = texture.get_width();
 	float texture_height = texture.get_height();
 
-	float pixel_center = linear_filter ? cl_pixelcenter_constant : 0.0f;
+	params1.texture_position[0].x = (((float) params2.srcX) ) / texture_width;
+	params1.texture_position[1].x = (((float) params2.srcX+params2.srcWidth) ) / texture_width;
+	params1.texture_position[2].x = (((float) params2.srcX) ) / texture_width;
+	params1.texture_position[3].x = (((float) params2.srcX+params2.srcWidth) ) / texture_width;
 
-	params1.texture_position[0].x = (((float) params2.srcX) + pixel_center ) / texture_width;
-	params1.texture_position[1].x = (((float) params2.srcX+params2.srcWidth) + pixel_center ) / texture_width;
-	params1.texture_position[2].x = (((float) params2.srcX) + pixel_center ) / texture_width;
-	params1.texture_position[3].x = (((float) params2.srcX+params2.srcWidth) + pixel_center ) / texture_width;
-
-	params1.texture_position[0].y = (((float) params2.srcY) + pixel_center ) / texture_height;
-	params1.texture_position[1].y = (((float) params2.srcY) + pixel_center ) / texture_height;
-	params1.texture_position[2].y = (((float) params2.srcY+params2.srcHeight) + pixel_center ) / texture_height;
-	params1.texture_position[3].y = (((float) params2.srcY+params2.srcHeight) + pixel_center ) / texture_height;
+	params1.texture_position[0].y = (((float) params2.srcY) ) / texture_height;
+	params1.texture_position[1].y = (((float) params2.srcY) ) / texture_height;
+	params1.texture_position[2].y = (((float) params2.srcY+params2.srcHeight) ) / texture_height;
+	params1.texture_position[3].y = (((float) params2.srcY+params2.srcHeight) ) / texture_height;
 
 	// Calculate final destination rectangle points for surface rectangle:
 	if (params2.rotate_angle.to_radians() == 0.0f)
@@ -684,7 +670,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 				description_frame.rect.get_height() <= texture_group.get_texture_sizes().height)
 			{
 				CL_Subtexture subtexture = texture_group.add(gc, description_frame.rect.get_size());
-				subtexture.get_texture().set_subimage(subtexture.get_geometry().get_top_left(), image.get_subimage(description_frame.rect));
+				subtexture.get_texture().set_subimage(subtexture.get_geometry().get_top_left(), image, description_frame.rect);
 				subtexture.get_texture().set_mag_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 				subtexture.get_texture().set_min_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 
@@ -705,7 +691,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 				int texture_height = height;
 
 				CL_Texture texture(gc, texture_width, texture_height);
-				texture.set_subimage(CL_Point(0,0), image.get_subimage(description_frame.rect));
+				texture.set_subimage(CL_Point(0,0), image, description_frame.rect);
 				texture.set_mag_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 				texture.set_min_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 

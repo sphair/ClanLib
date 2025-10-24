@@ -43,9 +43,6 @@ public:
 	/// \brief Construct initial directory scanner.
 	CL_DirectoryScanner_Win32();
 
-	/// \brief Copy constructor.
-	CL_DirectoryScanner_Win32(const CL_DirectoryScanner_Win32 &copy);
-
 	virtual ~CL_DirectoryScanner_Win32();
 
 

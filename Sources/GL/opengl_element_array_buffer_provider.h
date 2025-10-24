@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -32,10 +33,11 @@
 #include "API/Display/TargetProviders/element_array_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
+#include "opengl_buffer_object_provider.h"
 
 class CL_OpenGLGraphicContextProvider;
 
-class CL_OpenGLElementArrayBufferProvider : public CL_ElementArrayBufferProvider, CL_DisposableObject
+class CL_OpenGLElementArrayBufferProvider : public CL_ElementArrayBufferProvider
 {
 /// \name Construction
 /// \{
@@ -57,9 +59,9 @@ public:
 /// \{
 
 public:
-	void *get_data();
+	void *get_data() { return buffer.get_data(); }
 
-	CLuint get_handle() const { return handle; }
+	CLuint get_handle() const { return buffer.get_handle(); }
 
 
 /// \}
@@ -67,11 +69,11 @@ public:
 /// \{
 
 public:
-	void lock(CL_BufferAccess access);
+	void lock(CL_BufferAccess access) { buffer.lock(access); }
 
-	void unlock();
+	void unlock() { buffer.unlock(); }
 
-	void upload_data(int offset, void *data, int size);
+	void upload_data(int offset, void *data, int size) { buffer.upload_data(offset,data, size); }
 
 
 /// \}
@@ -79,17 +81,8 @@ public:
 /// \{
 
 private:
-	void on_dispose();
-	CLenum to_enum(CL_BufferUsage usage) const;
+	CL_OpenGLBufferObjectProvider buffer;
 
-	CLenum to_enum(CL_BufferAccess access) const;
-
-	CL_OpenGLGraphicContextProvider *gc_provider;
-
-	CLuint handle;
-
-	void *data_ptr;
 /// \}
 };
-
 

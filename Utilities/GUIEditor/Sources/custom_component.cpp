@@ -49,7 +49,7 @@ public:
 CustomComponent::CustomComponent(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CustomComponent_Impl())
 {
-	set_type_name(cl_text("CustomComponent"));
+	set_type_name("CustomComponent");
 	func_process_message().set(impl.get(), &CustomComponent_Impl::on_process_message);
 	func_render().set(impl.get(), &CustomComponent_Impl::on_render);
 	func_resized().set(impl.get(), &CustomComponent_Impl::on_resized);

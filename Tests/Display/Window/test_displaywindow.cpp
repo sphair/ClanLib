@@ -54,7 +54,7 @@ void TestApp::test_display_window(void)
 	desc_1.set_topmost(false);
 	desc_1.set_tool_window(false);
 	desc_1.set_drop_shadow(false);
-	desc_1.set_title(cl_text("Window 1"));
+	desc_1.set_title("Window 1");
 	CL_Rect window_1_rect = CL_Rect(window_1_xpos, window_1_ypos, window_1_width + window_1_xpos, window_1_height + window_1_ypos);
 	desc_1.set_position(window_1_rect, false);
 	CL_Rect window_1_viewport_rect = CL_Rect(0, 0, window_1_width - border_size.right + border_size.left, window_1_height - border_size.bottom + border_size.top);
@@ -64,7 +64,7 @@ void TestApp::test_display_window(void)
 	desc_2.set_topmost(false);
 	desc_2.set_tool_window(false);
 	desc_2.set_drop_shadow(false);
-	desc_2.set_title(cl_text("Window 2"));
+	desc_2.set_title("Window 2");
 	CL_Rect window_2_rect = CL_Rect(window_2_xpos, window_2_ypos, window_2_width + window_2_xpos, window_2_height + window_2_ypos);
 	desc_2.set_position(window_2_rect, false);
 	CL_Rect window_2_viewport_rect = CL_Rect(0, 0, window_2_width, window_2_height);
@@ -208,13 +208,13 @@ void TestApp::test_display_window(void)
 	CL_Console::write_line("   Function: void set_clipboard_text(const CL_StringRef &text);");
 	CL_Console::write_line("   Function: bool is_clipboard_text_available() const");
 	CL_Console::write_line("   Function: CL_String get_clipboard_text() const");
-	window_1.set_clipboard_text(cl_text("Hello World"));
+	window_1.set_clipboard_text("Hello World");
 
 //NOTE: This test will not work on linux, as the CL_KeepAlive::process() needs operating during is_clipboard_text_available()
 	CL_KeepAlive::process();
 	if (!window_2.is_clipboard_text_available()) fail();
 	CL_String text = window_2.get_clipboard_text();
 
-	if (text != cl_text("Hello World")) fail();
+	if (text != "Hello World") fail();
 	CL_Console::write_line(" * Ensure \"Hello World\" is in the clipboard *");
 }

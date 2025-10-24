@@ -101,6 +101,11 @@ public:
 	/// \brief enable = true = enable
 	void set_draggable(bool enable = true);
 
+	using CL_GUIComponent::set_layout;
+
+	/// \brief Sets the theme layout for this component
+	void set_layout(CL_CSSLayout layout);
+
 /// \}
 /// \name Implementation
 /// \{

@@ -41,6 +41,7 @@ CL_DomImplementation::CL_DomImplementation()
 
 CL_DomImplementation::CL_DomImplementation(CL_DomDocument &doc)
 {
+	throw CL_Exception("FIXME: Create impl and handle doc"); 
 }
 
 CL_DomImplementation::~CL_DomImplementation()
@@ -58,9 +59,9 @@ bool CL_DomImplementation::has_feature(
 	const CL_DomString &feature,
 	const CL_DomString &version)
 {
-	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0 && (version == cl_text("1.0") || version.empty()))
+	if (CL_StringHelp::compare(feature, "xml") == 0 && (version == "1.0" || version.empty()))
 		return true;
-	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0 && (version == cl_text("2.0") || version.empty()))
+	if (CL_StringHelp::compare(feature, "xml") == 0 && (version == "2.0" || version.empty()))
 		return true;
 	return false;
 }

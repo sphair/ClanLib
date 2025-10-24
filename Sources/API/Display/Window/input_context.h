@@ -50,11 +50,6 @@ public:
 	/// \brief Constructs an input context.
 	CL_InputContext();
 
-	/// \brief Constructs a InputContext
-	///
-	/// \param copy = Input Context
-	CL_InputContext(const CL_InputContext &copy);
-
 	~CL_InputContext();
 
 /// \}

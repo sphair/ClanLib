@@ -42,17 +42,13 @@ CL_SqliteCommandProvider::CL_SqliteCommandProvider(CL_SqliteConnectionProvider *
 : connection(connection), text(text), vm(0), last_insert_rowid(-1)
 {
 	CL_String t = text;
-	if (t.empty() || t[t.length()-1] != cl_text(';'))
-		t += cl_text(";");
+	if (t.empty() || t[t.length()-1] != ';')
+		t += ";";
 	const CL_String::char_type *tail = 0;
 	int result;
 	for (int i = 0; i < 1000; i++)
 	{
-#ifdef UNICODE
-		result = sqlite3_prepare16(connection->db, t.data(), t.length()*sizeof(CL_String::char_type), &vm, (const void **) &tail);
-#else
 		result = sqlite3_prepare(connection->db, t.data(), t.length()*sizeof(CL_String::char_type), &vm, (const char **) &tail);
-#endif
 		if (result != SQLITE_BUSY)
 			break;
 		CL_System::sleep(1);
@@ -96,11 +92,7 @@ int CL_SqliteCommandProvider::get_output_last_insert_rowid() const
 
 void CL_SqliteCommandProvider::set_input_parameter_string(int index, const CL_StringRef &value)
 {
-#ifdef UNICODE
-	int result = sqlite3_bind_text16(vm, index, value.data(), value.length()*sizeof(wchar_t), SQLITE_TRANSIENT);
-#else
 	int result = sqlite3_bind_text(vm, index, value.data(), value.length(), SQLITE_TRANSIENT);
-#endif
 	throw_if_failed(result);
 }
 

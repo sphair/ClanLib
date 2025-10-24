@@ -70,17 +70,7 @@ void CL_GL1FrameBufferProvider::on_dispose()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1FrameBufferProvider Attributes:
 
-CLuint CL_GL1FrameBufferProvider::get_draw_handle()
-{
-	return 0;
-}
-
-CLuint CL_GL1FrameBufferProvider::get_read_handle()
-{
-	return 0;
-}
-
-CL_Size CL_GL1FrameBufferProvider::get_attachment_size(int buffer_id) const
+CL_Size CL_GL1FrameBufferProvider::get_size() const
 {
 	if (selected_surface.is_null())
 	{
@@ -89,10 +79,9 @@ CL_Size CL_GL1FrameBufferProvider::get_attachment_size(int buffer_id) const
 	return selected_surface.get_size();
 }
 
-const std::vector<int> &CL_GL1FrameBufferProvider::get_attachment_indexes() const
+CL_FrameBufferBindTarget CL_GL1FrameBufferProvider::get_bind_target() const
 {
-	static std::vector<int> empty;
-	return empty;
+	return cl_framebuffer_draw;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -113,7 +102,7 @@ void CL_GL1FrameBufferProvider::start()
 {
 	if (pbuffer.is_null())
 	{
-		throw CL_Exception(cl_text("GL1 Framebuffer does not contain a texture"));
+		throw CL_Exception("GL1 Framebuffer does not contain a texture");
 	}
 }
 
@@ -124,8 +113,11 @@ void CL_GL1FrameBufferProvider::stop()
 
 void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer)
 {
-	throw CL_Exception(cl_text("GL1 RenderBuffers are not supported"));
+	throw CL_Exception("GL1 RenderBuffers are not supported");
+}
 
+void CL_GL1FrameBufferProvider::detach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer)
+{
 }
 
 void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, int level, int zoffset)
@@ -141,7 +133,7 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 	CL_GL1TextureProvider *texture_provider = dynamic_cast<CL_GL1TextureProvider *> (texture.get_provider());
 	if (texture_provider == NULL)
 	{
-		throw CL_Exception(cl_text("Selected texture is not a GL1 texture"));
+		throw CL_Exception("Selected texture is not a GL1 texture");
 	}
 
 	CL_Size surface_size = texture_provider->get_surface_size();
@@ -185,38 +177,35 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 
 void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
 {
-	throw CL_Exception(cl_text("Implement me"));
+	throw CL_Exception("Implement me");
 }
-
 
 void CL_GL1FrameBufferProvider::detach_color_buffer(int color_buffer, const CL_Texture &texture, int level, int zoffset)
 {
 	detach_all();
 }
 
-void CL_GL1FrameBufferProvider::attach_stencil_buffer(const CL_RenderBuffer &render_buffer)
-{
-	throw CL_Exception(cl_text("Implement me"));
-}
+void CL_GL1FrameBufferProvider::attach_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::detach_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::detach_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
 
-void CL_GL1FrameBufferProvider::detach_stencil_buffer()
-{
-	throw CL_Exception(cl_text("Implement me"));
-}
+void CL_GL1FrameBufferProvider::attach_depth_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::detach_depth_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::detach_depth_buffer(const CL_Texture &texture, int level, int zoffset) {}
 
-void CL_GL1FrameBufferProvider::attach_depth_buffer(const CL_RenderBuffer &render_buffer)
-{
-	throw CL_Exception(cl_text("Implement me"));
-}
+void CL_GL1FrameBufferProvider::attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
+void CL_GL1FrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
+void CL_GL1FrameBufferProvider::detach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
 
-void CL_GL1FrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level , int zoffset )
+void CL_GL1FrameBufferProvider::set_bind_target(CL_FrameBufferBindTarget target)
 {
-	throw CL_Exception(cl_text("Implement me"));
-}
-
-void CL_GL1FrameBufferProvider::detach_depth_buffer()
-{
-	throw CL_Exception(cl_text("Implement me"));
+	throw CL_Exception("Implement Me");
 }
 
 /////////////////////////////////////////////////////////////////////////////

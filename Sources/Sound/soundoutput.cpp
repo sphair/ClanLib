@@ -101,10 +101,6 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 	CL_Sound::select_output(*this);
 }
 
-CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput &copy) : impl(copy.impl)
-{
-}
-
 CL_SoundOutput::~CL_SoundOutput()
 {
 }
@@ -115,6 +111,12 @@ CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl)
 }
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput attributes:
+
+void CL_SoundOutput::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_SoundOutput is null");
+}
 
 const CL_String8 &CL_SoundOutput::get_name() const
 {

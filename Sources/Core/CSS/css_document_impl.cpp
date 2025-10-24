@@ -37,22 +37,13 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/CSS/css_property.h"
-#include "API/Core/CSS/css_selector.h"
+#include "css_selector.h"
 #include "css_document_impl.h"
 #include <cstring>
 
 #ifndef WIN32
 #define stricmp strcasecmp
 #endif
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument_Impl Construction:
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument_Impl Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument_Impl Operations:
 
 void CL_CSSDocument_Impl::load(const CL_String &filename, const CL_VirtualDirectory &directory)
 {
@@ -64,7 +55,7 @@ void CL_CSSDocument_Impl::load(const CL_String &filename, const CL_VirtualDirect
 
 	int size = input.get_size();
 	if (size < 0)
-		throw CL_Exception(cl_text("IODevice does not support get_size()"));
+		throw CL_Exception("IODevice does not support get_size()");
 	CL_DataBuffer data(size);
 	int bytes_read = input.read(data.get_data(), data.get_size());
 	data.set_size(bytes_read);
@@ -104,7 +95,7 @@ void CL_CSSDocument_Impl::load(const CL_StringRef &path, CL_IODevice &input)
 
 	int size = input.get_size();
 	if (size < 0)
-		throw CL_Exception(cl_text("IODevice does not support get_size()"));
+		throw CL_Exception("IODevice does not support get_size()");
 	CL_DataBuffer data(size);
 	int bytes_read = input.read(data.get_data(), data.get_size());
 	data.set_size(bytes_read);
@@ -148,10 +139,6 @@ int CL_CSSDocument_Impl::load_import(unsigned char *data, int pos, int length, c
 	CL_String8 import_utf8((char *) data+block_start, block_end-block_start);
 	CL_String import_text = CL_StringHelp::trim(CL_StringHelp::utf8_to_text(import_utf8));
 
-	CL_CSSImport import;
-	import.set_value(import_text);
-	imports.push_back(import);
-
 	// Create the file fullname using the previous filename path
 	CL_String fullname = CL_PathHelp::get_fullname(last_path, import_text, CL_PathHelp::path_type_file);
 	fullname = CL_PathHelp::normalize(fullname, CL_PathHelp::path_type_file);
@@ -170,12 +157,8 @@ int CL_CSSDocument_Impl::load_import(unsigned char *data, int pos, int length, c
 	CL_String8 import_utf8((char *) data+block_start, block_end-block_start);
 	CL_String import_text = CL_StringHelp::trim(CL_StringHelp::utf8_to_text(import_utf8));
 
-	CL_CSSImport import;
-	import.set_value(import_text);
-	imports.push_back(import);
-
-	CL_TempString inc_fullname = path + import_text;
-	CL_TempString inc_path = CL_PathHelp::get_fullpath(inc_fullname, CL_PathHelp::path_type_file);
+	CL_String inc_fullname = path + import_text;
+	CL_String inc_path = CL_PathHelp::get_fullpath(inc_fullname, CL_PathHelp::path_type_file);
 
 	CL_IODevice iodevice = CL_File(inc_fullname);
 		
@@ -203,18 +186,18 @@ int CL_CSSDocument_Impl::load_ruleset(unsigned char *data, int pos, int length)
 		CL_CSSSelector selector;
 		while (true)
 		{
-			CL_String::size_type split_pos = selector_text.find_first_of(cl_text(" \t\r\n"));
+			CL_String::size_type split_pos = selector_text.find_first_of(" \t\r\n");
 			if (split_pos == CL_String::npos)
 				break;
 
 			CL_String element = selector_text.substr(0, split_pos);
-			selector.add_path_element(element);
+			selector.path_elements.push_back(element);
 			selector_text = CL_StringHelp::trim(selector_text.substr(split_pos));
 		}
 		if (selector_text.empty())
-			throw CL_Exception(cl_format(cl_text("Unexpected character '%1' at position %2"), CL_StringHelp::local8_to_text(CL_String8(1, data[pos])), pos));
-		selector.add_path_element(selector_text);
-		ruleset.add_selector(selector);
+			throw CL_Exception(cl_format("Unexpected character '%1' at position %2", CL_String8(1, data[pos]), pos));
+		selector.path_elements.push_back(selector_text);
+		ruleset.selectors.push_back(selector);
 
 		if (data[pos++] == '{')
 			break;
@@ -235,7 +218,7 @@ int CL_CSSDocument_Impl::load_ruleset(unsigned char *data, int pos, int length)
 		if (data[pos-1] == ':')
 		{
 			if (name_text.empty())
-				throw CL_Exception(cl_format(cl_text("Unexpected ':' at position %1"), pos));
+				throw CL_Exception(cl_format("Unexpected ':' at position %1", pos));
 
 			int value_start, value_end;
 			value_start = pos;
@@ -260,11 +243,11 @@ int CL_CSSDocument_Impl::load_ruleset(unsigned char *data, int pos, int length)
 			CL_CSSProperty property;
 			property.set_name(name_text);
 			property.set_value(value_text);
-			if (CL_StringHelp::compare(priority_text, cl_text("important"), true) == 0)
+			if (CL_StringHelp::compare(priority_text, "important", true) == 0)
 				property.set_priority(CL_CSSProperty::priority_important);
 			else
 				property.set_priority(CL_CSSProperty::priority_normal);
-			ruleset.add_property(property);
+			ruleset.properties.push_back(property);
 
 			if (data[pos++] == '}')
 				break;
@@ -272,7 +255,7 @@ int CL_CSSDocument_Impl::load_ruleset(unsigned char *data, int pos, int length)
 		else if (data[pos-1] == ';')
 		{
 			if (!name_text.empty())
-				throw CL_Exception(cl_format(cl_text("Unexpected ';' at position %1"), pos));
+				throw CL_Exception(cl_format("Unexpected ';' at position %1", pos));
 		}
 		else
 		{
@@ -289,10 +272,10 @@ int CL_CSSDocument_Impl::load_keyword(const char *keyword, unsigned char *data, 
 {
 	int keyword_len = strlen(keyword);
 	if (pos+keyword_len > length)
-		throw CL_Exception(cl_format(cl_text("Expected %1 at position %2"), keyword, pos));
+		throw CL_Exception(cl_format("Expected %1 at position %2", keyword, pos));
 	CL_String8 s((char *) data+pos, keyword_len);
 	if (CL_StringHelp::compare(keyword, s, true) != 0)
-		throw CL_Exception(cl_format(cl_text("Expected %1 at position %2"), keyword, pos));
+		throw CL_Exception(cl_format("Expected %1 at position %2", keyword, pos));
 	return pos + keyword_len;
 }
 
@@ -339,7 +322,7 @@ int CL_CSSDocument_Impl::load_until(const char *chars, unsigned char *data, int 
 			break;
 		}
 	}
-	throw CL_Exception(cl_format(cl_text("Premature end of file while looking for one of %1"), chars));
+	throw CL_Exception(cl_format("Premature end of file while looking for one of %1", chars));
 	return pos;
 }
 
@@ -382,10 +365,48 @@ void CL_CSSDocument_Impl::whitespace_comments(unsigned char *data, unsigned int 
 	}
 }
 
-void CL_CSSDocument_Impl::save(CL_IODevice &output)
+unsigned int CL_CSSDocument_Impl::style_load_until(const CL_StringRef::char_type *chars, const CL_StringRef &style_text, unsigned int pos)
 {
-	throw CL_Exception(cl_text("CL_CSSDocument::save not implemented yet"));
-}
+	bool quotes1 = false;
+	bool quotes2 = false;
+	int level = 0;
+	while (pos < style_text.length())
+	{
+		if (level == 0 && quotes1 == false && quotes2 == false)
+		{
+			for (int i = 0; chars[i] != 0; i++)
+			{
+				if (style_text[pos] == chars[i])
+					return pos;
+			}
+		}
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument_Impl Implementation:
+		switch (style_text[pos++])
+		{
+		case '"':
+			quotes1 = !quotes1;
+			break;
+		case '\'':
+			quotes2 = !quotes2;
+			break;
+		case '(':
+		case '{':
+		case '[':
+			if (quotes1 || quotes2)
+				break;
+			level++;
+			break;
+		case ')':
+		case '}':
+		case ']':
+			if (quotes1 || quotes2)
+				break;
+			level--;
+			break;
+		case '\\':
+			pos++;
+			break;
+		}
+	}
+	return pos;
+}

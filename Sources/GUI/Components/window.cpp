@@ -35,20 +35,21 @@
 #include "API/GUI/gui_message_activation_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
-#include "API/GUI/gui_window_manager.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/GUI/Components/window.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_window_manager.h"
+#include "API/GUI/Components/window.h"
 #include "API/Display/2D/draw.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
+#include "API/CSSLayout/css_layout.h"
+#include "API/CSSLayout/css_layout_element.h"
 #include "../gui_component_impl.h"
 #include "../gui_manager_impl.h"
 #include "../gui_css_strings.h"
-#include "API/GUI/gui_window_manager.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Window_Impl Class:
@@ -58,7 +59,7 @@ class CL_Window_Impl
 public:
 	CL_Window_Impl() : draw_decorations(false), draw_start(false), draggable(false)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	void check_move_window(CL_GUIMessage &msg);
@@ -88,6 +89,7 @@ public:
 	bool draggable;
 
 	CL_Rect part_buttonclose_rect;
+	CL_Rect part_caption_rect;
 
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_caption;
@@ -96,6 +98,8 @@ public:
 	CL_GUIThemePart part_framebottom;
 	CL_GUIThemePart part_buttonclose;
 	CL_GUIThemePartProperty prop_text_color;
+
+	CL_CSSLayout css_layout;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,6 +123,9 @@ CL_Window::CL_Window(CL_GUIComponent *owner, const CL_GUITopLevelDescription &de
 
 	set_type_name(CssStr::Window::type_name);
 
+	if(get_gui_manager().has_layout(this))
+		set_layout(get_gui_manager().create_layout(this));
+
 	impl->create_parts();
 }
 
@@ -139,6 +146,9 @@ CL_Window::CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &de
 	func_resized().set(impl.get(), &CL_Window_Impl::on_resized);
 
 	set_type_name(CssStr::Window::type_name);
+
+	if(get_gui_manager().has_layout(this))
+		set_layout(get_gui_manager().create_layout(this));
 
 	impl->create_parts();
 }
@@ -229,6 +239,12 @@ void CL_Window::bring_to_front()
 	}
 }
 
+void CL_Window::set_layout(CL_CSSLayout layout)
+{
+	impl->css_layout = layout;
+	impl->create_parts();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Window Implementation:
 
@@ -252,12 +268,20 @@ void CL_Window_Impl::create_parts()
 		int frameright_width = part_frameright.get_preferred_width();
 		int caption_height = part_caption.get_preferred_height();
 
-		// TODO: Instead of -2 and -3, use some sort of caption content area
 		part_buttonclose_rect = CL_Rect(rect.right - part_buttonclose_size.width - frameright_width - 2, rect.top + caption_height - part_buttonclose_size.height - 3, rect.right - frameright_width - 2, rect.top + caption_height - 3);
 	}
 
 	font = part_component.get_font();
 	text_color = part_component.get_property(prop_text_color);
+
+	if (!css_layout.is_null())
+	{
+		CL_GraphicContext gc = window->get_gc();
+		css_layout.layout(gc, window->get_size());
+
+		part_buttonclose_rect = css_layout.find_element("close").get_content_box();
+		part_caption_rect = css_layout.find_element("caption").get_content_box();
+	}
 }
 
 void CL_Window_Impl::on_style_changed()
@@ -393,6 +417,9 @@ void CL_Window_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect
 	{
 		part_component.render_box(gc, rect, update_rect);
 	}
+
+	if (!css_layout.is_null())
+		css_layout.render(gc);
 }
 
 void CL_Window_Impl::check_move_window(CL_GUIMessage &msg)

@@ -39,7 +39,8 @@
 #endif
 
 template<typename T> inline T cl_pow2(T value) { return value*value; }
-template<typename T> T cl_min(T a, T b) { if(a < b) return a; return b; }
-template<typename T> T cl_max(T a, T b) { if(a > b) return a; return b; }
+template<typename A, typename B> inline A cl_min(A a, B b) { return a < b ? a : b; }
+template<typename A, typename B> inline A cl_max(A a, B b) { return a > b ? a : b; }
 
 /// \}
+

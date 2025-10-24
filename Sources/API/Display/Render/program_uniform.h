@@ -46,11 +46,7 @@ class CL_API_DISPLAY CL_ProgramUniform
 /// \{
 
 public:
-	/// \brief Constructs a program uniform.
-	///
-	/// \param name Uniform name.
-	/// \param size Size of uniform.
-	/// \param type OpenGL uniform type.
+	/// \brief Constructs a null instance.
 	CL_ProgramUniform();
 
 	/// \brief Constructs a ProgramUniform
@@ -68,6 +64,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Get uniform name.
 	CL_StringRef get_name() const;
 

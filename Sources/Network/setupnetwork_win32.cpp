@@ -46,7 +46,7 @@ CL_SetupNetwork::CL_SetupNetwork(bool register_resources_only)
 		WSADATA wsaData;
 		int err = WSAStartup(winsock_version, &wsaData);
 		if (err != 0)
-			throw CL_Exception(cl_text("Failed to initialize winsockets"));
+			throw CL_Exception("Failed to initialize winsockets");
 	}
 }
 

@@ -60,7 +60,7 @@ void CL_Thread_Win32::start(CL_Runnable *runnable)
 	handle = CreateThread(0, 0, &CL_Thread_Win32::thread_main, runnable, 0, &threadId);
 	if (handle == INVALID_HANDLE_VALUE)
 	{
-		throw CL_Exception(cl_text("Unable to create new thread"));
+		throw CL_Exception("Unable to create new thread");
 	}
 }
 

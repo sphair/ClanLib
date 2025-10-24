@@ -1,11 +1,7 @@
-lib_LTLIBRARIES = libclan21Network.la
+lib_LTLIBRARIES = libclan22Network.la
 
-libclan21Network_la_SOURCES = \
+libclan22Network_la_SOURCES = \
 precomp.cpp \
-IRC/dcc_download.cpp \
-IRC/dcc_download_generic.cpp \
-IRC/irc_connection.cpp \
-IRC/irc_connection_generic.cpp \
 NetGame/client.cpp \
 NetGame/connection.cpp \
 NetGame/connection_impl.cpp \
@@ -40,16 +36,19 @@ Socket/udp_socket_impl.cpp \
 Socket/unix_socket.cpp
 
 if WIN32
-libclan21Network_la_SOURCES += \
+libclan22Network_la_SOURCES += \
 Socket/event_provider_win32socket.cpp \
 Socket/win32_socket.cpp \
 setupnetwork_win32.cpp
 else
-libclan21Network_la_SOURCES += \
+libclan22Network_la_SOURCES += \
 setupnetwork_unix.cpp
 endif
 
-libclan21Network_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22Network_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_Network)
+
+libclan22Sound_la_CXXFLAGS=$(Network_CXXFLAGS) $(extra_CFLAGS_Network)
 
 # EOF #

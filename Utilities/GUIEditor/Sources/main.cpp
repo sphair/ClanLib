@@ -41,8 +41,8 @@ public:
 	{
 		CL_SetupCore setup_core;
 		CL_SetupDisplay setup_display;
-		CL_SetupGL setup_gl;
-//		CL_SetupGDI setup_gdi;
+//		CL_SetupGL setup_gl;
+		CL_SetupSWRender setup_swrender;
 
 		try
 		{
@@ -56,7 +56,7 @@ public:
 		catch (CL_Exception e)
 		{
 #ifdef WIN32
-			MessageBox(0, e.get_message_and_stack_trace().c_str(), TEXT("Unhandled Exception"), MB_OK|MB_ICONERROR);
+			MessageBoxA(0, e.get_message_and_stack_trace().c_str(), "Unhandled Exception", MB_OK|MB_ICONERROR);
 #else
 			CL_Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
 #endif

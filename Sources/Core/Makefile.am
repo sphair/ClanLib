@@ -1,15 +1,16 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan21Core.la
+lib_LTLIBRARIES = libclan22Core.la
 
-libclan21Core_la_SOURCES = \
+libclan22Core_la_SOURCES = \
+core_global.cpp \
 core_iostream.cpp \
 CSS/css_document.cpp \
 CSS/css_document_impl.cpp \
-CSS/css_import.cpp \
 CSS/css_property.cpp \
-CSS/css_ruleset.cpp \
 CSS/css_selector.cpp \
+CSS/css_tokenizer.cpp \
+CSS/css_tokenizer_impl.cpp \
 IOData/access_control_list.cpp \
 IOData/directory.cpp \
 IOData/directory_scanner.cpp \
@@ -49,6 +50,7 @@ Math/base64_encoder.cpp \
 Math/base64_decoder.cpp \
 Math/bezier_curve.cpp \
 Math/bezier_curve_impl.cpp \
+Math/quaternion.cpp \
 Math/vec2.cpp \
 Math/vec3.cpp \
 Math/vec4.cpp \
@@ -89,8 +91,7 @@ System/console_window.cpp \
 System/console_window_generic.cpp \
 System/databuffer.cpp \
 System/datetime.cpp \
-System/detect_3dnow.cpp \
-System/detect_mmx.cpp \
+System/detect_cpu_ext.cpp \
 System/event.cpp \
 System/event_impl.cpp \
 System/exception.cpp \
@@ -107,16 +108,20 @@ System/timer.cpp \
 System/thread_local_storage.cpp \
 System/thread_local_storage_impl.cpp \
 System/disposable_object.cpp \
+Text/console.cpp \
 Text/console_logger.cpp \
 Text/file_logger.cpp \
 Text/logger.cpp \
+Text/string16.cpp \
+Text/string8.cpp \
+Text/string_data16.cpp \
+Text/string_data8.cpp \
+Text/string_ref16.cpp \
+Text/string_ref8.cpp \
 Text/string_allocator.cpp \
-Text/string_container.cpp \
-Text/temp_string_container.cpp \
-Text/string_data.cpp \
-Text/string_reference.cpp \
 Text/string_format.cpp \
 Text/string_help.cpp \
+Text/utf8_reader.cpp \
 XML/dom_attr.cpp \
 XML/dom_cdata_section.cpp \
 XML/dom_character_data.cpp \
@@ -143,14 +148,14 @@ XML/xpath_evaluator_impl.cpp \
 XML/xpath_object.cpp
 
 if WIN32
-libclan21Core_la_SOURCES += \
+libclan22Core_la_SOURCES += \
 IOData/Win32/directory_scanner_win32.cpp \
 System/Win32/event_provider_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/service_win32.cpp \
 System/Win32/thread_win32.cpp
 else
-libclan21Core_la_SOURCES += \
+libclan22Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
 System/Unix/init_linux.cpp \
@@ -159,9 +164,12 @@ System/Unix/thread_unix.cpp
 endif
 
 # FIXME: Hardcoding these here might not be a good idea
-libclan21Core_la_LIBADD = @LIBPTHREAD@
+libclan22Core_la_LIBADD = @LIBPTHREAD@
 
-libclan21Core_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22Core_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanCore)
+
+libclan22Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
 
 # EOF #

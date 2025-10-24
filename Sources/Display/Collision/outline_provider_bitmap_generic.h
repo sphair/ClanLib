@@ -33,15 +33,13 @@
 
 #include "API/Display/Collision/contour.h"
 
-class CL_PixelBufferRef;
-
 class CL_OutlineProviderBitmap_Generic
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_OutlineProviderBitmap_Generic(const CL_PixelBufferRef &pbuf, int alpha_limit=128, bool get_insides=true);
+	CL_OutlineProviderBitmap_Generic(const CL_PixelBuffer &pbuf, int alpha_limit=128, bool get_insides=true);
 	~CL_OutlineProviderBitmap_Generic();
 
 

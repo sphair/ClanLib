@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanGL_Display clanGL Display
@@ -31,6 +32,8 @@
 
 #pragma once
 #include "api_gl.h"
+
+#include "../Core/IOData/datatypes.h"
 
 #ifndef CL_DISPLAYDEFINES_DEFINES
 #define CL_DISPLAYDEFINES_DEFINES
@@ -49,6 +52,8 @@ typedef int CLsizei;
 typedef unsigned char CLubyte;
 typedef unsigned short CLushort;
 typedef unsigned int CLuint;
+typedef cl_int64 CLint64;
+typedef cl_uint64 CLuint64;
 typedef float CLfloat;
 typedef float CLclampf;
 typedef double CLdouble;
@@ -57,8 +62,9 @@ typedef void CLvoid;
 typedef char CLchar;
 typedef ptrdiff_t CLintptr;
 typedef ptrdiff_t CLsizeiptr;
-
+typedef struct __CLsync *CLsync;
 #else
+typedef struct __CLsync *CLsync;
 typedef unsigned long CLenum;
 typedef unsigned char CLboolean;
 typedef unsigned long CLbitfield;
@@ -84,2054 +90,1008 @@ typedef ptrdiff_t CLsizeiptr;
 /// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 enum CL_DisplayDefines
 {
-	// AccumOp:
-
-	CL_ACCUM                          = 0x0100,
-	CL_LOAD                           = 0x0101,
-	CL_RETURN                         = 0x0102,
-	CL_MULT                           = 0x0103,
-	CL_ADD                            = 0x0104,
-
-	// AlphaFunction:
-
-	CL_NEVER                          = 0x0200,
-	CL_LESS                           = 0x0201,
-	CL_EQUAL                          = 0x0202,
-	CL_LEQUAL                         = 0x0203,
-	CL_GREATER                        = 0x0204,
-	CL_NOTEQUAL                       = 0x0205,
-	CL_GEQUAL                         = 0x0206,
-	CL_ALWAYS                         = 0x0207,
-
-	// AttribMask:
-
-	CL_CURRENT_BIT                    = 0x00000001,
-	CL_POINT_BIT                      = 0x00000002,
-	CL_LINE_BIT                       = 0x00000004,
-	CL_POLYGON_BIT                    = 0x00000008,
-	CL_POLYGON_STIPPLE_BIT            = 0x00000010,
-	CL_PIXEL_MODE_BIT                 = 0x00000020,
-	CL_LIGHTING_BIT                   = 0x00000040,
-	CL_FOG_BIT                        = 0x00000080,
-	CL_DEPTH_BUFFER_BIT               = 0x00000100,
-	CL_ACCUM_BUFFER_BIT               = 0x00000200,
-	CL_STENCIL_BUFFER_BIT             = 0x00000400,
-	CL_VIEWPORT_BIT                   = 0x00000800,
-	CL_TRANSFORM_BIT                  = 0x00001000,
-	CL_ENABLE_BIT                     = 0x00002000,
-	CL_COLOR_BUFFER_BIT               = 0x00004000,
-	CL_HINT_BIT                       = 0x00008000,
-	CL_EVAL_BIT                       = 0x00010000,
-	CL_LIST_BIT                       = 0x00020000,
-	CL_TEXTURE_BIT                    = 0x00040000,
-	CL_SCISSOR_BIT                    = 0x00080000,
-	CL_ALL_ATTRIB_BITS                = 0x000fffff,
-
-	// BeginMode:
-
-	CL_POINTS                         = 0x0000,
-	CL_LINES                          = 0x0001,
-	CL_LINE_LOOP                      = 0x0002,
-	CL_LINE_STRIP                     = 0x0003,
-	CL_TRIANGLES                      = 0x0004,
-	CL_TRIANGLE_STRIP                 = 0x0005,
-	CL_TRIANGLE_FAN                   = 0x0006,
-	CL_QUADS                          = 0x0007,
-	CL_QUAD_STRIP                     = 0x0008,
-	CL_POLYGON                        = 0x0009,
-
-	// BlendEquationMode:
-
-	CL_LOGIC_OP                       = 0x0BF1,
-	// CL_FUNC_ADD
-	// CL_MIN
-	// CL_MAX
-	// CL_FUNC_SUBTRACT
-	// CL_FUNC_REVERSE_SUBTRACT
-
-	// BlendingFactorDest:
-
-	CL_ZERO                           = 0,
-	CL_ONE                            = 1,
-	CL_SRC_COLOR                      = 0x0300,
-	CL_ONE_MINUS_SRC_COLOR            = 0x0301,
-	CL_SRC_ALPHA                      = 0x0302,
-	CL_ONE_MINUS_SRC_ALPHA            = 0x0303,
-	CL_DST_ALPHA                      = 0x0304,
-	CL_ONE_MINUS_DST_ALPHA            = 0x0305,
-	// CL_CONSTANT_COLOR
-	// CL_ONE_MINUS_CONSTANT_COLOR
-	// CL_CONSTANT_ALPHA
-	// CL_ONE_MINUS_CONSTANT_ALPHA
-
-	// BlendingFactorSrc:
-
-	// CL_ZERO
-	// CL_ONE
-	CL_DST_COLOR                      = 0x0306,
-	CL_ONE_MINUS_DST_COLOR            = 0x0307,
-	CL_SRC_ALPHA_SATURATE             = 0x0308,
-	// CL_SRC_ALPHA
-	// CL_ONE_MINUS_SRC_ALPHA
-	// CL_DST_ALPHA
-	// CL_ONE_MINUS_DST_ALPHA
-	// CL_CONSTANT_COLOR
-	// CL_ONE_MINUS_CONSTANT_COLOR
-	// CL_CONSTANT_ALPHA
-	// CL_ONE_MINUS_CONSTANT_ALPHA
-
-	// Boolean:
-
-	CL_TRUE                           = 1,
-	CL_FALSE                          = 0,
-
-	// ClearBufferMask:
-
-	// COLOR_BUFFER_BIT
-	// ACCUM_BUFFER_BIT
-	// STENCIL_BUFFER_BIT
-	// DEPTH_BUFFER_BIT
-
-	// ClientArrayType:
-
-	// VERTEX_ARRAY
-	// NORMAL_ARRAY
-	// COLOR_ARRAY
-	// INDEX_ARRAY
-	// TEXTURE_COORD_ARRAY
-	// EDGE_FLAG_ARRAY
-
-	// ClipPlaneName:
-
-	CL_CLIP_PLANE0                    = 0x3000,
-	CL_CLIP_PLANE1                    = 0x3001,
-	CL_CLIP_PLANE2                    = 0x3002,
-	CL_CLIP_PLANE3                    = 0x3003,
-	CL_CLIP_PLANE4                    = 0x3004,
-	CL_CLIP_PLANE5                    = 0x3005,
-
-	// ColorMaterialFace:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
-
-	// ColorMaterialParameter:
-
-	// CL_AMBIENT
-	// CL_DIFFUSE
-	// CL_SPECULAR
-	// CL_EMISSION
-	// CL_AMBIENT_AND_DIFFUSE
-
-	// ColorPointerType:
-
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// ColorTableParameterPName:
-
-	// CL_COLOR_TABLE_SCALE
-	// CL_COLOR_TABLE_BIAS
-
-	// ColorTableTarget:
-
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_PROXY_COLOR_TABLE
-	// CL_PROXY_POST_CONVOLUTION_COLOR_TABLE
-	// CL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE
-
-	// ConvolutionBorderMode:
-
-	// CL_REDUCE
-	// CL_IGNORE_BORDER
-	// CL_CONSTANT_BORDER
-
-	// ConvolutionParameter:
-
-	// CL_CONVOLUTION_BORDER_MODE
-	// CL_CONVOLUTION_FILTER_SCALE
-	// CL_CONVOLUTION_FILTER_BIAS
-
-	// ConvolutionTarget:
-
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-
-	// CullFaceMode:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
-
-	// DataType:
-
-	CL_BYTE                           = 0x1400,
-	CL_UNSIGNED_BYTE                  = 0x1401,
-	CL_SHORT                          = 0x1402,
-	CL_UNSIGNED_SHORT                 = 0x1403,
-	CL_INT                            = 0x1404,
-	CL_UNSIGNED_INT                   = 0x1405,
-	CL_FLOAT                          = 0x1406,
-	CL_2_BYTES                        = 0x1407,
-	CL_3_BYTES                        = 0x1408,
-	CL_4_BYTES                        = 0x1409,
-	CL_DOUBLE                         = 0x140A,
-
-	// DepthFunction:
-
-	// CL_NEVER
-	// CL_LESS
-	// CL_EQUAL
-	// CL_LEQUAL
-	// CL_GREATER
-	// CL_NOTEQUAL
-	// CL_GEQUAL
-	// CL_ALWAYS
-
-	// DrawBufferMode:
-
-	CL_NONE                           = 0,
-	CL_FRONT_LEFT                     = 0x0400,
-	CL_FRONT_RIGHT                    = 0x0401,
-	CL_BACK_LEFT                      = 0x0402,
-	CL_BACK_RIGHT                     = 0x0403,
-	CL_FRONT                          = 0x0404,
-	CL_BACK                           = 0x0405,
-	CL_LEFT                           = 0x0406,
-	CL_RIGHT                          = 0x0407,
-	CL_FRONT_AND_BACK                 = 0x0408,
-	CL_AUX0                           = 0x0409,
-	CL_AUX1                           = 0x040A,
-	CL_AUX2                           = 0x040B,
-	CL_AUX3                           = 0x040C,
-
-	// Enable:
-
-	// CL_FOG
-	// CL_LIGHTING
-	// CL_TEXTURE_1D
-	// CL_TEXTURE_2D
-	// CL_LINE_STIPPLE
-	// CL_POLYGON_STIPPLE
-	// CL_CULL_FACE
-	// CL_ALPHA_TEST
-	// CL_BLEND
-	// CL_INDEX_LOGIC_OP
-	// CL_COLOR_LOGIC_OP
-	// CL_DITHER
-	// CL_STENCIL_TEST
-	// CL_DEPTH_TEST
-	// CL_CLIP_PLANE0
-	// CL_CLIP_PLANE1
-	// CL_CLIP_PLANE2
-	// CL_CLIP_PLANE3
-	// CL_CLIP_PLANE4
-	// CL_CLIP_PLANE5
-	// CL_LIGHT0
-	// CL_LIGHT1
-	// CL_LIGHT2
-	// CL_LIGHT3
-	// CL_LIGHT4
-	// CL_LIGHT5
-	// CL_LIGHT6
-	// CL_LIGHT7
-	// CL_TEXTURE_GEN_S
-	// CL_TEXTURE_GEN_T
-	// CL_TEXTURE_GEN_R
-	// CL_TEXTURE_GEN_Q
-	// CL_MAP1_VERTEX_3
-	// CL_MAP1_VERTEX_4
-	// CL_MAP1_COLOR_4
-	// CL_MAP1_INDEX
-	// CL_MAP1_NORMAL
-	// CL_MAP1_TEXTURE_COORD_1
-	// CL_MAP1_TEXTURE_COORD_2
-	// CL_MAP1_TEXTURE_COORD_3
-	// CL_MAP1_TEXTURE_COORD_4
-	// CL_MAP2_VERTEX_3
-	// CL_MAP2_VERTEX_4
-	// CL_MAP2_COLOR_4
-	// CL_MAP2_INDEX
-	// CL_MAP2_NORMAL
-	// CL_MAP2_TEXTURE_COORD_1
-	// CL_MAP2_TEXTURE_COORD_2
-	// CL_MAP2_TEXTURE_COORD_3
-	// CL_MAP2_TEXTURE_COORD_4
-	// CL_POINT_SMOOTH
-	// CL_LINE_SMOOTH
-	// CL_POLYGON_SMOOTH
-	// CL_SCISSOR_TEST
-	// CL_COLOR_MATERIAL
-	// CL_NORMALIZE
-	// CL_AUTO_NORMAL
-	// CL_VERTEX_ARRAY
-	// CL_NORMAL_ARRAY
-	// CL_COLOR_ARRAY
-	// CL_INDEX_ARRAY
-	// CL_TEXTURE_COORD_ARRAY
-	// CL_EDGE_FLAG_ARRAY
-	// CL_POLYGON_OFFSET_POINT
-	// CL_POLYGON_OFFSET_LINE
-	// CL_POLYGON_OFFSET_FILL
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-	// CL_SEPARABLE_2D
-	// CL_HISTOGRAM
-	// CL_MINMAX
-	// CL_RESCALE_NORMAL
-	// CL_TEXTURE_3D
-
-	// ErrorCode:
-
-	CL_NO_ERROR                     = 0,
-	CL_INVALID_ENUM                 = 0x0500,
-	CL_INVALID_VALUE                = 0x0501,
-	CL_INVALID_OPERATION            = 0x0502,
-	CL_STACK_OVERFLOW               = 0x0503,
-	CL_STACK_UNDERFLOW              = 0x0504,
-	CL_OUT_OF_MEMORY                = 0x0505,
-	// CL_TABLE_TOO_LARGE
-
-	// FeedBackMode:
-
-	CL_2D                           = 0x0600,
-	CL_3D                           = 0x0601,
-	CL_3D_COLOR                     = 0x0602,
-	CL_3D_COLOR_TEXTURE             = 0x0603,
-	CL_4D_COLOR_TEXTURE             = 0x0604,
-
-	// FeedBackToken:
-
-	CL_PASS_THROUGH_TOKEN           = 0x0700,
-	CL_POINT_TOKEN                  = 0x0701,
-	CL_LINE_TOKEN                   = 0x0702,
-	CL_POLYGON_TOKEN                = 0x0703,
-	CL_BITMAP_TOKEN                 = 0x0704,
-	CL_DRAW_PIXEL_TOKEN             = 0x0705,
-	CL_COPY_PIXEL_TOKEN             = 0x0706,
-	CL_LINE_RESET_TOKEN             = 0x0707,
-
-	// FogMode:
-
-	// CL_LINEAR
-	CL_EXP                          = 0x0800,
-	CL_EXP2                         = 0x0801,
-
-	// FogParameter:
-
-	// CL_FOG_COLOR
-	// CL_FOG_DENSITY
-	// CL_FOG_END
-	// CL_FOG_INDEX
-	// CL_FOG_MODE
-	// CL_FOG_START
-
-	// FrontFaceDirection:
-
-	CL_CW                           = 0x0900,
-	CL_CCW                          = 0x0901,
-
-	// GetColorTableParameterPName:
-
-	// CL_COLOR_TABLE_SCALE
-	// CL_COLOR_TABLE_BIAS
-	// CL_COLOR_TABLE_FORMAT
-	// CL_COLOR_TABLE_WIDTH
-	// CL_COLOR_TABLE_RED_SIZE
-	// CL_COLOR_TABLE_GREEN_SIZE
-	// CL_COLOR_TABLE_BLUE_SIZE
-	// CL_COLOR_TABLE_ALPHA_SIZE
-	// CL_COLOR_TABLE_LUMINANCE_SIZE
-	// CL_COLOR_TABLE_INTENSITY_SIZE
-
-	// GetConvolutionParameterPName:
-
-	// CL_CONVOLUTION_BORDER_COLOR
-	// CL_CONVOLUTION_BORDER_MODE
-	// CL_CONVOLUTION_FILTER_SCALE
-	// CL_CONVOLUTION_FILTER_BIAS
-	// CL_CONVOLUTION_FORMAT
-	// CL_CONVOLUTION_WIDTH
-	// CL_CONVOLUTION_HEIGHT
-	// CL_MAX_CONVOLUTION_WIDTH
-	// CL_MAX_CONVOLUTION_HEIGHT
-
-	// GetHistogramParameterPName:
-
-	// CL_HISTOGRAM_WIDTH
-	// CL_HISTOGRAM_FORMAT
-	// CL_HISTOGRAM_RED_SIZE
-	// CL_HISTOGRAM_GREEN_SIZE
-	// CL_HISTOGRAM_BLUE_SIZE
-	// CL_HISTOGRAM_ALPHA_SIZE
-	// CL_HISTOGRAM_LUMINANCE_SIZE
-	// CL_HISTOGRAM_SINK
-
-	// GetMapTarget:
-
-	CL_COEFF                        = 0x0A00,
-	CL_ORDER                        = 0x0A01,
-	CL_DOMAIN                       = 0x0A02,
-
-	// GetMinmaxParameterPName:
-
-	// CL_MINMAX_FORMAT
-	// CL_MINMAX_SINK
-
-	// GetPixelMap:
-
-	// CL_PIXEL_MAP_I_TO_I
-	// CL_PIXEL_MAP_S_TO_S
-	// CL_PIXEL_MAP_I_TO_R
-	// CL_PIXEL_MAP_I_TO_G
-	// CL_PIXEL_MAP_I_TO_B
-	// CL_PIXEL_MAP_I_TO_A
-	// CL_PIXEL_MAP_R_TO_R
-	// CL_PIXEL_MAP_G_TO_G
-	// CL_PIXEL_MAP_B_TO_B
-	// CL_PIXEL_MAP_A_TO_A
-
-	// GetPointerTarget:
-
-	// CL_VERTEX_ARRAY_POINTER
-	// CL_NORMAL_ARRAY_POINTER
-	// CL_COLOR_ARRAY_POINTER
-	// CL_INDEX_ARRAY_POINTER
-	// CL_TEXTURE_COORD_ARRAY_POINTER
-	// CL_EDGE_FLAG_ARRAY_POINTER
-
-	// GetTarget:
-
-	CL_CURRENT_COLOR                = 0x0B00,
-	CL_CURRENT_INDEX                = 0x0B01,
-	CL_CURRENT_NORMAL               = 0x0B02,
-	CL_CURRENT_TEXTURE_COORDS       = 0x0B03,
-	CL_CURRENT_RASTER_COLOR         = 0x0B04,
-	CL_CURRENT_RASTER_INDEX         = 0x0B05,
-	CL_CURRENT_RASTER_TEXTURE_COORDS= 0x0B06,
-	CL_CURRENT_RASTER_POSITION      = 0x0B07,
-	CL_CURRENT_RASTER_POSITION_VALID= 0x0B08,
-	CL_CURRENT_RASTER_DISTANCE      = 0x0B09,
-	CL_POINT_SMOOTH                 = 0x0B10,
-	CL_POINT_SIZE                   = 0x0B11,
-	CL_POINT_SIZE_RANGE             = 0x0B12,
-	CL_POINT_SIZE_GRANULARITY       = 0x0B13,
-	CL_LINE_SMOOTH                  = 0x0B20,
-	CL_LINE_WIDTH                   = 0x0B21,
-	CL_LINE_WIDTH_RANGE             = 0x0B22,
-	CL_LINE_WIDTH_GRANULARITY       = 0x0B23,
-	CL_LINE_STIPPLE                 = 0x0B24,
-	CL_LINE_STIPPLE_PATTERN         = 0x0B25,
-	CL_LINE_STIPPLE_REPEAT          = 0x0B26,
-	// CL_SMOOTH_POINT_SIZE_RANGE
-	// CL_SMOOTH_POINT_SIZE_GRANULARITY
-	// CL_SMOOTH_LINE_WIDTH_RANGE
-	// CL_SMOOTH_LINE_WIDTH_GRANULARITY
-	// CL_ALIASED_POINT_SIZE_RANGE
-	// CL_ALIASED_LINE_WIDTH_RANGE
-	CL_LIST_MODE                    = 0x0B30,
-	CL_MAX_LIST_NESTING             = 0x0B31,
-	CL_LIST_BASE                    = 0x0B32,
-	CL_LIST_INDEX                   = 0x0B33,
-	CL_POLYGON_MODE                 = 0x0B40,
-	CL_POLYGON_SMOOTH               = 0x0B41,
-	CL_POLYGON_STIPPLE              = 0x0B42,
-	CL_EDGE_FLAG                    = 0x0B43,
-	CL_CULL_FACE                    = 0x0B44,
-	CL_CULL_FACE_MODE               = 0x0B45,
-	CL_FRONT_FACE                   = 0x0B46,
-	CL_LIGHTING                     = 0x0B50,
-	CL_LIGHT_MODEL_LOCAL_VIEWER     = 0x0B51,
-	CL_LIGHT_MODEL_TWO_SIDE         = 0x0B52,
-	CL_LIGHT_MODEL_AMBIENT          = 0x0B53,
-	CL_SHADE_MODEL                  = 0x0B54,
-	CL_COLOR_MATERIAL_FACE          = 0x0B55,
-	CL_COLOR_MATERIAL_PARAMETER     = 0x0B56,
-	CL_COLOR_MATERIAL               = 0x0B57,
-	CL_FOG                          = 0x0B60,
-	CL_FOG_INDEX                    = 0x0B61,
-	CL_FOG_DENSITY                  = 0x0B62,
-	CL_FOG_START                    = 0x0B63,
-	CL_FOG_END                      = 0x0B64,
-	CL_FOG_MODE                     = 0x0B65,
-	CL_FOG_COLOR                    = 0x0B66,
-	CL_DEPTH_RANGE                  = 0x0B70,
-	CL_DEPTH_TEST                   = 0x0B71,
-	CL_DEPTH_WRITEMASK              = 0x0B72,
-	CL_DEPTH_CLEAR_VALUE            = 0x0B73,
-	CL_DEPTH_FUNC                   = 0x0B74,
-	CL_ACCUM_CLEAR_VALUE            = 0x0B80,
-	CL_STENCIL_TEST                 = 0x0B90,
-	CL_STENCIL_CLEAR_VALUE          = 0x0B91,
-	CL_STENCIL_FUNC                 = 0x0B92,
-	CL_STENCIL_VALUE_MASK           = 0x0B93,
-	CL_STENCIL_FAIL                 = 0x0B94,
-	CL_STENCIL_PASS_DEPTH_FAIL      = 0x0B95,
-	CL_STENCIL_PASS_DEPTH_PASS      = 0x0B96,
-	CL_STENCIL_REF                  = 0x0B97,
-	CL_STENCIL_WRITEMASK            = 0x0B98,
-	CL_MATRIX_MODE                  = 0x0BA0,
-	CL_NORMALIZE                    = 0x0BA1,
-	CL_VIEWPORT                     = 0x0BA2,
-	CL_MODELVIEW_STACK_DEPTH        = 0x0BA3,
-	CL_PROJECTION_STACK_DEPTH       = 0x0BA4,
-	CL_TEXTURE_STACK_DEPTH          = 0x0BA5,
-	CL_MODELVIEW_MATRIX             = 0x0BA6,
-	CL_PROJECTION_MATRIX            = 0x0BA7,
-	CL_TEXTURE_MATRIX               = 0x0BA8,
-	CL_ATTRIB_STACK_DEPTH           = 0x0BB0,
-	CL_CLIENT_ATTRIB_STACK_DEPTH    = 0x0BB1,
-	CL_ALPHA_TEST                   = 0x0BC0,
-	CL_ALPHA_TEST_FUNC              = 0x0BC1,
-	CL_ALPHA_TEST_REF               = 0x0BC2,
-	CL_DITHER                       = 0x0BD0,
-	CL_BLEND_DST                    = 0x0BE0,
-	CL_BLEND_SRC                    = 0x0BE1,
-	CL_BLEND                        = 0x0BE2,
-	CL_LOGIC_OP_MODE                = 0x0BF0,
-	CL_INDEX_LOGIC_OP               = 0x0BF1,
-	CL_COLOR_LOGIC_OP               = 0x0BF2,
-	CL_AUX_BUFFERS                  = 0x0C00,
-	CL_DRAW_BUFFER                  = 0x0C01,
-	CL_READ_BUFFER                  = 0x0C02,
-	CL_SCISSOR_BOX                  = 0x0C10,
-	CL_SCISSOR_TEST                 = 0x0C11,
-	CL_INDEX_CLEAR_VALUE            = 0x0C20,
-	CL_INDEX_WRITEMASK              = 0x0C21,
-	CL_COLOR_CLEAR_VALUE            = 0x0C22,
-	CL_COLOR_WRITEMASK              = 0x0C23,
-	CL_INDEX_MODE                   = 0x0C30,
-	CL_RGBA_MODE                    = 0x0C31,
-	CL_DOUBLEBUFFER                 = 0x0C32,
-	CL_STEREO                       = 0x0C33,
-	CL_RENDER_MODE                  = 0x0C40,
-	CL_PERSPECTIVE_CORRECTION_HINT  = 0x0C50,
-	CL_POINT_SMOOTH_HINT            = 0x0C51,
-	CL_LINE_SMOOTH_HINT             = 0x0C52,
-	CL_POLYGON_SMOOTH_HINT          = 0x0C53,
-	CL_FOG_HINT                     = 0x0C54,
-	CL_TEXTURE_GEN_S                = 0x0C60,
-	CL_TEXTURE_GEN_T                = 0x0C61,
-	CL_TEXTURE_GEN_R                = 0x0C62,
-	CL_TEXTURE_GEN_Q                = 0x0C63,
-	CL_PIXEL_MAP_I_TO_I             = 0x0C70,
-	CL_PIXEL_MAP_S_TO_S             = 0x0C71,
-	CL_PIXEL_MAP_I_TO_R             = 0x0C72,
-	CL_PIXEL_MAP_I_TO_G             = 0x0C73,
-	CL_PIXEL_MAP_I_TO_B             = 0x0C74,
-	CL_PIXEL_MAP_I_TO_A             = 0x0C75,
-	CL_PIXEL_MAP_R_TO_R             = 0x0C76,
-	CL_PIXEL_MAP_G_TO_G             = 0x0C77,
-	CL_PIXEL_MAP_B_TO_B             = 0x0C78,
-	CL_PIXEL_MAP_A_TO_A             = 0x0C79,
-	CL_PIXEL_MAP_I_TO_I_SIZE        = 0x0CB0,
-	CL_PIXEL_MAP_S_TO_S_SIZE        = 0x0CB1,
-	CL_PIXEL_MAP_I_TO_R_SIZE        = 0x0CB2,
-	CL_PIXEL_MAP_I_TO_G_SIZE        = 0x0CB3,
-	CL_PIXEL_MAP_I_TO_B_SIZE        = 0x0CB4,
-	CL_PIXEL_MAP_I_TO_A_SIZE        = 0x0CB5,
-	CL_PIXEL_MAP_R_TO_R_SIZE        = 0x0CB6,
-	CL_PIXEL_MAP_G_TO_G_SIZE        = 0x0CB7,
-	CL_PIXEL_MAP_B_TO_B_SIZE        = 0x0CB8,
-	CL_PIXEL_MAP_A_TO_A_SIZE        = 0x0CB9,
-	CL_UNPACK_SWAP_BYTES            = 0x0CF0,
-	CL_UNPACK_LSB_FIRST             = 0x0CF1,
-	CL_UNPACK_ROW_LENGTH            = 0x0CF2,
-	CL_UNPACK_SKIP_ROWS             = 0x0CF3,
-	CL_UNPACK_SKIP_PIXELS           = 0x0CF4,
-	CL_UNPACK_ALIGNMENT             = 0x0CF5,
-	CL_PACK_SWAP_BYTES              = 0x0D00,
-	CL_PACK_LSB_FIRST               = 0x0D01,
-	CL_PACK_ROW_LENGTH              = 0x0D02,
-	CL_PACK_SKIP_ROWS               = 0x0D03,
-	CL_PACK_SKIP_PIXELS             = 0x0D04,
-	CL_PACK_ALIGNMENT               = 0x0D05,
-	CL_MAP_COLOR                    = 0x0D10,
-	CL_MAP_STENCIL                  = 0x0D11,
-	CL_INDEX_SHIFT                  = 0x0D12,
-	CL_INDEX_OFFSET                 = 0x0D13,
-	CL_RED_SCALE                    = 0x0D14,
-	CL_RED_BIAS                     = 0x0D15,
-	CL_ZOOM_X                       = 0x0D16,
-	CL_ZOOM_Y                       = 0x0D17,
-	CL_GREEN_SCALE                  = 0x0D18,
-	CL_GREEN_BIAS                   = 0x0D19,
-	CL_BLUE_SCALE                   = 0x0D1A,
-	CL_BLUE_BIAS                    = 0x0D1B,
-	CL_ALPHA_SCALE                  = 0x0D1C,
-	CL_ALPHA_BIAS                   = 0x0D1D,
-	CL_DEPTH_SCALE                  = 0x0D1E,
-	CL_DEPTH_BIAS                   = 0x0D1F,
-	CL_MAX_EVAL_ORDER               = 0x0D30,
-	CL_MAX_LIGHTS                   = 0x0D31,
-	CL_MAX_CLIP_PLANES              = 0x0D32,
-	CL_MAX_TEXTURE_SIZE             = 0x0D33,
-	CL_MAX_PIXEL_MAP_TABLE          = 0x0D34,
-	CL_MAX_ATTRIB_STACK_DEPTH       = 0x0D35,
-	CL_MAX_MODELVIEW_STACK_DEPTH    = 0x0D36,
-	CL_MAX_NAME_STACK_DEPTH         = 0x0D37,
-	CL_MAX_PROJECTION_STACK_DEPTH   = 0x0D38,
-	CL_MAX_TEXTURE_STACK_DEPTH      = 0x0D39,
-	CL_MAX_VIEWPORT_DIMS            = 0x0D3A,
-	CL_MAX_CLIENT_ATTRIB_STACK_DEPTH= 0x0D3B,
-	CL_SUBPIXEL_BITS                = 0x0D50,
-	CL_INDEX_BITS                   = 0x0D51,
-	CL_RED_BITS                     = 0x0D52,
-	CL_GREEN_BITS                   = 0x0D53,
-	CL_BLUE_BITS                    = 0x0D54,
-	CL_ALPHA_BITS                   = 0x0D55,
-	CL_DEPTH_BITS                   = 0x0D56,
-	CL_STENCIL_BITS                 = 0x0D57,
-	CL_ACCUM_RED_BITS               = 0x0D58,
-	CL_ACCUM_GREEN_BITS             = 0x0D59,
-	CL_ACCUM_BLUE_BITS              = 0x0D5A,
-	CL_ACCUM_ALPHA_BITS             = 0x0D5B,
-	CL_NAME_STACK_DEPTH             = 0x0D70,
-	CL_AUTO_NORMAL                  = 0x0D80,
-	CL_MAP1_COLOR_4                 = 0x0D90,
-	CL_MAP1_INDEX                   = 0x0D91,
-	CL_MAP1_NORMAL                  = 0x0D92,
-	CL_MAP1_TEXTURE_COORD_1         = 0x0D93,
-	CL_MAP1_TEXTURE_COORD_2         = 0x0D94,
-	CL_MAP1_TEXTURE_COORD_3         = 0x0D95,
-	CL_MAP1_TEXTURE_COORD_4         = 0x0D96,
-	CL_MAP1_VERTEX_3                = 0x0D97,
-	CL_MAP1_VERTEX_4                = 0x0D98,
-	CL_MAP2_COLOR_4                 = 0x0DB0,
-	CL_MAP2_INDEX                   = 0x0DB1,
-	CL_MAP2_NORMAL                  = 0x0DB2,
-	CL_MAP2_TEXTURE_COORD_1         = 0x0DB3,
-	CL_MAP2_TEXTURE_COORD_2         = 0x0DB4,
-	CL_MAP2_TEXTURE_COORD_3         = 0x0DB5,
-	CL_MAP2_TEXTURE_COORD_4         = 0x0DB6,
-	CL_MAP2_VERTEX_3                = 0x0DB7,
-	CL_MAP2_VERTEX_4                = 0x0DB8,
-	CL_MAP1_GRID_DOMAIN             = 0x0DD0,
-	CL_MAP1_GRID_SEGMENTS           = 0x0DD1,
-	CL_MAP2_GRID_DOMAIN             = 0x0DD2,
-	CL_MAP2_GRID_SEGMENTS           = 0x0DD3,
-	CL_TEXTURE_1D                   = 0x0DE0,
-	CL_TEXTURE_2D                   = 0x0DE1,
-	CL_FEEDBACK_BUFFER_POINTER      = 0x0DF0,
-	CL_FEEDBACK_BUFFER_SIZE         = 0x0DF1,
-	CL_FEEDBACK_BUFFER_TYPE         = 0x0DF2,
-	CL_SELECTION_BUFFER_POINTER     = 0x0DF3,
-	CL_SELECTION_BUFFER_SIZE        = 0x0DF4,
-	// CL_TEXTURE_BINDING_1D
-	// CL_TEXTURE_BINDING_2D
-	// CL_TEXTURE_BINDING_3D
-	// CL_VERTEX_ARRAY
-	// CL_NORMAL_ARRAY
-	// CL_COLOR_ARRAY
-	// CL_INDEX_ARRAY
-	// CL_TEXTURE_COORD_ARRAY
-	// CL_EDGE_FLAG_ARRAY
-	// CL_VERTEX_ARRAY_SIZE
-	// CL_VERTEX_ARRAY_TYPE
-	// CL_VERTEX_ARRAY_STRIDE
-	// CL_NORMAL_ARRAY_TYPE
-	// CL_NORMAL_ARRAY_STRIDE
-	// CL_COLOR_ARRAY_SIZE
-	// CL_COLOR_ARRAY_TYPE
-	// CL_COLOR_ARRAY_STRIDE
-	// CL_INDEX_ARRAY_TYPE
-	// CL_INDEX_ARRAY_STRIDE
-	// CL_TEXTURE_COORD_ARRAY_SIZE
-	// CL_TEXTURE_COORD_ARRAY_TYPE
-	// CL_TEXTURE_COORD_ARRAY_STRIDE
-	// CL_EDGE_FLAG_ARRAY_STRIDE
-	// CL_POLYGON_OFFSET_FACTOR
-	// CL_POLYGON_OFFSET_UNITS
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-	// CL_SEPARABLE_2D
-	// CL_POST_CONVOLUTION_RED_SCALE
-	// CL_POST_CONVOLUTION_GREEN_SCALE
-	// CL_POST_CONVOLUTION_BLUE_SCALE
-	// CL_POST_CONVOLUTION_ALPHA_SCALE
-	// CL_POST_CONVOLUTION_RED_BIAS
-	// CL_POST_CONVOLUTION_GREEN_BIAS
-	// CL_POST_CONVOLUTION_BLUE_BIAS
-	// CL_POST_CONVOLUTION_ALPHA_BIAS
-	// CL_COLOR_MATRIX
-	// CL_COLOR_MATRIX_STACK_DEPTH
-	// CL_MAX_COLOR_MATRIX_STACK_DEPTH
-	// CL_POST_COLOR_MATRIX_RED_SCALE
-	// CL_POST_COLOR_MATRIX_GREEN_SCALE
-	// CL_POST_COLOR_MATRIX_BLUE_SCALE
-	// CL_POST_COLOR_MATRIX_ALPHA_SCALE
-	// CL_POST_COLOR_MATRIX_RED_BIAS
-	// CL_POST_COLOR_MATRIX_GREEN_BIAS
-	// CL_POST_COLOR_MATRIX_BLUE_BIAS
-	// CL_POST_COLOR_MATRIX_ALPHA_BIAS
-	// CL_HISTOGRAM
-	// CL_MINMAX
-	// CL_MAX_ELEMENTS_VERTICES
-	// CL_MAX_ELEMENTS_INDICES
-	// CL_RESCALE_NORMAL
-	// CL_LIGHT_MODEL_COLOR_CONTROL
-	// CL_PACK_SKIP_IMAGES
-	// CL_PACK_IMAGE_HEIGHT
-	// CL_UNPACK_SKIP_IMAGES
-	// CL_UNPACK_IMAGE_HEIGHT
-	// CL_TEXTURE_3D
-	// CL_MAX_3D_TEXTURE_SIZE
-	// CL_BLEND_COLOR
-	// CL_BLEND_EQUATION
-	// CL_ACTIVE_TEXTURE
-	// CL_CLIENT_ACTIVE_TEXTURE
-	// CL_MAX_TEXTURE_UNITS
-
-	// GetTextureParameter:
-
-	// CL_TEXTURE_MAG_FILTER
-	// CL_TEXTURE_MIN_FILTER
-	// CL_TEXTURE_WRAP_S
-	// CL_TEXTURE_WRAP_T
-	CL_TEXTURE_WIDTH                = 0x1000,
-	CL_TEXTURE_HEIGHT               = 0x1001,
-	CL_TEXTURE_INTERNAL_FORMAT      = 0x1003,
-	CL_TEXTURE_BORDER_COLOR         = 0x1004,
-	CL_TEXTURE_BORDER               = 0x1005,
-	// CL_TEXTURE_RED_SIZE
-	// CL_TEXTURE_GREEN_SIZE
-	// CL_TEXTURE_BLUE_SIZE
-	// CL_TEXTURE_ALPHA_SIZE
-	// CL_TEXTURE_LUMINANCE_SIZE
-	// CL_TEXTURE_INTENSITY_SIZE
-	// CL_TEXTURE_PRIORITY
-	// CL_TEXTURE_RESIDENT
-	// CL_TEXTURE_DEPTH
-	// CL_TEXTURE_WRAP_R
-	// CL_TEXTURE_MIN_LOD
-	// CL_TEXTURE_MAX_LOD
-	// CL_TEXTURE_BASE_LEVEL
-	// CL_TEXTURE_MAX_LEVEL
-
-	// HintMode:
-
-	CL_DONT_CARE                    = 0x1100,
-	CL_FASTEST                      = 0x1101,
-	CL_NICEST                       = 0x1102,
-
-	// HintTarget:
-
-	// CL_PERSPECTIVE_CORRECTION_HINT
-	// CL_POINT_SMOOTH_HINT
-	// CL_LINE_SMOOTH_HINT
-	// CL_POLYGON_SMOOTH_HINT
-	// CL_FOG_HINT
-
-	// HistogramTarget:
-
-	// CL_HISTOGRAM
-	// CL_PROXY_HISTOGRAM
-
-	// IndexPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// LightModelColorControl:
-
-	// CL_SINGLE_COLOR
-	// CL_SEPARATE_SPECULAR_COLOR
-
-	// LightModelParameter:
-
-	// CL_LIGHT_MODEL_AMBIENT
-	// CL_LIGHT_MODEL_LOCAL_VIEWER
-	// CL_LIGHT_MODEL_TWO_SIDE
-	// CL_LIGHT_MODEL_COLOR_CONTROL
-
-	// LightName:
-
-	CL_LIGHT0                       = 0x4000,
-	CL_LIGHT1                       = 0x4001,
-	CL_LIGHT2                       = 0x4002,
-	CL_LIGHT3                       = 0x4003,
-	CL_LIGHT4                       = 0x4004,
-	CL_LIGHT5                       = 0x4005,
-	CL_LIGHT6                       = 0x4006,
-	CL_LIGHT7                       = 0x4007,
-
-	// LightParameter:
-
-	CL_AMBIENT                      = 0x1200,
-	CL_DIFFUSE                      = 0x1201,
-	CL_SPECULAR                     = 0x1202,
-	CL_POSITION                     = 0x1203,
-	CL_SPOT_DIRECTION               = 0x1204,
-	CL_SPOT_EXPONENT                = 0x1205,
-	CL_SPOT_CUTOFF                  = 0x1206,
-	CL_CONSTANT_ATTENUATION         = 0x1207,
-	CL_LINEAR_ATTENUATION           = 0x1208,
-	CL_QUADRATIC_ATTENUATION        = 0x1209,
-
-	// InterleavedArrays:
-
-	// CL_V2F
-	// CL_V3F
-	// CL_C4UB_V2F
-	// CL_C4UB_V3F
-	// CL_C3F_V3F
-	// CL_N3F_V3F
-	// CL_C4F_N3F_V3F
-	// CL_T2F_V3F
-	// CL_T4F_V4F
-	// CL_T2F_C4UB_V3F
-	// CL_T2F_C3F_V3F
-	// CL_T2F_N3F_V3F
-	// CL_T2F_C4F_N3F_V3F
-	// CL_T4F_C4F_N3F_V4F
-
-	// ListMode:
-
-	CL_COMPILE                      = 0x1300,
-	CL_COMPILE_AND_EXECUTE          = 0x1301,
-
-	// ListNameType:
-
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_2_BYTES
-	// CL_3_BYTES
-	// CL_4_BYTES
-
-	// LogicOp:
-
-	CL_CLEAR                        = 0x1500,
-	CL_AND                          = 0x1501,
-	CL_AND_REVERSE                  = 0x1502,
-	CL_COPY                         = 0x1503,
-	CL_AND_INVERTED                 = 0x1504,
-	CL_NOOP                         = 0x1505,
-	CL_XOR                          = 0x1506,
-	CL_OR                           = 0x1507,
-	CL_NOR                          = 0x1508,
-	CL_EQUIV                        = 0x1509,
-	CL_INVERT                       = 0x150A,
-	CL_OR_REVERSE                   = 0x150B,
-	CL_COPY_INVERTED                = 0x150C,
-	CL_OR_INVERTED                  = 0x150D,
-	CL_NAND                         = 0x150E,
-	CL_SET                          = 0x150F,
-
-	// MapTarget:
-
-	// CL_MAP1_COLOR_4
-	// CL_MAP1_INDEX
-	// CL_MAP1_NORMAL
-	// CL_MAP1_TEXTURE_COORD_1
-	// CL_MAP1_TEXTURE_COORD_2
-	// CL_MAP1_TEXTURE_COORD_3
-	// CL_MAP1_TEXTURE_COORD_4
-	// CL_MAP1_VERTEX_3
-	// CL_MAP1_VERTEX_4
-	// CL_MAP2_COLOR_4
-	// CL_MAP2_INDEX
-	// CL_MAP2_NORMAL
-	// CL_MAP2_TEXTURE_COORD_1
-	// CL_MAP2_TEXTURE_COORD_2
-	// CL_MAP2_TEXTURE_COORD_3
-	// CL_MAP2_TEXTURE_COORD_4
-	// CL_MAP2_VERTEX_3
-	// CL_MAP2_VERTEX_4
-
-	// MaterialFace:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
-
-	// MaterialParameter:
-
-	CL_EMISSION                     = 0x1600,
-	CL_SHININESS                    = 0x1601,
-	CL_AMBIENT_AND_DIFFUSE          = 0x1602,
-	CL_COLOR_INDEXES                = 0x1603,
-	// CL_AMBIENT
-	// CL_DIFFUSE
-	// CL_SPECULAR
-
-	// MatrixMode:
-
-	CL_MODELVIEW                    = 0x1700,
-	CL_PROJECTION                   = 0x1701,
-	CL_TEXTURE                      = 0x1702,
-
-	// MeshMode1:
-
-	// CL_POINT
-	// CL_LINE
-
-	// MeshMode2:
-
-	// CL_POINT
-	// CL_LINE
-	// CL_FILL
-
-	// MinmaxTarget:
-
-	// CL_MINMAX
-
-	// NormalPointerType:
-
-	// CL_BYTE
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// PixelCopyType:
-
-	CL_COLOR                        = 0x1800,
-	CL_DEPTH                        = 0x1801,
-	CL_STENCIL                      = 0x1802,
-
-	// PixelFormat:
-
-	CL_COLOR_INDEX                  = 0x1900,
-	CL_STENCIL_INDEX                = 0x1901,
-	CL_DEPTH_COMPONENT              = 0x1902,
-	CL_RED                          = 0x1903,
-	CL_GREEN                        = 0x1904,
-	CL_BLUE                         = 0x1905,
-	CL_ALPHA                        = 0x1906,
-	CL_RGB                          = 0x1907,
-	CL_RGBA                         = 0x1908,
-	CL_LUMINANCE                    = 0x1909,
-	CL_LUMINANCE_ALPHA              = 0x190A,
-	// CL_ABGR
-
-	// PixelInternalFormat:
-
-	// CL_ALPHA4
-	// CL_ALPHA8
-	// CL_ALPHA12
-	// CL_ALPHA16
-	// CL_LUMINANCE4
-	// CL_LUMINANCE8
-	// CL_LUMINANCE12
-	// CL_LUMINANCE16
-	// CL_LUMINANCE4_ALPHA4
-	// CL_LUMINANCE6_ALPHA2
-	// CL_LUMINANCE8_ALPHA8
-	// CL_LUMINANCE12_ALPHA4
-	// CL_LUMINANCE12_ALPHA12
-	// CL_LUMINANCE16_ALPHA16
-	// CL_INTENSITY
-	// CL_INTENSITY4
-	// CL_INTENSITY8
-	// CL_INTENSITY12
-	// CL_INTENSITY16
-	// CL_R3_G3_B2
-	// CL_RGB4
-	// CL_RGB5
-	// CL_RGB8
-	// CL_RGB10
-	// CL_RGB12
-	// CL_RGB16
-	// CL_RGBA2
-	// CL_RGBA4
-	// CL_RGB5_A1
-	// CL_RGBA8
-	// CL_RGB10_A2
-	// CL_RGBA12
-	// CL_RGBA16
-
-	// PixelMap:
-
-	// CL_PIXEL_MAP_I_TO_I
-	// CL_PIXEL_MAP_S_TO_S
-	// CL_PIXEL_MAP_I_TO_R
-	// CL_PIXEL_MAP_I_TO_G
-	// CL_PIXEL_MAP_I_TO_B
-	// CL_PIXEL_MAP_I_TO_A
-	// CL_PIXEL_MAP_R_TO_R
-	// CL_PIXEL_MAP_G_TO_G
-	// CL_PIXEL_MAP_B_TO_B
-	// CL_PIXEL_MAP_A_TO_A
-
-	// PixelStore:
-
-	// CL_UNPACK_SWAP_BYTES
-	// CL_UNPACK_LSB_FIRST
-	// CL_UNPACK_ROW_LENGTH
-	// CL_UNPACK_SKIP_ROWS
-	// CL_UNPACK_SKIP_PIXELS
-	// CL_UNPACK_ALIGNMENT
-	// CL_PACK_SWAP_BYTES
-	// CL_PACK_LSB_FIRST
-	// CL_PACK_ROW_LENGTH
-	// CL_PACK_SKIP_ROWS
-	// CL_PACK_SKIP_PIXELS
-	// CL_PACK_ALIGNMENT
-	// CL_PACK_SKIP_IMAGES
-	// CL_PACK_IMAGE_HEIGHT
-	// CL_UNPACK_SKIP_IMAGES
-	// CL_UNPACK_IMAGE_HEIGHT
-
-	// PixelTransfer:
-
-	// CL_MAP_COLOR
-	// CL_MAP_STENCIL
-	// CL_INDEX_SHIFT
-	// CL_INDEX_OFFSET
-	// CL_RED_SCALE
-	// CL_RED_BIAS
-	// CL_GREEN_SCALE
-	// CL_GREEN_BIAS
-	// CL_BLUE_SCALE
-	// CL_BLUE_BIAS
-	// CL_ALPHA_SCALE
-	// CL_ALPHA_BIAS
-	// CL_DEPTH_SCALE
-	// CL_DEPTH_BIAS
-	// CL_POST_CONVOLUTION_RED_SCALE
-	// CL_POST_CONVOLUTION_GREEN_SCALE
-	// CL_POST_CONVOLUTION_BLUE_SCALE
-	// CL_POST_CONVOLUTION_ALPHA_SCALE
-	// CL_POST_CONVOLUTION_RED_BIAS
-	// CL_POST_CONVOLUTION_GREEN_BIAS
-	// CL_POST_CONVOLUTION_BLUE_BIAS
-	// CL_POST_CONVOLUTION_ALPHA_BIAS
-	// CL_POST_COLOR_MATRIX_RED_SCALE
-	// CL_POST_COLOR_MATRIX_GREEN_SCALE
-	// CL_POST_COLOR_MATRIX_BLUE_SCALE
-	// CL_POST_COLOR_MATRIX_ALPHA_SCALE
-	// CL_POST_COLOR_MATRIX_RED_BIAS
-	// CL_POST_COLOR_MATRIX_GREEN_BIAS
-	// CL_POST_COLOR_MATRIX_BLUE_BIAS
-	// CL_POST_COLOR_MATRIX_ALPHA_BIAS
-
-	// PixelType:
-
-	CL_BITMAP                       = 0x1A00,
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_BGR
-	// CL_BGRA
-	// CL_UNSIGNED_BYTE_3_3_2
-	// CL_UNSIGNED_SHORT_4_4_4_4
-	// CL_UNSIGNED_SHORT_5_5_5_1
-	// CL_UNSIGNED_INT_8_8_8_8
-	// CL_UNSIGNED_INT_10_10_10_2
-	// CL_UNSIGNED_SHORT_5_6_5
-	// CL_UNSIGNED_BYTE_2_3_3_REV
-	// CL_UNSIGNED_SHORT_5_6_5_REV
-	// CL_UNSIGNED_SHORT_4_4_4_4_REV
-	// CL_UNSIGNED_SHORT_1_5_5_5_REV
-	// CL_UNSIGNED_INT_8_8_8_8_REV
-	// CL_UNSIGNED_INT_2_10_10_10_REV
-
-	// PolygonMode:
-
-	CL_POINT                        = 0x1B00,
-	CL_LINE                         = 0x1B01,
-	CL_FILL                         = 0x1B02,
-
-	// ReadBufferMode:
-
-	// CL_FRONT_LEFT
-	// CL_FRONT_RIGHT
-	// CL_BACK_LEFT
-	// CL_BACK_RIGHT
-	// CL_FRONT
-	// CL_BACK
-	// CL_LEFT
-	// CL_RIGHT
-	// CL_AUX0
-	// CL_AUX1
-	// CL_AUX2
-	// CL_AUX3
-
-	// RenderingMode:
-
-	CL_RENDER                       = 0x1C00,
-	CL_FEEDBACK                     = 0x1C01,
-	CL_SELECT                       = 0x1C02,
-
-	// SeparableTarget:
-
-	// CL_SEPARABLE_2D
-
-	// ShadingModel:
-
-	CL_FLAT                         = 0x1D00,
-	CL_SMOOTH                       = 0x1D01,
-
-	// StencilFunction:
-
-	// CL_NEVER
-	// CL_LESS
-	// CL_EQUAL
-	// CL_LEQUAL
-	// CL_GREATER
-	// CL_NOTEQUAL
-	// CL_GEQUAL
-	// CL_ALWAYS
-
-	// StencilOp:
-
-	// CL_ZERO
-	CL_KEEP                         = 0x1E00,
-	CL_REPLACE                      = 0x1E01,
-	CL_INCR                         = 0x1E02,
-	CL_DECR                         = 0x1E03,
-	// CL_INVERT
-
-	// StringName:
-
-	CL_VENDOR                       = 0x1F00,
-	CL_RENDERER                     = 0x1F01,
-	CL_VERSION                      = 0x1F02,
-	CL_EXTENSIONS                   = 0x1F03,
-	CL_SHADING_LANGUAGE_VERSION     = 0x8B8C,
-
-	// TextureCoordName:
-
-	CL_S                            = 0x2000,
-	CL_T                            = 0x2001,
-	CL_R                            = 0x2002,
-	CL_Q                            = 0x2003,
-
-	// TexCoordPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// TextureEnvMode:
-
-	CL_MODULATE                     = 0x2100,
-	CL_DECAL                        = 0x2101,
-	// CL_BLEND
-	// CL_REPLACE
-
-	// TextureEnvParameter:
-
-	CL_TEXTURE_ENV_MODE             = 0x2200,
-	CL_TEXTURE_ENV_COLOR            = 0x2201,
-
-	// TextureEnvTarget:
-
-	CL_TEXTURE_ENV                  = 0x2300,
-
-	// TextureGenMode:
-
-	CL_EYE_LINEAR                   = 0x2400,
-	CL_OBJECT_LINEAR                = 0x2401,
-	CL_SPHERE_MAP                   = 0x2402,
-
-	// TextureGenParameter:
-
-	CL_TEXTURE_GEN_MODE             = 0x2500,
-	CL_OBJECT_PLANE                 = 0x2501,
-	CL_EYE_PLANE                    = 0x2502,
-
-	// TextureMagFilter:
-
-	CL_NEAREST                      = 0x2600,
-	CL_LINEAR                       = 0x2601,
-
-	// TextureMinFilter:
-
-	// CL_NEAREST
-	// CL_LINEAR
-	CL_NEAREST_MIPMAP_NEAREST       = 0x2700,
-	CL_LINEAR_MIPMAP_NEAREST        = 0x2701,
-	CL_NEAREST_MIPMAP_LINEAR        = 0x2702,
-	CL_LINEAR_MIPMAP_LINEAR         = 0x2703,
-
-	// TextureParameterName:
-
-	CL_TEXTURE_MAG_FILTER           = 0x2800,
-	CL_TEXTURE_MIN_FILTER           = 0x2801,
-	CL_TEXTURE_WRAP_S               = 0x2802,
-	CL_TEXTURE_WRAP_T               = 0x2803,
-	// CL_TEXTURE_BORDER_COLOR
-	// CL_TEXTURE_PRIORITY
-	// CL_TEXTURE_WRAP_R
-	// CL_TEXTURE_MIN_LOD
-	// CL_TEXTURE_MAX_LOD
-	// CL_TEXTURE_BASE_LEVEL
-	// CL_TEXTURE_MAX_LEVEL
-
-	// TextureTarget:
-
-	// CL_TEXTURE_1D
-	// CL_TEXTURE_2D
-	// CL_PROXY_TEXTURE_1D
-	// CL_PROXY_TEXTURE_2D
-	// CL_TEXTURE_3D
-	// CL_PROXY_TEXTURE_3D
-
-	// TextureUnit:
-
-	// CL_TEXTURE0
-	// CL_TEXTURE1
-	// CL_TEXTURE2
-	// CL_TEXTURE3
-	// CL_TEXTURE4
-	// CL_TEXTURE5
-	// CL_TEXTURE6
-	// CL_TEXTURE7
-	// CL_TEXTURE8
-	// CL_TEXTURE9
-	// CL_TEXTURE10
-	// CL_TEXTURE11
-	// CL_TEXTURE12
-	// CL_TEXTURE13
-	// CL_TEXTURE14
-	// CL_TEXTURE15
-	// CL_TEXTURE16
-	// CL_TEXTURE17
-	// CL_TEXTURE18
-	// CL_TEXTURE19
-	// CL_TEXTURE20
-	// CL_TEXTURE21
-	// CL_TEXTURE22
-	// CL_TEXTURE23
-	// CL_TEXTURE24
-	// CL_TEXTURE25
-	// CL_TEXTURE26
-	// CL_TEXTURE27
-	// CL_TEXTURE28
-	// CL_TEXTURE29
-	// CL_TEXTURE30
-	// CL_TEXTURE31
-
-	// TextureWrapMode:
-
-	CL_CLAMP                        = 0x2900,
-	CL_REPEAT                       = 0x2901,
-	// CL_CLAMP_TO_EDGE
-
-	// VertexPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// ClientAttribMask:
-
-	CL_CLIENT_PIXEL_STORE_BIT       = 0x00000001,
-	CL_CLIENT_VERTEX_ARRAY_BIT      = 0x00000002,
-	CL_CLIENT_ALL_ATTRIB_BITS       = 0xffffffff,
-
-	// polygon_offset:
-
-	CL_POLYGON_OFFSET_FACTOR        = 0x8038,
-	CL_POLYGON_OFFSET_UNITS         = 0x2A00,
-	CL_POLYGON_OFFSET_POINT         = 0x2A01,
-	CL_POLYGON_OFFSET_LINE          = 0x2A02,
-	CL_POLYGON_OFFSET_FILL          = 0x8037,
-
-	// texture:
-
-	CL_ALPHA4                       = 0x803B,
-	CL_ALPHA8                       = 0x803C,
-	CL_ALPHA12                      = 0x803D,
-	CL_ALPHA16                      = 0x803E,
-	CL_LUMINANCE4                   = 0x803F,
-	CL_LUMINANCE8                   = 0x8040,
-	CL_LUMINANCE12                  = 0x8041,
-	CL_LUMINANCE16                  = 0x8042,
-	CL_LUMINANCE4_ALPHA4            = 0x8043,
-	CL_LUMINANCE6_ALPHA2            = 0x8044,
-	CL_LUMINANCE8_ALPHA8            = 0x8045,
-	CL_LUMINANCE12_ALPHA4           = 0x8046,
-	CL_LUMINANCE12_ALPHA12          = 0x8047,
-	CL_LUMINANCE16_ALPHA16          = 0x8048,
-	CL_INTENSITY                    = 0x8049,
-	CL_INTENSITY4                   = 0x804A,
-	CL_INTENSITY8                   = 0x804B,
-	CL_INTENSITY12                  = 0x804C,
-	CL_INTENSITY16                  = 0x804D,
-	CL_R3_G3_B2                     = 0x2A10,
-	CL_RGB4                         = 0x804F,
-	CL_RGB5                         = 0x8050,
-	CL_RGB8                         = 0x8051,
-	CL_RGB10                        = 0x8052,
-	CL_RGB12                        = 0x8053,
-	CL_RGB16                        = 0x8054,
-	CL_RGBA2                        = 0x8055,
-	CL_RGBA4                        = 0x8056,
-	CL_RGB5_A1                      = 0x8057,
-	CL_RGBA8                        = 0x8058,
-	CL_RGB10_A2                     = 0x8059,
-	CL_RGBA12                       = 0x805A,
-	CL_RGBA16                       = 0x805B,
-	CL_TEXTURE_RED_SIZE             = 0x805C,
-	CL_TEXTURE_GREEN_SIZE           = 0x805D,
-	CL_TEXTURE_BLUE_SIZE            = 0x805E,
-	CL_TEXTURE_ALPHA_SIZE           = 0x805F,
-	CL_TEXTURE_LUMINANCE_SIZE       = 0x8060,
-	CL_TEXTURE_INTENSITY_SIZE       = 0x8061,
-	CL_PROXY_TEXTURE_1D             = 0x8063,
-	CL_PROXY_TEXTURE_2D             = 0x8064,
-
-	// texture_object:
-
-	CL_TEXTURE_PRIORITY             = 0x8066,
-	CL_TEXTURE_RESIDENT             = 0x8067,
-	CL_TEXTURE_BINDING_1D           = 0x8068,
-	CL_TEXTURE_1D_BINDING           = 0x8068,
-	CL_TEXTURE_BINDING_2D           = 0x8069,
-	CL_TEXTURE_2D_BINDING           = 0x8069,
-	CL_TEXTURE_BINDING_3D           = 0x806A,
-	CL_TEXTURE_3D_BINDING           = 0x806A,
-
-	// vertex_array:
-
-	CL_VERTEX_ARRAY                 = 0x8074,
-	CL_NORMAL_ARRAY                 = 0x8075,
-	CL_COLOR_ARRAY                  = 0x8076,
-	CL_INDEX_ARRAY                  = 0x8077,
-	CL_TEXTURE_COORD_ARRAY          = 0x8078,
-	CL_EDGE_FLAG_ARRAY              = 0x8079,
-	CL_VERTEX_ARRAY_SIZE            = 0x807A,
-	CL_VERTEX_ARRAY_TYPE            = 0x807B,
-	CL_VERTEX_ARRAY_STRIDE          = 0x807C,
-	CL_NORMAL_ARRAY_TYPE            = 0x807E,
-	CL_NORMAL_ARRAY_STRIDE          = 0x807F,
-	CL_COLOR_ARRAY_SIZE             = 0x8081,
-	CL_COLOR_ARRAY_TYPE             = 0x8082,
-	CL_COLOR_ARRAY_STRIDE           = 0x8083,
-	CL_INDEX_ARRAY_TYPE             = 0x8085,
-	CL_INDEX_ARRAY_STRIDE           = 0x8086,
-	CL_TEXTURE_COORD_ARRAY_SIZE     = 0x8088,
-	CL_TEXTURE_COORD_ARRAY_TYPE     = 0x8089,
-	CL_TEXTURE_COORD_ARRAY_STRIDE   = 0x808A,
-	CL_EDGE_FLAG_ARRAY_STRIDE       = 0x808C,
-	CL_VERTEX_ARRAY_POINTER         = 0x808E,
-	CL_NORMAL_ARRAY_POINTER         = 0x808F,
-	CL_COLOR_ARRAY_POINTER          = 0x8090,
-	CL_INDEX_ARRAY_POINTER          = 0x8091,
-	CL_TEXTURE_COORD_ARRAY_POINTER  = 0x8092,
-	CL_EDGE_FLAG_ARRAY_POINTER      = 0x8093,
-	CL_V2F                          = 0x2A20,
-	CL_V3F                          = 0x2A21,
-	CL_C4UB_V2F                     = 0x2A22,
-	CL_C4UB_V3F                     = 0x2A23,
-	CL_C3F_V3F                      = 0x2A24,
-	CL_N3F_V3F                      = 0x2A25,
-	CL_C4F_N3F_V3F                  = 0x2A26,
-	CL_T2F_V3F                      = 0x2A27,
-	CL_T4F_V4F                      = 0x2A28,
-	CL_T2F_C4UB_V3F                 = 0x2A29,
-	CL_T2F_C3F_V3F                  = 0x2A2A,
-	CL_T2F_N3F_V3F                  = 0x2A2B,
-	CL_T2F_C4F_N3F_V3F              = 0x2A2C,
-	CL_T4F_C4F_N3F_V4F              = 0x2A2D,
-
-	// bgra
-
-	CL_BGR                          = 0x80E0,
-	CL_BGRA                         = 0x80E1,
-
-	// blend_color
-
-	CL_CONSTANT_COLOR               = 0x8001,
-	CL_ONE_MINUS_CONSTANT_COLOR     = 0x8002,
-	CL_CONSTANT_ALPHA               = 0x8003,
-	CL_ONE_MINUS_CONSTANT_ALPHA     = 0x8004,
-	CL_BLEND_COLOR                  = 0x8005,
-
-	// blend_minmax
-
-	CL_FUNC_ADD                     = 0x8006,
-	CL_MIN                          = 0x8007,
-	CL_MAX                          = 0x8008,
-	CL_BLEND_EQUATION               = 0x8009,
-
-	// blend_subtract
-
-	CL_FUNC_SUBTRACT                = 0x800A,
-	CL_FUNC_REVERSE_SUBTRACT        = 0x800B,
-
-	// color_matrix
-
-	CL_COLOR_MATRIX                 = 0x80B1,
-	CL_COLOR_MATRIX_STACK_DEPTH     = 0x80B2,
-	CL_MAX_COLOR_MATRIX_STACK_DEPTH = 0x80B3,
-	CL_POST_COLOR_MATRIX_RED_SCALE  = 0x80B4,
-	CL_POST_COLOR_MATRIX_GREEN_SCALE= 0x80B5,
-	CL_POST_COLOR_MATRIX_BLUE_SCALE = 0x80B6,
-	CL_POST_COLOR_MATRIX_ALPHA_SCALE= 0x80B7,
-	CL_POST_COLOR_MATRIX_RED_BIAS   = 0x80B8,
-	CL_POST_COLOR_MATRIX_GREEN_BIAS = 0x80B9,
-	CL_POST_COLOR_MATRIX_BLUE_BIAS  = 0x80BA,
-	CL_POST_COLOR_MATRIX_ALPHA_BIAS = 0x80BB,
-
-	// color_table
-
-	CL_COLOR_TABLE                  = 0x80D0,
-	CL_POST_CONVOLUTION_COLOR_TABLE = 0x80D1,
-	CL_POST_COLOR_MATRIX_COLOR_TABLE= 0x80D2,
-	CL_PROXY_COLOR_TABLE            = 0x80D3,
-	CL_PROXY_POST_CONVOLUTION_COLOR_TABLE = 0x80D4,
-	CL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE = 0x80D5,
-	CL_COLOR_TABLE_SCALE            = 0x80D6,
-	CL_COLOR_TABLE_BIAS             = 0x80D7,
-	CL_COLOR_TABLE_FORMAT           = 0x80D8,
-	CL_COLOR_TABLE_WIDTH            = 0x80D9,
-	CL_COLOR_TABLE_RED_SIZE         = 0x80DA,
-	CL_COLOR_TABLE_GREEN_SIZE       = 0x80DB,
-	CL_COLOR_TABLE_BLUE_SIZE        = 0x80DC,
-	CL_COLOR_TABLE_ALPHA_SIZE       = 0x80DD,
-	CL_COLOR_TABLE_LUMINANCE_SIZE   = 0x80DE,
-	CL_COLOR_TABLE_INTENSITY_SIZE   = 0x80DF,
-
-	// convolution
-
-	CL_CONVOLUTION_1D               = 0x8010,
-	CL_CONVOLUTION_2D               = 0x8011,
-	CL_SEPARABLE_2D                 = 0x8012,
-	CL_CONVOLUTION_BORDER_MODE      = 0x8013,
-	CL_CONVOLUTION_FILTER_SCALE     = 0x8014,
-	CL_CONVOLUTION_FILTER_BIAS      = 0x8015,
-	CL_REDUCE                       = 0x8016,
-	CL_CONVOLUTION_FORMAT           = 0x8017,
-	CL_CONVOLUTION_WIDTH            = 0x8018,
-	CL_CONVOLUTION_HEIGHT           = 0x8019,
-	CL_MAX_CONVOLUTION_WIDTH        = 0x801A,
-	CL_MAX_CONVOLUTION_HEIGHT       = 0x801B,
-	CL_POST_CONVOLUTION_RED_SCALE   = 0x801C,
-	CL_POST_CONVOLUTION_GREEN_SCALE = 0x801D,
-	CL_POST_CONVOLUTION_BLUE_SCALE  = 0x801E,
-	CL_POST_CONVOLUTION_ALPHA_SCALE = 0x801F,
-	CL_POST_CONVOLUTION_RED_BIAS    = 0x8020,
-	CL_POST_CONVOLUTION_GREEN_BIAS  = 0x8021,
-	CL_POST_CONVOLUTION_BLUE_BIAS   = 0x8022,
-	CL_POST_CONVOLUTION_ALPHA_BIAS  = 0x8023,
-	CL_CONSTANT_BORDER              = 0x8151,
-	CL_REPLICATE_BORDER             = 0x8153,
-	CL_CONVOLUTION_BORDER_COLOR     = 0x8154,
-
-	// draw_range_elements
-
-	CL_MAX_ELEMENTS_VERTICES        = 0x80E8,
-	CL_MAX_ELEMENTS_INDICES         = 0x80E9,
-
-	// histogram
-
-	CL_HISTOGRAM                    = 0x8024,
-	CL_PROXY_HISTOGRAM              = 0x8025,
-	CL_HISTOGRAM_WIDTH              = 0x8026,
-	CL_HISTOGRAM_FORMAT             = 0x8027,
-	CL_HISTOGRAM_RED_SIZE           = 0x8028,
-	CL_HISTOGRAM_GREEN_SIZE         = 0x8029,
-	CL_HISTOGRAM_BLUE_SIZE          = 0x802A,
-	CL_HISTOGRAM_ALPHA_SIZE         = 0x802B,
-	CL_HISTOGRAM_LUMINANCE_SIZE     = 0x802C,
-	CL_HISTOGRAM_SINK               = 0x802D,
-	CL_MINMAX                       = 0x802E,
-	CL_MINMAX_FORMAT                = 0x802F,
-	CL_MINMAX_SINK                  = 0x8030,
-	CL_TABLE_TOO_LARGE              = 0x8031,
-
-	// packed_pixels
-
-	CL_UNSIGNED_BYTE_3_3_2          = 0x8032,
-	CL_UNSIGNED_SHORT_4_4_4_4       = 0x8033,
-	CL_UNSIGNED_SHORT_5_5_5_1       = 0x8034,
-	CL_UNSIGNED_INT_8_8_8_8         = 0x8035,
-	CL_UNSIGNED_INT_10_10_10_2      = 0x8036,
-	CL_UNSIGNED_BYTE_2_3_3_REV      = 0x8362,
-	CL_UNSIGNED_SHORT_5_6_5         = 0x8363,
-	CL_UNSIGNED_SHORT_5_6_5_REV     = 0x8364,
-	CL_UNSIGNED_SHORT_4_4_4_4_REV   = 0x8365,
-	CL_UNSIGNED_SHORT_1_5_5_5_REV   = 0x8366,
-	CL_UNSIGNED_INT_8_8_8_8_REV     = 0x8367,
-	CL_UNSIGNED_INT_2_10_10_10_REV  = 0x8368,
-
-	CL_MIRRORED_REPEAT              = 0x8370,
-
-	// rescale_normal
-
-	CL_RESCALE_NORMAL               = 0x803A,
-
-	// separate_specular_color
-
-	CL_LIGHT_MODEL_COLOR_CONTROL    = 0x81F8,
-	CL_SINGLE_COLOR                 = 0x81F9,
-	CL_SEPARATE_SPECULAR_COLOR      = 0x81FA,
-
-	// texture3D
-
-	CL_PACK_SKIP_IMAGES             = 0x806B,
-	CL_PACK_IMAGE_HEIGHT            = 0x806C,
-	CL_UNPACK_SKIP_IMAGES           = 0x806D,
-	CL_UNPACK_IMAGE_HEIGHT          = 0x806E,
-	CL_TEXTURE_3D                   = 0x806F,
-	CL_PROXY_TEXTURE_3D             = 0x8070,
-	CL_TEXTURE_DEPTH                = 0x8071,
-	CL_TEXTURE_WRAP_R               = 0x8072,
-	CL_MAX_3D_TEXTURE_SIZE          = 0x8073,
-
-	// texture_edge_clamp
-
-	CL_CLAMP_TO_BORDER              = 0x812D,
-	CL_CLAMP_TO_EDGE                = 0x812F,
-
-	// texture_lod
-
-	CL_TEXTURE_MIN_LOD              = 0x813A,
-	CL_TEXTURE_MAX_LOD              = 0x813B,
-	CL_TEXTURE_BASE_LEVEL           = 0x813C,
-	CL_TEXTURE_MAX_LEVEL            = 0x813D,
-
-	// GetTarget1_2:
-
-	CL_SMOOTH_POINT_SIZE_RANGE      = 0x0B12,
-	CL_SMOOTH_POINT_SIZE_GRANULARITY= 0x0B13,
-	CL_SMOOTH_LINE_WIDTH_RANGE      = 0x0B22,
-	CL_SMOOTH_LINE_WIDTH_GRANULARITY= 0x0B23,
-	CL_ALIASED_POINT_SIZE_RANGE     = 0x846D,
-	CL_ALIASED_LINE_WIDTH_RANGE     = 0x846E,
-
-	// multitexture:
-
-	CL_TEXTURE0                 = 0x84C0,
-	CL_TEXTURE1                 = 0x84C1,
-	CL_TEXTURE2                 = 0x84C2,
-	CL_TEXTURE3                 = 0x84C3,
-	CL_TEXTURE4                 = 0x84C4,
-	CL_TEXTURE5                 = 0x84C5,
-	CL_TEXTURE6                 = 0x84C6,
-	CL_TEXTURE7                 = 0x84C7,
-	CL_TEXTURE8                 = 0x84C8,
-	CL_TEXTURE9                 = 0x84C9,
-	CL_TEXTURE10                = 0x84CA,
-	CL_TEXTURE11                = 0x84CB,
-	CL_TEXTURE12                = 0x84CC,
-	CL_TEXTURE13                = 0x84CD,
-	CL_TEXTURE14                = 0x84CE,
-	CL_TEXTURE15                = 0x84CF,
-	CL_TEXTURE16                = 0x84D0,
-	CL_TEXTURE17                = 0x84D1,
-	CL_TEXTURE18                = 0x84D2,
-	CL_TEXTURE19                = 0x84D3,
-	CL_TEXTURE20                = 0x84D4,
-	CL_TEXTURE21                = 0x84D5,
-	CL_TEXTURE22                = 0x84D6,
-	CL_TEXTURE23                = 0x84D7,
-	CL_TEXTURE24                = 0x84D8,
-	CL_TEXTURE25                = 0x84D9,
-	CL_TEXTURE26                = 0x84DA,
-	CL_TEXTURE27                = 0x84DB,
-	CL_TEXTURE28                = 0x84DC,
-	CL_TEXTURE29                = 0x84DD,
-	CL_TEXTURE30                = 0x84DE,
-	CL_TEXTURE31                = 0x84DF,
-	CL_ACTIVE_TEXTURE           = 0x84E0,
-	CL_CLIENT_ACTIVE_TEXTURE    = 0x84E1,
-	CL_MAX_TEXTURE_UNITS        = 0x84E2,
-
-	// EXT_abgr:
-
-	CL_ABGR                     = 0x8000,
-
-	// EXT_blend_color:
-
-	// CL_CONSTANT_COLOR           = 0x8001,
-	// CL_ONE_MINUS_CONSTANT_COLOR = 0x8002,
-	// CL_CONSTANT_ALPHA           = 0x8003,
-	// CL_ONE_MINUS_CONSTANT_ALPHA = 0x8004,
-	// CL_BLEND_COLOR              = 0x8005,
-
-	// EXT_blend_minmax:
-
-	// CL_FUNC_ADD                 = 0x8006,
-	// CL_MIN                      = 0x8007,
-	// CL_MAX                      = 0x8008,
-	// CL_BLEND_EQUATION           = 0x8009,
-
-	// EXT_blend_subtract:
-
-	// CL_FUNC_SUBTRACT            = 0x800A,
-	// CL_FUNC_REVERSE_SUBTRACT    = 0x800B,
-
-	// EXT_texture_env_combine:
-
-	CL_COMBINE                  = 0x8570,
-	CL_COMBINE_RGB              = 0x8571,
-	CL_COMBINE_ALPHA            = 0x8572,
-	CL_RGB_SCALE                = 0x8573,
-	CL_ADD_SIGNED               = 0x8574,
-	CL_INTERPOLATE              = 0x8575,
-	CL_CONSTANT                 = 0x8576,
-	CL_PRIMARY_COLOR            = 0x8577,
-	CL_PREVIOUS                 = 0x8578,
-	CL_SOURCE0_RGB              = 0x8580,
-	CL_SOURCE1_RGB              = 0x8581,
-	CL_SOURCE2_RGB              = 0x8582,
-	CL_SOURCE0_ALPHA            = 0x8588,
-	CL_SOURCE1_ALPHA            = 0x8589,
-	CL_SOURCE2_ALPHA            = 0x858A,
-	CL_OPERAND0_RGB             = 0x8590,
-	CL_OPERAND1_RGB             = 0x8591,
-	CL_OPERAND2_RGB             = 0x8592,
-	CL_OPERAND0_ALPHA           = 0x8598,
-	CL_OPERAND1_ALPHA           = 0x8599,
-	CL_OPERAND2_ALPHA           = 0x859A,
-
-	// OpenGL 1.5 token renames:
-	CL_SRC0_RGB                 = CL_SOURCE0_RGB,
-	CL_SRC1_RGB                 = CL_SOURCE1_RGB,
-	CL_SRC2_RGB                 = CL_SOURCE2_RGB,
-	CL_SRC0_ALPHA               = CL_SOURCE0_ALPHA,
-	CL_SRC1_ALPHA               = CL_SOURCE1_ALPHA,
-	CL_SRC2_ALPHA               = CL_SOURCE2_ALPHA,
-
-	// ARB_texture_compression:
-
-	CL_COMPRESSED_ALPHA           = 0x84e9,
-	CL_COMPRESSED_LUMINANCE       = 0x84ea,
-	CL_COMPRESSED_LUMINANCE_ALPHA = 0x84eb,
-	CL_COMPRESSED_INTENSITY       = 0x84ec,
-	CL_COMPRESSED_RGB             = 0x84ed,
-	CL_COMPRESSED_RGBA            = 0x84ee,
-	CL_TEXTURE_COMPRESSION_HINT   = 0x84ef,
-	CL_TEXTURE_COMPRESSED_IMAGE_SIZE = 0x86a0,
-	CL_TEXTURE_COMPRESSED         = 0x86a1,
-	CL_NUM_COMPRESSED_TEXTURE_FORMATS = 0x86a2,
-	CL_COMPRESSED_TEXTURE_FORMATS = 0x86a3,
-
-	// ARB_texture_cube_map:
-
-	CL_NORMAL_MAP                 = 0x8511,
-	CL_REFLECTION_MAP             = 0x8512,
-	CL_TEXTURE_CUBE_MAP           = 0x8513,
-	CL_TEXTURE_BINDING_CUBE_MAP   = 0x8514,
-	CL_TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515,
-	CL_TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516,
-	CL_TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517,
-	CL_TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518,
-	CL_TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519,
-	CL_TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851a,
-	CL_PROXY_TEXTURE_CUBE_MAP     = 0x851b,
-	CL_MAX_CUBE_MAP_TEXTURE_SIZE  = 0x851c,
-
-	// ARB_multisample:
-
-	CL_MULTISAMPLE                = 0x809d,
-	CL_SAMPLE_ALPHA_TO_COVERAGE   = 0x809e,
-	CL_SAMPLE_ALPHA_TO_ONE        = 0x809f,
-	CL_SAMPLE_COVERAGE            = 0x80a0,
-	CL_SAMPLE_BUFFERS             = 0x80a8,
-	CL_SAMPLES                    = 0x80a9,
-	CL_SAMPLE_COVERAGE_VALUE      = 0x80aa,
-	CL_SAMPLE_COVERAGE_INVERT     = 0x80ab,
-	CL_MULTISAMPLE_BIT            = 0x20000000,
-
-	// ARB_texture_env_combine:
-
-	CL_SUBTRACT                   = 0x84e7,
-	// CL_COMBINE                    = 0x8570,
-	// CL_COMBINE_RGB                = 0x8571,
-	// CL_COMBINE_ALPHA              = 0x8572,
-	// CL_RGB_SCALE                  = 0x8573,
-	// CL_ADD_SIGNED                 = 0x8574,
-	// CL_INTERPOLATE                = 0x8575,
-	// CL_CONSTANT                   = 0x8576,
-	// CL_PRIMARY_COLOR              = 0x8577,
-	// CL_PREVIOUS                   = 0x8578,
-	// CL_SOURCE0_RGB                = 0x8580,
-	// CL_SOURCE1_RGB                = 0x8581,
-	// CL_SOURCE2_RGB                = 0x8582,
-	// CL_SOURCE0_ALPHA              = 0x8588,
-	// CL_SOURCE1_ALPHA              = 0x8589,
-	// CL_SOURCE2_ALPHA              = 0x858a,
-	// CL_OPERAND0_RGB               = 0x8590,
-	// CL_OPERAND1_RGB               = 0x8591,
-	// CL_OPERAND2_RGB               = 0x8592,
-	// CL_OPERAND0_ALPHA             = 0x8598,
-	// CL_OPERAND1_ALPHA             = 0x8599,
-	// CL_OPERAND2_ALPHA             = 0x859a,
-
-	// ARB_texture_env_dot3:
-
-	CL_DOT3_RGB                   = 0x86ae,
-	CL_DOT3_RGBA                  = 0x86af,
-
-	// ARB_transpose_matrix:
-
-	CL_TRANSPOSE_MODELVIEW_MATRIX  = 0x84e3,
-	CL_TRANSPOSE_PROJECTION_MATRIX = 0x84e4,
-	CL_TRANSPOSE_TEXTURE_MATRIX    = 0x84e5,
-	CL_TRANSPOSE_COLOR_MATRIX      = 0x84e6,
-
-	// SGIS_generate_mipmap:
-
-	CL_GENERATE_MIPMAP             = 0x8191,
-	CL_GENERATE_MIPMAP_HINT        = 0x8192,
-
-	// ARB_depth_texture:
-
-	CL_DEPTH_COMPONENT16           = 0x81a5,
-	CL_DEPTH_COMPONENT24           = 0x81a6,
-	CL_DEPTH_COMPONENT32           = 0x81a7,
-	CL_TEXTURE_DEPTH_SIZE          = 0x884a,
-	CL_DEPTH_TEXTURE_MODE          = 0x884b,
-
-	// ARB_shadow:
-
-	CL_TEXTURE_COMPARE_MODE        = 0x884c,
-	CL_TEXTURE_COMPARE_FUNC        = 0x884d,
-	CL_COMPARE_R_TO_TEXTURE        = 0x884e,
-
-	// EXT_fog_coord:
-
-	CL_FOG_COORDINATE_SOURCE       = 0x8450,
-	CL_FOG_COORDINATE              = 0x8451,
-	CL_FRAGMENT_DEPTH              = 0x8452,
-	CL_CURRENT_FOG_COORDINATE      = 0x8453,
-	CL_FOG_COORDINATE_ARRAY_TYPE   = 0x8454,
-	CL_FOG_COORDINATE_ARRAY_STRIDE = 0x8455,
-	CL_FOG_COORDINATE_ARRAY_POINTER = 0x8456,
-	CL_FOG_COORDINATE_ARRAY        = 0x8457,
-
-	// OpenGL 1.5 token renames:
-	CL_FOG_COORD_SRC               = CL_FOG_COORDINATE_SOURCE,
-	CL_FOG_COORD                   = CL_FOG_COORDINATE,
-	CL_CURRENT_FOG_COORD           = CL_CURRENT_FOG_COORDINATE,
-	CL_FOG_COORD_ARRAY_TYPE        = CL_FOG_COORDINATE_ARRAY_TYPE,
-	CL_FOG_COORD_ARRAY_STRIDE      = CL_FOG_COORDINATE_ARRAY_STRIDE,
-	CL_FOG_COORD_ARRAY_POINTER     = CL_FOG_COORDINATE_ARRAY_POINTER,
-	CL_FOG_COORD_ARRAY             = CL_FOG_COORDINATE_ARRAY,
-
-	// ARB_point_parameters:
-
-	CL_POINT_SIZE_MIN              = 0x8126,
-	CL_POINT_SIZE_MAX              = 0x8127,
-	CL_POINT_FADE_THRESHOLD_SIZE   = 0x8128,
-	CL_POINT_DISTANCE_ATTENUATION  = 0x8129,
-
-	// EXT_secondary_color:
-
-	CL_COLOR_SUM                   = 0x8458,
-	CL_CURRENT_SECONDARY_COLOR     = 0x8459,
-	CL_SECONDARY_COLOR_ARRAY_SIZE  = 0x845a,
-	CL_SECONDARY_COLOR_ARRAY_TYPE  = 0x845b,
-	CL_SECONDARY_COLOR_ARRAY_STRIDE = 0x845c,
-	CL_SECONDARY_COLOR_ARRAY_POINTER = 0x845d,
-	CL_SECONDARY_COLOR_ARRAY       = 0x845e,
-
-	// EXT_blend_func_separate:
-
-	CL_BLEND_DST_RGB               = 0x80c8,
-	CL_BLEND_SRC_RGB               = 0x80c9,
-	CL_BLEND_DST_ALPHA             = 0x80ca,
-	CL_BLEND_SRC_ALPHA             = 0x80cb,
-
-	// EXT_stencil_wrap:
-
-	CL_INCR_WRAP                   = 0x8507,
-	CL_DECR_WRAP                   = 0x8508,
-
-	// EXT_texture_lod_bias:
-
-	CL_MAX_TEXTURE_LOD_BIAS        = 0x84fd,
-	CL_TEXTURE_FILTER_CONTROL      = 0x8500,
-	CL_TEXTURE_LOD_BIAS            = 0x8501,
-
-	// ARB_vertex_buffer_object:
-
-	CL_ARRAY_BUFFER                        = 0x8892,
-	CL_ELEMENT_ARRAY_BUFFER                = 0x8893,
-	CL_ARRAY_BUFFER_BINDING                = 0x8894,
-	CL_ELEMENT_ARRAY_BUFFER_BINDING        = 0x8895,
-	CL_VERTEX_ARRAY_BUFFER_BINDING         = 0x8896,
-	CL_NORMAL_ARRAY_BUFFER_BINDING         = 0x8897,
-	CL_COLOR_ARRAY_BUFFER_BINDING          = 0x8898,
-	CL_INDEX_ARRAY_BUFFER_BINDING          = 0x8899,
-	CL_TEXTURE_COORD_ARRAY_BUFFER_BINDING  = 0x889A,
-	CL_EDGE_FLAG_ARRAY_BUFFER_BINDING      = 0x889B,
-	CL_SECONDARY_COLOR_ARRAY_BUFFER_BINDING = 0x889C,
-	CL_FOG_COORDINATE_ARRAY_BUFFER_BINDING = 0x889D,
-	CL_FOG_COORD_ARRAY_BUFFER_BINDING      = CL_FOG_COORDINATE_ARRAY_BUFFER_BINDING,
-	CL_WEIGHT_ARRAY_BUFFER_BINDING         = 0x889E,
-	CL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING  = 0x889F,
-	CL_STREAM_DRAW                         = 0x88E0,
-	CL_STREAM_READ                         = 0x88E1,
-	CL_STREAM_COPY                         = 0x88E2,
-	CL_STATIC_DRAW                         = 0x88E4,
-	CL_STATIC_READ                         = 0x88E5,
-	CL_STATIC_COPY                         = 0x88E6,
-	CL_DYNAMIC_DRAW                        = 0x88E8,
-	CL_DYNAMIC_READ                        = 0x88E9,
-	CL_DYNAMIC_COPY                        = 0x88EA,
-	CL_READ_ONLY                           = 0x88B8,
-	CL_WRITE_ONLY                          = 0x88B9,
-	CL_READ_WRITE                          = 0x88BA,
-	CL_BUFFER_SIZE                         = 0x8764,
-	CL_BUFFER_USAGE                        = 0x8765,
-	CL_BUFFER_ACCESS                       = 0x88BB,
-	CL_BUFFER_MAPPED                       = 0x88BC,
-	CL_BUFFER_MAP_POINTER                  = 0x88BD,
-
-	// ARB_occlusion_query:
-
-	CL_SAMPLES_PASSED                      = 0x8914,
-	CL_QUERY_COUNTER_BITS                  = 0x8864,
-	CL_CURRENT_QUERY                       = 0x8865,
-	CL_QUERY_RESULT                        = 0x8866,
-	CL_QUERY_RESULT_AVAILABLE              = 0x8867,
-
-	// ARB_shader_objects:
-
-	CL_PROGRAM_OBJECT                      = 0x8B40,
-	CL_TYPE                                = 0x8B4E,
-	CL_SUBTYPE                             = 0x8B4F,
-	CL_DELETE_STATUS                       = 0x8B80,
-	CL_COMPILE_STATUS                      = 0x8B81,
-	CL_LINK_STATUS                         = 0x8B82,
-	CL_VALIDATE_STATUS                     = 0x8B83,
-	CL_INFO_LOG_LENGTH                     = 0x8B84,
-	CL_ATTACHED_OBJECTS                    = 0x8B85,
-	CL_ACTIVE_UNIFORMS                     = 0x8B86,
-	CL_ACTIVE_UNIFORM_MAX_LENGTH           = 0x8B87,
-	CL_SHADER_SOURCE_LENGTH                = 0x8B88,
-	CL_CURRENT_PROGRAM                     = 0x8B8D,
-	CL_OBJECT_TYPE                         = CL_TYPE,
-	CL_OBJECT_SUBTYPE                      = CL_SUBTYPE,
-	CL_OBJECT_DELETE_STATUS                = CL_DELETE_STATUS,
-	CL_OBJECT_COMPILE_STATUS               = CL_COMPILE_STATUS,
-	CL_OBJECT_LINK_STATUS                  = CL_LINK_STATUS,
-	CL_OBJECT_VALIDATE_STATUS              = CL_VALIDATE_STATUS,
-	CL_OBJECT_INFO_LOG_LENGTH              = CL_INFO_LOG_LENGTH,
-	CL_OBJECT_ATTACHED_OBJECTS             = CL_ATTACHED_OBJECTS,
-	CL_OBJECT_ACTIVE_UNIFORMS              = CL_ACTIVE_UNIFORMS,
-	CL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH    = CL_ACTIVE_UNIFORM_MAX_LENGTH,
-	CL_OBJECT_SHADER_SOURCE_LENGTH         = CL_SHADER_SOURCE_LENGTH,
-	CL_SHADER_OBJECT                       = 0x8B48,
-	// CL_FLOAT                               = 0x1406,
-	// CL_FLOAT_VEC2                          = 0x8B50,
-	// CL_FLOAT_VEC3                          = 0x8B51,
-	// CL_FLOAT_VEC4                          = 0x8B52,
-	// CL_INT                                 = 0x1404,
-	CL_INT_VEC2                            = 0x8B53,
-	CL_INT_VEC3                            = 0x8B54,
-	CL_INT_VEC4                            = 0x8B55,
-	CL_BOOL                                = 0x8B56,
-	CL_BOOL_VEC2                           = 0x8B57,
-	CL_BOOL_VEC3                           = 0x8B58,
-	CL_BOOL_VEC4                           = 0x8B59,
-	CL_FLOAT_MAT2                          = 0x8B5A,
-	CL_FLOAT_MAT3                          = 0x8B5B,
-	CL_FLOAT_MAT4                          = 0x8B5C,
-	CL_SAMPLER_1D                          = 0x8B5D,
-	CL_SAMPLER_2D                          = 0x8B5E,
-	CL_SAMPLER_3D                          = 0x8B5F,
-	CL_SAMPLER_CUBE                        = 0x8B60,
-	CL_SAMPLER_1D_SHADOW                   = 0x8B61,
-	CL_SAMPLER_2D_SHADOW                   = 0x8B62,
-	CL_SAMPLER_2D_RECT                     = 0x8B63,
-	CL_SAMPLER_2D_RECT_SHADOW              = 0x8B64,
-
-	// ARB_vertex_shader:
-
-	CL_VERTEX_SHADER                       = 0x8B31,
-	CL_MAX_VERTEX_UNIFORM_COMPONENTS       = 0x8B4A,
-	CL_MAX_VARYING_FLOATS                  = 0x8B4B,
-	CL_MAX_VERTEX_ATTRIBS                  = 0x8869,
-	CL_MAX_TEXTURE_IMAGE_UNITS             = 0x8872,
-	CL_MAX_VERTEX_TEXTURE_IMAGE_UNITS      = 0x8B4C,
-	CL_MAX_COMBINED_TEXTURE_IMAGE_UNITS    = 0x8B4D,
-	CL_MAX_TEXTURE_COORDS                  = 0x8871,
-	CL_VERTEX_PROGRAM_POINT_SIZE           = 0x8642,
-	CL_VERTEX_PROGRAM_TWO_SIDE             = 0x8643,
-	CL_ACTIVE_ATTRIBUTES                   = 0x8B89,
-	CL_ACTIVE_ATTRIBUTE_MAX_LENGTH         = 0x8B8A,
-	CL_OBJECT_ACTIVE_ATTRIBUTES            = CL_ACTIVE_ATTRIBUTES,
-	CL_OBJECT_ACTIVE_ATTRIBUTE_MAX_LENGTH  = CL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
-	CL_VERTEX_ATTRIB_ARRAY_ENABLED         = 0x8622,
-	CL_VERTEX_ATTRIB_ARRAY_SIZE            = 0x8623,
-	CL_VERTEX_ATTRIB_ARRAY_STRIDE          = 0x8624,
-	CL_VERTEX_ATTRIB_ARRAY_TYPE            = 0x8625,
-	CL_VERTEX_ATTRIB_ARRAY_NORMALIZED      = 0x886A,
-	CL_CURRENT_VERTEX_ATTRIB               = 0x8626,
-	CL_VERTEX_ATTRIB_ARRAY_POINTER         = 0x8645,
-	// CL_FLOAT                               = 0x1406,
-	CL_FLOAT_VEC2                          = 0x8B50,
-	CL_FLOAT_VEC3                          = 0x8B51,
-	CL_FLOAT_VEC4                          = 0x8B52,
-	// CL_FLOAT_MAT2                          = 0x8B5A,
-	// CL_FLOAT_MAT3                          = 0x8B5B,
-	// CL_FLOAT_MAT4                          = 0x8B5C,
-
-	// ARB_fragment_shader:
-
-	CL_FRAGMENT_SHADER                     = 0x8B30,
-	CL_MAX_FRAGMENT_UNIFORM_COMPONENTS     = 0x8B49,
-	// CL_MAX_TEXTURE_COORDS                  = 0x8871,
-	// CL_MAX_TEXTURE_IMAGE_UNITS             = 0x8872,
-	CL_FRAGMENT_SHADER_DERIVATIVE_HINT     = 0x8B8B,
-
-	// ARB_draw_buffers:
-
-	CL_MAX_DRAW_BUFFERS                    = 0x8824,
-	CL_DRAW_BUFFER0                        = 0x8825,
-	CL_DRAW_BUFFER1                        = 0x8826,
-	CL_DRAW_BUFFER2                        = 0x8827,
-	CL_DRAW_BUFFER3                        = 0x8828,
-	CL_DRAW_BUFFER4                        = 0x8829,
-	CL_DRAW_BUFFER5                        = 0x882A,
-	CL_DRAW_BUFFER6                        = 0x882B,
-	CL_DRAW_BUFFER7                        = 0x882C,
-	CL_DRAW_BUFFER8                        = 0x882D,
-	CL_DRAW_BUFFER9                        = 0x882E,
-	CL_DRAW_BUFFER10                       = 0x882F,
-	CL_DRAW_BUFFER11                       = 0x8830,
-	CL_DRAW_BUFFER12                       = 0x8831,
-	CL_DRAW_BUFFER13                       = 0x8832,
-	CL_DRAW_BUFFER14                       = 0x8833,
-	CL_DRAW_BUFFER15                       = 0x8834,
-
-	// ARB_point_sprite:
-
-	CL_POINT_SPRITE                        = 0x8861,
-	CL_COORD_REPLACE                       = 0x8862,
-	CL_POINT_SPRITE_COORD_ORIGIN           = 0x8CA0,
-	CL_LOWER_LEFT                          = 0x8CA1,
-	CL_UPPER_LEFT                          = 0x8CA2,
-
-	// ATI_separate_stencil:
-
-	// CL_KEEP                                = 0x1E00,
-	// CL_ZERO                                = 0x0000,
-	// CL_REPLACE                             = 0x1E01,
-	// CL_INCR                                = 0x1E02,
-	// CL_DECR                                = 0x1E03,
-	// CL_INVERT                              = 0x150A,
-	// CL_NEVER                               = 0x0200,
-	// CL_LESS                                = 0x0201,
-	// CL_LEQUAL                              = 0x0203,
-	// CL_GREATER                             = 0x0204,
-	// CL_GEQUAL                              = 0x0206,
-	// CL_EQUAL                               = 0x0202,
-	// CL_NOTEQUAL                            = 0x0205,
-	// CL_ALWAYS                              = 0x0207,
-	// CL_FRONT                               = 0x0404,
-	// CL_BACK                                = 0x0405,
-	// CL_FRONT_AND_BACK                      = 0x0408,
-	CL_STENCIL_BACK_FUNC                   = 0x8800,
-	CL_STENCIL_BACK_FAIL                   = 0x8801,
-	CL_STENCIL_BACK_PASS_DEPTH_FAIL        = 0x8802,
-	CL_STENCIL_BACK_PASS_DEPTH_PASS        = 0x8803,
-
-	// EXT_stencil_two_side additional states:
-
-	CL_STENCIL_TEST_TWO_SIDE               = 0x8910,
-	CL_ACTIVE_STENCIL_FACE                 = 0x8911,
-
-	// EXT_framebuffer_object:
-
-	CL_FRAMEBUFFER                         = 0x8D40,
-	CL_RENDERBUFFER                        = 0x8D41,
-	CL_STENCIL_INDEX1                      = 0x8D46,
-	CL_STENCIL_INDEX4                      = 0x8D47,
-	CL_STENCIL_INDEX8                      = 0x8D48,
-	CL_STENCIL_INDEX16                     = 0x8D49,
-	CL_RENDERBUFFER_WIDTH                  = 0x8D42,
-	CL_RENDERBUFFER_HEIGHT                 = 0x8D43,
-	CL_RENDERBUFFER_INTERNAL_FORMAT        = 0x8D44,
-	CL_RENDERBUFFER_RED_SIZE               = 0x8D50,
-	CL_RENDERBUFFER_GREEN_SIZE             = 0x8D51,
-	CL_RENDERBUFFER_BLUE_SIZE              = 0x8D52,
-	CL_RENDERBUFFER_ALPHA_SIZE             = 0x8D53,
-	CL_RENDERBUFFER_DEPTH_SIZE             = 0x8D54,
-	CL_RENDERBUFFER_STENCIL_SIZE           = 0x8D55,
-	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE              = 0x8CD0,
-	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME              = 0x8CD1,
-	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL            = 0x8CD2,
-	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE    = 0x8CD3,
-	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET       = 0x8CD4,
-	CL_COLOR_ATTACHMENT0                   = 0x8CE0,
-	CL_COLOR_ATTACHMENT1                   = 0x8CE1,
-	CL_COLOR_ATTACHMENT2                   = 0x8CE2,
-	CL_COLOR_ATTACHMENT3                   = 0x8CE3,
-	CL_COLOR_ATTACHMENT4                   = 0x8CE4,
-	CL_COLOR_ATTACHMENT5                   = 0x8CE5,
-	CL_COLOR_ATTACHMENT6                   = 0x8CE6,
-	CL_COLOR_ATTACHMENT7                   = 0x8CE7,
-	CL_COLOR_ATTACHMENT8                   = 0x8CE8,
-	CL_COLOR_ATTACHMENT9                   = 0x8CE9,
-	CL_COLOR_ATTACHMENT10                  = 0x8CEA,
-	CL_COLOR_ATTACHMENT11                  = 0x8CEB,
-	CL_COLOR_ATTACHMENT12                  = 0x8CEC,
-	CL_COLOR_ATTACHMENT13                  = 0x8CED,
-	CL_COLOR_ATTACHMENT14                  = 0x8CEE,
-	CL_COLOR_ATTACHMENT15                  = 0x8CEF,
-	CL_DEPTH_ATTACHMENT                    = 0x8D00,
-	CL_STENCIL_ATTACHMENT                  = 0x8D20,
-	CL_FRAMEBUFFER_COMPLETE                            = 0x8CD5,
-	CL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT               = 0x8CD6,
-	CL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT       = 0x8CD7,
-	CL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS               = 0x8CD9,
-	CL_FRAMEBUFFER_INCOMPLETE_FORMATS                  = 0x8CDA,
-	CL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER              = 0x8CDB,
-	CL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER              = 0x8CDC,
-	CL_FRAMEBUFFER_UNSUPPORTED                         = 0x8CDD,
-	CL_FRAMEBUFFER_BINDING                 = 0x8CA6,
-	CL_RENDERBUFFER_BINDING                = 0x8CA7,
-	CL_MAX_COLOR_ATTACHMENTS               = 0x8CDF,
-	CL_MAX_RENDERBUFFER_SIZE               = 0x84E8,
-	CL_INVALID_FRAMEBUFFER_OPERATION       = 0x0506,
-
-	// EXT_texture_compression_s3tc:
-
-	CL_COMPRESSED_RGB_S3TC_DXT1_EXT        = 0x83F0,
-	CL_COMPRESSED_RGBA_S3TC_DXT1_EXT       = 0x83F1,
-	CL_COMPRESSED_RGBA_S3TC_DXT3_EXT       = 0x83F2,
-	CL_COMPRESSED_RGBA_S3TC_DXT5_EXT       = 0x83F3,
-
-	// EXT_framebuffer_blit:
-
-	CL_READ_FRAMEBUFFER                    = 0x8CA8,
-	CL_DRAW_FRAMEBUFFER                    = 0x8CA9,
-	CL_DRAW_FRAMEBUFFER_BINDING            = 0x8CA6, // alias CL_FRAMEBUFFER_BINDING
-	CL_READ_FRAMEBUFFER_BINDING            = 0x8CAA,
-
-	// EXT_texture_filter_anisotropic:
-
-	CL_TEXTURE_MAX_ANISOTROPY              = 0x84FE,
-	CL_MAX_TEXTURE_MAX_ANISOTROPY          = 0x84FF
-
+	// AttribMask
+	CL_DEPTH_BUFFER_BIT	= 0x00000100,
+	CL_STENCIL_BUFFER_BIT	= 0x00000400,
+	CL_COLOR_BUFFER_BIT	= 0x00004000,
+
+	// Boolean
+	CL_FALSE	= 0,
+	CL_TRUE	= 1,
+
+	// BeginMode
+	CL_POINTS	= 0x0000,
+	CL_LINES	= 0x0001,
+	CL_LINE_LOOP	= 0x0002,
+	CL_LINE_STRIP	= 0x0003,
+	CL_TRIANGLES	= 0x0004,
+	CL_TRIANGLE_STRIP	= 0x0005,
+	CL_TRIANGLE_FAN	= 0x0006,
+
+	// AlphaFunction
+	CL_NEVER	= 0x0200,
+	CL_LESS	= 0x0201,
+	CL_EQUAL	= 0x0202,
+	CL_LEQUAL	= 0x0203,
+	CL_GREATER	= 0x0204,
+	CL_NOTEQUAL	= 0x0205,
+	CL_GEQUAL	= 0x0206,
+	CL_ALWAYS	= 0x0207,
+
+	// BlendingFactorDest
+	CL_ZERO	= 0,
+	CL_ONE	= 1,
+	CL_SRC_COLOR	= 0x0300,
+	CL_ONE_MINUS_SRC_COLOR	= 0x0301,
+	CL_SRC_ALPHA	= 0x0302,
+	CL_ONE_MINUS_SRC_ALPHA	= 0x0303,
+	CL_DST_ALPHA	= 0x0304,
+	CL_ONE_MINUS_DST_ALPHA	= 0x0305,
+
+	// BlendingFactorSrc
+	CL_DST_COLOR	= 0x0306,
+	CL_ONE_MINUS_DST_COLOR	= 0x0307,
+	CL_SRC_ALPHA_SATURATE	= 0x0308,
+
+	// DrawBufferMode
+	CL_NONE	= 0,
+	CL_FRONT_LEFT	= 0x0400,
+	CL_FRONT_RIGHT	= 0x0401,
+	CL_BACK_LEFT	= 0x0402,
+	CL_BACK_RIGHT	= 0x0403,
+	CL_FRONT	= 0x0404,
+	CL_BACK	= 0x0405,
+	CL_LEFT	= 0x0406,
+	CL_RIGHT	= 0x0407,
+	CL_FRONT_AND_BACK	= 0x0408,
+
+	// ErrorCode
+	CL_NO_ERROR	= 0,
+	CL_INVALID_ENUM	= 0x0500,
+	CL_INVALID_VALUE	= 0x0501,
+	CL_INVALID_OPERATION	= 0x0502,
+	CL_OUT_OF_MEMORY	= 0x0505,
+
+	// FrontFaceDirection
+	CL_CW	= 0x0900,
+	CL_CCW	= 0x0901,
+
+	// GetPName
+	CL_POINT_SIZE	= 0x0B11,
+	CL_POINT_SIZE_RANGE	= 0x0B12,
+	CL_POINT_SIZE_GRANULARITY	= 0x0B13,
+	CL_LINE_SMOOTH	= 0x0B20,
+	CL_LINE_WIDTH	= 0x0B21,
+	CL_LINE_WIDTH_RANGE	= 0x0B22,
+	CL_LINE_WIDTH_GRANULARITY	= 0x0B23,
+	CL_POLYGON_SMOOTH	= 0x0B41,
+	CL_CULL_FACE	= 0x0B44,
+	CL_CULL_FACE_MODE	= 0x0B45,
+	CL_FRONT_FACE	= 0x0B46,
+	CL_DEPTH_RANGE	= 0x0B70,
+	CL_DEPTH_TEST	= 0x0B71,
+	CL_DEPTH_WRITEMASK	= 0x0B72,
+	CL_DEPTH_CLEAR_VALUE	= 0x0B73,
+	CL_DEPTH_FUNC	= 0x0B74,
+	CL_STENCIL_TEST	= 0x0B90,
+	CL_STENCIL_CLEAR_VALUE	= 0x0B91,
+	CL_STENCIL_FUNC	= 0x0B92,
+	CL_STENCIL_VALUE_MASK	= 0x0B93,
+	CL_STENCIL_FAIL	= 0x0B94,
+	CL_STENCIL_PASS_DEPTH_FAIL	= 0x0B95,
+	CL_STENCIL_PASS_DEPTH_PASS	= 0x0B96,
+	CL_STENCIL_REF	= 0x0B97,
+	CL_STENCIL_WRITEMASK	= 0x0B98,
+	CL_VIEWPORT	= 0x0BA2,
+	CL_DITHER	= 0x0BD0,
+	CL_BLEND_DST	= 0x0BE0,
+	CL_BLEND_SRC	= 0x0BE1,
+	CL_BLEND	= 0x0BE2,
+	CL_LOGIC_OP_MODE	= 0x0BF0,
+	CL_COLOR_LOGIC_OP	= 0x0BF2,
+	CL_DRAW_BUFFER	= 0x0C01,
+	CL_READ_BUFFER	= 0x0C02,
+	CL_SCISSOR_BOX	= 0x0C10,
+	CL_SCISSOR_TEST	= 0x0C11,
+	CL_COLOR_CLEAR_VALUE	= 0x0C22,
+	CL_COLOR_WRITEMASK	= 0x0C23,
+	CL_DOUBLEBUFFER	= 0x0C32,
+	CL_STEREO	= 0x0C33,
+	CL_LINE_SMOOTH_HINT	= 0x0C52,
+	CL_POLYGON_SMOOTH_HINT	= 0x0C53,
+	CL_UNPACK_SWAP_BYTES	= 0x0CF0,
+	CL_UNPACK_LSB_FIRST	= 0x0CF1,
+	CL_UNPACK_ROW_LENGTH	= 0x0CF2,
+	CL_UNPACK_SKIP_ROWS	= 0x0CF3,
+	CL_UNPACK_SKIP_PIXELS	= 0x0CF4,
+	CL_UNPACK_ALIGNMENT	= 0x0CF5,
+	CL_PACK_SWAP_BYTES	= 0x0D00,
+	CL_PACK_LSB_FIRST	= 0x0D01,
+	CL_PACK_ROW_LENGTH	= 0x0D02,
+	CL_PACK_SKIP_ROWS	= 0x0D03,
+	CL_PACK_SKIP_PIXELS	= 0x0D04,
+	CL_PACK_ALIGNMENT	= 0x0D05,
+	CL_MAX_TEXTURE_SIZE	= 0x0D33,
+	CL_MAX_VIEWPORT_DIMS	= 0x0D3A,
+	CL_SUBPIXEL_BITS	= 0x0D50,
+	CL_TEXTURE_1D	= 0x0DE0,
+	CL_TEXTURE_2D	= 0x0DE1,
+	CL_POLYGON_OFFSET_UNITS	= 0x2A00,
+	CL_POLYGON_OFFSET_POINT	= 0x2A01,
+	CL_POLYGON_OFFSET_LINE	= 0x2A02,
+	CL_POLYGON_OFFSET_FILL	= 0x8037,
+	CL_POLYGON_OFFSET_FACTOR	= 0x8038,
+	CL_TEXTURE_BINDING_1D	= 0x8068,
+	CL_TEXTURE_BINDING_2D	= 0x8069,
+
+	// GetTextureParameter
+	CL_TEXTURE_WIDTH	= 0x1000,
+	CL_TEXTURE_HEIGHT	= 0x1001,
+	CL_TEXTURE_INTERNAL_FORMAT	= 0x1003,
+	CL_TEXTURE_BORDER_COLOR	= 0x1004,
+	CL_TEXTURE_RED_SIZE	= 0x805C,
+	CL_TEXTURE_GREEN_SIZE	= 0x805D,
+	CL_TEXTURE_BLUE_SIZE	= 0x805E,
+	CL_TEXTURE_ALPHA_SIZE	= 0x805F,
+
+	// HintMode
+	CL_DONT_CARE	= 0x1100,
+	CL_FASTEST	= 0x1101,
+	CL_NICEST	= 0x1102,
+
+	// DataType
+	CL_BYTE	= 0x1400,
+	CL_UNSIGNED_BYTE	= 0x1401,
+	CL_SHORT	= 0x1402,
+	CL_UNSIGNED_SHORT	= 0x1403,
+	CL_INT	= 0x1404,
+	CL_UNSIGNED_INT	= 0x1405,
+	CL_FLOAT	= 0x1406,
+	CL_DOUBLE	= 0x140A,
+
+	// LogicOp
+	CL_CLEAR	= 0x1500,
+	CL_AND	= 0x1501,
+	CL_AND_REVERSE	= 0x1502,
+	CL_COPY	= 0x1503,
+	CL_AND_INVERTED	= 0x1504,
+	CL_NOOP	= 0x1505,
+	CL_XOR	= 0x1506,
+	CL_OR	= 0x1507,
+	CL_NOR	= 0x1508,
+	CL_EQUIV	= 0x1509,
+	CL_INVERT	= 0x150A,
+	CL_OR_REVERSE	= 0x150B,
+	CL_COPY_INVERTED	= 0x150C,
+	CL_OR_INVERTED	= 0x150D,
+	CL_NAND	= 0x150E,
+	CL_SET	= 0x150F,
+
+	// MatrixMode (for gl3.h, FBO attachment type)
+	CL_TEXTURE	= 0x1702,
+
+	// PixelCopyType
+	CL_COLOR	= 0x1800,
+	CL_DEPTH	= 0x1801,
+	CL_STENCIL	= 0x1802,
+
+	// PixelFormat
+	CL_STENCIL_INDEX	= 0x1901,
+	CL_DEPTH_COMPONENT	= 0x1902,
+	CL_RED	= 0x1903,
+	CL_GREEN	= 0x1904,
+	CL_BLUE	= 0x1905,
+	CL_ALPHA	= 0x1906,
+	CL_RGB	= 0x1907,
+	CL_RGBA	= 0x1908,
+
+	// PolygonMode
+	CL_POINT	= 0x1B00,
+	CL_LINE	= 0x1B01,
+	CL_FILL	= 0x1B02,
+
+	// StencilOp
+	CL_KEEP	= 0x1E00,
+	CL_REPLACE	= 0x1E01,
+	CL_INCR	= 0x1E02,
+	CL_DECR	= 0x1E03,
+
+	// StringName
+	CL_VENDOR	= 0x1F00,
+	CL_RENDERER	= 0x1F01,
+	CL_VERSION	= 0x1F02,
+	CL_EXTENSIONS	= 0x1F03,
+
+	// TextureMagFilter
+	CL_NEAREST	= 0x2600,
+	CL_LINEAR	= 0x2601,
+
+	// TextureMinFilter
+	CL_NEAREST_MIPMAP_NEAREST	= 0x2700,
+	CL_LINEAR_MIPMAP_NEAREST	= 0x2701,
+	CL_NEAREST_MIPMAP_LINEAR	= 0x2702,
+	CL_LINEAR_MIPMAP_LINEAR	= 0x2703,
+
+	// TextureParameterName
+	CL_TEXTURE_MAG_FILTER	= 0x2800,
+	CL_TEXTURE_MIN_FILTER	= 0x2801,
+	CL_TEXTURE_WRAP_S	= 0x2802,
+	CL_TEXTURE_WRAP_T	= 0x2803,
+
+	// TextureTarget
+	CL_PROXY_TEXTURE_1D	= 0x8063,
+	CL_PROXY_TEXTURE_2D	= 0x8064,
+
+	// TextureWrapMode
+	CL_REPEAT	= 0x2901,
+
+	// PixelInternalFormat
+	CL_R3_G3_B2	= 0x2A10,
+	CL_RGB4	= 0x804F,
+	CL_RGB5	= 0x8050,
+	CL_RGB8	= 0x8051,
+	CL_RGB10	= 0x8052,
+	CL_RGB12	= 0x8053,
+	CL_RGB16	= 0x8054,
+	CL_RGBA2	= 0x8055,
+	CL_RGBA4	= 0x8056,
+	CL_RGB5_A1	= 0x8057,
+	CL_RGBA8	= 0x8058,
+	CL_RGB10_A2	= 0x8059,
+	CL_RGBA12	= 0x805A,
+	CL_RGBA16	= 0x805B,
+
+	CL_UNSIGNED_BYTE_3_3_2	= 0x8032,
+	CL_UNSIGNED_SHORT_4_4_4_4	= 0x8033,
+	CL_UNSIGNED_SHORT_5_5_5_1	= 0x8034,
+	CL_UNSIGNED_INT_8_8_8_8	= 0x8035,
+	CL_UNSIGNED_INT_10_10_10_2	= 0x8036,
+	CL_TEXTURE_BINDING_3D	= 0x806A,
+	CL_PACK_SKIP_IMAGES	= 0x806B,
+	CL_PACK_IMAGE_HEIGHT	= 0x806C,
+	CL_UNPACK_SKIP_IMAGES	= 0x806D,
+	CL_UNPACK_IMAGE_HEIGHT	= 0x806E,
+	CL_TEXTURE_3D	= 0x806F,
+	CL_PROXY_TEXTURE_3D	= 0x8070,
+	CL_TEXTURE_DEPTH	= 0x8071,
+	CL_TEXTURE_WRAP_R	= 0x8072,
+	CL_MAX_3D_TEXTURE_SIZE	= 0x8073,
+	CL_UNSIGNED_BYTE_2_3_3_REV	= 0x8362,
+	CL_UNSIGNED_SHORT_5_6_5	= 0x8363,
+	CL_UNSIGNED_SHORT_5_6_5_REV	= 0x8364,
+	CL_UNSIGNED_SHORT_4_4_4_4_REV	= 0x8365,
+	CL_UNSIGNED_SHORT_1_5_5_5_REV	= 0x8366,
+	CL_UNSIGNED_INT_8_8_8_8_REV	= 0x8367,
+	CL_UNSIGNED_INT_2_10_10_10_REV	= 0x8368,
+	CL_BGR	= 0x80E0,
+	CL_BGRA	= 0x80E1,
+	CL_MAX_ELEMENTS_VERTICES	= 0x80E8,
+	CL_MAX_ELEMENTS_INDICES	= 0x80E9,
+	CL_CLAMP_TO_EDGE	= 0x812F,
+	CL_TEXTURE_MIN_LOD	= 0x813A,
+	CL_TEXTURE_MAX_LOD	= 0x813B,
+	CL_TEXTURE_BASE_LEVEL	= 0x813C,
+	CL_TEXTURE_MAX_LEVEL	= 0x813D,
+	CL_SMOOTH_POINT_SIZE_RANGE	= 0x0B12,
+	CL_SMOOTH_POINT_SIZE_GRANULARITY	= 0x0B13,
+	CL_SMOOTH_LINE_WIDTH_RANGE	= 0x0B22,
+	CL_SMOOTH_LINE_WIDTH_GRANULARITY	= 0x0B23,
+	CL_ALIASED_LINE_WIDTH_RANGE	= 0x846E,
+
+	CL_CONSTANT_COLOR	= 0x8001,
+	CL_ONE_MINUS_CONSTANT_COLOR	= 0x8002,
+	CL_CONSTANT_ALPHA	= 0x8003,
+	CL_ONE_MINUS_CONSTANT_ALPHA	= 0x8004,
+	CL_BLEND_COLOR	= 0x8005,
+	CL_FUNC_ADD	= 0x8006,
+	CL_MIN	= 0x8007,
+	CL_MAX	= 0x8008,
+	CL_BLEND_EQUATION	= 0x8009,
+	CL_FUNC_SUBTRACT	= 0x800A,
+	CL_FUNC_REVERSE_SUBTRACT	= 0x800B,
+
+	CL_TEXTURE0	= 0x84C0,
+	CL_TEXTURE1	= 0x84C1,
+	CL_TEXTURE2	= 0x84C2,
+	CL_TEXTURE3	= 0x84C3,
+	CL_TEXTURE4	= 0x84C4,
+	CL_TEXTURE5	= 0x84C5,
+	CL_TEXTURE6	= 0x84C6,
+	CL_TEXTURE7	= 0x84C7,
+	CL_TEXTURE8	= 0x84C8,
+	CL_TEXTURE9	= 0x84C9,
+	CL_TEXTURE10	= 0x84CA,
+	CL_TEXTURE11	= 0x84CB,
+	CL_TEXTURE12	= 0x84CC,
+	CL_TEXTURE13	= 0x84CD,
+	CL_TEXTURE14	= 0x84CE,
+	CL_TEXTURE15	= 0x84CF,
+	CL_TEXTURE16	= 0x84D0,
+	CL_TEXTURE17	= 0x84D1,
+	CL_TEXTURE18	= 0x84D2,
+	CL_TEXTURE19	= 0x84D3,
+	CL_TEXTURE20	= 0x84D4,
+	CL_TEXTURE21	= 0x84D5,
+	CL_TEXTURE22	= 0x84D6,
+	CL_TEXTURE23	= 0x84D7,
+	CL_TEXTURE24	= 0x84D8,
+	CL_TEXTURE25	= 0x84D9,
+	CL_TEXTURE26	= 0x84DA,
+	CL_TEXTURE27	= 0x84DB,
+	CL_TEXTURE28	= 0x84DC,
+	CL_TEXTURE29	= 0x84DD,
+	CL_TEXTURE30	= 0x84DE,
+	CL_TEXTURE31	= 0x84DF,
+	CL_ACTIVE_TEXTURE	= 0x84E0,
+	CL_MULTISAMPLE	= 0x809D,
+	CL_SAMPLE_ALPHA_TO_COVERAGE	= 0x809E,
+	CL_SAMPLE_ALPHA_TO_ONE	= 0x809F,
+	CL_SAMPLE_COVERAGE	= 0x80A0,
+	CL_SAMPLE_BUFFERS	= 0x80A8,
+	CL_SAMPLES	= 0x80A9,
+	CL_SAMPLE_COVERAGE_VALUE	= 0x80AA,
+	CL_SAMPLE_COVERAGE_INVERT	= 0x80AB,
+	CL_TEXTURE_CUBE_MAP	= 0x8513,
+	CL_TEXTURE_BINDING_CUBE_MAP	= 0x8514,
+	CL_TEXTURE_CUBE_MAP_POSITIVE_X	= 0x8515,
+	CL_TEXTURE_CUBE_MAP_NEGATIVE_X	= 0x8516,
+	CL_TEXTURE_CUBE_MAP_POSITIVE_Y	= 0x8517,
+	CL_TEXTURE_CUBE_MAP_NEGATIVE_Y	= 0x8518,
+	CL_TEXTURE_CUBE_MAP_POSITIVE_Z	= 0x8519,
+	CL_TEXTURE_CUBE_MAP_NEGATIVE_Z	= 0x851A,
+	CL_PROXY_TEXTURE_CUBE_MAP	= 0x851B,
+	CL_MAX_CUBE_MAP_TEXTURE_SIZE	= 0x851C,
+	CL_COMPRESSED_RGB	= 0x84ED,
+	CL_COMPRESSED_RGBA	= 0x84EE,
+	CL_TEXTURE_COMPRESSION_HINT	= 0x84EF,
+	CL_TEXTURE_COMPRESSED_IMAGE_SIZE	= 0x86A0,
+	CL_TEXTURE_COMPRESSED	= 0x86A1,
+	CL_NUM_COMPRESSED_TEXTURE_FORMATS	= 0x86A2,
+	CL_COMPRESSED_TEXTURE_FORMATS	= 0x86A3,
+	CL_CLAMP_TO_BORDER	= 0x812D,
+
+	CL_BLEND_DST_RGB	= 0x80C8,
+	CL_BLEND_SRC_RGB	= 0x80C9,
+	CL_BLEND_DST_ALPHA	= 0x80CA,
+	CL_BLEND_SRC_ALPHA	= 0x80CB,
+	CL_POINT_FADE_THRESHOLD_SIZE	= 0x8128,
+	CL_DEPTH_COMPONENT16	= 0x81A5,
+	CL_DEPTH_COMPONENT24	= 0x81A6,
+	CL_DEPTH_COMPONENT32	= 0x81A7,
+	CL_MIRRORED_REPEAT	= 0x8370,
+	CL_MAX_TEXTURE_LOD_BIAS	= 0x84FD,
+	CL_TEXTURE_LOD_BIAS	= 0x8501,
+	CL_INCR_WRAP	= 0x8507,
+	CL_DECR_WRAP	= 0x8508,
+	CL_TEXTURE_DEPTH_SIZE	= 0x884A,
+	CL_TEXTURE_COMPARE_MODE	= 0x884C,
+	CL_TEXTURE_COMPARE_FUNC	= 0x884D,
+
+	CL_BUFFER_SIZE	= 0x8764,
+	CL_BUFFER_USAGE	= 0x8765,
+	CL_QUERY_COUNTER_BITS	= 0x8864,
+	CL_CURRENT_QUERY	= 0x8865,
+	CL_QUERY_RESULT	= 0x8866,
+	CL_QUERY_RESULT_AVAILABLE	= 0x8867,
+	CL_ARRAY_BUFFER	= 0x8892,
+	CL_ELEMENT_ARRAY_BUFFER	= 0x8893,
+	CL_ARRAY_BUFFER_BINDING	= 0x8894,
+	CL_ELEMENT_ARRAY_BUFFER_BINDING	= 0x8895,
+	CL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING	= 0x889F,
+	CL_READ_ONLY	= 0x88B8,
+	CL_WRITE_ONLY	= 0x88B9,
+	CL_READ_WRITE	= 0x88BA,
+	CL_BUFFER_ACCESS	= 0x88BB,
+	CL_BUFFER_MAPPED	= 0x88BC,
+	CL_BUFFER_MAP_POINTER	= 0x88BD,
+	CL_STREAM_DRAW	= 0x88E0,
+	CL_STREAM_READ	= 0x88E1,
+	CL_STREAM_COPY	= 0x88E2,
+	CL_STATIC_DRAW	= 0x88E4,
+	CL_STATIC_READ	= 0x88E5,
+	CL_STATIC_COPY	= 0x88E6,
+	CL_DYNAMIC_DRAW	= 0x88E8,
+	CL_DYNAMIC_READ	= 0x88E9,
+	CL_DYNAMIC_COPY	= 0x88EA,
+	CL_SAMPLES_PASSED	= 0x8914,
+
+	CL_BLEND_EQUATION_RGB	= 0x8009,
+	CL_VERTEX_ATTRIB_ARRAY_ENABLED	= 0x8622,
+	CL_VERTEX_ATTRIB_ARRAY_SIZE	= 0x8623,
+	CL_VERTEX_ATTRIB_ARRAY_STRIDE	= 0x8624,
+	CL_VERTEX_ATTRIB_ARRAY_TYPE	= 0x8625,
+	CL_CURRENT_VERTEX_ATTRIB	= 0x8626,
+	CL_VERTEX_PROGRAM_POINT_SIZE	= 0x8642,
+	CL_VERTEX_ATTRIB_ARRAY_POINTER	= 0x8645,
+	CL_STENCIL_BACK_FUNC	= 0x8800,
+	CL_STENCIL_BACK_FAIL	= 0x8801,
+	CL_STENCIL_BACK_PASS_DEPTH_FAIL	= 0x8802,
+	CL_STENCIL_BACK_PASS_DEPTH_PASS	= 0x8803,
+	CL_MAX_DRAW_BUFFERS	= 0x8824,
+	CL_DRAW_BUFFER0	= 0x8825,
+	CL_DRAW_BUFFER1	= 0x8826,
+	CL_DRAW_BUFFER2	= 0x8827,
+	CL_DRAW_BUFFER3	= 0x8828,
+	CL_DRAW_BUFFER4	= 0x8829,
+	CL_DRAW_BUFFER5	= 0x882A,
+	CL_DRAW_BUFFER6	= 0x882B,
+	CL_DRAW_BUFFER7	= 0x882C,
+	CL_DRAW_BUFFER8	= 0x882D,
+	CL_DRAW_BUFFER9	= 0x882E,
+	CL_DRAW_BUFFER10	= 0x882F,
+	CL_DRAW_BUFFER11	= 0x8830,
+	CL_DRAW_BUFFER12	= 0x8831,
+	CL_DRAW_BUFFER13	= 0x8832,
+	CL_DRAW_BUFFER14	= 0x8833,
+	CL_DRAW_BUFFER15	= 0x8834,
+	CL_BLEND_EQUATION_ALPHA	= 0x883D,
+	CL_MAX_VERTEX_ATTRIBS	= 0x8869,
+	CL_VERTEX_ATTRIB_ARRAY_NORMALIZED	= 0x886A,
+	CL_MAX_TEXTURE_IMAGE_UNITS	= 0x8872,
+	CL_FRAGMENT_SHADER	= 0x8B30,
+	CL_VERTEX_SHADER	= 0x8B31,
+	CL_MAX_FRAGMENT_UNIFORM_COMPONENTS	= 0x8B49,
+	CL_MAX_VERTEX_UNIFORM_COMPONENTS	= 0x8B4A,
+	CL_MAX_VARYING_FLOATS	= 0x8B4B,
+	CL_MAX_VERTEX_TEXTURE_IMAGE_UNITS	= 0x8B4C,
+	CL_MAX_COMBINED_TEXTURE_IMAGE_UNITS	= 0x8B4D,
+	CL_SHADER_TYPE	= 0x8B4F,
+	CL_FLOAT_VEC2	= 0x8B50,
+	CL_FLOAT_VEC3	= 0x8B51,
+	CL_FLOAT_VEC4	= 0x8B52,
+	CL_INT_VEC2	= 0x8B53,
+	CL_INT_VEC3	= 0x8B54,
+	CL_INT_VEC4	= 0x8B55,
+	CL_BOOL	= 0x8B56,
+	CL_BOOL_VEC2	= 0x8B57,
+	CL_BOOL_VEC3	= 0x8B58,
+	CL_BOOL_VEC4	= 0x8B59,
+	CL_FLOAT_MAT2	= 0x8B5A,
+	CL_FLOAT_MAT3	= 0x8B5B,
+	CL_FLOAT_MAT4	= 0x8B5C,
+	CL_SAMPLER_1D	= 0x8B5D,
+	CL_SAMPLER_2D	= 0x8B5E,
+	CL_SAMPLER_3D	= 0x8B5F,
+	CL_SAMPLER_CUBE	= 0x8B60,
+	CL_SAMPLER_1D_SHADOW	= 0x8B61,
+	CL_SAMPLER_2D_SHADOW	= 0x8B62,
+	CL_DELETE_STATUS	= 0x8B80,
+	CL_COMPILE_STATUS	= 0x8B81,
+	CL_LINK_STATUS	= 0x8B82,
+	CL_VALIDATE_STATUS	= 0x8B83,
+	CL_INFO_LOG_LENGTH	= 0x8B84,
+	CL_ATTACHED_SHADERS	= 0x8B85,
+	CL_ACTIVE_UNIFORMS	= 0x8B86,
+	CL_ACTIVE_UNIFORM_MAX_LENGTH	= 0x8B87,
+	CL_SHADER_SOURCE_LENGTH	= 0x8B88,
+	CL_ACTIVE_ATTRIBUTES	= 0x8B89,
+	CL_ACTIVE_ATTRIBUTE_MAX_LENGTH	= 0x8B8A,
+	CL_FRAGMENT_SHADER_DERIVATIVE_HINT	= 0x8B8B,
+	CL_SHADING_LANGUAGE_VERSION	= 0x8B8C,
+	CL_CURRENT_PROGRAM	= 0x8B8D,
+	CL_POINT_SPRITE_COORD_ORIGIN	= 0x8CA0,
+	CL_LOWER_LEFT	= 0x8CA1,
+	CL_UPPER_LEFT	= 0x8CA2,
+	CL_STENCIL_BACK_REF	= 0x8CA3,
+	CL_STENCIL_BACK_VALUE_MASK	= 0x8CA4,
+	CL_STENCIL_BACK_WRITEMASK	= 0x8CA5,
+
+	CL_PIXEL_PACK_BUFFER	= 0x88EB,
+	CL_PIXEL_UNPACK_BUFFER	= 0x88EC,
+	CL_PIXEL_PACK_BUFFER_BINDING	= 0x88ED,
+	CL_PIXEL_UNPACK_BUFFER_BINDING	= 0x88EF,
+	CL_FLOAT_MAT2x3	= 0x8B65,
+	CL_FLOAT_MAT2x4	= 0x8B66,
+	CL_FLOAT_MAT3x2	= 0x8B67,
+	CL_FLOAT_MAT3x4	= 0x8B68,
+	CL_FLOAT_MAT4x2	= 0x8B69,
+	CL_FLOAT_MAT4x3	= 0x8B6A,
+	CL_SRGB	= 0x8C40,
+	CL_SRGB8	= 0x8C41,
+	CL_SRGB_ALPHA	= 0x8C42,
+	CL_SRGB8_ALPHA8	= 0x8C43,
+	CL_COMPRESSED_SRGB	= 0x8C48,
+	CL_COMPRESSED_SRGB_ALPHA	= 0x8C49,
+
+	CL_COMPARE_REF_TO_TEXTURE	= 0x884E,
+	CL_CLIP_DISTANCE0	= 0x3000,
+	CL_CLIP_DISTANCE1	= 0x3001,
+	CL_CLIP_DISTANCE2	= 0x3002,
+	CL_CLIP_DISTANCE3	= 0x3003,
+	CL_CLIP_DISTANCE4	= 0x3004,
+	CL_CLIP_DISTANCE5	= 0x3005,
+	CL_CLIP_DISTANCE6	= 0x3006,
+	CL_CLIP_DISTANCE7	= 0x3007,
+	CL_MAX_CLIP_DISTANCES	= 0x0D32,
+	CL_MAJOR_VERSION	= 0x821B,
+	CL_MINOR_VERSION	= 0x821C,
+	CL_NUM_EXTENSIONS	= 0x821D,
+	CL_CONTEXT_FLAGS	= 0x821E,
+	CL_DEPTH_BUFFER	= 0x8223,
+	CL_STENCIL_BUFFER	= 0x8224,
+	CL_COMPRESSED_RED	= 0x8225,
+	CL_COMPRESSED_RG	= 0x8226,
+	CL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT	= 0x0001,
+	CL_RGBA32F	= 0x8814,
+	CL_RGB32F	= 0x8815,
+	CL_RGBA16F	= 0x881A,
+	CL_RGB16F	= 0x881B,
+	CL_VERTEX_ATTRIB_ARRAY_INTEGER	= 0x88FD,
+	CL_MAX_ARRAY_TEXTURE_LAYERS	= 0x88FF,
+	CL_MIN_PROGRAM_TEXEL_OFFSET	= 0x8904,
+	CL_MAX_PROGRAM_TEXEL_OFFSET	= 0x8905,
+	CL_CLAMP_READ_COLOR	= 0x891C,
+	CL_FIXED_ONLY	= 0x891D,
+	CL_MAX_VARYING_COMPONENTS	= 0x8B4B,
+	CL_TEXTURE_1D_ARRAY	= 0x8C18,
+	CL_PROXY_TEXTURE_1D_ARRAY	= 0x8C19,
+	CL_TEXTURE_2D_ARRAY	= 0x8C1A,
+	CL_PROXY_TEXTURE_2D_ARRAY	= 0x8C1B,
+	CL_TEXTURE_BINDING_1D_ARRAY	= 0x8C1C,
+	CL_TEXTURE_BINDING_2D_ARRAY	= 0x8C1D,
+	CL_R11F_G11F_B10F	= 0x8C3A,
+	CL_UNSIGNED_INT_10F_11F_11F_REV	= 0x8C3B,
+	CL_RGB9_E5	= 0x8C3D,
+	CL_UNSIGNED_INT_5_9_9_9_REV	= 0x8C3E,
+	CL_TEXTURE_SHARED_SIZE	= 0x8C3F,
+	CL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH	= 0x8C76,
+	CL_TRANSFORM_FEEDBACK_BUFFER_MODE	= 0x8C7F,
+	CL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS	= 0x8C80,
+	CL_TRANSFORM_FEEDBACK_VARYINGS	= 0x8C83,
+	CL_TRANSFORM_FEEDBACK_BUFFER_START	= 0x8C84,
+	CL_TRANSFORM_FEEDBACK_BUFFER_SIZE	= 0x8C85,
+	CL_PRIMITIVES_GENERATED	= 0x8C87,
+	CL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN	= 0x8C88,
+	CL_RASTERIZER_DISCARD	= 0x8C89,
+	CL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS	= 0x8C8A,
+	CL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS	= 0x8C8B,
+	CL_INTERLEAVED_ATTRIBS	= 0x8C8C,
+	CL_SEPARATE_ATTRIBS	= 0x8C8D,
+	CL_TRANSFORM_FEEDBACK_BUFFER	= 0x8C8E,
+	CL_TRANSFORM_FEEDBACK_BUFFER_BINDING	= 0x8C8F,
+	CL_RGBA32UI	= 0x8D70,
+	CL_RGB32UI	= 0x8D71,
+	CL_RGBA16UI	= 0x8D76,
+	CL_RGB16UI	= 0x8D77,
+	CL_RGBA8UI	= 0x8D7C,
+	CL_RGB8UI	= 0x8D7D,
+	CL_RGBA32I	= 0x8D82,
+	CL_RGB32I	= 0x8D83,
+	CL_RGBA16I	= 0x8D88,
+	CL_RGB16I	= 0x8D89,
+	CL_RGBA8I	= 0x8D8E,
+	CL_RGB8I	= 0x8D8F,
+	CL_RED_INTEGER	= 0x8D94,
+	CL_GREEN_INTEGER	= 0x8D95,
+	CL_BLUE_INTEGER	= 0x8D96,
+	CL_RGB_INTEGER	= 0x8D98,
+	CL_RGBA_INTEGER	= 0x8D99,
+	CL_BGR_INTEGER	= 0x8D9A,
+	CL_BGRA_INTEGER	= 0x8D9B,
+	CL_SAMPLER_1D_ARRAY	= 0x8DC0,
+	CL_SAMPLER_2D_ARRAY	= 0x8DC1,
+	CL_SAMPLER_1D_ARRAY_SHADOW	= 0x8DC3,
+	CL_SAMPLER_2D_ARRAY_SHADOW	= 0x8DC4,
+	CL_SAMPLER_CUBE_SHADOW	= 0x8DC5,
+	CL_UNSIGNED_INT_VEC2	= 0x8DC6,
+	CL_UNSIGNED_INT_VEC3	= 0x8DC7,
+	CL_UNSIGNED_INT_VEC4	= 0x8DC8,
+	CL_INT_SAMPLER_1D	= 0x8DC9,
+	CL_INT_SAMPLER_2D	= 0x8DCA,
+	CL_INT_SAMPLER_3D	= 0x8DCB,
+	CL_INT_SAMPLER_CUBE	= 0x8DCC,
+	CL_INT_SAMPLER_1D_ARRAY	= 0x8DCE,
+	CL_INT_SAMPLER_2D_ARRAY	= 0x8DCF,
+	CL_UNSIGNED_INT_SAMPLER_1D	= 0x8DD1,
+	CL_UNSIGNED_INT_SAMPLER_2D	= 0x8DD2,
+	CL_UNSIGNED_INT_SAMPLER_3D	= 0x8DD3,
+	CL_UNSIGNED_INT_SAMPLER_CUBE	= 0x8DD4,
+	CL_UNSIGNED_INT_SAMPLER_1D_ARRAY	= 0x8DD6,
+	CL_UNSIGNED_INT_SAMPLER_2D_ARRAY	= 0x8DD7,
+	CL_QUERY_WAIT	= 0x8E13,
+	CL_QUERY_NO_WAIT	= 0x8E14,
+	CL_QUERY_BY_REGION_WAIT	= 0x8E15,
+	CL_QUERY_BY_REGION_NO_WAIT	= 0x8E16,
+	CL_BUFFER_ACCESS_FLAGS	= 0x911F,
+	CL_BUFFER_MAP_LENGTH	= 0x9120,
+	CL_BUFFER_MAP_OFFSET	= 0x9121,
+
+	CL_SAMPLER_2D_RECT	= 0x8B63,
+	CL_SAMPLER_2D_RECT_SHADOW	= 0x8B64,
+	CL_SAMPLER_BUFFER	= 0x8DC2,
+	CL_INT_SAMPLER_2D_RECT	= 0x8DCD,
+	CL_INT_SAMPLER_BUFFER	= 0x8DD0,
+	CL_UNSIGNED_INT_SAMPLER_2D_RECT	= 0x8DD5,
+	CL_UNSIGNED_INT_SAMPLER_BUFFER	= 0x8DD8,
+	CL_TEXTURE_BUFFER	= 0x8C2A,
+	CL_MAX_TEXTURE_BUFFER_SIZE	= 0x8C2B,
+	CL_TEXTURE_BINDING_BUFFER	= 0x8C2C,
+	CL_TEXTURE_BUFFER_DATA_STORE_BINDING	= 0x8C2D,
+	CL_TEXTURE_BUFFER_FORMAT	= 0x8C2E,
+	CL_TEXTURE_RECTANGLE	= 0x84F5,
+	CL_TEXTURE_BINDING_RECTANGLE	= 0x84F6,
+	CL_PROXY_TEXTURE_RECTANGLE	= 0x84F7,
+	CL_MAX_RECTANGLE_TEXTURE_SIZE	= 0x84F8,
+	CL_RED_SNORM	= 0x8F90,
+	CL_RG_SNORM	= 0x8F91,
+	CL_RGB_SNORM	= 0x8F92,
+	CL_RGBA_SNORM	= 0x8F93,
+	CL_R8_SNORM	= 0x8F94,
+	CL_RG8_SNORM	= 0x8F95,
+	CL_RGB8_SNORM	= 0x8F96,
+	CL_RGBA8_SNORM	= 0x8F97,
+	CL_R16_SNORM	= 0x8F98,
+	CL_RG16_SNORM	= 0x8F99,
+	CL_RGB16_SNORM	= 0x8F9A,
+	CL_RGBA16_SNORM	= 0x8F9B,
+	CL_SIGNED_NORMALIZED	= 0x8F9C,
+	CL_PRIMITIVE_RESTART	= 0x8F9D,
+	CL_PRIMITIVE_RESTART_INDEX	= 0x8F9E,
+
+	CL_CONTEXT_CORE_PROFILE_BIT	= 0x00000001,
+	CL_CONTEXT_COMPATIBILITY_PROFILE_BIT	= 0x00000002,
+	CL_LINES_ADJACENCY	= 0x000A,
+	CL_LINE_STRIP_ADJACENCY	= 0x000B,
+	CL_TRIANGLES_ADJACENCY	= 0x000C,
+	CL_TRIANGLE_STRIP_ADJACENCY	= 0x000D,
+	CL_PROGRAM_POINT_SIZE	= 0x8642,
+	CL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS	= 0x8C29,
+	CL_FRAMEBUFFER_ATTACHMENT_LAYERED	= 0x8DA7,
+	CL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS	= 0x8DA8,
+	CL_GEOMETRY_SHADER	= 0x8DD9,
+	CL_GEOMETRY_VERTICES_OUT	= 0x8916,
+	CL_GEOMETRY_INPUT_TYPE	= 0x8917,
+	CL_GEOMETRY_OUTPUT_TYPE	= 0x8918,
+	CL_MAX_GEOMETRY_UNIFORM_COMPONENTS	= 0x8DDF,
+	CL_MAX_GEOMETRY_OUTPUT_VERTICES	= 0x8DE0,
+	CL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS	= 0x8DE1,
+	CL_MAX_VERTEX_OUTPUT_COMPONENTS	= 0x9122,
+	CL_MAX_GEOMETRY_INPUT_COMPONENTS	= 0x9123,
+	CL_MAX_GEOMETRY_OUTPUT_COMPONENTS	= 0x9124,
+	CL_MAX_FRAGMENT_INPUT_COMPONENTS	= 0x9125,
+	CL_CONTEXT_PROFILE_MASK	= 0x9126,
+
+	CL_DEPTH_COMPONENT32F	= 0x8CAC,
+	CL_DEPTH32F_STENCIL8	= 0x8CAD,
+	CL_FLOAT_32_UNSIGNED_INT_24_8_REV	= 0x8DAD,
+
+	CL_INVALID_FRAMEBUFFER_OPERATION	= 0x0506,
+	CL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING	= 0x8210,
+	CL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE	= 0x8211,
+	CL_FRAMEBUFFER_ATTACHMENT_RED_SIZE	= 0x8212,
+	CL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE	= 0x8213,
+	CL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE	= 0x8214,
+	CL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE	= 0x8215,
+	CL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE	= 0x8216,
+	CL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE	= 0x8217,
+	CL_FRAMEBUFFER_DEFAULT	= 0x8218,
+	CL_FRAMEBUFFER_UNDEFINED	= 0x8219,
+	CL_DEPTH_STENCIL_ATTACHMENT	= 0x821A,
+	CL_MAX_RENDERBUFFER_SIZE	= 0x84E8,
+	CL_DEPTH_STENCIL	= 0x84F9,
+	CL_UNSIGNED_INT_24_8	= 0x84FA,
+	CL_DEPTH24_STENCIL8	= 0x88F0,
+	CL_TEXTURE_STENCIL_SIZE	= 0x88F1,
+	CL_TEXTURE_RED_TYPE	= 0x8C10,
+	CL_TEXTURE_GREEN_TYPE	= 0x8C11,
+	CL_TEXTURE_BLUE_TYPE	= 0x8C12,
+	CL_TEXTURE_ALPHA_TYPE	= 0x8C13,
+	CL_TEXTURE_DEPTH_TYPE	= 0x8C16,
+	CL_UNSIGNED_NORMALIZED	= 0x8C17,
+	CL_FRAMEBUFFER_BINDING	= 0x8CA6,
+	CL_DRAW_FRAMEBUFFER_BINDING	= CL_FRAMEBUFFER_BINDING,
+	CL_RENDERBUFFER_BINDING	= 0x8CA7,
+	CL_READ_FRAMEBUFFER	= 0x8CA8,
+	CL_DRAW_FRAMEBUFFER	= 0x8CA9,
+	CL_READ_FRAMEBUFFER_BINDING	= 0x8CAA,
+	CL_RENDERBUFFER_SAMPLES	= 0x8CAB,
+	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE	= 0x8CD0,
+	CL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME	= 0x8CD1,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL	= 0x8CD2,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE	= 0x8CD3,
+	CL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER	= 0x8CD4,
+	CL_FRAMEBUFFER_COMPLETE	= 0x8CD5,
+	CL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT	= 0x8CD6,
+	CL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT	= 0x8CD7,
+	CL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER	= 0x8CDB,
+	CL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER	= 0x8CDC,
+	CL_FRAMEBUFFER_UNSUPPORTED	= 0x8CDD,
+	CL_MAX_COLOR_ATTACHMENTS	= 0x8CDF,
+	CL_COLOR_ATTACHMENT0	= 0x8CE0,
+	CL_COLOR_ATTACHMENT1	= 0x8CE1,
+	CL_COLOR_ATTACHMENT2	= 0x8CE2,
+	CL_COLOR_ATTACHMENT3	= 0x8CE3,
+	CL_COLOR_ATTACHMENT4	= 0x8CE4,
+	CL_COLOR_ATTACHMENT5	= 0x8CE5,
+	CL_COLOR_ATTACHMENT6	= 0x8CE6,
+	CL_COLOR_ATTACHMENT7	= 0x8CE7,
+	CL_COLOR_ATTACHMENT8	= 0x8CE8,
+	CL_COLOR_ATTACHMENT9	= 0x8CE9,
+	CL_COLOR_ATTACHMENT10	= 0x8CEA,
+	CL_COLOR_ATTACHMENT11	= 0x8CEB,
+	CL_COLOR_ATTACHMENT12	= 0x8CEC,
+	CL_COLOR_ATTACHMENT13	= 0x8CED,
+	CL_COLOR_ATTACHMENT14	= 0x8CEE,
+	CL_COLOR_ATTACHMENT15	= 0x8CEF,
+	CL_DEPTH_ATTACHMENT	= 0x8D00,
+	CL_STENCIL_ATTACHMENT	= 0x8D20,
+	CL_FRAMEBUFFER	= 0x8D40,
+	CL_RENDERBUFFER	= 0x8D41,
+	CL_RENDERBUFFER_WIDTH	= 0x8D42,
+	CL_RENDERBUFFER_HEIGHT	= 0x8D43,
+	CL_RENDERBUFFER_INTERNAL_FORMAT	= 0x8D44,
+	CL_STENCIL_INDEX1	= 0x8D46,
+	CL_STENCIL_INDEX4	= 0x8D47,
+	CL_STENCIL_INDEX8	= 0x8D48,
+	CL_STENCIL_INDEX16	= 0x8D49,
+	CL_RENDERBUFFER_RED_SIZE	= 0x8D50,
+	CL_RENDERBUFFER_GREEN_SIZE	= 0x8D51,
+	CL_RENDERBUFFER_BLUE_SIZE	= 0x8D52,
+	CL_RENDERBUFFER_ALPHA_SIZE	= 0x8D53,
+	CL_RENDERBUFFER_DEPTH_SIZE	= 0x8D54,
+	CL_RENDERBUFFER_STENCIL_SIZE	= 0x8D55,
+	CL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE	= 0x8D56,
+	CL_MAX_SAMPLES	= 0x8D57,
+
+	CL_FRAMEBUFFER_SRGB	= 0x8DB9,
+
+	CL_HALF_FLOAT	= 0x140B,
+
+	CL_MAP_READ_BIT	= 0x0001,
+	CL_MAP_WRITE_BIT	= 0x0002,
+	CL_MAP_INVALIDATE_RANGE_BIT	= 0x0004,
+	CL_MAP_INVALIDATE_BUFFER_BIT	= 0x0008,
+	CL_MAP_FLUSH_EXPLICIT_BIT	= 0x0010,
+	CL_MAP_UNSYNCHRONIZED_BIT	= 0x0020,
+
+	CL_COMPRESSED_RED_RGTC1	= 0x8DBB,
+	CL_COMPRESSED_SIGNED_RED_RGTC1	= 0x8DBC,
+	CL_COMPRESSED_RG_RGTC2	= 0x8DBD,
+	CL_COMPRESSED_SIGNED_RG_RGTC2	= 0x8DBE,
+
+	CL_RG	= 0x8227,
+	CL_RG_INTEGER	= 0x8228,
+	CL_R8	= 0x8229,
+	CL_R16	= 0x822A,
+	CL_RG8	= 0x822B,
+	CL_RG16	= 0x822C,
+	CL_R16F	= 0x822D,
+	CL_R32F	= 0x822E,
+	CL_RG16F	= 0x822F,
+	CL_RG32F	= 0x8230,
+	CL_R8I	= 0x8231,
+	CL_R8UI	= 0x8232,
+	CL_R16I	= 0x8233,
+	CL_R16UI	= 0x8234,
+	CL_R32I	= 0x8235,
+	CL_R32UI	= 0x8236,
+	CL_RG8I	= 0x8237,
+	CL_RG8UI	= 0x8238,
+	CL_RG16I	= 0x8239,
+	CL_RG16UI	= 0x823A,
+	CL_RG32I	= 0x823B,
+	CL_RG32UI	= 0x823C,
+
+	CL_VERTEX_ARRAY_BINDING	= 0x85B5,
+
+	CL_UNIFORM_BUFFER	= 0x8A11,
+	CL_UNIFORM_BUFFER_BINDING	= 0x8A28,
+	CL_UNIFORM_BUFFER_START	= 0x8A29,
+	CL_UNIFORM_BUFFER_SIZE	= 0x8A2A,
+	CL_MAX_VERTEX_UNIFORM_BLOCKS	= 0x8A2B,
+	CL_MAX_GEOMETRY_UNIFORM_BLOCKS	= 0x8A2C,
+	CL_MAX_FRAGMENT_UNIFORM_BLOCKS	= 0x8A2D,
+	CL_MAX_COMBINED_UNIFORM_BLOCKS	= 0x8A2E,
+	CL_MAX_UNIFORM_BUFFER_BINDINGS	= 0x8A2F,
+	CL_MAX_UNIFORM_BLOCK_SIZE	= 0x8A30,
+	CL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS	= 0x8A31,
+	CL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS	= 0x8A32,
+	CL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS	= 0x8A33,
+	CL_UNIFORM_BUFFER_OFFSET_ALIGNMENT	= 0x8A34,
+	CL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH	= 0x8A35,
+	CL_ACTIVE_UNIFORM_BLOCKS	= 0x8A36,
+	CL_UNIFORM_TYPE	= 0x8A37,
+	CL_UNIFORM_SIZE	= 0x8A38,
+	CL_UNIFORM_NAME_LENGTH	= 0x8A39,
+	CL_UNIFORM_BLOCK_INDEX	= 0x8A3A,
+	CL_UNIFORM_OFFSET	= 0x8A3B,
+	CL_UNIFORM_ARRAY_STRIDE	= 0x8A3C,
+	CL_UNIFORM_MATRIX_STRIDE	= 0x8A3D,
+	CL_UNIFORM_IS_ROW_MAJOR	= 0x8A3E,
+	CL_UNIFORM_BLOCK_BINDING	= 0x8A3F,
+	CL_UNIFORM_BLOCK_DATA_SIZE	= 0x8A40,
+	CL_UNIFORM_BLOCK_NAME_LENGTH	= 0x8A41,
+	CL_UNIFORM_BLOCK_ACTIVE_UNIFORMS	= 0x8A42,
+	CL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES	= 0x8A43,
+	CL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER	= 0x8A44,
+	CL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER	= 0x8A45,
+	CL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER	= 0x8A46,
+	CL_INVALID_INDEX	= 0xFFFFFFFFu,
+
+	CL_COPY_READ_BUFFER	= 0x8F36,
+	CL_COPY_WRITE_BUFFER	= 0x8F37,
+
+	CL_DEPTH_CLAMP	= 0x864F,
+
+	CL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION	= 0x8E4C,
+	CL_FIRST_VERTEX_CONVENTION	= 0x8E4D,
+	CL_LAST_VERTEX_CONVENTION	= 0x8E4E,
+	CL_PROVOKING_VERTEX	= 0x8E4F,
+
+	CL_TEXTURE_CUBE_MAP_SEAMLESS	= 0x884F,
+
+	CL_MAX_SERVER_WAIT_TIMEOUT	= 0x9111,
+	CL_OBJECT_TYPE	= 0x9112,
+	CL_SYNC_CONDITION	= 0x9113,
+	CL_SYNC_STATUS	= 0x9114,
+	CL_SYNC_FLAGS	= 0x9115,
+	CL_SYNC_FENCE	= 0x9116,
+	CL_SYNC_GPU_COMMANDS_COMPLETE	= 0x9117,
+	CL_UNSIGNALED	= 0x9118,
+	CL_SIGNALED	= 0x9119,
+	CL_ALREADY_SIGNALED	= 0x911A,
+	CL_TIMEOUT_EXPIRED	= 0x911B,
+	CL_CONDITION_SATISFIED	= 0x911C,
+	CL_WAIT_FAILED	= 0x911D,
+	CL_SYNC_FLUSH_COMMANDS_BIT	= 0x00000001,
+	CL_TIMEOUT_IGNORED	= 0xFFFFFFFFFFFFFFFFull,
+
+	CL_SAMPLE_POSITION	= 0x8E50,
+	CL_SAMPLE_MASK	= 0x8E51,
+	CL_SAMPLE_MASK_VALUE	= 0x8E52,
+	CL_MAX_SAMPLE_MASK_WORDS	= 0x8E59,
+	CL_TEXTURE_2D_MULTISAMPLE	= 0x9100,
+	CL_PROXY_TEXTURE_2D_MULTISAMPLE	= 0x9101,
+	CL_TEXTURE_2D_MULTISAMPLE_ARRAY	= 0x9102,
+	CL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY	= 0x9103,
+	CL_TEXTURE_BINDING_2D_MULTISAMPLE	= 0x9104,
+	CL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY	= 0x9105,
+	CL_TEXTURE_SAMPLES	= 0x9106,
+	CL_TEXTURE_FIXED_SAMPLE_LOCATIONS	= 0x9107,
+	CL_SAMPLER_2D_MULTISAMPLE	= 0x9108,
+	CL_INT_SAMPLER_2D_MULTISAMPLE	= 0x9109,
+	CL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE	= 0x910A,
+	CL_SAMPLER_2D_MULTISAMPLE_ARRAY	= 0x910B,
+	CL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY	= 0x910C,
+	CL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY	= 0x910D,
+	CL_MAX_COLOR_TEXTURE_SAMPLES	= 0x910E,
+	CL_MAX_DEPTH_TEXTURE_SAMPLES	= 0x910F,
+	CL_MAX_INTEGER_SAMPLES	= 0x9110,
+
+
+
+	CL_SAMPLE_SHADING	= 0x8C36,
+	CL_MIN_SAMPLE_SHADING_VALUE	= 0x8C37,
+
+	CL_TEXTURE_CUBE_MAP_ARRAY	= 0x9009,
+	CL_TEXTURE_BINDING_CUBE_MAP_ARRAY	= 0x900A,
+	CL_PROXY_TEXTURE_CUBE_MAP_ARRAY	= 0x900B,
+	CL_SAMPLER_CUBE_MAP_ARRAY	= 0x900C,
+	CL_SAMPLER_CUBE_MAP_ARRAY_SHADOW	= 0x900D,
+	CL_INT_SAMPLER_CUBE_MAP_ARRAY	= 0x900E,
+	CL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY	= 0x900F,
+
+	CL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET_ARB	= 0x8E5E,
+	CL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET_ARB	= 0x8E5F,
+
+	CL_SRC1_COLOR	= 0x88F9,
+	CL_ONE_MINUS_SRC1_COLOR	= 0x88FA,
+	CL_ONE_MINUS_SRC1_ALPHA	= 0x88FB,
+	CL_MAX_DUAL_SOURCE_DRAW_BUFFERS	= 0x88FC,
+
+	CL_ANY_SAMPLES_PASSED	= 0x8C2F,
+
+	CL_SAMPLER_BINDING	= 0x8919,
+
+	CL_RGB10_A2UI	= 0x906F,
+
+	CL_TEXTURE_SWIZZLE_R	= 0x8E42,
+	CL_TEXTURE_SWIZZLE_G	= 0x8E43,
+	CL_TEXTURE_SWIZZLE_B	= 0x8E44,
+	CL_TEXTURE_SWIZZLE_A	= 0x8E45,
+	CL_TEXTURE_SWIZZLE_RGBA	= 0x8E46,
+
+	CL_TIME_ELAPSED	= 0x88BF,
+	CL_TIMESTAMP	= 0x8E28,
+
+	CL_INT_2_10_10_10_REV	= 0x8D9F,
+
+	CL_DRAW_INDIRECT_BUFFER	= 0x8F3F,
+	CL_DRAW_INDIRECT_BUFFER_BINDING	= 0x8F43,
+
+	CL_GEOMETRY_SHADER_INVOCATIONS	= 0x887F,
+	CL_MAX_GEOMETRY_SHADER_INVOCATIONS	= 0x8E5A,
+	CL_MIN_FRAGMENT_INTERPOLATION_OFFSET	= 0x8E5B,
+	CL_MAX_FRAGMENT_INTERPOLATION_OFFSET	= 0x8E5C,
+	CL_FRAGMENT_INTERPOLATION_OFFSET_BITS	= 0x8E5D,
+	CL_MAX_VERTEX_STREAMS	= 0x8E71,
+
+	CL_DOUBLE_VEC2	= 0x8FFC,
+	CL_DOUBLE_VEC3	= 0x8FFD,
+	CL_DOUBLE_VEC4	= 0x8FFE,
+	CL_DOUBLE_MAT2	= 0x8F46,
+	CL_DOUBLE_MAT3	= 0x8F47,
+	CL_DOUBLE_MAT4	= 0x8F48,
+	CL_DOUBLE_MAT2x3	= 0x8F49,
+	CL_DOUBLE_MAT2x4	= 0x8F4A,
+	CL_DOUBLE_MAT3x2	= 0x8F4B,
+	CL_DOUBLE_MAT3x4	= 0x8F4C,
+	CL_DOUBLE_MAT4x2	= 0x8F4D,
+	CL_DOUBLE_MAT4x3	= 0x8F4E,
+
+	CL_ACTIVE_SUBROUTINES	= 0x8DE5,
+	CL_ACTIVE_SUBROUTINE_UNIFORMS	= 0x8DE6,
+	CL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS	= 0x8E47,
+	CL_ACTIVE_SUBROUTINE_MAX_LENGTH	= 0x8E48,
+	CL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH	= 0x8E49,
+	CL_MAX_SUBROUTINES	= 0x8DE7,
+	CL_MAX_SUBROUTINE_UNIFORM_LOCATIONS	= 0x8DE8,
+	CL_NUM_COMPATIBLE_SUBROUTINES	= 0x8E4A,
+	CL_COMPATIBLE_SUBROUTINES	= 0x8E4B,
+
+	CL_PATCHES	= 0x000E,
+	CL_PATCH_VERTICES	= 0x8E72,
+	CL_PATCH_DEFAULT_INNER_LEVEL	= 0x8E73,
+	CL_PATCH_DEFAULT_OUTER_LEVEL	= 0x8E74,
+	CL_TESS_CONTROL_OUTPUT_VERTICES	= 0x8E75,
+	CL_TESS_GEN_MODE	= 0x8E76,
+	CL_TESS_GEN_SPACING	= 0x8E77,
+	CL_TESS_GEN_VERTEX_ORDER	= 0x8E78,
+	CL_TESS_GEN_POINT_MODE	= 0x8E79,
+	CL_ISOLINES	= 0x8E7A,
+	CL_FRACTIONAL_ODD	= 0x8E7B,
+	CL_FRACTIONAL_EVEN	= 0x8E7C,
+	CL_MAX_PATCH_VERTICES	= 0x8E7D,
+	CL_MAX_TESS_GEN_LEVEL	= 0x8E7E,
+	CL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS	= 0x8E7F,
+	CL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS	= 0x8E80,
+	CL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS	= 0x8E81,
+	CL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS	= 0x8E82,
+	CL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS	= 0x8E83,
+	CL_MAX_TESS_PATCH_COMPONENTS	= 0x8E84,
+	CL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS	= 0x8E85,
+	CL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS	= 0x8E86,
+	CL_MAX_TESS_CONTROL_UNIFORM_BLOCKS	= 0x8E89,
+	CL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS	= 0x8E8A,
+	CL_MAX_TESS_CONTROL_INPUT_COMPONENTS	= 0x886C,
+	CL_MAX_TESS_EVALUATION_INPUT_COMPONENTS	= 0x886D,
+	CL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS	= 0x8E1E,
+	CL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS	= 0x8E1F,
+	CL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER	= 0x84F0,
+	CL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER	= 0x84F1,
+	CL_TESS_EVALUATION_SHADER	= 0x8E87,
+	CL_TESS_CONTROL_SHADER	= 0x8E88,
+
+	CL_TRANSFORM_FEEDBACK	= 0x8E22,
+	CL_TRANSFORM_FEEDBACK_BUFFER_PAUSED	= 0x8E23,
+	CL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE	= 0x8E24,
+	CL_TRANSFORM_FEEDBACK_BINDING	= 0x8E25,
+
+	CL_MAX_TRANSFORM_FEEDBACK_BUFFERS	= 0x8E70,
+
+//------------------------------------------------------------------------------
+// Legacy defines to be removed when graphics cards drivers support the new defines
+
+	// ARB_geometry_shader4
+	CL_GEOMETRY_VERTICES_OUT_ARB = 0x8DDA,
+	CL_GEOMETRY_INPUT_TYPE_ARB = 0x8DDB,
+	CL_GEOMETRY_OUTPUT_TYPE_ARB = 0x8DDC,
+	CL_MAX_GEOMETRY_VARYING_COMPONENTS_ARB = 0x8DDD,
+	CL_MAX_VERTEX_VARYING_COMPONENTS_ARB = 0x8DDE,
+	CL_MAX_GEOMETRY_UNIFORM_COMPONENTS_ARB = 0x8DDF,
+	CL_MAX_GEOMETRY_OUTPUT_VERTICES_ARB = 0x8DE0,
+	CL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_ARB = 0x8DE1,
+
+//------------------------------------------------------------------------------
+// Extensions not in the specification
+
+	// EXT_texture_filter_anisotropic
+	CL_TEXTURE_MAX_ANISOTROPY_EXT	= 0x84FE,
+	CL_MAX_TEXTURE_MAX_ANISOTROPY_EXT = 0x84FF
 };
 
 #endif
 
 /// \}
+
+

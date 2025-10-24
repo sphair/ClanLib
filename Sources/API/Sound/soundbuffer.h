@@ -56,6 +56,9 @@ class CL_API_SOUND CL_SoundBuffer
 /// \{
 
 public:
+	/// \brief Construct a null instance
+	CL_SoundBuffer();
+
 	/// \brief Construct sound buffer.
 	/** <p>A sound buffer can be constructed either as static or
 	    streamed. If the sound buffer is loaded from resources, the
@@ -70,8 +73,6 @@ public:
 	    <p>If <i>delete_provider</i> is true, the provider will be
 	    deleted when the soundbuffer is deleted.</p>*/
 
-	CL_SoundBuffer();
-
 	CL_SoundBuffer(
 		const CL_String &res_id,
 		CL_ResourceManager *manager);
@@ -82,23 +83,18 @@ public:
 	CL_SoundBuffer(
 		const CL_String &fullname,
 		bool streamed = false,
-		const CL_String &format = cl_text(""));
+		const CL_String &format = "");
 
 	CL_SoundBuffer(
 		const CL_String &filename,
 		bool streamed,
 		const CL_VirtualDirectory &directory,
-		const CL_String &type = cl_text(""));
+		const CL_String &type = "");
 
 	CL_SoundBuffer(
 		CL_IODevice &file,
 		bool streamed,
 		const CL_String &type);
-
-	/// \brief Constructs a SoundBuffer
-	///
-	/// \param copy = Sound Buffer
-	CL_SoundBuffer(const CL_SoundBuffer &copy);
 
 	virtual ~CL_SoundBuffer();
 
@@ -116,10 +112,11 @@ public:
 	/// \brief Returns the default panning position when the buffer is played.
 	float get_pan() const;
 
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null();
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 /// \}
 /// \name Operations
@@ -150,6 +147,7 @@ public:
 
 	/// \brief Plays the soundbuffer on the specified soundcard.
 	///
+	/// \param looping looping
 	/// \param output Sound output to be used - NULL means use the current selected sound output (CL_Sound::get_selected_output().
 	///
 	/// \return The playback session.

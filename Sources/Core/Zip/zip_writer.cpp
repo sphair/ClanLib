@@ -91,7 +91,7 @@ CL_ZipWriter::CL_ZipWriter(CL_IODevice &output, bool storeFilenamesAsUTF8)
 void CL_ZipWriter::begin_file(const CL_StringRef &filename, bool compress)
 {
 	if (impl->file_begun)
-		throw CL_Exception(cl_text("CL_ZipWriter already writing a file"));
+		throw CL_Exception("CL_ZipWriter already writing a file");
 	impl->file_begun = true;
 
 	impl->uncompressed_length = 0;
@@ -142,14 +142,14 @@ void CL_ZipWriter::begin_file(const CL_StringRef &filename, bool compress)
 		memset(&impl->zs, 0, sizeof(z_stream));
 		int result = deflateInit2(&impl->zs, Z_DEFAULT_COMPRESSION, Z_DEFLATED, -15, 8, Z_DEFAULT_STRATEGY); // Undocumented: if wbits is negative, zlib skips header check
 		if (result != Z_OK)
-			throw CL_Exception(cl_text("Zlib deflateInit failed for zip index!"));
+			throw CL_Exception("Zlib deflateInit failed for zip index!");
 	}
 }
 
 void CL_ZipWriter::write_file_data(const void *data, cl_int64 size)
 {
 	if (!impl->file_begun)
-		throw CL_Exception(cl_text("CL_ZipWriter::begin_file not called prior CL_ZipWriter::write_file_data"));
+		throw CL_Exception("CL_ZipWriter::begin_file not called prior CL_ZipWriter::write_file_data");
 
 	impl->uncompressed_length += size;
 
@@ -163,12 +163,12 @@ void CL_ZipWriter::write_file_data(const void *data, cl_int64 size)
 			impl->zs.next_out = (Bytef *) impl->zbuffer;
 			impl->zs.avail_out = 16*1024;
 			int result = deflate(&impl->zs, Z_NO_FLUSH);
-			if (result == Z_NEED_DICT) throw CL_Exception(cl_text("Zlib deflate wants a dictionary!"));
-			if (result == Z_DATA_ERROR) throw CL_Exception(cl_text("Zip data stream is corrupted"));
-			if (result == Z_STREAM_ERROR) throw CL_Exception(cl_text("Zip stream structure was inconsistent!"));
-			if (result == Z_MEM_ERROR) throw CL_Exception(cl_text("Zlib did not have enough memory to compress file!"));
-			if (result == Z_BUF_ERROR) throw CL_Exception(cl_text("Not enough data in buffer when Z_FINISH was used"));
-			if (result != Z_OK) throw CL_Exception(cl_text("Zlib deflate failed while compressing zip file!"));
+			if (result == Z_NEED_DICT) throw CL_Exception("Zlib deflate wants a dictionary!");
+			if (result == Z_DATA_ERROR) throw CL_Exception("Zip data stream is corrupted");
+			if (result == Z_STREAM_ERROR) throw CL_Exception("Zip stream structure was inconsistent!");
+			if (result == Z_MEM_ERROR) throw CL_Exception("Zlib did not have enough memory to compress file!");
+			if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
+			if (result != Z_OK) throw CL_Exception("Zlib deflate failed while compressing zip file!");
 
 			cl_int64 zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize > 0)
@@ -202,12 +202,12 @@ void CL_ZipWriter::end_file()
 			impl->zs.next_out = (Bytef *) impl->zbuffer;
 			impl->zs.avail_out = 16*1024;
 			int result = deflate(&impl->zs, Z_FINISH);
-			if (result == Z_NEED_DICT) throw CL_Exception(cl_text("Zlib deflate wants a dictionary!"));
-			if (result == Z_DATA_ERROR) throw CL_Exception(cl_text("Zip data stream is corrupted"));
-			if (result == Z_STREAM_ERROR) throw CL_Exception(cl_text("Zip stream structure was inconsistent!"));
-			if (result == Z_MEM_ERROR) throw CL_Exception(cl_text("Zlib did not have enough memory to compress file!"));
-			if (result == Z_BUF_ERROR) throw CL_Exception(cl_text("Not enough data in buffer when Z_FINISH was used"));
-			if (result != Z_OK && result != Z_STREAM_END) throw CL_Exception(cl_text("Zlib deflate failed while compressing zip file!"));
+			if (result == Z_NEED_DICT) throw CL_Exception("Zlib deflate wants a dictionary!");
+			if (result == Z_DATA_ERROR) throw CL_Exception("Zip data stream is corrupted");
+			if (result == Z_STREAM_ERROR) throw CL_Exception("Zip stream structure was inconsistent!");
+			if (result == Z_MEM_ERROR) throw CL_Exception("Zlib did not have enough memory to compress file!");
+			if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
+			if (result != Z_OK && result != Z_STREAM_END) throw CL_Exception("Zlib deflate failed while compressing zip file!");
 			cl_int64 zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize == 0)
 				break;
@@ -242,7 +242,7 @@ void CL_ZipWriter::end_file()
 void CL_ZipWriter::write_toc()
 {
 	if (impl->file_begun)
-		throw CL_Exception(cl_text("Cannot write zip TOC when already writing a file entry"));
+		throw CL_Exception("Cannot write zip TOC when already writing a file entry");
 
 	cl_int64 offset_start_central_dir = impl->output.get_position();
 
@@ -286,7 +286,7 @@ void CL_ZipWriter::write_toc()
 	central_dir_end.size_of_central_directory = central_dir_size;
 	central_dir_end.offset_to_start_of_central_directory = offset_start_central_dir;
 	central_dir_end.file_comment_length = 0;
-	central_dir_end.file_comment = cl_text("");
+	central_dir_end.file_comment = "";
 	central_dir_end.save(impl->output);
 }
 

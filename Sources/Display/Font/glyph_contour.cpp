@@ -104,7 +104,7 @@ bool CL_GlyphContour::is_point_inside(const CL_Pointf &P) const
 
 void CL_GlyphContour::add_curve(CL_BezierCurve &curve)
 {
-	std::vector<CL_Pointf> points = curve.generate_curve_points(10);
+	std::vector<CL_Pointf> points = curve.generate_curve_points(CL_Angle::from_degrees(10));
 	
 	for( unsigned int i = 0; i<points.size() - 1; i++ )
 	{

@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FileDialog_Impl Class:
@@ -91,18 +92,19 @@ public:
 			filter_index = filter_index;
 	}
 
-	CL_String get_filter_string() const
+	CL_String16 get_filter_string() const
 	{
-		CL_String filter;
+		CL_String16 filter;
 
 		for(int i = 0; i < filters.size(); ++i)
 		{
-			filter += filters[i].description;
-			filter += cl_text('\0');
-			filter += filters[i].extension;
-			filter += cl_text('\0');
+			filter += CL_StringHelp::utf8_to_ucs2(filters[i].description);
+			filter += (wchar_t) '\0';
+			filter += CL_StringHelp::utf8_to_ucs2(filters[i].extension);
+			filter += (wchar_t) '\0';
 		}
-		filter += "\0\0";
+		filter += (wchar_t) '\0';
+		filter += (wchar_t) '\0';
 
 		return filter;
 	}
@@ -120,19 +122,22 @@ public:
 		else
 			ofn.hwndOwner = 0;
 
-		CL_String::char_type filename_buffer[FILENAME_MAX] = { 0 };
+		CL_String16::char_type filename_buffer[FILENAME_MAX] = { 0 };
+		CL_String16 title16 = CL_StringHelp::utf8_to_ucs2(title);
+		CL_String16 filter16 = get_filter_string();
+		CL_String16 initial_directory16 = CL_StringHelp::utf8_to_ucs2(initial_directory);
 		ofn.lpstrFile = filename_buffer;
 		ofn.nMaxFile = FILENAME_MAX;
 
-		ofn.lpstrFilter = get_filter_string().c_str();
+		ofn.lpstrFilter = filter16.c_str();
 		ofn.nFilterIndex = filter_index + 1;
 
 		ofn.lpstrFileTitle = 0;
 		ofn.nMaxFileTitle = 0;
 
-		ofn.lpstrInitialDir = initial_directory.c_str();
+		ofn.lpstrInitialDir = initial_directory16.c_str();
 
-		ofn.lpstrTitle = title.c_str();
+		ofn.lpstrTitle = title16.c_str();
 
 		ofn.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_EXPLORER;
 

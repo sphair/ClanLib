@@ -9,7 +9,8 @@ DIST_SUBDIRS = \
   GL             \
   GL1            \
   GUI            \
-  GDI            \
+  CSSLayout      \
+  SWRender       \
   MikMod         \
   Network        \
   RegExp         \

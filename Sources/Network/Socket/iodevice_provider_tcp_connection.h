@@ -77,6 +77,7 @@ public:
 	void disconnect_graceful();
 	void disconnect_abortive();
 	void set_nodelay(bool enable);
+	void set_keep_alive(bool enable, int timeout, int interval);
 	int send(const void *data, int len, bool send_all);
 	int receive(void *data, int len, bool receive_all);
 	int peek(void *data, int len);

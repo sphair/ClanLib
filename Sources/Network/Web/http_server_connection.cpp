@@ -107,6 +107,13 @@ CL_HTTPServerConnection::~CL_HTTPServerConnection()
 /////////////////////////////////////////////////////////////////////////////
 // CL_HTTPServerConnection Attributes:
 
+
+void CL_HTTPServerConnection::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_HTTPServerConnection is null");
+}
+
 CL_StringRef8 CL_HTTPServerConnection::get_request_type()
 {
 	return impl->request_type;
@@ -130,7 +137,7 @@ CL_DataBuffer CL_HTTPServerConnection::read_request_data()
 	if (impl->request_read)
 		return impl->request_data;
 	if (impl->performed_read)
-		throw CL_Exception(cl_text("Cannot read request data if manual reading has been performed first."));
+		throw CL_Exception("Cannot read request data if manual reading has been performed first.");
 
 	impl->request_read = true;
 
@@ -147,7 +154,7 @@ CL_DataBuffer CL_HTTPServerConnection::read_request_data()
 			impl->request_data.set_size(0);
 			CL_String8 str_chunk_size;
 			if (CL_HTTPServer_Impl::read_line(impl->connection, str_chunk_size) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			CL_String8::size_type size_length = str_chunk_size.find(';');
 			int chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 			while (chunk_size > 0)
@@ -158,24 +165,24 @@ CL_DataBuffer CL_HTTPServerConnection::read_request_data()
 				if (bytes_read != chunk_size)
 				{
 					impl->request_data.set_size(0);
-					throw CL_Exception(cl_text("Premature end of HTTP response data"));
+					throw CL_Exception("Premature end of HTTP response data");
 				}
 				char crlf[2];
 				bytes_read = impl->connection.receive(crlf, 2, true);
 				if (bytes_read != 2)
-					throw CL_Exception(cl_text("Premature end of HTTP response data"));
+					throw CL_Exception("Premature end of HTTP response data");
 				if (crlf[0] != '\r' || crlf[1] != '\n')
-					throw CL_Exception(cl_text("Expected CRLF after chunk in chunked encoding"));
+					throw CL_Exception("Expected CRLF after chunk in chunked encoding");
 
 				if (CL_HTTPServer_Impl::read_line(impl->connection, str_chunk_size) == false)
-					throw CL_Exception(cl_text("Premature end of HTTP response data"));
+					throw CL_Exception("Premature end of HTTP response data");
 				CL_String8::size_type size_length = str_chunk_size.find(';');
 				chunk_size = CL_StringHelp::local8_to_int(str_chunk_size.substr(0, size_length), 16);
 			}
 
 			CL_String8 trailer;
 			if (CL_HTTPServer_Impl::read_lines(impl->connection, trailer) == false)
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 		}
 		else if (transfer_encoding.empty())
 		{
@@ -185,12 +192,12 @@ CL_DataBuffer CL_HTTPServerConnection::read_request_data()
 			if (bytes_read != length)
 			{
 				impl->request_data.set_size(0);
-				throw CL_Exception(cl_text("Premature end of HTTP response data"));
+				throw CL_Exception("Premature end of HTTP response data");
 			}
 		}
 		else
 		{
-			throw CL_Exception(cl_format(cl_text("Unknown transfer encoding: %1"), CL_StringHelp::local8_to_text(transfer_encoding)));
+			throw CL_Exception(cl_format("Unknown transfer encoding: %1", CL_StringHelp::local8_to_text(transfer_encoding)));
 		}
 	}
 
@@ -200,7 +207,7 @@ CL_DataBuffer CL_HTTPServerConnection::read_request_data()
 void CL_HTTPServerConnection::write_response_status(int status_code, const CL_StringRef8 &status_text)
 {
 	if (impl->performed_write)
-		throw CL_Exception(cl_text("Cannot write reponse status if manual writing has been performed first."));
+		throw CL_Exception("Cannot write reponse status if manual writing has been performed first.");
 
 	CL_String8 status_line;
 	status_line.append("HTTP/1.1 ");
@@ -214,7 +221,7 @@ void CL_HTTPServerConnection::write_response_status(int status_code, const CL_St
 void CL_HTTPServerConnection::write_response_headers(const CL_StringRef8 &headers)
 {
 	if (impl->performed_write)
-		throw CL_Exception(cl_text("Cannot write reponse headers if manual writing has been performed first."));
+		throw CL_Exception("Cannot write reponse headers if manual writing has been performed first.");
 
 	// Analyze and print headers line by line:
 
@@ -284,7 +291,7 @@ void CL_HTTPServerConnection::write_response_data(const CL_DataBuffer &data)
 {
 	// Make sure HTTP headers are written and sane:
 	if (impl->performed_write)
-		throw CL_Exception(cl_text("Cannot write reponse data if manual writing has been performed first."));
+		throw CL_Exception("Cannot write reponse data if manual writing has been performed first.");
 	if (!impl->writing_header)
 		write_response_headers(CL_StringRef8());
 	if (impl->writing_header)
@@ -301,7 +308,7 @@ void CL_HTTPServerConnection::write_response_data(const CL_DataBuffer &data)
 	}
 	impl->writing_header = false;
 	if (impl->written_content_length >= 0 && data.get_size() != impl->written_content_length)
-		throw CL_Exception(cl_text("HTTP Content-Length in header does not match response data size!"));
+		throw CL_Exception("HTTP Content-Length in header does not match response data size!");
 
 	// Header should be ok.  Write the actual data:
 	impl->connection.write(data.get_data(), data.get_size(), true);

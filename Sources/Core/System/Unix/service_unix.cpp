@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -60,11 +60,11 @@ int CL_Service_Unix::main(int argc, char **argv)
 	for (int i=0; i<argc; i++)
 		args.push_back(argv[i]);
 
-	if (argc >= 3 && args[1] == cl_text("-daemon"))
+	if (argc >= 3 && args[1] == "-daemon")
 	{
 		return run_daemon(args);
 	}
-	else if (argc == 2 && args[1] == cl_text("-debug"))
+	else if (argc == 2 && args[1] == "-debug")
 	{
 		return run_debug(args);
 	}

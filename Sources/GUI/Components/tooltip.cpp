@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message.h"
@@ -71,9 +72,9 @@ public:
 CL_ToolTip::CL_ToolTip(CL_GUIManager manager)
 : CL_GUIComponent(&manager, CL_ToolTip_Impl::create_description()), impl(new CL_ToolTip_Impl)
 {
-	set_type_name(cl_text("tooltip"));
+	set_type_name("tooltip");
 	impl->tooltip = this;
-	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 
 	func_process_message().set(impl.get(), &CL_ToolTip_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_ToolTip_Impl::on_render);
@@ -92,6 +93,18 @@ CL_ToolTip::~CL_ToolTip()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ToolTip Attributes:
+
+CL_ToolTip *CL_ToolTip::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ToolTip *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ToolTip*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ToolTip named item: %1", id));
+
+	return object;
+}
 
 CL_StringRef CL_ToolTip::get_text() const
 {
@@ -141,7 +154,7 @@ void CL_ToolTip::hide()
 CL_GUITopLevelDescription CL_ToolTip_Impl::create_description()
 {
 	CL_GUITopLevelDescription desc;
-	desc.set_title(cl_text("Tooltip"));
+	desc.set_title("Tooltip");
 	desc.set_visible(false);
 	desc.set_topmost(true);
 	desc.set_decorations(false);

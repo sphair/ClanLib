@@ -47,11 +47,7 @@ class CL_API_DISPLAY CL_ProgramAttribute
 /// \{
 
 public:
-	/// \brief Constructs a program attribute.
-	///
-	/// \param name Name of attribute.
-	/// \param size Attribute size.
-	/// \param type OpenGL attribute type.
+	/// \brief Constructs a null instance.
 	CL_ProgramAttribute();
 
 	/// \brief Constructs a ProgramAttribute
@@ -68,6 +64,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Get attribute name.
 	CL_StringRef get_name() const;
 

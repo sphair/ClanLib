@@ -36,6 +36,7 @@
 #include "../../Core/Resources/resource_data_session.h"
 #include "../../Core/Math/origin.h"
 #include "color.h"
+#include "../Image/image_import_description.h"
 
 class CL_GraphicContext;
 class CL_VirtualDirectory;
@@ -56,7 +57,7 @@ class CL_API_DISPLAY CL_Image
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a null image.
+	/// \brief Constructs a null instance.
 	CL_Image();
 
 	/// \brief Constructs an image from a texture.
@@ -74,29 +75,33 @@ public:
 
 	/// \brief Constructs a Image from a pixelbuffer.
 	///
-	/// \param context = Graphic Context
+	/// \param gc = Graphic Context
 	/// \param pixelbuffer = Pixelbuffer to get image data from
-	CL_Image(CL_GraphicContext &gc, const CL_PixelBuffer &pixelbuffer);
+	/// \param rect = pixelbuffer rect
+	CL_Image(CL_GraphicContext &gc, const CL_PixelBuffer &pixelbuffer, const CL_Rect &rect);
 
 	/// \brief Constructs a Image
 	///
 	/// \param context = Graphic Context
 	/// \param filename Filename of image to load
-	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename);
+	/// \param import_desc = Image Import Description
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Image
 	///
 	/// \param context = Graphic Context
 	/// \param filename Filename of image to load
 	/// \param dir = Virtual directory to load filename from
-	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, CL_VirtualDirectory &dir);
+	/// \param import_desc = Image Import Description
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Image
 	///
 	/// \param context = Graphic Context
 	/// \param resource_id Resource name of the image resource
 	/// \param resources Resource manager used to load resource
-	CL_Image(CL_GraphicContext &context, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+	/// \param import_desc = Image Import Description
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	virtual ~CL_Image();	
 /// \}
@@ -104,8 +109,11 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the image is not properly constructed.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Returns x scale.
 	/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/
@@ -167,23 +175,34 @@ public:
 	///
 	/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
 	/// \param gc Graphic context on which to render upon.
-	/// \param src Source rectangle to draw. Use this is draw only part of the image.
-	/// \param dest Rectangle to draw image in.
 	void draw(
 		CL_GraphicContext &gc,
 		float x,
 		float y) const;
 
+	/// \brief Draw image on graphic context.
+	///
+	/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.
+	/// \param gc Graphic context on which to render upon.
 	void draw(
 		CL_GraphicContext &gc,
 		int x,
 		int y) const;
 
+	/// \brief Draw image on graphic context.
+	///
+	/// \param gc Graphic context on which to render upon.
+	/// \param src Source rectangle to draw. Use this is draw only part of the image.
+	/// \param dest Rectangle to draw image in.
 	void draw(
 		CL_GraphicContext &gc,
 		const CL_Rectf &src,
 		const CL_Rectf &dest) const;
 
+	/// \brief Draw image on graphic context.
+	///
+	/// \param gc Graphic context on which to render upon.
+	/// \param dest Rectangle to draw image in.
 	void draw(
 		CL_GraphicContext &gc,
 		const CL_Rectf &dest) const;

@@ -39,7 +39,6 @@
 
 enum CL_TextureWrapMode;
 enum CL_TextureFilter;
-enum CL_TextureDepthMode;
 enum CL_TextureCompareMode;
 enum CL_CompareFunction;
 class CL_PixelBuffer;
@@ -75,10 +74,13 @@ public:
 	virtual void create(int width, int height, CL_TextureFormat internal_format, int depth) = 0;
 
 	/// \brief Retrieve image data from texture.
-	virtual CL_PixelBuffer get_pixeldata(CL_PixelFormat &format, int level) const = 0;
+	virtual CL_PixelBuffer get_pixeldata(CL_TextureFormat sized_format, int level) const = 0;
+
+	/// \brief Generate the mipmap
+	virtual void generate_mipmap() = 0;
 
 	/// \brief Upload image to texture.
-	virtual void set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format) = 0;
+	virtual void set_image(CL_PixelBuffer &image, int level) = 0;
 
 	/// \brief Upload cube map.
 	virtual void set_cube_map(
@@ -88,8 +90,7 @@ public:
 		CL_PixelBuffer &cube_map_negative_y,
 		CL_PixelBuffer &cube_map_positive_z,
 		CL_PixelBuffer &cube_map_negative_z,
-		int level,
-		CL_TextureFormat internal_format) = 0;
+		int level) = 0;
 
 	virtual void set_compressed_image(
 		int level,
@@ -102,7 +103,8 @@ public:
 	virtual void set_subimage(
 		int x,
 		int y,
-		const CL_PixelBufferRef &image,
+		const CL_PixelBuffer &image,
+		const CL_Rect &src_rect,
 		int level) = 0;
 
 	/// \brief Copy image data from a graphic context.
@@ -141,9 +143,6 @@ public:
 	/// \brief Sets the texture max level texture parameter.
 	virtual void set_max_level(int max_level) = 0;
 
-	/// \brief Enables or disables automatic mipmap generation when uploading image data.
-	virtual void set_generate_mipmap(bool generate_mipmap) = 0;
-
 	/// \brief Set the texture wrapping mode.
 	virtual void set_wrap_mode(
 		CL_TextureWrapMode wrap_s,
@@ -165,9 +164,6 @@ public:
 
 	/// \brief Set the maximum degree of anisotropy.
 	virtual void set_max_anisotropy(float v) = 0;
-
-	/// \brief Set the depth texture mode parameter.
-	virtual void set_depth_mode(CL_TextureDepthMode depth_mode) = 0;
 
 	/// \brief Sets the texture compare mode and compare function texture parameters.
 	virtual void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func) = 0;

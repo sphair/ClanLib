@@ -47,7 +47,6 @@
 
 class CL_CollisionOutline_Generic;
 class CL_ResourceManager;
-class CL_PixelBufferRef;
 class CL_OutputSourceProvider;
 class CL_GraphicContext;
 class CL_Color;
@@ -122,13 +121,14 @@ public:
 	/// \param pbuf = Find alpha outline from a pixel buffer
 	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
 	/// \param accuracy = Amount of optimization of the outline (default medium)
-	CL_CollisionOutline(const CL_PixelBufferRef &pbuf, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium );
+	CL_CollisionOutline(const CL_PixelBuffer &pbuf, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium );
 
 	/// \brief Construct a collision outline.
 	///
-	/// \param filename = Load outline from a file. The file can be an image or a precompiled outline.
-	/// \param directory = The virtual directory
-	/// \param file_extension = "out" for a precompiled outline, else a bitmap outline
+	/// \param fullname = Full name
+	/// \param alpha_limit = value
+	/// \param accuracy = Outline Accuracy
+	/// \param get_insides = bool
 	CL_CollisionOutline(const CL_StringRef &fullname, int alpha_limit=128, CL_OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
 
 	/// \brief Constructs a CollisionOutline
@@ -152,7 +152,7 @@ public:
 	/// \brief Construct a collision outline.
 	///
 	/// \param resource_id = The resource id
-	/// \param mananger = The resource manager
+	/// \param manager = The resource manager
 	CL_CollisionOutline(const CL_StringRef &resource_id, CL_ResourceManager *manager );
 
 	/// \brief Construct a collision outline.
@@ -327,8 +327,7 @@ public:
 
 	/// \brief Write the outline to a file.
 	///
-	/// \param filename = Name of file.
-	/// \param directory = Visual Directory to use
+	/// \param fullname = Name of file.
 	void save(const CL_StringRef &fullname) const;
 
 	/// \brief Save

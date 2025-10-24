@@ -41,5 +41,8 @@ public:
 	bool on_input_pointer_moved(const CL_InputEvent &input_event);
 
 private:
+	static void swap(int &v1, int &v2);
+	CL_Rect get_rect(const CL_Point &end) const;
+
 	CL_Point start;
 };

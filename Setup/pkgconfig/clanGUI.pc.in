@@ -6,9 +6,9 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include/ClanLib-@LT_RELEASE@
 
 Name: clanGUI
-Description: portable main() wrapper of ClanLib
+Description: ClanLib GUI
 Version: @VERSION@
-Requires: clanDisplay-@LT_RELEASE@ = @VERSION@
+Requires: clanDisplay-@LT_RELEASE@ = @VERSION@ clanCSSLayout-@LT_RELEASE@ = @VERSION@
 Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@GUI @extra_LIBS_clanGUI@
 Cflags: -I${includedir} @extra_CFLAGS_clanGUI@
 

@@ -46,6 +46,7 @@ public:
 	void disconnect_abortive();
 
 	void set_nodelay(bool enable);
+	void set_keep_alive(bool enable, int timeout, int interval);
 
 	void bind(const CL_SocketName &socketname, bool reuse_address);
 

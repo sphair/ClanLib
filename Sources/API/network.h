@@ -63,10 +63,6 @@
 #include "Network/Web/webservice_part.h"
 #include "Network/Web/webservice_exception.h"
 
-#include "Network/IRC/irc_connection.h"
-#include "Network/IRC/irc_numerics.h"
-#include "Network/IRC/dcc_download.h"
-
 #include "Network/NetGame/client.h"
 #include "Network/NetGame/connection.h"
 #include "Network/NetGame/event.h"
@@ -81,103 +77,27 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-dll.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-dll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-dll-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-dll-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mtdll-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "ws2_32.lib")
-			#pragma comment(lib, "iphlpapi.lib")
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
+	#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanNetwork-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanNetwork-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mt-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "ws2_32.lib")
-			#pragma comment(lib, "iphlpapi.lib")
+			#pragma comment(lib, "clanNetwork-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-dll-uc.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-dll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-dll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-dll-uc-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mtdll-uc.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mtdll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mtdll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mtdll-uc-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "ws2_32.lib")
-			#pragma comment(lib, "iphlpapi.lib")
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanNetwork-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanNetwork-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mt-uc.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mt-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanNetwork-x64-static-mt-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanNetwork-static-mt-uc-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "ws2_32.lib")
-			#pragma comment(lib, "iphlpapi.lib")
+			#pragma comment(lib, "clanNetwork-static-mt-debug.lib")
 		#endif
 	#endif
+	#pragma comment(lib, "ws2_32.lib")
+	#pragma comment(lib, "iphlpapi.lib")
 #endif
-

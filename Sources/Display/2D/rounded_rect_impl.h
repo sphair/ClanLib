@@ -46,7 +46,6 @@ public:
 	~CL_RoundedRect_Impl();
 
 	void draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
-	void draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
 	void fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin);
 	void fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin);
 

@@ -41,6 +41,7 @@
 #include "../../Core/Resources/resource_data_session.h"
 #include "../Render/graphic_context.h"
 #include "../Render/blend_mode.h"
+#include "../Image/image_import_description.h"
 
 #include "color.h"
 
@@ -65,12 +66,7 @@ public:
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a sprite.
-	///
-	/// \param resource_id Resource name of a sprite resource.
-	/// \param manager Resource manager used to load resource.
-	/// \param sprite_description Sprite description used to construct sprite.
-	/// \param gc Graphic context to use.
+	/// \brief Constructs a null instance.
 	CL_Sprite();
 
 	/// \brief Constructs a Sprite
@@ -82,28 +78,28 @@ public:
 	///
 	/// \param gc = Graphic Context
 	/// \param fullname = String Ref
-	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname);
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
 	/// \param gc = Graphic Context
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir);
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+	CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
 	/// \param gc = Graphic Context
 	/// \param file = IODevice
 	/// \param image_type = String
-	CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type);
+	CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc = CL_ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
@@ -111,18 +107,17 @@ public:
 	/// \param description = Sprite Description
 	CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &description);
 
-	/// \brief Constructs a Sprite
-	///
-	/// \param copy = Sprite
-	CL_Sprite(const CL_Sprite &copy);
 	virtual ~CL_Sprite();
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the sprite is not properly constructed.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Returns current angle in degrees.
 	CL_Angle get_angle() const;
@@ -374,7 +369,6 @@ public:
 /// \{
 private:
 	CL_SharedPtr<CL_Sprite_Impl> impl;
-	CL_ResourceDataSession resource_data_session;
 /// \}
 };
 

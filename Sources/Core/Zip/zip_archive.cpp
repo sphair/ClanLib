@@ -86,7 +86,7 @@ std::vector<CL_ZipFileEntry> CL_ZipArchive::get_file_list(const CL_StringRef &di
 {
 	CL_String path = dirpath;
 	if (path.empty())
-		path = cl_text("/");
+		path = "/";
 
 	std::vector<CL_ZipFileEntry> files;
 	std::vector<CL_StringRef> added_directories;
@@ -163,7 +163,7 @@ CL_IODevice CL_ZipArchive::open_file(const CL_StringRef &filename)
 			}
 
 			case CL_ZipFileEntry_Impl::type_removed:
-				throw CL_Exception(cl_format(cl_text("Unable to zip open file entry %1. The entry has been removed!"), filename));
+				throw CL_Exception(cl_format("Unable to zip open file entry %1. The entry has been removed!", filename));
 				break;
 
 			case CL_ZipFileEntry_Impl::type_added_memory:
@@ -172,26 +172,23 @@ CL_IODevice CL_ZipArchive::open_file(const CL_StringRef &filename)
 			case CL_ZipFileEntry_Impl::type_added_file:
 				return CL_File(entry.impl->filename);
 			}
-			throw CL_Exception(cl_format(cl_text("Unknown zip file entry type %1"), filename));
+			throw CL_Exception(cl_format("Unknown zip file entry type %1", filename));
 		}
 	}
-	throw CL_Exception(cl_format(cl_text("Unable to find zip index %1"), filename));
-	return CL_IODevice();
+	throw CL_Exception(cl_format("Unable to find zip index %1", filename));
 } 
 
 CL_String CL_ZipArchive::get_pathname(const CL_StringRef &filename)
 {
-	throw CL_Exception(cl_text("CL_ZipArchive::get_pathname: function not implemented."));
-	return filename;
+	throw CL_Exception("CL_ZipArchive::get_pathname: function not implemented.");
 }
 
 CL_IODevice CL_ZipArchive::create_file(const CL_StringRef &filename, bool compress)
 {
-	throw CL_Exception(cl_text("CL_ZipArchive::create_file: function not implemented."));
-	return CL_IODevice();
+	throw CL_Exception("CL_ZipArchive::create_file: function not implemented.");
 }
 
-void CL_ZipArchive::add_file(const CL_StringRef &input_filename, const CL_StringRef &archive_filename, bool compress)
+void CL_ZipArchive::add_file(const CL_StringRef &input_filename, const CL_StringRef &archive_filename)
 {
 	CL_ZipFileEntry file_entry;
 	file_entry.set_input_filename(input_filename);
@@ -201,7 +198,7 @@ void CL_ZipArchive::add_file(const CL_StringRef &input_filename, const CL_String
 
 void CL_ZipArchive::save()
 {
-	throw CL_Exception(cl_text("CL_ZipArchive::save: function not implemented."));
+	throw CL_Exception("CL_ZipArchive::save: function not implemented.");
 }
 
 void CL_ZipArchive::save(const CL_StringRef &filename)
@@ -219,8 +216,8 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 	{
 		local_header_offsets.push_back(output.get_position());
 
-		CL_TempString input_filename = (*it).get_input_filename();
-		CL_TempString archive_filename = (*it).get_archive_filename();
+		CL_String input_filename = (*it).get_input_filename();
+		CL_String archive_filename = (*it).get_archive_filename();
 		CL_File input(input_filename);
 
 		CL_DataBuffer data(input.get_size());
@@ -255,8 +252,8 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 	// write central directory entries.
 	for (it=impl->files.begin(); it!=impl->files.end(); ++it)
 	{
-		CL_TempString input_filename = (*it).get_input_filename();
-		CL_TempString filename = (*it).get_archive_filename();
+		CL_String input_filename = (*it).get_input_filename();
+		CL_String filename = (*it).get_archive_filename();
 		CL_File input(input_filename);
 
 		(*it).impl->record.version_made_by = 20;
@@ -296,7 +293,7 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 	central_dir_end.size_of_central_directory = central_dir_size;
 	central_dir_end.offset_to_start_of_central_directory = offset_start_central_dir;
 	central_dir_end.file_comment_length = 0;
-	central_dir_end.file_comment = cl_text("");
+	central_dir_end.file_comment = "";
 	central_dir_end.save(output);
 }
 
@@ -331,7 +328,7 @@ void CL_ZipArchive::load(CL_IODevice &input)
 	}
 	if (end_record_pos == -1)
 	{
-		throw CL_Exception(cl_text("This appear not to be a zip file"));
+		throw CL_Exception("This appear not to be a zip file");
 	}
 
 	// Load end of central directory record:

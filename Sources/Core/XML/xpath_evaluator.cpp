@@ -49,7 +49,7 @@ CL_XPathObject CL_XPathEvaluator::evaluate(const CL_StringRef &expression, CL_Do
 	CL_XPathToken prev_token;
 	CL_XPathEvaluateResult result = impl->evaluate(expression, context_node, prev_token);
 	if (result.next_token.type != CL_XPathToken::type_none)
-		throw CL_Exception(cl_text("Syntax error in xpath expression"));
+		throw CL_Exception("Syntax error in xpath expression");
 	return result.result;
 }
 
@@ -60,7 +60,7 @@ std::vector<CL_DomNode> XPathEvaluator::evaluate(
 	int tokenizer_pos = 0;
 	CL_StringRef token = read_token(expression, tokenizer_pos);
 
-	if (token == cl_text("/"))
+	if (token == "/")
 	{
 		context_node = context_node.ownerDocument();
 		token = read_token(expression, tokenizer_pos);
@@ -77,21 +77,21 @@ std::vector<CL_DomNode> XPathEvaluator::evaluate(
 	CL_StringRef node_test;
 
 	CL_StringRef next_token = peek_token(expression, tokenizer_pos);
-	if (next_token == cl_text("::")
+	if (next_token == "::")
 	{
 		axis_name = token;
 		node_test = read_token(expression, tokenzier_pos);
 	}
 	else
 	{
-		if (token[0] == cl_text('@'))
+		if (token[0] == '@')
 		{
-			axis_name = cl_text("attribute");
+			axis_name = "attribute";
 			node_test = token.substr(1);
 		}
 		else
 		{
-			axis_name = cl_text("child");
+			axis_name = "child";
 			node_test = token;
 		}
 	}
@@ -99,7 +99,7 @@ std::vector<CL_DomNode> XPathEvaluator::evaluate(
 	std::vector<CL_DomNode> location_nodes = find_location_nodes(axis_name, node_test);
 	
 	next_token = peek_token(expression, tokenizer_pos);
-	while (next_token == cl_text("["))
+	while (next_token == "[")
 	{
 		read_token(expression, tokenizer_pos);
 		filter_location_nodes(location_nodes, expression, tokenizer_pos);
@@ -111,7 +111,7 @@ std::vector<CL_DomNode> XPathEvaluator::evaluate(
 	{
 		return location_nodes;
 	}
-	else if (token == cl_text("/"))
+	else if (token == "/")
 	{
 		std::vector<CL_DomNode> union_nodes;
 		std::vector<CL_DomNode>::size_type i = 0, size = location_nodes.size();
@@ -125,7 +125,7 @@ std::vector<CL_DomNode> XPathEvaluator::evaluate(
 	}
 	else
 	{
-		throw Exception(cl_text("XPath syntax error"));
+		throw Exception("XPath syntax error");
 	}
 }
 */

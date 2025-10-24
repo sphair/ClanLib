@@ -5,7 +5,7 @@
 #define USE_GDI_BECAUSE_IT_IS_COOL
 
 #ifdef USE_GDI_BECAUSE_IT_IS_COOL
-#include <ClanLib/gdi.h>
+#include <ClanLib/swrender.h>
 #else
 #include <ClanLib/gl.h>
 #endif
@@ -46,7 +46,7 @@ public:
 			CL_Image image_bottom_right(gc, "image_bottom_right", &resources);
 			CL_Image image_black(gc, "image_black", &resources);
 
-			CL_Font small_font = CL_Font(gc, cl_text("Tahoma"), 12);
+			CL_Font small_font = CL_Font(gc, "Tahoma", 12);
 
 			//CL_Console::write_line("Color: %1,%2,%3,%4", image_resources.get_color().r, image_resources.get_color().g, image_resources.get_color().b, image_resources.get_color().a);
 			//CL_Console::write_line("Scale: %1,%2", image_resources.get_scale_x(), image_resources.get_scale_y());
@@ -56,48 +56,48 @@ public:
 			{
 				gc.clear(CL_Colorf(0.5f,0.5f,0.5f));
 
-				small_font.draw_text(gc, 10, 40, cl_text("Image From Texture (10,60)"));
+				small_font.draw_text(gc, 10, 40, "Image From Texture (10,60)");
 				image_texture.draw(gc, 10, 60);
 
-				small_font.draw_text(gc, 150, 40, cl_text("Image From Load (150,60)"));
+				small_font.draw_text(gc, 150, 40, "Image From Load (150,60)");
 				image_loaded.draw(gc, 150, 60);
 
-				small_font.draw_text(gc, 300, 40, cl_text("Image From Resources (300,60)"));
+				small_font.draw_text(gc, 300, 40, "Image From Resources (300,60)");
 				image_resources.draw(gc, 300, 60);
 
-				small_font.draw_text(gc, 450, 40, cl_text("Image Copied (450,60)"));
+				small_font.draw_text(gc, 450, 40, "Image Copied (450,60)");
 				image_copy.draw(gc, 450, 60);
 
-				small_font.draw_text(gc, 10, 190, cl_text("Image - Top Right (10,200)"));
+				small_font.draw_text(gc, 10, 190, "Image - Top Right (10,200)");
 				image_top_right.draw(gc, 10, 200);
 
-				small_font.draw_text(gc, 150, 190, cl_text("Image - Top Right (150,200)"));
+				small_font.draw_text(gc, 150, 190, "Image - Top Right (150,200)");
 				image_texture.draw(gc, CL_Rect(32, 0, CL_Size(32, 32)), CL_Rect(150, 200, CL_Size(32, 32)));
 
-				small_font.draw_text(gc, 300, 190, cl_text("Image - Bottom Right (300,200)"));
+				small_font.draw_text(gc, 300, 190, "Image - Bottom Right (300,200)");
 				image_bottom_right.draw(gc, 300, 200);
 
-				small_font.draw_text(gc, 450, 190, cl_text("Image - Bottom Right (450,200)"));
+				small_font.draw_text(gc, 450, 190, "Image - Bottom Right (450,200)");
 				image_texture.draw(gc, CL_Rect(32, 32, CL_Size(32, 32)), CL_Rect(450, 200, CL_Size(32, 32)));
 
-				small_font.draw_text(gc, 10, 290, cl_text("700 Images (10,300)"));
+				small_font.draw_text(gc, 10, 290, "700 Images (10,300)");
 				for(int i=0;i<700;i++)
 					image_texture.draw(gc, 10, 300);
 
-				small_font.draw_text(gc, 150, 290, cl_text("br image (150,400) Size(128,256)"));
+				small_font.draw_text(gc, 150, 290, "br image (150,400) Size(128,256)");
 				image_bottom_right.draw(gc, CL_Rect(150, 300, CL_Size(128, 256)));
 
-				small_font.draw_text(gc, 300, 290, cl_text("Image - black"));
+				small_font.draw_text(gc, 300, 290, "Image - black");
 				image_black.draw(gc, 300, 300);
 
-				small_font.draw_text(gc, 300, 490, cl_text("Image - Scale (1.5, 2.5)"));
+				small_font.draw_text(gc, 300, 490, "Image - Scale (1.5, 2.5)");
 				image_texture.set_scale(1.5f, 2.5f);
 				image_texture.draw(gc, 300, 500);
 				image_texture.set_scale(1.0f, 1.0f);
 
-				small_font.draw_text(gc, 450, 460, cl_text("Image - Alignment (4 images with 8 pixel offset)"));
-				small_font.draw_text(gc, 450, 475, cl_text("(top left, top right, bottom left, bottom right)"));
-				small_font.draw_text(gc, 450, 490, cl_text("(Circle denotes the draw origin)"));
+				small_font.draw_text(gc, 450, 460, "Image - Alignment (4 images with 8 pixel offset)");
+				small_font.draw_text(gc, 450, 475, "(top left, top right, bottom left, bottom right)");
+				small_font.draw_text(gc, 450, 490, "(Circle denotes the draw origin)");
 				const int offset = 96;
 
 				image_texture.set_alignment(origin_top_left, 8, 8);
@@ -112,9 +112,9 @@ public:
 
 				CL_Draw::circle(gc, 450+offset, 500+offset, 4, CL_Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
-				small_font.draw_text(gc, 700, 460, cl_text("Image - Center Alignment (4 images with 8 pixel offset)"));
-				small_font.draw_text(gc, 700, 475, cl_text("(top center, right center, bottom center, left center)"));
-				small_font.draw_text(gc, 700, 490, cl_text("(Circle denotes the draw origin)"));
+				small_font.draw_text(gc, 700, 460, "Image - Center Alignment (4 images with 8 pixel offset)");
+				small_font.draw_text(gc, 700, 475, "(top center, right center, bottom center, left center)");
+				small_font.draw_text(gc, 700, 490, "(Circle denotes the draw origin)");
 
 				image_texture.set_alignment(origin_top_center, 0, 8);
 				image_texture.draw(gc, 700+offset, 500+offset);
@@ -128,9 +128,9 @@ public:
 
 				CL_Draw::circle(gc, 700+offset, 500+offset, 4, CL_Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
-				small_font.draw_text(gc, 700, 160, cl_text("Image - Center Align (4 images with 64 pixel offset)"));
-				small_font.draw_text(gc, 700, 175, cl_text("Also Includes a centered image (Without offset)"));
-				small_font.draw_text(gc, 700, 190, cl_text("(Circle denotes the draw origin)"));
+				small_font.draw_text(gc, 700, 160, "Image - Center Align (4 images with 64 pixel offset)");
+				small_font.draw_text(gc, 700, 175, "Also Includes a centered image (Without offset)");
+				small_font.draw_text(gc, 700, 190, "(Circle denotes the draw origin)");
 
 				const int center_image_offset = 64;
 
@@ -227,7 +227,7 @@ public:
 		CL_SetupDisplay setup_disp;
 
 #ifdef USE_GDI_BECAUSE_IT_IS_COOL
-		CL_SetupGDI setup_gdi;
+		CL_SetupSWRender setup_swrender;
 #else
 		CL_SetupGL setup_gl;
 #endif

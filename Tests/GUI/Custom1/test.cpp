@@ -3,7 +3,7 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/gdi.h>
+#include <ClanLib/swrender.h>
 
 class CustomComponent : public CL_GUIComponent
 {

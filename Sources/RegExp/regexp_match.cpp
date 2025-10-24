@@ -67,11 +67,6 @@ CL_RegExpMatch::CL_RegExpMatch()
 {
 }
 
-CL_RegExpMatch::CL_RegExpMatch(const CL_RegExpMatch &other)
-: impl(other.impl)
-{
-}
-
 CL_RegExpMatch::~CL_RegExpMatch()
 {
 }

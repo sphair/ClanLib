@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2009 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -89,13 +89,17 @@ public:
 
 	bool is_visible() const;
 
+	CL_Size get_minimum_size(bool client_area) const;
+	CL_Size get_maximum_size(bool client_area) const;
+	CL_String get_title() const;
+
 	bool is_fullscreen() const {return fullscreen;}
 
 	/// \brief Returns the X11 display handle.
-	Display *get_display() { return disp; }
+	Display *get_display() const { return disp; }
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() { return window; }
+	Window get_window() const { return window; }
 
 	CL_InputContext &get_ic() { return ic; }
 
@@ -195,6 +199,8 @@ public:
 	// Currently, only supports a single library
 	void *dlopen(const char *filename, int flag); 
 
+	void process_queued_events();
+
 /// \}
 /// \name Implementation
 /// \{
@@ -221,8 +227,6 @@ private:
 	void received_mouse_move(XMotionEvent &event);
 
 	void clear_structurenotify_events();
-
-	CL_Rect get_window_frame_size();
 
 	CL_InputDeviceProvider_X11Keyboard *get_keyboard() const;
 	CL_InputDeviceProvider_X11Mouse *get_mouse() const;
@@ -265,9 +269,10 @@ private:
 
 	CL_Callback_v0 callback_on_resized;
 
-	static CL_Rect frame_size;
-	static bool frame_size_set;
-	bool window_has_caption;
+	CL_Size minimum_size;
+	CL_Size maximum_size;
+	CL_String window_title;
+
 	bool resize_enabled;
 
 	void *dlopen_lib_handle;
@@ -275,6 +280,10 @@ private:
 	CL_Clipboard_X11 clipboard;
 
 	std::vector<CL_SocketMessage_X11> current_window_events;
+
+	std::vector<CL_Rect> last_repaint_rect;
+
+	XSizeHints *size_hints;
 /// \}
 };
 

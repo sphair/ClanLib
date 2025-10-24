@@ -82,7 +82,7 @@ public:
 
 	/// \brief Constructs a DomDocument
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomDocument(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocument();
@@ -167,7 +167,7 @@ public:
 	/// \brief Returns a NodeList of all the Elements with a given tag name.
 	/** <p>The list is in the order in which they would be encountered
 	    in a preorder traversal of the Document tree.</p>
-	    \param tagname The name of the tag to match on. The special value "*" matches all tags.*/
+	    \param tag_name The name of the tag to match on. The special value "*" matches all tags.*/
 	CL_DomNodeList get_elements_by_tag_name(const CL_DomString &tag_name);
 
 	/// \brief Returns a NodeList of all the Elements with a given local name and namespace URI.
@@ -199,7 +199,7 @@ public:
 	/// \param input Input source to read from.
 	/// \param eat_whitespace Passed on to CL_XMLTokenizer::set_eat_whitespace.
 	/// \param insert_point Place in the DOM to insert the loaded XML code.
-	/// retval: List of all top level nodes created.
+	/// \return List of all top level nodes created.
 	std::vector<CL_DomNode> load(
 		CL_IODevice &input,
 		bool eat_whitespace = true,
@@ -208,7 +208,6 @@ public:
 	/// \brief Saves the DOM document as XML to an input source.
 	///
 	/// \param output Output source to write to.
-	/// \param delete_output If true, will delete output source after usage.
 	/// \param insert_whitespace Passed on to CL_XMLWriter::set_insert_whitespace.
 	void save(CL_IODevice &output, bool insert_whitespace = true);
 

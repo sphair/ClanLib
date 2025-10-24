@@ -45,10 +45,10 @@
 CL_Color::CL_Color(const CL_StringRef &hexstr)
 {
 	if( hexstr.empty() || hexstr.length() > 9 )
-		throw CL_Exception(cl_format(cl_text("Bad hex color string: %1"), hexstr));
+		throw CL_Exception(cl_format("Bad hex color string: %1", hexstr));
 
 	int pos = 0;
-	if( hexstr[0] == cl_text('#') )
+	if( hexstr[0] == '#' )
 		pos++;
 
 	color = strtoul(CL_StringHelp::text_to_local8(hexstr.substr(pos)).c_str(), 0, 16);
@@ -88,6 +88,7 @@ CL_Color::CL_Color(const CL_Colorf& color)
 {
 }
 
+/*
 CL_Color CL_Color::from_pixelformat(unsigned int raw_color, const CL_PixelFormat &pf)
 {
 	const int in_r_shift = CL_PixelFormat::get_mask_shift(pf.get_red_mask());
@@ -148,6 +149,7 @@ unsigned int CL_Color::to_pixelformat(const CL_PixelFormat &pf) const
 
 	return out_pixel;
 }
+*/
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Color attributes:
@@ -316,7 +318,7 @@ CL_Color CL_Color::find_color(const CL_StringRef &name)
 	if( name.empty() )
 		return CL_Color::transparent;
 
-	if( name[0] == cl_text('#'))
+	if( name[0] == '#')
 	{
 		return CL_Color(name);
 	}

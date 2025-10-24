@@ -68,7 +68,7 @@ bool CL_HTTPServer_Impl::read_line(CL_TCPConnection &connection, CL_String8 &out
 	{
 		char buffer[1024];
 		if (connection.get_read_event().wait(15000) == false)
-			throw CL_Exception(cl_text("Read timed out"));
+			throw CL_Exception("Read timed out");
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
 			break;
@@ -96,7 +96,7 @@ bool CL_HTTPServer_Impl::read_lines(CL_TCPConnection &connection, CL_String8 &ou
 	{
 		char buffer[1024];
 		if (connection.get_read_event().wait(15000) == false)
-			throw CL_Exception(cl_text("Read timed out"));
+			throw CL_Exception("Read timed out");
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
 			break;
@@ -177,17 +177,17 @@ void CL_HTTPServer_Impl::connection_thread_main(CL_TCPConnection connection)
 		CL_StringRef8 command, url, version;
 		CL_String8::size_type pos1 = request.find(' ');
 		if (pos1 == CL_String8::npos)
-			throw CL_Exception(cl_text("Bad request"));
+			throw CL_Exception("Bad request");
 		command = request.substr(0, pos1);
 		if (command != "POST" && command != "GET")
-			throw CL_Exception(cl_text("Unsupported"));
+			throw CL_Exception("Unsupported");
 		CL_String8::size_type pos2 = request.find(' ', pos1 + 1);
 		if (pos2 == CL_String8::npos)
-			throw CL_Exception(cl_text("Bad request"));
+			throw CL_Exception("Bad request");
 		url = request.substr(pos1+1, pos2-pos1-1);
 		CL_String8::size_type pos3 = request.find(' ', pos2 + 1);
 		if (pos3 != CL_String8::npos)
-			throw CL_Exception(cl_text("Bad request"));
+			throw CL_Exception("Bad request");
 		version = request.substr(pos2 + 1);
 
 		CL_DataBuffer request_data;

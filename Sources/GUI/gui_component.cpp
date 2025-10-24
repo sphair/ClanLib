@@ -37,7 +37,6 @@
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_layout_corners.h"
 #include "API/GUI/gui_window_manager.h"
-#include "API/Core/CSS/css_ruleset.h"
 #include "API/Core/CSS/css_document.h"
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
@@ -58,7 +57,7 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *parent)
 : impl(CL_GUIComponent_Impl::create_from_parent(parent))
 {
 	impl->component = this;
-	impl->type_name = cl_text("component");
+	impl->type_name = "component";
 	impl->geometry = CL_Rect(0,0,0,0);
 
 	if (impl->parent->impl->last_child)
@@ -81,7 +80,7 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager->add_component(this, 0, description);
-	impl->type_name = cl_text("component");
+	impl->type_name = "component";
 	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
 	request_repaint();
 }
@@ -93,7 +92,7 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *owner, CL_GUITopLevelDescripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager->add_component(this, owner, description);
-	impl->type_name = cl_text("component");
+	impl->type_name = "component";
 	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
 	request_repaint();
 }
@@ -170,14 +169,14 @@ CL_StringRef CL_GUIComponent::get_element_name() const
 
 	CL_String element_name = impl->type_name;
 	if (!impl->class_name.empty())
-		element_name += cl_text(".") + impl->class_name;
+		element_name += "." + impl->class_name;
 	if (!impl->id_name.empty())
-		element_name += cl_text("#") + impl->id_name;
+		element_name += "#" + impl->id_name;
 	if (impl->parent)
 	{
 		CL_String path_name = impl->parent->get_element_name();
 		if (!path_name.empty())
-			element_name = path_name + cl_text(" ") + element_name;
+			element_name = path_name + " " + element_name;
 	}
 
 	impl->element_name = element_name;	
@@ -566,7 +565,7 @@ bool CL_GUIComponent::get_clip_children() const
 
 CL_Size CL_GUIComponent::get_preferred_size() const
 {
-	throw CL_Exception(cl_text("CL_GUIComponent::get_preferred_size shall not be called directly! Derived classes should override this function, if needed!"));
+	throw CL_Exception("CL_GUIComponent::get_preferred_size shall not be called directly! Derived classes should override this function, if needed!");
 	return CL_Size();
 }
 
@@ -732,7 +731,7 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 	{
 		if (impl->clip_children)
 		{
-			push_cliprect(gc, get_size());
+			push_cliprect(gc, impl->clip_children_rect);
 		}
 
 		CL_GUIComponent *cur = impl->first_child;
@@ -744,10 +743,10 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 			update_rect.overlap(component_to_window_coords(cur_geometry));
 			if (update_rect.get_width() > 0 && update_rect.get_height() > 0)
 			{
-				CL_Rect child_clip_rect = cur->window_to_component_coords(update_rect);
+				CL_Rect child_dirty_rect = cur->window_to_component_coords(update_rect);
 
 				gc.push_translate((float)cur_geometry.left, (float)cur_geometry.top);
-				cur->render(gc, child_clip_rect, true);
+				cur->render(gc, child_dirty_rect, true);
 				gc.pop_modelview();
 			}
 			cur = cur->impl->next_sibling;
@@ -940,10 +939,10 @@ void CL_GUIComponent::create_components(const CL_DomDocument &gui_xml)
 
 	// Check if loaded document uses namespaces and if its a clanlib resources xml document:
 	CL_DomElement doc_element = const_hack.get_document_element();
-	if (doc_element.get_namespace_uri() == cl_text("http://clanlib.org/xmlns/gui-1.0"))
+	if (doc_element.get_namespace_uri() == "http://clanlib.org/xmlns/gui-1.0")
 	{
-		if (doc_element.get_local_name() != cl_text("gui"))
-			throw CL_Exception(cl_text("ClanLib GUI XML documents must begin with a gui element."));
+		if (doc_element.get_local_name() != "gui")
+			throw CL_Exception("ClanLib GUI XML documents must begin with a gui element.");
 
 		CL_GUIXMLLoaderVersion_1_0 loader(this, impl->layout);
 		loader.set_create_custom_callback(&impl->func_create_custom_component);
@@ -951,7 +950,7 @@ void CL_GUIComponent::create_components(const CL_DomDocument &gui_xml)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("XML document is not a ClanLib GUI XML document."));
+		throw CL_Exception("XML document is not a ClanLib GUI XML document.");
 	}
 }
 
@@ -1024,6 +1023,9 @@ void CL_GUIComponent::delete_child_components()
 	{
 		delete impl->last_child;
 	}
+
+	impl->first_child = 0;
+	impl->last_child = 0;
 }
 
 void CL_GUIComponent::set_parent_component(CL_GUIComponent *new_parent)
@@ -1088,9 +1090,13 @@ void CL_GUIComponent::set_cursor(CL_StandardCursor type)
 	impl->gui_manager->window_manager.set_cursor(toplevel, type);
 }
 
-void CL_GUIComponent::set_clip_children(bool clip)
+void CL_GUIComponent::set_clip_children(bool clip, const CL_Rect &rect)
 {
 	impl->clip_children = clip;
+	if (rect.get_width() == 0 || rect.get_height() == 0)
+		impl->clip_children_rect = get_size();
+	else
+		impl->clip_children_rect = rect;
 }
 
 void CL_GUIComponent::focus_next()
@@ -1271,12 +1277,12 @@ void CL_GUIComponent::set_selected_in_component_group(bool selected)
 
 CL_GUIComponent::CL_GUIComponent(CL_GUIComponent &other)
 {
-	throw CL_Exception(cl_text("CL_GUIComponent copy construction disallowed"));
+	throw CL_Exception("CL_GUIComponent copy construction disallowed");
 }
 
 CL_GUIComponent &CL_GUIComponent::operator =(const CL_GUIComponent &other)
 {
-	throw CL_Exception(cl_text("CL_GUIComponent operator = disallowed"));
+	throw CL_Exception("CL_GUIComponent operator = disallowed");
 }
 
 

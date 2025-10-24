@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -55,19 +55,19 @@ CL_EventProvider_Socketpair::CL_EventProvider_Socketpair(bool manual_reset, bool
 		switch (errno)
 		{
 		case EMFILE:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair! Too many descriptors are in use by this process."));
+			throw CL_Exception("Could not create event waiting socket pair! Too many descriptors are in use by this process.");
 		case EAFNOSUPPORT:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair! The specified address family is not supported on this machine."));
+			throw CL_Exception("Could not create event waiting socket pair! The specified address family is not supported on this machine.");
 		case EPROTONOSUPPORT:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair! The specified protocol is not supported on this machine."));
+			throw CL_Exception("Could not create event waiting socket pair! The specified protocol is not supported on this machine.");
 #ifdef EOPNOSUPPORT
 		case EOPNOSUPPORT:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair! The specified protocol does not support creation of socket pairs."));
+			throw CL_Exception("Could not create event waiting socket pair! The specified protocol does not support creation of socket pairs.");
 #endif
 		case EFAULT:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair! wait_sockets does not point at a valid part of the process address space."));
+			throw CL_Exception("Could not create event waiting socket pair! wait_sockets does not point at a valid part of the process address space.");
 		default:
-			throw CL_Exception(cl_text("Could not create event waiting socket pair!"));
+			throw CL_Exception("Could not create event waiting socket pair!");
 		}
 	}
 
@@ -135,7 +135,7 @@ bool CL_EventProvider_Socketpair::set()
 		int msg = 1;
 		int result = send(wait_sockets[0], &msg, sizeof(int), 0);
 		if (result < 0)
-			throw CL_Exception(cl_text("CL_EventProvider_Socketpair::set failed"));
+			throw CL_Exception("CL_EventProvider_Socketpair::set failed");
 	}
 	return true;
 }
@@ -148,7 +148,7 @@ bool CL_EventProvider_Socketpair::reset()
 		int msg = 0;
 		int result = recv(wait_sockets[1], &msg, sizeof(int), 0);
 		if (result < 0)
-			throw CL_Exception(cl_text("CL_EventProvider_Socketpair::reset failed"));
+			throw CL_Exception("CL_EventProvider_Socketpair::reset failed");
 		state = false;
 	}
 	return true;

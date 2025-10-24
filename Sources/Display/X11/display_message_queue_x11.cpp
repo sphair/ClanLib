@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2007 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -58,6 +58,8 @@ CL_DisplayMessageQueue_X11::~CL_DisplayMessageQueue_X11()
 
 int CL_DisplayMessageQueue_X11::wait(const std::vector<CL_Event> &events, int timeout)
 {
+	process_queued_events();
+
 	int num_events = 0;
 	for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 	{
@@ -90,7 +92,7 @@ int CL_DisplayMessageQueue_X11::wait(const std::vector<CL_Event> &events, int ti
 			{
 				CL_EventProvider *provider = events[index_events].get_event_provider();
 				if (provider == 0)
-					throw CL_Exception(cl_text("CL_EventProvider is a null pointer!"));
+					throw CL_Exception("CL_EventProvider is a null pointer!");
 
 				CL_SocketMessage_X11 msg;
 				
@@ -173,11 +175,11 @@ void CL_DisplayMessageQueue_X11::set_mouse_capture(CL_X11Window *window, bool st
 
 CL_SharedPtr<CL_DisplayMessageQueue_X11::ThreadData> CL_DisplayMessageQueue_X11::get_thread_data()
 {
-	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable(cl_text("CL_DisplayMessageQueue_X11::thread_data")));
+	CL_SharedPtr<ThreadData> data(CL_ThreadLocalStorage::get_variable("CL_DisplayMessageQueue_X11::thread_data"));
 	if (data.is_null())
 	{
 		data = CL_SharedPtr<ThreadData>(new ThreadData);
-		CL_ThreadLocalStorage::set_variable(cl_text("CL_DisplayMessageQueue_X11::thread_data"), data);
+		CL_ThreadLocalStorage::set_variable("CL_DisplayMessageQueue_X11::thread_data", data);
 	}
 	return data;
 }
@@ -265,7 +267,7 @@ int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_Soc
 
 		if (handle > FD_SETSIZE)
 		{
-			throw CL_Exception(cl_text("Invalid file descriptor handle - maybe use poll() instead of select()?"));
+			throw CL_Exception("Invalid file descriptor handle - maybe use poll() instead of select()?");
 		}
 
 		switch (all_events[message_index].type)
@@ -384,4 +386,16 @@ void CL_DisplayMessageQueue_X11::process_message()
 		window->get_ic().process_messages();
 	}
 }
+
+void CL_DisplayMessageQueue_X11::process_queued_events()
+{
+	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
+	std::vector<CL_X11Window *>::size_type index, size;
+	size = thread_data->windows.size();
+	for (index = 0; index < size; index++)
+	{
+		thread_data->windows[index]->process_queued_events();
+	}
+}
+
 

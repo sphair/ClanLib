@@ -44,7 +44,7 @@ public:
 	{
 	}
 
-	virtual RetVal invoke() = 0;
+	virtual RetVal invoke() const = 0;
 };
 
 /// (Internal ClanLib Class)
@@ -58,7 +58,7 @@ public:
 	{
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return static_func();
 	}
@@ -78,7 +78,7 @@ public:
 	{
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return static_func(user_data);
 	}
@@ -100,7 +100,7 @@ public:
 	{
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return (instance->*member_func)();
 	}
@@ -122,7 +122,7 @@ public:
 	{
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return (instance->*member_func)(user_data);
 	}
@@ -145,7 +145,7 @@ public:
 	{
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return functor();
 	}
@@ -225,7 +225,7 @@ public:
 		impl = CL_SharedPtr< CL_Callback_Impl_0<RetVal> >();
 	}
 
-	RetVal invoke()
+	RetVal invoke() const
 	{
 		return impl->invoke();
 	}

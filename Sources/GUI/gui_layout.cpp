@@ -62,11 +62,6 @@ CL_GUILayout::CL_GUILayout(CL_GUILayoutProvider *provider)
 	impl->provider = provider;
 }
 
-CL_GUILayout::CL_GUILayout(const CL_GUILayout &copy)
-{
-	impl = copy.impl;
-}
-
 CL_GUILayout::~CL_GUILayout()
 {
 }

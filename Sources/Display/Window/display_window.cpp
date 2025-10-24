@@ -97,6 +97,16 @@ HWND CL_DisplayWindow::get_hwnd() const
 {
 	return impl->provider->get_hwnd();
 }
+#else
+Display *CL_DisplayWindow::get_display() const
+{
+	return impl->provider->get_display();
+}
+
+Window CL_DisplayWindow::get_window() const
+{
+	return impl->provider->get_window();
+}
 #endif
 
 CL_Rect CL_DisplayWindow::get_geometry() const
@@ -149,6 +159,11 @@ CL_Signal_v0 &CL_DisplayWindow::sig_window_close()
 	return impl->sig_window_close;
 }
 
+CL_Signal_v0 &CL_DisplayWindow::sig_window_destroy()
+{
+	return impl->sig_window_destroy;
+}
+
 CL_Signal_v0 &CL_DisplayWindow::sig_window_minimized()
 {
 	return impl->sig_window_minimized;
@@ -164,10 +179,22 @@ CL_Callback_v1<CL_Rect &> &CL_DisplayWindow::func_window_resize()
 	return impl->func_window_resize;
 }
 
-bool CL_DisplayWindow::is_null() const
+CL_Callback_0<bool> &CL_DisplayWindow::func_minimize_clicked()
 {
-	return impl.is_null();
+	return impl->func_minimize_clicked;
 }
+
+CL_Signal_v0 &CL_DisplayWindow::sig_window_moved()
+{
+	return impl->sig_window_moved;
+}
+
+void CL_DisplayWindow::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_DisplayWindow is null");
+}
+
 
 bool CL_DisplayWindow::is_minimized() const
 {
@@ -212,6 +239,21 @@ CL_String CL_DisplayWindow::get_clipboard_text() const
 CL_PixelBuffer CL_DisplayWindow::get_clipboard_image() const
 {
 	return impl->provider->get_clipboard_image();
+}
+
+CL_Size CL_DisplayWindow::get_minimum_size( bool client_area )
+{
+	return impl->provider->get_minimum_size(client_area);
+}
+
+CL_Size CL_DisplayWindow::get_maximum_size( bool client_area )
+{
+	return impl->provider->get_maximum_size(client_area);
+}
+
+CL_String CL_DisplayWindow::get_title() const
+{
+	return impl->provider->get_title();
 }
 
 /////////////////////////////////////////////////////////////////////////////

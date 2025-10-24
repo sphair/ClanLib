@@ -46,12 +46,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SpriteDescription construction:
 
-CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
+CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc)
 : impl(new CL_SpriteDescription_Impl)
 {
 	CL_Resource resource = resources->get_resource(resource_id);
-	if (resource.get_type() != cl_text("sprite") && resource.get_type() != cl_text("sprite_description") && resource.get_type() != cl_text("image"))
-		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'sprite' or 'sprite_description' or 'image'"), resource_id));
+	if (resource.get_type() != "sprite" && resource.get_type() != "sprite_description" && resource.get_type() != "image")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'sprite' or 'sprite_description' or 'image'", resource_id));
 
 	CL_DomNode cur_node = resource.get_element().get_first_child();
 
@@ -62,7 +62,7 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 
 		CL_DomElement cur_element = cur_node.to_element();
 		CL_String tag_name = cur_element.get_tag_name();
-		if (tag_name == cl_text("image") || tag_name == cl_text("image-file"))
+		if (tag_name == "image" || tag_name == "image-file")
 		{
 			if (cur_element.has_attribute("fileseq"))
 			{
@@ -96,7 +96,7 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 
 					try
 					{
-						CL_Texture texture = CL_SharedGCData::load_texture(gc, file_name, virtual_directory);
+						CL_Texture texture = CL_SharedGCData::load_texture(gc, file_name, virtual_directory, import_desc );
 						add_frame(texture);
 					}
 					catch (CL_Exception e)
@@ -113,10 +113,10 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 			}
 			else
 			{
-				CL_String image_name = cur_element.get_attribute(cl_text("file"));
+				CL_String image_name = cur_element.get_attribute("file");
 				CL_Texture texture;
 				CL_VirtualDirectory virtual_directory = resources->get_directory(resource);
-				texture = CL_SharedGCData::load_texture(gc, image_name, virtual_directory);
+				texture = CL_SharedGCData::load_texture(gc, image_name, virtual_directory, import_desc );
 
 				CL_DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 
@@ -127,7 +127,7 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 				{
 					do {
 						CL_DomElement cur_child_elemnt = cur_child.to_element();
-						if(cur_child.get_node_name() == cl_text("grid"))
+						if(cur_child.get_node_name() == "grid")
 						{
 							int xpos = 0;
 							int ypos = 0;
@@ -139,24 +139,24 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 							int width = 0;
 							int height = 0;
 
-							std::vector<CL_TempString> image_size = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("size")), cl_text(","));
+							std::vector<CL_String> image_size = CL_StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
 							if (image_size.size() > 0)
 								width = CL_StringHelp::text_to_int(image_size[0]);
 							if (image_size.size() > 1)
 								height = CL_StringHelp::text_to_int(image_size[1]);
 
-							if (cur_child_elemnt.has_attribute(cl_text("pos")))
+							if (cur_child_elemnt.has_attribute("pos"))
 							{
-								std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
+								std::vector<CL_String> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
 								if (image_pos.size() > 0)
 									xpos = CL_StringHelp::text_to_int(image_pos[0]);
 								if (image_pos.size() > 1)
 									ypos = CL_StringHelp::text_to_int(image_pos[1]);
 							}
 
-							if (cur_child_elemnt.has_attribute(cl_text("array")))
+							if (cur_child_elemnt.has_attribute("array"))
 							{
-								std::vector<CL_TempString> image_array = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("array")), cl_text(","));
+								std::vector<CL_String> image_array = CL_StringHelp::split_text(cur_child_elemnt.get_attribute("array"), ",");
 								if (image_array.size() == 2)
 								{
 									xarray = CL_StringHelp::text_to_int(image_array[0]);
@@ -164,18 +164,18 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 								}
 								else
 								{
-									throw CL_Exception(cl_text("Resource '") + resource.get_name() + cl_text("' has incorrect array attribute, must be \"X,Y\"!")); 
+									throw CL_Exception("Resource '" + resource.get_name() + "' has incorrect array attribute, must be \"X,Y\"!"); 
 								}
 							}
 
-							if (cur_child_elemnt.has_attribute(cl_text("array_skipframes")))
+							if (cur_child_elemnt.has_attribute("array_skipframes"))
 							{
-								array_skipframes = CL_StringHelp::text_to_int(cur_child_elemnt.get_attribute(cl_text("array_skipframes")));
+								array_skipframes = CL_StringHelp::text_to_int(cur_child_elemnt.get_attribute("array_skipframes"));
 							}
 
-							if (cur_child_elemnt.has_attribute(cl_text("spacing")))
+							if (cur_child_elemnt.has_attribute("spacing"))
 							{
-								std::vector<CL_TempString> image_spacing = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("spacing")), cl_text(","));
+								std::vector<CL_String> image_spacing = CL_StringHelp::split_text(cur_child_elemnt.get_attribute("spacing"), ",");
 								xspacing = CL_StringHelp::text_to_int(image_spacing[0]);
 								yspacing = CL_StringHelp::text_to_int(image_spacing[1]);
 							}
@@ -188,29 +188,29 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 								array_skipframes,
 								xspacing, yspacing);
 						}
-						else if( cur_child.get_node_name() == cl_text("palette"))
+						else if( cur_child.get_node_name() == "palette")
 						{
-							throw CL_Exception(cl_text("Resource '") + resource.get_name() + cl_text("' uses palette cutter - which is not supported anymore")); 
+							throw CL_Exception("Resource '" + resource.get_name() + "' uses palette cutter - which is not supported anymore"); 
 						}
-						else if( cur_child.get_node_name() == cl_text("alpha"))
+						else if( cur_child.get_node_name() == "alpha")
 						{
 							int xpos = 0;
 							int ypos = 0;
 							float trans_limit = 0.05f;
 
-							if (cur_child_elemnt.has_attribute(cl_text("pos")))
+							if (cur_child_elemnt.has_attribute("pos"))
 							{
-								std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
+								std::vector<CL_String> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
 								xpos = CL_StringHelp::text_to_int(image_pos[0]);
 								ypos = CL_StringHelp::text_to_int(image_pos[1]);
 							}
 
-							if (cur_child_elemnt.has_attribute(cl_text("trans_limit")))
+							if (cur_child_elemnt.has_attribute("trans_limit"))
 							{
-								trans_limit = CL_StringHelp::text_to_float(cur_child_elemnt.get_attribute(cl_text("trans_limit")));
+								trans_limit = CL_StringHelp::text_to_float(cur_child_elemnt.get_attribute("trans_limit"));
 							}
 
-							if (cur_child_elemnt.has_attribute(cl_text("free")))
+							if (cur_child_elemnt.has_attribute("free"))
 							{
 								add_alphaclipped_frames_free(
 									texture,
@@ -235,7 +235,7 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 	}
 
 	if (get_frames().empty()) 
-		throw CL_Exception(cl_text("Sprite resource contained no frames!"));
+		throw CL_Exception("Sprite resource contained no frames!");
 }
 
 CL_SpriteDescription::CL_SpriteDescription()
@@ -279,24 +279,26 @@ void CL_SpriteDescription::add_frame(const CL_Texture &texture)
 	impl->frames.push_back(CL_SpriteDescriptionFrame(texture, CL_Rect(0, 0, texture.get_width(), texture.get_height())));
 }
 
-void CL_SpriteDescription::add_frame(const CL_StringRef &filename, CL_VirtualDirectory &dir)
+void CL_SpriteDescription::add_frame(const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc)
 {
-	CL_PixelBuffer image = CL_ImageProviderFactory::load(filename, dir, cl_text(""));
+	CL_PixelBuffer image = CL_ImageProviderFactory::load(filename, dir, "");
+	image = import_desc.process(image);
 	add_frame(image);
 }
 
-void CL_SpriteDescription::add_frame(const CL_StringRef &fullname)
+void CL_SpriteDescription::add_frame(const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc)
 {
 	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
 	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
 	CL_VirtualFileSystem vfs(path);
 	CL_VirtualDirectory dir = vfs.get_root_directory();
-	add_frame(filename, dir);
+	add_frame(filename, dir, import_desc );
 }
 
-void CL_SpriteDescription::add_frame(CL_IODevice &file, const CL_String &image_type)
+void CL_SpriteDescription::add_frame(CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc)
 {
 	CL_PixelBuffer image = CL_ImageProviderFactory::load(file, image_type);
+	image = import_desc.process(image);
 	add_frame(image);
 }
 
@@ -324,7 +326,7 @@ void CL_SpriteDescription::add_gridclipped_frames(
 				break;
 
 			if(xstart + width > pixelbuffer.get_width() || ystart + height > pixelbuffer.get_height())
-				throw CL_Exception(cl_text("add_gridclipped_frames: Outside pixelbuffer bounds"));
+				throw CL_Exception("add_gridclipped_frames: Outside pixelbuffer bounds");
 
 			impl->frames.push_back(CL_SpriteDescriptionFrame(pixelbuffer, CL_Rect(xstart, ystart, xstart + width, ystart + height)));
 			xstart += width + xspace;
@@ -351,7 +353,7 @@ void CL_SpriteDescription::add_gridclipped_frames(
 				break;
 
 			if(xstart + width > texture.get_width() || ystart + height > texture.get_height())
-				throw CL_Exception(cl_text("add_gridclipped_frames: Outside texture bounds"));
+				throw CL_Exception("add_gridclipped_frames: Outside texture bounds");
 
 			impl->frames.push_back(CL_SpriteDescriptionFrame(texture, CL_Rect(xstart, ystart, xstart + width, ystart + height)));
 			xstart += width + xspace;
@@ -365,15 +367,7 @@ void CL_SpriteDescription::add_alphaclipped_frames(
 	int xpos, int ypos, 
 	double trans_limit)
 {
-	CL_PixelFormat format;
-	format.set_red_mask(0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask(0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-	format.set_depth(32);
-	format.enable_colorkey(false);
-
-	CL_PixelBuffer pixelbuffer = texture.get_pixeldata(format);
+	CL_PixelBuffer pixelbuffer = texture.get_pixeldata(cl_rgba8);
 
 	add_alphaclipped_frames(pixelbuffer, xpos, ypos, trans_limit);
 }
@@ -383,15 +377,7 @@ void CL_SpriteDescription::add_alphaclipped_frames(
 	int xpos, int ypos, 
 	double trans_limit)
 {
-	CL_PixelFormat format;
-	format.set_red_mask(0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask(0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-	format.set_depth(32);
-	format.enable_colorkey(false);
-	
-	CL_PixelBuffer alpha_buffer = pixelbuffer.to_format(format);
+	CL_PixelBuffer alpha_buffer = pixelbuffer.to_format(cl_rgba8);
 
 	int begin = 0;
 	bool prev_trans = true;
@@ -444,7 +430,7 @@ void CL_SpriteDescription::add_alphaclipped_frames(
 	}
 	
 	if (cut_top >= cut_bottom)
-		throw CL_Exception(cl_text("add_alphaclipped_frames: Image contained only alpha!"));
+		throw CL_Exception("add_alphaclipped_frames: Image contained only alpha!");
 
 	for(int x=0; x < alpha_width; x++)
 	{
@@ -474,15 +460,7 @@ void CL_SpriteDescription::add_alphaclipped_frames_free(
 	int xpos, int ypos, 
 	double trans_limit)
 {
-	CL_PixelFormat format;
-	format.set_red_mask(0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask(0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-	format.set_depth(32);
-	format.enable_colorkey(false);
-
-	CL_PixelBuffer pixelbuffer = texture.get_pixeldata(format);
+	CL_PixelBuffer pixelbuffer = texture.get_pixeldata(cl_rgba8);
 
 	add_alphaclipped_frames_free(pixelbuffer, xpos, ypos, trans_limit);
 }
@@ -492,15 +470,7 @@ void CL_SpriteDescription::add_alphaclipped_frames_free(
 	int xpos, int ypos, 
 	double trans_limit)
 {
-	CL_PixelFormat format;
-	format.set_red_mask(0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask(0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-	format.set_depth(32);
-	format.enable_colorkey(false);
-
-	CL_PixelBuffer alpha_buffer = pixelbuffer.to_format(format);
+	CL_PixelBuffer alpha_buffer = pixelbuffer.to_format(cl_rgba8);
 
 	int width = alpha_buffer.get_width();
 	int height = alpha_buffer.get_height();

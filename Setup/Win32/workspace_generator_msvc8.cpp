@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,18 +38,12 @@
 
 WorkspaceGenerator_MSVC8::ConfigurationType WorkspaceGenerator_MSVC8::types[] =
 {
-	true, "Static lib with static debug runtime", runtime_static_debug, false, false,
-	true, "Static lib with static release runtime", runtime_static_release, false, false,
-	false, "Static lib with static debug runtime and unicode build", runtime_static_debug, true, false,
-	false, "Static lib with static release runtime and unicode build", runtime_static_release, true, false,
-	false, "Static lib with DLL debug runtime", runtime_dll_debug, false, false,
-	false, "Static lib with DLL release runtime", runtime_dll_release, false, false,
-	false, "Static lib with DLL debug runtime and unicode build", runtime_dll_debug, true, false,
-	false, "Static lib with DLL release runtime and unicode build", runtime_dll_release, true, false,
-	false, "DLL lib with DLL debug runtime", runtime_dll_debug, false, true,
-	false, "DLL lib with DLL release runtime", runtime_dll_release, false, true,
-	false, "DLL lib with DLL debug runtime and unicode build", runtime_dll_debug, true, true,
-	false, "DLL lib with DLL release runtime and unicode build", runtime_dll_release, true, true,
+	false, "DebugMT", runtime_static_debug, true, false,
+	false, "DebugMTDLL", runtime_dll_debug, true, false,
+	false, "DebugDLL", runtime_dll_debug, true, true,
+	false, "ReleaseMT", runtime_static_release, true, false,
+	false, "ReleaseMTDLL", runtime_dll_release, true, false,
+	false, "ReleaseDLL", runtime_dll_release, true, true,
 	false, 0, runtime_static_debug, false, false
 };
 
@@ -57,15 +51,12 @@ WorkspaceGenerator_MSVC8::WorkspaceGenerator_MSVC8()
 {
 }
 
-void WorkspaceGenerator_MSVC8::enable_configurations(bool include_unicode, bool include_mtdll, bool include_dll)
+void WorkspaceGenerator_MSVC8::enable_configurations(bool include_mtdll, bool include_dll)
 {
 	int i;
 	for (i = 0; types[i].name != 0; i++)
 	{
-		if (types[i].unicode)
-			types[i].included = include_unicode;
-		else
-			types[i].included = true;
+		types[i].included = true;
 
 		if (types[i].runtime_type == runtime_dll_debug || types[i].runtime_type == runtime_dll_release)
 		{
@@ -130,19 +121,24 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 	writer.write_line(0, "Global");
 
-	writer.write_line(1, "GlobalSection(SolutionConfiguration) = preSolution");
+	writer.write_line(1, "GlobalSection(SolutionConfigurationPlatforms) = preSolution");
 	int i;
 	for (i = 0; types[i].name != 0; i++)
 	{
 		if (types[i].included == false)
 			continue;
 		char line[256];
-		sprintf_s(line, 256, "ConfigName.%d = %s", i, types[i].name);
+		sprintf_s(line, 256, "%s|Win32 = %s|Win32", types[i].name, types[i].name);
 		writer.write_line(2, line);
+		if (include_platform_x64)
+		{
+			sprintf_s(line, 256, "%s|x64 = %s|x64", types[i].name, types[i].name);
+			writer.write_line(2, line);
+		}
 	}
 	writer.write_line(1, "EndGlobalSection");
 
-	writer.write_line(1, "GlobalSection(ProjectConfiguration) = postSolution");
+	writer.write_line(1, "GlobalSection(ProjectConfigurationPlatforms) = postSolution");
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
 	{
 		std::string project_guid = get_project_guid(it->name);
@@ -151,10 +147,18 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 			if (types[i].included == false)
 				continue;
 			char line[256];
-			sprintf_s(line, 256, "%s.%s.ActiveCfg = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
+			sprintf_s(line, 256, "%s.%s|Win32.ActiveCfg = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
 			writer.write_line(2, line);
-			sprintf_s(line, 256, "%s.%s.Build.0 = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
+			sprintf_s(line, 256, "%s.%s|Win32.Build.0 = %s|Win32", project_guid.c_str(), types[i].name, types[i].name);
 			writer.write_line(2, line);
+
+			if (include_platform_x64)
+			{
+				sprintf_s(line, 256, "%s.%s|x64.ActiveCfg = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+				sprintf_s(line, 256, "%s.%s|x64.Build.0 = %s|x64", project_guid.c_str(), types[i].name, types[i].name);
+				writer.write_line(2, line);
+			}
 		}
 	}
 	writer.write_line(1, "EndGlobalSection");
@@ -179,8 +183,8 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	propertysheet.tools.push_back(tool_librarian);
 
 	tool_compiler->additional_include_directories = workspace.input_include_dir;
-	tool_linker->additional_library_directories = workspace.input_lib_dir;
-	tool_librarian->additional_library_directories = workspace.input_lib_dir;
+	tool_linker->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
+	tool_librarian->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
 
 	std::string propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.vsprops";
 	OutputWriter writer(propertysheet_filename.c_str());
@@ -298,9 +302,8 @@ void WorkspaceGenerator_MSVC8::write_install_batch_file(const Workspace &workspa
 		install_mkdir(bat, "API\\", std::string(instdir), &project);
 		install_copydir(bat, "API\\", std::string(instdir), &project);
 
-		bat << "echo %1" << std::endl;
-		bat << "copy %1 \"" << workspace.output_lib_dir.c_str() << "\" > nul" << std::endl;
-		bat << "copy %2 \"" << workspace.output_lib_dir.c_str() << "\" > nul" << std::endl;
+		bat << "copy %1 \"" << workspace.output_lib_dir.c_str() << "\\%4\" > nul" << std::endl;
+		bat << "copy %2 \"" << workspace.output_lib_dir.c_str() << "\\%4\\%3\" > nul" << std::endl;
 	}
 }
 
@@ -321,11 +324,11 @@ void WorkspaceGenerator_MSVC8::install_mkdir(
 
 	if (win9x)
 	{
-		bat << "if not exist \"" << dest_dir << "\\nul\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
+		bat << "if not exist \"" << dest_dir << "\\%4\\nul\"" << " mkdir \"" << dest_dir << "\\%4\"" << std::endl;
 	}
 	else
 	{
-		bat << "if not exist \"" << dest_dir << "\"" << " mkdir \"" << dest_dir << "\"" << std::endl;
+		bat << "if not exist \"" << dest_dir << "\\%4\"" << " mkdir \"" << dest_dir << "\\%4\"" << std::endl;
 	}
 }
 
@@ -535,7 +538,7 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	}
 
 	shared.tool_post_build->description.set("Installing library and API headers...");
-	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot;");
+	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
 
 	shared.config->tools.push_back(shared.tool_compiler);
 	if (config.dll)
@@ -652,22 +655,20 @@ std::string WorkspaceGenerator_MSVC8::make_output_filename(
 	const std::string &project_name)
 {
 	std::string output_file = "$(OutDir)\\clan" + project_name;
-	if (platform == "x64")
-		output_file += "-x64";
 	if (config.dll)
 	{
 		output_file += "-dll";
 	}
+	else if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
+	{
+		output_file += "-static-mtdll";
+	}
 	else
 	{
-		if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_static_release)
-			output_file += "-static-mt";
-		else
-			output_file += "-static-mtdll";
+		output_file += "-static-mt";
 	}
-	if (config.unicode)
-		output_file += "-uc";
-	if (config.runtime_type == runtime_static_debug ||config.runtime_type == runtime_dll_debug)
+
+	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
 		output_file += "-debug";
 	if (make_dll_name)
 		output_file += ".dll";

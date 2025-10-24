@@ -64,13 +64,13 @@ public:
 CL_ResourceManager::CL_ResourceManager()
 : impl(new CL_ResourceManager_Impl)
 {
-	impl->ns_resources = cl_text("http://clanlib.org/xmlns/resources-1.0");
+	impl->ns_resources = "http://clanlib.org/xmlns/resources-1.0";
 	CL_DomElement document_element = impl->document.create_element_ns(
 		impl->ns_resources,
-		cl_text("clres:resources"));
+		"clres:resources");
 	document_element.set_attribute_ns(
-		cl_text("http://www.w3.org/2000/xmlns/"),
-		cl_text("xmlns:clres"),
+		"http://www.w3.org/2000/xmlns/",
+		"xmlns:clres",
 		impl->ns_resources);
 	impl->document.append_child(document_element);
 }
@@ -242,7 +242,7 @@ CL_Resource CL_ResourceManager::get_resource(
 		}
 	}
 
-	throw CL_Exception(cl_format(cl_text("Resource not found: %1"), resource_id));
+	throw CL_Exception(cl_format("Resource not found: %1", resource_id));
 	return CL_Resource(impl->document.get_document_element(), *this);
 }
 
@@ -267,7 +267,7 @@ bool CL_ResourceManager::get_boolean_resource(
 		return default_value;
 
 	CL_Resource resource = get_resource(resource_id);
-	return CL_StringHelp::text_to_bool(resource.get_element().get_attribute(cl_text("value")));
+	return CL_StringHelp::text_to_bool(resource.get_element().get_attribute("value"));
 }
 
 int CL_ResourceManager::get_integer_resource(
@@ -278,7 +278,7 @@ int CL_ResourceManager::get_integer_resource(
 		return default_value;
 
 	CL_Resource resource = get_resource(resource_id);
-	return CL_StringHelp::text_to_int(resource.get_element().get_attribute(cl_text("value")));
+	return CL_StringHelp::text_to_int(resource.get_element().get_attribute("value"));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -316,7 +316,7 @@ void CL_ResourceManager::remove_resources(const CL_ResourceManager& additional_r
 CL_Resource CL_ResourceManager::create_resource(const CL_String &resource_id, const CL_String &type)
 {
 	if (resource_exists(resource_id))
-		throw CL_Exception(cl_format(cl_text("Resource %1 already exists"), resource_id));
+		throw CL_Exception(cl_format("Resource %1 already exists", resource_id));
 
 	std::vector<CL_String> path_elements = CL_PathHelp::split_basepath(resource_id);
 	CL_String name = CL_PathHelp::get_filename(resource_id);
@@ -329,10 +329,10 @@ CL_Resource CL_ResourceManager::create_resource(const CL_String &resource_id, co
 	{
 		if (cur.is_element() &&
 			cur.get_namespace_uri() == impl->ns_resources &&
-			cur.get_local_name() == cl_text("section"))
+			cur.get_local_name() == "section")
 		{
 			CL_DomElement element = cur.to_element();
-			CL_String name = element.get_attribute_ns(impl->ns_resources, cl_text("name"));
+			CL_String name = element.get_attribute_ns(impl->ns_resources, "name");
 			if (name == *path_it)
 			{
 				++path_it;
@@ -355,7 +355,7 @@ CL_Resource CL_ResourceManager::create_resource(const CL_String &resource_id, co
 		}
 		else
 		{
-			section = impl->document.create_element_ns( impl->ns_resources,(prefix + cl_text(":") + *path_it));
+			section = impl->document.create_element_ns( impl->ns_resources,(prefix + ":" + *path_it));
 		}
 		parent.append_child(section);
 		parent = section;
@@ -370,12 +370,12 @@ CL_Resource CL_ResourceManager::create_resource(const CL_String &resource_id, co
 	}
 	else
 	{
-		resource_node = impl->document.create_element_ns( impl->ns_resources,(prefix + cl_text(":") + type));
+		resource_node = impl->document.create_element_ns( impl->ns_resources,(prefix + ":" + type));
 	}
 
 	resource_node.set_attribute_ns(
 		impl->ns_resources,
-		prefix.empty() ? cl_text("name") : (prefix + cl_text(":name")),
+		prefix.empty() ? "name" : (prefix + ":name"),
 		name);
 	parent.append_child(resource_node);
 
@@ -442,20 +442,20 @@ void CL_ResourceManager::load(CL_IODevice file, CL_VirtualDirectory directory)
 
 	// Check if loaded document uses namespaces and if its a clanlib resources xml document:
 	CL_DomElement doc_element = new_document.get_document_element();
-	if (doc_element.get_namespace_uri().empty() && doc_element.get_local_name() == cl_text("resources"))
+	if (doc_element.get_namespace_uri().empty() && doc_element.get_local_name() == "resources")
 	{
 		impl->ns_resources = CL_String();
 	}
-	else if (doc_element.get_namespace_uri() == cl_text("http://clanlib.org/xmlns/resources-1.0"))
+	else if (doc_element.get_namespace_uri() == "http://clanlib.org/xmlns/resources-1.0")
 	{
-		if (doc_element.get_local_name() != cl_text("resources"))
-			throw CL_Exception(cl_text("ClanLib resource documents must begin with a resources element."));
+		if (doc_element.get_local_name() != "resources")
+			throw CL_Exception("ClanLib resource documents must begin with a resources element.");
 
-		impl->ns_resources = cl_text("http://clanlib.org/xmlns/resources-1.0");
+		impl->ns_resources = "http://clanlib.org/xmlns/resources-1.0";
 	}
 	else
 	{
-		throw CL_Exception(cl_text("XML document is not a ClanLib resources document."));
+		throw CL_Exception("XML document is not a ClanLib resources document.");
 	}
 
 	impl->document = new_document;
@@ -471,16 +471,16 @@ void CL_ResourceManager::load(CL_IODevice file, CL_VirtualDirectory directory)
 		if (nodes_stack.back().is_element())
 		{
 			CL_DomElement element = nodes_stack.back().to_element();
-			if (element.get_namespace_uri() == impl->ns_resources && element.get_local_name() == cl_text("section"))
+			if (element.get_namespace_uri() == impl->ns_resources && element.get_local_name() == "section")
 			{
-				CL_String section_name = element.get_attribute_ns(impl->ns_resources, cl_text("name"));
+				CL_String section_name = element.get_attribute_ns(impl->ns_resources, "name");
 				section_stack.push_back(section_stack.back() + CL_PathHelp::add_trailing_slash(section_name, CL_PathHelp::path_type_virtual));
 				nodes_stack.push_back(element.get_first_child());
 				continue;
 			}
-			else if (element.has_attribute_ns(impl->ns_resources, cl_text("name")))
+			else if (element.has_attribute_ns(impl->ns_resources, "name"))
 			{
-				CL_String resource_name = element.get_attribute_ns(impl->ns_resources, cl_text("name"));
+				CL_String resource_name = element.get_attribute_ns(impl->ns_resources, "name");
 				CL_String resource_id = section_stack.back() + resource_name;
 				impl->resources[resource_id] = CL_Resource(element, *this);
 			}

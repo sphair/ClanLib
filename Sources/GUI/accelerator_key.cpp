@@ -104,11 +104,12 @@ int CL_AcceleratorKey::get_id() const
 	return impl->id;
 }
 
-bool CL_AcceleratorKey::is_null() const
-{
-	return impl.is_null();
-}
 
+void CL_AcceleratorKey::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_AcceleratorKey is null");
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_AcceleratorKey Operations:

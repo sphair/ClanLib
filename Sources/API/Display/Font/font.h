@@ -169,6 +169,9 @@ public:
 	/// \brief The pixel buffer containing the glyph
 	CL_PixelBuffer buffer;
 
+	/// \brief The rect containing the image inside "buffer"
+	CL_Rect buffer_rect;
+
 	/// \brief Offset to draw the font to buffer
 	/** For example:
 	    x = pos_x + pixelbuffer.offset.x

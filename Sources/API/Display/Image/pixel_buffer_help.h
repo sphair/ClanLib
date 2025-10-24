@@ -43,7 +43,7 @@ class CL_API_DISPLAY CL_PixelBufferHelp
 /// \{
 public:
 	/// \brief Add a border around a pixelbuffer, duplicating the edge pixels
-	static CL_PixelBuffer add_border(const CL_PixelBufferRef &pb, int border_size);
+	static CL_PixelBuffer add_border(const CL_PixelBuffer &pb, int border_size, const CL_Rect &rect);
 /// \}
 };
 

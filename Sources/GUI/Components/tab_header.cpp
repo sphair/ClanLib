@@ -52,7 +52,7 @@ class CL_TabHeader_Impl
 public:
 	CL_TabHeader_Impl() : first_tab_x_offset(0), selected_page(-1)
 	{
-		prop_first_tab_x_offset = CL_GUIThemePartProperty(CssStr::first_tab_x_offset, cl_text("0"));
+		prop_first_tab_x_offset = CL_GUIThemePartProperty(CssStr::first_tab_x_offset, "0");
 	}
 
 	void on_process_message(CL_GUIMessage &msg);

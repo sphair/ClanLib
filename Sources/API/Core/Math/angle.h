@@ -45,6 +45,20 @@ enum CL_AngleUnit
 	cl_radians
 };
 
+/// \brief Euler angle rotation order
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+enum CL_EulerOrder
+{
+	cl_XYZ,
+	cl_XZY,
+	cl_YZX,
+	cl_YXZ,
+	cl_ZXY,
+	cl_ZYX
+};
+
+
 /// \brief Angle class.
 ///
 /// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
@@ -94,10 +108,14 @@ public:
 	void set_radians(float radians);
 
 	/// \brief Converts angle to range [0,360] degrees.
-	void normalize();
+	///
+	/// \return reference to this object
+	CL_Angle &normalize();
 
 	/// \brief Converts angle to range [-180,180] degrees.
-	void normalize_180();
+	///
+	/// \return reference to this object
+	CL_Angle &normalize_180();
 
 /// \}
 /// \name Operators

@@ -40,8 +40,13 @@
 #include "../../Core/Signals/signal_v1.h"
 #include "../../Core/Signals/signal_v2.h"
 #include "../../Core/Signals/callback_v1.h"
+#include "../../Core/Signals/callback_0.h"
 #include "../../Core/Text/string_types.h"
 #include "../display_target.h"
+
+#ifndef WIN32
+#include <X11/Xlib.h>
+#endif
 
 class CL_Size;
 class CL_Rect;
@@ -84,7 +89,7 @@ class CL_API_DISPLAY CL_DisplayWindow
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a window.
+	/// \brief Constructs a null instance.
 	CL_DisplayWindow();
 
 	/// \brief Constructs a window.
@@ -157,17 +162,29 @@ public:
 	/// \brief Signal emitted when window is closed.
 	CL_Signal_v0 &sig_window_close();
 
+	/// \brief Signal emitted when window is destroyed.
+	CL_Signal_v0 &sig_window_destroy();
+
 	/// \brief Signal emitted when window is minimized.
 	CL_Signal_v0 &sig_window_minimized();
 
 	/// \brief Signal emitted when window is maximized.
 	CL_Signal_v0 &sig_window_maximized();
 
+	/// \brief Signal emitted after a window has been moved.
+	CL_Signal_v0 &sig_window_moved();
+
 	/// \brief Callback called when a window is being resized.
 	CL_Callback_v1<CL_Rect &> &func_window_resize();
 
-	/// \brief returns true if this display window is invalid
-	bool is_null() const;
+	/// \brief Callback called when a window is asked to minimize itself.
+	CL_Callback_0<bool> &func_minimize_clicked();
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief returns true if this display window is visible
 	bool is_visible() const;
@@ -194,12 +211,27 @@ public:
 	/// <p>Returns a null pixelbuffer if no image is available.</p>
 	CL_PixelBuffer get_clipboard_image() const;
 
+	/// \brief Returns the minimum size the window can be resized to by the application user.
+	CL_Size get_minimum_size(bool client_area=false);
+
+	/// \brief Returns the maximum size the window can be resized to by the application user.
+	CL_Size get_maximum_size(bool client_area=false);
+
+	/// \brief Returns the window title.
+	CL_String get_title() const;
+
 #ifdef WIN32
 
 	/// \brief Get Hwnd
 	///
 	/// \return hwnd
 	HWND get_hwnd() const;
+#else
+	/// \brief Returns the X11 display handle.
+	Display *get_display() const;
+
+	/// \brief Handle to X11 window handle.
+	Window get_window() const;
 #endif
 
 /// \}
@@ -224,7 +256,7 @@ public:
 	/// \brief Set window position and size.
 	///
 	/// \param pos = Window position and size.
-	/// \param client = true - Position relative to window client area
+	/// \param client_area = true - Position relative to window client area
 	void set_position(const CL_Rect &pos, bool client_area);
 
 	/// \brief Set window position and size.
@@ -248,7 +280,7 @@ public:
 	///
 	/// \param width = New width of window in pixels.
 	/// \param height = New height of window in pixels.
-	/// \param client = true - relative to the window client area
+	/// \param client_area = true - relative to the window client area
 	void set_size(int width, int height, bool client_area);
 
 	/// \brief Minimum size a window can be resized to by the application user.

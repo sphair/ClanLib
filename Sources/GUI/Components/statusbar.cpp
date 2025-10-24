@@ -68,7 +68,7 @@ class CL_StatusBar_Impl
 public:
 	CL_StatusBar_Impl() : show_size_grip(true)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	void on_process_message(CL_GUIMessage &msg);
@@ -99,7 +99,7 @@ public:
 CL_StatusBar::CL_StatusBar(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_StatusBar_Impl)
 {
-	set_type_name(cl_text("statusbar"));
+	set_type_name("statusbar");
 	impl->statusbar = this;
 
 	func_process_message().set(impl.get(), &CL_StatusBar_Impl::on_process_message);
@@ -116,6 +116,18 @@ CL_StatusBar::~CL_StatusBar()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_StatusBar Attributes:
+
+CL_StatusBar *CL_StatusBar::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_StatusBar *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_StatusBar*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_StatusBar named item: %1", id));
+
+	return object;
+}
 
 CL_Size CL_StatusBar::get_preferred_size() const
 {
@@ -315,9 +327,9 @@ void CL_StatusBar_Impl::throw_if_part_exists(int id) const
 void CL_StatusBar_Impl::create_parts()
 {
 	part_component = CL_GUIThemePart(statusbar);
-	part_status_text = CL_GUIThemePart(statusbar, cl_text("statustext"));
-	part_status_part = CL_GUIThemePart(statusbar, cl_text("statuspart"));
-	part_size_grip = CL_GUIThemePart(statusbar, cl_text("sizegrip"));
+	part_status_text = CL_GUIThemePart(statusbar, "statustext");
+	part_status_part = CL_GUIThemePart(statusbar, "statuspart");
+	part_size_grip = CL_GUIThemePart(statusbar, "sizegrip");
 	font = part_component.get_font();
 	text_color = part_component.get_property(prop_text_color);
 }

@@ -60,7 +60,7 @@ CL_Thread::~CL_Thread()
 void CL_Thread::start(CL_Runnable *runnable)
 {
 	if (runnable == 0)
-		throw CL_Exception(cl_text("Invalid runnable pointer"));
+		throw CL_Exception("Invalid runnable pointer");
 
 	impl->start(runnable);
 }

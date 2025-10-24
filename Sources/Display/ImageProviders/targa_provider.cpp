@@ -43,14 +43,14 @@ CL_PixelBuffer CL_TargaProvider::load(
 {
 	CL_IODevice datafile = directory.open_file_read(filename);
 	CL_TargaProvider_Impl targa(datafile);
-	return CL_PixelBuffer(targa.width, targa.height, targa.pitch, targa.format, targa.palette, targa.get_data());
+	return CL_PixelBuffer(targa.width, targa.height, targa.sized_format, targa.palette, targa.get_data());
 }
 
 CL_PixelBuffer CL_TargaProvider::load(
 	CL_IODevice &file)
 {
 	CL_TargaProvider_Impl targa(file);
-	return CL_PixelBuffer(targa.width, targa.height, targa.pitch, targa.format, targa.palette, targa.get_data());
+	return CL_PixelBuffer(targa.width, targa.height, targa.sized_format, targa.palette, targa.get_data());
 }
 
 CL_PixelBuffer CL_TargaProvider::load(
@@ -67,14 +67,14 @@ void CL_TargaProvider::save(
 	const CL_String &filename,
 	CL_VirtualDirectory &directory)
 {
-	throw CL_Exception(cl_text("TargaProvider doesn't support saving"));
+	throw CL_Exception("TargaProvider doesn't support saving");
 }
 
 void CL_TargaProvider::save(
 	CL_PixelBuffer buffer,
 	CL_IODevice &file)
 {
-	throw CL_Exception(cl_text("TargaProvider doesn't support saving"));
+	throw CL_Exception("TargaProvider doesn't support saving");
 }
 
 void CL_TargaProvider::save(

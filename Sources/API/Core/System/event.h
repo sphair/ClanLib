@@ -73,29 +73,31 @@ public:
 
 public:
 	/// \brief Wait for event to become flagged.
+	///
+	/// \return true = When was flagged. Else timeout
 	bool wait(int timeout = -1);
 
-	static int wait(int count, CL_Event const * const * events, int timeout = -1, bool wait_all = false);
+	static int wait(int count, CL_Event const * const * events, int timeout = -1);
 
-	static int wait(const std::vector<CL_Event *> &events, int timeout = -1, bool wait_all = false);
+	static int wait(const std::vector<CL_Event *> &events, int timeout = -1);
 
-	static int wait(const std::vector<CL_Event> &events, int timeout = -1, bool wait_all = false);
+	static int wait(const std::vector<CL_Event> &events, int timeout = -1);
 
 	static int wait(CL_Event &event1, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, int timeout = -1);
 
-	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, CL_Event &event8, int timeout = -1, bool wait_all = false);
+	static int wait(CL_Event &event1, CL_Event &event2, CL_Event &event3, CL_Event &event4, CL_Event &event5, CL_Event &event6, CL_Event &event7, CL_Event &event8, int timeout = -1);
 
 	/// \brief Flag event.
 	void set();

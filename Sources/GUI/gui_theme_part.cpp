@@ -121,6 +121,11 @@ CL_Rect CL_GUIThemePart::get_content_shrink_box() const
 {
 	CL_Rect shrink_box(0,0,0,0);
 
+	int margin_top = get_property_int(impl->prop_margin_top);
+	int margin_left = get_property_int(impl->prop_margin_left);
+	int margin_right = get_property_int(impl->prop_margin_right);
+	int margin_bottom = get_property_int(impl->prop_margin_bottom);
+
 	int border_top = get_property_int(impl->prop_border_top);
 	int border_left = get_property_int(impl->prop_border_left);
 	int border_right = get_property_int(impl->prop_border_right);
@@ -131,10 +136,10 @@ CL_Rect CL_GUIThemePart::get_content_shrink_box() const
 	int padding_right = get_property_int(impl->prop_padding_right);
 	int padding_bottom = get_property_int(impl->prop_padding_bottom);
 
-	shrink_box.left += border_left + padding_left;
-	shrink_box.right += (border_right + padding_right);
-	shrink_box.top += border_top + padding_top;
-	shrink_box.bottom += (border_bottom + padding_bottom);
+	shrink_box.left += margin_left+ border_left + padding_left;
+	shrink_box.right += margin_right + border_right + padding_right;
+	shrink_box.top += margin_top + border_top + padding_top;
+	shrink_box.bottom += margin_bottom + border_bottom + padding_bottom;
 
 	return shrink_box;
 }
@@ -193,19 +198,19 @@ CL_Font CL_GUIThemePart::get_font() const
 
 	CL_StringRef font_weight = get_property(impl->prop_font_weight);
 	int weight = 0;
-	if (font_weight == cl_text("normal"))
+	if (font_weight == "normal")
 		weight = 400;
-	else if (font_weight == cl_text("bold") || font_weight == cl_text("bolder"))
+	else if (font_weight == "bold" || font_weight == "bolder")
 		weight = 700;
-	else if (font_weight == cl_text("light") || font_weight == cl_text("lighter"))
+	else if (font_weight == "light" || font_weight == "lighter")
 		weight = 300;
 	else
 		weight = CL_StringHelp::text_to_int(font_weight);
 
 	int font_size = get_property_int(impl->prop_font_size);
 
-	bool italic = (get_property(impl->prop_font_style) == cl_text("italic"));
-	bool underline = (get_property(impl->prop_text_decoration) == cl_text("underline"));
+	bool italic = (get_property(impl->prop_font_style) == "italic");
+	bool underline = (get_property(impl->prop_text_decoration) == "underline");
 	bool strikeout = false;
 
 	CL_GUIComponent *component = impl->component;

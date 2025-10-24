@@ -56,7 +56,7 @@ void CL_ZipFileHeader::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x02014b50)
 	{
-		throw CL_Exception(cl_text("Incorrect File Header signature"));
+		throw CL_Exception("Incorrect File Header signature");
 	}
 	version_made_by = input.read_int16();
 	version_needed_to_extract = input.read_int16();

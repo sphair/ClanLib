@@ -58,7 +58,7 @@ public:
 
 	/// \brief Constructs a DBCommand
 	///
-	/// \param CL_DBCommand_Impl = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DBCommand(const CL_SharedPtr<CL_DBCommand_Impl> &impl);
 
 	~CL_DBCommand();

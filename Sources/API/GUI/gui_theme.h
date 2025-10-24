@@ -62,11 +62,6 @@ public:
 	/// \param provider = The theme provider
 	CL_GUITheme(CL_GUIThemeProvider *provider);
 
-	/// \brief Constructs a GUITheme
-	///
-	/// \param copy = GUITheme
-	CL_GUITheme(const CL_GUITheme &copy);
-
 	~CL_GUITheme();
 
 /// \}

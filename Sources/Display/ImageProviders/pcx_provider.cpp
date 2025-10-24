@@ -43,14 +43,14 @@ CL_PixelBuffer CL_PCXProvider::load(
 {
 	CL_IODevice datafile = directory.open_file_read(filename);
 	CL_PCXProvider_Impl pcx(datafile);
-	return CL_PixelBuffer(pcx.width, pcx.height, pcx.pitch, pcx.format, pcx.palette, pcx.get_data());
+	return CL_PixelBuffer(pcx.width, pcx.height, pcx.sized_format, pcx.palette, pcx.get_data());
 }
 
 CL_PixelBuffer CL_PCXProvider::load(
 	CL_IODevice &file)
 {
 	CL_PCXProvider_Impl pcx(file);
-	return CL_PixelBuffer(pcx.width, pcx.height, pcx.pitch, pcx.format, pcx.palette, pcx.get_data());
+	return CL_PixelBuffer(pcx.width, pcx.height, pcx.sized_format, pcx.palette, pcx.get_data());
 }
 
 CL_PixelBuffer CL_PCXProvider::load(
@@ -66,7 +66,7 @@ void CL_PCXProvider::save(
 	CL_PixelBuffer buffer,
 	CL_IODevice &file)
 {
-	throw CL_Exception(cl_text("PCXProvider doesn't support saving"));
+	throw CL_Exception("PCXProvider doesn't support saving");
 }
 
 void CL_PCXProvider::save(
@@ -74,7 +74,7 @@ void CL_PCXProvider::save(
 	const CL_String &filename,
 	CL_VirtualDirectory &directory)
 {
-	throw CL_Exception(cl_text("PCXProvider doesn't support saving"));
+	throw CL_Exception("PCXProvider doesn't support saving");
 }
 
 void CL_PCXProvider::save(

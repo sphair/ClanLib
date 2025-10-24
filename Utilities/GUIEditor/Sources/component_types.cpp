@@ -86,7 +86,7 @@ void ComponentTypes::set_id_name(CL_GUIComponent *new_component, int id)
 	if (component_count.find(id) == component_count.end())
 		component_count[id] = 1;
 
-	new_component->set_id_name(cl_format(cl_text("%1%2"), new_component->get_type_name(), component_count[id]++));
+	new_component->set_id_name(cl_format("%1%2", new_component->get_type_name(), component_count[id]++));
 }
 
 const std::vector<ComponentType *> &ComponentTypes::get_types()

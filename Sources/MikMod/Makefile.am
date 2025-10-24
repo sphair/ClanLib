@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan21MikMod.la
+lib_LTLIBRARIES = libclan22MikMod.la
 
-libclan21MikMod_la_SOURCES =  \
+libclan22MikMod_la_SOURCES =  \
  module_reader.cpp          \
  resourcetype_module.h      \
  module_reader.h	    \
@@ -8,9 +8,12 @@ libclan21MikMod_la_SOURCES =  \
  soundprovider_mikmod.cpp   \
  soundprovider_mikmod_session.cpp
 
-libclan21MikMod_la_LIBADD = -lmikmod
+libclan22MikMod_la_LIBADD = -lmikmod
 
-libclan21MikMod_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22MikMod_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_MikMod)
+
+libclan22Sound_la_CXXFLAGS=$(MikMod_CXXFLAGS) $(extra_CFLAGS_MikMod)
 
 # EOF #

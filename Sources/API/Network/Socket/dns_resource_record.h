@@ -49,11 +49,6 @@ class CL_API_NETWORK CL_DNSResourceRecord
 public:
 	CL_DNSResourceRecord();
 
-	/// \brief Constructs a DNSResourceRecord
-	///
-	/// \param other = DNSResource Record
-	CL_DNSResourceRecord(const CL_DNSResourceRecord &other);
-
 	~CL_DNSResourceRecord();
 
 /// \}
@@ -179,7 +174,6 @@ public:
 /// \{
 
 public:
-	CL_DNSResourceRecord &operator =(const CL_DNSResourceRecord &other);
 
 	/// \brief Set record
 	///

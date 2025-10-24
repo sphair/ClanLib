@@ -151,11 +151,6 @@ public:
 	CL_Sizex<Type> get_size() const { return CL_Sizex<Type>(get_width(), get_height()); }
 
 	/// \brief Returns the bounding box of the quad as a CL_Rect
-	///
-	/// \param hotspot Point to rotate around.
-	/// \param origin Determines the hotspot point within the rectangle
-	/// \param x, y Offsets applied negatively to the hotspot point
-	/// \param angle Angle to rotate in degrees.
 	CL_Rect get_bounds() const;
 
 /// \}

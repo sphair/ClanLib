@@ -37,7 +37,6 @@ class CL_GraphicContext;
 class CL_FontMetrics;
 class CL_Colorf;
 class CL_Point;
-class CL_PixelBufferRef;
 class CL_Size;
 class CL_Rect;
 

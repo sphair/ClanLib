@@ -32,6 +32,7 @@
 #include "font_engine_win32.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Core/Text/string_help.h"
 
 CL_FontEngine_Win32::CL_FontEngine_Win32(const CL_FontDescription &desc)
 : handle(0)
@@ -49,9 +50,9 @@ CL_FontEngine_Win32::CL_FontEngine_Win32(const CL_FontDescription &desc)
 		CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
 		(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
-		desc.get_typeface_name().c_str());
+		CL_StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
 	if (handle == 0)
-		throw CL_Exception(cl_text("CreateFont failed"));
+		throw CL_Exception("CreateFont failed");
 
 	HDC dc = GetDC(0);
 	int old_mode = SetMapMode(dc, MM_TEXT);
@@ -64,7 +65,7 @@ CL_FontEngine_Win32::CL_FontEngine_Win32(const CL_FontDescription &desc)
 	{
 		DeleteObject(handle);
 		handle = 0;
-		throw CL_Exception(cl_text("GetTextMetrics failed"));
+		throw CL_Exception("GetTextMetrics failed");
 	}
 }
 
@@ -96,162 +97,214 @@ CL_FontMetrics CL_FontEngine_Win32::get_metrics()
 
 CL_FontPixelBuffer CL_FontEngine_Win32::get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color)
 {
-	HDC hdc = ::GetDC(NULL);
-	int old_mode = SetMapMode(hdc, MM_TEXT);
-	HGDIOBJ old_font = 0;
-	old_font = SelectObject(hdc, handle);
+	if (anti_alias)
+		return get_font_glyph_gray8(glyph, color);
+	else
+		return get_font_glyph_mono(glyph, color);
+}
 
-	CL_FontPixelBuffer font_buffer;
-
-	unsigned int r = (unsigned int) (color.get_red() * 255);
-	unsigned int g = (unsigned int) (color.get_green() * 255);
-	unsigned int b = (unsigned int) (color.get_blue() * 255);
-	unsigned int a = (unsigned int) (color.get_alpha() * 255);
-	if (r > 255)
-		r = 255;
-	if (g > 255)
-		g = 255;
-	if (b > 255)
-		b = 255;
-	if (a > 255)
-		a = 255;
-	unsigned int c = (r << 24) + (g << 16) + (b << 8);
-
-	int pos_x = 0;
-	int pos_y = 0;
-
-	font_buffer.glyph = glyph;
-
-	CL_DataBuffer glyph_buffer;
-
-	if (anti_alias) // anti-alias font
+CL_FontPixelBuffer CL_FontEngine_Win32::get_font_glyph_lcd(int glyph, const CL_Colorf &color)
+{
+	CL_DataBuffer glyph_bitmap;
+	GLYPHMETRICS glyph_metrics = { 0 };
+	MAT2 matrix = { 0 };
+	matrix.eM11.value = 3;
+	matrix.eM22.value = 1;
+	if (try_load_glyph_bitmap(glyph, GGO_GRAY8_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 	{
-		GLYPHMETRICS glyph_metrics;
-		MAT2 mat2;
-		memset(&mat2, 0, sizeof(MAT2));
-		mat2.eM11.value = 1;
-		mat2.eM22.value = 1;
-		DWORD buffer_size = GetGlyphOutline(hdc, glyph, GGO_GRAY8_BITMAP, &glyph_metrics, 0, 0, &mat2);
-		if (buffer_size == GDI_ERROR)
-		{
-			ABC abc;
-			if (GetCharABCWidths(hdc, glyph, glyph, &abc))
-				pos_x += abc.abcA + abc.abcB + abc.abcC;
-			goto failed;
-		}
+		CL_PixelBuffer pixelbuffer((glyph_metrics.gmBlackBoxX+2)/3, glyph_metrics.gmBlackBoxY, cl_rgba8);
 
-		if (buffer_size == 0)
-		{
-			pos_x += glyph_metrics.gmCellIncX;
-			pos_y += glyph_metrics.gmCellIncY;
-			goto failed;
-		}
-		glyph_buffer.set_size(buffer_size);
-		DWORD result = GetGlyphOutline(hdc, glyph, GGO_GRAY8_BITMAP, &glyph_metrics, glyph_buffer.get_size(), glyph_buffer.get_data(), &mat2);
-		if (result == GDI_ERROR)
-		{
-			ABC abc;
-			if (GetCharABCWidths(hdc, glyph, glyph, &abc))
-				pos_x += abc.abcA + abc.abcB + abc.abcC;
-			goto failed;
-		}
+		DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
+		unsigned char *s = (unsigned char *) glyph_bitmap.get_data();
 
-		DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4;
-		s_pitch *= 4;
-		unsigned char *s = (unsigned char *) glyph_buffer.get_data();
+		DWORD d_width = pixelbuffer.get_width();
+		DWORD *d = (DWORD *) pixelbuffer.get_data();
+		memset(d, 0, d_width*pixelbuffer.get_height()*4);
 
-		DWORD d_pitch = glyph_metrics.gmBlackBoxX * sizeof(DWORD);
-		CL_PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, d_pitch, CL_PixelFormat::rgba8888);
-		font_buffer.buffer = pixelbuffer;
+		CL_Color icolor = color;
+		unsigned int c = (icolor.get_red() << 24) + (icolor.get_green() << 16) + (icolor.get_blue() << 8);
 
-		DWORD *d = (DWORD *) font_buffer.buffer.get_data();
-
-		DWORD grayRamp[65];
-		for (unsigned int i = 0; i < 65; i++)
-		{
-			unsigned int intensity = i * 255 / 64;
-			grayRamp[i] = c + intensity;
-		}
-			
 		for (DWORD py = 0; py < glyph_metrics.gmBlackBoxY; py++)
 		{
 			for (DWORD px = 0; px < glyph_metrics.gmBlackBoxX; px++)
 			{
-				DWORD gray = grayRamp[s[px + py*s_pitch]];
-				d[px + py*glyph_metrics.gmBlackBoxX] = gray;
+				DWORD gray = s[px + py*s_pitch];
+				gray = (gray*255+32)/64;
+
+				int offset = px/3 + py*d_width;
+				DWORD component = 3-(px%3);
+				DWORD component_mask = ((DWORD)0xff)<<(component*8);
+				DWORD component_color = ((DWORD)0xff-gray)<<(component*8);
+
+				if (gray > 0)
+					d[offset] |= 0xff;
+
+				d[offset] &= ~component_mask;
+				d[offset] |= component_color;
 			}
 		}
 
-		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x;
+		CL_FontPixelBuffer font_buffer;
+		font_buffer.glyph = glyph;
+		font_buffer.buffer = pixelbuffer;
+		font_buffer.buffer_rect = pixelbuffer.get_size();
+		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x/3;
 		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.empty_buffer = false;
-		pos_x = glyph_metrics.gmCellIncX;
-		pos_y = glyph_metrics.gmCellIncY;
+		font_buffer.increment.x = (glyph_metrics.gmCellIncX+2)/3;
+		font_buffer.increment.y = glyph_metrics.gmCellIncY;
+		return font_buffer;
 	}
 	else
 	{
-		GLYPHMETRICS glyph_metrics;
-		MAT2 mat2;
-		memset(&mat2, 0, sizeof(MAT2));
-		mat2.eM11.value = 1;
-		mat2.eM22.value = 1;
-		DWORD buffer_size = GetGlyphOutline(hdc, glyph, GGO_BITMAP, &glyph_metrics, 0, 0, &mat2);
-		if (buffer_size == GDI_ERROR)
+		return get_empty_font_glyph(glyph);
+	}
+}
+
+CL_FontPixelBuffer CL_FontEngine_Win32::get_font_glyph_gray8(int glyph, const CL_Colorf &color)
+{
+	CL_DataBuffer glyph_bitmap;
+	GLYPHMETRICS glyph_metrics = { 0 };
+	MAT2 matrix = { 0 };
+	matrix.eM11.value = 1;
+	matrix.eM22.value = 1;
+	if (try_load_glyph_bitmap(glyph, GGO_GRAY8_BITMAP, matrix, glyph_bitmap, glyph_metrics))
+	{
+		CL_PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, cl_rgba8);
+
+		DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
+		unsigned char *s = (unsigned char *) glyph_bitmap.get_data();
+
+		DWORD d_width = glyph_metrics.gmBlackBoxX;
+		DWORD *d = (DWORD *) pixelbuffer.get_data();
+
+		CL_Color icolor = color;
+		unsigned int c = (icolor.get_red() << 24) + (icolor.get_green() << 16) + (icolor.get_blue() << 8);
+
+		for (DWORD py = 0; py < glyph_metrics.gmBlackBoxY; py++)
 		{
-			ABC abc;
-			if (GetCharABCWidths(hdc, glyph, glyph, &abc))
-				pos_x += abc.abcA + abc.abcB + abc.abcC;
-			goto failed;
+			for (DWORD px = 0; px < glyph_metrics.gmBlackBoxX; px++)
+			{
+				DWORD gray = s[px + py*s_pitch];
+				d[px + py*d_width] = c + (gray*255+32)/64;
+			}
 		}
 
-		if (buffer_size == 0)
-		{
-			pos_x += glyph_metrics.gmCellIncX;
-			pos_y += glyph_metrics.gmCellIncY;
-			goto failed;
-		}
-		glyph_buffer.set_size(buffer_size);
-		DWORD result = GetGlyphOutline(hdc, glyph, GGO_BITMAP, &glyph_metrics, glyph_buffer.get_size(), glyph_buffer.get_data(), &mat2);
-		if (result == GDI_ERROR)
-		{
-			ABC abc;
-			if (GetCharABCWidths(hdc, glyph, glyph, &abc))
-				pos_x += abc.abcA + abc.abcB + abc.abcC;
-			goto failed;
-		}
-
-		DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32;
-		s_pitch *= 4;
-		unsigned char *s = (unsigned char *) glyph_buffer.get_data();
-
-		DWORD d_pitch = glyph_metrics.gmBlackBoxX * sizeof(DWORD);
-
-		CL_PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, d_pitch, CL_PixelFormat::rgba8888);
+		CL_FontPixelBuffer font_buffer;
+		font_buffer.glyph = glyph;
 		font_buffer.buffer = pixelbuffer;
-				
-		DWORD *d = (DWORD *) font_buffer.buffer.get_data();
+		font_buffer.buffer_rect = pixelbuffer.get_size();
+		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x;
+		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y;
+		font_buffer.empty_buffer = false;
+		font_buffer.increment.x = glyph_metrics.gmCellIncX;
+		font_buffer.increment.y = glyph_metrics.gmCellIncY;
+		return font_buffer;
+	}
+	else
+	{
+		return get_empty_font_glyph(glyph);
+	}
+}
+
+CL_FontPixelBuffer CL_FontEngine_Win32::get_font_glyph_mono(int glyph, const CL_Colorf &color)
+{
+	CL_DataBuffer glyph_bitmap;
+	GLYPHMETRICS glyph_metrics = { 0 };
+	MAT2 matrix = { 0 };
+	matrix.eM11.value = 1;
+	matrix.eM22.value = 1;
+	if (try_load_glyph_bitmap(glyph, GGO_BITMAP, matrix, glyph_bitmap, glyph_metrics))
+	{
+		CL_PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, cl_rgba8);
+
+		DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32 * 4;
+		unsigned char *s = (unsigned char *) glyph_bitmap.get_data();
+
+		DWORD d_width = glyph_metrics.gmBlackBoxX;
+		DWORD *d = (DWORD *) pixelbuffer.get_data();
+
+		CL_Color icolor = color;
+		unsigned int c = (icolor.get_red() << 24) + (icolor.get_green() << 16) + (icolor.get_blue() << 8);
 
 		for (DWORD py = 0; py < glyph_metrics.gmBlackBoxY; py++)
 		{
 			for (DWORD px = 0; px < glyph_metrics.gmBlackBoxX; px++)
 			{
 				DWORD gray = c + ((s[px/8 + py*s_pitch] >> (7-px%8)) & 1) * 255;
-				d[px + py*glyph_metrics.gmBlackBoxX] = gray;
+				d[px + py*d_width] = gray;
 			}
 		}
 
+		CL_FontPixelBuffer font_buffer;
+		font_buffer.glyph = glyph;
+		font_buffer.buffer = pixelbuffer;
+		font_buffer.buffer_rect = pixelbuffer.get_size();
 		font_buffer.offset.x = glyph_metrics.gmptGlyphOrigin.x;
 		font_buffer.offset.y = -glyph_metrics.gmptGlyphOrigin.y;
 		font_buffer.empty_buffer = false;
-		pos_x = glyph_metrics.gmCellIncX;
-		pos_y = glyph_metrics.gmCellIncY;
+		font_buffer.increment.x = glyph_metrics.gmCellIncX;
+		font_buffer.increment.y = glyph_metrics.gmCellIncY;
+		return font_buffer;
 	}
-failed:	
-	SelectObject(hdc, old_font);
-	SetMapMode(hdc, old_mode);
-	::ReleaseDC(NULL, hdc);
+	else
+	{
+		return get_empty_font_glyph(glyph);
+	}
+}
 
-	font_buffer.increment.x = pos_x;
-	font_buffer.increment.y = pos_y;
+bool CL_FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matrix, CL_DataBuffer &glyph_bitmap, GLYPHMETRICS &glyph_metrics)
+{
+	HDC dc = GetDC(0);
+	HGDIOBJ old_font = SelectObject(dc, handle);
+
+	wchar_t text[2];
+	text[0] = glyph;
+	text[1] = 0;
+	WORD indices[2] = {0};
+	GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+	glyph = indices[0];
+	format |= GGO_GLYPH_INDEX;
+
+	bool result = false;
+	DWORD bitmap_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, 0, 0, &matrix);
+	if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
+	{
+		CL_DataBuffer buffer(bitmap_size);
+		bitmap_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+		if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
+		{
+			glyph_bitmap = buffer;
+			result = true;
+		}
+	}
+
+	SelectObject(dc, old_font);
+	ReleaseDC(0, dc);
+	return result;
+}
+
+CL_FontPixelBuffer CL_FontEngine_Win32::get_empty_font_glyph(int glyph)
+{
+	HDC dc = GetDC(0);
+	HGDIOBJ old_font = SelectObject(dc, handle);
+
+	CL_FontPixelBuffer font_buffer;
+	font_buffer.glyph = glyph;
+	font_buffer.empty_buffer = true;
+	ABC abc = { 0 };
+	if (GetCharABCWidths(dc, glyph, glyph, &abc))
+	{
+		font_buffer.increment.x = abc.abcA + abc.abcB + abc.abcC;
+		font_buffer.increment.y = 0;
+	}
+	else
+	{
+		font_buffer.increment.x = 0;
+		font_buffer.increment.y = 0;
+	}
+
+	SelectObject(dc, old_font);
+	ReleaseDC(0, dc);
 	return font_buffer;
 }

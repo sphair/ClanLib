@@ -108,8 +108,7 @@ CL_FontMetrics CL_FontProvider_Vector::get_font_metrics(CL_GraphicContext &gc)
 
 int CL_FontProvider_Vector::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
 {
-	throw CL_Exception(cl_text("FIXME"));
-	return 0;
+	throw CL_Exception("FIXME");
 }
 
 void CL_FontProvider_Vector::destroy()
@@ -160,7 +159,7 @@ CL_Size CL_FontProvider_Vector::get_text_size(CL_GraphicContext &gc, const CL_St
 		if (offset_x > max_x)
 			max_x = offset_x;
 
-		if( out_glyphs[i] == cl_text('\n') )
+		if( out_glyphs[i] == '\n' )
 		{
 			offset_x = 0;
 			offset_y += metrics.get_height();
@@ -272,7 +271,7 @@ void CL_FontProvider_Vector::draw_glyphs(
 		gc.pop_modelview();
 		
 		offset_x += interspacing_x[i];
-		if( glyphs[i] == cl_text('\n') )
+		if( glyphs[i] == '\n' )
 		{
 			offset_x = 0;
 			y += metrics.get_height();

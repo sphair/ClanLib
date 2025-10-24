@@ -56,7 +56,7 @@ void CL_ZipLocalFileHeader::load(CL_IODevice &input)
 	signature = input.read_int32();
 	if (signature != 0x04034b50)
 	{
-		throw CL_Exception(cl_text("Incorrect Local File Header signature"));
+		throw CL_Exception("Incorrect Local File Header signature");
 	}
 	version_needed_to_extract = input.read_int16();
 	general_purpose_bit_flag = input.read_int16();

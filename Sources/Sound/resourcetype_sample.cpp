@@ -53,9 +53,9 @@ CL_ResourceData_Sample::CL_ResourceData_Sample(class CL_Resource &resource)
 
 	CL_SoundProvider *provider = 0;
 
-	CL_String name = resource.get_element().get_attribute(cl_text("file"));
-	CL_String sound_format = resource.get_element().get_attribute(cl_text("format"));
-	bool streamed = (element.get_attribute(cl_text("stream"), cl_text("no")) == cl_text("yes"));
+	CL_String name = resource.get_element().get_attribute("file");
+	CL_String sound_format = resource.get_element().get_attribute("format");
+	bool streamed = (element.get_attribute("stream", "no") == "yes");
 
 	provider = CL_SoundProviderFactory::load(
 		name,
@@ -68,7 +68,7 @@ CL_ResourceData_Sample::CL_ResourceData_Sample(class CL_Resource &resource)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Unknown sample format"));
+		throw CL_Exception("Unknown sample format");
 	}
 }
 

@@ -49,12 +49,12 @@ CL_ListViewLayoutThumbnails::CL_ListViewLayoutThumbnails(CL_ListView *listview)
 : CL_ListViewLayout(listview), opener_gap(0), icon_gap(0), indent_width(0),
   max_rows_visible(0), max_grid_cols_visible(0), row_draw_y_pos(0)
 {
-	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, cl_text("100"));
-	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, cl_text("100"));
-	prop_line_edit_offset_left = CL_GUIThemePartProperty(cl_text("line-edit-offset-left"));
-	prop_line_edit_offset_top = CL_GUIThemePartProperty(cl_text("line-edit-offset-top"));
-	prop_line_edit_offset_bottom = CL_GUIThemePartProperty(cl_text("line-edit-offset-bottom"));
-	prop_line_edit_offset_right = CL_GUIThemePartProperty(cl_text("line-edit-offset-right"));
+	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, "100");
+	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, "100");
+	prop_line_edit_offset_left = CL_GUIThemePartProperty("line-edit-offset-left");
+	prop_line_edit_offset_top = CL_GUIThemePartProperty("line-edit-offset-top");
+	prop_line_edit_offset_bottom = CL_GUIThemePartProperty("line-edit-offset-bottom");
+	prop_line_edit_offset_right = CL_GUIThemePartProperty("line-edit-offset-right");
 }
 
 CL_ListViewLayoutThumbnails::~CL_ListViewLayoutThumbnails()
@@ -171,11 +171,11 @@ std::vector<ListViewRow> &CL_ListViewLayoutThumbnails::get_rows()
 
 void CL_ListViewLayoutThumbnails::create_parts()
 {
-	part_row = CL_GUIThemePart(listview, cl_text("row"));
-	part_opener = CL_GUIThemePart(listview, cl_text("row_opener"));
-	part_cell = CL_GUIThemePart(listview, cl_text("cell"));
+	part_row = CL_GUIThemePart(listview, "row");
+	part_opener = CL_GUIThemePart(listview, "row_opener");
+	part_cell = CL_GUIThemePart(listview, "cell");
 
-	part_cell.set_state(cl_text("thumbnails"), true);
+	part_cell.set_state("thumbnails", true);
 	part_cell.set_state(CssStr::normal, true);
 	part_row.set_state(CssStr::normal, true);
 
@@ -183,7 +183,7 @@ void CL_ListViewLayoutThumbnails::create_parts()
 	size_icon.height = part_cell.get_property_int(prop_icon_height);
 
 	CL_Font font = part_cell.get_font();
-	height_text = font.get_text_size(gc, cl_text("l")).height;
+	height_text = font.get_text_size(gc, "l").height;
 
 	size_cell = part_cell.get_preferred_size();
 	height_row = size_cell.height;
@@ -195,7 +195,7 @@ void CL_ListViewLayoutThumbnails::create_parts()
 	lineedit_textrect_offset.bottom = part_cell.get_property_int(prop_line_edit_offset_bottom);
 	lineedit_textrect_offset.right = part_cell.get_property_int(prop_line_edit_offset_right);
 
-	CL_GUIThemePart part_icon_selection(listview, cl_text("icon_selection"));
+	CL_GUIThemePart part_icon_selection(listview, "icon_selection");
 	icon_sel_shrink_box = part_icon_selection.get_content_shrink_box();
 
 	rect_cell_shrink = part_cell.get_content_shrink_box();

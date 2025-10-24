@@ -47,6 +47,9 @@ class CL_API_DISPLAY CL_OcclusionQuery
 /// \{
 
 public:
+	/// \brief Constructs a null instance.
+	CL_OcclusionQuery();
+
 	/// \brief Constructs an occlusion query object.
 	CL_OcclusionQuery(CL_GraphicContext &context);
 
@@ -57,6 +60,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the result of the occlusion query.
 	int get_result();
 

@@ -29,13 +29,13 @@
 #include "Core/precomp.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 #include "API/Core/CSS/css_document.h"
-#include "API/Core/CSS/css_selector.h"
-#include "API/Core/CSS/css_ruleset.h"
+#include "API/Core/CSS/css_property.h"
+#include "css_selector.h"
+#include "css_ruleset.h"
 #include "css_document_impl.h"
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument Construction:
 
 CL_CSSDocument::CL_CSSDocument()
 : impl(new CL_CSSDocument_Impl)
@@ -46,25 +46,9 @@ CL_CSSDocument::~CL_CSSDocument()
 {
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument Attributes:
-
-std::vector<CL_CSSImport> &CL_CSSDocument::get_imports()
+std::vector<CL_CSSProperty> CL_CSSDocument::select(const CL_StringRef &element)
 {
-	return impl->imports;
-}
-
-std::vector<CL_CSSRuleSet> &CL_CSSDocument::get_rulesets()
-{
-	return impl->rulesets;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument Operations:
-
-std::vector<CL_CSSRuleSet> CL_CSSDocument::select(const CL_StringRef &element)
-{
-	std::map<CL_String, std::vector<CL_CSSRuleSet> >::iterator it_cache;
+	std::map<CL_String, std::vector<CL_CSSProperty> >::iterator it_cache;
 	it_cache = impl->select_cache.find(element);
 	if (it_cache != impl->select_cache.end())
 		return it_cache->second;
@@ -77,7 +61,7 @@ std::vector<CL_CSSRuleSet> CL_CSSDocument::select(const CL_StringRef &element)
 	CL_StringRef::size_type pos = 0;
 	while (true)
 	{
-		CL_StringRef::size_type next_whitespace = element.find(cl_text(' '), pos);
+		CL_StringRef::size_type next_whitespace = element.find(' ', pos);
 		if (next_whitespace != CL_StringRef::npos)
 		{
 			path_elements.push_back(element.substr(pos, next_whitespace - pos));
@@ -95,7 +79,7 @@ std::vector<CL_CSSRuleSet> CL_CSSDocument::select(const CL_StringRef &element)
 	for (index_rulesets = 0; index_rulesets < size_rulesets; index_rulesets++)
 	{
 		CL_CSSRuleSet &ruleset = impl->rulesets[index_rulesets];
-		std::vector<CL_CSSSelector> &selectors = ruleset.get_selectors();
+		std::vector<CL_CSSSelector> &selectors = ruleset.selectors;
 		bool match = false;
 		int specificity = 0;
 
@@ -136,47 +120,34 @@ std::vector<CL_CSSRuleSet> CL_CSSDocument::select(const CL_StringRef &element)
 		}
 	}
 
-	impl->select_cache[element] = sets;
+	std::vector<CL_CSSProperty> properties;
 
-	return sets;
-}
-
-void CL_CSSDocument::add_import(CL_CSSImport import)
-{
-	impl->imports.push_back(import);
-}
-
-void CL_CSSDocument::add_ruleset(CL_CSSRuleSet ruleset)
-{
-	impl->rulesets.push_back(ruleset);
-}
-
-void CL_CSSDocument::remove_import(CL_CSSImport import)
-{
-	std::vector<CL_CSSImport>::size_type i, size;
-	size = impl->imports.size();
-	for (i=0; i<size; i++)
+	// Prioritize properties with the important flag:
+	for (size_t i = 0; i < sets.size(); i++)
 	{
-		if (impl->imports[i] == import)
+		for (size_t j = 0; j < sets[i].properties.size(); j++)
 		{
-			impl->imports.erase(impl->imports.begin() + i);
-			return;
+			if (sets[i].properties[j].get_priority() == CL_CSSProperty::priority_important)
+			{
+				properties.push_back(sets[i].properties[j]);
+			}
 		}
 	}
-}
 
-void CL_CSSDocument::remove_ruleset(CL_CSSRuleSet ruleset)
-{
-	std::vector<CL_CSSRuleSet>::size_type i, size;
-	size = impl->rulesets.size();
-	for (i=0; i<size; i++)
+	// Add the remaining properties:
+	for (size_t i = 0; i < sets.size(); i++)
 	{
-		if (impl->rulesets[i] == ruleset)
+		for (size_t j = 0; j < sets[i].properties.size(); j++)
 		{
-			impl->rulesets.erase(impl->rulesets.begin() + i);
-			return;
+			if (sets[i].properties[j].get_priority() != CL_CSSProperty::priority_important)
+			{
+				properties.push_back(sets[i].properties[j]);
+			}
 		}
 	}
+
+	impl->select_cache[element] = properties;
+	return properties;
 }
 
 void CL_CSSDocument::load(const CL_String &filename, const CL_VirtualDirectory &directory)
@@ -192,10 +163,61 @@ void CL_CSSDocument::load(const CL_String &fullname)
 	impl->load(path, file);
 }
 
-void CL_CSSDocument::save(CL_IODevice &output)
+std::vector<CL_CSSProperty> CL_CSSDocument::parse_style_properties(const CL_StringRef &style_text)
 {
-	impl->save(output);
-}
+	std::vector<CL_CSSProperty> properties;
+	CL_StringRef::size_type pos = 0;
+	while (pos < style_text.length())
+	{
+		int name_start, name_end;
+		name_start = pos;
+		pos = CL_CSSDocument_Impl::style_load_until(":;", style_text, pos);
+		name_end = pos;
+		pos++;
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_CSSDocument Implementation:
+		CL_String name_text = CL_StringHelp::trim(style_text.substr(name_start, name_end-name_start));
+
+		if (pos <= style_text.length() && style_text[pos-1] == ':')
+		{
+			if (name_text.empty())
+				throw CL_Exception(cl_format("Unexpected ':' at position %1", pos));
+
+			int value_start, value_end;
+			value_start = pos;
+			pos = CL_CSSDocument_Impl::style_load_until("!;", style_text, pos);
+			value_end = pos;
+
+			CL_String value_text = CL_StringHelp::trim(style_text.substr(value_start, value_end-value_start));
+			CL_String priority_text;
+			if (style_text[pos] == '!')
+			{
+				pos++;
+				int priority_start, priority_end;
+				priority_start = pos;
+				pos = CL_CSSDocument_Impl::style_load_until(";", style_text, pos);
+				priority_end = pos;
+
+				priority_text = CL_StringHelp::trim(style_text.substr(priority_start, priority_end-priority_start));
+			}
+
+			CL_CSSProperty property;
+			property.set_name(name_text);
+			property.set_value(value_text);
+			if (CL_StringHelp::compare(priority_text, "important", true) == 0)
+				property.set_priority(CL_CSSProperty::priority_important);
+			else
+				property.set_priority(CL_CSSProperty::priority_normal);
+			properties.push_back(property);
+		}
+		else if (pos > style_text.length() || style_text[pos-1] == ';')
+		{
+			if (!name_text.empty())
+				throw CL_Exception(cl_format("Unexpected ';' at position %1", pos));
+		}
+		else
+		{
+			break;
+		}
+	}
+	return properties;
+}

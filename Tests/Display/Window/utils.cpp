@@ -58,7 +58,7 @@ CL_Rect get_window_frame_size()
 	d=XOpenDisplay(NULL);
 	if(d==NULL)
 	{
-		throw CL_Exception(cl_text("Cannot open display"));
+		throw CL_Exception("Cannot open display");
 	}
 	int s=DefaultScreen(d);
 	const int win_xpos = 128;

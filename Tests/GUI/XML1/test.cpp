@@ -39,7 +39,7 @@ public:
 			CL_GUILayoutCorners layout;
 			window.set_layout(layout);
 
-			window.create_components(cl_text("dialog.xml"));
+			window.create_components("dialog.xml");
 
 			gui.exec();
 		}

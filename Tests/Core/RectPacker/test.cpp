@@ -1,6 +1,6 @@
 #include <ClanLib/core.h>
 
-void main(void)
+int main(void)
 {
 	CL_SetupCore setup_core;
 
@@ -96,5 +96,6 @@ void main(void)
 	{
 		std::cout << "Expected: " << e.message.c_str() << std::endl;		
 	}
+	return 0;
 }
 

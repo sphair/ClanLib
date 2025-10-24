@@ -42,7 +42,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	
 	// Create sound capture:
 	result = DirectSoundCaptureCreate8(0, &dsoundcapture, 0);
-	if (FAILED(result)) throw CL_Exception(cl_text("Failed to create DirectSound capture!"));
+	if (FAILED(result)) throw CL_Exception("Failed to create DirectSound capture!");
 
 	DSCCAPS caps;
 	memset(&caps, 0, sizeof(DSCCAPS));
@@ -51,7 +51,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	if (FAILED(result))
 	{
 		dsoundcapture->Release();
-		throw CL_Exception(cl_text("Failed to query for DirectSound capture capabilities!"));
+		throw CL_Exception("Failed to query for DirectSound capture capabilities!");
 	}
 
 	// Setup sound format and create capture buffer:
@@ -78,7 +78,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	if (FAILED(result))
 	{
 		dsoundcapture->Release();
-		throw CL_Exception(cl_text("Failed to create capture buffer!"));
+		throw CL_Exception("Failed to create capture buffer!");
 	}
 
 	// Setup notify events for each record fragment:
@@ -87,7 +87,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 	{
 		capturebuffer->Release();
 		dsoundcapture->Release();
-		throw CL_Exception(cl_text("Failed to create notify events for capture buffer!"));
+		throw CL_Exception("Failed to create notify events for capture buffer!");
 	}
 
 	notify_event = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -105,7 +105,7 @@ CL_SoundProvider_Recorder_DirectSound_Session::CL_SoundProvider_Recorder_DirectS
 		notify->Release();
 		capturebuffer->Release();
 		dsoundcapture->Release();
-		throw CL_Exception(cl_text("Failed to create notification positions for capture buffer!"));
+		throw CL_Exception("Failed to create notification positions for capture buffer!");
 	}
 	delete[] notify_pos;
 
@@ -140,11 +140,6 @@ int CL_SoundProvider_Recorder_DirectSound_Session::get_num_samples() const
 int CL_SoundProvider_Recorder_DirectSound_Session::get_frequency() const
 {
 	return frequency;
-}
-
-CL_SoundFormat CL_SoundProvider_Recorder_DirectSound_Session::get_format() const
-{
-	return sf_16bit_signed;
 }
 
 int CL_SoundProvider_Recorder_DirectSound_Session::get_num_channels() const

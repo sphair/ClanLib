@@ -38,7 +38,7 @@
 
 CL_FontMetrics::CL_FontMetrics()
 {
-	return;
+
 }
 
 CL_FontMetrics::CL_FontMetrics(
@@ -63,16 +63,22 @@ CL_FontMetrics::CL_FontMetrics(
 		max_character_width, weight, overhang,
 		digitized_aspect_x, digitized_aspect_y, italic, underline, struck_out, fixed_pitch ) )
 {
-	return;
+
 }
 
 CL_FontMetrics::~CL_FontMetrics()
 {
-	return;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontMetrics Attributes:
+
+void CL_FontMetrics::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_FontMetrics is null");
+}
 
 float CL_FontMetrics::get_height() const
 {

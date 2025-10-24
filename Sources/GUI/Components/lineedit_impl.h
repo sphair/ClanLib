@@ -49,12 +49,12 @@ public:
 		cursor_blink_visible(true),
 		clip_start_offset(0),
 		clip_end_offset(0),
-		decimal_char(cl_text(".")),
+		decimal_char("."),
 		ignore_mouse_events(false),
 		cursor_drawing_enabled_when_parent_focused(false),
 		select_all_on_focus_gain(true)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	~CL_LineEdit_Impl()
@@ -73,8 +73,8 @@ public:
 	void update_text_clipping();
 	void create_parts();
 
-	CL_Callback_v1<CL_InputEvent> func_before_edit_changed;
-	CL_Callback_v1<CL_InputEvent> func_after_edit_changed;
+	CL_Callback_v1<CL_InputEvent &> func_before_edit_changed;
+	CL_Callback_v1<CL_InputEvent &> func_after_edit_changed;
 	CL_Callback_v0 func_selection_changed;
 	CL_Callback_v0 func_focus_gained;
 	CL_Callback_v0 func_focus_lost;
@@ -115,9 +115,9 @@ public:
 	int get_character_index(int mouse_x_wincoords);
 	int find_next_break_character(int pos);
 	int find_previous_break_character(int pos);
-	CL_TempString get_visible_text_before_selection();
-	CL_TempString get_visible_text_after_selection();
-	CL_TempString get_visible_selected_text();
+	CL_String get_visible_text_before_selection();
+	CL_String get_visible_text_after_selection();
+	CL_String get_visible_selected_text();
 	CL_String create_password(CL_String::size_type num_letters) const;
 	CL_Size get_visual_text_size(CL_GraphicContext &gc, CL_Font &font, int pos, int npos) const;
 	CL_Size get_visual_text_size(CL_GraphicContext &gc, CL_Font &font) const;

@@ -47,7 +47,7 @@ CL_SqliteConnectionProvider::CL_SqliteConnectionProvider(const CL_StringRef &db_
 	{
 		if (db)
 			sqlite3_close(db);
-		throw CL_Exception(cl_text("Unable to open database"));
+		throw CL_Exception("Unable to open database");
 	}
 }
 
@@ -71,7 +71,7 @@ CL_SqliteConnectionProvider::~CL_SqliteConnectionProvider()
 CL_DBCommandProvider *CL_SqliteConnectionProvider::create_command(const CL_StringRef &text, CL_DBCommand::Type type)
 {
 	if (type != CL_DBCommand::sql_statement)
-		throw CL_Exception(cl_text("Sqlite database connections only support SQL statement commands"));
+		throw CL_Exception("Sqlite database connections only support SQL statement commands");
 	else
 		return new CL_SqliteCommandProvider(this, text);
 }
@@ -79,7 +79,7 @@ CL_DBCommandProvider *CL_SqliteConnectionProvider::create_command(const CL_Strin
 CL_DBTransactionProvider *CL_SqliteConnectionProvider::begin_transaction(CL_DBTransaction::Type type)
 {
 	if (active_transaction)
-		throw CL_Exception(cl_text("Only one database transaction may be active for a connection"));
+		throw CL_Exception("Only one database transaction may be active for a connection");
 	else
 		return new CL_SqliteTransactionProvider(this, type);
 }
@@ -87,7 +87,7 @@ CL_DBTransactionProvider *CL_SqliteConnectionProvider::begin_transaction(CL_DBTr
 CL_DBReaderProvider *CL_SqliteConnectionProvider::execute_reader(CL_DBCommandProvider *command)
 {
 	if (active_reader)
-		throw CL_Exception(cl_text("Only one database reader may be active for a connection"));
+		throw CL_Exception("Only one database reader may be active for a connection");
 	else
 		return new CL_SqliteReaderProvider(this, dynamic_cast<CL_SqliteCommandProvider*>(command));
 }
@@ -96,7 +96,7 @@ CL_String CL_SqliteConnectionProvider::execute_scalar_string(CL_DBCommandProvide
 {
 	std::auto_ptr<CL_DBReaderProvider> reader(execute_reader(command));
 	if (!reader->retrieve_row())
-		throw CL_Exception(cl_text("Database command statement returned no value"));
+		throw CL_Exception("Database command statement returned no value");
 	CL_String value = reader->get_column_string(0);
 	reader->close();
 	return value;
@@ -106,7 +106,7 @@ int CL_SqliteConnectionProvider::execute_scalar_int(CL_DBCommandProvider *comman
 {
 	std::auto_ptr<CL_DBReaderProvider> reader(execute_reader(command));
 	if (!reader->retrieve_row())
-		throw CL_Exception(cl_text("Database command statement returned no value"));
+		throw CL_Exception("Database command statement returned no value");
 	int value = reader->get_column_int(0);
 	reader->close();
 	return value;

@@ -1,7 +1,0 @@
-<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
-	<lineedit class="" id="topic" text="" anchor_tl="0" anchor_br="0" dist_tl_x="48" dist_tl_y="16" dist_br_x="352" dist_br_y="37" geom="48,16,352,37"/>
-	<label class="" id="label1" text="Topic:" anchor_tl="0" anchor_br="0" dist_tl_x="8" dist_tl_y="16" dist_br_x="40" dist_br_y="37" geom="8,16,40,37"/>
-	<button class="" id="ok" text="OK" anchor_tl="0" anchor_br="0" dist_tl_x="184" dist_tl_y="48" dist_br_x="264" dist_br_y="69" geom="184,48,264,69"/>
-	<button class="" id="cancel" text="Cancel" anchor_tl="0" anchor_br="0" dist_tl_x="272" dist_tl_y="48" dist_br_x="352" dist_br_y="69" geom="272,48,352,69"/>
-	<dialog width="368" height="80"/>
-</gui>

@@ -98,13 +98,13 @@ void CL_SoundProvider_Wave_Impl::load(CL_IODevice &source)
 	char chunk_id[4];
 	source.read(chunk_id, 4);
 	if (memcmp(chunk_id, "RIFF", 4))
-		throw CL_Exception(cl_text("Expected RIFF header!"));
+		throw CL_Exception("Expected RIFF header!");
 	cl_uint32 chunk_size = source.read_uint32();
 
 	char format_id[4];
 	source.read(format_id, 4);
 	if (memcmp(format_id, "WAVE", 4))
-		throw CL_Exception(cl_text("Expected WAVE header!"));
+		throw CL_Exception("Expected WAVE header!");
 
 	cl_uint32 subchunk_pos = source.get_position();
 	cl_uint32 subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
@@ -121,7 +121,7 @@ void CL_SoundProvider_Wave_Impl::load(CL_IODevice &source)
 	else if (bits_per_sample == 8)
 		format = sf_8bit_unsigned;
 	else
-		throw CL_Exception(cl_text("Unsupported wave sample format"));
+		throw CL_Exception("Unsupported wave sample format");
 
 	cl_uint32 subchunk2_size = find_subchunk("data", source, subchunk_pos, chunk_size);
 
@@ -148,6 +148,6 @@ unsigned int CL_SoundProvider_Wave_Impl::find_subchunk(const char *chunk, CL_IOD
 		}
 		file_offset += subchunk1_size + 8;
 	}
-	throw CL_Exception(cl_text("Block not found!"));
+	throw CL_Exception("Block not found!");
 
 }

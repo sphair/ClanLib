@@ -141,9 +141,6 @@ void CL_InputContext_Impl::process_messages()
 		case CL_InputEvent::proximity_change:
 			event.device.sig_proximity_change().invoke(event, input_state);
 			break;
-		case CL_InputEvent::ball_moved:
-			event.device.sig_ball_move().invoke(event, input_state);
-			break;
 		default:	// Added to stop the compiler warning about "no_key" not handled in switch
 			break;
 		}

@@ -1,13 +1,16 @@
-lib_LTLIBRARIES = libclan21Database.la
+lib_LTLIBRARIES = libclan22Database.la
 
-libclan21Database_la_SOURCES = \
+libclan22Database_la_SOURCES = \
 precomp.cpp \
 db_command.cpp \
 db_connection.cpp \
 db_reader.cpp \
 db_transaction.cpp
 
-libclan21Database_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22Database_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanDatabase)
+
+libclan22Database_la_CXXFLAGS=$(clanDatabase_CXXFLAGS) $(extra_CFLAGS_clanDatabase)
 
 # EOF #

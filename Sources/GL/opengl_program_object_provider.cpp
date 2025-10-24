@@ -289,7 +289,7 @@ void CL_OpenGLProgramObjectProvider::set_uniformiv(const CL_StringRef &name, int
 	else if( size == 2 ) clUniform2iv(loc, count, data);	
 	else if( size == 3 ) clUniform3iv(loc, count, data);	
 	else if( size == 4 ) clUniform4iv(loc, count, data);	
-	else throw CL_Exception(cl_format(cl_text("Unsupported size given to uniform '%1'."), name));
+	else throw CL_Exception(cl_format("Unsupported size given to uniform '%1'.", name));
 }
 
 void CL_OpenGLProgramObjectProvider::set_uniform1f(const CL_StringRef &name, float p1)
@@ -353,7 +353,7 @@ void CL_OpenGLProgramObjectProvider::set_uniformfv(const CL_StringRef &name, int
 	else if( size == 2 ) clUniform2fv(loc, count, data);	
 	else if( size == 3 ) clUniform3fv(loc, count, data);	
 	else if( size == 4 ) clUniform4fv(loc, count, data);	
-	else throw CL_Exception(cl_format(cl_text("Unsupported size given to uniform '%1'."), name));
+	else throw CL_Exception(cl_format("Unsupported size given to uniform '%1'.", name));
 }
 
 void CL_OpenGLProgramObjectProvider::set_uniform_matrix(const CL_StringRef &name, int size, int count, bool transpose, float *data)
@@ -368,7 +368,7 @@ void CL_OpenGLProgramObjectProvider::set_uniform_matrix(const CL_StringRef &name
 	if( size == 2 ) clUniformMatrix2fv(loc, count, transpose, data);	
 	else if( size == 3 ) clUniformMatrix3fv(loc, count, transpose, data);	
 	else if( size == 4 ) clUniformMatrix4fv(loc, count, transpose, data);
-	else throw CL_Exception(cl_format(cl_text("Unsupported size given to uniform '%1'."), name));
+	else throw CL_Exception(cl_format("Unsupported size given to uniform '%1'.", name));
 }
 
 /////////////////////////////////////////////////////////////////////////////

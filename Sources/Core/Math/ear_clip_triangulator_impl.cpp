@@ -47,12 +47,12 @@ CL_EarClipTriangulator_Impl::CL_EarClipTriangulator_Impl()
 
 CL_EarClipTriangulator_Impl::~CL_EarClipTriangulator_Impl()
 {
-	for (int cnt = 0; cnt < vertices.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
 	{
 		delete vertices[cnt];
 	}
 
-	for (int cnt = 0; cnt < hole.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < hole.size(); cnt++)
 	{
 		delete hole[cnt];
 	}
@@ -65,7 +65,7 @@ std::vector<CL_Pointf> CL_EarClipTriangulator_Impl::get_vertices()
 {
 	std::vector<CL_Pointf> points;
 
-	for (int cnt = 0; cnt < vertices.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
 	{
 		points.push_back( CL_Pointf(vertices[cnt]->x, vertices[cnt]->y));
 	}
@@ -99,7 +99,7 @@ void CL_EarClipTriangulator_Impl::add_vertex(float x, float y)
 
 void CL_EarClipTriangulator_Impl::clear()
 {
-	for (int cnt = 0; cnt < vertices.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < vertices.size(); cnt++)
 	{
 		delete vertices[cnt];
 	}
@@ -240,11 +240,11 @@ void CL_EarClipTriangulator_Impl::end_hole()
 	float inner_point_rel;
 	float distance = FLT_MAX;
 
-	for (int vertex_cnt = 0; vertex_cnt < vertices.size(); vertex_cnt++)
+	for (unsigned int vertex_cnt = 0; vertex_cnt < vertices.size(); vertex_cnt++)
 	{
 		CL_Pointf tmp_outer_point = CL_Pointf(vertices[vertex_cnt]->x,vertices[vertex_cnt]->y);
 
-		for (int hole_cnt = 0; hole_cnt < hole.size(); hole_cnt++)
+		for (unsigned int hole_cnt = 0; hole_cnt < hole.size(); hole_cnt++)
 		{
 
 			CL_Pointf tmp_line_start(hole[hole_cnt]->x, hole[hole_cnt]->y);
@@ -508,7 +508,7 @@ void CL_EarClipTriangulator_Impl::set_bridge_vertice_offset(
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Error: CL_EarClipTriangulator: division by zero in function set_bridge_vertice_offset. Duplicated end points on a cyclic curve?"));
+		throw CL_Exception("Error: CL_EarClipTriangulator: division by zero in function set_bridge_vertice_offset. Duplicated end points on a cyclic curve?");
 	}
 	
 	// Changed from 0.01f to 0.001f (13 Jan 2009) to stop pixel sized gaps in a font [rombust]

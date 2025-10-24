@@ -112,11 +112,7 @@ private:
 	CL_FontDescription get_registered_font(const CL_FontDescription &desc);
 #endif
 
-#ifdef WIN32
-	CL_FontEngine_Win32 *font_engine;
-#else
-	CL_FontEngine_Freetype *font_engine;
-#endif
+	CL_FontEngine *font_engine;
 
 #ifndef WIN32
 	static std::map<CL_String /*font_typeface*/, CL_String /*font_filename*/ > font_register_cache;

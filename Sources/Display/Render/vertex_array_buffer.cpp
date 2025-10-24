@@ -78,10 +78,16 @@ CL_VertexArrayBuffer::~CL_VertexArrayBuffer()
 /////////////////////////////////////////////////////////////////////////////
 // CL_VertexArrayBuffer Attributes:
 
+void CL_VertexArrayBuffer::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_VertexArrayBuffer is null");
+}
+
 void *CL_VertexArrayBuffer::get_data()
 {
 	if (impl->lock_count <= 0)
-		throw CL_Exception(cl_text("Attempted to retrieve vertex array buffer data without locking it first."));
+		throw CL_Exception("Attempted to retrieve vertex array buffer data without locking it first.");
 	return impl->provider->get_data();
 }
 

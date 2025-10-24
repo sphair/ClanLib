@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+  <!--<head>
+    <title>
+      display/box/float/clear test
+    </title>
+  </head>-->
+  <body>
+    <dl>
+      <dt>
+        toggle
+      </dt>
+      <dd>
+        <ul>
+          <li>
+            the way
+          </li>
+          <li id="bar">
+            <p>
+              the world ends
+            </p>
+            <form action="./" method="get">
+              <p>
+                bang
+                <input type="radio" name="foo" value="off"/>
+					    </p>
+              <p>
+                whimper
+                <input type="radio" name="foo2" value="on"/>
+					    </p>
+            </form>
+          </li>
+          <li>
+            i grow old
+          </li>
+          <li id="baz">
+            pluot?
+          </li>
+        </ul>
+        <blockquote>
+          <address>
+            bar maids,
+          </address>
+        </blockquote>
+        <h1>
+          sing to me, erbarme dich
+        </h1>
+      </dd>
+    </dl>
+    <p class="lastblock">
+      This is a nonsensical document, but syntactically valid HTML 4.0. All 100%-conformant CSS1 agents should be able to render the document elements above this paragraph indistinguishably (to the pixel) from this
+      <a href="sec5526c.gif">reference rendering,</a>
+      (except font rasterization and form widgets). All discrepancies should be traceable to CSS1 implementation shortcomings. Once you have finished evaluating this test, you can return to the <a href="sec5526c.htm">parent page</a>.
+    </p>
+  </body>
+</html>

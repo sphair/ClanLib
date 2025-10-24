@@ -76,22 +76,22 @@ CL_FontMetrics_Impl::~CL_FontMetrics_Impl()
 
 CL_String::char_type CL_FontMetrics_Impl::get_first_char() const
 {
-	return CL_String::char_type(cl_text('\0')); // todo
+	return CL_String::char_type('\0'); // todo
 }
 
 CL_String::char_type CL_FontMetrics_Impl::get_last_char() const
 {
-	return CL_String::char_type(cl_text('\0')); // todo	
+	return CL_String::char_type('\0'); // todo	
 }
 
 CL_String::char_type CL_FontMetrics_Impl::get_default_char() const
 {
-	return CL_String::char_type(cl_text('?'));
+	return CL_String::char_type('?');
 }
 
 CL_String::char_type CL_FontMetrics_Impl::get_word_break_char() const
 {
-	return CL_String::char_type(cl_text(' '));
+	return CL_String::char_type(' ');
 }
 
 /////////////////////////////////////////////////////////////////////////////

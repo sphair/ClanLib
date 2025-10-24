@@ -128,7 +128,7 @@ void CL_NetGameConnection_Impl::connection_main()
 			else if (wakeup_reason == 1) // we got data to receive
 			{
 				CL_NetGameEvent incoming_event = CL_NetGameNetworkData::receive_data(connection);
-				if (incoming_event.get_name() == cl_text("_close"))
+				if (incoming_event.get_name() == "_close")
 					break;
 				site->add_network_event(CL_NetGameNetworkEvent(base, incoming_event));
 			}

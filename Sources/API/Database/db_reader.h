@@ -52,7 +52,7 @@ public:
 
 	/// \brief Constructs a DBReader
 	///
-	/// \param CL_DBReader_Impl = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DBReader(const CL_SharedPtr<CL_DBReader_Impl> &impl);
 
 	~CL_DBReader();

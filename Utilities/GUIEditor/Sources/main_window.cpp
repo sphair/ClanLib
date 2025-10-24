@@ -70,9 +70,9 @@ MainWindow::~MainWindow()
 CL_GUITopLevelDescription MainWindow::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
-	desc.set_title(cl_text("ClanLib GUI Editor"));
+	desc.set_title("ClanLib GUI Editor");
 	desc.set_allow_resize(true);
-	desc.set_position(CL_Rect(200, 200, 1100, 768), false);
+	desc.set_size(CL_Size(1100, 768), false);
 	return desc;
 }
 
@@ -82,53 +82,53 @@ void MainWindow::create_components()
 	toolbar_main = new CL_ToolBar(this);
 	toolbar_tools = new CL_ToolBar(this);
 	statusbar = new CL_StatusBar(this);
-	statusbar->set_status_text(cl_text("Ready"));
+	statusbar->set_status_text("Ready");
 	view_border = new ViewBorder(this);
 	property_component = new PropertyComponent(this);
 
-	toolbar_tools->set_id_name(cl_text("tools"));
+	toolbar_tools->set_id_name("tools");
 	toolbar_tools->set_single_selection(true);
 }
 
 void MainWindow::populate_menubar()
 {
 	CL_PopupMenu menu_file;
-	menu_file.insert_item(cl_text("New")).set_enabled(false);
-	menu_file.insert_item(cl_text("Open")).set_enabled(false);
-	menu_file.insert_item(cl_text("Save")).set_enabled(false);
-	menu_file.insert_item(cl_text("Exit")).set_enabled(false);
-	menubar->add_menu(cl_text("File"), menu_file);
+	menu_file.insert_item("New").set_enabled(false);
+	menu_file.insert_item("Open").set_enabled(false);
+	menu_file.insert_item("Save").set_enabled(false);
+	menu_file.insert_item("Exit").set_enabled(false);
+	menubar->add_menu("File", menu_file);
 
 	CL_PopupMenu menu_edit;
-	menu_edit.insert_item(cl_text("Undo")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Redo")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Cut")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Copy")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Paste")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Delete")).set_enabled(false);
-	menu_edit.insert_item(cl_text("Select All")).set_enabled(false);
-	menubar->add_menu(cl_text("Edit"), menu_edit);
+	menu_edit.insert_item("Undo").set_enabled(false);
+	menu_edit.insert_item("Redo").set_enabled(false);
+	menu_edit.insert_item("Cut").set_enabled(false);
+	menu_edit.insert_item("Copy").set_enabled(false);
+	menu_edit.insert_item("Paste").set_enabled(false);
+	menu_edit.insert_item("Delete").set_enabled(false);
+	menu_edit.insert_item("Select All").set_enabled(false);
+	menubar->add_menu("Edit", menu_edit);
 /*
 	CL_PopupMenu menu_view;
-	menubar->add_menu(cl_text("View"), menu_view);
+	menubar->add_menu("View", menu_view);
 */
 /*	CL_PopupMenu menu_tools;
-	menu_tools.insert_item(cl_text("Options"));
+	menu_tools.insert_item("Options");
 	CL_PopupMenuItem pmi_source_generator = menu_tools.insert_item("Source Generator...");
 	pmi_source_generator.func_clicked().set(this, &MainWindow::on_menu_source_generator);
-	menubar->add_menu(cl_text("Tools"), menu_tools);*/
+	menubar->add_menu("Tools", menu_tools);*/
 
 	CL_PopupMenu menu_help;
-	menu_help.insert_item(cl_text("About GUI Editor")).set_enabled(false);
-	menubar->add_menu(cl_text("Help"), menu_help);
+	menu_help.insert_item("About GUI Editor").set_enabled(false);
+	menubar->add_menu("Help", menu_help);
 }
 
 void MainWindow::populate_tools_toolbar()
 {
 	toolbar_tools->func_item_selected().set(this, &MainWindow::on_tool_selected);
 
-	CL_Sprite sprite(get_gc(), cl_text("gfx/pointer.png"));
-	CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, cl_text("Select"), 1337);
+	CL_Sprite sprite(get_gc(), "gfx/pointer.png");
+	CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, "Select", 1337);
 	tbi.set_toggling(true);
 
 	const std::vector<ComponentType *> &types = ComponentTypes::get_types();
@@ -143,9 +143,9 @@ void MainWindow::populate_tools_toolbar()
 void MainWindow::populate_main_toolbar()
 {
 	toolbar_main->func_item_clicked().set(this, &MainWindow::on_main_toolbar_clicked);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("new_16x16.png")), 0, cl_text("New"), main_toolbar_new);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("open_16x16.png")), 0, cl_text("Open"), main_toolbar_open);
-	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("save_16x16.png")), 0, cl_text("Save As"), main_toolbar_save);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "new_16x16.png"), 0, "New", main_toolbar_new);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "open_16x16.png"), 0, "Open", main_toolbar_open);
+	toolbar_main->insert_item(CL_Sprite(get_gc(), "save_16x16.png"), 0, "Save As", main_toolbar_save);
 }
 
 bool MainWindow::on_close()

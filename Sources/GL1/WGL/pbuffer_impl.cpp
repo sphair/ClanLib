@@ -62,7 +62,7 @@ public:
 	}
 	virtual const CL_RenderWindowProvider * new_worker_context() const
 	{
-		throw CL_Exception(cl_text("Pixel buffer worker threads are not implemented"));
+		throw CL_Exception("Pixel buffer worker threads are not implemented");
 	}
 
 private:
@@ -78,7 +78,7 @@ CL_PBuffer_GL1_Impl::CL_PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provid
 	CL_SharedGCData::add_disposable(this);
 
 	if (!gc_provider)
-		throw CL_Exception(cl_text("Unexpected provider"));
+		throw CL_Exception("Unexpected provider");
 
 }
 
@@ -127,7 +127,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_WGL &window_provider, CL_S
 
 	if (cl1WglCreatePbufferARB == 0)
 	{
-		throw CL_Exception(cl_text("WGL_ARB_pbuffer OpenGL extension not supported by this card"));
+		throw CL_Exception("WGL_ARB_pbuffer OpenGL extension not supported by this card");
 	}
 
 	int attribList[1] = { 0 };
@@ -169,7 +169,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_WGL &window_provider, CL_S
 
 	HGLRC share_context = window_provider.get_share_context();
 	if (share_context == 0)
-		throw CL_Exception(cl_text("Shared OpenGL Context is not valid"));
+		throw CL_Exception("Shared OpenGL Context is not valid");
 
 	wglShareLists(share_context, pbuffer_context);
 

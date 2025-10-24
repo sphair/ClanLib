@@ -74,8 +74,8 @@
 #include "Display/Image/pixel_buffer.h"
 #include "Display/Image/pixel_buffer_help.h"
 #include "Display/Image/pixel_format.h"
-#include "Display/Image/pixel_format_type.h"
 #include "Display/Image/icon_set.h"
+#include "Display/Image/image_import_description.h"
 #include "Display/ImageProviders/jpeg_compressor.h"
 #include "Display/ImageProviders/jpeg_decompressor.h"
 #include "Display/ImageProviders/jpeg_provider.h"
@@ -109,6 +109,7 @@
 #include "Display/TargetProviders/display_target_provider.h"
 #include "Display/TargetProviders/display_window_provider.h"
 #include "Display/TargetProviders/element_array_buffer_provider.h"
+#include "Display/TargetProviders/pixel_buffer_provider.h"
 #include "Display/TargetProviders/font_provider.h"
 #include "Display/TargetProviders/frame_buffer_provider.h"
 #include "Display/TargetProviders/graphic_context_provider.h"
@@ -123,7 +124,6 @@
 #include "Display/Window/cursor.h"
 #include "Display/Window/display_window.h"
 #include "Display/Window/display_window_description.h"
-#include "Display/Window/display_window_mode.h"
 #include "Display/Window/input_context.h"
 #include "Display/Window/input_device.h"
 #include "Display/Window/input_event.h"
@@ -134,155 +134,46 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-dll.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-dll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-dll-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-dll-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mtdll.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mtdll.lib")
-					#pragma comment(lib, "libpng-x64-static-mtdll.lib")
-					#pragma comment(lib, "freetype-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mtdll.lib")
-					#pragma comment(lib, "libjpeg-static-mtdll.lib")
-					#pragma comment(lib, "libpng-static-mtdll.lib")
-					#pragma comment(lib, "freetype-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "libpng-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "freetype-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mtdll-debug.lib")
-					#pragma comment(lib, "libjpeg-static-mtdll-debug.lib")
-					#pragma comment(lib, "libpng-static-mtdll-debug.lib")
-					#pragma comment(lib, "freetype-static-mtdll-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "winmm.lib")
-			#pragma comment(lib, "dinput8.lib")
-			#pragma comment(lib, "dxguid.lib")
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
+	#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanDisplay-dll.lib")
+			#pragma comment(lib, "libjpeg-dll.lib")
+			#pragma comment(lib, "libpng-dll.lib")
+			#pragma comment(lib, "freetype-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanDisplay-static-mtdll.lib")
+			#pragma comment(lib, "libjpeg-static-mtdll.lib")
+			#pragma comment(lib, "libpng-static-mtdll.lib")
+			#pragma comment(lib, "freetype-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mt.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mt.lib")
-					#pragma comment(lib, "libpng-x64-static-mt.lib")
-					#pragma comment(lib, "freetype-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mt.lib")
-					#pragma comment(lib, "libjpeg-static-mt.lib")
-					#pragma comment(lib, "libpng-static-mt.lib")
-					#pragma comment(lib, "freetype-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mt-debug.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mt-debug.lib")
-					#pragma comment(lib, "libpng-x64-static-mt-debug.lib")
-					#pragma comment(lib, "freetype-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mt-debug.lib")
-					#pragma comment(lib, "libjpeg-static-mt-debug.lib")
-					#pragma comment(lib, "libpng-static-mt-debug.lib")
-					#pragma comment(lib, "freetype-static-mt-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "winmm.lib")
-			#pragma comment(lib, "dinput8.lib")
-			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "clanDisplay-static-mt.lib")
+			#pragma comment(lib, "libjpeg-static-mt.lib")
+			#pragma comment(lib, "libpng-static-mt.lib")
+			#pragma comment(lib, "freetype-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-dll-uc.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-dll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-dll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-dll-uc-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mtdll-uc.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mtdll.lib")
-					#pragma comment(lib, "libpng-x64-static-mtdll.lib")
-					#pragma comment(lib, "freetype-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mtdll-uc.lib")
-					#pragma comment(lib, "libjpeg-static-mtdll.lib")
-					#pragma comment(lib, "libpng-static-mtdll.lib")
-					#pragma comment(lib, "freetype-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mtdll-uc-debug.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "libpng-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "freetype-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mtdll-uc-debug.lib")
-					#pragma comment(lib, "libjpeg-static-mtdll-debug.lib")
-					#pragma comment(lib, "libpng-static-mtdll-debug.lib")
-					#pragma comment(lib, "freetype-static-mtdll-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "winmm.lib")
-			#pragma comment(lib, "dinput8.lib")
-			#pragma comment(lib, "dxguid.lib")
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanDisplay-dll-debug.lib")
+			#pragma comment(lib, "libjpeg-dll-debug.lib")
+			#pragma comment(lib, "libpng-dll-debug.lib")
+			#pragma comment(lib, "freetype-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanDisplay-static-mtdll-debug.lib")
+			#pragma comment(lib, "libjpeg-static-mtdll-debug.lib")
+			#pragma comment(lib, "libpng-static-mtdll-debug.lib")
+			#pragma comment(lib, "freetype-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mt-uc.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mt.lib")
-					#pragma comment(lib, "libpng-x64-static-mt.lib")
-					#pragma comment(lib, "freetype-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mt-uc.lib")
-					#pragma comment(lib, "libjpeg-static-mt.lib")
-					#pragma comment(lib, "libpng-static-mt.lib")
-					#pragma comment(lib, "freetype-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanDisplay-x64-static-mt-uc-debug.lib")
-					#pragma comment(lib, "libjpeg-x64-static-mt-debug.lib")
-					#pragma comment(lib, "libpng-x64-static-mt-debug.lib")
-					#pragma comment(lib, "freetype-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanDisplay-static-mt-uc-debug.lib")
-					#pragma comment(lib, "libjpeg-static-mt-debug.lib")
-					#pragma comment(lib, "libpng-static-mt-debug.lib")
-					#pragma comment(lib, "freetype-static-mt-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "winmm.lib")
-			#pragma comment(lib, "dinput8.lib")
-			#pragma comment(lib, "dxguid.lib")
+			#pragma comment(lib, "clanDisplay-static-mt-debug.lib")
+			#pragma comment(lib, "libjpeg-static-mt-debug.lib")
+			#pragma comment(lib, "libpng-static-mt-debug.lib")
+			#pragma comment(lib, "freetype-static-mt-debug.lib")
 		#endif
 	#endif
+	#pragma comment(lib, "winmm.lib")
+	#pragma comment(lib, "dinput8.lib")
+	#pragma comment(lib, "dxguid.lib")
 #endif
-

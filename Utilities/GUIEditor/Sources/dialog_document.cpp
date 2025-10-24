@@ -34,8 +34,8 @@
 DialogDocument::DialogDocument()
 : next_free_id(1), container(0)
 {
-	CL_DomElement element_gui = doc.create_element(cl_text("gui")); 
-	element_gui.set_attribute(cl_text("xmlns"), namespace_uri);
+	CL_DomElement element_gui = doc.create_element("gui"); 
+	element_gui.set_attribute("xmlns", namespace_uri);
 	doc.append_child(element_gui);
 	container = new DialogContainer(this, element_gui);
 }
@@ -45,15 +45,15 @@ DialogDocument::~DialogDocument()
 	delete container;
 }
 
-CL_String DialogDocument::namespace_uri = cl_text("http://clanlib.org/xmlns/gui-1.0");
+CL_String DialogDocument::namespace_uri = "http://clanlib.org/xmlns/gui-1.0";
 
 void DialogDocument::load(const CL_StringRef &name)
 {
 	CL_DomDocument doc;
 	CL_File file = CL_File(name, CL_File::open_existing, CL_File::access_read);
 	doc.load(file);
-	if (doc.get_document_element().get_local_name() != cl_text("gui") || doc.get_document_element().get_namespace_uri() != namespace_uri)
-		throw CL_Exception(cl_format(cl_text("%1 is not a valid GUI Definition XML file"), name));
+	if (doc.get_document_element().get_local_name() != "gui" || doc.get_document_element().get_namespace_uri() != namespace_uri)
+		throw CL_Exception(cl_format("%1 is not a valid GUI Definition XML file", name));
 
 	delete container;
 	next_free_id = 1;

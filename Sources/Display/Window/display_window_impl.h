@@ -52,9 +52,12 @@ public:
 		site.sig_resize = &sig_resize;
 		site.sig_paint = &sig_paint;
 		site.sig_window_close = &sig_window_close;
+		site.sig_window_destroy = &sig_window_destroy;
 		site.sig_window_minimized = &sig_window_minimized;
 		site.sig_window_maximized = &sig_window_maximized;
 		site.func_window_resize = &func_window_resize;
+		site.func_minimize_clicked = &func_minimize_clicked;
+		site.sig_window_moved = &sig_window_moved;
 	}
 
 	~CL_DisplayWindow_Impl()
@@ -71,9 +74,12 @@ public:
 	CL_Signal_v2<int, int> sig_resize;
 	CL_Signal_v1<const CL_Rect &> sig_paint;
 	CL_Signal_v0 sig_window_close;
+	CL_Signal_v0 sig_window_destroy;
 	CL_Signal_v0 sig_window_minimized;
 	CL_Signal_v0 sig_window_maximized;
+	CL_Signal_v0 sig_window_moved;
 	CL_Callback_v1<CL_Rect &> func_window_resize;
+	CL_Callback_0<bool> func_minimize_clicked;
 	CL_DisplayWindowSite site;
 	CL_Cursor current_cursor;
 };

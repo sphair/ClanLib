@@ -37,10 +37,6 @@ CL_CDDrive::CL_CDDrive()
 {
 }
 
-CL_CDDrive::CL_CDDrive(const CL_CDDrive &copy) : impl(copy.impl)
-{
-}
-
 CL_CDDrive::~CL_CDDrive()
 {
 }
@@ -52,6 +48,12 @@ std::vector<CL_CDDrive> &CL_CDDrive::get_drives()
 {
 	static std::vector<CL_CDDrive> drives;
 	return drives;
+}
+
+void CL_CDDrive::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_CDDrive is null");
 }
 
 CL_String8 CL_CDDrive::get_drive_path()

@@ -1,0 +1,39 @@
+
+lineedit
+{
+	bg-image: ComponentBackground; 
+	bg-image-sizing: stretch;
+	bg-image-sizing-left: 8;
+	bg-image-sizing-right: 8;
+	bg-image-sizing-top: 8;
+	bg-image-sizing-bottom: 8;
+	
+	border-top: 0;
+	border-left: 10;
+	border-right: 10;
+	border-bottom: 0;
+
+	text-color: #E6D789;
+	
+	font-weight: bold;
+	font-size: 22;
+	font-family: VeraBd;
+}
+
+lineedit cursor
+{
+	preferred-width: 1;
+	
+	bg-color: yellow;
+}
+
+lineedit selection
+{
+	bg-color: gray20;
+
+	text-color: white;
+
+	font-weight: bold;
+	font-size: 22;
+	font-family: VeraBd;
+}

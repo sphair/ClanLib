@@ -122,6 +122,10 @@ void TestApp::test_line_segment2()
 
 		line_b = CL_LineSegment2f(CL_Vec2f(2.0f, 8.0f), CL_Vec2f(16.0f + 14.0f, 15.0f + 7.0f));
 		if (!line_a.intersects(line_b, true) ) fail();
+
+		line_a = CL_LineSegment2f(CL_Vec2f(50.0f,75.0f),CL_Vec2f(75.0f,50.0f));
+		line_b = CL_LineSegment2f(CL_Vec2f(73.4f,98.0f),CL_Vec2f(73.4f,73.4f));
+		if (line_a.intersects(line_b, false)) fail();
 	}
 
 	CL_Console::write_line("   Function: get_intersection()");

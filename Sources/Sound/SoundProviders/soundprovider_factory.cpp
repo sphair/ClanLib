@@ -56,7 +56,7 @@ CL_SoundProvider *CL_SoundProviderFactory::load(
 {
 	if (!type.empty())
 	{
-		if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown sound provider type ") + type);
+		if (types.find(type) == types.end()) throw CL_Exception("Unknown sound provider type " + type);
 
 		CL_SoundProviderType *factory = types[type];
 		return factory->load(filename, streamed, directory);
@@ -66,7 +66,7 @@ CL_SoundProvider *CL_SoundProviderFactory::load(
 	CL_String ext = CL_PathHelp::get_extension(filename);
 	if (ext.empty()) ext = filename;
 	ext = CL_StringHelp::text_to_lower(ext);
-	if (types.find(ext) == types.end()) throw CL_Exception(CL_String(cl_text("Unknown sound provider type ")) + ext);
+	if (types.find(ext) == types.end()) throw CL_Exception("Unknown sound provider type " + ext);
 
 	CL_SoundProviderType *factory = types[ext];
 	return factory->load(filename, streamed, directory);
@@ -88,7 +88,7 @@ CL_SoundProvider *CL_SoundProviderFactory::load(
 	bool streamed,
 	const CL_String &type)
 {
-	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown sound provider type ") + type);
+	if (types.find(type) == types.end()) throw CL_Exception("Unknown sound provider type " + type);
 
 	CL_SoundProviderType *factory = types[type];
 	return factory->load(file, streamed);

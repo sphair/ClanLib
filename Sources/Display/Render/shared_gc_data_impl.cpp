@@ -48,9 +48,13 @@ CL_Signal_v0 &CL_SharedGCData_Impl::func_gc_destruction_imminent()
 	return sig_destruction_imminent;
 }
 
-CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
+CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
 {
-	CL_String key = virtual_directory.get_identifier() + filename;
+	CL_String alpha_code = "A";
+	if (import_desc.get_premultiply_alpha())
+		alpha_code = "P";
+
+	CL_String key = virtual_directory.get_identifier() + filename + alpha_code;
 
 	std::vector<SharedTextureMap>::size_type i;
 	for (i=0; i<textures.size(); i++)
@@ -61,7 +65,7 @@ CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_St
 			if (textures[i].texture_impl.is_invalid_weak_link())
 			{
 				// Remove from the cache
-				unload_texture(filename, virtual_directory);
+				unload_texture(filename, virtual_directory, import_desc);
 				break;
 			}
 			CL_SharedPtr<CL_Texture_Impl> texture_impl = textures[i].texture_impl.to_sharedptr();
@@ -69,14 +73,18 @@ CL_Texture CL_SharedGCData_Impl::load_texture(CL_GraphicContext &gc, const CL_St
 		}
 	}
 
-	CL_Texture texture = CL_Texture(gc, filename, virtual_directory);
+	CL_Texture texture = CL_Texture(gc, filename, virtual_directory, import_desc);
 	textures.push_back(SharedTextureMap(key, texture));
 	return texture;
 }
 
-void CL_SharedGCData_Impl::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
+void CL_SharedGCData_Impl::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
 {
-	CL_String key = virtual_directory.get_identifier() + filename;
+	CL_String alpha_code = "A";
+	if (import_desc.get_premultiply_alpha())
+		alpha_code = "P";
+
+	CL_String key = virtual_directory.get_identifier() + filename + alpha_code;
 
 	std::vector<SharedTextureMap>::iterator it;
 	for (it=textures.begin(); it<textures.end(); ++it)

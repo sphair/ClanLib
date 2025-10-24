@@ -143,11 +143,6 @@ enum CL_DisplayDefines
 	// BlendEquationMode:
 
 	CL_LOGIC_OP                       = 0x0BF1,
-	// CL_FUNC_ADD
-	// CL_MIN
-	// CL_MAX
-	// CL_FUNC_SUBTRACT
-	// CL_FUNC_REVERSE_SUBTRACT
 
 	// BlendingFactorDest:
 
@@ -159,47 +154,17 @@ enum CL_DisplayDefines
 	CL_ONE_MINUS_SRC_ALPHA            = 0x0303,
 	CL_DST_ALPHA                      = 0x0304,
 	CL_ONE_MINUS_DST_ALPHA            = 0x0305,
-	// CL_CONSTANT_COLOR
-	// CL_ONE_MINUS_CONSTANT_COLOR
-	// CL_CONSTANT_ALPHA
-	// CL_ONE_MINUS_CONSTANT_ALPHA
 
 	// BlendingFactorSrc:
 
-	// CL_ZERO
-	// CL_ONE
 	CL_DST_COLOR                      = 0x0306,
 	CL_ONE_MINUS_DST_COLOR            = 0x0307,
 	CL_SRC_ALPHA_SATURATE             = 0x0308,
-	// CL_SRC_ALPHA
-	// CL_ONE_MINUS_SRC_ALPHA
-	// CL_DST_ALPHA
-	// CL_ONE_MINUS_DST_ALPHA
-	// CL_CONSTANT_COLOR
-	// CL_ONE_MINUS_CONSTANT_COLOR
-	// CL_CONSTANT_ALPHA
-	// CL_ONE_MINUS_CONSTANT_ALPHA
 
 	// Boolean:
 
 	CL_TRUE                           = 1,
 	CL_FALSE                          = 0,
-
-	// ClearBufferMask:
-
-	// COLOR_BUFFER_BIT
-	// ACCUM_BUFFER_BIT
-	// STENCIL_BUFFER_BIT
-	// DEPTH_BUFFER_BIT
-
-	// ClientArrayType:
-
-	// VERTEX_ARRAY
-	// NORMAL_ARRAY
-	// COLOR_ARRAY
-	// INDEX_ARRAY
-	// TEXTURE_COORD_ARRAY
-	// EDGE_FLAG_ARRAY
 
 	// ClipPlaneName:
 
@@ -209,68 +174,6 @@ enum CL_DisplayDefines
 	CL_CLIP_PLANE3                    = 0x3003,
 	CL_CLIP_PLANE4                    = 0x3004,
 	CL_CLIP_PLANE5                    = 0x3005,
-
-	// ColorMaterialFace:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
-
-	// ColorMaterialParameter:
-
-	// CL_AMBIENT
-	// CL_DIFFUSE
-	// CL_SPECULAR
-	// CL_EMISSION
-	// CL_AMBIENT_AND_DIFFUSE
-
-	// ColorPointerType:
-
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// ColorTableParameterPName:
-
-	// CL_COLOR_TABLE_SCALE
-	// CL_COLOR_TABLE_BIAS
-
-	// ColorTableTarget:
-
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_PROXY_COLOR_TABLE
-	// CL_PROXY_POST_CONVOLUTION_COLOR_TABLE
-	// CL_PROXY_POST_COLOR_MATRIX_COLOR_TABLE
-
-	// ConvolutionBorderMode:
-
-	// CL_REDUCE
-	// CL_IGNORE_BORDER
-	// CL_CONSTANT_BORDER
-
-	// ConvolutionParameter:
-
-	// CL_CONVOLUTION_BORDER_MODE
-	// CL_CONVOLUTION_FILTER_SCALE
-	// CL_CONVOLUTION_FILTER_BIAS
-
-	// ConvolutionTarget:
-
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-
-	// CullFaceMode:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
 
 	// DataType:
 
@@ -285,17 +188,6 @@ enum CL_DisplayDefines
 	CL_3_BYTES                        = 0x1408,
 	CL_4_BYTES                        = 0x1409,
 	CL_DOUBLE                         = 0x140A,
-
-	// DepthFunction:
-
-	// CL_NEVER
-	// CL_LESS
-	// CL_EQUAL
-	// CL_LEQUAL
-	// CL_GREATER
-	// CL_NOTEQUAL
-	// CL_GEQUAL
-	// CL_ALWAYS
 
 	// DrawBufferMode:
 
@@ -313,85 +205,6 @@ enum CL_DisplayDefines
 	CL_AUX1                           = 0x040A,
 	CL_AUX2                           = 0x040B,
 	CL_AUX3                           = 0x040C,
-
-	// Enable:
-
-	// CL_FOG
-	// CL_LIGHTING
-	// CL_TEXTURE_1D
-	// CL_TEXTURE_2D
-	// CL_LINE_STIPPLE
-	// CL_POLYGON_STIPPLE
-	// CL_CULL_FACE
-	// CL_ALPHA_TEST
-	// CL_BLEND
-	// CL_INDEX_LOGIC_OP
-	// CL_COLOR_LOGIC_OP
-	// CL_DITHER
-	// CL_STENCIL_TEST
-	// CL_DEPTH_TEST
-	// CL_CLIP_PLANE0
-	// CL_CLIP_PLANE1
-	// CL_CLIP_PLANE2
-	// CL_CLIP_PLANE3
-	// CL_CLIP_PLANE4
-	// CL_CLIP_PLANE5
-	// CL_LIGHT0
-	// CL_LIGHT1
-	// CL_LIGHT2
-	// CL_LIGHT3
-	// CL_LIGHT4
-	// CL_LIGHT5
-	// CL_LIGHT6
-	// CL_LIGHT7
-	// CL_TEXTURE_GEN_S
-	// CL_TEXTURE_GEN_T
-	// CL_TEXTURE_GEN_R
-	// CL_TEXTURE_GEN_Q
-	// CL_MAP1_VERTEX_3
-	// CL_MAP1_VERTEX_4
-	// CL_MAP1_COLOR_4
-	// CL_MAP1_INDEX
-	// CL_MAP1_NORMAL
-	// CL_MAP1_TEXTURE_COORD_1
-	// CL_MAP1_TEXTURE_COORD_2
-	// CL_MAP1_TEXTURE_COORD_3
-	// CL_MAP1_TEXTURE_COORD_4
-	// CL_MAP2_VERTEX_3
-	// CL_MAP2_VERTEX_4
-	// CL_MAP2_COLOR_4
-	// CL_MAP2_INDEX
-	// CL_MAP2_NORMAL
-	// CL_MAP2_TEXTURE_COORD_1
-	// CL_MAP2_TEXTURE_COORD_2
-	// CL_MAP2_TEXTURE_COORD_3
-	// CL_MAP2_TEXTURE_COORD_4
-	// CL_POINT_SMOOTH
-	// CL_LINE_SMOOTH
-	// CL_POLYGON_SMOOTH
-	// CL_SCISSOR_TEST
-	// CL_COLOR_MATERIAL
-	// CL_NORMALIZE
-	// CL_AUTO_NORMAL
-	// CL_VERTEX_ARRAY
-	// CL_NORMAL_ARRAY
-	// CL_COLOR_ARRAY
-	// CL_INDEX_ARRAY
-	// CL_TEXTURE_COORD_ARRAY
-	// CL_EDGE_FLAG_ARRAY
-	// CL_POLYGON_OFFSET_POINT
-	// CL_POLYGON_OFFSET_LINE
-	// CL_POLYGON_OFFSET_FILL
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-	// CL_SEPARABLE_2D
-	// CL_HISTOGRAM
-	// CL_MINMAX
-	// CL_RESCALE_NORMAL
-	// CL_TEXTURE_3D
 
 	// ErrorCode:
 
@@ -429,88 +242,16 @@ enum CL_DisplayDefines
 	CL_EXP                          = 0x0800,
 	CL_EXP2                         = 0x0801,
 
-	// FogParameter:
-
-	// CL_FOG_COLOR
-	// CL_FOG_DENSITY
-	// CL_FOG_END
-	// CL_FOG_INDEX
-	// CL_FOG_MODE
-	// CL_FOG_START
-
 	// FrontFaceDirection:
 
 	CL_CW                           = 0x0900,
 	CL_CCW                          = 0x0901,
-
-	// GetColorTableParameterPName:
-
-	// CL_COLOR_TABLE_SCALE
-	// CL_COLOR_TABLE_BIAS
-	// CL_COLOR_TABLE_FORMAT
-	// CL_COLOR_TABLE_WIDTH
-	// CL_COLOR_TABLE_RED_SIZE
-	// CL_COLOR_TABLE_GREEN_SIZE
-	// CL_COLOR_TABLE_BLUE_SIZE
-	// CL_COLOR_TABLE_ALPHA_SIZE
-	// CL_COLOR_TABLE_LUMINANCE_SIZE
-	// CL_COLOR_TABLE_INTENSITY_SIZE
-
-	// GetConvolutionParameterPName:
-
-	// CL_CONVOLUTION_BORDER_COLOR
-	// CL_CONVOLUTION_BORDER_MODE
-	// CL_CONVOLUTION_FILTER_SCALE
-	// CL_CONVOLUTION_FILTER_BIAS
-	// CL_CONVOLUTION_FORMAT
-	// CL_CONVOLUTION_WIDTH
-	// CL_CONVOLUTION_HEIGHT
-	// CL_MAX_CONVOLUTION_WIDTH
-	// CL_MAX_CONVOLUTION_HEIGHT
-
-	// GetHistogramParameterPName:
-
-	// CL_HISTOGRAM_WIDTH
-	// CL_HISTOGRAM_FORMAT
-	// CL_HISTOGRAM_RED_SIZE
-	// CL_HISTOGRAM_GREEN_SIZE
-	// CL_HISTOGRAM_BLUE_SIZE
-	// CL_HISTOGRAM_ALPHA_SIZE
-	// CL_HISTOGRAM_LUMINANCE_SIZE
-	// CL_HISTOGRAM_SINK
 
 	// GetMapTarget:
 
 	CL_COEFF                        = 0x0A00,
 	CL_ORDER                        = 0x0A01,
 	CL_DOMAIN                       = 0x0A02,
-
-	// GetMinmaxParameterPName:
-
-	// CL_MINMAX_FORMAT
-	// CL_MINMAX_SINK
-
-	// GetPixelMap:
-
-	// CL_PIXEL_MAP_I_TO_I
-	// CL_PIXEL_MAP_S_TO_S
-	// CL_PIXEL_MAP_I_TO_R
-	// CL_PIXEL_MAP_I_TO_G
-	// CL_PIXEL_MAP_I_TO_B
-	// CL_PIXEL_MAP_I_TO_A
-	// CL_PIXEL_MAP_R_TO_R
-	// CL_PIXEL_MAP_G_TO_G
-	// CL_PIXEL_MAP_B_TO_B
-	// CL_PIXEL_MAP_A_TO_A
-
-	// GetPointerTarget:
-
-	// CL_VERTEX_ARRAY_POINTER
-	// CL_NORMAL_ARRAY_POINTER
-	// CL_COLOR_ARRAY_POINTER
-	// CL_INDEX_ARRAY_POINTER
-	// CL_TEXTURE_COORD_ARRAY_POINTER
-	// CL_EDGE_FLAG_ARRAY_POINTER
 
 	// GetTarget:
 
@@ -535,12 +276,6 @@ enum CL_DisplayDefines
 	CL_LINE_STIPPLE                 = 0x0B24,
 	CL_LINE_STIPPLE_PATTERN         = 0x0B25,
 	CL_LINE_STIPPLE_REPEAT          = 0x0B26,
-	// CL_SMOOTH_POINT_SIZE_RANGE
-	// CL_SMOOTH_POINT_SIZE_GRANULARITY
-	// CL_SMOOTH_LINE_WIDTH_RANGE
-	// CL_SMOOTH_LINE_WIDTH_GRANULARITY
-	// CL_ALIASED_POINT_SIZE_RANGE
-	// CL_ALIASED_LINE_WIDTH_RANGE
 	CL_LIST_MODE                    = 0x0B30,
 	CL_MAX_LIST_NESTING             = 0x0B31,
 	CL_LIST_BASE                    = 0x0B32,
@@ -729,137 +464,20 @@ enum CL_DisplayDefines
 	CL_FEEDBACK_BUFFER_TYPE         = 0x0DF2,
 	CL_SELECTION_BUFFER_POINTER     = 0x0DF3,
 	CL_SELECTION_BUFFER_SIZE        = 0x0DF4,
-	// CL_TEXTURE_BINDING_1D
-	// CL_TEXTURE_BINDING_2D
-	// CL_TEXTURE_BINDING_3D
-	// CL_VERTEX_ARRAY
-	// CL_NORMAL_ARRAY
-	// CL_COLOR_ARRAY
-	// CL_INDEX_ARRAY
-	// CL_TEXTURE_COORD_ARRAY
-	// CL_EDGE_FLAG_ARRAY
-	// CL_VERTEX_ARRAY_SIZE
-	// CL_VERTEX_ARRAY_TYPE
-	// CL_VERTEX_ARRAY_STRIDE
-	// CL_NORMAL_ARRAY_TYPE
-	// CL_NORMAL_ARRAY_STRIDE
-	// CL_COLOR_ARRAY_SIZE
-	// CL_COLOR_ARRAY_TYPE
-	// CL_COLOR_ARRAY_STRIDE
-	// CL_INDEX_ARRAY_TYPE
-	// CL_INDEX_ARRAY_STRIDE
-	// CL_TEXTURE_COORD_ARRAY_SIZE
-	// CL_TEXTURE_COORD_ARRAY_TYPE
-	// CL_TEXTURE_COORD_ARRAY_STRIDE
-	// CL_EDGE_FLAG_ARRAY_STRIDE
-	// CL_POLYGON_OFFSET_FACTOR
-	// CL_POLYGON_OFFSET_UNITS
-	// CL_COLOR_TABLE
-	// CL_POST_CONVOLUTION_COLOR_TABLE
-	// CL_POST_COLOR_MATRIX_COLOR_TABLE
-	// CL_CONVOLUTION_1D
-	// CL_CONVOLUTION_2D
-	// CL_SEPARABLE_2D
-	// CL_POST_CONVOLUTION_RED_SCALE
-	// CL_POST_CONVOLUTION_GREEN_SCALE
-	// CL_POST_CONVOLUTION_BLUE_SCALE
-	// CL_POST_CONVOLUTION_ALPHA_SCALE
-	// CL_POST_CONVOLUTION_RED_BIAS
-	// CL_POST_CONVOLUTION_GREEN_BIAS
-	// CL_POST_CONVOLUTION_BLUE_BIAS
-	// CL_POST_CONVOLUTION_ALPHA_BIAS
-	// CL_COLOR_MATRIX
-	// CL_COLOR_MATRIX_STACK_DEPTH
-	// CL_MAX_COLOR_MATRIX_STACK_DEPTH
-	// CL_POST_COLOR_MATRIX_RED_SCALE
-	// CL_POST_COLOR_MATRIX_GREEN_SCALE
-	// CL_POST_COLOR_MATRIX_BLUE_SCALE
-	// CL_POST_COLOR_MATRIX_ALPHA_SCALE
-	// CL_POST_COLOR_MATRIX_RED_BIAS
-	// CL_POST_COLOR_MATRIX_GREEN_BIAS
-	// CL_POST_COLOR_MATRIX_BLUE_BIAS
-	// CL_POST_COLOR_MATRIX_ALPHA_BIAS
-	// CL_HISTOGRAM
-	// CL_MINMAX
-	// CL_MAX_ELEMENTS_VERTICES
-	// CL_MAX_ELEMENTS_INDICES
-	// CL_RESCALE_NORMAL
-	// CL_LIGHT_MODEL_COLOR_CONTROL
-	// CL_PACK_SKIP_IMAGES
-	// CL_PACK_IMAGE_HEIGHT
-	// CL_UNPACK_SKIP_IMAGES
-	// CL_UNPACK_IMAGE_HEIGHT
-	// CL_TEXTURE_3D
-	// CL_MAX_3D_TEXTURE_SIZE
-	// CL_BLEND_COLOR
-	// CL_BLEND_EQUATION
-	// CL_ACTIVE_TEXTURE
-	// CL_CLIENT_ACTIVE_TEXTURE
-	// CL_MAX_TEXTURE_UNITS
 
 	// GetTextureParameter:
 
-	// CL_TEXTURE_MAG_FILTER
-	// CL_TEXTURE_MIN_FILTER
-	// CL_TEXTURE_WRAP_S
-	// CL_TEXTURE_WRAP_T
 	CL_TEXTURE_WIDTH                = 0x1000,
 	CL_TEXTURE_HEIGHT               = 0x1001,
 	CL_TEXTURE_INTERNAL_FORMAT      = 0x1003,
 	CL_TEXTURE_BORDER_COLOR         = 0x1004,
 	CL_TEXTURE_BORDER               = 0x1005,
-	// CL_TEXTURE_RED_SIZE
-	// CL_TEXTURE_GREEN_SIZE
-	// CL_TEXTURE_BLUE_SIZE
-	// CL_TEXTURE_ALPHA_SIZE
-	// CL_TEXTURE_LUMINANCE_SIZE
-	// CL_TEXTURE_INTENSITY_SIZE
-	// CL_TEXTURE_PRIORITY
-	// CL_TEXTURE_RESIDENT
-	// CL_TEXTURE_DEPTH
-	// CL_TEXTURE_WRAP_R
-	// CL_TEXTURE_MIN_LOD
-	// CL_TEXTURE_MAX_LOD
-	// CL_TEXTURE_BASE_LEVEL
-	// CL_TEXTURE_MAX_LEVEL
 
 	// HintMode:
 
 	CL_DONT_CARE                    = 0x1100,
 	CL_FASTEST                      = 0x1101,
 	CL_NICEST                       = 0x1102,
-
-	// HintTarget:
-
-	// CL_PERSPECTIVE_CORRECTION_HINT
-	// CL_POINT_SMOOTH_HINT
-	// CL_LINE_SMOOTH_HINT
-	// CL_POLYGON_SMOOTH_HINT
-	// CL_FOG_HINT
-
-	// HistogramTarget:
-
-	// CL_HISTOGRAM
-	// CL_PROXY_HISTOGRAM
-
-	// IndexPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
-
-	// LightModelColorControl:
-
-	// CL_SINGLE_COLOR
-	// CL_SEPARATE_SPECULAR_COLOR
-
-	// LightModelParameter:
-
-	// CL_LIGHT_MODEL_AMBIENT
-	// CL_LIGHT_MODEL_LOCAL_VIEWER
-	// CL_LIGHT_MODEL_TWO_SIDE
-	// CL_LIGHT_MODEL_COLOR_CONTROL
 
 	// LightName:
 
@@ -885,40 +503,10 @@ enum CL_DisplayDefines
 	CL_LINEAR_ATTENUATION           = 0x1208,
 	CL_QUADRATIC_ATTENUATION        = 0x1209,
 
-	// InterleavedArrays:
-
-	// CL_V2F
-	// CL_V3F
-	// CL_C4UB_V2F
-	// CL_C4UB_V3F
-	// CL_C3F_V3F
-	// CL_N3F_V3F
-	// CL_C4F_N3F_V3F
-	// CL_T2F_V3F
-	// CL_T4F_V4F
-	// CL_T2F_C4UB_V3F
-	// CL_T2F_C3F_V3F
-	// CL_T2F_N3F_V3F
-	// CL_T2F_C4F_N3F_V3F
-	// CL_T4F_C4F_N3F_V4F
-
 	// ListMode:
 
 	CL_COMPILE                      = 0x1300,
 	CL_COMPILE_AND_EXECUTE          = 0x1301,
-
-	// ListNameType:
-
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_2_BYTES
-	// CL_3_BYTES
-	// CL_4_BYTES
 
 	// LogicOp:
 
@@ -939,71 +527,18 @@ enum CL_DisplayDefines
 	CL_NAND                         = 0x150E,
 	CL_SET                          = 0x150F,
 
-	// MapTarget:
-
-	// CL_MAP1_COLOR_4
-	// CL_MAP1_INDEX
-	// CL_MAP1_NORMAL
-	// CL_MAP1_TEXTURE_COORD_1
-	// CL_MAP1_TEXTURE_COORD_2
-	// CL_MAP1_TEXTURE_COORD_3
-	// CL_MAP1_TEXTURE_COORD_4
-	// CL_MAP1_VERTEX_3
-	// CL_MAP1_VERTEX_4
-	// CL_MAP2_COLOR_4
-	// CL_MAP2_INDEX
-	// CL_MAP2_NORMAL
-	// CL_MAP2_TEXTURE_COORD_1
-	// CL_MAP2_TEXTURE_COORD_2
-	// CL_MAP2_TEXTURE_COORD_3
-	// CL_MAP2_TEXTURE_COORD_4
-	// CL_MAP2_VERTEX_3
-	// CL_MAP2_VERTEX_4
-
-	// MaterialFace:
-
-	// CL_FRONT
-	// CL_BACK
-	// CL_FRONT_AND_BACK
-
 	// MaterialParameter:
 
 	CL_EMISSION                     = 0x1600,
 	CL_SHININESS                    = 0x1601,
 	CL_AMBIENT_AND_DIFFUSE          = 0x1602,
 	CL_COLOR_INDEXES                = 0x1603,
-	// CL_AMBIENT
-	// CL_DIFFUSE
-	// CL_SPECULAR
 
 	// MatrixMode:
 
 	CL_MODELVIEW                    = 0x1700,
 	CL_PROJECTION                   = 0x1701,
 	CL_TEXTURE                      = 0x1702,
-
-	// MeshMode1:
-
-	// CL_POINT
-	// CL_LINE
-
-	// MeshMode2:
-
-	// CL_POINT
-	// CL_LINE
-	// CL_FILL
-
-	// MinmaxTarget:
-
-	// CL_MINMAX
-
-	// NormalPointerType:
-
-	// CL_BYTE
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
 
 	// PixelCopyType:
 
@@ -1024,154 +559,16 @@ enum CL_DisplayDefines
 	CL_RGBA                         = 0x1908,
 	CL_LUMINANCE                    = 0x1909,
 	CL_LUMINANCE_ALPHA              = 0x190A,
-	// CL_ABGR
-
-	// PixelInternalFormat:
-
-	// CL_ALPHA4
-	// CL_ALPHA8
-	// CL_ALPHA12
-	// CL_ALPHA16
-	// CL_LUMINANCE4
-	// CL_LUMINANCE8
-	// CL_LUMINANCE12
-	// CL_LUMINANCE16
-	// CL_LUMINANCE4_ALPHA4
-	// CL_LUMINANCE6_ALPHA2
-	// CL_LUMINANCE8_ALPHA8
-	// CL_LUMINANCE12_ALPHA4
-	// CL_LUMINANCE12_ALPHA12
-	// CL_LUMINANCE16_ALPHA16
-	// CL_INTENSITY
-	// CL_INTENSITY4
-	// CL_INTENSITY8
-	// CL_INTENSITY12
-	// CL_INTENSITY16
-	// CL_R3_G3_B2
-	// CL_RGB4
-	// CL_RGB5
-	// CL_RGB8
-	// CL_RGB10
-	// CL_RGB12
-	// CL_RGB16
-	// CL_RGBA2
-	// CL_RGBA4
-	// CL_RGB5_A1
-	// CL_RGBA8
-	// CL_RGB10_A2
-	// CL_RGBA12
-	// CL_RGBA16
-
-	// PixelMap:
-
-	// CL_PIXEL_MAP_I_TO_I
-	// CL_PIXEL_MAP_S_TO_S
-	// CL_PIXEL_MAP_I_TO_R
-	// CL_PIXEL_MAP_I_TO_G
-	// CL_PIXEL_MAP_I_TO_B
-	// CL_PIXEL_MAP_I_TO_A
-	// CL_PIXEL_MAP_R_TO_R
-	// CL_PIXEL_MAP_G_TO_G
-	// CL_PIXEL_MAP_B_TO_B
-	// CL_PIXEL_MAP_A_TO_A
-
-	// PixelStore:
-
-	// CL_UNPACK_SWAP_BYTES
-	// CL_UNPACK_LSB_FIRST
-	// CL_UNPACK_ROW_LENGTH
-	// CL_UNPACK_SKIP_ROWS
-	// CL_UNPACK_SKIP_PIXELS
-	// CL_UNPACK_ALIGNMENT
-	// CL_PACK_SWAP_BYTES
-	// CL_PACK_LSB_FIRST
-	// CL_PACK_ROW_LENGTH
-	// CL_PACK_SKIP_ROWS
-	// CL_PACK_SKIP_PIXELS
-	// CL_PACK_ALIGNMENT
-	// CL_PACK_SKIP_IMAGES
-	// CL_PACK_IMAGE_HEIGHT
-	// CL_UNPACK_SKIP_IMAGES
-	// CL_UNPACK_IMAGE_HEIGHT
-
-	// PixelTransfer:
-
-	// CL_MAP_COLOR
-	// CL_MAP_STENCIL
-	// CL_INDEX_SHIFT
-	// CL_INDEX_OFFSET
-	// CL_RED_SCALE
-	// CL_RED_BIAS
-	// CL_GREEN_SCALE
-	// CL_GREEN_BIAS
-	// CL_BLUE_SCALE
-	// CL_BLUE_BIAS
-	// CL_ALPHA_SCALE
-	// CL_ALPHA_BIAS
-	// CL_DEPTH_SCALE
-	// CL_DEPTH_BIAS
-	// CL_POST_CONVOLUTION_RED_SCALE
-	// CL_POST_CONVOLUTION_GREEN_SCALE
-	// CL_POST_CONVOLUTION_BLUE_SCALE
-	// CL_POST_CONVOLUTION_ALPHA_SCALE
-	// CL_POST_CONVOLUTION_RED_BIAS
-	// CL_POST_CONVOLUTION_GREEN_BIAS
-	// CL_POST_CONVOLUTION_BLUE_BIAS
-	// CL_POST_CONVOLUTION_ALPHA_BIAS
-	// CL_POST_COLOR_MATRIX_RED_SCALE
-	// CL_POST_COLOR_MATRIX_GREEN_SCALE
-	// CL_POST_COLOR_MATRIX_BLUE_SCALE
-	// CL_POST_COLOR_MATRIX_ALPHA_SCALE
-	// CL_POST_COLOR_MATRIX_RED_BIAS
-	// CL_POST_COLOR_MATRIX_GREEN_BIAS
-	// CL_POST_COLOR_MATRIX_BLUE_BIAS
-	// CL_POST_COLOR_MATRIX_ALPHA_BIAS
 
 	// PixelType:
 
 	CL_BITMAP                       = 0x1A00,
-	// CL_BYTE
-	// CL_UNSIGNED_BYTE
-	// CL_SHORT
-	// CL_UNSIGNED_SHORT
-	// CL_INT
-	// CL_UNSIGNED_INT
-	// CL_FLOAT
-	// CL_BGR
-	// CL_BGRA
-	// CL_UNSIGNED_BYTE_3_3_2
-	// CL_UNSIGNED_SHORT_4_4_4_4
-	// CL_UNSIGNED_SHORT_5_5_5_1
-	// CL_UNSIGNED_INT_8_8_8_8
-	// CL_UNSIGNED_INT_10_10_10_2
-	// CL_UNSIGNED_SHORT_5_6_5
-	// CL_UNSIGNED_BYTE_2_3_3_REV
-	// CL_UNSIGNED_SHORT_5_6_5_REV
-	// CL_UNSIGNED_SHORT_4_4_4_4_REV
-	// CL_UNSIGNED_SHORT_1_5_5_5_REV
-	// CL_UNSIGNED_INT_8_8_8_8_REV
-	// CL_UNSIGNED_INT_2_10_10_10_REV
-
+	
 	// PolygonMode:
 
 	CL_POINT                        = 0x1B00,
 	CL_LINE                         = 0x1B01,
 	CL_FILL                         = 0x1B02,
-
-	// ReadBufferMode:
-
-	// CL_FRONT_LEFT
-	// CL_FRONT_RIGHT
-	// CL_BACK_LEFT
-	// CL_BACK_RIGHT
-	// CL_FRONT
-	// CL_BACK
-	// CL_LEFT
-	// CL_RIGHT
-	// CL_AUX0
-	// CL_AUX1
-	// CL_AUX2
-	// CL_AUX3
 
 	// RenderingMode:
 
@@ -1179,25 +576,10 @@ enum CL_DisplayDefines
 	CL_FEEDBACK                     = 0x1C01,
 	CL_SELECT                       = 0x1C02,
 
-	// SeparableTarget:
-
-	// CL_SEPARABLE_2D
-
 	// ShadingModel:
 
 	CL_FLAT                         = 0x1D00,
 	CL_SMOOTH                       = 0x1D01,
-
-	// StencilFunction:
-
-	// CL_NEVER
-	// CL_LESS
-	// CL_EQUAL
-	// CL_LEQUAL
-	// CL_GREATER
-	// CL_NOTEQUAL
-	// CL_GEQUAL
-	// CL_ALWAYS
 
 	// StencilOp:
 
@@ -1221,13 +603,6 @@ enum CL_DisplayDefines
 	CL_T                            = 0x2001,
 	CL_R                            = 0x2002,
 	CL_Q                            = 0x2003,
-
-	// TexCoordPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
 
 	// TextureEnvMode:
 
@@ -1264,8 +639,6 @@ enum CL_DisplayDefines
 
 	// TextureMinFilter:
 
-	// CL_NEAREST
-	// CL_LINEAR
 	CL_NEAREST_MIPMAP_NEAREST       = 0x2700,
 	CL_LINEAR_MIPMAP_NEAREST        = 0x2701,
 	CL_NEAREST_MIPMAP_LINEAR        = 0x2702,
@@ -1277,70 +650,11 @@ enum CL_DisplayDefines
 	CL_TEXTURE_MIN_FILTER           = 0x2801,
 	CL_TEXTURE_WRAP_S               = 0x2802,
 	CL_TEXTURE_WRAP_T               = 0x2803,
-	// CL_TEXTURE_BORDER_COLOR
-	// CL_TEXTURE_PRIORITY
-	// CL_TEXTURE_WRAP_R
-	// CL_TEXTURE_MIN_LOD
-	// CL_TEXTURE_MAX_LOD
-	// CL_TEXTURE_BASE_LEVEL
-	// CL_TEXTURE_MAX_LEVEL
-
-	// TextureTarget:
-
-	// CL_TEXTURE_1D
-	// CL_TEXTURE_2D
-	// CL_PROXY_TEXTURE_1D
-	// CL_PROXY_TEXTURE_2D
-	// CL_TEXTURE_3D
-	// CL_PROXY_TEXTURE_3D
-
-	// TextureUnit:
-
-	// CL_TEXTURE0
-	// CL_TEXTURE1
-	// CL_TEXTURE2
-	// CL_TEXTURE3
-	// CL_TEXTURE4
-	// CL_TEXTURE5
-	// CL_TEXTURE6
-	// CL_TEXTURE7
-	// CL_TEXTURE8
-	// CL_TEXTURE9
-	// CL_TEXTURE10
-	// CL_TEXTURE11
-	// CL_TEXTURE12
-	// CL_TEXTURE13
-	// CL_TEXTURE14
-	// CL_TEXTURE15
-	// CL_TEXTURE16
-	// CL_TEXTURE17
-	// CL_TEXTURE18
-	// CL_TEXTURE19
-	// CL_TEXTURE20
-	// CL_TEXTURE21
-	// CL_TEXTURE22
-	// CL_TEXTURE23
-	// CL_TEXTURE24
-	// CL_TEXTURE25
-	// CL_TEXTURE26
-	// CL_TEXTURE27
-	// CL_TEXTURE28
-	// CL_TEXTURE29
-	// CL_TEXTURE30
-	// CL_TEXTURE31
 
 	// TextureWrapMode:
 
 	CL_CLAMP                        = 0x2900,
 	CL_REPEAT                       = 0x2901,
-	// CL_CLAMP_TO_EDGE
-
-	// VertexPointerType:
-
-	// CL_SHORT
-	// CL_INT
-	// CL_FLOAT
-	// CL_DOUBLE
 
 	// ClientAttribMask:
 
@@ -1662,26 +976,6 @@ enum CL_DisplayDefines
 
 	CL_ABGR                     = 0x8000,
 
-	// EXT_blend_color:
-
-	// CL_CONSTANT_COLOR           = 0x8001,
-	// CL_ONE_MINUS_CONSTANT_COLOR = 0x8002,
-	// CL_CONSTANT_ALPHA           = 0x8003,
-	// CL_ONE_MINUS_CONSTANT_ALPHA = 0x8004,
-	// CL_BLEND_COLOR              = 0x8005,
-
-	// EXT_blend_minmax:
-
-	// CL_FUNC_ADD                 = 0x8006,
-	// CL_MIN                      = 0x8007,
-	// CL_MAX                      = 0x8008,
-	// CL_BLEND_EQUATION           = 0x8009,
-
-	// EXT_blend_subtract:
-
-	// CL_FUNC_SUBTRACT            = 0x800A,
-	// CL_FUNC_REVERSE_SUBTRACT    = 0x800B,
-
 	// EXT_texture_env_combine:
 
 	CL_COMBINE                  = 0x8570,
@@ -1758,27 +1052,6 @@ enum CL_DisplayDefines
 	// ARB_texture_env_combine:
 
 	CL_SUBTRACT                   = 0x84e7,
-	// CL_COMBINE                    = 0x8570,
-	// CL_COMBINE_RGB                = 0x8571,
-	// CL_COMBINE_ALPHA              = 0x8572,
-	// CL_RGB_SCALE                  = 0x8573,
-	// CL_ADD_SIGNED                 = 0x8574,
-	// CL_INTERPOLATE                = 0x8575,
-	// CL_CONSTANT                   = 0x8576,
-	// CL_PRIMARY_COLOR              = 0x8577,
-	// CL_PREVIOUS                   = 0x8578,
-	// CL_SOURCE0_RGB                = 0x8580,
-	// CL_SOURCE1_RGB                = 0x8581,
-	// CL_SOURCE2_RGB                = 0x8582,
-	// CL_SOURCE0_ALPHA              = 0x8588,
-	// CL_SOURCE1_ALPHA              = 0x8589,
-	// CL_SOURCE2_ALPHA              = 0x858a,
-	// CL_OPERAND0_RGB               = 0x8590,
-	// CL_OPERAND1_RGB               = 0x8591,
-	// CL_OPERAND2_RGB               = 0x8592,
-	// CL_OPERAND0_ALPHA             = 0x8598,
-	// CL_OPERAND1_ALPHA             = 0x8599,
-	// CL_OPERAND2_ALPHA             = 0x859a,
 
 	// ARB_texture_env_dot3:
 
@@ -1936,11 +1209,6 @@ enum CL_DisplayDefines
 	CL_OBJECT_ACTIVE_UNIFORM_MAX_LENGTH    = CL_ACTIVE_UNIFORM_MAX_LENGTH,
 	CL_OBJECT_SHADER_SOURCE_LENGTH         = CL_SHADER_SOURCE_LENGTH,
 	CL_SHADER_OBJECT                       = 0x8B48,
-	// CL_FLOAT                               = 0x1406,
-	// CL_FLOAT_VEC2                          = 0x8B50,
-	// CL_FLOAT_VEC3                          = 0x8B51,
-	// CL_FLOAT_VEC4                          = 0x8B52,
-	// CL_INT                                 = 0x1404,
 	CL_INT_VEC2                            = 0x8B53,
 	CL_INT_VEC3                            = 0x8B54,
 	CL_INT_VEC4                            = 0x8B55,
@@ -1983,20 +1251,14 @@ enum CL_DisplayDefines
 	CL_VERTEX_ATTRIB_ARRAY_NORMALIZED      = 0x886A,
 	CL_CURRENT_VERTEX_ATTRIB               = 0x8626,
 	CL_VERTEX_ATTRIB_ARRAY_POINTER         = 0x8645,
-	// CL_FLOAT                               = 0x1406,
 	CL_FLOAT_VEC2                          = 0x8B50,
 	CL_FLOAT_VEC3                          = 0x8B51,
 	CL_FLOAT_VEC4                          = 0x8B52,
-	// CL_FLOAT_MAT2                          = 0x8B5A,
-	// CL_FLOAT_MAT3                          = 0x8B5B,
-	// CL_FLOAT_MAT4                          = 0x8B5C,
 
 	// ARB_fragment_shader:
 
 	CL_FRAGMENT_SHADER                     = 0x8B30,
 	CL_MAX_FRAGMENT_UNIFORM_COMPONENTS     = 0x8B49,
-	// CL_MAX_TEXTURE_COORDS                  = 0x8871,
-	// CL_MAX_TEXTURE_IMAGE_UNITS             = 0x8872,
 	CL_FRAGMENT_SHADER_DERIVATIVE_HINT     = 0x8B8B,
 
 	// ARB_draw_buffers:
@@ -2029,23 +1291,6 @@ enum CL_DisplayDefines
 
 	// ATI_separate_stencil:
 
-	// CL_KEEP                                = 0x1E00,
-	// CL_ZERO                                = 0x0000,
-	// CL_REPLACE                             = 0x1E01,
-	// CL_INCR                                = 0x1E02,
-	// CL_DECR                                = 0x1E03,
-	// CL_INVERT                              = 0x150A,
-	// CL_NEVER                               = 0x0200,
-	// CL_LESS                                = 0x0201,
-	// CL_LEQUAL                              = 0x0203,
-	// CL_GREATER                             = 0x0204,
-	// CL_GEQUAL                              = 0x0206,
-	// CL_EQUAL                               = 0x0202,
-	// CL_NOTEQUAL                            = 0x0205,
-	// CL_ALWAYS                              = 0x0207,
-	// CL_FRONT                               = 0x0404,
-	// CL_BACK                                = 0x0405,
-	// CL_FRONT_AND_BACK                      = 0x0408,
 	CL_STENCIL_BACK_FUNC                   = 0x8800,
 	CL_STENCIL_BACK_FAIL                   = 0x8801,
 	CL_STENCIL_BACK_PASS_DEPTH_FAIL        = 0x8802,

@@ -71,7 +71,7 @@ void CL_PCXProvider_Impl::read_pcx(
 	{
 		int read = _datafile.read(header, 128);
 		if (read != 128)
-			throw CL_Exception(cl_text("File not big enough to read the PCX header"));
+			throw CL_Exception("File not big enough to read the PCX header");
 	}
 
 	// only the useful fields that will be used more than once
@@ -89,7 +89,7 @@ void CL_PCXProvider_Impl::read_pcx(
 	} pcx_header;
 
 	if (header[0] != 10)
-		throw CL_Exception(cl_text("Not a PCX file"));
+		throw CL_Exception("Not a PCX file");
 
 	pcx_header.version = header[1];
 	pcx_header.encoding = header[2];
@@ -108,7 +108,7 @@ void CL_PCXProvider_Impl::read_pcx(
 
 	// both 8bit with palette and 24bit rgb modes require version 5
 	if (pcx_header.version < 5)
-		throw CL_Exception(cl_text("PCX version unsupported"));
+		throw CL_Exception("PCX version unsupported");
 
 	const int total_line_bytes = pcx_header.bytes_per_line * pcx_header.nplanes;
 
@@ -121,7 +121,7 @@ void CL_PCXProvider_Impl::read_pcx(
 		pitch = width * 3;
 		image = new unsigned char[pitch * height];
 		if (image == 0)
-			throw CL_Exception(cl_text("Unable to allocate memory for pcx image"));
+			throw CL_Exception("Unable to allocate memory for pcx image");
 
 		unsigned char *p = image;
 		const int extra = total_line_bytes - pitch;
@@ -180,13 +180,7 @@ void CL_PCXProvider_Impl::read_pcx(
 				}
 			}
 		}
-		CL_PCXProvider_Impl::format.enable_colorkey(false);
-		CL_PCXProvider_Impl::format.set_colorkey(0);
-		CL_PCXProvider_Impl::format.set_depth(24);
-		CL_PCXProvider_Impl::format.set_red_mask(0x0000ff);
-		CL_PCXProvider_Impl::format.set_green_mask(0x00ff00);
-		CL_PCXProvider_Impl::format.set_blue_mask(0xff0000);
-		CL_PCXProvider_Impl::format.set_alpha_mask(0);
+		CL_PCXProvider_Impl::sized_format = cl_bgr8;
 		CL_PCXProvider_Impl::pitch = pitch;
 		CL_PCXProvider_Impl::width = width;
 		CL_PCXProvider_Impl::height = height;
@@ -197,7 +191,7 @@ void CL_PCXProvider_Impl::read_pcx(
 		pitch = width;
 		image = new unsigned char[pitch * height];
 		if (image == 0)
-			throw CL_Exception(cl_text("Unable to allocate memory for pcx image"));
+			throw CL_Exception("Unable to allocate memory for pcx image");
 
 		unsigned char *p = image;
 		const int extra = total_line_bytes - pitch;
@@ -249,7 +243,7 @@ void CL_PCXProvider_Impl::read_pcx(
 		if (_datafile.read_int8() != 12)
 		{
 			delete[] image;
-			throw CL_Exception(cl_text("Palette not found"));
+			throw CL_Exception("Palette not found");
 		}
 		for (int i = 0; i < 256; i++)
 		{
@@ -259,14 +253,11 @@ void CL_PCXProvider_Impl::read_pcx(
 			palette[i].set_color(r, g, b);
 		}
 
-		CL_PCXProvider_Impl::format.enable_colorkey(false);
-		CL_PCXProvider_Impl::format.set_colorkey(0);
-		CL_PCXProvider_Impl::format.set_depth(8);
-		CL_PCXProvider_Impl::format.set_type(pixelformat_index);
+		CL_PCXProvider_Impl::sized_format = cl_color_index;
 		CL_PCXProvider_Impl::pitch = pitch;
 		CL_PCXProvider_Impl::width = width;
 		CL_PCXProvider_Impl::height = height;
 	}
 	else
-		throw CL_Exception(cl_text("Unsupported PCX format"));
+		throw CL_Exception("Unsupported PCX format");
 }

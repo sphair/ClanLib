@@ -68,7 +68,7 @@ private:
 	{
 		TextBlock() : start(0), end(0) { }
 
-		int start, end;
+		unsigned int start, end;
 	};
 
 	enum ObjectType
@@ -94,7 +94,7 @@ private:
 
 		CL_Font font;
 		CL_Colorf color;
-		int start, end;
+		unsigned int start, end;
 
 		CL_Image image;
 		CL_SpanComponent *component;
@@ -167,7 +167,7 @@ private:
 		int id;
 	};
 
-	TextSizeResult find_text_size(CL_GraphicContext &gc, const TextBlock &block, int object_index, int forced_line_break = -1);
+	TextSizeResult find_text_size(CL_GraphicContext &gc, const TextBlock &block, unsigned int object_index);
 	std::vector<TextBlock> find_text_blocks();
 	void layout_lines(CL_GraphicContext & gc, int max_width);
 	void layout_text(CL_GraphicContext & gc, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
@@ -177,8 +177,8 @@ private:
 	void reflow_line(CurrentLine &current_line, int max_width);
 	FloatBox float_box_left(FloatBox float_box, int max_width);
 	FloatBox float_box_right(FloatBox float_box, int max_width);
-	FloatBox float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1, const std::vector<FloatBox> &floats2);
-	bool box_fits_on_line(const FloatBox &box, int max_width, const std::vector<FloatBox> &floats);
+	FloatBox float_box_any(FloatBox box, int max_width, const std::vector<FloatBox> &floats1);
+	bool box_fits_on_line(const FloatBox &box, int max_width);
 	void place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result);
 	void force_place_line_segments(CurrentLine &current_line, TextSizeResult &text_size_result, int max_width);
 	void next_line(CurrentLine &current_line);

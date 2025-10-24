@@ -50,9 +50,10 @@ CL_RectPacker::~CL_RectPacker()
 /////////////////////////////////////////////////////////////////////////////
 // CL_RectPacker Attributes:
 
-bool CL_RectPacker::is_null() const
+void CL_RectPacker::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_RectPacker is null");
 }
 
 CL_RectPacker::AllocationPolicy CL_RectPacker::get_allocation_policy() const

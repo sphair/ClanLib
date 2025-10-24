@@ -63,10 +63,11 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get Class name
 	///
@@ -131,7 +132,7 @@ public:
 	/// \param accel_text = String Ref
 	///
 	/// \return Popup Menu Item
-	CL_PopupMenuItem insert_item_accel(const CL_StringRef &text, const CL_StringRef &accel_text=cl_text(""), int id = -1, int index = -1);
+	CL_PopupMenuItem insert_item_accel(const CL_StringRef &text, const CL_StringRef &accel_text="", int id = -1, int index = -1);
 
 	/// \brief Insert separator
 	///

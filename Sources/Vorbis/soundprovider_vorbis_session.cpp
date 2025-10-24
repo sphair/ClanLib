@@ -56,32 +56,35 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 	if (ogg_sync_pageout(&oy,&og) !=1)
 	{
 		/* error case.  Must not be Vorbis data */
-		throw CL_Exception(cl_text("Input does not appear to be an Ogg bitstream."));
+		throw CL_Exception("Input does not appear to be an Ogg bitstream.");
 	}
 	
 	/* Get the serial number and set up the rest of decode. */
 	/* serialno first; use it to set up a logical stream */
-	ogg_stream_init(&os,ogg_page_serialno(&og));
+	if (ogg_stream_init(&os,ogg_page_serialno(&og))<0)
+	{
+		throw CL_Exception("Error initialising the Ogg bitstream data.");
+	}
 
 	vorbis_info_init(&vi);
 	vorbis_comment_init(&vc);
 	if (ogg_stream_pagein(&os,&og)<0)
 	{ 
 		/* error; stream version mismatch perhaps */
-		throw CL_Exception(cl_text("Error reading first page of Ogg bitstream data."));
+		throw CL_Exception("Error reading first page of Ogg bitstream data.");
 	}
 	
 	if (ogg_stream_packetout(&os,&op)!=1)
 	{ 
 		/* no page? must not be vorbis */
-		throw CL_Exception(cl_text("Error reading initial header packet."));
+		throw CL_Exception("Error reading initial header packet.");
 	}
     
 	if (vorbis_synthesis_headerin(&vi,&vc,&op)<0)
 	{ 
 		/* error case; not a vorbis header */
-		throw CL_Exception(cl_text("This Ogg bitstream does not contain Vorbis ")
-		      cl_text("audio data."));
+		throw CL_Exception("This Ogg bitstream does not contain Vorbis "
+		      "audio data.");
 	}
     
 	/* At this point, we're sure we're Vorbis.  We've set up the logical
@@ -118,9 +121,11 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 					{
 						/* Uh oh; data at some point was corrupted or missing!
 						We can't tolerate that in a header.  Die. */
-						throw CL_Exception(cl_text("Corrupt secondary header."));
+						throw CL_Exception("Corrupt secondary header.");
 					}
-					vorbis_synthesis_headerin(&vi,&vc,&op);
+					if (vorbis_synthesis_headerin(&vi,&vc,&op) < 0)
+						throw CL_Exception("vorbis_synthesis_headerin failed");
+
 					i++;
 				}
 			}
@@ -130,7 +135,7 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 		bytes=input->read(buffer,4096);
 		if(bytes==0 && i<2)
 		{
-			throw CL_Exception(cl_text("End of file before finding all Vorbis headers!"));
+			throw CL_Exception("End of file before finding all Vorbis headers!");
 		}
 		ogg_sync_wrote(&oy,bytes);
 	}
@@ -161,6 +166,8 @@ CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvide
 				       multiple vorbis_block structures
 				       for vd here */
 
+	if ( (vi.channels == 0) || (vi.rate == 0) )
+		throw CL_Exception("something is wrong with the vorbis stream");
 }
 
 CL_SoundProvider_Vorbis_Session::~CL_SoundProvider_Vorbis_Session()
@@ -195,11 +202,6 @@ int CL_SoundProvider_Vorbis_Session::get_num_samples() const
 int CL_SoundProvider_Vorbis_Session::get_frequency() const
 {
 	return vi.rate;
-}
-
-CL_SoundFormat CL_SoundProvider_Vorbis_Session::get_format() const
-{
-	return sf_16bit_signed;
 }
 
 int CL_SoundProvider_Vorbis_Session::get_num_channels() const

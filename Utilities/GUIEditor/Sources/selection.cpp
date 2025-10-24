@@ -50,6 +50,14 @@ std::vector<HolderComponent*> Selection::get_selection()
 	return selected_holders;
 }
 
+bool Selection::is_selected(HolderComponent *holder) const
+{
+	for (size_t i = 0; i < selected_holders.size(); i++)
+		if (selected_holders[i] == holder)
+			return true;
+	return false;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Selection Operations:
 

@@ -1,11 +1,14 @@
-lib_LTLIBRARIES = libclan21App.la
+lib_LTLIBRARIES = libclan22App.la
 
 if WIN32
-libclan21App_la_SOURCES = Win32/clanapp.cpp
+libclan22App_la_SOURCES = Win32/clanapp.cpp
 else
-libclan21App_la_SOURCES = Unix/clanapp.cpp
+libclan22App_la_SOURCES = Unix/clanapp.cpp
 endif
 
-libclan21App_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22App_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanApp)
+
+libclan22App_la_CXXFLAGS=$(clanApp_CXXFLAGS) $(extra_CFLAGS_clanApp)
 # EOF #

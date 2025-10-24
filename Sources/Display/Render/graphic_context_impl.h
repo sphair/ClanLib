@@ -32,7 +32,13 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
 #include "API/Core/Math/mat4.h"
-#include "Display/2D/sprite_render_batch.h"
+#include "Display/2D/render_batch2d.h"
+#include "Display/2D/render_batch3d.h"
+#include "Display/2D/render_batch_sprite.h"
+#include "API/Display/Render/blend_mode.h"
+#include "API/Display/Render/pen.h"
+#include "API/Display/Render/polygon_rasterizer.h"
+#include "API/Display/Render/buffer_control.h"
 #include <list>
 
 class CL_RenderBatcher;
@@ -47,6 +53,7 @@ public:
 	void flush_batcher(CL_GraphicContext &gc);
 	void update_batcher_modelview();
 	void set_batcher(CL_GraphicContext &gc, CL_RenderBatcher *batcher);
+	void set_internal_batcher(CL_MapMode mode);
 
 	CL_SharedPtr<CL_PrimitivesArray_Impl> create_prim_array(CL_SharedPtr<CL_GraphicContext_Impl> this_gc);
 	static void free_prim_array(CL_PrimitivesArray_Impl *prim_array);
@@ -58,6 +65,18 @@ public:
 	int max_attributes;
 	bool modelview_changed;
 	CL_RenderBatcher *active_batcher;
-	CL_SpriteRenderBatch sprite_batcher;
+	CL_RenderBatcherSprite *current_internal_batcher;
 	int modelview_index;
+
+	std::vector<CL_Texture> selected_textures;
+	CL_BlendMode selected_blend_mode;
+	CL_Pen selected_pen;
+	CL_BufferControl selected_buffer_control;
+	CL_PolygonRasterizer selected_polygon_rasterizer;
+	CL_FrameBuffer selected_read_frame_buffer;
+	CL_FrameBuffer selected_write_frame_buffer;
+
+private:
+	CL_RenderBatch2D render_batcher_2d;
+	CL_RenderBatch3D render_batcher_3d;
 };

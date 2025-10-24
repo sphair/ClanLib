@@ -204,6 +204,22 @@ void TestApp::test_matrix_mat4()
 
 		if (result != result2) fail();
 	}
+
+	CL_Console::write_line("   Function: rotate (using euler angles) and get_euler");
+	{
+		CL_Angle angle_x(20, cl_degrees);
+		CL_Angle angle_y(30, cl_degrees);
+		CL_Angle angle_z(40, cl_degrees);
+
+		CL_Mat4f test_matrix;
+		test_matrix = CL_Mat4f::rotate(angle_x, angle_y, angle_z, cl_YXZ);
+
+		CL_Vec3f angles = test_matrix.get_euler(cl_YXZ);
+
+		check_float(angles.x, angle_x.to_radians());
+		check_float(angles.y, angle_y.to_radians());
+		check_float(angles.z, angle_z.to_radians());
+	}
 }
 
 void TestApp::test_matrix_mat2()

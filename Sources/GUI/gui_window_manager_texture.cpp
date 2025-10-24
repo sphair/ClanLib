@@ -88,6 +88,5 @@ void CL_GUIWindowManagerTexture::draw_windows(CL_GraphicContext &gc)
 	get_provider()->draw_windows(gc);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerTexture Implementation:

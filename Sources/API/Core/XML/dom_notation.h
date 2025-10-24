@@ -55,7 +55,7 @@ public:
 
 	/// \brief Constructs a DomNotation
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomNotation(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomNotation();

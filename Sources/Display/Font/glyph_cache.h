@@ -101,7 +101,6 @@ private:
 
 	static const int glyph_border_size = 1;
 
-
 public:
 	// Contains the anti alias setting
 	bool anti_alias;

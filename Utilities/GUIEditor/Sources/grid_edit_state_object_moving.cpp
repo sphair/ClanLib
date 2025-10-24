@@ -47,8 +47,11 @@ bool GridEditStateObjectMoving::on_input_pressed(const CL_InputEvent &e)
 		{
 			start = e.mouse_pos;
 			start_geometry = holder->get_geometry();
-			grid->main_window->get_selection()->clear();
-			grid->main_window->get_selection()->add_holder(holder);
+			if (!grid->main_window->get_selection()->is_selected(holder))
+			{
+				grid->main_window->get_selection()->clear();
+				grid->main_window->get_selection()->add_holder(holder);
+			}
 			grid->capture_mouse(true);
 			grid->request_repaint();
 			return true;
@@ -109,6 +112,15 @@ void GridEditStateObjectMoving::move_to(const CL_Point &mouse_pos, bool perform_
 	if(perform_snap)
 		source_rect.translate(grid->snap(holder, holder->get_snaplines(), source_rect));
 
-	holder->set_geometry(source_rect);
+	delta.x = source_rect.left - holder->get_geometry().left;
+	delta.y = source_rect.top - holder->get_geometry().top;
+
+	std::vector<HolderComponent *> selection = grid->main_window->get_selection()->get_selection();
+	for (size_t i = 0; i < selection.size(); i++)
+	{
+		CL_Rect geometry = selection[i]->get_geometry();
+		geometry.translate(delta.x, delta.y);
+		selection[i]->set_geometry(geometry);
+	}
 	grid->request_repaint();
 }

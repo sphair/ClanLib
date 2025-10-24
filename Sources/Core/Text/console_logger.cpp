@@ -57,38 +57,38 @@ void CL_ConsoleLogger::log(const CL_StringRef &type, const CL_StringRef &text)
 {
 	CL_StringRef months[] =
 	{
-		cl_text("Jan"),
-		cl_text("Feb"),
-		cl_text("Mar"),
-		cl_text("Apr"),
-		cl_text("May"),
-		cl_text("Jun"),
-		cl_text("Jul"),
-		cl_text("Aug"),
-		cl_text("Sep"),
-		cl_text("Oct"),
-		cl_text("Nov"),
-		cl_text("Dec")
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
 	};
 	
 	CL_StringRef days[] =
 	{
-		cl_text("Sun"),
-		cl_text("Mon"),
-		cl_text("Tue"),
-		cl_text("Wed"),
-		cl_text("Thu"),
-		cl_text("Fri"),
-		cl_text("Sat")
+		"Sun",
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri",
+		"Sat"
 	};
 
 	// Tue Nov 16 11:34:15 2004 UTC
 	CL_DateTime cur_time = CL_DateTime::get_current_utc_time();
 
 #ifdef WIN32
-	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n"));
+	CL_StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n");
 #else
-	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n"));
+	CL_StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n");
 #endif
 	format.set_arg(1, days[cur_time.get_day_of_week()]);
 	format.set_arg(2, months[cur_time.get_month() - 1]);
@@ -101,12 +101,13 @@ void CL_ConsoleLogger::log(const CL_StringRef &type, const CL_StringRef &text)
 	format.set_arg(9, text);
 
 #ifdef WIN32
-	CL_TempString log_line = format.get_result();
+	CL_String16 log_line = CL_StringHelp::utf8_to_ucs2(format.get_result());
 
 	DWORD bytesWritten = 0;
+
 	WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), log_line.data(), log_line.size(), &bytesWritten, 0);
 #else
-	CL_TempString8 log_line = CL_StringHelp::text_to_local8(format.get_result());
+	CL_String8 log_line = CL_StringHelp::text_to_local8(format.get_result());
 	write(1, log_line.data(), log_line.length());
 #endif
 }

@@ -644,10 +644,10 @@ public:
 	}
 
 	/// \brief Converts the color to a given pixel format.
-	unsigned int to_pixelformat(const CL_PixelFormat &pf) const;
+	//unsigned int to_pixelformat(const CL_PixelFormat &pf) const;
 
 	/// \brief Converts a raw pixel in a given pixel format to a color.
-	static CL_Color from_pixelformat(unsigned int raw_color, const CL_PixelFormat &pf);
+	//static CL_Color from_pixelformat(unsigned int raw_color, const CL_PixelFormat &pf);
 /// \}
 };
 

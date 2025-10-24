@@ -44,7 +44,7 @@ public:
 	{
 	}
 
-	virtual void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) = 0;
+	virtual void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const = 0;
 };
 
 /// (Internal ClanLib Class)
@@ -58,7 +58,7 @@ public:
 	{
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		static_func(p1, p2, p3, p4, p5);
 	}
@@ -78,7 +78,7 @@ public:
 	{
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		static_func(p1, p2, p3, p4, p5, user_data);
 	}
@@ -100,7 +100,7 @@ public:
 	{
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		(instance->*member_func)(p1, p2, p3, p4, p5);
 	}
@@ -122,7 +122,7 @@ public:
 	{
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		(instance->*member_func)(p1, p2, p3, p4, p5, user_data);
 	}
@@ -145,7 +145,7 @@ public:
 	{
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		functor(p1, p2, p3, p4, p5);
 	}
@@ -225,7 +225,7 @@ public:
 		impl = CL_SharedPtr< CL_Callback_Impl_v5<P1, P2, P3, P4, P5> >();
 	}
 
-	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
+	void invoke(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) const
 	{
 		impl->invoke(p1, p2, p3, p4, p5);
 	}

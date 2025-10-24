@@ -60,15 +60,15 @@ int CL_Service_Win32::main(int argc, char **argv)
 	for (int i=0; i<argc; i++)
 		args.push_back(CL_StringHelp::local8_to_text(argv[i]));
 
-	if (argc == 2 && args[1] == cl_text("-debug"))
+	if (argc == 2 && args[1] == "-debug")
 	{
 		return run_debug(args);
 	}
-	else if (argc == 2 && args[1] == cl_text("-install"))
+	else if (argc == 2 && args[1] == "-install")
 	{
 		return run_install();
 	}
-	else if (argc == 2 && args[1] == cl_text("-uninstall"))
+	else if (argc == 2 && args[1] == "-uninstall")
 	{
 		return run_uninstall();
 	}
@@ -126,7 +126,7 @@ void CL_Service_Win32::service_thread_main(DWORD argc, LPTSTR *argv)
 	instance_win32->service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 	instance_win32->service_status.dwServiceSpecificExitCode = 0;
 	if (!instance_win32->debug_mode)
-		instance_win32->handle_service_status = RegisterServiceCtrlHandler(instance_win32->service_name.c_str(), service_ctrl);
+		instance_win32->handle_service_status = RegisterServiceCtrlHandler(CL_StringHelp::utf8_to_ucs2(instance_win32->service_name).c_str(), service_ctrl);
 
 	instance_win32->report_status(SERVICE_START_PENDING, NO_ERROR, 2000);
 
@@ -218,32 +218,32 @@ int CL_Service_Win32::run_install()
 	BOOL result = GetModuleFileName(0, exe_filename, 1024);
 	if (result == FALSE)
 	{
-		CL_Console::write_line(cl_text("Could not install service. Unable to retrieve executable path."));
+		CL_Console::write_line("Could not install service. Unable to retrieve executable path.");
 		return 1;
 	}
 
 	SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
 	if (handle_manager == 0)
 	{
-		CL_Console::write_line(cl_text("Could not install service. Failed to open service control manager."));
+		CL_Console::write_line("Could not install service. Failed to open service control manager.");
 		return 2;
 	}
 
 	SC_HANDLE handle_service = CreateService(
-		handle_manager, service_name.c_str(), service_name.c_str(),
+		handle_manager, CL_StringHelp::utf8_to_ucs2(service_name).c_str(), CL_StringHelp::utf8_to_ucs2(service_name).c_str(),
 		SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_DEMAND_START,
 		SERVICE_ERROR_NORMAL, exe_filename, 0, 0, 0, 0, 0);
 	if (handle_service == 0)
 	{
 		CloseServiceHandle(handle_manager);
-		CL_Console::write_line(cl_text("Could not create service in service control manager."));
+		CL_Console::write_line("Could not create service in service control manager.");
 		return 3;
 	}
 
 	CloseServiceHandle(handle_service);
 	CloseServiceHandle(handle_manager);
 
-	CL_Console::write_line(cl_text("%1 installed."), service_name);
+	CL_Console::write_line("%1 installed.", service_name);
 	return 0;
 }
 
@@ -252,16 +252,16 @@ int CL_Service_Win32::run_uninstall()
 	SC_HANDLE handle_manager = OpenSCManager(0, 0, SC_MANAGER_ALL_ACCESS);
 	if (handle_manager == 0)
 	{
-		CL_Console::write_line(cl_text("Could not uninstall service. Failed to open service control manager."));
+		CL_Console::write_line("Could not uninstall service. Failed to open service control manager.");
 		return 1;
 	}
 
 	SC_HANDLE handle_service = OpenService(
-		handle_manager, service_name.c_str(), SERVICE_ALL_ACCESS);
+		handle_manager, CL_StringHelp::utf8_to_ucs2(service_name).c_str(), SERVICE_ALL_ACCESS);
 	if (handle_service == 0)
 	{
 		CloseServiceHandle(handle_manager);
-		CL_Console::write_line(cl_text("Could not open service in service control manager."));
+		CL_Console::write_line("Could not open service in service control manager.");
 		return 2;
 	}
 
@@ -269,13 +269,13 @@ int CL_Service_Win32::run_uninstall()
 	memset(&service_status, 0, sizeof(SERVICE_STATUS));
 	if (ControlService(handle_service, SERVICE_CONTROL_STOP, &service_status))
 	{
-		CL_Console::write(cl_text("Stopping %1.."), service_name);
+		CL_Console::write("Stopping %1..", service_name);
 		Sleep(1000);
 		while (QueryServiceStatus(handle_service, &service_status))
 		{
 			if (service_status.dwCurrentState == SERVICE_STOP_PENDING)
 			{
-				CL_Console::write(cl_text("."));
+				CL_Console::write(".");
 				Sleep(1000);
 			}
 			else
@@ -283,17 +283,17 @@ int CL_Service_Win32::run_uninstall()
 				break;
 			}
 		}
-		CL_Console::write_line(cl_text(""));
+		CL_Console::write_line("");
 		if (service_status.dwCurrentState == SERVICE_STOPPED)
-			CL_Console::write_line(cl_text("%1 stopped."), service_name);
+			CL_Console::write_line("%1 stopped.", service_name);
 		else
-			CL_Console::write_line(cl_text("%1 failed to stop."), service_name);
+			CL_Console::write_line("%1 failed to stop.", service_name);
 	}
 
 	if (DeleteService(handle_service))
-		CL_Console::write_line(cl_text("%1 removed."), service_name);
+		CL_Console::write_line("%1 removed.", service_name);
 	else
-		CL_Console::write_line(cl_text("Unable to uninstall service. DeleteService failed."));
+		CL_Console::write_line("Unable to uninstall service. DeleteService failed.");
 
 	CloseServiceHandle(handle_service);
 	CloseServiceHandle(handle_manager);
@@ -302,11 +302,11 @@ int CL_Service_Win32::run_uninstall()
 
 void CL_Service_Win32::print_help()
 {
-	CL_Console::write_line(cl_text("Service parameters:"));
-	CL_Console::write_line(cl_text("  -install            - Install service"));
-	CL_Console::write_line(cl_text("  -uninstall          - Remove the service"));
-	CL_Console::write_line(cl_text("  -debug              - Run service as a console application"));
-	CL_Console::write_line(cl_text(""));
-	CL_Console::write_line(cl_text("StartServiceCtrlDispatcher being called."));
-	CL_Console::write_line(cl_text("This may take several seconds. Please wait."));
+	CL_Console::write_line("Service parameters:");
+	CL_Console::write_line("  -install            - Install service");
+	CL_Console::write_line("  -uninstall          - Remove the service");
+	CL_Console::write_line("  -debug              - Run service as a console application");
+	CL_Console::write_line("");
+	CL_Console::write_line("StartServiceCtrlDispatcher being called.");
+	CL_Console::write_line("This may take several seconds. Please wait.");
 }

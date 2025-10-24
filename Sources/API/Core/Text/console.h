@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 /// \addtogroup clanCore_Text clanCore Text
@@ -56,25 +57,7 @@ class CL_Console
 
 public:
 	/// \brief Writes text to the console window.
-	static void write(const CL_StringRef &text)
-	{
-	#ifdef WIN32
-		/*
-			Do not replace WriteConsole with the commented WriteFile code unless you
-			really know what you are doing and understand when ANSI code pages are used and
-			when OEM code pages are used.  -- mbn 29. jan 2008
-
-		CL_TempString8 t = CL_StringHelp::text_to_local8(text);
-		DWORD written = 0;
-		WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), t.data(), t.length(), &written, 0);
-		*/
-
-		DWORD written = 0;
-		WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), text.data(), text.length(), &written, 0);
-	#else
-		::write(1, text.data(), text.length());
-	#endif
-	}
+	static void write(const CL_StringRef &text);
 
 	template <class Arg1>
 
@@ -84,7 +67,7 @@ public:
 	/// \param arg1 = Arg1
 	static void write(const CL_StringRef &format, Arg1 arg1)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		write(f.get_result());
 	}
@@ -98,7 +81,7 @@ public:
 	/// \param arg2 = Arg2
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		write(f.get_result());
@@ -114,7 +97,7 @@ public:
 	/// \param arg3 = Arg3
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -132,7 +115,7 @@ public:
 	/// \param arg4 = Arg4
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -152,7 +135,7 @@ public:
 	/// \param arg5 = Arg5
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -174,7 +157,7 @@ public:
 	/// \param arg6 = Arg6
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -198,7 +181,7 @@ public:
 	/// \param arg7 = Arg7
 	static void write(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -214,9 +197,9 @@ public:
 	{
 		write(text);
 	#ifdef WIN32
-		write(cl_text("\r\n"));
+		write("\r\n");
 	#else
-		write(cl_text("\n"));
+		write("\n");
 	#endif
 	}
 
@@ -228,7 +211,7 @@ public:
 	/// \param arg1 = Arg1
 	static void write_line(const CL_StringRef &format, Arg1 arg1)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		write_line(f.get_result());
 	}
@@ -242,7 +225,7 @@ public:
 	/// \param arg2 = Arg2
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		write_line(f.get_result());
@@ -258,7 +241,7 @@ public:
 	/// \param arg3 = Arg3
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -276,7 +259,7 @@ public:
 	/// \param arg4 = Arg4
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -296,7 +279,7 @@ public:
 	/// \param arg5 = Arg5
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -318,7 +301,7 @@ public:
 	/// \param arg6 = Arg6
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -342,7 +325,7 @@ public:
 	/// \param arg7 = Arg7
 	static void write_line(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
 	{
-		CL_TempStringFormat f(format);
+		CL_StringFormat f(format);
 		f.set_arg(1, arg1);
 		f.set_arg(2, arg2);
 		f.set_arg(3, arg3);
@@ -354,23 +337,10 @@ public:
 	}
 
 	/// \brief Block until a key is pressed in the console window.
-	static void wait_for_key()
-	{
-	#ifdef WIN32
-		while (!_kbhit()) Sleep(250);
-		_getch();	// Required, else the next call to wait_for_key would fail
-	#endif
-/*
-		write_line("Press any key");
-	#ifdef WIN32
-		TCHAR buffer[1];
-		DWORD written = 0;
-		BOOL result = ReadConsole(GetStdHandle(STD_INPUT_HANDLE), buffer, 1, &written, 0);
-	#else
-		char buffer[1];
-		read(0, buffer, 1);
-	#endif
-*/	}
+	///
+	/// This function does not do anything on Linux
+	static void wait_for_key();
+
 /// \}
 };
 

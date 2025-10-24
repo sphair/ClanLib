@@ -205,8 +205,8 @@ Panel::Panel(GUI *gui) : gui(gui)
 	spin_texture_translate->set_geometry(CL_Rect(130, yoffset, CL_Size(64, 21)));
 	spin_texture_translate->set_number_of_decimal_places(3);
 	spin_texture_translate->set_floating_point_mode(true);
-	spin_texture_translate->set_value_float(0.375f);
-	spin_texture_translate->set_step_size_float(0.005f);
+	spin_texture_translate->set_value_float(0.0f);
+	spin_texture_translate->set_step_size_float(0.375f);
 	spin_texture_translate->set_ranges_float(-1.0f, 1.0f);
 	spin_texture_translate->func_value_changed().set(this, &Panel::on_spin_changed, spin_texture_translate);
 

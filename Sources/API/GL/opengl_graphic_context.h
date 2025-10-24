@@ -44,13 +44,21 @@ class CL_API_GL CL_GraphicContext_GL : public CL_GraphicContext
 {
 //!Construction
 public:
-	/// \brief 
+	// \brief Create a null instance
+	CL_GraphicContext_GL() {}
+
+	/// \brief Create a GL specific graphics context
 	CL_GraphicContext_GL(CL_GraphicContext &gc);
 
 	~CL_GraphicContext_GL();
 
 //!Attributes
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get the opengl version
 	///

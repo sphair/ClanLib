@@ -47,7 +47,7 @@
 #include "API/Display/2D/draw.h"
 #include "API/Core/Text/string_help.h"
 
-#include "../2D/sprite_render_batch.h"
+#include "../2D/render_batch2d.h"
 #include "../Render/graphic_context_impl.h"
 
 #ifndef WIN32

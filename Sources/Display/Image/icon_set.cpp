@@ -174,19 +174,10 @@ CL_DataBuffer CL_IconSet_Impl::create_ico_helper(const std::vector<CL_PixelBuffe
 CL_PixelBuffer CL_IconSet_Impl::create_bitmap_data(const CL_PixelBuffer &image)
 {
 	// Convert pixel buffer to DIB compatible format:
-	CL_PixelFormat argb8888(
-		32,
-		0x00ff0000,
-		0x0000ff00,
-		0x000000ff,
-		0xff000000);
 
-	int pitch = image.get_width() * 4;
-	CL_PixelBuffer bmp_image(image.get_width(), image.get_height(), pitch, argb8888);
+	CL_PixelBuffer bmp_image(image.get_width(), image.get_height(), cl_argb8);
 
-	image.convert(
-		bmp_image.get_data(), bmp_image.get_format(), pitch,
-		CL_Rect(0, 0, bmp_image.get_width(), bmp_image.get_height()));
+	image.convert(bmp_image, CL_Rect(0, 0, bmp_image.get_width(), bmp_image.get_height()));
 
 	// Note that the APIs use pre-multiplied alpha, which means that the red,
 	// green and blue channel values in the bitmap must be pre-multiplied with

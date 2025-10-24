@@ -42,6 +42,7 @@ public:
 	}
 
 	CL_RenderBufferProvider *provider;
+	CL_Size size;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -51,26 +52,33 @@ CL_RenderBuffer::CL_RenderBuffer()
 {
 }
 
-CL_RenderBuffer::CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format)
+CL_RenderBuffer::CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format, int multisample_samples)
 : impl(new CL_RenderBuffer_Impl)
 {
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
 	impl->provider = gc_provider->alloc_render_buffer();
-	impl->provider->create(width, height, internal_format);
+	impl->provider->create(width, height, internal_format, multisample_samples);
+	impl->size.width = width;
+	impl->size.height = height; 
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RenderBuffer Attributes:
 
-bool CL_RenderBuffer::is_null() const
+void CL_RenderBuffer::throw_if_null() const
 {
-	return impl.is_null();
-
+	if (impl.is_null())
+		throw CL_Exception("CL_RenderBuffer is null");
 }
 
 CL_RenderBufferProvider *CL_RenderBuffer::get_provider() const
 {
 	return impl->provider;
+}
+
+const CL_Size &CL_RenderBuffer::get_size() const
+{
+	return impl->size;
 }
 
 /////////////////////////////////////////////////////////////////////////////

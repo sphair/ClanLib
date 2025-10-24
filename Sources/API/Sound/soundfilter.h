@@ -48,18 +48,13 @@ class CL_API_SOUND CL_SoundFilter
 
 public:
 
-	/// \brief Constructs a NULL sound filter
+	/// \brief Constructs a NULL instance
 	CL_SoundFilter() {};
 
 	/// \brief Constructs a sound filter
 	///
 	/// \param provider = The provider
 	CL_SoundFilter(CL_SoundFilterProvider *provider);
-
-	/// \brief Constructs a SoundFilter
-	///
-	/// \param copy = Sound Filter
-	CL_SoundFilter(const CL_SoundFilter &copy);
 
 	~CL_SoundFilter();
 
@@ -85,10 +80,11 @@ public:
 
 public:
 
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null();
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Retrieves the provider.
 	CL_SoundFilterProvider *get_provider() const;

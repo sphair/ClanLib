@@ -35,7 +35,6 @@
 
 
 #include "../api_core.h"
-#include "thread_local_storage.h"
 
 /// \brief Library initializer class.
 ///
@@ -57,8 +56,6 @@ public:
 /// \{
 
 public:
-	CL_ThreadLocalStorage tls;
-
 
 /// \}
 /// \name Implementation

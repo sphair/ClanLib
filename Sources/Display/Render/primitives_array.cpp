@@ -38,6 +38,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_PrimitivesArray Construction:
 
+CL_PrimitivesArray::CL_PrimitivesArray()
+{
+}
+
 CL_PrimitivesArray::CL_PrimitivesArray(CL_GraphicContext &gc)
 : impl(gc.impl->create_prim_array(gc.impl))
 {
@@ -50,10 +54,12 @@ CL_PrimitivesArray::~CL_PrimitivesArray()
 /////////////////////////////////////////////////////////////////////////////
 // CL_PrimitivesArray Attributes:
 
-bool CL_PrimitivesArray::is_null() const
+void CL_PrimitivesArray::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("is null");
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PrimitivesArray Operations:

@@ -54,7 +54,7 @@ CL_WebserviceMessage::CL_WebserviceMessage(const CL_StringRef &name, const CL_St
 {
 	impl->document = CL_SoapHelp::create_soap11_message(impl->envelope, impl->body);
 	impl->message = impl->document.create_element_ns(target_namespace, name);
-	impl->message.set_attribute(cl_text("xmlns"), target_namespace);
+	impl->message.set_attribute("xmlns", target_namespace);
 	impl->body.append_child(impl->message);
 }
 
@@ -110,7 +110,7 @@ CL_WebservicePart CL_WebserviceMessage::get_part_ns(const CL_StringRef &namespac
 {
 	CL_DomNode node = impl->message.named_item_ns(namespace_uri, name);
 	if (!node.is_element())
-		throw CL_Exception(cl_format(cl_text("No web service message part named %1"), name));
+		throw CL_Exception(cl_format("No web service message part named %1", name));
 	return CL_WebservicePart(node.to_element());
 }
 
@@ -171,7 +171,7 @@ CL_String CL_WebserviceMessage::create_qname(const CL_StringRef &name)
 	if (prefix.empty())
 		return name;
 	else
-		return prefix + cl_text(":") + name;
+		return prefix + ":" + name;
 }
 
 CL_WebservicePart CL_WebserviceMessage::append_part(const CL_StringRef &name)

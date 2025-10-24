@@ -49,7 +49,7 @@ class CL_OutlineMath
  public:
 	/// \brief Find minimum spanning circle for the set of points
 	///
-	/// \param std::vector<CL_Pointf> &points the points to calulate on
+	/// \param points the points to calulate on
 	static CL_OutlineCircle minimum_enclosing_disc(
 		const std::vector<CL_Pointf> &points);
 	static void minimum_enclosing_disc(

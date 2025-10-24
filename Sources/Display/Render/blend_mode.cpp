@@ -39,7 +39,7 @@ public:
 	CL_BlendMode_Impl()	:
 	  src_func(cl_blend_src_alpha),
 	  dest_func(cl_blend_one_minus_src_alpha),
-	  src_alpha_func(cl_blend_src_alpha), 
+	  src_alpha_func(cl_blend_one), 
 	  dest_alpha_func(cl_blend_one_minus_src_alpha),
 	  color_equation(cl_blend_equation_add),
 	  alpha_equation(cl_blend_equation_add),

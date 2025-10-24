@@ -66,10 +66,6 @@ public:
 	/// \brief Returns the current position in the playback stream.
 	virtual int get_position() const = 0;
 
-	/// \brief Returns the playback sample format.
-	/** \return The playback Sample format.*/
-	virtual CL_SoundFormat get_format() const = 0;
-
 	/// \brief Returns the number of channels filled when get_data is called.
 	virtual int get_num_channels() const = 0;
 
@@ -100,6 +96,13 @@ public:
 	///
 	/// \return True for success. False otherwise.
 	virtual bool set_position(int pos) = 0;
+
+	/// \brief Sets the end position within the current stream.
+	///
+	/// \param pos = End position.
+	///
+	/// \return True for success. False otherwise.
+	virtual bool set_end_position(int pos) = 0;
 
 	/// \brief Called when a playback session needs more sample data.
 	///

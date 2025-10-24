@@ -59,7 +59,7 @@ std::vector<CL_Rect> CL_ScreenInfoProvider_Win32::get_screen_geometries(int &pri
 		if ((display_device.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) == 0 &&
 			(display_device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP))
 		{
-			CL_String device_name = display_device.DeviceName;
+			CL_String16 device_name = display_device.DeviceName;
 			DEVMODE devmode;
 			memset(&devmode, 0, sizeof(DEVMODE));
 			devmode.dmSize = sizeof(DEVMODE);

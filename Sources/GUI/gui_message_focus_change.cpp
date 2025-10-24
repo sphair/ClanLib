@@ -43,8 +43,8 @@ public:
 
 CL_GUIMessage_FocusChange::CL_GUIMessage_FocusChange()
 {
-	set_type(cl_text("focus change"));
-	set_data(cl_text("focus change"), CL_SharedPtr<CL_GUIMessage_FocusChangeData>(
+	set_type("focus change");
+	set_data("focus change", CL_SharedPtr<CL_GUIMessage_FocusChangeData>(
 		new CL_GUIMessage_FocusChangeData));
 }
 
@@ -62,12 +62,12 @@ CL_GUIMessage_FocusChange::~CL_GUIMessage_FocusChange()
 
 CL_StringRef CL_GUIMessage_FocusChange::get_type_name()
 {
-	return cl_text("focus change");
+	return "focus change";
 }
 
 CL_GUIMessage_FocusChange::FocusType CL_GUIMessage_FocusChange::get_focus_type() const
 {
-	CL_SharedPtr<CL_GUIMessage_FocusChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_FocusChangeData> >(get_data(cl_text("focus change")));
+	CL_SharedPtr<CL_GUIMessage_FocusChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_FocusChangeData> >(get_data("focus change"));
 	if (d.is_null())
 		return losing_focus;
 	return d->focus_type;
@@ -78,12 +78,12 @@ CL_GUIMessage_FocusChange::FocusType CL_GUIMessage_FocusChange::get_focus_type()
 
 void CL_GUIMessage_FocusChange::set_focus_type(FocusType focus_type)
 {
-	CL_SharedPtr<CL_GUIMessage_FocusChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_FocusChangeData> >(get_data(cl_text("focus change")));
+	CL_SharedPtr<CL_GUIMessage_FocusChangeData> d = static_cast<CL_SharedPtr<CL_GUIMessage_FocusChangeData> >(get_data("focus change"));
 	if (d.is_null())
 	{
 		d = CL_SharedPtr<CL_GUIMessage_FocusChangeData>(
 			new CL_GUIMessage_FocusChangeData);
-		set_data(cl_text("focus change"), d);
+		set_data("focus change", d);
 	}
 	d->focus_type = focus_type;
 }

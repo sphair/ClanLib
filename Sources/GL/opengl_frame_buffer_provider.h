@@ -34,6 +34,7 @@
 
 #include "API/Display/TargetProviders/frame_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
+#include "API/Display/Render/render_buffer.h"
 
 class CL_API_DISPLAY CL_OpenGLFrameBufferProvider : public CL_FrameBufferProvider, CL_DisposableObject
 {
@@ -51,13 +52,11 @@ public:
 /// \{
 
 public:
-	CLuint get_draw_handle();
-	CLuint get_read_handle();
+	CLuint get_handle();
 
-	CL_Size get_attachment_size(int buffer_id) const;
+	CL_Size get_size() const;
 
-	const std::vector<int> &get_attachment_indexes() const;
-
+	CL_FrameBufferBindTarget get_bind_target() const;
 
 /// \}
 /// \name Operations
@@ -68,23 +67,32 @@ public:
 	void destroy();
 
 	void attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
-
+	void detach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
-
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
-
 	void detach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
 
 	void attach_stencil_buffer(const CL_RenderBuffer &render_buffer);
-
-	void detach_stencil_buffer();
+	void detach_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 
 	void attach_depth_buffer(const CL_RenderBuffer &render_buffer);
-
+	void detach_depth_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 	void attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 
-	void detach_depth_buffer();
+	void attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 
+	void set_bind_target(CL_FrameBufferBindTarget target);
+
+	void check_framebuffer_complete();
 
 /// \}
 /// \name Implementation
@@ -94,13 +102,30 @@ private:
 	void on_dispose();
 	static CL_String get_error_message(int error_code);
 
-	CL_Size sizes[16];
+	CLuint decode_texture_subtype(CL_TextureSubtype subtype);
+	void detach_object(CLenum opengl_attachment, const CL_Texture &texture);
+	void detach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
 
-	int attachment_texture_types[16];
+	// Returns true if the object was replaced
+	bool attach_object(CLenum opengl_attachment, const CL_Texture &texture, int level, int zoffset, CLuint texture_target);
+	bool attach_object(CLenum opengl_attachment, const CL_RenderBuffer &render_buffer);
 
-	std::vector<int> attachment_indexes;
+	int decode_internal_attachment_offset(CLenum opengl_attachment);
 
-	CLuint handles[2];
+	static const int depth_attachment_offset = 0;
+	static const int stencil_attachment_offset = 1;
+	static const int depth_stencil_attachment_offset = 2;
+	static const int color_attachment_offset = 3;
+	static const int max_color_attachments = 16;
+	static const int num_attachment_offsets = color_attachment_offset + max_color_attachments;
+
+	CL_Texture attached_textures[num_attachment_offsets];
+	CL_RenderBuffer attached_renderbuffers[num_attachment_offsets];
+
+	int count_color_attachments;
+	CLuint handle;
+
+	CL_FrameBufferBindTarget bind_target;
 
 	CL_OpenGLGraphicContextProvider *gc_provider;
 /// \}
@@ -109,17 +134,11 @@ private:
 class CL_FrameBufferStateTracker
 {
 public:
-	enum Type
-	{
-		type_draw,
-		type_read
-	};
-
-	CL_FrameBufferStateTracker(Type buffer_type, CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
+	CL_FrameBufferStateTracker(CL_FrameBufferBindTarget target, CLuint handle, CL_OpenGLGraphicContextProvider *gc_provider);
 	~CL_FrameBufferStateTracker();
 
 private:
-	Type buffer_type;
+	CL_FrameBufferBindTarget bind_target;
 	CLint last_bound;
 	bool handle_and_bound_equal;
 };

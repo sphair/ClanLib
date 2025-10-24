@@ -93,11 +93,6 @@ CL_GUIComponent *CL_GUIMessage::get_target() const
 	return impl->target;
 }
 
-bool CL_GUIMessage::is_null() const
-{
-	return impl.is_null();
-}
-
 bool CL_GUIMessage::is_consumed() const
 {
 	return impl->consumed;

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -50,6 +50,7 @@ public:
 	void disconnect_abortive();
 
 	void set_nodelay(bool enable);
+	void set_keep_alive(bool enable, int timeout, int interval);
 
 	void bind(const CL_SocketName &socketname, bool reuse_address);
 

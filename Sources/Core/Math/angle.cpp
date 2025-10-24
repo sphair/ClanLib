@@ -86,18 +86,20 @@ void CL_Angle::set_radians(float radians)
 	value_rad = radians;
 }
 
-void CL_Angle::normalize()
+CL_Angle &CL_Angle::normalize()
 {
 	value_rad = fmod(value_rad, CL_PI*2.0f);
 	if (value_rad < 0.0f)
 		value_rad += CL_PI*2.0f;
+	return *this;
 }
 
-void CL_Angle::normalize_180()
+CL_Angle &CL_Angle::normalize_180()
 {
 	normalize();
 	if (value_rad > CL_PI)
 		value_rad -= CL_PI * 2.0f;
+	return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -95,15 +95,15 @@ CL_DomString CL_DomNode::get_node_name() const
 		switch (tree_node->node_type)
 		{
 		case CDATA_SECTION_NODE:
-			return cl_text("#cdata-section");
+			return "#cdata-section";
 		case COMMENT_NODE:
-			return cl_text("#comment");
+			return "#comment";
 		case DOCUMENT_NODE:
-			return cl_text("#document");
+			return "#document";
 		case DOCUMENT_FRAGMENT_NODE:
-			return cl_text("#document-fragment");
+			return "#document-fragment";
 		case TEXT_NODE:
-			return cl_text("#text");
+			return "#text";
 		case ATTRIBUTE_NODE:
 		case DOCUMENT_TYPE_NODE:
 		case ELEMENT_NODE:
@@ -156,7 +156,7 @@ CL_DomString CL_DomNode::get_prefix() const
 	if (impl)
 	{
 		CL_DomString node_name = impl->get_tree_node()->get_node_name();
-		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		CL_DomString::size_type pos = node_name.find(':');
 		if (pos != CL_DomString::npos)
 			return node_name.substr(0, pos);
 	}
@@ -169,9 +169,9 @@ void CL_DomNode::set_prefix(const CL_DomString &prefix)
 	{
 		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.get();
 		CL_DomString node_name = impl->get_tree_node()->get_node_name();
-		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		CL_DomString::size_type pos = node_name.find(':');
 		if (pos == CL_DomString::npos)
-			impl->get_tree_node()->set_node_name(doc_impl, prefix + cl_text(':') + node_name);
+			impl->get_tree_node()->set_node_name(doc_impl, prefix + ':' + node_name);
 		else
 			impl->get_tree_node()->set_node_name(doc_impl, prefix + node_name.substr(pos));
 	}
@@ -182,7 +182,7 @@ CL_DomString CL_DomNode::get_local_name() const
 	if (impl)
 	{
 		CL_DomString node_name = impl->get_tree_node()->get_node_name();
-		CL_DomString::size_type pos = node_name.find(cl_text(':'));
+		CL_DomString::size_type pos = node_name.find(':');
 		if (pos != CL_DomString::npos)
 			return node_name.substr(pos + 1);
 		else
@@ -411,9 +411,9 @@ bool CL_DomNode::is_supported(
 	const CL_DomString &feature,
 	const CL_DomString &version) const
 {
-	if (CL_StringHelp::compare(feature, cl_text("xml")) == 0)
+	if (CL_StringHelp::compare(feature, "xml") == 0)
 	{
-		if (version.empty() || version == cl_text("1.0") || version == cl_text("2.0"))
+		if (version.empty() || version == "1.0" || version == "2.0")
 			return true;
 	}
 	return false;
@@ -557,7 +557,7 @@ CL_DomNode CL_DomNode::append_child(CL_DomNode new_child)
 
 CL_DomNode CL_DomNode::clone_node(bool deep) const
 {
-	return CL_DomNode();
+	throw CL_Exception("Implement me");
 }
 
 CL_DomElement CL_DomNode::to_element() const
@@ -671,14 +671,14 @@ CL_DomNode CL_DomNode::named_item_ns(
 
 CL_DomString CL_DomNode::find_namespace_uri(const CL_DomString &qualified_name) const
 {
-	static CL_DomString xmlns_prefix(cl_text("xmlns:"));
-	static CL_DomString xmlns_xml(cl_text("xml"));
-	static CL_DomString xmlns_xml_uri(cl_text("http://www.w3.org/XML/1998/namespace"));
-	static CL_DomString xmlns_xmlns(cl_text("xmlns"));
-	static CL_DomString xmlns_xmlns_uri(cl_text("http://www.w3.org/2000/xmlns/"));
+	static CL_DomString xmlns_prefix("xmlns:");
+	static CL_DomString xmlns_xml("xml");
+	static CL_DomString xmlns_xml_uri("http://www.w3.org/XML/1998/namespace");
+	static CL_DomString xmlns_xmlns("xmlns");
+	static CL_DomString xmlns_xmlns_uri("http://www.w3.org/2000/xmlns/");
 
 	CL_DomString prefix;
-	CL_DomString::size_type pos = qualified_name.find(cl_text(':'));
+	CL_DomString::size_type pos = qualified_name.find(':');
 	if (pos != CL_DomString::npos)
 		prefix = qualified_name.substr(0, pos);
 
@@ -722,7 +722,7 @@ CL_DomString CL_DomNode::find_prefix(const CL_DomString &namespace_uri) const
 		for (int index = 0; index < size; index++)
 		{
 			CL_DomNode attribute = attributes.item(index);
-			if (attribute.get_prefix() == cl_text("xmlns") &&
+			if (attribute.get_prefix() == "xmlns" &&
 				attribute.get_node_value() == namespace_uri)
 			{
 				return attribute.get_local_name();
@@ -743,7 +743,7 @@ CL_DomNode CL_DomNode::select_node(const CL_DomString &xpath_expression) const
 {
 	std::vector<CL_DomNode> nodes = select_nodes(xpath_expression);
 	if (nodes.empty())
-		throw CL_Exception(cl_format(cl_text("Xpath did not match any node: %1"), xpath_expression));
+		throw CL_Exception(cl_format("Xpath did not match any node: %1", xpath_expression));
 	return nodes[0];
 }
 

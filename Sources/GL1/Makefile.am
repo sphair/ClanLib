@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan21GL1.la
+lib_LTLIBRARIES = libclan22GL1.la
 
-libclan21GL1_la_SOURCES = \
+libclan22GL1_la_SOURCES = \
 	gl1_frame_buffer_provider.cpp \
 	gl1_graphic_context_provider.cpp \
 	gl1_render_buffer_provider.cpp \
@@ -28,7 +28,7 @@ libclan21GL1_la_SOURCES = \
 	precomp.h
 
 if WIN32
-	libclan21GL1_la_SOURCES += \
+	libclan22GL1_la_SOURCES += \
 	WGL/pbuffer_impl.h \
 	WGL/pbuffer_impl.cpp \
 	WGL/gl1_creation_helper.cpp \
@@ -36,21 +36,18 @@ if WIN32
 	WGL/gl1_creation_helper.h \
 	WGL/gl1_window_provider_wgl.h
 else
-libclan21GL1_la_SOURCES += \
+libclan22GL1_la_SOURCES += \
 	GLX/pbuffer_impl.h \
 	GLX/pbuffer_impl.cpp \
 	GLX/gl1_window_provider_glx.cpp \
 	GLX/gl1_window_provider_glx.h
 
-#libclan21GL1_la_LIBADD = -lXi
 endif
 
-# EXTRA_DIST = \
-# WGL/displaycard_opengl_win32.cpp \
-# WGL/displaycard_opengl_win32.h   \
-# WGL/setupgl_win32.cpp
+libclan22GL1_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanGL1)
 
-libclan21GL1_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22GL1_la_CXXFLAGS=$(clanGL1_CXXFLAGS) $(extra_CFLAGS_clanGL1)
 
 # EOF #

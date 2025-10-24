@@ -190,7 +190,7 @@ public:
 	///
 	/// This subtracts the matrix as follows: this = subtract_matrix - this
 	///
-	/// \param subtrac_matrix = Matrix to subtract
+	/// \param subtract_matrix = Matrix to subtract
 	///
 	/// \return reference to this object
 	CL_Mat2<Type> &subtract(const CL_Mat2<Type> &subtract_matrix);

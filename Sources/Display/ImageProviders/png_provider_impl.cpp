@@ -81,11 +81,6 @@ CL_PNGProvider_Impl::~CL_PNGProvider_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // CL_PNGProvider_Impl attributes:
 
-bool CL_PNGProvider_Impl::is_indexed() const
-{
-	return (format.get_depth()==8);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_PNGProvider_Impl operations:
 
@@ -96,18 +91,20 @@ void* CL_PNGProvider_Impl::get_data()
 
 void CL_PNGProvider_Impl::init()
 {
+	sized_format = cl_rgba8;
+
 	//setting up PNGLIB stuff
 	png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, (png_voidp) this, pngread_error_handler, NULL);
 	
 	if (!png_ptr) 
-		throw CL_Exception(cl_text("CL_PNGProvider_Impl: png_create_read_struct() failed"));
+		throw CL_Exception("CL_PNGProvider_Impl: png_create_read_struct() failed");
 	
 	info_ptr = png_create_info_struct(png_ptr);
 
 	if (!info_ptr)
 	{
 		png_destroy_read_struct(&png_ptr, (png_infopp) NULL, (png_infopp) NULL);
-		throw CL_Exception(cl_text("CL_PNGProvider_Impl: png_create_info_struct() failed"));
+		throw CL_Exception("CL_PNGProvider_Impl: png_create_info_struct() failed");
 	}
 
 	end_info = png_create_info_struct(png_ptr);
@@ -115,7 +112,7 @@ void CL_PNGProvider_Impl::init()
 	if (!end_info)
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
-		throw CL_Exception(cl_text("Unable to create PNG info struct"));
+		throw CL_Exception("Unable to create PNG info struct");
 	}   
 	// Note, we must not use png_ptr->jmpbuff, as if libpng is compiled using a different compiler, unexpected results will occur
 	if (setjmp(jmpbuf))
@@ -145,12 +142,11 @@ void CL_PNGProvider_Impl::init()
 	// this could be integrated better, but I'm too tired, so I just hack CL_TargaProvider
 	// support into it. -- mbn 21. feb 2002
 
-	CL_PNGProvider_Impl::format.enable_colorkey(uses_src_colorkey());
-	CL_PNGProvider_Impl::format.set_colorkey(get_src_colorkey());
 	CL_PNGProvider_Impl::pitch = get_pitch();
 	CL_PNGProvider_Impl::width = get_width();
 	CL_PNGProvider_Impl::height = get_height();
-	if (is_indexed()) CL_PNGProvider_Impl::format.set_type(pixelformat_index);
+	//if ((format.get_depth()==8))
+	//	CL_PNGProvider_Impl::sized_format = cl_color_index;
 }
 
 void CL_PNGProvider_Impl::deinit()
@@ -227,19 +223,14 @@ void CL_PNGProvider_Impl::read_data()
 		read_data_rgba ();
 		break;
 	default:
-		throw CL_Exception(cl_text("CL_PNGProvider_Impl: Unsupported PNG format!"));
+		throw CL_Exception("CL_PNGProvider_Impl: Unsupported PNG format!");
 		break;
 	}
 }
 
 void CL_PNGProvider_Impl::read_data_rgb()
 {
-	format.set_type(pixelformat_rgba);
-	format.set_red_mask(0xff0000);
-	format.set_green_mask(0x00ff00);
-	format.set_blue_mask(0x0000ff);
-	format.set_alpha_mask(0x000000);
-	format.set_depth(24);
+	sized_format = cl_rgb8;
 
 	pitch = png_get_rowbytes(png_ptr, info_ptr);
 
@@ -269,13 +260,7 @@ void CL_PNGProvider_Impl::read_data_rgb()
 
 void CL_PNGProvider_Impl::read_data_rgba()
 {
-	format.set_type(pixelformat_rgba);
-	format.set_red_mask  (0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask (0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-
-	format.set_depth(32);
+	sized_format = cl_rgba8;
 
 	pitch = png_get_rowbytes(png_ptr, info_ptr);
 
@@ -307,12 +292,7 @@ void CL_PNGProvider_Impl::read_data_rgba()
 
 void CL_PNGProvider_Impl::read_data_grayscale()
 {
-	format.set_type(pixelformat_rgba);
-	format.set_red_mask(0xff0000);
-	format.set_green_mask(0x00ff00);
-	format.set_blue_mask(0x0000ff);
-	format.set_alpha_mask(0x000000);
-	format.set_depth(24);
+	sized_format = cl_rgb8;
 
 	int bit_depth = png_get_bit_depth(png_ptr,info_ptr);
 	int rowbytes  = png_get_rowbytes(png_ptr, info_ptr);
@@ -348,12 +328,7 @@ void CL_PNGProvider_Impl::read_data_grayscale()
 
 void CL_PNGProvider_Impl::read_data_grayscale_alpha()
 {
-	format.set_type(pixelformat_rgba);
-	format.set_red_mask(0xff000000);
-	format.set_green_mask(0x00ff0000);
-	format.set_blue_mask(0x0000ff00);
-	format.set_alpha_mask(0x000000ff);
-	format.set_depth(32);
+	sized_format = cl_rgba8;
 
 	pitch = width * 4;
 
@@ -405,12 +380,7 @@ void CL_PNGProvider_Impl::read_data_grayscale_alpha()
 
 void CL_PNGProvider_Impl::read_data_palette()
 {
-	format.set_type(pixelformat_index);
-	format.set_red_mask(0x00000000);
-	format.set_green_mask(0x00000000);
-	format.set_blue_mask(0x00000000);
-	format.set_alpha_mask(0x00000000);
-	format.set_depth(8);
+	sized_format = cl_color_index;
 
 	int bit_depth = png_get_bit_depth(png_ptr,info_ptr);
 	int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
@@ -483,7 +453,7 @@ void CL_PNGProvider_Impl::read_data_palette()
 			}
 			break;
 		default:
-			throw CL_Exception(cl_text("CL_PNGProvider_Impl: Unhandled bit depth"));
+			throw CL_Exception("CL_PNGProvider_Impl: Unhandled bit depth");
 		}
 		delete[] tmp_image;
 	}

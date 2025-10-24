@@ -74,10 +74,10 @@ CL_DomString CL_DomDocument_Generic::find_namespace_uri(
 	const CL_XMLToken &search_token,
 	const CL_DomNode &search_node)
 {
-	static CL_DomString xmlns_prefix(cl_text("xmlns:"));
+	static CL_DomString xmlns_prefix("xmlns:");
 	CL_DomString name = qualified_name;
 	CL_DomString prefix;
-	CL_DomString::size_type pos = name.find(cl_text(':'));
+	CL_DomString::size_type pos = name.find(':');
 	if (pos != CL_DomString::npos)
 		prefix = name.substr(0, pos);
 
@@ -86,7 +86,7 @@ CL_DomString CL_DomDocument_Generic::find_namespace_uri(
 	{
 		if (prefix.empty())
 		{
-			if (search_token.attributes[i].first == cl_text("xmlns"))
+			if (search_token.attributes[i].first == "xmlns")
 				return search_token.attributes[i].second;
 		}
 		else

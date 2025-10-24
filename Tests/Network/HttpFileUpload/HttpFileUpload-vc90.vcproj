@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="HttpFileUpload"
-	ProjectGUID="{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}"
+	ProjectGUID="{1063ECE5-D66A-4DA2-89D9-4DC7EC728C6D}"
 	RootNamespace="TCPConnection"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"

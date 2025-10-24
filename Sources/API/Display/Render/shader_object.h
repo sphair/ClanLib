@@ -49,6 +49,7 @@ class CL_ShaderObject_Impl;
 enum CL_ShaderType
 {
 	cl_shadertype_vertex,
+	cl_shadertype_geometry,
 	cl_shadertype_fragment
 };
 
@@ -66,21 +67,21 @@ class CL_API_DISPLAY CL_ShaderObject
 /// \{
 
 public:
+	/// \brief Constructs a null instance
+	CL_ShaderObject();
+
 	/// \brief Constructs an OpenGL shader.
 	///
 	/// \param type Shader type. Can be cl_shadertype_vertex or cl_shadertype_fragment.
 	/// \param source Shader source code, in OpenGL Shader Language (GLSL).
-	/// \param sources Shader source code as list of strings.
-	/// \param gc_provider Graphics context in which to create the shader object
-	/// \param resource_id Name of shader object resource.
-	/// \param resources Resource Manager providing resource.
+	/// \param gc Graphics context in which to create the shader object
 	CL_ShaderObject(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &source);
 
 	/// \brief Constructs a ShaderObject
 	///
 	/// \param gc = Graphic Context
 	/// \param type = Shader Type
-	/// \param vector = std
+	/// \param sources = sources
 	CL_ShaderObject(CL_GraphicContext &gc, CL_ShaderType type, const std::vector<CL_StringRef> &sources);
 
 	/// \brief Constructs a ShaderObject
@@ -94,7 +95,7 @@ public:
 	///
 	/// \param gc_provider = Graphic Context Provider
 	/// \param type = Shader Type
-	/// \param vector = std
+	/// \param sources = sources
 	CL_ShaderObject(CL_GraphicContextProvider *gc_provider, CL_ShaderType type, const std::vector<CL_StringRef> &sources);
 
 	/// \brief Load
@@ -180,6 +181,12 @@ public:
 
 	/// \brief Get shader source code.
 	CL_String get_shader_source() const;
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 /// \}
 /// \name Operations

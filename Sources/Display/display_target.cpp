@@ -86,9 +86,10 @@ CL_DisplayTargetProvider *CL_DisplayTarget::get_provider()
 		return 0;
 }
 
-bool CL_DisplayTarget::is_null() const
+void CL_DisplayTarget::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_DisplayTarget is null");
 }
 
 /////////////////////////////////////////////////////////////////////////////

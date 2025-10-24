@@ -34,15 +34,8 @@
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Render/blend_mode.h"
-#include "sprite_render_batch.h"
+#include "render_batch2d.h"
 #include <vector>
-
-/// \brief Shared data between sprites from same resource
-class CL_SpriteData
-{
-public:
-	CL_SpriteData(const CL_StringRef &resource_id, CL_ResourceManager *resources);
-};
 
 struct CL_Surface_TargetDrawParams1
 {
@@ -97,8 +90,7 @@ public:
 	void init(
 		CL_GraphicContext &gc,
 		const CL_StringRef &resource_id,
-		CL_ResourceManager *resources,
-		CL_SharedPtr<CL_SpriteData> sprite_data);
+		CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc);
 
 public:
 	class SpriteFrame
@@ -123,8 +115,6 @@ public:
 public:
 	const SpriteFrame *get_frame(unsigned int index) const;
 	SpriteFrame *get_frame(unsigned int index);
-
-	CL_SharedPtr<CL_SpriteData> data;
 
 	CL_Angle angle, angle_pitch, angle_yaw;
 	CL_Angle base_angle;

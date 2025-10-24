@@ -100,7 +100,7 @@ CL_Pointf CL_BezierCurve_Impl::get_point_relative(float pos) const
 	return P[0];
 }
 
-std::vector<CL_Pointf> CL_BezierCurve_Impl::generate_curve_points(float split_angle_deg)
+std::vector<CL_Pointf> CL_BezierCurve_Impl::generate_curve_points(const CL_Angle &split_angle)
 {
 	std::vector<CL_Pointf> points;
 /*
@@ -111,7 +111,7 @@ std::vector<CL_Pointf> CL_BezierCurve_Impl::generate_curve_points(float split_an
 	points.push_back(get_point_relative(1.0));
 */
 
-	split_angle_rad = CL_PI / 180.0f * split_angle_deg;
+	split_angle_rad = split_angle.to_radians(); 
 
 	points.push_back( get_point_relative(0.0) );
 

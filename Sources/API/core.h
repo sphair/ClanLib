@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,1,2)
-#define CL_VERSION_STRING "2.1.2"
+#define CL_CURRENT_VERSION	CL_VERSION(2,2,0)
+#define CL_VERSION_STRING "2.2.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -61,6 +61,7 @@
 #include "Core/Text/string_format.h"
 #include "Core/Text/string_help.h"
 #include "Core/Text/string_allocator.h"
+#include "Core/Text/utf8_reader.h"
 #include "Core/System/databuffer.h"
 #include "Core/System/block_allocator.h"
 #include "Core/System/console_window.h"
@@ -141,10 +142,9 @@
 #include "Core/XML/xpath_evaluator.h"
 #include "Core/XML/xpath_object.h"
 #include "Core/CSS/css_document.h"
-#include "Core/CSS/css_import.h"
 #include "Core/CSS/css_property.h"
-#include "Core/CSS/css_ruleset.h"
-#include "Core/CSS/css_selector.h"
+#include "Core/CSS/css_tokenizer.h"
+#include "Core/CSS/css_token.h"
 #include "Core/IOData/access_control_list.h"
 #include "Core/IOData/file.h"
 #include "Core/IOData/file_help.h"
@@ -181,6 +181,7 @@
 #include "Core/Math/ear_clip_result.h"
 #include "Core/Math/line_math.h"
 #include "Core/Math/cl_math.h"
+#include "Core/Math/quaternion.h"
 #include "Core/Math/mat2.h"
 #include "Core/Math/mat3.h"
 #include "Core/Math/mat4.h"
@@ -203,113 +204,29 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (_MT)
-		#error Your application is set to link with the single threaded version of the run-time library. Go to project settings, in the C++ section, and change it from single threaded to multi threaded.
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
 	#endif
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-dll.lib")
-				#else
-					#pragma comment(lib, "clanCore-dll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-dll-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-dll-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mtdll.lib")
-					#pragma comment(lib, "zlib-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mtdll.lib")
-					#pragma comment(lib, "zlib-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mtdll-debug.lib")
-					#pragma comment(lib, "zlib-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mtdll-debug.lib")
-					#pragma comment(lib, "zlib-static-mtdll-debug.lib")
-				#endif
-			#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanCore-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanCore-static-mtdll.lib")
+			#pragma comment(lib, "zlib-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mt.lib")
-					#pragma comment(lib, "zlib-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mt.lib")
-					#pragma comment(lib, "zlib-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mt-debug.lib")
-					#pragma comment(lib, "zlib-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mt-debug.lib")
-					#pragma comment(lib, "zlib-static-mt-debug.lib")
-				#endif
-			#endif
+			#pragma comment(lib, "clanCore-static-mt.lib")
+			#pragma comment(lib, "zlib-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-dll-uc.lib")
-				#else
-					#pragma comment(lib, "clanCore-dll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-dll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-dll-uc-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mtdll-uc.lib")
-					#pragma comment(lib, "zlib-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mtdll-uc.lib")
-					#pragma comment(lib, "zlib-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mtdll-uc-debug.lib")
-					#pragma comment(lib, "zlib-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mtdll-uc-debug.lib")
-					#pragma comment(lib, "zlib-static-mtdll-debug.lib")
-				#endif
-			#endif
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanCore-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanCore-static-mtdll-debug.lib")
+			#pragma comment(lib, "zlib-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mt-uc.lib")
-					#pragma comment(lib, "zlib-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mt-uc.lib")
-					#pragma comment(lib, "zlib-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanCore-x64-static-mt-uc-debug.lib")
-					#pragma comment(lib, "zlib-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanCore-static-mt-uc-debug.lib")
-					#pragma comment(lib, "zlib-static-mt-debug.lib")
-				#endif
-			#endif
+			#pragma comment(lib, "clanCore-static-mt-debug.lib")
+			#pragma comment(lib, "zlib-static-mt-debug.lib")
 		#endif
 	#endif
 #endif

@@ -412,7 +412,7 @@ protected:
 
 	/// \brief Constructs a DomNode
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNode_Generic> impl;

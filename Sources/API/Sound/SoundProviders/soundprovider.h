@@ -49,11 +49,6 @@ class CL_API_SOUND CL_SoundProvider
 public:
 	CL_SoundProvider();
 
-	/// \brief Constructs a SoundProvider
-	///
-	/// \param copy = Sound Provider
-	CL_SoundProvider(const CL_SoundProvider &copy);
-
 	virtual ~CL_SoundProvider();
 
 /// \}

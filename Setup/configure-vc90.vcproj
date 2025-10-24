@@ -252,14 +252,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Win32\workspace_generator_msvc.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Win32\workspace_generator_msvc.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Win32\workspace_generator_msvc8.cpp"
 				>
 			</File>

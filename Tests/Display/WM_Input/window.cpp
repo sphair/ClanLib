@@ -8,7 +8,7 @@ Window::Window()
 	create_window_class();
 	handle = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, TEXT("WindowClass"), TEXT("My Window"), WS_OVERLAPPEDWINDOW|WS_VISIBLE, 0, 0, 1024, 768, 0, 0, GetModuleHandle(0), this);
 	if (handle == 0)
-		throw CL_Exception(cl_text("Failed to create window"));
+		throw CL_Exception("Failed to create window");
 }
 
 Window::~Window()
@@ -53,7 +53,7 @@ void Window::create_window_class()
 		class_ex.hIcon = 0;
 		class_atom = RegisterClassEx(&class_ex);
 		if (class_atom == 0)
-			throw CL_Exception(cl_text("Failed to register window class"));
+			throw CL_Exception("Failed to register window class");
 	}
 }
 

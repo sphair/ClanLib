@@ -38,7 +38,7 @@
 /// \brief String formatting class.
 ///
 /// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
-class CL_API_CORE CL_TempStringFormat
+class CL_API_CORE CL_StringFormat
 {
 /// \name Construction
 /// \{
@@ -48,16 +48,16 @@ public:
 	/// \brief Constructs a TempStringFormat
 	///
 	/// \param format_string = String Ref
-	CL_TempStringFormat(const CL_StringRef &format_string);
+	CL_StringFormat(const CL_StringRef &format_string);
 
-	~CL_TempStringFormat();
+	~CL_StringFormat();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	const CL_TempString &get_result() const;
+	const CL_String &get_result() const;
 
 /// \}
 /// \name Operations
@@ -110,7 +110,7 @@ private:
 	/// \param length = value
 	void create_arg(int index, int start, int length);
 
-	CL_TempString string;
+	CL_String string;
 
 	struct ArgPosition
 	{
@@ -124,32 +124,35 @@ private:
 /// \}
 };
 
+inline CL_String cl_format(const CL_StringRef &format)
+{ return format; }
+
 template <class Arg1>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); return f.get_result(); }
 
 template <class Arg1, class Arg2>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); return f.get_result(); }
 
 template <class Arg1, class Arg2, class Arg3>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); return f.get_result(); }
 
 template <class Arg1, class Arg2, class Arg3, class Arg4>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); return f.get_result(); }
 
 template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); return f.get_result(); }
 
 template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); return f.get_result(); }
 
 template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
-CL_TempString cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
-{ CL_TempStringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); return f.get_result(); }
+CL_String cl_format(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7)
+{ CL_StringFormat f(format); f.set_arg(1, arg1); f.set_arg(2, arg2); f.set_arg(3, arg3); f.set_arg(4, arg4); f.set_arg(5, arg5); f.set_arg(6, arg6); f.set_arg(7, arg7); return f.get_result(); }
 
 /// \}

@@ -58,8 +58,6 @@ public:
 
 	virtual int get_frequency() const;
 
-	virtual CL_SoundFormat get_format() const;
-
 	virtual int get_num_channels() const;
 
 	virtual int get_position() const;
@@ -77,6 +75,8 @@ public:
 	virtual bool play();
 
 	virtual bool set_position(int pos);
+
+	virtual bool set_end_position(int pos) { return false; }
 
 	virtual int get_data(float **data_ptr, int data_requested);
 

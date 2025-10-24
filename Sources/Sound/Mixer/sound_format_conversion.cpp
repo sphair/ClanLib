@@ -69,7 +69,7 @@ void CL_SoundFormatConversion::from_16bit_le(CL_SoundMixingBuffersData &output, 
 
 void CL_SoundFormatConversion::from_16bit_be(CL_SoundMixingBuffersData &output, void *input, CL_SpeakerPositionMask input_speakers, unsigned int sample_count)
 {
-	throw CL_Exception(cl_text("16 bit big endian samples not implemented"));
+	throw CL_Exception("16 bit big endian samples not implemented");
 }
 
 void CL_SoundFormatConversion::from_8bit_signed(CL_SoundMixingBuffersData &output, void *input, CL_SpeakerPositionMask input_speakers, unsigned int sample_count)
@@ -162,7 +162,7 @@ void CL_SoundFormatConversion::to_16bit_le(void **output, CL_SpeakerPositionMask
 
 void CL_SoundFormatConversion::to_16bit_be(void **output, CL_SpeakerPositionMask output_speakers, const CL_SoundMixingBuffersData &input, unsigned int sample_count)
 {
-	throw CL_Exception(cl_text("16 bit big endian samples not implemented"));
+	throw CL_Exception("16 bit big endian samples not implemented");
 }
 
 void CL_SoundFormatConversion::to_8bit_signed(void **output, CL_SpeakerPositionMask output_speakers, const CL_SoundMixingBuffersData &input, unsigned int sample_count)

@@ -47,6 +47,7 @@
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
+typedef GLXContext (*ptr_glXCreateContextAttribs)(Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
 class CL_OpenGLWindowProvider_GLX;
 
@@ -97,6 +98,7 @@ public:
 	typedef __GLXextFuncPtr (CL_GLFUNC *ptr_glXGetProcAddress) (const GLubyte *);
 	typedef void (*(CL_GLFUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
 
+
 public:
 	ptr_glXChooseVisual glXChooseVisual;
 	ptr_glXCopyContext glXCopyContext;
@@ -138,6 +140,7 @@ public:
 	ptr_glXSelectEvent glXSelectEvent;
 	ptr_glXGetProcAddress glXGetProcAddress;
 	ptr_glXGetProcAddressARB glXGetProcAddressARB;
+
 };
 
 class CL_GL_RenderWindowProvider_GLX: public CL_RenderWindowProvider
@@ -195,15 +198,19 @@ public:
 
 	bool is_clipboard_image_available() const { return x11_window.is_clipboard_image_available(); }
 
+	CL_String get_title() const { return x11_window.get_title(); }
+	CL_Size get_minimum_size(bool client_area) const { return x11_window.get_minimum_size(client_area); }
+	CL_Size get_maximum_size(bool client_area) const { return x11_window.get_maximum_size(client_area); }
+
 	CL_String get_clipboard_text() const { return x11_window.get_clipboard_text(); }
 
 	CL_PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
 
 	/// \brief Returns the X11 display handle.
-	Display *get_display() { return x11_window.get_display(); }
+	Display *get_display() const { return x11_window.get_display(); }
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() { return x11_window.get_window(); }
+	Window get_window() const { return x11_window.get_window(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }

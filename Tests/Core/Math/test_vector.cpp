@@ -921,6 +921,25 @@ void TestApp::test_vector3(void)
 		if (destf.y != 3.0f) fail();
 		if (destf.z != -2.0f) fail();
 	}
+
+	CL_Console::write_line("   Function: CL_Vec3<Type> operator * (const CL_Mat3<Type>& matrix, const CL_Vec3<Type>& v)");
+	{
+		/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+		CL_Mat3f matrix(1.0f, 2.0f, 3.0f, 
+						4.0f, 5.0f, 6.0f,
+						7.0f, 8.0f, 9.0f);
+
+		CL_Vec3f vector(1.0f, 2.0f, 3.0f);
+		CL_Vec3f result = matrix * vector;
+
+		if (result.x != ( (matrix[0 + 3*0] * vector.x) + (matrix[0 + 3*1] * vector.y) + (matrix[0 + 3*2] * vector.z) ) )
+			fail();
+		if (result.y != ( (matrix[1 + 3*0] * vector.x) + (matrix[1 + 3*1] * vector.y) + (matrix[1 + 3*2] * vector.z) ) )
+			fail();
+		if (result.z != ( (matrix[2 + 3*0] * vector.x) + (matrix[2 + 3*1] * vector.y) + (matrix[2 + 3*2] * vector.z) ) )
+			fail();
+	
+	}
 }
 
 

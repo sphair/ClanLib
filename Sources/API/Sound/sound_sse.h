@@ -59,6 +59,12 @@ public:
 	/// \brief Unpacks 8 bit mono samples into a single float channel
 	static void unpack_8bit_mono(unsigned char *input, int size, float *output);
 
+	/// \brief Unpacks float mono samples into a single float channel
+	static void unpack_float_mono(float *input, int size, float *output);
+
+	/// \brief Unpacks float stereo samples into separate float channels
+	static void unpack_float_stereo(float *input, int size, float *output[2]);
+
 	/// \brief Packs two float channels into a single 16 bit samples stream
 	static void pack_16bit_stereo(float *input[2], int size, short *output);
 

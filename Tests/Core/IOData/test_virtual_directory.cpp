@@ -100,7 +100,7 @@ void TestApp::test_virtual_directory_part1(void)
 
 //*** testing open_directory()
 	CL_Console::write_line("   Function: CL_VirtualDirectory CL_VirtualDirectory::open_directory(const CL_String &path)");
-	CL_VirtualDirectory dir2 = dir.open_directory(cl_text("ABC/DEF"));
+	CL_VirtualDirectory dir2 = dir.open_directory("ABC/DEF");
 	strpath = dir2.get_path();
 #ifdef WIN32
 	str = cwd + "\\ABC\\DEF\\";
@@ -113,7 +113,7 @@ void TestApp::test_virtual_directory_part1(void)
 	CL_Console::write_line("   Function: CL_IODevice CL_VirtualDirectory::open_file()");
 	if(true)
 	{
-		CL_IODevice device = dir.open_file(cl_text("../IOData/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		CL_IODevice device = dir.open_file("../IOData/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 		char test_data[4];
 		if (device.receive(test_data, 4, true) != 4) fail();
 		if ( (test_data[0] != '/') || (test_data[1] != '*') ) fail();
@@ -121,7 +121,7 @@ void TestApp::test_virtual_directory_part1(void)
 
 //*** testing make_path_absolute()
 	CL_Console::write_line("   Function: CL_String make_path_absolute(const CL_String &relative_path)");
-	str = dir.make_path_absolute(cl_text("../IOData/ABC/DEF"));
+	str = dir.make_path_absolute("../IOData/ABC/DEF");
 	strpath = dir2.get_path();
 #ifdef WIN32
 	str = cwd + "\\ABC\\DEF\\";
@@ -132,12 +132,12 @@ void TestApp::test_virtual_directory_part1(void)
 
 //*** testing make_path_relative()
 	CL_Console::write_line("   Function: CL_String make_path_relative(const CL_String &absolute_path)");
-	CL_String str2 = cwd + cl_text("/ABC/DEF");
+	CL_String str2 = cwd + "/ABC/DEF";
 	str = dir.make_path_relative(str2);
 #ifdef WIN32
-	if (str != cl_text("ABC\\DEF")) fail();
+	if (str != "ABC\\DEF") fail();
 #else
-	if (str != cl_text("ABC/DEF")) fail();
+	if (str != "ABC/DEF") fail();
 #endif
 
 //*** testing mount(const CL_String &mount_point, CL_VirtualFileSystem &fs)
@@ -145,7 +145,7 @@ void TestApp::test_virtual_directory_part1(void)
 	try
 	{
 		CL_VirtualFileSystem fs;
-		dir.mount(cl_text("./"), fs);
+		dir.mount("./", fs);
 		fail();	// Exception should have been called
 	}
 	catch (CL_Exception errror)
@@ -156,7 +156,7 @@ void TestApp::test_virtual_directory_part1(void)
 	CL_Console::write_line("   Function: mount(const CL_String &mount_point, const CL_String &path)");
 	try
 	{
-		dir.mount(cl_text("../"), cl_text("../"));
+		dir.mount("../", "../");
 		fail();	// Exception should have been called
 	}
 	catch (CL_Exception errror)
@@ -167,7 +167,7 @@ void TestApp::test_virtual_directory_part1(void)
 	CL_Console::write_line("   Function: unmount(const CL_String &mount_point)");
 	try
 	{
-		dir.unmount(cl_text("../"));
+		dir.unmount("../");
 		fail();	// Exception should have been called
 	}
 	catch (CL_Exception errror)
@@ -182,8 +182,8 @@ void TestApp::test_virtual_directory_part2(void)
 
 	CL_String str;
 	CL_String cwd(working_dir);
-	CL_VirtualFileSystem vfs(cl_text("../../"));
-	CL_VirtualDirectory dir(vfs, cl_text("Core/IOData"));
+	CL_VirtualFileSystem vfs("../../");
+	CL_VirtualDirectory dir(vfs, "Core/IOData");
 
 //*** testing get_file_system()
 	CL_Console::write_line("   Function: CL_VirtualFileSystem get_file_system()");
@@ -193,7 +193,7 @@ void TestApp::test_virtual_directory_part2(void)
 //*** testing get_path()
 	CL_Console::write_line("   Function: CL_String &get_path()");
 	CL_String strpath = dir.get_path();
-	if (strpath != cl_text("Core/IOData/")) fail();
+	if (strpath != "Core/IOData/") fail();
 
 //*** testing get_directory_listing()
 	CL_Console::write_line("   Function: CL_VirtualDirectoryListing get_directory_listing()");
@@ -202,19 +202,19 @@ void TestApp::test_virtual_directory_part2(void)
 	{
 		if (!listing.next()) fail();
 		str = listing.get_filename();
-	}while(str != cl_text("test_virtual_directory.cpp"));
+	}while(str != "test_virtual_directory.cpp");
 
 //*** testing open_directory()
 	CL_Console::write_line("   Function: CL_VirtualDirectory CL_VirtualDirectory::open_directory(const CL_String &path)");
-	CL_VirtualDirectory dir2 = dir.open_directory(cl_text("ABC/DEF"));
+	CL_VirtualDirectory dir2 = dir.open_directory("ABC/DEF");
 	strpath = dir2.get_path();
-	if (cl_text("Core/IOData/ABC/DEF/") != strpath) fail();
+	if ("Core/IOData/ABC/DEF/" != strpath) fail();
 
 //*** testing open_file()
 	CL_Console::write_line("   Function: CL_IODevice CL_VirtualDirectory::open_file()");
 	if(true)
 	{
-		CL_IODevice device = dir.open_file(cl_text("../IOData/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		CL_IODevice device = dir.open_file("../IOData/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 		char test_data[4];
 		if (device.receive(test_data, 4, true) != 4) fail();
 		if ( (test_data[0] != '/') || (test_data[1] != '*') ) fail();
@@ -222,87 +222,87 @@ void TestApp::test_virtual_directory_part2(void)
 
 //*** testing make_path_absolute()
 	CL_Console::write_line("   Function: CL_String make_path_absolute(const CL_String &relative_path)");
-	str = dir.make_path_absolute(cl_text("../IOData/ABC/DEF"));
+	str = dir.make_path_absolute("../IOData/ABC/DEF");
 	strpath = dir2.get_path();
 #ifdef WIN32
-	if (str != cl_text("Core\\IOData\\ABC\\DEF")) fail();
+	if (str != "Core\\IOData\\ABC\\DEF") fail();
 #else
-	if (str != cl_text("Core/IOData/ABC/DEF")) fail();
+	if (str != "Core/IOData/ABC/DEF") fail();
 #endif
 
 
 //*** testing make_path_relative()
 	CL_Console::write_line("   Function: CL_String make_path_relative(const CL_String &absolute_path)");
-	CL_VirtualDirectory dir3(vfs, cl_text("/Core/IOData"));
-	CL_String str2 = cl_text("/Core/IOData/ABC/DEF");
+	CL_VirtualDirectory dir3(vfs, "/Core/IOData");
+	CL_String str2 = "/Core/IOData/ABC/DEF";
 	str = dir3.make_path_relative(str2);
 #ifdef WIN32
-	if (str != cl_text("ABC\\DEF")) fail();
+	if (str != "ABC\\DEF") fail();
 #else
-	if (str != cl_text("ABC/DEF")) fail();
+	if (str != "ABC/DEF") fail();
 #endif
 
 //*** testing mount(const CL_String &mount_point, const CL_String &path)
 	CL_Console::write_line("   Function: mount(const CL_String &mount_point, const CL_String &path)");
 	if(true)
 	{
-		CL_VirtualFileSystem vfs(cl_text("somewhere"));
-		CL_VirtualDirectory dir(vfs, cl_text("do_not_care"));
-		dir.mount(cl_text("ABC"), cl_text("../../Core/IOData"));
-		CL_IODevice device = dir.open_file(cl_text("ABC/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		CL_VirtualFileSystem vfs("somewhere");
+		CL_VirtualDirectory dir(vfs, "do_not_care");
+		dir.mount("ABC", "../../Core/IOData");
+		CL_IODevice device = dir.open_file("ABC/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 	}
 
 //*** testing mount(const CL_String &mount_point, CL_VirtualFileSystem &fs)
 	CL_Console::write_line("   Function: mount(const CL_String &mount_point, CL_VirtualFileSystem &fs)");
 	if(true)
 	{
-		CL_VirtualFileSystem vfs(cl_text("somewhere"));
-		CL_VirtualDirectory dir(vfs, cl_text("do_not_care"));
-		CL_VirtualFileSystem new_vfs(new MyFileSource(cl_text("Hello")));
-		dir.mount(cl_text("ABC"), new_vfs);
-		CL_IODevice device = dir.open_file(cl_text("ABC/World"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-		if (MyFileSource::fullname != cl_text("HelloWorld")) fail();
+		CL_VirtualFileSystem vfs("somewhere");
+		CL_VirtualDirectory dir(vfs, "do_not_care");
+		CL_VirtualFileSystem new_vfs(new MyFileSource("Hello"));
+		dir.mount("ABC", new_vfs);
+		CL_IODevice device = dir.open_file("ABC/World", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		if (MyFileSource::fullname != "HelloWorld") fail();
 	}
 
 //*** testing unmount(const CL_String &mount_point)
 	CL_Console::write_line("   Function: unmount(const CL_String &mount_point)");
 	if(true)
 	{
-		CL_VirtualFileSystem vfs(cl_text("./"));
-		CL_VirtualDirectory dir(vfs, cl_text("./"));
-		dir.mount(cl_text("ABC"), cl_text("../../Core/IOData"));
-		dir.mount(cl_text("DEF"), cl_text("../../Core/IOData"));
-		dir.mount(cl_text("GHI"), cl_text("../../Core/IOData"));
+		CL_VirtualFileSystem vfs("./");
+		CL_VirtualDirectory dir(vfs, "./");
+		dir.mount("ABC", "../../Core/IOData");
+		dir.mount("DEF", "../../Core/IOData");
+		dir.mount("GHI", "../../Core/IOData");
 
-		dir.open_file(cl_text("ABC/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-		dir.open_file(cl_text("DEF/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-		dir.open_file(cl_text("GHI/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-		dir.unmount(cl_text("DEF"));
-		dir.unmount(cl_text("WWW"));
-		dir.open_file(cl_text("ABC/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-		dir.open_file(cl_text("GHI/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.open_file("ABC/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.open_file("DEF/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.open_file("GHI/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.unmount("DEF");
+		dir.unmount("WWW");
+		dir.open_file("ABC/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.open_file("GHI/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 
 		try
 		{
-			dir.open_file(cl_text("DEF/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+			dir.open_file("DEF/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 			fail();	// Exception should have been called
 		}
 		catch (CL_Exception errror)
 		{
 		}
-		dir.unmount(cl_text("ABC"));
-		dir.unmount(cl_text("GHI"));
+		dir.unmount("ABC");
+		dir.unmount("GHI");
 		try
 		{
-			dir.open_file(cl_text("ABC/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
-			dir.open_file(cl_text("GHI/test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+			dir.open_file("ABC/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+			dir.open_file("GHI/test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 
 			fail();	// Exception should have been called
 		}
 		catch (CL_Exception errror)
 		{
 		}
-		dir.open_file(cl_text("test_virtual_directory.cpp"), CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
+		dir.open_file("test_virtual_directory.cpp", CL_File::open_existing, CL_File::access_read, CL_File::share_all, 0);
 
 	}
 

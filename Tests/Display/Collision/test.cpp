@@ -1,3 +1,31 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2010 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Harry Storbacka
+*/
+
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
@@ -19,6 +47,8 @@ void print_usage()
 	CL_Console::write_line( "'c':    replace contours with convex hull");
 	CL_Console::write_line( "'h':    show this help again");
 	CL_Console::write_line( "1-8:    scale the middle outline");
+	CL_Console::write_line( "'x':    save then reload outline");
+	CL_Console::write_line( "'d':    toggle drawing of deep point");
 };
 
 
@@ -30,7 +60,7 @@ public:
 private:
 	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
-
+	void draw_point_normal(CL_GraphicContext &gc, const CL_Pointf &point, const CL_Pointf &normal, const CL_Colorf &color);
 private:
 	bool quit;
 };
@@ -62,8 +92,8 @@ int App::start(const std::vector<CL_String> &args)
 	try
 	{
 		CL_DisplayWindowDescription desc;
-		desc.set_title(cl_text("ClanLib Collision Test"));
-		desc.set_size(CL_Size(800, 600), true);
+		desc.set_title("ClanLib Collision Test");
+		desc.set_size(CL_Size(950, 700), true);
 		CL_DisplayWindow window(desc);
 
 		CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -71,8 +101,11 @@ int App::start(const std::vector<CL_String> &args)
 
 		CL_GraphicContext gc = window.get_gc();
 
+		CL_Font font(gc, "Tahoma", 16);
+
 //////////////////////////////////////////////////////////////////////////
 		CL_String file1("images/triangle.png");
+		//CL_String file2("images/triangle.png");
 		CL_String file2("images/weird.png");
 		//CL_String file2("images/edge_test2.png");
 		//CL_String file2("images/inside_test5.png");
@@ -90,9 +123,10 @@ int App::start(const std::vector<CL_String> &args)
 
 		// draw_limit = 0;
 
-		bool draw_sub_on_co1 = true;
-		bool draw_sub_on_co2 = true;
+		bool draw_sub_on_co1 = false;
+		bool draw_sub_on_co2 = false;
 		bool draw_surfaces = false;
+		bool draw_deep_point = false;
 		float sub_circle_multiplier = 3.5f;
 
 		////////////////////////////////////////////
@@ -115,6 +149,10 @@ int App::start(const std::vector<CL_String> &args)
 		CL_VirtualDirectory vdir = vfs.get_root_directory();
 		CL_CollisionOutline co1(file1);
 		CL_CollisionOutline co2(file2, vdir, 128, accuracy_medium, true);
+
+		// Save now before alignment and positions have been applied
+		co1.save("collision_1_test_outline_file");
+		co2.save("collision_2_test_outline_file");
 
 		// print some info about the outlines:
 		unsigned int size = co1.get_contours().size();
@@ -254,11 +292,37 @@ int App::start(const std::vector<CL_String> &args)
 				draw_sub_on_co2 = !draw_sub_on_co2;
 				CL_System::sleep(100);
 			}
+			if( keyboard.get_keycode(CL_KEY_D) )
+			{
+				draw_deep_point = !draw_deep_point;
+				CL_System::sleep(100);
+			}
 			if( keyboard.get_keycode(CL_KEY_S) )
 			{
 				draw_surfaces = !draw_surfaces;
 				CL_System::sleep(100);
 			}
+			if( keyboard.get_keycode(CL_KEY_X) )
+			{
+				// Load, ensuring recreated
+				co1 = CL_CollisionOutline();
+				co1.load("collision_1_test_outline_file");
+				co2 = CL_CollisionOutline();
+				co2.load("collision_2_test_outline_file");
+		
+				// Reset the options
+				co1.set_alignment(origin_center);
+				co1.set_rotation_hotspot(origin_center);
+				co1.enable_collision_info(true,true,true,true);
+				co1.set_inside_test(true);
+				co2.set_alignment(origin_center);
+				co2.set_rotation_hotspot(origin_center);
+				co2.enable_collision_info(true,true,true,true);
+				co2.set_inside_test(true);
+
+				CL_System::sleep(100);
+			}
+
 			if( keyboard.get_keycode(CL_KEY_SUBTRACT) )
 			{
 				sub_circle_multiplier -= 0.2f;
@@ -313,12 +377,13 @@ int App::start(const std::vector<CL_String> &args)
 			if(draw_sub_on_co2)
 				co2.draw_sub_circles(0.0, 0.0, CL_Colorf::blue, gc);
 
+			int font_ypos = 20;
 
 			// -----------------------------------
 			// collision testing
 			if( co2.collide(co1) )
 			{
-				CL_Draw::fill(gc, CL_Rect(0,0,800,600), CL_Colorf(CL_Color(55,40,250,20)));
+				CL_Draw::fill(gc, gc.get_size(), CL_Colorf(CL_Color(55,40,250,20)));
 				const std::vector<CL_CollidingContours> &colpointinfo = co2.get_collision_info();
 				for(unsigned int c = 0; c < colpointinfo.size(); c++)
 				{
@@ -326,23 +391,52 @@ int App::start(const std::vector<CL_String> &args)
 
 					for(unsigned int p = 0; p < colpointinfo[c].points.size(); p++)
 					{
-						CL_Pointf p1 = colpointinfo[c].points[p].point;
-						CL_Pointf p2 = p1 + CL_Pointf(colpointinfo[c].points[p].normal.x * 20.0f, colpointinfo[c].points[p].normal.y * 20.0f);
-						CL_Draw::line(gc, 
-							int(p1.x+0.5f), int(p1.y+0.5f),
-							int(p2.x+0.5f), int(p2.y+0.5f),
-							(colpointinfo[c].points[p].is_entry ? CL_Colorf::green : CL_Colorf::red));
-						// CL_Console::write_line(cl_format("p1: (%1,%2), ", p1.x, p1.y, colpointinfo[c].points[p].is_entry ? "entry" : "exit"));
+						const CL_CollisionPoint &collision_point = colpointinfo[c].points[p];
+						draw_point_normal(gc, collision_point.point, collision_point.normal, collision_point.is_entry ? CL_Colorf::green : CL_Colorf::red);
+	
+						// Draw information
+						CL_String output(cl_format("Collision(%1). Point Number (%2). ", c, p));
+						output = output + cl_format("Point(%1,%2). Normal(%3,%4). ", collision_point.point.x, collision_point.point.y, collision_point.normal.x, collision_point.normal.y);
+						if (collision_point.is_entry)
+						{
+							output = output + cl_format("Entry(true). ");
+						}
+						else
+						{
+							output = output + cl_format("Entry(false). ");
+						}
+
+						output = output + cl_format("Contour1(%1,%2), Contour2(%3,%4).", collision_point.contour1_line_start, collision_point.contour1_line_end, collision_point.contour2_line_start, collision_point.contour2_line_end);
+
+						font.draw_text(gc, 0, font_ypos, output, CL_Colorf(0.0f, 0.0f, 0.0f, 0.5f));
+						font_ypos += 20;
 					}
 					// Paint the pen-depth and normal from the deepest points
 					{
-						CL_Pointf p1 = colpointinfo[c].contour1_deep_point;
-						CL_Pointf p2 = p1 + CL_Pointf(colpointinfo[c].penetration_normal.x * colpointinfo[c].penetration_depth, colpointinfo[c].penetration_normal.y * colpointinfo[c].penetration_depth);
-						CL_Draw::line(gc, int(p1.x+0.5f), int(p1.y+0.5f),int(p2.x+0.5f), int(p2.y+0.5f),CL_Colorf::blue);
+						if (draw_deep_point)
+						{
+							draw_point_normal(gc, colpointinfo[c].contour1_deep_point, colpointinfo[c].penetration_normal, CL_Colorf::blue);
+							draw_point_normal(gc, colpointinfo[c].contour2_deep_point, colpointinfo[c].penetration_normal, CL_Colorf::blue);
+						}
 
-						p1 = colpointinfo[c].contour2_deep_point;
-						p2 = p1 + CL_Pointf(colpointinfo[c].penetration_normal.x * colpointinfo[c].penetration_depth, colpointinfo[c].penetration_normal.y * colpointinfo[c].penetration_depth);
-						CL_Draw::line(gc, int(p1.x+0.5f), int(p1.y+0.5f),int(p2.x+0.5f), int(p2.y+0.5f),CL_Colorf::blue);
+						// Draw information
+
+						CL_String output(cl_format("Collision(%1). ", c));
+						if (colpointinfo[c].inside)
+						{
+							output = output + cl_format("Inside(true). ");
+						}
+						else
+						{
+							output = output + cl_format("Inside(false). ");
+						}
+						output = output + cl_format("PenNormal(%1,%2). ", colpointinfo[c].penetration_normal.x, colpointinfo[c].penetration_normal.y);
+						output = output + cl_format("PenDepth(%1). ", colpointinfo[c].penetration_depth);
+						output = output + cl_format("DeepPoint1(%1,%2). ", colpointinfo[c].contour1_deep_point.x, colpointinfo[c].contour1_deep_point.y);
+						output = output + cl_format("DeepPoint2(%1,%2). ", colpointinfo[c].contour2_deep_point.x, colpointinfo[c].contour2_deep_point.y);
+						font.draw_text(gc, 0, font_ypos, output, CL_Colorf(0.0f, 0.0f, 0.0f, 0.5f));
+						font_ypos += 20;
+
 					}
 				}
 			}
@@ -391,4 +485,14 @@ void App::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
 void App::on_window_close()
 {
 	quit = true;
+}
+
+void App::draw_point_normal(CL_GraphicContext &gc, const CL_Pointf &point, const CL_Pointf &normal, const CL_Colorf &color)
+{
+	CL_Pointf p1 = point;
+	CL_Pointf p2 = p1 + CL_Pointf(normal.x * 20.0f, normal.y * 20.0f);
+	CL_Draw::line(gc, 
+			int(p1.x+0.5f), int(p1.y+0.5f),
+			int(p2.x+0.5f), int(p2.y+0.5f),
+			color);
 }

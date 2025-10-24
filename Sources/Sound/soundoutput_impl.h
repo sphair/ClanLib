@@ -147,6 +147,8 @@ private:
 	/// \brief Clamp mixing buffer values to the -1 to 1 range
 	void clamp_mix_buffers();
 
+	static CL_Mutex singleton_mutex;
+	static CL_SoundOutput_Impl *instance;
 /// \}
 };
 

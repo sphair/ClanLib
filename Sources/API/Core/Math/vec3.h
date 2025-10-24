@@ -256,6 +256,8 @@ public:
 /// \}
 };
 
+/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+/// Note: "vec = vector * matrix"  is different to "vec = matrix * vector"
 template<typename Type>
 CL_Vec3<Type> operator * (const CL_Vec3<Type>& v, const CL_Mat3<Type>& matrix)
 {
@@ -265,6 +267,8 @@ CL_Vec3<Type> operator * (const CL_Vec3<Type>& v, const CL_Mat3<Type>& matrix)
 		matrix[2*3+0]*v.x + matrix[2*3+1]*v.y + matrix[2*3+2]*v.z);
 }
 
+/// Matrix is assumed to be in the Column-Major matrix format (opengl native)\n
+/// Note: "vec = vector * matrix"  is different to "vec = matrix * vector"
 template<typename Type>
 CL_Vec3<Type> operator * (const CL_Mat3<Type>& matrix, const CL_Vec3<Type>& v)
 {

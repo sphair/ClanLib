@@ -30,96 +30,92 @@
 #include "API/Core/System/thread_local_storage.h"
 #include "thread_local_storage_impl.h"
 
-#ifdef WIN32
-// This doesnt work if you use ClanLib in a DLL that is LoadLibrary'ed.. -- mbn
-//	static __declspec(thread) CL_ThreadLocalStorage_Impl *cl_tls_impl = 0;
-	static DWORD cl_tls_index = TLS_OUT_OF_INDEXES;
-	CL_Mutex cl_tls_mutex;
-	class CL_TLSCleanUpHandler
-	{
-	public:
-		~CL_TLSCleanUpHandler()
-		{
-			if (cl_tls_index != TLS_OUT_OF_INDEXES)
-			{
-				TlsFree(cl_tls_index);
-				cl_tls_index = TLS_OUT_OF_INDEXES;
-			}
-		}
-	} cl_tls_cleanup;
-#elif !defined(HAVE_TLS)
-	static bool cl_tls_index_created = false;
-	static pthread_key_t cl_tls_index = 0;
-	CL_Mutex cl_tls_mutex;
-	class CL_TLSCleanUpHandler
-	{
-	public:
-		~CL_TLSCleanUpHandler()
-		{
-			if (cl_tls_index_created)
-			{
-				pthread_key_delete(cl_tls_index);
-				cl_tls_index_created = false;
-				cl_tls_index = 0;
-			}
-		}
-	} cl_tls_cleanup;
-#else
-	__thread CL_ThreadLocalStorage_Impl *cl_tls_impl = 0;
-#endif
+#include "../core_global.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ThreadLocalStorage Construction:
+
+void CL_ThreadLocalStorage::create_initial_instance()
+{
+	if (!cl_core_global.cl_tls)
+	{
+		cl_core_global.cl_tls = new(CL_ThreadLocalStorage);
+	}
+}
 
 CL_ThreadLocalStorage::CL_ThreadLocalStorage()
 {
 	CL_System::alloc_thread_temp_pool();
 
 #ifdef WIN32
-	if (cl_tls_index == TLS_OUT_OF_INDEXES)
+	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
 	{
-		CL_MutexSection mutex_lock(&cl_tls_mutex);
-		cl_tls_index = TlsAlloc();
+		CL_MutexSection mutex_lock(&cl_core_global.cl_tls_mutex);
+		cl_core_global.cl_tls_index = TlsAlloc();
 	}
 
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_tls_index);
-#elif !defined(HAVE_TLS)
-	if (!cl_tls_index_created)
-	{
-		CL_MutexSection mutex_lock(&cl_tls_mutex);
-		pthread_key_create(&cl_tls_index, 0);
-		cl_tls_index_created = true;
-	}
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_core_global.cl_tls_index);
 
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_tls_index);
-#endif
-	if (!cl_tls_impl)
+	if (!tls_impl)
 	{
-		cl_tls_impl = new CL_ThreadLocalStorage_Impl;
-#ifdef WIN32
-		TlsSetValue(cl_tls_index, cl_tls_impl);
-#elif !defined(HAVE_TLS)
-		pthread_setspecific(cl_tls_index, cl_tls_impl);
-#endif
+		tls_impl = new CL_ThreadLocalStorage_Impl;
+		TlsSetValue(cl_core_global.cl_tls_index, tls_impl);
 	}
 	else
 	{
-		cl_tls_impl->add_reference();
+		tls_impl->add_reference();
 	}
+
+#elif !defined(HAVE_TLS)
+	if (!cl_core_global.cl_tls_index_created)
+	{
+		CL_MutexSection mutex_lock(&cl_core_global.cl_tls_mutex);
+		pthread_key_create(&cl_core_global.cl_tls_index, 0);
+		cl_core_global.cl_tls_index_created = true;
+	}
+
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_core_global.cl_tls_index);
+
+	if (!tls_impl)
+	{
+		tls_impl = new CL_ThreadLocalStorage_Impl;
+		pthread_setspecific(cl_core_global.cl_tls_index, tls_impl);
+	}
+	else
+	{
+		tls_impl->add_reference();
+	}
+#else
+
+	if (!cl_core_global.cl_tls_impl)
+	{
+		cl_core_global.cl_tls_impl = new CL_ThreadLocalStorage_Impl;
+	}
+	else
+	{
+		cl_core_global.cl_tls_impl->add_reference();
+	}
+#endif
 }
 
 CL_ThreadLocalStorage::~CL_ThreadLocalStorage()
 {
 #ifdef WIN32
-	if (cl_tls_index == TLS_OUT_OF_INDEXES)
+	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
 		return;
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_tls_index);
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_core_global.cl_tls_index);
+	if (tls_impl)
+		tls_impl->release_reference();
 #elif !defined(HAVE_TLS)
-	if (!cl_tls_index_created)
+	if (!cl_core_global.cl_tls_index_created)
 		return;
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_tls_index);
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_core_global.cl_tls_index);
+	if (tls_impl)
+		tls_impl->release_reference();
+#else
+	if (cl_core_global.cl_tls_impl)
+		cl_core_global.cl_tls_impl->release_reference();
 #endif
-	cl_tls_impl->release_reference();
 
 	CL_System::free_thread_temp_pool();
 }
@@ -130,17 +126,19 @@ CL_ThreadLocalStorage::~CL_ThreadLocalStorage()
 CL_UnknownSharedPtr CL_ThreadLocalStorage::get_variable(const CL_StringRef &name)
 {
 #ifdef WIN32
-	if (cl_tls_index == TLS_OUT_OF_INDEXES)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_tls_index);
+	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_core_global.cl_tls_index);
 #elif !defined(HAVE_TLS)
-	if (!cl_tls_index_created)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_tls_index);
+	if (!cl_core_global.cl_tls_index_created)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_core_global.cl_tls_index);
+#else
+	CL_ThreadLocalStorage_Impl *tls_impl = cl_core_global.cl_tls_impl;
 #endif
-	if (cl_tls_impl == 0)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	return cl_tls_impl->get_variable(name);
+	if (tls_impl == 0)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	return tls_impl->get_variable(name);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -149,17 +147,19 @@ CL_UnknownSharedPtr CL_ThreadLocalStorage::get_variable(const CL_StringRef &name
 void CL_ThreadLocalStorage::set_variable(const CL_StringRef &name, CL_UnknownSharedPtr ptr)
 {
 #ifdef WIN32
-	if (cl_tls_index == TLS_OUT_OF_INDEXES)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_tls_index);
+	if (cl_core_global.cl_tls_index == TLS_OUT_OF_INDEXES)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) TlsGetValue(cl_core_global.cl_tls_index);
 #elif !defined(HAVE_TLS)
-	if (!cl_tls_index_created)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	CL_ThreadLocalStorage_Impl *cl_tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_tls_index);
+	if (!cl_core_global.cl_tls_index_created)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	CL_ThreadLocalStorage_Impl *tls_impl = (CL_ThreadLocalStorage_Impl *) pthread_getspecific(cl_core_global.cl_tls_index);
+#else
+	CL_ThreadLocalStorage_Impl *tls_impl = cl_core_global.cl_tls_impl;
 #endif
-	if (cl_tls_impl == 0)
-		throw CL_Exception(cl_text("No CL_ThreadLocalStorage object created for this thread."));
-	cl_tls_impl->set_variable(name,ptr);
+	if (tls_impl == 0)
+		throw CL_Exception("No CL_ThreadLocalStorage object created for this thread.");
+	tls_impl->set_variable(name,ptr);
 }
 
 /////////////////////////////////////////////////////////////////////////////

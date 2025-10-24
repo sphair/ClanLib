@@ -58,9 +58,9 @@ void CL_OutlineProviderFile_Generic::load(CL_IODevice &input_source)
 	unsigned char version = input_source.read_uint8();
 
 	if( type != 0x16082004  )
-		throw CL_Exception(cl_text("File is not a collision outline file") );
+		throw CL_Exception("File is not a collision outline file" );
 	if( version != 1 )
-		throw CL_Exception(cl_format(cl_text("Unsupported version of outline format: %1. Supported versions: 1."), version) );
+		throw CL_Exception(cl_format("Unsupported version of outline format: %1. Supported versions: 1.", version) );
 
 	// read in width and height
 	width = input_source.read_int32();

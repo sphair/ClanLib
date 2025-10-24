@@ -57,7 +57,7 @@ public:
 
 	/// \brief Constructs a DomProcessingInstruction
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomProcessingInstruction();

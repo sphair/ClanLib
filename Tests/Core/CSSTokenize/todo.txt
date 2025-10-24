@@ -1,0 +1,69 @@
+
+Unimplemented properties in box tree post processing (until moved elsewhere):
+
+text-transform
+quotes
+
+Unimplemented properties in layout:
+
+background-attachment, background-position, background-repeat
+clip
+counter-increment, counter-reset
+table-layout, caption-side, empty-cells, border-collapse, vertical-align (tables)
+list-style-position, list-style-image
+overflow
+direction, unicode-bidi
+page-break-after, page-break-before, page-break-inside, orphans, widows
+font-variant, text-decoration, letter-spacing, word-spacing, vertical-align (line segments)
+
+
+Incomplete properties in layout:
+
+border-style (only solid and none supported)
+content (counter, counters, uri, attr, open-quote, close-quote)
+clear (uncertain if the clearance is correctly implemented)
+display (table-*, none)
+font-family (all standard fonts map to Times New Roman)
+font-style (oblique is treated as italic)
+font-weight (bolder, lighter)
+list-style-type (only disc and none supported)
+margin-left, margin-top, margin-right, margin-bottom (inline elements, tables, negative margins)
+position, top, left, right, bottom (relative for inline elements, absolute, fixed)
+text-align (justify)
+visibility (collapse)
+white-space (rendering newlines, spaces and tabs for other modes than normal)
+width, height (replaced elements, inline-block, tables)
+min-width, min-height, max-width, max-height (replaced elements, inline-block, tables)
+z-index (layers within a stacking context not rendered in correct order)
+
+
+Unimplemented interactive specific properties:
+
+cursor
+outline-color, outline-style, outline-width
+
+
+Known bugs:
+
+Negative lengths and numbers does not work
+the > symbol does not work in selector chains
+
+
+
+-----------
+
+
+calculate_sizes(viewport.width, viewport.height)
+	if (element_node->is_shrink_to_fit())
+		find_shrink_to_fit_width(width);
+	calculate_child_sizes(actual.width, actual.height);
+
+find_shrink_to_fit_width(avail_width)
+	find_preferred_width()
+	find_minimum_width()
+
+find_preferred_width()
+	return sum(floats_widths())+max(longest_line_widths())
+
+find_minimum_width()
+	return max(max(floats_widths()),max(shortest_line_widths()))

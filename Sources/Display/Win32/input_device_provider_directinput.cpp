@@ -51,7 +51,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 	{
 		throw CL_Exception(
 			cl_format(
-				cl_text("Unable to open device %1 (%2)"),
+				"Unable to open device %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
@@ -63,7 +63,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 
 		throw CL_Exception(
 			cl_format(
-				cl_text("Unable to the set cooperative level for %1 (%2)"),
+				"Unable to the set cooperative level for %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
@@ -75,7 +75,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 
 		throw CL_Exception(
 			cl_format(
-				cl_text("Unable to set device dataformat for %1 (%2)"),
+				"Unable to set device dataformat for %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
@@ -95,7 +95,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 
 		throw CL_Exception(
 			cl_format(
-				cl_text("Unable to set buffer size attribute on device %1 (%2)"),
+				"Unable to set buffer size attribute on device %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
@@ -111,7 +111,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 
 		throw CL_Exception(
 			cl_format(
-				cl_text("Unable to acquire device %1 (%2)"),
+				"Unable to acquire device %1 (%2)",
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
@@ -153,7 +153,7 @@ bool CL_InputDeviceProvider_DirectInput::get_keycode(int keycode) const
 CL_String CL_InputDeviceProvider_DirectInput::get_key_name(int id) const
 {
 	throw_if_disposed();
-	return cl_format(cl_text("Joystick button %1"), id);
+	return cl_format("Joystick button %1", id);
 }
 
 float CL_InputDeviceProvider_DirectInput::get_axis(int index) const

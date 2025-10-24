@@ -50,71 +50,37 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-dll.lib")
-				#pragma comment(lib, "libvorbis-dll.lib")
-				#pragma comment(lib, "libogg-dll.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-dll-debug.lib")
-				#pragma comment(lib, "libvorbis-dll-debug.lib")
-				#pragma comment(lib, "libogg-dll-debug.lib")
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-static-mtdll.lib")
-				#pragma comment(lib, "libvorbis-static-mtdll.lib")
-				#pragma comment(lib, "libogg-static-mtdll.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-static-mtdll-debug.lib")
-				#pragma comment(lib, "libvorbis-static-mtdll-debug.lib")
-				#pragma comment(lib, "libogg-static-mtdll-debug.lib")
-			#endif
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
+	#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanVorbis-dll.lib")
+			#pragma comment(lib, "libvorbis-dll.lib")
+			#pragma comment(lib, "libogg-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanVorbis-static-mtdll.lib")
+			#pragma comment(lib, "libvorbis-static-mtdll.lib")
+			#pragma comment(lib, "libogg-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-static-mt.lib")
-				#pragma comment(lib, "libvorbis-static-mt.lib")
-				#pragma comment(lib, "libogg-static-mt.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-static-mt-debug.lib")
-				#pragma comment(lib, "libvorbis-static-mt-debug.lib")
-				#pragma comment(lib, "libogg-static-mt-debug.lib")
-			#endif
+			#pragma comment(lib, "clanVorbis-static-mt.lib")
+			#pragma comment(lib, "libvorbis-static-mt.lib")
+			#pragma comment(lib, "libogg-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-dll-uc.lib")
-				#pragma comment(lib, "libvorbis-dll.lib")
-				#pragma comment(lib, "libogg-dll.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-dll-uc-debug.lib")
-				#pragma comment(lib, "libvorbis-dll-debug.lib")
-				#pragma comment(lib, "libogg-dll-debug.lib")
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-static-mtdll-uc.lib")
-				#pragma comment(lib, "libvorbis-static-mtdll.lib")
-				#pragma comment(lib, "libogg-static-mtdll.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-static-mtdll-uc-debug.lib")
-				#pragma comment(lib, "libvorbis-static-mtdll-debug.lib")
-				#pragma comment(lib, "libogg-static-mtdll-debug.lib")
-			#endif
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanVorbis-dll-debug.lib")
+			#pragma comment(lib, "libvorbis-dll-debug.lib")
+			#pragma comment(lib, "libogg-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanVorbis-static-mtdll-debug.lib")
+			#pragma comment(lib, "libvorbis-static-mtdll-debug.lib")
+			#pragma comment(lib, "libogg-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanVorbis-static-mt-uc.lib")
-				#pragma comment(lib, "libvorbis-static-mt.lib")
-				#pragma comment(lib, "libogg-static-mt.lib")
-			#else
-				#pragma comment(lib, "clanVorbis-static-mt-uc-debug.lib")
-				#pragma comment(lib, "libvorbis-static-mt-debug.lib")
-				#pragma comment(lib, "libogg-static-mt-debug.lib")
-			#endif
+			#pragma comment(lib, "clanVorbis-static-mt-debug.lib")
+			#pragma comment(lib, "libvorbis-static-mt-debug.lib")
+			#pragma comment(lib, "libogg-static-mt-debug.lib")
 		#endif
 	#endif
 #endif
-

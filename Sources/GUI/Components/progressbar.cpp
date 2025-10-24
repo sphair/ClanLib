@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -78,8 +79,8 @@ CL_ProgressBar::CL_ProgressBar(CL_GUIComponent *parent)
 
 	impl->progressbar = this;
 	impl->part_component = CL_GUIThemePart(this);
-	impl->part_progress = CL_GUIThemePart(this, cl_text("progress"));
-	impl->part_chunk = CL_GUIThemePart(this, cl_text("chunk"));
+	impl->part_progress = CL_GUIThemePart(this, "progress");
+	impl->part_chunk = CL_GUIThemePart(this, "chunk");
 
 	impl->part_component.set_state(CssStr::normal, true);
 
@@ -93,6 +94,18 @@ CL_ProgressBar::~CL_ProgressBar()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgressBar Attributes:
+
+CL_ProgressBar *CL_ProgressBar::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ProgressBar *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ProgressBar*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ProgressBar named item: %1", id));
+
+	return object;
+}
 
 int CL_ProgressBar::get_min() const
 {

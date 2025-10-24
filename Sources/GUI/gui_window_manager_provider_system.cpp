@@ -37,6 +37,7 @@
 #include "API/Display/Window/input_device.h"
 #include "API/GUI/gui_window_manager_system.h"
 #include "API/Display/Render/blend_mode.h"
+#include "gui_manager_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerProvider_System Construction:
@@ -95,6 +96,12 @@ void CL_GUIWindowManagerProvider_System::on_displaywindow_window_close(CL_GUITop
 	site->func_close->invoke(top_level_window);
 }
 
+void CL_GUIWindowManagerProvider_System::on_displaywindow_window_destroy(CL_GUITopLevelWindow *top_level_window)
+{
+	maintain_window_cache(top_level_window);
+	site->func_destroy->invoke(top_level_window);
+}
+
 void CL_GUIWindowManagerProvider_System::on_input(const CL_InputEvent &incoming_input_event, const CL_InputState &input_state, CL_GUITopLevelWindow *top_level_window)
 {
 	CL_GUITopLevelWindowSystem *top_level_system = window_map[top_level_window];
@@ -132,12 +139,14 @@ void CL_GUIWindowManagerProvider_System::create_window(
 		{
 			top_level_window = cached_windows[used_cached_windows-1];
 			top_level_window->slots = CL_SlotContainer();
+			cache_window_handles[handle] = top_level_window->window.get_hwnd();
 		}
 		else
 		{
 			top_level_window = new CL_GUITopLevelWindowSystem;
 			top_level_window->window = CL_DisplayWindow(description);
 			cached_windows.push_back(top_level_window);
+			cache_window_handles[handle] = top_level_window->window.get_hwnd();
 		}
 	}
 	else
@@ -154,6 +163,7 @@ void CL_GUIWindowManagerProvider_System::create_window(
 	top_level_window->slots.connect(top_level_window->window.sig_resize(), this, &CL_GUIWindowManagerProvider_System::on_displaywindow_resize, handle);
 	top_level_window->slots.connect(top_level_window->window.sig_paint(), this, &CL_GUIWindowManagerProvider_System::on_displaywindow_paint, handle);
 	top_level_window->slots.connect(top_level_window->window.sig_window_close(), this, &CL_GUIWindowManagerProvider_System::on_displaywindow_window_close, handle);
+	top_level_window->slots.connect(top_level_window->window.sig_window_destroy(), this, &CL_GUIWindowManagerProvider_System::on_displaywindow_window_destroy, handle);
 
 	CL_InputContext& ic = top_level_window->window.get_ic();
 	top_level_window->slots.connect(ic.get_mouse().sig_key_up(), this, &CL_GUIWindowManagerProvider_System::on_input, handle);
@@ -178,6 +188,8 @@ void CL_GUIWindowManagerProvider_System::destroy_window(CL_GUITopLevelWindow *ha
 	capture_mouse(handle, false);	// Ensure the destroyed window has not captured the mouse
 
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowSystem *>::iterator it = window_map.find(handle);
+	if (it == window_map.end())
+		throw CL_Exception("destroy window called on non-existing window.");
 
 	bool cached = false;
 #ifdef WIN32	// Cached windows do not work on Linux
@@ -292,7 +304,7 @@ CL_GraphicContext& CL_GUIWindowManagerProvider_System::get_gc(CL_GUITopLevelWind
 {
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowSystem *>::const_iterator it = window_map.find(handle);
 	if (it == window_map.end())
-		throw CL_Exception(cl_text("Cannot find window handle"));
+		throw CL_Exception("Cannot find window handle");
 
 	return it->second->window.get_gc();
 }
@@ -301,7 +313,7 @@ CL_InputContext& CL_GUIWindowManagerProvider_System::get_ic(CL_GUITopLevelWindow
 {
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowSystem *>::const_iterator it = window_map.find(handle);
 	if (it == window_map.end())
-		throw CL_Exception(cl_text("Cannot find window handle"));
+		throw CL_Exception("Cannot find window handle");
 
 	return it->second->window.get_ic();
 }
@@ -445,3 +457,29 @@ void CL_GUIWindowManagerProvider_System::pop_cliprect(CL_GUITopLevelWindow *hand
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerProvider_System Implementation:
+
+void CL_GUIWindowManagerProvider_System::maintain_window_cache(CL_GUITopLevelWindow *destroy_top_level_window)
+{
+#ifdef _WIN32
+	std::map<CL_GUITopLevelWindow *, HWND>::iterator it;
+	it = cache_window_handles.find(destroy_top_level_window);
+	if (it != cache_window_handles.end())
+	{
+		HWND hwnd_del = (*it).second;
+
+		// Windows about to be destroyed need to be removed from the cache.
+		std::vector<CL_GUITopLevelWindowSystem *>::size_type i;
+		for (i = 0; i < cached_windows.size(); i++)
+		{
+			CL_GUITopLevelWindowSystem *tlws = cached_windows[i];
+			HWND cache_hwnd = tlws->window.get_hwnd();
+			if (cache_hwnd == hwnd_del)
+			{
+				cached_windows.erase(cached_windows.begin()+i);
+				cache_window_handles.erase(it);
+				break;
+			}
+		}
+	}
+#endif
+}

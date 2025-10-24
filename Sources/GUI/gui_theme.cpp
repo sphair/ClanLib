@@ -60,11 +60,6 @@ CL_GUITheme::CL_GUITheme(CL_GUIThemeProvider *provider)
 	impl->provider = provider;
 }
 
-CL_GUITheme::CL_GUITheme(const CL_GUITheme &copy)
-{
-	impl = copy.impl;
-}
-
 CL_GUITheme::~CL_GUITheme()
 {
 }

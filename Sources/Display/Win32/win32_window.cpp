@@ -44,6 +44,7 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/ImageProviders/png_provider.h"
+#include "API/Display/screen_info.h"
 #include "win32_window.h"
 #include "input_device_provider_win32keyboard.h"
 #include "input_device_provider_win32mouse.h"
@@ -60,17 +61,10 @@
 #pragma comment(lib, "dwmapi.lib")
 #endif
 
-#if _MSC_VER == 1300
-// My dinput.lib seem to be broken (the one with msvc7).
-// It gives me a linker error about DirectInput8Create. Easier to create with cocreateinstance than
-// download hundreds of megabytes. :) -- mbn 5 oct 2003
-#define BROKEN_DINPUT
-#endif
-
 CL_Win32Window::CL_Win32Window()
 : hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
-  directinput(0),
-  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false)
+  directinput(0), direct8_module(0),
+  minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false), allow_dropshadow(false)
 {
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
 	keyboard = CL_InputDevice(new CL_InputDeviceProvider_Win32Keyboard(this));
@@ -93,9 +87,19 @@ CL_Win32Window::~CL_Win32Window()
 	for (size_t i = 0; i < joysticks.size(); i++)
 		joysticks[i].get_provider()->dispose();
 
-	destroy_direct_input();
+	if (directinput)
+		directinput->Release();
+
 	if (destroy_hwnd && hwnd)
 		DestroyWindow(hwnd);
+
+	// We must delete direct_input module AFTER the window is destroyed. Although input has been released, it seems a bug somewhere in DirectInput causes random crashes unloading
+	if (direct8_module)
+	{
+		FreeLibrary(direct8_module);
+		ptr_DirectInput8Create = 0;
+	}
+
 	if (large_icon)
 		DestroyIcon(large_icon);
 	if (small_icon)
@@ -137,6 +141,29 @@ bool CL_Win32Window::is_maximized() const
 bool CL_Win32Window::is_visible() const
 {
 	return IsWindowVisible(hwnd) != 0;
+}
+
+CL_Size CL_Win32Window::get_minimum_size(bool client_area) const
+{
+	if (!client_area)
+		return minimum_size;
+	else
+		throw CL_Exception("CL_Win32Window::get_minimum_size not implemented for client_area");
+}
+
+CL_Size CL_Win32Window::get_maximum_size(bool client_area) const
+{
+	if (!client_area)
+		return maximum_size;
+	else
+		throw CL_Exception("CL_Win32Window::get_maximum_size not implemented for client_area");
+}
+
+CL_String CL_Win32Window::get_title() const
+{
+	TCHAR str[1024];
+	int len = GetWindowText(hwnd, str, 1024);
+	return CL_String(str, len);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -196,7 +223,7 @@ void CL_Win32Window::set_cursor(CL_StandardCursor type)
 	case cl_cursor_size_we: cursor_handle = LoadCursor(0, IDC_SIZEWE); break;
 	case cl_cursor_uparrow: cursor_handle = LoadCursor(0, IDC_UPARROW); break;
 	case cl_cursor_wait: cursor_handle = LoadCursor(0, IDC_WAIT); break;
-	default: throw CL_Exception(cl_text("Unknown standard cursor type"));
+	default: throw CL_Exception("Unknown standard cursor type");
 	}
 	SetCursor(cursor_handle);
 	current_cursor = cursor_handle;
@@ -211,7 +238,7 @@ void CL_Win32Window::hide_system_cursor()
 
 void CL_Win32Window::set_title(const CL_StringRef &new_title)
 {
-	SetWindowText(hwnd, new_title.c_str());
+	SetWindowText(hwnd, CL_StringHelp::utf8_to_ucs2(new_title).c_str());
 }
 
 void CL_Win32Window::set_position(const CL_Rect &pos, bool client_area)
@@ -302,45 +329,97 @@ void CL_Win32Window::capture_mouse(bool capture)
 
 void CL_Win32Window::create_direct_input()
 {
-#ifndef BROKEN_DINPUT
-	HRESULT result = DirectInput8Create(GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID *) &directinput, 0);
-	if (FAILED(result))
+	direct8_module = LoadLibrary(TEXT("dinput8.dll"));
+	ptr_DirectInput8Create = (FuncDirectInput8Create*) GetProcAddress(direct8_module, "DirectInput8Create");
+	if (ptr_DirectInput8Create)
 	{
-		cl_log_event("debug", "Unable to initialize direct input");
-	}
-#else
-	// My directinput doesnt know this directinput8create function (hmm weird)
-	// So creating it via CoCreateInstance instead..
-
-	HRESULT result = CoInitializeEx(0, COINIT_APARTMENTTHREADED);
-	if (FAILED(result) && result != RPC_E_CHANGED_MODE)
-	{
-		throw CL_Exception(cl_text("CoInitialize failed!"));
-	}
-
-	result = CoCreateInstance(CLSID_DirectInput8, 0, CLSCTX_INPROC_SERVER, IID_IDirectInput8A, (LPVOID *) &directinput);
-	if (FAILED(result))
-	{
-		cl_log_event("debug", cl_text("Unable to create direct input"));
-	}
-	else
-	{
-		result = directinput->Initialize(GetModuleHandle(0), DIRECTINPUT_VERSION);
+		HRESULT result = ptr_DirectInput8Create(GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID *) &directinput, 0);
 		if (FAILED(result))
 		{
-			directinput->Release();
-			directinput = 0;
-
-			cl_log_event("debug", cl_text("Unable to initialize direct input"));
+			cl_log_event("debug", "Unable to initialize direct input");
 		}
 	}
-#endif
 }
 
-void CL_Win32Window::destroy_direct_input()
+class CL_ExceptionCatcher
 {
-	if (directinput)
-		directinput->Release();
+public:
+	CL_ExceptionCatcher()
+	: enabled(true)
+	{
+	}
+
+	~CL_ExceptionCatcher()
+	{
+		if (enabled)
+		{
+			// It is considered an application error if an exception reaches the message handler, since
+			// it will now need to unroll the stack beyond code under C++'s control.  We therefore
+			// force an application crash here.
+			//unexpected();
+			RaiseException(EXCEPTION_NONCONTINUABLE_EXCEPTION, EXCEPTION_NONCONTINUABLE, 0, 0);
+		}
+	}
+	void disable() { enabled = false; }
+
+private:
+	bool enabled;
+};
+
+LONG cl_grr(PEXCEPTION_POINTERS info)
+{
+	// The point of this function is to prevent something within Windows from eating access violations
+	// and other fatal exceptions.
+#ifdef NOT_USED
+	switch (info->ExceptionRecord->ExceptionCode)
+	{
+	case EXCEPTION_ACCESS_VIOLATION:
+	case EXCEPTION_DATATYPE_MISALIGNMENT:
+	case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
+	/*case EXCEPTION_FLT_DENORMAL_OPERAND:
+	case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+	case EXCEPTION_FLT_INEXACT_RESULT:
+	case EXCEPTION_FLT_INVALID_OPERATION:
+	case EXCEPTION_FLT_OVERFLOW:
+	case EXCEPTION_FLT_STACK_CHECK:
+	case EXCEPTION_FLT_UNDERFLOW:
+	case EXCEPTION_INT_DIVIDE_BY_ZERO:
+	case EXCEPTION_INT_OVERFLOW:*/
+	case EXCEPTION_PRIV_INSTRUCTION:
+	case EXCEPTION_IN_PAGE_ERROR:
+	case EXCEPTION_ILLEGAL_INSTRUCTION:
+	case EXCEPTION_NONCONTINUABLE_EXCEPTION:
+	case EXCEPTION_STACK_OVERFLOW:
+	case EXCEPTION_INVALID_DISPOSITION:
+	/*case EXCEPTION_GUARD_PAGE:
+	case EXCEPTION_INVALID_HANDLE:
+	case EXCEPTION_POSSIBLE_DEADLOCK:*/
+		return UnhandledExceptionFilter(info);
+	default:
+		return EXCEPTION_CONTINUE_SEARCH;
+	}
+#endif
+	DebugBreak();
+	FatalAppExit(0, TEXT("GRR!"));
+	SetUnhandledExceptionFilter(0);
+	UnhandledExceptionFilter(info);
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+LRESULT CL_Win32Window::static_window_try_proc(
+	HWND wnd,
+	UINT msg,
+	WPARAM wparam,
+	LPARAM lparam)
+{
+	__try
+	{
+		return static_window_proc(wnd, msg, wparam, lparam);
+	} __except(cl_grr(exception_info()))
+	{
+		// A special thanks to whoever at Microsoft chose to eat access violations during WM_PAINT calls.
+		return DefWindowProc(wnd, msg, wparam, lparam);
+	}
 }
 
 LRESULT CL_Win32Window::static_window_proc(
@@ -349,6 +428,7 @@ LRESULT CL_Win32Window::static_window_proc(
 	WPARAM wparam,
 	LPARAM lparam)
 {
+	CL_ExceptionCatcher exception_catcher;
 	CL_Win32Window *self = 0;
 	if (msg == WM_CREATE)
 	{
@@ -461,20 +541,31 @@ LRESULT CL_Win32Window::static_window_proc(
 	if (call_window_proc)
 	{
 		if (self)
-			return self->window_proc(wnd, msg, wparam, lparam);
+		{
+			lresult = self->window_proc(wnd, msg, wparam, lparam);
+		}
 		else
-			return DefWindowProc(wnd, msg, wparam, lparam);
+		{
+			lresult = DefWindowProc(wnd, msg, wparam, lparam);
+		}
 	}
-	else
-	{
-		return lresult;
-	}
+	exception_catcher.disable();
+	return lresult;
 }
 
 LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
 	{
+	case WM_ERASEBKGND:
+		// We process this function because the DWM needs a background color on the class.
+		// The DWM uses this color for clearing the window itself if our WM_PAINT doesn't
+		// complete in time.  This is important when the window is being resized, since the
+		// color chosen can have a significant impact on visual presentation when our
+		// WM_PAINT is too slow and the DWM is forced to present the window prematurely
+		// with just the fill completed.
+		return 0;
+
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:
 	case WM_KEYUP:
@@ -483,7 +574,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		return 0;
 
 	case WM_INPUT:
-		received_joystick_input();
+		received_joystick_input(msg, wparam, lparam);
 		return 0;
 
 	case WM_LBUTTONDOWN:
@@ -510,6 +601,15 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		if (get_tablet() && get_tablet()->device_present() && !get_tablet()->is_context_on_top())
 			get_tablet()->set_context_on_top(true);
 		return 0;
+
+	case WM_MOVE:
+		if (get_tablet() && get_tablet()->device_present())
+			get_tablet()->check_monitor_changed();
+		if (site)
+		{
+			site->sig_window_moved->invoke();
+		}
+		break;
 
 	case WM_SIZING:
 		if (site)
@@ -542,8 +642,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 				win_rect->right-wi.cxWindowBorders,
 				win_rect->bottom-wi.cyWindowBorders);
 
-
-			if (site && !site->func_window_resize->is_null())
+			if (!site->func_window_resize->is_null())
 				site->func_window_resize->invoke(client_rect);
 			win_rect->left = client_rect.left - wi.cxWindowBorders;
 			win_rect->right = client_rect.right + wi.cxWindowBorders;
@@ -612,9 +711,13 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 			site->sig_window_close->invoke();
 		return 0;
 
+	case WM_DESTROY:
+		if (site)
+			site->sig_window_destroy->invoke();
+		return 0;
+
 	case WM_PAINT:
 		{
-//			HDC hdc = (HDC) wparam;
 			RECT rect;
 			if (GetUpdateRect(hwnd, &rect, FALSE))
 			{
@@ -627,7 +730,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 				cl_rect.right = rect.right;
 				cl_rect.bottom = rect.bottom;
 
-				// cl_log_event(cl_format(cl_text("Dirty %1"), has_drop_shadow ? cl_text(" Pop") : cl_text("")), cl_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
+				// cl_log_event(cl_format("Dirty %1", has_drop_shadow ? " Pop" : ""), cl_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
 
 				if (site)
 					site->sig_paint->invoke(cl_rect);
@@ -648,15 +751,24 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 			return get_tablet()->process_proximity(lparam, wparam);
 		return FALSE;
 
-/*
-	Do not re-enable this code.  If you need to stop screen-savers from appearing,
-	code a CL_DisplayWindowMessage handler in your application. -- mbn 13. jan 2007
-
 	case WM_SYSCOMMAND:
-		// Do not allow screen-saver to start.
-		if (wparam == SC_SCREENSAVE) return TRUE;
+		switch (wparam)
+		{
+		case SC_MINIMIZE:
+			if (site && !site->func_minimize_clicked->is_null())
+			{
+				if (site->func_minimize_clicked->invoke())
+					return 0;
+			}
+			break;
+
+		//case SC_SCREENSAVE: // To do: add CL_DisplayWindow::set_allow_screensaver(bool enable)
+		//	return 0; 
+
+		default:
+			break;
+		}
 		break;
-*/
 
 	case WM_GETICON:
 		if (wparam == ICON_BIG && large_icon)
@@ -695,7 +807,7 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 		hwnd = CreateWindowEx(
 			ex_style,
 			desc.has_drop_shadow() ? TEXT("ClanApplicationDS") : TEXT("ClanApplication"),
-			desc.get_title().c_str(),
+			CL_StringHelp::utf8_to_ucs2(desc.get_title()).c_str(),
 			style,
 			window_rect.left,
 			window_rect.top,
@@ -707,7 +819,7 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 			this);
 
 		if (hwnd == 0)
-			throw CL_Exception(cl_text("Unable to create window"));
+			throw CL_Exception("Unable to create window");
 
 		if (desc.is_fullscreen())
 		{
@@ -943,13 +1055,34 @@ void CL_Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 }
 
-void CL_Win32Window::received_joystick_input()
+void CL_Win32Window::received_joystick_input(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	// Polling all the input context devices.
 	// This is untidy, as mouse, keyboard will also be poll'ed
 	// However, the mouse and keyboard poll() functions are empty.
 	// So i think that's okay :)
 	ic.poll(false);
+/*
+	if (msg == WM_INPUT)
+	{
+		HRAWINPUT handle = (HRAWINPUT)lparam;
+		UINT size = 0;
+		BOOL result = GetRawInputData(handle, RID_INPUT, 0, &size, sizeof(RAWINPUTHEADER));
+		if (result)
+		{
+			CL_DataBuffer buffer(size);
+			result = GetRawInputData(handle, RID_INPUT, buffer.get_data(), &size, sizeof(RAWINPUTHEADER));
+			if (result)
+			{
+				RAWINPUT *rawinput = (RAWINPUT*)buffer.get_data();
+				if (rawinput->header.dwType == RIM_TYPEMOUSE)
+				{
+					// To do: generate relative mouse movement events based on HID mouse information.
+				}
+			}
+		}
+	}
+*/
 }
 
 void CL_Win32Window::setup_tablet()
@@ -981,23 +1114,25 @@ BOOL CL_Win32Window::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvR
 
 void CL_Win32Window::set_clipboard_text(const CL_StringRef &text)
 {
+	CL_String16 text16 = CL_StringHelp::utf8_to_ucs2(text);
+
 	BOOL result = OpenClipboard(hwnd);
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to open clipboard"));
+		throw CL_Exception("Unable to open clipboard");
 
 	result = EmptyClipboard();
 	if (result == FALSE)
 	{
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to empty clipboard"));
+		throw CL_Exception("Unable to empty clipboard");
 	}
 
-	unsigned int length = (text.length()+1) * sizeof(CL_StringRef::char_type);
+	unsigned int length = (text16.length()+1) * sizeof(CL_StringRef16::char_type);
 	HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
 	if (handle == 0)
 	{
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to allocate clipboard memory"));
+		throw CL_Exception("Unable to allocate clipboard memory");
 	}
 
 	void *data = GlobalLock(handle);
@@ -1005,22 +1140,18 @@ void CL_Win32Window::set_clipboard_text(const CL_StringRef &text)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to lock clipboard memory"));
+		throw CL_Exception("Unable to lock clipboard memory");
 	}
-	memcpy(data, text.c_str(), length);
+	memcpy(data, text16.c_str(), length);
 	GlobalUnlock(handle);
 
-#ifdef UNICODE
 	HANDLE data_result = SetClipboardData(CF_UNICODETEXT, handle);
-#else
-	HANDLE data_result = SetClipboardData(CF_TEXT, handle);
-#endif
 
 	if (data_result == 0)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to set clipboard data"));
+		throw CL_Exception("Unable to set clipboard data");
 	}
 
 	CloseClipboard();
@@ -1030,39 +1161,31 @@ CL_String CL_Win32Window::get_clipboard_text() const
 {
 	BOOL result = OpenClipboard(hwnd);
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to open clipboard"));
+		throw CL_Exception("Unable to open clipboard");
 
-#ifdef UNICODE
 	HANDLE handle = GetClipboardData(CF_UNICODETEXT);
-#else
-	HANDLE handle = GetClipboardData(CF_TEXT);
-#endif
 	if (handle == 0)
 	{
 		CloseClipboard();
 		return CL_String();
 	}
 
-	CL_String::char_type *data = (CL_String::char_type *) GlobalLock(handle);
+	CL_String16::char_type *data = (CL_String16::char_type *) GlobalLock(handle);
 	if (data == 0)
 	{
 		CloseClipboard();
 		return CL_String();
 	}
-	CL_String str = data;
+	CL_String str = CL_StringHelp::ucs2_to_utf8(data);
 	GlobalUnlock(handle);
 
 	CloseClipboard();
-	return data;
+	return str;
 }
 
 bool CL_Win32Window::is_clipboard_text_available() const
 {
-#ifdef UNICODE
 	return IsClipboardFormatAvailable(CF_UNICODETEXT) == TRUE;
-#else
-	return IsClipboardFormatAvailable(CF_TEXT) == TRUE;
-#endif
 }
 
 bool CL_Win32Window::is_clipboard_image_available() const
@@ -1083,13 +1206,13 @@ void CL_Win32Window::set_clipboard_image(const CL_PixelBuffer &image)
 {
 	BOOL result = OpenClipboard(hwnd);
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to open clipboard"));
+		throw CL_Exception("Unable to open clipboard");
 
 	result = EmptyClipboard();
 	if (result == FALSE)
 	{
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to empty clipboard"));
+		throw CL_Exception("Unable to empty clipboard");
 	}
 
 	add_dib_to_clipboard(image);
@@ -1111,7 +1234,7 @@ void CL_Win32Window::add_png_to_clipboard(const CL_PixelBuffer &image)
 	if (handle == 0)
 	{
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to allocate clipboard memory"));
+		throw CL_Exception("Unable to allocate clipboard memory");
 	}
 
 	char *data = (char *) GlobalLock(handle);
@@ -1119,7 +1242,7 @@ void CL_Win32Window::add_png_to_clipboard(const CL_PixelBuffer &image)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to lock clipboard memory"));
+		throw CL_Exception("Unable to lock clipboard memory");
 	}
 
 	memcpy(data, png_data.get_data(), png_data.get_size());
@@ -1132,20 +1255,20 @@ void CL_Win32Window::add_png_to_clipboard(const CL_PixelBuffer &image)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to set clipboard data"));
+		throw CL_Exception("Unable to set clipboard data");
 	}
 }
 
 void CL_Win32Window::add_dib_to_clipboard(const CL_PixelBuffer &image)
 {
-	CL_PixelBuffer bmp_image = create_bitmap_data(image);
+	CL_PixelBuffer bmp_image = create_bitmap_data(image, image.get_size());
 
 	unsigned int length = sizeof(BITMAPV5HEADER) + bmp_image.get_pitch() * bmp_image.get_height();
 	HANDLE handle = GlobalAlloc(GMEM_MOVEABLE, length);
 	if (handle == 0)
 	{
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to allocate clipboard memory"));
+		throw CL_Exception("Unable to allocate clipboard memory");
 	}
 
 	char *data = (char *) GlobalLock(handle);
@@ -1153,14 +1276,14 @@ void CL_Win32Window::add_dib_to_clipboard(const CL_PixelBuffer &image)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to lock clipboard memory"));
+		throw CL_Exception("Unable to lock clipboard memory");
 	}
 
 	BITMAPV5HEADER *bmp_header = (BITMAPV5HEADER*) data;
 	memset(bmp_header, 0, sizeof(BITMAPV5HEADER));
 	bmp_header->bV5Size = sizeof(BITMAPV5HEADER);
 	bmp_header->bV5Width = bmp_image.get_width();
-	bmp_header->bV5Height = -bmp_image.get_height();
+	bmp_header->bV5Height = bmp_image.get_height();
 	bmp_header->bV5Planes = 1;
 	bmp_header->bV5BitCount = 32;
 	bmp_header->bV5Compression = BI_RGB;
@@ -1177,27 +1300,22 @@ void CL_Win32Window::add_dib_to_clipboard(const CL_PixelBuffer &image)
 	{
 		GlobalFree(handle);
 		CloseClipboard();
-		throw CL_Exception(cl_text("Unable to set clipboard data"));
+		throw CL_Exception("Unable to set clipboard data");
 	}
 }
 
-CL_PixelBuffer CL_Win32Window::create_bitmap_data(const CL_PixelBuffer &image)
+CL_PixelBuffer CL_Win32Window::create_bitmap_data(const CL_PixelBuffer &image, const CL_Rect &rect)
 {
+	if (rect.left < 0 || rect.top < 0 || rect.right > image.get_width(), rect.bottom > image.get_height())
+		throw CL_Exception("Rectangle passed to CL_Win32Window::create_bitmap_data() out of bounds");
+
 	// Convert pixel buffer to DIB compatible format:
-	CL_PixelFormat argb8888(
-		32,
-		0x00ff0000,
-		0x0000ff00,
-		0x000000ff,
-		0xff000000);
+	int pitch = 4;
+	CL_PixelBuffer bmp_image(rect.get_width(), rect.get_height(), cl_argb8);
 
-	int pitch = image.get_width() * 4;
-	CL_PixelBuffer bmp_image(image.get_width(), image.get_height(), pitch, argb8888);
-
-	image.convert(
-		bmp_image.get_data(), bmp_image.get_format(), pitch,
-		CL_Rect(0, 0, bmp_image.get_width(), bmp_image.get_height()));
-
+	image.convert(bmp_image, CL_Rect(0, 0, bmp_image.get_width(), bmp_image.get_height()), rect);
+	bmp_image.flip_vertical(); // flip_vertical() ensures the pixels are stored upside-down as expected by the BMP format
+	
 	// Note that the APIs use pre-multiplied alpha, which means that the red,
 	// green and blue channel values in the bitmap must be pre-multiplied with
 	// the alpha channel value. For example, if the alpha channel value is x,
@@ -1228,15 +1346,15 @@ CL_PixelBuffer CL_Win32Window::create_bitmap_data(const CL_PixelBuffer &image)
 	return bmp_image;
 }
 
-HBITMAP CL_Win32Window::create_bitmap(HDC hdc, CL_PixelBuffer image)
+HBITMAP CL_Win32Window::create_bitmap(HDC hdc, const CL_PixelBuffer &image)
 {
-	CL_PixelBuffer bmp_image = create_bitmap_data(image);
+	CL_PixelBuffer bmp_image = create_bitmap_data(image, image.get_size());
 
 	BITMAPV5HEADER bmp_header;
 	memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
 	bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
 	bmp_header.bV5Width = bmp_image.get_width();
-	bmp_header.bV5Height = -bmp_image.get_height();
+	bmp_header.bV5Height = bmp_image.get_height();
 	bmp_header.bV5Planes = 1;
 	bmp_header.bV5BitCount = 32;
 	bmp_header.bV5Compression = BI_RGB;
@@ -1280,7 +1398,7 @@ void CL_Win32Window::request_repaint( const CL_Rect &cl_rect )
 void CL_Win32Window::set_minimum_size( int width, int height, bool client_area)
 {
 	if (client_area)
-		throw CL_Exception(cl_text("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_minimum_size(...)."));
+		throw CL_Exception("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_minimum_size(...).");
 
 	this->minimum_size = CL_Size(width,height);
 }
@@ -1288,7 +1406,7 @@ void CL_Win32Window::set_minimum_size( int width, int height, bool client_area)
 void CL_Win32Window::set_maximum_size( int width, int height, bool client_area)
 {
 	if (client_area)
-		throw CL_Exception(cl_text("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_maximum_size(...)."));
+		throw CL_Exception("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_maximum_size(...).");
 
 	this->maximum_size = CL_Size(width,height);
 }
@@ -1297,7 +1415,7 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 {
 	BOOL result = OpenClipboard(hwnd);
 	if (result == FALSE)
-		throw CL_Exception(cl_text("Unable to open clipboard"));
+		throw CL_Exception("Unable to open clipboard");
 
 	UINT format = EnumClipboardFormats(0);
 	UINT png_format = 0;
@@ -1306,8 +1424,8 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 		TCHAR szFormatName[80];
 		int retLen = GetClipboardFormatName(format, szFormatName, sizeof(szFormatName));
 		
-		if (CL_StringRef(cl_text("image/png")) == szFormatName || 
-			CL_StringRef(cl_text("PNG")) == szFormatName)
+		if (CL_StringRef16(L"image/png") == szFormatName || 
+			CL_StringRef16(L"PNG") == szFormatName)
 		{
 			png_format = format;
 			break;
@@ -1368,7 +1486,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapI
 	}
 
 	if (offsetBitmapBits + bitmapBitsSize > size)
-		throw CL_Exception(cl_text("Out of bounds in get_rgba8888_from_dib!"));
+		throw CL_Exception("Out of bounds in get_rgba8888_from_dib!");
 
 	// Ask GDI to do the hard work and convert it to rgba8888:
 	HDC hdc = GetDC(0);
@@ -1404,7 +1522,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapI
 	}
 
 
-	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), pitch, CL_PixelFormat::argb8888, bitmap_data.get_data());
+	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), cl_argb8, bitmap_data.get_data());
 
 	ReleaseDC(0, hdc);
 
@@ -1428,7 +1546,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *b
 	}
 
 	if (offsetBitmapBits + bitmapBitsSize > size)
-		throw CL_Exception(cl_text("Out of bounds in get_rgba8888_from_dib!"));
+		throw CL_Exception("Out of bounds in get_rgba8888_from_dib!");
 
 	// Ask GDI to do the hard work and convert it to rgba8888:
 	HDC hdc = GetDC(0);
@@ -1467,7 +1585,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *b
 	}
 
 
-	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), pitch, CL_PixelFormat::argb8888, bitmap_data.get_data());
+	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), cl_argb8, bitmap_data.get_data());
 
 	ReleaseDC(0, hdc);
 
@@ -1507,8 +1625,8 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_png(cl_uint8 *data, size_t size
 
 void CL_Win32Window::register_clipboard_formats()
 {
-//	TCHAR *png_format_str = cl_text("image/png");
-	TCHAR *png_format_str = cl_text("PNG");
+//	TCHAR *png_format_str = L"image/png";
+	TCHAR *png_format_str = L"PNG";
 	png_clipboard_format = RegisterClipboardFormat(png_format_str);
 }
 
@@ -1562,52 +1680,33 @@ void CL_Win32Window::register_window_class()
 		WNDCLASS wndclass;
 		memset(&wndclass, 0, sizeof(WNDCLASS));
 		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS; // 0; 
-		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
+		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_try_proc;
 		wndclass.cbClsExtra = 0;
 		wndclass.cbWndExtra = 0;
 		wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
 		wndclass.hIcon = 0;
 		wndclass.hCursor = 0;
-		wndclass.hbrBackground = 0;
-		wndclass.lpszMenuName = 0;//TEXT("ClanApplication");
+		wndclass.hbrBackground = CreateSolidBrush(RGB(255,255,255)); // Todo: add CL_DisplayWindow::set_dwm_clear_color(const CL_Colorf &color)
+		wndclass.lpszMenuName = 0;
 		wndclass.lpszClassName = TEXT("ClanApplication");
 		RegisterClass(&wndclass);
 
 		memset(&wndclass, 0, sizeof(WNDCLASS));
 
-		// *** DropShadow has problems on WindowsXP
-		// *** It can be fixed on NVIDIA cards, but not on ATI Cards (Yet!)
-		// ... but we can not call "GLubyte *vendor=glGetString(GL_VENDOR);"
-		// ... as the target may be DirectX
-		bool winxp_flag = true;
-		OSVERSIONINFOEX osvi;
-		BOOL bOsVersionInfoEx;
-
-		ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-		if( (bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) )
-		{
-			if (osvi.dwMajorVersion > 5 )
-			{
-				winxp_flag = false;
-			}
-		}
-
 		wndclass.style = CS_HREDRAW | CS_VREDRAW;
-		if (!winxp_flag)
+		if (allow_dropshadow)
 		{
 			wndclass.style |= CS_DROPSHADOW;
 		}
 
-		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
+		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_try_proc;
 		wndclass.cbClsExtra = 0;
 		wndclass.cbWndExtra = 0;
 		wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
 		wndclass.hIcon = 0;
 		wndclass.hCursor = 0;
-		wndclass.hbrBackground = 0;
-		wndclass.lpszMenuName = 0;//TEXT("ClanApplicationDS");
+		wndclass.hbrBackground = CreateSolidBrush(RGB(255,255,255)); // Todo: add CL_DisplayWindow::set_dwm_clear_color(const CL_Colorf &color)
+		wndclass.lpszMenuName = 0;
 		wndclass.lpszClassName = TEXT("ClanApplicationDS");
 		RegisterClass(&wndclass);
 
@@ -1625,6 +1724,10 @@ void CL_Win32Window::connect_window_input(const CL_DisplayWindowDescription &des
 	#define HID_USAGE_PAGE_GENERIC		((USHORT) 0x01)
 	#endif
 
+	#ifndef HID_USAGE_GENERIC_MOUSE
+	#define HID_USAGE_GENERIC_MOUSE	((USHORT) 0x02)
+	#endif
+
 	#ifndef HID_USAGE_GENERIC_JOYSTICK
 	#define HID_USAGE_GENERIC_JOYSTICK	((USHORT) 0x04)
 	#endif
@@ -1637,12 +1740,15 @@ void CL_Win32Window::connect_window_input(const CL_DisplayWindowDescription &des
 	#define RIDEV_INPUTSINK	(0x100)
 	#endif
 
-	// NOTE: During developing this, I noticed that changing an of these options require
+	// NOTE: During developing this, I noticed that changing any of these options require
 	// you to go into control panel / Game controllers - Else the device is not detected!
-	// Maybe it is bacause we never clear RegisterRawInputDevices() on exit?
+	// Maybe it is because we never clear RegisterRawInputDevices() on exit?
 
 	// Treat joystick and gamepad as the same thing
+
+//	RAWINPUTDEVICE Rid[3];	(for mouse)
 	RAWINPUTDEVICE Rid[2];
+
 	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
 	Rid[0].usUsage = HID_USAGE_GENERIC_JOYSTICK; 
 	Rid[0].dwFlags = 0;//RIDEV_INPUTSINK;   
@@ -1652,8 +1758,14 @@ void CL_Win32Window::connect_window_input(const CL_DisplayWindowDescription &des
 	Rid[1].dwFlags = 0;//RIDEV_INPUTSINK;   
 	Rid[1].hwndTarget = hwnd;
 	BOOL result = RegisterRawInputDevices(Rid, 2, sizeof(RAWINPUTDEVICE));
-
-
+/*
+	-- Experimental mouse support disabled for now.  Note, (many?) mices are still PS2.
+	Rid[2].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	Rid[2].usUsage = HID_USAGE_GENERIC_MOUSE; 
+	Rid[2].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[2].hwndTarget = hwnd;
+	BOOL result = RegisterRawInputDevices(Rid, 3, sizeof(RAWINPUTDEVICE));
+*/
 	ic.clear();
 	ic.add_keyboard(keyboard);
 	ic.add_mouse(mouse);
@@ -1727,11 +1839,21 @@ RECT CL_Win32Window::get_window_geometry_from_description(const CL_DisplayWindow
 
 	if (desc.is_fullscreen())
 	{
+		int primary_screen = 0;
+		CL_ScreenInfo screen_info;
+		std::vector<CL_Rect> screen_rects = screen_info.get_screen_geometries(primary_screen);
+		CL_Rect R = screen_rects[desc.get_fullscreen_monitor()];
+
 		clientSize = false;
-		x = 0;
+		x = R.left;
+		y = R.top;
+		width = R.get_width();
+		height = R.get_height();
+
+/*		x = 0;
 		y = 0;
 		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);*/
 	}
 	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
 	{

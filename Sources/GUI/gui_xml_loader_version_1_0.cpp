@@ -106,72 +106,72 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 
 	while (e.is_element())
 	{
-		CL_TempString tag = e.get_tag_name();
+		CL_String tag = e.get_tag_name();
 		CL_GUIComponent *new_comp = 0;
 
-		if (tag == cl_text("button"))
+		if (tag == "button")
 		{
 			CL_PushButton *co = new CL_PushButton(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_text(e.get_attribute(cl_text("text")));
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("checkbox"))
+		else if (tag == "checkbox")
 		{
 			CL_CheckBox *co = new CL_CheckBox(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_text(e.get_attribute(cl_text("text")));
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("radiobutton"))
+		else if (tag == "radiobutton")
 		{
 			CL_RadioButton *co = new CL_RadioButton(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_text(e.get_attribute(cl_text("text")));
-			if (e.has_attribute(cl_text("group")))
-				co->set_group_name(e.get_attribute(cl_text("group")));
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
+			if (e.has_attribute("group"))
+				co->set_group_name(e.get_attribute("group"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("label"))
+		else if (tag == "label")
 		{
 			CL_Label *co = new CL_Label(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_text(e.get_attribute(cl_text("text")));
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("toolbar"))
+		else if (tag == "toolbar")
 		{
 			CL_ToolBar *co = new CL_ToolBar(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("progressbar"))
+		else if (tag == "progressbar")
 		{
 			CL_ProgressBar *co = new CL_ProgressBar(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("lineedit"))
+		else if (tag == "lineedit")
 		{
 			CL_LineEdit *co = new CL_LineEdit(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_text(e.get_attribute(cl_text("text")));
+			if (e.has_attribute("text"))
+				co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("slider"))
+		else if (tag == "slider")
 		{
 			CL_Slider *co = new CL_Slider(parent);
-			co->set_min(CL_StringHelp::text_to_int(e.get_attribute(cl_text("min"))));
-			co->set_max(CL_StringHelp::text_to_int(e.get_attribute(cl_text("max"))));
-			co->set_tick_count(CL_StringHelp::text_to_int(e.get_attribute(cl_text("ticks"))));
-			co->set_page_step(CL_StringHelp::text_to_int(e.get_attribute(cl_text("page_step"))));
+			co->set_min(CL_StringHelp::text_to_int(e.get_attribute("min")));
+			co->set_max(CL_StringHelp::text_to_int(e.get_attribute("max")));
+			co->set_tick_count(CL_StringHelp::text_to_int(e.get_attribute("ticks")));
+			co->set_page_step(CL_StringHelp::text_to_int(e.get_attribute("page_step")));
 			new_comp = co;
 		}
-		else if (tag == cl_text("listview"))
+		else if (tag == "listview")
 		{
 			CL_ListView *co = new CL_ListView(parent);
 			// load_listview(co);
 			new_comp = co;
 		}
-		else if (tag == cl_text("tab"))
+		else if (tag == "tab")
 		{
 			CL_Tab *co = new CL_Tab(parent);
 			new_comp = co;
@@ -179,10 +179,10 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 			CL_DomElement tab_child = e.get_first_child().to_element();
 			while (tab_child.is_element())
 			{
-				if (tab_child.get_tag_name() == cl_text("tabpage"))
+				if (tab_child.get_tag_name() == "tabpage")
 				{
-					CL_TempString label = tab_child.get_attribute(cl_text("label"), "Error: NO LABEL!");
-					int id = CL_StringHelp::text_to_int(tab_child.get_attribute(cl_text("id"), "0"));
+					CL_String label = tab_child.get_attribute("label", "Error: NO LABEL!");
+					int id = CL_StringHelp::text_to_int(tab_child.get_attribute("id", "0"));
 					CL_TabPage *tab_page = co->add_page(label, id);
 					CL_GUILayoutCorners tabpage_layout;
 					tab_page->set_layout(tabpage_layout);
@@ -192,50 +192,50 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 				tab_child = tab_child.get_next_sibling().to_element();
 			}
 		}
-		else if (tag == cl_text("statusbar"))
+		else if (tag == "statusbar")
 		{
 			CL_StatusBar *co = new CL_StatusBar(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("menubar"))
+		else if (tag == "menubar")
 		{
 			CL_MenuBar *co = new CL_MenuBar(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("combobox"))
+		else if (tag == "combobox")
 		{
 			CL_ComboBox *co = new CL_ComboBox(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("scrollbar"))
+		else if (tag == "scrollbar")
 		{
 			CL_ScrollBar *co = new CL_ScrollBar(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("spin"))
+		else if (tag == "spin")
 		{
 			CL_Spin *co = new CL_Spin(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("imageview"))
+		else if (tag == "imageview")
 		{
 			CL_ImageView *co = new CL_ImageView(parent);
 			new_comp = co;
 		}
-		else if (tag == cl_text("frame"))
+		else if (tag == "frame")
 		{
 			CL_Frame *co = new CL_Frame(parent);
-			if (e.has_attribute(cl_text("text")))
-				co->set_header_text(e.get_attribute(cl_text("text")));
+			if (e.has_attribute("text"))
+				co->set_header_text(e.get_attribute("text"));
 			new_comp = co;
 			CL_GUILayoutCorners layout_corners;
 			co->set_layout(layout_corners);
 			load(e, co);
 		}
-		else if (tag == cl_text("dialog"))
+		else if (tag == "dialog")
 		{
-			dialog_width = CL_StringHelp::text_to_int(e.get_attribute(cl_text("width")));
-			dialog_height = CL_StringHelp::text_to_int(e.get_attribute(cl_text("height")));
+			dialog_width = CL_StringHelp::text_to_int(e.get_attribute("width"));
+			dialog_height = CL_StringHelp::text_to_int(e.get_attribute("height"));
 		}
 		else // unknown tag... try create a custom_component
 		{
@@ -249,11 +249,11 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 
 		if (new_comp)
 		{
-			new_comp->set_id_name(e.get_attribute(cl_text("id")));
-			new_comp->set_class_name(e.get_attribute(cl_text("class")));
+			new_comp->set_id_name(e.get_attribute("id"));
+			new_comp->set_class_name(e.get_attribute("class"));
 
-			CL_TempString str = e.get_attribute(cl_text("geom"));
-			std::vector<CL_TempString> split = CL_StringHelp::split_text(str, cl_text(","));
+			CL_String str = e.get_attribute("geom");
+			std::vector<CL_String> split = CL_StringHelp::split_text(str, ",");
 
 			CL_Rect g;
 			g.left = CL_StringHelp::text_to_int(split[0]);
@@ -269,12 +269,12 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 				CL_GUILayoutProvider_Corners *corner_provider_layout = dynamic_cast<CL_GUILayoutProvider_Corners*>(parent_layout.get_provider());
 				if (corner_provider_layout)
 				{
-					int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_x")));
-					int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_y")));
-					int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_x")));
-					int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_y")));
-					CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_tl")));
-					CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_br")));
+					int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
+					int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
+					int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute("dist_br_x"));
+					int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute("dist_br_y"));
+					CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_tl"));
+					CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_br"));
 
 					corner_provider_layout->add_component(new_comp, ap_tl, dist_tl_x, dist_tl_y, ap_br, dist_rb_x, dist_rb_y);
 				}

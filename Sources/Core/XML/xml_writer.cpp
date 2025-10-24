@@ -98,29 +98,29 @@ void CL_XMLWriter::write(const CL_XMLToken &token)
 	case CL_XMLToken::ELEMENT_TOKEN:
 		if (token.variant == CL_XMLToken::END)
 		{
-			str.append(cl_text("</"));
+			str.append("</");
 			str.append(impl->insert_escapes_fast(token.name));
-			str.append(cl_text(">"));
+			str.append(">");
 		}
 		else
 		{
-			str.append(cl_text("<"));
+			str.append("<");
 			str.append(impl->insert_escapes_fast(token.name));
 
 			int size = (int) token.attributes.size();
 			for (int i=0; i<size; i++)
 			{
-				str.append(cl_text(" "));
+				str.append(" ");
 				str.append(token.attributes[i].first);
-				str.append(cl_text("=\""));
+				str.append("=\"");
 				str.append(impl->insert_escapes_fast(token.attributes[i].second));
-				str.append(cl_text("\""));
+				str.append("\"");
 			}
 
 			if (token.variant == CL_XMLToken::SINGLE)
-				str.append(cl_text("/>"));
+				str.append("/>");
 			else
-				str.append(cl_text(">"));
+				str.append(">");
 		}
 		break;
 		
@@ -129,15 +129,15 @@ void CL_XMLWriter::write(const CL_XMLToken &token)
 		break;
 		
 	case CL_XMLToken::CDATA_SECTION_TOKEN:
-		str.append(cl_text("<![CDATA["));
+		str.append("<![CDATA[");
 		str.append(token.value);
-		str.append(cl_text("]]>"));
+		str.append("]]>");
 		break;
 
 	case CL_XMLToken::COMMENT_TOKEN:
-		str.append(cl_text("<!--"));
+		str.append("<!--");
 		str.append(token.value);
-		str.append(cl_text("-->"));
+		str.append("-->");
 		break;
 
 	case CL_XMLToken::ENTITY_REFERENCE_TOKEN:
@@ -151,9 +151,9 @@ void CL_XMLWriter::write(const CL_XMLToken &token)
 	if (impl->insert_whitespace)
 	{
 #ifdef WIN32
-		str.append(cl_text("\r\n"));
+		str.append("\r\n");
 #else
-		str.append(cl_text("\n"));
+		str.append("\n");
 #endif
 	}
 
@@ -162,12 +162,7 @@ void CL_XMLWriter::write(const CL_XMLToken &token)
 		impl->indent++;
 	}
 
-#ifdef UNICODE
-	CL_String8 utf8 = CL_StringHelp::text_to_utf8(str);
-	impl->output.send(utf8.data(), utf8.size());
-#else
 	impl->output.send(str.data(), str.size());
-#endif
 }
 	
 /////////////////////////////////////////////////////////////////////////////
@@ -175,11 +170,11 @@ void CL_XMLWriter::write(const CL_XMLToken &token)
 
 CL_StringRef CL_XMLWriter_Generic::insert_escapes_fast(const CL_StringRef &str)
 {
-	static CL_StringRef const amp(cl_text("&amp;"));
-	static CL_StringRef const quot(cl_text("&quot;"));
-	static CL_StringRef const apos(cl_text("&apos;"));
-	static CL_StringRef const lt(cl_text("&lt;"));
-	static CL_StringRef const gt(cl_text("&gt;"));
+	static CL_StringRef const amp("&amp;");
+	static CL_StringRef const quot("&quot;");
+	static CL_StringRef const apos("&apos;");
+	static CL_StringRef const lt("&lt;");
+	static CL_StringRef const gt("&gt;");
 
 	escaped_string = str;
 	CL_StringRef::size_type pos = 0;
@@ -187,23 +182,23 @@ CL_StringRef CL_XMLWriter_Generic::insert_escapes_fast(const CL_StringRef &str)
 	{
 		switch(escaped_string[pos])
 		{
-		case cl_text('&'):
+		case '&':
 			escaped_string.replace(pos, 1, amp);
 			pos += amp.size();
 			break;
-		case cl_text('\''):
+		case '\'':
 			escaped_string.replace(pos, 1, apos);
 			pos += apos.size();
 			break;
-		case cl_text('\"'):
+		case '\"':
 			escaped_string.replace(pos, 1, quot);
 			pos += quot.size();
 			break;
-		case cl_text('<'):
+		case '<':
 			escaped_string.replace(pos, 1, lt);
 			pos += lt.size();
 			break;
-		case cl_text('>'):
+		case '>':
 			escaped_string.replace(pos, 1, gt);
 			pos += gt.size();
 			break;

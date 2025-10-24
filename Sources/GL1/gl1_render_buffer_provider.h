@@ -58,7 +58,7 @@ public:
 
 public:
 	/// \brief Creates a render buffer image of the specified dimensions.
-	virtual void create(int width, int height, CL_TextureFormat internal_format);
+	virtual void create(int width, int height, CL_TextureFormat internal_format, int multisample_samples);
 
 	/// \brief Destroys the provider.
 	virtual void destroy();

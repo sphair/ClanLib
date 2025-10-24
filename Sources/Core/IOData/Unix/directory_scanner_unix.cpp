@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -88,7 +88,7 @@ CL_DirectoryScanner_Unix::~CL_DirectoryScanner_Unix()
 
 CL_String CL_DirectoryScanner_Unix::get_directory_path()
 {
-	return path_name + cl_text("/");
+	return path_name + "/";
 }
 
 int CL_DirectoryScanner_Unix::get_size()
@@ -103,7 +103,7 @@ CL_String CL_DirectoryScanner_Unix::get_name()
 
 CL_String CL_DirectoryScanner_Unix::get_pathname()
 {
-	return path_name + cl_text("/") + file_name;
+	return path_name + "/" + file_name;
 }
 
 bool CL_DirectoryScanner_Unix::is_directory()
@@ -129,7 +129,7 @@ bool CL_DirectoryScanner_Unix::is_writable()
 bool CL_DirectoryScanner_Unix::next()
 {	
 	if(!dir_temp)
-		throw CL_Exception(cl_text("Directory scanner not initialized"));
+		throw CL_Exception("Directory scanner not initialized");
 
 	entry = readdir(dir_temp);
 

@@ -62,11 +62,7 @@ enum CL_DrawBuffer
 	cl_buffer_back,
 	cl_buffer_left,
 	cl_buffer_right,
-	cl_buffer_front_and_back,
-	cl_buffer_aux0,
-	cl_buffer_aux1,
-	cl_buffer_aux2,
-	cl_buffer_aux3
+	cl_buffer_front_and_back
 };
 
 /// \brief Logic Op

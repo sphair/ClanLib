@@ -42,7 +42,7 @@ CL_EventProvider_Win32::CL_EventProvider_Win32(bool manual_reset, bool initial_s
 		initial_state ? TRUE : FALSE,
 		0);
 	if (handle == INVALID_HANDLE_VALUE)
-		throw CL_Exception(cl_text("Unable to create event!"));
+		throw CL_Exception("Unable to create event!");
 }
 
 CL_EventProvider_Win32::~CL_EventProvider_Win32()

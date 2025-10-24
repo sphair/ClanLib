@@ -73,7 +73,7 @@ CL_GL1ProcAddress *CL_RenderWindowProvider_GLX_PBuffer::get_proc_address(const C
 
 const CL_RenderWindowProvider * CL_RenderWindowProvider_GLX_PBuffer::new_worker_context() const
 {
-	throw CL_Exception(cl_text("Pixel buffer worker threads are not implemented"));
+	throw CL_Exception("Pixel buffer worker threads are not implemented");
 }
 
 CL_PBuffer_GL1_Impl::CL_PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
@@ -82,7 +82,7 @@ CL_PBuffer_GL1_Impl::CL_PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provid
 	CL_SharedGCData::add_disposable(this);
 
 	if (!gc_provider)
-		throw CL_Exception(cl_text("Unexpected provider"));
+		throw CL_Exception("Unexpected provider");
 
 }
 
@@ -136,7 +136,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 	disp = window_provider.get_display();
 	if (disp == NULL)
 	{
-		throw CL_Exception(cl_text("Cannot obtain GL1 display"));
+		throw CL_Exception("Cannot obtain GL1 display");
 	}
 
 	int scrnum;
@@ -167,33 +167,33 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 
 	if ((glx->glXChooseFBConfig == NULL) ||  (glx->glXCreatePbuffer == NULL) || (glx->glXGetVisualFromFBConfig == NULL) ||  (glx->glXCreateContext == NULL))
 	{
-		throw CL_Exception(cl_text("pbuffer support is not available (require glx 1.3)"));
+		throw CL_Exception("pbuffer support is not available (require glx 1.3)");
 	}
 
 	fbconfig = glx->glXChooseFBConfig(disp, scrnum, attrib, &nitems);
 
 	if (fbconfig == NULL)
 	{
-		throw CL_Exception(cl_text("Error: couldn't get fbconfig"));
+		throw CL_Exception("Error: couldn't get fbconfig");
 	}
 
 	pbuffer = glx->glXCreatePbuffer(disp, fbconfig[0], pbufAttrib);
 	if (!pbuffer)
 	{
-		throw CL_Exception(cl_text("Error: couldn't create pbuffer"));
+		throw CL_Exception("Error: couldn't create pbuffer");
 	}
 
 	visinfo = glx->glXGetVisualFromFBConfig(disp, fbconfig[0]);
 	if (!visinfo)
 	{
-		throw CL_Exception(cl_text("Error: couldn't get an RGBA, double-buffered visual"));
+		throw CL_Exception("Error: couldn't get an RGBA, double-buffered visual");
 	}
 
 	GLXContext shared_context = window_provider.get_share_context();
 
 	if (!shared_context)
 	{
-		throw CL_Exception(cl_text("Error: cannot obtain the shared context"));
+		throw CL_Exception("Error: cannot obtain the shared context");
 	}
 
 	pbuffer_context = glx->glXCreateContext( disp, visinfo, 
@@ -201,7 +201,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 
 	if (!pbuffer_context)
 	{
-		throw CL_Exception(cl_text("Error: glXCreateContext failed"));
+		throw CL_Exception("Error: glXCreateContext failed");
 	}
 
 	XFree(fbconfig);

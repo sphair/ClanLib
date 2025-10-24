@@ -43,12 +43,15 @@
 #include "../../Core/Signals/callback_v1.h"
 #include "../Window/display_window.h"
 
+#ifndef WIN32
+#include <X11/Xlib.h>
+#endif
+
 class CL_Point;
 class CL_DisplayWindowDescription;
 class CL_GraphicContext;
 class CL_InputContext;
 class CL_CursorProvider;
-class CL_PixelBufferRef;
 class CL_SpriteDescription;
 
 /// \brief Display Window site.
@@ -74,6 +77,9 @@ public:
 	/// \brief Pointer to window close signal.
 	CL_Signal_v0 *sig_window_close;
 
+	/// \brief Pointer to window destroy signal.
+	CL_Signal_v0 *sig_window_destroy;
+
 	/// \brief Pointer to window minimized signal.
 	CL_Signal_v0 *sig_window_minimized;
 
@@ -82,6 +88,12 @@ public:
 
 	/// \brief Pointer to window resize callback function.
 	CL_Callback_v1<CL_Rect &> *func_window_resize;
+
+	/// \brief Pointer to minimized clicked callback function.
+	CL_Callback_0<bool> *func_minimize_clicked;
+
+	/// \brief Pointer to window moved signal.
+	CL_Signal_v0 *sig_window_moved;
 /// \}
 };
 
@@ -120,6 +132,15 @@ public:
 	/// \brief Returns true if the window is fullscreen.
 	virtual bool is_fullscreen() const = 0;
 
+	/// \brief Returns the minimum size of the window.
+	virtual CL_Size get_minimum_size(bool client_area) const = 0;
+
+	/// \brief Returns the maximum size of the window.
+	virtual CL_Size get_maximum_size(bool client_area) const = 0;
+
+	/// \brief Returns the maximum size of the window.
+	virtual CL_String get_title() const = 0;
+
 	/// \brief Return the graphic context for the window.
 	virtual CL_GraphicContext& get_gc() = 0;
 
@@ -132,6 +153,12 @@ public:
 	///
 	/// \return hwnd
 	virtual HWND get_hwnd() const = 0;
+#else
+	/// \brief Returns the X11 display handle.
+	virtual Display *get_display() const = 0;
+
+	/// \brief Handle to X11 window handle.
+	virtual Window get_window() const = 0;
 #endif
 
 	/// \brief Returns true if text is available in the clipboard.

@@ -199,6 +199,10 @@ public:
 
 	bool is_visible() const {return x11_window.is_visible();}
 
+	CL_String get_title() const { return x11_window.get_title(); }
+	CL_Size get_minimum_size(bool client_area) const { return x11_window.get_minimum_size(client_area); }
+	CL_Size get_maximum_size(bool client_area) const { return x11_window.get_maximum_size(client_area); }
+
 	bool is_clipboard_text_available() const { return x11_window.is_clipboard_text_available(); }
 
 	bool is_clipboard_image_available() const { return x11_window.is_clipboard_image_available(); }
@@ -208,10 +212,10 @@ public:
 	CL_PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
 
 	/// \brief Returns the X11 display handle.
-	Display *get_display() { return x11_window.get_display(); }
+	Display *get_display() const { return x11_window.get_display(); }
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() { return x11_window.get_window(); }
+	Window get_window() const { return x11_window.get_window(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }

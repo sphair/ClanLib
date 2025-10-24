@@ -1,11 +1,11 @@
-lib_LTLIBRARIES = libclan21Display.la
+lib_LTLIBRARIES = libclan22Display.la
 
 if WIN32
 else
-libclan21Display_la_LIBADD = -lpng -ljpeg
+libclan22Display_la_LIBADD = -lpng -ljpeg
 endif
 
-libclan21Display_la_SOURCES = \
+libclan22Display_la_SOURCES = \
 	2D/color.cpp \
 	2D/color_hsv.cpp \
 	2D/color_hsl.cpp \
@@ -23,8 +23,11 @@ libclan21Display_la_SOURCES = \
 	2D/texture_group.cpp \
 	2D/texture_group_impl.cpp \
 	2D/texture_group_impl.h \
-	2D/sprite_render_batch.cpp \
-	2D/sprite_render_batch_impl.h \
+	2D/render_batch2d.cpp \
+	2D/render_batch2d.h \
+	2D/render_batch3d.cpp \
+	2D/render_batch3d.h \
+	2D/render_batch_sprite.h \
 	2D/span_layout.cpp \
 	2D/span_layout_impl.cpp \
 	2D/span_layout_impl.h \
@@ -46,6 +49,8 @@ libclan21Display_la_SOURCES = \
 	Image/pixel_buffer_impl.cpp \
 	Image/pixel_buffer_impl.h \
 	Image/pixel_format.cpp \
+	Image/image_import_description.cpp \
+	Image/image_import_description_impl.h \
 	ImageProviders/targa_provider_impl.h \
 	ImageProviders/png_provider_impl.h \
 	ImageProviders/jpeg_provider_impl.h \
@@ -125,7 +130,6 @@ libclan21Display_la_SOURCES = \
 	Window/input_event.cpp \
 	Window/input_state.cpp \
 	Window/cursor.cpp \
-	Window/display_window_mode.cpp \
 	display.cpp \
 	display_target.cpp \
 	screen_info.cpp \
@@ -145,30 +149,19 @@ libclan21Display_la_SOURCES = \
 	X11/input_device_provider_x11keyboard.cpp \
 	X11/input_device_provider_x11keyboard.h
 if LINUX_JOYSTICK
-libclan21Display_la_SOURCES += \
+libclan22Display_la_SOURCES += \
 	X11/input_device_provider_linuxjoystick.cpp \
 	X11/input_device_provider_linuxjoystick.h
 endif
-libclan21Display_la_SOURCES += \
+libclan22Display_la_SOURCES += \
 	X11/font_config.cpp \
 	X11/font_config.h
 
-# if WIN32
-# libclan21Display_la_SOURCES += \
-# Win32/dc_buffer.cpp \
-# Win32/dc_buffer_generic.cpp \
-# Win32/dc_buffer_generic.h \
-# Win32/display_window_win32.cpp \
-# Win32/display_window_win32.h \
-# Win32/input_device_directinput.cpp \
-# Win32/input_device_directinput.h \
-# Win32/input_device_win32keyboard.cpp \
-# Win32/input_device_win32keyboard.h \
-# Win32/input_device_win32mouse.cpp \
-# Win32/input_device_win32mouse.h
-# endif
 
-libclan21Display_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22Display_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanDisplay)
 
+libclan22Display_la_CXXFLAGS=$(clanDisplay_CXXFLAGS) $(extra_CFLAGS_clanDisplay)
 # EOF #
+

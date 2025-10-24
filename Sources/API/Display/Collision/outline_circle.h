@@ -65,7 +65,7 @@ class CL_OutlineCircle
  public:
 	/// \brief Construct a outline circle
 	///
-	/// \param CL_OutlineCircle &other  Other circle to test.
+	/// \param other  Other circle to test.
 	bool collide(const CL_OutlineCircle &other) const
 	{
 		if( &other == this )

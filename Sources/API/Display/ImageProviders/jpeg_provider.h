@@ -50,7 +50,7 @@ class CL_API_DISPLAY CL_JPEGProvider
 public:
 	/// \brief Called to load an image with this provider type.
 	///
-	/// \param name Name of the file to load.
+	/// \param filename Name of the file to load.
 	/// \param directory Directory that file name is relative to.
 	static CL_PixelBuffer load(
 		const CL_String &filename,

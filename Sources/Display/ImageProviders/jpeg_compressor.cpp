@@ -230,7 +230,7 @@ void CL_JPEGCompressor::write_marker(int marker, const void * const data, int le
 
 void CL_JPEGCompressor::write_comment_marker(const CL_StringRef &comment)
 {
-	CL_TempString8 comment8 = CL_StringHelp::text_to_local8(comment);
+	CL_String8 comment8 = CL_StringHelp::text_to_local8(comment);
 	write_marker(marker_com, comment8.data(), comment8.length());
 }
 

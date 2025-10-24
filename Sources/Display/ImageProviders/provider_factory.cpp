@@ -70,9 +70,9 @@ CL_PixelBuffer CL_ImageProviderFactory::load(
 	const CL_String &type
 	)
 {
-	if (type != cl_text(""))
+	if (type != "")
 	{
-		if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+		if (types.find(type) == types.end()) throw CL_Exception("Unknown image provider type " + type);
 
 		CL_ImageProviderType *factory = types[type];
 		return factory->load(filename, directory);
@@ -81,7 +81,7 @@ CL_PixelBuffer CL_ImageProviderFactory::load(
 	// Determine file extension and use it to lookup type.
 	CL_String ext = CL_PathHelp::get_extension(filename, CL_PathHelp::path_type_virtual);
 	ext = CL_StringHelp::text_to_lower(ext);
-	if (types.find(ext) == types.end()) throw CL_Exception(CL_String(cl_text("Unknown image provider type ")) + ext);
+	if (types.find(ext) == types.end()) throw CL_Exception(CL_String("Unknown image provider type ") + ext);
 
 	CL_ImageProviderType *factory = types[ext];
 	return factory->load(filename, directory);
@@ -91,7 +91,7 @@ CL_PixelBuffer CL_ImageProviderFactory::load(
 		CL_IODevice &file,
 		const CL_String &type)
 {
-	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+	if (types.find(type) == types.end()) throw CL_Exception("Unknown image provider type " + type);
 
 	CL_ImageProviderType *factory = types[type];
 	return factory->load(file);
@@ -120,7 +120,7 @@ void CL_ImageProviderFactory::save(
 	if (type.empty())
 		type = CL_PathHelp::get_extension(filename, CL_PathHelp::path_type_virtual);
 	
-	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+	if (types.find(type) == types.end()) throw CL_Exception("Unknown image provider type " + type);
 	
 	CL_ImageProviderType *factory = types[type];
 	factory->save(buffer, filename, directory);
@@ -146,7 +146,7 @@ void CL_ImageProviderFactory::save(
 	)
 {
 	
-	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown image provider type ") + type);
+	if (types.find(type) == types.end()) throw CL_Exception("Unknown image provider type " + type);
 
 	CL_ImageProviderType *factory = types[type];
 	factory->save(buffer, file);

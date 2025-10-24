@@ -76,27 +76,6 @@ void CL_RoundedRect_Impl::draw(CL_GraphicContext &gc, const CL_Pointf &position,
 	gc.pop_modelview();
 }
 
-void CL_RoundedRect_Impl::draw(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Gradient &gradient, CL_Origin origin)
-{
-	//TODO: gradient parameter is not used
-
-	if( outline_needs_update )
-		calculate_outline_points();
-
-	CL_Pointf origin_offset = CL_Pointf::calc_origin(origin, size);
-
-	gc.push_translate(position.x - origin_offset.x, position.y - origin_offset.y);
-
-	for( unsigned int i=0; i<outline.size(); i++ )
-	{
-		// todo: add CL_StaticLineStripArray primitives array
-		CL_Draw::line(gc, outline[i], outline[(i+1)%outline.size()], CL_Colorf::pink);
-	}
-
-	gc.pop_modelview();
-}
-
-
 void CL_RoundedRect_Impl::fill(CL_GraphicContext &gc, const CL_Pointf &position, const CL_Colorf &color, CL_Origin origin)
 {
 	if( outline_needs_update )
@@ -197,7 +176,7 @@ void CL_RoundedRect_Impl::triangulate()
 {
 	CL_EarClipTriangulator triangulator;
 
-	for (int cnt = 0; cnt < outline.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < outline.size(); cnt++)
 	{
 		triangulator.add_vertex(outline[cnt].x, outline[cnt].y);
 	}
@@ -209,7 +188,7 @@ void CL_RoundedRect_Impl::triangulate()
 
 	std::vector<CL_EarClipTriangulator_Triangle> &result_triangles = result.get_triangles();
 
-	for (int cnt = 0; cnt < result_triangles.size(); cnt++)
+	for (unsigned int cnt = 0; cnt < result_triangles.size(); cnt++)
 	{
 		CL_Vec2f positions[3] =
 		{
@@ -302,16 +281,16 @@ void CL_RoundedRect_Impl::calculate_outline_points()
 	
 	std::vector<CL_Pointf> points;
 
-	points = bez_tr.generate_curve_points(10);
+	points = bez_tr.generate_curve_points(CL_Angle::from_degrees(10));
 	outline.insert(outline.end(), points.begin(), points.end());
 
-	points = bez_br.generate_curve_points(10);
+	points = bez_br.generate_curve_points(CL_Angle::from_degrees(10));
 	outline.insert(outline.end(), points.begin(), points.end());
 
-	points = bez_bl.generate_curve_points(10);
+	points = bez_bl.generate_curve_points(CL_Angle::from_degrees(10));
 	outline.insert(outline.end(), points.begin(), points.end());
 
-	points = bez_tl.generate_curve_points(10);
+	points = bez_tl.generate_curve_points(CL_Angle::from_degrees(10));
 	outline.insert(outline.end(), points.begin(), points.end());
 
 	outline_needs_update = false;

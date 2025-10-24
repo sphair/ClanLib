@@ -68,10 +68,10 @@ CL_WebserviceClient::CL_WebserviceClient(const CL_StringRef &url)
 	CL_String protocol = CL_URLHelp::get_protocol(url);
 	CL_String address = CL_URLHelp::get_host(url);
 	CL_String port = CL_URLHelp::get_port(url);
-	if (protocol != cl_text("http"))
-		throw CL_Exception(cl_format(cl_text("Unsupported protocol: %1"), protocol));
+	if (protocol != "http")
+		throw CL_Exception(cl_format("Unsupported protocol: %1", protocol));
 	if (port.empty())
-		port = cl_text("80");
+		port = "80";
 	impl->url = url;
 	impl->connection = CL_HTTPClientConnection(CL_SocketName(address, port));
 }
@@ -102,10 +102,10 @@ void CL_WebserviceClient::send_request(
 	request_doc.save(request, false);
 
 	CL_String8 request_headers = CL_StringHelp::text_to_local8(cl_format(
-		cl_text("Host: %1\n")
-		cl_text("SOAPAction: \"%2\"\n")
-		cl_text("Content-Type: text/xml; charset=utf-8\n")
-		cl_text("Content-Length: %3"),
+		"Host: %1\n"
+		"SOAPAction: \"%2\"\n"
+		"Content-Type: text/xml; charset=utf-8\n"
+		"Content-Length: %3",
 		CL_URLHelp::get_host(impl->url),
 		soap_action,
 		request.get_size()));
@@ -143,7 +143,7 @@ CL_WebserviceMessage CL_WebserviceClient::read_response()
 			if (is_soap && soap_fault.is_element())
 			{
 				// faultstring is, for some (to me) unexplainable reason, not namespace qualified.
-				CL_DomNode fault_string = soap_fault.named_item(cl_text("faultstring"));
+				CL_DomNode fault_string = soap_fault.named_item("faultstring");
 				if (fault_string.is_element())
 					e.message = fault_string.to_element().get_text();
 			}

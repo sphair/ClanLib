@@ -44,7 +44,7 @@ CL_FontConfig::CL_FontConfig()
         }
         if  (!fc_config)
 	{
-		throw CL_Exception(cl_text("CL_FontConfig: Initializing FontConfig library failed."));
+		throw CL_Exception("CL_FontConfig: Initializing FontConfig library failed.");
 	} 
 }
 
@@ -84,13 +84,13 @@ CL_String CL_FontConfig::match_font(const CL_FontDescription &desc) const
 		(char*) NULL);
 		if (!fc_pattern)
 		{
-			throw CL_Exception(cl_text("CL_FontConfig: Building FontConfig pattern failed."));
+			throw CL_Exception("CL_FontConfig: Building FontConfig pattern failed.");
 		}
 
 		// Execute any needed param substitutions required by the system config.
 		if (FcTrue !=  FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern))
 		{
-			throw CL_Exception(cl_text("CL_FontConfig: Font config substitutions failed."));
+			throw CL_Exception("CL_FontConfig: Font config substitutions failed.");
 		}
 
 		// Supply default values for underspecified font patterns. Never fails.
@@ -102,7 +102,7 @@ CL_String CL_FontConfig::match_font(const CL_FontDescription &desc) const
 		FcChar8 * fc_font_file_path = NULL;
 		if (FcResultMatch != FcPatternGetString (fc_match, FC_FILE, 0, &fc_font_file_path))
 		{
-			throw CL_Exception(cl_text("CL_FontConfig: Could not resolve font pattern to a font file."));
+			throw CL_Exception("CL_FontConfig: Could not resolve font pattern to a font file.");
 		}
 
 		// Release resources and return results.

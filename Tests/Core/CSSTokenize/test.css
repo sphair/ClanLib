@@ -1,0 +1,142 @@
+div.float
+{
+    float: left;
+    width: auto;
+    margin: 5px;
+    padding: 5px;
+    border-width: 2px;
+    border-style: solid;
+}
+
+object.ok
+{
+    width: 60px;
+    height: 24px;
+    display: inline-block;
+    float: none;
+    margin: 2px;
+    padding: 2px;
+}
+
+object.cancel
+{
+    width: 60px;
+    height: 24px;
+    display: inline-block;
+    float: none;
+    margin: 2px;
+    border: solid 2px green;
+    padding: 2px;
+}
+
+p.right
+{
+    text-align: right;
+}
+
+img
+{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    float: none;
+}
+
+div.inline
+{
+    float: none;
+    display: inline-block;
+    border: solid;
+    border-width: 1px;
+    width: 100px;
+    line-height: normal;
+}
+
+p.silly
+{
+    clear: both;
+    background-color: #cdcdcd;
+    text-align: right;
+}
+
+p.essay:before
+{
+    color: teal;
+    content: "Wow, this is a story before the story! ";
+}
+
+p.essay
+{
+    line-height: 1.5em;
+}
+
+h1
+{
+    font:normal 44px/48px Georgia, "Times New Roman", Times, serif;    
+    margin-top: 0px;
+    padding-top: 0px;
+    text-align: center;
+}
+
+h2
+{
+    display: run-in;
+}
+
+h2:after { content: " "; }
+
+.menu
+{
+    background-image: url("../../../Resources/GUIThemeAero/Images/popupmenu.png");
+    background-repeat: -clan-stretch;
+    -clan-background-border-left: 32px;
+    -clan-background-border-top: 4px;
+    -clan-background-border-right: 4px;
+    -clan-background-border-bottom: 4px;
+    padding-left: 26px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 20px;
+}
+
+html
+{
+    background-repeat: -clan-stretch;
+    -clan-background-border-left: 265px;
+    -clan-background-border-right: 215px;
+    -clan-background-border-top: 67px;
+    -clan-background-border-bottom: 12px;
+    -clan-total-width: 100%;
+    -clan-total-height: 100%;
+    padding-left: 12px;
+    padding-top: 12px;
+    padding-right: 11px;
+    padding-bottom: 7px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+
+body
+{
+    margin: 0px;
+}
+
+td
+{
+    font-family: "Consolas";
+    font-size: 2em;
+    background-color: #cdcdcd;
+    vertical-align: middle;
+}
+
+table
+{
+    border-style: solid;
+    border-spacing: 2px;
+    table-layout: fixed;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}

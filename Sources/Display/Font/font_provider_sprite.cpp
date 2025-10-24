@@ -52,74 +52,74 @@ CL_FontProvider_Sprite::CL_FontProvider_Sprite( CL_GraphicContext &gc, const CL_
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
 	
-	if (type != cl_text("font"))
-		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'font'"), resource_id));
+	if (type != "font")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'font'", resource_id));
 
 	CL_DomElement bitmap_element = resource.get_element().named_item("bitmap").to_element();
 
 	if (!bitmap_element.is_null())
 	{
-		if (!bitmap_element.has_attribute(cl_text("glyphs"))) 
+		if (!bitmap_element.has_attribute("glyphs")) 
 			throw CL_Exception(cl_format("Font resource %1 has no 'glyphs' attribute.", resource.get_name()));
 		
-		if (!bitmap_element.has_attribute(cl_text("letters"))) 
+		if (!bitmap_element.has_attribute("letters")) 
 			throw CL_Exception(cl_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
 
-		spr_glyphs = CL_Sprite(gc, bitmap_element.get_attribute(cl_text("glyphs")), resources);
+		spr_glyphs = CL_Sprite(gc, bitmap_element.get_attribute("glyphs"), resources);
 
-		const CL_String &letters = bitmap_element.get_attribute(cl_text("letters"));
+		const CL_String &letters = bitmap_element.get_attribute("letters");
 
-		int spacelen = CL_StringHelp::text_to_int(bitmap_element.get_attribute(cl_text("spacelen"), cl_text("-1")));
-		bool monospace = CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("monospace"), cl_text("false")));
+		int spacelen = CL_StringHelp::text_to_int(bitmap_element.get_attribute("spacelen", "-1"));
+		bool monospace = CL_StringHelp::text_to_bool(bitmap_element.get_attribute("monospace", "false"));
 
 		setup_glyphs(gc, letters, spacelen, monospace);
 
 		// Modify the default font metrics, if specified
 
-		if (bitmap_element.has_attribute(cl_text("height"))) 
-			font_metrics.set_height(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("height"), cl_text("0"))));
+		if (bitmap_element.has_attribute("height")) 
+			font_metrics.set_height(CL_StringHelp::text_to_float(bitmap_element.get_attribute("height", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("ascent"))) 
-			font_metrics.set_ascent(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("ascent"), cl_text("0"))));
+		if (bitmap_element.has_attribute("ascent")) 
+			font_metrics.set_ascent(CL_StringHelp::text_to_float(bitmap_element.get_attribute("ascent", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("descent"))) 
-			font_metrics.set_descent(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("descent"), cl_text("0"))));
+		if (bitmap_element.has_attribute("descent")) 
+			font_metrics.set_descent(CL_StringHelp::text_to_float(bitmap_element.get_attribute("descent", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("internal_leading"))) 
-			font_metrics.set_internal_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("internal_leading"), cl_text("0"))));
+		if (bitmap_element.has_attribute("internal_leading")) 
+			font_metrics.set_internal_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute("internal_leading", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("external_leading"))) 
-			font_metrics.set_external_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("external_leading"), cl_text("0"))));
+		if (bitmap_element.has_attribute("external_leading")) 
+			font_metrics.set_external_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute("external_leading", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("average_character_width"))) 
-			font_metrics.set_average_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("average_character_width"), cl_text("0"))));
+		if (bitmap_element.has_attribute("average_character_width")) 
+			font_metrics.set_average_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute("average_character_width", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("max_character_width"))) 
-			font_metrics.set_max_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("max_character_width"), cl_text("0"))));
+		if (bitmap_element.has_attribute("max_character_width")) 
+			font_metrics.set_max_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute("max_character_width", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("weight"))) 
-			font_metrics.set_weight(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("weight"), cl_text("0"))));
+		if (bitmap_element.has_attribute("weight")) 
+			font_metrics.set_weight(CL_StringHelp::text_to_float(bitmap_element.get_attribute("weight", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("overhang"))) 
-			font_metrics.set_overhang(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("overhang"), cl_text("0"))));
+		if (bitmap_element.has_attribute("overhang")) 
+			font_metrics.set_overhang(CL_StringHelp::text_to_float(bitmap_element.get_attribute("overhang", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("digitized_aspect_x"))) 
-			font_metrics.set_digitized_aspect_x(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("digitized_aspect_x"), cl_text("0"))));
+		if (bitmap_element.has_attribute("digitized_aspect_x")) 
+			font_metrics.set_digitized_aspect_x(CL_StringHelp::text_to_float(bitmap_element.get_attribute("digitized_aspect_x", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("digitized_aspect_y"))) 
-			font_metrics.set_digitized_aspect_y(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("digitized_aspect_y"), cl_text("0"))));
+		if (bitmap_element.has_attribute("digitized_aspect_y")) 
+			font_metrics.set_digitized_aspect_y(CL_StringHelp::text_to_float(bitmap_element.get_attribute("digitized_aspect_y", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("italic"))) 
-			font_metrics.set_italic(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("italic"), cl_text("0"))));
+		if (bitmap_element.has_attribute("italic")) 
+			font_metrics.set_italic(CL_StringHelp::text_to_bool(bitmap_element.get_attribute("italic", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("underlined"))) 
-			font_metrics.set_underlined(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("underlined"), cl_text("0"))));
+		if (bitmap_element.has_attribute("underlined")) 
+			font_metrics.set_underlined(CL_StringHelp::text_to_bool(bitmap_element.get_attribute("underlined", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("struck_out"))) 
-			font_metrics.set_struck_out(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("struck_out"), cl_text("0"))));
+		if (bitmap_element.has_attribute("struck_out")) 
+			font_metrics.set_struck_out(CL_StringHelp::text_to_bool(bitmap_element.get_attribute("struck_out", "0")));
 
-		if (bitmap_element.has_attribute(cl_text("fixed_pitch"))) 
-			font_metrics.set_fixed_pitch(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("fixed_pitch"), cl_text("0"))));
+		if (bitmap_element.has_attribute("fixed_pitch")) 
+			font_metrics.set_fixed_pitch(CL_StringHelp::text_to_bool(bitmap_element.get_attribute("fixed_pitch", "0")));
 
 	}
 	else
@@ -197,13 +197,13 @@ int CL_FontProvider_Sprite::get_character_index(CL_GraphicContext &gc, const CL_
 	int font_height = fm.get_height();
 	int font_external_leading = fm.get_external_leading();
 
-	std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
-	for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+	std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
+	for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
 	{
 		int xpos = dest_x;
 		int ypos = dest_y;
 
-		CL_TempString &textline = lines[i];
+		CL_String &textline = lines[i];
 		CL_String::size_type string_length = textline.length();
 
 		// Scan the string

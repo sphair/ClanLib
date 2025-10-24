@@ -57,8 +57,9 @@
 CL_X11Window::CL_X11Window()
 : window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
-  site(0), clipboard(this), dlopen_lib_handle(NULL)
+  site(0), clipboard(this), dlopen_lib_handle(NULL), size_hints(NULL)
 {
+	last_repaint_rect.reserve(32);
 	keyboard = CL_InputDevice(new CL_InputDeviceProvider_X11Keyboard(this));
 	mouse = CL_InputDevice(new CL_InputDeviceProvider_X11Mouse(this));
 
@@ -81,6 +82,9 @@ CL_X11Window::~CL_X11Window()
 
 	close_window();
 
+	if (size_hints)
+		XFree(size_hints);
+
 	if (disp)
 	{
 		XCloseDisplay(disp);
@@ -98,7 +102,7 @@ CL_X11Window::~CL_X11Window()
 void *CL_X11Window::dlopen(const char *filename, int flag)
 {
 	if (dlopen_lib_handle)
-		throw CL_Exception(cl_text("CL_X11Window::dlopen called twice - This is currently not supported, and is probably a bug!"));
+		throw CL_Exception("CL_X11Window::dlopen called twice - This is currently not supported, and is probably a bug!");
 	dlopen_lib_handle = ::dlopen(filename, flag);
 	return dlopen_lib_handle;
 }
@@ -106,15 +110,7 @@ void *CL_X11Window::dlopen(const char *filename, int flag)
 
 CL_Rect CL_X11Window::get_geometry() const
 {
-	CL_Rect scr_pos = get_screen_position();
-	if (window_has_caption)
-	{
-		return CL_Rect(	scr_pos.left + frame_size.left, scr_pos.top + frame_size.top, 
-				scr_pos.right + frame_size.right, scr_pos.bottom + frame_size.bottom);
-	}else
-	{
-		return scr_pos;
-	}
+	return get_screen_position();
 }
 
 CL_Rect CL_X11Window::get_viewport() const
@@ -165,6 +161,28 @@ bool CL_X11Window::is_visible() const
 	return true;
 }
 
+CL_Size CL_X11Window::get_minimum_size(bool client_area) const
+{
+	if (!client_area)
+		return minimum_size;
+	else
+		throw CL_Exception("CL_X11Window::get_minimum_size not implemented for client_area");
+}
+
+CL_Size CL_X11Window::get_maximum_size(bool client_area) const
+{
+	if (!client_area)
+		return maximum_size;
+	else
+		throw CL_Exception("CL_X11Window::get_maximum_size not implemented for client_area");
+}
+
+CL_String CL_X11Window::get_title() const
+{
+	return window_title;
+}
+
+
 void CL_X11Window::open_screen()
 {
 	if (disp == 0)
@@ -179,8 +197,6 @@ void CL_X11Window::create(XVisualInfo *visual, int screen_bpp, CL_DisplayWindowS
 {
 	site = new_site;
 
-	get_window_frame_size();	// Cache the window frame size
-
 	open_screen();
 
 	create_new_window(visual, screen_bpp, description);
@@ -190,26 +206,13 @@ void CL_X11Window::create(XVisualInfo *visual, int screen_bpp, CL_DisplayWindowS
 CL_Point CL_X11Window::client_to_screen(const CL_Point &client)
 {
 	CL_Rect view = get_geometry();
-
-	if (window_has_caption)
-	{
-		return CL_Point(view.left + client.x - frame_size.left, view.top + client.y - frame_size.top);
-	}else
-	{
-		return CL_Point(view.left + client.x, view.top + client.y);
-	}
+	return CL_Point(view.left + client.x, view.top + client.y);
 }
 
 CL_Point CL_X11Window::screen_to_client(const CL_Point &screen)
 {
 	CL_Rect view = get_geometry();
-	if (window_has_caption)
-	{
-		return CL_Point(screen.x - view.left + frame_size.left, screen.y - view.top +  frame_size.top);
-	}else
-	{
-		return CL_Point(screen.x - view.left, screen.y - view.top);
-	}
+	return CL_Point(screen.x - view.left, screen.y - view.top);
 }
 
 void CL_X11Window::show_system_cursor()
@@ -229,6 +232,7 @@ void CL_X11Window::hide_system_cursor()
 
 void CL_X11Window::set_title(const CL_StringRef &new_title)
 {
+	window_title = new_title;
 	XSetStandardProperties(disp, window, new_title.c_str(), new_title.c_str(), None, NULL, 0, NULL);
 }
 
@@ -236,38 +240,17 @@ void CL_X11Window::set_position(const CL_Rect &pos, bool client_area)
 {
 	int result;
 
-	// Clear hints - to allow repositioning
-	XSizeHints *size_hints = XAllocSizeHints();
-	if (size_hints)
+	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
 	{
 		long user_hints;
 		XGetWMNormalHints(disp, window, size_hints, &user_hints);
-		size_hints->flags &= ~( PSize|PBaseSize | PMinSize | PMaxSize | PPosition);
+		size_hints->flags &= ~(PMinSize | PMaxSize);
 		XSetWMNormalHints(disp, window, size_hints);
 	}
 
 	clear_structurenotify_events();
 
-	int width = pos.get_width();
-	int height = pos.get_height();
-	int xpos = pos.left;
-	int ypos = pos.top;
-
-	if ( (client_area) )
-	{
-		if (window_has_caption)
-		{
-			xpos += frame_size.left;
-			ypos += frame_size.top;
-		}
-		result = XMoveResizeWindow(disp, window, xpos, ypos, width, height);
-	}
-	else
-	{
-		width =  width + frame_size.left;
-		height = height + frame_size.top;
-		result = XMoveResizeWindow(disp, window, xpos, ypos, width, height);
-	}
+	result = XMoveResizeWindow(disp, window, pos.left, pos.top, pos.get_width(), pos.get_height());
 	
 	if (! ( (result == BadValue) || (result == BadWindow) ) )
 	{
@@ -276,31 +259,19 @@ void CL_X11Window::set_position(const CL_Rect &pos, bool client_area)
 		do {
 			XMaskEvent(disp, StructureNotifyMask, &event);
 		}while ( (event.type != ConfigureNotify) || (event.xconfigure.event != window) );
+		XPutBackEvent(disp, &event);
 	}
 
-	// Restore hints
-	if (size_hints)
+	if (!resize_enabled)	// resize has been temporary enabled
 	{
-		size_hints->x = xpos;
-		size_hints->y = ypos;
-		size_hints->width       = width;
-		size_hints->height      = height;
-		size_hints->base_width  = width;
-		size_hints->base_height = height;
-		size_hints->min_width   = width;
-		size_hints->min_height  = height;
-		size_hints->max_width   = width;
-		size_hints->max_height  = height;
-		size_hints->flags       |= PMinSize | PMaxSize | PPosition;
-
-		if (!resize_enabled)
-		{
-			size_hints->flags |= PMinSize | PMaxSize;
-		}
-
+		size_hints->min_width   = pos.get_width();
+		size_hints->min_height  = pos.get_height();
+		size_hints->max_width   = pos.get_width();
+		size_hints->max_height  = pos.get_height();
+		size_hints->flags |= PMinSize | PMaxSize;
 		XSetWMNormalHints(disp, window, size_hints);
-		XFree(size_hints);
 	}
+
 }
 
 void CL_X11Window::set_size(int width, int height, bool client_area)
@@ -309,29 +280,14 @@ void CL_X11Window::set_size(int width, int height, bool client_area)
 
 	if (!resize_enabled)	// If resize has been disabled, we have to temporary enable it
 	{
-		XSizeHints *size_hints = XAllocSizeHints();
-		if (size_hints)
-		{
-			long user_hints;
-			XGetWMNormalHints(disp, window, size_hints, &user_hints);
-			size_hints->flags &= ~(PMinSize | PMaxSize);
-			XSetWMNormalHints(disp, window, size_hints);
-			XFree(size_hints);
-		}
+		long user_hints;
+		XGetWMNormalHints(disp, window, size_hints, &user_hints);
+		size_hints->flags &= ~(PMinSize | PMaxSize);
+		XSetWMNormalHints(disp, window, size_hints);
 	}
 	clear_structurenotify_events();
 
-	if ( (client_area) || (!window_has_caption) )
-	{
-		//TODO: Resize does not work on windows without a caption - May need to temporary enable it ... this is silly though!
-		result = XResizeWindow(disp, window, width, height);
-	}
-	else
-	{
-		width =  width + frame_size.left;
-		height = height + frame_size.top;
-		result = XResizeWindow(disp, window, width, height);
-	}
+	result = XResizeWindow(disp, window, width, height);
 	
 	if (! ( (result == BadValue) || (result == BadWindow) ) )
 	{
@@ -340,27 +296,17 @@ void CL_X11Window::set_size(int width, int height, bool client_area)
 		do {
 			XMaskEvent(disp, StructureNotifyMask, &event);
 		}while ( (event.type != ConfigureNotify) || (event.xconfigure.event != window) );
+		XPutBackEvent(disp, &event);
 	}
 
-	if (!resize_enabled)	// If resize has been disabled, do disable x11 window resize
+	if (!resize_enabled)	// resize has been temporary enabled
 	{
-		XSizeHints *size_hints = XAllocSizeHints();
-		if (size_hints)
-		{
-			long user_hints;
-			XGetWMNormalHints(disp, window, size_hints, &user_hints);
-			size_hints->width       = width;
-			size_hints->height      = height;
-			size_hints->base_width  = width;
-			size_hints->base_height = height;
-			size_hints->min_width   = width;
-			size_hints->min_height  = height;
-			size_hints->max_width   = width;
-			size_hints->max_height  = height;
-			size_hints->flags       |= PMinSize | PMaxSize;
-			XSetWMNormalHints(disp, window, size_hints);
-			XFree(size_hints);
-		}
+		size_hints->min_width   = width;
+		size_hints->min_height  = height;
+		size_hints->max_width   = width;
+		size_hints->max_height  = height;
+		size_hints->flags |= PMinSize | PMaxSize;
+		XSetWMNormalHints(disp, window, size_hints);
 	}
 
 }
@@ -409,6 +355,10 @@ void CL_X11Window::show(bool activate)
 	wait_mapped();
 	clear_structurenotify_events();
 	if (activate) set_enabled(true);
+
+	// Force the window is updated
+	CL_Rect window_rect = get_viewport();
+	set_size(window_rect.get_width(), window_rect.get_height(), true);
 }
 
 void CL_X11Window::hide()
@@ -526,8 +476,6 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	screen_connection.handle = ConnectionNumber(disp);
 	current_window_events.push_back(screen_connection);
 
-	window_has_caption = desc.has_caption();
-
 	XGetInputFocus(disp, &window_last_focus, &window_last_revert_return);
 
 	bpp = screen_bpp;
@@ -574,40 +522,12 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 
 	bool client_area = desc.get_position_client_area();
 
-	if (window_has_caption)
-	{
-		if (!client_area)
-		{
-
-			// The API for desc.get_size() includes the window frame, but X11 expects it excluded
-			win_width += frame_size.left;
-			win_height += frame_size.top;
-		}
-	}
-
-	if (client_area)
-	{
-		if (win_x >=0)
-		{
-			win_x -= frame_size.left;
-			if (win_x < 0)
-				win_x = 0;
-		}
-		if (win_y >=0)
-		{
-			win_y -= frame_size.left;
-			if (win_y < 0)
-				win_y = 0;
-		}
-	}
-
 	Window parent = RootWindow(disp, current_screen);
-
 
 	if (!desc.get_owner().is_null())
 	{
 		// This is not required. When enabled (with a parent window) popup windows would be created, with an incorrect style
-		//parent = provider_glx->get_window();
+		//parent = desc.get_owner().get_window();
 
 		CL_Rect rect = desc.get_owner().get_geometry();
 		if (win_x == -1 && win_y == -1)
@@ -637,37 +557,77 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 		InputOutput,  visual->visual, CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
 
 	if (window == 0)
-		throw CL_Exception(cl_text("Unable to create the X11 window"));
+		throw CL_Exception("Unable to create the X11 window");
+
+	if (!desc.get_owner().is_null())
+	{
+		CL_DisplayWindow owner = desc.get_owner();
+		XSetTransientForHint(disp, window, owner.get_window());
+	}
 
 	clipboard.setup();
 
 	// set title of window:
 	set_title(desc.get_title());
 
-	// Remove window caption
-	if (!window_has_caption)
-	{
-		Atom WM_HINTS;
 
-		// Motif and Gnome
-		WM_HINTS = XInternAtom(disp, "_MOTIF_WM_HINTS", True);
-		if ( WM_HINTS != None )
+	// Motif and Gnome
+	Atom WM_HINTS;
+	WM_HINTS = XInternAtom(disp, "_MOTIF_WM_HINTS", True);
+	if ( WM_HINTS != None )
+	{
+
+#ifndef MwmHintsDecoration
+#define MwmHintsDecorations (1 << 1)
+#define MwmDecorAll (1 << 0)
+#define MwmDecorBorder (1 << 1)
+#define MwmDecorHandle (1 << 2)
+#define MwmDecorTitle (1 << 3)
+#endif
+
+		int decor;
+		if (desc.has_caption())
+		{
+			if (!desc.has_border())
+			{
+				decor = MwmDecorTitle;
+			}
+			else	decor = -1;
+		}
+		else
+		{
+			if (desc.has_border())
+			{
+				decor = MwmDecorBorder;
+			}
+			else	decor = 0;
+		}
+
+		if (decor >=0)	// Decor specified
 		{
 			// From Xm/MwmUtil.h
-			struct {
+			typedef struct {
 				long flags;
 				long functions;
 				long decorations;
 				long input_mode;
 				long status;
-			} MWMHints = { 2, 0, 0, 0, 0 };
+			} MWMHints;
+			MWMHints hints = { MwmHintsDecorations, 0, decor, 0, 0 };
 
 			XChangeProperty(disp, window,
-				WM_HINTS, WM_HINTS, 32,
-				PropModeReplace,
-				(unsigned char *)&MWMHints,
-				sizeof(MWMHints)/sizeof(long));
+			WM_HINTS, WM_HINTS, 32,
+			PropModeReplace,
+			(unsigned char *)&hints,
+			sizeof(MWMHints)/sizeof(long));
 		}
+	}
+
+
+	// Remove window caption
+	if (!desc.has_caption())
+	{
+
 		// KDM
 		WM_HINTS = XInternAtom(disp, "KWM_WIN_DECORATION", True);
 		if ( WM_HINTS != None ) {
@@ -693,11 +653,27 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 
 	}
 
-	// setup size hints:
-	XSizeHints *size_hints = XAllocSizeHints();
-	if (size_hints == NULL)
+	resize_enabled = desc.get_allow_resize() || desc.is_fullscreen(); // Fs needs resizable window
+
+	if (resize_enabled)
 	{
-		throw CL_Exception(cl_text("Cannot allocate X11 XSizeHints structure"));
+		minimum_size = CL_Size(32, 32);
+		maximum_size = CL_Size(0, 0);	// No maximum size by default
+	}
+	else
+	{
+		minimum_size = CL_Size(win_width, win_height);
+		maximum_size = CL_Size(win_width, win_height);
+	}
+
+	// setup size hints:
+	if (!size_hints)
+	{
+		size_hints = XAllocSizeHints();
+		if (size_hints == NULL)
+		{
+			throw CL_Exception("Cannot allocate X11 XSizeHints structure");
+		}
 	}
 
 	size_hints->x = win_x;
@@ -706,22 +682,18 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	size_hints->height      = win_height;
 	size_hints->base_width  = win_width;
 	size_hints->base_height = win_height;
-	size_hints->min_width   = win_width;
-	size_hints->min_height  = win_height;
-	size_hints->max_width   = win_width;
-	size_hints->max_height  = win_height;
-	size_hints->flags       = PSize|PBaseSize|PPosition;
-
-	resize_enabled = desc.get_allow_resize() || desc.is_fullscreen(); // Fs needs resizable window
+	size_hints->min_width   = minimum_size.width;
+	size_hints->min_height  = minimum_size.height;
+	size_hints->max_width   = maximum_size.width;
+	size_hints->max_height  = maximum_size.height;
+	size_hints->flags       = PSize|PBaseSize|PPosition|PMinSize;
 
 	if (!resize_enabled)
 	{
-		size_hints->flags |= PMinSize | PMaxSize;
+		size_hints->flags |= PMaxSize;
 	}
 	XSetWMNormalHints(disp, window, size_hints);
 	
-	XFree(size_hints);
-
 	// handle wm_delete_events if in windowed mode:
 	Atom wm_delete = XInternAtom(disp, "WM_DELETE_WINDOW", True);
 	XSetWMProtocols(disp, window, &wm_delete, 1);
@@ -761,13 +733,15 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 {
 	XEvent event;
-	CL_Rect *rect;
+	std::vector<CL_Rect> exposed_rects;
+	CL_Rect largest_exposed_rect;
+	CL_Rect rect;
 
 	ic.poll(false);		// Check input devices
-
 	// Dispatch all Xlib events
-	if (get_xevent(event))
+	while (get_xevent(event))
 	{
+
 		switch(event.type)
 		{
 			//Resize or Move
@@ -780,34 +754,21 @@ void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 					event.xconfigure.x + bw + event.xconfigure.width,
 					event.xconfigure.y + bw + event.xconfigure.height
 				);
-				CL_Rect rect_saved = rect;
-				int width = rect.right - rect.left;
-				int height = rect.bottom - rect.top;
-
-				// Move window
-				if ( (rect_saved.left != rect.left) || (rect_saved.right != rect.right) )
-				{
-					XMoveWindow(disp, window, rect.left-bw, rect.top-bw);
-				}
-
-				// Resize Window
-				if ( (width != event.xconfigure.width) || (height != event.xconfigure.height) )
-				{
-					if (site && !site->func_window_resize->is_null())
-					{
-						site->func_window_resize->invoke(rect);	// Excluding borders
-					}
-					XResizeWindow(disp, window, width, height);
-				}
-
-				if (!callback_on_resized.is_null())
-					callback_on_resized.invoke();
 
 				if (site)
 				{
-					site->sig_resize->invoke(width, height);	// Excluding borders
+					site->sig_window_moved->invoke();
+					if (!site->func_window_resize->is_null())
+					{
+						site->func_window_resize->invoke(rect);	// Excluding borders
+					}
+
+					if (!callback_on_resized.is_null())
+						callback_on_resized.invoke();
+
+					site->sig_resize->invoke(rect.get_width(), rect.get_height());	// Excluding borders
 				}
-			
+	
 				break;
 			}
 			case ClientMessage:
@@ -816,12 +777,30 @@ void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 				break;
 			case Expose:
 				// Repaint notification
-				// Could be more efficient if we checked ahead for other
-				// repaint notifications
-				rect = new CL_Rect(event.xexpose.x, event.xexpose.y,
+				if (!site)
+					break;
+
+				if (exposed_rects.empty())	// First call, reverse some additional memory as required
+				{
+					unsigned int num_exposed = event.xexpose.count;
+					if (num_exposed > 1024)		// Have an upper limit if something strange is going on
+						num_exposed = 1024;
+					if (num_exposed < 8)		// Allocate a min of 8 expose_rects
+						num_exposed = 8;
+					exposed_rects.reserve(num_exposed);
+				}
+
+				rect = CL_Rect(event.xexpose.x, event.xexpose.y, 
 					event.xexpose.x + event.xexpose.width, event.xexpose.y + event.xexpose.height);
-				if (site) site->sig_paint->invoke(*rect);
-				delete rect;
+
+				exposed_rects.push_back(rect);
+
+				// For optimisation later on, calculate the largest exposed rect
+				if ((largest_exposed_rect.get_width() * largest_exposed_rect.get_height()) < (rect.get_width() * rect.get_height()))
+				{
+					largest_exposed_rect = rect;
+				}
+
 				break;
 			case FocusIn:
 				if (site)
@@ -886,12 +865,53 @@ void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 			case SelectionRequest:	// Clipboard requests
 				clipboard.event_selection_request(event.xselectionrequest);
 				break;
-
-			//case PropertyNotify:
-			//	break;		
-
 		default:
 			break;
+		}
+	}
+
+	// Send any exposure events, unless they have already been sent
+	unsigned int max = exposed_rects.size();
+
+	if (max==1)	// Simple case, a single rect
+	{
+		site->sig_paint->invoke(largest_exposed_rect);
+	}
+	else if (max > 8)
+	{
+		// TODO: Why is this condition significantly faster?
+		CL_Rect window_rect = get_viewport();
+		site->sig_paint->invoke(window_rect);
+	}
+	else if (max > 1)
+	{
+		// Send the largest rect first
+		site->sig_paint->invoke(largest_exposed_rect);
+		for (unsigned int cnt=0; cnt < max; cnt++)
+		{
+			CL_Rect &rect = exposed_rects[cnt];
+
+			// Rect is the larged rect or is inside the largest rect
+			if (largest_exposed_rect.is_inside(rect))
+			{
+				continue;
+			}
+
+			// Search for later larger rects that contain this rect
+			bool inner_flag = false;
+			for (unsigned int inner_cnt=cnt+1; inner_cnt < max; inner_cnt++)
+			{
+				if (exposed_rects[inner_cnt].is_inside(rect))
+				{
+					inner_flag = true;
+					break;
+				}
+			}
+
+			if (!inner_flag)
+			{
+				site->sig_paint->invoke(rect);
+			}
 		}
 	}
 }
@@ -943,7 +963,7 @@ void CL_X11Window::setup_joysticks()
 		{
 			try
 			{
-				CL_InputDeviceProvider_LinuxJoystick *joystick_provider = new CL_InputDeviceProvider_LinuxJoystick(this, cl_text(pathname));
+				CL_InputDeviceProvider_LinuxJoystick *joystick_provider = new CL_InputDeviceProvider_LinuxJoystick(this, pathname);
 				CL_InputDevice device(joystick_provider);
 				joysticks.push_back(device);
 				ic.add_joystick(device);
@@ -986,7 +1006,7 @@ void CL_X11Window::set_clipboard_text(const CL_StringRef &text)
 
 void CL_X11Window::set_clipboard_image(const CL_PixelBuffer &buf)
 {
-	throw CL_Exception(cl_text("Todo: CL_X11Window::set_clipboard_image"));
+	throw CL_Exception("Todo: CL_X11Window::set_clipboard_image");
 }
 
 CL_String CL_X11Window::get_clipboard_text() const
@@ -996,7 +1016,7 @@ CL_String CL_X11Window::get_clipboard_text() const
 
 CL_PixelBuffer CL_X11Window::get_clipboard_image() const
 {
-	throw CL_Exception(cl_text("Todo: CL_X11Window::get_clipboard_image"));
+	throw CL_Exception("Todo: CL_X11Window::get_clipboard_image");
 
 	return CL_PixelBuffer();
 }
@@ -1014,136 +1034,6 @@ bool CL_X11Window::is_clipboard_image_available() const
 void CL_X11Window::set_cursor(CL_CursorProvider_X11 *cursor)
 {
 	//TODO:
-}
-
-CL_Rect CL_X11Window::frame_size(0,0,0,0);
-bool CL_X11Window::frame_size_set = false;
-
-CL_Rect CL_X11Window::get_window_frame_size()
-{
-	if (frame_size_set)
-	{
-		return frame_size;
-	}
-#ifdef FIXME_THIS_LOOKS_TERRIBLE
-	Display *d;
-	Window w;
-	d=XOpenDisplay(NULL);
-	if(d==NULL)
-	{
-		throw CL_Exception(cl_text("Cannot open display"));
-	}
-	int s=DefaultScreen(d);
-
-	// Try 2 attempts at different positions to ensure that an accurate reading is made
-	// FIXME: This looks terrible, the temporary window is shown!
-	for (int attempt_cnt = 0; attempt_cnt < 2; attempt_cnt++)
-	{
-		int win_xpos = 128 + attempt_cnt*32;
-		int win_ypos = 128 + attempt_cnt*32;
-		const int win_width = 128;
-		const int win_height = 128;
-		w=XCreateSimpleWindow(d, RootWindow(d, s), win_xpos, win_ypos, win_width, win_height, 0, BlackPixel(d, s), WhitePixel(d, s));	
-		XSelectInput(d, w,
-			ExposureMask |
-			KeyPressMask |
-			KeyReleaseMask |
-			ButtonPressMask |
-			ButtonReleaseMask |
-			StructureNotifyMask |
-			PropertyChangeMask |
-			PointerMotionMask |
-			EnterWindowMask |
-			LeaveWindowMask |
-			KeymapStateMask |
-			FocusChangeMask);
-
-		// setup size hints:
-		XSizeHints *size_hints = XAllocSizeHints();
-		if (size_hints)
-		{
-			size_hints->x = win_xpos;
-			size_hints->y = win_ypos;
-			size_hints->width       = win_width;
-			size_hints->height      = win_height;
-			size_hints->base_width  = win_width;
-			size_hints->base_height = win_height;
-			size_hints->min_width   = win_width;
-			size_hints->min_height  = win_height;
-			size_hints->max_width   = win_width;
-			size_hints->max_height  = win_height;
-			size_hints->flags       = PSize|PBaseSize|PPosition;
-			XSetWMNormalHints(d, w, size_hints);
-			XFree(size_hints);
-		}
-
-		XMapWindow(d, w);
-
-		// Wait for mapped
-		XEvent event;
-		do {
-			XMaskEvent(d, StructureNotifyMask, &event);
-		}while ( (event.type != MapNotify) || (event.xmap.event != w) );
-
-		int xpos;
-		int ypos;
-		unsigned int width;
-		unsigned int height;
-		Window *children_ptr;
-		unsigned int num_child;
-		Window temp_window;
-		XWindowAttributes attr;
-
-		XGetWindowAttributes(d, w, &attr);
-
-		xpos = attr.x;
-		ypos = attr.y;
-		width = attr.width;
-		height = attr.height;
-
-		// Search all parent windows .... there MUST be an easier may
-
-		Window current_window = w;
-		while(true)
-		{
-			children_ptr = NULL;
-			XQueryTree(d, current_window, &temp_window, &current_window, &children_ptr, &num_child);
-			if (children_ptr)
-				XFree(children_ptr);
-
-			if (!current_window) break;
-
-			XGetWindowAttributes(d, current_window, &attr);
-			xpos += attr.x;
-			ypos += attr.y;
-		}
-
-		XDestroyWindow(d, w);
-
-		xpos -= win_xpos;
-		ypos -= win_ypos;
-
-		if (attempt_cnt)
-		{
-			// Ensure the frame size is the same as different positions
-			if ((frame_size.left != -xpos) || (frame_size.top != -ypos))
-			{
-				// Set to a zero frame size
-				frame_size = CL_Rect(0, 0, 0, 0);
-				break;
-			}
-		}else
-		{
-			frame_size = CL_Rect(-xpos, -ypos, 0, 0);
-		}
-
-	}
-
-	XCloseDisplay(d);
-#endif
-	frame_size_set = true;
-
-	return frame_size;
 }
 
 // Note, This function does not search the cache, this is intentional, as the event should never be in the cache when this function is used
@@ -1171,37 +1061,86 @@ bool CL_X11Window::get_xevent( XEvent &event ) const
 
 void CL_X11Window::request_repaint( const CL_Rect &cl_rect )
 {
-	XEvent event;
-	event.xexpose.type = Expose;
-	event.xexpose.serial = 0;
-	event.xexpose.send_event = True;
-	event.xexpose.display = disp;
-	event.xexpose.window = window;
-	event.xexpose.x = cl_rect.left;
-	event.xexpose.y = cl_rect.top;
-	event.xexpose.width = cl_rect.get_width();
-	event.xexpose.height = cl_rect.get_height();
-	event.xexpose.count = 0;
 
-	XSendEvent( disp, window, False, 0, &event );
+	CL_Rect rect = cl_rect;
+	CL_Rect window_rect = get_viewport();
+
+	rect.clip(window_rect);
+
+	// Validate rect size (if outside clipping region)
+	if ((rect.get_width() <= 0) || (rect.get_height() <= 0) )
+		return;
+
+	// Search the repaint list
+	unsigned int max = last_repaint_rect.size();
+	for (unsigned int cnt=0; cnt < max; cnt++)
+	{
+		// Ensure request for exposure has not already been made
+		if (last_repaint_rect[cnt].is_inside(rect))
+		{
+			return;
+		}
+
+		// Does this esposure completely contain one already been made
+		if (rect.is_inside(last_repaint_rect[cnt]))
+		{
+			last_repaint_rect[cnt] = rect;
+
+			// We can also flag all others as free space to optimise further, but get_messages() indirectly does this (and probably faster)
+			return;
+		}
+
+	}
+	// Message sent in process_queued_events() because expose events need to contain a counter
+	last_repaint_rect.push_back(rect);
+
+}
+
+void CL_X11Window::process_queued_events()
+{
+	unsigned int max = last_repaint_rect.size();
+	for (unsigned int cnt=0; cnt < max; cnt++)
+	{
+		CL_Rect &rect = last_repaint_rect[cnt];
+
+		XEvent event;
+		event.xexpose.type = Expose;
+		event.xexpose.serial = 0;
+		event.xexpose.send_event = True;
+		event.xexpose.display = disp;
+		event.xexpose.window = window;
+		event.xexpose.x = rect.left;
+		event.xexpose.y = rect.top;	
+		event.xexpose.width = rect.get_width();
+		event.xexpose.height = rect.get_height();
+		event.xexpose.count = (max -1) - cnt;
+		XSendEvent( disp, window, False, 0, &event );
+	}
+	last_repaint_rect.clear();
 }
 
 void CL_X11Window::set_minimum_size( int width, int height, bool client_area)
 {
-	//TODO: Implement for X11
-//	if (client_area)
-//		throw CL_Exception(cl_text("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_minimum_size(...)."));
-//
-//	this->minimum_size = CL_Size(width,height);
+	minimum_size = CL_Size(width,height);
+
+	long user_hints;
+	XGetWMNormalHints(disp, window, size_hints, &user_hints);
+	size_hints->min_width   = minimum_size.width;
+	size_hints->min_height  = minimum_size.height;
+	size_hints->flags |= PMinSize;
+	XSetWMNormalHints(disp, window, size_hints);
 }
 
 void CL_X11Window::set_maximum_size( int width, int height, bool client_area)
 {
-	//TODO: Implement for X11
-//	if (client_area)
-//		throw CL_Exception(cl_text("Congratulations! You just got assigned the task of adding support for client area in CL_Win32Window::set_maximum_size(...)."));
-//
-//	this->maximum_size = CL_Size(width,height);
+	maximum_size = CL_Size(width,height);
+
+	long user_hints;
+	XGetWMNormalHints(disp, window, size_hints, &user_hints);
+	size_hints->max_width   = maximum_size.width;
+	size_hints->max_height  = maximum_size.height;
+	size_hints->flags |= PMaxSize;
+	XSetWMNormalHints(disp, window, size_hints);
 }
 
 void CL_X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
@@ -1274,5 +1213,4 @@ CL_InputDeviceProvider_X11Mouse *CL_X11Window::get_mouse() const
 {
 	return static_cast<CL_InputDeviceProvider_X11Mouse *>(mouse.get_provider());
 }
-
 

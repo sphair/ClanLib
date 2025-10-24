@@ -38,9 +38,9 @@ public:
 			tab.set_geometry(CL_Rect(CL_Point(50,20),CL_Size(280,360)));
 
 			// tab 1
-			CL_TabPage *tab_page_1 = tab.add_page(cl_text("foo"));
+			CL_TabPage *tab_page_1 = tab.add_page("foo");
 			//tab_page_1->set_geometry(CL_Rect(CL_Point(0,0),CL_Size(230,300)));
-			//tab.add_page(cl_text("foo"), cl_text("foo"), &tab_page_1);
+			//tab.add_page("foo", "foo", &tab_page_1);
 
 			CL_Label label_p1(tab_page_1);
 			label_p1.set_geometry(CL_Rect(CL_Point(10,10),CL_Size(130,20)));
@@ -51,9 +51,9 @@ public:
 			btn_p1.set_text("Button Foo");
 
 			// tab 2
-			CL_TabPage *tab_page_2 = tab.add_page(cl_text("bar"));
+			CL_TabPage *tab_page_2 = tab.add_page("bar");
 			//tab_page_2->set_geometry(CL_Rect(CL_Point(0,0),CL_Size(230,300)));
-			//tab.add_page(cl_text("bar"), cl_text("tab with really long name"), &tab_page_2);
+			//tab.add_page("bar", "tab with really long name", &tab_page_2);
  
 			CL_Label label_p2(tab_page_2);
 			label_p2.set_geometry(CL_Rect(CL_Point(10,10),CL_Size(130,20)));
@@ -64,9 +64,9 @@ public:
 			btn_p2.set_text("Button Bar");
 
 			// tab 3
-			CL_TabPage *tab_page_3 = tab.add_page(cl_text("p3"));
+			CL_TabPage *tab_page_3 = tab.add_page("p3");
 			//tab_page_3->set_geometry(CL_Rect(CL_Point(0,0),CL_Size(230,300)));
-			//tab.add_page(cl_text("p3"), cl_text("p3"), &tab_page_3);
+			//tab.add_page("p3", "p3", &tab_page_3);
 
 			gui.exec();
 		}

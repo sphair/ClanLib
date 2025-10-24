@@ -38,7 +38,7 @@
 HolderComponent::HolderComponent(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), parent_grid(0), anchor_tl(cl_anchor_top_left), anchor_br(cl_anchor_top_left)
 {
-	set_type_name(cl_text("holder"));
+	set_type_name("holder");
 	func_render().set(this, &HolderComponent::on_render);
 	func_resized().set(this, &HolderComponent::on_resized);
 
@@ -105,90 +105,90 @@ CL_DomElement HolderComponent::to_element(CL_DomDocument &doc)
 	CL_StringRef type = comp->get_type_name();
 
 	CL_DomElement e = doc.create_element(comp->get_type_name());
-	e.set_attribute(cl_text("class"), comp->get_class_name());
-	e.set_attribute(cl_text("id"), comp->get_id_name());
+	e.set_attribute("class", comp->get_class_name());
+	e.set_attribute("id", comp->get_id_name());
 
 	if (!pos_equation_x.empty())
-		e.set_attribute(cl_text("eq-x"), pos_equation_x);
+		e.set_attribute("eq-x", pos_equation_x);
 	if (!pos_equation_y.empty())
-		e.set_attribute(cl_text("eq-y"), pos_equation_y);
+		e.set_attribute("eq-y", pos_equation_y);
 	if (!pos_equation_x2.empty())
-		e.set_attribute(cl_text("eq-x2"), pos_equation_x2);
+		e.set_attribute("eq-x2", pos_equation_x2);
 	if (!pos_equation_y2.empty())
-		e.set_attribute(cl_text("eq-y2"), pos_equation_y2);
+		e.set_attribute("eq-y2", pos_equation_y2);
 
-	if (type == cl_text("button"))
+	if (type == "button")
 	{
 		CL_PushButton *co = dynamic_cast<CL_PushButton*>(comp);
-		e.set_attribute(cl_text("text"), co->get_text());
+		e.set_attribute("text", co->get_text());
 	}
-	else if (comp->get_type_name() == cl_text("checkbox"))
+	else if (comp->get_type_name() == "checkbox")
 	{
 		CL_CheckBox *co = dynamic_cast<CL_CheckBox*>(comp);
-		e.set_attribute(cl_text("text"), co->get_text());
+		e.set_attribute("text", co->get_text());
 	}
-	else if (comp->get_type_name() == cl_text("radiobutton"))
+	else if (comp->get_type_name() == "radiobutton")
 	{
 		CL_RadioButton *co = dynamic_cast<CL_RadioButton*>(comp);
-		e.set_attribute(cl_text("text"), co->get_text());
-		e.set_attribute(cl_text("group"), co->get_group_name());
+		e.set_attribute("text", co->get_text());
+		e.set_attribute("group", co->get_group_name());
 	}
-	else if (comp->get_type_name() == cl_text("label"))
+	else if (comp->get_type_name() == "label")
 	{
 		CL_Label *co = dynamic_cast<CL_Label*>(comp);
-		e.set_attribute(cl_text("text"), co->get_text());
+		e.set_attribute("text", co->get_text());
 	}
-	else if (comp->get_type_name() == cl_text("lineedit"))
+	else if (comp->get_type_name() == "lineedit")
 	{
 		CL_LineEdit *co = dynamic_cast<CL_LineEdit*>(comp);
-		e.set_attribute(cl_text("text"), co->get_text());
+		e.set_attribute("text", co->get_text());
 	}
-	else if (comp->get_type_name() == cl_text("menubar"))
+	else if (comp->get_type_name() == "menubar")
 	{
 		// CL_MenuBar *co = dynamic_cast<CL_MenuBar*>(comp);
 	}
-	else if (comp->get_type_name() == cl_text("statusbar"))
+	else if (comp->get_type_name() == "statusbar")
 	{
 		// CL_StatusBar *co = dynamic_cast<CL_StatusBar*>(comp);
 	}
-	else if (comp->get_type_name() == cl_text("toolbar"))
+	else if (comp->get_type_name() == "toolbar")
 	{
 		// CL_ToolBar *co = dynamic_cast<CL_ToolBar*>(comp);
 	}
-	else if (comp->get_type_name() == cl_text("imageview"))
+	else if (comp->get_type_name() == "imageview")
 	{
 		// CL_ImageView *co = dynamic_cast<CL_ImageView*>(comp);
 	}
-	else if (comp->get_type_name() == cl_text("listview"))
+	else if (comp->get_type_name() == "listview")
 	{
 		CL_ListView *co = dynamic_cast<CL_ListView*>(comp);
 		save_listview(e, co);
 	}
-	else if (comp->get_type_name() == cl_text("slider"))
+	else if (comp->get_type_name() == "slider")
 	{
 		CL_Slider *co = dynamic_cast<CL_Slider*>(comp);
-		e.set_attribute(cl_text("min"), CL_StringHelp::int_to_text(co->get_min()));
-		e.set_attribute(cl_text("max"), CL_StringHelp::int_to_text(co->get_max()));
-		e.set_attribute(cl_text("ticks"), CL_StringHelp::int_to_text(co->get_tick_count()));
-		e.set_attribute(cl_text("page_step"), CL_StringHelp::int_to_text(co->get_page_step()));
+		e.set_attribute("min", CL_StringHelp::int_to_text(co->get_min()));
+		e.set_attribute("max", CL_StringHelp::int_to_text(co->get_max()));
+		e.set_attribute("ticks", CL_StringHelp::int_to_text(co->get_tick_count()));
+		e.set_attribute("page_step", CL_StringHelp::int_to_text(co->get_page_step()));
 	}
-	else if (comp->get_type_name() == cl_text("tab"))
+	else if (comp->get_type_name() == "tab")
 	{
 		CL_Tab *co = dynamic_cast<CL_Tab*>(comp);
 
 		CL_GUIComponent *child = co->get_first_child();
 		while (child != 0)
 		{
-			if (child->get_type_name() == cl_text("tabpage"))
+			if (child->get_type_name() == "tabpage")
 			{
 				CL_TabPage *tab_page = dynamic_cast<CL_TabPage*>(child);
-				CL_DomElement tabpage_element = doc.create_element(cl_text("tabpage"));
-				tabpage_element.set_attribute(cl_text("label"), tab_page->get_label());
+				CL_DomElement tabpage_element = doc.create_element("tabpage");
+				tabpage_element.set_attribute("label", tab_page->get_label());
 
 				CL_GUIComponent *tabpage_child = child->get_first_child();
 				while (tabpage_child != 0)
 				{
-					if (tabpage_child->get_type_name() == cl_text("holder"))
+					if (tabpage_child->get_type_name() == "holder")
 					{
 						HolderComponent *holder_comp = dynamic_cast<HolderComponent*>(tabpage_child);
 						CL_DomElement tabpage_child_element = holder_comp->to_element(doc);
@@ -205,15 +205,15 @@ CL_DomElement HolderComponent::to_element(CL_DomDocument &doc)
 		}
 		
 	}
-	else if (comp->get_type_name() == cl_text("frame"))
+	else if (comp->get_type_name() == "frame")
 	{
 		CL_Frame *co = dynamic_cast<CL_Frame*>(comp);
-		e.set_attribute(cl_text("text"), co->get_header_text());
+		e.set_attribute("text", co->get_header_text());
 
 		CL_GUIComponent *child = co->get_first_child();
 		while (child != 0)
 		{
-			if (child->get_type_name() == cl_text("holder"))
+			if (child->get_type_name() == "holder")
 			{
 				HolderComponent *holder_comp = dynamic_cast<HolderComponent*>(child);
 				CL_DomElement frame_child_element = holder_comp->to_element(doc);
@@ -224,11 +224,11 @@ CL_DomElement HolderComponent::to_element(CL_DomDocument &doc)
 		}
 
 	}
-	else if (comp->get_type_name() == cl_text("spin"))
+	else if (comp->get_type_name() == "spin")
 	{
 		// CL_Spin *co = dynamic_cast<CL_Spin*>(comp);
 	}
-	else if (comp->get_type_name() == cl_text("combobox"))
+	else if (comp->get_type_name() == "combobox")
 	{
 		// CL_ComboBox *co = dynamic_cast<CL_ComboBox*>(comp);
 	}
@@ -314,8 +314,8 @@ CL_Rect HolderComponent::get_grabber_sw() const
 void HolderComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
 	// Do a fill rect for otherwise transparent components:
-	CL_TempString type = get_first_child()->get_type_name();
-	if (type == cl_text("toolbar") || type == cl_text("menubar") /*|| type == cl_text("label")*/)
+	CL_String type = get_first_child()->get_type_name();
+	if (type == "toolbar" || type == "menubar" /*|| type == "label"*/)
 	{
 		CL_Rect child_geom = get_first_child()->get_geometry();
 		CL_Draw::fill(get_gc(), child_geom, CL_Colorf(0.35f, 0.498f, 0.603f, 0.2f));
@@ -342,12 +342,12 @@ void HolderComponent::save_geometry(CL_DomElement &e, CL_GUIComponent *comp)
 	CL_Rect holder_g = comp->get_parent_component()->get_geometry();
 	CL_Rect g = get_geometry();
 
-	CL_TempString left = CL_StringHelp::int_to_text(g.left);
-	CL_TempString right = CL_StringHelp::int_to_text(g.right);
-	CL_TempString top = CL_StringHelp::int_to_text(g.top);
-	CL_TempString bottom = CL_StringHelp::int_to_text(g.bottom);
+	CL_String left = CL_StringHelp::int_to_text(g.left);
+	CL_String right = CL_StringHelp::int_to_text(g.right);
+	CL_String top = CL_StringHelp::int_to_text(g.top);
+	CL_String bottom = CL_StringHelp::int_to_text(g.bottom);
 
-	e.set_attribute(cl_text("geom"), left + cl_text(",") + top + cl_text(",") + right + cl_text(",") + bottom);
+	e.set_attribute("geom", left + "," + top + "," + right + "," + bottom);
 }
 
 void HolderComponent::save_anchors(CL_DomElement &e, CL_GUIComponent *comp)
@@ -404,17 +404,17 @@ void HolderComponent::save_listview(CL_DomElement &e, CL_ListView *lv)
 	CL_ListViewHeader *header = lv->get_header();
 	
 	CL_DomDocument doc = e.get_owner_document(); 
-	CL_DomElement e_header = doc.create_element(cl_text("listview_header"));
+	CL_DomElement e_header = doc.create_element("listview_header");
 	e.append_child(e_header);
 
 	CL_ListViewColumnHeader col = header->get_first_column();
 
 	while (!col.is_null())
 	{
-		CL_DomElement e_col = doc.create_element(cl_text("listview_column"));
-		e_col.set_attribute(cl_text("col_id"), col.get_column_id());
-		e_col.set_attribute(cl_text("caption"), col.get_caption());
-		e_col.set_attribute(cl_text("width"), CL_StringHelp::int_to_text(col.get_width()));
+		CL_DomElement e_col = doc.create_element("listview_column");
+		e_col.set_attribute("col_id", col.get_column_id());
+		e_col.set_attribute("caption", col.get_caption());
+		e_col.set_attribute("width", CL_StringHelp::int_to_text(col.get_width()));
 
 		col = col.get_next_sibling();
 	}
@@ -446,7 +446,7 @@ CL_GUIComponent *HolderComponent::get_tab_or_frame_parent(CL_GUIComponent *comp)
 	CL_GUIComponent *test = comp->get_parent_component();
 	while (test != 0)
 	{
-		if (test->get_type_name() == cl_text("tabpage") || test->get_type_name() == cl_text("frame"))
+		if (test->get_type_name() == "tabpage" || test->get_type_name() == "frame")
 			return test;
 		test = test->get_parent_component();
 	}

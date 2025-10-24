@@ -36,18 +36,18 @@ Application::Application()
 	ComponentTypes::initialize();
 
 	CL_String base_path = CL_System::get_exe_path();
-	if(CL_FileHelp::file_exists(base_path + cl_text("resources.xml")) == false)
-		base_path += cl_text("..\\");
+	if(CL_FileHelp::file_exists(base_path + "resources.xml") == false)
+		base_path += "..\\";
 	CL_Directory::set_current(base_path);
 
-	resources = CL_ResourceManager(cl_text("resources.xml"));
+	resources = CL_ResourceManager("resources.xml");
 
-	CL_String resource_filename(cl_text("../../Resources/GUIThemeAero/resources.xml"));
-	CL_String theme_filename(cl_text("theme.css"));
+	CL_String resource_filename("../../Resources/GUIThemeAero/resources.xml");
+	CL_String theme_filename("theme.css");
 	if (!CL_FileHelp::file_exists(resource_filename))
 	{
-		resource_filename = cl_text("../../Resources/GUIThemeBasic/resources.xml");
-		theme_filename = cl_text("theme_basic.css");
+		resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+		theme_filename = "theme_basic.css";
 	}
 
 	CL_ResourceManager resources2(resource_filename);

@@ -54,6 +54,14 @@ CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_String &title,
 	impl->position_client_area = client_area;
 }
 
+CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_String &title, const CL_Size &size, bool client_area)
+	: impl(new CL_DisplayWindowDescription_Impl)
+{
+	impl->title = title;
+	impl->position.set_size(size);
+	impl->position_client_area = client_area;
+}
+
 CL_DisplayWindowDescription::CL_DisplayWindowDescription(const CL_Rect &position, bool client_area)
 : impl(new CL_DisplayWindowDescription_Impl)
 {
@@ -214,6 +222,11 @@ int CL_DisplayWindowDescription::get_stencil_size() const
 	return impl->stencil_size;
 }
 
+int CL_DisplayWindowDescription::get_fullscreen_monitor() const
+{
+	return impl->fullscreen_monitor;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowDescription operations:
 
@@ -295,9 +308,10 @@ void CL_DisplayWindowDescription::set_position(const CL_Rect &position, bool cli
 	impl->position_client_area = client_area;
 }
 
-void CL_DisplayWindowDescription::set_fullscreen(bool fullscreen)
+void CL_DisplayWindowDescription::set_fullscreen(bool fullscreen, int monitor)
 {
 	impl->fullscreen = fullscreen;
+	impl->fullscreen_monitor = monitor;
 }
 
 void CL_DisplayWindowDescription::set_flipping_buffers(int num_buffers)

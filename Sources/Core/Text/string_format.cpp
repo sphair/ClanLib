@@ -32,9 +32,9 @@
 #include "API/Core/System/exception.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_TempStringFormat Construction:
+// CL_StringFormat Construction:
 
-CL_TempStringFormat::CL_TempStringFormat(const CL_StringRef &format_string)
+CL_StringFormat::CL_StringFormat(const CL_StringRef &format_string)
 : string(format_string)
 {
 	bool arg_mode = false;
@@ -46,7 +46,7 @@ CL_TempStringFormat::CL_TempStringFormat(const CL_StringRef &format_string)
 	{
 		if (!arg_mode)
 		{
-			if (string[index] == cl_text('%'))
+			if (string[index] == '%')
 			{
 				arg_mode = true;
 				arg_value = 0;
@@ -57,7 +57,7 @@ CL_TempStringFormat::CL_TempStringFormat(const CL_StringRef &format_string)
 		{
 			switch (string[index])
 			{
-			case cl_text('%'):
+			case '%':
 				if (arg_start == index-1)
 				{
 					arg_mode = false;
@@ -72,18 +72,18 @@ CL_TempStringFormat::CL_TempStringFormat(const CL_StringRef &format_string)
 					arg_value = 0;
 				}
 				break;
-			case cl_text('0'):
-			case cl_text('1'):
-			case cl_text('2'):
-			case cl_text('3'):
-			case cl_text('4'):
-			case cl_text('5'):
-			case cl_text('6'):
-			case cl_text('7'):
-			case cl_text('8'):
-			case cl_text('9'):
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
 				arg_value *= 10;
-				arg_value += string[index]-cl_text('0');
+				arg_value += string[index]-'0';
 				break;
 			default:
 				if (arg_start != index-1)
@@ -98,22 +98,22 @@ CL_TempStringFormat::CL_TempStringFormat(const CL_StringRef &format_string)
 		create_arg(arg_value, arg_start, size-arg_start);
 }
 
-CL_TempStringFormat::~CL_TempStringFormat()
+CL_StringFormat::~CL_StringFormat()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_TempStringFormat Attributes:
+// CL_StringFormat Attributes:
 
-const CL_TempString &CL_TempStringFormat::get_result() const
+const CL_String &CL_StringFormat::get_result() const
 {
 	return string;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_TempStringFormat Operations:
+// CL_StringFormat Operations:
 
-void CL_TempStringFormat::set_arg(int index, const CL_StringRef &text)
+void CL_StringFormat::set_arg(int index, const CL_StringRef &text)
 {
 	if (index >= (int) args.size())
 		return;
@@ -135,39 +135,39 @@ void CL_TempStringFormat::set_arg(int index, const CL_StringRef &text)
 	}
 }
 	
-void CL_TempStringFormat::set_arg(int index, int value, int min_length)
+void CL_StringFormat::set_arg(int index, int value, int min_length)
 {
-	CL_TempString t = CL_StringHelp::int_to_text(value);
+	CL_String t = CL_StringHelp::int_to_text(value);
 	if ((int) t.length() < min_length)
-		t = CL_TempString(min_length-t.length(), cl_text('0')) + t;
+		t = CL_String(min_length-t.length(), '0') + t;
 	set_arg(index, t);
 }
 
-void CL_TempStringFormat::set_arg(int index, unsigned int value, int min_length)
+void CL_StringFormat::set_arg(int index, unsigned int value, int min_length)
 {
-	CL_TempString t = CL_StringHelp::uint_to_text(value);
+	CL_String t = CL_StringHelp::uint_to_text(value);
 	if ((int) t.length() < min_length)
-		t = CL_TempString(min_length-t.length(), cl_text('0')) + t;
+		t = CL_String(min_length-t.length(), '0') + t;
 	set_arg(index, t);
 }
 
-void CL_TempStringFormat::set_arg(int index, float value)
+void CL_StringFormat::set_arg(int index, float value)
 {
 	set_arg(index, CL_StringHelp::float_to_text(value));
 }
 
-void CL_TempStringFormat::set_arg(int index, double value)
+void CL_StringFormat::set_arg(int index, double value)
 {
 	set_arg(index, CL_StringHelp::double_to_text(value));
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_TempStringFormat Implementation:
+// CL_StringFormat Implementation:
 
-void CL_TempStringFormat::create_arg(int index, int start, int length)
+void CL_StringFormat::create_arg(int index, int start, int length)
 {
 	if (index > 256)
-		throw CL_Exception(cl_text("Encountered more than 256 indexes in a formatted string!"));
+		throw CL_Exception("Encountered more than 256 indexes in a formatted string!");
 
 	ArgPosition pos(start, length);
 	while (index >= (int) args.size())

@@ -175,13 +175,11 @@ public:
 	/// This function checks if a path has a trailing
 	/// slash/backslash and removes it if needed.
 	/// \param path The path to use
-	/// \param path_type The path type (of path)
 	/// \return The converted path
 	static CL_String remove_trailing_slash(
-		const CL_String &path,
-		PathType path_type = path_type_file);
+		const CL_String &path);
 
-	/// \brief  Returns the drive (C:) or share name (\\computer\share)
+	/// \brief  Returns the drive (C:) or share name ( \ \ computer \ share)
 	///
 	/// If (path_type == path_type_virtual) or not using windows, then this function always returns an empty string.
 	/// \param fullname The full path name to use

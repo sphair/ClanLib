@@ -29,7 +29,7 @@
 #include <ClanLib/application.h>
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
-#include <ClanLib/gdi.h>
+#include <ClanLib/swrender.h>
 
 class TestApp
 {
@@ -102,7 +102,7 @@ public:
 	{
 		CL_SetupCore setup_core;
 		CL_SetupDisplay setup_display;
-		CL_SetupGDI setup_gdi;
+		CL_SetupSWRender setup_swrender;
 
 		TestApp app;
 		return app.main(args);

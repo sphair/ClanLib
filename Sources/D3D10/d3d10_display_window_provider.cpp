@@ -85,6 +85,21 @@ CL_InputContext& CL_D3D10DisplayWindowProvider::get_ic()
 	return ic;
 }
 
+CL_Size CL_D3D10DisplayWindowProvider::get_minimum_size(bool client_area) const
+{
+	return CL_Size();
+}
+
+CL_Size CL_D3D10DisplayWindowProvider::get_maximum_size(bool client_area) const
+{
+	return CL_Size();
+}
+
+CL_String CL_D3D10DisplayWindowProvider::get_title() const
+{
+	return CL_String();
+}
+
 HWND CL_D3D10DisplayWindowProvider::get_hwnd() const
 {
 	return 0;

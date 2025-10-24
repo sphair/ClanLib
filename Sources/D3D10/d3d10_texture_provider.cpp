@@ -47,16 +47,16 @@ CL_D3D10TextureProvider::~CL_D3D10TextureProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10TextureProvider Operations:
 
+void CL_D3D10TextureProvider::create(int new_width, int new_height, CL_TextureFormat internal_format, int new_depth)
+{
+}
+
 void CL_D3D10TextureProvider::destroy()
 {
 	delete this;
 }
 
-void CL_D3D10TextureProvider::create(int width, int height, CL_TextureFormat internal_format, int depth)
-{
-}
-
-CL_PixelBuffer CL_D3D10TextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const
+CL_PixelBuffer CL_D3D10TextureProvider::get_pixeldata(CL_TextureFormat sized_format, int level) const 
 {
 	return CL_PixelBuffer();
 }
@@ -89,7 +89,8 @@ void CL_D3D10TextureProvider::set_compressed_image(
 void CL_D3D10TextureProvider::set_subimage(
 	int x,
 	int y,
-	const CL_PixelBufferRef &image,
+	const CL_PixelBuffer &image,
+	const CL_Rect &src_rect,
 	int level)
 {
 }
@@ -137,10 +138,6 @@ void CL_D3D10TextureProvider::set_max_level(int max_level)
 {
 }
 
-void CL_D3D10TextureProvider::set_generate_mipmap(bool generate_mipmap)
-{
-}
-
 void CL_D3D10TextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_s,
 	CL_TextureWrapMode wrap_t,
@@ -171,13 +168,8 @@ void CL_D3D10TextureProvider::set_max_anisotropy(float v)
 {
 }
 
-void CL_D3D10TextureProvider::set_depth_mode(CL_TextureDepthMode depth_mode)
-{
-}
-
 void CL_D3D10TextureProvider::set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func)
 {
 }
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10TextureProvider Implementation:

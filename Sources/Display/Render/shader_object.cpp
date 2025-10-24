@@ -62,6 +62,11 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_ShaderObject Construction:
 
+CL_ShaderObject::CL_ShaderObject()
+{
+	// empty
+}
+
 CL_ShaderObject::CL_ShaderObject(CL_GraphicContext &gc, CL_ShaderType type, const CL_StringRef &source)
 : impl(new CL_ShaderObject_Impl)
 {
@@ -95,16 +100,16 @@ CL_ShaderObject::CL_ShaderObject(CL_GraphicContextProvider *gc_provider, CL_Shad
 CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
 {
 	CL_Resource resource = resources->get_resource(resource_id);
-	CL_String filename = resource.get_element().get_attribute(cl_text("file"));
+	CL_String filename = resource.get_element().get_attribute("file");
 	CL_String type = resource.get_element().get_tag_name();
 	
 	CL_ShaderType shader_type;
-	if (type == cl_text("fragment-shader"))
+	if (type == "fragment-shader")
 		shader_type = cl_shadertype_fragment;
-	else if (type == cl_text("vertex-shader"))
+	else if (type == "vertex-shader")
 		shader_type = cl_shadertype_vertex;
 	else
-		throw CL_Exception(cl_text("CL_ShaderObject: Unknown shader type: ") + type);
+		throw CL_Exception("CL_ShaderObject: Unknown shader type: " + type);
 
 	CL_VirtualDirectory directory = resources->get_directory(resource);
 
@@ -115,9 +120,9 @@ CL_ShaderObject CL_ShaderObject::load(CL_GraphicContext &gc, const CL_StringRef 
 
 	CL_ShaderObject shader_object(gc, shader_type, CL_StringHelp::local8_to_text(source));
 
-	if (resource.get_element().get_attribute(cl_text("compile"), cl_text("true")) == cl_text("true"))
+	if (resource.get_element().get_attribute("compile", "true") == "true")
 		if(!shader_object.compile())
-			throw CL_Exception(cl_format(cl_text("Unable to compiler shader program %1: %2"), resource_id, shader_object.get_info_log()));
+			throw CL_Exception(cl_format("Unable to compiler shader program %1: %2", resource_id, shader_object.get_info_log()));
 
 	return shader_object;
 }
@@ -150,7 +155,7 @@ CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_Shad
 	CL_ShaderObject shader_object = CL_ShaderObject::load(gc, shader_type, filename, directory);
 
 	if(!shader_object.compile())
-		throw CL_Exception(cl_format(cl_text("Unable to compiler shader program %1: %2"), filename, shader_object.get_info_log()));
+		throw CL_Exception(cl_format("Unable to compiler shader program %1: %2", filename, shader_object.get_info_log()));
 
 	return shader_object;
 }
@@ -160,7 +165,7 @@ CL_ShaderObject CL_ShaderObject::load_and_compile(CL_GraphicContext &gc, CL_Shad
 	CL_ShaderObject shader_object = CL_ShaderObject::load(gc, shader_type, file);
 
 	if(!shader_object.compile())
-		throw CL_Exception(cl_format(cl_text("Unable to compiler shader program : %1"), shader_object.get_info_log()));
+		throw CL_Exception(cl_format("Unable to compiler shader program : %1", shader_object.get_info_log()));
 
 	return shader_object;
 }
@@ -198,6 +203,12 @@ CL_String CL_ShaderObject::get_info_log() const
 CL_String CL_ShaderObject::get_shader_source() const
 {
 	return impl->provider->get_shader_source();
+}
+
+void CL_ShaderObject::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_ShaderObject is null");
 }
 
 /////////////////////////////////////////////////////////////////////////////

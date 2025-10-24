@@ -87,20 +87,20 @@ private:
 		const CL_StringRef &expression,
 		const CL_XPathToken &previous_token = CL_XPathToken());
 
-	void evaluate_location_step(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_ancestor(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_ancestor_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_attribute(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_child(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_descendant(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_descendant_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_following(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_following_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_namespace(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_parent(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_preceding(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_preceding_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	void select_nodes_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void evaluate_location_step(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_ancestor(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_ancestor_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_attribute(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_child(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_descendant(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_descendant_or_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_following(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_following_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_namespace(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_parent(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_preceding(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_preceding_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
+	void select_nodes_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
 	bool confirm_step_requirements(const CL_DomNode &node, int &node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression);
 
 	CL_XPathObject call_function(const CL_StringRef &name, std::vector<CL_XPathObject> parameters);

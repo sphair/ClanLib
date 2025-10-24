@@ -101,6 +101,10 @@ void CL_GL1TextureProvider::on_dispose()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1TextureProvider Operations:
 
+void CL_GL1TextureProvider::generate_mipmap()
+{
+}
+
 void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureFormat internal_format, int new_depth)
 {
 	throw_if_disposed();
@@ -111,14 +115,14 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 
 	if ( (new_width > 32768) || (new_width < 1) )
 	{
-		throw CL_Exception(cl_text("Invalid texture width in the GL1 target"));
+		throw CL_Exception("Invalid texture width in the GL1 target");
 	}
 
 	if ( (texture_type == CL_TEXTURE_2D) || (texture_type == CL_TEXTURE_3D) )
 	{
 		if ( (new_height > 32768) || (new_height < 1) )
 		{
-			throw CL_Exception(cl_text("Invalid texture height in the GL1 target"));
+			throw CL_Exception("Invalid texture height in the GL1 target");
 		}
 	}
 
@@ -126,7 +130,7 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 	{
 		if ( (new_depth > 32768) || (new_depth < 1) )
 		{
-			throw CL_Exception(cl_text("Invalid texture depth in the GL1 target"));
+			throw CL_Exception("Invalid texture depth in the GL1 target");
 		}
 	}
 
@@ -187,17 +191,19 @@ void CL_GL1TextureProvider::create(int new_width, int new_height, CL_TextureForm
 		// Clear the whole texture if it is npot
 		if (!power_of_two_texture)
 		{
-			CL_PixelBuffer image = CL_PixelBuffer(pot_width, pot_height, pot_width * 4, CL_PixelFormat::rgba8888);
+			CL_PixelBuffer image = CL_PixelBuffer(pot_width, pot_height, cl_rgba8);
 			void *data = image.get_data();
 			memset(data, 0, pot_width * pot_height * 4);
 
 			CLenum format;
 			CLenum type;
-			CL_GL1::to_opengl_pixelformat(image.get_format(), format, type);
+			CL_GL1::to_opengl_pixelformat(image, format, type);
 
 			cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-			const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+			const int bytesPerPixel = image.get_bytes_per_pixel();
 			cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+			cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 			int image_width = image.get_width();
 			int image_height = image.get_height();
@@ -251,7 +257,7 @@ void CL_GL1TextureProvider::destroy()
 	delete this;
 }
 
-CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_PixelFormat &format, int level) const
+CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_TextureFormat sized_format, int level) const
 {
 	throw_if_disposed();
 
@@ -259,31 +265,29 @@ CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_PixelFormat &format, int 
 
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	CL_PixelFormat abgr_format;
-	abgr_format.set_depth(32);
-	abgr_format.enable_colorkey(false);
-	abgr_format.set_alpha_mask(0xFF000000);
-	abgr_format.set_blue_mask (0x00FF0000);
-	abgr_format.set_green_mask(0x0000FF00);
-	abgr_format.set_red_mask  (0x000000FF);
-
 	CL_PixelBuffer buffer(
 		pot_width, pot_height,
-		pot_width * 4,
-		abgr_format);
+		cl_abgr8);
 
 	cl1GetTexImage(texture_type, level, CL_RGBA, CL_UNSIGNED_BYTE, buffer.get_data());
 
-	CL_PixelBufferRef buffer_ref(width, height, buffer.get_pitch(), buffer.get_format(), buffer.get_data());
+	CL_PixelBuffer buffer_ref(width, height, buffer.get_format(), buffer.get_data());
 
-	return buffer_ref.to_format(format);
+	return buffer.to_format(sized_format);
 }
 
-void CL_GL1TextureProvider::set_image(CL_PixelBuffer &image, int level, CL_TextureFormat internal_format)
+void CL_GL1TextureProvider::set_image(CL_PixelBuffer &image, int level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	set_texture_image2d(CL_TEXTURE_2D, image, level, internal_format);
+	if (texture_type == CL_TEXTURE_2D)
+	{
+		set_texture_image2d(CL_TEXTURE_2D, image, level);
+	}
+	else if (texture_type == CL_TEXTURE_3D)
+	{
+		set_texture_image3d(CL_TEXTURE_3D, image, image.get_height() / height, level);
+	}
 }
 
 void CL_GL1TextureProvider::set_cube_map(
@@ -293,18 +297,17 @@ void CL_GL1TextureProvider::set_cube_map(
 	CL_PixelBuffer &cube_map_negative_y,
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level, internal_format);
-	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level, internal_format);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_X, cube_map_positive_x, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_X, cube_map_negative_x, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Y, cube_map_positive_y, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Y, cube_map_negative_y, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_POSITIVE_Z, cube_map_positive_z, level);
+	set_texture_image2d(CL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cube_map_negative_z, level);
 }
 
 void CL_GL1TextureProvider::set_compressed_image(
@@ -327,57 +330,61 @@ void CL_GL1TextureProvider::set_compressed_image(
 void CL_GL1TextureProvider::set_subimage(
 	int x,
 	int y,
-	const CL_PixelBufferRef &image,
+	const CL_PixelBuffer &ximage,
+	const CL_Rect &src_rect,
 	int level)
 {
+	CL_PixelBuffer image = ximage;
+
+	if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > image.get_width(), src_rect.bottom > image.get_height())
+		throw CL_Exception("Rectangle out of bounds");
+
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
 	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
 	CLenum format;
 	CLenum type;
-	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image.get_format(), format, type);
+	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		if (image.get_pitch() % bytesPerPixel != 0)
 			conv_needed = true;
 	}
-
-	const void *data;
-	CL_PixelBuffer buffer;
 
 	// no conversion needed
 	if (!conv_needed)
 	{
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, src_rect.left);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, src_rect.top);
 
-		data = image.get_data();
 	}
 	// conversion needed
 	else
 	{
 		bool big_endian = CL_Endian::is_system_big();
 
+		CL_PixelBuffer buffer;
+
 		if (!big_endian)
 			buffer = CL_PixelBuffer(
-				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL1 RGB/RGBA is always big endian
+				src_rect.get_width(), src_rect.get_height(),
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL1 RGB/RGBA is always big endian
 		else
 			buffer = CL_PixelBuffer(
-				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
+				src_rect.get_width(), src_rect.get_height(),
+				needs_alpha ? cl_rgba8 : cl_rgb8);
 	
-		image.convert(buffer);
+		image.convert(buffer, CL_Rect(0, 0, buffer.get_size()), src_rect);
 
 		format = needs_alpha ? CL_RGBA : CL_RGB;
 
@@ -386,11 +393,13 @@ void CL_GL1TextureProvider::set_subimage(
 
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 		type = CL_UNSIGNED_BYTE;
-		data = buffer.get_data();
+		image = buffer;
 	}
 
 	// upload
@@ -398,11 +407,11 @@ void CL_GL1TextureProvider::set_subimage(
 		CL_TEXTURE_2D,            // target
 		level,                    // level
 		x, y,                     // xoffset, yoffset
-		image.get_width(),        // width
-		image.get_height(),       // height
+		src_rect.get_width(),        // width
+		src_rect.get_height(),       // height
 		format,					  // format
 		type,					  // type
-		data);                    // texels
+		image.get_data());        // texels
 
 	if (!power_of_two_texture)
 	{
@@ -412,8 +421,8 @@ void CL_GL1TextureProvider::set_subimage(
 		int right_edge = x + image.get_width();
 		if ( right_edge >= width )
 		{
-			CL_PixelBufferRef image_edge = image.get_subimage(CL_Rect(width-1, 0, CL_Size(1, image.get_height())));
-			char *edge_data = (char *) image_edge.get_data();
+			char *edge_data = (char *) image.get_data();
+			edge_data += image.get_bytes_per_pixel() * (width-1);
 
 			for(int edge_cnt = right_edge; edge_cnt < pot_width; edge_cnt++)
 			{
@@ -422,7 +431,7 @@ void CL_GL1TextureProvider::set_subimage(
 					level,				// level
 					edge_cnt, y,		// xoffset, yoffset
 					1,					// width
-					image_edge.get_height(),	// height
+					src_rect.get_height(),	// height
 					format,				// format
 					type,				// type
 					edge_data);				// texels
@@ -432,8 +441,8 @@ void CL_GL1TextureProvider::set_subimage(
 		int bottom_edge = y + image.get_height();
 		if ( bottom_edge >= height )
 		{
-			CL_PixelBufferRef image_edge = image.get_subimage(CL_Rect(0, height-1, CL_Size(image.get_width(), 1)));
-			char *edge_data = (char *) image_edge.get_data();
+			char *edge_data = (char *) image.get_data();
+			edge_data += image.get_pitch() * (height-1);
 
 			for(int edge_cnt = bottom_edge; edge_cnt < pot_height; edge_cnt++)
 			{
@@ -441,7 +450,7 @@ void CL_GL1TextureProvider::set_subimage(
 					CL_TEXTURE_2D,		// target
 					level,				// level
 					x, edge_cnt,		// xoffset, yoffset
-					image_edge.get_width(),		// width
+					src_rect.get_width(),		// width
 					1,	// height
 					format,				// format
 					type,				// type
@@ -449,7 +458,9 @@ void CL_GL1TextureProvider::set_subimage(
 			}
 		}
 	}
-
+	// Restore these unpack values to the default
+	cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+	cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 }
 
 void CL_GL1TextureProvider::copy_image_from(
@@ -534,13 +545,6 @@ void CL_GL1TextureProvider::set_max_level(int max_level)
 	cl1TexParameteri(texture_type, CL_TEXTURE_MAX_LEVEL, max_level);
 }
 
-void CL_GL1TextureProvider::set_generate_mipmap(bool generate_mipmap)
-{
-	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_GENERATE_MIPMAP, generate_mipmap);
-}
-
 void CL_GL1TextureProvider::set_wrap_mode(
 	CL_TextureWrapMode wrap_s,
 	CL_TextureWrapMode wrap_t,
@@ -589,13 +593,6 @@ void CL_GL1TextureProvider::set_max_anisotropy(float v)
 {
 }
 
-void CL_GL1TextureProvider::set_depth_mode(CL_TextureDepthMode depth_mode)
-{
-	throw_if_disposed();
-	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
-	cl1TexParameteri(texture_type, CL_DEPTH_TEXTURE_MODE, to_enum(depth_mode));	
-}
-
 void CL_GL1TextureProvider::set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func)
 {
 	throw_if_disposed();
@@ -608,7 +605,7 @@ void CL_GL1TextureProvider::transform_coordinate(const CL_PrimitivesArrayData::V
 {
 	if (attribute.type != cl_type_float)
 	{
-		throw CL_Exception(cl_text("Implement me: Texture coord npot transformation (not float) (GL1 target)"));
+		throw CL_Exception("Implement me: Texture coord npot transformation (not float) (GL1 target)");
 	}
 
 	int desired_size = attribute.size * (total_vertices);
@@ -667,15 +664,14 @@ void CL_GL1TextureProvider::transform_coordinate(const CL_PrimitivesArrayData::V
 void CL_GL1TextureProvider::set_texture_image2d(
 	CLuint target,
 	CL_PixelBuffer &image,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
 	throw_if_disposed();
 	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
 
 	CLint gl_internal_format;
 	CLenum gl_pixel_format;
-	CL_GL1::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
+	CL_GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 
 /*
@@ -691,16 +687,16 @@ void CL_GL1TextureProvider::set_texture_image2d(
 */
 
 	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
 	CLenum format;
 	CLenum type;
-	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image.get_format(), format, type);
+	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		if (image.get_pitch() % bytesPerPixel != 0)
 			conv_needed = true;
 	}
@@ -712,8 +708,10 @@ void CL_GL1TextureProvider::set_texture_image2d(
 
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
@@ -744,13 +742,11 @@ void CL_GL1TextureProvider::set_texture_image2d(
 		if (!big_endian)
 			buffer = CL_PixelBuffer(
 				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL RGB/RGBA is always big endian
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
 		else
 			buffer = CL_PixelBuffer(
 				image.get_width(), image.get_height(),
-				image.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
+				needs_alpha ? cl_rgba8 : cl_rgb8);
 	
 		image.convert(buffer);
 
@@ -760,8 +756,10 @@ void CL_GL1TextureProvider::set_texture_image2d(
 
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
 
 		// upload
 		cl1TexImage2D(
@@ -781,6 +779,109 @@ void CL_GL1TextureProvider::set_texture_image2d(
 		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_S, CL_CLAMP_TO_EDGE);
 		cl1TexParameteri(CL_TEXTURE_2D, CL_TEXTURE_WRAP_T, CL_CLAMP_TO_EDGE);
 		*/
+	}
+}
+
+void CL_GL1TextureProvider::set_texture_image3d(
+	CLuint target,
+	CL_PixelBuffer &image,
+	int image_depth,
+	int level)
+{
+	throw_if_disposed();
+	CL_GL1TextureStateTracker state_tracker(texture_type, handle, NULL);
+
+	CLint gl_internal_format;
+	CLenum gl_pixel_format;
+	CL_GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+
+	// check out if the original texture needs or doesn't need an alpha channel
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
+
+	CLenum format;
+	CLenum type;
+	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
+
+	// also check for the pitch (OpenGL1 can only skip pixels, not bytes)
+	if (!conv_needed)
+	{
+		const int bytesPerPixel = image.get_bytes_per_pixel();
+		if (image.get_pitch() % bytesPerPixel != 0)
+			conv_needed = true;
+	}
+
+	// no conversion needed
+	if (!conv_needed)
+	{
+		// Upload to OpenGL1:
+
+		// change alignment
+		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		const int bytesPerPixel = image.get_bytes_per_pixel();
+		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+
+		char *data = (char *) image.get_data();
+		int image_width = image.get_width();
+		int image_height = image.get_height() / image_depth;
+
+		cl1TexImage3D(
+			target,                   // target
+			level,                    // level
+			gl_internal_format,           // internalformat
+			image_width,              // width
+			image_height,             // height
+			image_depth,             // depth
+			0,						 // border
+			format,                   // format
+			type,                     // type
+			data);                    // texels
+	}
+	// conversion needed
+	else
+	{
+		bool big_endian = CL_Endian::is_system_big();
+
+		CL_PixelBuffer buffer;
+		if (!big_endian)
+			buffer = CL_PixelBuffer(
+				image.get_width(), image.get_height(),
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
+		else
+			buffer = CL_PixelBuffer(
+				image.get_width(), image.get_height(),
+				needs_alpha ? cl_rgba8 : cl_rgb8);
+	
+		image.convert(buffer);
+
+		format = needs_alpha ? CL_RGBA : CL_RGB;
+
+		// Upload to OpenGL:
+
+		// change alignment
+		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
+		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		cl1PixelStorei(CL_UNPACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(CL_UNPACK_SKIP_ROWS, 0);
+
+		int image_width = image.get_width();
+		int image_height = image.get_height() / image_depth;
+
+		// upload
+		cl1TexImage3D(
+			target,                   // target
+			level,                    // level
+			gl_internal_format,           // internalformat
+			image_width,        // width
+			image_height,       // height
+			image_depth,       // depth
+			0,                        // border
+			format,                   // format
+			CL_UNSIGNED_BYTE,         // type
+			buffer.get_data());       // texels
+
 	}
 }
 
@@ -806,17 +907,6 @@ CLenum CL_GL1TextureProvider::to_enum(CL_TextureWrapMode mode)
 	case cl_wrap_repeat: return CL_REPEAT;
 	case cl_wrap_mirrored_repeat: return CL_MIRRORED_REPEAT;
 	default: return CL_CLAMP_TO_EDGE;
-	}
-}
-
-CLenum CL_GL1TextureProvider::to_enum(CL_TextureDepthMode mode)
-{
- 	switch(mode)
-	{
-	case cl_depthmode_luminance: return CL_LUMINANCE;
-	case cl_depthmode_intensity: return CL_INTENSITY;
-	case cl_depthmode_alpha: return CL_ALPHA;
-	default: return CL_LUMINANCE;
 	}
 }
 

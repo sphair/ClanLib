@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+  <!--<head>
+    <title>The Amazing Title</title>
+  </head>-->
+  <body>
+    <h1>The Amazing  Headline</h1>
+    <table style="height: 400px">
+      <!--<tbody>-->
+        <tr style="height: 25%">
+          <td>1x1 sdfg sfdg sdfg</td>
+          <td>1x2</td>
+          <td>1x3</td>
+          <td>1x4</td>
+        </tr>
+        <tr style="height: 25%">
+          <td>[2x1]</td>
+          <td>
+            [<b>2x2</b>]
+          </td>
+          <td>[2x3]</td>
+          <td>[2x4]</td>
+        </tr>
+        <tr style="height: 25%">
+          <td>3x1</td>
+          <td>3x2</td>
+          <td>3x3</td>
+          <td>3x4</td>
+        </tr>
+        <tr style="height: 25%">
+          <td>4x1</td>
+          <td>4x2</td>
+          <td>4x3</td>
+          <td>4x4</td>
+        </tr>
+      <!--</tbody>-->
+    </table>
+    <p>The amazing paragraph.</p>
+    <h2>The not quite   as amazing subheadline</h2>
+    <div class="float">
+      <p>Left floated stuff:</p>
+      <ul>
+        <li>Blabla en fisk</li>
+      </ul>
+    </div>
+    <p>Some <i>  more</i> amazing text.</p>
+    <p class="essay">
+      <img/>
+      Did you know that if you just type enough text in this paragraph you will test the
+      <div class="inline">Why hello there! This is an inline box!</div>
+      word wrapping functionality of this new excellent span layout implementation? Fascinating!</p>
+    <p class="silly">It would appear we need to type even more silly text.</p>
+    <p>Did you know that x<sup>2</sup> equals 8 but only<sub>1</sub> if the moon and the sun is in perfect alignment?</p>
+    <ul class="menu">
+      <li>Point number one</li>
+      <li>And the second point</li>
+    </ul>
+    <p>Another great tale of css box text that is being laid out!</p>
+    <p class="right">
+      click one of these buttons: <object class="ok"/><object class="cancel"/>
+    </p>
+  </body>
+</html>

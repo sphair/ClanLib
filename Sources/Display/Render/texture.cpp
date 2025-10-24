@@ -55,7 +55,6 @@ public:
 	lod_bias(0),
 	base_level(0),
 	max_level(0),
-	generate_mipmap(0),
 	wrap_mode_s(cl_wrap_clamp_to_edge),
 	wrap_mode_t(cl_wrap_clamp_to_edge),
 	wrap_mode_r(cl_wrap_clamp_to_edge),
@@ -63,7 +62,6 @@ public:
 	mag_filter(cl_filter_linear),
 	max_anisotropy(1.0f),
 	resident(0),
-	depth_mode(cl_depthmode_luminance),
 	compare_mode(cl_comparemode_none),
 	compare_function(cl_comparefunc_lequal)
 	{
@@ -82,7 +80,6 @@ public:
 	float lod_bias;
 	int base_level;
 	int max_level;
-	bool generate_mipmap;
 	CL_TextureWrapMode wrap_mode_s;
 	CL_TextureWrapMode wrap_mode_t;
 	CL_TextureWrapMode wrap_mode_r;
@@ -90,7 +87,6 @@ public:
 	CL_TextureFilter mag_filter;
 	float max_anisotropy;
 	bool resident;
-	CL_TextureDepthMode depth_mode;
 	CL_TextureCompareMode compare_mode;
 	CL_CompareFunction compare_function;
 };
@@ -108,7 +104,7 @@ CL_Texture::CL_Texture(CL_GraphicContext &context, CL_TextureDimensions texture_
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
 	if (gc_provider == NULL)
 	{
-		throw CL_Exception(cl_text("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()"));
+		throw CL_Exception("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()");
 	}
 	impl->provider = gc_provider->alloc_texture(texture_dimensions);
 
@@ -120,13 +116,13 @@ CL_Texture::CL_Texture(CL_GraphicContext &context, const CL_Size &size, CL_Textu
 {
 	if ( (size.width<=0) || (size.height<=0) )
 	{
-		throw CL_Exception(cl_text("An attempt was made to create a CL_Texture with an invalid size"));
+		throw CL_Exception("An attempt was made to create a CL_Texture with an invalid size");
 	}
 
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
 	if (gc_provider == NULL)
 	{
-		throw CL_Exception(cl_text("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()"));
+		throw CL_Exception("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()");
 	}
 
 	impl->provider = gc_provider->alloc_texture(cl_texture_2d);
@@ -142,13 +138,13 @@ CL_Texture::CL_Texture(CL_GraphicContext &context, int width, int height, CL_Tex
 {
 	if ( (width<=0) || (height<=0) )
 	{
-		throw CL_Exception(cl_text("An attempt was made to create a CL_Texture with an invalid size"));
+		throw CL_Exception("An attempt was made to create a CL_Texture with an invalid size");
 	}
 
 	CL_GraphicContextProvider *gc_provider = context.get_provider();
 	if (gc_provider == NULL)
 	{
-		throw CL_Exception(cl_text("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()"));
+		throw CL_Exception("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()");
 	}
 
 	impl->provider = gc_provider->alloc_texture(cl_texture_2d);
@@ -159,37 +155,63 @@ CL_Texture::CL_Texture(CL_GraphicContext &context, int width, int height, CL_Tex
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t, impl->wrap_mode_r);
 }
 
-CL_Texture::CL_Texture(
-	CL_GraphicContext &context,
-	const CL_StringRef &filename,
-	const CL_VirtualDirectory &directory)
+CL_Texture::CL_Texture(CL_GraphicContext &context, int width, int height, int depth, CL_TextureFormat internal_format)
+: impl(new CL_Texture_Impl)
 {
-	CL_PixelBuffer pb = CL_ImageProviderFactory::load(filename, directory, CL_String());
-	*this = CL_Texture(context, pb.get_width(), pb.get_height());
+	if ( (width<=0) || (height<=0) || (depth<=0) )
+	{
+		throw CL_Exception("An attempt was made to create a CL_Texture with an invalid size");
+	}
 
-	set_subimage(CL_Point(0, 0), pb, 0);
+	CL_GraphicContextProvider *gc_provider = context.get_provider();
+	if (gc_provider == NULL)
+	{
+		throw CL_Exception("todo: if gc_provider is null, use CL_Display::get_current_gc()->get_provider()");
+	}
+
+	impl->provider = gc_provider->alloc_texture(cl_texture_3d);
+	impl->provider->create(width, height, internal_format, depth);
+	impl->width = width;
+	impl->height = height;
+//	impl->depth = depth;
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t, impl->wrap_mode_r);
 }
 
 CL_Texture::CL_Texture(
 	CL_GraphicContext &context,
-	const CL_StringRef &fullname)
+	const CL_StringRef &filename,
+	const CL_VirtualDirectory &directory, const CL_ImageImportDescription &import_desc)
+{
+	CL_PixelBuffer pb = CL_ImageProviderFactory::load(filename, directory, CL_String());
+	pb = import_desc.process(pb);
+	
+	*this = CL_Texture(context, pb.get_width(), pb.get_height());
+
+	set_subimage(CL_Point(0, 0), pb, CL_Rect(pb.get_size()), 0);
+
+	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t, impl->wrap_mode_r);
+}
+
+CL_Texture::CL_Texture(
+	CL_GraphicContext &context,
+	const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc)
 {
 	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
 	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
 	CL_VirtualFileSystem vfs(path);
-	*this = CL_Texture(context, filename, vfs.get_root_directory());
+	*this = CL_Texture(context, filename, vfs.get_root_directory(), import_desc );
 }
 
 CL_Texture::CL_Texture(
 		CL_GraphicContext &context,
-		CL_IODevice &file, const CL_String &image_type)
+		CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc)
 {
 	CL_PixelBuffer pb = CL_ImageProviderFactory::load(file, image_type);
+	pb = import_desc.process(pb);
 	*this = CL_Texture(context, pb.get_width(), pb.get_height());
 
-	set_subimage(CL_Point(0, 0), pb, 0);
+	set_subimage(CL_Point(0, 0), pb, CL_Rect(pb.get_size()), 0);
 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t, impl->wrap_mode_r);
 }
@@ -197,17 +219,17 @@ CL_Texture::CL_Texture(
 CL_Texture::CL_Texture(
 	const CL_StringRef &resource_id,
 	CL_ResourceManager *resources,
-	CL_GraphicContext &gc)
+	CL_GraphicContext &gc, const CL_ImageImportDescription &import_desc)
 {
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
 	
-	if (type != cl_text("texture"))
-		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'texture'"), resource_id));
+	if (type != "texture")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'texture'", resource_id));
 
-	CL_String filename = resource.get_element().get_attribute(cl_text("file"));
+	CL_String filename = resource.get_element().get_attribute("file");
 	CL_VirtualDirectory directory = resource.get_manager().get_directory(resource);
-	*this = CL_Texture(gc, filename, directory);
+	*this = CL_Texture(gc, filename, directory, import_desc);
 }
 
 CL_Texture::CL_Texture(CL_SharedPtr<CL_Texture_Impl> &impl) : impl(impl)
@@ -222,20 +244,19 @@ CL_Texture::~CL_Texture()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Texture Attributes:
 
-bool CL_Texture::is_null() const
+void CL_Texture::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_Texture is null");
 }
 
-int CL_Texture::get_width(int level) const
+int CL_Texture::get_width() const
 {
-	//TODO: Use level parameter
 	return impl->width;
 }
 
-int CL_Texture::get_height(int level) const
+int CL_Texture::get_height() const
 {
-	//TODO: Use level parameter
 	return impl->height;
 }
 
@@ -246,18 +267,18 @@ CL_Size CL_Texture::get_size() const
 
 int CL_Texture::get_depth() const
 {
-	return 0;
+	throw CL_Exception("CL_Texture::get_depth() is not implemented");
 }
 
 CL_PixelBuffer CL_Texture::get_pixeldata(int level) const 
 {
 	// todo: pixel format rgba8888?
-	return impl->provider->get_pixeldata(CL_PixelFormat::rgba8888, level); 
+	return impl->provider->get_pixeldata(cl_rgba8, level); 
 }
 
-CL_PixelBuffer CL_Texture::get_pixeldata(CL_PixelFormat &format, int level) const 
+CL_PixelBuffer CL_Texture::get_pixeldata(CL_TextureFormat sized_format, int level) const 
 {
-	return impl->provider->get_pixeldata(format, level); // todo: format ?
+	return impl->provider->get_pixeldata(sized_format, level);
 }
 
 float CL_Texture::get_min_lod() const
@@ -283,11 +304,6 @@ int CL_Texture::get_base_level() const
 int CL_Texture::get_max_level() const
 {
 	return impl->max_level;
-}
-
-bool CL_Texture::get_generate_mipmap() const
-{
-	return impl->generate_mipmap;
 }
 
 CL_TextureWrapMode CL_Texture::get_wrap_mode_s() const
@@ -320,11 +336,6 @@ bool CL_Texture::is_resident() const
 	return impl->resident;
 }
 
-CL_TextureDepthMode CL_Texture::get_depth_mode() const
-{
-	return impl->depth_mode;
-}
-
 CL_TextureCompareMode CL_Texture::get_compare_mode() const
 {
 	return impl->compare_mode;
@@ -351,12 +362,16 @@ CL_WeakPtr<CL_Texture_Impl> CL_Texture::get_impl() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_Texture Operations:
 
+void CL_Texture::generate_mipmap()
+{
+	impl->provider->generate_mipmap();
+}
+
 void CL_Texture::set_image(
 	CL_PixelBuffer &image,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
-	impl->provider->set_image(image, level, internal_format);
+	impl->provider->set_image(image, level);
 	impl->width = image.get_width();
 	impl->height = image.get_height();
 }
@@ -368,8 +383,7 @@ void CL_Texture::set_cube_map(
 	CL_PixelBuffer &cube_map_negative_y,
 	CL_PixelBuffer &cube_map_positive_z,
 	CL_PixelBuffer &cube_map_negative_z,
-	int level,
-	CL_TextureFormat internal_format)
+	int level)
 {
 	impl->provider->set_cube_map(
 		cube_map_positive_x,
@@ -378,8 +392,7 @@ void CL_Texture::set_cube_map(
 		cube_map_negative_y,
 		cube_map_positive_z,
 		cube_map_negative_z,
-		level,
-		internal_format);
+		level);
 	impl->width = cube_map_positive_x.get_width();
 	impl->height = cube_map_positive_x.get_height();
 }
@@ -399,18 +412,21 @@ void CL_Texture::set_compressed_image(
 void CL_Texture::set_subimage(
 	int x,
 	int y,
-	const CL_PixelBufferRef &image,
+	const CL_PixelBuffer &image,
+	const CL_Rect &src_rect,
+
 	int level)
 {
-	impl->provider->set_subimage(x, y, image, level);
+	impl->provider->set_subimage(x, y, image, src_rect, level);
 }
 
 void CL_Texture::set_subimage(
 	const CL_Point &point,
-	const CL_PixelBufferRef &image,
+	const CL_PixelBuffer &image,
+	const CL_Rect &src_rect,
 	int level)
 {
-	impl->provider->set_subimage(point.x, point.y, image, level);
+	impl->provider->set_subimage(point.x, point.y, image, src_rect, level);
 }
 
 void CL_Texture::copy_image_from(
@@ -509,15 +525,6 @@ void CL_Texture::set_max_level(int max_level)
 	}
 }
 
-void CL_Texture::set_generate_mipmap(bool generate_mipmap)
-{
-	if( impl->generate_mipmap != generate_mipmap )
-	{
-		impl->provider->set_generate_mipmap(generate_mipmap);
-		impl->generate_mipmap = generate_mipmap;
-	}
-}
-
 void CL_Texture::set_wrap_mode(
 	CL_TextureWrapMode wrap_s,
 	CL_TextureWrapMode wrap_t,
@@ -578,15 +585,6 @@ void CL_Texture::set_max_anisotropy(float max_anisotropy)
 	{
 		impl->provider->set_max_anisotropy(max_anisotropy);
 		impl->max_anisotropy = max_anisotropy;
-	}
-}
-
-void CL_Texture::set_depth_mode(CL_TextureDepthMode depth_mode)
-{
-	if( impl->depth_mode != depth_mode )
-	{
-		impl->provider->set_depth_mode(depth_mode);
-		impl->depth_mode = depth_mode;
 	}
 }
 

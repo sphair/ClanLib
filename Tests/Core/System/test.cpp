@@ -67,10 +67,11 @@ int TestApp::main(const std::vector<CL_String> &args)
 #endif
 		CL_Console::write_line("Directory: API/Core/System");
 
-		test_sharedptr_part1();
-		test_sharedptr_part2();
-		test_weakptr();
-		test_datetime();
+		//test_sharedptr_part1();
+		//test_sharedptr_part2();
+		//test_weakptr();
+		//test_datetime();
+		test_interlock();
 		
 		CL_Console::write_line("All Tests Complete");
 		console.display_close_message();
@@ -89,7 +90,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 void TestApp::fail(void)
 {
-	throw CL_Exception(cl_text("Failed Test"));
+	throw CL_Exception("Failed Test");
 }
 
 

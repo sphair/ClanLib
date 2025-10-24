@@ -122,7 +122,7 @@ int CL_SoundOutput_DirectSound::find_fragment_write_position()
 	DWORD play = 0, write = 0;
 	HRESULT err = soundbuffer->GetCurrentPosition(&play, &write);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("IDirectSoundBuffer8::GetCurrentPosition failed"));
+		throw CL_Exception("IDirectSoundBuffer8::GetCurrentPosition failed");
 
 	int fragment_index = ((play/get_bytes_per_sample() + frag_size + frag_size/2) / frag_size) % get_fragment_count();
 	return fragment_index * frag_size;
@@ -134,7 +134,7 @@ void CL_SoundOutput_DirectSound::write_to_sound_buffer(int write_pos, const floa
 	void *ptr1 = 0, *ptr2 = 0;
 	HRESULT err = soundbuffer->Lock(write_pos*get_bytes_per_sample(), size*get_bytes_per_sample(), (void **) &ptr1, &size1, (void **) &ptr2, &size2, 0);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("IDirectSoundBuffer8::Lock failed"));
+		throw CL_Exception("IDirectSoundBuffer8::Lock failed");
 
 	char *_data = (char *) data;
 	if (ptr1)
@@ -144,7 +144,7 @@ void CL_SoundOutput_DirectSound::write_to_sound_buffer(int write_pos, const floa
 
 	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("IDirectSoundBuffer8::Unlock failed"));
+		throw CL_Exception("IDirectSoundBuffer8::Unlock failed");
 }
 
 void CL_SoundOutput_DirectSound::release_resources()
@@ -165,7 +165,7 @@ void CL_SoundOutput_DirectSound::create_directsound_object()
 {
 	HRESULT err = DirectSoundCreate(0, &directsound, 0);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("DirectSoundCreate failed"));
+		throw CL_Exception("DirectSoundCreate failed");
 }
 
 void CL_SoundOutput_DirectSound::set_cooperative_level()
@@ -197,11 +197,11 @@ void CL_SoundOutput_DirectSound::set_cooperative_level()
 		GetModuleHandle(0),
 		NULL);
 	if (hwnd == 0)
-		throw CL_Exception(cl_text("CreateWindow failed for DirectSound object"));
+		throw CL_Exception("CreateWindow failed for DirectSound object");
 
 	HRESULT err = directsound->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("IDirectSound8::SetCooperativeLevel failed"));
+		throw CL_Exception("IDirectSound8::SetCooperativeLevel failed");
 }
 
 void CL_SoundOutput_DirectSound::set_fragment_size()
@@ -249,7 +249,7 @@ void CL_SoundOutput_DirectSound::create_sound_buffer()
 
 	HRESULT err = directsound->CreateSoundBuffer(&desc, &soundbuffer, NULL);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("IDirectSound8::CreateSoundBuffer failed"));
+		throw CL_Exception("IDirectSound8::CreateSoundBuffer failed");
 }
 
 void CL_SoundOutput_DirectSound::verify_sound_buffer_capabilities()
@@ -260,10 +260,10 @@ void CL_SoundOutput_DirectSound::verify_sound_buffer_capabilities()
 	
 	HRESULT err = soundbuffer->GetCaps(&caps);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("Could not retrieve direct sound buffer capabilities."));
+		throw CL_Exception("Could not retrieve direct sound buffer capabilities.");
 
 	if (caps.dwBufferBytes != get_buffer_size())
-		throw CL_Exception(cl_text("Direct sound buffer size does not match our request."));
+		throw CL_Exception("Direct sound buffer size does not match our request.");
 }
 
 void CL_SoundOutput_DirectSound::clear_sound_buffer()
@@ -273,7 +273,7 @@ void CL_SoundOutput_DirectSound::clear_sound_buffer()
 	void *ptr2 = 0;
 	HRESULT err = soundbuffer->Lock(0, get_buffer_size(), &ptr1, &size1, &ptr2, &size2, 0);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("Unable to lock DirectSound buffer."));
+		throw CL_Exception("Unable to lock DirectSound buffer.");
 
 	memset(ptr1, 0, size1);
 	if (ptr2)
@@ -281,7 +281,7 @@ void CL_SoundOutput_DirectSound::clear_sound_buffer()
 
 	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("Could not unlock DirectSound buffer."));
+		throw CL_Exception("Could not unlock DirectSound buffer.");
 }
 
 void CL_SoundOutput_DirectSound::create_notify_event()
@@ -289,14 +289,14 @@ void CL_SoundOutput_DirectSound::create_notify_event()
 	// Setup some sleeping :)
 	sleep_event = CreateEvent(0, TRUE, FALSE, 0);
 	if (sleep_event == 0)
-		throw CL_Exception(cl_text("CreateEvent failed"));
+		throw CL_Exception("CreateEvent failed");
 }
 
 void CL_SoundOutput_DirectSound::retrieve_notify_interface()
 {
 	HRESULT err = soundbuffer->QueryInterface(IID_IDirectSoundNotify, (void **) &notify);
 	if (FAILED(err))
-		throw CL_Exception(cl_text("Direct sound buffer does not support needed IDirectSoundNotify interface."));
+		throw CL_Exception("Direct sound buffer does not support needed IDirectSoundNotify interface.");
 }
 
 void CL_SoundOutput_DirectSound::set_notify_positions()
@@ -314,7 +314,7 @@ void CL_SoundOutput_DirectSound::set_notify_positions()
 		}
 		HRESULT result = notify->SetNotificationPositions(num_fragments, &notify_positions[0]);
 		if (FAILED(result))
-			throw CL_Exception(cl_text("IDirecTsoundNotify::SetNotificationPositions failed"));
+			throw CL_Exception("IDirecTsoundNotify::SetNotificationPositions failed");
 	}
 }
 
@@ -325,6 +325,6 @@ void CL_SoundOutput_DirectSound::play_sound_buffer()
 	if (FAILED(err))
 	{
 		stop_mixer_thread();
-		throw CL_Exception(cl_text("Could not start sound buffer playback"));
+		throw CL_Exception("Could not start sound buffer playback");
 	}
 }

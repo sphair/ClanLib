@@ -43,6 +43,7 @@ public:
 public:
 	bool empty();
 	std::vector<HolderComponent*> get_selection();
+	bool is_selected(HolderComponent *holder) const;
 
 //! Operations:
 public:

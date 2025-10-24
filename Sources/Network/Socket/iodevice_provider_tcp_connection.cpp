@@ -104,8 +104,8 @@ void CL_IODeviceProvider_TCPConnection::connect(const CL_SocketName &remote)
 	switch (wakeup_reason)
 	{
 	case 0: return;
-	case 1: receive(0, 0, false); throw CL_Exception(cl_text("Connection attempt failed"));
-	case -1: throw CL_Exception(cl_text("Connection attempt timed out"));
+	case 1: receive(0, 0, false); throw CL_Exception("Connection attempt failed");
+	case -1: throw CL_Exception("Connection attempt timed out");
 	}
 }
 
@@ -137,6 +137,11 @@ void CL_IODeviceProvider_TCPConnection::set_nodelay(bool enable)
 	socket.set_nodelay(enable);
 }
 
+void CL_IODeviceProvider_TCPConnection::set_keep_alive(bool enable, int timeout, int interval)
+{
+	socket.set_keep_alive(enable, timeout, interval);
+}
+
 int CL_IODeviceProvider_TCPConnection::send(const void *data, int len, bool send_all)
 {
 	if (!send_all)
@@ -150,7 +155,7 @@ int CL_IODeviceProvider_TCPConnection::send(const void *data, int len, bool send
 		while (pos < len)
 		{
 			if (!write_event.wait(timeout))
-				throw CL_Exception(cl_text("Send timed out"));
+				throw CL_Exception("Send timed out");
 			pos += socket.send(d+pos, len-pos);
 		}
 		return pos;
@@ -170,10 +175,10 @@ int CL_IODeviceProvider_TCPConnection::receive(void *data, int len, bool receive
 		while (pos < len)
 		{
 			if (!read_event.wait(timeout))
-				throw CL_Exception(cl_text("Receive timed out"));
+				throw CL_Exception("Receive timed out");
 			int received = socket.receive(d+pos, len-pos);
 			if (received == 0)
-				throw CL_Exception(cl_text("Unable to receive all data: connection closed by peer"));
+				throw CL_Exception("Unable to receive all data: connection closed by peer");
 			pos += received;
 		}
 		return pos;
@@ -187,7 +192,7 @@ int CL_IODeviceProvider_TCPConnection::peek(void *data, int len)
 
 CL_IODeviceProvider *CL_IODeviceProvider_TCPConnection::duplicate()
 {
-	throw CL_Exception(cl_text("CL_IODeviceProvider_TCPConnection::duplicate() - duplicate not supported for TCP connections."));
+	throw CL_Exception("CL_IODeviceProvider_TCPConnection::duplicate() - duplicate not supported for TCP connections.");
 	return 0;
 }
 

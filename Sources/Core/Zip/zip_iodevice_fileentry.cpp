@@ -68,8 +68,7 @@ int CL_ZipIODevice_FileEntry::get_position() const
 
 int CL_ZipIODevice_FileEntry::send(const void *data, int len, bool send_all)
 {
-	// Read-only device.
-	return 0;
+	throw CL_Exception("Read-only device.");
 }
 
 int CL_ZipIODevice_FileEntry::receive(void *buffer, int size, bool receive_all)
@@ -211,7 +210,7 @@ void CL_ZipIODevice_FileEntry::init()
 		zs.opaque = Z_NULL;
 		//result = inflateInit(&zs);
 		result = inflateInit2(&zs, -15); // Undocumented: if wbits is negative, zlib skips header check
-		if (result != Z_OK) throw CL_Exception(cl_text("Zlib inflateInit failed for zip index!"));
+		if (result != Z_OK) throw CL_Exception("Zlib inflateInit failed for zip index!");
 		zstream_open = true;
 		break;
 
@@ -225,7 +224,7 @@ void CL_ZipIODevice_FileEntry::init()
 	case zip_compress_deflate64:
 	case zip_compress_pkware_implode:
 	default:
-		throw CL_Exception(cl_format(cl_text("Unsupported compression method %1"), file_header.compression_method));
+		throw CL_Exception(cl_format("Unsupported compression method %1", file_header.compression_method));
 	}
 }
 
@@ -293,12 +292,12 @@ int CL_ZipIODevice_FileEntry::lowlevel_read(void *data, int size, bool read_all)
 			// Decompress data:
 			int result = inflate(&zs, 0);
 			if (result == Z_STREAM_END) break;
-			if (result == Z_NEED_DICT) throw CL_Exception(cl_text("Zlib inflate wants a dictionary!"));
-			if (result == Z_DATA_ERROR) throw CL_Exception(cl_text("Zip data stream is corrupted"));
-			if (result == Z_STREAM_ERROR) throw CL_Exception(cl_text("Zip stream structure was inconsistent!"));
-			if (result == Z_MEM_ERROR) throw CL_Exception(cl_text("Zlib did not have enough memory to decompress file!"));
-			if (result == Z_BUF_ERROR) throw CL_Exception(cl_text("Not enough data in buffer when Z_FINISH was used"));
-			if (result != Z_OK) throw CL_Exception(cl_text("Zlib inflate failed while decompressing zip file!"));
+			if (result == Z_NEED_DICT) throw CL_Exception("Zlib inflate wants a dictionary!");
+			if (result == Z_DATA_ERROR) throw CL_Exception("Zip data stream is corrupted");
+			if (result == Z_STREAM_ERROR) throw CL_Exception("Zip stream structure was inconsistent!");
+			if (result == Z_MEM_ERROR) throw CL_Exception("Zlib did not have enough memory to decompress file!");
+			if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
+			if (result != Z_OK) throw CL_Exception("Zlib inflate failed while decompressing zip file!");
 		}
 		pos += size - zs.avail_out;
 		return size - zs.avail_out;

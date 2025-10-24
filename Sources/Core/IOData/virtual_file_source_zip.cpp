@@ -60,7 +60,7 @@ CL_String CL_VirtualFileSource_Zip::get_identifier() const
 {
 	// Ideally we should identify from the archive source (checksum etc)
 	// I'm sure someone will implement it if it is required
-	return path + cl_format(cl_text("/%1"), zip_source_unique_id);
+	return path + cl_format("/%1", zip_source_unique_id);
 }
 
 /////////////////////////////////////////////////////////////////////////////

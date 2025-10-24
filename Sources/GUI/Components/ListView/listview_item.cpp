@@ -65,9 +65,10 @@ CL_ListViewItem::~CL_ListViewItem()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ListViewItem Attributes:
 
-bool CL_ListViewItem::is_null() const
+void CL_ListViewItem::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_ListViewItem is null");
 }
 
 bool CL_ListViewItem::is_item() const

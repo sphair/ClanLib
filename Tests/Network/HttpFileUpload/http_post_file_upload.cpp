@@ -8,7 +8,7 @@
 // Construction
 
 HttpPostFileUpload::HttpPostFileUpload() 
-: form_boundary(cl_text("39f2057baece2"))
+: form_boundary("39f2057baece2")
 {
 }
 

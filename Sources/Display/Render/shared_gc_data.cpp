@@ -50,16 +50,16 @@ CL_Signal_v0 &CL_SharedGCData::func_gc_destruction_imminent()
 	return self->impl->func_gc_destruction_imminent();
 }
 
-CL_Texture CL_SharedGCData::load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
+CL_Texture CL_SharedGCData::load_texture(CL_GraphicContext &gc, const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
 {
 	CL_SharedGCData *self = get_instance();
-	return self->impl->load_texture(gc, filename, virtual_directory);
+	return self->impl->load_texture(gc, filename, virtual_directory, import_desc);
 }
 
-void CL_SharedGCData::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory)
+void CL_SharedGCData::unload_texture(const CL_String &filename, const CL_VirtualDirectory &virtual_directory, const CL_ImageImportDescription &import_desc)
 {
 	CL_SharedGCData *self = get_instance();
-	self->impl->unload_texture(filename, virtual_directory);
+	self->impl->unload_texture(filename, virtual_directory, import_desc);
 }
 
 void CL_SharedGCData::unload_all_textures()

@@ -61,12 +61,12 @@ int	cl_wcscasecmp(const wchar_t *, const wchar_t *);
 /////////////////////////////////////////////////////////////////////////////
 // CL_StringHelp Operations:
 
-std::vector<CL_TempString> CL_StringHelp::split_text(
+std::vector<CL_String> CL_StringHelp::split_text(
 	const CL_StringRef &text,
 	const CL_StringRef &split_string,
 	bool skip_empty)
 {
-	std::vector<CL_TempString> result;
+	std::vector<CL_String> result;
 	CL_String::size_type end_pos = 0, begin_pos = 0;
 	while (true)
 	{
@@ -87,14 +87,14 @@ std::vector<CL_TempString> CL_StringHelp::split_text(
 	return result;
 }
 
-CL_TempString CL_StringHelp::trim(const CL_StringRef &text)
+CL_String CL_StringHelp::trim(const CL_StringRef &text)
 {
-	CL_String::size_type first_char = text.find_first_not_of(cl_text(" \r\n\t"));
-	CL_String::size_type last_char = text.find_last_not_of(cl_text(" \r\n\t"));
+	CL_String::size_type first_char = text.find_first_not_of(" \r\n\t");
+	CL_String::size_type last_char = text.find_last_not_of(" \r\n\t");
 	if (first_char == CL_String::npos)
-		return CL_TempString();
+		return CL_String();
 	if (last_char == CL_String::npos)
-		return CL_TempString();
+		return CL_String();
 	return text.substr(first_char, last_char - first_char + 1);
 }
 
@@ -128,18 +128,79 @@ int CL_StringHelp::compare(const CL_StringRef16 &a, const CL_StringRef16 &b, boo
 #endif
 }
 
-CL_TempString CL_StringHelp::text_to_upper(const CL_StringRef &s)
+CL_String CL_StringHelp::text_to_upper(const CL_StringRef &s)
 {
-#ifdef UNICODE
-	return ucs2_to_upper(s);
-#else
 	return local8_to_upper(s);
-#endif
 }
 	
-CL_TempString8 CL_StringHelp::local8_to_upper(const CL_StringRef8 &s)
+CL_String8 CL_StringHelp::wchar_to_utf8(wchar_t value)
 {
-	CL_TempString8 result = s;
+	char text[8];
+
+	if ( (value < 0x80) && (value > 0) )
+	{
+		text[0] = (char) value;
+		text[1] = 0;
+	}
+	else if( value < 0x800 )
+	{
+		text[0] = (char) (  0xc0 | ( value >> 6 ));
+		text[1] = (char) (  0x80 | ( value & 0x3f ));
+		text[2] = 0;
+	}
+	else if( value < 0x10000 )
+	{
+		text[0] = (char) (  0xe0 | ( value >> 12 ));
+		text[1] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
+		text[2] = (char) (  0x80 | ( value & 0x3f ));
+		text[3] = 0;
+	
+	}
+	else if( value < 0x200000 )
+	{
+#ifndef WIN32
+		text[0] = (char) (  0xf0 | ( value >> 18 ));
+#endif
+		text[1] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
+		text[2] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
+		text[3] = (char) (  0x80 | ( value & 0x3f ));
+		text[4] = 0;
+
+	}
+	else if( value < 0x4000000 )
+	{
+#ifndef WIN32
+		text[0] = (char) (  0xf8 | ( value >> 24 ));
+		text[1] = (char) (  0x80 | ( (value >> 18) & 0x3f ));
+#endif
+		text[2] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
+		text[3] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
+		text[4] = (char) (  0x80 | ( value & 0x3f ));
+		text[5] = 0;
+
+	}
+	else if( value < 0x80000000 )
+	{
+#ifndef WIN32
+		text[0] = (char) (  0xfc | ( value >> 30 ));
+		text[1] = (char) (  0x80 | ( (value >> 24) & 0x3f ));
+		text[2] = (char) (  0x80 | ( (value >> 18) & 0x3f ));
+#endif
+		text[3] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
+		text[4] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
+		text[5] = (char) (  0x80 | ( value & 0x3f ));
+		text[6] = 0;
+	}
+	else
+	{
+		text[0] = 0;	// Invalid wchar value
+	}
+	return text;
+}
+
+CL_String8 CL_StringHelp::local8_to_upper(const CL_StringRef8 &s)
+{
+	CL_String8 result = s;
 	CL_String8::size_type index, size;
 	size = result.length();
 	for (index = 0; index < size; index++)
@@ -149,9 +210,9 @@ CL_TempString8 CL_StringHelp::local8_to_upper(const CL_StringRef8 &s)
 	return result;
 }
 
-CL_TempString16 CL_StringHelp::ucs2_to_upper(const CL_StringRef16 &s)
+CL_String16 CL_StringHelp::ucs2_to_upper(const CL_StringRef16 &s)
 {
-	CL_TempString16 result = s;
+	CL_String16 result = s;
 	CL_String16::size_type index, size;
 	size = result.length();
 	for (index = 0; index < size; index++)
@@ -161,18 +222,14 @@ CL_TempString16 CL_StringHelp::ucs2_to_upper(const CL_StringRef16 &s)
 	return result;
 }
 	
-CL_TempString CL_StringHelp::text_to_lower(const CL_StringRef &s)
+CL_String CL_StringHelp::text_to_lower(const CL_StringRef &s)
 {
-#ifdef UNICODE
-	return ucs2_to_lower(s);
-#else
 	return local8_to_lower(s);
-#endif
 }
 	
-CL_TempString8 CL_StringHelp::local8_to_lower(const CL_StringRef8 &s)
+CL_String8 CL_StringHelp::local8_to_lower(const CL_StringRef8 &s)
 {
-	CL_TempString8 result = s;
+	CL_String8 result = s;
 	CL_String8::size_type index, size;
 	size = result.length();
 	for (index = 0; index < size; index++)
@@ -182,9 +239,9 @@ CL_TempString8 CL_StringHelp::local8_to_lower(const CL_StringRef8 &s)
 	return result;
 }
 	
-CL_TempString16 CL_StringHelp::ucs2_to_lower(const CL_StringRef16 &s)
+CL_String16 CL_StringHelp::ucs2_to_lower(const CL_StringRef16 &s)
 {
-	CL_TempString16 result = s;
+	CL_String16 result = s;
 	CL_String16::size_type index, size;
 	size = result.length();
 	for (index = 0; index < size; index++)
@@ -194,16 +251,12 @@ CL_TempString16 CL_StringHelp::ucs2_to_lower(const CL_StringRef16 &s)
 	return result;
 }
 
-CL_TempString CL_StringHelp::float_to_text(float value, int num_decimal_places)
+CL_String CL_StringHelp::float_to_text(float value, int num_decimal_places)
 {
-#ifdef UNICODE
-	return float_to_ucs2(value, num_decimal_places);
-#else
 	return float_to_local8(value, num_decimal_places);
-#endif
 }
 
-CL_TempString8 CL_StringHelp::float_to_local8(float value, int num_decimals)
+CL_String8 CL_StringHelp::float_to_local8(float value, int num_decimals)
 {
 	char buf[64];
 	memset(buf, 0, 64);
@@ -212,31 +265,27 @@ CL_TempString8 CL_StringHelp::float_to_local8(float value, int num_decimals)
 #else
 	snprintf(buf, 63, ("%." + CL_StringHelp::int_to_local8(num_decimals) + "f").c_str(), value);
 #endif
-	return CL_TempString8(buf);
+	return CL_String8(buf);
 }
 	
-CL_TempString16 CL_StringHelp::float_to_ucs2(float value, int num_decimals)
+CL_String16 CL_StringHelp::float_to_ucs2(float value, int num_decimals)
 {
 #ifdef WIN32
 	WCHAR buf[64];
 	memset(buf, 0, 64 * sizeof(WCHAR));
 	swprintf(buf, ("%." + CL_StringHelp::int_to_ucs2(num_decimals) + "f").c_str(), value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #else
 	wchar_t buf[64];
 	memset(buf, 0, 64 * sizeof(wchar_t));
 	swprintf(buf, 63, ("%." + CL_StringHelp::int_to_ucs2(num_decimals) + "f").c_str(), value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #endif
 }
 
 float CL_StringHelp::text_to_float(const CL_StringRef &value)
 {
-#ifdef UNICODE
-	return ucs2_to_float(value);
-#else
 	return local8_to_float(value);
-#endif
 }
 	
 float CL_StringHelp::local8_to_float(const CL_StringRef8 &value)
@@ -253,16 +302,12 @@ float CL_StringHelp::ucs2_to_float(const CL_StringRef16 &value)
 	return result;
 }
 
-CL_TempString CL_StringHelp::double_to_text(double value, int num_decimals)
+CL_String CL_StringHelp::double_to_text(double value, int num_decimals)
 {
-#ifdef UNICODE
-	return double_to_ucs2(value, num_decimals);
-#else
 	return double_to_local8(value, num_decimals);
-#endif
 }
 
-CL_TempString8 CL_StringHelp::double_to_local8(double value, int num_decimals)
+CL_String8 CL_StringHelp::double_to_local8(double value, int num_decimals)
 {
 	char buf[64];
 	memset(buf, 0, 64);
@@ -271,31 +316,27 @@ CL_TempString8 CL_StringHelp::double_to_local8(double value, int num_decimals)
 #else
 	snprintf(buf, 63, ("%." + CL_StringHelp::int_to_local8(num_decimals) + "f").c_str(), value);
 #endif
-	return CL_TempString8(buf);
+	return CL_String8(buf);
 }
 	
-CL_TempString16 CL_StringHelp::double_to_ucs2(double value, int num_decimals)
+CL_String16 CL_StringHelp::double_to_ucs2(double value, int num_decimals)
 {
 #ifdef WIN32
 	WCHAR buf[64];
 	memset(buf, 0, 64 * sizeof(WCHAR));
 	swprintf(buf, ("%." + CL_StringHelp::int_to_ucs2(num_decimals) + "f").c_str(), value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #else
 	wchar_t buf[64];
 	memset(buf, 0, 64 * sizeof(wchar_t));
 	swprintf(buf, 63, ("%." + CL_StringHelp::int_to_ucs2(num_decimals) + "f").c_str(), value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #endif
 }
 	
 double CL_StringHelp::text_to_double(const CL_StringRef &value)
 {
-#ifdef UNICODE
-	return ucs2_to_double(value);
-#else
 	return local8_to_double(value);
-#endif
 }
 	
 double CL_StringHelp::local8_to_double(const CL_StringRef8 &value)
@@ -312,16 +353,12 @@ double CL_StringHelp::ucs2_to_double(const CL_StringRef16 &value)
 	return result;
 }
 
-CL_TempString CL_StringHelp::int_to_text(int value)
+CL_String CL_StringHelp::int_to_text(int value)
 {
-#ifdef UNICODE
-	return int_to_ucs2(value);
-#else
 	return int_to_local8(value);
-#endif
 }
 
-CL_TempString8 CL_StringHelp::int_to_local8(int value)
+CL_String8 CL_StringHelp::int_to_local8(int value)
 {
 	char buf[32];
 	memset(buf, 0, 32);
@@ -330,31 +367,27 @@ CL_TempString8 CL_StringHelp::int_to_local8(int value)
 #else
 	snprintf(buf, 31, "%d", value);
 #endif
-	return CL_TempString8(buf);
+	return CL_String8(buf);
 }
 	
-CL_TempString16 CL_StringHelp::int_to_ucs2(int value)
+CL_String16 CL_StringHelp::int_to_ucs2(int value)
 {
 #ifdef WIN32
 	WCHAR buf[32];
 	memset(buf, 0, 32 * sizeof(WCHAR));
 	swprintf(buf, L"%d", value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #else
 	wchar_t buf[32];
 	memset(buf, 0, 32 * sizeof(wchar_t));
 	swprintf(buf, 31, L"%d", value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #endif
 }
 
 int CL_StringHelp::text_to_int(const CL_StringRef &value, int base)
 {
-#ifdef UNICODE
-	return ucs2_to_int(value, base);
-#else
 	return local8_to_int(value, base);
-#endif
 }
 	
 int CL_StringHelp::local8_to_int(const CL_StringRef8 &value, int base)
@@ -391,7 +424,7 @@ int CL_StringHelp::local8_to_int(const CL_StringRef8 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Unsupported base passed for local8_to_int"));
+		throw CL_Exception("Unsupported base passed for local8_to_int");
 	}
 }
 	
@@ -402,7 +435,7 @@ int CL_StringHelp::ucs2_to_int(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return _wtoi(value.c_str());
 #else
-		throw CL_Exception(cl_text("ucs2_to_int not implemented on unix yet"));
+		throw CL_Exception("ucs2_to_int not implemented on unix yet");
 		return 0;
 #endif
 	}
@@ -434,20 +467,16 @@ int CL_StringHelp::ucs2_to_int(const CL_StringRef16 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Unsupported base passed for ucs2_to_int"));
+		throw CL_Exception("Unsupported base passed for ucs2_to_int");
 	}
 }
 
-CL_TempString CL_StringHelp::uint_to_text(unsigned int value)
+CL_String CL_StringHelp::uint_to_text(unsigned int value)
 {
-#ifdef UNICODE
-	return uint_to_ucs2(value);
-#else
 	return uint_to_local8(value);
-#endif
 }
 
-CL_TempString8 CL_StringHelp::uint_to_local8(unsigned int value)
+CL_String8 CL_StringHelp::uint_to_local8(unsigned int value)
 {
 	char buf[32];
 	memset(buf, 0, 32);
@@ -456,31 +485,27 @@ CL_TempString8 CL_StringHelp::uint_to_local8(unsigned int value)
 #else
 	snprintf(buf, 31, "%u", value);
 #endif
-	return CL_TempString8(buf);
+	return CL_String8(buf);
 }
 	
-CL_TempString16 CL_StringHelp::uint_to_ucs2(unsigned int value)
+CL_String16 CL_StringHelp::uint_to_ucs2(unsigned int value)
 {
 #ifdef WIN32
 	WCHAR buf[32];
 	memset(buf, 0, 32 * sizeof(WCHAR));
 	swprintf(buf, L"%u", value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #else
 	wchar_t buf[32];
 	memset(buf, 0, 32 * sizeof(wchar_t));
 	swprintf(buf, 31, L"%u", value);
-	return CL_TempString16(buf);
+	return CL_String16(buf);
 #endif
 }
 
 unsigned int CL_StringHelp::text_to_uint(const CL_StringRef &value, int base)
 {
-#ifdef UNICODE
-	return ucs2_to_uint(value, base);
-#else
 	return local8_to_uint(value, base);
-#endif
 }
 	
 unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
@@ -517,7 +542,7 @@ unsigned int CL_StringHelp::local8_to_uint(const CL_StringRef8 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Unsupported base passed for local8_to_int"));
+		throw CL_Exception("Unsupported base passed for local8_to_int");
 	}
 }
 	
@@ -528,7 +553,7 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return (unsigned int) _wtoi(value.c_str());
 #else
-		throw CL_Exception(cl_text("ucs2_to_uint not implemented on unix yet"));
+		throw CL_Exception("ucs2_to_uint not implemented on unix yet");
 		return 0;
 #endif
 	}
@@ -560,36 +585,28 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("Unsupported base passed for ucs2_to_int"));
+		throw CL_Exception("Unsupported base passed for ucs2_to_int");
 	}
 }
 
-CL_TempString CL_StringHelp::bool_to_text(bool value)
+CL_String CL_StringHelp::bool_to_text(bool value)
 {
-#ifdef UNICODE
-	return bool_to_ucs2(value);
-#else
 	return bool_to_local8(value);
-#endif
 }
 
-CL_TempString8 CL_StringHelp::bool_to_local8(bool value)
+CL_String8 CL_StringHelp::bool_to_local8(bool value)
 {
 	return value ? "true" : "false";
 }
 
-CL_TempString16 CL_StringHelp::bool_to_ucs2(bool value)
+CL_String16 CL_StringHelp::bool_to_ucs2(bool value)
 {
 	return value ? L"true" : L"false";
 }
 
 bool CL_StringHelp::text_to_bool(const CL_StringRef &value)
 {
-#ifdef UNICODE
-	return ucs2_to_bool(value);
-#else
 	return local8_to_bool(value);
-#endif
 }
 
 bool CL_StringHelp::local8_to_bool(const CL_StringRef8 &value)
@@ -616,49 +633,40 @@ bool CL_StringHelp::ucs2_to_bool(const CL_StringRef16 &value)
 		return false;
 }
 
-CL_TempString8 CL_StringHelp::text_to_local8(const CL_StringRef &text)
+CL_String8 CL_StringHelp::text_to_local8(const CL_StringRef &text)
 {
-#ifdef UNICODE
-	return ucs2_to_local8(text);
-#else
 	return text;
-#endif
 }
 
-CL_TempString8 CL_StringHelp::text_to_utf8(const CL_StringRef &text)
+CL_String8 CL_StringHelp::text_to_utf8(const CL_StringRef &text)
 {
-#ifdef UNICODE
-	return ucs2_to_utf8(text);
-#else
-	CL_TempString16 ucs2 = local8_to_ucs2(text);
-	return ucs2_to_utf8(ucs2);
-#endif
+	return text;
 }
 
-CL_TempString8 CL_StringHelp::ucs2_to_latin1(const CL_StringRef16 &ucs2)
+CL_String8 CL_StringHelp::ucs2_to_latin1(const CL_StringRef16 &ucs2)
 {
 	CL_String8::size_type i, length = ucs2.length();
-	CL_TempString8 latin1(length, ' ');
+	CL_String8 latin1(length, ' ');
 	for (i=0; i<length; i++)
 		latin1[i] = (char) ucs2[i];
 	return latin1;
 }
 
-CL_TempString8 CL_StringHelp::ucs2_to_latin9(const CL_StringRef16 &ucs2)
+CL_String8 CL_StringHelp::ucs2_to_latin9(const CL_StringRef16 &ucs2)
 {
 	CL_String8::size_type i, length = ucs2.length();
-	CL_TempString8 latin1(length, ' ');
+	CL_String8 latin1(length, ' ');
 	for (i=0; i<length; i++)
 		latin1[i] = (ucs2[i] != 0x20ac) ? ucs2[i] : 0xa4;
 	return latin1;
 }
 
-CL_TempString8 CL_StringHelp::ucs2_to_local8(const CL_StringRef16 &ucs2)
+CL_String8 CL_StringHelp::ucs2_to_local8(const CL_StringRef16 &ucs2)
 {
 	return ucs2_to_latin9(ucs2);
 }
 
-CL_TempString8 CL_StringHelp::ucs2_to_utf8(const CL_StringRef16 &ucs2)
+CL_String8 CL_StringHelp::ucs2_to_utf8(const CL_StringRef16 &ucs2)
 {
 	// Calculate length:
 
@@ -677,7 +685,7 @@ CL_TempString8 CL_StringHelp::ucs2_to_utf8(const CL_StringRef16 &ucs2)
 	
 	// Perform conversion:
 	
-	CL_TempString8 utf8(length_utf8, ' ');
+	CL_String8 utf8(length_utf8, ' ');
 	CL_String8::size_type pos_utf8 = 0;
 	for (pos = 0; pos < length_ucs2; pos++)
 	{
@@ -701,48 +709,40 @@ CL_TempString8 CL_StringHelp::ucs2_to_utf8(const CL_StringRef16 &ucs2)
 	return utf8;
 }
 
-CL_TempString16 CL_StringHelp::latin1_to_ucs2(const CL_StringRef8 &latin1)
+CL_String16 CL_StringHelp::latin1_to_ucs2(const CL_StringRef8 &latin1)
 {
 	CL_String16::size_type i, length = latin1.length();
-	CL_TempString16 ucs2(length, ' ');
+	CL_String16 ucs2(length, ' ');
 	for (i=0; i<length; i++)
 		ucs2[i] = latin1[i];
 	return ucs2;
 }
 
-CL_TempString16 CL_StringHelp::latin9_to_ucs2(const CL_StringRef8 &latin9)
+CL_String16 CL_StringHelp::latin9_to_ucs2(const CL_StringRef8 &latin9)
 {
 	CL_String16::size_type i, length = latin9.length();
-	CL_TempString16 ucs2(length, ' ');
+	CL_String16 ucs2(length, ' ');
 	for (i=0; i<length; i++)
 		ucs2[i] = ((unsigned char) latin9[i] != 0xa4) ? latin9[i] : 0x20ac;
 	return ucs2;
 }
 
-CL_TempString CL_StringHelp::local8_to_text(const CL_StringRef8 &local8)
+CL_String CL_StringHelp::local8_to_text(const CL_StringRef8 &local8)
 {
-#ifdef UNICODE
-	return local8_to_ucs2(local8);
-#else
 	return local8;
-#endif
 }
 
-CL_TempString CL_StringHelp::ucs2_to_text(const CL_StringRef16 &ucs2)
+CL_String CL_StringHelp::ucs2_to_text(const CL_StringRef16 &ucs2)
 {
-#ifdef UNICODE
-	return ucs2;
-#else
-	return ucs2_to_local8(ucs2);
-#endif
+	return ucs2_to_utf8(ucs2);
 }
 
-CL_TempString16 CL_StringHelp::local8_to_ucs2(const CL_StringRef8 &local8)
+CL_String16 CL_StringHelp::local8_to_ucs2(const CL_StringRef8 &local8)
 {
 	return latin9_to_ucs2(local8);
 }
 
-CL_TempString16 CL_StringHelp::utf8_to_ucs2(const CL_StringRef8 &utf8)
+CL_String16 CL_StringHelp::utf8_to_ucs2(const CL_StringRef8 &utf8)
 {
 	// Calculate length:
 
@@ -762,11 +762,11 @@ CL_TempString16 CL_StringHelp::utf8_to_ucs2(const CL_StringRef8 &utf8)
 		length_ucs2--;
 	}
 	if (pos <= 0)
-		return CL_TempString16();
+		return CL_String16();
 
 	// Perform conversion:
 	
-	CL_TempString16 ucs2(length_ucs2, L'?');
+	CL_String16 ucs2(length_ucs2, L'?');
 	pos = 0;
 	CL_String16::size_type ucs2_pos = 0;
 	while (pos < length_utf8 && ucs2_pos < length_ucs2)
@@ -799,35 +799,22 @@ CL_TempString16 CL_StringHelp::utf8_to_ucs2(const CL_StringRef8 &utf8)
 	return ucs2;
 }
 
-CL_TempString CL_StringHelp::utf8_to_text(const CL_StringRef8 &utf8)
+CL_String CL_StringHelp::utf8_to_text(const CL_StringRef8 &utf8)
 {
-#ifdef UNICODE
-	return utf8_to_ucs2(utf8);
-#else
-	CL_TempString16 ucs2 = utf8_to_ucs2(utf8);
-	return ucs2_to_local8(ucs2);
-#endif
+	return utf8;
 }
 
-CL_TempString8 CL_StringHelp::text_to_cp437(const CL_StringRef &text)
+CL_String8 CL_StringHelp::text_to_cp437(const CL_StringRef &text)
 {
-#ifdef UNICODE
-	return ucs2_to_cp437(text);
-#else
 	return ucs2_to_cp437(local8_to_ucs2(text));
-#endif
 }
 
-CL_TempString CL_StringHelp::cp437_to_text(const CL_StringRef8 &cp437)
+CL_String CL_StringHelp::cp437_to_text(const CL_StringRef8 &cp437)
 {
-#ifdef UNICODE
-	return cp437_to_ucs2(cp437);
-#else
-	return ucs2_to_local8(cp437_to_ucs2(cp437));
-#endif
+	return ucs2_to_utf8(cp437_to_ucs2(cp437));
 }
 
-CL_TempString16 CL_StringHelp::cp437_to_ucs2(const CL_StringRef8 &cp437)
+CL_String16 CL_StringHelp::cp437_to_ucs2(const CL_StringRef8 &cp437)
 {
 	static CL_String16::char_type cp437_charset[] =
 	{
@@ -865,24 +852,24 @@ CL_TempString16 CL_StringHelp::cp437_to_ucs2(const CL_StringRef8 &cp437)
 		0x00B0, 0x2219, 0x00B7, 0x221A, 0x207F, 0x00B2, 0x25A0, 0x00A0
 	};
 
-	CL_TempString16 str16;
+	CL_String16 str16;
 	str16.resize(cp437.length());
 	const unsigned char *input = (const unsigned char *) cp437.data();
-	CL_TempString16::char_type *output = str16.data();
-	CL_TempString16::size_type index, size;
+	CL_String16::char_type *output = str16.data();
+	CL_String16::size_type index, size;
 	size = cp437.length();
 	for (index = 0; index < size; index++)
 		output[index] = cp437_charset[input[index]];
 	return str16;
 }
 
-CL_TempString8 CL_StringHelp::ucs2_to_cp437(const CL_StringRef16 &text)
+CL_String8 CL_StringHelp::ucs2_to_cp437(const CL_StringRef16 &text)
 {
-	CL_TempString8 str8;
+	CL_String8 str8;
 	str8.resize(text.length());
 	unsigned char *output = (unsigned char *) str8.data();
-	const CL_TempString16::char_type *input = text.data();
-	CL_TempString16::size_type index, size;
+	const CL_String16::char_type *input = text.data();
+	CL_String16::size_type index, size;
 	size = text.length();
 	for (index = 0; index < size; index++)
 	{

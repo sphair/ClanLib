@@ -27,39 +27,39 @@ int main(int, char**)
 
 void test1()
 {
-	CL_Console::write_line(cl_text(""));
-	CL_Console::write_line(cl_text("--- Begin of test1 ---"));
-	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line("");
+	CL_Console::write_line("--- Begin of test1 ---");
+	CL_Console::write_line("");
 
-	CL_SocketName socket_name(cl_text("www.clanlib.org"), cl_text("80"));
+	CL_SocketName socket_name("www.clanlib.org", "80");
 	CL_TCPConnection connection(socket_name);
 	connection.set_nodelay(true);
 	unsigned int start_time = CL_System::get_time();
-	CL_Console::write_line(cl_text("Time start: %1"), start_time);
+	CL_Console::write_line("Time start: %1", start_time);
 	for (int i = 0; i < 10; i++)
 	{
 		send_request(connection);
 		receive_response(connection);
 	}
 	unsigned int end_time = CL_System::get_time();
-	CL_Console::write_line(cl_text("Time end: %1"), end_time);
-	CL_Console::write_line(cl_text("Delta time: %1"), (end_time - start_time));
+	CL_Console::write_line("Time end: %1", end_time);
+	CL_Console::write_line("Delta time: %1", (end_time - start_time));
 
-	CL_Console::write_line(cl_text(""));
-	CL_Console::write_line(cl_text("--- End of test1 ---"));
-	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line("");
+	CL_Console::write_line("--- End of test1 ---");
+	CL_Console::write_line("");
 }
 
 void test2()
 {
-	CL_Console::write_line(cl_text(""));
-	CL_Console::write_line(cl_text("--- Begin of test2 ---"));
-	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line("");
+	CL_Console::write_line("--- Begin of test2 ---");
+	CL_Console::write_line("");
 
-	CL_SocketName socket_name(cl_text("www.clanlib.org"), cl_text("80"));
+	CL_SocketName socket_name("www.clanlib.org", "80");
 	CL_HTTPClientConnection connection(socket_name);
 	unsigned int start_time = CL_System::get_time();
-	CL_Console::write_line(cl_text("Time start: %1"), start_time);
+	CL_Console::write_line("Time start: %1", start_time);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -73,12 +73,12 @@ void test2()
 	}
 
 	unsigned int end_time = CL_System::get_time();
-	CL_Console::write_line(cl_text("Time end: %1"), end_time);
-	CL_Console::write_line(cl_text("Delta time: %1"), (end_time - start_time));
+	CL_Console::write_line("Time end: %1", end_time);
+	CL_Console::write_line("Delta time: %1", (end_time - start_time));
 
-	CL_Console::write_line(cl_text(""));
-	CL_Console::write_line(cl_text("--- End of test2 ---"));
-	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line("");
+	CL_Console::write_line("--- End of test2 ---");
+	CL_Console::write_line("");
 }
 
 void send_request(CL_TCPConnection &connection)
@@ -110,9 +110,9 @@ bool read_line(CL_TCPConnection &connection, CL_String8 &out_line)
 	{
 		char buffer[1024];
 
-		int wakeup_reason = connection.get_read_event().wait(15000);
-		if (wakeup_reason == -1)
-			throw CL_Exception(cl_text("read_line timed out"));
+		bool wakeup_reason = connection.get_read_event().wait(15000);
+		if (!wakeup_reason)
+			throw CL_Exception("read_line timed out");
 
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)

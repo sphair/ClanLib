@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
@@ -76,7 +77,7 @@ CL_Frame::CL_Frame(CL_GUIComponent *parent)
 {
 	set_type_name(CssStr::Frame::type_name);
 	impl->frame = this;
-	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("blue"));
+	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "blue");
 	func_process_message().set(impl.get(), &CL_Frame_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_Frame_Impl::on_render);
 	func_style_changed().set(impl.get(), &CL_Frame_Impl::on_style_changed);
@@ -90,6 +91,18 @@ CL_Frame::~CL_Frame()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Frame Attributes:
+
+CL_Frame *CL_Frame::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_Frame *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_Frame*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_Frame named item: %1", id));
+
+	return object;
+}
 
 CL_Sprite CL_Frame::get_header_icon() const
 {

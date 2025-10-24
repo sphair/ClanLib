@@ -104,7 +104,7 @@ void CL_CommandLine_Generic::parse_args(int argc, char** argv)
 							{            
 								if (i == argc - 1) 
 								{
-									CL_TempStringFormat str(cl_text("option '%1' requires an argument"));
+									CL_StringFormat str("option '%1' requires an argument");
 									str.set_arg(1, argv[i]);
 									throw CL_Exception(str.get_result());
 								}
@@ -118,7 +118,7 @@ void CL_CommandLine_Generic::parse_args(int argc, char** argv)
 					}
 					else
 					{
-						CL_TempStringFormat str(cl_text("unrecognized option '%1'"));
+						CL_StringFormat str("unrecognized option '%1'");
 						str.set_arg(1, argv[i]);
 						throw CL_Exception(str.get_result());
 					}
@@ -148,7 +148,7 @@ void CL_CommandLine_Generic::parse_args(int argc, char** argv)
 								if (i == argc - 1 || *(p+1) != '\0') 
 								{
 									// No more arguments
-									CL_TempStringFormat str(cl_text("option requires an argument -- %1"));
+									CL_StringFormat str("option requires an argument -- %1");
 									str.set_arg(1, CL_StringHelp::local8_to_text(CL_String8(1, *p)));
 									throw CL_Exception(str.get_result());
 								}
@@ -161,7 +161,7 @@ void CL_CommandLine_Generic::parse_args(int argc, char** argv)
 						} 
 						else 
 						{
-							CL_TempStringFormat str(cl_text("invalid option -- %1"));
+							CL_StringFormat str("invalid option -- %1");
 							str.set_arg(1, CL_StringHelp::local8_to_text(CL_String8(1, *p)));
 							throw CL_Exception(str.get_result());
 						}
@@ -224,24 +224,24 @@ void CL_CommandLine_Generic::print_help()
 			{
 				if (first_usage) 
 				{
-					CL_Console::write_line(cl_text("Usage: %1 %2"), CL_StringHelp::local8_to_text(programm), CL_StringHelp::local8_to_text(i->help));
+					CL_Console::write_line("Usage: %1 %2", CL_StringHelp::local8_to_text(programm), CL_StringHelp::local8_to_text(i->help));
 					first_usage = false;
 				}
 				else
 				{
-					CL_Console::write_line(cl_text("or:    %1 %2"), CL_StringHelp::local8_to_text(programm), CL_StringHelp::local8_to_text(i->help));
+					CL_Console::write_line("or:    %1 %2", CL_StringHelp::local8_to_text(programm), CL_StringHelp::local8_to_text(i->help));
 				}
 			} 
 			else if (i->key == GROUP) 
 			{
 				if (i != options.begin())
-					CL_Console::write_line(cl_text(""));
+					CL_Console::write_line("");
 				CL_Console::write_line(CL_StringHelp::local8_to_text(i->help));
 			}
 			else if (i->key == DOC) 
 			{
 				if (i != options.begin())
-					CL_Console::write_line(cl_text(""));
+					CL_Console::write_line("");
 				CL_Console::write_line(CL_StringHelp::local8_to_text(i->help));
 			}
 			else 
@@ -266,11 +266,11 @@ void CL_CommandLine_Generic::print_help()
 
 				CL_String8 syntax = CL_StringRef8(option) + CL_StringRef8(argument);
 				syntax.resize(help_indent, ' ');
-				CL_Console::write_line(cl_text("  %1 %2"), CL_StringHelp::local8_to_text(syntax), CL_StringHelp::local8_to_text(i->help));
+				CL_Console::write_line("  %1 %2", CL_StringHelp::local8_to_text(syntax), CL_StringHelp::local8_to_text(i->help));
 			}
 		}
 	}
-	CL_Console::write_line(cl_text(""));
+	CL_Console::write_line("");
 }
 
 void CL_CommandLine_Generic::add_usage(const CL_String8& usage)

@@ -56,7 +56,7 @@ CL_DNSResolver::CL_DNSResolver()
 		result = GetNetworkParams((PFIXED_INFO) buffer.get_data(), &buffer_length);
 	}
 	if (result != ERROR_SUCCESS)
-		throw CL_Exception(cl_text("Unable to get network parameters"));
+		throw CL_Exception("Unable to get network parameters");
 
 	PFIXED_INFO fixed_info = (PFIXED_INFO) buffer.get_data();
 	IP_ADDR_STRING *cur = &fixed_info->DnsServerList;
@@ -64,12 +64,12 @@ CL_DNSResolver::CL_DNSResolver()
 	{
 		CL_String dns_server = CL_StringHelp::local8_to_text(cur->IpAddress.String);
 		if (!dns_server.empty())
-		impl->dns_servers.push_back(CL_SocketName(dns_server, cl_text("53")));
+		impl->dns_servers.push_back(CL_SocketName(dns_server, "53"));
 		cur = cur->Next;
 	}
 #else
 	// Convert file into lines:
-	CL_File file(cl_text("/etc/resolv.conf"), CL_File::open_existing, CL_File::access_read);
+	CL_File file("/etc/resolv.conf", CL_File::open_existing, CL_File::access_read);
 	CL_DataBuffer buffer(file.get_size());
 	file.read(buffer.get_data(), buffer.get_size());
 	char *d = (char *) buffer.get_data();
@@ -116,7 +116,7 @@ CL_DNSResolver::CL_DNSResolver()
 
 	}
 	if (impl->dns_servers.empty())
-		throw CL_Exception(cl_text("No dns servers found in /etc/resolv.conf"));
+		throw CL_Exception("No dns servers found in /etc/resolv.conf");
 #endif
 }
 
@@ -143,24 +143,24 @@ std::vector<CL_DNSResourceRecord> CL_DNSResolver::lookup_resource(
 			domain_name, resource_type, timeout, dns_server);
 
 		if (packet.is_truncated())
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; truncated DNS answer packet"));
+			throw CL_Exception("Unable to lookup DNS resource; truncated DNS answer packet");
 
 		switch (packet.get_response_code())
 		{
 		case CL_DNSPacket::response_ok:
 			break;
 		case CL_DNSPacket::response_format_error:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; format error"));
+			throw CL_Exception("Unable to lookup DNS resource; format error");
 		case CL_DNSPacket::response_server_failure:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; server failure"));
+			throw CL_Exception("Unable to lookup DNS resource; server failure");
 		case CL_DNSPacket::response_name_error:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; name error"));
+			throw CL_Exception("Unable to lookup DNS resource; name error");
 		case CL_DNSPacket::response_not_implemented:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; not implemented"));
+			throw CL_Exception("Unable to lookup DNS resource; not implemented");
 		case CL_DNSPacket::response_refused:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; refused"));
+			throw CL_Exception("Unable to lookup DNS resource; refused");
 		default:
-			throw CL_Exception(cl_text("Unable to lookup DNS resource; unknown error"));
+			throw CL_Exception("Unable to lookup DNS resource; unknown error");
 		}
 
 		// Does this DNS server know the answer?
@@ -171,7 +171,7 @@ std::vector<CL_DNSResourceRecord> CL_DNSResolver::lookup_resource(
 		{
 			CL_DNSResourceRecord record = packet.get_answer(j);
 
-			if (record.get_name() == domain_name && record.get_type() == cl_text("CNAME"))
+			if (record.get_name() == domain_name && record.get_type() == "CNAME")
 				domain_name_cname = record.get_cname_cname();
 
 			if (record.get_name() == domain_name && record.get_type() == resource_type)
@@ -181,7 +181,7 @@ std::vector<CL_DNSResourceRecord> CL_DNSResolver::lookup_resource(
 		{
 			CL_DNSResourceRecord record = packet.get_additional(j);
 
-			if (record.get_name() == domain_name && record.get_type() == cl_text("CNAME"))
+			if (record.get_name() == domain_name && record.get_type() == "CNAME")
 				domain_name_cname = record.get_cname_cname();
 
 			if (record.get_name() == domain_name && record.get_type() == resource_type)
@@ -213,14 +213,14 @@ std::vector<CL_DNSResourceRecord> CL_DNSResolver::lookup_resource(
 		if (packet.get_nameserver_count() > 0)
 		{
 			CL_DNSResourceRecord rr = packet.get_nameserver(0);
-			if (rr.get_type() != cl_text("NS"))
-				throw CL_Exception(cl_text("Unable to lookup DNS resource"));
+			if (rr.get_type() != "NS")
+				throw CL_Exception("Unable to lookup DNS resource");
 			dns_server = rr.get_ns_nsdname();
 			continue;
 		}
 
 		// Looks like this resource does not exist.
-		throw CL_Exception(cl_text("DNS resource data not found"));
+		throw CL_Exception("DNS resource data not found");
 	}
 
 	std::vector<CL_DNSResourceRecord> results;
@@ -242,7 +242,7 @@ CL_DNSPacket CL_DNSResolver::perform_query(
 
 	for (int i = 0; i < timeout; i += 1000)
 	{
-		CL_SocketName dns_server(dns_server_name, cl_text("53"));
+		CL_SocketName dns_server(dns_server_name, "53");
 		impl->udp_socket.send(
 			packet.get_data().get_data(),
 			packet.get_data().get_size(),
@@ -267,7 +267,7 @@ CL_DNSPacket CL_DNSResolver::perform_query(
 	}
 
 	impl->queries.erase(impl->queries.find(query_id));
-	throw CL_Exception(cl_text("Unable to perform lookup"));
+	throw CL_Exception("Unable to perform lookup");
 	return CL_DNSPacket();
 }
 
@@ -283,7 +283,7 @@ CL_DNSPacket CL_DNSResolver::perform_query(
 		true,
 		domain_name,
 		CL_DNSResourceRecord::type_to_int(resource_type),
-		CL_DNSResourceRecord::class_to_int(cl_text("IN")));
+		CL_DNSResourceRecord::class_to_int("IN"));
 	return perform_query(packet, timeout, dns_server_name);
 }
 

@@ -29,12 +29,20 @@
 #include "Core/precomp.h"
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/System/thread_local_storage.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SetupCore Construction:
 
 CL_SetupCore::CL_SetupCore()
 {
+	CL_ThreadLocalStorage::create_initial_instance();
+#ifndef CL_DISABLE_SSE2
+	if (!CL_System::detect_cpu_extension(CL_System::sse2))
+	{
+		throw CL_Exception("Sorry, ClanLib 2.2 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
+	}
+#endif
 }
 
 CL_SetupCore::~CL_SetupCore()

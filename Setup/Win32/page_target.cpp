@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -120,15 +120,17 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR) self);
 
 			if (self->target_version == 600)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC60);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC60);
 			else if (self->target_version == 700)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC70);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC70);
 			else if (self->target_version == 710)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC71);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC71);
 			else if (self->target_version == 800)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC80);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC80);
 			else if (self->target_version == 900)
-				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC90, IDC_RADIO_VC90);
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC90);
+			else if (self->target_version == 1000)
+				CheckRadioButton(hWnd, IDC_RADIO_VC60, IDC_RADIO_VC100, IDC_RADIO_VC100);
 
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_NONUNICODE), BM_SETCHECK, BST_CHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_SETCHECK, self->include_unicode ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -183,6 +185,8 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_version = 800;
 		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC90) == BST_CHECKED)
 			target_version = 900;
+		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC100) == BST_CHECKED)
+			target_version = 1000;
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_gl1 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_GL1), BM_GETCHECK, 0, 0) == BST_CHECKED);

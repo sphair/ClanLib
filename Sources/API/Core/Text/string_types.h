@@ -29,37 +29,15 @@
 /// \addtogroup clanCore_Text clanCore Text
 /// \{
 
-#ifndef _cl_header_string_types_
-#define _cl_header_string_types_
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <string>
-#include "string_data.h"
-#include "string_reference.h"
-#include "string_container.h"
-#include "temp_string_container.h"
+#include "string_ref8.h"
+#include "string_ref16.h"
+#include "string8.h"
+#include "string16.h"
 
-typedef CL_StringReference<char, std::string> CL_StringRef8;
-typedef CL_StringReference<wchar_t, std::wstring> CL_StringRef16;
-typedef CL_StringContainer<char, CL_StringRef8, std::string> CL_String8;
-typedef CL_StringContainer<wchar_t, CL_StringRef16, std::wstring> CL_String16;
-typedef CL_TempStringContainer<char, CL_StringRef8, std::string> CL_TempString8;
-typedef CL_TempStringContainer<wchar_t, CL_StringRef16, std::wstring> CL_TempString16;
-
-#if defined(UNICODE)
-typedef CL_StringRef16 CL_StringRef;
-typedef CL_String16 CL_String;
-typedef CL_TempString16 CL_TempString;
-#define cl_text(a) L##a
-#else
 typedef CL_StringRef8 CL_StringRef;
 typedef CL_String8 CL_String;
-typedef CL_TempString8 CL_TempString;
-#define cl_text(a) a
-#endif
 
-#endif
 /// \}

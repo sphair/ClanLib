@@ -80,8 +80,7 @@ void WindowsTheme::render_box(CL_GraphicContext &gc, CL_GUIThemePart &part, cons
 		HRESULT result = DrawThemeBackground(uxpart.theme, bitmap_dc, uxpart.part_id, uxpart.state_id, &rect_win32, &clip_rect_win32);
 		if (SUCCEEDED(result))
 		{
-			CL_PixelFormat argb8888(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-			CL_PixelBuffer buffer(rect.get_width(), rect.get_height(), rect.get_width()*4, argb8888);
+			CL_PixelBuffer buffer(rect.get_width(), rect.get_height(), cl_argb8);
 			BITMAPV5HEADER bmp_header;
 			memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
 			bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
@@ -91,7 +90,7 @@ void WindowsTheme::render_box(CL_GraphicContext &gc, CL_GUIThemePart &part, cons
 			bmp_header.bV5BitCount = 32;
 			bmp_header.bV5Compression = BI_RGB;
 			GetDIBits(bitmap_dc, bitmap, 0, rect.get_height(), buffer.get_data(), (BITMAPINFO*)&bmp_header, DIB_PAL_COLORS);
-			gc.draw_pixels((float)rect.left, (float)rect.top, buffer);
+			gc.draw_pixels((float)rect.left, (float)rect.top, buffer, buffer.get_size());
 		}
 
 		SelectObject(bitmap_dc, old_bitmap);

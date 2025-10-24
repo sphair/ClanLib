@@ -66,107 +66,28 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-dll.lib")
-				#else
-					#pragma comment(lib, "clanSound-dll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-dll-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-dll-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mtdll.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mtdll.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mtdll-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mtdll-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "dsound.lib")
-			#pragma comment(lib, "dxguid.lib")
-			#pragma comment(lib, "winmm.lib")
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
+	#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanSound-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanSound-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mt.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mt.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mt-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mt-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "dsound.lib")
-			#pragma comment(lib, "dxguid.lib")
-			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "clanSound-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-dll-uc.lib")
-				#else
-					#pragma comment(lib, "clanSound-dll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-dll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-dll-uc-debug.lib")
-				#endif
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mtdll-uc.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mtdll-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mtdll-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mtdll-uc-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "dsound.lib")
-			#pragma comment(lib, "dxguid.lib")
-			#pragma comment(lib, "winmm.lib")
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanSound-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanSound-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mt-uc.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mt-uc.lib")
-				#endif
-			#else
-				#if defined(_M_X64)
-					#pragma comment(lib, "clanSound-x64-static-mt-uc-debug.lib")
-				#else
-					#pragma comment(lib, "clanSound-static-mt-uc-debug.lib")
-				#endif
-			#endif
-			#pragma comment(lib, "dsound.lib")
-			#pragma comment(lib, "dxguid.lib")
-			#pragma comment(lib, "winmm.lib")
+			#pragma comment(lib, "clanSound-static-mt-debug.lib")
 		#endif
 	#endif
+	#pragma comment(lib, "dsound.lib")
+	#pragma comment(lib, "dxguid.lib")
+	#pragma comment(lib, "winmm.lib")
 #endif
-

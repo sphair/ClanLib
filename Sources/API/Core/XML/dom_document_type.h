@@ -67,7 +67,7 @@ public:
 
 	/// \brief Constructs a DomDocumentType
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomDocumentType(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomDocumentType();

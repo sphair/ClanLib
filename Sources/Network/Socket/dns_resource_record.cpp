@@ -44,11 +44,6 @@ CL_DNSResourceRecord::CL_DNSResourceRecord()
 {
 }
 
-CL_DNSResourceRecord::CL_DNSResourceRecord(const CL_DNSResourceRecord &other)
-: impl(other.impl)
-{
-}
-
 CL_DNSResourceRecord::~CL_DNSResourceRecord()
 {
 }
@@ -67,7 +62,7 @@ CL_String CL_DNSResourceRecord::get_type() const
 	int type_offset = find_domain_name_end(data, impl->record_offset);
 	int rr_data_offset = type_offset + 2 + 2 + 4 + 2;
 	if (data.get_size() < rr_data_offset)
-		throw CL_Exception(cl_text("Premature end of DNS resource record"));
+		throw CL_Exception("Premature end of DNS resource record");
 	unsigned short rr_type = ntohs(*(unsigned short *) (data.get_data() + type_offset));
 	//unsigned short rr_class = ntohs(*(unsigned short *) (data.get_data() + type_offset+2));
 	//unsigned int rr_ttl = ntohl(*(unsigned int *) (data.get_data() + type_offset+4));
@@ -81,7 +76,7 @@ CL_String CL_DNSResourceRecord::get_class() const
 	int type_offset = find_domain_name_end(data, impl->record_offset);
 	int rr_data_offset = type_offset + 2 + 2 + 4 + 2;
 	if (data.get_size() < rr_data_offset)
-		throw CL_Exception(cl_text("Premature end of DNS resource record"));
+		throw CL_Exception("Premature end of DNS resource record");
 	//unsigned short rr_type = ntohs(*(unsigned short *) (data.get_data() + type_offset));
 	unsigned short rr_class = ntohs(*(unsigned short *) (data.get_data() + type_offset+2));
 	//unsigned int rr_ttl = ntohl(*(unsigned int *) (data.get_data() + type_offset+4));
@@ -95,7 +90,7 @@ int CL_DNSResourceRecord::get_ttl() const
 	int type_offset = find_domain_name_end(data, impl->record_offset);
 	int rr_data_offset = type_offset + 2 + 2 + 4 + 2;
 	if (data.get_size() < rr_data_offset)
-		throw CL_Exception(cl_text("Premature end of DNS resource record"));
+		throw CL_Exception("Premature end of DNS resource record");
 	//unsigned short rr_type = ntohs(*(unsigned short *) (data.get_data() + type_offset));
 	//unsigned short rr_class = ntohs(*(unsigned short *) (data.get_data() + type_offset+2));
 	unsigned int rr_ttl = ntohl(*(unsigned int *) (data.get_data() + type_offset+4));
@@ -132,7 +127,7 @@ int CL_DNSResourceRecord::get_mx_preference() const
 {
 	const CL_DataBuffer &data = impl->packet.get_data();
 	if (data.get_size() < impl->rdata_offset + 2)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	short *preference = (short *) (data.get_data() + impl->rdata_offset);
 	return ntohs(*preference);
 }
@@ -168,7 +163,7 @@ unsigned int CL_DNSResourceRecord::get_soa_serial() const
 	int pos = find_domain_name_end(impl->packet.get_data(), impl->rdata_offset);
 	pos = find_domain_name_end(impl->packet.get_data(), pos);
 	if (impl->packet.get_data().get_size() < pos + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	unsigned int *serial = (unsigned int *) (impl->packet.get_data().get_data() + pos);
 	return ntohl(*serial);
 }
@@ -178,7 +173,7 @@ int CL_DNSResourceRecord::get_soa_refresh() const
 	int pos = find_domain_name_end(impl->packet.get_data(), impl->rdata_offset);
 	pos = find_domain_name_end(impl->packet.get_data(), pos) + 4;
 	if (impl->packet.get_data().get_size() < pos + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	int *refresh = (int *) (impl->packet.get_data().get_data() + pos);
 	return ntohl(*refresh);
 }
@@ -188,7 +183,7 @@ int CL_DNSResourceRecord::get_soa_retry() const
 	int pos = find_domain_name_end(impl->packet.get_data(), impl->rdata_offset);
 	pos = find_domain_name_end(impl->packet.get_data(), pos) + 8;
 	if (impl->packet.get_data().get_size() < pos + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	int *retry = (int *) (impl->packet.get_data().get_data() + pos);
 	return ntohl(*retry);
 }
@@ -198,7 +193,7 @@ int CL_DNSResourceRecord::get_soa_expire() const
 	int pos = find_domain_name_end(impl->packet.get_data(), impl->rdata_offset);
 	pos = find_domain_name_end(impl->packet.get_data(), pos) + 12;
 	if (impl->packet.get_data().get_size() < pos + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	int *expire = (int *) (impl->packet.get_data().get_data() + pos);
 	return ntohl(*expire);
 }
@@ -208,7 +203,7 @@ unsigned int CL_DNSResourceRecord::get_soa_minimum() const
 	int pos = find_domain_name_end(impl->packet.get_data(), impl->rdata_offset);
 	pos = find_domain_name_end(impl->packet.get_data(), pos) + 16;
 	if (impl->packet.get_data().get_size() < pos + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	unsigned int *minimum = (unsigned int *) (impl->packet.get_data().get_data() + pos);
 	return ntohl(*minimum);
 }
@@ -216,7 +211,7 @@ unsigned int CL_DNSResourceRecord::get_soa_minimum() const
 unsigned int CL_DNSResourceRecord::get_a_address() const
 {
 	if (impl->packet.get_data().get_size() < impl->rdata_offset)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	unsigned int *address = (unsigned int *) (impl->packet.get_data().get_data() + impl->rdata_offset);
 	return *address;
 }
@@ -225,7 +220,7 @@ CL_String CL_DNSResourceRecord::get_a_address_str() const
 {
 	unsigned long addr_long = (unsigned long) ntohl(get_a_address());
 	CL_String str_addr = cl_format(
-		cl_text("%1.%2.%3.%4"),
+		"%1.%2.%3.%4",
 		int((addr_long & 0xff000000) >> 24),
 		int((addr_long & 0x00ff0000) >> 16),
 		int((addr_long & 0x0000ff00) >> 8),
@@ -236,7 +231,7 @@ CL_String CL_DNSResourceRecord::get_a_address_str() const
 unsigned int CL_DNSResourceRecord::get_wks_address() const
 {
 	if (impl->packet.get_data().get_size() < impl->rdata_offset + 4)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	unsigned int *address = (unsigned int *) (impl->packet.get_data().get_data() + impl->rdata_offset);
 	return *address;
 }
@@ -245,7 +240,7 @@ CL_String CL_DNSResourceRecord::get_wks_address_str() const
 {
 	unsigned long addr_long = (unsigned long) ntohl(get_wks_address());
 	CL_String str_addr = cl_format(
-		cl_text("%1.%2.%3.%4"),
+		"%1.%2.%3.%4",
 		int((addr_long & 0xff000000) >> 24),
 		int((addr_long & 0x00ff0000) >> 16),
 		int((addr_long & 0x0000ff00) >> 8),
@@ -256,7 +251,7 @@ CL_String CL_DNSResourceRecord::get_wks_address_str() const
 unsigned char CL_DNSResourceRecord::get_wks_protocol() const
 {
 	if (impl->packet.get_data().get_size() < impl->rdata_offset + 5)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	unsigned char *protocol = (unsigned char *) (impl->packet.get_data().get_data() + impl->rdata_offset + 4);
 	return *protocol;
 }
@@ -265,7 +260,7 @@ CL_DataBuffer CL_DNSResourceRecord::get_wks_bit_map() const
 {
 	int len = impl->rdata_length - 5;
 	if (len < 0)
-		throw CL_Exception(cl_text("Premature end of resource data section"));
+		throw CL_Exception("Premature end of resource data section");
 	CL_DataBuffer bit_map(len);
 	memcpy(bit_map.get_data(), impl->packet.get_data().get_data() + impl->rdata_offset + 5, len);
 	return bit_map;
@@ -273,12 +268,6 @@ CL_DataBuffer CL_DNSResourceRecord::get_wks_bit_map() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DNSResourceRecord Operation:
-
-CL_DNSResourceRecord &CL_DNSResourceRecord::operator =(const CL_DNSResourceRecord &other)
-{
-	impl = other.impl;
-	return *this;
-}
 
 void CL_DNSResourceRecord::set_record(CL_DNSPacket new_packet, int new_record_offset)
 {
@@ -288,7 +277,7 @@ void CL_DNSResourceRecord::set_record(CL_DNSPacket new_packet, int new_record_of
 	int type_offset = find_domain_name_end(new_data, new_record_offset);
 	int rr_data_offset = type_offset + 2 + 2 + 4 + 2;
 	if (new_data.get_size() < rr_data_offset)
-		throw CL_Exception(cl_text("Premature end of DNS resource record"));
+		throw CL_Exception("Premature end of DNS resource record");
 
 	//unsigned short rr_type = ntohs(*(unsigned short *) (new_data.get_data() + type_offset));
 	//unsigned short rr_class = ntohs(*(unsigned short *) (new_data.get_data() + type_offset+2));
@@ -296,7 +285,7 @@ void CL_DNSResourceRecord::set_record(CL_DNSPacket new_packet, int new_record_of
 	unsigned short rr_data_length = ntohs(*(unsigned short *) (new_data.get_data() + type_offset+8));
 
 	if (new_data.get_size() < rr_data_offset + rr_data_length)
-		throw CL_Exception(cl_text("Premature end of DNS resource record RDATA section"));
+		throw CL_Exception("Premature end of DNS resource record RDATA section");
 
 	// Generic record fields seem sane. Store record:
 
@@ -366,7 +355,7 @@ int CL_DNSResourceRecord::type_to_int(const CL_String &qtype)
 
 	int value = CL_StringHelp::local8_to_int(qtype_local8);
 	if (value <= 0)
-		throw CL_Exception(cl_text("Unknown DNS resource record type ") + qtype);
+		throw CL_Exception("Unknown DNS resource record type " + qtype);
 	return value;
 }
 
@@ -388,7 +377,7 @@ CL_String CL_DNSResourceRecord::type_description(const CL_String &qtype)
 		if (rr_types[index].name == qtype_local8)
 			return CL_StringHelp::local8_to_text(rr_types[index].description);
 	}
-	return cl_text("Unknown type ") + qtype;
+	return "Unknown type " + qtype;
 }
 
 CL_String CL_DNSResourceRecord::type_description(int qtype)
@@ -398,7 +387,7 @@ CL_String CL_DNSResourceRecord::type_description(int qtype)
 		if (rr_types[index].value == qtype)
 			return CL_StringHelp::local8_to_text(rr_types[index].description);
 	}
-	return cl_text("Unknown type ") + CL_StringHelp::int_to_text(qtype);
+	return "Unknown type " + CL_StringHelp::int_to_text(qtype);
 }
 
 int CL_DNSResourceRecord::class_to_int(const CL_String &qclass)
@@ -412,7 +401,7 @@ int CL_DNSResourceRecord::class_to_int(const CL_String &qclass)
 
 	int value = CL_StringHelp::local8_to_int(qclass_local8);
 	if (value <= 0)
-		throw CL_Exception(cl_text("Unknown DNS resource record type ") + qclass);
+		throw CL_Exception("Unknown DNS resource record type " + qclass);
 	return value;
 }
 
@@ -434,7 +423,7 @@ CL_String CL_DNSResourceRecord::class_description(const CL_String &qclass)
 		if (class_types[index].name == qclass_local8)
 			return CL_StringHelp::local8_to_text(class_types[index].description);
 	}
-	return cl_text("Unknown class ") + qclass;
+	return "Unknown class " + qclass;
 }
 
 CL_String CL_DNSResourceRecord::class_description(int qclass)
@@ -444,7 +433,7 @@ CL_String CL_DNSResourceRecord::class_description(int qclass)
 		if (class_types[index].value == qclass)
 			return CL_StringHelp::local8_to_text(class_types[index].description);
 	}
-	return cl_text("Unknown class ") + CL_StringHelp::int_to_text(qclass);
+	return "Unknown class " + CL_StringHelp::int_to_text(qclass);
 }
 
 int CL_DNSResourceRecord::find_domain_name_end(const CL_DataBuffer &packet, int offset)
@@ -453,7 +442,7 @@ int CL_DNSResourceRecord::find_domain_name_end(const CL_DataBuffer &packet, int 
 	while (true)
 	{
 		if (offset >= packet.get_size())
-			throw CL_Exception(cl_text("Premature end of resource data domain name"));
+			throw CL_Exception("Premature end of resource data domain name");
 
 		if (data[offset] > 0 && data[offset] < 64)
 		{
@@ -471,7 +460,7 @@ int CL_DNSResourceRecord::find_domain_name_end(const CL_DataBuffer &packet, int 
 		}
 		else
 		{
-			throw CL_Exception(cl_text("Malformed resource data domain name (find_domain_name_end)"));
+			throw CL_Exception("Malformed resource data domain name (find_domain_name_end)");
 		}
 	}
 	return offset;
@@ -484,26 +473,26 @@ CL_String CL_DNSResourceRecord::read_domain_name(const CL_DataBuffer &packet, in
 	while (true)
 	{
 		if (offset >= packet.get_size())
-			throw CL_Exception(cl_text("Premature end of resource data domain name"));
+			throw CL_Exception("Premature end of resource data domain name");
 
 		if (data[offset] > 0 && data[offset] < 64)
 		{
 			if (offset+1+data[offset] >= packet.get_size())
-				throw CL_Exception(cl_text("Premature end of resource data domain name"));
+				throw CL_Exception("Premature end of resource data domain name");
 
 			if (!name.empty())
-				name.append(cl_text("."));
+				name.append(".");
 
 			name.append(CL_StringHelp::local8_to_text(CL_String8((const char *) data+offset+1, data[offset])));
 			offset += data[offset] + 1;
 
 			if (name.length() > 512)
-				throw CL_Exception(cl_text("Domain name exceeds 512 characters!"));
+				throw CL_Exception("Domain name exceeds 512 characters!");
 		}
 		else if ((data[offset] & 0xc0) == 0xc0)
 		{
 			if (offset+1 >= packet.get_size())
-				throw CL_Exception(cl_text("Premature end of resource data domain name"));
+				throw CL_Exception("Premature end of resource data domain name");
 
 			offset = (int(data[offset] & 0x3f) << 8) + data[offset+1];
 		}
@@ -513,7 +502,7 @@ CL_String CL_DNSResourceRecord::read_domain_name(const CL_DataBuffer &packet, in
 		}
 		else
 		{
-			throw CL_Exception(cl_text("Malformed resource data domain name"));
+			throw CL_Exception("Malformed resource data domain name");
 		}
 	}
 	return name;

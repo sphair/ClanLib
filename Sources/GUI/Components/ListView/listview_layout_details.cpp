@@ -60,18 +60,18 @@ CL_ListViewLayoutDetails::CL_ListViewLayoutDetails(CL_ListView *listview)
 : CL_ListViewLayout(listview), icon_offset_y(0), opener_gap(0), icon_gap(0),
   indent_width(0), max_rows_visible(0), row_draw_y_pos(0), columns_valid(false)
 {
-	prop_opener_gap = CL_GUIThemePartProperty(CssStr::opener_gap, cl_text("6"));
-	prop_opener_offset_x = CL_GUIThemePartProperty(CssStr::opener_offset_x, cl_text("0"));
-	prop_opener_offset_y = CL_GUIThemePartProperty(CssStr::opener_offset_y, cl_text("0"));
-	prop_icon_text_gap = CL_GUIThemePartProperty(CssStr::icon_text_gap, cl_text("6"));
-	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, cl_text("16"));
-	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, cl_text("16"));
-	prop_icon_offset_y = CL_GUIThemePartProperty(CssStr::icon_offset_y, cl_text("0"));
-	prop_indent_width = CL_GUIThemePartProperty(CssStr::indent_width, cl_text("20"));
-	prop_lineedit_offset_left = CL_GUIThemePartProperty(CssStr::lineedit_offset_left, cl_text("0"));
-	prop_lineedit_offset_top = CL_GUIThemePartProperty(CssStr::lineedit_offset_top, cl_text("0"));
-	prop_lineedit_offset_right = CL_GUIThemePartProperty(CssStr::lineedit_offset_right, cl_text("0"));
-	prop_lineedit_offset_bottom = CL_GUIThemePartProperty(CssStr::lineedit_offset_bottom, cl_text("0"));
+	prop_opener_gap = CL_GUIThemePartProperty(CssStr::opener_gap, "6");
+	prop_opener_offset_x = CL_GUIThemePartProperty(CssStr::opener_offset_x, "0");
+	prop_opener_offset_y = CL_GUIThemePartProperty(CssStr::opener_offset_y, "0");
+	prop_icon_text_gap = CL_GUIThemePartProperty(CssStr::icon_text_gap, "6");
+	prop_icon_width = CL_GUIThemePartProperty(CssStr::icon_width, "16");
+	prop_icon_height = CL_GUIThemePartProperty(CssStr::icon_height, "16");
+	prop_icon_offset_y = CL_GUIThemePartProperty(CssStr::icon_offset_y, "0");
+	prop_indent_width = CL_GUIThemePartProperty(CssStr::indent_width, "20");
+	prop_lineedit_offset_left = CL_GUIThemePartProperty(CssStr::lineedit_offset_left, "0");
+	prop_lineedit_offset_top = CL_GUIThemePartProperty(CssStr::lineedit_offset_top, "0");
+	prop_lineedit_offset_right = CL_GUIThemePartProperty(CssStr::lineedit_offset_right, "0");
+	prop_lineedit_offset_bottom = CL_GUIThemePartProperty(CssStr::lineedit_offset_bottom, "0");
 }
 
 CL_ListViewLayoutDetails::~CL_ListViewLayoutDetails()
@@ -238,8 +238,8 @@ void CL_ListViewLayoutDetails::create_parts()
 	part_row = CL_GUIThemePart(listview, CssStr::ListView::part_row);
 	part_opener = CL_GUIThemePart(listview, CssStr::ListView::part_opener);
 	part_cell = CL_GUIThemePart(listview, CssStr::ListView::part_cell);
-	part_cell.set_state(cl_text("details"), true);
-	part_opener.set_state(cl_text("open"), true);
+	part_cell.set_state("details", true);
+	part_opener.set_state("open", true);
 
 	opener_gap = part_cell.get_property_int(prop_opener_gap);
 	size_opener = part_opener.get_preferred_size();
@@ -253,7 +253,7 @@ void CL_ListViewLayoutDetails::create_parts()
 
 	CL_Font font = part_cell.get_font();
 	CL_FontMetrics metrics = font.get_font_metrics(gc);
-	//height_text = gc.get_text_size(cl_text("l")).height; // todo: use font metrics
+	//height_text = gc.get_text_size("l").height; // todo: use font metrics
 	height_text = (int)metrics.get_height();
 	descent = (int)metrics.get_descent();
 

@@ -66,11 +66,6 @@ CL_SocketName::CL_SocketName(const CL_String &address, const CL_String &port)
 	impl->port = port;
 }
 
-CL_SocketName::CL_SocketName(const CL_SocketName &copy)
-: impl(copy.impl)
-{
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_SocketName attributes:
 
@@ -135,7 +130,7 @@ CL_String CL_SocketName::lookup_ipv4() const
 	{
 		hostent *host = gethostbyname(CL_StringHelp::text_to_local8(impl->address).c_str());
 		if (host == 0)
-			throw CL_Exception(cl_text("Could not lookup DNS name"));
+			throw CL_Exception("Could not lookup DNS name");
 		
 		ipv4_address = *((in_addr_t *) host->h_addr_list[0]);
 	}
@@ -156,7 +151,7 @@ CL_String CL_SocketName::lookup_hostname() const
 
 		hostent *host = gethostbyaddr((const char *) &addr, sizeof(sockaddr_in), AF_INET);
 		if (host == 0)
-			throw CL_Exception(cl_text("Could not lookup DNS name"));
+			throw CL_Exception("Could not lookup DNS name");
 		
 		return CL_StringHelp::local8_to_text(host->h_name);
 	}
@@ -177,10 +172,10 @@ CL_SocketName CL_SocketName::to_hostname()
 void CL_SocketName::to_sockaddr(int domain, struct sockaddr *out_addr, int len) const
 {
 	if (domain != AF_INET)
-		throw CL_Exception(cl_text("Only AF_INET domain supported for CL_SocketName::to_sockaddr"));
+		throw CL_Exception("Only AF_INET domain supported for CL_SocketName::to_sockaddr");
 
 	if (len < sizeof(sockaddr_in))
-		throw CL_Exception(cl_text("Insufficient buffer for sockaddr_in structure"));
+		throw CL_Exception("Insufficient buffer for sockaddr_in structure");
 
 	sockaddr_in addr;
 	memset(&addr, 0, sizeof(sockaddr_in));
@@ -197,7 +192,7 @@ void CL_SocketName::to_sockaddr(int domain, struct sockaddr *out_addr, int len) 
 		{
 			hostent *host = gethostbyname(CL_StringHelp::text_to_local8(impl->address).c_str());
 			if (host == 0)
-				throw CL_Exception(cl_text("Could not lookup DNS name"));
+				throw CL_Exception("Could not lookup DNS name");
 		
 			addr.sin_addr.s_addr = *((in_addr_t *) host->h_addr_list[0]);
 		}
@@ -209,14 +204,14 @@ void CL_SocketName::to_sockaddr(int domain, struct sockaddr *out_addr, int len) 
 void CL_SocketName::from_sockaddr(int domain, struct sockaddr *addr, int len)
 {
 	if (domain != AF_INET)
-		throw CL_Exception(cl_text("Only AF_INET domain supported for CL_SocketName::to_sockaddr"));
+		throw CL_Exception("Only AF_INET domain supported for CL_SocketName::to_sockaddr");
 
 	if (len < sizeof(sockaddr_in))
-		throw CL_Exception(cl_text("Insufficient buffer for sockaddr_in structure"));
+		throw CL_Exception("Insufficient buffer for sockaddr_in structure");
 
 	sockaddr_in *addr_in = (sockaddr_in *) addr;
 	if (addr_in->sin_family != AF_INET)
-		throw CL_Exception(cl_text("Unexpected sin_family in sockaddr"));
+		throw CL_Exception("Unexpected sin_family in sockaddr");
 
 	unsigned long addr_long = (unsigned long) ntohl(addr_in->sin_addr.s_addr);
 	CL_String port = CL_StringHelp::int_to_text(ntohs(addr_in->sin_port));
@@ -228,7 +223,7 @@ void CL_SocketName::from_sockaddr(int domain, struct sockaddr *addr, int len)
 	else
 	{
 		CL_String str_addr = cl_format(
-			cl_text("%1.%2.%3.%4"),
+			"%1.%2.%3.%4",
 			int((addr_long & 0xff000000) >> 24),
 			int((addr_long & 0x00ff0000) >> 16),
 			int((addr_long & 0x0000ff00) >> 8),

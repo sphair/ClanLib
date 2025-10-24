@@ -60,6 +60,7 @@ CL_GUIManager_Impl::CL_GUIManager_Impl()
 	func_resize.set(this, &CL_GUIManager_Impl::on_resize);
 	func_paint.set(this, &CL_GUIManager_Impl::on_paint);
 	func_close.set(this, &CL_GUIManager_Impl::on_close);
+	func_destroy.set(this, &CL_GUIManager_Impl::on_destroy);
 	func_input_received.set(this, &CL_GUIManager_Impl::on_input_received);
 
 	wm_site.func_focus_lost = &func_focus_lost;
@@ -67,6 +68,7 @@ CL_GUIManager_Impl::CL_GUIManager_Impl()
 	wm_site.func_resize = &func_resize;
 	wm_site.func_paint = &func_paint;
 	wm_site.func_close = &func_close;
+	wm_site.func_destroy = &func_destroy;
 	wm_site.func_input_received = &func_input_received;
 }
 
@@ -234,7 +236,7 @@ void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
 	CL_GUITopLevelWindow *toplevel_window = get_toplevel_window(component);
 	if (toplevel_window == NULL)
 	{
-		throw CL_Exception(cl_text("No top level window is set"));
+		throw CL_Exception("No top level window is set");
 	}
 
 	if (toplevel_window->focused_component == component)
@@ -533,19 +535,19 @@ CL_GUIComponent *CL_GUIManager_Impl::get_focus_component()
 	return 0;
 }
 
-std::vector<CL_CSSRuleSet> &CL_GUIManager_Impl::get_rulesets(const CL_StringRef &element_name) const
+std::vector<CL_CSSProperty> &CL_GUIManager_Impl::get_properties(const CL_StringRef &element_name) const
 {
-	std::map< CL_String, std::vector<CL_CSSRuleSet> >::iterator it = rulesets_cache.find(element_name);
-	if (it != rulesets_cache.end())
+	std::map< CL_String, std::vector<CL_CSSProperty> >::iterator it = properties_cache.find(element_name);
+	if (it != properties_cache.end())
 		return it->second;
 	CL_CSSDocument css_document_const_hack = css_document;
-	rulesets_cache[element_name] = css_document_const_hack.select(element_name);
-	return rulesets_cache[element_name];
+	properties_cache[element_name] = css_document_const_hack.select(element_name);
+	return properties_cache[element_name];
 }
 
-void CL_GUIManager_Impl::reset_rulesets()
+void CL_GUIManager_Impl::reset_properties()
 {
-	rulesets_cache.clear();
+	properties_cache.clear();
 }
 
 void CL_GUIManager_Impl::register_font(const CL_Font &font, const CL_FontDescription &desc)
@@ -674,6 +676,11 @@ void CL_GUIManager_Impl::on_close(CL_GUITopLevelWindow *toplevel_window)
 	CL_GUIMessage_Close message;
 	message.set_target(toplevel_window->component);
 	dispatch_message(message);
+}
+
+void CL_GUIManager_Impl::on_destroy(CL_GUITopLevelWindow *toplevel_window)
+{
+//	delete toplevel_window->component;
 }
 
 void CL_GUIManager_Impl::on_input_received(

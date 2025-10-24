@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
@@ -87,6 +88,18 @@ CL_Label::~CL_Label()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Label Attributes:
 
+CL_Label *CL_Label::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_Label *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_Label*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_Label named item: %1", id));
+
+	return object;
+}
+
 CL_String CL_Label::get_text() const
 {
 	return impl->span.get_combined_text();
@@ -103,7 +116,7 @@ CL_Size CL_Label::get_preferred_size() const
 void CL_Label::set_text(const CL_StringRef &text)
 {
 	impl->span = CL_SpanLayout();
-	CL_GUIThemePartProperty prop_text_color(CssStr::text_color, cl_text("black"));
+	CL_GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
 	CL_Colorf text_color = impl->part_component.get_property(prop_text_color);
 	CL_Font font = impl->part_component.get_font();
 	impl->span.add_text(text, font, text_color);

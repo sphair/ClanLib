@@ -49,17 +49,23 @@ class CL_API_CORE CL_StringHelp
 /// \{
 
 public:
-	static std::vector<CL_TempString> split_text(
+	static std::vector<CL_String> split_text(
 		const CL_StringRef &text,
 		const CL_StringRef &split_string,
 		bool skip_empty = true);
+
+	/// \brief Wide char to utf-8
+	///
+	/// \param value = Wide char value
+	/// \return The UTF-8 String
+	static CL_String8 wchar_to_utf8(wchar_t value);
 
 	/// \brief Trim
 	///
 	/// \param text = String Ref
 	///
 	/// \return Temp String
-	static CL_TempString trim(const CL_StringRef &text);
+	static CL_String trim(const CL_StringRef &text);
 
 	/// \brief Compare
 	///
@@ -84,42 +90,42 @@ public:
 	/// \param s = String Ref
 	///
 	/// \return Temp String
-	static CL_TempString text_to_upper(const CL_StringRef &s);
+	static CL_String text_to_upper(const CL_StringRef &s);
 
 	/// \brief Local8 to upper
 	///
 	/// \param s = String Ref8
 	///
 	/// \return Temp String8
-	static CL_TempString8 local8_to_upper(const CL_StringRef8 &s);
+	static CL_String8 local8_to_upper(const CL_StringRef8 &s);
 
 	/// \brief Ucs2 to upper
 	///
 	/// \param s = String Ref16
 	///
 	/// \return Temp String16
-	static CL_TempString16 ucs2_to_upper(const CL_StringRef16 &s);
+	static CL_String16 ucs2_to_upper(const CL_StringRef16 &s);
 
 	/// \brief Text to lower
 	///
 	/// \param s = String Ref
 	///
 	/// \return Temp String
-	static CL_TempString text_to_lower(const CL_StringRef &s);
+	static CL_String text_to_lower(const CL_StringRef &s);
 
 	/// \brief Local8 to lower
 	///
 	/// \param s = String Ref8
 	///
 	/// \return Temp String8
-	static CL_TempString8 local8_to_lower(const CL_StringRef8 &s);
+	static CL_String8 local8_to_lower(const CL_StringRef8 &s);
 
 	/// \brief Ucs2 to lower
 	///
 	/// \param s = String Ref16
 	///
 	/// \return Temp String16
-	static CL_TempString16 ucs2_to_lower(const CL_StringRef16 &s);
+	static CL_String16 ucs2_to_lower(const CL_StringRef16 &s);
 
 	/// \brief Float to text
 	///
@@ -127,7 +133,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String
-	static CL_TempString float_to_text(float value, int num_decimal_places=6);
+	static CL_String float_to_text(float value, int num_decimal_places=6);
 
 	/// \brief Float to local8
 	///
@@ -135,7 +141,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String8
-	static CL_TempString8 float_to_local8(float value, int num_decimal_places=6);
+	static CL_String8 float_to_local8(float value, int num_decimal_places=6);
 
 	/// \brief Float to ucs2
 	///
@@ -143,7 +149,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String16
-	static CL_TempString16 float_to_ucs2(float value, int num_decimal_places=6);
+	static CL_String16 float_to_ucs2(float value, int num_decimal_places=6);
 
 	/// \brief Text to float
 	///
@@ -172,7 +178,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String
-	static CL_TempString double_to_text(double value, int num_decimal_places=6);
+	static CL_String double_to_text(double value, int num_decimal_places=6);
 
 	/// \brief Double to local8
 	///
@@ -180,7 +186,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String8
-	static CL_TempString8 double_to_local8(double value, int num_decimal_places=6);
+	static CL_String8 double_to_local8(double value, int num_decimal_places=6);
 
 	/// \brief Double to ucs2
 	///
@@ -188,7 +194,7 @@ public:
 	/// \param num_decimal_places = value
 	///
 	/// \return Temp String16
-	static CL_TempString16 double_to_ucs2(double value, int num_decimal_places=6);
+	static CL_String16 double_to_ucs2(double value, int num_decimal_places=6);
 
 	/// \brief Text to double
 	///
@@ -216,21 +222,21 @@ public:
 	/// \param value = value
 	///
 	/// \return Temp String
-	static CL_TempString int_to_text(int value);
+	static CL_String int_to_text(int value);
 
 	/// \brief Int to local8
 	///
 	/// \param value = value
 	///
 	/// \return Temp String8
-	static CL_TempString8 int_to_local8(int value);
+	static CL_String8 int_to_local8(int value);
 
 	/// \brief Int to ucs2
 	///
 	/// \param value = value
 	///
 	/// \return Temp String16
-	static CL_TempString16 int_to_ucs2(int value);
+	static CL_String16 int_to_ucs2(int value);
 
 	/// \brief Text to int
 	///
@@ -261,21 +267,21 @@ public:
 	/// \param value = value
 	///
 	/// \return Temp String
-	static CL_TempString uint_to_text(unsigned int value);
+	static CL_String uint_to_text(unsigned int value);
 
 	/// \brief Uint to local8
 	///
 	/// \param value = value
 	///
 	/// \return Temp String8
-	static CL_TempString8 uint_to_local8(unsigned int value);
+	static CL_String8 uint_to_local8(unsigned int value);
 
 	/// \brief Uint to ucs2
 	///
 	/// \param value = value
 	///
 	/// \return Temp String16
-	static CL_TempString16 uint_to_ucs2(unsigned int value);
+	static CL_String16 uint_to_ucs2(unsigned int value);
 
 	static unsigned int text_to_uint(const CL_StringRef &value, int base = 10);
 
@@ -288,21 +294,21 @@ public:
 	/// \param value = bool
 	///
 	/// \return Temp String
-	static CL_TempString bool_to_text(bool value);
+	static CL_String bool_to_text(bool value);
 
 	/// \brief Bool to local8
 	///
 	/// \param value = bool
 	///
 	/// \return Temp String8
-	static CL_TempString8 bool_to_local8(bool value);
+	static CL_String8 bool_to_local8(bool value);
 
 	/// \brief Bool to ucs2
 	///
 	/// \param value = bool
 	///
 	/// \return Temp String16
-	static CL_TempString16 bool_to_ucs2(bool value);
+	static CL_String16 bool_to_ucs2(bool value);
 
 	/// \brief Text to bool
 	///
@@ -330,119 +336,119 @@ public:
 	/// \param text = String Ref
 	///
 	/// \return Temp String8
-	static CL_TempString8 text_to_cp437(const CL_StringRef &text);
+	static CL_String8 text_to_cp437(const CL_StringRef &text);
 
 	/// \brief Ucs2 to cp437
 	///
 	/// \param text = String Ref16
 	///
 	/// \return Temp String8
-	static CL_TempString8 ucs2_to_cp437(const CL_StringRef16 &text);
+	static CL_String8 ucs2_to_cp437(const CL_StringRef16 &text);
 
 	/// \brief Cp437 to text
 	///
 	/// \param cp437 = String Ref8
 	///
 	/// \return Temp String
-	static CL_TempString cp437_to_text(const CL_StringRef8 &cp437);
+	static CL_String cp437_to_text(const CL_StringRef8 &cp437);
 
 	/// \brief Cp437 to ucs2
 	///
 	/// \param cp437 = String Ref8
 	///
 	/// \return Temp String16
-	static CL_TempString16 cp437_to_ucs2(const CL_StringRef8 &cp437);
+	static CL_String16 cp437_to_ucs2(const CL_StringRef8 &cp437);
 
 	/// \brief Text to local8
 	///
 	/// \param text = String Ref
 	///
 	/// \return Temp String8
-	static CL_TempString8 text_to_local8(const CL_StringRef &text);
+	static CL_String8 text_to_local8(const CL_StringRef &text);
 
 	/// \brief Text to utf8
 	///
 	/// \param text = String Ref
 	///
 	/// \return Temp String8
-	static CL_TempString8 text_to_utf8(const CL_StringRef &text);
+	static CL_String8 text_to_utf8(const CL_StringRef &text);
 
 	/// \brief Ucs2 to latin1
 	///
 	/// \param ucs2 = String Ref16
 	///
 	/// \return Temp String8
-	static CL_TempString8 ucs2_to_latin1(const CL_StringRef16 &ucs2);
+	static CL_String8 ucs2_to_latin1(const CL_StringRef16 &ucs2);
 
 	/// \brief Ucs2 to latin9
 	///
 	/// \param ucs2 = String Ref16
 	///
 	/// \return Temp String8
-	static CL_TempString8 ucs2_to_latin9(const CL_StringRef16 &ucs2);
+	static CL_String8 ucs2_to_latin9(const CL_StringRef16 &ucs2);
 
 	/// \brief Ucs2 to local8
 	///
 	/// \param ucs2 = String Ref16
 	///
 	/// \return Temp String8
-	static CL_TempString8 ucs2_to_local8(const CL_StringRef16 &ucs2);
+	static CL_String8 ucs2_to_local8(const CL_StringRef16 &ucs2);
 
 	/// \brief Ucs2 to utf8
 	///
 	/// \param ucs2 = String Ref16
 	///
 	/// \return Temp String8
-	static CL_TempString8 ucs2_to_utf8(const CL_StringRef16 &ucs2);
+	static CL_String8 ucs2_to_utf8(const CL_StringRef16 &ucs2);
 
 	/// \brief Local8 to text
 	///
 	/// \param local8 = String Ref8
 	///
 	/// \return Temp String
-	static CL_TempString local8_to_text(const CL_StringRef8 &local8);
+	static CL_String local8_to_text(const CL_StringRef8 &local8);
 
 	/// \brief Ucs2 to text
 	///
 	/// \param ucs2 = String Ref16
 	///
 	/// \return Temp String
-	static CL_TempString ucs2_to_text(const CL_StringRef16 &ucs2);
+	static CL_String ucs2_to_text(const CL_StringRef16 &ucs2);
 
 	/// \brief Latin1 to ucs2
 	///
 	/// \param latin1 = String Ref8
 	///
 	/// \return Temp String16
-	static CL_TempString16 latin1_to_ucs2(const CL_StringRef8 &latin1);
+	static CL_String16 latin1_to_ucs2(const CL_StringRef8 &latin1);
 
 	/// \brief Latin9 to ucs2
 	///
 	/// \param latin9 = String Ref8
 	///
 	/// \return Temp String16
-	static CL_TempString16 latin9_to_ucs2(const CL_StringRef8 &latin9);
+	static CL_String16 latin9_to_ucs2(const CL_StringRef8 &latin9);
 
 	/// \brief Local8 to ucs2
 	///
 	/// \param local8 = String Ref8
 	///
 	/// \return Temp String16
-	static CL_TempString16 local8_to_ucs2(const CL_StringRef8 &local8);
+	static CL_String16 local8_to_ucs2(const CL_StringRef8 &local8);
 
 	/// \brief Utf8 to ucs2
 	///
 	/// \param utf8 = String Ref8
 	///
 	/// \return Temp String16
-	static CL_TempString16 utf8_to_ucs2(const CL_StringRef8 &utf8);
+	static CL_String16 utf8_to_ucs2(const CL_StringRef8 &utf8);
 
 	/// \brief Utf8 to text
 	///
 	/// \param utf8 = String Ref8
 	///
 	/// \return Temp String
-	static CL_TempString utf8_to_text(const CL_StringRef8 &utf8);
+	static CL_String utf8_to_text(const CL_StringRef8 &utf8);
 
 	enum BOMType
 	{
@@ -470,7 +476,7 @@ public:
 	/// \param String = System
 	///
 	/// \return Temp String
-	static CL_TempString clr_to_text(const System::String ^str)
+	static CL_String clr_to_text(const System::String ^str)
 	{
 		return clr_to_ucs2(str);
 	}
@@ -486,7 +492,7 @@ public:
 	/// \param String = System
 	///
 	/// \return Temp String
-	static CL_TempString clr_to_text(const System::String ^str)
+	static CL_String clr_to_text(const System::String ^str)
 	{
 		return ucs2_to_text(clr_to_ucs2(str));
 	}
@@ -502,10 +508,10 @@ public:
 	/// \param String = System
 	///
 	/// \return Temp String16
-	static CL_TempString16 clr_to_ucs2(const System::String ^str)
+	static CL_String16 clr_to_ucs2(const System::String ^str)
 	{
 		cli::pin_ptr<const wchar_t> chars = PtrToStringChars(str);
-		return CL_TempString16(chars);
+		return CL_String16(chars);
 	}
 
 	static System::String ^ucs2_to_clr(const CL_StringRef16 &str)

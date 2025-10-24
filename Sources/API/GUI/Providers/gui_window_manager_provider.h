@@ -173,6 +173,7 @@ public:
 	///
 	/// \param handle = GUITop Level Window
 	/// \param gc = Graphic Context
+	/// \param rect = Clip rect
 	virtual void push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect) = 0;
 
 	/// \brief Push cliprect
@@ -234,7 +235,7 @@ public:
 	/// \brief Set cursor
 	///
 	/// \param handle = GUITop Level Window
-	/// \param CL_StandardCursor = enum
+	/// \param type = CL_StandardCursor
 	virtual void set_cursor(CL_GUITopLevelWindow *handle, enum CL_StandardCursor type) = 0;
 
 	/// \brief Perform any updates.

@@ -48,47 +48,25 @@
 #pragma managed(pop)
 #endif
 
-#if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-dll.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-dll-debug.lib")
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-static-mtdll.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-static-mtdll-debug.lib")
-			#endif
+#if defined(_MSC_VER)
+	#if !defined(_MT)
+		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
+	#endif
+	#if !defined(_DEBUG)
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanDatabase-dll.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanDatabase-static-mtdll.lib")
 		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-static-mt.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-static-mt-debug.lib")
-			#endif
+			#pragma comment(lib, "clanDatabase-static-mt.lib")
 		#endif
 	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-dll-uc.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-dll-uc-debug.lib")
-			#endif
-		#elif defined (_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-static-mtdll-uc.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-static-mtdll-uc-debug.lib")
-			#endif
+		#if defined(CL_DLL)
+			#pragma comment(lib, "clanDatabase-dll-debug.lib")
+		#elif defined(_DLL)
+			#pragma comment(lib, "clanDatabase-static-mtdll-debug.lib")
 		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanDatabase-static-mt-uc.lib")
-			#else
-				#pragma comment(lib, "clanDatabase-static-mt-uc-debug.lib")
-			#endif
+			#pragma comment(lib, "clanDatabase-static-mt-debug.lib")
 		#endif
 	#endif
 #endif
-

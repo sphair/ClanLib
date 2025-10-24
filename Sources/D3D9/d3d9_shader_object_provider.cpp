@@ -109,12 +109,12 @@ void CL_D3D9ShaderObjectProvider::compile()
 	case cl_shadertype_vertex:
 		result = window->get_device()->CreateVertexShader((const DWORD *) shader_code->GetBufferPointer(), vertex_shader.output_variable());
 		if (FAILED(result))
-			throw CL_Exception(cl_text("Unable to create vertex shader object"));
+			throw CL_Exception("Unable to create vertex shader object");
 		break;
 	case cl_shadertype_fragment:
 		result = window->get_device()->CreatePixelShader((const DWORD *) shader_code->GetBufferPointer(), pixel_shader.output_variable());
 		if (FAILED(result))
-			throw CL_Exception(cl_text("Unable to create pixel shader object"));
+			throw CL_Exception("Unable to create pixel shader object");
 		break;
 	}
 }

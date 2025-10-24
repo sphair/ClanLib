@@ -42,8 +42,8 @@ public:
 
 CL_GUIMessage_Close::CL_GUIMessage_Close()
 {
-	set_type(cl_text("window close"));
-	set_data(cl_text("window close"), CL_SharedPtr<CL_GUIMessage_CloseData>(
+	set_type("window close");
+	set_data("window close", CL_SharedPtr<CL_GUIMessage_CloseData>(
 		new CL_GUIMessage_CloseData));
 }
 
@@ -61,7 +61,7 @@ CL_GUIMessage_Close::~CL_GUIMessage_Close()
 
 CL_StringRef CL_GUIMessage_Close::get_type_name()
 {
-	return cl_text("window close");
+	return "window close";
 }
 
 /////////////////////////////////////////////////////////////////////////////	

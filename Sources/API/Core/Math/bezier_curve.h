@@ -72,7 +72,7 @@ public:
 	void add_control_point(const CL_Pointf &);
 
 	/// \brief Generates points on the bezier curve.
-	std::vector<CL_Pointf> generate_curve_points(float split_angle_deg);
+	std::vector<CL_Pointf> generate_curve_points(const CL_Angle &split_angle);
 
 	/// \brief Get a point on the bezier curve.
 	CL_Pointf get_point_relative(float pos_0_to_1) const;

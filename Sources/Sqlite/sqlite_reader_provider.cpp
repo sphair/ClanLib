@@ -60,11 +60,7 @@ int CL_SqliteReaderProvider::get_column_count() const
 
 CL_String CL_SqliteReaderProvider::get_column_name(int index) const
 {
-#ifdef UNICODE
-	return (CL_String16::char_type *) sqlite3_column_name16(vm, index);
-#else
 	return (CL_String8::char_type *) sqlite3_column_name(vm, index);
-#endif
 }
 
 int CL_SqliteReaderProvider::get_name_index(const CL_StringRef &name) const
@@ -72,27 +68,19 @@ int CL_SqliteReaderProvider::get_name_index(const CL_StringRef &name) const
 	int count = get_column_count();
 	for (int index = 0; index < count; index++)
 	{
-#ifdef UNICODE
-		CL_String16::char_type *col_name = (CL_String16::char_type *) sqlite3_column_name16(vm, index);
-#else
 		const char *col_name = sqlite3_column_name(vm, index);
-#endif
 		if (col_name != 0 && col_name == name)
 		{
 			return index;
 		}
 	}
 
-	throw CL_Exception(cl_format(cl_text("No such column name %1"), name));
+	throw CL_Exception(cl_format("No such column name %1", name));
 }
 
 CL_String CL_SqliteReaderProvider::get_column_string(int index) const
 {
-#ifdef UNICODE
-	CL_String16::char_type *str = (CL_String16::char_type *) sqlite3_column_text16(vm, index);
-#else
 	CL_String8::char_type *str = (CL_String8::char_type *) sqlite3_column_text(vm, index);
-#endif
 	if (str != 0)
 		return str;
 	else
@@ -149,14 +137,14 @@ bool CL_SqliteReaderProvider::retrieve_row()
 				finished = true;
 				return false;
 			case SQLITE_ERROR:
-				throw CL_Exception(cl_text("Database Error!"));
+				throw CL_Exception("Database Error!");
 			case SQLITE_MISUSE:
-				throw CL_Exception(cl_text("Database Misuse!"));
+				throw CL_Exception("Database Misuse!");
 			default:
-				throw CL_Exception(cl_format(cl_text("Unknown database result code: %1"), result));
+				throw CL_Exception(cl_format("Unknown database result code: %1", result));
 			}
 		}
-		throw CL_Exception(cl_text("Database Busy!"));
+		throw CL_Exception("Database Busy!");
 	}
 	else
 	{

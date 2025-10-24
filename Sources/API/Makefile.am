@@ -38,9 +38,6 @@ clanApp_includes = \
 clanNetwork_includes = \
 	network.h \
 	Network/api_network.h \
-	Network/IRC/dcc_download.h \
-	Network/IRC/irc_connection.h \
-	Network/IRC/irc_numerics.h \
 	Network/setupnetwork.h \
 	Network/Socket/dns_packet.h \
 	Network/Socket/dns_resolver.h \
@@ -169,10 +166,9 @@ clanCore_includes = \
 	Core/api_core.h \
 	Core/core_iostream.h \
 	Core/CSS/css_document.h \
-	Core/CSS/css_import.h \
 	Core/CSS/css_property.h \
-	Core/CSS/css_ruleset.h \
-	Core/CSS/css_selector.h \
+	Core/CSS/css_tokenizer.h \
+	Core/CSS/css_token.h \
 	Core/IOData/access_control_list.h \
 	Core/IOData/cl_endian.h \
 	Core/IOData/datatypes.h \
@@ -204,6 +200,7 @@ clanCore_includes = \
 	Core/Math/line.h \
 	Core/Math/line_ray.h \
 	Core/Math/line_segment.h \
+	Core/Math/quaternion.h \
 	Core/Math/vec1.h \
 	Core/Math/vec2.h \
 	Core/Math/vec3.h \
@@ -296,12 +293,15 @@ clanCore_includes = \
 	Core/Text/logger.h \
 	Core/Text/string_format.h \
 	Core/Text/string_help.h \
-	Core/Text/string_container.h \
-	Core/Text/temp_string_container.h \
-	Core/Text/string_data.h \
-	Core/Text/string_reference.h \
 	Core/Text/string_types.h \
 	Core/Text/string_allocator.h \
+	Core/Text/string16.h \
+	Core/Text/string8.h \
+	Core/Text/string_data16.h \
+	Core/Text/string_data8.h \
+	Core/Text/string_ref16.h \
+	Core/Text/string_ref8.h \
+	Core/Text/utf8_reader.h \
 	Core/XML/dom_attr.h \
 	Core/XML/dom_cdata_section.h \
 	Core/XML/dom_character_data.h \
@@ -366,11 +366,13 @@ clanDisplay_includes = \
 	Display/ImageProviders/provider_factory.h \
 	Display/ImageProviders/jpeg_compressor.h \
 	Display/Image/icon_set.h \
+	Display/Image/image_import_description.h \
 	Display/Image/pixel_format.h \
 	Display/Image/palette.h \
+	Display/Image/buffer_usage.h \
+	Display/Image/texture_format.h \
 	Display/Image/pixel_buffer.h \
 	Display/Image/pixel_buffer_help.h \
-	Display/Image/pixel_format_type.h \
 	Display/Font/font_system.h \
 	Display/Font/font_sprite.h \
 	Display/Font/font_freetype.h \
@@ -402,6 +404,7 @@ clanDisplay_includes = \
 	Display/TargetProviders/shader_object_provider.h \
 	Display/TargetProviders/render_buffer_provider.h \
 	Display/TargetProviders/element_array_buffer_provider.h \
+	Display/TargetProviders/pixel_buffer_provider.h \
 	Display/TargetProviders/frame_buffer_provider.h \
 	Display/TargetProviders/occlusion_query_provider.h \
 	Display/TargetProviders/input_device_provider.h \
@@ -420,8 +423,24 @@ clanDisplay_includes = \
 	Display/Window/display_window_description.h \
 	Display/Window/input_event.h \
 	Display/Window/input_state.h \
-	Display/Window/cursor.h \
-	Display/Window/display_window_mode.h
+	Display/Window/cursor.h
+
+clanCSSLayout_includes = \
+	csslayout.h \
+	CSSLayout/css_replaced_component.h \
+	CSSLayout/css_property2.h \
+	CSSLayout/api_csslayout.h \
+	CSSLayout/css_layout.h \
+	CSSLayout/css_property_list2.h \
+	CSSLayout/css_layout_object.h \
+	CSSLayout/dom_select_node.h \
+	CSSLayout/css_select_node2.h \
+	CSSLayout/css_layout_node.h \
+	CSSLayout/css_layout_user_data.h \
+	CSSLayout/css_hit_test_result.h \
+	CSSLayout/css_layout_element.h \
+	CSSLayout/css_document2.h \
+	CSSLayout/css_layout_text.h
 
 clanVorbis_includes = \
 	vorbis.h \
@@ -452,11 +471,18 @@ clanSqlite_includes = \
 	Sqlite/api_sqlite.h \
 	Sqlite/sqlite_connection.h
 
-clanGDI_includes = \
-	gdi.h \
-	GDI/api_gdi.h \
-	GDI/gdi_target.h \
-	GDI/setup_gdi.h
+clanSWRender_includes = \
+	swrender.h \
+	SWRender/pixel_command.h \
+	SWRender/blit_argb8_sse.h \
+	SWRender/swr_graphic_context.h \
+	SWRender/pixel_buffer_data.h \
+	SWRender/swr_target.h \
+	SWRender/setup_swrender.h \
+	SWRender/pixel_thread_context.h \
+	SWRender/software_program.h \
+	SWRender/swr_program_object.h \
+	SWRender/api_swrender.h
 
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
@@ -471,7 +497,7 @@ EXTRA_HEADERS = \
 	$(clanMikMod_includes) \
 	$(clanNetwork_includes) \
 	$(clanGUI_includes) \
-	$(clanGDI_includes) \
+	$(clanSWRender_includes) \
 	$(clanSound_includes) \
 	$(clanVorbis_includes) \
 	$(clanDatabase_includes) \

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -61,7 +61,7 @@ INT_PTR CALLBACK PageFinished::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, 
 				TEXT("produce the ClanLib solution and project files. \n")
 				TEXT("\n")
 				TEXT("When the installation process is completed, please open the ")
-				TEXT("ClanLib.sln / ClanLib.dsw file this wizard has produced for you. ")
+				TEXT("ClanLib.sln file this wizard has produced for you. ")
 				TEXT("It contains all the ClanLib libraries.\n")
 				TEXT("\n");
 			SendMessage(GetDlgItem(hWnd, IDC_FINISHED_TEXT), WM_SETTEXT, 0, (LPARAM) finished_text);

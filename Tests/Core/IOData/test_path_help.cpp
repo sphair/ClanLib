@@ -42,181 +42,181 @@ void TestApp::test_path_help(void)
 	CL_String str2;
 	CL_String str_dir(working_dir);
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = str_dir + cl_text("\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"); 
+	str2 = str_dir + "\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"; 
 #else
-	str2 = str_dir + cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str2 = str_dir + "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI\\"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI\\", "JKL/MNO\\PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = str_dir + cl_text("\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"); 
+	str2 = str_dir + "\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"; 
 #else
-	str2 = str_dir + cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str2 = str_dir + "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI/"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI/", "JKL/MNO\\PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = str_dir + cl_text("\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"); 
+	str2 = str_dir + "\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"; 
 #else
-	str2 = str_dir + cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str2 = str_dir + "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = str_dir + cl_text("\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"); 
+	str2 = str_dir + "\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"; 
 #else
-	str2 = str_dir + cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str2 = str_dir + "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("/ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_absolute("/ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
 	CL_String str_location(location_dir);
-	str2 = str_location + cl_text("\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"); 
+	str2 = str_location + "\\ABC\\DEF\\GHI\\JKL\\MNO\\PQR"; 
 #else
-	str2 =  cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str2 =  "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
 #ifdef WIN32
 	// Test not valid on WIn32
 #else
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("/JKL/MNO\\PQR"), CL_PathHelp::path_type_file);
-	str2 = cl_text("/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "/JKL/MNO\\PQR", CL_PathHelp::path_type_file);
+	str2 = "/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 #endif
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF/GHI/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI\\"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI\\", "JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF/GHI/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI/"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI/", "JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF/GHI/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF/GHI/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("/ABC/DEF\\GHI"), cl_text("JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 =  cl_text("/ABC/DEF/GHI/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("/ABC/DEF\\GHI", "JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 =  "/ABC/DEF/GHI/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_absolute(cl_text("ABC/DEF\\GHI"), cl_text("/JKL/MNO\\PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("/JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_absolute("ABC/DEF\\GHI", "/JKL/MNO\\PQR", CL_PathHelp::path_type_virtual);
+	str2 = "/JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
 //*** testing make_relative()
 
 	CL_Console::write_line("   Function: CL_String make_relative()");
 
-	str = CL_PathHelp::make_relative(cl_text("ABC/DEF\\GHI"), str_dir + cl_text("/ABC\\DEF/GHI\\JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("ABC/DEF\\GHI", str_dir + "/ABC\\DEF/GHI\\JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("JKL\\MNO\\PQR"); 
+	str2 = "JKL\\MNO\\PQR"; 
 #else
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str2 = "JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("ABC/DEF\\GHI\\"), str_dir + cl_text("/ABC/DEF/GHI\\JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("ABC/DEF\\GHI\\", str_dir + "/ABC/DEF/GHI\\JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("JKL\\MNO\\PQR"); 
+	str2 = "JKL\\MNO\\PQR"; 
 #else
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str2 = "JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("ABC/DEF\\GHI/"), str_dir + cl_text("/ABC/DEF\\GHI/JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("ABC/DEF\\GHI/", str_dir + "/ABC/DEF\\GHI/JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("JKL\\MNO\\PQR"); 
+	str2 = "JKL\\MNO\\PQR"; 
 #else
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str2 = "JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("ABC/DEF\\GHI"), str_dir + cl_text("/ABC/DEF\\GHI/JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("ABC/DEF\\GHI", str_dir + "/ABC/DEF\\GHI/JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("JKL\\MNO\\PQR"); 
+	str2 = "JKL\\MNO\\PQR"; 
 #else
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str2 = "JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("ABC/DEF\\GHI"), str_dir + cl_text("/ABC/DEF\\JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("ABC/DEF\\GHI", str_dir + "/ABC/DEF\\JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("../JKL\\MNO\\PQR"); 
+	str2 = "../JKL\\MNO\\PQR"; 
 #else
-	str2 = cl_text("../JKL/MNO/PQR"); 
+	str2 = "../JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI"), cl_text("/ABC/DEF\\GHI/JKL/MNO/PQR"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI", "/ABC/DEF\\GHI/JKL/MNO/PQR", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 =  cl_text("JKL\\MNO\\PQR"); 
+	str2 =  "JKL\\MNO\\PQR"; 
 #else
-	str2 =  cl_text("JKL/MNO/PQR"); 
+	str2 =  "JKL/MNO/PQR"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI\\"), cl_text("/ABC/DEF/GHI\\JKL/MNO/PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI\\", "/ABC/DEF/GHI\\JKL/MNO/PQR", CL_PathHelp::path_type_virtual);
+	str2 = "JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI/"), cl_text("/ABC/DEF/GHI\\JKL/MNO/PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI/", "/ABC/DEF/GHI\\JKL/MNO/PQR", CL_PathHelp::path_type_virtual);
+	str2 = "JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI"), cl_text("/ABC/DEF/GHI\\JKL/MNO/PQR"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI", "/ABC/DEF/GHI\\JKL/MNO/PQR", CL_PathHelp::path_type_virtual);
+	str2 = "JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI"), cl_text("/ABC/DEF\\GHI/JKL/MNO/PQR"), CL_PathHelp::path_type_virtual);
-	str2 =  cl_text("JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI", "/ABC/DEF\\GHI/JKL/MNO/PQR", CL_PathHelp::path_type_virtual);
+	str2 =  "JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::make_relative(cl_text("/ABC/DEF\\GHI"), cl_text("/ABC/DEF\\JKL/MNO/PQR"), CL_PathHelp::path_type_virtual);
-	str2 =  cl_text("../JKL/MNO/PQR"); 
+	str = CL_PathHelp::make_relative("/ABC/DEF\\GHI", "/ABC/DEF\\JKL/MNO/PQR", CL_PathHelp::path_type_virtual);
+	str2 =  "../JKL/MNO/PQR"; 
 	if (str != str2) fail();
 
 //*** testing is_absolute()
 
 	CL_Console::write_line("   Function: bool is_absolute()");
 #ifdef WIN32
-	bool result = CL_PathHelp::is_absolute(cl_text("c:/ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	bool result = CL_PathHelp::is_absolute("c:/ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
-	result = CL_PathHelp::is_absolute(cl_text("c:\\ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_absolute("c:\\ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
 #else
-	bool result = CL_PathHelp::is_absolute(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	bool result = CL_PathHelp::is_absolute("/ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
-	result = CL_PathHelp::is_absolute(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_absolute("\\ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
 #endif
-	result = CL_PathHelp::is_absolute(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_absolute("ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
-	result = CL_PathHelp::is_absolute(cl_text("./ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_absolute("./ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
-	result = CL_PathHelp::is_absolute(cl_text(""), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_absolute("", CL_PathHelp::path_type_file);
 	if (result) fail();
 
-	result = CL_PathHelp::is_absolute(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_absolute("/ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (!result) fail();
-	result = CL_PathHelp::is_absolute(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_absolute("\\ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (result) fail();	// (As '\' is not allowed)
-	result = CL_PathHelp::is_absolute(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_absolute("ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (result) fail();
-	result = CL_PathHelp::is_absolute(cl_text("./ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_absolute("./ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (result) fail();
-	result = CL_PathHelp::is_absolute(cl_text(""), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_absolute("", CL_PathHelp::path_type_virtual);
 	if (result) fail();
 
 //*** testing is_relative()
@@ -224,381 +224,381 @@ void TestApp::test_path_help(void)
 	CL_Console::write_line("   Function: bool is_relative()");
 
 #ifdef WIN32
-	result = CL_PathHelp::is_relative(cl_text("C:/ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("C:/ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
-	result = CL_PathHelp::is_relative(cl_text("c:\\ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("c:\\ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
 #else
-	result = CL_PathHelp::is_relative(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("/ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
-	result = CL_PathHelp::is_relative(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("\\ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (result) fail();
 #endif
-	result = CL_PathHelp::is_relative(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
-	result = CL_PathHelp::is_relative(cl_text("./ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("./ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 	if (!result) fail();
-	result = CL_PathHelp::is_relative(cl_text(""), CL_PathHelp::path_type_file);
+	result = CL_PathHelp::is_relative("", CL_PathHelp::path_type_file);
 	if (!result) fail();
 
-	result = CL_PathHelp::is_relative(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_relative("/ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (result) fail();
-	result = CL_PathHelp::is_relative(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_relative("\\ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (!result) fail();	// (As '\' is not allowed)
-	result = CL_PathHelp::is_relative(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_relative("ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (!result) fail();
-	result = CL_PathHelp::is_relative(cl_text("./ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_relative("./ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
 	if (!result) fail();
-	result = CL_PathHelp::is_relative(cl_text(""), CL_PathHelp::path_type_virtual);
+	result = CL_PathHelp::is_relative("", CL_PathHelp::path_type_virtual);
 	if (!result) fail();
 
 //*** testing normalize()
 
 	CL_Console::write_line("   Function: CL_String normalize()");
 
-	str = CL_PathHelp::normalize(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::normalize("ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\DEF\\GHI"); 
+	str2 = "ABC\\DEF\\GHI"; 
 #else
-	str2 = cl_text("ABC/DEF/GHI"); 
+	str2 = "ABC/DEF/GHI"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::normalize("/ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("\\ABC\\DEF\\GHI"); 
+	str2 = "\\ABC\\DEF\\GHI"; 
 #else
-	str2 = cl_text("/ABC/DEF/GHI"); 
+	str2 = "/ABC/DEF/GHI"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::normalize("\\ABC/DEF\\GHI", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("\\ABC\\DEF\\GHI"); 
+	str2 = "\\ABC\\DEF\\GHI"; 
 #else
-	str2 = cl_text("/ABC/DEF/GHI"); 
+	str2 = "/ABC/DEF/GHI"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("././ABC/DEF\\GHI/..\\../JKL"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::normalize("././ABC/DEF\\GHI/..\\../JKL", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\JKL"); 
+	str2 = "ABC\\JKL"; 
 #else
-	str2 = cl_text("ABC/JKL"); 
+	str2 = "ABC/JKL"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF/GHI"); 
+	str = CL_PathHelp::normalize("ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF/GHI"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("/ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("/ABC/DEF/GHI"); 
+	str = CL_PathHelp::normalize("/ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
+	str2 = "/ABC/DEF/GHI"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("\\ABC/DEF\\GHI"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("/ABC/DEF/GHI"); 
+	str = CL_PathHelp::normalize("\\ABC/DEF\\GHI", CL_PathHelp::path_type_virtual);
+	str2 = "/ABC/DEF/GHI"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::normalize(cl_text("././ABC/DEF\\GHI/..\\../JKL"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/JKL"); 
+	str = CL_PathHelp::normalize("././ABC/DEF\\GHI/..\\../JKL", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/JKL"; 
 	if (str != str2) fail();
 
 //*** testing add_trailing_slash()
 	CL_Console::write_line("   Function: CL_String add_trailing_slash()");
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::add_trailing_slash("ABC", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\"); 
+	str2 = "ABC\\"; 
 #else
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC/"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::add_trailing_slash("ABC/", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #else
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC\\"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::add_trailing_slash("ABC\\", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\"); 
+	str2 = "ABC\\"; 
 #else
-	str2 = cl_text("ABC\\"); 
+	str2 = "ABC\\"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/"); 
+	str = CL_PathHelp::add_trailing_slash("ABC", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC/"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/"); 
+	str = CL_PathHelp::add_trailing_slash("ABC/", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::add_trailing_slash(cl_text("ABC\\"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC\\/"); 
+	str = CL_PathHelp::add_trailing_slash("ABC\\", CL_PathHelp::path_type_virtual);
+	str2 = "ABC\\/"; 
 	if (str != str2) fail();
 
 //*** testing remove_trailing_slash()
 	CL_Console::write_line("   Function: CL_String remove_trailing_slash()");
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::remove_trailing_slash("ABC");
 #ifdef WIN32
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #else
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC/"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::remove_trailing_slash("ABC/");
 #ifdef WIN32
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #else
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC\\"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::remove_trailing_slash("ABC\\");
 #ifdef WIN32
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #else
-	str2 = cl_text("ABC"); 
+	str2 = "ABC"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC"); 
+	str = CL_PathHelp::remove_trailing_slash("ABC");
+	str2 = "ABC"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC/"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC"); 
+	str = CL_PathHelp::remove_trailing_slash("ABC/");
+	str2 = "ABC"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::remove_trailing_slash(cl_text("ABC\\"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC"); 
+	str = CL_PathHelp::remove_trailing_slash("ABC\\");
+	str2 = "ABC"; 
 	if (str != str2) fail();
 
 //*** testing get_location()
 	CL_Console::write_line("   Function: CL_String get_location()");
 
-	str = CL_PathHelp::get_location(cl_text("ABC"), CL_PathHelp::path_type_file);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_location("ABC", CL_PathHelp::path_type_file);
+	str2 = ""; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_location(cl_text("ABC"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_location("ABC", CL_PathHelp::path_type_virtual);
+	str2 = ""; 
 	if (str != str2) fail();
 
 //*** testing get_basepath()
 	CL_Console::write_line("   Function: CL_String get_basepath()");
 
-	str = CL_PathHelp::get_basepath(cl_text("ABC"), CL_PathHelp::path_type_file);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_basepath("ABC", CL_PathHelp::path_type_file);
+	str2 = ""; 
 	if (str != str2) fail();
 
 #ifdef WIN32	// WIN32 only tests
-	str = CL_PathHelp::get_basepath(cl_text("c:\\ABC\\DEF"), CL_PathHelp::path_type_file);
-	str2 = cl_text("\\ABC\\"); 
+	str = CL_PathHelp::get_basepath("c:\\ABC\\DEF", CL_PathHelp::path_type_file);
+	str2 = "\\ABC\\"; 
 	if (str != str2) fail();
-	str = CL_PathHelp::get_basepath(cl_text("\\\\ABC\\DEF\\GHI"), CL_PathHelp::path_type_file);
-	str2 = cl_text("\\DEF\\"); 
+	str = CL_PathHelp::get_basepath("\\\\ABC\\DEF\\GHI", CL_PathHelp::path_type_file);
+	str2 = "\\DEF\\"; 
 	if (str != str2) fail();
 
 #endif
 
-	str = CL_PathHelp::get_basepath(cl_text("ABC/DEF"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_basepath("ABC/DEF", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #else
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basepath(cl_text("/ABC\\DEF"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_basepath("/ABC\\DEF", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("/ABC\\"); 
+	str2 = "/ABC\\"; 
 #else
-	str2 = cl_text("/ABC\\"); 
+	str2 = "/ABC\\"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basepath(cl_text("ABC"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_basepath("ABC", CL_PathHelp::path_type_virtual);
+	str2 = ""; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basepath(cl_text("ABC/DEF"), CL_PathHelp::path_type_virtual);
+	str = CL_PathHelp::get_basepath("ABC/DEF", CL_PathHelp::path_type_virtual);
 #ifdef WIN32
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #else
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basepath(cl_text("/ABC\\DEF"), CL_PathHelp::path_type_virtual);
+	str = CL_PathHelp::get_basepath("/ABC\\DEF", CL_PathHelp::path_type_virtual);
 #ifdef WIN32
-	str2 = cl_text("/"); 
+	str2 = "/"; 
 #else
-	str2 = cl_text("/"); 
+	str2 = "/"; 
 #endif
 	if (str != str2) fail();
 
 //*** testing  split_basepath()
 	CL_Console::write_line("   Function: std::vector<CL_String> split_basepath()");
 
-	std::vector<CL_String> vstr = CL_PathHelp::split_basepath(cl_text("ABC/DEF\\GHI/JKL"), CL_PathHelp::path_type_file);
+	std::vector<CL_String> vstr = CL_PathHelp::split_basepath("ABC/DEF\\GHI/JKL", CL_PathHelp::path_type_file);
 	if (vstr.size() != 3) fail();
-	if (vstr[0] != cl_text("ABC")) fail();
-	if (vstr[1] != cl_text("DEF")) fail();
-	if (vstr[2] != cl_text("GHI")) fail();
+	if (vstr[0] != "ABC") fail();
+	if (vstr[1] != "DEF") fail();
+	if (vstr[2] != "GHI") fail();
 
-	vstr = CL_PathHelp::split_basepath(cl_text("ABC/DEF\\GHI/JKL"), CL_PathHelp::path_type_virtual);
+	vstr = CL_PathHelp::split_basepath("ABC/DEF\\GHI/JKL", CL_PathHelp::path_type_virtual);
 	if (vstr.size() != 2) fail();
-	if (vstr[0] != cl_text("ABC")) fail();
-	if (vstr[1] != cl_text("DEF\\GHI")) fail();
+	if (vstr[0] != "ABC") fail();
+	if (vstr[1] != "DEF\\GHI") fail();
 
 //*** testing get_fullpath()
 	CL_Console::write_line("   Function: CL_String get_fullpath()");
 
-	str = CL_PathHelp::get_fullpath(cl_text("ABC"), CL_PathHelp::path_type_file);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_fullpath("ABC", CL_PathHelp::path_type_file);
+	str2 = ""; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullpath(cl_text("ABC/DEF"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_fullpath("ABC/DEF", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #else
-	str2 = cl_text("ABC/"); 
+	str2 = "ABC/"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullpath(cl_text("/ABC\\DEF"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_fullpath("/ABC\\DEF", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("/ABC\\"); 
+	str2 = "/ABC\\"; 
 #else
-	str2 = cl_text("/ABC\\"); 
+	str2 = "/ABC\\"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullpath(cl_text("ABC"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_fullpath("ABC", CL_PathHelp::path_type_virtual);
+	str2 = ""; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullpath(cl_text("ABC/DEF"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/"); 
+	str = CL_PathHelp::get_fullpath("ABC/DEF", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullpath(cl_text("/ABC\\DEF"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("/"); 
+	str = CL_PathHelp::get_fullpath("/ABC\\DEF", CL_PathHelp::path_type_virtual);
+	str2 = "/"; 
 	if (str != str2) fail();
 
 //*** testing get_filename()
 	CL_Console::write_line("   Function: CL_String get_filename()");
 
-	str = CL_PathHelp::get_filename(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_file);
-	str2 = cl_text("HIJ.KLM"); 
+	str = CL_PathHelp::get_filename("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_file);
+	str2 = "HIJ.KLM"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_filename(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("DEF\\HIJ.KLM"); 
+	str = CL_PathHelp::get_filename("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_virtual);
+	str2 = "DEF\\HIJ.KLM"; 
 	if (str != str2) fail();
 
 //*** testing get_basename()
 	CL_Console::write_line("   Function: CL_String get_basename()");
 
-	str = CL_PathHelp::get_basename(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_file);
-	str2 = cl_text("HIJ"); 
+	str = CL_PathHelp::get_basename("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_file);
+	str2 = "HIJ"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basename(cl_text("ABC/DEF\\.KLM"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_basename("ABC/DEF\\.KLM", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text(""); 
+	str2 = ""; 
 #else
-	str2 = cl_text(".KLM"); 
+	str2 = ".KLM"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basename(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("DEF\\HIJ"); 
+	str = CL_PathHelp::get_basename("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_virtual);
+	str2 = "DEF\\HIJ"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_basename(cl_text("ABC/.DEF\\X"), CL_PathHelp::path_type_virtual);
+	str = CL_PathHelp::get_basename("ABC/.DEF\\X", CL_PathHelp::path_type_virtual);
 #ifdef WIN32
-	str2 = cl_text(".DEF\\X"); 
+	str2 = ".DEF\\X"; 
 #else
-	str2 = cl_text(".DEF\\X"); 
+	str2 = ".DEF\\X"; 
 #endif
 	if (str != str2) fail();
 
 //*** testing get_extension()
 	CL_Console::write_line("   Function: CL_String get_extension()");
 
-	str = CL_PathHelp::get_extension(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_file);
-	str2 = cl_text("KLM"); 
+	str = CL_PathHelp::get_extension("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_file);
+	str2 = "KLM"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_extension(cl_text("ABC/DEF\\.KLM"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_extension("ABC/DEF\\.KLM", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("KLM"); 
+	str2 = "KLM"; 
 #else
-	str2 = cl_text(""); 
+	str2 = ""; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_extension(cl_text("ABC/DEF\\HIJ.KLM"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("KLM"); 
+	str = CL_PathHelp::get_extension("ABC/DEF\\HIJ.KLM", CL_PathHelp::path_type_virtual);
+	str2 = "KLM"; 
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_extension(cl_text("ABC/.DEF\\X"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text(""); 
+	str = CL_PathHelp::get_extension("ABC/.DEF\\X", CL_PathHelp::path_type_virtual);
+	str2 = ""; 
 	if (str != str2) fail();
 
 //*** testing get_fullname(#1)
 	CL_Console::write_line("   Function: CL_String get_fullname(#1)");
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_fullname("ABC", "DEF", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\DEF"); 
+	str2 = "ABC\\DEF"; 
 #else
-	str2 = cl_text("ABC/DEF"); 
+	str2 = "ABC/DEF"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF"); 
+	str = CL_PathHelp::get_fullname("ABC", "DEF", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF"; 
 	if (str != str2) fail();
 
 //*** testing get_fullname(#2)
 	CL_Console::write_line("   Function: CL_String get_fullname(#2)");
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), cl_text("GHI"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_fullname("ABC", "DEF", "GHI", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABC\\DEF.GHI"); 
+	str2 = "ABC\\DEF.GHI"; 
 #else
-	str2 = cl_text("ABC/DEF.GHI"); 
+	str2 = "ABC/DEF.GHI"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), cl_text("GHI"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABC/DEF.GHI"); 
+	str = CL_PathHelp::get_fullname("ABC", "DEF", "GHI", CL_PathHelp::path_type_virtual);
+	str2 = "ABC/DEF.GHI"; 
 	if (str != str2) fail();
 
 //*** testing get_fullname(#3)
 	CL_Console::write_line("   Function: CL_String get_fullname(#3)");
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), cl_text("GHI"), cl_text("JKL"), CL_PathHelp::path_type_file);
+	str = CL_PathHelp::get_fullname("ABC", "DEF", "GHI", "JKL", CL_PathHelp::path_type_file);
 #ifdef WIN32
-	str2 = cl_text("ABCDEF\\GHI.JKL"); 
+	str2 = "ABCDEF\\GHI.JKL"; 
 #else
-	str2 = cl_text("ABCDEF/GHI.JKL"); 
+	str2 = "ABCDEF/GHI.JKL"; 
 #endif
 	if (str != str2) fail();
 
-	str = CL_PathHelp::get_fullname(cl_text("ABC"), cl_text("DEF"), cl_text("GHI"), cl_text("JKL"), CL_PathHelp::path_type_virtual);
-	str2 = cl_text("ABCDEF/GHI.JKL"); 
+	str = CL_PathHelp::get_fullname("ABC", "DEF", "GHI", "JKL", CL_PathHelp::path_type_virtual);
+	str2 = "ABCDEF/GHI.JKL"; 
 	if (str != str2) fail();
 
 }

@@ -38,6 +38,7 @@
 #endif
 
 #include "API/Core/Text/string_types.h"
+#include "API/Core/IOData/datatypes.h"
 #include "API/Core/System/exception.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)

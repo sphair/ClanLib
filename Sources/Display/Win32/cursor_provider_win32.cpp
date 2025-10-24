@@ -61,7 +61,7 @@ CL_CursorProvider_Win32::~CL_CursorProvider_Win32()
 HCURSOR CL_CursorProvider_Win32::create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot)
 {
 	if (sprite_description.get_frames().empty())
-		throw CL_Exception(cl_text("Cannot create cursor with no image frames"));
+		throw CL_Exception("Cannot create cursor with no image frames");
 	CL_DataBuffer ani_file = create_ani_file(sprite_description, hotspot);
 	int desired_width = sprite_description.get_frames().front().rect.get_width();
 	int desired_height = sprite_description.get_frames().front().rect.get_height();
@@ -69,26 +69,28 @@ HCURSOR CL_CursorProvider_Win32::create_cursor(const CL_SpriteDescription &sprit
 	return (HCURSOR) icon;
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ico_file(const CL_PixelBufferRef &image)
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_file(const CL_PixelBuffer &image)
 {
-	return create_ico_helper(image, 1, CL_Point(0, 0));
+	return create_ico_helper(image, CL_Rectf(image.get_size()), 1, CL_Point(0, 0));
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot)
+CL_DataBuffer CL_CursorProvider_Win32::create_cur_file(const CL_PixelBuffer &image, const CL_Rect &rect, const CL_Point &hotspot)
 {
-	return create_ico_helper(image, 2, hotspot);
+	return create_ico_helper(image, rect, 2, hotspot);
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot)
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const CL_PixelBuffer &image, const CL_Rect &rect, WORD type, const CL_Point &hotspot)
 {
-	std::vector<CL_PixelBufferRef> images;
+	std::vector<CL_PixelBuffer> images;
+	std::vector<CL_Rect> rects;
 	std::vector<CL_Point> hotspots;
 	images.push_back(image);
+	rects.push_back(rect);
 	hotspots.push_back(hotspot);
-	return create_ico_helper(images, type, hotspots);
+	return create_ico_helper(images, rects, type, hotspots);
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_PixelBufferRef> &images, WORD type, const std::vector<CL_Point> &hotspots)
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_PixelBuffer> &images, const std::vector<CL_Rect> &rects, WORD type, const std::vector<CL_Point> &hotspots)
 {
 	CL_DataBuffer buf;
 	buf.set_capacity(32*1024);
@@ -102,7 +104,7 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_Pi
 
 	std::vector<CL_PixelBuffer> bmp_images;
 	for (size_t i = 0; i < images.size(); i++)
-		bmp_images.push_back(CL_Win32Window::create_bitmap_data(images[i]));
+		bmp_images.push_back(CL_Win32Window::create_bitmap_data(images[i], rects[i]));
 
 	for (size_t i = 0; i < bmp_images.size(); i++)
 	{
@@ -120,6 +122,7 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_Pi
 			entry.XHotspot = hotspots[i].x;
 			entry.YHotspot = hotspots[i].y;
 		}
+		device.write(&entry, sizeof(IconDirectoryEntry));
 	}
 
 	for (size_t i = 0; i < bmp_images.size(); i++)
@@ -128,10 +131,11 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_Pi
 		memset(&bmp_header, 0, sizeof(BITMAPINFOHEADER));
 		bmp_header.biSize = sizeof(BITMAPINFOHEADER);
 		bmp_header.biWidth = bmp_images[i].get_width();
-		bmp_header.biHeight = -bmp_images[i].get_height() * 2; // why on earth do I have to multiply this by two??
+		bmp_header.biHeight = bmp_images[i].get_height()*2; // why on earth do I have to multiply this by two??
 		bmp_header.biPlanes = 1;
 		bmp_header.biBitCount = 32;
 		bmp_header.biCompression = BI_RGB;
+		bmp_header.biSizeImage = bmp_images[i].get_pitch() * bmp_images[i].get_height();
 		device.write(&bmp_header, sizeof(BITMAPINFOHEADER));
 		device.write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
 	}
@@ -166,9 +170,9 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ani_file(const CL_SpriteDescriptio
 	for (std::vector<CL_SpriteDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 	{
 		if (frames[i].type != CL_SpriteDescriptionFrame::type_pixelbuffer)
-			throw CL_Exception(cl_text("Only pixel buffer sprite frames currently supported for cursors"));
+			throw CL_Exception("Only pixel buffer sprite frames currently supported for cursors");
 
-		CL_DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer.get_subimage(frames[i].rect), hotspot);
+		CL_DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, hotspot);
 		ani_frames.icons.push_back(ico_file);
 		DWORD rate = static_cast<DWORD>(frames[i].delay * 60);
 		if (rate == 0)
@@ -182,6 +186,8 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ani_file(const CL_SpriteDescriptio
 	ani_header.cbSizeOf = sizeof(ANIHeader);
 	ani_header.flags = AF_ICON;
 	ani_header.JifRate = 30;
+	ani_header.cBitCount = 32;
+	ani_header.cPlanes = 1;
 	ani_header.cFrames = ani_frames.icons.size();
 	ani_header.cSteps = steps.size();
 	ani_header.cx = hotspot.x;

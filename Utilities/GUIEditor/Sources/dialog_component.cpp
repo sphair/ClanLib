@@ -41,7 +41,7 @@ DialogComponent::DialogComponent(DialogContainer *container, CL_DomElement eleme
 		{
 			CL_DomElement element_container = cur.to_element();
 			CL_DomNamedNodeMap attributes = element.get_attributes();
-			if (element_container.get_namespace_uri() == DialogDocument::namespace_uri && element_container.get_local_name() == cl_text("container"))
+			if (element_container.get_namespace_uri() == DialogDocument::namespace_uri && element_container.get_local_name() == "container")
 			{
 				containers.push_back(new DialogContainer(get_document(), element_container));
 			}
@@ -57,7 +57,7 @@ CL_StringRef DialogComponent::get_type() const
 
 CL_StringRef DialogComponent::get_name() const
 {
-	return element.get_attribute_ns(DialogDocument::namespace_uri, cl_text("name"));
+	return element.get_attribute_ns(DialogDocument::namespace_uri, "name");
 }
 
 std::vector<DialogProperty> DialogComponent::get_properties() const
@@ -90,17 +90,17 @@ CL_StringRef DialogComponent::get_property(const CL_StringRef &name, const CL_St
 
 void DialogComponent::set_property(const CL_StringRef &name, const CL_StringRef &value)
 {
-	CL_TempString prefix = element.get_prefix();
+	CL_String prefix = element.get_prefix();
 	if (!prefix.empty())
-		prefix.append(cl_text(":"));
+		prefix.append(":");
 	element.set_attribute_ns(DialogDocument::namespace_uri, prefix + name, value);
 }
 
 DialogContainer *DialogComponent::create_container()
 {
-	CL_TempString prefix = element.get_prefix();
+	CL_String prefix = element.get_prefix();
 	if (!prefix.empty())
-		prefix.append(cl_text(":"));
+		prefix.append(":");
 	CL_DomElement element_container = element.get_owner_document().create_element_ns(DialogDocument::namespace_uri, prefix + "container");
 	element.append_child(element_container);
 	DialogContainer *container = new DialogContainer(get_document(), element_container);

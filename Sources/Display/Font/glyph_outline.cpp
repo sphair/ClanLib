@@ -238,7 +238,7 @@ void CL_GlyphOutline::generate_contour_prim_array()
 		}
 
 		if (index == 0)
-			throw CL_Exception(cl_text("A glyph outline contour does not contain any points"));
+			throw CL_Exception("A glyph outline contour does not contain any points");
 
 		prim_array_outline->vertex[subarray_index][index] = CL_Vec2f(points.front().x, -points.front().y);
 	}

@@ -57,11 +57,6 @@ CL_SoundFilter::CL_SoundFilter(CL_SoundFilterProvider *provider)
 	impl->provider = provider;
 }
 
-CL_SoundFilter::CL_SoundFilter(const CL_SoundFilter &copy)
-{
-	impl = copy.impl;
-}
-
 CL_SoundFilter::~CL_SoundFilter()
 {
 }
@@ -69,9 +64,10 @@ CL_SoundFilter::~CL_SoundFilter()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundFilter operations:
 
-bool CL_SoundFilter::is_null()
+void CL_SoundFilter::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_SoundFilter is null");
 }
 
 CL_SoundFilterProvider *CL_SoundFilter::get_provider() const

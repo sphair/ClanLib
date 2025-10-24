@@ -53,7 +53,7 @@ public:
 
 	/// \brief Constructs a DomCharacterData
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomCharacterData(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomCharacterData();

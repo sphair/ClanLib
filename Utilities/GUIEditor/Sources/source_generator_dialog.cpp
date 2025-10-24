@@ -37,7 +37,7 @@ SourceGeneratorDialog::SourceGeneratorDialog(CL_GUIManager *gui_manager)
 {
 	set_layout(layout);
 
-	create_components(cl_text("Dialogs/source_generator.xml"));
+	create_components("Dialogs/source_generator.xml");
 
 	btn_generate = dynamic_cast<CL_PushButton*>(get_named_item("button_generate"));
 	btn_browse_h = dynamic_cast<CL_PushButton*>(get_named_item("button_browse_h"));
@@ -64,7 +64,7 @@ SourceGeneratorDialog::SourceGeneratorDialog(CL_GUIManager *gui_manager)
 CL_GUITopLevelDescription SourceGeneratorDialog::get_startup_description()
 {
 	CL_GUITopLevelDescription desc;
-	desc.set_title(cl_text("ClanLib GUI Editor"));
+	desc.set_title("ClanLib GUI Editor");
 	desc.set_allow_resize(true);
 	desc.set_position(CL_RectPS(400, 400, 104, 208), false);
 	return desc;
@@ -72,13 +72,13 @@ CL_GUITopLevelDescription SourceGeneratorDialog::get_startup_description()
 
 void SourceGeneratorDialog::on_btn_browse_cpp()
 {
-//	CL_TempString filename = show_open_file_dialog();
+//	CL_String filename = show_open_file_dialog();
 //	combo_cpp_filename->set_text(filename);
 }
 
 void SourceGeneratorDialog::on_btn_browse_h()
 {
-//	CL_TempString filename = show_open_file_dialog();
+//	CL_String filename = show_open_file_dialog();
 //	combo_h_filename->set_text(filename);
 }
 

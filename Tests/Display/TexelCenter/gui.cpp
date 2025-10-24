@@ -79,9 +79,9 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	display_framebuffer.attach_color_buffer(0, display_image);
 
 	font_texture_group = CL_TextureGroup(gc, CL_Size(512, 512));
-	font = CL_Font_System(gc, cl_text("Tahoma"), 32);
+	font = CL_Font_System(gc, "Tahoma", 32);
 	font.set_texture_group(font_texture_group);
-	font_small = CL_Font_System(gc, cl_text("Tahoma"), 16);
+	font_small = CL_Font_System(gc, "Tahoma", 16);
 	font_small.set_texture_group(font_texture_group);
 
 	CL_FontDescription font_desc;
@@ -128,7 +128,6 @@ bool GUI::run()
 	write_display_image();
 
 	display_modelview_matrix("ModelView Matrix", 50.0f, 400.0f, last_modelview_matrix);
-	display_modelview_matrix("ModelView OpenGL", 50.0f, 550.0f, last_modelview_opengl);
 
 	show_display_image();
 
@@ -176,11 +175,7 @@ void GUI::write_display_image()
 	gc.mult_rotate(angle);
 	gc.mult_translate(-center.x, -center.y);
 
-	// Force ClanGL to write the model view matrix
-	CL_PixelBuffer pb(1, 1, 4, CL_PixelFormat::rgba8888);
-	gc.draw_pixels(-10.0f, -10.0f, pb);
-
-	clGetFloatv(CL_MODELVIEW_MATRIX, last_modelview_opengl.matrix);
+	gc.flush_batcher();
 	last_modelview_matrix = gc.get_modelview();
 
 	if (panel->is_image())

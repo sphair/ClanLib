@@ -60,7 +60,23 @@ enum CL_VertexAttributeDataType
 	cl_type_float
 };
 
+/// \brief Standard Attribute Index
+///
+/// These can be used within CL_Primitives array when you are using CL_StandardProgram.
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
+enum CL_StandardAttributeIndex
+{
+	cl_attrib_position = 0,
+	cl_attrib_color = 1,
+	cl_attrib_texture_position = 2,
+	cl_attrib_texture_index = 3,
+	cl_attrib_normal = 4	// The normal vector (Currently only used by the GL1 target)
+};
+
 /// \brief Primitives array description.
+///
+/// See "CL_StandardAttributeIndex" for the index values if using CL_StandardProgram with CL_PrimitivesArray
 ///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_PrimitivesArray
@@ -68,6 +84,7 @@ class CL_PrimitivesArray
 /// \name Construction
 /// \{
 public:
+	/// \brief Construct a null instance
 	CL_PrimitivesArray();
 
 	/// \brief Constructs a PrimitivesArray
@@ -81,8 +98,12 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the primitives array was created without specifying a graphic context.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 
 /// \}
 /// \name Operations
@@ -283,154 +304,154 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1ub
+	/// \param values = Vec1ub
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1ub * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1b
+	/// \param values = Vec1b
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1b * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1us
+	/// \param values = Vec1us
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1us * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1s
+	/// \param values = Vec1s
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1s * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1ui
+	/// \param values = Vec1ui
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1ui * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1i
+	/// \param values = Vec1i
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1i * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec1f
+	/// \param values = Vec1f
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec1f * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2ub
+	/// \param values = Vec2ub
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2ub * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2b
+	/// \param values = Vec2b
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2b * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2us
+	/// \param values = Vec2us
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2us * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2s
+	/// \param values = Vec2s
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2s * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2ui
+	/// \param values = Vec2ui
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2ui * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2i
+	/// \param values = Vec2i
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2i * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec2f
+	/// \param values = Vec2f
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec2f * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3ub
+	/// \param values = Vec3ub
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3ub * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3b
+	/// \param values = Vec3b
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3b * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3us
+	/// \param values = Vec3us
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3us * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3s
+	/// \param values = Vec3s
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3s * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3ui
+	/// \param values = Vec3ui
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3ui * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3i
+	/// \param values = Vec3i
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3i * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec3f
+	/// \param values = Vec3f
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec3f * const values, int stride = 0);
 
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4ub
+	/// \param values = Vec4ub
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4ub * const values, int stride = 0, bool normalize = false);
@@ -438,7 +459,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4b
+	/// \param values = Vec4b
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4b * const values, int stride = 0, bool normalize = false);
@@ -446,7 +467,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4us
+	/// \param values = Vec4us
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4us * const values, int stride = 0, bool normalize = false);
@@ -454,7 +475,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4s
+	/// \param values = Vec4s
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4s * const values, int stride = 0, bool normalize = false);
@@ -462,7 +483,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4ui
+	/// \param values = Vec4ui
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4ui * const values, int stride = 0, bool normalize = false);
@@ -470,7 +491,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4i
+	/// \param values = Vec4i
 	/// \param stride = value
 	/// \param normalize = bool
 	void set_attributes(int index, const CL_Vec4i * const values, int stride = 0, bool normalize = false);
@@ -478,7 +499,7 @@ public:
 	/// \brief Set attributes
 	///
 	/// \param index = value
-	/// \param const = Vec4f
+	/// \param values = Vec4f
 	/// \param stride = value
 	void set_attributes(int index, const CL_Vec4f * const values, int stride = 0);
 

@@ -56,15 +56,15 @@ CL_ListViewRenderer::CL_ListViewRenderer(CL_ListView *listview)
 : listview(listview), display_mode(listview_mode_details),
   scroll_x(0), scroll_y(0), height_row(0)
 {
-	prop_icon_color = CL_GUIThemePartProperty(CssStr::icon_color, cl_text("white"));
-	prop_icon_color_selected = CL_GUIThemePartProperty(CssStr::icon_color_selected, cl_text("white"));
-	prop_icon_color_overlay = CL_GUIThemePartProperty(CssStr::icon_color_overlay, cl_text("white"));
-	prop_icon_color_selected_overlay = CL_GUIThemePartProperty(CssStr::icon_color_selected_overlay, cl_text("white"));
+	prop_icon_color = CL_GUIThemePartProperty(CssStr::icon_color, "white");
+	prop_icon_color_selected = CL_GUIThemePartProperty(CssStr::icon_color_selected, "white");
+	prop_icon_color_overlay = CL_GUIThemePartProperty(CssStr::icon_color_overlay, "white");
+	prop_icon_color_selected_overlay = CL_GUIThemePartProperty(CssStr::icon_color_selected_overlay, "white");
 
-	prop_selection_margin_left = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_left, cl_text("3"));
-	prop_selection_margin_right = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_right, cl_text("3"));
-	prop_selection_margin_top = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_top, cl_text("3"));
-	prop_selection_margin_bottom = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_bottom, cl_text("3"));
+	prop_selection_margin_left = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_left, "3");
+	prop_selection_margin_right = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_right, "3");
+	prop_selection_margin_top = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_top, "3");
+	prop_selection_margin_bottom = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_bottom, "3");
 }
 
 CL_ListViewRenderer::~CL_ListViewRenderer()
@@ -224,16 +224,16 @@ void CL_ListViewRenderer::create_parts()
 {
 	CL_GUIThemePart part_component(listview); // just for font.
 
-	part_row = CL_GUIThemePart(listview, cl_text("row"));
-	part_row_alternate = CL_GUIThemePart(listview, cl_text("row"));
-	part_opener_open = CL_GUIThemePart(listview, cl_text("row_opener"));
-	part_opener_closed = CL_GUIThemePart(listview, cl_text("row_opener"));
-	part_selection = CL_GUIThemePart(listview, cl_text("selection"));
-	part_columns_bg = CL_GUIThemePart(listview, cl_text("columns_bg"));
-	part_column = CL_GUIThemePart(listview, cl_text("column"));
-	part_cell = CL_GUIThemePart(listview, cl_text("cell"));
+	part_row = CL_GUIThemePart(listview, "row");
+	part_row_alternate = CL_GUIThemePart(listview, "row");
+	part_opener_open = CL_GUIThemePart(listview, "row_opener");
+	part_opener_closed = CL_GUIThemePart(listview, "row_opener");
+	part_selection = CL_GUIThemePart(listview, "selection");
+	part_columns_bg = CL_GUIThemePart(listview, "columns_bg");
+	part_column = CL_GUIThemePart(listview, "column");
+	part_cell = CL_GUIThemePart(listview, "cell");
 
-	part_icon_selection = CL_GUIThemePart(listview, cl_text("icon_selection"));
+	part_icon_selection = CL_GUIThemePart(listview, "icon_selection");
 
 	selection_margin.left = part_selection.get_property_int(prop_selection_margin_left);
 	selection_margin.right = part_selection.get_property_int(prop_selection_margin_right);

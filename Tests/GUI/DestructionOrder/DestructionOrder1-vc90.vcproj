@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="DestructionOrder1"
-	ProjectGUID="{39894959-F657-4A12-B5EA-166F1DFBD7EE}"
+	ProjectGUID="{BD0D7D76-D4C7-4FD4-9278-2B1F780841A0}"
 	RootNamespace="DestructionOrder1"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"

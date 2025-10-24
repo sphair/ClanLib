@@ -65,6 +65,7 @@ public:
 		create_volatile  = 2
 	};
 
+	// Construct a null instance
 	CL_RegistryKey();
 
 	CL_RegistryKey(PredefinedKey key, const CL_StringRef &subkey, unsigned int access_rights = KEY_ALL_ACCESS, unsigned int create_flags = create_always);
@@ -79,6 +80,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	HKEY get_key() const;
 
 	std::vector<CL_String> get_subkey_names() const;

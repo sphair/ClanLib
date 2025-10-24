@@ -52,6 +52,7 @@
 #include "API/GL1/texture_unit.h"
 #include "API/GL1/opengl1.h"
 #include "API/GL1/opengl1_wrap.h"
+#include "API/Display/2D/image.h"
 
 #ifdef WIN32
 #include "WGL/gl1_window_provider_wgl.h"
@@ -61,7 +62,8 @@
 #endif
 #include "pbuffer.h"
 
-#include "../Display/2D/sprite_render_batch.h"
+#include "../Display/2D/render_batch2d.h"
+#include "../Display/2D/render_batch3d.h"
 
 class CL_GL1SelectedTexture
 {
@@ -84,15 +86,17 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
 	max_texture_coords = get_max_texture_coords();
 
 	// Hack, so the sprite render batcher does not exceed the allowed number of textures
-	if (max_texture_coords < CL_SpriteRenderBatch::max_textures)
+	if (max_texture_coords < CL_RenderBatch2D::max_textures)
 	{
 		if (max_texture_coords > 0)
 		{
-			CL_SpriteRenderBatch::max_textures = max_texture_coords;
+			CL_RenderBatch2D::max_textures = max_texture_coords;
+			CL_RenderBatch3D::max_textures = max_texture_coords;
 		}
 		else
 		{
-			CL_SpriteRenderBatch::max_textures = 1;
+			CL_RenderBatch2D::max_textures = 1;
+			CL_RenderBatch3D::max_textures = 1;
 		}
 	}
 
@@ -143,7 +147,7 @@ void CL_GL1GraphicContextProvider::get_opengl_version(int &version_major, int &v
 	version_minor = 0;
 	version_release = 0;
 
-	std::vector<CL_TempString> split_version = CL_StringHelp::split_text(version, ".");
+	std::vector<CL_String> split_version = CL_StringHelp::split_text(version, ".");
 	if(split_version.size() > 0)
 		version_major = CL_StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
@@ -194,7 +198,7 @@ CL_Size CL_GL1GraphicContextProvider::get_max_texture_size() const
 int CL_GL1GraphicContextProvider::get_width() const
 {
 	if (framebuffer_bound)
-		return framebuffer_provider->get_attachment_size(0).width;
+		return framebuffer_provider->get_size().width;
 	else
 		return render_window->get_viewport_width();
 
@@ -205,13 +209,13 @@ CL_PBuffer_GL1 CL_GL1GraphicContextProvider::create_pbuffer(CL_Size size)
 #ifdef WIN32
 	const CL_RenderWindowProvider_WGL *wptr = dynamic_cast<const CL_RenderWindowProvider_WGL *> (render_window);
 	if (wptr == NULL)
-		throw CL_Exception(cl_text("Render window type is not known"));
+		throw CL_Exception("Render window type is not known");
 
 	return ((CL_RenderWindowProvider_WGL *) wptr)->get_window().create_pbuffer(this, size);
 #else
 	const CL_GL1_RenderWindowProvider_GLX *wptr = dynamic_cast<const CL_GL1_RenderWindowProvider_GLX *> (render_window);
 	if (wptr == NULL)
-		throw CL_Exception(cl_text("Render window type is not known"));
+		throw CL_Exception("Render window type is not known");
 
 	return ((CL_GL1_RenderWindowProvider_GLX *) wptr)->get_window().create_pbuffer(this, size);
 #endif
@@ -221,7 +225,7 @@ CL_PBuffer_GL1 CL_GL1GraphicContextProvider::create_pbuffer(CL_Size size)
 int CL_GL1GraphicContextProvider::get_height() const
 {
 	if (framebuffer_bound)
-		return framebuffer_provider->get_attachment_size(0).height;
+		return framebuffer_provider->get_size().height;
 	else
 		return render_window->get_viewport_height();
 }
@@ -296,19 +300,19 @@ CL_GraphicContext CL_GL1GraphicContextProvider::create_worker_gc()
 
 CL_OcclusionQueryProvider *CL_GL1GraphicContextProvider::alloc_occlusion_query()
 {
-	throw CL_Exception(cl_text("Occlusion Queries are not supported for OpenGL 1.3"));
+	throw CL_Exception("Occlusion Queries are not supported for OpenGL 1.3");
 	return NULL;
 }
 
 CL_ProgramObjectProvider *CL_GL1GraphicContextProvider::alloc_program_object()
 {
-	throw CL_Exception(cl_text("Program Objects are not supported for OpenGL 1.3"));
+	throw CL_Exception("Program Objects are not supported for OpenGL 1.3");
 	return NULL;
 }
 
 CL_ShaderObjectProvider *CL_GL1GraphicContextProvider::alloc_shader_object()
 {
-	throw CL_Exception(cl_text("Shader Objects are not supported for OpenGL 1.3"));
+	throw CL_Exception("Shader Objects are not supported for OpenGL 1.3");
 	return NULL;
 }
 
@@ -329,13 +333,20 @@ CL_RenderBufferProvider *CL_GL1GraphicContextProvider::alloc_render_buffer()
 
 CL_VertexArrayBufferProvider *CL_GL1GraphicContextProvider::alloc_vertex_array_buffer()
 {
-	throw CL_Exception(cl_text("Vertex Array Buffers are not supported for OpenGL 1.3"));
+	throw CL_Exception("Vertex Array Buffers are not supported for OpenGL 1.3");
 	return NULL;
 }
 
 CL_ElementArrayBufferProvider *CL_GL1GraphicContextProvider::alloc_element_array_buffer()
 {
-	throw CL_Exception(cl_text("Element Array Buffers are not supported for Open GL 1.3"));
+	throw CL_Exception("Element Array Buffers are not supported for Open GL 1.3");
+	return NULL;
+}
+
+
+CL_PixelBufferProvider *CL_GL1GraphicContextProvider::alloc_pixel_buffer()
+{
+	throw CL_Exception("Pixel Buffers Objects are not supported for Open GL 1.3");
 	return NULL;
 }
 
@@ -345,13 +356,13 @@ CL_PixelBuffer CL_GL1GraphicContextProvider::get_pixeldata(const CL_Rect& rect) 
 
 	if( rect.left != rect.right )
 	{
-		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::abgr8888);
+		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), cl_abgr8);
 		cl1ReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
 		pbuf.flip_vertical();
 		return pbuf;
 	}
 
-	CL_PixelBuffer pbuf( get_width(), get_height(), get_width()*4, CL_PixelFormat::abgr8888);
+	CL_PixelBuffer pbuf( get_width(), get_height(), cl_abgr8);
 	cl1ReadPixels(0, 0, get_width(), get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;
@@ -401,7 +412,7 @@ void CL_GL1GraphicContextProvider::set_texture(int unit_index, const CL_Texture 
 
 	if ( (unit_index <0) || (unit_index >= max_texture_coords) )
 	{
-		throw CL_Exception(cl_text("Invalid texture unit index in GL1 target"));
+		throw CL_Exception("Invalid texture unit index in GL1 target");
 	}
 	selected_textures[unit_index].texture = NULL;
 
@@ -431,7 +442,7 @@ void CL_GL1GraphicContextProvider::set_texture(int unit_index, const CL_Texture 
 	}
 }
 
-void CL_GL1GraphicContextProvider::reset_texture(int unit_index)
+void CL_GL1GraphicContextProvider::reset_texture(int unit_index, const CL_Texture &texture)
 {
 	set_active();
 
@@ -484,9 +495,9 @@ void CL_GL1GraphicContextProvider::pop_texture_matrix(int unit_index)
 	cl1MatrixMode(CL_MODELVIEW);
 }
 
-void CL_GL1GraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &buffer)
+void CL_GL1GraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &w_buffer, const CL_FrameBuffer &r_buffer)
 {
-	framebuffer_provider = dynamic_cast<CL_GL1FrameBufferProvider *>(buffer.get_provider());
+	framebuffer_provider = dynamic_cast<CL_GL1FrameBufferProvider *>(w_buffer.get_provider());
 	framebuffer_provider->set_active();
 	framebuffer_provider->start();
 
@@ -521,9 +532,9 @@ void CL_GL1GraphicContextProvider::set_program_object(CL_StandardProgram standar
 {
 }
 
-void CL_GL1GraphicContextProvider::set_program_object(const CL_ProgramObject &program)
+void CL_GL1GraphicContextProvider::set_program_object(const CL_ProgramObject &program, int program_matrix_flags)
 {
-	throw CL_Exception(cl_text("GLSL program objects are not supported on OpenGL 1.3"));
+	throw CL_Exception("GLSL program objects are not supported on OpenGL 1.3");
 }
 
 void CL_GL1GraphicContextProvider::reset_program_object()
@@ -766,7 +777,7 @@ void CL_GL1GraphicContextProvider::set_primitives_array(const CL_PrimitivesArray
 			case 0: // POSITION
 				if (attribute.single_value)
 				{
-					throw CL_Exception(cl_text("Implement me!"));
+					throw CL_Exception("Implement me!");
 				}
 				else if (attribute.data)
 				{
@@ -775,7 +786,7 @@ void CL_GL1GraphicContextProvider::set_primitives_array(const CL_PrimitivesArray
 				}
 				else if (attribute.array_provider)
 				{
-					throw CL_Exception(cl_text("BindBuffer is not available for OpenGL 1.3"));
+					throw CL_Exception("BindBuffer is not available for OpenGL 1.3");
 					//cl1BindBuffer(CL_ARRAY_BUFFER, static_cast<CL_GL1VertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
 					//cl1EnableClientState(CL_VERTEX_ARRAY);
 					//cl1VertexPointer(attribute.size, to_enum(attribute.type),  attribute.stride,  attribute.data);
@@ -820,7 +831,7 @@ void CL_GL1GraphicContextProvider::set_primitives_array(const CL_PrimitivesArray
 				}
 				else if (attribute.array_provider)
 				{
-					throw CL_Exception(cl_text("BindBuffer is not available for OpenGL 1.3"));
+					throw CL_Exception("BindBuffer is not available for OpenGL 1.3");
 				}
 
 				break;
@@ -850,7 +861,7 @@ void CL_GL1GraphicContextProvider::set_primitives_array(const CL_PrimitivesArray
 				}
 				else if (attribute.array_provider)
 				{
-					throw CL_Exception(cl_text("BindBuffer is not available for OpenGL 1.3"));
+					throw CL_Exception("BindBuffer is not available for OpenGL 1.3");
 				}
 				break;
 		}
@@ -870,13 +881,13 @@ void CL_GL1GraphicContextProvider::draw_primitives_array(CL_PrimitivesType type,
 
 	if (primitives_array_texture.single_value)
 	{
-		throw CL_Exception(cl_text("Implement me!"));
+		throw CL_Exception("Implement me!");
 	}
 
 	if (primitives_array_texture.data == NULL)
 	{
 		// Must be the unsupported bindbuffer
-		throw CL_Exception(cl_text("BindBuffer is not available for OpenGL 1.3"));
+		throw CL_Exception("BindBuffer is not available for OpenGL 1.3");
 	}
 
 	CLenum primitive_type = to_enum(type);
@@ -973,7 +984,7 @@ void CL_GL1GraphicContextProvider::draw_primitives_array(CL_PrimitivesType type,
 				}
 				break;
 			default:
-				throw CL_Exception(cl_text("Implement me!"));
+				throw CL_Exception("Implement me!");
 			}
 		}
 		else
@@ -989,6 +1000,10 @@ void CL_GL1GraphicContextProvider::draw_primitives_array(CL_PrimitivesType type,
 		offset += num_vertices_in_group;
 		num_vertices -=	num_vertices_in_group;
 	}
+}
+
+void CL_GL1GraphicContextProvider::draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count)
+{
 }
 
 void CL_GL1GraphicContextProvider::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices)
@@ -1016,7 +1031,7 @@ void CL_GL1GraphicContextProvider::draw_primitives_elements(
 	CL_VertexAttributeDataType indices_type,
 	void *offset)
 {
-	throw CL_Exception(cl_text("Cannot draw Element Array Buffers for the OpenGL 1.3 target"));
+	throw CL_Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 }
 
 void CL_GL1GraphicContextProvider::reset_primitives_array()
@@ -1049,8 +1064,8 @@ void CL_GL1GraphicContextProvider::reset_primitives_array()
 	prim_arrays_set = false;
 }
 
-void CL_GL1GraphicContextProvider::draw_pixels(
-	float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &image, const CL_Colorf &color)
+void CL_GL1GraphicContextProvider::draw_pixels(CL_GraphicContext &gc, 
+	float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &color)
 {
 	if (x + image.get_width() * zoom_x < 0 || y + image.get_height() * zoom_y < 0 ||
 		x + image.get_width() * zoom_x > get_width() || y + image.get_height() * zoom_y > get_height())
@@ -1058,7 +1073,13 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 		return;
 	}
 
-	CL_PixelBufferRef subimage(image);
+	CL_Image texture_image(gc, image, src_rect);
+	texture_image.draw(gc, CL_Rectf(x, y, CL_Sizef( ((float) texture_image.get_width()) * zoom_x, ((float) texture_image.get_height()) * zoom_y) ));
+	gc.flush_batcher();
+
+	// This can be speeded up by using the code below, but it requires fixing (to use src_rect)
+/*
+	CL_PixelBuffer subimage(image);
 	if (x < 0 || y < 0)
 	{
 		if (zoom_x == 0.0f || zoom_y == 0.0f)
@@ -1073,16 +1094,16 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 	set_active();
 
 	// check out if the original texture needs or doesn't need an alpha channel
-	bool needs_alpha = image.get_format().get_alpha_mask() || image.get_format().has_colorkey();
+	bool needs_alpha = image.get_alpha_mask() || image.has_colorkey();
 
 	CLenum format;
 	CLenum type;
-	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image.get_format(), format, type);
+	bool conv_needed = !CL_GL1::to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (OpenGL can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		if (subimage.get_pitch() % bytesPerPixel != 0)
 			conv_needed = true;
 	}
@@ -1092,7 +1113,7 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 	{
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (image.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = image.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
 
 		char *data = (char *) subimage.get_data();
@@ -1128,12 +1149,12 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 			buffer = CL_PixelBuffer(
 				subimage.get_width(), subimage.get_height(),
 				subimage.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::abgr8888 : CL_PixelFormat::bgr888); // OpenGL RGB/RGBA is always big endian
+				needs_alpha ? cl_abgr8 : cl_bgr8); // OpenGL RGB/RGBA is always big endian
 		else
 			buffer = CL_PixelBuffer(
 				subimage.get_width(), subimage.get_height(),
 				subimage.get_width() * (needs_alpha ? 4 : 3),
-				needs_alpha ? CL_PixelFormat::rgba8888 : CL_PixelFormat::rgb888);
+				needs_alpha ? cl_rgba8 : cl_rgb8);
 	
 		CL_PixelBuffer(subimage).convert(buffer);
 
@@ -1141,7 +1162,7 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 
 		// change alignment
 		cl1PixelStorei(CL_UNPACK_ALIGNMENT, 1);
-		const int bytesPerPixel = (buffer.get_format().get_depth() + 7) / 8;
+		const int bytesPerPixel = buffer.get_bytes_per_pixel();
 		cl1PixelStorei(CL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
 
 		cl1RasterPos2d((x>0)*x, (y>0)*y);
@@ -1165,6 +1186,7 @@ void CL_GL1GraphicContextProvider::draw_pixels(
 		cl1PixelTransferf(CL_GREEN_SCALE, 1.0);
 		cl1PixelTransferf(CL_BLUE_SCALE, 1.0);
 	}
+*/
 }
 
 void CL_GL1GraphicContextProvider::set_clip_rect(const CL_Rect &rect)
@@ -1231,21 +1253,7 @@ void CL_GL1GraphicContextProvider::set_map_mode(CL_MapMode mode)
 	}
 
 	map_mode = mode;
-
-	switch (map_mode)
-	{
-	case cl_map_2d_upper_left:
-		on_window_resized();
-		break;
-	case cl_map_2d_lower_left:
-		on_window_resized();
-		break;
-	case cl_user_projection:
-		set_active();
-		cl1MatrixMode(CL_PROJECTION);
-		cl1LoadMatrixf(projection.matrix);
-		break;
-	}
+	on_window_resized();
 }
 
 void CL_GL1GraphicContextProvider::on_window_resized()
@@ -1257,16 +1265,6 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 	{
 	default:
 		break;
-	case cl_user_projection:
-		set_active();
-		cl1Viewport(0, 0, width, height);
-		if (cl1IsEnabled(CL_SCISSOR_TEST))
-			cl1Scissor(
-				last_clip_rect.left,
-				last_clip_rect.top,
-				last_clip_rect.get_width(),
-				last_clip_rect.get_height());
-		break;
 	case cl_map_2d_upper_left:
 		set_active();
 		cl1Viewport(0, 0, width, height);
@@ -1275,7 +1273,6 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, (float)height, 0.0f));
 		cl1MatrixMode(CL_MODELVIEW);
 		cl1LoadIdentity();
-		cl1Translatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0f);
 		cl1MultMatrixf(modelview);
 		if (cl1IsEnabled(CL_SCISSOR_TEST))
 			cl1Scissor(
@@ -1292,8 +1289,18 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
 		cl1MatrixMode(CL_MODELVIEW);
 		cl1LoadIdentity();
-		cl1Translated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0f);
 		cl1MultMatrixf(modelview);
+		if (cl1IsEnabled(CL_SCISSOR_TEST))
+			cl1Scissor(
+				last_clip_rect.left,
+				last_clip_rect.top,
+				last_clip_rect.get_width(),
+				last_clip_rect.get_height());
+		break;
+
+	case cl_user_projection:
+		set_active();
+		cl1Viewport(0, 0, width, height);
 		if (cl1IsEnabled(CL_SCISSOR_TEST))
 			cl1Scissor(
 				last_clip_rect.left,
@@ -1337,7 +1344,6 @@ void CL_GL1GraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 	if (map_mode != cl_user_projection)
 	{
 		cl1LoadIdentity();
-		cl1Translatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 		cl1MultMatrixf(modelview);
 	}
 	else
@@ -1377,7 +1383,10 @@ void CL_GL1GraphicContextProvider::set_blend_mode(const CL_BlendMode &mode)
 	}
 	else
 	{
-		throw CL_Exception(cl_text("BlendFuncSeparate is not supported for OpenGL 1.3"));
+		// TODO: Fixme !
+		//throw CL_Exception("BlendFuncSeparate is not supported for OpenGL 1.3");
+		if (cl1BlendFunc)
+			cl1BlendFunc(to_enum(mode.get_blend_function_src()), to_enum(mode.get_blend_function_dest()));
 	}
 }
 
@@ -1385,51 +1394,25 @@ void CL_GL1GraphicContextProvider::set_pen(const CL_Pen &pen)
 {
 	set_active();
 
-	float attenuation_params[3];
-	pen.get_point_distance_attenuation(attenuation_params[0], attenuation_params[1], attenuation_params[2]);
 
 // (OpenGL 1.4)
-//	if (cl1PointParameterfv)
-//		cl1PointParameterfv(CL_POINT_DISTANCE_ATTENUATION, attenuation_params);
 //	if (cl1PointParameterf)
 //	{
-//		cl1PointParameterf(CL_POINT_SIZE_MIN, (CLfloat)pen.get_min_point_size());
-//		cl1PointParameterf(CL_POINT_SIZE_MAX, (CLfloat)pen.get_max_point_size());
 //		cl1PointParameterf(CL_POINT_FADE_THRESHOLD_SIZE, (CLfloat)pen.get_point_fade_treshold_size());
 //	}
 
 	cl1PointSize((CLfloat)pen.get_point_size());
 	cl1LineWidth((CLfloat)pen.get_line_width());
 
-	if (pen.is_point_antialiased())
-		cl1Enable(CL_POINT_SMOOTH);
-	else
-		cl1Disable(CL_POINT_SMOOTH);
-
 	if (pen.is_line_antialiased())
 		cl1Enable(CL_LINE_SMOOTH);
 	else
 		cl1Disable(CL_LINE_SMOOTH);
 
-	if (pen.is_line_stippled())
-	{
-		cl1Enable(CL_LINE_STIPPLE);
-		cl1LineStipple(pen.get_line_stipple_repeat_count(), pen.get_line_stipple_pattern());
-	}
-	else
-	{
-		cl1Disable(CL_LINE_STIPPLE);
-	}
-
 	if (pen.is_using_vertex_program_point_sizes())
 		cl1Enable(CL_VERTEX_PROGRAM_POINT_SIZE);
 	else
 		cl1Disable(CL_VERTEX_PROGRAM_POINT_SIZE);
-
-	if (pen.is_using_point_sprites())
-		cl1Enable(CL_POINT_SPRITE);
-	else
-		cl1Disable(CL_POINT_SPRITE);
 
 // (OpenGL 1.4)
 //	if(cl1PointParameterf)
@@ -1518,7 +1501,7 @@ void CL_GL1GraphicContextProvider::set_buffer_control(const CL_BufferControl &bc
 
 	if( bc.is_stencil_test_enabled() )
 	{
-		throw CL_Exception(cl_text("Stencil buffer is not available for OpenGL 1.3"));
+		throw CL_Exception("Stencil buffer is not available for OpenGL 1.3");
 	}
 
 	cl1DrawBuffer( to_enum(bc.get_draw_buffer()) );
@@ -1543,10 +1526,6 @@ CLenum CL_GL1GraphicContextProvider::to_enum(CL_DrawBuffer buffer)
 {
 	switch(buffer)
 	{
-	case cl_buffer_aux0: return CL_AUX0;
-	case cl_buffer_aux1: return CL_AUX1;
-	case cl_buffer_aux2: return CL_AUX2;
-	case cl_buffer_aux3: return CL_AUX3;
 	case cl_buffer_back: return CL_BACK;
 	case cl_buffer_back_left: return CL_BACK_LEFT;
 	case cl_buffer_back_right: return CL_BACK_RIGHT;
@@ -1779,9 +1758,6 @@ CLenum CL_GL1GraphicContextProvider::to_enum(enum CL_PrimitivesType value)
 	case cl_triangle_strip: gl_mode = CL_TRIANGLE_STRIP; break;
 	case cl_triangle_fan: gl_mode = CL_TRIANGLE_FAN; break;
 	case cl_triangles: gl_mode = CL_TRIANGLES; break;
-	case cl_quad_strip: gl_mode = CL_QUAD_STRIP; break;
-	case cl_quads: gl_mode = CL_QUADS; break;
-	case cl_polygon: gl_mode = CL_POLYGON; break;
 	}
 	return gl_mode;
 }
@@ -1851,7 +1827,7 @@ void CL_GL1GraphicContextProvider::set_primitive_texture( int texture_index, CL_
 	else
 	{
 		//Disabled this exception because the sprite render batcher does this intentionally
-		//throw CL_Exception(cl_text("Attempt to draw a texture that was not selected in the GL1 target"));
+		//throw CL_Exception("Attempt to draw a texture that was not selected in the GL1 target");
 	}
 
 }

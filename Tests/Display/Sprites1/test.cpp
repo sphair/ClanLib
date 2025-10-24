@@ -16,7 +16,7 @@ public:
 
 		try
 		{
-			CL_DisplayWindow window("über sprite test", 1024, 1024);
+			CL_DisplayWindow window("Ã¼ber sprite test", 1024, 1024);
 			CL_GraphicContext gc = window.get_gc();
 			
 			CL_BlendMode blend_mode1;

@@ -196,9 +196,11 @@ CLenum CL_OpenGLShaderObjectProvider::shadertype_to_opengl(CL_ShaderType type)
 	{
 	case cl_shadertype_vertex:
 		return CL_VERTEX_SHADER;
+	case cl_shadertype_geometry:
+		return CL_GEOMETRY_SHADER;
 	case cl_shadertype_fragment:
 		return CL_FRAGMENT_SHADER;
 	default:
-		throw CL_Exception(cl_text("CL_OpenGLShaderObjectProvider: Unknown shader type: ") + type);
+		throw CL_Exception("CL_OpenGLShaderObjectProvider: Unknown shader type: " + type);
 	}
 }

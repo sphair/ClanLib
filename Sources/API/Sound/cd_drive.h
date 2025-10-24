@@ -48,13 +48,10 @@ class CL_API_SOUND CL_CDDrive
 /// \{
 
 public:
-	/// \brief Constructs a CD drive object.
-	CL_CDDrive();
-
-	/// \brief Constructs a CDDrive
+	/// \brief Constructs a null instance
 	///
-	/// \param copy = CDDrive
-	CL_CDDrive(const CL_CDDrive &copy);
+	/// Use get_drives() instead
+	CL_CDDrive();
 
 	virtual ~CL_CDDrive();
 
@@ -65,6 +62,12 @@ public:
 public:
 	/// \brief Returns the amount of CD drives available on the system.
 	static std::vector<CL_CDDrive> &get_drives();
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 	/// \brief Get the path of the CD drive.
 	CL_String8 get_drive_path();

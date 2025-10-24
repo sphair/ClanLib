@@ -39,7 +39,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutlineProviderBitmap construction:
 
-CL_OutlineProviderBitmap::CL_OutlineProviderBitmap(const CL_PixelBufferRef &pbuf, int alpha_limit, bool get_insides)
+CL_OutlineProviderBitmap::CL_OutlineProviderBitmap(const CL_PixelBuffer &pbuf, int alpha_limit, bool get_insides)
 {
 	impl = CL_SharedPtr<CL_OutlineProviderBitmap_Generic> (new CL_OutlineProviderBitmap_Generic( pbuf, alpha_limit, get_insides));
 }

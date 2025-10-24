@@ -49,6 +49,7 @@ class CL_AcceleratorKey
 /// \{
 
 public:
+	/// \brief Constructs a null instance
 	CL_AcceleratorKey();
 
 	/// \brief Constructs a AcceleratorKey
@@ -88,10 +89,12 @@ public:
 	/// \return id
 	int get_id() const;
 
-	/// \brief Is Null
-	///
-	/// \return true = null
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 
 /// \}
 /// \name Operations

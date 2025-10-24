@@ -54,13 +54,10 @@ public:
 /// \{
 
 public:
-	CLuint get_draw_handle();
-	CLuint get_read_handle();
 
-	CL_Size get_attachment_size(int buffer_id) const;
+	CL_Size get_size() const;
 
-	const std::vector<int> &get_attachment_indexes() const;
-
+	CL_FrameBufferBindTarget get_bind_target() const;
 
 /// \}
 /// \name Operations
@@ -72,6 +69,8 @@ public:
 
 	void attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
 
+	void detach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
+
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
 
 	void attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
@@ -79,20 +78,31 @@ public:
 	void detach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
 
 	void attach_stencil_buffer(const CL_RenderBuffer &render_buffer);
-
-	void detach_stencil_buffer();
+	void detach_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 
 	void attach_depth_buffer(const CL_RenderBuffer &render_buffer);
-
+	void detach_depth_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 	void attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
 
-	void detach_depth_buffer();
+	void attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
+	void attach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+
 
 	void start();
 
 	void stop();
 
 	void set_active() const;
+
+	void set_bind_target(CL_FrameBufferBindTarget target);
 
 /// \}
 /// \name Implementation

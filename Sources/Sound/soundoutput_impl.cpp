@@ -33,6 +33,9 @@
 #include <algorithm>
 #include "API/Sound/sound_sse.h"
 
+CL_Mutex CL_SoundOutput_Impl::singleton_mutex;
+CL_SoundOutput_Impl *CL_SoundOutput_Impl::instance = 0;
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Impl construction:
 
@@ -40,11 +43,17 @@ CL_SoundOutput_Impl::CL_SoundOutput_Impl(int mixing_frequency, int latency)
 : mixing_frequency(mixing_frequency), mixing_latency(latency), volume(1.0f),
   pan(0.0f), mix_buffer_size(0)
 {
-	mix_buffers[0] = 0;
+ 	mix_buffers[0] = 0;
 	mix_buffers[1] = 0;
 	temp_buffers[0] = 0;
 	temp_buffers[1] = 0;
 	stereo_buffer = 0;
+
+	CL_MutexSection lock(&singleton_mutex);
+	if (instance)
+		throw CL_Exception("Only a single instance of CL_SoundOutput is allowed");
+	instance = this;
+
 }
 
 CL_SoundOutput_Impl::~CL_SoundOutput_Impl()
@@ -54,6 +63,9 @@ CL_SoundOutput_Impl::~CL_SoundOutput_Impl()
 	CL_SoundSSE::aligned_free(mix_buffers[1]);
 	CL_SoundSSE::aligned_free(temp_buffers[0]);
 	CL_SoundSSE::aligned_free(temp_buffers[1]);
+
+	CL_MutexSection lock(&singleton_mutex);
+	instance = NULL;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -148,7 +160,7 @@ void CL_SoundOutput_Impl::resize_mix_buffers()
 
 		mix_buffer_size = get_fragment_size();
 		//if (mix_buffer_size & 3)
-		//	throw CL_Exception(cl_text("Fragment size must be a multiple of 4"));
+		//	throw CL_Exception("Fragment size must be a multiple of 4");
 
 		mix_buffers[0] = (float *) CL_SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size );
 		mix_buffers[1] = (float *) CL_SoundSSE::aligned_alloc(sizeof(float) * mix_buffer_size );

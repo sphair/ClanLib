@@ -40,7 +40,7 @@
 #include "collision_outline_generic.h"
 
 CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
-	const CL_PixelBufferRef &pbuf,
+	const CL_PixelBuffer &pbuf,
 	int alpha_limit,
 	bool get_insides)
 :
@@ -55,7 +55,7 @@ CL_OutlineProviderBitmap_Generic::CL_OutlineProviderBitmap_Generic(
 	last_point(0,0),
 	last_dir(DIR_LEFT)
 {
-	if( pbuf.get_format() != CL_PixelFormat::rgba8888 )
+	if( pbuf.get_format() != cl_rgba8 )
 	{
 		// the image contains no alpha - add only a rectangle
 		CL_Contour contour;
@@ -132,7 +132,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 			contour.set_inside_contour(true);
 		}
 		else
-			throw CL_Exception(cl_text("Arg, the start corner is not of any of the two known types: 0x8, 0x7\n"));
+			throw CL_Exception("Arg, the start corner is not of any of the two known types: 0x8, 0x7\n");
 			
 		while( true )
 		{
@@ -148,7 +148,7 @@ void CL_OutlineProviderBitmap_Generic::find_contours()
 					break;
 				}
 				else
-					throw CL_Exception(cl_format(cl_text("Error: front() == back(), but only %1 points in list"), (int)contour.get_points().size()));
+					throw CL_Exception(cl_format("Error: front() == back(), but only %1 points in list", (int)contour.get_points().size()));
 			}
 
 			if( contour.get_points().size() > 10000 ) break; // Sanity ?
@@ -316,7 +316,7 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		else if(last_dir == DIR_DOWN)
 			next_dir = DIR_LEFT;
 		else
-			throw CL_Exception(cl_format(cl_text("Came to a corner-type: 0x6, but last direction was: %1"),last_dir));
+			throw CL_Exception(cl_format("Came to a corner-type: 0x6, but last direction was: %1",last_dir));
 		break;
 	// XX
 	// X0
@@ -336,7 +336,7 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		else if(last_dir == DIR_LEFT)
 			next_dir = DIR_UP;
 		else
-			throw CL_Exception(cl_format(cl_text("Came to a corner-type: 0x9, but last direction was: %1"), last_dir));
+			throw CL_Exception(cl_format("Came to a corner-type: 0x9, but last direction was: %1", last_dir));
 		break;
 	// 0X
 	// 0X
@@ -365,7 +365,7 @@ void CL_OutlineProviderBitmap_Generic::get_next_point(std::vector<CL_Pointf> &po
 		break;
 	
 	default:
-		throw CL_Exception(cl_format(cl_text("Unknown corner-type: %1"), last_corner));
+		throw CL_Exception(cl_format("Unknown corner-type: %1", last_corner));
 		break;
 	}
 	
@@ -422,7 +422,7 @@ bool CL_OutlineProviderBitmap_Generic::is_opaque(int x, int y)
 	
 	unsigned char *pbdata = static_cast<unsigned char *>(pb.get_data());
 	unsigned int pitch = pb.get_pitch();
-	unsigned char bpp = pb.get_format().get_depth()/8;
+	unsigned char bpp = pb.get_bytes_per_pixel();
 
 	return pbdata[y*pitch+x*bpp+alpha_pixel] >= alpha_limit;
 }

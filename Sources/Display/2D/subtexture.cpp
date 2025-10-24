@@ -71,6 +71,12 @@ CL_Subtexture::~CL_Subtexture()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Subtexture Attributes:
 
+void CL_Subtexture::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_Subtexture is null");
+}
+
 CL_Texture CL_Subtexture::get_texture()
 {
 	return impl->texture;

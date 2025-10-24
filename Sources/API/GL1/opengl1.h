@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanGL1_System clanGL1 System
@@ -62,15 +63,13 @@ public:
 	/// \brief Function table for OpenGL 2.0.
 	static CL_GL1Functions *functions;
 
-	/// \brief Get a pixel format out of an OpenGL format.
-	/** <p>The function returns false if it can't convert format, otherwise the
-	    the formatare returned with values in pf.</p>*/
-	static bool from_opengl_pixelformat(CLenum format, CLenum type, CL_PixelFormat &pf);
+	/// \brief Returns the number of bits in a texture format
+	static int get_textureformat_bits(CL_TextureFormat format);
 
 	/// \brief Get a OpenGL format out of a pixel format.
 	/** <p>The function returns false if pixelformat color depth is not convertible to
 	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
-	static bool to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, CLenum &type);
+	static bool to_opengl_pixelformat(const CL_PixelBuffer &pbuffer, CLenum &format, CLenum &type);
 
 	/// \brief To opengl textureformat
 	///

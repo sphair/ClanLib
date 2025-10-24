@@ -45,14 +45,14 @@ CL_PixelBuffer CL_JPEGProvider::load(
 	const CL_VirtualDirectory &directory)
 {
 	CL_JPEGProvider_Impl jpeg(filename, directory);
-	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.pitch, jpeg.format, jpeg.palette, jpeg.get_data());
+	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.sized_format, jpeg.palette, jpeg.get_data());
 }
 
 CL_PixelBuffer CL_JPEGProvider::load(
 	CL_IODevice &file)
 {
 	CL_JPEGProvider_Impl jpeg(file);
-	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.pitch, jpeg.format, jpeg.palette, jpeg.get_data());
+	return CL_PixelBuffer(jpeg.width, jpeg.height, jpeg.sized_format, jpeg.palette, jpeg.get_data());
 }
 
 CL_PixelBuffer CL_JPEGProvider::load(
@@ -81,11 +81,11 @@ void CL_JPEGProvider::save(
 	CL_IODevice &file,
 	int quality)
 {
-	if (buffer.get_format() != CL_PixelFormat::bgr888)
+	if (buffer.get_format() != cl_bgr8)
 	{
 		CL_PixelBuffer newbuf(
 			buffer.get_width(), buffer.get_height(), 
-			buffer.get_width()*3, CL_PixelFormat::bgr888);
+			cl_bgr8);
 		buffer.convert(newbuf);
 		buffer = newbuf;
 	}

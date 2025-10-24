@@ -117,7 +117,7 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
 	while (cur_attribute)
 	{
 		CL_StringRef lname = cur_attribute->get_node_name();
-		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		CL_StringRef::size_type lpos = lname.find_first_of(':');
 		if (lpos != CL_StringRef::npos)
 			lname = lname.substr(lpos + 1);
 
@@ -207,7 +207,7 @@ CL_DomNode CL_DomNamedNodeMap::set_named_item_ns(const CL_DomNode &node)
 	while (cur_attribute)
 	{
 		CL_StringRef lname = cur_attribute->get_node_name();
-		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		CL_StringRef::size_type lpos = lname.find_first_of(':');
 		if (lpos != CL_StringRef::npos)
 			lname = lname.substr(lpos + 1);
 
@@ -301,7 +301,7 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
 	while (cur_attribute)
 	{
 		CL_StringRef lname = cur_attribute->get_node_name();
-		CL_StringRef::size_type lpos = lname.find_first_of(cl_text(':'));
+		CL_StringRef::size_type lpos = lname.find_first_of(':');
 		if (lpos != CL_StringRef::npos)
 			lname = lname.substr(lpos + 1);
 

@@ -37,6 +37,7 @@
 #include "../IOData/datatypes.h"
 #include "mat2.h"
 #include "mat3.h"
+#include "angle.h"
 
 template<typename Type>
 class CL_Mat2;
@@ -46,6 +47,9 @@ class CL_Mat3;
 
 template<typename Type>
 class CL_Mat4;
+
+template<typename Type>
+class CL_Vec3;
 
 class CL_Angle;
 
@@ -170,6 +174,13 @@ public:
 	/// \return The matrix (in column-major format)
 	static CL_Mat4<Type> rotate(const CL_Angle &angle, Type x, Type y, Type z, bool normalize = true);
 
+	/// \brief Create a rotation matrix using euler angles
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	///
+	/// \return The matrix (in column-major format)
+	static CL_Mat4<Type> rotate(const CL_Angle &angle_x, const CL_Angle &angle_y, const CL_Angle &angle_z, CL_EulerOrder order);
+
 	/// \brief Create a scale matrix
 	///
 	/// \param x = Scale X
@@ -232,7 +243,7 @@ public:
 	/// \return The matrix
 	static CL_Mat4<Type> subtract(const CL_Mat4<Type> &matrix_1, const CL_Mat4<Type> &matrix_2);
 
-	/// \brief Calculate the adjoint (or known as adjugate) of a matrix
+	/// \brief Calculate the adjoint (or known as Adjugate or Conjugate Transpose) of a matrix
 	///
 	/// \param matrix = The matrix to use
 	/// \return The adjoint matrix
@@ -244,6 +255,12 @@ public:
 	/// \param matrix = The matrix to use
 	/// \return The inversed matrix
 	static CL_Mat4<Type> inverse(const CL_Mat4<Type> &matrix);
+
+	/// \brief Calculate the transpose of a matrix 
+	///
+	/// \param matrix = The matrix to use
+	/// \return The transposed matrix
+	static CL_Mat4<Type> transpose(const CL_Mat4<Type> &matrix);
 
 /// \}
 /// \name Attributes
@@ -261,6 +278,16 @@ public:
 
 	/// \brief Returns the z coordinate for the point (0,0,0) multiplied with this matrix.
 	Type get_origin_z() const { return matrix[14]; }
+
+	/// \brief Extract the euler angles (in radians) from a matrix (in column-major format)
+	///
+	/// \return The x,y,z angles (in radians)
+	CL_Vec3<Type> get_euler(CL_EulerOrder order) const;
+
+	/// \brief Get a transformed point from the matrix (in column-major format)
+	///
+	/// \return The transformed point
+	CL_Vec3<Type> get_transformed_point(const CL_Vec3<Type> &vector) const;
 
 /// \}
 /// \name Operations
@@ -332,6 +359,11 @@ public:
 	/// Creates a zero matrix if the determinent == 0
 	/// \return reference to this object
 	CL_Mat4<Type> &inverse();
+
+	/// \brief Calculate the transpose of this matrix 
+	///
+	/// \return reference to this object
+	CL_Mat4<Type> &transpose();
 
 /// \}
 /// \name Operators

@@ -45,7 +45,7 @@
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/png_provider.h"
 #include "sprite_impl.h"
-#include "sprite_render_batch.h"
+#include "render_batch2d.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Sprite Construction:
@@ -59,52 +59,44 @@ CL_Sprite::CL_Sprite(CL_GraphicContext &gc)
 {
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &fullname, const CL_ImageImportDescription &import_desc)
 {
 	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
 	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
 	CL_VirtualFileSystem vfs(path);
 	CL_VirtualDirectory dir = vfs.get_root_directory();
-	*this = CL_Sprite(gc, filename, dir);
+	*this = CL_Sprite(gc, filename, dir, import_desc );
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory &dir, const CL_ImageImportDescription &import_desc)
 : impl(new CL_Sprite_Impl(gc))
 {
 	CL_SpriteDescription desc;
-	desc.add_frame(filename, dir);
+	desc.add_frame(filename, dir, import_desc );
 	impl->create_textures(gc, desc);
 
 	restart();
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type )
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, CL_IODevice &file, const CL_String &image_type, const CL_ImageImportDescription &import_desc )
 : impl(new CL_Sprite_Impl(gc))
 {
 	CL_SpriteDescription desc;
-	desc.add_frame(file, image_type);
+	desc.add_frame(file, image_type, import_desc );
 	impl->create_textures(gc, desc);
 	restart();
 }
 
-CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
+CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc)
 : impl(new CL_Sprite_Impl(gc))
 {
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
 	
-	if (type != cl_text("sprite"))
-		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'sprite'"), resource_id));
+	if (type != "sprite")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'sprite'", resource_id));
 
-	resource_data_session = CL_ResourceDataSession(cl_text("sprite"), resource);
-	CL_SharedPtr<CL_SpriteData> data(resource.get_data(cl_text("sprite")));
-	if (data.is_null())
-	{
-		data = CL_SharedPtr<CL_SpriteData>(new CL_SpriteData(resource_id, resources));
-		resource.set_data(cl_text("sprite"), data);
-	}
-
-	impl->init(gc, resource_id, resources, data);
+	impl->init(gc, resource_id, resources, import_desc );
 }
 
 CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &description)
@@ -114,11 +106,6 @@ CL_Sprite::CL_Sprite(CL_GraphicContext &gc, const CL_SpriteDescription &descript
 	restart();
 }
 
-CL_Sprite::CL_Sprite(const CL_Sprite &copy)
-: impl(copy.impl), resource_data_session(copy.resource_data_session)
-{
-}
-
 CL_Sprite::~CL_Sprite()
 {
 }
@@ -126,9 +113,10 @@ CL_Sprite::~CL_Sprite()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Sprite Attributes:
 
-bool CL_Sprite::is_null() const
+void CL_Sprite::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_Sprite is null");
 }
 
 CL_Angle CL_Sprite::get_angle() const
@@ -514,7 +502,7 @@ void CL_Sprite::set_linear_filter(bool linear_filter)
 	impl->linear_filter = linear_filter;
 
 	std::vector<CL_Sprite_Impl::SpriteFrame>::size_type size = impl->frames.size();
-	for (int cnt = 0; cnt < size; cnt++)
+	for (unsigned int cnt = 0; cnt < size; cnt++)
 	{
 		impl->frames[cnt].texture.set_mag_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
 		impl->frames[cnt].texture.set_min_filter(linear_filter ? cl_filter_linear : cl_filter_nearest);
@@ -548,7 +536,7 @@ void CL_Sprite::set_frame(unsigned int frame)
 void CL_Sprite::set_delay(int delay_ms)
 {
 	std::vector<CL_Sprite_Impl::SpriteFrame>::size_type size = impl->frames.size();
-	for (int cnt = 0; cnt < size; cnt++)
+	for (unsigned int cnt = 0; cnt < size; cnt++)
 		impl->frames[cnt].delay_ms = delay_ms;
 }
 

@@ -53,10 +53,6 @@ CL_DirectoryScanner::CL_DirectoryScanner()
 #endif
 }
 
-CL_DirectoryScanner::CL_DirectoryScanner(const CL_DirectoryScanner &copy) : impl(copy.impl)
-{
-}
-
 CL_DirectoryScanner::~CL_DirectoryScanner()
 {
 }

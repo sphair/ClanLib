@@ -51,7 +51,7 @@ class CL_API_DISPLAY CL_RenderBuffer
 /// \{
 
 public:
-	/// \brief Constructs a render buffer.
+	/// \brief Constructs a null instance.
 	CL_RenderBuffer();
 
 	/// \brief Constructs a RenderBuffer
@@ -60,15 +60,21 @@ public:
 	/// \param width = value
 	/// \param height = value
 	/// \param internal_format = Texture Format
-	CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format = cl_rgba);
+	CL_RenderBuffer(CL_GraphicContext &context, int width, int height, CL_TextureFormat internal_format = cl_rgba, int multisample_samples=0);
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Returns true if this is a null render buffer.
-	bool is_null() const;
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
+	/// \brief Returns the render buffer size.
+	const CL_Size &get_size() const;
 
 	/// \brief Get Provider
 	///

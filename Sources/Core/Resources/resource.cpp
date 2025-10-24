@@ -86,7 +86,7 @@ CL_String CL_Resource::get_type() const
 
 CL_String CL_Resource::get_name() const
 {
-	return impl->element.get_attribute(cl_text("name"));
+	return impl->element.get_attribute("name");
 }
 
 CL_DomElement &CL_Resource::get_element()

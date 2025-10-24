@@ -203,6 +203,21 @@ bool CL_GL1WindowProvider_WGL::is_clipboard_image_available() const
 	return win32_window.is_clipboard_image_available();
 }
 
+CL_Size CL_GL1WindowProvider_WGL::get_minimum_size(bool client_area) const
+{
+	return win32_window.get_minimum_size(client_area);
+}
+
+CL_Size CL_GL1WindowProvider_WGL::get_maximum_size(bool client_area) const
+{
+	return win32_window.get_maximum_size(client_area);
+}
+
+CL_String CL_GL1WindowProvider_WGL::get_title() const
+{
+	return win32_window.get_title();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GL1WindowProvider_WGL Operations:
 
@@ -236,7 +251,7 @@ void CL_GL1WindowProvider_WGL::create_shadow_window(HWND wnd)
 		window_info.rcWindow.bottom - window_info.rcWindow.top,
 		GetParent(wnd), 0, GetModuleHandle(0), 0);
 	if (hwnd == 0)
-		throw CL_Exception(cl_text("Unable to create display window (opengl offscreen window)"));
+		throw CL_Exception("Unable to create display window (opengl offscreen window)");
 
 	shadow_window = true;
 }
@@ -392,13 +407,12 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
 		cl1MatrixMode(CL_MODELVIEW);
 		cl1LoadIdentity();
-		cl1Translated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 
 		cl1ReadBuffer(CL_BACK);
 		cl1RasterPos2i(0, 0);
 		cl1PixelZoom(1.0f, 1.0f);
 
-		CL_PixelBuffer pixelbuffer(width, height, width*4, CL_PixelFormat::rgba8888);
+		CL_PixelBuffer pixelbuffer(width, height, cl_rgba8);
 		cl1ReadPixels(
 			0, 0,
 			width, height,
@@ -467,7 +481,6 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 	cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
 	cl1MatrixMode(CL_MODELVIEW);
 	cl1LoadIdentity();
-	cl1Translated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 
 	if (shadow_window)
 	{
@@ -478,7 +491,7 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = CL_Rect(0,0, width, height);
 
-		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::rgba8888);
+		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
 		cl1ReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,

@@ -42,7 +42,7 @@ class CL_DisplayWindowDescription_Impl
 public:
 	CL_DisplayWindowDescription_Impl()
 	{
-		title = cl_text("Untitled Clanlib Window");
+		title = "Untitled Clanlib Window";
 		position = CL_Rect(-1, -1, 639, 479);
 		position_client_area = false;
 		decorations = true;
@@ -56,6 +56,7 @@ public:
 		drop_shadow = false;
 		tool_window = false;
 		fullscreen = false;
+		fullscreen_monitor = 0;
 		flipping_buffers = 2;
 		allow_resize = false;
 		refresh_rate = 0;
@@ -90,6 +91,7 @@ public:
 	bool drop_shadow;
 	bool tool_window;
 	bool fullscreen;
+	int fullscreen_monitor;
 	bool allow_resize;
 	int flipping_buffers;
 	int bpp;

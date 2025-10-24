@@ -11,7 +11,7 @@ public:
 	{
 		try
 		{
-			CL_ResourceManager resources(cl_text("../../../Resources/GUIThemeLuna/resources.xml")); 
+			CL_ResourceManager resources("../../../Resources/GUIThemeLuna/resources.xml"); 
 
 			CL_GUIManager gui;
  
@@ -21,11 +21,11 @@ public:
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
 			gui.set_theme(theme);
-			gui.set_css_document(cl_text("../../../Resources/GUIThemeLuna/theme.css"));
+			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
 
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
-			win_desc.set_title(cl_text("Popup Menu test app."));
+			win_desc.set_title("Popup Menu test app.");
 			win_desc.set_drop_shadow(false);
 			win_desc.set_position(CL_Rect(200,200,600,600), false);
 			CL_Window root(&gui, win_desc);			
@@ -35,37 +35,37 @@ public:
 			menubar.set_geometry(CL_Rect(0,0,400,24));
 
 			CL_PopupMenu menu_file;
-			menu_file.insert_item(cl_text("New"));
-			menu_file.insert_item(cl_text("Open"));
-			menu_file.insert_item(cl_text("Save"));
-			menu_file.insert_item(cl_text("Exit"));
-			menubar.add_menu(cl_text("File"), menu_file);
+			menu_file.insert_item("New");
+			menu_file.insert_item("Open");
+			menu_file.insert_item("Save");
+			menu_file.insert_item("Exit");
+			menubar.add_menu("File", menu_file);
 
 			CL_PopupMenu menu_edit;
-			menu_edit.insert_item(cl_text("Undo"));
-			menu_edit.insert_item(cl_text("Redo"));
+			menu_edit.insert_item("Undo");
+			menu_edit.insert_item("Redo");
 			menu_edit.insert_separator();
-			menu_edit.insert_item(cl_text("Cut"));
-			menu_edit.insert_item(cl_text("Copy"));
+			menu_edit.insert_item("Cut");
+			menu_edit.insert_item("Copy");
 			menu_edit.insert_separator();
-			CL_PopupMenuItem item_submenu = menu_edit.insert_item(cl_text("Submenu"));
+			CL_PopupMenuItem item_submenu = menu_edit.insert_item("Submenu");
 			menu_edit.insert_separator();
-			menu_edit.insert_item(cl_text("Paste"));
-			menu_edit.insert_item(cl_text("Delete"));
+			menu_edit.insert_item("Paste");
+			menu_edit.insert_item("Delete");
 			menu_edit.insert_separator();
-			menu_edit.insert_item(cl_text("Select All"));
+			menu_edit.insert_item("Select All");
 
 			CL_PopupMenu menu_submenu;
-			menu_submenu.insert_item(cl_text("foo"));
-			menu_submenu.insert_item(cl_text("bar"));
-			menu_submenu.insert_item(cl_text("foobar"));
+			menu_submenu.insert_item("foo");
+			menu_submenu.insert_item("bar");
+			menu_submenu.insert_item("foobar");
 			item_submenu.set_submenu(menu_submenu);
 
- 			menubar.add_menu(cl_text("Edit"), menu_edit);
+ 			menubar.add_menu("Edit", menu_edit);
 
 			CL_PushButton button1(&root);
 			button1.set_geometry(CL_Rect(20, 100, 200, 125));
-			button1.set_text(cl_text("Click for pop-up menu"));
+			button1.set_text("Click for pop-up menu");
 
 			button1.func_clicked().set(this, &App::on_button1_clicked, &button1);
 
@@ -78,7 +78,7 @@ public:
 		}
 		catch (CL_Exception e)
 		{
-			CL_ConsoleWindow console(cl_text("Console"));
+			CL_ConsoleWindow console("Console");
  			CL_Console::write_line(e.message);
 			console.display_close_message();
 		}
@@ -88,7 +88,7 @@ public:
 
 	bool on_close(CL_Window *win)
 	{
-		cl_log_event(cl_text("TestApp"), cl_text("Shutdown"));
+		cl_log_event("TestApp", "Shutdown");
 		win->exit_with_code(0);
 		return true;
 	}
@@ -103,9 +103,9 @@ public:
 		};
 
 		CL_PopupMenu menu;
-		menu.insert_item(cl_text("Item 1"), id_item1);
-		menu.insert_item(cl_text("Item 2"), id_item2);
-		menu.insert_item(cl_text("Item 3"), id_item3);
+		menu.insert_item("Item 1", id_item1);
+		menu.insert_item("Item 2", id_item2);
+		menu.insert_item("Item 3", id_item3);
 
 		int x = button1->get_geometry().get_width()/2;
 		int y = button1->get_geometry().get_height()/2;

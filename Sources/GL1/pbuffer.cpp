@@ -65,7 +65,8 @@ void CL_PBuffer_GL1::set_active() const
 	impl->set_active();
 }
 
-bool CL_PBuffer_GL1::is_null() const
+void CL_PBuffer_GL1::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("is null");
 }

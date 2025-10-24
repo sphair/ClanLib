@@ -38,7 +38,7 @@
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/quad.h"
 #include "API/Core/Math/triangle_math.h"
-#include "sprite_render_batch.h"
+#include "render_batch2d.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Draw operations:
@@ -119,7 +119,7 @@ void CL_Draw::box(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &
 
 void CL_Draw::fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
 {
-	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
+	CL_RenderBatcherSprite *batcher = gc.impl->current_internal_batcher;
 	batcher->fill(gc, x1, y1, x2, y2, color);
 }
 

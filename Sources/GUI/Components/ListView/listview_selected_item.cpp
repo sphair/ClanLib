@@ -177,9 +177,10 @@ CL_ListViewSelectedItem::CL_ListViewSelectedItem(const CL_ListViewItem &item)
 /////////////////////////////////////////////////////////////////////////////
 // CL_ListViewSelectedItem Attributes:
 
-bool CL_ListViewSelectedItem::is_null() const
+void CL_ListViewSelectedItem::throw_if_null() const
 {
-	return impl.is_null();
+	if (impl.is_null())
+		throw CL_Exception("CL_ListViewSelectedItem is null");
 }
 
 bool CL_ListViewSelectedItem::is_item() const

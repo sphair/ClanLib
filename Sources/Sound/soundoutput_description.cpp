@@ -50,14 +50,8 @@ CL_SoundOutput_Description::CL_SoundOutput_Description() : impl(new CL_SoundOutp
 	impl->mixing_latency = 50;
 }
 
-CL_SoundOutput_Description::CL_SoundOutput_Description(const CL_SoundOutput_Description &copy) : impl(new CL_SoundOutput_Description_Impl)
-{
-	*impl = *copy.impl;
-}
-
 CL_SoundOutput_Description::~CL_SoundOutput_Description()
 {
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -75,12 +69,6 @@ int CL_SoundOutput_Description::get_mixing_latency() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Description operations:
-
-CL_SoundOutput_Description &CL_SoundOutput_Description::operator =(const CL_SoundOutput_Description &copy)
-{
-	*impl = *copy.impl;
-	return *this;
-}
 
 void CL_SoundOutput_Description::set_mixing_frequency(int frequency)
 {

@@ -57,7 +57,7 @@ public:
 
 	/// \brief Constructs a DBTransaction
 	///
-	/// \param CL_DBTransaction_Impl = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DBTransaction(const CL_SharedPtr<CL_DBTransaction_Impl> &impl);
 
 	~CL_DBTransaction();

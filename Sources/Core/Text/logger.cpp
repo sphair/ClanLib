@@ -79,6 +79,7 @@ void cl_log_event(const CL_StringRef &type, const CL_StringRef &text)
 
 void CL_Logger::log(const CL_StringRef &type, const CL_StringRef &text)
 {
+	throw CL_Exception("Implement me");
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
@@ -87,8 +88,8 @@ CL_RadioButton::CL_RadioButton(CL_GUIComponent *parent)
 	set_focus_policy(focus_group);
 
 	impl->radio = this;
-	impl->prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, cl_text("2"));
-	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+	impl->prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, "2");
+	impl->prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 
 	impl->create_parts();
 
@@ -104,6 +105,18 @@ CL_RadioButton::~CL_RadioButton()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RadioButton Attributes:
+
+CL_RadioButton *CL_RadioButton::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_RadioButton *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_RadioButton*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_RadioButton named item: %1", id));
+
+	return object;
+}
 
 CL_String CL_RadioButton::get_text() const
 {

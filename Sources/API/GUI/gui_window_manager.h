@@ -73,6 +73,9 @@ public:
 	/// \brief Pointer to close notification callback function.
 	CL_Callback_v1<CL_GUITopLevelWindow *> *func_close;
 
+	/// \brief Pointer to destroy notification callback function.
+	CL_Callback_v1<CL_GUITopLevelWindow *> *func_destroy;
+
 	/// \brief Pointer to close notification callback function.
 	CL_Callback_v3<CL_GUITopLevelWindow *, const CL_InputEvent &, const CL_InputState &> *func_input_received;
 /// \}
@@ -101,11 +104,6 @@ public:
 	///
 	/// \param provider = The theme provider
 	CL_GUIWindowManager(CL_GUIWindowManagerProvider *provider);
-
-	/// \brief Constructs a GUIWindowManager
-	///
-	/// \param copy = GUIWindow Manager
-	CL_GUIWindowManager(const CL_GUIWindowManager &copy);
 
 	~CL_GUIWindowManager();
 
@@ -239,6 +237,7 @@ public:
 	///
 	/// \param handle = GUITop Level Window
 	/// \param gc = Graphic Context
+	/// \param rect = Clip rect
 	void push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect);
 
 	/// \brief Pop cliprect
@@ -303,7 +302,7 @@ public:
 	/// \brief Set cursor
 	///
 	/// \param handle = GUITop Level Window
-	/// \param CL_StandardCursor = enum
+	/// \param type = CL_StandardCursor
 	void set_cursor(CL_GUITopLevelWindow *handle, enum CL_StandardCursor type);
 
 	/// \brief Perform any updates.

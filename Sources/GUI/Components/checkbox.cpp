@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
@@ -52,8 +53,8 @@ public:
 	CL_CheckBox_Impl()
 	: three_state(false)
 	{
-		prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, cl_text("2"));
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
+		prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, "2");
+		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	void on_process_message(CL_GUIMessage &msg);
@@ -105,6 +106,18 @@ CL_CheckBox::~CL_CheckBox()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CheckBox Attributes:
+
+CL_CheckBox *CL_CheckBox::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_CheckBox *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_CheckBox*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_CheckBox named item: %1", id));
+
+	return object;
+}
 
 bool CL_CheckBox::is_indeterminated() const
 {

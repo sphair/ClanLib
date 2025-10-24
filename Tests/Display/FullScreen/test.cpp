@@ -57,7 +57,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 	{
 		CL_DisplayWindowDescription desc;
 		desc.set_size(CL_Size(800,600), true);
-		desc.set_title(cl_text("Fullscreen test"));
+		desc.set_title("Fullscreen test");
 		CL_DisplayWindow window(desc);
 		
 		while (!window.get_ic().get_keyboard().get_keycode(CL_KEY_ESCAPE))

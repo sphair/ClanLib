@@ -30,6 +30,7 @@
 #include "win32_socket.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Network/Socket/socket_name.h"
+#include <Mstcpip.h>
 
 CL_Win32Socket::CL_Win32Socket()
 : handle(INVALID_SOCKET), close_handle(true), event_handle(0), receive_handle(0), send_handle(0), except_handle(0)
@@ -144,7 +145,7 @@ void CL_Win32Socket::create_event_handles()
 	send_handle = CreateEvent(0, TRUE, FALSE, 0);
 	except_handle = CreateEvent(0, TRUE, FALSE, 0);
 	if (handle == 0 || receive_handle == 0 || send_handle == 0 || except_handle == 0)
-		throw CL_Exception(cl_text("CreateEvent failed"));
+		throw CL_Exception("CreateEvent failed");
 }
 
 void CL_Win32Socket::set_nodelay(bool enable)
@@ -152,6 +153,24 @@ void CL_Win32Socket::set_nodelay(bool enable)
 	int value = enable ? 1 : 0;
 	int result = setsockopt(handle, IPPROTO_TCP, TCP_NODELAY, (const char *) &value, sizeof(int));
 	throw_if_failed(result);
+}
+
+void CL_Win32Socket::set_keep_alive(bool enable, int timeout, int interval)
+{
+	int value = enable ? 1 : 0;
+	int result = setsockopt(handle, SOL_SOCKET, SO_KEEPALIVE, (const char *) &value, sizeof(int));
+	throw_if_failed(result);
+
+	if (enable && timeout != 0 && interval != 0)
+	{
+		tcp_keepalive keepalive = { 0 };
+		keepalive.onoff = 1;
+		keepalive.keepalivetime = timeout;
+		keepalive.keepaliveinterval = interval;
+		DWORD bytes_returned = 0;
+		result = WSAIoctl(handle, SIO_KEEPALIVE_VALS, &keepalive, sizeof(tcp_keepalive), 0, 0, &bytes_returned, 0, 0);
+		throw_if_failed(result);
+	}
 }
 
 void CL_Win32Socket::bind(const CL_SocketName &socketname, bool reuse_address)
@@ -419,110 +438,110 @@ CL_String CL_Win32Socket::error_to_string(int err)
 	switch (err)
 	{
 	case WSAEACCES:
-		return cl_text("Permission denied");
+		return "Permission denied";
 	case WSAEADDRINUSE:
-		return cl_text("Address already in use");
+		return "Address already in use";
 	case WSAEADDRNOTAVAIL:
-		return cl_text("Cannot assign requested address");
+		return "Cannot assign requested address";
 	case WSAEAFNOSUPPORT:
-		return cl_text("Address family not supported by protocol family");
+		return "Address family not supported by protocol family";
 	case WSAEALREADY:
-		return cl_text("Operation already in progress");
+		return "Operation already in progress";
 	case WSAECONNABORTED:
-		return cl_text("Software caused connection abort");
+		return "Software caused connection abort";
 	case WSAECONNREFUSED:
-		return cl_text("Connection refused");
+		return "Connection refused";
 	case WSAECONNRESET:
-		return cl_text("Connection reset by peer");
+		return "Connection reset by peer";
 	case WSAEDESTADDRREQ:
-		return cl_text("Destination address required");
+		return "Destination address required";
 	case WSAEFAULT:
-		return cl_text("Bad address");
+		return "Bad address";
 	case WSAEHOSTDOWN:
-		return cl_text("Host is down");
+		return "Host is down";
 	case WSAEINPROGRESS:
-		return cl_text("Operation now in progress");
+		return "Operation now in progress";
 	case WSAEINTR:
-		return cl_text("Interrupted function call");
+		return "Interrupted function call";
 	case WSAEINVAL:
-		return cl_text("Invalid argument");
+		return "Invalid argument";
 	case WSAEISCONN:
-		return cl_text("Socket is already connected");
+		return "Socket is already connected";
 	case WSAEMFILE:
-		return cl_text("Too many open files");
+		return "Too many open files";
 	case WSAEMSGSIZE:
-		return cl_text("Message too long");
+		return "Message too long";
 	case WSAENETDOWN:
-		return cl_text("Network is down");
+		return "Network is down";
 	case WSAENETRESET:
-		return cl_text("Network dropped connection on reset");
+		return "Network dropped connection on reset";
 	case WSAENETUNREACH:
-		return cl_text("Network is unreachable");
+		return "Network is unreachable";
 	case WSAENOBUFS:
-		return cl_text("No buffer space available");
+		return "No buffer space available";
 	case WSAENOPROTOOPT:
-		return cl_text("Bad protocol option");
+		return "Bad protocol option";
 	case WSAENOTCONN:
-		return cl_text("Socket is not connected");
+		return "Socket is not connected";
 	case WSAENOTSOCK:
-		return cl_text("Socket operation on nonsocket");
+		return "Socket operation on nonsocket";
 	case WSAEOPNOTSUPP:
-		return cl_text("Operation not supported");
+		return "Operation not supported";
 	case WSAEPFNOSUPPORT:
-		return cl_text("Protocol family not supported");
+		return "Protocol family not supported";
 	case WSAEPROCLIM:
-		return cl_text("Too many processes");
+		return "Too many processes";
 	case WSAEPROTONOSUPPORT:
-		return cl_text("Protocol not supported");
+		return "Protocol not supported";
 	case WSAEPROTOTYPE:
-		return cl_text("Protocol wrong type for socket");
+		return "Protocol wrong type for socket";
 	case WSAESHUTDOWN:
-		return cl_text("Cannot send after socket shutdown");
+		return "Cannot send after socket shutdown";
 	case WSAESOCKTNOSUPPORT:
-		return cl_text("Socket type not supported");
+		return "Socket type not supported";
 	case WSAETIMEDOUT:
-		return cl_text("Connection timed out");
+		return "Connection timed out";
 //	case WSATYPE_NOT_FOUND:
-//		return cl_text("Class type not found");
+//		return "Class type not found";
 	case WSAEWOULDBLOCK:
-		return cl_text("Resource temporarily unavailable");
+		return "Resource temporarily unavailable";
 	case WSAHOST_NOT_FOUND:
-		return cl_text("Host not found");
+		return "Host not found";
 //	case WSA_INVALID_HANDLE:
-//		return cl_text("Specified event object handle is invalid");
+//		return "Specified event object handle is invalid";
 //	case WSA_INVALID_PARAMETER:
-//		return cl_text("One or more parameters are invalid");
+//		return "One or more parameters are invalid";
 //	case WSAINVALIDPROCTABLE:
-//		return cl_text("Invalid procedure table from service provider");
+//		return "Invalid procedure table from service provider";
 //	case WSAINVALIDPROVIDER:
-//		return cl_text("Invalid service provider version number");
+//		return "Invalid service provider version number";
 //	case WSA_IO_INCOMPLETE:
-//		return cl_text("Overlapped I/O event object not in signaled state");
+//		return "Overlapped I/O event object not in signaled state";
 //	case WSA_IO_PENDING:
-//		return cl_text("Overlapped operations will complete later");
+//		return "Overlapped operations will complete later";
 //	case WSA_NOT_ENOUGH_MEMORY:
-//		return cl_text("Insufficient memory available");
+//		return "Insufficient memory available";
 	case WSANOTINITIALISED:
-		return cl_text("Successful WSAStartup not yet performed");
+		return "Successful WSAStartup not yet performed";
 	case WSANO_DATA:
-		return cl_text("Valid name, no data record of requested type");
+		return "Valid name, no data record of requested type";
 	case WSANO_RECOVERY:
-		return cl_text("This is a nonrecoverable error");
+		return "This is a nonrecoverable error";
 //	case WSAPROVIDERFAILEDINIT:
-//		return cl_text("Unable to initialize a service provider");
+//		return "Unable to initialize a service provider";
 //	case WSASYSCALLFAILURE:
-//		return cl_text("System call failure");
+//		return "System call failure";
 	case WSASYSNOTREADY:
-		return cl_text("Network subsystem is unavailable");
+		return "Network subsystem is unavailable";
 	case WSATRY_AGAIN:
-		return cl_text("Nonauthoritative host not found");
+		return "Nonauthoritative host not found";
 	case WSAVERNOTSUPPORTED:
-		return cl_text("Winsock.dll version out of range");
+		return "Winsock.dll version out of range";
 	case WSAEDISCON:
-		return cl_text("Graceful shutdown in progress");
+		return "Graceful shutdown in progress";
 //	case WSA_OPERATION_ABORTED:
-//		return cl_text("Overlapped operation aborted");
+//		return "Overlapped operation aborted";
 	default:
-		return cl_format(cl_text("Unknown socket error %1"), err);
+		return cl_format("Unknown socket error %1", err);
 	}
 }

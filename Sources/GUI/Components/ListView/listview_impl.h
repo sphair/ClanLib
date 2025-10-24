@@ -111,9 +111,9 @@ public:
 
 	void on_scroll();
 
-	void on_before_edit_item(CL_InputEvent e);
+	void on_before_edit_item(CL_InputEvent &e);
 
-	void on_after_edit_item(CL_InputEvent e);
+	void on_after_edit_item(CL_InputEvent &e);
 
 	void on_style_changed();
 

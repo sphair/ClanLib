@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2005 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -53,13 +53,9 @@ class WorkspaceGenerator_MSVC8
 {
 public:
 	WorkspaceGenerator_MSVC8();
-
 	void set_platforms(bool include_win32, bool include_x64);
-
-	void enable_configurations(bool include_unicode, bool include_mtdll, bool include_dll);
-
+	void enable_configurations(bool include_mtdll, bool include_dll);
 	void set_target_version(int version);
-
 	void write(const Workspace &workspace);
 
 	enum RuntimeType

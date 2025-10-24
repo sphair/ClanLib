@@ -53,13 +53,8 @@ class CL_API_SOUND CL_SoundBuffer_Session
 /// \{
 
 public:
-	/// \brief Creates a soundbuffer session.
+	/// \brief Creates a null instance
 	CL_SoundBuffer_Session();
-
-	/// \brief Constructs a SoundBuffer Session
-	///
-	/// \param copy = Sound Buffer_ Session
-	CL_SoundBuffer_Session(const CL_SoundBuffer_Session &copy);
 
 	virtual ~CL_SoundBuffer_Session();
 
@@ -68,31 +63,41 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the current sample position of the playback.
 	int get_position() const;
 
 	/// \brief Returns the sample position relative to the full length.
-	/** <p>The value returned will be between 0 and 1, where 0
-	    means the session is at the beginning, and 1
-	    means that the soundeffect has reached the end.</p>*/
+	///
+	/// The value returned will be between 0 and 1, where 0
+	///    means the session is at the beginning, and 1
+	///   means that the soundeffect has reached the end.
 	float get_position_relative() const;
 
 	/// \brief Returns the total length (in samples) of the sound buffer played.
-	/** <p>Value returned will be -1 if the length is unknown (in
-	    case of non-static soundeffects like streamed sound)</p>*/
+	///
+	/// Value returned will be -1 if the length is unknown (in
+	///    case of non-static soundeffects like streamed sound)
 	int get_length() const;
 
 	/// \brief Returns the frequency of the session.
 	int get_frequency() const;
 
 	/// \brief Returns the linear relative volume of the soundeffect.
-	/** <p>0 means the soundeffect is muted, 1 means the soundeffect
-	    is playing at "max" volume.</p>*/
+	///
+	/// 0 means the soundeffect is muted, 1 means the soundeffect
+	///    is playing at "max" volume.
 	float get_volume() const;
 
 	/// \brief Returns the current pan (in a measure from -1 -> 1).
-	/** <p>-1 means the soundeffect is only playing in the left speaker,
-	    and 1 means the soundeffect is only playing in the right speaker.</p>*/
+	///
+	/// -1 means the soundeffect is only playing in the left speaker,
+	///   and 1 means the soundeffect is only playing in the right speaker.
 	float get_pan() const;
 
 	/// \brief Returns whether this session loops
@@ -109,17 +114,27 @@ public:
 
 public:
 	/// \brief Sets the session position to 'new_pos'.
-	/** <p>The new position of the session.</p>
-	    \return Returns true if operation completed succesfully.*/
+	///
+	/// \param new_pos = The new position of the session.
+	/// \return Returns true if operation completed succesfully.
 	bool set_position(int new_pos);
 
 	/// \brief Sets the relative position of the session.
-	/** <p>Value must be between 0 and 1, where 0 sets the
-	    session to the beginning, and 1 sets it
-	    to the end of the sound buffer.</p>
-	    \param new_pos New relative position.
-	    \return Returns true if operation completed succesfully.*/
+	///
+	/// Value must be between 0 and 1, where 0 sets the
+	///    session to the beginning, and 1 sets it
+	///    to the end of the sound buffer.
+	///
+	/// \param new_pos New relative position.
+	/// \return Returns true if operation completed succesfully.
 	bool set_position_relative(float new_pos);
+
+	/// \brief Sets the end position within the current stream.
+	///
+	/// \param pos = End position.
+	///
+	/// \return True for success. False otherwise.
+	bool set_end_position(int pos);
 
 	/// \brief Sets the frequency of the session.
 	///
@@ -127,18 +142,22 @@ public:
 	void set_frequency(int new_freq);
 
 	/// \brief Sets the volume of the session in a relative measure (0->1)
-	/** <p>A value of 0 will effectively mute the sound (although it will
-	    still be sampled), and a value of 1 will set the volume to "max".</p>
-	    \param new_volume New volume of session.
-	    \return Returns true if the operation completed succesfully.*/
+	///
+	/// A value of 0 will effectively mute the sound (although it will
+	///    still be sampled), and a value of 1 will set the volume to "max".
+	///
+	///    \param new_volume New volume of session.
+	///    \return Returns true if the operation completed succesfully.
 	void set_volume(float new_volume);
 
 	/// \brief Sets the panning of the session played in measures from -1 -> 1
-	/** <p>Setting the pan with a value of -1 will pan the session to the
-	    extreme left (left speaker only), 1 will pan the session to the
-	    extreme right (right speaker only).</p>
-	    \param new_pan New pan of the session played.
-	    \return Returns true if the operation completed sucecsfully.*/
+	///
+	/// Setting the pan with a value of -1 will pan the session to the
+	///    extreme left (left speaker only), 1 will pan the session to the
+	///  extreme right (right speaker only).
+	///
+	///    \param new_pan New pan of the session played.
+	///    \return Returns true if the operation completed sucecsfully.
 	void set_pan(float new_pan);
 
 	/// \brief Starts playback of the session.

@@ -56,7 +56,7 @@ CL_FontEngine_Freetype_Library::CL_FontEngine_Freetype_Library()
 	FT_Error error = FT_Init_FreeType( &library );
 	if ( error )
 	{
-		throw CL_Exception(cl_text("CL_FontEngine_Freetype_Library: Initializing FreeType library failed."));
+		throw CL_Exception("CL_FontEngine_Freetype_Library: Initializing FreeType library failed.");
 	} 
 }
 
@@ -65,7 +65,7 @@ CL_FontEngine_Freetype_Library::~CL_FontEngine_Freetype_Library()
 	FT_Error error = FT_Done_FreeType(library);
 	if ( error )
 	{
-		throw CL_Exception(cl_text("CL_FontEngine_Freetype_Library: Denitializing FreeType library failed."));
+		throw CL_Exception("CL_FontEngine_Freetype_Library: Denitializing FreeType library failed.");
 	} 
 }
 
@@ -82,7 +82,7 @@ CL_FontEngine_Freetype::CL_FontEngine_Freetype(CL_IODevice &io_dev, float height
 {
 	if (average_width<0.0)
 	{
-		throw CL_Exception(cl_text("Freetype error: average_width is invalid"));
+		throw CL_Exception("Freetype error: average_width is invalid");
 	}
 
 	data_buffer = CL_DataBuffer(io_dev.get_size());
@@ -94,11 +94,11 @@ CL_FontEngine_Freetype::CL_FontEngine_Freetype(CL_IODevice &io_dev, float height
 
 	if ( error == FT_Err_Unknown_File_Format )
 	{
-		throw CL_Exception(cl_text("Freetype error: The font file could be opened and read, but it appears  that its font format is unsupported"));
+		throw CL_Exception("Freetype error: The font file could be opened and read, but it appears  that its font format is unsupported");
 	}
 	else if ( error )
 	{
-		throw CL_Exception(cl_text("Freetype error: Font file could not be opened or read, or is corrupted."));
+		throw CL_Exception("Freetype error: Font file could not be opened or read, or is corrupted.");
 	}
 
 	if (height >= 0.0f)
@@ -126,7 +126,7 @@ CL_FontMetrics CL_FontEngine_Freetype::get_metrics()
 	FT_UInt glyph_index = FT_Get_Char_Index( face, FT_ULong(' ') );
 	FT_Error error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
 	if ( error )
-	throw CL_Exception(cl_text("freetype: error loading glyph"));
+	throw CL_Exception("freetype: error loading glyph");
 
 
 	float ascent = face->size->metrics.ascender / 64.0f;
@@ -166,7 +166,7 @@ float CL_FontEngine_Freetype::get_kerning(const CL_StringRef::char_type &lchar, 
 
 	if ( error )
 	{
-		throw CL_Exception(cl_text("CL_FreeTypeFont: error retrieving kerning info"));
+		throw CL_Exception("CL_FreeTypeFont: error retrieving kerning info");
 	}
 	
 	return float(kerning.x) / 64.0f;
@@ -179,7 +179,7 @@ float CL_FontEngine_Freetype::get_advance_x(const CL_StringRef::char_type &ch)
 	int error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
 	if ( error )
 	{
-		throw CL_Exception(cl_text("freetype: error loading glyph"));
+		throw CL_Exception("freetype: error loading glyph");
 	}
 
 	return float(face->glyph->advance.x) / 64.0f;
@@ -220,7 +220,7 @@ CL_GlyphOutline *CL_FontEngine_Freetype::load_glyph_outline(int c)
 	FT_Error error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
 	if ( error )
 	{
-		throw CL_Exception(cl_text("freetype: error loading glyph"));
+		throw CL_Exception("freetype: error loading glyph");
 	}
 
 	FT_Glyph glyph;
@@ -229,7 +229,7 @@ CL_GlyphOutline *CL_FontEngine_Freetype::load_glyph_outline(int c)
 
 	if ( error )
 	{
-		throw CL_Exception(cl_text("freetype: error getting glyph"));
+		throw CL_Exception("freetype: error getting glyph");
 	}
 
 	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
@@ -237,11 +237,11 @@ CL_GlyphOutline *CL_FontEngine_Freetype::load_glyph_outline(int c)
 
 	CL_GlyphOutline *outline = new CL_GlyphOutline;
 
-//	cl_write_console_line(cl_format(cl_text("Num contours: %1"), ft_outline.n_contours));
+//	cl_write_console_line(cl_format("Num contours: %1", ft_outline.n_contours));
 
 	for( int cont = 0; cont < ft_outline.n_contours; cont++ )
 	{
-//		cl_write_console_line(cl_format(cl_text("Num points in contour %1: %2"), cont, ft_outline.contours[0]+1));
+//		cl_write_console_line(cl_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
 		
 		CL_GlyphContour *contour = new CL_GlyphContour; // deleted by CL_GlyphOutline
 		
@@ -249,7 +249,7 @@ CL_GlyphOutline *CL_FontEngine_Freetype::load_glyph_outline(int c)
 //		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
 //		{
 //			FT_Vector pos = ft_outline.points[i];
-//			cl_write_console_line(cl_format(cl_text("dump points[%1]: (%2,%3) \t type: %4"), i, pos.x, pos.y, ft_outline.tags[i]));
+//			cl_write_console_line(cl_format("dump points[%1]: (%2,%3) \t type: %4", i, pos.x, pos.y, ft_outline.tags[i]));
 //		}
 		
 		std::vector<CL_TaggedPoint> points = get_contour_points(cont, &ft_outline);
@@ -312,7 +312,7 @@ CL_FontPixelBuffer CL_FontEngine_Freetype::get_font_glyph(int glyph, bool anti_a
 	}
 	else
 	{
-		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_MONO | FT_LOAD_NO_HINTING);
+		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_TARGET_MONO);
 		if (error) return font_buffer;
 
 		error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_MONO);
@@ -320,8 +320,8 @@ CL_FontPixelBuffer CL_FontEngine_Freetype::get_font_glyph(int glyph, bool anti_a
 
 	font_buffer.glyph = glyph;
 	// Set Incrememt pen position
-	font_buffer.increment.x = slot->advance.x >> 6;
-	font_buffer.increment.y = slot->advance.y >> 6;
+	font_buffer.increment.x = (slot->advance.x+32) >> 6;
+	font_buffer.increment.y = (slot->advance.y+32) >> 6;
  
 	if (error)
 		return font_buffer;
@@ -334,8 +334,9 @@ CL_FontPixelBuffer CL_FontEngine_Freetype::get_font_glyph(int glyph, bool anti_a
 	int src_height = slot->bitmap.rows;
 	int src_pitch = slot->bitmap.pitch;
 
-	CL_PixelBuffer pixelbuffer(src_width, src_height, src_width*4, CL_PixelFormat::rgba8888);
+	CL_PixelBuffer pixelbuffer(src_width, src_height, cl_rgba8);
 	font_buffer.buffer = pixelbuffer;
+	font_buffer.buffer_rect = pixelbuffer.get_size();
 	font_buffer.empty_buffer = false;
 
 	unsigned char *src_data = slot->bitmap.buffer;

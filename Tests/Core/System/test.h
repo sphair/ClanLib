@@ -74,6 +74,7 @@ private:
 	void test_sharedptr_part2(void);
 	void test_weakptr(void);
 	void test_datetime();
+	void test_interlock();
 
 	CL_String convert_time(CL_DateTime &datetime);
 	void fail(void);

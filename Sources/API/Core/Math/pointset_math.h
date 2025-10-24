@@ -48,13 +48,13 @@ class CL_API_CORE CL_PointSetMath
 public:
 	/// \brief Find minimum spanning circle for the set of points
 	///
-	/// \param std::vector<CL_Pointf> &points the points to calulate on
+	/// \param points the points to calulate on
 	static CL_Circlef minimum_enclosing_disc(
 		const std::vector<CL_Pointf> &points);
 
 	/// \brief Return the convex hull of the given set of points
 	///
-	/// \param std::vector<CL_Pointf> P the set of points
+	/// \param points the set of points
 	static std::vector<CL_Pointf> convex_hull_from_polygon(std::vector<CL_Pointf> &points);
 
 	static CL_Rect bounding_box(const std::vector<CL_Pointf> &points);

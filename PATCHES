@@ -20,4 +20,5 @@ Describing
 ===================================
 You should describe what your patch does. Please no 'This fixes a bug'.
 Tell us which bug, in what component. Generally, be descriptive without
-being needless verbose.
+being being needlessly verbose.
+

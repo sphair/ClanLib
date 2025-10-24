@@ -48,10 +48,8 @@ class CL_API_CORE CL_DataBuffer
 /// \{
 
 public:
-	/// \brief Constructs a data buffer.
+	/// \brief Constructs a data buffer of 0 size.
 	CL_DataBuffer();
-
-	CL_DataBuffer(const CL_DataBuffer &copy);
 
 	CL_DataBuffer(int size, CL_MemoryPool *pool = 0);
 

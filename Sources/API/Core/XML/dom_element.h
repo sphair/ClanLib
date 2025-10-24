@@ -71,7 +71,7 @@ public:
 
 	/// \brief Constructs a DomElement
 	///
-	/// \param CL_DomNode_Generic = Shared Ptr
+	/// \param impl = Shared Ptr
 	CL_DomElement(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	~CL_DomElement();

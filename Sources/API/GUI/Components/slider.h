@@ -59,6 +59,12 @@ public:
 /// \{
 
 public:
+	using CL_GUIComponent::get_named_item;
+
+	/// \brief Find the child CL_Slider with the specified component ID name.
+	///
+	/// If it was not found, an exception is thrown.
+	static CL_Slider *get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id);
 
 	/// \brief Is Vertical
 	///

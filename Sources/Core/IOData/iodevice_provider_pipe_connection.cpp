@@ -49,7 +49,7 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 : handle(INVALID_HANDLE_VALUE), peeked_data(0)
 {
 	handle = CreateFile(
-		(cl_text("\\\\.\\pipe\\") + pipe_name).c_str(),
+		CL_StringHelp::utf8_to_ucs2("\\\\.\\pipe\\" + pipe_name).c_str(),
 		GENERIC_READ|GENERIC_WRITE,
 		0,
 		0,
@@ -57,14 +57,14 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 		FILE_FLAG_OVERLAPPED,
 		0);
 	if (handle == INVALID_HANDLE_VALUE)
-		throw CL_Exception(cl_format(cl_text("Unable to open pipe %1"), pipe_name));
+		throw CL_Exception(cl_format("Unable to open pipe %1", pipe_name));
 
 	DWORD pipe_mode = PIPE_READMODE_BYTE|PIPE_WAIT;
 	BOOL result = SetNamedPipeHandleState(handle, &pipe_mode, 0, 0);
 	if (result == FALSE)
 	{
 		CloseHandle(handle);
-		throw CL_Exception(cl_format(cl_text("Unable to set named pipe handle state on %1"), pipe_name));
+		throw CL_Exception(cl_format("Unable to set named pipe handle state on %1", pipe_name));
 	}
 }
 #else
@@ -74,11 +74,11 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 {
 	CL_String8 pipe_name_local8 = CL_StringHelp::text_to_local8(pipe_name);
 	if (pipe_name_local8.length() >= UNIX_PATH_MAX)
-		throw CL_Exception(cl_text("Pipe name too long"));
+		throw CL_Exception("Pipe name too long");
 
 	handle = socket(PF_UNIX, SOCK_STREAM, 0);
 	if (handle == -1)
-		throw CL_Exception(cl_text("Socket create failed"));
+		throw CL_Exception("Socket create failed");
 
 	sockaddr_un name;
 	memset(&name, 0, sizeof(sockaddr_un));
@@ -89,7 +89,7 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 	if (res == -1)
 	{
 		::close(handle);
-		throw CL_Exception(cl_text("Could not connect to server"));
+		throw CL_Exception("Could not connect to server");
 	}
 }
 #endif
@@ -100,7 +100,7 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 : handle(pipe_handle), peeked_data(0)
 {
 	if (handle == INVALID_HANDLE_VALUE)
-		throw CL_Exception(cl_text("Invalid handle value"));
+		throw CL_Exception("Invalid handle value");
 }
 #else
 CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
@@ -108,7 +108,7 @@ CL_IODeviceProvider_PipeConnection::CL_IODeviceProvider_PipeConnection(
 : handle(pipe_handle), peeked_data(0)
 {
 	if (handle == -1)
-		throw CL_Exception(cl_text("Invalid socket value"));
+		throw CL_Exception("Invalid socket value");
 }
 #endif
 
@@ -135,11 +135,11 @@ int CL_IODeviceProvider_PipeConnection::send(const void *_data, int length, bool
 		BOOL result = WriteFile(handle, data+pos, length-pos, 0, &overlapped);
 		DWORD error = (result == FALSE) ? GetLastError() : ERROR_SUCCESS;
 		if (result == FALSE && error != ERROR_IO_PENDING)
-			throw CL_Exception(cl_text("Write failed to pipe!"));
+			throw CL_Exception("Write failed to pipe!");
 		DWORD written = 0;
 		result = GetOverlappedResult(handle, &overlapped, &written, TRUE);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("Write failed to pipe!"));
+			throw CL_Exception("Write failed to pipe!");
 		pos += written;
 		if (!send_all)
 			break;
@@ -152,7 +152,7 @@ int CL_IODeviceProvider_PipeConnection::send(const void *_data, int length, bool
 	{
 		int res = ::send(handle, data+pos, length-pos, 0);
 		if (res == -1)
-			throw CL_Exception(cl_text("Write failed to socket!"));
+			throw CL_Exception("Write failed to socket!");
 		pos += res;
 		if (!send_all)
 			break;
@@ -220,8 +220,7 @@ void CL_IODeviceProvider_PipeConnection::disconnect()
 
 CL_IODeviceProvider *CL_IODeviceProvider_PipeConnection::duplicate()
 {
-	throw CL_Exception(cl_text("CL_IODeviceProvider_PipeConnection::duplicate() - Not Implemented"));
-	return 0;
+	throw CL_Exception("CL_IODeviceProvider_PipeConnection::duplicate() - Not Implemented");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -239,11 +238,11 @@ int CL_IODeviceProvider_PipeConnection::lowlevel_read(void *buffer, int length, 
 		BOOL result = ReadFile(handle, data+received, length-received, 0, &overlapped);
 		DWORD error = (result == FALSE) ? GetLastError() : ERROR_SUCCESS;
 		if (result == FALSE && error != ERROR_IO_PENDING)
-			throw CL_Exception(cl_text("Read failed from pipe!"));
+			throw CL_Exception("Read failed from pipe!");
 		DWORD bytes_read = 0;
 		result = GetOverlappedResult(handle, &overlapped, &bytes_read, TRUE);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("Read failed from pipe!"));
+			throw CL_Exception("Read failed from pipe!");
 		received += bytes_read;
 		if (!receive_all)
 			break;
@@ -256,7 +255,7 @@ int CL_IODeviceProvider_PipeConnection::lowlevel_read(void *buffer, int length, 
 	{
 		int res = ::recv(handle, data+received, length-received, 0);
 		if (res == -1)
-			throw CL_Exception(cl_text("Read failed on socket!"));
+			throw CL_Exception("Read failed on socket!");
 		received += res;
 		if (!receive_all)
 			break;

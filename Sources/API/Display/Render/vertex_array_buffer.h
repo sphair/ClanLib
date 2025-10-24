@@ -35,31 +35,7 @@
 #include "graphic_context.h"
 #include "../api_display.h"
 
-/// \brief Vertex Array Buffer usage enum
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
-enum CL_BufferUsage
-{
-	cl_usage_stream_draw,
-	cl_usage_stream_read,
-	cl_usage_stream_copy,
-	cl_usage_static_draw,
-	cl_usage_static_read,
-	cl_usage_static_copy,
-	cl_usage_dynamic_draw,
-	cl_usage_dynamic_read,
-	cl_usage_dynamic_copy
-};
-
-/// \brief Vertex Array Buffer access enum
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
-enum CL_BufferAccess
-{
-	cl_access_read_only,
-	cl_access_write_only,
-	cl_access_read_write
-};
+#include "../Image/buffer_usage.h"
 
 class CL_VertexArrayBufferProvider;
 class CL_VertexArrayBuffer_Impl;
@@ -73,7 +49,7 @@ class CL_API_DISPLAY CL_VertexArrayBuffer
 /// \{
 
 public:
-	/// \brief Constructs a vertex array buffer.
+	/// \brief Constructs a null instance.
 	CL_VertexArrayBuffer();
 
 	/// \brief Constructs a VertexArrayBuffer
@@ -98,6 +74,12 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Retrieves a pointer to the mapped buffer.
 	void *get_data();
 

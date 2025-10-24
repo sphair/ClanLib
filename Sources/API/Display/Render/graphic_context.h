@@ -41,6 +41,7 @@
 #include "../../Core/IOData/virtual_directory.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Signals/signal_v0.h"
+#include "frame_buffer.h"
 
 class CL_Size;
 class CL_BufferControl;
@@ -50,7 +51,6 @@ class CL_BlendMode;
 class CL_Texture;
 class CL_FrameBuffer;
 class CL_PixelBuffer;
-class CL_PixelBufferRef;
 class CL_PrimitivesArray;
 class CL_Font;
 class CL_FontMetrics;
@@ -73,10 +73,7 @@ enum CL_PrimitivesType
 	cl_lines,
 	cl_triangle_strip,
 	cl_triangle_fan,
-	cl_triangles,
-	cl_quad_strip,
-	cl_quads,
-	cl_polygon
+	cl_triangles
 };
 
 /// \brief Mapping modes.
@@ -91,12 +88,31 @@ enum CL_MapMode
 
 /// \brief Standard Program
 ///
+/// See "CL_StandardAttributeIndex" if using the standard program with CL_PrimitivesArray
+///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CL_StandardProgram
 {
 	cl_program_color_only,
 	cl_program_single_texture,
 	cl_program_sprite
+};
+
+/// \brief Program Object Matrix Flags
+///
+/// These defines determine which matricies will be set in the program object
+///
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
+enum CL_ProgramMatrixFlags
+{
+	cl_program_matrix_none = 0,
+	cl_program_matrix_modelview = 0x1,	///< cl_ModelViewMatrix (mat4)
+	cl_program_matrix_projection = 0x2,	///< cl_ProjectionMatrix (mat4)
+	cl_program_matrix_modelview_projection = 0x4,	///< cl_ModelViewProjectionMatrix (mat4)
+	cl_program_matrix_normal = 0x8,	///< cl_NormalMatrix (mat3 - inverse of cl_ModelViewMatrix)
+
+	cl_program_matrix_all_standard = cl_program_matrix_modelview | cl_program_matrix_projection | cl_program_matrix_modelview_projection | cl_program_matrix_normal	///< All the standard OpenGL uniforms
+
 };
 
 /// \brief Interface to drawing graphics.
@@ -108,7 +124,7 @@ class CL_API_DISPLAY CL_GraphicContext
 /// \{
 
 public:
-	/// \brief Constructs a graphic context.
+	/// \brief Constructs a null instance.
 	CL_GraphicContext();
 
 	/// \brief Constructs a GraphicContext
@@ -122,20 +138,52 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return impl.is_null(); }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the currently selected texture for the specified index.
-	CL_Texture get_texture(int index);
+	///
+	/// \param index = 0 to x, the index of the texture
+	/// \return The texture. Use texture.is_null() to determine if the texture was not selected
+	CL_Texture get_texture(int index) const;
+
+	/// \brief Returns the currently selected textures
+	///
+	/// \return The selected textures (placed at unit_index 0 to size()-1).  These may contain null textures if textures were not selected
+	std::vector<CL_Texture> get_textures() const;
 
 	/// \brief Returns the blending mode description.
-	CL_BlendMode get_blend_mode();
+	///
+	/// \return The blend mode.
+	CL_BlendMode get_blend_mode() const;
 
 	/// \brief Returns the buffer control description.
-	CL_BufferControl get_buffer_control();
+	///
+	/// \return The buffer control
+	CL_BufferControl get_buffer_control() const;
 
 	/// \brief Returns the polygon rasterizer setup.
-	CL_PolygonRasterizer get_polygon_rasterizer();
+	///
+	/// \return The polygon rasterizer
+	CL_PolygonRasterizer get_polygon_rasterizer() const;
+
+	/// \brief Returns the currently selected write frame buffer.
+	///
+	/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
+	CL_FrameBuffer get_write_frame_buffer() const;
+
+	/// \brief Returns the currently selected read frame buffer.
+	///
+	/// \return The frame buffer. Use frame_buffer.is_null() to determine if the frame buffer was not selected
+	CL_FrameBuffer get_read_frame_buffer() const;
 
 	/// \brief Returns the currently selected pen.
-	CL_Pen get_pen();
+	///
+	/// \return The pen.
+	CL_Pen get_pen() const;
 
 	/// \brief Returns the current width of the context.
 	int get_width() const;
@@ -177,22 +225,41 @@ public:
 	CL_PixelBuffer get_pixeldata(const CL_Rect& rect = CL_Rect(0,0,0,0)) const;
 
 	/// \brief Sets the current frame buffer.
-	void set_frame_buffer(const CL_FrameBuffer &frame_buffer);
+	void set_frame_buffer(const CL_FrameBuffer &write_buffer);
+	void set_frame_buffer(const CL_FrameBuffer &write_buffer, const CL_FrameBuffer &read_buffer);
 
 	/// \brief Resets the current frame buffer to be the initial frame buffer.
 	void reset_frame_buffer();
 
 	/// \brief Select texture into index.
+	///
+	/// \param unit_index = 0 to x, the index of this texture
+	/// \param texture = The texture to select.  This can be an empty texture CL_Texture()
 	void set_texture(int unit_index, const CL_Texture &texture);
 
+	/// \brief Select textures
+	///
+	/// Only textures units from 0 to textures.size()-1 are set.
+	///
+	/// \param textures = The texture to select (placed at unit_index 0 to texture.size()-1).  These may contain null textures
+	void set_textures(std::vector<CL_Texture> &textures);
+
 	/// \brief Remove texture from index.
+	///
+	/// \param unit_index = 0 to x, the index of the texture
 	void reset_texture(int unit_index);
+
+	/// \brief Remove all selected textures
+	void reset_textures();
 
 	/// \brief Set active program object to the standard program specified.
 	void set_program_object(CL_StandardProgram standard_program);
 
 	/// \brief Set active program object.
-	void set_program_object(const CL_ProgramObject &program);
+	///
+	/// \param program = Program to set
+	/// \param program_matrix_flags = Which matricies will be set in the program object ( CL_ProgramMatrixFlags bitmask flags)
+	void set_program_object(const CL_ProgramObject &program, int program_matrix_flags = cl_program_matrix_all_standard);
 
 	/// \brief Remove active program object.
 	void reset_program_object();
@@ -237,6 +304,14 @@ public:
 	/// \param num_vertices = value
 	void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices);
 
+	/// \brief Draw primitives array instanced
+	///
+	/// \param type = Primitives Type
+	/// \param offset = value
+	/// \param num_vertices = value
+	/// \param instance_count = number of instances drawn
+	void draw_primitives_array_instanced(CL_PrimitivesType type, int offset, int num_vertices, int instance_count);
+
 	/// \brief Draw primitives elements
 	///
 	/// \param type = Primitives Type
@@ -271,17 +346,22 @@ public:
 	void reset_primitives_array();
 
 	/// \brief Draw pixel buffer on gc.
-	void draw_pixels(float x, float y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color = CL_Colorf::white);
+	///
+	/// Note, For OpenGL targets this is slow. Consider drawing a texture with a pixelbuffer object (created via CL_PixelBuffer(gc, ...) )
+	void draw_pixels(float x, float y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color = CL_Colorf::white);
 
 	/// \brief Draw pixels
+	///
+	/// Note, For OpenGL targets this is slow. Consider drawing a texture with a pixelbuffer object (created via CL_PixelBuffer(gc, ...) )
 	///
 	/// \param x = value
 	/// \param y = value
 	/// \param zoom_x = value
 	/// \param zoom_y = value
 	/// \param pixel_buffer = Pixel Buffer Ref
+	/// \param src_rect = Source rect
 	/// \param color = Colorf
-	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBufferRef &pixel_buffer, const CL_Colorf &color = CL_Colorf::white);
+	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Rect &src_rect, const CL_Colorf &color = CL_Colorf::white);
 
 	/// \brief Clears the whole context using the specified color.
 	void clear(const CL_Colorf &color = CL_Colorf::black);

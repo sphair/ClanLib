@@ -51,7 +51,7 @@ CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvide
 	CL_IODevice_Memory *input = input_autoptr;
 
 	MREADER *reader = new_clanlib_reader((void *) input);
-	if (reader == 0) throw CL_Exception(cl_text("new_clanlib_reader failed!"));
+	if (reader == 0) throw CL_Exception("new_clanlib_reader failed!");
 
 	module = Player_LoadGeneric(reader,CLANLIB_READER_CHANNELS,0);
 	if (module == 0)
@@ -88,11 +88,6 @@ int CL_SoundProvider_MikMod_Session::get_num_samples() const
 int CL_SoundProvider_MikMod_Session::get_frequency() const
 {
 	return frequency;
-}
-
-CL_SoundFormat CL_SoundProvider_MikMod_Session::get_format() const
-{
-	return format;
 }
 
 int CL_SoundProvider_MikMod_Session::get_num_channels() const

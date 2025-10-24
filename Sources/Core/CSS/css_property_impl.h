@@ -28,46 +28,17 @@
 
 #pragma once
 
-
 #include "API/Core/CSS/css_property.h"
 
 class CL_CSSProperty_Impl
 {
-/// \name Construction
-/// \{
-
 public:
 	CL_CSSProperty_Impl()
 	: priority(CL_CSSProperty::priority_normal)
 	{
 	}
 
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
 	CL_String name;
-
 	CL_String value;
-
 	CL_CSSProperty::Priority priority;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
 };
-
-

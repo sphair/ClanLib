@@ -36,10 +36,6 @@ CL_SoundProvider::CL_SoundProvider()
 {
 }
 
-CL_SoundProvider::CL_SoundProvider(const CL_SoundProvider &copy) : impl(copy.impl)
-{
-}
-
 CL_SoundProvider::~CL_SoundProvider()
 {
 }

@@ -33,8 +33,9 @@
 #include "API/Display/Render/shared_gc_data.h"
 
 CL_GraphicContext_Impl::CL_GraphicContext_Impl(CL_GraphicContextProvider *provider)
-: provider(provider), max_attributes(0), modelview_changed(false), active_batcher(0), modelview_index(0)
+: provider(provider), max_attributes(0), modelview_changed(false), active_batcher(0), modelview_index(0), current_internal_batcher(&render_batcher_2d)
 {
+	selected_textures.resize(8);	// Create 8 unit indexes by default
 	modelviews.push_back(CL_Mat4f::identity());
 	max_attributes = provider->get_max_attributes();
 	CL_SharedGCData::add_ref();
@@ -51,7 +52,6 @@ CL_GraphicContext_Impl::~CL_GraphicContext_Impl()
 	size = free_prim_arrays.size();
 	for (index = 0; index < size; index++)
 		delete free_prim_arrays[index];
-
 }
 
 CL_SharedPtr<CL_PrimitivesArray_Impl> CL_GraphicContext_Impl::create_prim_array(CL_SharedPtr<CL_GraphicContext_Impl> this_gc)
@@ -110,5 +110,17 @@ void CL_GraphicContext_Impl::set_batcher(CL_GraphicContext &gc, CL_RenderBatcher
 		active_batcher = batcher;
 		if (active_batcher)
 			active_batcher->modelview_changed(modelviews[modelview_index]);
+	}
+}
+
+void CL_GraphicContext_Impl::set_internal_batcher(CL_MapMode mode)
+{
+	if (mode == cl_user_projection)
+	{
+		current_internal_batcher = &render_batcher_3d;
+	}
+	else
+	{
+		current_internal_batcher = &render_batcher_2d;
 	}
 }

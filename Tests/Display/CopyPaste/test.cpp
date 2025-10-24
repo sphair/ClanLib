@@ -57,7 +57,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 	{
 		CL_DisplayWindowDescription desc;
 		desc.set_size(CL_Size(800,600), true);
-		desc.set_title(cl_text("Image clipboard test"));
+		desc.set_title("Image clipboard test");
 		CL_DisplayWindow window(desc);
 		
 		CL_PixelBuffer to_clipboard = CL_ImageProviderFactory::load("copy.png");

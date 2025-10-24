@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Theme">
+      <UniqueIdentifier>{d58bff26-66a7-493b-8df1-2d9dfe657e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Theme\CSS">
+      <UniqueIdentifier>{138941cd-b18d-47dd-8adb-0b02e60cd977}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="checkbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="combobox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gui_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="info.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lineedit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="listview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menubar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="precomp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="progressbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pushbutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="radiobutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="slider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tabpage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="app.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="checkbox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="combobox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_system.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_texture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="info.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lineedit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="listview.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menubar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="precomp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="program.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="progressbar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pushbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="radiobutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scrollbar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="slider.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spin.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tabpage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\resources.xml">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\checkbox.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\combobox.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\frame.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\groupbox.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\image.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\label.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\lineedit.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\listview.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\menubar.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\popupmenu.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\progressbar.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\pushbutton.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\radiobutton.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\scrollbar_horizontal.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\scrollbar_vertical.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\slider.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\spin.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\statusbar.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\tab.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\tabpage.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\theme.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\toolbar.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeAero\window.css">
+      <Filter>Resource Files\Theme\CSS</Filter>
+    </None>
+    <None Include="Makefile" />
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>

@@ -417,16 +417,16 @@ void TestApp::test_iodevice(void)
 
 	// Test read until NUL #3
 	str8b = mem.read_string_text("Hello ", "A", false);
-	if (cl_text("World") != str8b) fail();
+	if ("World" != str8b) fail();
 	mem.seek(0);
 
 	// Test read general #1
 	str8b = mem.read_string_text("ol eH", "dr", false);
-	if (cl_text("Wo") != str8b) fail();
+	if ("Wo" != str8b) fail();
 
 	// Test read general #2
 	str8b = mem.read_string_text(NULL, "d", false);
-	if (cl_text("rl") != str8b) fail();
+	if ("rl" != str8b) fail();
 	mem.seek(0);
 }
 

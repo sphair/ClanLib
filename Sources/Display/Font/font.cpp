@@ -115,8 +115,8 @@ void CL_Font::draw_text(CL_GraphicContext &gc, float dest_x, float dest_y, const
 	{
 		CL_FontMetrics fm = get_font_metrics(gc);
 		int line_spacing = fm.get_height() + fm.get_external_leading();
-		std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
-		for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+		std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
+		for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
 		{
 			get_provider()->draw_text(gc, dest_x, dest_y, lines[i], color);
 			dest_y += line_spacing;
@@ -142,8 +142,8 @@ CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 	{
 		CL_FontMetrics fm = get_font_metrics(gc);
 		int line_spacing = fm.get_external_leading();
-		std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
-		for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+		std::vector<CL_String> lines = CL_StringHelp::split_text(text, "\n", false);
+		for (std::vector<CL_String>::size_type i=0; i<lines.size(); i++)
 		{
 			CL_Size line_size = get_provider()->get_text_size(gc, lines[i]);
 

@@ -164,7 +164,7 @@ void CL_NetGameServer_Impl::process()
 			}
 			break;
 		default:
-			throw CL_Exception(cl_text("Unknown server event type"));
+			throw CL_Exception("Unknown server event type");
 		}
 	}
 }

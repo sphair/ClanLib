@@ -78,8 +78,6 @@ public:
 
 	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> sig_pointer_move;
 
-	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> sig_ball_move;
-
 	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> sig_axis_move;
 
 	CL_Signal_v2<const CL_InputEvent &, const CL_InputState &> sig_key_dblclk;

@@ -68,6 +68,9 @@ int TestApp::main(const std::vector<CL_String> &args)
 #endif
 		CL_Console::write_line("Directory: API/Core/Math");
 
+		test_angle();
+		test_quaternion_f();
+		test_quaternion_d();
 		test_vector1();
 		test_vector2();
 		test_vector3();
@@ -98,7 +101,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 void TestApp::fail(void)
 {
-	throw CL_Exception(cl_text("Failed Test"));
+	throw CL_Exception("Failed Test");
 }
 
 

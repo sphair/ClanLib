@@ -29,6 +29,7 @@
 
 #include "Core/precomp.h"
 #include "directory_scanner_win32.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DirectoryScanner_Win32 construction:
@@ -38,14 +39,9 @@ CL_DirectoryScanner_Win32::CL_DirectoryScanner_Win32()
 {
 }
 
-CL_DirectoryScanner_Win32::CL_DirectoryScanner_Win32(const CL_DirectoryScanner_Win32 &copy) 
-: handle(INVALID_HANDLE_VALUE), first_next(true)
-{
-}
-
 CL_DirectoryScanner_Win32::~CL_DirectoryScanner_Win32()
 {
-	if (INVALID_HANDLE_VALUE) FindClose(handle);
+	if (handle != INVALID_HANDLE_VALUE) FindClose(handle);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -53,7 +49,7 @@ CL_DirectoryScanner_Win32::~CL_DirectoryScanner_Win32()
 
 bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname)
 {
-	return scan(pathname, cl_text("*.*"));
+	return scan(pathname, "*.*");
 }
 
 bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname, const CL_String& pattern)
@@ -76,7 +72,7 @@ bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname, const CL_String
 
 	// Start our search:
 	CL_String filename = directory_path + pattern;
-	handle = FindFirstFile(filename.c_str(), &fileinfo);
+	handle = FindFirstFile(CL_StringHelp::utf8_to_ucs2(filename).c_str(), &fileinfo);
 	first_next = true;
 	return (handle != INVALID_HANDLE_VALUE);
 }
@@ -120,7 +116,7 @@ bool CL_DirectoryScanner_Win32::is_readable()
 	if (first_next) return false;
 
 	HANDLE file = CreateFile(
-		get_pathname().c_str(),
+		CL_StringHelp::utf8_to_ucs2(get_pathname()).c_str(),
 		GENERIC_READ,
 		FILE_SHARE_READ,
 		0,
@@ -137,7 +133,7 @@ bool CL_DirectoryScanner_Win32::is_writable()
 	if (first_next) return false;
 
 	HANDLE file = CreateFile(
-		get_pathname().c_str(),
+		CL_StringHelp::utf8_to_ucs2(get_pathname()).c_str(),
 		GENERIC_READ,
 		FILE_SHARE_READ,
 		0,
@@ -170,7 +166,7 @@ bool CL_DirectoryScanner_Win32::next()
 CL_String CL_DirectoryScanner_Win32::path_with_ending_slash(const CL_String &path)
 {
 	int len = path.length();
-	if (len == 0) return cl_text(".\\");
-	if (path[len-1] == cl_text('/') || path[len-1] == cl_text('\\')) return path;
-	return path + cl_text("\\");
+	if (len == 0) return ".\\";
+	if (path[len-1] == '/' || path[len-1] == '\\') return path;
+	return path + "\\";
 }

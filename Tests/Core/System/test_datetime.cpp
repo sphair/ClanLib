@@ -174,13 +174,13 @@ void TestApp::test_datetime()
 	CL_Console::write_line("--> Check current time. Press any key to continue");
 	datetime = CL_DateTime::get_current_utc_time();
 	CL_String datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[ UTC ] %1"), datestring));
+	CL_Console::write_line(cl_format("[ UTC ] %1", datestring));
 	datetime = datetime.to_utc();
 	datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[ UTC ] %1"), datestring));
+	CL_Console::write_line(cl_format("[ UTC ] %1", datestring));
 	datetime = datetime.to_local();
 	datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[LOCAL] %1"), datestring));
+	CL_Console::write_line(cl_format("[LOCAL] %1", datestring));
 
 	CL_Console::wait_for_key();
 
@@ -189,13 +189,13 @@ void TestApp::test_datetime()
 	CL_Console::write_line("--> Check current time. Press any key to continue");
 	datetime = CL_DateTime::get_current_local_time();
 	datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[LOCAL] %1"), datestring));
+	CL_Console::write_line(cl_format("[LOCAL] %1", datestring));
 	datetime = datetime.to_utc();
 	datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[ UTC ] %1"), datestring));
+	CL_Console::write_line(cl_format("[ UTC ] %1", datestring));
 	datetime = datetime.to_local();
 	datestring = convert_time(datetime);
-	CL_Console::write_line(cl_format(cl_text("[LOCAL] %1"), datestring));
+	CL_Console::write_line(cl_format("[LOCAL] %1", datestring));
 
 	CL_Console::wait_for_key();
 
@@ -205,7 +205,7 @@ void TestApp::test_datetime()
 CL_String TestApp::convert_time(CL_DateTime &datetime)
 {
 
-	CL_TempStringFormat format(cl_text("Year:%1 Month: %2 Day: %3 Hour:%4 Mins:%5 Secs:%6 Nano=%7"));
+	CL_StringFormat format("Year:%1 Month: %2 Day: %3 Hour:%4 Mins:%5 Secs:%6 Nano=%7");
 	format.set_arg(1, datetime.get_year());
 	format.set_arg(2, datetime.get_month());
 	format.set_arg(3, datetime.get_day());

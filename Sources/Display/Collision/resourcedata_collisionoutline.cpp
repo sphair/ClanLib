@@ -46,32 +46,32 @@
 
 CL_ResourceData_CollisionOutline::CL_ResourceData_CollisionOutline(CL_Resource &resource)
 {
-	CL_String filename = resource.get_element().get_attribute(cl_text("file"));
-	int alpha_limit = CL_StringHelp::text_to_int( (resource.get_element().get_attribute(cl_text("alpha_value"), cl_text("128"))));
-	CL_String accuracy_str = resource.get_element().get_attribute(cl_text("accuracy"), cl_text("medium"));
+	CL_String filename = resource.get_element().get_attribute("file");
+	int alpha_limit = CL_StringHelp::text_to_int( (resource.get_element().get_attribute("alpha_value", "128")));
+	CL_String accuracy_str = resource.get_element().get_attribute("accuracy", "medium");
 	CL_OutlineAccuracy accuracy;
 
-	if(accuracy_str == cl_text("high"))
+	if(accuracy_str == "high")
 		accuracy = accuracy_high;
-	else if(accuracy_str == cl_text("medium"))
+	else if(accuracy_str == "medium")
 		accuracy = accuracy_medium;
-	else if(accuracy_str == cl_text("low"))
+	else if(accuracy_str == "low")
 		accuracy = accuracy_low;
-	else if(accuracy_str == cl_text("poor"))
+	else if(accuracy_str == "poor")
 		accuracy = accuracy_poor;
     else
 		accuracy = accuracy_raw;
 
 	CL_CollisionOutline_Generic *outline;
 
-	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == cl_text("out") )
+	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
 		outline = new CL_CollisionOutline_Generic(
 			new CL_OutlineProviderFile(filename, resource.get_manager().get_directory(resource)), accuracy_raw);
 	}
 	else
 	{
-		CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), cl_text(""));
+		CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), "");
 		outline = new CL_CollisionOutline_Generic(
 			new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy );
 	}

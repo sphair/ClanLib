@@ -176,33 +176,32 @@ bool CL_InputDeviceProvider_Win32Tablet::init_tablet()
 {
 	// connects tablet to a hwnd
 
-	LOGCONTEXT      tablet;           // The context of the tablet
 	AXIS            TabletX, TabletY; // The maximum tablet size
 
 	// get default region
-	int tablet_connected = WTInfo(WTI_DEFCONTEXT, 0, &tablet);
+	int tablet_connected = WTInfo(WTI_DEFCONTEXT, 0, &logcontext);
 
 	if( !tablet_connected  )
 		return false;
 
 	// modify the digitizing region
 
-	tablet.lcOptions |= CXO_MESSAGES;
-	tablet.lcOptions |= CXO_SYSTEM; // make wintab move the system cursor
-	tablet.lcPktData = PACKETDATA;
-	tablet.lcPktMode = PACKETMODE;
-	tablet.lcMoveMask = PACKETDATA;
-	tablet.lcBtnUpMask = tablet.lcBtnDnMask;
+	logcontext.lcOptions |= CXO_MESSAGES;
+	logcontext.lcOptions |= CXO_SYSTEM; // make wintab move the system cursor
+	logcontext.lcPktData = PACKETDATA;
+	logcontext.lcPktMode = PACKETMODE;
+	logcontext.lcMoveMask = PACKETDATA;
+	logcontext.lcBtnUpMask = logcontext.lcBtnDnMask;
 
-	tablet.lcPktRate = 100;
+	logcontext.lcPktRate = 100;
 
     // Set the entire tablet as active
 	WTInfo(WTI_DEVICES,DVC_X,&TabletX);
 	WTInfo(WTI_DEVICES,DVC_Y,&TabletY);
-	tablet.lcInOrgX = 0;
-	tablet.lcInOrgY = 0;
-	tablet.lcInExtX = TabletX.axMax;
-	tablet.lcInExtY = TabletY.axMax;
+	logcontext.lcInOrgX = 0;
+	logcontext.lcInOrgY = 0;
+	logcontext.lcInExtX = TabletX.axMax;
+	logcontext.lcInExtY = TabletY.axMax;
 
 	HWND hwnd = window->get_hwnd();
 
@@ -214,29 +213,30 @@ bool CL_InputDeviceProvider_Win32Tablet::init_tablet()
 		return false;
 	}
 
-	HMONITOR hMonitor = MonitorFromRect(&rect, MONITOR_DEFAULTTONULL);
+	HMONITOR monitor = MonitorFromRect(&rect, MONITOR_DEFAULTTONULL);
+	previous_monitor = monitor;
 
-	if (!hMonitor)
+	if (!monitor)
 		return false;
 
 	MONITORINFO monitor_info;
 	ZeroMemory(&monitor_info, sizeof(monitor_info));
 	monitor_info.cbSize = sizeof(monitor_info);
 
- 	if (GetMonitorInfo(hMonitor, &monitor_info) != 0)
+ 	if (GetMonitorInfo(monitor, &monitor_info) != 0)
 	{
-		tablet.lcSysOrgX = monitor_info.rcMonitor.left;
-		tablet.lcSysOrgY = monitor_info.rcMonitor.top;
-		tablet.lcSysExtX = monitor_info.rcMonitor.right;
-		tablet.lcSysExtY = monitor_info.rcMonitor.bottom;
+		logcontext.lcSysOrgX = monitor_info.rcMonitor.left;
+		logcontext.lcSysOrgY = monitor_info.rcMonitor.top;
+		logcontext.lcSysExtX = monitor_info.rcMonitor.right - monitor_info.rcMonitor.left;
+		logcontext.lcSysExtY = monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top;
 
-		tablet.lcOutOrgX = monitor_info.rcMonitor.left;
-		tablet.lcOutOrgY = monitor_info.rcMonitor.top;
-		tablet.lcOutExtX = monitor_info.rcMonitor.right;
-		tablet.lcOutExtY = -monitor_info.rcMonitor.bottom;
+		logcontext.lcOutOrgX = monitor_info.rcMonitor.left;
+		logcontext.lcOutOrgY = monitor_info.rcMonitor.top;
+		logcontext.lcOutExtX = monitor_info.rcMonitor.right - monitor_info.rcMonitor.left;
+		logcontext.lcOutExtY = -(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top);
 
 		// open the region
-		htab = WTOpen(hwnd, &tablet, TRUE);
+		htab = WTOpen(hwnd, &logcontext, TRUE);
 	}
 
 	if( htab == 0 )
@@ -266,6 +266,7 @@ bool CL_InputDeviceProvider_Win32Tablet::init_tablet()
 void CL_InputDeviceProvider_Win32Tablet::init_axis()
 {
 	// setup x,y and pressure axis... the rest: todo
+	axis.clear();
 
 	AXIS TabletX, TabletY, TabletPres;
 
@@ -456,7 +457,7 @@ void CL_InputDeviceProvider_Win32Tablet::on_dispose()
 	{
 		if (!WTClose(htab))
 		{
-			throw CL_Exception(cl_text("CL_InputDeviceProvider_Win32Tablet: Error closing tablet context"));
+			throw CL_Exception("CL_InputDeviceProvider_Win32Tablet: Error closing tablet context");
 		}
 	}
 
@@ -465,3 +466,42 @@ void CL_InputDeviceProvider_Win32Tablet::on_dispose()
 	if (wintab_dll)
 		FreeLibrary(wintab_dll);
 }
+
+void CL_InputDeviceProvider_Win32Tablet::check_monitor_changed()
+{
+	HWND hwnd = window->get_hwnd();
+	RECT rect;
+	GetWindowRect(hwnd, &rect);
+
+	HMONITOR monitor = MonitorFromRect(&rect, MONITOR_DEFAULTTONEAREST);
+
+	if (monitor != previous_monitor)
+	{
+		MONITORINFO monitor_info;
+		ZeroMemory(&monitor_info, sizeof(monitor_info));
+		monitor_info.cbSize = sizeof(monitor_info);
+
+		if (GetMonitorInfo(monitor, &monitor_info) != 0)
+		{
+			logcontext.lcSysOrgX = monitor_info.rcMonitor.left;
+			logcontext.lcSysOrgY = monitor_info.rcMonitor.top;
+			logcontext.lcSysExtX = monitor_info.rcMonitor.right - monitor_info.rcMonitor.left;
+			logcontext.lcSysExtY = monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top;
+
+			logcontext.lcOutOrgX = monitor_info.rcMonitor.left;
+			logcontext.lcOutOrgY = monitor_info.rcMonitor.top;
+			logcontext.lcOutExtX = monitor_info.rcMonitor.right - monitor_info.rcMonitor.left;
+			logcontext.lcOutExtY = -(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top);
+
+			WTSet(htab, &logcontext);
+		}
+
+		previous_monitor = monitor;
+
+		init_axis();
+	}
+}
+
+
+
+

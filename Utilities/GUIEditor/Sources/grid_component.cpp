@@ -43,7 +43,7 @@ GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
 : CL_GUIComponent(parent), main_window(main_window), component_container(0),
   component_overlay(0), boundary(320,200)
 {
-	set_type_name(cl_text("grid"));
+	set_type_name("grid");
 	func_input_pressed().set(this, &GridComponent::on_input_pressed);
 	func_input_released().set(this, &GridComponent::on_input_released);
 	func_input_doubleclick().set(this, &GridComponent::on_input_doubleclick);
@@ -108,66 +108,66 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 	{
 		HolderComponent *holder = new HolderComponent(parent);
 		
-		CL_TempString tag = e.get_tag_name();
+		CL_String tag = e.get_tag_name();
 		CL_GUIComponent *new_comp = 0;
 
-		if (tag == cl_text("button"))
+		if (tag == "button")
 		{
 			CL_PushButton *co = new CL_PushButton(holder->get_container());
-			co->set_text(e.get_attribute(cl_text("text")));
+			co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("checkbox"))
+		else if (tag == "checkbox")
 		{
 			CL_CheckBox *co = new CL_CheckBox(holder->get_container());
-			co->set_text(e.get_attribute(cl_text("text")));
+			co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("radiobutton"))
+		else if (tag == "radiobutton")
 		{
 			CL_RadioButton *co = new CL_RadioButton(holder->get_container());
-			co->set_text(e.get_attribute(cl_text("text")));
+			co->set_text(e.get_attribute("text"));
 			co->set_group_name(e.get_attribute("group"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("label"))
+		else if (tag == "label")
 		{
 			CL_Label *co = new CL_Label(holder->get_container());
-			co->set_text(e.get_attribute(cl_text("text")));
+			co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("statusbar"))
+		else if (tag == "statusbar")
 		{
 			CL_StatusBar *co = new CL_StatusBar(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("lineedit"))
+		else if (tag == "lineedit")
 		{
 			CL_LineEdit *co = new CL_LineEdit(holder->get_container());
-			co->set_text(e.get_attribute(cl_text("text")));
+			co->set_text(e.get_attribute("text"));
 			new_comp = co;
 		}
-		else if (tag == cl_text("imageview"))
+		else if (tag == "imageview")
 		{
 			CL_ImageView *co = new CL_ImageView(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("slider"))
+		else if (tag == "slider")
 		{
 			CL_Slider *co = new CL_Slider(holder->get_container());
-			co->set_min(CL_StringHelp::text_to_int(e.get_attribute(cl_text("min"))));
-			co->set_max(CL_StringHelp::text_to_int(e.get_attribute(cl_text("max"))));
-			co->set_tick_count(CL_StringHelp::text_to_int(e.get_attribute(cl_text("ticks"))));
-			co->set_page_step(CL_StringHelp::text_to_int(e.get_attribute(cl_text("page_step"))));
+			co->set_min(CL_StringHelp::text_to_int(e.get_attribute("min")));
+			co->set_max(CL_StringHelp::text_to_int(e.get_attribute("max")));
+			co->set_tick_count(CL_StringHelp::text_to_int(e.get_attribute("ticks")));
+			co->set_page_step(CL_StringHelp::text_to_int(e.get_attribute("page_step")));
 			new_comp = co;
 		}
-		else if (tag == cl_text("listview"))
+		else if (tag == "listview")
 		{
 			CL_ListView *co = new CL_ListView(holder->get_container());
 //			load_listview(e, co);
 			new_comp = co;
 		}
-		else if (tag == cl_text("tab"))
+		else if (tag == "tab")
 		{
 			CL_Tab *co = new CL_Tab(holder->get_container());
 			new_comp = co;
@@ -175,10 +175,10 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			CL_DomElement tab_child = e.get_first_child().to_element();
 			while (tab_child.is_element())
 			{
-				if (tab_child.get_tag_name() == cl_text("tabpage"))
+				if (tab_child.get_tag_name() == "tabpage")
 				{
-					CL_TempString label = tab_child.get_attribute(cl_text("label"), "Error: NO LABEL!");
-					int id = CL_StringHelp::text_to_int(tab_child.get_attribute(cl_text("id"), "0"));
+					CL_String label = tab_child.get_attribute("label", "Error: NO LABEL!");
+					int id = CL_StringHelp::text_to_int(tab_child.get_attribute("id", "0"));
 					CL_TabPage *tab_page = co->add_page(label, id);
 					load(tab_child, tab_page);
 				}
@@ -187,39 +187,39 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			}
 
 		}
-		else if (tag == cl_text("menubar"))
+		else if (tag == "menubar")
 		{
 			CL_MenuBar *co = new CL_MenuBar(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("frame"))
+		else if (tag == "frame")
 		{
 			CL_Frame *co = new CL_Frame(holder->get_container());
-			co->set_header_text(e.get_attribute(cl_text("text")));
+			co->set_header_text(e.get_attribute("text"));
 			new_comp = co;
 
 			CL_DomElement frame_child = e.get_first_child().to_element();
 			load(e, co);
 		}
-		else if (tag == cl_text("spin"))
+		else if (tag == "spin")
 		{
 			CL_Spin *co = new CL_Spin(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("combobox"))
+		else if (tag == "combobox")
 		{
 			CL_ComboBox *co = new CL_ComboBox(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("toolbar"))
+		else if (tag == "toolbar")
 		{
 			CL_ToolBar *co = new CL_ToolBar(holder->get_container());
 			new_comp = co;
 		}
-		else if (tag == cl_text("dialog"))
+		else if (tag == "dialog")
 		{
-			int w = CL_StringHelp::text_to_int(e.get_attribute(cl_text("width")));
-			int h = CL_StringHelp::text_to_int(e.get_attribute(cl_text("height")));
+			int w = CL_StringHelp::text_to_int(e.get_attribute("width"));
+			int h = CL_StringHelp::text_to_int(e.get_attribute("height"));
 			boundary.width = w;
 			boundary.height = h;
 		}
@@ -236,25 +236,25 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 		}
 		else
 		{
-			int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_x")));
-			int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_y")));
-			int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_x")));
-			int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_y")));
-			CL_String pos_equation_x = e.get_attribute(cl_text("eq-x"), cl_text(""));
-			CL_String pos_equation_y = e.get_attribute(cl_text("eq-y"), cl_text(""));
-			CL_String pos_equation_x2 = e.get_attribute(cl_text("eq-x2"), cl_text(""));
-			CL_String pos_equation_y2 = e.get_attribute(cl_text("eq-y2"), cl_text(""));
+			int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
+			int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
+			int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute("dist_br_x"));
+			int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute("dist_br_y"));
+			CL_String pos_equation_x = e.get_attribute("eq-x", "");
+			CL_String pos_equation_y = e.get_attribute("eq-y", "");
+			CL_String pos_equation_x2 = e.get_attribute("eq-x2", "");
+			CL_String pos_equation_y2 = e.get_attribute("eq-y2", "");
 			holder->set_position_equations(pos_equation_x, pos_equation_y);
 			holder->set_position_equations2(pos_equation_x2, pos_equation_y2);
-			CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_tl")));
-			CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_br")));
+			CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_tl"));
+			CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_br"));
 
 			holder->set_anchor_tl(ap_tl);
 			holder->set_anchor_br(ap_br);
 
 			holders.push_back(holder);
-			new_comp->set_id_name(e.get_attribute(cl_text("id")));
-			new_comp->set_class_name(e.get_attribute(cl_text("class")));
+			new_comp->set_id_name(e.get_attribute("id"));
+			new_comp->set_class_name(e.get_attribute("class"));
 
 			CL_Rect holder_g = load_geometry(e);
 			CL_Size comp_size = holder_g.get_size();
@@ -271,15 +271,15 @@ void GridComponent::save(const CL_StringRef &fullname)
 {
 	CL_DomDocument doc;
 
-	CL_DomElement element_gui = doc.create_element(cl_text("gui")); 
-	element_gui.set_attribute(cl_text("xmlns"), cl_text("http://clanlib.org/xmlns/gui-1.0"));
+	CL_DomElement element_gui = doc.create_element("gui"); 
+	element_gui.set_attribute("xmlns", "http://clanlib.org/xmlns/gui-1.0");
 	
 	doc.append_child(element_gui);
 
 	CL_GUIComponent *comp = component_container->get_first_child();
 	while (comp != 0)
 	{
-		if (comp->get_type_name() == cl_text("holder"))
+		if (comp->get_type_name() == "holder")
 		{
 			HolderComponent *holder = dynamic_cast<HolderComponent*>(comp);
 			if (holder)
@@ -325,8 +325,8 @@ void GridComponent::set_boundary_size(const CL_Size &size)
 CL_DomElement GridComponent::to_element(CL_DomDocument &doc)
 {
 	CL_DomElement de = doc.create_element("dialog");
-	de.set_attribute(cl_text("width"), CL_StringHelp::int_to_text(boundary.width));
-	de.set_attribute(cl_text("height"), CL_StringHelp::int_to_text(boundary.height));
+	de.set_attribute("width", CL_StringHelp::int_to_text(boundary.width));
+	de.set_attribute("height", CL_StringHelp::int_to_text(boundary.height));
 	return de;
 }
 
@@ -356,7 +356,7 @@ HolderComponent *GridComponent::find_holder_at(const CL_Point &pos)
 bool GridComponent::deliver_input_to_tab(const CL_InputEvent &e)
 {
 	CL_GUIComponent *child = component_container->get_component_at(e.mouse_pos);
-	if (child && child->get_type_name() == cl_text("tabheader"))
+	if (child && child->get_type_name() == "tabheader")
 	{
 		CL_InputEvent e_child = e;
 		e_child.mouse_pos = child->window_to_component_coords(component_to_window_coords(e.mouse_pos));
@@ -410,7 +410,7 @@ void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 	set_cliprect(gc, get_size());
 	CL_Rect g = get_geometry().get_size();
 
-	bool tab_parent = (get_parent_component()->get_type_name() == cl_text("tabpage"));
+	bool tab_parent = (get_parent_component()->get_type_name() == "tabpage");
 
 	if (tab_parent)
 	{
@@ -418,7 +418,8 @@ void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 	}
 	else
 	{
-		CL_Draw::fill(gc, g, CL_Colorf::darkgray);
+		//CL_Draw::fill(gc, g, CL_Colorf::darkgray);
+		CL_Draw::fill(gc, g, CL_Colorf(199/255.0f, 209/255.0f, 224/255.0f));
 		CL_Draw::fill(gc, boundary, CL_Colorf::lightgrey/*CL_Colorf("E0DFE3")*/);
 	}
 /*
@@ -468,6 +469,17 @@ void GridComponent::on_render_overlay(CL_GraphicContext &gc, const CL_Rect &upda
 		}
 	}
 
+	if (netselect_box.get_size() != CL_Size(0,0))
+	{
+		CL_Rect box = netselect_box;
+		box.translate(component_container->get_geometry().left, component_container->get_geometry().top);
+
+		CL_Colorf c = CL_Colorf::blue;
+		c.set_alpha(0.1f);
+		CL_Draw::fill(gc, box, c);
+		CL_Draw::box(gc, box, CL_Colorf::blue);
+	}
+
 	reset_cliprect(gc);
 }
 
@@ -481,8 +493,8 @@ void GridComponent::on_resized()
 
 CL_Rect GridComponent::load_geometry(CL_DomElement &e)
 {
-	CL_TempString str = e.get_attribute(cl_text("geom"));
-	std::vector<CL_TempString> split = CL_StringHelp::split_text(str, cl_text(","));
+	CL_String str = e.get_attribute("geom");
+	std::vector<CL_String> split = CL_StringHelp::split_text(str, ",");
 
 	CL_Rect r;
 	r.left = CL_StringHelp::text_to_int(split[0]);
@@ -543,4 +555,28 @@ CL_Vec2i GridComponent::snap(HolderComponent *holder, const std::vector<SnapLine
 	targets.push_back(SnapLine::SnapLineTarget(get_dialog_size(), get_snaplines()));
 
 	return SnapLine::snap(source_rect, source_snaplines, targets);
+}
+
+void GridComponent::set_netselect_box(CL_Rect new_netselect_box)
+{
+	if (netselect_box != new_netselect_box)
+	{
+		netselect_box = new_netselect_box;
+		request_repaint();
+	}
+}
+
+void GridComponent::select_objects(const CL_Rect &box)
+{
+	for (size_t i = 0; i < holders.size(); i++)
+	{
+		CL_Rect holder_box = holders[i]->get_geometry();
+		holder_box.overlap(box);
+		if (holder_box.right > holder_box.left && holder_box.bottom > holder_box.top)
+		{
+			main_window->get_selection()->add_holder(holders[i]);
+		}
+	}
+	main_window->get_selection()->sig_selection_changed().invoke();
+	request_repaint();
 }

@@ -28,9 +28,7 @@
 
 #pragma once
 
-
-#include "API/Core/CSS/css_import.h"
-#include "API/Core/CSS/css_ruleset.h"
+#include "css_ruleset.h"
 #include <map>
 
 class CL_IODevice;
@@ -38,29 +36,10 @@ class CL_VirtualFileSystem;
 
 class CL_CSSDocument_Impl
 {
-/// \name Construction
-/// \{
-
 public:
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	std::vector<CL_CSSImport> imports;
-
 	std::vector<CL_CSSRuleSet> rulesets;
+	std::map<CL_String, std::vector<CL_CSSProperty> > select_cache;
 
-	std::map<CL_String, std::vector<CL_CSSRuleSet> > select_cache;
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
 	void load(const CL_String &filename, const CL_VirtualDirectory &directory);
 	void load(const CL_StringRef &path, CL_IODevice &input);
 
@@ -68,22 +47,12 @@ public:
 	int load_import(unsigned char *data, int pos, int length, const CL_StringRef &path);
 
 	int load_ruleset(unsigned char *data, int pos, int length);
-
 	int load_keyword(const char *keyword, unsigned char *data, int pos, int length);
-
 	int load_until(const char *chars, unsigned char *data, int pos, int length);
 
 	void whitespace_comments(unsigned char *data, unsigned int length);
 
 	void save(CL_IODevice &output);
 
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
+	static unsigned int style_load_until(const CL_StringRef::char_type *chars, const CL_StringRef &style_text, unsigned int pos);
 };
-
-

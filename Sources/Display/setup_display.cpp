@@ -55,12 +55,12 @@ CL_SetupDisplay::CL_SetupDisplay()
 	// This function must be the first Xlib function a multi-threaded program calls, and it must complete before any other Xlib call is made.
 	XInitThreads();
 #endif
-	jpeg_provider  = new CL_ProviderType_Register<CL_JPEGProvider>(cl_text("jpeg"));
-	jpg_provider   = new CL_ProviderType_Register<CL_JPEGProvider>(cl_text("jpg"));
-	pcx_provider   = new CL_ProviderType_Register<CL_PCXProvider>(cl_text("pcx"));
-	png_provider   = new CL_ProviderType_Register<CL_PNGProvider>(cl_text("png"));
-	targa_provider = new CL_ProviderType_Register<CL_TargaProvider>(cl_text("targa"));
-	tga_provider   = new CL_ProviderType_Register<CL_TargaProvider>(cl_text("tga"));
+	jpeg_provider  = new CL_ProviderType_Register<CL_JPEGProvider>("jpeg");
+	jpg_provider   = new CL_ProviderType_Register<CL_JPEGProvider>("jpg");
+	pcx_provider   = new CL_ProviderType_Register<CL_PCXProvider>("pcx");
+	png_provider   = new CL_ProviderType_Register<CL_PNGProvider>("png");
+	targa_provider = new CL_ProviderType_Register<CL_TargaProvider>("targa");
+	tga_provider   = new CL_ProviderType_Register<CL_TargaProvider>("tga");
 }
 
 CL_SetupDisplay::~CL_SetupDisplay()

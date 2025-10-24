@@ -47,7 +47,7 @@ CL_InputDeviceProvider_LinuxJoystick::CL_InputDeviceProvider_LinuxJoystick(CL_X1
 
 	if (fd == -1)
 	{
-		throw CL_Exception(cl_text("Cannot Open Joystick"));
+		throw CL_Exception("Cannot Open Joystick");
 	}
 
 	char number_of_axes;
@@ -108,7 +108,7 @@ bool CL_InputDeviceProvider_LinuxJoystick::get_keycode(int keycode) const
 
 CL_String CL_InputDeviceProvider_LinuxJoystick::get_key_name(int id) const
 {
-	return cl_format(cl_text("Joystick button %1"), id);
+	return cl_format("Joystick button %1", id);
 }
 
 float CL_InputDeviceProvider_LinuxJoystick::get_axis(int index) const

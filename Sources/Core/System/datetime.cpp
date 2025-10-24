@@ -82,7 +82,7 @@ CL_DateTime CL_DateTime::get_current_utc_time()
 	time_t unix_ticks = 0;
 	unix_ticks = time(&unix_ticks);
 	if (unix_ticks == -1)
-		throw CL_Exception(cl_text("Failed to get current UTC time"));
+		throw CL_Exception("Failed to get current UTC time");
 	cl_int64 ticks = ticks_from_1601_to_1900 + ((cl_int64) unix_ticks) * 10000000;
 	return CL_DateTime::get_utc_time_from_ticks(ticks);
 #endif
@@ -104,7 +104,7 @@ CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
 		file_time.dwLowDateTime = ticks & 0xffffffff;
 		BOOL result = FileTimeToSystemTime(&file_time, &system_time);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("FileTimeToSystemTime failed"));
+			throw CL_Exception("FileTimeToSystemTime failed");
 		datetime.year = system_time.wYear;
 		datetime.month = system_time.wMonth;
 		datetime.day = system_time.wDay;
@@ -114,7 +114,7 @@ CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
 		datetime.nanoseconds = system_time.wMilliseconds * 1000000;
 		result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("SystemTimeToFileTime failed"));
+			throw CL_Exception("SystemTimeToFileTime failed");
 		cl_int64 new_ticks = (((cl_int64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		datetime.nanoseconds += (ticks - new_ticks)*100;
 	#else
@@ -123,7 +123,7 @@ CL_DateTime CL_DateTime::get_utc_time_from_ticks(cl_int64 ticks)
 		time_t unix_ticks = (ticks - ticks_from_1601_to_1900) / 10000000;
 		tm *result = gmtime_r(&unix_ticks, &tm_utc);
 		if (result == 0)
-			throw CL_Exception(cl_text("gmtime_r failed"));
+			throw CL_Exception("gmtime_r failed");
 		datetime.year = ((int)result->tm_year)+1900;
 		datetime.month = result->tm_mon+1;
 		datetime.day = result->tm_mday;
@@ -156,7 +156,7 @@ cl_int64 CL_DateTime::to_ticks() const
 		system_time.wMilliseconds = nanoseconds / 1000000;
 		BOOL result = SystemTimeToFileTime(&system_time, &file_time);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("SystemTimeToFileTime failed"));
+			throw CL_Exception("SystemTimeToFileTime failed");
 		cl_int64 ticks = (((cl_int64)file_time.dwHighDateTime) << 32) + file_time.dwLowDateTime;
 		ticks += (nanoseconds % 1000000)/100;
 		return ticks;
@@ -246,7 +246,7 @@ CL_DateTime CL_DateTime::to_utc() const
 		local_time.wMilliseconds = nanoseconds / 1000000;
 		BOOL result = TzSpecificLocalTimeToSystemTime(0, &local_time, &system_time);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("TzSpecificLocalTimeToSystemTime failed"));
+			throw CL_Exception("TzSpecificLocalTimeToSystemTime failed");
 
 		CL_DateTime datetime;
 		datetime.timezone = utc_timezone;
@@ -271,12 +271,12 @@ CL_DateTime CL_DateTime::to_utc() const
 		tm_local.tm_isdst = -1;
 		time_t unix_ticks = mktime(&tm_local);
 		if (unix_ticks == -1)
-			throw CL_Exception(cl_text("mktime failed"));
+			throw CL_Exception("mktime failed");
 
 		memset(&tm_local, 0, sizeof(tm));
 		tm *result = gmtime_r(&unix_ticks, &tm_local);
 		if (result == 0)
-			throw CL_Exception(cl_text("gmtime_r failed"));
+			throw CL_Exception("gmtime_r failed");
 
 		CL_DateTime datetime;
 		datetime.timezone = utc_timezone;
@@ -313,7 +313,7 @@ CL_DateTime CL_DateTime::to_local() const
 		system_time.wMilliseconds = nanoseconds / 1000000;
 		BOOL result = SystemTimeToTzSpecificLocalTime(0, &system_time, &local_time);
 		if (result == FALSE)
-			throw CL_Exception(cl_text("SystemTimeToTzSpecificLocalTime failed"));
+			throw CL_Exception("SystemTimeToTzSpecificLocalTime failed");
 
 		CL_DateTime datetime;
 		datetime.timezone = local_timezone;
@@ -390,7 +390,7 @@ CL_DateTime CL_DateTime::to_local() const
 
 		tm *result = localtime_r(&unix_ticks, &tm_local);
 		if (result == 0)
-			throw CL_Exception(cl_text("localtime_r failed"));
+			throw CL_Exception("localtime_r failed");
 
 		CL_DateTime datetime;
 		datetime.timezone = local_timezone;
@@ -463,7 +463,7 @@ unsigned int CL_DateTime::get_day_of_week() const
 {
 	throw_if_null();
 	if (year < 1600)
-		throw CL_Exception(cl_text("Unsupported date specified"));
+		throw CL_Exception("Unsupported date specified");
 
 	int century_anchor_days[4] =
 	{
@@ -625,13 +625,13 @@ void CL_DateTime::add_nanoseconds(int nanoseconds)
 CL_String CL_DateTime::to_long_date_string() const
 {
 	throw_if_null();
-	throw CL_Exception(cl_text("CL_DateTime::to_long_date_string() not implemented"));
+	throw CL_Exception("CL_DateTime::to_long_date_string() not implemented");
 }
 
 CL_String CL_DateTime::to_short_date_string() const
 {
 	throw_if_null();
-	CL_TempStringFormat format(cl_text("%1-%2-%3"));
+	CL_StringFormat format("%1-%2-%3");
 	format.set_arg(1, get_year(), 4);
 	format.set_arg(2, get_month(), 2);
 	format.set_arg(3, get_day(), 2);
@@ -651,10 +651,10 @@ CL_DateTime CL_DateTime::from_short_date_string(const CL_String &value)
 	int second = -1;
 	int milliseconds = -1;
 
-	CL_StringRef::size_type separator_pos = value.find_first_of(cl_text(' '));
+	CL_StringRef::size_type separator_pos = value.find_first_of(' ');
 
 	// Check if we got a date part
-	if(value.find_first_of(cl_text('-')) != CL_StringRef::npos)
+	if(value.find_first_of('-') != CL_StringRef::npos)
 	{
 		CL_StringRef datePart;
 		if(separator_pos == CL_StringRef::npos)
@@ -665,7 +665,7 @@ CL_DateTime CL_DateTime::from_short_date_string(const CL_String &value)
 		CL_StringRef::size_type prevPos = 0;
 		while (true)
 		{
-			CL_StringRef::size_type pos = datePart.find_first_of(cl_text("-/\\"), prevPos);
+			CL_StringRef::size_type pos = datePart.find_first_of("-/\\", prevPos);
 			if (pos == CL_String::npos)
 				pos = datePart.length() - 1;
 
@@ -686,7 +686,7 @@ CL_DateTime CL_DateTime::from_short_date_string(const CL_String &value)
 	}
 
 	// Check if we got a time part
-	if (value.find_first_of(cl_text(':')) != CL_StringRef::npos)
+	if (value.find_first_of(':') != CL_StringRef::npos)
 	{
 		CL_StringRef timePart;
 
@@ -698,7 +698,7 @@ CL_DateTime CL_DateTime::from_short_date_string(const CL_String &value)
 		CL_StringRef::size_type prevPos = 0;
 		while (true)
 		{
-			CL_StringRef::size_type pos = timePart.find_first_of(cl_text(":."), prevPos);
+			CL_StringRef::size_type pos = timePart.find_first_of(":.", prevPos);
 			if (pos == CL_String::npos)
 				pos = timePart.length() - 1;
 
@@ -742,7 +742,7 @@ CL_String CL_DateTime::to_short_datetime_string() const
 {
 	throw_if_null();
 	// 2008-04-01
-	CL_TempStringFormat format(cl_text("%1-%2-%3 %4:%5:%6"));
+	CL_StringFormat format("%1-%2-%3 %4:%5:%6");
 	format.set_arg(1, get_year(), 4);
 	format.set_arg(2, get_month(), 2);
 	format.set_arg(3, get_day(), 2);
@@ -756,7 +756,7 @@ CL_String CL_DateTime::to_long_time_string() const
 {
 	throw_if_null();
 	// hh:mm:ss
-	CL_TempStringFormat format(cl_text("%1:%2:%3"));
+	CL_StringFormat format("%1:%2:%3");
 	format.set_arg(1, get_hour(), 2);
 	format.set_arg(2, get_minutes(), 2);
 	format.set_arg(3, get_seconds(), 2);
@@ -767,7 +767,7 @@ CL_String CL_DateTime::to_short_time_string() const
 {
 	throw_if_null();
 	// hh:mm
-	CL_TempStringFormat format(cl_text("%1:%2"));
+	CL_StringFormat format("%1:%2");
 	format.set_arg(1, get_hour(), 2);
 	format.set_arg(2, get_minutes(), 2);
 	return format.get_result();
@@ -779,32 +779,32 @@ CL_String CL_DateTime::to_string() const
 	// Mon Feb 3 12:32:54 2008
 	CL_StringRef months[] =
 	{
-		cl_text("Jan"),
-		cl_text("Feb"),
-		cl_text("Mar"),
-		cl_text("Apr"),
-		cl_text("May"),
-		cl_text("Jun"),
-		cl_text("Jul"),
-		cl_text("Aug"),
-		cl_text("Sep"),
-		cl_text("Oct"),
-		cl_text("Nov"),
-		cl_text("Dec")
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
 	};
 	
 	CL_StringRef days[] =
 	{
-		cl_text("Sun"),
-		cl_text("Mon"),
-		cl_text("Tue"),
-		cl_text("Wed"),
-		cl_text("Thu"),
-		cl_text("Fri"),
-		cl_text("Sat")
+		"Sun",
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri",
+		"Sat"
 	};
 
-	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7"));
+	CL_StringFormat format("%1 %2 %3 %4:%5:%6 %7");
 	format.set_arg(1, days[get_day_of_week()]);
 	format.set_arg(2, months[get_month() - 1]);
 	format.set_arg(3, get_day());
@@ -865,15 +865,15 @@ void CL_DateTime::throw_if_invalid_date(int year, int month, int day, int hour, 
 		if ((year%100) == 0 && (year%400) != 0) // Except for those divisible by 100 unless they are also divisible by 400
 			leap_year = false;
 		if ((leap_year && day > 29) || (!leap_year && day > 28))
-			throw CL_Exception(cl_text("Invalid date specified"));
+			throw CL_Exception("Invalid date specified");
 	}
 
-	if (year < 1900 || year > 2900 | month < 1 || month > 12 || day < 1 || day > 31 || minute < 0 || minute > 59 || seconds < 0 || seconds > 60 || nanoseconds >= 1000000000)
-		throw CL_Exception(cl_text("Invalid date specified"));
+	if (year < 1900 || year > 2900 || month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || seconds < 0 || seconds > 60 || nanoseconds >= 1000000000)
+		throw CL_Exception("Invalid date specified");
 }
 
 void CL_DateTime::throw_if_null() const
 {
 	if (is_null())
-		throw CL_Exception(cl_text("CL_DateTime object is null"));
+		throw CL_Exception("CL_DateTime object is null");
 }

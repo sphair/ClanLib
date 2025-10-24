@@ -29,6 +29,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component_description.h"
@@ -66,6 +67,18 @@ CL_ScrollBar::~CL_ScrollBar()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ScrollBar Attributes:
+
+CL_ScrollBar *CL_ScrollBar::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_ScrollBar *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_ScrollBar*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_ScrollBar named item: %1", id));
+
+	return object;
+}
 
 bool CL_ScrollBar::is_vertical() const
 {
@@ -159,7 +172,7 @@ void CL_ScrollBar::set_page_step(int step)
 void CL_ScrollBar::set_ranges(int scroll_min, int scroll_max, int line_step, int page_step)
 {
 	if (scroll_min >= scroll_max || line_step <= 0 || page_step <= 0)
-		throw CL_Exception(cl_text("Scrollbar ranges out of bounds!"));
+		throw CL_Exception("Scrollbar ranges out of bounds!");
 	impl->scroll_min = scroll_min;
 	impl->scroll_max = scroll_max;
 	impl->line_step = line_step;

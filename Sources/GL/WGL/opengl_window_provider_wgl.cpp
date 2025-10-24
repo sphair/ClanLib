@@ -194,6 +194,21 @@ bool CL_OpenGLWindowProvider_WGL::is_visible() const
 	return win32_window.is_visible();
 }
 
+CL_Size CL_OpenGLWindowProvider_WGL::get_minimum_size(bool client_area) const
+{
+	return win32_window.get_minimum_size(client_area);
+}
+
+CL_Size CL_OpenGLWindowProvider_WGL::get_maximum_size(bool client_area) const
+{
+	return win32_window.get_maximum_size(client_area);
+}
+
+CL_String CL_OpenGLWindowProvider_WGL::get_title() const
+{
+	return win32_window.get_title();
+}
+
 bool CL_OpenGLWindowProvider_WGL::is_clipboard_text_available() const
 {
 	return win32_window.is_clipboard_text_available();
@@ -237,7 +252,7 @@ void CL_OpenGLWindowProvider_WGL::create_shadow_window(HWND wnd)
 		window_info.rcWindow.bottom - window_info.rcWindow.top,
 		GetParent(wnd), 0, GetModuleHandle(0), 0);
 	if (hwnd == 0)
-		throw CL_Exception(cl_text("Unable to create display window (opengl offscreen window)"));
+		throw CL_Exception("Unable to create display window (opengl offscreen window)");
 
 	shadow_window = true;
 }
@@ -374,34 +389,16 @@ void CL_OpenGLWindowProvider_WGL::bring_to_front()
 void CL_OpenGLWindowProvider_WGL::flip(int interval)
 {
 	CL_OpenGL::set_active(get_gc());
+	clFlush();
 
 	if (shadow_window)
 	{
 		int width = get_viewport().get_width();
 		int height = get_viewport().get_height();
 
-		CLint old_viewport[4], old_matrix_mode;
-		CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-		clGetIntegerv(CL_VIEWPORT, old_viewport);
-		clGetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-		clGetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-		clGetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-		CLboolean blending = clIsEnabled(CL_BLEND);
-		clDisable(CL_BLEND);
-
-		clViewport(0, 0, width, height);
-		clMatrixMode(CL_PROJECTION);
-		clLoadIdentity();
-		clMultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-		clMatrixMode(CL_MODELVIEW);
-		clLoadIdentity();
-		clTranslated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
-
 		clReadBuffer(CL_BACK);
-		clRasterPos2i(0, 0);
-		clPixelZoom(1.0f, 1.0f);
 
-		CL_PixelBuffer pixelbuffer(width, height, width*4, CL_PixelFormat::rgba8888);
+		CL_PixelBuffer pixelbuffer(width, height, cl_rgba8);
 		clReadPixels(
 			0, 0,
 			width, height,
@@ -411,14 +408,6 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 
 		win32_window.update_layered(pixelbuffer, CL_Point(0, 0), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
 
-		if (blending)
-			clEnable(CL_BLEND);
-		clViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-		clMatrixMode(CL_PROJECTION);
-		clLoadMatrixf(old_matrix_projection);
-		clMatrixMode(CL_MODELVIEW);
-		clLoadMatrixf(old_matrix_modelview);
-		clMatrixMode(old_matrix_mode);
 	}
 	else
 	{
@@ -454,34 +443,16 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 		return;
 
 	CL_OpenGL::set_active(gc);
-
-	CLint old_viewport[4], old_matrix_mode;
-	CLfloat old_matrix_projection[16], old_matrix_modelview[16];
-	clGetIntegerv(CL_VIEWPORT, old_viewport);
-	clGetIntegerv(CL_MATRIX_MODE, &old_matrix_mode);
-	clGetFloatv(CL_PROJECTION_MATRIX, old_matrix_projection);
-	clGetFloatv(CL_MODELVIEW_MATRIX, old_matrix_modelview);
-	CLboolean blending = clIsEnabled(CL_BLEND);
-	clDisable(CL_BLEND);
-
-	clViewport(0, 0, width, height);
-	clMatrixMode(CL_PROJECTION);
-	clLoadIdentity();
-	clMultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-	clMatrixMode(CL_MODELVIEW);
-	clLoadIdentity();
-	clTranslated(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
+	clFlush();
 
 	if (shadow_window)
 	{
 		clReadBuffer(CL_BACK);
-		clRasterPos2i(0, 0);
-		clPixelZoom(1.0f, 1.0f);
 
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = CL_Rect(0,0, width, height);
 
-		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::rgba8888);
+		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
 		clReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
@@ -490,7 +461,6 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 			pixelbuffer.get_data());
 
 		win32_window.update_layered(pixelbuffer, CL_Point(rect.left, rect.top), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
-
 	}
 	else
 	{
@@ -498,30 +468,41 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 		clGetBooleanv(CL_DOUBLEBUFFER, &isdoublebuffered);
 		if (isdoublebuffered)
 		{
+
+			CLint read_last_bound;
+			CLint draw_last_bound;
+
+			clGetIntegerv(CL_READ_FRAMEBUFFER_BINDING, &read_last_bound);
+			clGetIntegerv(CL_DRAW_FRAMEBUFFER_BINDING, &draw_last_bound);
+
+			clBindFramebuffer(CL_READ_FRAMEBUFFER, 0);
+		    clBindFramebuffer(CL_DRAW_FRAMEBUFFER, 0);
+
 			clReadBuffer(CL_BACK);
 			clDrawBuffer(CL_FRONT);
 
-			clRasterPos2i(rect.left, height - rect.bottom);
-			clPixelZoom(1.0f, 1.0f);
-
-			clCopyPixels(
+			clBlitFramebuffer( 
 				rect.left, height - rect.bottom,
-				rect.right - rect.left, rect.bottom - rect.top,
-				CL_COLOR);
+				rect.right, height - rect.top,
+				rect.left, height - rect.bottom,
+				rect.right, height - rect.top,
+				CL_COLOR_BUFFER_BIT, CL_LINEAR);
 
 			clDrawBuffer(CL_BACK);
+			clReadBuffer(CL_FRONT);
+
+			if (read_last_bound)
+				clBindFramebuffer(CL_READ_FRAMEBUFFER, read_last_bound);
+
+			if (draw_last_bound)
+				clBindFramebuffer(CL_DRAW_FRAMEBUFFER, draw_last_bound);
+
 			clFlush();
+
 		}
 	}
 
-	if (blending)
-		clEnable(CL_BLEND);
-	clViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	clMatrixMode(CL_PROJECTION);
-	clLoadMatrixf(old_matrix_projection);
-	clMatrixMode(CL_MODELVIEW);
-	clLoadMatrixf(old_matrix_modelview);
-	clMatrixMode(old_matrix_mode);
+
 }
 
 void CL_OpenGLWindowProvider_WGL::capture_mouse(bool capture)

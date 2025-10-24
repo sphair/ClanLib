@@ -80,7 +80,6 @@ class CL_GUIWindowManagerProvider_Texture : public CL_GUIWindowManagerProvider
 /// \{
 public:
 	CL_GUIWindowManagerProvider_Texture(CL_DisplayWindow &display_window);
-
 	~CL_GUIWindowManagerProvider_Texture();
 
 /// \}
@@ -96,32 +95,21 @@ public:
 	CL_GUIWindowManager::CL_WindowManagerType get_window_manager_type() const;
 
 	CL_GUIWindowManagerSite *site;
-
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowTexture *> window_map;
-
 	std::vector<CL_GUITopLevelWindowTexture *> root_window_z_order;	// Beginning is at the top
-
 	CL_Callback_v0 func_repaint;
-
 	CL_Callback_v1<CL_FrameBuffer &> func_setup_framebuffer;
-
 	CL_Callback_v2<CL_InputEvent &, CL_InputState &> func_input_intercept;
-
 	CL_GUITopLevelWindow *activated_window;
 	CL_GUITopLevelWindow *capture_mouse_window;
-
 	CL_DisplayWindow display_window;
-
 	CL_SlotContainer slots;
-
 	CL_TextureGroup texture_group;
-
 	CL_FrameBuffer frame_buffer;
 	bool frame_buffer_initial_setup;
 	bool frame_buffer_stencil_attached;
 	bool frame_buffer_depth_attached;
 	CL_Texture frame_buffer_texture_attached;	// A copy of the last texture that is attached to the frame buffer
-	
 	bool setup_painting_called; // True when setup_painting() was called in CL_GUIWindowManagerTexture
 	bool painting_set;	// True when the frame buffer is active (used by setup_painting() )
 

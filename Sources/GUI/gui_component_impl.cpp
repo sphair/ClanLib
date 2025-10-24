@@ -53,7 +53,7 @@ CL_GUIComponent_Impl *CL_GUIComponent_Impl::create_from_parent(CL_GUIComponent *
 	if (parent)
 		return new CL_GUIComponent_Impl(parent->get_gui_manager().impl, parent, false);
 	else
-		throw CL_Exception(cl_text("Cannot create child component with no parent!"));
+		throw CL_Exception("Cannot create child component with no parent!");
 }
 
 CL_GUIComponent_Impl *CL_GUIComponent_Impl::create_from_manager(CL_GUIManager *manager)
@@ -61,7 +61,7 @@ CL_GUIComponent_Impl *CL_GUIComponent_Impl::create_from_manager(CL_GUIManager *m
 	if (manager)
 		return new CL_GUIComponent_Impl(manager->impl, 0, true);
 	else
-		throw CL_Exception(cl_text("Cannot create component with a null manager!"));
+		throw CL_Exception("Cannot create component with a null manager!");
 }
 
 CL_GUIComponent_Impl *CL_GUIComponent_Impl::create_from_owner(CL_GUIComponent *owner)
@@ -69,7 +69,7 @@ CL_GUIComponent_Impl *CL_GUIComponent_Impl::create_from_owner(CL_GUIComponent *o
 	if (owner)
 		return new CL_GUIComponent_Impl(owner->get_gui_manager().impl, owner, true);
 	else
-		throw CL_Exception(cl_text("Cannot create child component with a null owner!"));
+		throw CL_Exception("Cannot create child component with a null owner!");
 }
 
 CL_GUIComponent_Impl::~CL_GUIComponent_Impl()

@@ -85,7 +85,7 @@ public:
 		object.timeout = new_timeout;
 		object.repeating = repeat;
 
-		if ( (new_timeout < timeout) || (timeout == -1) )
+		if ( (timeout == -1) || (new_timeout < ( (unsigned int) timeout) ) )
 		{
 			// Only break into the thread when a shorter timeout is required
 			update_event.set();
@@ -244,7 +244,7 @@ private:
 class CL_Timer_Impl
 {
 public:
-	CL_Timer_Impl() : timeout(-1), repeating(false), id(-1)
+	CL_Timer_Impl() : timeout(0), repeating(false), id(-1)
 	{
 		// Create a static timer thread if none exist
 		CL_MutexSection mutex_lock(&timer_thread_mutex);

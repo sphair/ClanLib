@@ -91,6 +91,22 @@ CL_InputContext& CL_D3D9DisplayWindowProvider::get_ic()
 	return win32_window.get_ic();
 }
 
+
+CL_Size CL_D3D9DisplayWindowProvider::get_minimum_size(bool client_area) const
+{
+	return CL_Size();
+}
+
+CL_Size CL_D3D9DisplayWindowProvider::get_maximum_size(bool client_area) const
+{
+	return CL_Size();
+}
+
+CL_String CL_D3D9DisplayWindowProvider::get_title() const
+{
+	return CL_String();
+}
+
 HWND CL_D3D9DisplayWindowProvider::get_hwnd() const
 {
 	return win32_window.get_hwnd();
@@ -147,7 +163,7 @@ void CL_D3D9DisplayWindowProvider::create(CL_DisplayWindowSite *new_site, const 
 		return;
 	direct3d = CL_ComPtr<IDirect3D9>(Direct3DCreate9(D3D_SDK_VERSION));
 	if (direct3d.is_null())
-		throw CL_Exception(cl_text("Failed to create Direct3D 9 interface"));
+		throw CL_Exception("Failed to create Direct3D 9 interface");
 
 	D3DPRESENT_PARAMETERS present_parameters;
 	memset(&present_parameters, 0, sizeof(D3DPRESENT_PARAMETERS));
@@ -160,7 +176,7 @@ void CL_D3D9DisplayWindowProvider::create(CL_DisplayWindowSite *new_site, const 
 	if (FAILED(result))
 	{
 		direct3d.clear();
-		throw CL_Exception(cl_text("Failed to create Direct3D 9 device"));
+		throw CL_Exception("Failed to create Direct3D 9 device");
 	}
 
 	gc = CL_GraphicContext(new CL_D3D9GraphicContextProvider(this));
@@ -260,7 +276,7 @@ void CL_D3D9DisplayWindowProvider::flip(int interval)
 
 void CL_D3D9DisplayWindowProvider::update(const CL_Rect &rect)
 {
-	throw CL_Exception(cl_text("Not implemented yet."));
+	throw CL_Exception("Not implemented yet.");
 }
 
 void CL_D3D9DisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)

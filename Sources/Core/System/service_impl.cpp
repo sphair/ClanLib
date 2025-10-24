@@ -37,7 +37,7 @@ CL_Service_Impl::CL_Service_Impl(CL_Service *service, const CL_String &service_n
 : service_name(service_name), service(service)
 {
 	if (instance != 0)
-		throw CL_Exception(cl_text("More than one instance of CL_Service not allowed"));
+		throw CL_Exception("More than one instance of CL_Service not allowed");
 	instance = this;
 }
 

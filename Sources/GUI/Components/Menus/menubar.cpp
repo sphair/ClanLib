@@ -28,6 +28,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message.h"
@@ -70,6 +71,18 @@ CL_MenuBar::~CL_MenuBar()
 /////////////////////////////////////////////////////////////////////////////
 // CL_MenuBar Attributes:
 
+CL_MenuBar *CL_MenuBar::get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id)
+{
+	CL_MenuBar *object = NULL;
+	if (reference_component)
+		object = dynamic_cast<CL_MenuBar*>(reference_component->get_named_item(id));
+
+	if (!object)
+		throw CL_Exception(cl_format("Cannot find CL_MenuBar named item: %1", id));
+
+	return object;
+}
+
 CL_Size CL_MenuBar::get_preferred_size() const
 {
 	return impl->part_component.get_preferred_size();
@@ -90,7 +103,7 @@ void CL_MenuBar::clear()
 
 int CL_MenuBar::add_menu(const CL_StringRef &name, CL_PopupMenu popup_menu)
 {
-	popup_menu.set_class_name(cl_text("menubar_joined"));
+	popup_menu.set_class_name("menubar_joined");
 
 	CL_TopMenu top_menu;
 	top_menu.name = name;
@@ -206,12 +219,12 @@ void CL_MenuBar_Impl::on_style_changed()
 void CL_MenuBar_Impl::create_parts()
 {
 	part_component = CL_GUIThemePart(menubar);
-	part_item = CL_GUIThemePart(menubar, cl_text("item"));
+	part_item = CL_GUIThemePart(menubar, "item");
 
-	CL_GUIThemePartProperty prop_bl(cl_text("border-left"), cl_text("0"));
-	CL_GUIThemePartProperty prop_pl(cl_text("padding-left"), cl_text("0"));
-	CL_GUIThemePartProperty prop_br(cl_text("border-right"), cl_text("0"));
-	CL_GUIThemePartProperty prop_pr(cl_text("padding-right"), cl_text("0"));
+	CL_GUIThemePartProperty prop_bl("border-left", "0");
+	CL_GUIThemePartProperty prop_pl("padding-left", "0");
+	CL_GUIThemePartProperty prop_br("border-right", "0");
+	CL_GUIThemePartProperty prop_pr("padding-right", "0");
 
 	item_border_left = part_item.get_property_int(prop_bl);
 	item_padding_left = part_item.get_property_int(prop_pl);
@@ -271,7 +284,7 @@ CL_Rect CL_MenuBar_Impl::get_menu_item_rect(int our_index)
 	CL_Rect menubar_rect = menubar->get_size();
 	CL_Rect menubar_content_rect = part_component.get_content_box(menubar_rect);
 
-	int x = 0;
+	int x = menubar_content_rect.left;
 	CL_GraphicContext &gc = menubar->get_gc();
 	std::vector<CL_TopMenu>::size_type index;
 	for (index = 0; index < menus.size(); index++)

@@ -63,11 +63,6 @@ public:
 	/// \brief Constructs directory scanner for iterating over a directory.
 	CL_DirectoryScanner();
 
-	/// \brief Constructs a DirectoryScanner
-	///
-	/// \param copy = Directory Scanner
-	CL_DirectoryScanner(const CL_DirectoryScanner &copy);
-
 	/// \brief Destructor.
 	~CL_DirectoryScanner();
 

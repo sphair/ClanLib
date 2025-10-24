@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan21GL.la
+lib_LTLIBRARIES = libclan22GL.la
 
-libclan21GL_la_SOURCES = \
+libclan22GL_la_SOURCES = \
 	opengl_window_description_impl.h \
 	opengl_graphic_context_provider.h \
 	opengl_target_provider.h \
@@ -27,30 +27,34 @@ libclan21GL_la_SOURCES = \
 	opengl_frame_buffer_provider.h \
 	opengl_element_array_buffer_provider.cpp \
 	opengl_element_array_buffer_provider.h \
+	opengl_pixel_buffer_provider.cpp \
+	opengl_pixel_buffer_provider.h \
+	opengl_buffer_object_provider.h \
+	opengl_texture_buffer_provider.h \
+	opengl_transform_feedback_buffer_provider.h \
+	opengl_uniform_buffer_provider.h \
+	opengl_buffer_object_provider.cpp \
 	opengl_vertex_array_buffer_provider.cpp \
 	opengl_vertex_array_buffer_provider.h \
 	opengl_render_buffer_provider.h
 
 if WIN32
-	libclan21GL_la_SOURCES += \
+	libclan22GL_la_SOURCES += \
 	WGL/opengl_creation_helper.cpp \
 	WGL/opengl_window_provider_wgl.cpp \
 	WGL/opengl_creation_helper.h \
 	WGL/opengl_window_provider_wgl.h
 else
-libclan21GL_la_SOURCES += \
+libclan22GL_la_SOURCES += \
 	GLX/opengl_window_provider_glx.cpp \
 	GLX/opengl_window_provider_glx.h
 
-#libclan21GL_la_LIBADD = -lXi
 endif
 
-# EXTRA_DIST = \
-# WGL/displaycard_opengl_win32.cpp \
-# WGL/displaycard_opengl_win32.h   \
-# WGL/setupgl_win32.cpp
+libclan22GL_la_LDFLAGS = \
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
+  $(extra_LIBS_clanGL)
 
-libclan21GL_la_LDFLAGS = \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
+libclan22GL_la_CXXFLAGS=$(clanGL_CXXFLAGS) $(extra_CFLAGS_clanGL)
 
 # EOF #

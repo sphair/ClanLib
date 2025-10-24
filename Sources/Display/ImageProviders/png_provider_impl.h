@@ -77,10 +77,7 @@ public:
 	/// \brief Returns whether a source colorkey is used.
 	bool uses_src_colorkey() const { return m_uses_src_colorkey; }
 
-	/// \brief Returns whether the target uses an indexed color mode or not.
-	bool is_indexed() const;
-
-	CL_PixelFormat format;
+	CL_TextureFormat sized_format;
 
 	int pitch, width, height;
 

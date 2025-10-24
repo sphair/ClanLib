@@ -81,7 +81,6 @@ CL_CollisionOutline::CL_CollisionOutline(const CL_StringRef &fullname, int alpha
 
 CL_CollisionOutline::CL_CollisionOutline(const CL_StringRef &filename, const CL_VirtualDirectory &directory, int alpha_limit, CL_OutlineAccuracy accuracy, bool get_insides)
 {
-	bool precompiled_outline;
 	CL_String file_extension = CL_PathHelp::get_extension(filename);
 
 	CL_IODevice file = directory.open_file_read(filename);
@@ -94,7 +93,7 @@ CL_CollisionOutline::CL_CollisionOutline(
 	CL_OutlineAccuracy accuracy,
 	bool get_insides)
 {
-	if( file_extension == cl_text("out") )
+	if( file_extension == "out" )
 	{
 		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderFile(file), accuracy_raw ));
 		impl = new_impl;
@@ -103,7 +102,7 @@ CL_CollisionOutline::CL_CollisionOutline(
 
 	CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(file, file_extension);
 	
-	if( pbuf.get_format() == CL_PixelFormat::rgba8888 )
+	if( pbuf.get_format() == cl_rgba8 )
 	{
 		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy));
 		impl = new_impl;
@@ -122,25 +121,25 @@ CL_CollisionOutline::CL_CollisionOutline(
 	CL_ResourceManager *manager)
 {
 	resource = manager->get_resource(resource_id);
-	if (resource.get_type() != cl_text("collisionoutline"))
-		throw CL_Exception(cl_format(cl_text("Resource '%1' is not of type 'collisionoutline'"), resource_id));
-	CL_ResourceDataSession(cl_text("collisionoutline"), resource);
-	CL_SharedPtr<CL_ResourceData_CollisionOutline> data(resource.get_data(cl_text("collisionoutline")));
+	if (resource.get_type() != "collisionoutline")
+		throw CL_Exception(cl_format("Resource '%1' is not of type 'collisionoutline'", resource_id));
+	CL_ResourceDataSession("collisionoutline", resource);
+	CL_SharedPtr<CL_ResourceData_CollisionOutline> data(resource.get_data("collisionoutline"));
 	if (data.is_null())
 	{
 		data = CL_SharedPtr<CL_ResourceData_CollisionOutline>(new CL_ResourceData_CollisionOutline(resource));
-		resource.set_data(cl_text("collisionoutline"), data);
+		resource.set_data("collisionoutline", data);
 	}
 	impl = data->collision_outline.impl;
 }
 
 CL_CollisionOutline::CL_CollisionOutline(
-	const CL_PixelBufferRef &pbuf,
+	const CL_PixelBuffer &pbuf,
 	int alpha_limit,
 	CL_OutlineAccuracy accuracy)
  : impl(new CL_CollisionOutline_Generic())
 {
-	if( pbuf.get_format() == CL_PixelFormat::rgba8888 )
+	if( pbuf.get_format() == cl_rgba8 )
 	{
 		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit), accuracy));
 		impl = new_impl;

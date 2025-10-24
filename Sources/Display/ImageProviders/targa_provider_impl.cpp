@@ -114,7 +114,7 @@ void CL_TargaProvider_Impl::read_tga(CL_IODevice &input_source)
 		read_rle_rgb(input_source, header);
 		break;
 	default:
-		throw CL_Exception(cl_text("Unsupported TGA filetype encountered"));
+		throw CL_Exception("Unsupported TGA filetype encountered");
 		break;
 	}
 }
@@ -168,14 +168,14 @@ void CL_TargaProvider_Impl::read_colormapped(
 
 		image = new unsigned char[height * pitch];
 		if (image == 0)
-			throw CL_Exception(cl_text("Out of memory trying to allocate for targa image"));
+			throw CL_Exception("Out of memory trying to allocate for targa image");
 
 		const bool is_mirrored = (header.image_descriptor_byte & (1 << 5)) ? false : true;
 		const int target_y_modifier = is_mirrored ? -1 : 1;
 		int targety = is_mirrored ? (height - 1) : 0;
 		int index_size = header.image_pixel_size / 8;
 		if (index_size > int(sizeof(unsigned int)))
-			throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+			throw CL_Exception("Unsupported or corrupted targa file");
 		bool big = CL_Endian::is_system_big();
 		for (int y = 0; y < height; y++, targety += target_y_modifier)
 		{
@@ -191,11 +191,7 @@ void CL_TargaProvider_Impl::read_colormapped(
 			}
 		}
 
-		CL_TargaProvider_Impl::format.enable_colorkey(false);
-		CL_TargaProvider_Impl::format.set_colorkey(0);
-		CL_TargaProvider_Impl::format.set_depth(8);
-		CL_TargaProvider_Impl::format.set_type(pixelformat_index);
-		CL_TargaProvider_Impl::pitch = pitch;
+		CL_TargaProvider_Impl::sized_format = cl_color_index;
 		CL_TargaProvider_Impl::width = width;
 		CL_TargaProvider_Impl::height = height;
 	}
@@ -208,7 +204,7 @@ void CL_TargaProvider_Impl::read_colormapped(
 		{
 			int c_size = header.colormap_entry_size / 8;
 			if (c_size > 4)
-				throw CL_Exception(cl_text("Unsupported color map"));
+				throw CL_Exception("Unsupported color map");
 			bool big = CL_Endian::is_system_big();
 			for (int i = header.colormap_orig; i < header.colormap_orig + header.colormap_length; i++)
 			{
@@ -233,14 +229,14 @@ void CL_TargaProvider_Impl::read_colormapped(
 
 		image = new unsigned char[height * pitch];
 		if (image == 0)
-			throw CL_Exception(cl_text("Out of memory allocating for targa image"));
+			throw CL_Exception("Out of memory allocating for targa image");
 
 		const bool is_mirrored = (header.image_descriptor_byte & (1 << 5)) ? false : true;
 		const int target_y_modifier = is_mirrored ? -1 : 1;
 		int targety = is_mirrored ? (height - 1) : 0;
 		int index_size = header.image_pixel_size / 8;
 		if (index_size > 4)
-			throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+			throw CL_Exception("Unsupported or corrupted targa file");
 		bool big = CL_Endian::is_system_big();
 		for (int y = 0; y < height; y++, targety += target_y_modifier)
 		{
@@ -259,36 +255,32 @@ void CL_TargaProvider_Impl::read_colormapped(
 
 		const int bpp = header.colormap_entry_size;
 
-		CL_TargaProvider_Impl::format.enable_colorkey(false);
-		CL_TargaProvider_Impl::format.set_colorkey(0);
-		CL_TargaProvider_Impl::format.set_depth(bpp);
 		if (bpp == 32)
 		{
-			CL_TargaProvider_Impl::format.set_red_mask(0x00ff0000);
-			CL_TargaProvider_Impl::format.set_green_mask(0x0000ff00);
-			CL_TargaProvider_Impl::format.set_blue_mask(0x000000ff);
 			if (alpha_found)
-				CL_TargaProvider_Impl::format.set_alpha_mask(0xff000000);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_argb8;
+			}
 			else
-				CL_TargaProvider_Impl::format.set_alpha_mask(0);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_rgb8;
+			}
 		}
 		else if (bpp == 24)
 		{
-			CL_TargaProvider_Impl::format.set_red_mask(0xff0000);
-			CL_TargaProvider_Impl::format.set_green_mask(0x00ff00);
-			CL_TargaProvider_Impl::format.set_blue_mask(0x0000ff);
-			CL_TargaProvider_Impl::format.set_alpha_mask(0x000000);
+			CL_TargaProvider_Impl::sized_format = cl_rgb8;
 		}
 		else if (bpp == 16)
 		{
 			// ARRRRRGG GGGBBBBB (little endian)
-			CL_TargaProvider_Impl::format.set_red_mask(CL_PixelFormat::get_bitmask(5, 10));
-			CL_TargaProvider_Impl::format.set_green_mask(CL_PixelFormat::get_bitmask(5, 5));
-			CL_TargaProvider_Impl::format.set_blue_mask(CL_PixelFormat::get_bitmask(5, 0));
 			if (alpha_found)
-				CL_TargaProvider_Impl::format.set_alpha_mask(CL_PixelFormat::get_bitmask(1, 15));
+			{
+				CL_TargaProvider_Impl::sized_format = cl_a1_rgb5;
+			}
 			else
-				CL_TargaProvider_Impl::format.set_alpha_mask(0);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_rgb5;
+			}
 		}
 		CL_TargaProvider_Impl::pitch = pitch;
 		CL_TargaProvider_Impl::width = width;
@@ -326,14 +318,14 @@ void CL_TargaProvider_Impl::read_rgb(
 
 	image = new unsigned char[pitch * height];
 	if (image == 0)
-		throw CL_Exception(cl_text("Out of memory allocating for targa image"));
+		throw CL_Exception("Out of memory allocating for targa image");
 
 	const bool is_mirrored = (header.image_descriptor_byte & (1 << 5)) ? false : true;
 	const int target_y_modifier = is_mirrored ? -1 : 1;
 	int targety = is_mirrored ? (height - 1) : 0;
 	int size_c = header.image_pixel_size / 8;
 	if (size_c > 4)
-		throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+		throw CL_Exception("Unsupported or corrupted targa file");
 	bool big = CL_Endian::is_system_big();
 	for (int y = 0; y < height; y++, targety += target_y_modifier)
 	{
@@ -351,36 +343,32 @@ void CL_TargaProvider_Impl::read_rgb(
 
 	const int bpp = header.image_pixel_size;
 
-	CL_TargaProvider_Impl::format.enable_colorkey(false);
-	CL_TargaProvider_Impl::format.set_colorkey(0);
-	CL_TargaProvider_Impl::format.set_depth(bpp);
 	if (bpp == 32)
 	{
-		CL_TargaProvider_Impl::format.set_red_mask(0x00ff0000);
-		CL_TargaProvider_Impl::format.set_green_mask(0x0000ff00);
-		CL_TargaProvider_Impl::format.set_blue_mask(0x000000ff);
 		if (alpha_found)
-			CL_TargaProvider_Impl::format.set_alpha_mask(0xff000000);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_argb8;
+		}
 		else
-			CL_TargaProvider_Impl::format.set_alpha_mask(0);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_rgb8;
+		}
 	}
 	else if (bpp == 24)
 	{
-		CL_TargaProvider_Impl::format.set_red_mask(0xff0000);
-		CL_TargaProvider_Impl::format.set_green_mask(0x00ff00);
-		CL_TargaProvider_Impl::format.set_blue_mask(0x0000ff);
-		CL_TargaProvider_Impl::format.set_alpha_mask(0x000000);
+		CL_TargaProvider_Impl::sized_format = cl_rgb8;
 	}
 	else if (bpp == 16)
 	{
 		// ARRRRRGG GGGBBBBB (little endian)
-		CL_TargaProvider_Impl::format.set_red_mask(CL_PixelFormat::get_bitmask(5, 10));
-		CL_TargaProvider_Impl::format.set_green_mask(CL_PixelFormat::get_bitmask(5, 5));
-		CL_TargaProvider_Impl::format.set_blue_mask(CL_PixelFormat::get_bitmask(5, 0));
 		if (alpha_found)
-			CL_TargaProvider_Impl::format.set_alpha_mask(CL_PixelFormat::get_bitmask(1, 15));
+		{
+			CL_TargaProvider_Impl::sized_format = cl_a1_rgb5;
+		}
 		else
-			CL_TargaProvider_Impl::format.set_alpha_mask(0);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_rgb5;
+		}
 	}
 	CL_TargaProvider_Impl::pitch = pitch;
 	CL_TargaProvider_Impl::width = width;
@@ -439,7 +427,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 
 		image = new unsigned char[height * pitch];
 		if (image == 0)
-			throw CL_Exception(cl_text("Out of memory allocating for targa image"));
+			throw CL_Exception("Out of memory allocating for targa image");
 
 		// repetitions left of an RLE packed and its associated color
 		unsigned int repe_left = 0, repe_color = 0;
@@ -451,7 +439,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 		int targety = is_mirrored ? (height - 1) : 0;
 		int size_c = header.image_pixel_size / 8;
 		if (size_c > 4)
-			throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+			throw CL_Exception("Unsupported or corrupted targa file");
 		bool big = CL_Endian::is_system_big();
 		for (int y = 0; y < height; y++, targety += target_y_modifier)
 		{
@@ -491,10 +479,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 			}
 		}
 
-		CL_TargaProvider_Impl::format.enable_colorkey(false);
-		CL_TargaProvider_Impl::format.set_colorkey(0);
-		CL_TargaProvider_Impl::format.set_depth(8);
-		CL_TargaProvider_Impl::format.set_type(pixelformat_index);
+		CL_TargaProvider_Impl::sized_format = cl_color_index;
 		CL_TargaProvider_Impl::pitch = pitch;
 		CL_TargaProvider_Impl::width = width;
 		CL_TargaProvider_Impl::height = height;
@@ -508,7 +493,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 		{
 			int size_c = header.colormap_entry_size / 8;
 			if (size_c > 4)
-				throw CL_Exception(cl_text("Unsupported colormap size"));
+				throw CL_Exception("Unsupported colormap size");
 			bool big = CL_Endian::is_system_big();
 			for (int i = header.colormap_orig; i < header.colormap_orig + header.colormap_length; i++)
 			{
@@ -523,7 +508,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 
 		image = new unsigned char[height * pitch];
 		if (image == 0)
-			throw CL_Exception(cl_text("Out of memory allocating for targa image"));
+			throw CL_Exception("Out of memory allocating for targa image");
 
 		// set to true if an alpha value > 0 was found (if the color depth supports it)
 		int alpha_found = false;
@@ -545,7 +530,7 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 		int targety = is_mirrored ? (height - 1) : 0;
 		int size_c = header.image_pixel_size / 8;
 		if (size_c > 4)
-			throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+			throw CL_Exception("Unsupported or corrupted targa file");
 		bool big = CL_Endian::is_system_big();
 		for (int y = 0; y < height; y++, targety += target_y_modifier)
 		{
@@ -590,36 +575,32 @@ void CL_TargaProvider_Impl::read_rle_colormapped(
 
 		const int bpp = header.colormap_entry_size;
 
-		CL_TargaProvider_Impl::format.enable_colorkey(false);
-		CL_TargaProvider_Impl::format.set_colorkey(0);
-		CL_TargaProvider_Impl::format.set_depth(bpp);
 		if (bpp == 32)
 		{
-			CL_TargaProvider_Impl::format.set_red_mask(0x00ff0000);
-			CL_TargaProvider_Impl::format.set_green_mask(0x0000ff00);
-			CL_TargaProvider_Impl::format.set_blue_mask(0x000000ff);
 			if (alpha_found)
-				CL_TargaProvider_Impl::format.set_alpha_mask(0xff000000);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_argb8;
+			}
 			else
-				CL_TargaProvider_Impl::format.set_alpha_mask(0);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_rgb8;
+			}
 		}
 		else if (bpp == 24)
 		{
-			CL_TargaProvider_Impl::format.set_red_mask(0xff0000);
-			CL_TargaProvider_Impl::format.set_green_mask(0x00ff00);
-			CL_TargaProvider_Impl::format.set_blue_mask(0x0000ff);
-			CL_TargaProvider_Impl::format.set_alpha_mask(0x000000);
+			CL_TargaProvider_Impl::sized_format = cl_rgb8;
 		}
 		else if (bpp == 16)
 		{
 			// ARRRRRGG GGGBBBBB (little endian)
-			CL_TargaProvider_Impl::format.set_red_mask(CL_PixelFormat::get_bitmask(5, 10));
-			CL_TargaProvider_Impl::format.set_green_mask(CL_PixelFormat::get_bitmask(5, 5));
-			CL_TargaProvider_Impl::format.set_blue_mask(CL_PixelFormat::get_bitmask(5, 0));
 			if (alpha_found)
-				CL_TargaProvider_Impl::format.set_alpha_mask(CL_PixelFormat::get_bitmask(1, 15));
+			{
+				CL_TargaProvider_Impl::sized_format = cl_a1_rgb5;
+			}
 			else
-				CL_TargaProvider_Impl::format.set_alpha_mask(0);
+			{
+				CL_TargaProvider_Impl::sized_format = cl_rgb5;
+			}
 		}
 		CL_TargaProvider_Impl::pitch = pitch;
 		CL_TargaProvider_Impl::width = width;
@@ -652,7 +633,7 @@ void CL_TargaProvider_Impl::read_rle_rgb(
 
 	image = new unsigned char[height * pitch];
 	if (image == 0)
-		throw CL_Exception(cl_text("Out of memory allocating for targa image"));
+		throw CL_Exception("Out of memory allocating for targa image");
 
 	// set to true if an alpha value > 0 was found (if the color depth supports it)
 	int alpha_found = false;
@@ -674,7 +655,7 @@ void CL_TargaProvider_Impl::read_rle_rgb(
 	int targety = is_mirrored ? (height - 1) : 0;
 	int size_c = header.image_pixel_size / 8;
 	if (size_c > 4)
-		throw CL_Exception(cl_text("Unsupported or corrupted targa file"));
+		throw CL_Exception("Unsupported or corrupted targa file");
 	bool big = CL_Endian::is_system_big();
 	for (int y = 0; y < height; y++, targety += target_y_modifier)
 	{
@@ -717,36 +698,32 @@ void CL_TargaProvider_Impl::read_rle_rgb(
 
 	const int bpp = header.image_pixel_size;
 
-	CL_TargaProvider_Impl::format.enable_colorkey(false);
-	CL_TargaProvider_Impl::format.set_colorkey(0);
-	CL_TargaProvider_Impl::format.set_depth(bpp);
 	if (bpp == 32)
 	{
-		CL_TargaProvider_Impl::format.set_red_mask(0x00ff0000);
-		CL_TargaProvider_Impl::format.set_green_mask(0x0000ff00);
-		CL_TargaProvider_Impl::format.set_blue_mask(0x000000ff);
 		if (alpha_found)
-			CL_TargaProvider_Impl::format.set_alpha_mask(0xff000000);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_argb8;
+		}
 		else
-			CL_TargaProvider_Impl::format.set_alpha_mask(0);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_rgb8;
+		}
 	}
 	else if (bpp == 24)
 	{
-		CL_TargaProvider_Impl::format.set_red_mask(0xff0000);
-		CL_TargaProvider_Impl::format.set_green_mask(0x00ff00);
-		CL_TargaProvider_Impl::format.set_blue_mask(0x0000ff);
-		CL_TargaProvider_Impl::format.set_alpha_mask(0x000000);
+		CL_TargaProvider_Impl::sized_format = cl_rgb8;
 	}
 	else if (bpp == 16)
 	{
 		// ARRRRRGG GGGBBBBB (little endian)
-		CL_TargaProvider_Impl::format.set_red_mask(CL_PixelFormat::get_bitmask(5, 10));
-		CL_TargaProvider_Impl::format.set_green_mask(CL_PixelFormat::get_bitmask(5, 5));
-		CL_TargaProvider_Impl::format.set_blue_mask(CL_PixelFormat::get_bitmask(5, 0));
 		if (alpha_found)
-			CL_TargaProvider_Impl::format.set_alpha_mask(CL_PixelFormat::get_bitmask(1, 15));
+		{
+			CL_TargaProvider_Impl::sized_format = cl_a1_rgb5;
+		}
 		else
-			CL_TargaProvider_Impl::format.set_alpha_mask(0);
+		{
+			CL_TargaProvider_Impl::sized_format = cl_rgb5;
+		}
 	}
 	CL_TargaProvider_Impl::pitch = pitch;
 	CL_TargaProvider_Impl::width = width;

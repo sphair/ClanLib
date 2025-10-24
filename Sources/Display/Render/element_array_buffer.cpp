@@ -78,10 +78,16 @@ CL_ElementArrayBuffer::~CL_ElementArrayBuffer()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ElementArrayBuffer Attributes:
 
+void CL_ElementArrayBuffer::throw_if_null() const
+{
+	if (impl.is_null())
+		throw CL_Exception("CL_ElementArrayBuffer is null");
+}
+
 void *CL_ElementArrayBuffer::get_data()
 {
 	if (impl->lock_count <= 0)
-		throw CL_Exception(cl_text("Attempted to retrieve element array buffer data without locking it first."));
+		throw CL_Exception("Attempted to retrieve element array buffer data without locking it first.");
 	return impl->provider->get_data();
 }
 

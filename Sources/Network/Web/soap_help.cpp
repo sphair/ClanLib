@@ -38,15 +38,15 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoapHelp Attributes:
 
-CL_StringRef CL_SoapHelp::soap11_ns = cl_text("http://schemas.xmlsoap.org/soap/envelope/");
+CL_StringRef CL_SoapHelp::soap11_ns = "http://schemas.xmlsoap.org/soap/envelope/";
 
-CL_StringRef CL_SoapHelp::soap12_ns = cl_text("http://www.w3.org/2003/05/soap-envelope");
+CL_StringRef CL_SoapHelp::soap12_ns = "http://www.w3.org/2003/05/soap-envelope";
 
-CL_StringRef CL_SoapHelp::xsi_ns = cl_text("http://www.w3.org/2001/XMLSchema-instance");
+CL_StringRef CL_SoapHelp::xsi_ns = "http://www.w3.org/2001/XMLSchema-instance";
 
-CL_StringRef CL_SoapHelp::xsd_ns = cl_text("http://www.w3.org/2001/XMLSchema");
+CL_StringRef CL_SoapHelp::xsd_ns = "http://www.w3.org/2001/XMLSchema";
 
-CL_StringRef CL_SoapHelp::xml_ns = cl_text("http://www.w3.org/XML/1998/namespace");
+CL_StringRef CL_SoapHelp::xml_ns = "http://www.w3.org/XML/1998/namespace";
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoapHelp Operations:
@@ -55,17 +55,17 @@ CL_DomDocument CL_SoapHelp::create_soap11_sender_fault(const CL_StringRef &reaso
 {
 	CL_DomElement envelope_element, body_element;
 	CL_DomDocument response = create_soap11_message(envelope_element, body_element);
-	CL_DomElement fault_element = response.create_element_ns(soap11_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap11_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap11_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap11_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:Sender")));
+	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:Sender"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap11_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap11_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -75,17 +75,17 @@ CL_DomDocument CL_SoapHelp::create_soap12_sender_fault(const CL_StringRef &reaso
 {
 	CL_DomElement envelope_element, body_element;
 	CL_DomDocument response = create_soap12_message(envelope_element, body_element);
-	CL_DomElement fault_element = response.create_element_ns(soap12_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap12_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap12_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap12_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:Sender")));
+	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:Sender"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap12_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap12_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -95,17 +95,17 @@ CL_DomDocument CL_SoapHelp::create_soap11_receiver_fault(const CL_StringRef &rea
 {
 	CL_DomElement envelope_element, body_element;
 	CL_DomDocument response = create_soap11_message(envelope_element, body_element);
-	CL_DomElement fault_element = response.create_element_ns(soap11_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap11_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap11_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap11_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:Receiver")));
+	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:Receiver"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap11_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap11_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -115,17 +115,17 @@ CL_DomDocument CL_SoapHelp::create_soap12_receiver_fault(const CL_StringRef &rea
 {
 	CL_DomElement envelope_element, body_element;
 	CL_DomDocument response = create_soap12_message(envelope_element, body_element);
-	CL_DomElement fault_element = response.create_element_ns(soap12_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap12_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap12_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap12_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:Receiver")));
+	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:Receiver"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap12_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap12_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -135,33 +135,33 @@ CL_DomDocument CL_SoapHelp::create_soap11_version_mismatch(const CL_StringRef &r
 {
 	CL_DomElement envelope_element, header_element, body_element;
 	CL_DomDocument response = create_soap11_message(envelope_element, header_element, body_element);
-	CL_DomElement upgrade_element = response.create_element_ns(soap11_ns, cl_text("soap:Upgrade"));
+	CL_DomElement upgrade_element = response.create_element_ns(soap11_ns, "soap:Upgrade");
 	header_element.append_child(upgrade_element);
 	if (supports_soap12)
 	{
-		CL_DomElement supported12_element = response.create_element_ns(soap11_ns, cl_text("soap:SupportedEnvelope"));
-		supported12_element.set_attribute_ns(xml_ns, cl_text("xml:qname"), cl_text("soap12:Envelope"));
-		supported12_element.set_attribute(cl_text("xmlns:soap12"), soap12_ns);
+		CL_DomElement supported12_element = response.create_element_ns(soap11_ns, "soap:SupportedEnvelope");
+		supported12_element.set_attribute_ns(xml_ns, "xml:qname", "soap12:Envelope");
+		supported12_element.set_attribute("xmlns:soap12", soap12_ns);
 		upgrade_element.append_child(supported12_element);
 	}
 	if (supports_soap11)
 	{
-		CL_DomElement supported11_element = response.create_element_ns(soap11_ns, cl_text("soap:SupportedEnvelope"));
-		supported11_element.set_attribute_ns(xml_ns, cl_text("xml:qname"), cl_text("soap11:Envelope"));
-		supported11_element.set_attribute(cl_text("xmlns:soap11"), soap11_ns);
+		CL_DomElement supported11_element = response.create_element_ns(soap11_ns, "soap:SupportedEnvelope");
+		supported11_element.set_attribute_ns(xml_ns, "xml:qname", "soap11:Envelope");
+		supported11_element.set_attribute("xmlns:soap11", soap11_ns);
 		upgrade_element.append_child(supported11_element);
 	}
-	CL_DomElement fault_element = response.create_element_ns(soap11_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap11_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap11_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap11_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:VersionMismatch")));
+	CL_DomElement code_value_element = response.create_element_ns(soap11_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:VersionMismatch"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap11_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap11_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap11_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -171,33 +171,33 @@ CL_DomDocument CL_SoapHelp::create_soap12_version_mismatch(const CL_StringRef &r
 {
 	CL_DomElement envelope_element, header_element, body_element;
 	CL_DomDocument response = create_soap12_message(envelope_element, header_element, body_element);
-	CL_DomElement upgrade_element = response.create_element_ns(soap12_ns, cl_text("soap:Upgrade"));
+	CL_DomElement upgrade_element = response.create_element_ns(soap12_ns, "soap:Upgrade");
 	header_element.append_child(upgrade_element);
 	if (supports_soap12)
 	{
-		CL_DomElement supported12_element = response.create_element_ns(soap12_ns, cl_text("soap:SupportedEnvelope"));
-		supported12_element.set_attribute_ns(xml_ns, cl_text("xml:qname"), cl_text("soap12:Envelope"));
-		supported12_element.set_attribute(cl_text("xmlns:soap12"), soap12_ns);
+		CL_DomElement supported12_element = response.create_element_ns(soap12_ns, "soap:SupportedEnvelope");
+		supported12_element.set_attribute_ns(xml_ns, "xml:qname", "soap12:Envelope");
+		supported12_element.set_attribute("xmlns:soap12", soap12_ns);
 		upgrade_element.append_child(supported12_element);
 	}
 	if (supports_soap11)
 	{
-		CL_DomElement supported11_element = response.create_element_ns(soap12_ns, cl_text("soap:SupportedEnvelope"));
-		supported11_element.set_attribute_ns(xml_ns, cl_text("xml:qname"), cl_text("soap11:Envelope"));
-		supported11_element.set_attribute(cl_text("xmlns:soap11"), soap11_ns);
+		CL_DomElement supported11_element = response.create_element_ns(soap12_ns, "soap:SupportedEnvelope");
+		supported11_element.set_attribute_ns(xml_ns, "xml:qname", "soap11:Envelope");
+		supported11_element.set_attribute("xmlns:soap11", soap11_ns);
 		upgrade_element.append_child(supported11_element);
 	}
-	CL_DomElement fault_element = response.create_element_ns(soap12_ns, cl_text("soap:Fault"));
+	CL_DomElement fault_element = response.create_element_ns(soap12_ns, "soap:Fault");
 	body_element.append_child(fault_element);
-	CL_DomElement code_element = response.create_element_ns(soap12_ns, cl_text("soap:Code"));
+	CL_DomElement code_element = response.create_element_ns(soap12_ns, "soap:Code");
 	fault_element.append_child(code_element);
-	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, cl_text("soap:Value"));
-	code_value_element.append_child(response.create_text_node(cl_text("soap:VersionMismatch")));
+	CL_DomElement code_value_element = response.create_element_ns(soap12_ns, "soap:Value");
+	code_value_element.append_child(response.create_text_node("soap:VersionMismatch"));
 	code_element.append_child(code_value_element);
-	CL_DomElement reason_element = response.create_element_ns(soap12_ns, cl_text("soap:Reason"));
+	CL_DomElement reason_element = response.create_element_ns(soap12_ns, "soap:Reason");
 	fault_element.append_child(reason_element);
-	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, cl_text("soap:Text"));
-	reason_text_element.set_attribute_ns(xml_ns, cl_text("xml:lang"), lang);
+	CL_DomElement reason_text_element = response.create_element_ns(soap12_ns, "soap:Text");
+	reason_text_element.set_attribute_ns(xml_ns, "xml:lang", lang);
 	reason_text_element.append_child(response.create_text_node(reason));
 	reason_element.append_child(reason_text_element);
 	return response;
@@ -209,13 +209,13 @@ CL_DomDocument CL_SoapHelp::create_soap11_message(
 	CL_DomElement &out_body)
 {
 	CL_DomDocument response;
-	CL_DomElement document_element = response.create_element_ns(soap11_ns, cl_text("soap:Envelope"));
-	document_element.set_attribute(cl_text("xmlns:soap"), soap11_ns);
-	document_element.set_attribute(cl_text("xmlns:xsi"), xsi_ns);
-	document_element.set_attribute(cl_text("xmlns:xsd"), xsd_ns);
-	CL_DomElement header_element = response.create_element_ns(soap11_ns, cl_text("soap:Header"));
+	CL_DomElement document_element = response.create_element_ns(soap11_ns, "soap:Envelope");
+	document_element.set_attribute("xmlns:soap", soap11_ns);
+	document_element.set_attribute("xmlns:xsi", xsi_ns);
+	document_element.set_attribute("xmlns:xsd", xsd_ns);
+	CL_DomElement header_element = response.create_element_ns(soap11_ns, "soap:Header");
 	document_element.append_child(header_element);
-	CL_DomElement body_element = response.create_element_ns(soap11_ns, cl_text("soap:Body"));
+	CL_DomElement body_element = response.create_element_ns(soap11_ns, "soap:Body");
 	document_element.append_child(body_element);
 	response.append_child(document_element);
 
@@ -230,11 +230,11 @@ CL_DomDocument CL_SoapHelp::create_soap11_message(
 	CL_DomElement &out_body)
 {
 	CL_DomDocument response;
-	CL_DomElement document_element = response.create_element_ns(soap11_ns, cl_text("soap:Envelope"));
-	document_element.set_attribute(cl_text("xmlns:soap"), soap11_ns);
-	document_element.set_attribute(cl_text("xmlns:xsi"), xsi_ns);
-	document_element.set_attribute(cl_text("xmlns:xsd"), xsd_ns);
-	CL_DomElement body_element = response.create_element_ns(soap11_ns, cl_text("soap:Body"));
+	CL_DomElement document_element = response.create_element_ns(soap11_ns, "soap:Envelope");
+	document_element.set_attribute("xmlns:soap", soap11_ns);
+	document_element.set_attribute("xmlns:xsi", xsi_ns);
+	document_element.set_attribute("xmlns:xsd", xsd_ns);
+	CL_DomElement body_element = response.create_element_ns(soap11_ns, "soap:Body");
 	document_element.append_child(body_element);
 	response.append_child(document_element);
 
@@ -249,13 +249,13 @@ CL_DomDocument CL_SoapHelp::create_soap12_message(
 	CL_DomElement &out_body)
 {
 	CL_DomDocument response;
-	CL_DomElement document_element = response.create_element_ns(soap12_ns, cl_text("soap:Envelope"));
-	document_element.set_attribute(cl_text("xmlns:soap"), soap12_ns);
-	document_element.set_attribute(cl_text("xmlns:xsi"), xsi_ns);
-	document_element.set_attribute(cl_text("xmlns:xsd"), xsd_ns);
-	CL_DomElement header_element = response.create_element_ns(soap12_ns, cl_text("soap:Header"));
+	CL_DomElement document_element = response.create_element_ns(soap12_ns, "soap:Envelope");
+	document_element.set_attribute("xmlns:soap", soap12_ns);
+	document_element.set_attribute("xmlns:xsi", xsi_ns);
+	document_element.set_attribute("xmlns:xsd", xsd_ns);
+	CL_DomElement header_element = response.create_element_ns(soap12_ns, "soap:Header");
 	document_element.append_child(header_element);
-	CL_DomElement body_element = response.create_element_ns(soap12_ns, cl_text("soap:Body"));
+	CL_DomElement body_element = response.create_element_ns(soap12_ns, "soap:Body");
 	document_element.append_child(body_element);
 	response.append_child(document_element);
 
@@ -270,11 +270,11 @@ CL_DomDocument CL_SoapHelp::create_soap12_message(
 	CL_DomElement &out_body)
 {
 	CL_DomDocument response;
-	CL_DomElement document_element = response.create_element_ns(soap12_ns, cl_text("soap:Envelope"));
-	document_element.set_attribute(cl_text("xmlns:soap"), soap12_ns);
-	document_element.set_attribute(cl_text("xmlns:xsi"), xsi_ns);
-	document_element.set_attribute(cl_text("xmlns:xsd"), xsd_ns);
-	CL_DomElement body_element = response.create_element_ns(soap12_ns, cl_text("soap:Body"));
+	CL_DomElement document_element = response.create_element_ns(soap12_ns, "soap:Envelope");
+	document_element.set_attribute("xmlns:soap", soap12_ns);
+	document_element.set_attribute("xmlns:xsi", xsi_ns);
+	document_element.set_attribute("xmlns:xsd", xsd_ns);
+	CL_DomElement body_element = response.create_element_ns(soap12_ns, "soap:Body");
 	document_element.append_child(body_element);
 	response.append_child(document_element);
 
@@ -290,7 +290,7 @@ bool CL_SoapHelp::get_soap11_elements(
 	CL_DomElement &out_body,
 	CL_DomElement &out_fault)
 {
-	CL_DomElement envelope = document.named_item_ns(soap11_ns, cl_text("Envelope")).to_element();
+	CL_DomElement envelope = document.named_item_ns(soap11_ns, "Envelope").to_element();
 	if (envelope.is_null())
 	{
 		out_envelope = CL_DomElement();
@@ -301,10 +301,10 @@ bool CL_SoapHelp::get_soap11_elements(
 	}
 
 	out_envelope = envelope;
-	out_header = envelope.named_item_ns(soap11_ns, cl_text("Header")).to_element();
-	out_body = envelope.named_item_ns(soap11_ns, cl_text("Body")).to_element();
+	out_header = envelope.named_item_ns(soap11_ns, "Header").to_element();
+	out_body = envelope.named_item_ns(soap11_ns, "Body").to_element();
 	if (out_body.is_element())
-		out_fault = out_body.named_item_ns(soap11_ns, cl_text("Fault")).to_element();
+		out_fault = out_body.named_item_ns(soap11_ns, "Fault").to_element();
 	else
 		out_fault = CL_DomElement();
 	return true;
@@ -317,7 +317,7 @@ bool CL_SoapHelp::get_soap12_elements(
 	CL_DomElement &out_body,
 	CL_DomElement &out_fault)
 {
-	CL_DomElement envelope = document.named_item_ns(soap12_ns, cl_text("Envelope")).to_element();
+	CL_DomElement envelope = document.named_item_ns(soap12_ns, "Envelope").to_element();
 	if (envelope.is_null())
 	{
 		out_envelope = CL_DomElement();
@@ -328,10 +328,10 @@ bool CL_SoapHelp::get_soap12_elements(
 	}
 
 	out_envelope = envelope;
-	out_header = envelope.named_item_ns(soap12_ns, cl_text("Header")).to_element();
-	out_body = envelope.named_item_ns(soap12_ns, cl_text("Body")).to_element();
+	out_header = envelope.named_item_ns(soap12_ns, "Header").to_element();
+	out_body = envelope.named_item_ns(soap12_ns, "Body").to_element();
 	if (out_body.is_element())
-		out_fault = out_body.named_item_ns(soap12_ns, cl_text("Fault")).to_element();
+		out_fault = out_body.named_item_ns(soap12_ns, "Fault").to_element();
 	else
 		out_fault = CL_DomElement();
 	return true;
