@@ -50,6 +50,35 @@
 #include "API/Core/System/clanstring.h"
 #include "API/Core/System/cl_assert.h"
 
+
+class FastTimer
+{
+public:
+
+	FastTimer(int a);
+
+	unsigned int GetTicks() 
+	{
+		QueryPerformanceCounter((LARGE_INTEGER*)&end);
+
+		diff = ((end - start) * 1000) / freq;
+		return (unsigned int)(diff & 0xffffffff);
+	}
+ 
+private:
+	__int64 freq;
+	__int64 start;
+	__int64 end;
+	__int64 diff;
+};
+
+
+FastTimer::FastTimer(int a)
+{
+	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	QueryPerformanceCounter((LARGE_INTEGER*)&start);
+}
+
 class CL_Win32Event_Dispatcher : public CL_KeepAlive
 {
 public:
@@ -65,13 +94,8 @@ void CL_SetupCore::set_instance(HINSTANCE hInstance)
 	CL_System_Win32::hInstance = hInstance;
 }
 
-static int init_ref_count = 0;
 void init_system()
 {
-	init_ref_count++;
-	if (init_ref_count > 1) return;
-	timeBeginPeriod(1);
-
 	event_dispatcher = new CL_Win32Event_Dispatcher;
 
 	// if you get this assertion, you forgot to call CL_SetupCore::set_instance()
@@ -85,13 +109,8 @@ void init_system()
 
 void deinit_system()
 {
-	init_ref_count--;
-	if (init_ref_count > 0) return;
-
 	delete event_dispatcher;
 	event_dispatcher = NULL;
-	timeEndPeriod(1);
-
 }
 
 void CL_Win32Event_Dispatcher::keep_alive()
@@ -122,25 +141,8 @@ void CL_Win32Event_Dispatcher::keep_alive()
 
 unsigned int CL_System::sys_time()
 {
-	/*
-	static LARGE_INTEGER perf_frequency, perf_counter;
-	static bool first_time = true;
-
-	if (first_time)
-	{
-		QueryPerformanceFrequency(&perf_frequency);
-		perf_frequency.QuadPart /= 1000;
-		first_time = false;
-	}
-
-	QueryPerformanceCounter(&perf_counter);
-	return (unsigned int) (perf_counter.QuadPart / perf_frequency.QuadPart);
-	*/
-
-	//Using TimeGetTime() fixed small but annoying stutter problems with intel dual core systems -SAR
-	
-	unsigned int time = timeGetTime();
-	return time;
+	static FastTimer fastTimer(0);
+	return fastTimer.GetTicks();
 }
 
 void CL_System::sleep(int millis)
@@ -155,7 +157,7 @@ int CL_System::get_num_cores() {
 	long cpus = sysinf.dwNumberOfProcessors;
 	return (cpus < 1)?-1 : static_cast<int>(cpus);
 }
-
+ 
 std::string CL_System::get_exe_path()
 {
 	// Get path to executable:

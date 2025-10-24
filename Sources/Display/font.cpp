@@ -429,6 +429,12 @@ int CL_Font::draw_to_gb(
 		return 0;
 	}
 	
+	float scalx = 1.0f;
+	float scaly = 1.0f;
+	get_scale(scalx,scaly);
+
+	CL_Color col = get_color();
+	
 	CL_Point pos(0, 0); //Drawing position, at the top of the current line
 	int line_height = font_height;//Height of the current line
 	int line_start = 0; //Index of the character beginning the current line
@@ -513,7 +519,7 @@ int CL_Font::draw_to_gb(
 			{
 				if (
 					impl->delims.find(glyphs[glyph_idx].character) != std::string::npos &&
-					(!is_glyph(glyph_idx) || gb.internal_rect(glyph_idx).right <= max_size.width)
+					(!is_glyph(glyphs[glyph_idx].character) || gb.internal_rect(glyph_idx).right <= max_size.width)
 				)
 				{
 					delim_idx = glyph_idx;
@@ -584,7 +590,7 @@ int CL_Font::draw_to_gb(
 		//Insert the glyph
 		glyphs.push_back(CL_GlyphBuffer::Glyph(
 			CL_Point(pos.x, pos.y + (line_height - font_height)), 
-			chr));
+			chr,scalx,scaly,col));
 		
 		//Advance the cursor
 		pos.x += gwidth;

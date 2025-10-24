@@ -5,6 +5,6 @@ LIBS=clanApp clanDisplay clanCore clanGL
 include ../Makefile.conf
 
 basic2d_sdl :
-	$(CXX) -DUSE_SDL $(CXXFLAGS) basic2d.cpp -o $@ `pkg-config --libs $(patsubst %,%-0.8,clanApp clanDisplay clanCore clanSDL)`
+	$(CXX) -DUSE_SDL $(CXXFLAGS) basic2d.cpp -o $@ `pkg-config --libs $(patsubst %,%-1.0,clanApp clanDisplay clanCore clanSDL)`
 
 # EOF #

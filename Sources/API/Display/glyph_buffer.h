@@ -121,13 +121,23 @@ public:
 		//p: The CL_Point that will be assigned to pos
 		//c: The unsigned int that will be assigned to character
 		Glyph() {;}
-		Glyph(CL_Point p, unsigned int c) : pos(p), character(c) {;}
+//		Glyph(CL_Point p, unsigned int c) : pos(p), character(c),glyphscale_x(1.0f),glyphscale_y(1.0f),fontcolor(CL_Color(0.0f,0.0f,0.0f,0.0f)) {;}
+		Glyph(CL_Point p, unsigned int c,float scalex,float scaley,CL_Color col = CL_Color(0.0f,0.0f,0.0f,0.0f)) : pos(p), character(c),glyphscale_x(scalex),glyphscale_y(scaley),fontcolor(col) {;}
 		
 		//: The position where the glyph is drawn.
 		CL_Point pos;
 		
 		//: The character which determines the glyph that's drawn.
 		unsigned int character;
+	
+		//: the scalex a character has
+		float glyphscale_x;
+	
+		//: the scaley a character has
+		float glyphscale_y;
+
+		//: the fontcolor
+		CL_Color fontcolor;
 	};
 
 	//: Represents a subsection of the buffer
@@ -321,8 +331,8 @@ public:
 	//- <p> It's usually more useful and efficient to have ClanLib draw many glyphs into the GlyphBuffer at once using
 	//- CL_Font::draw_to_gb() or CL_TextStyler::draw_to_gb() than to use this function or the glyphs vector
 	//- to manually add glyphs.</p>
-	CL_GlyphBuffer &add(int x, int y, unsigned int character)
-		{glyphs.push_back(Glyph(CL_Point(x,y), character)); return *this;}
+	CL_GlyphBuffer &add(int x, int y, unsigned int character,float scalex = 1.0f,float scaley = 1.0f)
+		{glyphs.push_back(Glyph(CL_Point(x,y), character,scalex,scaley)); return *this;}
 	
 	CL_GlyphBuffer &add(const CL_GlyphBuffer &other, int center_x = 0, int center_y = 0)
 		{return add(other, Range(other), center_x, center_y);}

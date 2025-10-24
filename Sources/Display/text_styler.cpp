@@ -47,14 +47,24 @@
 #include <stack>
 #include <vector>
 
+void scale_restore(std::vector<std::pair<CL_Font,std::pair<float,float> > > &scalesaver) {
+	while (!scalesaver.empty()) {
+		scalesaver.back().first.set_scale(scalesaver.back().second.first,scalesaver.back().second.second);
+		scalesaver.pop_back();
+	}
+}
+
 //Used in draw_to_gb
 //Returns the font for a given state of font tags, scale tags, and color tags
 CL_Font get_font(
 	const CL_TextStyler& ts,
 	const std::list<std::string>& fnttags,
 	const std::list<std::pair<float, float> >& scaletags,
-	const std::stack<CL_Color>& colorstack)
+	const std::stack<CL_Color>& colorstack,
+	std::vector<std::pair<CL_Font,std::pair<float,float> > > &scalesaver)
 {
+	scale_restore(scalesaver);
+
 	std::map<std::string, CL_Font>::const_iterator fntit = ts.get_fonts().end();
 	
 	//Find the top-most font tag that corresponds with an existing font in the TextStyler
@@ -83,10 +93,12 @@ CL_Font get_font(
 		scale_y *= it2->second;
 	}
 	
+	float fntx, fnty;
+	fnt.get_scale(fntx, fnty);
+	scalesaver.push_back(std::make_pair(fnt,std::make_pair(fntx,fnty)));
+
 	if (scale_x != 1.0 || scale_y != 1.0)
 	{
-		float fntx, fnty;
-		fnt.get_scale(fntx, fnty);
 		fnt.set_scale(scale_x * fntx, scale_y * fnty);
 	}
 	
@@ -371,6 +383,7 @@ int CL_TextStyler::draw_to_gb(
 	CL_GlyphBuffer& gb,
 	CL_Size max_size) const
 {
+	std::vector<std::pair<CL_Font,std::pair<float,float> > > scalesaver;
 	std::list<std::string> fnttags; //Stack of open font tags, beginning is top
 	std::list<std::pair<float, float> > scaletags; //Stack of open scale tags, beginning is top
 	std::stack<CL_Color> colorstack; //Stack of color tags, overrides existing CL_Font color
@@ -401,7 +414,7 @@ int CL_TextStyler::draw_to_gb(
 			if (*(it+1) == *it)
 			{
 				const int glyph_cnt =
-					get_font(*this, fnttags, scaletags, colorstack).draw_to_gb(std::string(1, *it), gb, max_size);
+					get_font(*this, fnttags, scaletags, colorstack,scalesaver).draw_to_gb(std::string(1, *it), gb, max_size);
 				if (glyph_cnt != 1)
 					break;
 				
@@ -432,7 +445,7 @@ int CL_TextStyler::draw_to_gb(
 				else if (*(it+1) == 'c' || (*(it+1) == '/' && *(it+2) == 'c'))
 					apply_color_tag(colorstack, it, tag_end);
 				else if (*(it+1) == 'n')
-					get_font(*this, fnttags, scaletags, colorstack).draw_to_gb(std::string("\n"), gb, max_size);
+					get_font(*this, fnttags, scaletags, colorstack,scalesaver).draw_to_gb(std::string("\n"), gb, max_size);
 				else
 					throw CL_Error("CL_TextStyler error: Unknown tag, bailing out");
 				
@@ -443,7 +456,7 @@ int CL_TextStyler::draw_to_gb(
 		{
 			std::string::const_iterator chunk_end = std::find_first_of(it, end, tagopns.begin(), tagopns.end());
 			
-			const int glyph_cnt = get_font(*this, fnttags, scaletags, colorstack).draw_to_gb(it, chunk_end, gb, max_size);
+			const int glyph_cnt = get_font(*this, fnttags, scaletags, colorstack,scalesaver).draw_to_gb(it, chunk_end, gb, max_size);
 			
 			if (glyph_cnt != chunk_end - it)
 				break;
@@ -496,6 +509,8 @@ int CL_TextStyler::draw_to_gb(
 			}
 		}
 	}
+
+	scale_restore(scalesaver);
 	
 	return gb.get_glyphs().size() - orig_size;
 }

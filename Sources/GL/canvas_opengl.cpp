@@ -48,6 +48,9 @@
 #include "graphic_context_opengl.h"
 #include "surface_target_opengl.h"
 #include <cstring>
+#ifndef WIN32
+#include <cstdio>
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Canvas_OpenGL construction:

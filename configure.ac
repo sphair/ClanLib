@@ -157,7 +157,7 @@ fi
 AC_ARG_WITH(sdl-gfx, AS_HELP_STRING([--with-sdl-gfx],[use sdl-gfx library for scaling and rotation (automatic)]),
   use_sdl_gfx="$withval", use_sdl_gfx=auto)
 
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h sys/sysctl.h)
 AC_EGREP_HEADER(fcvt, stdlib.h,,AC_DEFINE(NEED_FCVT))
 
 dnl Checks the system type

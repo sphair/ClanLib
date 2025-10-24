@@ -35,6 +35,7 @@
 #include <iostream>
 #include <errno.h>
 #include <cstring>
+#include <cstdio>
 
 #include "API/Core/System/error.h"
 #include "API/Core/System/clanstring.h"

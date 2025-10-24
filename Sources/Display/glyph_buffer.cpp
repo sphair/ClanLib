@@ -334,7 +334,7 @@ CL_GlyphBuffer &CL_GlyphBuffer::add(
 			it != other.glyphs.begin() + range.end;
 			++it)
 		{
-			glyphs.push_back(Glyph(CL_Point(it->pos.x + x, it->pos.y + y), it->character));
+			glyphs.push_back(Glyph(CL_Point(it->pos.x + x, it->pos.y + y), it->character,it->glyphscale_x,it->glyphscale_y));
 		}
 	}
 	
@@ -471,10 +471,11 @@ CL_Color CL_GlyphBuffer::Iter::get_color_eff(const CL_Font& fnt) const
 {
 	const std::map<int, CL_Color>& color_effects = pgb->get_color_effects();
 	std::map<int, CL_Color>::const_iterator col_eff = color_effects.find(glyph_num);
-	if (col_eff != color_effects.end())
-		return col_eff->second;
-	else
-		return fnt.get_color();
+	if (col_eff != color_effects.end()) {
+		return col_eff->second; } 
+	const Glyph &glph = pgb->glyphs[glyph_num];
+	if (glph.fontcolor == CL_Color(0.0f,0.0f,0.0f,0.0f)) { return fnt.get_color(); }
+	return glph.fontcolor;
 }
 
 const CL_Font& CL_GlyphBuffer::Iter::get_font() const
@@ -617,12 +618,15 @@ void CL_GlyphBuffer::draw_glyphs(
 			CL_Color eff_color = it.get_color_eff(font);
 			float scale_eff_x, scale_eff_y;
 			it.get_scale_eff(scale_eff_x, scale_eff_y);
+
+			scale_eff_x *= glyph->glyphscale_x;
+			scale_eff_y *= glyph->glyphscale_y;
 			
 			//If there's any scale effect or scale property, apply it
 			if (eff_color != orig_color)
 				font.set_color(eff_color);
-			if (scale_x != 1.0 || scale_eff_x != 1.0 || scale_y != 1.0 || scale_eff_y != 1.0)
-				font.set_scale(scale_eff_x * scale_x * orig_scale_x, scale_eff_y * scale_y * orig_scale_y);
+			if (scale_x != 1.0 || scale_eff_x != orig_scale_x || scale_y != 1.0 || scale_eff_y != orig_scale_y)
+				font.set_scale(scale_eff_x * scale_x, scale_eff_y * scale_y);
 			
 			//Draw the glyph, using the current angle
 			font.draw_character(draw_pos.x, draw_pos.y, glyph->character, it.get_angle_eff() + rot_angle, gc);
@@ -630,7 +634,7 @@ void CL_GlyphBuffer::draw_glyphs(
 			//Restore the original values, if they were changed
 			if (eff_color != orig_color)
 				font.set_color(orig_color);
-			if (scale_x != 1.0 || scale_eff_x != 1.0 || scale_y != 1.0 || scale_eff_y != 1.0)
+			if (scale_x != 1.0 || scale_eff_x != orig_scale_x || scale_y != 1.0 || scale_eff_y != orig_scale_y)
 				font.set_scale(orig_scale_x, orig_scale_y);
 		}
 	}

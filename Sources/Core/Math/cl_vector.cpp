@@ -138,7 +138,7 @@ void CL_Vector::operator += (const CL_Vector& v)
 	x += v.x;
 	y += v.y;
 	z += v.z;
-	w += v.z;
+	w += v.w;
 }
 
 void CL_Vector::operator -= (const CL_Vector& v)
@@ -170,7 +170,7 @@ CL_Vector CL_Vector::operator - (const CL_Vector& v) const
 	return CL_Vector(x - v.x,
 			 y - v.y,
 			 z - v.z,
-			 w - v.z);
+			 w - v.w);
 }
 
 CL_Vector CL_Vector::operator - () const

@@ -244,7 +244,6 @@ clanCore_includes = \
 	Core/System/system.h \
 	Core/System/thread.h \
 	Core/System/cl_assert.h \
-	Core/System/log.h \
 	Core/System/cl_library.h \
 	Core/System/clonable.h \
 	Core/System/lazycopyptr.h \
