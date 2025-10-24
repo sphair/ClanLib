@@ -281,10 +281,6 @@ public:
 
 	GLXContext create_context(const CL_OpenGLWindowDescription &gl_desc);
 
-	/// \brief Check for window messages
-	/** \return true when there is a message*/
-	bool has_messages() { return x11_window.has_messages(); }
-
 	void set_clipboard_text(const CL_StringRef &text) { x11_window.set_clipboard_text(text); }
 
 	void set_clipboard_image(const CL_PixelBuffer &buf) { x11_window.set_clipboard_image(buf); }

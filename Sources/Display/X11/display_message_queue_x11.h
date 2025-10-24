@@ -73,11 +73,16 @@ public:
 public:
 	int wait(const std::vector<CL_Event> &events, int timeout);
 
+	Display *get_display();
 	void add_client(CL_X11Window *window);
 	void remove_client(CL_X11Window *window);
 
 	void set_mouse_capture(CL_X11Window *window, bool state);
 
+	// The library will be opened / closed by this class
+	// Returns 0 if the library could not be found
+	// Currently, only supports a single library
+	void *dlopen_opengl(const char *filename, int flag); 
 /// \}
 /// \name Implementation
 /// \{
@@ -98,6 +103,8 @@ private:
 	void process_queued_events();
 	CL_X11Window *current_mouse_capture_window;
 
+	Display *display;
+	void *dlopen_lib_handle;
 /// \}
 };
 

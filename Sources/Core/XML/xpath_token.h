@@ -91,7 +91,7 @@ public:
 
 	Type type;
 	Value value;
-	CL_StringRef::size_type pos, length;
+	CL_String::size_type pos, length;
 
 	CL_XPathToken()
 	: type(type_none), pos(0), length(0)

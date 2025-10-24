@@ -28,6 +28,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Image/perlin_noise.h"
+#include <cstdlib>
 
 // This perlin noise code is based from ideas from numerious sources, including
 // The original perlin noise example code

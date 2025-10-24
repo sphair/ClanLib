@@ -32,6 +32,13 @@
 #pragma once
 
 #include "api_swrender.h"
+
+#if defined(__GNUC__) && !defined(__SSE2__)
+// Do not attempt to compile SSE2 code if the compiler does not support it
+#else
+
+#ifndef CL_DISABLE_SSE2
+
 #include <emmintrin.h>
 
 /// \brief SSE accelerated rendering operations for ARGB8888
@@ -330,4 +337,8 @@ inline void CL_BlitARGB8SSE::channels_to_pixels(__m128i &dest0, __m128i &dest1, 
 	} \
 }
 
+#endif
+#endif
+
 /// \}
+

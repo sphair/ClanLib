@@ -170,7 +170,6 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 #ifdef WIN32
 	window.create(site, description);
 #elif !defined(__APPLE__)
-	window.open_screen();
 	Display *disp = window.get_display();
 
 	int bpp = 24;

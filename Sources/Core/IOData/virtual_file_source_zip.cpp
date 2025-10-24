@@ -82,7 +82,7 @@ bool CL_VirtualFileSource_Zip::initialize_directory_listing(const CL_String &pat
 	directory_list_path = path;
 	index = 0;
 	
-	return !file_list.empty();
+	return true;	// Empty directories should be valid
 }
 
 bool CL_VirtualFileSource_Zip::next_file(CL_VirtualDirectoryListingEntry &entry)

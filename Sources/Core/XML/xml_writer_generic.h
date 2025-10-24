@@ -37,7 +37,7 @@ class CL_XMLWriter_Generic
 /// \{
 
 public:
-	CL_XMLWriter_Generic() : insert_whitespace(true), indent(0) { return; }
+	CL_XMLWriter_Generic() : insert_whitespace(true), indent(0), first_token(true), single_line_tag(true) { }
 
 
 /// \}
@@ -56,6 +56,9 @@ public:
 	CL_String str;
 
 	CL_String escaped_string;
+
+	bool first_token;
+	bool single_line_tag;
 
 
 /// \}

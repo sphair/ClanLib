@@ -35,18 +35,29 @@
 #include "API/Core/System/keep_alive.h"
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
+#include <dlfcn.h>
 
 CL_DisplayMessageQueue_X11 CL_DisplayMessageQueue_X11::message_queue;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_X11 construction:
 
-CL_DisplayMessageQueue_X11::CL_DisplayMessageQueue_X11() : current_mouse_capture_window(NULL)
+CL_DisplayMessageQueue_X11::CL_DisplayMessageQueue_X11() : current_mouse_capture_window(NULL), display(0), dlopen_lib_handle(NULL)
 {
 }
 
 CL_DisplayMessageQueue_X11::~CL_DisplayMessageQueue_X11()
 {
+	if (display)
+	{
+		XCloseDisplay(display);
+	}
+
+	// This MUST be called after XCloseDisplay - It is used for http://www.xfree86.org/4.8.0/DRI11.html
+	if (dlopen_lib_handle)
+	{
+		dlclose(dlopen_lib_handle);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -55,6 +66,26 @@ CL_DisplayMessageQueue_X11::~CL_DisplayMessageQueue_X11()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_X11 operations:
+
+void *CL_DisplayMessageQueue_X11::dlopen_opengl(const char *filename, int flag)
+{
+	if (!dlopen_lib_handle)		// This is a shared resource. We assume that filename and flags will never change, which makes sense in this case
+	{
+		dlopen_lib_handle = ::dlopen(filename, flag);
+	}
+	return dlopen_lib_handle;
+}
+
+Display *CL_DisplayMessageQueue_X11::get_display()
+{
+	if (!display)
+	{
+		display = XOpenDisplay(NULL);
+		if (!display)
+			throw CL_Exception("Could not open X11 display!");
+	}
+	return display;
+}
 
 int CL_DisplayMessageQueue_X11::wait(const std::vector<CL_Event> &events, int timeout)
 {
@@ -201,6 +232,12 @@ int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_Soc
 
 	if ( (internal_message_found == false) && (timeout != 0) ) // We do not need to check for window file descriptors, when a message was already found, or when we exit straight away
 	{
+
+		CL_SocketMessage_X11 screen_connection;
+		screen_connection.type = CL_EventProvider::type_fd_read;
+		screen_connection.handle = ConnectionNumber(display);
+		all_events.push_back(screen_connection);
+
 		// Get the window file descriptors
 		CL_SharedPtr<ThreadData> thread_data = get_thread_data();
 		std::vector<CL_X11Window *>::size_type index, size;
@@ -352,15 +389,22 @@ bool CL_DisplayMessageQueue_X11::has_internal_messages()
 {
 	bool message_flag = false;
 
+	if (display)
+	{
+		if (XPending(display) > 0)
+		{
+			message_flag = true;
+		}
+	}
+
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
 	std::vector<CL_X11Window *>::size_type index, size;
 	size = thread_data->windows.size();
 	for (index = 0; index < size; index++)
 	{
-		if (thread_data->windows[index]->has_messages())
-		{
+		CL_InputContext ic = thread_data->windows[index]->get_ic();
+		if (ic.poll(true))
 			message_flag = true;
-		}
 	}
 	return message_flag;
 }
@@ -368,15 +412,29 @@ bool CL_DisplayMessageQueue_X11::has_internal_messages()
 void CL_DisplayMessageQueue_X11::process_message()
 {
 	CL_SharedPtr<ThreadData> data = get_thread_data();
+
+	XEvent event;
+	while(XPending(display) > 0)
+	{
+		XNextEvent(display, &event);
+
+		for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+		{
+			CL_X11Window *window = data->windows[i];
+			if (window->get_window() == event.xany.window)
+			{
+				CL_X11Window *mouse_capture_window = current_mouse_capture_window;
+				if (mouse_capture_window == NULL)
+					mouse_capture_window = window;
+
+				window->process_message(event, mouse_capture_window);
+			}
+		}
+	}
+
 	for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
 	{
-		CL_X11Window *window = data->windows[i];
-
-		CL_X11Window *mouse_capture_window = current_mouse_capture_window;
-		if (mouse_capture_window == NULL)
-			mouse_capture_window = window;
-
-		window->get_message(mouse_capture_window);
+		data->windows[i]->process_message_complete();
 	}
 
 	// Process all input context messages (done seperately, because of the mouse_capture hack)

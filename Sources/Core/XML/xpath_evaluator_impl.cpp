@@ -80,6 +80,7 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 			cur_token.type == CL_XPathToken::type_at_sign ||
 			cur_token.type == CL_XPathToken::type_dot ||
 			cur_token.type == CL_XPathToken::type_double_dot ||
+			cur_token.type == CL_XPathToken::type_node_type ||
 			(cur_token.type == CL_XPathToken::type_operator &&
 				(cur_token.value.oper == CL_XPathToken::operator_slash ||
 				cur_token.value.oper == CL_XPathToken::operator_double_slash)))
@@ -159,8 +160,22 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 					filtered_nodes.push_back(nodes[node_index]);
 			}
 
-			cur_token = end_token;
-			operand_stack.push_back(CL_XPathObject(filtered_nodes));
+			cur_token = read_token(expression, end_token);
+			CL_XPathToken next_token = read_token(expression, cur_token);
+			if (next_token.type == CL_XPathToken::type_axis_name ||
+				next_token.type == CL_XPathToken::type_name_test ||
+				next_token.type == CL_XPathToken::type_node_type ||
+				next_token.type == CL_XPathToken::type_at_sign ||
+				next_token.type == CL_XPathToken::type_dot ||
+				next_token.type == CL_XPathToken::type_double_dot ||
+				(next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash))
+			{
+				cur_token = read_location_steps(expression, next_token, filtered_nodes, 0, operand_stack);
+			}
+			else
+			{
+				operand_stack.push_back(CL_XPathObject(filtered_nodes));
+			}
 		}
 		else if (cur_token.type == CL_XPathToken::type_operator)
 		{
@@ -207,7 +222,6 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 	result.next_token = cur_token;
 	return result;
 }
-
 
 CL_XPathObject CL_XPathEvaluator_Impl::call_function(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const CL_StringRef &name, const std::vector<CL_XPathObject> &parameters) const
 {
@@ -878,7 +892,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::read_location_path(
 	std::vector<CL_XPathEvaluator_Impl::Operand> &operand_stack) const
 {
 /*
-	[1] LocationPath               ::= RelativeLocationPath | AbsoluteLocationPath	
+	[1] LocationPath               ::= RelativeLocationPath | AbsoluteLocationPath
 	[2] AbsoluteLocationPath       ::= '/' RelativeLocationPath? | AbbreviatedAbsoluteLocationPath
 	[3] RelativeLocationPath       ::= Step | RelativeLocationPath '/' Step | AbbreviatedRelativeLocationPath
 */
@@ -1107,7 +1121,7 @@ CL_XPathToken CL_XPathEvaluator_Impl::skip_predicate_expression(const CL_StringR
 	return cur_token;
 }
 
-void CL_XPathEvaluator_Impl::evaluate_location_step(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::evaluate_location_step(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	if (step_index < steps.size())
 	{
@@ -1146,7 +1160,7 @@ void CL_XPathEvaluator_Impl::evaluate_location_step(const CL_XPathNodeSet &conte
 	}
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode parent = context[context_node_index].get_parent_node();
@@ -1161,7 +1175,7 @@ void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_XPathNodeSet &contex
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode parent = context[context_node_index];
@@ -1176,7 +1190,7 @@ void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_XPathNodeSet
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNamedNodeMap attributes = context[context_node_index].get_attributes();
@@ -1191,7 +1205,7 @@ void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_XPathNodeSet &conte
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_child(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_child(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode cur_node = context[context_node_index].get_first_child();
@@ -1205,7 +1219,7 @@ void CL_XPathEvaluator_Impl::select_nodes_child(const CL_XPathNodeSet &context, 
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet parentNodes;
 	CL_XPathNodeSet nodeset;
@@ -1231,7 +1245,7 @@ void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_XPathNodeSet &cont
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet parentNodes;
 	CL_XPathNodeSet nodeset;
@@ -1257,7 +1271,7 @@ void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_XPathNodeS
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_following(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_following(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 
@@ -1293,7 +1307,7 @@ void CL_XPathEvaluator_Impl::select_nodes_following(const CL_XPathNodeSet &conte
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode cur_node = context[context_node_index].get_next_sibling();
@@ -1307,11 +1321,11 @@ void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_XPathNodeSe
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_namespace(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_namespace(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode parent = context[context_node_index].get_parent_node();
@@ -1324,7 +1338,7 @@ void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_XPathNodeSet &context,
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 
@@ -1360,7 +1374,7 @@ void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_XPathNodeSet &conte
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset;
 	CL_DomNode cur_node = context[context_node_index].get_previous_sibling();
@@ -1374,7 +1388,7 @@ void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_XPathNodeSe
 	evaluate_location_step_predicates(nodeset, steps, step_index, expression, nodes);
 }
 
-void CL_XPathEvaluator_Impl::select_nodes_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::select_nodes_self(const CL_XPathNodeSet &context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_DomNode cur_node = context[context_node_index];
 	if (!cur_node.is_null())
@@ -1394,7 +1408,7 @@ bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, c
 		test_passed = true;
 		break;
 	case CL_XPathLocationStep::type_name:
-		test_passed = step.test_str == "*" || node.get_node_name() == step.test_str;
+		test_passed = (node.get_node_type() == CL_DomNode::ELEMENT_NODE || node.get_node_type() == CL_DomNode::ATTRIBUTE_NODE) && (step.test_str == "*" || node.get_node_name() == step.test_str);
 		break;
 	case CL_XPathLocationStep::type_node:
 		if (step.node_type != CL_XPathToken::node_type_node)
@@ -1447,7 +1461,7 @@ bool CL_XPathEvaluator_Impl::confirm_step_predicate(CL_XPathNodeSet &context, CL
 	return include_in_nodeset;
 }
 
-void CL_XPathEvaluator_Impl::evaluate_location_step_predicates(const CL_XPathNodeSet &context, const std::vector<CL_XPathLocationStep> &steps, unsigned int step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
+void CL_XPathEvaluator_Impl::evaluate_location_step_predicates(const CL_XPathNodeSet &context, const std::vector<CL_XPathLocationStep> &steps, std::vector<CL_XPathLocationStep>::size_type step_index, const CL_StringRef &expression, CL_XPathNodeSet &nodes) const
 {
 	CL_XPathNodeSet nodeset = context;
 	for (std::vector<CL_XPathLocationStep::Predicate>::const_iterator pit = steps[step_index].predicates.begin(), pEnd = steps[step_index].predicates.end(); pit != pEnd; ++pit)
@@ -1920,7 +1934,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_local_name(const CL_XPathNodeSet
 	}
 
 	if (nodeset.empty())
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 	else
 		return CL_XPathObject(nodeset.front().get_local_name());
 }
@@ -1942,7 +1956,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_namespace_uri(const CL_XPathNode
 	}
 
 	if (nodeset.empty())
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 	else
 		return CL_XPathObject(nodeset.front().get_namespace_uri());
 }
@@ -1964,7 +1978,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_name(const CL_XPathNodeSet& cont
 	}
 
 	if (nodeset.empty())
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 	else
 		return CL_XPathObject(nodeset.front().get_node_name());
 }
@@ -1982,7 +1996,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_string(const CL_XPathNodeSet& co
 		obj = parameters.front();
 	}
 
-	return string(obj);
+	return CL_XPathObject(string(obj));
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_concat(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2033,7 +2047,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_substring_before(const CL_XPathN
 	if (pos != CL_String::npos)
 		return CL_XPathObject(p1.get_string().substr(0, pos));
 	else
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_substring_after(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2048,7 +2062,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_substring_after(const CL_XPathNo
 	if (pos != CL_String::npos)
 		return CL_XPathObject(p1.substr(pos+1));
 	else
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_substring(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2137,7 +2151,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_boolean(const CL_XPathNodeSet& c
 	if (parameters.empty())
 		throw CL_XPathException("Function boolean(object) expects an object parameter");
 
-	return boolean(parameters[0]);
+	return CL_XPathObject(boolean(parameters[0]));
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_not(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2181,7 +2195,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_lang(const CL_XPathNodeSet& cont
 		cur_node = cur_node.get_parent_node();
 	}
 
-	return found;
+	return CL_XPathObject(found);
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_number(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2189,7 +2203,7 @@ CL_XPathObject CL_XPathEvaluator_Impl::function_number(const CL_XPathNodeSet& co
 	if (parameters.empty())
 		throw CL_XPathException("Function number(object) expects 1 object parameter");
 
-	return number(parameters[0]);
+	return CL_XPathObject(number(parameters[0]));
 }
 
 CL_XPathObject CL_XPathEvaluator_Impl::function_sum(const CL_XPathNodeSet& context, CL_XPathNodeSet::size_type context_node_index, const std::vector<CL_XPathObject> &parameters) const
@@ -2732,7 +2746,7 @@ inline CL_XPathObject CL_XPathEvaluator_Impl::string(const CL_XPathObject &objec
 
 	case CL_XPathObject::type_null:
 	default:
-		return CL_XPathObject("");
+		return CL_XPathObject(CL_StringRef());
 	}
 }
 

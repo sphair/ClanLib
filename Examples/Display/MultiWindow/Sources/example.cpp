@@ -69,6 +69,7 @@ int Example::start(const std::vector<CL_String> &args)
 	CL_FontMetrics font_metrics = font.get_font_metrics();
 	int font_yoffset = (int)( font_metrics.get_ascent() - font_metrics.get_internal_leading() ) / 2;
 	int font_xoffset = 0;
+	int font_counter = 0;
 
 	// Start program timer
 	unsigned int time_start = CL_System::get_time();
@@ -108,8 +109,10 @@ int Example::start(const std::vector<CL_String> &args)
 		CL_Point window_2_connect(window_geometry_2.get_center());
 
 		// Scroll the text
-		font_xoffset += time_delta/5;
-		font_xoffset %= text_size.width;
+		const int font_speed = 5;
+		font_counter += time_delta;
+		font_counter %= text_size.width * font_speed;		// Wrap around counter
+		font_xoffset = font_counter / font_speed;
 
 		// Calculate the angle between the 2 windows
 		float angle = atan2( (float) (window_2_connect.y - window_1_connect.y), (float) (window_2_connect.x - window_1_connect.x));

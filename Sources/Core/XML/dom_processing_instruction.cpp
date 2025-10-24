@@ -30,6 +30,7 @@
 #include "API/Core/XML/dom_processing_instruction.h"
 #include "API/Core/XML/dom_document.h"
 #include "dom_node_generic.h"
+#include "dom_tree_node.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DomProcessingInstruction construction:
@@ -41,7 +42,9 @@ CL_DomProcessingInstruction::CL_DomProcessingInstruction()
 CL_DomProcessingInstruction::CL_DomProcessingInstruction(CL_DomDocument &doc, const CL_DomString &target, const CL_DomString &data)
 : CL_DomNode(doc, PROCESSING_INSTRUCTION_NODE)
 {
-	set_node_value(data);
+	CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
+	impl->get_tree_node()->set_node_name(doc_impl, target);
+	impl->get_tree_node()->set_node_value(doc_impl, data);
 }
 
 CL_DomProcessingInstruction::CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl) : CL_DomNode(impl)
@@ -57,16 +60,27 @@ CL_DomProcessingInstruction::~CL_DomProcessingInstruction()
 
 CL_DomString CL_DomProcessingInstruction::get_target() const
 {
-	return CL_DomString();
+	if (impl)
+		return impl->get_tree_node()->get_node_name();
+	else
+		return CL_DomString();
 }
 
 CL_DomString CL_DomProcessingInstruction::get_data() const
 {
-	return CL_DomString();
+	if (impl)
+		return impl->get_tree_node()->get_node_value();
+	else
+		return CL_DomString();
 }
 
 void CL_DomProcessingInstruction::set_data(const CL_DomString &data)
 {
+	if (impl)
+	{
+		CL_DomDocument_Generic *doc_impl = (CL_DomDocument_Generic *) impl->owner_document.lock().get();
+		impl->get_tree_node()->set_node_value(doc_impl, data);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

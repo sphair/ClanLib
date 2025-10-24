@@ -281,12 +281,11 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 
 	if (insert_point.is_element() == false)
 		insert_point = *this;
-		
+
 	std::vector<CL_DomNode> node_stack;
 	node_stack.push_back(insert_point);
 
 	std::vector<CL_DomNode> result;
-	
 	try
 	{
 		CL_XMLToken cur_token;
@@ -347,6 +346,9 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 				break;
 			
 			case CL_XMLToken::COMMENT_TOKEN:
+				node_stack.back().append_child(create_comment(cur_token.value));
+				if (node_stack.back() == insert_point)
+					result.push_back(node_stack.back().get_last_child());
 				break;
 
 			case CL_XMLToken::DOCUMENT_TYPE_TOKEN:
@@ -356,6 +358,9 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 				break;
 
 			case CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN:
+				node_stack.back().append_child(create_processing_instruction(cur_token.name, cur_token.value));
+				if (node_stack.back() == insert_point)
+					result.push_back(node_stack.back().get_last_child());
 				break;
 			}		
 

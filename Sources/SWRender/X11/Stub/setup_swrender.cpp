@@ -23,7 +23,7 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
 #include "SWRender/precomp.h"
@@ -31,39 +31,25 @@
 #include "API/SWRender/setup_swrender.h"
 #include "API/SWRender/swr_target.h"
 
+// NON-SSE2 STUB
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SetupSWRender Construction:
 
-static CL_Mutex cl_gdi_mutex;
-
-static int cl_gdi_refcount = 0;
-
-static CL_SWRenderTarget *cl_gdi_target = 0;
-
 CL_SetupSWRender::CL_SetupSWRender()
 {
-	if (!CL_System::detect_cpu_extension(CL_System::sse2))
+	if (CL_System::detect_cpu_extension(CL_System::sse2))
 	{
-		throw CL_Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
+		throw CL_Exception("Sorry, this compiled clanSWRender does not support SSE2, but your CPU does support SSE2. (Update clanSWRender to contain SSE2)");
 	}
-
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	if (cl_gdi_refcount == 0)
-		cl_gdi_target = new CL_SWRenderTarget();
-	cl_gdi_refcount++;
+	throw CL_Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
 }
 
 CL_SetupSWRender::~CL_SetupSWRender()
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_refcount--;
-	if (cl_gdi_refcount == 0)
-		delete cl_gdi_target;
 }
 
 void CL_SetupSWRender::set_current()
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_target->set_current();
 }
 

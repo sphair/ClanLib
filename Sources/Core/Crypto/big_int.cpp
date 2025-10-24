@@ -46,6 +46,7 @@
 
 #include "Core/precomp.h"
 #include "big_int.h"
+#include <cstdlib>
 
 bool CL_BigInt::prime_tab_built = false;
 cl_bigint_digit CL_BigInt::prime_tab[prime_tab_size];

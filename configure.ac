@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.3.5)
+AC_INIT(ClanLib, 2.3.6)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=3
-CLANLIB_MICRO_VERSION=5
+CLANLIB_MICRO_VERSION=6
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -243,12 +243,10 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
   ])
 
 
+AM_CONDITIONAL([DISABLE_SSE2], [test x$use_sse2 = xno])
+
 if test "$use_sse2" != "no"; then
 	CXXFLAGS="$CXXFLAGS -msse2"
-
-	extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -msse2"
-else
-	extra_CFLAGS_clanCore="$extra_CFLAGS_clanCore -DCL_DISABLE_SSE2"
 fi
 
 if test "$WIN32" = "no"; then
@@ -452,7 +450,8 @@ if test "$enable_clanDisplay" != "no"; then
 			echo "=============================="
 
 			if test "$use_sse2" != "yes"; then
-				CLANLIB_DISABLE_MODULE(clanSWRender, [ *** Requires SSE2 Support ] )
+			 	dnl CLANLIB_DISABLE_MODULE(clanSWRender, [ *** Requires SSE2 Support ] )
+				echo "Compiling using Stub. Required SSE2 Support"
 			fi
 
 			if test "$enable_clanSWRender" = "auto"; then enable_clanSWRender=yes; fi
@@ -864,7 +863,14 @@ echo "                 clanRegExp = $enable_clanRegExp"
 echo "                 clanSqlite = $enable_clanSqlite"
 echo "                    clanGUI = $enable_clanGUI"
 echo "              clanCSSLayout = $enable_clanCSSLayout"
-echo "               clanSWRender = $enable_clanSWRender"
+
+swrender_options=""
+if test "$enable_clanSWRender" != "no"; then
+	if test "$use_sse2" != "yes"; then
+		swrender_options="$swrender_options * Warning SSE2 Disabled - Using stub"
+	fi
+fi
+echo "               clanSWRender = $enable_clanSWRender $swrender_options"
 
 core_options=""
 if test "$use_sse2" != "no"; then

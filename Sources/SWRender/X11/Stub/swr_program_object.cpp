@@ -23,47 +23,51 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
 #include "SWRender/precomp.h"
-#include "API/Core/System/mutex.h"
-#include "API/SWRender/setup_swrender.h"
-#include "API/SWRender/swr_target.h"
+#include "API/SWRender/swr_graphic_context.h"
+#include "API/SWRender/swr_program_object.h"
+
+// NON-SSE2 stub
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SetupSWRender Construction:
+// CL_ProgramObject_SWRender Construction:
 
-static CL_Mutex cl_gdi_mutex;
-
-static int cl_gdi_refcount = 0;
-
-static CL_SWRenderTarget *cl_gdi_target = 0;
-
-CL_SetupSWRender::CL_SetupSWRender()
+CL_ProgramObject_SWRender::CL_ProgramObject_SWRender(CL_SoftwareProgram *program, bool is_sprite_program)
 {
-	if (!CL_System::detect_cpu_extension(CL_System::sse2))
-	{
-		throw CL_Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
-	}
-
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	if (cl_gdi_refcount == 0)
-		cl_gdi_target = new CL_SWRenderTarget();
-	cl_gdi_refcount++;
 }
 
-CL_SetupSWRender::~CL_SetupSWRender()
+CL_ProgramObject_SWRender::CL_ProgramObject_SWRender(const CL_ProgramObject &program_object) : CL_ProgramObject(program_object)
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_refcount--;
-	if (cl_gdi_refcount == 0)
-		delete cl_gdi_target;
 }
 
-void CL_SetupSWRender::set_current()
+CL_ProgramObject_SWRender::~CL_ProgramObject_SWRender()
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_target->set_current();
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_ProgramObject_SWRender Attributes:
+
+CL_SoftwareProgram *CL_ProgramObject_SWRender::get_program() const
+{
+	return NULL;
+}
+
+bool CL_ProgramObject_SWRender::is_sprite_program() const
+{
+	return false;
+}
+
+CL_SWRenderProgramObjectProvider *CL_ProgramObject_SWRender::get_provider() const
+{
+	return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_ProgramObject_SWRender Operations:
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_ProgramObject_SWRender Implementation:
 

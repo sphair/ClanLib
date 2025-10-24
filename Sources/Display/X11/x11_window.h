@@ -127,21 +127,13 @@ public:
 	void hide();
 	void bring_to_front();
 	void capture_mouse(bool capture);
-	void get_message(CL_X11Window *mouse_capture_window);
-	bool has_messages();
+	void process_message(XEvent &event, CL_X11Window *mouse_capture_window);
+	void process_message_complete();
 	void request_repaint(const CL_Rect &rect);
 	void set_clipboard_text(const CL_StringRef &text);
 	void set_clipboard_image(const CL_PixelBuffer &buf);
-	bool get_xevent( XEvent &event ) const;
-	bool get_xevent( XEvent &event, int event_type ) const;
 	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
 	CL_Point get_mouse_position() const;
-	void open_screen();
-
-	// The library will be opened / closed by this class
-	// Returns 0 if the library could not be found
-	// Currently, only supports a single library
-	void *dlopen(const char *filename, int flag); 
 
 	void process_queued_events();
 
@@ -151,6 +143,7 @@ public:
 
 private:
 
+	void process_window_resize(const CL_Rect &new_rect);
 	void calculate_window_frame_size();
 	void map_window();
 	void unmap_window();
@@ -189,7 +182,6 @@ private:
 	CL_Size maximum_size;
 	CL_String window_title;
 	bool resize_enabled;
-	void *dlopen_lib_handle;
 	CL_Clipboard_X11 clipboard;
 	std::vector<CL_SocketMessage_X11> current_window_events;
 	std::vector<CL_Rect> last_repaint_rect;
@@ -225,6 +217,8 @@ private:
 	bool always_send_window_position_changed_event;
 	bool always_send_window_size_changed_event;
 
+	std::vector<CL_Rect> exposed_rects;
+	CL_Rect largest_exposed_rect;
 /// \}
 };
 

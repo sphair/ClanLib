@@ -607,7 +607,9 @@ CL_PixelBuffer CL_OpenGLGraphicContextProvider::get_pixeldata(const CL_Rect& rec
 	CL_OpenGL::set_active(this);
 	if (!framebuffer_bound)
 		glReadBuffer(GL_BACK);
-	glClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
+
+	if (glClampColor)
+		glClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
 	glReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), format, type, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;

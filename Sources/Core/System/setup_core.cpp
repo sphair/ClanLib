@@ -40,7 +40,7 @@ CL_SetupCore::CL_SetupCore()
 #ifndef CL_DISABLE_SSE2
 	if (!CL_System::detect_cpu_extension(CL_System::sse2))
 	{
-		throw CL_Exception("Sorry, ClanLib 2.2 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
+		throw CL_Exception("Sorry, ClanLib 2.3 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
 	}
 #endif
 }

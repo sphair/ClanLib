@@ -187,73 +187,89 @@ bool CL_XMLTokenizer_Generic::next_tag_node(CL_XMLToken *out_token)
 
 	out_token->type = questionMark ? CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN : CL_XMLToken::ELEMENT_TOKEN;
 	out_token->variant = closing ? CL_XMLToken::END : CL_XMLToken::BEGIN;
-	out_token->name = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
+	out_token->name = string_allocator.alloc(data_ptr + start_pos, end_pos - start_pos);
 
-	// Check for possible attributes:
-	while (true)
+	if (out_token->type == CL_XMLToken::PROCESSING_INSTRUCTION_TOKEN)
 	{
 		// Strip whitespace:
 		pos = data.find_first_not_of(" \r\n\t", pos);
 		if (pos == data.npos)
 			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
-		// End of tag, stop searching for more attributes:
-		if (data_ptr[pos] == '/' || data_ptr[pos] == '?' || data_ptr[pos] == '>')
-			break;
-
-		// Extract attribute name:
-		CL_String::size_type start_pos = pos;
-		CL_String::size_type end_pos = data.find_first_of(" \r\n\t=", start_pos);
+		end_pos = data.find_first_of("?", pos);
 		if (end_pos == data.npos)
 			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+		out_token->value = string_allocator.alloc(data_ptr + pos, end_pos - pos);
 		pos = end_pos;
-
-		CL_StringRef attributeName = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
-
-		// Find seperator:
-		pos = data.find_first_not_of(" \r\n\t", pos);
-		if (pos == data.npos || pos == size-1)
-			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
-		if (data_ptr[pos++] != '=')
-			CL_XMLTokenizer_Generic::throw_exception(cl_format("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)", get_line_number(), out_token->name, attributeName));
-
-		// Strip whitespace:
-		pos = data.find_first_not_of(" \r\n\t", pos);
-		if (pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
-
-		// Extract attribute value:
-		CL_String::char_type const * first_of = " \r\n\t";
-		if (data_ptr[pos] == '"')
+	}
+	else // out_token->type == CL_XMLToken::ELEMENT_TOKEN
+	{
+		// Check for possible attributes:
+		while (true)
 		{
-			first_of = "\"";
-			pos++;
-			if (pos == size)
+			// Strip whitespace:
+			pos = data.find_first_not_of(" \r\n\t", pos);
+			if (pos == data.npos)
 				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
-		}
-		else
-			if (data_ptr[pos] == '\'')
+
+			// End of tag, stop searching for more attributes:
+			if (data_ptr[pos] == '/' || data_ptr[pos] == '?' || data_ptr[pos] == '>')
+				break;
+
+			// Extract attribute name:
+			CL_String::size_type start_pos = pos;
+			CL_String::size_type end_pos = data.find_first_of(" \r\n\t=", start_pos);
+			if (end_pos == data.npos)
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+			pos = end_pos;
+
+			CL_StringRef attributeName = string_allocator.alloc(data_ptr + start_pos, end_pos-start_pos);
+
+			// Find seperator:
+			pos = data.find_first_not_of(" \r\n\t", pos);
+			if (pos == data.npos || pos == size-1)
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+			if (data_ptr[pos++] != '=')
+				CL_XMLTokenizer_Generic::throw_exception(cl_format("XML error(s), parser confused at line %1 (tag=%2, attributeName=%3)", get_line_number(), out_token->name, attributeName));
+
+			// Strip whitespace:
+			pos = data.find_first_not_of(" \r\n\t", pos);
+			if (pos == data.npos)
+				CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+
+			// Extract attribute value:
+			CL_String::char_type const * first_of = " \r\n\t";
+			if (data_ptr[pos] == '"')
 			{
-				first_of = "'";
+				first_of = "\"";
 				pos++;
 				if (pos == size)
 					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 			}
+			else
+				if (data_ptr[pos] == '\'')
+				{
+					first_of = "'";
+					pos++;
+					if (pos == size)
+						CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+				}
 
-		start_pos = pos;
-		end_pos = data.find_first_of(first_of, start_pos);
-		if (end_pos == data.npos)
-			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
-		
-		CL_StringRef attributeValue, attributeValueOrig(data_ptr + start_pos, end_pos-start_pos, false);
-		unescape(attributeValue, attributeValueOrig);
+				start_pos = pos;
+				end_pos = data.find_first_of(first_of, start_pos);
+				if (end_pos == data.npos)
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
 
-		pos = end_pos + 1;
-		if (pos == size)
-			CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+				CL_StringRef attributeValue, attributeValueOrig(data_ptr + start_pos, end_pos-start_pos, false);
+				unescape(attributeValue, attributeValueOrig);
 
-		// Finally apply attribute to token:
-		out_token->attributes.push_back(CL_XMLToken::Attribute(attributeName, attributeValue));
+				pos = end_pos + 1;
+				if (pos == size)
+					CL_XMLTokenizer_Generic::throw_exception("Premature end of XML data!");
+
+				// Finally apply attribute to token:
+				out_token->attributes.push_back(CL_XMLToken::Attribute(attributeName, attributeValue));
+		}
 	}
 
 	// Check if its singular:

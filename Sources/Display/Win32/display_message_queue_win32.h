@@ -56,7 +56,14 @@ public:
 	void add_client(CL_Win32Window *window);
 	void remove_client(CL_Win32Window *window);
 
-	static bool should_apply_vista_x64_workaround() { return ptrSetProcessUserModeExceptionPolicy == 0 || ptrGetProcessUserModeExceptionPolicy == 0; }
+	static bool should_apply_vista_x64_workaround()
+	{
+#ifdef _M_X86
+		return ptrSetProcessUserModeExceptionPolicy == 0 || ptrGetProcessUserModeExceptionPolicy == 0;
+#else
+		return false;
+#endif
+	}
 
  /// \}
  /// \name Implementation

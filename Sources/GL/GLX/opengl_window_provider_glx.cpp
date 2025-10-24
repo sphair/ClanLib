@@ -42,6 +42,7 @@
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
+#include "Display/X11/display_message_queue_x11.h"
 #include "../opengl_window_description_impl.h"
 #include "../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
@@ -122,7 +123,7 @@ CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 	// http://www.xfree86.org/4.8.0/DRI11.html -
 	// "Do not close the library with dlclose() until after XCloseDisplay() has been called. When libGL.so initializes itself it registers several callbacks functions with Xlib. When XCloseDisplay() is called those callback functions are called. If libGL.so has already been unloaded with dlclose() this will cause a segmentation fault"
 	// - Which it did - So we need x11_window to own the library (and close it)
-	opengl_lib_handle = x11_window.dlopen(GL_OPENGL_LIBRARY, RTLD_NOW | RTLD_GLOBAL);
+	opengl_lib_handle = CL_DisplayMessageQueue_X11::message_queue.dlopen_opengl(GL_OPENGL_LIBRARY, RTLD_NOW | RTLD_GLOBAL);
 	if (!opengl_lib_handle)
 	{
 		throw CL_Exception(cl_format("Cannot open opengl library: %1", GL_OPENGL_LIBRARY));
@@ -256,7 +257,6 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 	site = new_site;
 	bool create_provider_flag = false;
 
-	x11_window.open_screen();
 	Display *disp = x11_window.get_display();
 
 	if (!opengl_context)
