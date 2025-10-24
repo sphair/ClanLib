@@ -306,12 +306,12 @@ CL_String8 &CL_String8::append(const char *s, size_type n)
 
 CL_String8 &CL_String8::append(const wchar_t *s)
 {
-	return append(CL_StringHelp::ucs2_to_local8(s));
+	return append(CL_StringHelp::ucs2_to_utf8(s));
 }
 
 CL_String8 &CL_String8::append(const wchar_t *s, size_type n)
 {
-	return append(CL_StringHelp::ucs2_to_local8(CL_StringRef16(s, n, false)));
+	return append(CL_StringHelp::ucs2_to_utf8(CL_StringRef16(s, n, false)));
 }
 
 CL_String8 &CL_String8::append(size_type n, char c)

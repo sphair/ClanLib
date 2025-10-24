@@ -193,6 +193,22 @@ CL_OpenGLGraphicContextProvider::CL_OpenGLGraphicContextProvider(const CL_Render
 	CL_OpenGL::glsl_version_major = shader_version_major;
 	CL_OpenGL::glsl_version_minor = shader_version_minor;
 
+	if (opengl_version_major < 3)
+	{
+		use_open_3_1 = false;
+	}
+	else
+	{
+		if ( (opengl_version_major == 3) && (opengl_version_minor == 0) )
+		{
+			use_open_3_1 = false;
+		}
+		else
+		{
+			use_open_3_1 = true;
+		}
+	}
+
 #if defined(__APPLE__)
 	// Force glsl 1_5 for apple
 	use_glsl_1_50 = true;
@@ -694,9 +710,8 @@ void CL_OpenGLGraphicContextProvider::reset_program_object()
 
 void CL_OpenGLGraphicContextProvider::draw_primitives(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArrayData * const prim_array)
 {
-
-	// Client vertex arrays must have a vertex buffer object for opengl 3.0 and above (without compatibility option)
-	if (CL_OpenGL::get_opengl_version_major() >= 3)
+	// Client vertex arrays must have a vertex buffer object for opengl 3.1 and above (without compatibility option)
+	if (use_open_3_1)
 	{
 		for (int i = 0; i < prim_array->num_attributes; i++)
 		{
@@ -706,7 +721,6 @@ void CL_OpenGLGraphicContextProvider::draw_primitives(CL_PrimitivesType type, in
 				return;
 			}
 		}
-		
 	}
 
 	set_primitives_array(prim_array);
@@ -935,7 +949,7 @@ void CL_OpenGLGraphicContextProvider::set_primitives_array(const CL_PrimitivesAr
 			// as will calling any array drawing command when no vertex array object is
 			// bound.
 
-			if (CL_OpenGL::get_opengl_version_major() < 3)
+			if (!use_open_3_1)
 			{
 				glEnableVertexAttribArray(prim_array->attribute_indexes[i]);
 				glVertexAttribPointer(

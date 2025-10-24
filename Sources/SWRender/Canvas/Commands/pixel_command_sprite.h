@@ -56,6 +56,7 @@ private:
 	};
 
 	void render_sprite(CL_PixelThreadContext *context);
+	void render_sprite_rotated(CL_PixelThreadContext *context);
 	void render_sprite_scale(CL_PixelThreadContext *context, const CL_Rect &box);
 	void render_sprite_scale_linear(CL_PixelThreadContext *context, const CL_Rect &box);
 	void render_sprite_noscale(CL_PixelThreadContext *context, const CL_Rect &box);

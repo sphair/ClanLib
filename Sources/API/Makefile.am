@@ -343,6 +343,7 @@ clanDisplay_includes = \
 	Display/2D/color_hsv2.h \
 	Display/2D/color_hsl2.h \
 	Display/2D/span_layout.h \
+	Display/2D/collidable_sprite.h \
 	Display/Collision/outline_accuracy.h \
 	Display/Collision/outline_provider_bitmap.h \
 	Display/Collision/outline_provider_file.h \

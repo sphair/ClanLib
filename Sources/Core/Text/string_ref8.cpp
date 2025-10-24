@@ -78,14 +78,14 @@ CL_StringRef8::CL_StringRef8(const char *c_str, size_type length, bool null_term
 CL_StringRef8::CL_StringRef8(const wchar_t *wc_str)
 : null_terminated(false), temporary(false)
 {
-	CL_String8 temp = CL_StringHelp::ucs2_to_local8(wc_str);
+	CL_String8 temp = CL_StringHelp::ucs2_to_utf8(wc_str);
 	create_temp(temp.data(), temp.length());
 }
 
 CL_StringRef8::CL_StringRef8(const wchar_t *wc_str, size_type length, bool null_terminated)
 : null_terminated(null_terminated), temporary(false)
 {
-	CL_String8 temp = CL_StringHelp::ucs2_to_local8(CL_StringRef16(wc_str, length, null_terminated));
+	CL_String8 temp = CL_StringHelp::ucs2_to_utf8(CL_StringRef16(wc_str, length, null_terminated));
 	create_temp(temp.data(), temp.length());
 }
 
@@ -141,7 +141,7 @@ CL_StringRef8 &CL_StringRef8::operator =(const char *c_str)
 
 CL_StringRef8 &CL_StringRef8::operator =(const wchar_t *c_str)
 {
-	CL_String8 temp = CL_StringHelp::ucs2_to_local8(c_str);
+	CL_String8 temp = CL_StringHelp::ucs2_to_utf8(c_str);
 	create_temp(temp.data(), temp.length());
 	return *this;
 }

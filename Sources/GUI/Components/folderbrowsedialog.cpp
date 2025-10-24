@@ -137,8 +137,8 @@ public:
 		
 			CL_String16::char_type path_buffer[FILENAME_MAX] = { 0 };
 
-			TCHAR Buffer[MAX_PATH];
-			ZeroMemory(Buffer, MAX_PATH);
+			WCHAR Buffer[MAX_PATH];
+			memset(Buffer, 0, sizeof(WCHAR) * MAX_PATH);
 
 			if(owner)
 				bi.hwndOwner = owner->get_display_window().get_hwnd();

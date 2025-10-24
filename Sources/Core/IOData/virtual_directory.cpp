@@ -36,6 +36,7 @@
 #include "API/Core/IOData/virtual_file_source.h"
 #include "API/Core/IOData/virtual_directory_listing.h"
 #include "API/Core/System/weakptr.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_VirtualDirectory_Impl Class:
@@ -60,10 +61,10 @@ CL_VirtualDirectory::CL_VirtualDirectory()
 : impl(new CL_VirtualDirectory_Impl)
 {
 #ifdef WIN32
-	TCHAR buffer[MAX_PATH];
+	WCHAR buffer[MAX_PATH];
 	buffer[0] = 0;
 	if (GetCurrentDirectory(MAX_PATH, buffer) > 0)
-		impl->base_path = buffer;
+		impl->base_path = CL_StringHelp::ucs2_to_utf8(buffer);
 #else
 	char buffer[1024];
 	buffer[0] = 0;

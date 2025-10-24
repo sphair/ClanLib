@@ -60,6 +60,12 @@ public:
 	/// \return The UTF-8 String
 	static CL_String8 wchar_to_utf8(wchar_t value);
 
+	/// \brief unicode char to utf-8
+	///
+	/// \param value = unicode char value
+	/// \return The UTF-8 String
+	static CL_String8 unicode_to_utf8(unsigned int value);
+
 	/// \brief Trim
 	///
 	/// \param text = String Ref

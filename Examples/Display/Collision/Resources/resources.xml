@@ -1,0 +1,243 @@
+<resources>
+	<sprite name="teapot">
+		<image file="texture1.png">
+			<grid pos="0,0" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,0" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,0" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,0" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,64" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,64" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,64" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,64" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,128" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,192" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,256" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,320" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,384" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="0,448" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,128" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,128" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,128" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,192" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,192" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,192" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,256" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,320" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,384" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="128,448" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,256" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,256" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,320" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,320" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,384" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="256,448" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,384" size="128,64"/>
+		</image>
+
+		<image file="texture1.png">
+			<grid pos="384,448" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,0" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,0" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,0" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,0" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,64" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,64" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,64" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,64" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,128" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,192" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,256" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,320" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,384" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="0,448" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,128" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,128" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,128" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,192" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,192" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,192" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,256" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,320" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,384" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="128,448" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,256" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,256" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="256,320" size="128,64"/>
+		</image>
+
+		<image file="texture2.png">
+			<grid pos="384,320" size="128,64"/>
+		</image>
+	</sprite>
+</resources>

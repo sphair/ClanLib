@@ -101,37 +101,6 @@ CL_PixelCommand *CL_SoftwareProgram_Standard::draw_sprite(CL_PixelPipeline *pipe
 	CL_Vec2f init_texcoords[3] = { attribute_values[6], attribute_values[7], attribute_values[8] };
 	int init_sampler = (int)attribute_values[9].x;
 	return new(pipeline) CL_PixelCommandSprite(init_points, init_primcolor[0], init_texcoords, init_sampler);
-
-/*
-	CL_Vec2f screen_pos[3];
-	for (int v=0; v<3; v++)
-		screen_pos[v] = canvas->transform(pos[v]);
-
-	// Check for non-rotated sprite
-	if (   ( (int) screen_pos[0].y == (int) (screen_pos[1].y) )
-		&& ( (int) screen_pos[0].x == (int) (screen_pos[2].x) ) )
-	{
-		canvas->draw_sprite(screen_pos, primary_color, tex_coords, sampler_index.x);
-	}
-	else
-	{
-		// Rotated Sprite.
-		canvas->draw_triangle(screen_pos, primary_color, tex_coords, sampler_index.x);
-		CL_Vec2f alt_screen_pos[3];
-		alt_screen_pos[0] = screen_pos[1];
-		alt_screen_pos[1].x = screen_pos[1].x + (screen_pos[2].x - screen_pos[0].x);
-		alt_screen_pos[1].y = screen_pos[1].y + (screen_pos[2].y - screen_pos[0].y);
-		alt_screen_pos[2] = screen_pos[2];
-
-		CL_Vec2f alt_tex_coords[3];
-		alt_tex_coords[0] = tex_coords[1];
-		alt_tex_coords[1].x = tex_coords[1].x + (tex_coords[2].x - tex_coords[0].x);
-		alt_tex_coords[1].y = tex_coords[1].y + (tex_coords[2].y - tex_coords[0].y);
-		alt_tex_coords[2] = tex_coords[2];
-
-		canvas->draw_triangle(alt_screen_pos, primary_color, alt_tex_coords, sampler_index.x);
-	}
-*/
 }
 
 CL_PixelCommand *CL_SoftwareProgram_Standard::draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values)

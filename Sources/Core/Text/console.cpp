@@ -66,7 +66,7 @@ void CL_Console::wait_for_key()
 /*
 		write_line("Press any key");
 	#ifdef WIN32
-		TCHAR buffer[1];
+		WCHAR buffer[1];
 		DWORD written = 0;
 		BOOL result = ReadConsole(GetStdHandle(STD_INPUT_HANDLE), buffer, 1, &written, 0);
 	#else

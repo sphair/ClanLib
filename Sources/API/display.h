@@ -55,6 +55,7 @@
 #include "Display/2D/subtexture.h"
 #include "Display/2D/texture_group.h"
 #include "Display/2D/span_layout.h"
+#include "Display/2D/collidable_sprite.h"
 #include "Display/Collision/collision_outline.h"
 #include "Display/Collision/contour.h"
 #include "Display/Collision/outline_accuracy.h"

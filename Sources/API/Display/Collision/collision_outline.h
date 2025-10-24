@@ -232,8 +232,11 @@ public:
 	/// \param file = The file
 	void load(CL_IODevice &file);
 
-	/// \brief Copy
+	/// \brief Copy. This function is de-appreciated and is removed in ClanLib 2.4. Use clone() instead
 	CL_CollisionOutline &copy(const CL_CollisionOutline &other);
+
+	/// \brief Makes a copy of the current collision outline.
+	CL_CollisionOutline clone() const;
 
 	/// \brief Optimize the outline by removing redundant points.
 	///

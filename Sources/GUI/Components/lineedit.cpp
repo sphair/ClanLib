@@ -220,6 +220,7 @@ void CL_LineEdit::set_lowercase(bool enable)
 	if (impl->lowercase != enable)
 	{
 		impl->lowercase = enable;
+		impl->text = CL_StringHelp::text_to_lower(impl->text);
 		request_repaint();
 	}
 }
@@ -229,6 +230,7 @@ void CL_LineEdit::set_uppercase(bool enable)
 	if (impl->uppercase != enable)
 	{
 		impl->uppercase = enable;
+		impl->text = CL_StringHelp::text_to_upper(impl->text);
 		request_repaint();
 	}
 }
@@ -262,7 +264,13 @@ void CL_LineEdit::set_max_length(int length)
 
 void CL_LineEdit::set_text(const CL_StringRef &text)
 {
-	impl->text = text;
+	if(impl->lowercase)
+		impl->text = CL_StringHelp::text_to_lower(text);
+	else if(impl->uppercase)
+		impl->text = CL_StringHelp::text_to_upper(text);
+	else
+		impl->text = text;
+
 	impl->clip_start_offset = 0;
 	impl->update_text_clipping();
 	set_cursor_pos(impl->text.size());
@@ -289,7 +297,6 @@ void CL_LineEdit::set_text(float number, int num_decimal_places)
 	impl->set_text_selection(0, 0);
 	request_repaint();
 }
-
 
 void CL_LineEdit::set_selection(int pos, int length)
 {
@@ -797,7 +804,6 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 			lineedit->set_cursor(cl_cursor_arrow);
 		}
 	}
-
 }
 
 void CL_LineEdit_Impl::on_style_changed()
@@ -826,7 +832,6 @@ void CL_LineEdit_Impl::create_parts()
 	part_selection.set_state(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
-
 }
 
 void CL_LineEdit_Impl::move(int steps, CL_InputEvent &e)
@@ -894,7 +899,13 @@ bool CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
 	{
 		return false;
 	}
-	text.insert(pos, str);
+
+	if(lowercase)
+		text.insert(pos, CL_StringHelp::text_to_lower(str));
+	else if(uppercase)
+		text.insert(pos, CL_StringHelp::text_to_upper(str));
+	else
+		text.insert(pos, str);
 
 	update_text_clipping();
 	lineedit->request_repaint();

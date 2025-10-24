@@ -81,16 +81,16 @@ cl_ubyte64 CL_System::get_microseconds()
 
 CL_String CL_System::get_exe_path()
 {
-	TCHAR exe_filename[_MAX_PATH];
+	WCHAR exe_filename[_MAX_PATH];
 	DWORD len = GetModuleFileName(NULL, exe_filename, _MAX_PATH);
 	if (len == 0 || len == _MAX_PATH)
 		throw CL_Exception("GetModuleFileName failed!");
 
-	TCHAR drive[_MAX_DRIVE], dir[_MAX_DIR];
+	WCHAR drive[_MAX_DRIVE], dir[_MAX_DIR];
 #ifdef _CRT_INSECURE_DEPRECATE
-	_tsplitpath_s(exe_filename, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
+	_wsplitpath_s(exe_filename, drive, _MAX_DRIVE, dir, _MAX_DIR, NULL, 0, NULL, 0);
 #else
-	_tsplitpath(exe_filename, drive, dir, NULL, NULL);
+	_wsplitpath(exe_filename, drive, dir, NULL, NULL);
 #endif
 
 	return CL_StringHelp::ucs2_to_utf8(drive) + CL_StringHelp::ucs2_to_utf8(dir);

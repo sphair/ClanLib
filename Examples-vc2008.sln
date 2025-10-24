@@ -129,6 +129,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerlinNoise", "Examples\Dis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Language", "Examples\Display_Text\Language\Language-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-3AACA936FFE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FullScreen", "Examples\Display\FullScreen\FullScreen-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scroller", "Examples\Display_Text\Scroller\Scroller-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6DDD136FFE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SineScroll", "Examples\Display\SineScroll\SineScroll-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6FACE22FFE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Examples\Display\Collision\Collision-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6111236ACE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextFade", "Examples\Display_Text\TextFade\TextFade-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-12345676FFE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -505,6 +515,36 @@ Global
 		{4E27E943-27C7-4F00-A431-3AACA936FFE4}.Release|Win32.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-3AACA936FFE4}.Release|Win32.Build.0 = Release|Win32
 		{4E27E943-27C7-4F00-A431-3AACA936FFE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-E6ACA2D6FFE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6DDD136FFE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6FACE22FFE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6111236ACE4}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-12345676FFE4}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

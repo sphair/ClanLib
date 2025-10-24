@@ -213,5 +213,6 @@ private:
 	int shader_version_minor;
 
 	bool use_glsl_1_50;	// Available with OpenGL 3.2 and above
+	bool use_open_3_1;	// Available with OpenGL 3.1 and above
 /// \}
 };

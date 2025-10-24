@@ -44,6 +44,7 @@
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/png_provider.h"
+#include "API/Display/Collision/collision_outline.h"
 #include "sprite_impl.h"
 #include "render_batch2d.h"
 

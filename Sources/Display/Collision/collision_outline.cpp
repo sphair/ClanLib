@@ -281,6 +281,12 @@ CL_CollisionOutline &CL_CollisionOutline::copy(const CL_CollisionOutline &other)
 		return *this;
 
 	impl->contours = other.get_contours();
+
+	impl->contours.clear();
+	impl->contours.reserve(other.impl->contours.size());
+	for (size_t i = 0; i < other.impl->contours.size(); i++)
+		impl->contours.push_back(other.impl->contours[i].clone());
+
 	impl->do_inside_test = other.get_inside_test();
 	impl->width = other.get_width();
 	impl->height = other.get_height();
@@ -307,6 +313,40 @@ CL_CollisionOutline &CL_CollisionOutline::copy(const CL_CollisionOutline &other)
 	impl->rotation_hotspot.y = y;
 
 	return *this;
+}
+
+CL_CollisionOutline CL_CollisionOutline::clone() const
+{
+	CL_CollisionOutline copy;
+	copy.impl->contours.clear();
+	copy.impl->contours.reserve(impl->contours.size());
+	for (size_t i = 0; i < impl->contours.size(); i++)
+		copy.impl->contours.push_back(impl->contours[i].clone());
+	copy.impl->do_inside_test = get_inside_test();
+	copy.impl->width = get_width();
+	copy.impl->height = get_height();
+	copy.impl->position = get_translation();
+	copy.impl->scale_factor = get_scale();
+	copy.impl->angle = get_angle();
+	copy.impl->minimum_enclosing_disc = get_minimum_enclosing_disc();
+
+	bool points, normals, metadata, pendepths;
+	get_collision_info_state(points,normals,metadata,pendepths);
+	copy.enable_collision_info(points,normals,metadata,pendepths);
+
+	CL_Origin origin;
+	float x, y;
+
+	get_alignment(origin,x,y);
+	copy.impl->translation_origin = origin;
+	copy.impl->translation_offset.x = x;
+	copy.impl->translation_offset.y = y;
+
+	get_rotation_hotspot(origin,x,y);
+	copy.impl->rotation_origin = origin;
+	copy.impl->rotation_hotspot.x = x;
+	copy.impl->rotation_hotspot.y = y;
+	return copy;
 }
 
 void CL_CollisionOutline::optimize(unsigned char check_distance, float corner_angle )

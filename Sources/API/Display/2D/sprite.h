@@ -42,12 +42,13 @@
 #include "../Render/graphic_context.h"
 #include "../Render/blend_mode.h"
 #include "../Image/image_import_description.h"
-
+#include "../Collision/collision_outline.h"
 #include "color.h"
 
 class CL_ResourceManager;
 class CL_SpriteDescription;
 class CL_Sprite_Impl;
+class CL_CollisionOutline;
 
 /// \brief Sprite class.
 ///

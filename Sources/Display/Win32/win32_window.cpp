@@ -177,9 +177,9 @@ CL_Size CL_Win32Window::get_maximum_size(bool client_area) const
 
 CL_String CL_Win32Window::get_title() const
 {
-	TCHAR str[1024];
+	WCHAR str[1024];
 	int len = GetWindowText(hwnd, str, 1024);
-	return CL_String(str, len);
+	return CL_StringHelp::ucs2_to_utf8(CL_String16(str, len));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1473,7 +1473,7 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 	UINT png_format = 0;
 	while (format)
 	{
-		TCHAR szFormatName[80];
+		WCHAR szFormatName[80];
 		int retLen = GetClipboardFormatName(format, szFormatName, sizeof(szFormatName));
 		
 		if (CL_StringRef16(L"image/png") == szFormatName || 
@@ -1677,8 +1677,8 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_png(cl_ubyte8 *data, size_t siz
 
 void CL_Win32Window::register_clipboard_formats()
 {
-//	TCHAR *png_format_str = L"image/png";
-	TCHAR *png_format_str = L"PNG";
+//	WCHAR *png_format_str = L"image/png";
+	WCHAR *png_format_str = L"PNG";
 	png_clipboard_format = RegisterClipboardFormat(png_format_str);
 }
 

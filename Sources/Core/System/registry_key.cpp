@@ -137,7 +137,7 @@ std::vector<CL_String> CL_RegistryKey::get_subkey_names() const
 	DWORD index = 0;
 	while (index < 100000)
 	{
-		TCHAR name[MAX_PATH];
+		WCHAR name[MAX_PATH];
 		DWORD name_size = MAX_PATH;
 		FILETIME last_write_time;
 		LONG result = RegEnumKeyEx(impl->key, index++, name, &name_size, 0, 0, 0, &last_write_time);
@@ -156,7 +156,7 @@ std::vector<CL_String> CL_RegistryKey::get_value_names() const
 	DWORD index = 0;
 	while (index < 100000)
 	{
-		TCHAR name[MAX_PATH];
+		WCHAR name[MAX_PATH];
 		DWORD name_size = MAX_PATH;
 		LONG result = RegEnumValue(impl->key, index++, name, &name_size, 0, 0, 0, 0);
 		if (result == ERROR_NO_MORE_ITEMS)
@@ -205,7 +205,7 @@ CL_String CL_RegistryKey::get_value_string(const CL_StringRef &name, const CL_St
 	result = RegQueryValueEx(impl->key, CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, &type, (LPBYTE) buffer.get_data(), &size_data);
 	if (result != ERROR_SUCCESS || type != REG_SZ)
 		return default_value;
-	return (TCHAR *) buffer.get_data();
+	return (WCHAR *) buffer.get_data();
 }
 
 std::vector<CL_String> CL_RegistryKey::get_value_multi_string(const CL_StringRef &name, const std::vector<CL_String> &default_value) const
@@ -222,7 +222,7 @@ std::vector<CL_String> CL_RegistryKey::get_value_multi_string(const CL_StringRef
 		return default_value;
 
 	std::vector<CL_String> results;
-	TCHAR *pos = (TCHAR *) buffer.get_data();
+	WCHAR *pos = (TCHAR *) buffer.get_data();
 	while (*pos != 0)
 	{
 		CL_StringRef s = pos;
@@ -313,7 +313,7 @@ void CL_RegistryKey::set_value_binary(const CL_StringRef &name, const CL_DataBuf
 void CL_RegistryKey::set_value_string(const CL_StringRef &name, const CL_StringRef &value)
 {
 	CL_String16 value_str = CL_StringHelp::utf8_to_ucs2(value);
-	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *) value_str.c_str(), (value_str.length()+1) * sizeof(TCHAR));
+	LONG result = RegSetValueEx(impl->key, name.empty() ? 0 : CL_StringHelp::utf8_to_ucs2(name).c_str(), 0, REG_SZ, (const BYTE *) value_str.c_str(), (value_str.length()+1) * sizeof(WCHAR));
 	if (result != ERROR_SUCCESS)
 		throw CL_Exception(cl_format("Unable to set registry key value %1", name));
 }
@@ -323,7 +323,7 @@ void CL_RegistryKey::set_value_multi_string(const CL_StringRef &name, const std:
 	int size = 1;
 	for (std::vector<CL_String>::size_type i = 0; i < value.size(); i++)
 		size += value[i].length()+1;
-	CL_DataBuffer buffer(size * sizeof(TCHAR));
+	CL_DataBuffer buffer(size * sizeof(WCHAR));
 	int pos = 0;
 	// gosh this is too boring..
 }

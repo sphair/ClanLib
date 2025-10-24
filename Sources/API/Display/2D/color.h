@@ -1293,6 +1293,23 @@ public:
 	{
 	}
 
+	/// \brief Constructs a color.
+	///
+	/// Color components are specified in the range 0 to 255.\n
+	/// An alpha value of 0 means complete transparency, while 255 means completely opaque (solid).
+	///
+	/// \param r = Red color component.
+	/// \param g = Green color component.
+	/// \param b = Blue color component.
+	/// \param a = Alpha (transparency) color component.
+	CL_Colorf(int r, int g, int b, int a=255)
+		: r(r/255.0f),
+		  g(g/255.0f),
+		  b(b/255.0f),
+		  a(a/255.0f)
+	{
+	}
+
 	explicit CL_Colorf(const CL_Color& color)
 		: r(color.get_red()/255.0f),
 		  g(color.get_green()/255.0f),

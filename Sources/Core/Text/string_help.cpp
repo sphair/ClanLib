@@ -36,6 +36,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <string>
+#include <sstream>
 #else
 #include <cstring>
 #if defined UNICODE && !defined _UNICODE
@@ -142,6 +144,11 @@ CL_String CL_StringHelp::text_to_upper(const CL_StringRef &s)
 	
 CL_String8 CL_StringHelp::wchar_to_utf8(wchar_t value)
 {
+	return unicode_to_utf8(value);
+}
+
+CL_String8 CL_StringHelp::unicode_to_utf8(unsigned int value)
+{
 	char text[8];
 
 	if ( (value < 0x80) && (value > 0) )
@@ -165,9 +172,7 @@ CL_String8 CL_StringHelp::wchar_to_utf8(wchar_t value)
 	}
 	else if( value < 0x200000 )
 	{
-#ifndef WIN32
 		text[0] = (char) (  0xf0 | ( value >> 18 ));
-#endif
 		text[1] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
 		text[2] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
 		text[3] = (char) (  0x80 | ( value & 0x3f ));
@@ -176,10 +181,8 @@ CL_String8 CL_StringHelp::wchar_to_utf8(wchar_t value)
 	}
 	else if( value < 0x4000000 )
 	{
-#ifndef WIN32
 		text[0] = (char) (  0xf8 | ( value >> 24 ));
 		text[1] = (char) (  0x80 | ( (value >> 18) & 0x3f ));
-#endif
 		text[2] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
 		text[3] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
 		text[4] = (char) (  0x80 | ( value & 0x3f ));
@@ -188,11 +191,9 @@ CL_String8 CL_StringHelp::wchar_to_utf8(wchar_t value)
 	}
 	else if( value < 0x80000000 )
 	{
-#ifndef WIN32
 		text[0] = (char) (  0xfc | ( value >> 30 ));
 		text[1] = (char) (  0x80 | ( (value >> 24) & 0x3f ));
 		text[2] = (char) (  0x80 | ( (value >> 18) & 0x3f ));
-#endif
 		text[3] = (char) (  0x80 | ( (value >> 12) & 0x3f ));
 		text[4] = (char) (  0x80 | ( (value >> 6) & 0x3f ));
 		text[5] = (char) (  0x80 | ( value & 0x3f ));
@@ -442,8 +443,10 @@ int CL_StringHelp::ucs2_to_int(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return _wtoi(value.c_str());
 #else
-		throw CL_Exception("ucs2_to_int not implemented on unix yet");
-		return 0;
+		std::wistringstream stream(value.c_str());
+		int num;
+		stream >> num;
+		return num;
 #endif
 	}
 	else if (base == 16)
@@ -560,8 +563,10 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return (unsigned int) _wtoi(value.c_str());
 #else
-		throw CL_Exception("ucs2_to_uint not implemented on unix yet");
-		return 0;
+		std::wistringstream stream(value.c_str());
+		unsigned int num;
+		stream >> num;
+		return num;
 #endif
 	}
 	else if (base == 16)
@@ -592,7 +597,7 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception("Unsupported base passed for ucs2_to_int");
+		throw CL_Exception("Unsupported base passed for ucs2_to_uint");
 	}
 }
 

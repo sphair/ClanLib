@@ -98,6 +98,17 @@ public:
 
 	/// \brief Less than operator
 	bool operator<(const CL_Contour &other) const { return impl < other.impl; }
+
+	/// \brief Makes a copy of the contour
+	CL_Contour clone()
+	{
+		CL_Contour copy;
+		copy.impl->points = impl->points;
+		copy.impl->is_inside_contour = impl->is_inside_contour;
+		copy.impl->sub_circles = impl->sub_circles;
+		return copy;
+	}
+
 /// \}
 	
 /// \name Implementation

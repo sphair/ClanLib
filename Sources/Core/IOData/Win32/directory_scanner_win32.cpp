@@ -62,9 +62,9 @@ bool CL_DirectoryScanner_Win32::scan (const CL_String &pathname, const CL_String
 /*
 	// Find the full path of the directory we are about to search:
 	int size_buffer = GetFullPathName(pathname, 0, 0, 0);
-	LPTSTR buffer = new TCHAR[size_buffer];
-	LPTSTR filepart = 0;
-	GetFullPathName(pathname, size_buffer, buffer, &filepart);
+	LPWSTR buffer = new WCHAR[size_buffer];
+	LPWSTR filepart = 0;
+	GetFullPathNameW(pathname, size_buffer, buffer, &filepart);
 	full_pathname = path_with_ending_slash(buffer);
 	delete[] buffer;
 */

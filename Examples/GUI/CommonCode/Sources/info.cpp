@@ -94,7 +94,7 @@ void Info::draw(CL_GraphicContext &gc)
 	}
 	else
 	{
-		color = CL_Colorf(0, 0, 0, 1.0f);
+		color = CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f);
 		set_constant_repaint(false);
 	}
 

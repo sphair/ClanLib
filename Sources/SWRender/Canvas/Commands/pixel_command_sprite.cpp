@@ -31,6 +31,7 @@
 #include "API/SWRender/blit_argb8_sse.h"
 #include "API/SWRender/pixel_thread_context.h"
 #include "../Renderers/pixel_fill_renderer.h"
+#include "../Renderers/pixel_triangle_renderer.h"
 #include "API/Display/2D/color.h"
 
 CL_PixelCommandSprite::CL_PixelCommandSprite(const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor, const CL_Vec2f init_texcoords[3], int init_sampler)
@@ -48,7 +49,16 @@ void CL_PixelCommandSprite::run(CL_PixelThreadContext *context)
 {
 	if (sampler != 4)
 	{
-		render_sprite(context);
+		// Check for non-rotated sprite
+		if (   ( (int) points[0].y == (int) (points[1].y) )
+			&& ( (int) points[0].x == (int) (points[2].x) ) )
+		{
+			render_sprite(context);
+		}
+		else
+		{
+			render_sprite_rotated(context);
+		}
 	}
 	else
 	{
@@ -64,6 +74,41 @@ void CL_PixelCommandSprite::run(CL_PixelThreadContext *context)
 			fill_renderer.fill_rect(dest, color);
 		}
 	}
+}
+void CL_PixelCommandSprite::render_sprite_rotated(CL_PixelThreadContext *context)
+{
+	float x[3] = { points[0].x, points[1].x, points[2].x };
+	float y[3] = { points[0].y, points[1].y, points[2].y };
+	float tx[3] = { texcoords[0].s, texcoords[1].s, texcoords[2].s };
+	float ty[3] = { texcoords[0].t, texcoords[1].t, texcoords[2].t };
+	float red[3] = { primcolor.r, primcolor.r, primcolor.r };
+	float green[3] = { primcolor.g, primcolor.g, primcolor.g };
+	float blue[3] = { primcolor.b, primcolor.b, primcolor.b };
+	float alpha[3] = { primcolor.a, primcolor.a, primcolor.a };
+	
+	CL_PixelTriangleRenderer triangle_renderer;
+	triangle_renderer.set_clip_rect(context->clip_rect);
+	triangle_renderer.set_vertex_arrays(x,y,tx,ty,red,green,blue,alpha);
+	triangle_renderer.set_dest(context->colorbuffer0.data, context->colorbuffer0.size.width, context->colorbuffer0.size.height);
+	triangle_renderer.set_src(context->samplers[sampler].data, context->samplers[sampler].size.width, context->samplers[sampler].size.height);
+	triangle_renderer.set_core(context->core, context->num_cores);
+	triangle_renderer.set_blend_function(context->cur_blend_src, context->cur_blend_dest, context->cur_blend_src_alpha, context->cur_blend_dest_alpha);
+	triangle_renderer.render_nearest(0, 1, 2);
+
+	x[0] = points[1].x;
+	y[0] = points[1].y;
+	x[1] = points[1].x + (points[2].x - points[0].x);
+	y[1] = points[1].y + (points[2].y - points[0].y);
+	x[2] = points[2].x;
+	y[2] = points[2].y;
+
+	tx[0] = texcoords[1].x;
+	ty[0] = texcoords[1].y;
+	tx[1] = texcoords[1].x + (texcoords[2].x - texcoords[0].x);
+	ty[1] = texcoords[1].y + (texcoords[2].y - texcoords[0].y);
+	tx[2] = texcoords[2].x;
+	ty[2] = texcoords[2].y;
+	triangle_renderer.render_nearest(0, 1, 2);
 }
 
 void CL_PixelCommandSprite::render_sprite(CL_PixelThreadContext *context)

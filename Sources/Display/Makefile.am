@@ -61,6 +61,7 @@ libclan23Display_la_SOURCES = \
 	2D/subtexture.cpp \
 	2D/rounded_rect.cpp \
 	2D/texture_group.cpp \
+	2D/collidable_sprite.cpp \
 	ImageProviders/png_provider_impl.cpp \
 	ImageProviders/png_provider.cpp \
 	ImageProviders/targa_provider.cpp \

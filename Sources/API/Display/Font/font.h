@@ -162,8 +162,18 @@ public:
 	/// Multiline text (seperated by /n) is supported\n
 	/// \n
 	/// Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.\n
-	/// The width is the pixel width
+	/// The width is the pixel width\n
+	/// \n
+	/// The size is the increment value to the next glyph
 	CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
+
+	/// \brief Gets the size of a specified glyph
+	///
+	/// The size is the increment value to the next glyph
+	///
+	/// \param glyph = The glyph to get
+	/// \return The size
+	CL_Size get_glyph_size(CL_GraphicContext &gc, unsigned int glyph);
 
 	/// \brief Retrieves font metrics description for the selected font.
 	CL_FontMetrics get_font_metrics();

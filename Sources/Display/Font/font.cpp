@@ -232,6 +232,17 @@ CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 	return total_size;
 }
 
+CL_Size CL_Font::get_glyph_size(CL_GraphicContext &gc, unsigned int glyph)
+{
+	CL_String text = CL_StringHelp::unicode_to_utf8(glyph);
+
+	if (impl)
+	{
+		return get_provider()->get_text_size(gc, text);
+	}
+	return CL_Size();
+}
+
 CL_FontMetrics CL_Font::get_font_metrics()
 {
 	if (impl)
