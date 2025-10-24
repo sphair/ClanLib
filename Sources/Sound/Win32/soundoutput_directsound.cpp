@@ -65,7 +65,7 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency, int
 		set_notify_positions();
 		play_sound_buffer();
 	}
-	catch (CL_Exception &e)
+	catch (const CL_Exception &e)
 	{
 		release_resources();
 		cl_log_event("mixer", e.message);

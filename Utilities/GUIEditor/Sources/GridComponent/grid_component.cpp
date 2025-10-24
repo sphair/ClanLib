@@ -227,6 +227,10 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 				{
 					CL_Spin *co = dynamic_cast<CL_Spin*>(new_comp);
 				}
+				else if (tag == "toolbar")
+				{
+					CL_ToolBar *co = dynamic_cast<CL_ToolBar*>(new_comp);
+				}
 				else
 				{
 					CustomComponent *co = dynamic_cast<CustomComponent*>(new_comp);

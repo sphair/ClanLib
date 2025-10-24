@@ -147,7 +147,7 @@ void CL_UTF8_Reader_Impl::move_to_leadbyte()
 			lead_position--;
 
 		int trailing_bytes = trailing_bytes_for_utf8[data[lead_position]];
-		if (lead_position + trailing_bytes == current_position)
+		if (lead_position + trailing_bytes >= current_position)
 			current_position = lead_position;
 	}
 }

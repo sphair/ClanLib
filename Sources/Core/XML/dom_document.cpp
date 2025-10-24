@@ -362,13 +362,13 @@ std::vector<CL_DomNode> CL_DomDocument::load(
 			tokenizer.next(&cur_token);
 		}
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception&)
 	{
 		for (std::vector<CL_DomNode>::size_type i = 0; i < result.size(); i++)
 		{
 			insert_point.remove_child(result[i]);
 		}
-		throw e;
+		throw;
 	}
 	return result;
 }

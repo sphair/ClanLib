@@ -95,7 +95,7 @@ CL_Image &CL_CSSResourceCache::get_image(CL_GraphicContext &gc, const CL_String 
 		{
 			image = CL_Image(gc, url);
 		}
-		catch (CL_Exception &)
+		catch (const CL_Exception &)
 		{
 		}
 		image_cache[url] = image;

@@ -135,7 +135,7 @@ std::vector<CL_String> CL_ResourceManager::get_section_names() const
 			std::vector<CL_String> additional_names = impl->additional_resources[i].get_section_names();
 			names.insert(names.end(), additional_names.begin(), additional_names.end());
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 		}
 	}
@@ -178,7 +178,7 @@ std::vector<CL_String> CL_ResourceManager::get_resource_names(const CL_String &s
 			std::vector<CL_String> additional_names = impl->additional_resources[i].get_resource_names(section);
 			names.insert(names.end(), additional_names.begin(), additional_names.end());
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 		}
 	}
@@ -237,7 +237,7 @@ CL_Resource CL_ResourceManager::get_resource(
 			return impl->additional_resources[i].get_resource(
 				resource_id, resolve_alias, reserved);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 		}
 	}

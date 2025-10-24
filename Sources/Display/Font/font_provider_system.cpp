@@ -214,7 +214,7 @@ void CL_FontProvider_System::load_font( CL_GraphicContext &context, const CL_Fon
 	{
 		io_dev = CL_File(font_file_path, CL_File::open_existing, CL_File::access_read);
 	}
-	catch(CL_Exception error)
+	catch(const CL_Exception&)
 	{
 		throw CL_Exception(cl_format("Cannot open font file: \"%1\"", font_file_path));
 	}

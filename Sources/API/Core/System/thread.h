@@ -78,7 +78,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;
@@ -93,7 +93,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;
@@ -108,7 +108,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;
@@ -123,7 +123,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;
@@ -138,7 +138,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;
@@ -153,7 +153,7 @@ public:
 		{
 			start(r);
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			delete r;
 			throw;

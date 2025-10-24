@@ -154,7 +154,7 @@ void CL_NetGameConnection_Impl::connection_main()
 			}
 		}
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception& e)
 	{
 		// to do: pass on e.message to the CL_NetGameNetworkEvent::client_disconnected event
 	}

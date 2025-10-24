@@ -77,7 +77,7 @@ bool CL_ZipReader::read_local_file_header(bool allow_data_descriptor)
 	{
 		impl->local_header.load(impl->input);
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception&)
 	{
 		return false;
 	}

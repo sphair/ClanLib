@@ -307,7 +307,7 @@ void CL_HTTPServer_Impl::connection_thread_main(CL_TCPConnection connection)
 		}
 */
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception& e)
 	{
 		cl_log_event("error", e.message);
 	}

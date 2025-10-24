@@ -123,10 +123,10 @@ void CL_PNGProvider_Impl::init()
 		png_set_read_fn(png_ptr,NULL,NULL);
 
 	}
-	catch (CL_Exception error)
+	catch (const CL_Exception&)
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
-		throw error;
+		throw;
 	}	
 
 	// free memory ...

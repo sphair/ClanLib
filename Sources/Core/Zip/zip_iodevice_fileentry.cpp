@@ -106,10 +106,10 @@ int CL_ZipIODevice_FileEntry::peek(void *data, int len)
 			memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 			return peeked_data.get_size();
 		}
-		catch (CL_Exception e)
+		catch (const CL_Exception&)
 		{
 			peeked_data.set_size(old_size);
-			throw e;
+			throw;
 		}
 	}
 }

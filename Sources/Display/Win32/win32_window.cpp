@@ -1158,7 +1158,7 @@ BOOL CL_Win32Window::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvR
 		self->joysticks.push_back(device);
 		self->ic.add_joystick(device);
 	}
-	catch (CL_Exception error)
+	catch (const CL_Exception& error)
 	{
 		cl_log_event("debug", "Could not setup game controller: %1", error.message);
 	}

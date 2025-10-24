@@ -78,7 +78,7 @@ void CL_DNSResolver_Impl::thread_main()
 				if (it != queries.end())
 					answers[query_id] = packet;
 			}
-			catch (CL_Exception e)
+			catch (const CL_Exception& e)
 			{
 				cl_log_event("dns", "Exception during parsing of response dns packet: %1", e.message);
 			}

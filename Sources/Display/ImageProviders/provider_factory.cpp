@@ -56,7 +56,7 @@ CL_PixelBuffer CL_ImageProviderFactory::try_load(
 	{
 		return load(filename, directory, type);
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception& e)
 	{
 		if (out_failure_reason)
 			*out_failure_reason = e.message;

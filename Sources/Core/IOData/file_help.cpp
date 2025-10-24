@@ -47,15 +47,18 @@ void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool cop
 	if (result == FALSE)
 		throw CL_Exception("Unable to copy file");
 #else
-	if (!copy_always)
+	while (!copy_always)
 	{
 		try
 		{
 			CL_File input_file(to);
-			throw CL_Exception("Destination file already exists");
 		}
-		catch (CL_Exception error) {
+		catch (const CL_Exception&)
+		{
+			break;
 		}
+
+		throw CL_Exception("Destination file already exists");
 	}
 
 	CL_File input_file(from);

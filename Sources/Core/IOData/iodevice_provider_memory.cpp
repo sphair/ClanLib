@@ -134,7 +134,7 @@ bool CL_IODeviceProvider_Memory::seek(int requested_position, CL_IODevice::SeekM
 
 CL_IODeviceProvider *CL_IODeviceProvider_Memory::duplicate()
 {
-	return 0;
+	return new CL_IODeviceProvider_Memory(data);
 }
 
 /////////////////////////////////////////////////////////////////////////////

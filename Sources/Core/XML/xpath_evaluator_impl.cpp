@@ -580,7 +580,7 @@ int CL_XPathEvaluator_Impl::compare_node_set(Operand &a, Operand b)
 				if (number1 == number2)
 					return 0;
 			}
-			catch (CL_Exception)
+			catch (const CL_Exception&)
 			{
 			}
 		}
@@ -692,7 +692,7 @@ int CL_XPathEvaluator_Impl::compare_number(Operand &a, Operand b)
 			else
 				return 0;
 		}
-		catch (CL_Exception)
+		catch (const CL_Exception&)
 		{
 			return -2;
 		}

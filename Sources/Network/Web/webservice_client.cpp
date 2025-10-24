@@ -148,7 +148,7 @@ CL_WebserviceMessage CL_WebserviceClient::read_response()
 					e.message = fault_string.to_element().get_text();
 			}
 		}
-		catch (CL_Exception e) // The response wasn't XML
+		catch (const CL_Exception&) // The response wasn't XML
 		{
 		}
 		throw e;

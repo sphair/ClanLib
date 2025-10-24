@@ -99,12 +99,12 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_Strin
 						CL_Texture texture = CL_SharedGCData::load_texture(gc, file_name, virtual_directory, import_desc );
 						add_frame(texture);
 					}
-					catch (CL_Exception e)
+					catch (const CL_Exception&)
 					{
 						if (impl->frames.empty())
 						{
 							//must have been an error, pass it down
-							throw e;
+							throw;
 						}
 						//can't find anymore pics
 						break;

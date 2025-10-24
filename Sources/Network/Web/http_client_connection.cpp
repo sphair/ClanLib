@@ -606,7 +606,7 @@ void CL_HTTPClientConnection_Impl::worker_thread_main()
 			}
 		}
 	}
-	catch (CL_Exception)
+	catch (const CL_Exception&)
 	{
 		stop_event.set();
 	}

@@ -49,13 +49,13 @@ public:
 
 void CustomIOFunctions::read( png_structp png_ptr, png_bytep data, png_size_t length )
 {
-	CL_IODevice *iodev = (CL_IODevice*)png_ptr->io_ptr;
+	CL_IODevice *iodev = (CL_IODevice*)png_get_io_ptr(png_ptr);
 	iodev->read(data, length);
 }
 
 void CustomIOFunctions::write( png_structp png_ptr, png_bytep data, png_size_t length )
 {
-	CL_IODevice *iodev = (CL_IODevice*)png_ptr->io_ptr;
+	CL_IODevice *iodev = (CL_IODevice*)png_get_io_ptr(png_ptr);
 	iodev->write(data, length);
 }
 

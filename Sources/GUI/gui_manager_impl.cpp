@@ -156,10 +156,10 @@ void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUICompone
 	{
 		window_manager.create_window(top_level_window, owner_window, desc);
 	}
-	catch (CL_Exception e)
+	catch (const CL_Exception&)
 	{
 		delete top_level_window;
-		throw e;
+		throw;
 	}
 
 	if (!destroy_signal_connected)

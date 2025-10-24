@@ -337,10 +337,10 @@ int CL_IODeviceProvider_File::peek(void *data, int len)
 			memcpy(data, peeked_data.get_data(), peeked_data.get_size());
 			return peeked_data.get_size();
 		}
-		catch (CL_Exception e)
+		catch (const CL_Exception& e)
 		{
 			peeked_data.set_size(old_size);
-			throw e;
+			throw;
 		}
 	}
 }
