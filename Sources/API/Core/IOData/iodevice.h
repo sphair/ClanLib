@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -103,6 +103,12 @@ public:
 	/// \brief Returns true if the input source is in little endian mode.
 	/** \return true if little endian*/
 	bool is_little_endian() const;
+
+	/// \brief Returns the provider for this object
+	const CL_IODeviceProvider *get_provider() const;
+
+	/// \brief Returns the provider for this object
+	CL_IODeviceProvider *get_provider();
 
 /// \}
 /// \name Operations
@@ -221,6 +227,22 @@ public:
 	/// The binary format written to the output source is first an uint32 telling the length of the
 	/// string, and then the string itself.
 	void write_string_a(const CL_StringRef8 &str);
+
+	/// \brief Writes a nul terminated string to the output source.
+	///
+	/// \param str String to write
+	///
+	/// The binary format written to the output source is the string content followed by the NUL character.
+	void write_string_nul(const CL_StringRef8 &str);
+
+	/// \brief Writes a text string to the output source.
+	///
+	/// \param str String to write
+	///
+	/// The binary format written to the output source is the string content appended with a native newline.
+	/// On Windows the newline is CR+LF sequence and on other platforms it is only LF character.
+	/// This function is intended for use with text files.
+	void write_string_text(const CL_StringRef8 &str);
 
 	/// \brief Reads a signed 64 bit integer from input source.
 	/** \return The integer read.*/

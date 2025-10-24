@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -148,7 +148,6 @@ void CL_NetGameConnection_Impl::connection_main()
 					else if (new_send_queue[i].type == Message::type_disconnect)
 					{
 						connection.disconnect_graceful();
-						site->add_network_event(CL_NetGameNetworkEvent(base, CL_NetGameNetworkEvent::client_disconnected));
 						return;
 					}
 				}

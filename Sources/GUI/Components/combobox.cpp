@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -69,7 +69,7 @@ public:
 	bool on_lineedit_unhandled_event(CL_InputEvent &event);
 	void on_popup_item_selected(CL_PopupMenuItem item);
 	void on_popup_menu_closed();
-
+	void on_enablemode_changed();
 	void create_components();
 
 	CL_Callback_v0 func_dropdown_opened;
@@ -111,6 +111,7 @@ CL_ComboBox::CL_ComboBox(CL_GUIComponent *parent)
 	func_resized().set(impl.get(), &CL_ComboBox_Impl::on_resized);
 	func_style_changed().set(impl.get(), &CL_ComboBox_Impl::on_style_changed);
 	// todo: enablemode
+	func_enablemode_changed().set(impl.get(), &CL_ComboBox_Impl::on_enablemode_changed);
 
 	impl->create_components();
 }
@@ -250,8 +251,18 @@ CL_Callback_v1<int> & CL_ComboBox::func_item_selected()
 /////////////////////////////////////////////////////////////////////////////
 // CL_ComboBox Implementation:
 
+void CL_ComboBox_Impl::on_enablemode_changed()
+{
+	lineedit->set_enabled(component->is_enabled());
+	lineedit->request_repaint();
+	component->request_repaint();
+}
+
 void CL_ComboBox_Impl::on_process_message(CL_GUIMessage &msg)
 {
+	if(!component->is_enabled())
+		return;
+
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
 		CL_GUIMessage_Input input_msg = msg;
@@ -309,6 +320,7 @@ void CL_ComboBox_Impl::on_process_message(CL_GUIMessage &msg)
 				!msg.is_consumed() &&
 				e.id != CL_KEY_TAB && 
 				e.id != CL_KEY_ENTER && 
+				e.id != CL_KEY_NUMPAD_ENTER &&
 				e.id != CL_KEY_ESCAPE &&
 				msg.get_data("No Loop Hack").is_null())
 			{
@@ -486,6 +498,9 @@ void CL_ComboBox_Impl::on_popup_item_selected(CL_PopupMenuItem item)
 
 void CL_ComboBox_Impl::on_lineedit_message(CL_GUIMessage &msg)
 {
+	if(!component->is_enabled())
+		return;
+
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
 		CL_GUIMessage_Input input_msg = msg;

@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Window1", "CopyPaste-vc2010.vcxproj", "{BAB9F701-4F2D-4D08-A3ED-02F84BD63AB2}"
 EndProject

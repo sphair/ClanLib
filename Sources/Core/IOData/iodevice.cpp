@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -76,6 +76,18 @@ int CL_IODevice::get_position() const
 bool CL_IODevice::is_little_endian() const
 {
 	return impl->little_endian_mode;
+}
+
+const CL_IODeviceProvider *CL_IODevice::get_provider() const
+{
+	throw_if_null();
+	return impl->provider;
+}
+
+CL_IODeviceProvider *CL_IODevice::get_provider()
+{
+	throw_if_null();
+	return impl->provider;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -247,6 +259,21 @@ void CL_IODevice::write_string_a(const CL_StringRef8 &str)
 	int size = str.length();
 	write_int32(size);
 	write(str.data(), size);
+}
+
+void CL_IODevice::write_string_nul(const CL_StringRef8 &str)
+{
+	write(str.c_str(), str.length() + 1);
+}
+
+void CL_IODevice::write_string_text(const CL_StringRef8 &str)
+{
+	write(str.data(), str.length());
+#ifdef WIN32
+	write("\r\n", 2);
+#else
+	write("\n", 1);
+#endif
 }
 
 cl_int64 CL_IODevice::read_int64()

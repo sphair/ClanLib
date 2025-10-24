@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -62,7 +62,7 @@ public:
 	void on_style_changed();
 	void on_enablemode_changed();
 
-	void create_parts();
+	void create_parts(bool checked = false, bool indeterminated = false);
 
 	CL_CheckBox *checkbox;
 
@@ -349,7 +349,7 @@ void CL_CheckBox_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 		part_focus.render_box(gc, focus_rect, update_rect);
 }
 
-void CL_CheckBox_Impl::create_parts()
+void CL_CheckBox_Impl::create_parts(bool checked, bool indeterminated)
 {
 	part_component = CL_GUIThemePart(checkbox);
 	part_checker = CL_GUIThemePart(checkbox, CssStr::CheckBox::part_checker);
@@ -361,20 +361,20 @@ void CL_CheckBox_Impl::create_parts()
 
 	part_checker.set_state(CssStr::normal, checkbox->is_enabled());
 	part_checker.set_state(CssStr::pressed, false);
-	part_checker.set_state(CssStr::indeterminated, checkbox->is_indeterminated());
-	part_checker.set_state(CssStr::checked, checkbox->is_checked());
-	part_checker.set_state(CssStr::unchecked, !checkbox->is_checked());
+	part_checker.set_state(CssStr::indeterminated, indeterminated);
+	part_checker.set_state(CssStr::checked, checked);
+	part_checker.set_state(CssStr::unchecked, !checked);
 	part_checker.set_state(CssStr::disabled, !checkbox->is_enabled());
 }
 
 void CL_CheckBox_Impl::on_style_changed()
 {
-	create_parts();
+	create_parts(checkbox->is_checked(), checkbox->is_indeterminated());
 	checkbox->request_repaint();
 }
 
 void CL_CheckBox_Impl::on_enablemode_changed()
 {
-	create_parts();
+	create_parts(checkbox->is_checked());
 	checkbox->request_repaint();
 }

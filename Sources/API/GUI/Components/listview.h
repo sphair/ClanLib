@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -83,6 +83,16 @@ public:
 	/// If it was not found, an exception is thrown.
 	static CL_ListView *get_named_item(CL_GUIComponent *reference_component, const CL_StringRef &id);
 
+	/// \brief Get current listview scrollbar position
+	///
+	/// \return int
+	int get_scroll_position();
+
+	/// \brief Get maximal listview scrollbar position
+	///
+	/// \return int
+	int get_scroll_max_position();
+	
 	/// \brief Get Header
 	///
 	/// \return header
@@ -127,6 +137,11 @@ public:
 	///
 	/// \return List View Item
 	CL_ListViewItem create_item();
+
+	/// \brief Set listview scrollbar position
+	///
+	/// \param pos = int
+	void set_scroll_position(int pos);
 
 	/// \brief On process message
 	///

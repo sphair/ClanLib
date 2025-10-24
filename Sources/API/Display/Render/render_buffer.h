@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -86,6 +86,8 @@ public:
 /// \{
 
 public:
+	/// \brief Equality operator
+	bool operator==(const CL_RenderBuffer &other) const;
 
 /// \}
 /// \name Implementation

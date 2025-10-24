@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -292,7 +292,7 @@ void CL_MenuModalLoop::on_keyboard_input(CL_InputEvent e)
 	}
 	else if (e.type == CL_InputEvent::released)
 	{
-		if (e.id == CL_KEY_ENTER)
+		if (e.id == CL_KEY_ENTER || e.id == CL_KEY_NUMPAD_ENTER)
 		{
 			CL_PopupMenuItem pmi = window->get_selected_item();
 			end();

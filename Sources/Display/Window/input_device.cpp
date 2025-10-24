@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -198,6 +198,9 @@ CL_String CL_InputDevice::keyid_to_string(int keycode) const
 		case CL_KEY_NUMPAD7: return "numpad7";
 		case CL_KEY_NUMPAD8: return "numpad8";
 		case CL_KEY_NUMPAD9: return "numpad9";
+#ifndef WIN32
+		case CL_KEY_NUMPAD_ENTER: return "numpad_enter";
+#endif
 		case CL_KEY_MULTIPLY: return "multiply";
 		case CL_KEY_ADD: return "add";
 		case CL_KEY_SEPARATOR: return "separator";
@@ -342,6 +345,7 @@ int CL_InputDevice::string_to_keyid(const CL_String &str) const
 			string_to_id["numpad7"] = CL_KEY_NUMPAD7;
 			string_to_id["numpad8"] = CL_KEY_NUMPAD8;
 			string_to_id["numpad9"] = CL_KEY_NUMPAD9;
+			string_to_id["numpad_enter"] = CL_KEY_NUMPAD_ENTER;
 			string_to_id["multiply"] = CL_KEY_MULTIPLY;
 			string_to_id["add"] = CL_KEY_ADD;
 			string_to_id["separator"] = CL_KEY_SEPARATOR;

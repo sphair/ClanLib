@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -83,6 +83,11 @@ const CL_Size &CL_RenderBuffer::get_size() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RenderBuffer Operations:
+
+bool CL_RenderBuffer::operator==(const CL_RenderBuffer &other) const
+{
+	return impl == other.impl;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_RenderBuffer Implementation:

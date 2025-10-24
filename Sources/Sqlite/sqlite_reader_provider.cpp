@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -137,10 +137,13 @@ bool CL_SqliteReaderProvider::retrieve_row()
 				finished = true;
 				return false;
 			case SQLITE_ERROR:
+				finished = true;
 				throw CL_Exception("Database Error!");
 			case SQLITE_MISUSE:
+				finished = true;
 				throw CL_Exception("Database Misuse!");
 			default:
+				finished = true;
 				throw CL_Exception(cl_format("Unknown database result code: %1", result));
 			}
 		}

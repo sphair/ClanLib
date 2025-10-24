@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Viewport1", "Viewport1-vc2010.vcxproj", "{3C5A0E78-4A05-4953-BA6F-A752C7F7AF92}"
 EndProject

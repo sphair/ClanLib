@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -115,8 +115,13 @@ void CL_PopupMenu::start(CL_GUIComponent *parent, const CL_Point &pos)
 	if (get_item_count() == 0)
 		return;
 
-	CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(parent->get_gui_manager());
-	menu_ptr->start(parent, *this, pos);
+	//CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(parent->get_gui_manager());
+	//menu_ptr->start(parent, *this, pos);
+
+	if(!impl.get()->menu_ptr.get())
+		impl.get()->menu_ptr.reset(new CL_MenuModalLoop(parent->get_gui_manager()));
+
+	impl.get()->menu_ptr.get()->start(parent, *this, pos);
 }
 
 CL_PopupMenuItem CL_PopupMenu::insert_item(const CL_StringRef &text, int id, int index)
@@ -217,6 +222,12 @@ int CL_PopupMenu::find_item(const CL_StringRef &text, bool case_sensitive)
 void CL_PopupMenu::set_class_name(const CL_StringRef &class_name)
 {
 	impl->class_name = class_name;
+}
+
+void CL_PopupMenu::clear()
+{
+	impl->items.clear();
+	impl->next_id = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

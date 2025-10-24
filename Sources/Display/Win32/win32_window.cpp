@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -846,20 +846,23 @@ void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc)
 	get_styles_from_description(desc, style, ex_style);
 	RECT window_rect = get_window_geometry_from_description(desc, style, ex_style);
 
+	SetWindowText(hwnd, CL_StringHelp::utf8_to_ucs2(desc.get_title()).c_str());
+
 	SetWindowLong(hwnd, GWL_STYLE, style);
 	SetWindowLong(hwnd, GWL_EXSTYLE, ex_style);
 
 	if (desc.is_fullscreen())
 	{
-		// Make always on top
-		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, desc.get_size().width, desc.get_size().height, SWP_NOACTIVATE|SWP_FRAMECHANGED);
+		// Place the window above all topmost or non-topmost windows depending on the topmost setting
+		SetWindowPos(hwnd, desc.is_topmost() ? HWND_TOPMOST : HWND_TOP, window_rect.left, window_rect.top,
+			window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, SWP_NOACTIVATE|SWP_FRAMECHANGED);
 	}
 	else
 	{
-		// Clear always on top flag; size as requested by description struct.
+		// Setup always on top flag; size as requested by description struct.
 		SetWindowPos(
 			hwnd,
-			HWND_NOTOPMOST,
+			desc.is_topmost() ? HWND_TOPMOST : HWND_NOTOPMOST,
 			window_rect.left,
 			window_rect.top,
 			window_rect.right-window_rect.left,

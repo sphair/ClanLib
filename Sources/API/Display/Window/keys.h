@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -125,6 +125,7 @@
 #define CL_KEY_NUMPAD7 VK_NUMPAD7
 #define CL_KEY_NUMPAD8 VK_NUMPAD8
 #define CL_KEY_NUMPAD9 VK_NUMPAD9
+#define CL_KEY_NUMPAD_ENTER CL_KEY_RETURN
 #define CL_KEY_MULTIPLY VK_MULTIPLY
 #define CL_KEY_ADD VK_ADD
 #define CL_KEY_SEPARATOR VK_SEPARATOR
@@ -282,6 +283,7 @@
 #define CL_KEY_NUMPAD7 83
 #define CL_KEY_NUMPAD8 84
 #define CL_KEY_NUMPAD9 85
+#define CL_KEY_NUMPAD_ENTER CL_KEY_RETURN
 #define CL_KEY_MULTIPLY 86
 #define CL_KEY_ADD 87
 #define CL_KEY_SEPARATOR 88
@@ -409,6 +411,7 @@
 #define CL_KEY_NUMPAD7 XK_KP_7
 #define CL_KEY_NUMPAD8 XK_KP_8
 #define CL_KEY_NUMPAD9 XK_KP_9
+#define CL_KEY_NUMPAD_ENTER XK_KP_Enter
 #define CL_KEY_MULTIPLY XK_KP_Multiply
 #define CL_KEY_ADD XK_KP_Add
 #define CL_KEY_SEPARATOR XK_KP_Separator

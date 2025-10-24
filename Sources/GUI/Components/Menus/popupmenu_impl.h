@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,6 +31,8 @@
 
 #include "API/GUI/Components/popupmenu.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "GUI/Components/Menus/menu_modal_loop.h"
+#include <memory>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenu_Impl Class:
@@ -47,4 +49,6 @@ public:
 	CL_String class_name;
 	int joiner_width;
 	CL_Callback_v0 func_close;
+
+	std::auto_ptr<CL_MenuModalLoop> menu_ptr;
 };

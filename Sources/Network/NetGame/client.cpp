@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -52,6 +52,8 @@ void CL_NetGameClient::connect(const CL_String &server, const CL_String &port)
 
 void CL_NetGameClient::disconnect()
 {
+	if (impl->connection.get() != 0)
+		impl->connection->disconnect();
 	impl->connection.reset();
 	impl->events.clear();
 }

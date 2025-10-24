@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -429,6 +429,11 @@ int CL_ProgramObject::get_uniform_location(const CL_StringRef &name) const
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgramObject Operations:
 
+bool CL_ProgramObject::operator==(const CL_ProgramObject &other) const
+{
+	return impl == other.impl;
+}
+
 void CL_ProgramObject::attach(const CL_ShaderObject &obj)
 {
 	if (obj.is_null())
@@ -441,7 +446,7 @@ void CL_ProgramObject::attach(const CL_ShaderObject &obj)
 
 void CL_ProgramObject::detach(const CL_ShaderObject &obj)
 {
-	impl->provider->attach(obj);
+	impl->provider->detach(obj);
 }
 
 void CL_ProgramObject::bind_attribute_location(int index, const CL_StringRef &name)

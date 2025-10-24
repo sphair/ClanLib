@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -90,6 +90,11 @@ CL_FrameBufferBindTarget CL_FrameBuffer::get_bind_target() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FrameBuffer Operations:
+
+bool CL_FrameBuffer::operator==(const CL_FrameBuffer &other) const
+{
+	return impl == other.impl;
+}
 
 void CL_FrameBuffer::attach_color_buffer(int attachment_index, const CL_RenderBuffer &render_buffer)
 {

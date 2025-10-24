@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,2,5)
-#define CL_VERSION_STRING "2.2.5"
+#define CL_CURRENT_VERSION	CL_VERSION(2,2,6)
+#define CL_VERSION_STRING "2.2.6"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)

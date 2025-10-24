@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -424,7 +424,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			if (!func_enter_pressed.is_null() && 
 				e.type == CL_InputEvent::pressed &&
-				(e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN))
+				(e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN || e.id == CL_KEY_NUMPAD_ENTER))
 			{
 				func_enter_pressed.invoke();
 				msg.set_consumed();
@@ -450,7 +450,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 
 			if (e.type == CL_InputEvent::pressed) // || e.repeat_count > 1) 
 			{
-				if (e.id == CL_KEY_ENTER || e.id == CL_KEY_ESCAPE || e.id == CL_KEY_TAB)
+				if (e.id == CL_KEY_ENTER || e.id == CL_KEY_ESCAPE || e.id == CL_KEY_TAB || e.id == CL_KEY_NUMPAD_ENTER)
 				{
 					// Do not consume these.
 					return;
@@ -537,8 +537,67 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				{
 					CL_String str = lineedit->get_gui_manager().get_clipboard_text();
 					lineedit->delete_selected_text();
-					insert_text(cursor_pos, str);
-					lineedit->set_cursor_pos(cursor_pos + str.length());
+
+					if (input_mask.empty())
+					{
+						if (numeric_mode)
+						{
+							CL_String present_text = lineedit->get_text();
+
+							bool present_minus = present_text.find('-') != CL_String::npos;
+							bool str_minus = str.find('-') != CL_String::npos;
+
+							if(!present_minus || !str_minus)
+							{
+								if((!present_minus && !str_minus) || //if no minus found
+									(str_minus && cursor_pos == 0 && str[0] == '-') || //if there's minus in text to paste
+									(present_minus && cursor_pos > 0)) //if there's minus in the beginning of control's text
+								{
+									if(numeric_mode_decimals)
+									{
+										CL_String::size_type decimal_point_pos;
+										if((decimal_point_pos = str.find_first_not_of(numeric_mode_characters, str[0] == '-' ? 1 : 0)) == CL_String::npos) //no decimal char inside string to paste
+										{ //we don't look at the position of decimal char inside of text in the textbox, if it's present
+											insert_text(cursor_pos, str);
+											lineedit->set_cursor_pos(cursor_pos + str.length());
+										}
+										else
+										{
+											if(present_text.find(decimal_char) == CL_String::npos &&
+												str[decimal_point_pos] == decimal_char[0] &&
+												str.find_first_not_of(numeric_mode_characters, decimal_point_pos + 1) == CL_String::npos) //allow only one decimal char in the string to paste
+											{
+												insert_text(cursor_pos, str);
+												lineedit->set_cursor_pos(cursor_pos + str.length());
+											}
+										}
+									}
+									else
+									{
+										if(str.find_first_not_of(numeric_mode_characters, str[0] == '-' ? 1 : 0) == CL_String::npos)
+										{
+											insert_text(cursor_pos, str);
+											lineedit->set_cursor_pos(cursor_pos + str.length());
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							insert_text(cursor_pos, str);
+							lineedit->set_cursor_pos(cursor_pos + str.length());
+						}
+					}
+					else
+					{
+						if (input_mask_accepts_input(cursor_pos, str))
+						{
+							insert_text(cursor_pos, str);
+							lineedit->set_cursor_pos(cursor_pos + str.length());
+						}
+					}
+
 					update_text_clipping();
 					msg.set_consumed();
 				}
@@ -1274,8 +1333,7 @@ void CL_LineEdit_Impl::on_enable_changed()
 
 bool CL_LineEdit_Impl::input_mask_accepts_input(int cursor_pos, const CL_StringRef &str)
 {
-	throw CL_Exception("CL_LineEdit_Impl::input_mask_accepts_input - not implemented!");
-	return true;
+	return str.find_first_not_of(input_mask) == CL_StringData8::npos;
 }
 
 CL_String CL_LineEdit_Impl::create_password(CL_String::size_type num_letters) const

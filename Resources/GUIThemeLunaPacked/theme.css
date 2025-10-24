@@ -799,6 +799,16 @@ popupmenu joiner
 	bg-image:PopupMenuJoiner;
 }
 
+progressbar
+{
+	bg-image:;
+	bg-color: #aaaaaa;
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+}
+
 progress 
 {
 	bg-image:;

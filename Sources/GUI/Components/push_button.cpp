@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -277,7 +277,7 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 		if (toggle_mode)
 		{
 			if( e.type == CL_InputEvent::released &&
-				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE) )
+				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE || e.id == CL_KEY_NUMPAD_ENTER) )
 			{
 				part.set_state(CssStr::pressed, !part.get_state(CssStr::pressed));
 				button->request_repaint();
@@ -290,14 +290,14 @@ void CL_PushButton_Impl::on_process_message(CL_GUIMessage &msg)
 		else
 		{
 			if (e.type == CL_InputEvent::pressed && 
-				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE))
+				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE || e.id == CL_KEY_NUMPAD_ENTER))
 			{
 				part.set_state(CssStr::pressed, true);
 				button->request_repaint();
 				msg.set_consumed();
 			}
 			else if( e.type == CL_InputEvent::released &&
-				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE) &&
+				(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_RETURN || e.id == CL_KEY_SPACE || e.id == CL_KEY_NUMPAD_ENTER) &&
 				part.get_state(CssStr::pressed) )
 			{
 				part.set_state(CssStr::pressed, false);

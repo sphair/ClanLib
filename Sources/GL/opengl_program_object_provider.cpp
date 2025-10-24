@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -84,7 +84,7 @@ unsigned int CL_OpenGLProgramObjectProvider::get_handle() const
 bool CL_OpenGLProgramObjectProvider::get_link_status() const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	CLint status = 0;
 	clGetProgramiv(handle, CL_LINK_STATUS, &status);
 	return (status != CL_FALSE);
@@ -93,7 +93,7 @@ bool CL_OpenGLProgramObjectProvider::get_link_status() const
 bool CL_OpenGLProgramObjectProvider::get_validate_status() const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	CLint status = 0;
 	clGetProgramiv(handle, CL_VALIDATE_STATUS, &status);
 	return (status != CL_FALSE);
@@ -108,7 +108,7 @@ std::vector<CL_ShaderObject> CL_OpenGLProgramObjectProvider::get_shaders() const
 CL_String CL_OpenGLProgramObjectProvider::get_info_log() const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	CL_String result;
 	CLsizei buffer_size = 16*1024;
 	while (buffer_size < 2*1024*1024)
@@ -129,10 +129,10 @@ CL_String CL_OpenGLProgramObjectProvider::get_info_log() const
 int CL_OpenGLProgramObjectProvider::get_uniform_count() const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
-	CLint count = 0;
-	clGetProgramiv(handle, CL_ACTIVE_UNIFORMS, &count);
-	return count;
+	if (cached_uniforms.empty())
+		fetch_uniforms();
+
+	return (int)cached_uniforms.size();
 }
 	
 std::vector<CL_ProgramUniform> CL_OpenGLProgramObjectProvider::get_uniforms() const
@@ -147,23 +147,13 @@ std::vector<CL_ProgramUniform> CL_OpenGLProgramObjectProvider::get_uniforms() co
 int CL_OpenGLProgramObjectProvider::get_uniform_location(const CL_StringRef &name) const
 {
 	throw_if_disposed();
-	if (cached_uniforms.empty())
-		fetch_uniforms();
-
-	std::vector<CL_ProgramUniform>::size_type i;
-	for (i = 0; i < cached_uniforms.size(); i++)
-	{
-		if (cached_uniforms[i].get_name() == name)
-			return cached_uniforms[i].get_location();
-	}
-
-	return -1;
+	CL_OpenGL::set_active(gc_provider);
+	return clGetUniformLocation(handle, CL_StringHelp::text_to_local8(name).c_str());
 }
 
 int CL_OpenGLProgramObjectProvider::get_attribute_count() const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
 	if (cached_attribs.empty())
 		fetch_attributes();
 
@@ -182,7 +172,7 @@ std::vector<CL_ProgramAttribute> CL_OpenGLProgramObjectProvider::get_attributes(
 int CL_OpenGLProgramObjectProvider::get_attribute_location(const CL_StringRef &name) const
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	return clGetAttribLocation(handle, CL_StringHelp::text_to_local8(name).c_str());
 }
 	
@@ -193,7 +183,7 @@ void CL_OpenGLProgramObjectProvider::attach(const CL_ShaderObject &obj)
 {
 	throw_if_disposed();
 	shaders.push_back(obj);
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	clAttachShader(handle, (CLuint) obj.get_handle());
 }
 
@@ -208,28 +198,31 @@ void CL_OpenGLProgramObjectProvider::detach(const CL_ShaderObject &obj)
 			break;
 		}
 	}
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	clDetachShader(handle, (CLuint) obj.get_handle());
 }
 
 void CL_OpenGLProgramObjectProvider::bind_attribute_location(int index, const CL_StringRef &name)
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	clBindAttribLocation(handle, index, CL_StringHelp::text_to_local8(name).c_str());
 }
 
 void CL_OpenGLProgramObjectProvider::link()
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	clLinkProgram(handle);
+
+	cached_attribs.clear();
+	cached_uniforms.clear();
 }
 	
 void CL_OpenGLProgramObjectProvider::validate()
 {
 	throw_if_disposed();
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 	clValidateProgram(handle);
 }
 
@@ -400,9 +393,10 @@ void CL_OpenGLProgramObjectProvider::fetch_attributes() const
 	if (!cached_attribs.empty())
 		return;
 
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 
-	int count = get_attribute_count();
+	CLint count = 0;
+	clGetProgramiv(handle, CL_ACTIVE_ATTRIBUTES, &count);
 	CLint name_size = 0;
 	clGetProgramiv(handle, CL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &name_size);
 	CLchar *name = new CLchar[name_size+1];
@@ -428,9 +422,10 @@ void CL_OpenGLProgramObjectProvider::fetch_uniforms() const
 	if (!cached_uniforms.empty())
 		return;
 
-	CL_ProgramObjectStateTracker state_tracker(handle, 0);
+	CL_OpenGL::set_active(gc_provider);
 
-	int count = get_uniform_count();
+	CLint count = 0;
+	clGetProgramiv(handle, CL_ACTIVE_UNIFORMS, &count);
 	CLint name_size = 0;
 	clGetProgramiv(handle, CL_ACTIVE_UNIFORM_MAX_LENGTH, &name_size);
 	CLchar *name = new CLchar[name_size+1];

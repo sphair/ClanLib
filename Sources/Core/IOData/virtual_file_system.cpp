@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -151,6 +151,13 @@ CL_VirtualDirectoryListing CL_VirtualFileSystem::get_directory_listing(const CL_
 CL_VirtualFileSource *CL_VirtualFileSystem::get_provider()
 {
 	return impl->provider;
+}
+
+CL_String CL_VirtualFileSystem::get_path() const
+{
+	if (impl->provider)
+		return impl->provider->get_path();
+	return "";
 }
 
 CL_String CL_VirtualFileSystem::get_identifier() const

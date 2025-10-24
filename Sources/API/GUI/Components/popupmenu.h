@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -158,6 +158,11 @@ public:
 
 	/// \brief Returns the index of the item that matches the start or the string furthest.
 	int find_item(const CL_StringRef &text, bool case_sensitive = false);
+	
+	/// \brief Delete all menu items
+	///
+	/// \param class_name = String Ref
+	void clear();
 
 /// \}
 /// \name Implementation

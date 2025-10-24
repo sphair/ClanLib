@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PopupMenu1", "PopupMenu1-vc2010.vcxproj", "{82C358DB-3A9C-4C15-869A-53CF1BE6B8A6}"
 EndProject

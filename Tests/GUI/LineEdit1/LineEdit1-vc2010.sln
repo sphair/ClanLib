@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LineEdit1", "LineEdit1-vc2010.vcxproj", "{901C2B2F-158F-4E2E-B29D-C078FF4B8B84}"
 EndProject

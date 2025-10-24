@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -837,7 +837,7 @@ void CL_GUIManager_Impl::process_standard_gui_keys(CL_GUIMessage &message)
 				focus_comp->focus_previous();
 			}
 		}
-		else if ((e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN) && e.type == CL_InputEvent::released)
+		else if ((e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN || e.id == CL_KEY_NUMPAD_ENTER) && e.type == CL_InputEvent::released)
 		{
 			CL_GUIComponent *comp = input.get_target();
 			if (comp)

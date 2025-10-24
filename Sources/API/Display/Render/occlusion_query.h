@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,6 +37,7 @@
 
 class CL_OcclusionQuery_Impl;
 class CL_GraphicContext;
+class CL_OcclusionQueryProvider;
 
 /// \brief Graphics occlusion query class.
 ///
@@ -71,6 +72,11 @@ public:
 
 	/// \brief Returns true if the GPU is ready to return the result.
 	bool is_result_ready();
+
+	/// \brief Get Provider
+	///
+	/// \return provider
+	CL_OcclusionQueryProvider *get_provider() const;
 
 /// \}
 /// \name Operations

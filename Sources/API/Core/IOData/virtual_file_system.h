@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2010 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -91,6 +91,9 @@ public:
 
 	/// \brief Returns the file source for this file system.
 	CL_VirtualFileSource *get_provider();
+
+	/// \brief Returns a path to the file source for this file system.
+	CL_String get_path() const;
 
 	/// \brief Get the identifier of this file source
 	///
