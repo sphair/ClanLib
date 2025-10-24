@@ -53,7 +53,7 @@ class WorkspaceGenerator_MSVC8
 {
 public:
 	WorkspaceGenerator_MSVC8();
-	void set_platforms(bool include_win32, bool include_x64, bool include_sse2, bool include_intrinsics);
+	void set_platforms(bool include_win32, bool include_x64, bool include_sse2, bool include_intrinsics, bool enable_debug_optimise, bool enable_whole_program_optimize);
 	void enable_configurations(bool include_mtdll, bool include_dll);
 	void set_target_version(int version);
 	void write(const Workspace &workspace);
@@ -111,12 +111,12 @@ private:
 	void generate_source_files(MSVC8_Project &vcproj, const Project &project);
 	std::list<std::string> extract_path(const std::string &fullname);
 	std::string get_project_guid(const std::string &project);
-	MSVC8_Configuration *create_debug_mt_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
-	MSVC8_Configuration *create_debug_mtdll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
-	MSVC8_Configuration *create_debug_dll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
-	MSVC8_Configuration *create_release_mt_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
-	MSVC8_Configuration *create_release_mtdll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
-	MSVC8_Configuration *create_release_dll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2);
+	MSVC8_Configuration *create_debug_mt_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize);
+	MSVC8_Configuration *create_debug_mtdll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize);
+	MSVC8_Configuration *create_debug_dll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_debug_optimize);
+	MSVC8_Configuration *create_release_mt_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize);
+	MSVC8_Configuration *create_release_mtdll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize);
+	MSVC8_Configuration *create_release_dll_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header, bool is_enable_sse2, bool is_whole_program_optimize);
 	SharedConfig create_shared_config(const std::string &platform, const std::string &project_name, const ConfigurationType &config, bool has_precomp, const std::string &precomp_header);
 	std::string make_output_filename(
 		const ConfigurationType &config,
@@ -136,6 +136,8 @@ private:
 	bool include_platform_x64;
 	bool is_enable_sse2;
 	bool is_enable_intrinsics;
+	bool is_debug_optimize;
+	bool is_whole_program_optimize;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -36,6 +36,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <string>
+#include <sstream>
 #else
 #include <cstring>
 #if defined UNICODE && !defined _UNICODE
@@ -442,8 +444,10 @@ int CL_StringHelp::ucs2_to_int(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return _wtoi(value.c_str());
 #else
-		throw CL_Exception("ucs2_to_int not implemented on unix yet");
-		return 0;
+		std::wistringstream stream(value.c_str());
+		int num;
+		stream >> num;
+		return num;
 #endif
 	}
 	else if (base == 16)
@@ -560,8 +564,10 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 #ifdef WIN32
 		return (unsigned int) _wtoi(value.c_str());
 #else
-		throw CL_Exception("ucs2_to_uint not implemented on unix yet");
-		return 0;
+		std::wistringstream stream(value.c_str());
+		unsigned int num;
+		stream >> num;
+		return num;
 #endif
 	}
 	else if (base == 16)
@@ -592,7 +598,7 @@ unsigned int CL_StringHelp::ucs2_to_uint(const CL_StringRef16 &value, int base)
 	}
 	else
 	{
-		throw CL_Exception("Unsupported base passed for ucs2_to_int");
+		throw CL_Exception("Unsupported base passed for ucs2_to_uint");
 	}
 }
 

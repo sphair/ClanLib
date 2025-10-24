@@ -214,7 +214,7 @@ VOID WINAPI CL_Service_Win32::service_ctrl(DWORD ctrl_code)
 
 int CL_Service_Win32::run_install()
 {
-	TCHAR exe_filename[MAX_PATH];
+	WCHAR exe_filename[MAX_PATH];
 	BOOL result = GetModuleFileName(0, exe_filename, 1024);
 	if (result == FALSE)
 	{

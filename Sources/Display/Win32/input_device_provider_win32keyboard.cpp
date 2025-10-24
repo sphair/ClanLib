@@ -66,7 +66,7 @@ CL_String CL_InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) co
 {
 	throw_if_disposed();
 
-	TCHAR name[1024];
+	WCHAR name[1024];
 	UINT scancode = MapVirtualKey(virtual_key, 0);
 	int length = GetKeyNameText(scancode << 16, name, 1024);
 	return CL_String(name, length);
