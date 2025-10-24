@@ -1,0 +1,20 @@
+radialmenu
+{
+    bg-image: RadialMenuBackground;
+    bg-image-sizing: center;
+    
+    pointer-image: RadialMenuPointer;
+
+	font-weight: normal;
+	font-size: -14;
+	text-color: white;
+	text-distance: 75;
+}
+
+radialmenu selected
+{
+	font-weight: bold;
+	font-size: -14;
+	text-color: yellow;
+	text-distance: 73;
+}

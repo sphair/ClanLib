@@ -4,8 +4,6 @@ libclanGDI_la_SOURCES = \
 fragment_buffer.cpp \
 fragment_buffer.h \
 interlocked_variable.h \
-gdi_display_message_queue_provider.cpp \
-gdi_display_message_queue_provider.h \
 gdi_display_window_provider.cpp \
 gdi_display_window_provider.h \
 gdi_element_array_buffer_provider.cpp \

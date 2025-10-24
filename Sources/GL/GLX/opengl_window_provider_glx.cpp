@@ -47,6 +47,7 @@
 #include "../opengl_window_description_impl.h"
 #include "../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
+#include "Display/X11/timer_provider_x11.h"
 
 namespace
 {
@@ -164,6 +165,11 @@ CL_OpenGLWindowProvider_GLX::~CL_OpenGLWindowProvider_GLX()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_GLX Operations:
+
+CL_TimerProvider *CL_OpenGLWindowProvider_GLX::alloc_timer(CL_DisplayWindow &disp_window)
+{
+	return new CL_TimerProvider_X11(disp_window);
+}
 
 void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &desc)
 {

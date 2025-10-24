@@ -63,13 +63,13 @@ public:
 	/// \param gc Graphic context to use.
 	CL_Image();
 
-	CL_Image(CL_GraphicContext context, CL_Texture texture, CL_Rect rect);
+	CL_Image(CL_GraphicContext &context, CL_Texture texture, CL_Rect rect);
 
-	CL_Image(CL_GraphicContext context, CL_Subtexture &sub_texture);
+	CL_Image(CL_GraphicContext &context, CL_Subtexture &sub_texture);
 
-	CL_Image(CL_GraphicContext context, const CL_StringRef &filename, CL_VirtualDirectory dir = CL_VirtualDirectory());
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &filename, CL_VirtualDirectory dir = CL_VirtualDirectory());
 
-	CL_Image(CL_GraphicContext context, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+	CL_Image(CL_GraphicContext &context, const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
 	virtual ~CL_Image();	
 /// \}
@@ -140,17 +140,17 @@ public:
 	/// \param src Source rectangle to draw. Use this is draw only part of the image.
 	/// \param dest Rectangle to draw image in.
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		float x,
 		float y);
 
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Rectf &src,
 		const CL_Rectf &dest);
 
 	void draw(
-		CL_GraphicContext gc,
+		CL_GraphicContext &gc,
 		const CL_Rectf &dest);
 
 	/// \brief Set scale for x and y directions individually.

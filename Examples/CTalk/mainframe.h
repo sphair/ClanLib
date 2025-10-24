@@ -41,12 +41,11 @@ private:
 	void on_close();
 	void on_view_button_clicked(View *view);
 	void on_connection_join(const CL_String &nick, const CL_String &channel, IRCConnection *connection);
-	void on_timer_expired();
 	static CL_GUITopLevelDescription get_window_description();
+
 	CL_ResourceManager *resources;
 	std::auto_ptr<Document> document;
 	std::vector<View *> views;
 	CL_Tab *tab;
 	CL_SlotContainer slots;
-	CL_Timer timer;
 };

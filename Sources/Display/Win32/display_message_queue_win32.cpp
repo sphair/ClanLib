@@ -27,6 +27,7 @@
 */
 
 #include "Display/precomp.h"
+#include "API/Core/System/databuffer.h"
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread_local_storage.h"
@@ -152,7 +153,8 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_Win32::get_message()
 	else
 	{
 		CL_DisplayWindowMessage clmsg;
-		clmsg.set_win32_params(msg);
+		CL_DataBuffer buffer(&msg, sizeof(msg));
+		clmsg.set_msg(cl_text("MSG"), buffer);
 		return clmsg;
 	}
 }
@@ -171,16 +173,22 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_Win32::peek_message(bool block)
 	else
 	{
 		CL_DisplayWindowMessage clmsg;
-		clmsg.set_win32_params(msg);
+		CL_DataBuffer buffer(&msg, sizeof(msg));
+		clmsg.set_msg(cl_text("MSG"), buffer);
 		return clmsg;
 	}
 }
 
 void CL_DisplayMessageQueue_Win32::dispatch_message(const CL_DisplayWindowMessage &message)
 {
-	MSG msg = message.get_msg();
-	TranslateMessage(&msg);
-	DispatchMessage(&msg);
+	const CL_DataBuffer buffer = message.get_msg(cl_text("MSG"));
+	if (buffer.get_size() == sizeof(MSG) )
+	{
+		MSG msg;
+		memcpy(&msg, buffer.get_data(), sizeof(msg));
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 
 	CL_SharedPtr<ThreadData> data = get_thread_data();
 	for (std::vector<CL_Win32Window *>::size_type i = 0; i < data->windows.size(); i++)

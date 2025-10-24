@@ -32,7 +32,9 @@
 #include "API/Core/Math/mat4.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread.h"
+#include "API/Core/Signals/slot.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/Display/Render/frame_buffer.h"
 #include "fragment_buffer.h"
 
 class CL_PixelPipeline
@@ -49,7 +51,7 @@ public:
 	void set_clip_rect(const CL_Rect &new_clip_rect);
 	void reset_clip_rect();
 
-	void set_framebuffer(const CL_PixelBuffer &colorbuffer0);
+	void set_framebuffer(const CL_FrameBuffer &buffer);
 	void reset_framebuffer();
 
 	void clear(const CL_Colorf &color);
@@ -105,6 +107,8 @@ private:
 
 	bool framebuffer_set;
 	bool cliprect_set;
+	CL_FrameBuffer framebuffer;
+	CL_Slot slot_framebuffer_modified;
 
 	struct ShadedVertex
 	{
@@ -173,4 +177,7 @@ private:
 
 	void fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color, int core, int num_cores);
 	void draw_image(const CL_Rect &dest, const CL_PixelBufferRef &image, const CL_Rect &src, const CL_Colorf &primary_color, int core=0, int num_cores=1);
+
+	void modified_framebuffer();
+
 };

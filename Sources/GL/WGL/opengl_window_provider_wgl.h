@@ -120,6 +120,8 @@ public:
 	/// \brief Invalidates a region of a screen, causing a repaint.
 	void invalidate_rect(const CL_Rect &rect);
 
+	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
+
 /// \}
 /// \name Implementation
 /// \{

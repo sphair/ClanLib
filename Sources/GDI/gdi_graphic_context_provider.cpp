@@ -179,8 +179,7 @@ void CL_GDIGraphicContextProvider::reset_texture(int unit_index)
 
 void CL_GDIGraphicContextProvider::set_frame_buffer(const CL_FrameBuffer &buffer)
 {
-	CL_GDIFrameBufferProvider *gdi_framebuffer = dynamic_cast<CL_GDIFrameBufferProvider *>(buffer.get_provider());
-	pixel_canvas->set_framebuffer(gdi_framebuffer->get_colorbuffer0());
+	pixel_canvas->set_framebuffer(buffer);
 }
 
 void CL_GDIGraphicContextProvider::reset_frame_buffer()
@@ -400,16 +399,18 @@ void CL_GDIGraphicContextProvider::draw_triangle(int index1, int index2, int ind
 	CL_Vec4f pos[3];
 	CL_Vec4f primary_color[3];
 	CL_Vec2f tex_coords[3];
+	CL_Vec1f sampler_index;
 
 	pos_fetcher->fetch(pos, indexes, 3, default_pos);
 	color_fetcher->fetch(primary_color, indexes, 3, default_color);
 	tex_fetcher->fetch(tex_coords, indexes, 3, default_tex_coord);
+	tex_index_fetcher->fetch(&sampler_index, indexes, 1, default_sampler);
 
 	CL_Vec2f screen_pos[3];
 	for (int v=0; v<3; v++)
 		screen_pos[v] = pixel_canvas->transform(pos[v]);
 
-	pixel_canvas->draw_triangle(screen_pos, primary_color, tex_coords, 0);
+	pixel_canvas->draw_triangle(screen_pos, primary_color, tex_coords, sampler_index.x);
 }
 
 void CL_GDIGraphicContextProvider::draw_sprite(int index1, int index2, int index3)

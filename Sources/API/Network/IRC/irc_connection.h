@@ -127,9 +127,6 @@ public:
 public:
 	CL_IRCConnection &operator =(const CL_IRCConnection &copy);
 
-	/// \brief Parse incoming lines and emit signals.
-	void process_data();
-
 	/// \brief Send command to IRC server.
 	///
 	/// \param prefix Sender prefix.

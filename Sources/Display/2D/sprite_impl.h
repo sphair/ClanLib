@@ -255,5 +255,3 @@ public:
 	CL_Signal_v0 sig_animation_finished;
 /// \}
 };
-
-

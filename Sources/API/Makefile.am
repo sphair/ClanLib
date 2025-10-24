@@ -437,6 +437,12 @@ clanGDI_includes = \
 	GDI/gdi_target.h \
 	GDI/setup_gdi.h
 
+clanSDL_includes = \
+	sdl.h \
+	SDL/api_sdl.h \
+	SDL/sdl_target.h \
+	SDL/setup_sdl.h
+
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 
@@ -450,6 +456,7 @@ EXTRA_HEADERS = \
 	$(clanNetwork_includes) \
 	$(clanGUI_includes) \
 	$(clanGDI_includes) \
+	$(clanSDL_includes) \
 	$(clanSound_includes) \
 	$(clanVorbis_includes) \
 	$(clanDatabase_includes) \

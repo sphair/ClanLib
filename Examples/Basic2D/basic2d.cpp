@@ -4,10 +4,14 @@
 
 #include <cmath>
 
+#ifdef USE_SDL
+#include <ClanLib/sdl.h>
+#else
 #ifdef USE_GDI
 #include <ClanLib/gdi.h>
 #else
 #include <ClanLib/gl.h>
+#endif
 #endif
 
 // This is the Application class (That is instantiated by the Program Class)
@@ -36,12 +40,17 @@ public:
 		// Initialize the ClanLib display component
 		CL_SetupDisplay setup_display;
 
+#ifdef USE_SDL
+		// Initilize the SDL drivers
+		CL_SetupSDL setup_sdl;
+#else
 #ifdef USE_GDI
 		// Initilize the GDI drivers
 		CL_SetupGDI setup_gdi;
 #else
 		// Initilize the OpenGL drivers
 		CL_SetupGL setup_gl;
+#endif
 #endif
 		// Start the Application
 		App app;

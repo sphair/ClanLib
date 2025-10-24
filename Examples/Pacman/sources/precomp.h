@@ -36,6 +36,7 @@
 
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
+#include <ClanLib/gdi.h>
 #include <ClanLib/core.h>
 #include <ClanLib/sound.h>
 //#include <ClanLib/mikmod.h>

@@ -76,7 +76,12 @@ void CL_IRCConnection_Generic::send_data(const CL_String8 &data)
 	event_send.set();
 }
 
-void CL_IRCConnection_Generic::process_data()
+CL_Event CL_IRCConnection_Generic::get_wakeup_event()
+{
+	return event_messages_available;
+}
+
+void CL_IRCConnection_Generic::process()
 {
 	CL_MutexSection mutex_lock(&mutex);
 	while (!received_queue.empty())
@@ -299,6 +304,7 @@ void CL_IRCConnection_Generic::process_data()
 		sig_socket_error.invoke(error_message);
 		signal_error = false;
 	}
+	event_messages_available.reset();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -354,6 +360,7 @@ void CL_IRCConnection_Generic::thread_main()
 
 		 				CL_MutexSection mutex_lock(&mutex);
 						received_queue.push(last_line);
+						event_messages_available.set();
 				
 						last_line = CL_String8();
 					}

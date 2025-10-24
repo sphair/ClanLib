@@ -1019,7 +1019,7 @@ void CL_XPathEvaluator_Impl::select_nodes_ancestor(const CL_DomNode &context_nod
 	int node_index = 1;
 	while (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
 			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
 		parent = parent.get_parent_node();
 	}
@@ -1031,12 +1031,12 @@ void CL_XPathEvaluator_Impl::select_nodes_ancestor_or_self(const CL_DomNode &con
 	CL_DomNode parent = context_node.get_parent_node();
 	if (!context_node.is_null())
 	{
-		if (confirm_step_requirements(context_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
 			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
 	}
 	while (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
 			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
 		parent = parent.get_parent_node();
 	}
@@ -1049,7 +1049,7 @@ void CL_XPathEvaluator_Impl::select_nodes_attribute(const CL_DomNode &context_no
 	int num_attributes = attributes.get_length();
 	for (int i = 0; i < num_attributes; i++)
 	{
-		if (confirm_step_requirements(attributes.item(i), node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(attributes.item(i), node_index, steps[step_index], expression))
 			evaluate_location_step(attributes.item(i), steps, step_index+1, expression, nodes);
 	}
 }
@@ -1060,7 +1060,7 @@ void CL_XPathEvaluator_Impl::select_nodes_child(const CL_DomNode &context_node, 
 	CL_DomNode cur_node = context_node.get_first_child();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 		cur_node = cur_node.get_next_sibling();
 	}
@@ -1087,7 +1087,7 @@ void CL_XPathEvaluator_Impl::select_nodes_descendant(const CL_DomNode &context_n
 				break;
 		}
 		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 	}
 }
@@ -1097,7 +1097,7 @@ void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_DomNode &c
 	int node_index = 1;
 	if (!context_node.is_null())
 	{
-		if (confirm_step_requirements(context_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
 			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
 	}
 	CL_DomNode cur_node = context_node;
@@ -1118,7 +1118,7 @@ void CL_XPathEvaluator_Impl::select_nodes_descendant_or_self(const CL_DomNode &c
 				break;
 		}
 		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 	}
 }
@@ -1144,7 +1144,7 @@ void CL_XPathEvaluator_Impl::select_nodes_following(const CL_DomNode &context_no
 				break;
 		}
 		cur_node = next;
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 	}
 }
@@ -1155,7 +1155,7 @@ void CL_XPathEvaluator_Impl::select_nodes_following_sibling(const CL_DomNode &co
 	CL_DomNode cur_node = context_node.get_next_sibling();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 		cur_node = cur_node.get_next_sibling();
 	}
@@ -1171,7 +1171,7 @@ void CL_XPathEvaluator_Impl::select_nodes_parent(const CL_DomNode &context_node,
 	CL_DomNode parent = context_node.get_parent_node();
 	if (!parent.is_null())
 	{
-		if (confirm_step_requirements(parent, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(parent, node_index, steps[step_index], expression))
 			evaluate_location_step(parent, steps, step_index+1, expression, nodes);
 	}
 }
@@ -1197,7 +1197,7 @@ void CL_XPathEvaluator_Impl::select_nodes_preceding(const CL_DomNode &context_no
 				break;
 		}
 		cur_node = prev;
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 	}
 }
@@ -1208,7 +1208,7 @@ void CL_XPathEvaluator_Impl::select_nodes_preceding_sibling(const CL_DomNode &co
 	CL_DomNode cur_node = context_node.get_previous_sibling();
 	while (!cur_node.is_null())
 	{
-		if (confirm_step_requirements(cur_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(cur_node, node_index, steps[step_index], expression))
 			evaluate_location_step(cur_node, steps, step_index+1, expression, nodes);
 		cur_node = cur_node.get_previous_sibling();
 	}
@@ -1219,12 +1219,12 @@ void CL_XPathEvaluator_Impl::select_nodes_self(const CL_DomNode &context_node, c
 	int node_index = 1;
 	if (!context_node.is_null())
 	{
-		if (confirm_step_requirements(context_node, node_index++, steps[step_index], expression))
+		if (confirm_step_requirements(context_node, node_index, steps[step_index], expression))
 			evaluate_location_step(context_node, steps, step_index+1, expression, nodes);
 	}
 }
 
-bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, int node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression)
+bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, int &node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression)
 {
 	bool test_passed = false;
 	switch (step.test_type)
@@ -1274,6 +1274,8 @@ bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, i
 
 	if (test_passed)
 	{
+		int cur_node_index = node_index;
+		node_index++;
 		for (std::vector<CL_XPathLocationStep::Predicate>::size_type predicate_index = 0; predicate_index < step.predicates.size(); predicate_index++)
 		{
 			const CL_XPathLocationStep::Predicate &predicate = step.predicates[predicate_index];
@@ -1291,7 +1293,7 @@ bool CL_XPathEvaluator_Impl::confirm_step_requirements(const CL_DomNode &node, i
 				include_in_nodeset = result.result.get_boolean();
 				break;
 			case CL_XPathObject::type_number:
-				include_in_nodeset = result.result.get_number() == node_index;
+				include_in_nodeset = result.result.get_number() == cur_node_index;
 				break;
 			case CL_XPathObject::type_string:
 				include_in_nodeset = !result.result.get_string().empty();

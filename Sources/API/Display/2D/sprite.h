@@ -155,6 +155,28 @@ public:
 	bool is_finished() const;
 /// \}
 
+/// \name Operators
+/// \{
+public:
+	/// \brief Equality operator
+	bool operator==(const CL_Sprite &other) const
+	{
+		return impl==other.impl;
+	}
+
+	/// \brief Inequality operator
+	bool operator!=(const CL_Sprite &other) const
+	{
+		return impl!=other.impl;
+	}
+
+	/// \brief Less than operator
+	bool operator<(const CL_Sprite &other) const
+	{
+		return impl < other.impl;
+	}
+	/// \}
+	
 /// \name Operations
 /// \{
 public:

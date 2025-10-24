@@ -70,13 +70,7 @@ public:
 	void stop();
 
 /// \}
-/// \name Events
-/// \{
 
-public:
-	CL_Callback_v0 func_expired;
-
-/// \}
 /// \name Implementation
 /// \{
 

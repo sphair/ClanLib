@@ -86,9 +86,8 @@ CL_Rect CL_GUIThemeDefault::render_text(
    const CL_Rect &content_rect,
    const CL_Rect &clip_rect)
 {
-	return impl->render_text(gc, part,font,text,content_rect,clip_rect);
+	return impl->render_text(gc, part, font, text, content_rect, clip_rect);
 }
-
 
 void CL_GUIThemeDefault::component_destroyed(CL_GUIComponent *component)
 {

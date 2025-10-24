@@ -1,0 +1,8 @@
+This file describes breaking changes between versions. 
+
+28-04-2009: 2.0.1 Released
+- Changes in Collision API if you use CL_Contour. CL_Contour no longer exposes
+  internal variables - use getter functions instead.
+
+22-04-2009: 2.0.0 Released
+

@@ -61,10 +61,10 @@ CL_Rect get_window_frame_size()
 		throw CL_Exception(cl_text("Cannot open display"));
 	}
 	int s=DefaultScreen(d);
-	const int win_xpos = 0;
-	const int win_ypos = 0;
-	const int win_width = 50;
-	const int win_height = 50;
+	const int win_xpos = 128;
+	const int win_ypos = 128;
+	const int win_width = 128;
+	const int win_height = 128;
 	w=XCreateSimpleWindow(d, RootWindow(d, s), win_xpos, win_ypos, win_width, win_height, 0, BlackPixel(d, s), WhitePixel(d, s));
 	XSelectInput(d, w, 
 		ExposureMask |

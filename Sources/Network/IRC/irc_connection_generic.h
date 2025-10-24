@@ -29,26 +29,21 @@
 
 #pragma once
 
-
-#if _MSC_VER > 1000
-#pragma once
-#endif
-
 #include "API/Network/Socket/tcp_connection.h"
 #include "API/Network/IRC/irc_connection.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/event.h"
+#include "API/Core/System/keep_alive.h"
 #include "API/Core/Text/string_types.h"
 
-class CL_IRCConnection_Generic
+class CL_IRCConnection_Generic : public CL_KeepAliveObject
 {
 /// \name Construction
 /// \{
 
 public:
 	CL_IRCConnection_Generic(const CL_String &server, const CL_String &port);
-
 	~CL_IRCConnection_Generic();
 
 
@@ -109,19 +104,12 @@ public:
 	CL_Signal_v2<const CL_String8 &, const CL_String8 &> sig_ping;
 
 	CL_Thread thread;
-
 	CL_Mutex mutex;
-
 	CL_TCPConnection connection;
-
 	std::queue<CL_String8> send_queue;
-
 	std::queue<CL_String8> received_queue;
-
 	CL_String8 nick, username, hostname, servername, realname;
-
-	CL_Event event_quit, event_send;
-
+	CL_Event event_quit, event_send, event_messages_available;
 
 /// \}
 /// \name Operations
@@ -129,13 +117,11 @@ public:
 
 public:
 	void add_ref();
-
 	void release_ref();
-
 	void send_data(const CL_String8 &data);
 
-	void process_data();
-
+	CL_Event get_wakeup_event();
+	void process();
 
 /// \}
 /// \name Implementation
@@ -145,11 +131,8 @@ private:
 	void thread_main();
 
 	CL_String server, port;
-
 	bool signal_error;
-
 	CL_String error_message;
-
 	int ref_count;
 /// \}
 };

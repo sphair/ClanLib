@@ -2,9 +2,21 @@ Remember when releasing:
 - Change configure.ac - AC_INIT(ClanLib, 2.0.1) and CLANLIB_MICRO_VERSION=1
 - Change API/Core.h - CL_VERSION_STRING and CL_CURRENT_VERSION
 
+- CL_Image
+  - Possibility to create from pixelbuffer
+
+- Texture Packer:
+  - Add UI to select which resource file to pack. 
+    (Currently hardcoded in MainWindow::load_resources())
+
 - GDI
   - The output from Tests/Display/2D is different for OpenGL and GDI
   - The output from Tests/Display/Image1 is different for OpenGL and GDI
+
+  - You cannot set the projection matrix in the GDI target
+    CL_GDIGraphicContextProvider::set_projection(const CL_Mat4f &matrix)
+    is empty
+    Add pixel_canvas->set_projection(matrix);
 
 - GUI Component issues:
   - Scrollbar buttons should use separate glyph part

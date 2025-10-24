@@ -22,10 +22,6 @@ MainFrame::MainFrame(CL_GUIManager *gui, CL_ResourceManager *resources)
 	document.reset(new Document);
 
 	add_server_list_view();
-
-	timer = create_timer();
-	timer.func_expired().set(this, &MainFrame::on_timer_expired);
-	timer.start(250);
 }
 
 MainFrame::~MainFrame()
@@ -172,12 +168,4 @@ void MainFrame::on_connection_join(const CL_String &nick, const CL_String &chann
 
 	// Ok no view, create new one:
 	add_view(channel, connection);
-}
-
-void MainFrame::on_timer_expired()
-{
-	for (std::list<IRCConnection *>::iterator it = document->connections.begin(); it != document->connections.end(); ++it)
-	{
-		(*it)->process_data();
-	}
 }

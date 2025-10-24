@@ -1,7 +1,21 @@
 This is a clanlib example version of the Super Methane Brothers game.
 
-Sound has been disabled. To enable it, define "ENABLE_SOUND"
+Sound has been disabled as it currently has pitch issues. To enable it, define "ENABLE_SOUND" (See makefile on linux)
 
+Linux - OpenGL
+  make clean
+  make
+  ./methane
+
+Linux - GDI (software renderer)
+  make clean
+  make gdi
+  ./methane
+
+Linux - SDL (SDL renderer)
+  make clean
+  make sdl
+  ./methane
 
 WebSite:
 http://methane.sourceforge.net/index.html

@@ -220,6 +220,8 @@ public:
 	/// \brief Returns the text stored in the clipboard.
 	virtual CL_String get_clipboard_text() const = 0;
 
+	/// \brief Allocate a timer
+	virtual CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window) = 0;
 
 /// \}
 /// \name Implementation

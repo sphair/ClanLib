@@ -42,6 +42,8 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Signals/callback_v0.h"
 
+#include "clipboard_x11.h"
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -59,13 +61,7 @@ class CL_Rect;
 class CL_DisplayWindowSite;
 class CL_DisplayWindowDescription;
 class CL_CursorProvider_X11;
-
-
-typedef struct _CL_XTimer
-{
-	CL_TimerProvider *timer;
-	unsigned int start_time;	// The start time
-}CL_XTimer;
+class CL_TimerProvider_X11;
 
 class CL_X11Window
 {
@@ -111,6 +107,9 @@ public:
 
 	bool is_clipboard_text_available() const;
 
+	CL_String get_clipboard_text() const;
+
+	unsigned char *get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
 
 /// \}
 /// \name Operations
@@ -160,17 +159,13 @@ public:
 	/// \brief Capture/Release the mouse.
 	void capture_mouse(bool capture);
 
-	bool get_message(CL_XEvent &clan_event);
+	bool get_message(XEvent &clan_event);
 
 	/// \brief Set the window timer
 	void set_timer(CL_TimerProvider *timer);
 
 	/// \brief Stop the window timer
 	void kill_timer(CL_TimerProvider *timer);
-
-	void set_clipboard_text(const CL_StringRef &text);
-
-	CL_String get_clipboard_text() const;
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
@@ -182,6 +177,15 @@ public:
 
 	void invalidate_rect(const CL_Rect &rect);
 
+	void set_clipboard_text(const CL_StringRef &text);
+
+	bool get_xevent( XEvent &event ) const;
+
+	bool get_xevent( XEvent &event, int event_type, bool block ) const;
+
+	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
+
+	CL_Point get_mouse_position() const;
 /// \}
 /// \name Implementation
 /// \{
@@ -215,14 +219,6 @@ private:
 
 	CL_Rect get_window_frame_size();
 
-	bool get_xevent( XEvent &event ) const;
-
-	bool get_xevent( XEvent &event, int event_type, bool block ) const;
-
-	unsigned char *get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const;
-
-	void process_selection_request(XEvent &event);
-
 	/// \brief Handle to X11 window.
 	Window window;
 
@@ -238,15 +234,11 @@ private:
 
 	bool layered;
 
-	bool alt_down, shift_down, ctrl_down;
-
 	int bpp;
 
 	bool fullscreen;
 
 	int current_screen;
-
-	CL_Point mouse_pos;
 
 	/// \brief Attributes used to create window.
 	XSetWindowAttributes attributes;
@@ -271,7 +263,7 @@ private:
 
 	CL_DisplayMessageQueue_X11 *message_queue;
 
-	std::list<CL_XTimer> timer_list;
+	std::list<CL_TimerProvider_X11 *> timer_list;
 
 	CL_Callback_v0 callback_on_resized;
 
@@ -282,18 +274,7 @@ private:
 	bool window_has_caption;
 	bool resize_enabled;
 
-	Atom atom_CLIPBOARD;
-	CL_String clipboard_current;
-	bool clipboard_available;
-
-	friend class CL_InputDeviceProvider_X11Keyboard;
-
-	friend class CL_InputDeviceProvider_X11Mouse;
-#ifdef HAVE_LINUX_JOYSTICK_H
-	friend class CL_InputDeviceProvider_LinuxJoystick;
-#endif
+	CL_Clipboard_X11 clipboard;
 /// \}
 };
-
-
 

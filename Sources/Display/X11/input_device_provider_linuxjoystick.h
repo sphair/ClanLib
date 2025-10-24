@@ -139,7 +139,6 @@ private:
 
 	mutable bool new_event;
 
-	friend class CL_X11Window;
 /// \}
 };
 

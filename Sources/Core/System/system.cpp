@@ -38,6 +38,13 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/types.h>
+
+#if defined(HAVE_SYS_SYSCTL_H) && \
+    !defined(_SC_NPROCESSORS_ONLN) && !defined(_SC_NPROC_ONLN)
+#include <sys/param.h>
+#include <sys/sysctl.h>
+#endif
+
 #ifndef __APPLE__
 #include <execinfo.h>
 #endif
@@ -224,6 +231,35 @@ CL_Mutex *CL_System::get_sharedptr_mutex()
 void *operator new(size_t size, CL_PreallocatedMemory *memory)
 {
 	return memory;
+}
+
+int CL_System::get_num_cores()
+{
+#ifdef WIN32
+	SYSTEM_INFO system_info;
+	memset(&system_info, 0, sizeof(SYSTEM_INFO));
+	GetSystemInfo(&system_info);
+	return system_info.dwNumberOfProcessors;
+#else
+	long cpus =  -1;
+# if defined(_SC_NPROCESSORS_ONLN)
+	cpus = sysconf(_SC_NPROCESSORS_ONLN);
+# elif defined(_SC_NPROC_ONLN)
+	cpus = sysconf(_SC_NPROC_ONLN);
+# elif defined(HAVE_SYS_SYSCTL_H)
+	int mib[2];
+	size_t len;
+
+	mib[0] = CTL_HW;
+	mib[1] = HW_NCPU;
+
+	len = sizeof(cpus);
+	(void)sysctl(mib, 2, &cpus, &len, NULL, 0);
+# endif
+	
+	return (cpus < 1)?-1 : static_cast<int>(cpus);
+
+#endif	// WIN32
 }
 
 /////////////////////////////////////////////////////////////////////////////

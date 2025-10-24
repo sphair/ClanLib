@@ -98,6 +98,8 @@ public:
 	/// \brief Tablet specific functionality.
 	bool in_proximity() const { return false; }
 
+	void get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -120,6 +122,7 @@ public:
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only) { return false; }	// Uses automatic updating and event handling via message system
 
+	void received_keyboard_input(XKeyEvent &event);
 
 /// \}
 /// \name Implementation
@@ -130,9 +133,9 @@ private:
 
 	CL_X11Window *window;
 
-	std::map<KeySym,int> current_keys_down;
+	bool ctrl_down, shift_down, alt_down;
 
-	friend class CL_X11Window;
+	std::map<KeySym,int> current_keys_down;
 /// \}
 };
 

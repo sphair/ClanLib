@@ -160,7 +160,7 @@ void Chat::on_render(CL_GraphicContext &gc, const CL_Rect &clip_rect)
 	}
 
 	CL_FontMetrics font_metrics = font.get_font_metrics(gc);
-	int page_step = max(1, get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
+	int page_step = cl_max(1, get_height()/static_cast<int>(font_metrics.get_height() + font_metrics.get_external_leading()));
 	if (scroll->get_page_step() != page_step)
 		scroll->set_ranges(0, lines.empty() ? 1 : lines.size(), 1, page_step);
 }

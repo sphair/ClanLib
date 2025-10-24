@@ -34,19 +34,11 @@
 
 #pragma once
 
-
 #include "../api_display.h"
 #include "../../Core/System/sharedptr.h"
 
 class CL_DisplayWindowMessage_Impl;
-
-#ifndef WIN32
-#include <X11/Xlib.h>
-typedef struct _CL_XEvent
-{
-	union _XEvent xevent;	// Contains XEvent structure.
-} CL_XEvent;
-#endif
+class CL_DataBuffer;
 
 /// \brief Windowing-system message.
 ///
@@ -68,11 +60,12 @@ public:
 /// \{
 
 public:
-#ifdef WIN32
-	MSG get_msg() const;
-#else
-	CL_XEvent get_msg() const;
-#endif
+	/// \brief Get the message
+	///
+	/// \param name = Name of the message (for example "MSG" for Win32, or "XEvent" for X11)
+	///
+	/// \return The Databuffer (get_size() returns zero, if the message is not available)
+	CL_DataBuffer get_msg(const CL_StringRef &name) const;
 
 	bool is_null() const;
 
@@ -83,12 +76,11 @@ public:
 public:
 	void set_handled_message(bool handled);
 
-#ifdef WIN32
-	void set_win32_params(const MSG &msg);
-#else
-	void set_x11_params(const CL_XEvent &src_event);
-#endif
-
+	/// \brief Set the message
+	///
+	/// \param name = Name of the message (for example "MSG" for Win32, or "XEvent" for X11)
+	/// \param databuffer = The Databuffer containing the message
+	void set_msg(const CL_StringRef &name, CL_DataBuffer databuffer);
 
 /// \}
 /// \name Implementation

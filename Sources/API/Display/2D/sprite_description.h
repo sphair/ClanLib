@@ -86,7 +86,7 @@ public:
 	/// \param resources Resource manager used to load resource.
 	CL_SpriteDescription();
 
-	CL_SpriteDescription(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
+	CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources);
 
 	CL_SpriteDescription(const CL_SpriteDescription &copy);
 

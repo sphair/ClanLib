@@ -175,7 +175,7 @@ CL_DataBuffer CL_RegistryKey::get_value_binary(const CL_StringRef &name, const C
 {
 	DWORD type = 0, size_data = 0;
 	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
-	if (result != ERROR_MORE_DATA || type != REG_BINARY)
+	if (result != ERROR_SUCCESS || type != REG_BINARY)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);
@@ -190,7 +190,7 @@ CL_String CL_RegistryKey::get_value_string(const CL_StringRef &name, const CL_St
 {
 	DWORD type = 0, size_data = 0;
 	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
-	if (result != ERROR_MORE_DATA || type != REG_SZ)
+	if (result != ERROR_SUCCESS || type != REG_SZ)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);
@@ -205,7 +205,7 @@ std::vector<CL_String> CL_RegistryKey::get_value_multi_string(const CL_StringRef
 {
 	DWORD type = 0, size_data = 0;
 	LONG result = RegQueryValueEx(impl->key, name.c_str(), 0, &type, 0, &size_data);
-	if (result != ERROR_MORE_DATA || type != REG_MULTI_SZ)
+	if (result != ERROR_SUCCESS || type != REG_MULTI_SZ)
 		return default_value;
 
 	CL_DataBuffer buffer(size_data);

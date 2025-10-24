@@ -36,6 +36,7 @@
 #include "API/Display/Window/timer.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
+#include <X11/Xlib.h>
 
 typedef struct _CL_SOCKET_MESSAGE
 {
@@ -93,7 +94,7 @@ private:
 	int msg_wait_for_multiple_objects(int count, CL_SOCKET_MESSAGE *handle_ptr, int timeout);
 
 	bool has_clan_event_peeked;
-	CL_XEvent clan_event_peeked;
+	XEvent clan_event_peeked;
 /// \}
 };
 

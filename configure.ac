@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.0.1)
+AC_INIT(ClanLib, 2.0.2)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=0
-CLANLIB_MICRO_VERSION=1
+CLANLIB_MICRO_VERSION=2
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 
@@ -151,6 +151,7 @@ if test "$WIN32" = "yes"; then
         extra_LIBS_clanVorbis="-lvorbis -logg"
         extra_LIBS_clanNetwork="-lws2_32"
 fi
+extra_LIBS_clanSDL="-lSDL -lSDL_gfx"
 
 dnl Store cflags for Setup/pkgconfig/clan*.in pkg-config files
 AC_SUBST(extra_CFLAGS_clanApp)
@@ -159,6 +160,7 @@ AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
 AC_SUBST(extra_CFLAGS_clanGUI)
 AC_SUBST(extra_CFLAGS_clanGDI)
+AC_SUBST(extra_CFLAGS_clanSDL)
 AC_SUBST(extra_CFLAGS_clanSound)
 AC_SUBST(extra_CFLAGS_clanDatabase)
 AC_SUBST(extra_CFLAGS_clanSqlite)
@@ -174,6 +176,7 @@ AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
 AC_SUBST(extra_LIBS_clanGUI)
 AC_SUBST(extra_LIBS_clanGDI)
+AC_SUBST(extra_LIBS_clanSDL)
 AC_SUBST(extra_LIBS_clanSound)
 AC_SUBST(extra_LIBS_clanDatabase)
 AC_SUBST(extra_LIBS_clanSqlite)
@@ -217,7 +220,7 @@ if test -n "$use_extra_libs" && test "$use_extra_libs" != "NO"; then
    IFS=$ac_save_ifs
 fi
 
-AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h)
+AC_CHECK_HEADERS(unistd.h fcntl.h sys/kd.h sys/vt.h sys/sysctl.h)
 AC_EGREP_HEADER(fcvt, stdlib.h,,AC_DEFINE(NEED_FCVT))
 
 dnl Checks the system type
@@ -314,6 +317,8 @@ CLANLIB_ARG_ENABLE(docs,         auto, [Build Clanlib API documentation], [wheth
 CLANLIB_ARG_ENABLE(clanDisplay,  auto, [Build clanDisplay module],    [whether we should try to build clanDisplay])
 
 CLANLIB_ARG_ENABLE(clanGL,       auto, [Build clanGL module],         [whether we should try to build clanGL])
+
+CLANLIB_ARG_ENABLE(clanSDL,      auto, [Build clanSDL module],        [whether we should try to build clanSDL])
 
 CLANLIB_ARG_ENABLE(clanSound,    auto, [Build clanSound module],      [whether we should try to build clanSound])
 
@@ -432,6 +437,32 @@ else
     CLANLIB_DISABLE_MODULE(clanGDI, [ *** clanGDI depends on clanDisplay])
     CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
     CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
+    CLANLIB_DISABLE_MODULE(clanSDL,  [ *** clanSDL  depends on clanDisplay])
+fi
+
+
+if test "$enable_clanSDL" != "no"; then
+    enable_clanSDL=yes
+    echo "Checking for clanSDL stuff"
+    echo "=============================="
+    OLDLIBS="$LIBS"
+    OLDCXXFLAGS="$CXXFLAGS"
+
+    AM_PATH_SDL([1.2.0], 
+        [AC_SUBST(SDL_CFLAGS)
+         AC_SUBST(SDL_LIBS)],
+        CLANLIB_DISABLE_MODULE(clanSDL, [ *** Could not find SDL (See http://www.libsdl.org )]))
+
+
+    LIBS="$OLDLIBS"
+    CXXFLAGS="$OLDCXXFLAGS"
+
+    if test "$enable_clanSDL" != "no"; then
+
+    dnl testing for SDL_gfx
+    CLANLIB_CHECK_LIB(sdl_gfx,  [`cat $srcdir/Setup/Tests/sdl_gfx.cpp`],  clanSDL, [ *** Could not find SDL_gfx (See http://www.ferzkopp.net/joomla/content/view/19/14/ )], [-lSDL -lSDL_gfx], [ `sdl-config --cflags`])
+   fi
+
 fi
 
 if test "$enable_clanSound" != "no"; then
@@ -487,10 +518,6 @@ fi
 if test "$enable_clanSqlite" != "no"; then
     echo "Checking for clanSqlite stuff"
     echo "==============================="
-
-        CLANLIB_CHECK_LIB(sqlite,[#include <sqlite3.h>
-             int main() { return 0; }],
-            clanSqlite, [ *** Cannot find sqlite libs (See http://www.sqlite.org )],[-lsqlite3] )
     echo ""
 fi
 
@@ -584,16 +611,20 @@ fi
 
 if test "$enable_clanGL" = "yes"; then
     CLANLIB_ENABLE_MODULES(GL)
-	ClanLib_Examples="$ClanLib_Examples Basic2D Canvas Methane Pacman ShadowOfTheBeast SpritesRTS Text"
+	ClanLib_Examples="$ClanLib_Examples Basic2D Canvas Methane Pacman ShadowOfTheBeast SpritesRTS Text PostProcessing"
 fi
 
 if test "$enable_clanGUI" = "yes"; then
     CLANLIB_ENABLE_MODULES(GUI)
-	ClanLib_Examples="$ClanLib_Examples CTalk DiceWar Font GUI NetGame"
+	ClanLib_Examples="$ClanLib_Examples CTalk DiceWar Font GUI NetGame GUICustomComponent"
 fi
 
 if test "$enable_clanGDI" = "yes"; then
     CLANLIB_ENABLE_MODULES(GDI)
+fi
+
+if test "$enable_clanSDL" = "yes"; then
+    CLANLIB_ENABLE_MODULES(SDL)
 fi
 
 if test "$enable_clanNetwork" = "yes"; then
@@ -755,6 +786,7 @@ echo "                 clanRegExp = $enable_clanRegExp"
 echo "                 clanSqlite = $enable_clanSqlite"
 echo "                    clanGUI = $enable_clanGUI"
 echo "                    clanGDI = $enable_clanGDI"
+echo "                    clanSDL = $enable_clanSDL"
 
 core_options=""
 if test "$gcc_cv_have_tls" != "yes"; then

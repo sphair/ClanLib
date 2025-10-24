@@ -37,6 +37,8 @@
 #include "API/Core/Signals/slot_container.h"
 #include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
 
 class CL_X11Window;
 
@@ -66,6 +68,9 @@ public:
 
 	/// \brief Returns the y position of the device.
 	int get_y() const;
+
+	/// \brief Returns the x and y position of the device.
+	CL_Point get_position() const;
 
 	/// \brief Returns true if the passed key code is down for this device.
 	bool get_keycode(int keycode) const;
@@ -114,6 +119,8 @@ public:
 	/// \return true when the device event has occurred
 	bool poll(bool peek_only) { return false; }	// Uses automatic updating and event handling via message system
 
+	void received_mouse_input(XButtonEvent &event);
+	void received_mouse_move(XMotionEvent &event);
 
 /// \}
 /// \name Implementation
@@ -126,7 +133,7 @@ private:
 
 	CL_X11Window *window;
 
-	friend class CL_X11Window;
+	CL_Point mouse_pos;
 /// \}
 };
 

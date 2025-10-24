@@ -86,11 +86,19 @@ public:
 
 	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resman);
 
+	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &fragment_filename) {CL_VirtualDirectory directory; return CL_ProgramObject::load(gc, vertex_filename, fragment_filename, directory);}
+
 	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &fragment_filename, CL_VirtualDirectory &directory);
+
+	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &fragment_filename) {CL_VirtualDirectory directory; return CL_ProgramObject::load(gc, fragment_filename, directory);}
 
 	static CL_ProgramObject load(CL_GraphicContext &gc, const CL_StringRef &fragment_filename, CL_VirtualDirectory &directory);
 
+	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &fragment_filename) {CL_VirtualDirectory directory; return CL_ProgramObject::load_and_link(gc, vertex_filename, fragment_filename, directory);}
+
 	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &vertex_filename, const CL_StringRef &fragment_filename, CL_VirtualDirectory &directory);
+
+	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &fragment_filename) {CL_VirtualDirectory directory; return CL_ProgramObject::load_and_link(gc, fragment_filename, directory);}
 
 	static CL_ProgramObject load_and_link(CL_GraphicContext &gc, const CL_StringRef &fragment_filename, CL_VirtualDirectory &directory);
 

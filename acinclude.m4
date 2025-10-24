@@ -169,7 +169,7 @@ AC_ARG_ENABLE(sdltest, [  --disable-sdltest       Do not try to compile and run 
     if test "x$enable_sdltest" = "xyes" ; then
       ac_save_CFLAGS="$CFLAGS"
       ac_save_LIBS="$LIBS"
-      CFLAGS="$CFLAGS $SDL_CFLAGS"
+      CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
       LIBS="$LIBS $SDL_LIBS"
 dnl
 dnl Now check if the installed SDL is sufficiently new. (Also sanity
@@ -234,7 +234,7 @@ int main (int argc, char *argv[])
 }
 
 ],, no_sdl=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
-       CFLAGS="$ac_save_CFLAGS"
+       CXXFLAGS="$ac_save_CFLAGS"
        LIBS="$ac_save_LIBS"
      fi
   fi
@@ -253,7 +253,7 @@ int main (int argc, char *argv[])
         :
        else
           echo "*** Could not run SDL test program, checking why..."
-          CFLAGS="$CFLAGS $SDL_CFLAGS"
+          CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"
           LIBS="$LIBS $SDL_LIBS"
           AC_TRY_LINK([
 #include <stdio.h>
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
           echo "*** exact error that occured. This usually means SDL was incorrectly installed"
           echo "*** or that you have moved SDL since it was installed. In the latter case, you"
           echo "*** may want to edit the sdl-config script: $SDL_CONFIG" ])
-          CFLAGS="$ac_save_CFLAGS"
+          CXXFLAGS="$ac_save_CFLAGS"
           LIBS="$ac_save_LIBS"
        fi
      fi

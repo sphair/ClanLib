@@ -17,6 +17,9 @@ To build dicewar_server:
 Models:
 http://www.3dtotal.com//ffa/meshes_v2/low_poly/rendb01/model_main.htm#
 
+
+TODO
+----------------------------------------------------------
 CODE POLISH:
 - Cleanup GUI init
 - Some better solution to GamePlayer/LobbyPlayer mess

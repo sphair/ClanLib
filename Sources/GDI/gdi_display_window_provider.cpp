@@ -34,10 +34,13 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
+#include "API/Display/Window/display_window_description.h"
 
 #ifdef WIN32
+#include "Display/Win32/timer_provider_win32.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #else
+#include "Display/X11/timer_provider_x11.h"
 #include "Display/X11/cursor_provider_x11.h"
 #endif
 
@@ -112,6 +115,15 @@ bool CL_GDIDisplayWindowProvider::is_clipboard_text_available() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDIDisplayWindowProvider Operations:
 
+CL_TimerProvider *CL_GDIDisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
+{
+#ifdef WIN32
+	return new CL_TimerProvider_Win32(disp_window);
+#else
+	return new CL_TimerProvider_X11(disp_window);
+#endif
+}
+
 CL_Point CL_GDIDisplayWindowProvider::client_to_screen(const CL_Point &client)
 {
 	return window.client_to_screen(client);
@@ -135,6 +147,12 @@ void CL_GDIDisplayWindowProvider::destroy()
 void CL_GDIDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
 {
 	site = new_site;
+	flip_timer_set = false;
+
+	refresh_rate = description.get_refresh_rate();
+	if (!refresh_rate)	// Default the refresh rate to 60 if not defined
+		refresh_rate = 60;
+
 #ifdef WIN32
 	window.create(site, description);
 #else
@@ -265,6 +283,40 @@ void CL_GDIDisplayWindowProvider::flip(int interval)
 	CL_PixelBuffer &image = canvas->to_pixelbuffer();
 	draw_image(get_viewport(), image, CL_Rect(0, 0, image.get_width(), image.get_height()));
 #endif
+
+	if (interval<=0)
+	{
+		flip_timer_set = false;
+	}
+	else
+	{
+		if (!flip_timer_set)
+		{
+			flip_last_time = CL_System::get_time();
+			flip_timer_set = true;
+		}
+		else
+		{
+			unsigned int current_time = CL_System::get_time();
+
+			int time_diff = current_time - flip_last_time;
+
+			interval *= 1000 / refresh_rate;
+			int time_wait = interval - time_diff;
+
+			if ( (time_wait > 0) && (time_wait < interval) )
+			{
+				CL_System::sleep(time_wait);
+				flip_last_time = current_time + time_wait;
+			}
+			else
+			{
+				flip_last_time = current_time;
+			}
+		}
+	}
+
+
 }
 
 void CL_GDIDisplayWindowProvider::update(const CL_Rect &rect)

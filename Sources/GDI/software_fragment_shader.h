@@ -76,10 +76,10 @@ public:
 					const unsigned int salpha = *(read_ptr);
 					const unsigned int neg_alpha = 255 - salpha;
 
-					*(line++) = (*line * neg_alpha + sblue * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + sgreen * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + sred * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + salpha * salpha) >> 8;
+					*line = (*line * neg_alpha + sblue * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + sgreen * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + sred * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + salpha * salpha) >> 8; ++line;
 
 					cur_varying_0i += dx_varying_0i;
 				}
@@ -100,10 +100,10 @@ public:
 					const unsigned int salpha = (*(read_ptr) * cur_varying_5i) >> 8;
 					const unsigned int neg_alpha = 255 - salpha;
 
-					*(line++) = (*line * neg_alpha + sblue * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + sgreen * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + sred * salpha) >> 8;
-					*(line++) = (*line * neg_alpha + salpha * salpha) >> 8;
+					*line = (*line * neg_alpha + sblue * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + sgreen * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + sred * salpha) >> 8; ++line;
+					*line = (*line * neg_alpha + salpha * salpha) >> 8; ++line;
 
 					cur_varying_0i += dx_varying_0i;
 				}
@@ -127,10 +127,10 @@ public:
 				const unsigned int salpha = (*(read_ptr) * cur_varying_5i) >> 8;
 				const unsigned int neg_alpha = 255 - salpha;
 
-				*(line++) = (*line * neg_alpha + sblue * salpha) >> 8;
-				*(line++) = (*line * neg_alpha + sgreen * salpha) >> 8;
-				*(line++) = (*line * neg_alpha + sred * salpha) >> 8;
-				*(line++) = (*line * neg_alpha + salpha * salpha) >> 8;
+				*line = (*line * neg_alpha + sblue * salpha) >> 8; ++line;
+				*line = (*line * neg_alpha + sgreen * salpha) >> 8; ++line;
+				*line = (*line * neg_alpha + sred * salpha) >> 8; ++line;
+				*line = (*line * neg_alpha + salpha * salpha) >> 8; ++line;
 
 				cur_varying_0i += dx_varying_0i;
 				cur_varying_1i += dx_varying_1i;

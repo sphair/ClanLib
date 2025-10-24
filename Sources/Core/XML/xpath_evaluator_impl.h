@@ -101,7 +101,7 @@ private:
 	void select_nodes_preceding(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
 	void select_nodes_preceding_sibling(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
 	void select_nodes_self(const CL_DomNode &context_node, const std::vector<CL_XPathLocationStep> &steps, int step_index, const CL_StringRef &expression, std::vector<CL_DomNode> &out_nodeset);
-	bool confirm_step_requirements(const CL_DomNode &node, int node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression);
+	bool confirm_step_requirements(const CL_DomNode &node, int &node_index, const CL_XPathLocationStep &step, const CL_StringRef &expression);
 
 	CL_XPathObject call_function(const CL_StringRef &name, std::vector<CL_XPathObject> parameters);
 	CL_XPathObject get_variable(const CL_StringRef &name);

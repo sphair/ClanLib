@@ -123,8 +123,14 @@ public:
 	/// \brief < operator.
 	bool operator < (const CL_Angle &angle) const;
 
+	/// \brief < operator.
+	bool operator <= (const CL_Angle &angle) const;
+
 	/// \brief > operator.
 	bool operator > (const CL_Angle &angle) const;
+
+	/// \brief > operator.
+	bool operator >= (const CL_Angle &angle) const;
 
 	/// \brief == operator.
 	bool operator== (const CL_Angle &angle) const;

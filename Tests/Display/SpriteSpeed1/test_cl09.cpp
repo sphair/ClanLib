@@ -274,22 +274,9 @@ void App::draw_equal_tex_diff_sprites(CL_GraphicContext &gc, int sprite_count, f
 
 void App::draw_equal_tex_diff_sprites_batch(CL_GraphicContext &gc, int sprite_count, float time_elapsed)
 {
-/*	CL_SpriteRenderBatch batch(gc);
-
-	int count = 0;
-	for(int x=0; x<100; ++x)
-	{
-		for(int y=0; y<100; ++y)
-		{
-			explosions_same_tex[count].draw(batch, x * 10.0f, y * 10.0f);
-			explosions_same_tex[count].update(time_elapsed);
-
-			count++;
-			if(count == sprite_count || count == 10000)
-				return;
-		}
-	}
-*/}
+	// Batching is builtin in 2.0..
+	draw_equal_tex_diff_sprites(gc, sprite_count, time_elapsed);
+}
 
 void App::draw_diff_tex_diff_sprites(CL_GraphicContext &gc, int sprite_count, float time_elapsed)
 {
@@ -310,20 +297,6 @@ void App::draw_diff_tex_diff_sprites(CL_GraphicContext &gc, int sprite_count, fl
 
 void App::draw_diff_tex_diff_sprites_batch(CL_GraphicContext &gc, int sprite_count, float time_elapsed)
 {
-/*	CL_SpriteRenderBatch batch(gc);
-	
-	int count = 0;
-	for(int x=0; x<100; ++x)
-	{
-		for(int y=0; y<100; ++y)
-		{
-			explosions_diff_tex[count].draw(batch, x * 10.0f, y * 10.0f);
-			explosions_diff_tex[count].update(time_elapsed);
-
-			count++;
-			if(count == sprite_count || count == 10000)
-				return;
-		}
-	}
-*/
+	// Batching is builtin in 2.0..
+	draw_diff_tex_diff_sprites(gc, sprite_count, time_elapsed);
 }

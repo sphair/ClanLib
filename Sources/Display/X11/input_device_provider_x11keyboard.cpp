@@ -27,15 +27,18 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "Display/precomp.h"
 #include "input_device_provider_x11keyboard.h"
+#include "API/Display/Window/input_event.h"
+#include "API/Display/Window/keys.h"
+#include "API/Core/Text/string_help.h"
 #include "x11_window.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Keyboard construction:
 
 CL_InputDeviceProvider_X11Keyboard::CL_InputDeviceProvider_X11Keyboard(CL_X11Window *window)
-: sig_provider_event(0), window(window)
+: sig_provider_event(0), window(window), ctrl_down(false), shift_down(false), alt_down(false)
 {
 	current_keys_down.clear();
 }
@@ -99,8 +102,74 @@ int CL_InputDeviceProvider_X11Keyboard::get_button_count() const
 	return -1;
 }
 
+void CL_InputDeviceProvider_X11Keyboard::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
+{
+	key_shift = shift_down;
+	key_alt = alt_down;
+	key_ctrl = ctrl_down;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Keyboard operations:
+
+void CL_InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
+{
+	// Is message a down or up event?
+	bool keydown;
+	if (event.type == KeyPress)
+	{
+		keydown = true;
+	}else	keydown = false;
+
+
+	KeyCode key_code = event.keycode;
+
+	// Prepare event to be emitted:
+	CL_InputEvent key;
+	if (keydown)
+		key.type = CL_InputEvent::pressed;
+	else
+		key.type = CL_InputEvent::released;
+	key.mouse_pos = window->get_mouse_position();
+	key.repeat_count = 0;	// X11 automatically handles keyboard repeats
+
+	KeySym key_symbol = XKeycodeToKeysym(window->get_display(), key_code, 0);
+
+	switch (key_symbol)
+	{
+		case XK_Control_L:
+		case XK_Control_R:
+			ctrl_down = keydown;
+			break;
+		case XK_Shift_L:
+		case XK_Shift_R:
+			shift_down = keydown;
+			break;
+		case XK_Alt_L:
+		case XK_Alt_R:
+			alt_down = keydown;
+			break;
+	}
+
+	key.id = key_symbol;
+
+	key.shift = shift_down;
+	key.alt = alt_down;
+	key.ctrl = ctrl_down;
+
+	const int buff_size = 16;
+	char buff[buff_size];
+	int result = XLookupString(&event, buff, buff_size - 1, NULL, NULL);
+	if (result < 0) result = 0;
+	if (result > (buff_size-1)) result = buff_size - 1;
+	buff[result] = 0;
+
+	key.str = CL_StringHelp::local8_to_text(CL_String8(buff, result));
+
+	// Emit message:
+	sig_provider_event->invoke(key);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Keyboard implementation:

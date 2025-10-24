@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Math/sha1.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Text/string_format.h"
@@ -45,7 +46,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SpriteDescription construction:
 
-CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
+CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
 : impl(new CL_SpriteDescription_Impl)
 {
 	CL_Resource resource = resources->get_resource(resource_id);
@@ -64,19 +65,6 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext gc, const CL_String
 			str_force_16bit = global_resource.get_element().get_attribute("force_16bit", "false");
 	}
 */
-/*	CL_String str_keep_pixelbuffer;
-	CL_String str_force_16bit;
-
-	if (resource.get_element().has_attribute("keep_pixelbuffer"))
-		str_keep_pixelbuffer = resource.get_element().get_attribute("keep_pixelbuffer", "false");
-	if (resource.get_element().has_attribute("force_16bit"))
-		str_force_16bit = resource.get_element().get_attribute("force_16bit", "false");
-
-	bool keep_pixelbuffer = CL_String::to_bool(str_keep_pixelbuffer);
-	bool force_16bit = CL_String::to_bool(str_force_16bit);
-
-	desc.set_surface_flag(keep_pixelbuffer * CL_Surface::flag_keep_pixelbuffer | force_16bit * CL_Surface::flag_force_16bit);
-*/
 	CL_DomNode cur_node = resource.get_element().get_first_child();
 
 	while(!cur_node.is_null())
@@ -88,160 +76,209 @@ CL_SpriteDescription::CL_SpriteDescription(CL_GraphicContext gc, const CL_String
 		CL_String tag_name = cur_element.get_tag_name();
 		if (tag_name == cl_text("image") || tag_name == cl_text("image-file"))
 		{
-			CL_String texture_name = cur_element.get_attribute(cl_text("texture"));
-			CL_String image_name = cur_element.get_attribute(cl_text("file"));
-			CL_PixelBuffer image;
-			CL_Texture texture;
-#ifndef use_old_style
-			if (texture_name.empty())
+			if (cur_element.has_attribute("fileseq"))
 			{
+				int start_index = 0;
+				if (cur_element.has_attribute("start_index"))
+					start_index = CL_StringHelp::text_to_int(cur_element.get_attribute("start_index"));
+
+				int skip_index = 0;
+				if (cur_element.has_attribute("skip_index"))
+					skip_index = CL_StringHelp::text_to_int(cur_element.get_attribute("skip_index"));
+
+				int leading_zeroes = 0;
+				if (cur_element.has_attribute("leading_zeroes"))
+					leading_zeroes =  CL_StringHelp::text_to_int(cur_element.get_attribute("leading_zeroes"));
+
+				CL_String  prefix = cur_element.get_attribute("fileseq");
+				CL_String  suffix = "." + CL_PathHelp::get_extension(prefix);
+				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
+
 				CL_VirtualDirectory virtual_directory = resources->get_directory(resource);
-				texture = CL_SharedGCData::load_texture(gc, image_name, virtual_directory);
-			}
-			else
-				texture = CL_Texture(texture_name, resources, gc);
-#else
-			if (texture_name.empty())
-				image = CL_ImageProviderFactory::load(image_name, cl_text(""), resources->get_directory(resource));
-			else
-				texture = CL_Texture(texture_name, resources, gc);
-#endif
 
-			CL_DomNode cur_child(cur_element.get_first_child());
-			if(cur_child.is_null()) 
-			{
-				if (texture.is_null())
-					add_frame(image);
-				else
-					add_frame(texture);
-			}
-			else
-			{
-				CL_DomElement cur_child_elemnt = cur_child.to_element();
-				if(cur_child.get_node_name() == cl_text("grid"))
+				for (int i=start_index;;i += skip_index)
 				{
-					int xpos = 0;
-					int ypos = 0;
-					int xarray = 1;
-					int yarray = 1;
-					int array_skipframes = 0;
-					int xspacing = 0;
-					int yspacing = 0;
-					int width = 0;
-					int height = 0;
+					CL_String file_name = prefix;
 
-					std::vector<CL_TempString> image_size = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("size")), cl_text(","));
-					if (image_size.size() > 0)
-						width = CL_StringHelp::text_to_int(image_size[0]);
-					if (image_size.size() > 1)
-						height = CL_StringHelp::text_to_int(image_size[1]);
+					CL_String frame_text = CL_StringHelp::int_to_text(i);
+					for (int zeroes_to_add = (leading_zeroes+1) - frame_text.length(); zeroes_to_add > 0; zeroes_to_add--)
+						file_name += "0";
 
-					if (cur_child_elemnt.has_attribute(cl_text("pos")))
+					file_name += frame_text + suffix;
+
+					try
 					{
-						std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
-						if (image_pos.size() > 0)
-							xpos = CL_StringHelp::text_to_int(image_pos[0]);
-						if (image_pos.size() > 1)
-							ypos = CL_StringHelp::text_to_int(image_pos[1]);
+						CL_Texture texture = CL_SharedGCData::load_texture(gc, file_name, virtual_directory);
+						add_frame(texture);
 					}
-
-					if (cur_child_elemnt.has_attribute(cl_text("array")))
+					catch (CL_Exception e)
 					{
-						std::vector<CL_TempString> image_array = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("array")), cl_text(","));
-						if (image_array.size() == 2)
+						if (impl->frames.empty())
 						{
-							xarray = CL_StringHelp::text_to_int(image_array[0]);
-							yarray = CL_StringHelp::text_to_int(image_array[1]);
+							//must have been an error, pass it down
+							throw e;
+						}
+						//can't find anymore pics
+						return;
+					}
+				}
+			}
+			else
+			{
+				CL_String texture_name = cur_element.get_attribute(cl_text("texture"));
+				CL_String image_name = cur_element.get_attribute(cl_text("file"));
+				CL_PixelBuffer image;
+				CL_Texture texture;
+	#ifndef use_old_style
+				if (texture_name.empty())
+				{
+					CL_VirtualDirectory virtual_directory = resources->get_directory(resource);
+					texture = CL_SharedGCData::load_texture(gc, image_name, virtual_directory);
+				}
+				else
+					texture = CL_Texture(texture_name, resources, gc);
+	#else
+				if (texture_name.empty())
+					image = CL_ImageProviderFactory::load(image_name, cl_text(""), resources->get_directory(resource));
+				else
+					texture = CL_Texture(texture_name, resources, gc);
+	#endif
+
+				CL_DomNode cur_child(cur_element.get_first_child());
+				if(cur_child.is_null()) 
+				{
+					if (texture.is_null())
+						add_frame(image);
+					else
+						add_frame(texture);
+				}
+				else
+				{
+					CL_DomElement cur_child_elemnt = cur_child.to_element();
+					if(cur_child.get_node_name() == cl_text("grid"))
+					{
+						int xpos = 0;
+						int ypos = 0;
+						int xarray = 1;
+						int yarray = 1;
+						int array_skipframes = 0;
+						int xspacing = 0;
+						int yspacing = 0;
+						int width = 0;
+						int height = 0;
+
+						std::vector<CL_TempString> image_size = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("size")), cl_text(","));
+						if (image_size.size() > 0)
+							width = CL_StringHelp::text_to_int(image_size[0]);
+						if (image_size.size() > 1)
+							height = CL_StringHelp::text_to_int(image_size[1]);
+
+						if (cur_child_elemnt.has_attribute(cl_text("pos")))
+						{
+							std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
+							if (image_pos.size() > 0)
+								xpos = CL_StringHelp::text_to_int(image_pos[0]);
+							if (image_pos.size() > 1)
+								ypos = CL_StringHelp::text_to_int(image_pos[1]);
+						}
+
+						if (cur_child_elemnt.has_attribute(cl_text("array")))
+						{
+							std::vector<CL_TempString> image_array = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("array")), cl_text(","));
+							if (image_array.size() == 2)
+							{
+								xarray = CL_StringHelp::text_to_int(image_array[0]);
+								yarray = CL_StringHelp::text_to_int(image_array[1]);
+							}
+							else
+							{
+								throw CL_Exception(cl_text("Resource '") + resource.get_name() + cl_text("' has incorrect array attribute, must be \"X,Y\"!")); 
+							}
+						}
+
+						if (cur_child_elemnt.has_attribute(cl_text("array_skipframes")))
+						{
+							array_skipframes = CL_StringHelp::text_to_int(cur_child_elemnt.get_attribute(cl_text("array_skipframes")));
+						}
+
+						if (cur_child_elemnt.has_attribute(cl_text("spacing")))
+						{
+							std::vector<CL_TempString> image_spacing = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("spacing")), cl_text(","));
+							xspacing = CL_StringHelp::text_to_int(image_spacing[0]);
+							yspacing = CL_StringHelp::text_to_int(image_spacing[1]);
+						}
+
+						if (texture.is_null())
+							add_gridclipped_frames(
+								image,
+								xpos, ypos,
+								width, height,
+								xarray, yarray,
+								array_skipframes,
+								xspacing, yspacing);
+						else
+							add_gridclipped_frames(
+								texture,
+								xpos, ypos,
+								width, height,
+								xarray, yarray,
+								array_skipframes,
+								xspacing, yspacing);
+					}
+					else if( cur_child.get_node_name() == cl_text("palette") && texture.is_null())
+					{
+						int xpos = 0;
+						int ypos = 0;
+
+						if (cur_child_elemnt.has_attribute(cl_text("pos")))
+						{
+							std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
+							xpos = CL_StringHelp::text_to_int(image_pos[0]);
+							ypos = CL_StringHelp::text_to_int(image_pos[1]);
+						}
+
+						add_paletteclipped_frames(
+							image,
+							xpos, ypos);
+					}
+					else if( cur_child.get_node_name() == cl_text("alpha") && texture.is_null())
+					{
+						int xpos = 0;
+						int ypos = 0;
+						float trans_limit = 0.05f;
+
+						if (cur_child_elemnt.has_attribute(cl_text("pos")))
+						{
+							std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
+							xpos = CL_StringHelp::text_to_int(image_pos[0]);
+							ypos = CL_StringHelp::text_to_int(image_pos[1]);
+						}
+
+						if (cur_child_elemnt.has_attribute(cl_text("trans_limit")))
+						{
+							trans_limit = CL_StringHelp::text_to_float(cur_child_elemnt.get_attribute(cl_text("trans_limit")));
+						}
+
+						if (cur_child_elemnt.has_attribute(cl_text("free")))
+						{
+							add_alphaclipped_frames_free(
+								image,
+								xpos, ypos,
+								trans_limit);
 						}
 						else
 						{
-							throw CL_Exception(cl_text("Resource '") + resource.get_name() + cl_text("' has incorrect array attribute, must be \"X,Y\"!")); 
+							add_alphaclipped_frames(
+								image,
+								xpos, ypos,
+								trans_limit);
 						}
 					}
 
-					if (cur_child_elemnt.has_attribute(cl_text("array_skipframes")))
-					{
-						array_skipframes = CL_StringHelp::text_to_int(cur_child_elemnt.get_attribute(cl_text("array_skipframes")));
-					}
-
-					if (cur_child_elemnt.has_attribute(cl_text("spacing")))
-					{
-						std::vector<CL_TempString> image_spacing = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("spacing")), cl_text(","));
-						xspacing = CL_StringHelp::text_to_int(image_spacing[0]);
-						yspacing = CL_StringHelp::text_to_int(image_spacing[1]);
-					}
-
-					if (texture.is_null())
-						add_gridclipped_frames(
-							image,
-							xpos, ypos,
-							width, height,
-							xarray, yarray,
-							array_skipframes,
-							xspacing, yspacing);
-					else
-						add_gridclipped_frames(
-							texture,
-							xpos, ypos,
-							width, height,
-							xarray, yarray,
-							array_skipframes,
-							xspacing, yspacing);
-				}
-				else if( cur_child.get_node_name() == cl_text("palette") && texture.is_null())
-				{
-					int xpos = 0;
-					int ypos = 0;
-
-					if (cur_child_elemnt.has_attribute(cl_text("pos")))
-					{
-						std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
-						xpos = CL_StringHelp::text_to_int(image_pos[0]);
-						ypos = CL_StringHelp::text_to_int(image_pos[1]);
-					}
-
-					add_paletteclipped_frames(
-						image,
-						xpos, ypos);
-				}
-				else if( cur_child.get_node_name() == cl_text("alpha") && texture.is_null())
-				{
-					int xpos = 0;
-					int ypos = 0;
-					float trans_limit = 0.05f;
-
-					if (cur_child_elemnt.has_attribute(cl_text("pos")))
-					{
-						std::vector<CL_TempString> image_pos = CL_StringHelp::split_text(cur_child_elemnt.get_attribute(cl_text("pos")), cl_text(","));
-						xpos = CL_StringHelp::text_to_int(image_pos[0]);
-						ypos = CL_StringHelp::text_to_int(image_pos[1]);
-					}
-
-					if (cur_child_elemnt.has_attribute(cl_text("trans_limit")))
-					{
-						trans_limit = CL_StringHelp::text_to_float(cur_child_elemnt.get_attribute(cl_text("trans_limit")));
-					}
-
-					if (cur_child_elemnt.has_attribute(cl_text("free")))
-					{
-						add_alphaclipped_frames_free(
-							image,
-							xpos, ypos,
-							trans_limit);
-					}
-					else
-					{
-						add_alphaclipped_frames(
-							image,
-							xpos, ypos,
-							trans_limit);
-					}
-				}
-
-				cur_child = cur_child.get_next_sibling();
-			} while(!cur_child.is_null());
+					cur_child = cur_child.get_next_sibling();
+				} while(!cur_child.is_null());
+			}
 		}
-
 		cur_node = cur_node.get_next_sibling();
 	}
 

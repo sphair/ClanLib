@@ -40,6 +40,7 @@ PageTarget::PageTarget()
 	include_mtdll = false;
 	include_dll = false;
 	include_x64 = false;
+	include_sdl = false;
 
 	HKEY hKey = 0;
 	LONG result = RegOpenKeyEx(
@@ -86,6 +87,13 @@ PageTarget::PageTarget()
 			include_x64 = (value != 0);
 		}
 
+		size = sizeof(DWORD);
+		result = RegQueryValueEx(hKey, TEXT("IncludeSDL"), 0, &type, (LPBYTE) &value, &size);
+		if (result == ERROR_SUCCESS && type == REG_DWORD)
+		{
+			include_sdl = (value != 0);
+		}
+
 		RegCloseKey(hKey);
 	}
 
@@ -127,6 +135,7 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_SETCHECK, self->include_mtdll ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_SETCHECK, self->include_dll ? BST_CHECKED : BST_UNCHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_SETCHECK, self->include_x64 ? BST_CHECKED : BST_UNCHECKED, 0);
+			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SDL), BM_SETCHECK, self->include_sdl ? BST_CHECKED : BST_UNCHECKED, 0);
 
 			// return FALSE if we set the focus
 			return TRUE;
@@ -176,6 +185,7 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_version = 900;
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
+		include_sdl = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_SDL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_dll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_DLL), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		return TRUE;

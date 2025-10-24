@@ -133,6 +133,8 @@ libclanDisplay_la_SOURCES = \
 	setup_display.cpp \
 	X11/x11_window.cpp \
 	X11/x11_window.h \
+	X11/clipboard_x11.cpp \
+	X11/clipboard_x11.h \
 	X11/display_message_queue_x11.cpp \
 	X11/display_message_queue_x11.h \
 	X11/cursor_provider_x11.cpp \

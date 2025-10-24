@@ -31,6 +31,7 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
+#include "Display/Win32/timer_provider_win32.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10DisplayWindowProvider Construction:
@@ -98,6 +99,11 @@ bool CL_D3D10DisplayWindowProvider::is_clipboard_text_available() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10DisplayWindowProvider Operations:
+
+CL_TimerProvider *CL_D3D10DisplayWindowProvider::alloc_timer(CL_DisplayWindow &disp_window)
+{
+	return new CL_TimerProvider_Win32(disp_window);
+}
 
 CL_Point CL_D3D10DisplayWindowProvider::client_to_screen(const CL_Point &client)
 {

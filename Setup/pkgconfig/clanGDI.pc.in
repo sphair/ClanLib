@@ -6,7 +6,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include/ClanLib-@LT_RELEASE@
 
 Name: clanGDI
-Description: portable main() wrapper of ClanLib
+Description: ClanLib software graphic rendering
 Version: @VERSION@
 Requires: clanDisplay-@LT_RELEASE@ = @VERSION@
 Libs:   -L${libdir} -lclanGDI @extra_LIBS_clanGDI@

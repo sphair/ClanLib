@@ -48,6 +48,7 @@
 #include "../opengl_target_provider.h"
 #include "opengl_creation_helper.h"
 #include <commctrl.h>
+#include "Display/Win32/timer_provider_win32.h"
 
 namespace
 {
@@ -202,6 +203,11 @@ bool CL_OpenGLWindowProvider_WGL::is_clipboard_text_available() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLWindowProvider_WGL Operations:
+
+CL_TimerProvider *CL_OpenGLWindowProvider_WGL::alloc_timer(CL_DisplayWindow &disp_window)
+{
+	return new CL_TimerProvider_Win32(disp_window);
+}
 
 CL_Point CL_OpenGLWindowProvider_WGL::client_to_screen(const CL_Point &client)
 {

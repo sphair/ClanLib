@@ -13,8 +13,4 @@ LIBS=clanCore clanDisplay clanSound clanApp clanGL clanMikMod
 
 include ../Makefile.conf
 
-%.dat : %.scr
-	@echo "Building datafile $<"
-	@./pacman -datafile $< $@
-
 # EOF #

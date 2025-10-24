@@ -171,6 +171,7 @@ public:
 
 	void invalidate_rect(const CL_Rect &rect) { x11_window.invalidate_rect(rect); }
 
+	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
 
 /// \}
 /// \name Implementation

@@ -70,6 +70,9 @@ public:
 	/// \brief Returns the mutex used by CL_SharedPtr.
 	static CL_Mutex *get_sharedptr_mutex();
 
+	/// \brief Return the number of CPU cores
+	static int get_num_cores();
+
 
 /// \}
 /// \name Operations

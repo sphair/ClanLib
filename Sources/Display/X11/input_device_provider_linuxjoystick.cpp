@@ -31,7 +31,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <linux/joystick.h>
-#include "GL/precomp.h"
+#include "Display/precomp.h"
 #include "API/Core/Text/string_format.h"
 #include "x11_window.h"
 #include "input_device_provider_linuxjoystick.h"
@@ -139,7 +139,7 @@ void CL_InputDeviceProvider_LinuxJoystick::set_position(int x, int y)
 void CL_InputDeviceProvider_LinuxJoystick::process_event(struct js_event event) const
 {
 	CL_InputEvent input_event;
-	input_event.mouse_pos = window->mouse_pos;
+	input_event.mouse_pos = window->get_mouse_position();
 	input_event.repeat_count = 0;
 
 	// We don't threat JS_EVENT_INIT special, so this should do

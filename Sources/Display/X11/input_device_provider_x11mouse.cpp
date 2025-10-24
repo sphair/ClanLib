@@ -27,16 +27,18 @@
 **    Mark Page
 */
 
-#include "GL/precomp.h"
+#include "Display/precomp.h"
 #include "API/Core/Text/string_format.h"
 #include "input_device_provider_x11mouse.h"
+#include "API/Display/Window/input_event.h"
+#include "API/Display/Window/keys.h"
 #include "x11_window.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Mouse construction:
 
 CL_InputDeviceProvider_X11Mouse::CL_InputDeviceProvider_X11Mouse(CL_X11Window *window)
-: sig_provider_event(0), window(window)
+: sig_provider_event(0), window(window), mouse_pos(-1,-1)
 {
 	for (int i=0; i<32; i++) key_states[i] = false;
 }
@@ -77,6 +79,21 @@ int CL_InputDeviceProvider_X11Mouse::get_y() const
 	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
 		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
 	return win_y_return;
+}
+
+CL_Point CL_InputDeviceProvider_X11Mouse::get_position() const
+{
+	Window root_return;
+	Window child_return;
+	int root_x_return;
+	int root_y_return;
+	int win_x_return=0;
+	int win_y_return=0;
+	unsigned int mask_return;
+
+	XQueryPointer(window->get_display(), window->get_window(), &root_return, &child_return,
+		&root_x_return, &root_y_return, &win_x_return, &win_y_return, &mask_return);
+	return (CL_Point(win_x_return, win_y_return));
 }
 
 bool CL_InputDeviceProvider_X11Mouse::get_keycode(int keycode) const
@@ -130,6 +147,60 @@ int CL_InputDeviceProvider_X11Mouse::get_button_count() const
 void CL_InputDeviceProvider_X11Mouse::set_position(int x, int y)
 {
 	XWarpPointer(window->get_display(), None, window->get_window(), 0,0, 0,0, x,y);
+}
+
+
+void CL_InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
+{
+
+	int id;
+
+	switch(event.button)
+	{
+		case 1: id = CL_MOUSE_LEFT; break;	// Left
+		case 3: id = CL_MOUSE_RIGHT; break;	// Right
+		case 2: id = CL_MOUSE_MIDDLE; break;	// Middle
+		case 4: id = CL_MOUSE_WHEEL_UP; break;	// Scroll up
+		case 5: id = CL_MOUSE_WHEEL_DOWN; break;	// Scroll down
+		case 6: id = CL_MOUSE_XBUTTON1; break;
+		case 7: id = CL_MOUSE_XBUTTON2; break;
+		default: return;	// Unknown press
+	}
+	mouse_pos.x = event.x;
+	mouse_pos.y = event.y;
+
+	// Prepare event to be emitted:
+	CL_InputEvent key;
+	key.mouse_pos = mouse_pos;
+	key.id = id;
+	if (event.type == ButtonPress)
+		key.type = CL_InputEvent::pressed;
+	else	key.type = CL_InputEvent::released;
+
+	// Emit message:
+	sig_provider_event->invoke(key);
+}
+
+void CL_InputDeviceProvider_X11Mouse::received_mouse_move(XMotionEvent &event)
+{
+	// Fetch coordinates
+	int x = event.x;
+	int y = event.y;
+
+	if(mouse_pos.x != x || mouse_pos.y != y)
+	{
+		mouse_pos.x = x;
+		mouse_pos.y = y;
+
+		// Prepare event to be emitted:
+		CL_InputEvent key;
+		key.type = CL_InputEvent::pointer_moved;
+		key.mouse_pos = mouse_pos;
+		window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
+
+		// Fire off signal
+		sig_provider_event->invoke(key);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

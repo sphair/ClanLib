@@ -293,8 +293,7 @@ void CL_CollisionOutline::draw(
 			CL_Draw::line(gc, x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
 		}
 
-		// Add points (as oposite color)
-		// TODO: This did not work with SDL, the draw_pixel fails
+		// Add points (as opposite color)
 		CL_Colorf colorinv(1.0f-color.get_red(),1.0f-color.get_green(),1.0f-color.get_blue());
 
 		CL_Pen pen;

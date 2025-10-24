@@ -138,8 +138,19 @@ public:
 	/// \brief Processes messages until exit_with_code is called.
 	int exec(CL_AcceleratorTable &table, bool loop_until_complete = true);
 
-	/// \brief Processes messages until exit_with_code is called - When an accelarator table is not required
-	int exec(bool loop_until_complete = true) {CL_AcceleratorTable table; return exec(table, loop_until_complete);}
+	/// \brief Processes messages until exit_with_code is called
+	int exec(bool loop_until_complete = true);
+
+	/// \brief Processes all messages available
+	void process_messages(CL_AcceleratorTable &accel_table);
+
+	/// \brief Processes all messages available
+	void process_messages();
+
+	/// \brief Blocks (and process keep alive objects) until a message is available or the timeout occurs
+	///
+	/// Returns true if a message is available, false otherwise.
+	bool wait(int timeout = -1);
 
 	/// \brief Reads the next message but leaves it in the queue.
 	CL_GUIMessage peek_message(bool block);

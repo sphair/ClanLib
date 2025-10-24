@@ -149,6 +149,16 @@ bool CL_Angle::operator>( const CL_Angle &angle ) const
 	return value_rad > angle.value_rad;
 }
 
+bool CL_Angle::operator<=( const CL_Angle &angle ) const
+{
+	return value_rad <= angle.value_rad;
+}
+
+bool CL_Angle::operator>=( const CL_Angle &angle ) const
+{
+	return value_rad >= angle.value_rad;
+}
+
 bool CL_Angle::operator==( const CL_Angle &angle ) const
 {
 	return value_rad == angle.value_rad;

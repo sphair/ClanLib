@@ -28,6 +28,7 @@
 */
 
 #include "Display/precomp.h"
+#include "API/Core/System/databuffer.h"
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/event.h"
@@ -127,11 +128,12 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::get_message()
 	{
 		has_clan_event_peeked = false;
 		CL_DisplayWindowMessage clmsg;
-		clmsg.set_x11_params(clan_event_peeked);
+		CL_DataBuffer buffer(&clan_event_peeked, sizeof(clan_event_peeked));
+		clmsg.set_msg(cl_text("XEvent"), buffer);
 		return clmsg;			
 	}
 
-	CL_XEvent clan_event;
+	XEvent clan_event;
 
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
 	std::vector<CL_X11Window *>::size_type index, size;
@@ -141,7 +143,8 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::get_message()
 		if (thread_data->windows[index]->get_message(clan_event))
 		{
 			CL_DisplayWindowMessage clmsg;
-			clmsg.set_x11_params(clan_event);
+			CL_DataBuffer buffer(&clan_event, sizeof(clan_event));
+			clmsg.set_msg(cl_text("XEvent"), buffer);
 			return clmsg;			
 		}
 	}
@@ -153,7 +156,8 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::peek_message(bool block)
 	if (has_clan_event_peeked)
 	{
 		CL_DisplayWindowMessage clmsg;
-		clmsg.set_x11_params(clan_event_peeked);
+		CL_DataBuffer buffer(&clan_event_peeked, sizeof(clan_event_peeked));
+		clmsg.set_msg(cl_text("XEvent"), buffer);
 		return clmsg;			
 	}
 
@@ -161,7 +165,7 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::peek_message(bool block)
 		wait(0, 0, -1, false);
 
 
-	CL_XEvent clan_event;
+	XEvent clan_event;
 
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
 	std::vector<CL_X11Window *>::size_type index, size;
@@ -174,7 +178,8 @@ CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::peek_message(bool block)
 			has_clan_event_peeked = true;
 
 			CL_DisplayWindowMessage clmsg;
-			clmsg.set_x11_params(clan_event);
+			CL_DataBuffer buffer(&clan_event, sizeof(clan_event));
+			clmsg.set_msg(cl_text("XEvent"), buffer);
 			return clmsg;			
 		}
 	}

@@ -71,9 +71,10 @@ void CL_TimerProvider_X11::start(unsigned int timeout, bool repeat)
 
 	repeat_flag = repeat;
 	timeout_value = timeout;
-
+	start_time = CL_System::get_time();
 	if (window)
 	{
+		
 		window->set_timer(this);
 		running = true;
 	}else
@@ -93,6 +94,38 @@ void CL_TimerProvider_X11::stop()
 		running = false;
 	}
 }
+
+void CL_TimerProvider_X11::process_timer(unsigned int current_time)
+{
+	unsigned int time_diff = current_time - start_time;
+	// Check to handle integer overflow
+	// If int ranges from 0 to 255 (for simplicity)
+	// Start = 3.  Current = 250.  Diff = Current - Start = 247
+	// Start = 100.  Current = 20. Diff = Current - Start = -80. For unsigned int: (-80) & 0xff = 176
+
+	// Note, it is possible that func_expired deletes itself
+
+	if (time_diff >=timeout_value)
+	{
+		start_time += timeout_value;
+		if (!repeat_flag)
+		{
+			stop();
+		}
+		if (!(func_expired.is_null()))
+		{
+			func_expired.invoke();
+		}
+	}
+}
+
+bool CL_TimerProvider_X11::check_timer(unsigned int current_time)
+{
+	unsigned int time_diff = current_time - start_time;
+	if (time_diff >= timeout_value) return true;
+	return false;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_TimerProvider_X11 Implementation:

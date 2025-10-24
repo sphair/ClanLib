@@ -76,28 +76,28 @@ void CL_Image_Impl::calc_hotspot()
 			translated_hotspot = CL_Point(translation_hotspot.x, translation_hotspot.y);
 			break;
 		case origin_top_center:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() / 2, translation_hotspot.y);
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y);
 			break;
 		case origin_top_right:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width(), translation_hotspot.y);
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y);
 			break;
 		case origin_center_left:
-			translated_hotspot = CL_Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() / 2);
+			translated_hotspot = CL_Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
 			break;
 		case origin_center:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() / 2, translation_hotspot.y - texture_rect.get_height() / 2);
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
 			break;
 		case origin_center_right:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width(), translation_hotspot.y - texture_rect.get_height() / 2);
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y / 2);
 			break;
 		case origin_bottom_left:
-			translated_hotspot = CL_Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height());
+			translated_hotspot = CL_Point(translation_hotspot.x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 		case origin_bottom_center:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() / 2, translation_hotspot.y - texture_rect.get_height());
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x / 2, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 		case origin_bottom_right:
-			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width(), translation_hotspot.y - texture_rect.get_height());
+			translated_hotspot = CL_Point(translation_hotspot.x - texture_rect.get_width() * scale_x, translation_hotspot.y - texture_rect.get_height() * scale_y);
 			break;
 	}
 }
@@ -109,28 +109,28 @@ CL_Image::CL_Image()
 {
 }
 
-CL_Image::CL_Image(CL_GraphicContext gc, CL_Texture texture, CL_Rect rect)
+CL_Image::CL_Image(CL_GraphicContext &gc, CL_Texture texture, CL_Rect rect)
 : impl(new CL_Image_Impl(gc))
 {
 	impl->texture = texture;
 	impl->texture_rect = rect;
 }
 
-CL_Image::CL_Image(CL_GraphicContext gc, CL_Subtexture &sub_texture)
+CL_Image::CL_Image(CL_GraphicContext &gc, CL_Subtexture &sub_texture)
 : impl(new CL_Image_Impl(gc))
 {
 	impl->texture = sub_texture.get_texture();
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
-CL_Image::CL_Image(CL_GraphicContext gc, const CL_StringRef &filename, CL_VirtualDirectory dir)
+CL_Image::CL_Image(CL_GraphicContext &gc, const CL_StringRef &filename, CL_VirtualDirectory dir)
 : impl(new CL_Image_Impl(gc))
 {
 	impl->texture = CL_SharedGCData::load_texture(gc, filename, dir);
 	impl->texture_rect = impl->texture.get_size();
 }
 
-CL_Image::CL_Image(CL_GraphicContext gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
+CL_Image::CL_Image(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources)
 : impl(new CL_Image_Impl(gc))
 {
 	CL_Resource resource = resources->get_resource(resource_id);
@@ -274,16 +274,17 @@ CL_Size CL_Image::get_size() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_Image Operations:
 
-void CL_Image::draw(CL_GraphicContext gc, float x, float y)
+void CL_Image::draw(CL_GraphicContext &gc, float x, float y)
 {
-	CL_Rectf dest(	x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
-				CL_Sizef(impl->texture_rect.get_width() * impl->scale_x, impl->texture_rect.get_height() * impl->scale_y));
+	CL_Rectf dest(
+		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
+		CL_Sizef(impl->texture_rect.get_width() * impl->scale_x, impl->texture_rect.get_height() * impl->scale_y));
 
 	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
 	batcher->draw_image(gc, impl->texture_rect, dest, impl->color, impl->texture);
 }
 
-void CL_Image::draw(CL_GraphicContext gc, const CL_Rectf &src, const CL_Rectf &dest)
+void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest)
 {
 	CL_Rectf new_src = src;
 	new_src.translate( impl->texture_rect.left, impl->texture_rect.top );
@@ -295,7 +296,7 @@ void CL_Image::draw(CL_GraphicContext gc, const CL_Rectf &src, const CL_Rectf &d
 	batcher->draw_image(gc, new_src, new_dest, impl->color, impl->texture);
 }
 
-void CL_Image::draw(CL_GraphicContext gc, const CL_Rectf &dest)
+void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 {
 	CL_Rectf new_dest = dest;
 	new_dest.translate(impl->translated_hotspot);
@@ -308,6 +309,7 @@ void CL_Image::set_scale(float x, float y)
 {
 	impl->scale_x = x;
 	impl->scale_y = y;
+	impl->calc_hotspot();
 }
 
 void CL_Image::set_alpha(float alpha)

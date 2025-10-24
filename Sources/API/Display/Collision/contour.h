@@ -62,7 +62,7 @@ class CL_Contour
 /// \{
 public:
 	/// \brief Construct a contour
-	CL_Contour() : impl(new CL_Contour_Impl()){};
+	CL_Contour() : impl(new CL_Contour_Impl()) {};
 	~CL_Contour() {};
 
 /// \}

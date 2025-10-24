@@ -196,11 +196,82 @@ void CL_GUIManager::set_tablet_proximity_component(CL_GUIComponent *comp, bool s
 	}
 }
 
+void CL_GUIManager::process_messages(CL_AcceleratorTable &accel_table)
+{
+	while (wait(0))
+	{
+		// Note, peek message is required, as CL_DisplayMessageQueue::wait() may say there is input that get_message() does not use
+		CL_GUIMessage message = peek_message(0);
+		if (!message.is_null())
+		{
+			message = get_message();
+
+			dispatch_message(message);
+
+			if (!message.is_consumed())
+				accel_table.process_message(message);
+
+			if (!message.is_consumed())
+				process_standard_gui_keys(message);
+		}
+	}
+
+	get_window_manager()->setup_painting();
+	impl->invalidate_constant_repaint_components();
+	get_window_manager()->update();
+	get_window_manager()->complete_painting();
+}
+
+bool CL_GUIManager::wait(int timeout)
+{
+	if (impl->is_constant_repaint_enabled())
+		timeout = 0;
+
+	std::vector<CL_KeepAliveObject *> objects = CL_KeepAlive::get_objects();
+	std::vector<CL_Event> events;
+	for (std::vector<CL_KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
+	{
+		events.push_back(objects[i]->get_wakeup_event());
+	}
+
+	// Process all display queue messages at once
+	int wakeup_reason;
+	do
+	{
+		wakeup_reason = CL_DisplayMessageQueue::wait(events, timeout);
+
+		// After the first event, we want to clear the timeout, so that the next call to CL_DisplayMessageQueue::wait() does not wait forever
+		timeout = 0; // To do: strictly speaking it should not be set to 0, but to the delta time between the wake up and initial wait request
+
+		if (wakeup_reason >= 0)
+		{
+			objects[wakeup_reason]->process();
+		}
+		else if (wakeup_reason == -2)
+		{
+			return true;
+		}
+	} while(wakeup_reason != -1);
+
+	return false;
+}
+
+void CL_GUIManager::process_messages()
+{
+	CL_AcceleratorTable table;
+	process_messages(table);
+}
+
+int CL_GUIManager::exec(bool loop_until_complete)
+{
+	CL_AcceleratorTable table;
+	return exec(table, loop_until_complete);
+}
 
 int CL_GUIManager::exec(CL_AcceleratorTable &accel_table, bool loop_until_complete)
 {
 	if (!impl->func_exec_handler.is_null())
-	return impl->func_exec_handler.invoke(accel_table, loop_until_complete);
+		return impl->func_exec_handler.invoke(accel_table, loop_until_complete);
 
 	while (!impl->exit_flag)
 	{
@@ -212,58 +283,8 @@ int CL_GUIManager::exec(CL_AcceleratorTable &accel_table, bool loop_until_comple
 				impl->func_exec_handler.invoke(accel_table, loop_until_complete);
 		}
 
-		int timeout = -1;
-		if (impl->is_constant_repaint_enabled() || !loop_until_complete)
-			timeout = 0;
-
-		std::vector<CL_KeepAliveObject *> objects = CL_KeepAlive::get_objects();
-		std::vector<CL_Event> events;
-		for (std::vector<CL_KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
-		{
-			events.push_back(objects[i]->get_wakeup_event());
-		}
-
-		// Process all display queue messages at once
-		int wakeup_reason;
-		do
-		{
-			wakeup_reason = CL_DisplayMessageQueue::wait(events, timeout);
-
-			// After the first event, we want to clear the timeout, so that the next call to CL_DisplayMessageQueue::wait() does not wait forever
-			// This is because we need to break out of this loop, and check the CL_KeepAlive objects and GUI repainting
-			timeout = 0;
-
-			if (wakeup_reason >= 0)
-			{
-				objects[wakeup_reason]->process();
-			}
-			else if (wakeup_reason == -2)
-			{
-				// Note, peek message is required, as CL_DisplayMessageQueue::wait() may say there is input that get_message() does not use
-				CL_GUIMessage message = peek_message(0);
-				if (!message.is_null())
-				{
-					CL_GUIMessage message = get_message();
-
-					dispatch_message(message);
-	
-					if (!message.is_consumed())
-						accel_table.process_message(message);
-	
-					if (!message.is_consumed())
-						process_standard_gui_keys(message);
-				}
-				else
-				{
-					break;
-				}
-			}
-		}while(wakeup_reason != -1);
-
-		get_window_manager()->setup_painting();
-		impl->invalidate_constant_repaint_components();
-		get_window_manager()->update();
-		get_window_manager()->complete_painting();
+		wait(loop_until_complete ? -1 : 0);
+		process_messages(accel_table);
 
 		// The user wants the exits now
 		if (!loop_until_complete)

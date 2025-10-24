@@ -29,11 +29,7 @@ void Client::exec()
 
 	while (!quit)
 	{
-		// Wait till we receive any network events
-		int wakeup_reason = CL_Event::wait(network_client.get_event_arrived());
-		if (wakeup_reason <= 0)
-			break;
-
+		CL_Event::wait(network_client.get_event_arrived());
 		network_client.process_events();
 	}
 }

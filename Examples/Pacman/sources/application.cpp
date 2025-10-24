@@ -30,7 +30,6 @@
 #include "precomp.h"
 #include "application.h"
 #include "world.h"
-#include <ClanLib/gdi.h>
 
 // This is the Program class that is called by CL_ClanApplication
 class Program

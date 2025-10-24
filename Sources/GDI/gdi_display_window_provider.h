@@ -139,6 +139,8 @@ public:
 
 	void invalidate_rect(const CL_Rect &rect);
 
+	CL_TimerProvider *alloc_timer(CL_DisplayWindow &disp_window);
+
 /// \}
 /// \name Implementation
 /// \{
@@ -156,6 +158,11 @@ private:
 #endif
 	CL_DisplayWindowSite *site;
 	CL_GraphicContext gc;
+
+	bool flip_timer_set;
+	unsigned int flip_last_time;
+	int refresh_rate;
+
 /// \}
 };
 

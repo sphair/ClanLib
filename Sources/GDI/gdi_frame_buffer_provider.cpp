@@ -103,6 +103,7 @@ void CL_GDIFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_R
 		colorbuffer0_type = type_render;
 		colorbuffer0_render = render_buffer;
 		colorbuffer0_texture = CL_Texture();
+		sig_changed_event.invoke();
 	}
 }
 
@@ -113,6 +114,7 @@ void CL_GDIFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 		colorbuffer0_type = type_texture;
 		colorbuffer0_render = CL_RenderBuffer();
 		colorbuffer0_texture = texture;
+		sig_changed_event.invoke();
 	}
 }
 
@@ -123,6 +125,7 @@ void CL_GDIFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 		colorbuffer0_type = type_texture;
 		colorbuffer0_render = CL_RenderBuffer();
 		colorbuffer0_texture = texture;
+		sig_changed_event.invoke();
 	}
 }
 
@@ -133,6 +136,7 @@ void CL_GDIFrameBufferProvider::detach_color_buffer(int color_buffer, const CL_T
 		colorbuffer0_type = type_none;
 		colorbuffer0_render = CL_RenderBuffer();
 		colorbuffer0_texture = CL_Texture();
+		sig_changed_event.invoke();
 	}
 }
 

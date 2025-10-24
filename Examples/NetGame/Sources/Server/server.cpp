@@ -30,10 +30,7 @@ void Server::exec()
 	while (true)
 	{
 		// Wait till we receive any network events
-		int wakeup_reason = CL_Event::wait(network_server.get_event_arrived());
-		if (wakeup_reason <= 0)
-			break;
-
+		CL_Event::wait(network_server.get_event_arrived());
 		network_server.process_events();
 	}
 

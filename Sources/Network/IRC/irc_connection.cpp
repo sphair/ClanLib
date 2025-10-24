@@ -96,11 +96,6 @@ CL_IRCConnection &CL_IRCConnection::operator =(const CL_IRCConnection &copy)
 	return *this;
 }
 
-void CL_IRCConnection::process_data()
-{
-	impl->process_data();
-}
-
 void CL_IRCConnection::send_command(const CL_String8 &prefix, const CL_String8 &command, const std::vector<CL_String8> &params)
 {
 	CL_String8 line;

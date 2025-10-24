@@ -31,6 +31,8 @@
 #include "pixel_pipeline.h"
 #include "software_fragment_shader.h"
 #include "draw_image.h"
+#include "gdi_frame_buffer_provider.h"
+
 
 #define alpha_component(a) (((a)&0xff000000)>>24)
 #define red_component(a) (((a)&0x00ff0000)>>16)
@@ -44,7 +46,7 @@ CL_PixelPipeline::CL_PixelPipeline(const CL_Size &size)
   framebuffer_set(false), cliprect_set(false), current_writer_fragment(-1),
   write_pos(0), active_cores(1)
 {
-	int num_cores = get_num_cores();
+	int num_cores = CL_System::get_num_cores();
 	active_cores = num_cores;
 	fragment_buffer.set_num_readers(num_cores);
 	if (active_cores > 1)
@@ -73,26 +75,6 @@ CL_PixelPipeline::~CL_PixelPipeline()
 	for (std::vector<CL_Thread>::size_type i = 0; i < worker_threads.size(); i++)
 		worker_threads[i].join();
 }
-
-#ifdef WIN32
-int CL_PixelPipeline::get_num_cores()
-{
-	SYSTEM_INFO system_info;
-	memset(&system_info, 0, sizeof(SYSTEM_INFO));
-	GetSystemInfo(&system_info);
-	return system_info.dwNumberOfProcessors;
-}
-#else
-int CL_PixelPipeline::get_num_cores()
-{
-	long cpus =  1;
-#ifndef __APPLE__
-	cpus = sysconf(_SC_NPROCESSORS_ONLN);
-#endif
-	
-	return (cpus < 1)? 1 : static_cast<int>(cpus);
-}
-#endif
 
 void CL_PixelPipeline::set_modelview(const CL_Mat4f &new_modelview)
 {
@@ -133,10 +115,34 @@ void CL_PixelPipeline::resize(const CL_Size &size)
 	}
 }
 
-void CL_PixelPipeline::set_framebuffer(const CL_PixelBuffer &new_colorbuffer0)
+void CL_PixelPipeline::set_framebuffer(const CL_FrameBuffer &buffer)
 {
 	wait_for_workers();
-	colorbuffer0.set(new_colorbuffer0);
+
+	CL_GDIFrameBufferProvider *gdi_framebuffer = dynamic_cast<CL_GDIFrameBufferProvider *>(buffer.get_provider());
+	if (!gdi_framebuffer)
+	{
+		throw CL_Exception(cl_text("Invalid FrameBuffer"));
+	}
+
+	framebuffer_set = true;
+	framebuffer = buffer;
+
+	slot_framebuffer_modified = gdi_framebuffer->get_sig_changed_event().connect(this, &CL_PixelPipeline::modified_framebuffer);
+
+	colorbuffer0.set(gdi_framebuffer->get_colorbuffer0());
+	CL_Rect rect = clip_rect;
+	clip_rect = (CL_Point(0,0),colorbuffer0.size);
+	if (cliprect_set)
+		set_clip_rect(rect);
+}
+
+void CL_PixelPipeline::modified_framebuffer()
+{
+	wait_for_workers();
+	CL_GDIFrameBufferProvider *gdi_framebuffer = dynamic_cast<CL_GDIFrameBufferProvider *>(framebuffer.get_provider());
+
+	colorbuffer0.set(gdi_framebuffer->get_colorbuffer0());
 	CL_Rect rect = clip_rect;
 	clip_rect = (CL_Point(0,0),colorbuffer0.size);
 	if (cliprect_set)
@@ -146,7 +152,13 @@ void CL_PixelPipeline::set_framebuffer(const CL_PixelBuffer &new_colorbuffer0)
 void CL_PixelPipeline::reset_framebuffer()
 {
 	wait_for_workers();
+
+	framebuffer_set = false;
+	slot_framebuffer_modified = CL_Slot();
 	colorbuffer0.set(primary_colorbuffer0);
+
+	framebuffer = CL_FrameBuffer();
+
 	CL_Rect rect = clip_rect;
 	clip_rect = (CL_Point(0,0),colorbuffer0.size);
 	if (cliprect_set)

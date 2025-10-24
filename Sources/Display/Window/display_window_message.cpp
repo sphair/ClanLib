@@ -30,25 +30,11 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Window/display_window_message.h"
+#include "API/Core/System/databuffer.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMessage_Impl class:
 
-#ifdef WIN32
-class CL_DisplayWindowMessage_Impl
-{
-public:
-	CL_DisplayWindowMessage_Impl()
-	: null(false)
-	{
-		memset(&msg, 0, sizeof(MSG));
-	}
-
-public:
-	MSG msg;
-	bool null;
-};
-#else
 class CL_DisplayWindowMessage_Impl
 {
 public:
@@ -58,10 +44,11 @@ public:
 	}
 
 public:
-	CL_XEvent msg;
+	CL_DataBuffer msg_databuffer;
+	CL_String msg_name;
 	bool null;
 };
-#endif
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMessage construction:
@@ -85,18 +72,18 @@ CL_DisplayWindowMessage CL_DisplayWindowMessage::null()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMessage attributes:
 
-#ifdef WIN32
-MSG CL_DisplayWindowMessage::get_msg() const
+CL_DataBuffer CL_DisplayWindowMessage::get_msg(const CL_StringRef &name) const
 {
-	return impl->msg;
+	if (impl->null)
+	{
+		return CL_DataBuffer(0);
+	}
+	if (name == impl->msg_name)
+	{
+		return impl->msg_databuffer;
+	}
+	return CL_DataBuffer(0);
 }
-
-#else
-CL_XEvent CL_DisplayWindowMessage::get_msg() const
-{
-	return impl->msg;
-}
-#endif
 
 bool CL_DisplayWindowMessage::is_null() const
 {
@@ -106,18 +93,12 @@ bool CL_DisplayWindowMessage::is_null() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMessage operations:
 
-#ifdef WIN32
-
-void CL_DisplayWindowMessage::set_win32_params(const MSG &msg)
+void CL_DisplayWindowMessage::set_msg(const CL_StringRef &name, CL_DataBuffer databuffer)
 {
-	impl->msg = msg;
+	impl->null = false;
+	impl->msg_name = name;
+	impl->msg_databuffer = databuffer;
 }
-#else
-void CL_DisplayWindowMessage::set_x11_params(const CL_XEvent &src_event)
-{
-	impl->msg = src_event;
-}
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayWindowMessage implementation:

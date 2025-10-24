@@ -55,6 +55,8 @@ public:
 
 	CL_PixelBuffer get_colorbuffer0() const;
 
+	CL_Signal_v0 &get_sig_changed_event() {return sig_changed_event;}
+
 /// \}
 /// \name Operations
 /// \{
@@ -79,6 +81,7 @@ private:
 	Type colorbuffer0_type;
 	CL_RenderBuffer colorbuffer0_render;
 	CL_Texture colorbuffer0_texture;
+	CL_Signal_v0 sig_changed_event;
 /// \}
 };
 

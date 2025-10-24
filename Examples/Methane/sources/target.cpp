@@ -18,6 +18,15 @@
 #include "target.h"
 
 #include "doc.h"
+
+#ifdef USE_GDI
+#define SOFTWARE_RENDERER 1
+#endif
+
+#ifdef USE_SDL
+#define SOFTWARE_RENDERER 1
+#endif
+
 //------------------------------------------------------------------------------
 // The game target (Yuck global!)
 // Thus - Only a single GameTarget is allowed
@@ -136,7 +145,7 @@ void CGameTarget::InitGame()
 	m_MOD_tune2 = CL_SoundBuffer("resources/tune2.mod");
 #endif // ENABLE_SOUND
 
-#ifndef USE_GDI
+#ifndef SOFTWARE_RENDERER
 	m_Shader_DrawWhite = CL_ProgramObject::load_and_link( gc, "shaders/white_vertex.glsl", "shaders/white_fragment.glsl", vdir);
 	m_Shader_DrawWhite.bind_attribute_location(0, "in_position");
 	m_Shader_DrawWhite.bind_attribute_location(1, "in_texcorrd");
@@ -412,7 +421,7 @@ void CGameTarget::Draw(int dest_xpos, int dest_ypos, int width, int height, int 
 
 	CL_Rectf source = CL_Rectf(texture_xpos, texture_ypos, (texture_xpos+width), (texture_ypos+height));
 
-#ifndef USE_GDI
+#ifndef SOFTWARE_RENDERER
 	gc.set_texture(0, m_Texture[texture_number]);
 
 	if (draw_white)

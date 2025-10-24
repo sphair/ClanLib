@@ -69,14 +69,13 @@ public:
 
 	void stop();
 
-/// \}
-/// \name Events
-/// \{
+	/// \brief Called by the window to process the timer
+	void process_timer(unsigned int current_time);
 
-public:
-	CL_Callback_v0 func_expired;
-
+	/// \brief Called by the window to check to see if a timer event will occur
+	bool check_timer(unsigned int current_time);
 /// \}
+
 /// \name Implementation
 /// \{
 
@@ -85,9 +84,11 @@ private:
 
 	unsigned int timer_handle;
 	bool repeat_flag;
-	int timeout_value;
+	unsigned int timeout_value;
 	bool running;
 
 	CL_DisplayWindowProvider *window;
+
+	unsigned int start_time;	// The start time
 /// \}
 };

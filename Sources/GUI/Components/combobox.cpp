@@ -255,7 +255,9 @@ void CL_ComboBox_Impl::create_components()
 	lineedit = new CL_LineEdit(component);
 	btn_arrow = new CL_PushButton(component);
 
-	CL_Image icon(component->get_gc(), cl_text("ComboBoxDownArrow"), &component->get_resources());
+	CL_GraphicContext gc = component->get_gc();
+	CL_ResourceManager resources = component->get_resources();
+	CL_Image icon(gc, cl_text("ComboBoxDownArrow"), &resources);
 
 	btn_arrow->set_icon(icon);
 	btn_arrow->func_clicked().set(this, &CL_ComboBox_Impl::on_btn_arrow_clicked);

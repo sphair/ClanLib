@@ -51,12 +51,12 @@ CL_Timer_Impl::~CL_Timer_Impl()
 
 CL_Timer_Impl::CL_Timer_Impl(CL_DisplayWindow &window) : provider(0)
 {
-#ifdef WIN32
-	provider = new CL_TimerProvider_Win32(window);
-#else
-	provider = new CL_TimerProvider_X11(window);
-#endif
-
+	CL_DisplayWindowProvider *window_provider = window.get_provider();
+	if (!window_provider)
+	{
+		throw CL_Exception(cl_text("Window provider is now valid"));
+	}
+	provider = window_provider->alloc_timer(window);
 }
 
 CL_Timer_Impl::CL_Timer_Impl(CL_TimerProvider *provider) : provider(provider)

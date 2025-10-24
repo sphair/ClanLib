@@ -14,7 +14,7 @@ Linux - OpenGL
 
 Linux - GDI (software renderer)
   make clean
-  make basic2d_gdi
-  ./basic2d_gdi
+  make gdi
+  ./basic2d
 
 

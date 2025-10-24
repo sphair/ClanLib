@@ -50,15 +50,14 @@
 #include "input_device_provider_linuxjoystick.h"
 #endif
 #include "display_message_queue_x11.h"
+#include "timer_provider_x11.h"
 #include <X11/Xatom.h>
 
 CL_X11Window::CL_X11Window(CL_DisplayMessageQueue_X11 *message_queue)
 : window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), message_queue(message_queue), fullscreen(false),
-  mouse_pos(-1,-1), disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
-  keyboard(0), mouse(0), site(0), ignore_focus_events(false),
-  ctrl_down(false), shift_down(false), alt_down(false), atom_CLIPBOARD(None), clipboard_available(false)
+  disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
+  keyboard(0), mouse(0), site(0), ignore_focus_events(false), clipboard(this)
 {
-
 	keyboard = new CL_InputDeviceProvider_X11Keyboard(this);
 	mouse = new CL_InputDeviceProvider_X11Mouse(this);
 	message_queue->add_client(this);
@@ -103,7 +102,7 @@ CL_Rect CL_X11Window::get_viewport() const
 	unsigned int width, height;
 	unsigned int temp, border_width;
 	XGetGeometry(disp, window, &new_window, &x, &y, &width, &height, &border_width, &temp);
-	return CL_Rect(x, y, x + width, y + height);
+	return CL_Rect(0, 0, width, height);
 }
 
 
@@ -458,30 +457,30 @@ CL_Rect CL_X11Window::get_screen_position() const
 
 void CL_X11Window::set_timer(CL_TimerProvider *timer)
 {
-
 	kill_timer(timer);
+	CL_TimerProvider_X11 *xtimer = dynamic_cast<CL_TimerProvider_X11*>(timer);
+	if (!xtimer)
+		throw CL_Exception(cl_text("Unsupported timer"));
 
-	CL_XTimer new_timer;
-	new_timer.timer = timer;
-	new_timer.start_time = CL_System::get_time();
-	timer_list.push_back(new_timer);
-
+	timer_list.push_back(xtimer);
 }
 
 void CL_X11Window::kill_timer(CL_TimerProvider *timer)
 {
+	CL_TimerProvider_X11 *xtimer = dynamic_cast<CL_TimerProvider_X11*>(timer);
+	if (!xtimer)
+		throw CL_Exception(cl_text("Unsupported timer"));
 
-	std::list<CL_XTimer>::iterator it;
+	std::list<CL_TimerProvider_X11 *>::iterator it;
 	// Find existing timer
 	for (it = timer_list.begin(); it != timer_list.end(); ++it)
 	{
-		if (it->timer == timer)
+		if (*it == xtimer)
 		{
 			timer_list.erase(it);
 			break;
 		}
 	}
-
 }
 
 void CL_X11Window::close_window()
@@ -522,15 +521,14 @@ void CL_X11Window::close_window()
 
 	if (focus && window_last_focus)
 	{
-		XSetInputFocus(disp, window_last_focus, window_last_revert_return, CurrentTime);
+//TODO: How to return the focus to the previous window - Checking that it is still valid ?
+//		XSetInputFocus(disp, window_last_focus, window_last_revert_return, CurrentTime);
 	}
 }
 
 void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const CL_DisplayWindowDescription &desc)
 {
 	close_window();	// Close the window if already opened (maybe it should be modified instead of recreated?)
-
-	clipboard_available = false;
 
 	current_screen = visual->screen;
 
@@ -586,12 +584,12 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	{
 		if (!client_area)
 		{
+
 			// The API for desc.get_size() includes the window frame, but X11 expects it excluded
 			win_width += frame_size.left;
 			win_height += frame_size.top;
 		}
 	}
-
 
 	if (client_area)
 	{
@@ -653,6 +651,11 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	window = XCreateWindow(disp, parent,
 		win_x, win_y, win_width, win_height, 0,  visual->depth,
 		InputOutput,  visual->visual, CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
+
+	if (window == 0)
+		throw CL_Exception(cl_text("Unable to create the X11 window"));
+
+	clipboard.setup();
 
 	// set title of window:
 	set_title(desc.get_title());
@@ -771,123 +774,7 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	else
 		restore_videomode();
 
-	atom_CLIPBOARD = XInternAtom(disp, "CLIPBOARD", False);
 }
-
-
-void CL_X11Window::received_keyboard_input(XKeyEvent &event)
-{
-	// Is message a down or up event?
-	bool keydown;
-	if (event.type == KeyPress)
-	{
-		keydown = true;
-	}else	keydown = false;
-
-
-	KeyCode key_code = event.keycode;
-
-	// Prepare event to be emitted:
-	CL_InputEvent key;
-	if (keydown)
-		key.type = CL_InputEvent::pressed;
-	else
-		key.type = CL_InputEvent::released;
-	key.mouse_pos = mouse_pos;
-	key.repeat_count = 0;	// X11 automatically handles keyboard repeats
-
-	KeySym key_symbol = XKeycodeToKeysym(disp, key_code, 0);
-
-	switch (key_symbol)
-	{
-		case XK_Control_L:
-		case XK_Control_R:
-			ctrl_down = keydown;
-			break;
-		case XK_Shift_L:
-		case XK_Shift_R:
-			shift_down = keydown;
-			break;
-		case XK_Alt_L:
-		case XK_Alt_R:
-			alt_down = keydown;
-			break;
-	}
-
-	key.id = key_symbol;
-
-	key.shift = shift_down;
-	key.alt = alt_down;
-	key.ctrl = ctrl_down;
-
-	const int buff_size = 16;
-	char buff[buff_size];
-	int result = XLookupString(&event, buff, buff_size - 1, NULL, NULL);
-	if (result < 0) result = 0;
-	if (result > (buff_size-1)) result = buff_size - 1;
-	buff[result] = 0;
-
-	key.str = CL_StringHelp::local8_to_text(CL_String8(buff, result));
-
-	// Emit message:
-	keyboard->sig_provider_event->invoke(key);
-}
-
-void CL_X11Window::received_mouse_input(XButtonEvent &event)
-{
-
-	int id;
-
-	switch(event.button)
-	{
-		case 1: id = CL_MOUSE_LEFT; break;	// Left
-		case 3: id = CL_MOUSE_RIGHT; break;	// Right
-		case 2: id = CL_MOUSE_MIDDLE; break;	// Middle
-		case 4: id = CL_MOUSE_WHEEL_UP; break;	// Scroll up
-		case 5: id = CL_MOUSE_WHEEL_DOWN; break;	// Scroll down
-		case 6: id = CL_MOUSE_XBUTTON1; break;
-		case 7: id = CL_MOUSE_XBUTTON2; break;
-		default: return;	// Unknown press
-	}
-	mouse_pos.x = event.x;
-	mouse_pos.y = event.y;
-
-	// Prepare event to be emitted:
-	CL_InputEvent key;
-	key.mouse_pos = mouse_pos;
-	key.id = id;
-	if (event.type == ButtonPress)
-		key.type = CL_InputEvent::pressed;
-	else	key.type = CL_InputEvent::released;
-
-	// Emit message:
-	mouse->sig_provider_event->invoke(key);
-}
-
-void CL_X11Window::received_mouse_move(XMotionEvent &event)
-{
-	// Fetch coordinates
-	int x = event.x;
-	int y = event.y;
-
-	if(mouse_pos.x != x || mouse_pos.y != y)
-	{
-		mouse_pos.x = x;
-		mouse_pos.y = y;
-
-		// Prepare event to be emitted:
-		CL_InputEvent key;
-		key.type = CL_InputEvent::pointer_moved;
-		key.mouse_pos = mouse_pos;
-		key.alt = alt_down;
-		key.shift = shift_down;
-		key.ctrl = ctrl_down;
-
-		// Fire off signal
-		mouse->sig_provider_event->invoke(key);
-	}
-}
-
 
 void CL_X11Window::process_timer_events()
 {
@@ -895,64 +782,36 @@ void CL_X11Window::process_timer_events()
 	if (timer_list.empty()) return;
 
 	unsigned int current_time = CL_System::get_time();
-	std::list<CL_XTimer>::iterator it;
+	std::list<CL_TimerProvider_X11 *>::iterator it;
 
 	// Find existing timer
-	it = timer_list.begin();
-	for (; it != timer_list.end();)
+	for (it = timer_list.begin(); it != timer_list.end();)
 	{
-		CL_XTimer *xptr = &(*it);
+		CL_TimerProvider_X11 *xptr = *it;
 		++it;	// Advance iterator now, as the current one may be destroyed
 
-		CL_TimerProvider *timer = xptr->timer;
-
-		unsigned int time_diff = current_time - xptr->start_time;
-		unsigned int timeout = timer->get_timeout();
-
-		// Check to handle integer overflow
-		// If int ranges from 0 to 255 (for simplicity)
-		// Start = 3.  Current = 250.  Diff = Current - Start = 247
-		// Start = 100.  Current = 20. Diff = Current - Start = -80. For unsigned int: (-80) & 0xff = 176
-
-		// Note, it is possible that timer.func_expired deletes itself
-
-		if (time_diff >=timeout)
-		{
-			xptr->start_time += timeout;
-
-			if (!timer->is_repeating())
-			{
-				timer->stop();
-			}
-
-			if (!timer->func_expired.is_null())
-			{
-				timer->func_expired.invoke();
-			}
-		}
+		xptr->process_timer(current_time);
 	}
-
 }
 
 // Returns: true is a timer event would occur
 bool CL_X11Window::check_timers(void)
 {
-
 	if (timer_list.empty()) return false;
 
 	unsigned int current_time = CL_System::get_time();
-	std::list<CL_XTimer>::iterator it;
+	std::list<CL_TimerProvider_X11 *>::iterator it;
 	// Find existing timer
 	for (it = timer_list.begin(); it != timer_list.end(); ++it)
 	{
-		unsigned int time_diff = current_time - it->start_time;
-		if (time_diff >= it->timer->get_timeout()) return true;
+		if ((*it)->check_timer(current_time))
+			return true;
 	}
 
 	return false;
 }
 
-bool CL_X11Window::get_message(CL_XEvent &clan_event)
+bool CL_X11Window::get_message(XEvent &clan_event)
 {
 	XEvent event;
 	CL_Rect *rect;
@@ -1043,27 +902,26 @@ bool CL_X11Window::get_message(CL_XEvent &clan_event)
 				break;
 			case KeyRelease:
 			case KeyPress:
-				received_keyboard_input(event.xkey);
+				keyboard->received_keyboard_input(event.xkey);
 				break;
 			//case KeymapNotify:
 			//	break;
 			case ButtonPress:
 			case ButtonRelease:
-				received_mouse_input(event.xbutton);
+				mouse->received_mouse_input(event.xbutton);
 				break;
 			case MotionNotify:
-				received_mouse_move(event.xmotion);
+				mouse->received_mouse_move(event.xmotion);
 				break;
 
 			case SelectionClear:	// New clipboard selection owner
-				clipboard_available = false;
-				clipboard_current = CL_String();
+				clipboard.event_selection_clear(event.xselectionclear);
 				break;
 			case SelectionNotify:
-				// Data was sent to use (this is handled in get_clipboard_text() )
+				clipboard.event_selection_notify();
 				break;
 			case SelectionRequest:	// Clipboard requests
-				process_selection_request(event);
+				clipboard.event_selection_request(event.xselectionrequest);
 				break;
 
 			//case PropertyNotify:
@@ -1073,7 +931,7 @@ bool CL_X11Window::get_message(CL_XEvent &clan_event)
 			break;
 		}
 
-		clan_event.xevent = event;
+		clan_event = event;
 		clan_event_set = true;
 	}
 
@@ -1269,91 +1127,17 @@ void CL_X11Window::set_videomode(int width, int height, int bpp_local, int refre
 
 void CL_X11Window::set_clipboard_text(const CL_StringRef &text)
 {
-
-	// **** README ****
-	// The clipboard only works while the message queue is being processed as get_message() processes clipboard (selection) events
-
-	if ( ( atom_CLIPBOARD == None ) )
-	{
-		// X Server does not have clipboard support
-		return;
-	}
-	clipboard_current = text;
-	clipboard_available = true;
-
-	XSetSelectionOwner(disp, XA_PRIMARY, window, CurrentTime );
-	XSetSelectionOwner(disp, atom_CLIPBOARD, window, CurrentTime );
-}
-
-// Important: Use XFree() on the returned pointer (if not NULL)
-unsigned char *CL_X11Window::get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const
-{
-	unsigned long bytes_after;
-	int read_bytes = 1024;
-	unsigned char *read_data = NULL;
-	do
-	{
-		if(read_data != NULL)
-		{
-			XFree(read_data);
-		}
-		int result = XGetWindowProperty(disp, use_window, prop, 0, read_bytes, False, AnyPropertyType, actual_type_ptr, actual_format_ptr, number_items_ptr, &bytes_after, &read_data);
-		if (result != Success)
-		{
-			*number_items_ptr = 0;
-			*actual_format_ptr = 0;
-			*actual_type_ptr = None;
-			return NULL;
-		}
-		read_bytes += bytes_after;
-	}while(bytes_after != 0);
-	return read_data;
+	clipboard.set_clipboard_text(text);
 }
 
 CL_String CL_X11Window::get_clipboard_text() const
 {
-	if ( ( atom_CLIPBOARD == None ) )
-	{
-		// X Server does not have clipboard support
-		return CL_String();
-	}
-
-	XConvertSelection(disp, atom_CLIPBOARD, XA_STRING, atom_CLIPBOARD, window, CurrentTime);
-	XFlush(disp);
-
-	XEvent event;
-	if (!get_xevent( event, SelectionNotify, true ))
-	{
-		return CL_String();
-	}
-
-	Atom actual_type;
-	int actual_format;
-	unsigned long number_items;
-	unsigned char *read_data = get_property(window, atom_CLIPBOARD, &number_items, &actual_format, &actual_type);
-
-	if ( (actual_format != 8) || (actual_type != XA_STRING) || (number_items <=0) || (read_data==NULL) )
-	{
-		if (read_data)
-		{
-			XFree(read_data);
-		}
-		return CL_String();
-	}
-
-	CL_String buffer( (char *) read_data);
-	XFree(read_data);
-	return buffer;
+	return clipboard.get_clipboard_text();
 }
 
 bool CL_X11Window::is_clipboard_text_available() const
 {
-	if (get_clipboard_text().size() > 0)
-	{
-		return true;
-	}
-
-	return false;
+	return clipboard.is_clipboard_text_available();
 }
 
 void CL_X11Window::set_cursor(CL_CursorProvider_X11 *cursor)
@@ -1361,7 +1145,7 @@ void CL_X11Window::set_cursor(CL_CursorProvider_X11 *cursor)
 	//TODO:
 }
 
-CL_Rect CL_X11Window::frame_size;
+CL_Rect CL_X11Window::frame_size(0,0,0,0);
 bool CL_X11Window::frame_size_set = false;
 
 CL_Rect CL_X11Window::get_window_frame_size()
@@ -1370,7 +1154,7 @@ CL_Rect CL_X11Window::get_window_frame_size()
 	{
 		return frame_size;
 	}
-
+#ifdef FIXME_THIS_LOOKS_TERRIBLE
 	Display *d;
 	Window w;
 	d=XOpenDisplay(NULL);
@@ -1379,93 +1163,115 @@ CL_Rect CL_X11Window::get_window_frame_size()
 		throw CL_Exception(cl_text("Cannot open display"));
 	}
 	int s=DefaultScreen(d);
-	const int win_xpos = 0;
-	const int win_ypos = 0;
-	const int win_width = 50;
-	const int win_height = 50;
-	w=XCreateSimpleWindow(d, RootWindow(d, s), win_xpos, win_ypos, win_width, win_height, 0, BlackPixel(d, s), WhitePixel(d, s));
-	XSelectInput(d, w, 
-		ExposureMask |
-		KeyPressMask |
-		KeyReleaseMask |
-		ButtonPressMask |
-		ButtonReleaseMask |
-		StructureNotifyMask |
-		PropertyChangeMask |
-		PointerMotionMask |
-		EnterWindowMask |
-		LeaveWindowMask |
-		KeymapStateMask |
-		FocusChangeMask);
 
-	// setup size hints:
-	XSizeHints *size_hints = XAllocSizeHints();
-	if (size_hints)
+	// Try 2 attempts at different positions to ensure that an accurate reading is made
+	// FIXME: This looks terrible, the temporary window is shown!
+	for (int attempt_cnt = 0; attempt_cnt < 2; attempt_cnt++)
 	{
-		size_hints->x = win_xpos;
-		size_hints->y = win_ypos;
-		size_hints->width       = win_width;
-		size_hints->height      = win_height;
-		size_hints->base_width  = win_width;
-		size_hints->base_height = win_height;
-		size_hints->min_width   = win_width;
-		size_hints->min_height  = win_height;
-		size_hints->max_width   = win_width;
-		size_hints->max_height  = win_height;
-		size_hints->flags       = PSize|PBaseSize|PPosition;
-		XSetWMNormalHints(d, w, size_hints);
-		XFree(size_hints);
+		int win_xpos = 128 + attempt_cnt*32;
+		int win_ypos = 128 + attempt_cnt*32;
+		const int win_width = 128;
+		const int win_height = 128;
+		w=XCreateSimpleWindow(d, RootWindow(d, s), win_xpos, win_ypos, win_width, win_height, 0, BlackPixel(d, s), WhitePixel(d, s));	
+		XSelectInput(d, w,
+			ExposureMask |
+			KeyPressMask |
+			KeyReleaseMask |
+			ButtonPressMask |
+			ButtonReleaseMask |
+			StructureNotifyMask |
+			PropertyChangeMask |
+			PointerMotionMask |
+			EnterWindowMask |
+			LeaveWindowMask |
+			KeymapStateMask |
+			FocusChangeMask);
+
+		// setup size hints:
+		XSizeHints *size_hints = XAllocSizeHints();
+		if (size_hints)
+		{
+			size_hints->x = win_xpos;
+			size_hints->y = win_ypos;
+			size_hints->width       = win_width;
+			size_hints->height      = win_height;
+			size_hints->base_width  = win_width;
+			size_hints->base_height = win_height;
+			size_hints->min_width   = win_width;
+			size_hints->min_height  = win_height;
+			size_hints->max_width   = win_width;
+			size_hints->max_height  = win_height;
+			size_hints->flags       = PSize|PBaseSize|PPosition;
+			XSetWMNormalHints(d, w, size_hints);
+			XFree(size_hints);
+		}
+
+		XMapWindow(d, w);
+
+		// Wait for mapped
+		XEvent event;
+		do {
+			XMaskEvent(d, StructureNotifyMask, &event);
+		}while ( (event.type != MapNotify) || (event.xmap.event != w) );
+
+		int xpos;
+		int ypos;
+		unsigned int width;
+		unsigned int height;
+		Window *children_ptr;
+		unsigned int num_child;
+		Window temp_window;
+		XWindowAttributes attr;
+
+		XGetWindowAttributes(d, w, &attr);
+
+		xpos = attr.x;
+		ypos = attr.y;
+		width = attr.width;
+		height = attr.height;
+
+		// Search all parent windows .... there MUST be an easier may
+
+		Window current_window = w;
+		while(true)
+		{
+			children_ptr = NULL;
+			XQueryTree(d, current_window, &temp_window, &current_window, &children_ptr, &num_child);
+			if (children_ptr)
+				XFree(children_ptr);
+
+			if (!current_window) break;
+
+			XGetWindowAttributes(d, current_window, &attr);
+			xpos += attr.x;
+			ypos += attr.y;
+		}
+
+		XDestroyWindow(d, w);
+
+		xpos -= win_xpos;
+		ypos -= win_ypos;
+
+		if (attempt_cnt)
+		{
+			// Ensure the frame size is the same as different positions
+			if ((frame_size.left != -xpos) || (frame_size.top != -ypos))
+			{
+				// Set to a zero frame size
+				frame_size = CL_Rect(0, 0, 0, 0);
+				break;
+			}
+		}else
+		{
+			frame_size = CL_Rect(-xpos, -ypos, 0, 0);
+		}
+
 	}
 
-	XMapWindow(d, w);
-
-	// Wait for mapped
-	XEvent event;
-	do {
-		XMaskEvent(d, StructureNotifyMask, &event);
-	}while ( (event.type != MapNotify) || (event.xmap.event != w) );
-
-	int xpos;
-	int ypos;
-	unsigned int width;
-	unsigned int height;
-	Window *children_ptr;
-	unsigned int num_child;
-	Window temp_window;
-	XWindowAttributes attr;
-
-	XGetWindowAttributes(d, w, &attr);
-
-	xpos = attr.x;
-	ypos = attr.y;
-	width = attr.width;
-	height = attr.height;
-
-	// Search all parent windows .... there MUST be an easier may
-
-	Window current_window = w;
-	while(true)
-	{
-		children_ptr = NULL;
-		XQueryTree(d, current_window, &temp_window, &current_window, &children_ptr, &num_child);
-		if (children_ptr)
-			XFree(children_ptr);
-
-		if (!current_window) break;
-
-		XGetWindowAttributes(d, current_window, &attr);
-		xpos += attr.x;
-		ypos += attr.y;
-	}
-
-	XDestroyWindow(d, w);
 	XCloseDisplay(d);
-
-	xpos -= win_xpos;
-	ypos -= win_ypos;
-
-	frame_size = CL_Rect(-xpos, -ypos, 0, 0);
+#endif
 	frame_size_set = true;
+
 	return frame_size;
 }
 
@@ -1490,84 +1296,6 @@ bool CL_X11Window::get_xevent( XEvent &event ) const
 		return true;
 	}
 	return false;
-}
-
-
-void CL_X11Window::process_selection_request(XEvent &event)
-{
-	XSelectionRequestEvent *rptr = &event.xselectionrequest;
-	if (rptr->requestor == window) return;	// Ignore request if from self
-
-	XEvent new_event;
-	new_event.xselection.type = SelectionNotify;
-	new_event.xselection.display = rptr->display;
-	new_event.xselection.requestor = rptr->requestor;
-	new_event.xselection.selection = rptr->selection;
-	new_event.xselection.target = rptr->target;
-	new_event.xselection.property = None;
-	new_event.xselection.time = rptr->time;
-
-	Atom xa_targets = XInternAtom(disp, "TARGETS", False);
-	Atom xa_multiple = XInternAtom(disp, "MULTIPLE", False);
-
-	struct AtomPair { Atom target; Atom property; } *multi_ptr = NULL;
-
-	unsigned char *data_ptr = NULL;
-	int num_multi = 0;
-	int index_multi = -1;
-	if (rptr->target == xa_multiple)
-	{
-		unsigned long number_items;
-		int actual_format;
-		Atom actual_type;
-		data_ptr = get_property( rptr->requestor, rptr->property, &number_items, &actual_format, &actual_type );
-		if ( data_ptr )
-		{
-			num_multi = number_items / 2;
-			multi_ptr = (struct AtomPair *) data_ptr;
-		}
-		index_multi = 0;
-	}
-
-	while( index_multi < num_multi)
-	{
-		Window xtarget;
-		Atom xproperty;
-		new_event.xselection.property = None;
-		if (multi_ptr)
-		{
-			xtarget = multi_ptr[index_multi].target;
-			xproperty = multi_ptr[index_multi].property;
-			index_multi++;
-		}else
-		{
-			xtarget = rptr->target;
-			xproperty = rptr->property;
-		}
-
-		if (xtarget == xa_targets)
-		{
-			long new_targets[1];
-			new_targets[0] = XA_STRING;
-			XChangeProperty( disp, rptr->requestor, xproperty, xa_targets, 32, PropModeReplace, (unsigned char *) new_targets, 1);
-			new_event.xselection.property = xproperty;
-		}else
-		{
-
-			if (xtarget == XA_STRING)
-			{
-				XChangeProperty(disp, rptr->requestor, xproperty, xtarget, 8, PropModeReplace, (const unsigned char*) clipboard_current.c_str(), clipboard_current.size());
-				new_event.xselection.property = xproperty;
-
-			}
-		}
-		XSendEvent( disp, rptr->requestor, False, 0, &new_event );
-		if (!num_multi) break;
-	}
-	if (data_ptr)
-	{
-		XFree(data_ptr);
-	}
 }
 
 void CL_X11Window::invalidate_rect( const CL_Rect &cl_rect )
@@ -1604,5 +1332,41 @@ void CL_X11Window::set_maximum_size( int width, int height, bool client_area)
 //
 //	this->maximum_size = CL_Size(width,height);
 }
+
+void CL_X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
+{
+	return keyboard->get_keyboard_modifiers(key_shift, key_alt, key_ctrl);
+}
+
+CL_Point CL_X11Window::get_mouse_position() const
+{
+	return mouse->get_position();
+}
+
+// Important: Use XFree() on the returned pointer (if not NULL)
+unsigned char *CL_X11Window::get_property(Window use_window, Atom prop, unsigned long *number_items_ptr, int *actual_format_ptr, Atom *actual_type_ptr) const
+{
+	unsigned long bytes_after;
+	int read_bytes = 1024;
+	unsigned char *read_data = NULL;
+	do
+	{
+		if(read_data != NULL)
+		{
+			XFree(read_data);
+		}
+		int result = XGetWindowProperty(disp, use_window, prop, 0, read_bytes, False, AnyPropertyType, actual_type_ptr, actual_format_ptr, number_items_ptr, &bytes_after, &read_data);
+		if (result != Success)
+		{
+			*number_items_ptr = 0;
+			*actual_format_ptr = 0;
+			*actual_type_ptr = None;
+			return NULL;
+		}
+		read_bytes += bytes_after;
+	}while(bytes_after != 0);
+	return read_data;
+}
+
 
 

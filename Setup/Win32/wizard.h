@@ -40,7 +40,7 @@ class Workspace;
 class Wizard
 {
 private:
-	Workspace create_workspace();
+	Workspace create_workspace(bool include_target_sdl);
 
 public:
 	Wizard();

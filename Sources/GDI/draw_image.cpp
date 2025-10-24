@@ -10,6 +10,108 @@
 #define green_component(a) (((a)&0x0000ff00)>>8)
 #define blue_component(a) ((a)&0x000000ff)
 
+/* Temporary disabled the GDI assembly, as it does not render the GUI example correctly on Vista */
+#ifdef _M_IX86_DISABLED
+//#ifdef _M_IX86
+
+void cl_draw_image_noscale_white(CL_DrawImageParams *params)
+{
+	const int start_src_x			= params->src_x+params->delta_x;
+	const int start_src_y			= params->src_y+params->delta_y;
+
+	const unsigned int	*src_line	= params->src_data  + start_src_y    * params->src_buffer_width  + start_src_x;
+
+	unsigned int		*dest_line	= params->dest_data + params->dest_y * params->dest_buffer_width + params->start_x;
+
+	const int blits_per_line		= (params->end_x-params->start_x) / 2; // how many 64 bits blits to process in a line
+	
+	const int dest_line_incr_bytes	= params->dest_buffer_width * params->num_cores * 4;
+	const int src_line_incr_bytes	= params->src_buffer_width * params->num_cores * 4;
+
+	const int num_lines				= (params->end_y-params->dest_y+params->num_cores-1) / params->num_cores;
+
+	if(num_lines<1 || blits_per_line<1)
+		return;
+
+	#pragma pack(16)
+	static const __int16 _ff[]={0x0100, 0x0100, 0x0100, 0x0100, 0x0100, 0x0100, 0x0100, 0x0100};
+	static const __int16 _7f[]={0x007f, 0x007f, 0x007f, 0x007f, 0x007f, 0x007f, 0x007f, 0x007f};
+	const void* ff = &_ff;
+	#pragma pack()
+
+	__asm
+	{
+		MOV			esi, src_line;
+		MOV			edi, dest_line;
+		MOV			edx, num_lines		// EDX: Line count
+
+		// XMM0 = 0, high part of unpacked bytes (unpacked to words)
+		PXOR		xmm0, xmm0	
+
+		// XMM1 : 8x 00FF, for inverse alpha 
+		MOVLPS     	xmm1, [_ff] 
+		MOVHPS     	xmm1, [_ff] 
+
+		// XMM7 : 8x 007F, for round up RGB channels before shift right
+		MOVLPS     	xmm7, [_7f] 
+		MOVHPS     	xmm7, [_7f] 
+
+	BLEND_Y:
+		XOR			eax, eax			// EAX blit byte offset from start of line
+		MOV			ecx, blits_per_line	// blit counter
+
+	BLEND_X:
+
+		// XMM2 : Src Pixel s0, s1
+		movlpd 		xmm2, [esi+eax]		// XMM2 = 0000000000000000 AARRGGBB AARRGGBB
+		punpcklbw	xmm2, xmm0			// XMM2 = 00AA 00RR 00GG 00BB 00AA 00RR 00GG 00BB
+
+		// XMM3 : Dst Pixel d0, d1
+		movlpd 		xmm3, [edi+eax]		// XMM3 = 0000000000000000 AARRGGBB AARRGGBB
+		PUNPCKLBW	xmm3, xmm0			// XMM3 = 00AA 00RR 00GG 00BB 00AA 00RR 00GG 00BB
+		
+		// XMM4 : Src Alpha Channel for s0, s1
+		pshuflw 	xmm4, xmm2, 0xFF	// XMM4 = 00AB00110011001100AA00AA00AA00AA  
+		pshufhw  	xmm4, xmm4, 0xFF	// XMM4 = 00AB00AB00AB00AB00AA00AA00AA00AA
+
+		// XMM5 : Src Inverse Alpha Channel for d0, d1
+		movapd		xmm5, xmm1
+		psubw		xmm5, xmm4
+
+		// XMM4 = XMM4 * XMM2, Src Blend = Src pix * Src Alpha
+		pmullw		xmm4, xmm2
+
+		// XMM5 = XMM5 * XMM3, Dst Blend = Dst pix * Inv Src Alpha
+		pmullw		xmm5, xmm3
+
+		// XMM5 = XMM5 + XMM4, Sum Blend
+		paddw		xmm5, xmm4
+		paddw		xmm5, xmm7 // round up
+		
+		// Pack and write back
+		psrlw		xmm5, 8
+		packuswb	xmm6, xmm5 
+		movhpd 		[edi+eax],xmm6	// dst <- high qword of XMM3
+
+		// Next blit (8 bytes ahead)
+		ADD			eax, 8		
+		DEC			ecx				// blit counter
+		JNZ			BLEND_X
+
+		// Next Source and Dest lines
+		MOV			eax, src_line_incr_bytes
+		MOV			ebx, dest_line_incr_bytes
+		ADD			esi, eax		
+		ADD			edi, ebx	
+
+		DEC			edx				// line counter
+		JNZ			BLEND_Y
+
+	}
+}
+
+#else
+
 void cl_draw_image_noscale_white(CL_DrawImageParams *params)
 {
 	int start_src_x = params->src_x+params->delta_x;
@@ -27,142 +129,6 @@ void cl_draw_image_noscale_white(CL_DrawImageParams *params)
 	{
 		for (int x = 0; x < line_length; x++)
 		{
-#ifdef STUFF_THAT_DOESNT_WORK
-			// __m128i spacked1 = _mm_loadu_si128(src_line+x);
-			// __m128i spacked2 = _mm_loadu_si128(src_line+x+4);
-
-			__m128i salpha = _mm_set_epi16(
-				alpha_component(src_line[x+0]),
-				alpha_component(src_line[x+1]),
-				alpha_component(src_line[x+2]),
-				alpha_component(src_line[x+3]),
-				alpha_component(src_line[x+4]),
-				alpha_component(src_line[x+5]),
-				alpha_component(src_line[x+6]),
-				alpha_component(src_line[x+7]));
-
-			__m128i sred = _mm_set_epi16(
-				red_component(src_line[x+0]),
-				red_component(src_line[x+1]),
-				red_component(src_line[x+2]),
-				red_component(src_line[x+3]),
-				red_component(src_line[x+4]),
-				red_component(src_line[x+5]),
-				red_component(src_line[x+6]),
-				red_component(src_line[x+7]));
-
-			__m128i sgreen = _mm_set_epi16(
-				green_component(src_line[x+0]),
-				green_component(src_line[x+1]),
-				green_component(src_line[x+2]),
-				green_component(src_line[x+3]),
-				green_component(src_line[x+4]),
-				green_component(src_line[x+5]),
-				green_component(src_line[x+6]),
-				green_component(src_line[x+7]));
-
-			__m128i sblue = _mm_set_epi16(
-				blue_component(src_line[x+0]),
-				blue_component(src_line[x+1]),
-				blue_component(src_line[x+2]),
-				blue_component(src_line[x+3]),
-				blue_component(src_line[x+4]),
-				blue_component(src_line[x+5]),
-				blue_component(src_line[x+6]),
-				blue_component(src_line[x+7]));
-
-//			__m128i dalpha = salpha;
-//			__m128i dred = sred;
-//			__m128i dgreen = sgreen;
-//			__m128i dblue = sblue;
-
-			__m128i dalpha = _mm_set_epi16(
-				alpha_component(dest_line[x+0]),
-				alpha_component(dest_line[x+1]),
-				alpha_component(dest_line[x+2]),
-				alpha_component(dest_line[x+3]),
-				alpha_component(dest_line[x+4]),
-				alpha_component(dest_line[x+5]),
-				alpha_component(dest_line[x+6]),
-				alpha_component(dest_line[x+7]));
-
-			__m128i dred = _mm_set_epi16(
-				red_component(dest_line[x+0]),
-				red_component(dest_line[x+1]),
-				red_component(dest_line[x+2]),
-				red_component(dest_line[x+3]),
-				red_component(dest_line[x+4]),
-				red_component(dest_line[x+5]),
-				red_component(dest_line[x+6]),
-				red_component(dest_line[x+7]));
-
-			__m128i dgreen = _mm_set_epi16(
-				green_component(dest_line[x+0]),
-				green_component(dest_line[x+1]),
-				green_component(dest_line[x+2]),
-				green_component(dest_line[x+3]),
-				green_component(dest_line[x+4]),
-				green_component(dest_line[x+5]),
-				green_component(dest_line[x+6]),
-				green_component(dest_line[x+7]));
-
-			__m128i dblue = _mm_set_epi16(
-				blue_component(dest_line[x+0]),
-				blue_component(dest_line[x+1]),
-				blue_component(dest_line[x+2]),
-				blue_component(dest_line[x+3]),
-				blue_component(dest_line[x+4]),
-				blue_component(dest_line[x+5]),
-				blue_component(dest_line[x+6]),
-				blue_component(dest_line[x+7]));
-
-			__m128i pos_salpha = salpha; // _mm_sll_epi16(salpha, 8);// * 256 / 255;
-			__m128i neg_salpha = _mm_sub_epi16(_mm_set1_epi16(255), pos_salpha);
-
-			sred = _mm_mulhi_epi16(sred, pos_salpha);
-			sred = _mm_mullo_epi16(sred, pos_salpha);
-			sgreen = _mm_mulhi_epi16(sgreen, pos_salpha);
-			sgreen = _mm_mullo_epi16(sgreen, pos_salpha);
-			sblue = _mm_mulhi_epi16(sblue, pos_salpha);
-			sblue = _mm_mullo_epi16(sblue, pos_salpha);
-			salpha = _mm_mulhi_epi16(salpha, pos_salpha);
-			salpha = _mm_mullo_epi16(salpha, pos_salpha);
-
-			dred = _mm_mulhi_epi16(dred, neg_salpha);
-			dred = _mm_mullo_epi16(dred, neg_salpha);
-			dgreen = _mm_mulhi_epi16(dgreen, neg_salpha);
-			dgreen = _mm_mullo_epi16(dgreen, neg_salpha);
-			dblue = _mm_mulhi_epi16(dblue, neg_salpha);
-			dblue = _mm_mullo_epi16(dblue, neg_salpha);
-			dalpha = _mm_mulhi_epi16(dalpha, neg_salpha);
-			dalpha = _mm_mullo_epi16(dalpha, neg_salpha);
-
-			dred = _mm_srli_epi16(_mm_add_epi16(dred, sred), 8);
-			dgreen = _mm_srli_epi16(_mm_add_epi16(dred, sgreen), 8);
-			dblue = _mm_srli_epi16(_mm_add_epi16(dred, sblue), 8);
-			dalpha = _mm_srli_epi16(_mm_add_epi16(dred, salpha), 8);
-
-			dest_line[x+0] = (_mm_extract_epi16(dalpha, 7)<<24) + (_mm_extract_epi16(dred, 7)<<16) + (_mm_extract_epi16(dgreen, 7)<<8) + _mm_extract_epi16(dblue, 7);
-			dest_line[x+1] = (_mm_extract_epi16(dalpha, 6)<<24) + (_mm_extract_epi16(dred, 6)<<16) + (_mm_extract_epi16(dgreen, 6)<<8) + _mm_extract_epi16(dblue, 6);
-			dest_line[x+2] = (_mm_extract_epi16(dalpha, 5)<<24) + (_mm_extract_epi16(dred, 5)<<16) + (_mm_extract_epi16(dgreen, 5)<<8) + _mm_extract_epi16(dblue, 5);
-			dest_line[x+3] = (_mm_extract_epi16(dalpha, 4)<<24) + (_mm_extract_epi16(dred, 4)<<16) + (_mm_extract_epi16(dgreen, 4)<<8) + _mm_extract_epi16(dblue, 4);
-			dest_line[x+4] = (_mm_extract_epi16(dalpha, 3)<<24) + (_mm_extract_epi16(dred, 3)<<16) + (_mm_extract_epi16(dgreen, 3)<<8) + _mm_extract_epi16(dblue, 3);
-			dest_line[x+5] = (_mm_extract_epi16(dalpha, 2)<<24) + (_mm_extract_epi16(dred, 2)<<16) + (_mm_extract_epi16(dgreen, 2)<<8) + _mm_extract_epi16(dblue, 2);
-			dest_line[x+6] = (_mm_extract_epi16(dalpha, 1)<<24) + (_mm_extract_epi16(dred, 1)<<16) + (_mm_extract_epi16(dgreen, 1)<<8) + _mm_extract_epi16(dblue, 1);
-			dest_line[x+7] = (_mm_extract_epi16(dalpha, 0)<<24) + (_mm_extract_epi16(dred, 0)<<16) + (_mm_extract_epi16(dgreen, 0)<<8) + _mm_extract_epi16(dblue, 0);
-
-
-/*
-			__m128i s = _mm_set_epi32(
-				red_component(src_line[x]),
-				green_component(src_line[x]),
-				blue_component(src_line[x])
-				alpha_component(src_line[x]));
-
-			__m128i s = _mm_set1_epi32(src_line[x]);
-*/
-#endif
-
 			unsigned int sred = red_component(src_line[x]);
 			unsigned int sgreen = green_component(src_line[x]);
 			unsigned int sblue = blue_component(src_line[x]);
@@ -187,6 +153,7 @@ void cl_draw_image_noscale_white(CL_DrawImageParams *params)
 		src_line += src_line_incr;
 	}
 }
+#endif 
 
 void cl_draw_image_noscale(CL_DrawImageParams *params)
 {
@@ -241,8 +208,8 @@ void cl_draw_image_nearest_white(CL_DrawImageParams *params)
 	int scale_x = (params->src_width<<16) / params->dest_width;
 	int scale_y = (params->src_height<<16) / params->dest_height;
 
-	int start_src_x = (params->src_x<<16)+params->delta_x*scale_x+32768;
-	int start_src_y = (params->src_y<<16)+params->delta_y*scale_y+32768;
+	int start_src_x = (params->src_x<<16)+params->delta_x*scale_x;
+	int start_src_y = (params->src_y<<16)+params->delta_y*scale_y;
 
 	unsigned int *dest_line = params->dest_data+params->dest_y*params->dest_buffer_width+params->start_x;
 
@@ -290,8 +257,8 @@ void cl_draw_image_nearest(CL_DrawImageParams *params)
 	int scale_x = (params->src_width<<16) / params->dest_width;
 	int scale_y = (params->src_height<<16) / params->dest_height;
 
-	int start_src_x = (params->src_x<<16)+params->delta_x*scale_x+32768;
-	int start_src_y = (params->src_y<<16)+params->delta_y*scale_y+32768;
+	int start_src_x = (params->src_x<<16)+params->delta_x*scale_x;
+	int start_src_y = (params->src_y<<16)+params->delta_y*scale_y;
 
 	unsigned int *dest_line = params->dest_data+params->dest_y*params->dest_buffer_width+params->start_x;
 

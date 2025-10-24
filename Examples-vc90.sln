@@ -56,6 +56,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditor", "Utilities\GUIE
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Text", "Examples\Text\Text-vc90.vcproj", "{903374C5-87EA-4010-BD44-95D54D95D234}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostProcessing", "Examples\PostProcessing\PostProcessing-vc90.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418D8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUICustomComponent", "Examples\GUICustomComponent\GUICustomComponent-vc90.vcproj", "{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -134,6 +138,14 @@ Global
 		{903374C5-87EA-4010-BD44-95D54D95D234}.Debug|Win32.Build.0 = Debug|Win32
 		{903374C5-87EA-4010-BD44-95D54D95D234}.Release|Win32.ActiveCfg = Release|Win32
 		{903374C5-87EA-4010-BD44-95D54D95D234}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D8}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D8}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D8}.Release|Win32.Build.0 = Release|Win32
+		{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}.Debug|Win32.Build.0 = Debug|Win32
+		{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}.Release|Win32.ActiveCfg = Release|Win32
+		{0AFAE68D-FFDB-46E2-8C9A-158D58F93BD8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
