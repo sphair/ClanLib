@@ -69,7 +69,6 @@ char ShaderColorInstanced::fragment[] =
 	"in vec3 WorldSpacePosition; \n"
 	"in vec4 ObjPos;\n"
 	"flat in vec4 xMaterialAmbientSpecular;\n"
-	"out vec4 gl_FragColor;\n"
 	"\n"
 	"uniform float MaterialShininess;\n"
 	"uniform vec4 MaterialEmission;\n"

@@ -55,19 +55,6 @@ int App::start(const std::vector<CL_String> &args)
 	// Connect a keyboard handler to on_key_up()
 	CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	// Set up GUI
-	CL_String theme;
-	if (CL_FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (CL_FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw CL_Exception("No themes found");
-
-	CL_GUIWindowManagerTexture wm(window);
-	CL_GUIManager gui(wm, theme);
-	wm.func_repaint().set(this, &App::wm_repaint);
-
 	// Get the graphic context
 	CL_GraphicContext gc = window.get_gc();
 
@@ -120,9 +107,6 @@ int App::start(const std::vector<CL_String> &args)
 		CL_String fps(cl_format("Drawing %1 teapots (containing 2882 triangles). fps = %2", (int) object_teapot->centers.size(), framerate_counter.get_framerate()));
 		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		font.draw_text(gc, 16, gc.get_height()-16-2, fps, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-
-		gui.exec(false);
-		wm.draw_windows(gc);
 
 		// Use flip(1) to lock the fps
 		window.flip(0);

@@ -130,7 +130,7 @@ public:
 
 	void open_screen();
 
-	void create(XVisualInfo *visual, int screen_bpp, CL_DisplayWindowSite *site, const CL_DisplayWindowDescription &description);
+	void create(XVisualInfo *visual, CL_DisplayWindowSite *site, const CL_DisplayWindowDescription &description);
 
 	void show_system_cursor();
 
@@ -218,7 +218,7 @@ private:
 	void close_window();
 
 	/// \brief Creates the initial window based on the window description.
-	void create_new_window(XVisualInfo *visual, int screen_bpp, const CL_DisplayWindowDescription &desc);
+	void create_new_window(XVisualInfo *visual, const CL_DisplayWindowDescription &desc);
 
 	void received_keyboard_input(XKeyEvent &event);
 
@@ -245,8 +245,6 @@ private:
 	bool allow_resize;
 
 	bool layered;
-
-	int bpp;
 
 	bool fullscreen;
 

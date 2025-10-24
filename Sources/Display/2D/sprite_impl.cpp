@@ -65,21 +65,14 @@ CL_Sprite_Impl::CL_Sprite_Impl(CL_GraphicContext &gc) :
 	play_backward(false),
 	play_pingpong(false),
 	show_on_finish(CL_Sprite::show_blank),
-	prim_array(0),
 	texture_group(gc, CL_Size(1,1))
 {
 	for (int i=0; i<6; i++)
 		prim_color[i] = CL_Vec4f(color.r,color.g,color.b,color.a);
-
-	prim_array = new CL_PrimitivesArray(gc);
-	prim_array->set_attributes(0, prim_dest);
-	prim_array->set_attributes(1, prim_color);
-	prim_array->set_attributes(2, prim_src);
 }
 
 CL_Sprite_Impl::~CL_Sprite_Impl()
 {
-	delete prim_array;
 }
 
 void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources, const CL_ImageImportDescription &import_desc)

@@ -202,18 +202,18 @@ std::vector<CL_String> CL_ResourceManager::get_resource_names_of_type(
 	const CL_String &type,
 	const CL_String &section) const
 {
+
+	CL_String section_trailing_slash = CL_PathHelp::add_trailing_slash(section, CL_PathHelp::path_type_virtual);
+
 	std::vector<CL_String> names;
 	std::map<CL_String, CL_Resource>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
-		CL_String cur_section = CL_PathHelp::get_filename(it->first, CL_PathHelp::path_type_virtual);
-		if (section == cur_section)
+		CL_String cur_section = CL_PathHelp::get_fullpath(it->first, CL_PathHelp::path_type_virtual);
+		if (section_trailing_slash == cur_section)
 		{
 			if (it->second.get_type() == type)
-			{
-				CL_String name = CL_PathHelp::get_filename(it->first, CL_PathHelp::path_type_virtual);
-				names.push_back(name);
-			}
+				names.push_back(it->first);
 		}
 	}
 	return names;
@@ -279,6 +279,17 @@ int CL_ResourceManager::get_integer_resource(
 
 	CL_Resource resource = get_resource(resource_id);
 	return CL_StringHelp::text_to_int(resource.get_element().get_attribute("value"));
+}
+
+CL_String CL_ResourceManager::get_string_resource(
+	const CL_String &resource_id,
+	const CL_StringRef &default_value)
+{
+	if (!resource_exists(resource_id))
+		return default_value;
+
+	CL_Resource resource = get_resource(resource_id);
+	return resource.get_element().get_attribute("value");
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 EXAMPLE_BIN=test
-OBJF = 2d.o
-LIBS=clanApp clanCore clanDisplay clanGL clanSWRender
+OBJF = test.o
+LIBS=clanApp clanCore
 
 include ../../../Examples/Makefile.conf
 

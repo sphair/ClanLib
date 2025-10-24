@@ -19,7 +19,7 @@ OBJF = ./Sources/example.o \
 
 LIBS=clanApp clanDisplay clanCore clanGL1
 
-CXXFLAGS += -I./ -ICollada
+CXXFLAGS += -I./ -I../../Object3D/Collada -I Sources
 
 include ../../Makefile.conf
 

@@ -23,41 +23,70 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
+**    (if your name is missing here, please add it)
 */
 
-#include "precomp.h"
-#include "program.h"
-#include "example.h"
+#include "test.h"
 
-int Program::main(const std::vector<CL_String> &args)
+int g_bConstructor = 0;
+int g_bDestructor = 0;
+
+// This is the Program class that is called by CL_ClanApplication
+class Program
 {
-	try
+public:
+	static int main(const std::vector<CL_String> &args)
 	{
 		// Initialize ClanLib base components
 		CL_SetupCore setup_core;
 
-		// Initialize the ClanLib display component
-		CL_SetupDisplay setup_display;
-
-		CL_SetupGL setup_gl;
-
 		// Start the Application
-		App app;
-		int retval = app.start(args);
+		TestApp app;
+		int retval = app.main(args);
 		return retval;
 	}
-	catch(CL_Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console", 80, 160);
-		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
-}
+};
 
 // Instantiate CL_ClanApplication, informing it where the Program is located
 CL_ClanApplication app(&Program::main);
+
+int TestApp::main(const std::vector<CL_String> &args)
+{
+	// Create a console window for text-output if not available
+	CL_ConsoleWindow console("Console");
+
+	try
+	{
+		CL_Console::write_line("ClanLib Test Suite:");
+		CL_Console::write_line("-------------------");
+#ifdef WIN32
+		CL_Console::write_line("Target: WIN32");
+#else
+		CL_Console::write_line("Target: LINUX");
+#endif
+		CL_Console::write_line("Directory: API/Core/Resources");
+		test_resources();
+
+		CL_Console::write_line("All Tests Complete");
+		console.display_close_message();
+	}
+
+	catch(CL_Exception error)
+	{
+		CL_Console::write_line("Exception caught:");
+		CL_Console::write_line(error.message);
+		console.display_close_message();
+		return -1;
+	}
+
+	return 0;
+}
+
+void TestApp::fail(void)
+{
+	throw CL_Exception("Failed Test");
+}
+
+
+

@@ -177,6 +177,9 @@ CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
 		(glx.glXIsDirect == NULL) ||
 		(glx.glXGetConfig == NULL) ||
 		(glx.glXQueryExtensionsString == NULL) ||
+		(glx.glXQueryVersion == NULL) ||
+		(glx.glXGetVisualFromFBConfig == NULL) ||
+		(glx.glXCreateNewContext == NULL) ||
 		(glx.glXCreateContext == NULL) )
 	{
 		throw CL_Exception("Cannot obtain required OpenGL GLX functions");
@@ -258,54 +261,117 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 
 	if (!opengl_context)
 	{
+		// FBConfigs were added in GLX version 1.3.
+
+		int glx_major, glx_minor;
+		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) || 
+			( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
+		{
+			throw CL_Exception("Invalid GLX version, require GLX 1.3");
+		}
+		if (glx.glXChooseFBConfig == NULL)
+			throw CL_Exception("Cannot find the glXChooseFBConfig function");
+
 		create_provider_flag = true;
 		// Setup OpenGL:
 		int gl_attribs_single[] =
 		{
-			GLX_RGBA,
+			GLX_X_RENDERABLE, True,
+			GLX_RENDER_TYPE, GLX_RGBA_BIT,
 			GLX_DEPTH_SIZE, 16,
 			GLX_STENCIL_SIZE, 8,
 			GLX_BUFFER_SIZE, 24,
 			None
 		};
 
-		int i = 0;
-
 		CL_OpenGLWindowDescription gl_desc(desc);
 
+		std::vector<int> gl_attribs;
+		gl_attribs.reserve(64);
 
-		int gl_attribs[32];	// WARNING - create() assumes this is 32 in size
-
-		// Note: gl_attribs[32] !!!!
-		gl_attribs[i++] = GLX_RGBA;
-		if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
-		if( gl_desc.get_stereo() ) gl_attribs[i++] = GLX_STEREO;
-		gl_attribs[i++] = GLX_BUFFER_SIZE;
-		gl_attribs[i++] = gl_desc.get_buffer_size();
-		gl_attribs[i++] = GLX_RED_SIZE; 
-		gl_attribs[i++] = gl_desc.get_red_size();
-		gl_attribs[i++] = GLX_GREEN_SIZE;
-		gl_attribs[i++] = gl_desc.get_green_size();
-		gl_attribs[i++] = GLX_BLUE_SIZE;
-		gl_attribs[i++] = gl_desc.get_blue_size();
-		gl_attribs[i++] = GLX_DEPTH_SIZE;
-		gl_attribs[i++] = gl_desc.get_depth_size();
-		gl_attribs[i++] = GLX_STENCIL_SIZE;
-		gl_attribs[i++] = gl_desc.get_stencil_size();
-		gl_attribs[i++] = None;
+		gl_attribs.push_back(GLX_X_RENDERABLE);
+		gl_attribs.push_back(True);
+		gl_attribs.push_back(GLX_DRAWABLE_TYPE);
+		gl_attribs.push_back(GLX_WINDOW_BIT);
+		gl_attribs.push_back(GLX_RENDER_TYPE);
+		gl_attribs.push_back(GLX_RGBA_BIT);
+		gl_attribs.push_back(GLX_X_VISUAL_TYPE);
+		gl_attribs.push_back(GLX_TRUE_COLOR);
+		gl_attribs.push_back(GLX_RED_SIZE);
+		gl_attribs.push_back(gl_desc.get_red_size());
+		gl_attribs.push_back(GLX_GREEN_SIZE);
+		gl_attribs.push_back(gl_desc.get_green_size());
+		gl_attribs.push_back(GLX_BLUE_SIZE);
+		gl_attribs.push_back(gl_desc.get_blue_size());
+		gl_attribs.push_back(GLX_ALPHA_SIZE);
+		gl_attribs.push_back(gl_desc.get_alpha_size());
+		gl_attribs.push_back(GLX_DEPTH_SIZE);
+		gl_attribs.push_back(gl_desc.get_depth_size());
+		gl_attribs.push_back(GLX_STENCIL_SIZE);
+		gl_attribs.push_back(gl_desc.get_stencil_size());
+		gl_attribs.push_back(GLX_DOUBLEBUFFER);
+		gl_attribs.push_back(gl_desc.get_doublebuffer() ? True : False);
+		gl_attribs.push_back(GLX_STEREO);
+		gl_attribs.push_back(gl_desc.get_stereo() ? True : False);
+		gl_attribs.push_back(None);
 
 		// get an appropriate visual
+		int fb_count;
+		GLXFBConfig *fbc = glx.glXChooseFBConfig( disp, DefaultScreen(disp), &gl_attribs[0], &fb_count );
+		if (!fbc)
+		{
+			printf("Requested visual not supported by your OpenGL implementation. Falling back on singlebuffered Visual!\n");
+			fbc = glx.glXChooseFBConfig( disp, DefaultScreen(disp), gl_attribs_single, &fb_count );
+			if (!fbc)
+				throw CL_Exception(" glxChooseFBConfig failed");
+			fbconfig = fbc[0];
+		}
+		else
+		{
+			if (!glx.glXGetFBConfigAttrib)
+				throw CL_Exception("Cannot find function glXGetFBConfigAttrib");
+
+			int desired_config = 0;
+			int max_sample_buffers = 0;
+			int max_samples = 0;
+			int required_samples = gl_desc.get_multisampling();
+			// Find the best fitting multisampling option
+			for (int i=0; i<fb_count; i++)
+			{
+				int samp_buf, samples;
+				glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLE_BUFFERS, &samp_buf );
+				glx.glXGetFBConfigAttrib( disp, fbc[i], GLX_SAMPLES       , &samples  );
+
+				// Samples are most important, because they are variable
+				if (max_samples < required_samples)
+				{
+					if (samples > max_samples)
+					{
+						max_samples = samples;
+						desired_config = i;
+					}
+				}
+
+				// Use the maximum sample buffer
+				if (max_samples == samples)	// Only check if the sample is valid
+				{
+					if (max_sample_buffers < samp_buf)
+					{
+						max_sample_buffers = samp_buf;
+						desired_config = i;
+					}
+				}
+			}
+			fbconfig = fbc[desired_config];
+		}
+
+		XFree(fbc);
+
 		if (opengl_visual_info) XFree(opengl_visual_info);
-		opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs);
-	
+		opengl_visual_info = glx.glXGetVisualFromFBConfig(disp, fbconfig);
 		if (opengl_visual_info == NULL)
 		{
-			opengl_visual_info = glx.glXChooseVisual(disp, DefaultScreen(disp), gl_attribs_single);
-			printf("Requested visual not supported by your OpenGL implementation. Falling back on singlebuffered Visual!\n");
-			if (opengl_visual_info == NULL)
-			{
-				throw CL_Exception("glxChooseVisual failed");
-			}
+			throw CL_Exception("glXGetVisualFromFBConfig failed");
 		}
 
 		// create a GLX context
@@ -318,10 +384,7 @@ void CL_OpenGLWindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const C
 
 	}
 
-	int screen_bpp = 0;
-	glx.glXGetConfig(disp, opengl_visual_info, GLX_BUFFER_SIZE, &screen_bpp);
-
-	x11_window.create(opengl_visual_info, screen_bpp, site, desc);
+	x11_window.create(opengl_visual_info, site, desc);
 
 	if (create_provider_flag)
 	{
@@ -342,9 +405,31 @@ bool CL_OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_nam
 	const char *ext_string = glx.glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
 	if (ext_string)
 	{
-		if (strstr(ext_string, ext_name))
+		const char *start;
+		const char *where, *terminator;
+		
+		// Extension names should not have spaces.
+		where = strchr(ext_name, ' ');
+		if ( where || *ext_name == '\0' )
+			return false;
+
+		int ext_len = strlen(ext_name);
+		
+		// It takes a bit of care to be fool-proof about parsing the OpenGL extensions string. Don't be fooled by sub-strings, etc.
+		for ( start = ext_string; ; )
 		{
-			return true;
+			where = strstr( start, ext_name );
+
+			if ( !where )
+				break;
+
+			terminator = where + ext_len;
+
+			if ( where == start || *(where - 1) == ' ' )
+				if ( *terminator == ' ' || *terminator == '\0' )
+					return true;
+
+			start = terminator;
 		}
 	}
 	return false;
@@ -371,6 +456,13 @@ void CL_OpenGLWindowProvider_GLX::setup_swap_interval_pointers()
 
 }
 
+static bool cl_ctxErrorOccurred = false;
+static int cl_ctxErrorHandler( Display *dpy, XErrorEvent *ev )
+{
+    cl_ctxErrorOccurred = true;
+    return 0;
+}
+
 GLXContext CL_OpenGLWindowProvider_GLX::create_context()
 {
 	GLXContext shared_context = NULL;
@@ -389,41 +481,60 @@ GLXContext CL_OpenGLWindowProvider_GLX::create_context()
 	}
 
 	GLXContext context;
-	context = glx.glXCreateContext(x11_window.get_display(), opengl_visual_info, shared_context, GL_TRUE);
+	context = glx.glXCreateNewContext(x11_window.get_display(), fbconfig, GLX_RGBA_TYPE, shared_context, True);
 	if(context == NULL)
 		throw CL_Exception("glXCreateContext failed");
-
+	
 	int attribs[] = {
-		GLX_CONTEXT_MAJOR_VERSION_ARB,
+		0x2091, //GLX_CONTEXT_MAJOR_VERSION_ARB,
 		3,
-		GLX_CONTEXT_MINOR_VERSION_ARB,
+		0x2092, //GLX_CONTEXT_MINOR_VERSION_ARB,
 		0,
-		0
+		None
 	};
 
 	ptr_glXCreateContextAttribs glXCreateContextAttribs = NULL;
 
-	if (glx.glXGetProcAddressARB)
-		glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddressARB((GLubyte*) "glXCreateContextAttribsARB");
-	if (glx.glXGetProcAddress)
-		glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddress((GLubyte*) "glXCreateContextAttribsARB");
-
-	if (glXCreateContextAttribs && glx.glXChooseFBConfig)
+	if (is_glx_extension_supported("GLX_ARB_create_context"))
 	{
-		int nitems = 0;
-		GLXFBConfig *framebuffer_config = glx.glXChooseFBConfig(x11_window.get_display(), DefaultScreen(x11_window.get_display()), NULL, &nitems); 
+		if (glx.glXGetProcAddressARB)
+			glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddressARB((GLubyte*) "glXCreateContextAttribsARB");
+		if (glx.glXGetProcAddress)
+			glXCreateContextAttribs = (ptr_glXCreateContextAttribs) glx.glXGetProcAddress((GLubyte*) "glXCreateContextAttribsARB");
+	}
 
-		if (framebuffer_config)
+
+	if (glXCreateContextAttribs)
+	{
+		// Install an X error handler so the application won't exit if GL 3.0 context allocation fails.
+  		//
+		// Note this error handler is global.  All display connections in all threads
+		// of a process use the same error handler, so be sure to guard against other
+		// threads issuing X commands while this code is running.
+		cl_ctxErrorOccurred = false;
+		int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&cl_ctxErrorHandler);
+	  
+		GLXContext context_gl3;
+		context_gl3 = glXCreateContextAttribs(x11_window.get_display(), fbconfig, shared_context, True, attribs);
+		
+  		// Restore the original error handler
+  		XSetErrorHandler( oldHandler );		
+		
+		if (cl_ctxErrorOccurred)
 		{
-			GLXContext context_gl3;
-			context_gl3 = glXCreateContextAttribs(x11_window.get_display(), *framebuffer_config, shared_context, GL_TRUE, attribs);
 			if (context_gl3)
 			{
-				glx.glXDestroyContext(x11_window.get_display(), context);
-				context = context_gl3;
+				glx.glXDestroyContext(x11_window.get_display(), context_gl3);
+				context_gl3 = 0;
 			}
-			XFree(framebuffer_config);
 		}
+		
+		if (context_gl3)
+		{
+			glx.glXDestroyContext(x11_window.get_display(), context);
+			context = context_gl3;
+		}
+
 	}
 
 	return context;

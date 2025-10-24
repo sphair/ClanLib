@@ -469,8 +469,6 @@ public:
 	static BOMType detect_bom(const void *data, CL_String::size_type length);
 
 #ifdef __cplusplus_cli
-#ifdef UNICODE
-
 	/// \brief Clr to text
 	///
 	/// \param String = System
@@ -478,30 +476,13 @@ public:
 	/// \return Temp String
 	static CL_String clr_to_text(const System::String ^str)
 	{
-		return clr_to_ucs2(str);
+		return ucs2_to_utf8(clr_to_ucs2(str));
 	}
 
 	static System::String ^text_to_clr(const CL_StringRef &str)
 	{
-		return ucs2_to_clr(str);
+		return ucs2_to_clr(utf8_to_ucs2(str));
 	}
-#else
-
-	/// \brief Clr to text
-	///
-	/// \param String = System
-	///
-	/// \return Temp String
-	static CL_String clr_to_text(const System::String ^str)
-	{
-		return ucs2_to_text(clr_to_ucs2(str));
-	}
-
-	static System::String ^text_to_clr(const CL_StringRef &str)
-	{
-		return ucs2_to_clr(local8_to_ucs2(str));
-	}
-#endif
 
 	/// \brief Clr to ucs2
 	///

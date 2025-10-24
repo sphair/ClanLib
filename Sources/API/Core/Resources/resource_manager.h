@@ -110,15 +110,20 @@ public:
 	/// \brief Returns the directory to load resource data from.
 	CL_VirtualDirectory get_directory(const CL_Resource &resource) const;
 
-	/// \brief Returns the value of a boolean resource.
+	/// \brief Returns the value of a boolean resource. (using the value attribute)
 	bool get_boolean_resource(
 		const CL_String &resource_id,
 		bool default_value);
 
-	/// \brief Returns the value of an integer resource.
+	/// \brief Returns the value of an integer resource. (using the value attribute)
 	int get_integer_resource(
 		const CL_String &resource_id,
 		int default_value);
+
+	/// \brief Returns the value of an string resource. (using the value attribute)
+	CL_String get_string_resource(
+		const CL_String &resource_id,
+		const CL_StringRef &default_value);
 
 /// \}
 /// \name Operations

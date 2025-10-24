@@ -25,7 +25,7 @@ OBJF = ./Sources/shader_color.o \
 ../Clan3D/Collada/collada_mesh.o \
 ../Clan3D/Collada/collada_effect_color_texture.o
 
-LIBS=clanApp clanDisplay clanCore clanGL clanGUI
+LIBS=clanApp clanDisplay clanCore clanGL
 
 CXXFLAGS += -I./ -I../../Object3D/Collada -I Sources
 

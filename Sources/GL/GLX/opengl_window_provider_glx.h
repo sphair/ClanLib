@@ -320,6 +320,8 @@ private:
 	bool  glx_swap_interval_set;
 	int last_set_interval;	// Set to -1 when not set
 
+	GLXFBConfig fbconfig;
+
 #ifdef CL_USE_DLOPEN
 	void *opengl_lib_handle;
 #endif

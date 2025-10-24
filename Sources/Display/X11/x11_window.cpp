@@ -55,7 +55,7 @@
 #include <dlfcn.h>
 
 CL_X11Window::CL_X11Window()
-: window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), fullscreen(false),
+: window(0), window_last_focus(0), cmap(0), allow_resize(false), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
   site(0), clipboard(this), dlopen_lib_handle(NULL), size_hints(NULL)
 {
@@ -193,13 +193,13 @@ void CL_X11Window::open_screen()
 	}
 }
 
-void CL_X11Window::create(XVisualInfo *visual, int screen_bpp, CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
+void CL_X11Window::create(XVisualInfo *visual, CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
 {
 	site = new_site;
 
 	open_screen();
 
-	create_new_window(visual, screen_bpp, description);
+	create_new_window(visual, description);
 }
 
 
@@ -465,7 +465,7 @@ void CL_X11Window::close_window()
 	}
 }
 
-void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const CL_DisplayWindowDescription &desc)
+void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindowDescription &desc)
 {
 	close_window();	// Close the window if already opened (maybe it should be modified instead of recreated?)
 
@@ -477,8 +477,6 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	current_window_events.push_back(screen_connection);
 
 	XGetInputFocus(disp, &window_last_focus, &window_last_revert_return);
-
-	bpp = screen_bpp;
 
 	// create a color map
 	cmap = XCreateColormap( disp, RootWindow(disp,  current_screen), visual->visual, AllocNone);
@@ -548,8 +546,19 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 
 	if (win_x == -1 && win_y == -1)
 	{
-		win_x = DisplayWidth(disp, current_screen)/2 - win_width/2;
-		win_y = DisplayHeight(disp, current_screen)/2 - win_height/2;
+		int disp_width = DisplayWidth(disp, current_screen);
+		int disp_height = DisplayHeight(disp, current_screen);
+		win_x = (disp_width - win_width)/2;
+		win_y = (disp_height - win_height)/2;
+
+		// It is very annoying to specify new windows centered when using 2 screens spanned
+		if (disp_width > 2000)	// A guess that 2 monitors are used
+		{
+			if (win_x > 1024)
+			{
+				win_x = (1024 - win_width)/2;
+			}
+		}
 	}
 
 	window = XCreateWindow(disp, parent,

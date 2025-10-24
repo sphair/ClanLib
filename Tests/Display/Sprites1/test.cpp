@@ -25,10 +25,10 @@ public:
 
 			gc.set_map_mode(cl_map_2d_upper_left);
 
-			CL_Sprite background(gc, "Images/background.png", CL_VirtualDirectory());
-			CL_Sprite test1_facit(gc, "Images/test1_facit.png", CL_VirtualDirectory());
+			CL_Sprite background(gc, "Images/background.png");
+			CL_Sprite test1_facit(gc, "Images/test1_facit.png");
 
-			CL_Sprite testsprite1(gc, "Images/testsprite1.png", CL_VirtualDirectory());
+			CL_Sprite testsprite1(gc, "Images/testsprite1.png");
 
 //			CL_PixelBuffer buffer = CL_ImageProviderFactory::load("Images/pacman.pcx");
 //			int texture_width = buffer.get_width();

@@ -23,41 +23,56 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
+**    (if your name is missing here, please add it)
 */
 
-#include "precomp.h"
-#include "program.h"
-#include "example.h"
+#include <ClanLib/core.h>
+#include <ClanLib/application.h>
 
-int Program::main(const std::vector<CL_String> &args)
+#ifndef WIN32
+#include <unistd.h>
+#include <stdio.h>
+#ifndef MAX_PATH
+#define MAX_PATH PATH_MAX
+#endif
+#else
+#include <direct.h>
+#ifndef chdir
+#define _chdir chdir
+#endif
+#ifndef MAX_PATH
+#define _MAX_PATH MAX_PATH
+#endif
+#include <tchar.h>
+#endif
+
+
+#ifndef WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#endif
+
+extern int g_bConstructor;
+extern int g_bDestructor;
+
+class MyClass
 {
-	try
-	{
-		// Initialize ClanLib base components
-		CL_SetupCore setup_core;
+public:
+	MyClass() { g_bConstructor++; };
+	~MyClass() { g_bDestructor++; };	
+};
 
-		// Initialize the ClanLib display component
-		CL_SetupDisplay setup_display;
+class TestApp
+{
+public:
+	virtual int main(const std::vector<CL_String> &args);
 
-		CL_SetupGL setup_gl;
+private:
+	void test_resources(void);
 
-		// Start the Application
-		App app;
-		int retval = app.start(args);
-		return retval;
-	}
-	catch(CL_Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console", 80, 160);
-		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
+	void fail();
+};
 
-		return -1;
-	}
-}
-
-// Instantiate CL_ClanApplication, informing it where the Program is located
-CL_ClanApplication app(&Program::main);

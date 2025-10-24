@@ -179,13 +179,14 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 	if (XMatchVisualInfo(disp, screen, 24, TrueColor, &visual_info)) {bpp = 24;} 
 	else if (XMatchVisualInfo(disp, screen, 16, TrueColor, &visual_info)) {bpp = 16;}
 	else if (XMatchVisualInfo(disp, screen, 15, TrueColor, &visual_info)) {bpp = 15;}
+	else if (XMatchVisualInfo(disp, screen, 32, TrueColor, &visual_info)) {bpp = 32;}
 	else if (XMatchVisualInfo(disp, screen, 8, PseudoColor, &visual_info)) {bpp = 8;}
 	else if (XMatchVisualInfo(disp, screen, 8, GrayScale, &visual_info)) {bpp = 8;}
 	else if (XMatchVisualInfo(disp, screen, 8, StaticGray, &visual_info)) {bpp = 8;}
 	else if (XMatchVisualInfo(disp, screen, 1, StaticGray, &visual_info)) {bpp = 1;}
 	else { throw CL_Exception("Cannot match visual info"); }
 
-	window.create(&visual_info, bpp, site, description);
+	window.create(&visual_info, site, description);
 #endif
 	gc = CL_GraphicContext(new CL_SWRenderGraphicContextProvider(this));
 }
