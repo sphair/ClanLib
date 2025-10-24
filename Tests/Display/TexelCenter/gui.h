@@ -45,8 +45,6 @@ public:
 	CL_ResourceManager &get_resources() { return resources_internal; }
 
 private:
-	void wm_repaint();
-	void gui_exec();
 	void write_display_image();
 	void show_display_image();
 	void draw_reference_images();

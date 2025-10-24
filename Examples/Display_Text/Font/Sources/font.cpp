@@ -177,11 +177,10 @@ int App::start(const std::vector<CL_String> &args)
 	CL_GraphicContext gc = window_ptr->get_gc();
 	small_font = CL_Font(gc, "Tahoma", 16);
 
-	wm.func_repaint().set(this, &App::gui_repaint);
-	do
+	while(!quit)
 	{
 		render();
-	}while(!gui.exec(false) && !quit);
+	}
 
 	small_font = CL_Font();
 	selected_font = CL_Font();
@@ -229,11 +228,12 @@ void App::render()
 
 	last_fps = 1000.0f / (CL_System::get_time()-start_time);
 
-	window_ptr->flip(1);
-}
+	wm_ptr->process();
+	wm_ptr->draw_windows(gc);
 
-void App::gui_repaint()
-{
+	window_ptr->flip(1);
+
+	CL_KeepAlive::process();
 }
 
 void App::select_font()

@@ -112,6 +112,12 @@ void CL_PixelLineRenderer::draw_line(const CL_LineSegment2 &line_dest, const CL_
 				line.q.x = t;
 			}
 
+			if(dest_y>=dest_height)
+			{
+				//abort
+				return;
+			}
+
 			unsigned int *dest_line = dest+dest_y*dest_width;
 			if (salpha == 255)
 			{

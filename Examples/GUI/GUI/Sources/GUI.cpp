@@ -69,6 +69,8 @@ bool GUI::run()
 
 	check_manager_change();
 
+	// IMPORTANT - THIS SHOULD NOT CALL gui_manager.exec(false), it should call gui_manager.exec(true)
+	// But, the ClanLib developers have not have had time to adjust this example to that the CL_GUIManager::exec() controls the main loop
 	gui_manager.exec(false);
 
 	CL_GraphicContext gc = app->get_window()->get_gc();

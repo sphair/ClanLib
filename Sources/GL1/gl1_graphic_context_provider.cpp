@@ -82,9 +82,7 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
   primitives_array_texture_set(false), primitives_array_texindex_set(false)
 {
 	check_opengl_version();
-
 	max_texture_coords = get_max_texture_coords();
-
 	// Hack, so the sprite render batcher does not exceed the allowed number of textures
 	if (max_texture_coords < CL_RenderBatch2D::max_textures)
 	{
@@ -99,7 +97,6 @@ CL_GL1GraphicContextProvider::CL_GL1GraphicContextProvider(const CL_RenderWindow
 			CL_RenderBatch3D::max_textures = 1;
 		}
 	}
-
 	// Limit the internal texture coords, to avoid situations where the opengl driver says there are unlimited texture coords
 	if (max_texture_coords > 255)
 		max_texture_coords = 255;
@@ -140,9 +137,7 @@ void CL_GL1GraphicContextProvider::get_opengl_version(int &version_major, int &v
 	If an error is generated, glGetString returns zero.
 */
 	CL_GL1::set_active(this);
-
 	CL_String version = (char*)cl1GetString(CL_VERSION);
-
 	version_major = 0;
 	version_minor = 0;
 	version_release = 0;

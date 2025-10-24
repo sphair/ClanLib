@@ -64,7 +64,6 @@ private:
 	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
 	void on_lineedit_changed(CL_InputEvent &e);
-	void gui_repaint();
 	void render();
 	void select_font();
 	void draw_font_example();

@@ -57,7 +57,6 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_GUIWindowManagerTexture wm(window);
 	CL_GUIManager gui(wm, theme);
-	wm.func_repaint().set(this, &App::wm_repaint);
 
 	CL_GraphicContext gc = window.get_gc();
 
@@ -74,11 +73,13 @@ int App::start(const std::vector<CL_String> &args)
 		time_last = time_now;
 
 		gc.clear(CL_Colorf(0.0f,0.0f,0.0f));
-	
+
+		wm.process();
 		wm.draw_windows(gc);
-		gui.exec(false);
 
 		window.flip(1);
+
+		CL_KeepAlive::process();
 	}
 
 	return 0;
@@ -102,7 +103,3 @@ void App::on_window_close()
 	quit = true;
 }
 
-
-void App::wm_repaint()
-{
-}

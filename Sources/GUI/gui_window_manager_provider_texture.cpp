@@ -733,7 +733,7 @@ void CL_GUIWindowManagerProvider_Texture::setup_painting()
 	painting_set = false;
 }
 
-void CL_GUIWindowManagerProvider_Texture::complete_painting()
+void CL_GUIWindowManagerProvider_Texture::finalise_painting()
 {
 	setup_painting_called = false;
 
@@ -745,6 +745,11 @@ void CL_GUIWindowManagerProvider_Texture::complete_painting()
 		gc.reset_cliprect();
 		gc.reset_frame_buffer();
 	}
+}
+
+void CL_GUIWindowManagerProvider_Texture::complete_painting()
+{
+	finalise_painting();
 
 	if (!func_repaint.is_null())
 	{
@@ -754,6 +759,13 @@ void CL_GUIWindowManagerProvider_Texture::complete_painting()
 	{
 		default_repaint();
 	}
+}
+
+void CL_GUIWindowManagerProvider_Texture::process()
+{
+	setup_painting();
+	update();
+	finalise_painting();
 }
 
 void CL_GUIWindowManagerProvider_Texture::set_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)

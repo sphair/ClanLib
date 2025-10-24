@@ -131,6 +131,8 @@ int App::start(const std::vector<CL_String> &args)
 		gui.draw();
 
 		window.flip(1);
+
+		CL_KeepAlive::process();
 	}
 
 	return 0;

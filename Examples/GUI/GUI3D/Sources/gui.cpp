@@ -44,7 +44,6 @@ GUI::GUI(App *app) : app(app), window(app->get_window()), wm(window)
 
 	gui = CL_GUIManager(wm, theme);
 
-	wm.func_repaint().set(this, &GUI::wm_repaint);
 	wm.func_input_intercept().set(this, &GUI::wm_input_intercept);
 }
 
@@ -54,7 +53,7 @@ GUI::~GUI()
 
 bool GUI::run()
 {
-	gui.exec(false);
+	wm.process();
 	return true;
 }
 
@@ -141,10 +140,6 @@ void GUI::draw()
 		gc.pop_modelview();
 
 	}
-}
-
-void GUI::wm_repaint()
-{
 }
 
 

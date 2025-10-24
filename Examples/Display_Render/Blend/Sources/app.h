@@ -54,7 +54,6 @@ private:
 	void on_window_close();
 	void setup_balls();
 	void move_balls(float time_diff, int num_balls);
-	void wm_repaint();
 	CL_String get_blendequation(CL_BlendEquation equation, const CL_String &source, const CL_String &dest, const CL_String &source_fragment, const CL_String &dest_fragment);
 	CL_String get_blendfunc(CL_BlendFunc blendfunc, const CL_String &fragment_colour);
 	void draw_equation(CL_GraphicContext &gc, CL_Font &font, Options *options);

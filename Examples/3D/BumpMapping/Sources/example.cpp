@@ -66,7 +66,6 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_GUIWindowManagerTexture wm(window);
 	CL_GUIManager gui(wm, theme);
-	wm.func_repaint().set(this, &App::wm_repaint);
 
 	// Get the graphic context
 	CL_GraphicContext gc = window.get_gc();
@@ -144,7 +143,7 @@ int App::start(const std::vector<CL_String> &args)
 		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		font.draw_text(gc, 16, gc.get_height()-16-2, fps, CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		gui.exec(false);
+		wm.process();
 		wm.draw_windows(gc);
 
 		// Use flip(1) to lock the fps
@@ -268,9 +267,6 @@ void App::calculate_matricies(CL_GraphicContext &gc)
 	scene.gs->light_modelview.inverse();
 }
 
-void App::wm_repaint()
-{
-}
 
 void App::rotate_teapot()
 {

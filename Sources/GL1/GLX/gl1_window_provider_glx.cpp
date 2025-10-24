@@ -176,6 +176,10 @@ CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
 	glx.glXGetProcAddressARB = (CL_GL1_GLXFunctions::ptr_glXGetProcAddressARB) CL_LOAD_GLFUNC(glXGetProcAddressARB);
 	glx.glXGetProcAddress = (CL_GL1_GLXFunctions::ptr_glXGetProcAddress) CL_LOAD_GLFUNC(glXGetProcAddress);
 
+	glx.glXCreatePbufferSGIX = NULL;	// Setup later
+	glx.glXDestroyPbufferSGIX = NULL;	// Setup later
+	glx.glXChooseFBConfigSGIX = NULL;	// Setup later
+	glx.glXGetVisualFromFBConfigSGIX = NULL;	// Setup later
 
 	if ( (glx.glXDestroyContext == NULL) ||
 		(glx.glXMakeCurrent == NULL) ||
@@ -264,6 +268,18 @@ void CL_GL1WindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_D
 
 	if (!opengl_context)
 	{
+
+		int glx_major, glx_minor;
+		if ( !glx.glXQueryVersion( disp, &glx_major, &glx_minor ) || 
+			( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
+		{
+			glx.glx_1_3 = false;
+		}
+		else
+		{
+			glx.glx_1_3 = true;
+		}
+
 		create_provider_flag = true;
 		// Setup OpenGL:
 		int gl_attribs_single[] =
@@ -327,7 +343,7 @@ void CL_GL1WindowProvider_GLX::create(CL_DisplayWindowSite *new_site, const CL_D
 		gc_providers.push_back(gc.get_provider());
 	}
 
-	setup_swap_interval_pointers();
+	setup_extension_pointers();
 	swap_interval = desc.get_swap_interval();
 	if (swap_interval != -1)
 	{
@@ -362,7 +378,7 @@ bool CL_GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 			return false;
 
 		int ext_len = strlen(ext_name);
-		
+	
 		// It takes a bit of care to be fool-proof about parsing the OpenGL extensions string. Don't be fooled by sub-strings, etc.
 		for ( start = ext_string; ; )
 		{
@@ -383,7 +399,7 @@ bool CL_GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-void CL_GL1WindowProvider_GLX::setup_swap_interval_pointers()
+void CL_GL1WindowProvider_GLX::setup_extension_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) CL_GL1::get_proc_address("glXSwapIntervalSGI");
 	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) CL_GL1::get_proc_address("glXSwapIntervalMESA");
@@ -397,6 +413,22 @@ void CL_GL1WindowProvider_GLX::setup_swap_interval_pointers()
 	if ( !is_glx_extension_supported("GLX_MESA_swap_control") )
 	{
 		glXSwapIntervalMESA = NULL;
+	}
+
+
+	glx.glXCreatePbufferSGIX = (CL_GL1_GLXFunctions::ptr_glXCreatePbufferSGIX) CL_GL1::get_proc_address("glXCreateGLXPbufferSGIX");
+	glx.glXDestroyPbufferSGIX = (CL_GL1_GLXFunctions::ptr_glXDestroyPbuffer) CL_GL1::get_proc_address("glXDestroyGLXPbufferSGIX");
+	glx.glXChooseFBConfigSGIX = (CL_GL1_GLXFunctions::ptr_glXChooseFBConfig) CL_GL1::get_proc_address("glXChooseFBConfigSGIX");
+	glx.glXGetVisualFromFBConfigSGIX = (CL_GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) CL_GL1::get_proc_address("glXGetVisualFromFBConfigSGIX");
+	if ( !is_glx_extension_supported("GLX_SGIX_pbuffer") )
+	{
+		glx.glXCreatePbufferSGIX = NULL;
+		glx.glXDestroyPbufferSGIX = NULL;
+	}
+	if ( !is_glx_extension_supported("GLX_SGIX_fbconfig") )
+	{
+		glx.glXChooseFBConfigSGIX = NULL;
+		glx.glXGetVisualFromFBConfigSGIX = NULL;
 	}
 }
 

@@ -7,3 +7,6 @@
 #include <ClanLib/network.h>
 #include <ClanLib/gui.h>
 #include <ClanLib/csslayout.h>
+#include <cstdlib>
+
+

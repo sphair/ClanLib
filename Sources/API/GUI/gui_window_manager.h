@@ -105,6 +105,9 @@ public:
 	/// \param provider = The theme provider
 	CL_GUIWindowManager(CL_GUIWindowManagerProvider *provider);
 
+	/// \brief Duplicates the reference to a window manager
+	CL_GUIWindowManager(const CL_GUIWindowManager &src);
+
 	~CL_GUIWindowManager();
 
 /// \}

@@ -176,6 +176,9 @@ public:
 
 	/// \brief Final completion for painting all top level windows
 	void complete_painting();
+	void finalise_painting();
+
+	void process();
 
 	void draw_windows(CL_GraphicContext &gc);
 

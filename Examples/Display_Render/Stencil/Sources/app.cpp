@@ -60,9 +60,7 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_GUIWindowManagerTexture wm(window);
 	CL_GUIManager gui(wm, theme);
-
-	wm.func_repaint().set(this, &App::wm_repaint);
-
+	
 	CL_GraphicContext gc = window.get_gc();
 
 	// Deleted automatically by the GUI
@@ -89,7 +87,7 @@ int App::start(const std::vector<CL_String> &args)
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
-		gui.exec(false);
+		wm.process();
 		wm.draw_windows(gc);
 
 		int num_balls = options->num_balls;
@@ -164,6 +162,8 @@ int App::start(const std::vector<CL_String> &args)
 		font.draw_text(gc, 10.0f, 500.0, "(This example does not use the stencil depth buffer comparison or the stencil bitmask)", CL_Colorf::black);
 
 		window.flip(1);
+
+		CL_KeepAlive::process();
 	}
 
 	return 0;
@@ -244,10 +244,6 @@ void App::move_balls(float time_diff, int num_balls)
 		}
 
 	}
-}
-
-void App::wm_repaint()
-{
 }
 
 CL_Image App::get_stencil(CL_GraphicContext &gc, CL_Rect rect)

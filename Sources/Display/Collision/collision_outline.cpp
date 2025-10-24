@@ -97,20 +97,22 @@ CL_CollisionOutline::CL_CollisionOutline(
 	{
 		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderFile(file), accuracy_raw ));
 		impl = new_impl;
-		return;
-	}
-
-	CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(file, file_extension);
-	
-	if( pbuf.get_format() == cl_rgba8 )
-	{
-		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy));
-		impl = new_impl;
 	}
 	else
 	{
-		CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy_raw));
-		impl = new_impl;
+
+		CL_PixelBuffer pbuf = CL_ImageProviderFactory::load(file, file_extension);
+	
+		if( pbuf.get_format() == cl_rgba8 )
+		{
+			CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy));
+			impl = new_impl;
+		}
+		else
+		{
+			CL_SharedPtr<CL_CollisionOutline_Generic> new_impl(new CL_CollisionOutline_Generic( new CL_OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy_raw));
+			impl = new_impl;
+		}
 	}
 
 	set_rotation_hotspot(origin_center);

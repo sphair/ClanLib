@@ -54,7 +54,6 @@ private:
 	void on_window_close();
 	void setup_balls();
 	void move_balls(float time_diff, int num_balls);
-	void wm_repaint();
 	CL_Image get_stencil(CL_GraphicContext &gc, CL_Rect rect);
 private:
 	bool quit;

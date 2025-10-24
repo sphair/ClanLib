@@ -185,6 +185,8 @@ public:
 	void set_window_manager(CL_GUIWindowManager &window_manager);
 
 	/// \brief Processes messages until exit_with_code is called
+	///
+	/// \param loop_until_complete : Obsolete, always keep "true". Use CL_GUIWindowManagerTexture::process() instead
 	int exec(bool loop_until_complete = true);
 
 	/// \brief Processes all messages available

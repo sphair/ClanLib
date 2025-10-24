@@ -45,8 +45,7 @@ public:
 private:
 	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
-	void wm_repaint();
-
+	
 private:
 	void render(CL_GraphicContext &gc);
 	void create_scene(CL_GraphicContext &gc);

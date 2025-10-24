@@ -57,9 +57,7 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_GUIWindowManagerTexture wm(window);
 	CL_GUIManager gui(wm, theme);
-
-	wm.func_repaint().set(this, &App::wm_repaint);
-
+	
 	CL_GraphicContext gc = window.get_gc();
 
 	// Deleted automatically by the GUI
@@ -84,7 +82,7 @@ int App::start(const std::vector<CL_String> &args)
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
-		gui.exec(false);
+		wm.process();
 		wm.draw_windows(gc);
 
 		int num_balls = options->num_balls;
@@ -121,6 +119,8 @@ int App::start(const std::vector<CL_String> &args)
 		gc.set_map_mode(cl_map_2d_upper_left);
 
 		window.flip(1);
+
+		CL_KeepAlive::process();
 	}
 	return 0;
 }
@@ -199,10 +199,6 @@ void App::move_balls(float time_diff, int num_balls)
 			}
 		}
 	}
-}
-
-void App::wm_repaint()
-{
 }
 
 void App::set_user_projection(CL_GraphicContext &gc, CL_Sizef &area_size, Options *options)

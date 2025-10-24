@@ -117,12 +117,29 @@ void CL_PBuffer_GL1_Impl::reset()
 	if (glx)
 	{
 		if (pbuffer_context) glx->glXDestroyContext(disp, pbuffer_context);
-		if (pbuffer) glx->glXDestroyPbuffer(disp, pbuffer);
+		if (pbuffer)
+		{
+			if (glx->glx_1_3)
+			{
+				glx->glXDestroyPbuffer(disp, pbuffer);
+			}
+			else
+			{
+				glx->glXDestroyPbufferSGIX(disp, pbuffer);
+			}
+		}
 	}
 
 	pbuffer_context = 0;
 	pbuffer = 0;
 	glx = NULL;
+}
+
+static bool cl1_ctxErrorOccurred = false;
+static int cl1_ctxErrorHandler( Display *dpy, XErrorEvent *ev )
+{
+    cl1_ctxErrorOccurred = true;
+    return 0;
 }
 
 void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_Size &size)
@@ -165,28 +182,64 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 
 	scrnum = DefaultScreen(disp );
 
-	if ((glx->glXChooseFBConfig == NULL) ||  (glx->glXCreatePbuffer == NULL) || (glx->glXGetVisualFromFBConfig == NULL) ||  (glx->glXCreateContext == NULL))
+	if ((glx->glXCreateContext == NULL))
 	{
-		throw CL_Exception("pbuffer support is not available (require glx 1.3)");
+		throw CL_Exception("internal error, cannot locate glxCreateContext");
 	}
 
-	fbconfig = glx->glXChooseFBConfig(disp, scrnum, attrib, &nitems);
-
-	if (fbconfig == NULL)
+	if (glx->glx_1_3)
 	{
-		throw CL_Exception("Error: couldn't get fbconfig");
+		if ((glx->glXCreatePbuffer == NULL) || (glx->glXChooseFBConfig == NULL) || (glx->glXGetVisualFromFBConfig == NULL))
+			throw CL_Exception("glXCreatePbuffer is not available, even though you are running glx 1.3 or better.");
+
+		fbconfig = glx->glXChooseFBConfig(disp, scrnum, attrib, &nitems);
+
+		if (fbconfig == NULL)
+		{
+			throw CL_Exception("Error: couldn't get fbconfig");
+		}
+		pbuffer = glx->glXCreatePbuffer(disp, fbconfig[0], pbufAttrib);
+
+		if (!pbuffer)
+			throw CL_Exception("Error: couldn't create pbuffer");
+
+		visinfo = glx->glXGetVisualFromFBConfig(disp, fbconfig[0]);
+		if (!visinfo)
+			throw CL_Exception("Error: couldn't get an RGBA, double-buffered visual");
 	}
-
-	pbuffer = glx->glXCreatePbuffer(disp, fbconfig[0], pbufAttrib);
-	if (!pbuffer)
+	else
 	{
-		throw CL_Exception("Error: couldn't create pbuffer");
-	}
+		if ((glx->glXCreatePbufferSGIX == NULL) || (glx->glXChooseFBConfigSGIX == NULL) || (glx->glXGetVisualFromFBConfigSGIX == NULL))
+			throw CL_Exception("pbuffer support is not available. Try updating your graphic card driver.");
+	
+		fbconfig = glx->glXChooseFBConfigSGIX(disp, scrnum, attrib, &nitems);
+		if (fbconfig == NULL)
+		{
+			throw CL_Exception("Error: couldn't get fbconfig");
+		}
+		int pbufAttrib2[] = {
+			GLX_LARGEST_PBUFFER, False,
+			None
+			};
 
-	visinfo = glx->glXGetVisualFromFBConfig(disp, fbconfig[0]);
-	if (!visinfo)
-	{
-		throw CL_Exception("Error: couldn't get an RGBA, double-buffered visual");
+		cl1_ctxErrorOccurred = false;
+		int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&cl1_ctxErrorHandler);
+
+		pbuffer = glx->glXCreatePbufferSGIX(disp, fbconfig[0], size.width, size.height, pbufAttrib2);
+
+		// Restore the original error handler
+		XSetErrorHandler( oldHandler );		
+		
+		if (cl1_ctxErrorOccurred)
+			throw CL_Exception("Failed creating glx 1.2 framebuffer");
+
+		if (!pbuffer)
+			throw CL_Exception("Error: couldn't create pbuffer");
+
+		visinfo = glx->glXGetVisualFromFBConfigSGIX(disp, fbconfig[0]);	
+		if (!visinfo)
+			throw CL_Exception("Error: couldn't get an RGBA, double-buffered visual");
+
 	}
 
 	GLXContext shared_context = window_provider.get_share_context();
@@ -196,8 +249,7 @@ void CL_PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, CL_S
 		throw CL_Exception("Error: cannot obtain the shared context");
 	}
 
-	pbuffer_context = glx->glXCreateContext( disp, visinfo, 
-		shared_context, GL_TRUE );
+	pbuffer_context = glx->glXCreateContext( disp, visinfo, shared_context, GL_TRUE );
 
 	if (!pbuffer_context)
 	{

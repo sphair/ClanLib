@@ -66,7 +66,6 @@ int App::start(const std::vector<CL_String> &args)
 
 	CL_GUIWindowManagerTexture wm(window);
 	CL_GUIManager gui(wm, theme);
-	wm.func_repaint().set(this, &App::wm_repaint);
 
 	// Get the graphic context
 	CL_GraphicContext gc = window.get_gc();
@@ -159,11 +158,13 @@ int App::start(const std::vector<CL_String> &args)
 		font.draw_text(gc, 600, 250, "Target Euler Orientation");
 		font.draw_text(gc, 16, 630, "(Using YXZ rotation order)");
 
-		gui.exec(false);
+		wm.process();
 		wm.draw_windows(gc);
 
 		// Use flip(1) to lock the fps
 		window.flip(0);
+
+		CL_KeepAlive::process();
 	}
 
 	return 0;
@@ -336,10 +337,6 @@ void App::calculate_matricies(CL_GraphicContext &gc)
 	light_distant->GetWorldMatrix(scene.gs->light_modelview);
 	scene.gs->light_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->light_modelview.inverse();
-}
-
-void App::wm_repaint()
-{
 }
 
 void App::control_target(Options *options)

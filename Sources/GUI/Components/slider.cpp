@@ -307,6 +307,9 @@ CL_Callback_v0 &CL_Slider::func_slider_moved()
 
 void CL_Slider_Impl::on_process_message(CL_GUIMessage &msg)
 {
+	if (!slider->is_enabled())
+		return;
+
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
 		CL_GUIMessage_Input input = msg;

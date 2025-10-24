@@ -44,7 +44,6 @@ public:
 	CL_GUIManager &get_gui_manager() {return gui;}
 
 private:
-	void wm_repaint();
 	CL_Vec3f transform_point(const CL_Vec3d &src_point, const CL_Mat4d &matrix);
 	void wm_input_intercept(CL_InputEvent &input_event, CL_InputState &input_state);
 

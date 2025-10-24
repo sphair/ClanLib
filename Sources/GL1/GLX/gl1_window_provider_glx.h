@@ -100,6 +100,13 @@ public:
 	typedef __GLXextFuncPtr (CL_GL1FUNC *ptr_glXGetProcAddress) (const GLubyte *);
 	typedef void (*(CL_GL1FUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
 
+	typedef GLXPbuffer (*ptr_glXCreatePbufferSGIX)(
+		Display *dpy,
+		GLXFBConfig config,
+		unsigned int width,
+		unsigned int height,
+		int *attrib_list);
+
 public:
 	ptr_glXChooseVisual glXChooseVisual;
 	ptr_glXCopyContext glXCopyContext;
@@ -141,8 +148,13 @@ public:
 	ptr_glXSelectEvent glXSelectEvent;
 	ptr_glXGetProcAddress glXGetProcAddress;
 	ptr_glXGetProcAddressARB glXGetProcAddressARB;
-};
 
+	bool glx_1_3;
+	ptr_glXCreatePbufferSGIX glXCreatePbufferSGIX;
+	ptr_glXDestroyPbuffer glXDestroyPbufferSGIX;
+	ptr_glXChooseFBConfig glXChooseFBConfigSGIX; 
+	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
+};
 
 class CL_GL1_RenderWindowProvider_GLX : public CL_RenderWindowProvider
 {
@@ -313,7 +325,7 @@ private:
 
 	bool is_glx_extension_supported(const char *ext_name);
 
-	void setup_swap_interval_pointers();
+	void setup_extension_pointers();
 
 	CL_X11Window x11_window;
 
@@ -326,6 +338,7 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
+
 	int swap_interval;
 
 #ifdef CL_USE_DLOPEN

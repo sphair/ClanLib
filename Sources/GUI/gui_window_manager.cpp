@@ -60,6 +60,11 @@ CL_GUIWindowManager::CL_GUIWindowManager(CL_GUIWindowManagerProvider *provider)
 	impl->provider = provider;
 }
 
+CL_GUIWindowManager::CL_GUIWindowManager(const CL_GUIWindowManager &src)
+: impl(src.impl)
+{
+}
+
 CL_GUIWindowManager::~CL_GUIWindowManager()
 {
 }

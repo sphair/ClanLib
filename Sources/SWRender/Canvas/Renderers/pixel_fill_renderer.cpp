@@ -67,12 +67,12 @@ void CL_PixelFillRenderer::clear(const CL_Colorf &color)
 	unsigned int color8888 = (c.get_alpha() << 24) + (c.get_red() << 16) + (c.get_green() << 8) + c.get_blue();
 	unsigned char *ptr_color8888 = (unsigned char *) &color8888;
 
-	for (int y = core; y < dest_buffer_height; y += num_cores)
+	for (int y = find_first_line_for_core(clip_rect.top, core, num_cores); y < clip_rect.bottom; y += num_cores)
 	{
-		unsigned char *line = dest_data + y * dest_buffer_width * 4;
+		unsigned char *line = dest_data + y * dest_buffer_width * 4 + clip_rect.left * 4;
 		unsigned int line_align = ((line) - ((unsigned char *) 0)) & 0xf; // A gcc safe way of obtaining an address
 		int pos = 0;
-		int length = dest_buffer_width*4;
+		int length = clip_rect.get_width()*4;
 
 		// Write single bytes until we are byte aligned:
 		if (line_align)

@@ -94,7 +94,6 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	font_desc.set_anti_alias(true);
 	font_large_antialias = CL_Font_System(gc, font_desc);
 	font_large_antialias.set_texture_group(font_texture_group);
-	wm.func_repaint().set(this, &GUI::wm_repaint);
 
 	panel.reset(new Panel(this) );
 }
@@ -111,19 +110,8 @@ bool GUI::run()
 
 	gc.set_map_mode(CL_MapMode(cl_map_2d_upper_left));
 
-	gui_exec();
-
-	std::vector<CL_GUIWindowManagerTextureWindow> windows = wm.get_windows();
-	std::vector<CL_GUIWindowManagerTextureWindow>::size_type index, size;
-	size = windows.size();
-
-	for (index = 0; index < size; index++)
-	{
-		CL_GUIWindowManagerTextureWindow window = windows[index];
-		CL_Subtexture texture = window.get_texture();
-		CL_Image image(gc, texture); 
-		image.draw(gc, window.get_geometry().left, window.get_geometry().top);
-	}
+	wm.process();
+	wm.draw_windows(gc);
 
 	write_display_image();
 
@@ -135,16 +123,9 @@ bool GUI::run()
 
 	window_ptr->flip(1);
 
+	CL_KeepAlive::process();
+
 	return true;
-}
-
-void GUI::gui_exec()
-{
-	gui.exec(false);
-}
-
-void GUI::wm_repaint()
-{
 }
 
 void GUI::write_display_image()
