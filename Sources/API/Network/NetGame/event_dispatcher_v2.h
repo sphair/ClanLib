@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,6 +31,7 @@
 
 #pragma once
 
+#include "../api_network.h"
 #include "event.h"
 #include <map>
 #include "../../Core/Signals/callback_v3.h"
@@ -39,7 +40,7 @@ template<typename ContextParam1, typename ContextParam2>
 /// \brief CL_NetGameEventDispatcher_v2
 ///
 /// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
-class CL_NetGameEventDispatcher_v2
+class CL_API_NETWORK CL_NetGameEventDispatcher_v2
 {
 public:
 	typedef CL_Callback_v3<const CL_NetGameEvent &, ContextParam1, ContextParam2> CallbackClass;

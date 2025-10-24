@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -67,6 +67,8 @@ bool CL_HTTPServer_Impl::read_line(CL_TCPConnection &connection, CL_String8 &out
 	while (out_line.length() < 1024)
 	{
 		char buffer[1024];
+		if (connection.get_read_event().wait(15000) == false)
+			throw CL_Exception(cl_text("Read timed out"));
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
 			break;
@@ -93,6 +95,8 @@ bool CL_HTTPServer_Impl::read_lines(CL_TCPConnection &connection, CL_String8 &ou
 	while (out_header_lines.length() < 32*1024)
 	{
 		char buffer[1024];
+		if (connection.get_read_event().wait(15000) == false)
+			throw CL_Exception(cl_text("Read timed out"));
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
 			break;
@@ -155,12 +159,18 @@ void CL_HTTPServer_Impl::connection_thread_main(CL_TCPConnection connection)
 		CL_String8 request;
 		bool bool_result = read_line(connection, request);
 		if (bool_result == false)
+		{
+			connection.disconnect_abortive();
 			return;
+		}
 
 		CL_String8 headers;
 		bool_result = read_lines(connection, headers);
 		if (bool_result == false)
+		{
+			connection.disconnect_abortive();
 			return;
+		}
 
 		// Extract request command, url and version:
 
@@ -229,6 +239,8 @@ void CL_HTTPServer_Impl::connection_thread_main(CL_TCPConnection connection)
 			write_line(connection, "");
 			write_line(connection, error_msg);
 		}
+
+		connection.disconnect_graceful();
 
 /*
 		if (url == "/")

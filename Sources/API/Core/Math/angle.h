@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -93,10 +93,10 @@ public:
 	/// \brief Set the angle value in radians.
 	void set_radians(float radians);
 
-	/// \brief Converts angle to range [0,360[ degrees.
+	/// \brief Converts angle to range [0,360] degrees.
 	void normalize();
 
-	/// \brief Converts angle to range [-180,180[ degrees.
+	/// \brief Converts angle to range [-180,180] degrees.
 	void normalize_180();
 
 /// \}

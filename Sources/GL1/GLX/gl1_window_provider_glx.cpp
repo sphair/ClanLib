@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -50,7 +50,7 @@
 #include "pbuffer_impl.h"
 
 #ifdef CL_USE_DLOPEN
-#define CL_OPENGL_LIBRARY "libGL.so"
+#define CL_OPENGL_LIBRARY "libGL.so.1"
 #include <dlfcn.h>
 #endif
 		

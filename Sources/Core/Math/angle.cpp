@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -88,13 +88,16 @@ void CL_Angle::set_radians(float radians)
 
 void CL_Angle::normalize()
 {
-	value_rad = fmod(value_rad, CL_PI*2);
+	value_rad = fmod(value_rad, CL_PI*2.0f);
+	if (value_rad < 0.0f)
+		value_rad += CL_PI*2.0f;
 }
 
 void CL_Angle::normalize_180()
 {
 	normalize();
-	value_rad -= CL_PI;
+	if (value_rad > CL_PI)
+		value_rad -= CL_PI * 2.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////

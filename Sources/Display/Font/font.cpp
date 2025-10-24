@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -141,7 +141,7 @@ CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 	if (!impl.is_null())
 	{
 		CL_FontMetrics fm = get_font_metrics(gc);
-		int line_spacing = fm.get_height() + fm.get_external_leading();
+		int line_spacing = fm.get_external_leading();
 		std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
 		for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
 		{

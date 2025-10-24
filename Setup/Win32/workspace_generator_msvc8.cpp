@@ -289,6 +289,7 @@ void WorkspaceGenerator_MSVC8::write_install_batch_file(const Workspace &workspa
 		bat_file += ".bat";
 
 		std::ofstream bat(bat_file.c_str());
+		bat << "mode con cp select=" << GetACP() << " > nul" << std::endl;
 
 		install_mkdir(bat, workspace.output_lib_dir);
 

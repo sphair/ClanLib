@@ -109,6 +109,11 @@ bool read_line(CL_TCPConnection &connection, CL_String8 &out_line)
 	while (out_line.length() < 1024)
 	{
 		char buffer[1024];
+
+		int wakeup_reason = connection.get_read_event().wait(15000);
+		if (wakeup_reason == -1)
+			throw CL_Exception(cl_text("read_line timed out"));
+
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
 			break;

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -584,8 +584,6 @@ void CL_SpriteDescription::add_alphaclipped_frames_free(
 			impl->frames.push_back(CL_SpriteDescriptionFrame(pixelbuffer, CL_Rect(x1, y1, x2, y2)));
 		}
 	}
-
-	delete[] explored;
 }
 
 void CL_SpriteDescription::set_frame_delay(int frame, double delay)

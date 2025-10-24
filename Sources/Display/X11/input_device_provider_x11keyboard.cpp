@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -139,9 +139,27 @@ void CL_InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &even
 	else
 		key.type = CL_InputEvent::released;
 	key.mouse_pos = window->get_mouse_position();
-	key.repeat_count = 0;	// X11 automatically handles keyboard repeats
 
 	KeySym key_symbol = XKeycodeToKeysym(window->get_display(), key_code, 0);
+
+	bool keypressed = get_keycode(key_symbol);
+
+        // Add to repeat count                                                                                               
+        if(keydown && keypressed)
+	  {
+	    if( repeat_count.find(key_symbol) == repeat_count.end() )
+	      repeat_count[key_symbol] = 0;
+	    else
+	      repeat_count[key_symbol]++;
+	  }
+
+	key.repeat_count = repeat_count[key_symbol];
+
+	if( !keydown && !keypressed )
+	  {
+	    repeat_count[key_symbol] = -1;
+
+	  }
 
 	switch (key_symbol)
 	{

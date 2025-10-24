@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -730,7 +730,7 @@ void CL_SpanLayout_Impl::align_justify(int max_width)
 
 CL_Size CL_SpanLayout_Impl::find_preferred_size(CL_GraphicContext &gc)
 {
-	layout_lines(gc, 0xdeadbabe); // Feed it with a very long length so it ends up on one line
+	layout_lines(gc, 0x70000000); // Feed it with a very long length so it ends up on one line
 	return get_size();
 }
 

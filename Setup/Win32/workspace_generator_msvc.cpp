@@ -1148,6 +1148,7 @@ void WorkspaceGenerator_MSVC6::write_dsp(const Workspace &workspace, const Proje
 		bat_file += ".bat";
 
 		std::ofstream bat(bat_file.c_str());
+		bat << "mode con cp select=" << GetACP() << " > nul" << std::endl;
 
 		install_mkdir(bat, workspace.output_lib_dir);
 
@@ -2422,6 +2423,7 @@ std::string WorkspaceGenerator_MSVC7::write_project(std::ofstream &sln, const Pr
 		bat_file += ".bat";
 
 		std::ofstream bat(bat_file.c_str());
+		bat << "mode con cp select=" << GetACP() << " > nul" << std::endl;
 
 		std::string instdir = workspace.output_include_dir.c_str();
 		instdir += "\\ClanLib";

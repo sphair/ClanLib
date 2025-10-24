@@ -11,7 +11,7 @@ static const char *TextToShow[] = {
 "",
 "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-",
 "ClanLib SDK",
-"Copyright (c) 1997-2009 The ClanLib Team",
+"Copyright (c) 1997-2010 The ClanLib Team",
 "",
 "This software is provided 'as-is', without any express or implied "
 "warranty.  In no event will the authors be held liable for any damages "

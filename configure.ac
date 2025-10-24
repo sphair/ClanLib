@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.1.1)
+AC_INIT(ClanLib, 2.1.2)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=1
-CLANLIB_MICRO_VERSION=1
+CLANLIB_MICRO_VERSION=2
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -500,9 +500,13 @@ if test "$enable_clanSound" != "no"; then
 	echo "Checking for clanSound stuff"
 	echo "============================"
 
-	dnl Note, ClanLib only supports SSE2 for clanSound
-	CLANLIB_CHECK_LIB(SSE2, [`cat $srcdir/Setup/Tests/sse2.cpp`], clanSound, [ *** Compliler does not support SSE2 ], [ ], [ -msse2 ] )
-
+	OLD_CXXFLAGS="$CXXFLAGS"; CXXFLAGS="-msse2";
+	AC_MSG_CHECKING([for SSE2])
+	AC_LINK_IFELSE([`cat $srcdir/Setup/Tests/sse2.cpp`],
+	    AC_MSG_RESULT(yes); clanSound_CXXFLAGS=-msse2,
+	    AC_MSG_RESULT(no); clanSound_CXXFLAGS=; AC_DEFINE(CL_DISABLE_SSE2))
+	CXXFLAGS="$OLD_CXXFLAGS"
+ 
 	if test "$WIN32" = "yes"; then
 		CLANLIB_CHECK_LIB(dsound,[#include <dsound.h>
 			int main() { return 0; } void used_stuff() {DirectSoundCreate(NULL, NULL, NULL);}],
@@ -527,10 +531,7 @@ if test "$enable_clanSound" != "no"; then
 	fi
 
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
-	if test "$enable_clanSound" = "yes"; then
-		clanSound_CXXFLAGS=-msse2
-		AC_SUBST(clanSound_CXXFLAGS)
-	fi
+	AC_SUBST(clanSound_CXXFLAGS)
 fi
 
 if test "$enable_clanSound" != "no"; then

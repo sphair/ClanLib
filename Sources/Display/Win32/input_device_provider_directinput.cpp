@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -100,6 +100,10 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 				device_instance.tszProductName));
 	}
 
+	/*
+	*** This is not required, and may fail with DIERR_OTHERAPPHASPRIO.
+	*** The function update() performs the Acquire().
+
 	result = directinput_device->Acquire();
 	if (FAILED(result))
 	{
@@ -111,6 +115,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 				device_instance.tszInstanceName,
 				device_instance.tszProductName));
 	}
+	*/
 }
 
 CL_InputDeviceProvider_DirectInput::~CL_InputDeviceProvider_DirectInput()

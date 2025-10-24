@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,17 +31,21 @@
 
 #pragma once
 
+#include "../api_network.h"
+
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
+#include "../Socket/socket_name.h" // TODO: Remove
 #include "../../Core/System/thread.h" // TODO: Remove
 #include "../../Core/System/event.h"	// TODO: Remove
 
 class CL_NetGameConnectionSite;
+class CL_NetGameConnection_Impl;
 
 /// \brief CL_NetGameConnection
 ///
 /// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
-class CL_NetGameConnection
+class CL_API_NETWORK CL_NetGameConnection
 {
 public:
 
@@ -50,6 +54,8 @@ public:
 	/// \param site = Net Game Connection Site
 	/// \param connection = TCPConnection
 	CL_NetGameConnection(CL_NetGameConnectionSite *site, const CL_TCPConnection &connection);
+	CL_NetGameConnection(CL_NetGameConnectionSite *site, const CL_SocketName &socket_name);
+
 	~CL_NetGameConnection();
 
 	/// \brief Set data
@@ -70,23 +76,15 @@ public:
 	/// \param game_event = Net Game Event
 	void send_event(const CL_NetGameEvent &game_event);
 
+	/// \brief Disconnects a client
+	void disconnect();
+
 private:
+	/// \brief Disallow copy constructors
+	CL_NetGameConnection(CL_NetGameConnection &other);
+	CL_NetGameConnection &operator =(const CL_NetGameConnection &other);
 
-	/// \brief Connection main
-	void connection_main();
-
-	CL_NetGameConnectionSite *site;
-	CL_TCPConnection connection;
-	CL_Thread thread;
-	CL_Event stop_event, queue_event;
-	CL_Mutex mutex;
-	std::vector<CL_NetGameEvent> send_queue;
-	struct AttachedData
-	{
-		CL_String name;
-		void *data;
-	};
-	std::vector<AttachedData> data;
+	CL_NetGameConnection_Impl *impl;
 };
 
 /// \}

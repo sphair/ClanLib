@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -906,7 +906,18 @@ void CL_OpenGLGraphicContextProvider::on_window_resized()
 
 	switch (map_mode)
 	{
-	default: break;
+	default:
+		break;
+	case cl_user_projection:
+		CL_OpenGL::set_active(this);
+		clViewport(0, 0, width, height);
+		if (clIsEnabled(CL_SCISSOR_TEST))
+			clScissor(
+				last_clip_rect.left,
+				last_clip_rect.top,
+				last_clip_rect.get_width(),
+				last_clip_rect.get_height());
+		break;
 	case cl_map_2d_upper_left:
 		CL_OpenGL::set_active(this);
 		clViewport(0, 0, width, height);

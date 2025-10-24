@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -78,10 +78,10 @@ public:
 		while (it != it_end)
 		{
 			if (it->get()->valid && it->get()->enabled)
-				return true;
+				return false;
 			++it;
 		}
-		return false;
+		return true;
 	}
 
 	bool is_invokable() const

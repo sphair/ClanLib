@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include "../api_network.h"
+
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
 #include "../../Core/Signals/signal_v1.h"
@@ -43,7 +45,7 @@ class CL_NetGameServer_Impl;
 /// \brief CL_NetGameServer
 ///
 /// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
-class CL_NetGameServer : CL_NetGameConnectionSite
+class CL_API_NETWORK CL_NetGameServer : CL_NetGameConnectionSite
 {
 public:
 	CL_NetGameServer();

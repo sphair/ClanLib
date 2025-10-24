@@ -22,7 +22,7 @@ Document::Document()
 		connection1.set_string("connectionname", "FreeNode");
 		connection1.set_string("server", "irc.freenode.net");
 		connection1.set_string("comment", "Freenode provides discussion facilities for the Free and Open Source Software communities, for not-for-profit organizations and for related communities and organizations.");
-		connection1.set_string("nick", "CTalk2009");
+		connection1.set_string("nick", "CTalk2010");
 		connection1.set_string("username", "carambola");
 		connection1.set_string("name", "Anonymous ClanLib Carambola User");
 		connection1.set_bool("autoconnect", false);
@@ -32,7 +32,7 @@ Document::Document()
 		connection2.set_string("connectionname", "QuakeNet");
 		connection2.set_string("server", "jubiigames.dk.quakenet.org"); /*"servercentral.il.us.quakenet.org"*/
 		connection2.set_string("comment", "QuakeNet is built around the gaming community, and is an organizations that facilitates the communication of many teams and online organizations.");
-		connection2.set_string("nick", "CTalk2009");
+		connection2.set_string("nick", "CTalk2010");
 		connection2.set_string("username", "carambola");
 		connection2.set_string("name", "Anonymous ClanLib Carambola User");
 		connection2.set_bool("autoconnect", false);

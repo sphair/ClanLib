@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,13 +28,19 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/sound_sse.h"
+#include <cstdlib>
+
+#ifndef CL_DISABLE_SSE2
 #include <emmintrin.h>
+#endif
 
 void *CL_SoundSSE::aligned_alloc(int size)
 {
 	void *ptr;
 #ifdef _MSC_VER
 	ptr = _aligned_malloc(size, 16);
+	if (!ptr)
+		throw CL_Exception(cl_text("Out of memory"));
 #else
 	if (posix_memalign( (void **) &ptr, 16, size))
 	{
@@ -58,6 +64,7 @@ void CL_SoundSSE::aligned_free(void *ptr)
 
 void CL_SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/8)*8;
 
 	__m128i zero = _mm_setzero_si128();
@@ -77,7 +84,9 @@ void CL_SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
 		_mm_storeu_ps(output[0]+i/2, tmp0);
 		_mm_storeu_ps(output[1]+i/2, tmp1);
 	}
-
+#else
+	const int sse_size = 0;
+#endif
 	// unpack remaining
 	for (int i = sse_size; i < size; i+=2)
 	{
@@ -88,6 +97,7 @@ void CL_SoundSSE::unpack_16bit_stereo(short *input, int size, float *output[2])
 
 void CL_SoundSSE::unpack_16bit_mono(short *input, int size, float *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/8)*8;
 
 	__m128i zero = _mm_setzero_si128();
@@ -102,6 +112,9 @@ void CL_SoundSSE::unpack_16bit_mono(short *input, int size, float *output)
 		_mm_storeu_ps(output+i+0, samples0);
 		_mm_storeu_ps(output+i+4, samples1);
 	}
+#else
+	const int sse_size = 0;
+#endif
 
 	// unpack remaining
 	for (int i = sse_size; i < size; i++)
@@ -112,6 +125,7 @@ void CL_SoundSSE::unpack_16bit_mono(short *input, int size, float *output)
 
 void CL_SoundSSE::unpack_8bit_stereo(unsigned char *input, int size, float *output[2])
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/16)*16;
 
 	__m128i zero = _mm_setzero_si128();
@@ -142,7 +156,9 @@ void CL_SoundSSE::unpack_8bit_stereo(unsigned char *input, int size, float *outp
 		 _mm_storeu_ps(output[0]+i/2+4, tmp2);
 		 _mm_storeu_ps(output[1]+i/2+4, tmp3);
 	}
-
+#else
+	const int sse_size = 0;
+#endif
 	// unpack remaining
 	for (int i = sse_size; i < size; i+=2)
 	{
@@ -156,6 +172,7 @@ void CL_SoundSSE::unpack_8bit_stereo(unsigned char *input, int size, float *outp
 
 void CL_SoundSSE::unpack_8bit_mono(unsigned char *input, int size, float *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/16)*16;
 
 	__m128i zero = _mm_setzero_si128();
@@ -179,17 +196,20 @@ void CL_SoundSSE::unpack_8bit_mono(unsigned char *input, int size, float *output
 		 _mm_storeu_ps(output+i+8, samples2);
 		 _mm_storeu_ps(output+i+12, samples3);
 	}
-
+#else
+	const int sse_size = 0;
+#endif
 	// unpack remaining
 	for (int i = sse_size; i < size; i++)
 	{
-		int value = input[0];
+		int value = input[i];
 		output[i] = ((float) (value - 128)) / 128.0f;
 	}
 }
 
 void CL_SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 constant1 = _mm_set1_ps(32767);
@@ -208,6 +228,10 @@ void CL_SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 		_mm_storeu_si128((__m128i*)(output+i*2), isamples);
 	}
 
+#else
+	const int sse_size = 0;
+#endif
+
 	// Pack remaining
 	for (int i = sse_size; i < size; i++)
 	{
@@ -218,6 +242,7 @@ void CL_SoundSSE::pack_16bit_stereo(float *input[2], int size, short *output)
 
 void CL_SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	for (int i = 0; i < sse_size; i+=4)
@@ -231,6 +256,10 @@ void CL_SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 		_mm_storeu_ps(output+i*2+4, tmp1);
 	}
 
+#else
+	const int sse_size = 0;
+#endif
+
 	// Pack remaining
 	for (int i = sse_size; i < size; i++)
 	{
@@ -241,6 +270,7 @@ void CL_SoundSSE::pack_float_stereo(float *input[2], int size, float *output)
 
 void CL_SoundSSE::copy_float(float *input, int size, float *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	for (int i = 0; i < sse_size; i+=4)
@@ -249,6 +279,10 @@ void CL_SoundSSE::copy_float(float *input, int size, float *output)
 		_mm_storeu_ps(output+i, s);
 	}
 
+#else
+	const int sse_size = 0;
+#endif
+
 	// Copy remaining
 	for (int i = sse_size; i < size; i++)
 		output[i] = input[i];
@@ -256,6 +290,7 @@ void CL_SoundSSE::copy_float(float *input, int size, float *output)
 
 void CL_SoundSSE::multiply_float(float *channel, int size, float volume)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 volume0 = _mm_set1_ps(volume);
@@ -265,6 +300,9 @@ void CL_SoundSSE::multiply_float(float *channel, int size, float volume)
 		s = _mm_mul_ps(s, volume0);
 		_mm_storeu_ps(channel+i, s);
 	}
+#else
+	const int sse_size = 0;
+#endif
 
 	for (int i = sse_size; i < size; i++)
 		channel[i] *= volume;
@@ -272,6 +310,7 @@ void CL_SoundSSE::multiply_float(float *channel, int size, float volume)
 
 void CL_SoundSSE::set_float(float *channel, int size, float value)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 
 	__m128 value0 = _mm_set1_ps(value);
@@ -279,6 +318,9 @@ void CL_SoundSSE::set_float(float *channel, int size, float value)
 	{
 		_mm_storeu_ps(channel+i, value0);
 	}
+#else
+	const int sse_size = 0;
+#endif
 
 	for (int i = sse_size; i < size; i++)
 		channel[i] = value;
@@ -286,6 +328,7 @@ void CL_SoundSSE::set_float(float *channel, int size, float value)
 
 void CL_SoundSSE::mix_one_to_one(float *input, int size, float *output, float volume)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	__m128 volume0 = _mm_set1_ps(volume);
 	for (int i = 0; i < sse_size; i+=4)
@@ -295,6 +338,10 @@ void CL_SoundSSE::mix_one_to_one(float *input, int size, float *output, float vo
 		_mm_storeu_ps(output+i, _mm_add_ps(_mm_mul_ps(sample0, volume0), sample1));
 	}
 
+#else
+	const int sse_size = 0;
+#endif
+
 	for (int i = sse_size; i < size; i++)
 	{
 		output[i] += input[i] * volume;
@@ -303,6 +350,7 @@ void CL_SoundSSE::mix_one_to_one(float *input, int size, float *output, float vo
 
 void CL_SoundSSE::mix_one_to_many(float *input, int size, float **output, float *volume, int channels)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	for (int i = 0; i < sse_size; i+=4)
 	{
@@ -311,9 +359,13 @@ void CL_SoundSSE::mix_one_to_many(float *input, int size, float **output, float 
 		{
 			__m128 sample1 = _mm_loadu_ps(output[j]+i);
 			__m128 volume0 = _mm_set1_ps(volume[j]);
-			_mm_storeu_ps(output[j]+i, _mm_add_ps(_mm_mul_ps(sample0, volume0), sample1));
+			_mm_storeu_ps(output[j]+i, _mm_add_ps(_mm_mul_ps(sample1, volume0), sample0));
 		}
 	}
+
+#else
+	const int sse_size = 0;
+#endif
 
 	for (int i = sse_size; i < size; i++)
 	{
@@ -327,6 +379,7 @@ void CL_SoundSSE::mix_one_to_many(float *input, int size, float **output, float 
 
 void CL_SoundSSE::mix_many_to_one(float **input, float *volume, int channels, int size, float *output)
 {
+#ifndef CL_DISABLE_SSE2
 	int sse_size = (size/4)*4;
 	for (int i = 0; i < sse_size; i+=4)
 	{
@@ -335,10 +388,14 @@ void CL_SoundSSE::mix_many_to_one(float **input, float *volume, int channels, in
 		{
 			__m128 sample1 = _mm_loadu_ps(input[j]+i);
 			__m128 volume0 = _mm_set1_ps(volume[j]);
-			sample0 = _mm_add_ps(_mm_mul_ps(sample0, volume0), sample1);
+			sample0 = _mm_add_ps(_mm_mul_ps(sample1, volume0), sample0);
 		}
 		_mm_storeu_ps(output+i, sample0);
 	}
+
+#else
+	const int sse_size = 0;
+#endif
 
 	for (int i = sse_size; i < size; i++)
 	{

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,90 +31,41 @@
 #include "API/Network/NetGame/connection_site.h"
 #include "network_event.h"
 #include "network_data.h"
+#include "connection_impl.h"
 
 CL_NetGameConnection::CL_NetGameConnection(CL_NetGameConnectionSite *site, const CL_TCPConnection &connection)
-: site(site), connection(connection)
+: impl(new CL_NetGameConnection_Impl())
 {
-	thread.start(this, &CL_NetGameConnection::connection_main);
+	impl->start(this, site, connection);
+}
+
+CL_NetGameConnection::CL_NetGameConnection(CL_NetGameConnectionSite *site, const CL_SocketName &socket_name)
+: impl(new CL_NetGameConnection_Impl())
+{
+	impl->start(this, site, socket_name);
 }
 
 CL_NetGameConnection::~CL_NetGameConnection()
 {
-	stop_event.set();
-	thread.join();
 }
 
 void CL_NetGameConnection::set_data(const CL_StringRef &name, void *new_data)
 {
-	for (std::vector<AttachedData>::iterator it = data.begin(); it != data.end(); ++it)
-	{
-		if (it->name == name)
-		{
-			it->data = new_data;
-			return;
-		}
-	}
-	AttachedData d;
-	d.name = name;
-	d.data = new_data;
-	data.push_back(d);
+	impl->set_data(name, new_data);
 }
 
 void *CL_NetGameConnection::get_data(const CL_StringRef &name) const
 {
-	for (std::vector<AttachedData>::const_iterator it = data.begin(); it != data.end(); ++it)
-	{
-		if (it->name == name)
-			return it->data;
-	}
-	return 0;
+	return impl->get_data(name);
 }
 
 void CL_NetGameConnection::send_event(const CL_NetGameEvent &game_event)
 {
-	CL_MutexSection mutex_lock(&mutex);
-	send_queue.push_back(game_event);
-	queue_event.set();
+	impl->send_event(game_event);
 }
 
-void CL_NetGameConnection::connection_main()
+void CL_NetGameConnection::disconnect()
 {
-	site->add_network_event(CL_NetGameNetworkEvent(this, CL_NetGameNetworkEvent::client_connected));
-	try
-	{
-		connection.set_nodelay(true);
-		while (true)
-		{
-			CL_Event read_event = connection.get_read_event();
-			int wakeup_reason = CL_Event::wait(stop_event, read_event, queue_event);
-			if (wakeup_reason <= 0)
-			{
-				break;
-			}
-			else if (wakeup_reason == 1) // we got data to receive
-			{
-				CL_NetGameEvent incoming_event = CL_NetGameNetworkData::receive_data(connection);
-				if (incoming_event.get_name() == cl_text("_close"))
-					break;
-				site->add_network_event(CL_NetGameNetworkEvent(this, incoming_event));
-			}
-			else if (wakeup_reason == 2) // we got data to send
-			{
-				CL_MutexSection mutex_lock(&mutex);
-				queue_event.reset();
-				std::vector<CL_NetGameEvent> new_send_queue;
-				send_queue.swap(new_send_queue);
-				mutex_lock.unlock();
-				for (unsigned int i = 0; i < new_send_queue.size(); i++)
-				{
-					CL_NetGameNetworkData::send_data(connection, new_send_queue[i]);
-				}
-			}
-		}
-	}
-	catch (CL_Exception e)
-	{
-		// to do: pass on e.message to the CL_NetGameNetworkEvent::client_disconnected event
-	}
-	site->add_network_event(CL_NetGameNetworkEvent(this, CL_NetGameNetworkEvent::client_disconnected));
+	impl->disconnect();
 }
+

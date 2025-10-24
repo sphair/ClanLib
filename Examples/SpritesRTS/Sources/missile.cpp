@@ -84,7 +84,7 @@ bool Missile::update(int timeElapsed_ms)
 	}
 	else
 	{
-		move(speed * timeElapsed_ms);
+		move(speed * timeElapsed);
 
 		if(world->hitCheck(collisionMissile, owner))
 		{

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -206,7 +206,7 @@ void CL_ZipArchive::save()
 
 void CL_ZipArchive::save(const CL_StringRef &filename)
 {
-	CL_File output(filename, CL_File::open_always, CL_File::access_read_write);
+	CL_File output(filename, CL_File::create_always, CL_File::access_read_write);
 
 	std::vector<int> local_header_offsets;
 	std::vector<cl_uint32> crc32_codes;

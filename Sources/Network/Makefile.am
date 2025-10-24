@@ -8,6 +8,7 @@ IRC/irc_connection.cpp \
 IRC/irc_connection_generic.cpp \
 NetGame/client.cpp \
 NetGame/connection.cpp \
+NetGame/connection_impl.cpp \
 NetGame/event.cpp \
 NetGame/event_value.cpp \
 NetGame/network_data.cpp \

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2009 The ClanLib Team
+**  Copyright (c) 1997-2010 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -134,6 +134,7 @@ private:
 
 	CL_X11Window *window;
 
+	std::map<int,int> repeat_count;
 	bool ctrl_down, shift_down, alt_down;
 
 	std::map<KeySym,int> current_keys_down;
