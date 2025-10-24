@@ -60,17 +60,17 @@ public:
 	struct FileEntry
 	{
 		CL_ZipLocalFileHeader local_header;
-		cl_long local_header_offset;
+		cl_byte64 local_header_offset;
 	};
 
 	CL_IODevice output;
 	bool storeFilenamesAsUTF8;
 	bool file_begun;
 	CL_ZipLocalFileHeader local_header;
-	cl_long local_header_offset;
-	cl_long uncompressed_length;
-	cl_long compressed_length;
-	cl_uint crc32;
+	cl_byte64 local_header_offset;
+	cl_byte64 uncompressed_length;
+	cl_byte64 compressed_length;
+	cl_ubyte32 crc32;
 	bool compress;
 	z_stream zs;
 	char zbuffer[16*1024];
@@ -122,10 +122,10 @@ void CL_ZipWriter::begin_file(const CL_StringRef &filename, bool compress)
 		CL_String8 filename_cp437 = CL_StringHelp::text_to_cp437(filename);
 		CL_String8 filename_utf8 = CL_StringHelp::text_to_utf8(filename);
 		CL_DataBuffer unicode_path(9 + filename_utf8.length());
-		cl_ushort *extra_id = (cl_ushort *) (unicode_path.get_data());
-		cl_ushort *extra_len = (cl_ushort *) (unicode_path.get_data() + 2);
-		cl_uchar *extra_version = (cl_uchar *) (unicode_path.get_data() + 4);
-		cl_uint *extra_crc32 = (cl_uint *) (unicode_path.get_data() + 5);
+		cl_ubyte16 *extra_id = (cl_ubyte16 *) (unicode_path.get_data());
+		cl_ubyte16 *extra_len = (cl_ubyte16 *) (unicode_path.get_data() + 2);
+		cl_ubyte8 *extra_version = (cl_ubyte8 *) (unicode_path.get_data() + 4);
+		cl_ubyte32 *extra_crc32 = (cl_ubyte32 *) (unicode_path.get_data() + 5);
 		*extra_id = 0x7075;
 		*extra_len = 5 + filename_utf8.length();
 		*extra_version = 1;
@@ -146,7 +146,7 @@ void CL_ZipWriter::begin_file(const CL_StringRef &filename, bool compress)
 	}
 }
 
-void CL_ZipWriter::write_file_data(const void *data, cl_long size)
+void CL_ZipWriter::write_file_data(const void *data, cl_byte64 size)
 {
 	if (!impl->file_begun)
 		throw CL_Exception("CL_ZipWriter::begin_file not called prior CL_ZipWriter::write_file_data");
@@ -170,7 +170,7 @@ void CL_ZipWriter::write_file_data(const void *data, cl_long size)
 			if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != Z_OK) throw CL_Exception("Zlib deflate failed while compressing zip file!");
 
-			cl_long zsize = 16*1024 - impl->zs.avail_out;
+			cl_byte64 zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize > 0)
 			{
 				impl->compressed_length += zsize;
@@ -208,7 +208,7 @@ void CL_ZipWriter::end_file()
 			if (result == Z_MEM_ERROR) throw CL_Exception("Zlib did not have enough memory to compress file!");
 			if (result == Z_BUF_ERROR) throw CL_Exception("Not enough data in buffer when Z_FINISH was used");
 			if (result != Z_OK && result != Z_STREAM_END) throw CL_Exception("Zlib deflate failed while compressing zip file!");
-			cl_long zsize = 16*1024 - impl->zs.avail_out;
+			cl_byte64 zsize = 16*1024 - impl->zs.avail_out;
 			if (zsize == 0)
 				break;
 			impl->output.write(impl->zbuffer, zsize);
@@ -226,7 +226,7 @@ void CL_ZipWriter::end_file()
 	impl->local_header.compressed_size = impl->compressed_length;
 	impl->local_header.crc32 = CL_ZipArchive_Impl::calc_crc32(0, 0, impl->crc32, true);
 
-	cl_long current_offset = impl->output.get_position();
+	cl_byte64 current_offset = impl->output.get_position();
 	impl->output.seek(impl->local_header_offset);
 	impl->local_header.save(impl->output);
 	impl->output.seek(current_offset);
@@ -244,7 +244,7 @@ void CL_ZipWriter::write_toc()
 	if (impl->file_begun)
 		throw CL_Exception("Cannot write zip TOC when already writing a file entry");
 
-	cl_long offset_start_central_dir = impl->output.get_position();
+	cl_byte64 offset_start_central_dir = impl->output.get_position();
 
 	// write central directory entries.
 	std::vector<CL_ZipWriter_Impl::FileEntry>::size_type index;
@@ -276,7 +276,7 @@ void CL_ZipWriter::write_toc()
 	digi_sign.size_of_data = 0;
 	digi_sign.save(output);
 */
-	cl_long central_dir_size = impl->output.get_position() - offset_start_central_dir;
+	cl_byte64 central_dir_size = impl->output.get_position() - offset_start_central_dir;
 
 	CL_ZipEndOfCentralDirectoryRecord central_dir_end;
 	central_dir_end.number_of_this_disk = 0;

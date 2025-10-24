@@ -1491,7 +1491,7 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 		HGLOBAL handle = reinterpret_cast<HGLOBAL>(GetClipboardData(png_format));
 		if (handle)
 		{
-			cl_uchar *data = reinterpret_cast<cl_uchar *>(GlobalLock(handle));
+			cl_ubyte8 *data = reinterpret_cast<cl_ubyte8 *>(GlobalLock(handle));
 			size_t size = GlobalSize(handle);
 
 			CL_PixelBuffer image = get_argb8888_from_png(data, size);
@@ -1564,7 +1564,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapI
 		throw CL_Exception("GetDIBits failed");
 
 	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-	cl_uchar *data = (cl_uchar *)bitmap_data.get_data();
+	cl_ubyte8 *data = (cl_ubyte8 *)bitmap_data.get_data();
 	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 	{
 		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1627,7 +1627,7 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *b
 		throw CL_Exception("GetDIBits failed");
 
 	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
-	cl_uchar *data = (cl_uchar *)bitmap_data.get_data();
+	cl_ubyte8 *data = (cl_ubyte8 *)bitmap_data.get_data();
 	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
 	{
 		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
@@ -1651,23 +1651,23 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *b
 
 void CL_Win32Window::flip_pixelbuffer_vertical(CL_PixelBuffer &pbuf) const
 {
-	cl_uchar *data = (cl_uchar*)pbuf.get_data();
+	cl_ubyte8 *data = (cl_ubyte8*)pbuf.get_data();
 
 	for (int y=0; y<(pbuf.get_height()/2); y++)
 	{
-		cl_uint *dy = (cl_uint*)(data + (y*pbuf.get_pitch()));
-		cl_uint *dy2 = (cl_uint*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
+		cl_ubyte32 *dy = (cl_ubyte32*)(data + (y*pbuf.get_pitch()));
+		cl_ubyte32 *dy2 = (cl_ubyte32*)(data + (pbuf.get_height()-y-1)*pbuf.get_pitch());
 
 		for (int x=0; x<pbuf.get_width(); x++)
 		{
-			cl_uint tmp = dy[x];
+			cl_ubyte32 tmp = dy[x];
 			dy[x] = dy2[x];
 			dy2[x] = tmp;
 		}
 	}
 }
 
-CL_PixelBuffer CL_Win32Window::get_argb8888_from_png(cl_uchar *data, size_t size) const
+CL_PixelBuffer CL_Win32Window::get_argb8888_from_png(cl_ubyte8 *data, size_t size) const
 {
 	CL_DataBuffer data_buffer(data, size);
 	CL_IODevice_Memory iodev(data_buffer);
@@ -1960,11 +1960,11 @@ void CL_Win32Window::update_layered_process_alpha(int y_start, int y_stop)
 	int sse_size = (w/8)*8;
 #endif
 
-	cl_uint *p = (cl_uint *) update_window_image.get_data();
+	cl_ubyte32 *p = (cl_ubyte32 *) update_window_image.get_data();
 	for (int y = y_start; y < y_stop; y++)
 	{
 		int index = y * w;
-		cl_uint *line = p + index;
+		cl_ubyte32 *line = p + index;
 
 		int size = w;
 #ifndef CL_DISABLE_SSE2
@@ -1975,10 +1975,10 @@ void CL_Win32Window::update_layered_process_alpha(int y_start, int y_stop)
 		{
 			// Reading RGBA
 			unsigned int cval = *line;
-			cl_uint r = (cval >> 24) & 0xff;
-			cl_uint g = (cval >> 16) & 0xff;
-			cl_uint b = (cval >> 8) & 0xff;
-			cl_uint a = cval & 0xff;
+			cl_ubyte32 r = (cval >> 24) & 0xff;
+			cl_ubyte32 g = (cval >> 16) & 0xff;
+			cl_ubyte32 b = (cval >> 8) & 0xff;
+			cl_ubyte32 a = cval & 0xff;
 
 			r = r * a / 255;
 			g = g * a / 255;
@@ -2042,10 +2042,10 @@ void CL_Win32Window::update_layered_process_alpha(int y_start, int y_stop)
 		{
 			// Reading RGBA
 			unsigned int cval = *line;
-			cl_uint r = (cval >> 24) & 0xff;
-			cl_uint g = (cval >> 16) & 0xff;
-			cl_uint b = (cval >> 8) & 0xff;
-			cl_uint a = cval & 0xff;
+			cl_ubyte32 r = (cval >> 24) & 0xff;
+			cl_ubyte32 g = (cval >> 16) & 0xff;
+			cl_ubyte32 b = (cval >> 8) & 0xff;
+			cl_ubyte32 a = cval & 0xff;
 
 			r = r * a / 255;
 			g = g * a / 255;

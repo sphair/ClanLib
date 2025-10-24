@@ -48,25 +48,25 @@ public:
 /// \{
 
 public:
-	cl_int signature; // 0x06064b50
+	cl_byte32 signature; // 0x06064b50
 
-	cl_long size_of_record;
+	cl_byte64 size_of_record;
 
-	cl_short version_made_by;
+	cl_byte16 version_made_by;
 
-	cl_short version_needed_to_extract;
+	cl_byte16 version_needed_to_extract;
 
-	cl_int number_of_this_disk;
+	cl_byte32 number_of_this_disk;
 
-	cl_int number_of_disk_with_central_directory_start;
+	cl_byte32 number_of_disk_with_central_directory_start;
 
-	cl_long number_of_entries_on_this_disk;
+	cl_byte64 number_of_entries_on_this_disk;
 
-	cl_long number_of_entries_in_central_directory;
+	cl_byte64 number_of_entries_in_central_directory;
 
-	cl_long size_of_central_directory;
+	cl_byte64 size_of_central_directory;
 
-	cl_long offset_to_start_of_central_directory;
+	cl_byte64 offset_to_start_of_central_directory;
 
 	CL_String extensible_data_sector;
 

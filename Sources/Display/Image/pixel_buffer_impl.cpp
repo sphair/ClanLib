@@ -138,15 +138,15 @@ CL_Colorf CL_PixelBuffer_Impl::get_pixel(int x, int y)
 	const int blue_shift = CL_PixelFormat::get_mask_shift(blue_mask);
 	const int alpha_shift = CL_PixelFormat::get_mask_shift(alpha_mask);
 
-	cl_uchar* buf = static_cast<cl_uchar*>(get_data());
+	cl_ubyte8* buf = static_cast<cl_ubyte8*>(get_data());
 
 	if (base_format == cl_formatbase_rgba)
 	{
-		cl_uchar *pos = &buf[y * get_pitch() + x * bytes_per_pixel];
+		cl_ubyte8 *pos = &buf[y * get_pitch() + x * bytes_per_pixel];
 
 		if (sized_format == cl_rgba8 || sized_format == cl_argb8 || sized_format == cl_abgr8)
 		{
-			cl_uint value = *((cl_uint*)pos);
+			cl_ubyte32 value = *((cl_ubyte32*)pos);
 
 			float max_value = 255.0f;
 			color = CL_Colorf (((value & red_mask) >> red_shift) / max_value,

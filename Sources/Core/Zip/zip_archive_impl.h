@@ -55,9 +55,9 @@ public:
 /// \{
 
 public:
-	static cl_uint calc_crc32(const void *data, cl_long size, cl_uint crc = CL_ZIP_CRC_START_VALUE, bool last_block = true);
+	static cl_ubyte32 calc_crc32(const void *data, cl_byte64 size, cl_ubyte32 crc = CL_ZIP_CRC_START_VALUE, bool last_block = true);
 
-	static void calc_time_and_date(cl_short &out_date, cl_short &out_time);
+	static void calc_time_and_date(cl_byte16 &out_date, cl_byte16 &out_time);
 
 
 /// \}
@@ -66,7 +66,7 @@ public:
 
 private:
 	// crc32_table_quotient = 0xdebb20e3
-	static cl_uint crc32_table[256];
+	static cl_ubyte32 crc32_table[256];
 /// \}
 };
 

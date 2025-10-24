@@ -6,7 +6,7 @@ dnl Ensure that a recent enough version of Autoconv is being used
 AC_PREREQ(2.50)
 
 dnl Set the name of the package and its version. (This must be called first)
-AC_INIT(ClanLib, 2.3.0)
+AC_INIT(ClanLib, 2.3.1)
 
 AC_CONFIG_MACRO_DIR(m4)
 
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE( foreign dist-bzip2 dist-zip 1.5b subdir-objects )
 
 CLANLIB_MAJOR_VERSION=2
 CLANLIB_MINOR_VERSION=3
-CLANLIB_MICRO_VERSION=0
+CLANLIB_MICRO_VERSION=1
 
 CLANLIB_VERSION=$CLANLIB_MAJOR_VERSION.$CLANLIB_MINOR_VERSION.$CLANLIB_MICRO_VERSION
 CLANLIB_RELEASE=$CLANLIB_MAJOR_VERSION$CLANLIB_MINOR_VERSION
@@ -134,6 +134,7 @@ if test "$WIN32" = "yes"; then
 		extra_LIBS_clanGL1="-lopengl32"
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
 		extra_LIBS_clanMikMod="-lmikmod"
+		extra_LIBS_clanSqlite="-lsqlite3"
 		extra_LIBS_clanVorbis="-lvorbis -logg"
 		extra_LIBS_clanNetwork="-lws2_32"
 		extra_LIBS_clanSWRender="-lmsvcrt"
@@ -148,6 +149,7 @@ if test "$WIN32" = "yes"; then
 	extra_LIBS_clanMikMod="-lmikmod"
 	extra_LIBS_clanVorbis="-lvorbis -logg"
 	extra_LIBS_clanNetwork="-lws2_32"
+	extra_LIBS_clanSqlite="-lsqlite3"
 	;;
 esac
 fi
@@ -540,6 +542,7 @@ fi
 if test "$enable_clanSqlite" != "no"; then
 	echo "Checking for clanSqlite stuff"
 	echo "==============================="
+	CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3])
 	echo ""
 fi
 

@@ -48,13 +48,13 @@ public:
 /// \{
 
 public:
-	cl_int signature; // 0x07064b50
+	cl_byte32 signature; // 0x07064b50
 
-	cl_int number_of_disk_with_zip64_end_of_central_directory;
+	cl_byte32 number_of_disk_with_zip64_end_of_central_directory;
 
-	cl_long relative_offset_of_zip64_end_of_central_directory;
+	cl_byte64 relative_offset_of_zip64_end_of_central_directory;
 
-	cl_int total_number_of_disks;
+	cl_byte32 total_number_of_disks;
 
 
 /// \}

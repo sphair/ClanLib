@@ -159,9 +159,9 @@ void CL_SoundOutput_OSS::write_fragment(float *data)
 {
 
 	// OSS Cannot handle floats (why!)
-	std::vector<cl_short> buffer;
+	std::vector<cl_byte16> buffer;
 	buffer.resize(frag_size);
-	cl_short *bptr = &buffer[0];
+	cl_byte16 *bptr = &buffer[0];
 	for (int cnt=0; cnt<frag_size; cnt++)
 	{
 		*(bptr++) = (int) ( *(data++) * 32767.0f );

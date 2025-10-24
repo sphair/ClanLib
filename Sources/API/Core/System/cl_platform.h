@@ -11,6 +11,25 @@
 #endif
 #endif
 
+#if defined(WIN32) && (defined(__MINGW32__) == 0)
+typedef __int8             cl_byte8;
+typedef unsigned __int8    cl_ubyte8;
+typedef __int16            cl_byte16;
+typedef unsigned __int16   cl_ubyte16;
+typedef __int32            cl_byte32;
+typedef unsigned __int32   cl_ubyte32;
+typedef __int64            cl_byte64;
+typedef unsigned __int64   cl_ubyte64;
+#else
+typedef char               cl_byte8;
+typedef unsigned char      cl_ubyte8;
+typedef short              cl_byte16;
+typedef unsigned short     cl_ubyte16;
+typedef int                cl_byte32;
+typedef unsigned int       cl_ubyte32;
+typedef long long          cl_byte64;
+typedef unsigned long long cl_ubyte64;
+#endif
 
 /**********************************************************************************
  * Copyright (c) 2008-2010 The Khronos Group Inc.

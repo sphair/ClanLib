@@ -89,7 +89,7 @@ private:
 
 	CL_ZipLocalFileHeader file_header;
 
-	cl_long pos, compressed_pos;
+	cl_byte64 pos, compressed_pos;
 
 	z_stream zs;
 

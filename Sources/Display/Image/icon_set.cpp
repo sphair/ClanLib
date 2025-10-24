@@ -43,45 +43,45 @@ public:
 
 	struct IconHeader
 	{
-		cl_ushort idReserved;
-		cl_ushort idType; // 1 = ICO, 2 = CUR
-		cl_ushort idCount;
+		cl_ubyte16 idReserved;
+		cl_ubyte16 idType; // 1 = ICO, 2 = CUR
+		cl_ubyte16 idCount;
 	};
 
 	struct IconDirectoryEntry
 	{
-		cl_uchar bWidth;
-		cl_uchar bHeight;
-		cl_uchar bColorCount;
-		cl_uchar bReserved;
+		cl_ubyte8 bWidth;
+		cl_ubyte8 bHeight;
+		cl_ubyte8 bColorCount;
+		cl_ubyte8 bReserved;
 		union
 		{
-			cl_ushort wPlanes;   // ICO format
-			cl_short XHotspot;   // CUR format
+			cl_ubyte16 wPlanes;   // ICO format
+			cl_byte16 XHotspot;   // CUR format
 		};
 		union
 		{
-			cl_ushort wBitCount; // ICO format
-			cl_short YHotspot;   // CUR format
+			cl_ubyte16 wBitCount; // ICO format
+			cl_byte16 YHotspot;   // CUR format
 		};
-		cl_uint dwBytesInRes;
-		cl_uint dwImageOffset;
-		/** cl_ushort nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
+		cl_ubyte32 dwBytesInRes;
+		cl_ubyte32 dwImageOffset;
+		/** cl_ubyte16 nID; // Mentioned by http://msdn2.microsoft.com/en-us/library/ms997538.aspx but not in other ICO docs.*/
 	};
 
 	struct IconBitmapInfoHeader
 	{
-        cl_uint biSize;
-        cl_int biWidth;
-        cl_int biHeight;
-        cl_ushort biPlanes;
-        cl_ushort biBitCount;
-        cl_uint biCompression;
-        cl_uint biSizeImage;
-        cl_int biXPelsPerMeter;
-        cl_int biYPelsPerMeter;
-        cl_uint biClrUsed;
-        cl_uint biClrImportant;
+        cl_ubyte32 biSize;
+        cl_byte32 biWidth;
+        cl_byte32 biHeight;
+        cl_ubyte16 biPlanes;
+        cl_ubyte16 biBitCount;
+        cl_ubyte32 biCompression;
+        cl_ubyte32 biSizeImage;
+        cl_byte32 biXPelsPerMeter;
+        cl_byte32 biYPelsPerMeter;
+        cl_ubyte32 biClrUsed;
+        cl_ubyte32 biClrImportant;
 	};
 
 	enum IconBitmapInfoCompressionType

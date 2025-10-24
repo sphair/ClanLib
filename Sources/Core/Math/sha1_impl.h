@@ -69,17 +69,17 @@ public:
 private:
 	void process_chunk();
 
-	void to_hex(char *buffer, cl_uint value, bool uppercase);
+	void to_hex(char *buffer, cl_ubyte32 value, bool uppercase);
 
 	unsigned int leftrotate_uint32(unsigned int value, int shift);
 
-	cl_uint h0, h1, h2, h3, h4;
+	cl_ubyte32 h0, h1, h2, h3, h4;
 
 	unsigned char chunk[64];
 
 	int chunk_filled;
 
-	cl_ulong length_message;
+	cl_ubyte64 length_message;
 
 	bool calculated;
 /// \}

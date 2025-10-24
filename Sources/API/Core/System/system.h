@@ -61,7 +61,7 @@ public:
 	static unsigned int get_time();
 
 	/// \brief Get the current time microseconds.
-	static cl_ulong get_microseconds();
+	static cl_ubyte64 get_microseconds();
 
     enum CL_CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, sse5 };
     enum CL_CPU_ExtensionPPC { altivec };

@@ -78,35 +78,29 @@ bool CL_Directory::create(const CL_StringRef &dir_name, bool recursive)
 
 	CL_String full_path = CL_PathHelp::add_trailing_slash(dir_name);
 
+	bool result = true;
 	if (recursive)
 	{
 		for (CL_String::size_type pos = full_path.find_first_of("\\/"); pos != CL_String::npos; pos = full_path.find_first_of("\\/", pos + 1))
 		{
 			CL_String path = full_path.substr(0, pos);
 #ifdef WIN32
-			BOOL result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(path).c_str(), NULL);
-			if (!result)
-				return false;
+			result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(path).c_str(), NULL) != 0;
 #else
-			int result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-			if (result)
-				return false;
+			result = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
 #endif
 		}
 	}
 	else
 	{
 #ifdef WIN32
-		BOOL result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str(), NULL);
-		if (!result)
-			return false;
+		result = CreateDirectory(CL_StringHelp::utf8_to_ucs2(full_path).c_str(), NULL) != 0;
 #else
-		int result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-		if (result)
-			return false;
+		result = mkdir(full_path.c_str(), S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) == 0;
 #endif
 	}
-	return true;
+
+	return result;
 }
 
 bool CL_Directory::remove(const CL_StringRef &dir_name, bool delete_files, bool delete_sub_directories)

@@ -60,7 +60,7 @@ unsigned int CL_System::get_time()
 	return (unsigned int) (get_microseconds() / 1000);
 }
 
-cl_ulong CL_System::get_microseconds()
+cl_ubyte64 CL_System::get_microseconds()
 {
 	static LARGE_INTEGER perf_counter;
 	static double perf_frequency;
@@ -76,7 +76,7 @@ cl_ulong CL_System::get_microseconds()
 
 	QueryPerformanceCounter(&perf_counter);
 	double quad_part = (double) perf_counter.QuadPart;
-	return (cl_ulong) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
+	return (cl_ubyte64) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
 }
 
 CL_String CL_System::get_exe_path()

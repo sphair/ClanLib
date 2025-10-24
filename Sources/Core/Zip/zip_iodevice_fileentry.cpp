@@ -116,7 +116,7 @@ int CL_ZipIODevice_FileEntry::peek(void *data, int len)
 
 bool CL_ZipIODevice_FileEntry::seek(int seek_pos, CL_IODevice::SeekMode mode)
 {
-	cl_long absolute_pos = 0;
+	cl_byte64 absolute_pos = 0;
 	switch (mode)
 	{
 	case CL_IODevice::seek_set:

@@ -34,7 +34,7 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#include "sqlite3.h"
+#include <sqlite3.h>
 #endif
 
 #include "API/Core/Text/string_types.h"

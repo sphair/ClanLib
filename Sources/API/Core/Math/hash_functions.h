@@ -59,10 +59,10 @@ public:
 
 public:
 	/// \brief Calculate a CRC32 checksum on the data. 
-	static cl_uint crc32(const void *data, int size, cl_uint running_crc=0);
+	static cl_ubyte32 crc32(const void *data, int size, cl_ubyte32 running_crc=0);
 
 	/// \brief Calculate a CRC32 checksum on the data. 
-	static cl_uint adler32(const void *data, int size, cl_uint running_adler32=0);
+	static cl_ubyte32 adler32(const void *data, int size, cl_ubyte32 running_adler32=0);
 
 	/// \brief Generate SHA-1 hash from data.
 	static CL_String8 sha1(const void *data, int size, bool uppercase = false);

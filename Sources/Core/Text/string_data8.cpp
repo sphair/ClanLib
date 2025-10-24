@@ -30,6 +30,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Text/string_data8.h"
 #include "API/Core/Text/string_ref8.h"
+#include "API/Core/Text/utf8_reader.h"
 
 const CL_StringData8::size_type CL_StringData8::npos = 0xffffffff;
 
@@ -481,6 +482,19 @@ int CL_StringData8::compare(size_type pos, size_type n, const char *s, size_type
 			return (int) (((unsigned int) d1[i]) - ((unsigned int) d2[i]));
 	}
 	return l1-l2;
+}
+
+CL_StringData8::size_type CL_StringData8::utf8_length() const
+{
+	size_type len = 0;
+	CL_UTF8_Reader utf8_reader(this->operator CL_StringRef8());
+	while(!utf8_reader.is_end())
+	{
+		len++;
+		utf8_reader.next();
+	}
+
+	return len;
 }
 
 /////////////////////////////////////////////////////////////////////////////

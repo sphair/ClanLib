@@ -68,10 +68,10 @@ public:
 	CL_StringRef get_input_filename() const;
 
 	/// \brief Returns the uncompressed size of file entry.
-	cl_long get_uncompressed_size();
+	cl_byte64 get_uncompressed_size();
 
 	/// \brief Returns the compressed size of file entry.
-	cl_long get_compressed_size();
+	cl_byte64 get_compressed_size();
 
 	/// \brief Is Directory
 	///

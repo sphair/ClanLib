@@ -367,6 +367,8 @@ public:
 	/// \return int
 	int compare(size_type pos, size_type n, const char *s, size_type len = npos) const;
 
+	
+	size_type utf8_length() const;
 protected:
 	mutable char *data_ptr;
 	mutable size_type data_length;

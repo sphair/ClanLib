@@ -65,7 +65,7 @@ public:
 	void begin_file(const CL_StringRef &filename, bool compress);
 
 	/// \brief Writes some file data to the zip file.
-	void write_file_data(const void *data, cl_long size);
+	void write_file_data(const void *data, cl_byte64 size);
 
 	/// \brief Ends the file entry.
 	void end_file();

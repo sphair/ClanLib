@@ -36,8 +36,8 @@
 class CL_JPEGStartOfFrame;
 class CL_JPEGStartOfScan;
 
-typedef cl_ushort CL_JPEGDefineRestartInterval;
-typedef cl_ushort CL_JPEGDefineNumberOfLines;
+typedef cl_ubyte16 CL_JPEGDefineRestartInterval;
+typedef cl_ubyte16 CL_JPEGDefineNumberOfLines;
 
 class CL_JPEGFileReader
 {

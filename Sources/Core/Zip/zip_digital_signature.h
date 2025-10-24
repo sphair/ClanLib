@@ -49,9 +49,9 @@ public:
 /// \{
 
 public:
-	cl_int signature; // 0x05054b50
+	cl_byte32 signature; // 0x05054b50
 
-	cl_short size_of_data;
+	cl_byte16 size_of_data;
 
 	CL_String signature_data;
 

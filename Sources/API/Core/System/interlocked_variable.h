@@ -103,13 +103,13 @@ private:
 
 #else
 	CL_InterlockedVariable()
-	: val((cl_int*)CL_System::aligned_alloc(sizeof(cl_int), 4))
+	: val((cl_byte32*)CL_System::aligned_alloc(sizeof(cl_byte32), 4))
 	{
 		set(0);
 	}
 
 	CL_InterlockedVariable(const CL_InterlockedVariable &src)
-	: val((cl_int*)CL_System::aligned_alloc(sizeof(cl_int), 4))
+	: val((cl_byte32*)CL_System::aligned_alloc(sizeof(cl_byte32), 4))
 	{
 		set(src.get());
 	}
@@ -151,7 +151,7 @@ private:
 	}
 
 private:
-	volatile cl_int *val;
+	volatile cl_byte32 *val;
 
 #endif
 };

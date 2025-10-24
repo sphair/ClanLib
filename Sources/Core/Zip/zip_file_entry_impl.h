@@ -54,7 +54,7 @@ public:
 	Type type;
 
 	/// \brief Offset to zip data in zip file (type_file).
-	// cl_long offset;
+	// cl_byte64 offset;
 
 	/// \brief Filename of file, if added from file (type_added_file).
 	CL_String filename;

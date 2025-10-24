@@ -99,22 +99,22 @@ void CL_SoundProvider_Wave_Impl::load(CL_IODevice &source)
 	source.read(chunk_id, 4);
 	if (memcmp(chunk_id, "RIFF", 4))
 		throw CL_Exception("Expected RIFF header!");
-	cl_uint chunk_size = source.read_uint32();
+	cl_ubyte32 chunk_size = source.read_uint32();
 
 	char format_id[4];
 	source.read(format_id, 4);
 	if (memcmp(format_id, "WAVE", 4))
 		throw CL_Exception("Expected WAVE header!");
 
-	cl_uint subchunk_pos = source.get_position();
-	cl_uint subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
+	cl_ubyte32 subchunk_pos = source.get_position();
+	cl_ubyte32 subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
 
-	cl_ushort audio_format = source.read_uint16();
+	cl_ubyte16 audio_format = source.read_uint16();
 	num_channels = source.read_uint16();
 	frequency = source.read_uint32();
-	cl_uint byte_rate = source.read_uint32();
-	cl_ushort block_align = source.read_uint16();
-	cl_ushort bits_per_sample = source.read_uint16();
+	cl_ubyte32 byte_rate = source.read_uint32();
+	cl_ubyte16 block_align = source.read_uint16();
+	cl_ubyte16 bits_per_sample = source.read_uint16();
 
 	if (bits_per_sample == 16)
 		format = sf_16bit_signed;
@@ -123,7 +123,7 @@ void CL_SoundProvider_Wave_Impl::load(CL_IODevice &source)
 	else
 		throw CL_Exception("Unsupported wave sample format");
 
-	cl_uint subchunk2_size = find_subchunk("data", source, subchunk_pos, chunk_size);
+	cl_ubyte32 subchunk2_size = find_subchunk("data", source, subchunk_pos, chunk_size);
 
 	data = new char[subchunk2_size];
 	source.read(data, subchunk2_size);
@@ -140,7 +140,7 @@ unsigned int CL_SoundProvider_Wave_Impl::find_subchunk(const char *chunk, CL_IOD
 	{
 		source.seek(file_offset);
 		source.read(subchunk1_id, 4);
-		cl_uint subchunk1_size = source.read_uint32();
+		cl_ubyte32 subchunk1_size = source.read_uint32();
 		if (!memcmp(subchunk1_id, chunk, 4))
 		{
 			// Found chunk

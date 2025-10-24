@@ -177,7 +177,7 @@ private:
 
 	static BOOL CALLBACK enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
 
-	CL_PixelBuffer get_argb8888_from_png(cl_uchar *data, size_t size) const;
+	CL_PixelBuffer get_argb8888_from_png(cl_ubyte8 *data, size_t size) const;
 	CL_PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 	CL_PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
 

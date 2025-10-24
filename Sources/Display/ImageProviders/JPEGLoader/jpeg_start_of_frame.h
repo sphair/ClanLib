@@ -35,9 +35,9 @@ class CL_JPEGStartOfFrame
 public:
 	CL_JPEGStartOfFrame() : sample_precision(0), height(0), width(0) { }
 
-	cl_uchar sample_precision;
-	cl_ushort height;
-	cl_ushort width;
+	cl_ubyte8 sample_precision;
+	cl_ubyte16 height;
+	cl_ubyte16 width;
 	std::vector<CL_JPEGStartOfFrameComponent> components;
 };
 
@@ -47,14 +47,14 @@ public:
 	CL_JPEGStartOfFrameComponent() : id(0), horz_sampling_factor(0), vert_sampling_factor(0), quantization_table_selector(0) { }
 
 	// Component identifier – Assigns a unique label to the component in the sequence of frame component specification parameters.
-	cl_uchar id;
+	cl_ubyte8 id;
 
 	// specifies the number of horizontal data units of the component in each MCU, when more than one component is encoded in a scan.
-	cl_uchar horz_sampling_factor;
+	cl_ubyte8 horz_sampling_factor;
 
 	// Specifies the number of vertical data units of the component in each MCU, when more than one component is encoded in a scan.
-	cl_uchar vert_sampling_factor;
+	cl_ubyte8 vert_sampling_factor;
 
 	// Specifies one of four possible quantization table destinations from which the quantization table to use for dequantization of DCT coefficients of the component.
-	cl_uchar quantization_table_selector;
+	cl_ubyte8 quantization_table_selector;
 };

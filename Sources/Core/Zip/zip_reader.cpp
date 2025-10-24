@@ -50,14 +50,14 @@ public:
 			inflateEnd(&zs);
 	}
 
-	cl_long deflate_read(void *data, cl_long size, bool read_all);
+	cl_byte64 deflate_read(void *data, cl_byte64 size, bool read_all);
 	
 	CL_IODevice input;
 	CL_ZipLocalFileHeader local_header;
 	z_stream zs;
 	char zbuffer[16*1024];
 	bool zstream_open;
-	cl_long compressed_pos;
+	cl_byte64 compressed_pos;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,24 +119,24 @@ bool CL_ZipReader::has_data_descriptor() const
 	return (impl->local_header.general_purpose_bit_flag & CL_ZIP_CRC32_IN_FILE_DESCRIPTOR);
 }
 
-cl_long CL_ZipReader::get_compressed_size() const
+cl_byte64 CL_ZipReader::get_compressed_size() const
 {
 	return impl->local_header.compressed_size;
 }
 
-cl_long CL_ZipReader::get_uncompressed_size() const
+cl_byte64 CL_ZipReader::get_uncompressed_size() const
 {
 	return impl->local_header.uncompressed_size;
 }
 
-void CL_ZipReader::set_data_descriptor_data(cl_long compressed_size, cl_long uncompressed_size, cl_uint crc32)
+void CL_ZipReader::set_data_descriptor_data(cl_byte64 compressed_size, cl_byte64 uncompressed_size, cl_ubyte32 crc32)
 {
 	impl->local_header.compressed_size = compressed_size;
 	impl->local_header.uncompressed_size = uncompressed_size;
 	impl->local_header.crc32 = crc32;
 }
 
-cl_long CL_ZipReader::read_file_data(void *data, cl_long size, bool read_all)
+cl_byte64 CL_ZipReader::read_file_data(void *data, cl_byte64 size, bool read_all)
 {
 	if (impl->zstream_open)
 	{
@@ -153,7 +153,7 @@ cl_long CL_ZipReader::read_file_data(void *data, cl_long size, bool read_all)
 
 #define cl_min(a,b) ((a)<(b)?(a):(b))
 
-cl_long CL_ZipReader_Impl::deflate_read(void *data, cl_long size, bool read_all)
+cl_byte64 CL_ZipReader_Impl::deflate_read(void *data, cl_byte64 size, bool read_all)
 {
 	zs.next_out = (Bytef *) data;
 	zs.avail_out = size;

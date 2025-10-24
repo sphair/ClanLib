@@ -48,11 +48,11 @@ public:
 /// \{
 
 public:
-	cl_int crc32;
+	cl_byte32 crc32;
 
-	cl_int compressed_size;
+	cl_byte32 compressed_size;
 
-	cl_int uncompressed_size;
+	cl_byte32 uncompressed_size;
 
 
 /// \}

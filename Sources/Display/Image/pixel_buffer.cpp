@@ -258,8 +258,8 @@ CL_PixelBuffer CL_PixelBuffer::copy(const CL_Rect &rect) const
 	int new_height = rect.get_height();
 
 	CL_PixelBuffer pbuf(new_width, new_height, get_format(), *get_palette(), 0);
-	cl_uchar *dst_data = (cl_uchar *)pbuf.get_data();
-	cl_uchar *src_data = (cl_uchar *)get_data() + (rect.top*impl->width + rect.left)*get_bytes_per_pixel();
+	cl_ubyte8 *dst_data = (cl_ubyte8 *)pbuf.get_data();
+	cl_ubyte8 *src_data = (cl_ubyte8 *)get_data() + (rect.top*impl->width + rect.left)*get_bytes_per_pixel();
 
 	int byte_width = new_width * get_bytes_per_pixel();
 	int src_pitch = get_pitch();
@@ -365,17 +365,17 @@ void CL_PixelBuffer::premultiply_alpha()
 		{
 			int w = get_width();
 			int h = get_height();
-			cl_uint *p = (cl_uint *) get_data();
+			cl_ubyte32 *p = (cl_ubyte32 *) get_data();
 			for (int y = 0; y < h; y++)
 			{
 				int index = y * w;
-				cl_uint *line = p + index;
+				cl_ubyte32 *line = p + index;
 				for (int x = 0; x < w; x++)
 				{
-					cl_uint r = ((line[x] >> 24) & 0xff);
-					cl_uint g = ((line[x] >> 16) & 0xff);
-					cl_uint b = ((line[x] >> 8) & 0xff);
-					cl_uint a = (line[x] & 0xff);
+					cl_ubyte32 r = ((line[x] >> 24) & 0xff);
+					cl_ubyte32 g = ((line[x] >> 16) & 0xff);
+					cl_ubyte32 b = ((line[x] >> 8) & 0xff);
+					cl_ubyte32 a = (line[x] & 0xff);
 
 					r = r * a / 255;
 					g = g * a / 255;
@@ -389,17 +389,17 @@ void CL_PixelBuffer::premultiply_alpha()
 		{
 			int w = get_width();
 			int h = get_height();
-			cl_uint *p = (cl_uint *) get_data();
+			cl_ubyte32 *p = (cl_ubyte32 *) get_data();
 			for (int y = 0; y < h; y++)
 			{
 				int index = y * w;
-				cl_uint *line = p + index;
+				cl_ubyte32 *line = p + index;
 				for (int x = 0; x < w; x++)
 				{
-					cl_uint a = ((line[x] >> 24) & 0xff);
-					cl_uint r = ((line[x] >> 16) & 0xff);
-					cl_uint g = ((line[x] >> 8) & 0xff);
-					cl_uint b = (line[x] & 0xff);
+					cl_ubyte32 a = ((line[x] >> 24) & 0xff);
+					cl_ubyte32 r = ((line[x] >> 16) & 0xff);
+					cl_ubyte32 g = ((line[x] >> 8) & 0xff);
+					cl_ubyte32 b = (line[x] & 0xff);
 
 					r = r * a / 255;
 					g = g * a / 255;

@@ -34,10 +34,10 @@ public:
 	CL_JPEGQuantizationTable() : table_index(0) { for (int i = 0; i < 64; i++) values[i] = 0; }
 
 	// Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.
-	cl_uchar table_index;
+	cl_ubyte8 table_index;
 
 	// Quantization element values in zig-zag scan order.
-	cl_ushort values[64];
+	cl_ubyte16 values[64];
 };
 
 typedef std::vector<CL_JPEGQuantizationTable> CL_JPEGDefineQuantizationTable;

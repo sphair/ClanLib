@@ -44,10 +44,10 @@ public:
 	TableClass table_class;
 
 	// Specifies one of four possible destinations at the decoder into which the Huffman table shall be installed.
-	cl_uchar table_index;
+	cl_ubyte8 table_index;
 
-	cl_uchar bits[16];
-	std::vector<cl_uchar> values;
+	cl_ubyte8 bits[16];
+	std::vector<cl_ubyte8> values;
 
 	std::vector<CL_JPEGHuffmanNode> tree;
 };
