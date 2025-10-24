@@ -43,8 +43,11 @@
 class CL_Colorf;
 class CL_Pointf;
 class CL_Gradient;
-struct CL_TexCoordArray;
-struct CL_ProgramAttributeArray;
+class CL_LineSegment2f;
+class CL_LineSegment2;
+class CL_Quadf;
+class CL_Trianglef;
+class CL_Triangle;
 
 /// \brief Primitives drawing class.
 ///
@@ -75,6 +78,13 @@ public:
 	/// \param end = Pointf
 	/// \param color = Colorf
 	static void line(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color);
+
+	/// \brief Line
+	///
+	/// \param gc = Graphic Context
+	/// \param line_segment = The line
+	/// \param color = Colorf
+	static void line(CL_GraphicContext &gc, const CL_LineSegment2f &line_segment, const CL_Colorf &color);
 
 	/// \brief Draw a box / rectangle.
 	static void box(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color);
@@ -112,10 +122,23 @@ public:
 	/// \param color = Colorf
 	static void fill(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color);
 
-	/// \brief Draw a textured rectangle.
+	/// \brief Draw a textured rectangle with the selected texture at unit 0
+	///
+	/// Usage: gc.set_texture(0, texture); CL_Draw::texture(gc, rect, ...); gc.reset_texture(0); \n
+	/// It is recommended to use CL_Image draw function instead of this function. CL_Image is faster because it internally batch draws
 	static void texture(
 		CL_GraphicContext &gc,
 		const CL_Rectf &rect,
+		const CL_Colorf &color = CL_Colorf::white,
+		const CL_Rectf &texture_unit1_coords = CL_Rectf(0.0, 0.0, 1.0, 1.0));
+
+	/// \brief Draw a textured rectangle
+	///
+	/// This is a convenience function. If using repeatedly, it is a lot faster to use CL_PrimitivesArray with gc.draw_primitives instead
+	static void texture(
+		CL_GraphicContext &gc,
+		const CL_Texture &texture,
+		const CL_Quadf &quad,
 		const CL_Colorf &color = CL_Colorf::white,
 		const CL_Rectf &texture_unit1_coords = CL_Rectf(0.0, 0.0, 1.0, 1.0));
 
@@ -174,6 +197,10 @@ public:
 
 	/// \brief Draw a triangle.
 	static void triangle(CL_GraphicContext &gc, const CL_Pointf &a, const CL_Pointf &b, const CL_Pointf &c, const CL_Colorf &color);
+
+	/// \brief Draw a triangle.
+	static void triangle(CL_GraphicContext &gc, const CL_Trianglef &dest_triangle, const CL_Colorf &color);
+
 /// \}
 };
 

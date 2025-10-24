@@ -92,7 +92,7 @@ void CL_AcceleratorTable::add_accelerator(const CL_AcceleratorKey &accel)
 	impl->entries.push_back(accel);
 }
 
-bool CL_AcceleratorTable::process_message(CL_GUIMessage &msg)
+void CL_AcceleratorTable::process_message(CL_GUIMessage &msg)
 {
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
@@ -106,11 +106,11 @@ bool CL_AcceleratorTable::process_message(CL_GUIMessage &msg)
 			{
 				if (e.type == CL_InputEvent::pressed && !(*it).func_pressed().is_null())
 					(*it).func_pressed().invoke(msg, (*it));
-				return true;
+				msg.set_consumed();
+				return;
 			}
 		}
 	}
-	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////

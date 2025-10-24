@@ -51,7 +51,7 @@ public:
 
 public:
 	CL_Size get_attachment_size(int buffer_id) const;
-	std::vector<int> get_attachment_indexes() const;
+	const std::vector<int> &get_attachment_indexes() const;
 
 	CL_PixelBuffer get_colorbuffer0() const;
 
@@ -82,6 +82,7 @@ private:
 	CL_RenderBuffer colorbuffer0_render;
 	CL_Texture colorbuffer0_texture;
 	CL_Signal_v0 sig_changed_event;
+	mutable std::vector<int> attachment_indexes;
 /// \}
 };
 

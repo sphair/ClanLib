@@ -199,11 +199,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\component_type.cpp"
+				RelativePath=".\Sources\component_type.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\component_type.h"
+				RelativePath=".\Sources\component_types.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\component_types.h"
 				>
 			</File>
 			<File
@@ -244,6 +248,66 @@
 			</File>
 			<File
 				RelativePath=".\Sources\grid_component.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_boundary_sizing.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_boundary_sizing.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_create_tool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_create_tool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_net_selecting.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_net_selecting.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_none.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_none.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_object_moving.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_object_moving.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_object_sizing.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\grid_edit_state_object_sizing.h"
 				>
 			</File>
 			<File
@@ -299,11 +363,91 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\property_component_tab_order.cpp"
+				RelativePath=".\Sources\property_component_edit_state.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\property_component_tab_order.h"
+				RelativePath=".\Sources\property_component_edit_state.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_handler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_header_sizing.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_header_sizing.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_node_opener.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_node_opener.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_none.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_none.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_revert_button.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_component_edit_state_revert_button.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_class_name.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_group_name.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_id_name.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_max.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_min.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_page_label.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_position.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_step_size.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_text.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\property_item_tick_count.h"
 				>
 			</File>
 			<File
@@ -319,19 +463,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sources\snapline.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\snapline.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sources\source_generator_dialog.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Sources\source_generator_dialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\system_dialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Sources\system_dialog.h"
 				>
 			</File>
 			<File

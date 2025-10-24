@@ -74,8 +74,7 @@ public:
 			combobox1.set_popup_menu(menu_edit);
 			combobox1.set_editable(false);
 
-			CL_AcceleratorTable accel_table;
-			gui.exec(accel_table);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -87,10 +86,11 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		cl_log_event(cl_text("TestApp"), cl_text("Shutdown"));
 		win->exit_with_code(0);
+		return true;
 	}
 
 	void on_button1_clicked(CL_PushButton *button1)
@@ -109,7 +109,7 @@ public:
 
 		int x = button1->get_geometry().get_width()/2;
 		int y = button1->get_geometry().get_height()/2;
-		menu.exec(button1, CL_Point(x, y));
+		menu.start(button1, button1->component_to_screen_coords(CL_Point(x, y)));
 	}
 };
 

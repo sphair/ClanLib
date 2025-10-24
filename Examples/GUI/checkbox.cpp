@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "checkbox.h"
 #include "GUI.h"
 

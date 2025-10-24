@@ -28,9 +28,8 @@
 
 #pragma once
 
-#include "API/Sound/soundprovider_session.h"
-
-class CL_SoundProvider_Wave_Generic;
+#include "API/Sound/SoundProviders/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider_wave.h"
 
 class CL_SoundProvider_Wave_Session : public CL_SoundProvider_Session
 {
@@ -38,8 +37,7 @@ class CL_SoundProvider_Wave_Session : public CL_SoundProvider_Session
 /// \{
 
 public:
-	CL_SoundProvider_Wave_Session(CL_SoundProvider_Wave_Generic *data);
-
+	CL_SoundProvider_Wave_Session(CL_SoundProvider_Wave &source);
 	~CL_SoundProvider_Wave_Session();
 
 
@@ -48,41 +46,33 @@ public:
 /// \{
 
 public:
-	virtual int get_num_samples() const;
-
-	virtual int get_frequency() const;
-
-	virtual CL_SoundFormat get_format() const;
-
-	virtual int get_num_channels() const;
-
-	virtual int get_position() const;
-
+	int get_num_samples() const;
+	int get_frequency() const;
+	CL_SoundFormat get_format() const;
+	int get_num_channels() const;
+	int get_position() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	virtual bool eof() const;
-
-	virtual void stop();
-
-	virtual bool play();
-
-	virtual bool set_position(int pos);
-
-	virtual int get_data(void **data_ptr, int data_requested);
-
+	bool eof() const;
+	void stop();
+	bool play();
+	bool set_position(int pos);
+	int get_data(float **data_ptr, int data_requested);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_SoundProvider_Wave_Generic *data;
+	CL_SoundProvider_Wave source;
 
 	int position;
+	int num_samples;
+	int frequency;
 /// \}
 };
 

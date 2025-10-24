@@ -63,7 +63,7 @@ public:
 	int start(const std::vector<CL_String> &args);
 
 private:
-	void on_close(CL_Window *win);
+	bool on_close(CL_Window *win);
 	void on_btn_play();
 	void on_btn_prepare();
 	void on_btn_update_soundoutput();

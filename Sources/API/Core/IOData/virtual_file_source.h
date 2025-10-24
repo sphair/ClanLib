@@ -83,6 +83,12 @@ public:
 	/// \brief Return the path of this file source.
 	virtual CL_String get_path() const = 0;
 
+	/// \brief Get the identifier of this file source
+	///
+	/// The exact format of this identifier depends on the implementation of the underlying filesystem and mounts
+	/// \return the identifier
+	virtual CL_String get_identifier() const = 0;
+
 /// \}
 /// \name Implementation
 /// \{

@@ -128,7 +128,7 @@ int App::start(const std::vector<CL_String> &args)
 			window.flip();
 
 			// This call processes user input and other events
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 
 		explosions_same_tex.clear();

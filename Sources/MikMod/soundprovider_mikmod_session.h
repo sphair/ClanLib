@@ -29,11 +29,12 @@
 
 #pragma once
 
-#include "API/Sound/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
+#include "API/MikMod/soundprovider_mikmod.h"
 
 #include "module_reader.h"
 
-class CL_SoundProvider_MikMod_Generic;
+class CL_SoundProvider_MikMod_Impl;
 class CL_IODevice;
 
 class CL_SoundProvider_MikMod_Session : public CL_SoundProvider_Session
@@ -42,8 +43,7 @@ class CL_SoundProvider_MikMod_Session : public CL_SoundProvider_Session
 /// \{
 
 public:
-	CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod_Generic *data);
-
+	CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod &source);
 	~CL_SoundProvider_MikMod_Session();
 
 
@@ -52,15 +52,11 @@ public:
 /// \{
 
 public:
-	virtual int get_num_samples() const;
-
-	virtual int get_frequency() const;
-
-	virtual CL_SoundFormat get_format() const;
-
-	virtual int get_num_channels() const;
-
-	virtual int get_position() const;
+	int get_num_samples() const;
+	int get_frequency() const;
+	CL_SoundFormat get_format() const;
+	int get_num_channels() const;
+	int get_position() const;
 
 
 /// \}
@@ -68,17 +64,12 @@ public:
 /// \{
 
 public:
-	virtual bool set_looping(bool loop);
-
-	virtual bool eof() const;
-
-	virtual void stop();
-
-	virtual bool play();
-
-	virtual bool set_position(int pos);
-
-	virtual int get_data(void **data_ptr, int data_requested);
+	bool set_looping(bool loop);
+	bool eof() const;
+	void stop();
+	bool play();
+	bool set_position(int pos);
+	int get_data(float **data_ptr, int data_requested);
 
 
 /// \}
@@ -86,22 +77,14 @@ public:
 /// \{
 
 private:
-	CL_SoundProvider_MikMod_Generic *data;
-
+	CL_SoundProvider_MikMod source;
 	CL_SoundFormat format;
-
 	int num_channels;
-
 	int num_samples;
-
 	int position;
-
 	bool stream_eof;
-
 	int frequency;
-
 	MODULE *module;
-
 	SBYTE buffer[64*1024];
 /// \}
 };

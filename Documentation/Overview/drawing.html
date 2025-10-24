@@ -26,8 +26,7 @@
 <p>Drawing graphics in ClanLib is done by first acquiring an instance of the
 <span class="code">CL_GraphicContext</span> interface.  Graphical contexts
 can be provided by different sources, with <span
-class="code">CL_DisplayWindow</span> and <span class="code">CL_Canvas</span>
-being the common sources.</p>
+class="code">CL_DisplayWindow</span> being the common source.</p>
 
 <p>A simple example of obtaining a graphic-context:</p>
 
@@ -39,15 +38,7 @@ CL_GraphicContext gc = window.get_gc();
 <p>A graphic context is an interface which you can use to draw graphics and
 create graphical objects like textures, shader objects and so on.  Each
 graphic context has a number of states that determine how each drawing
-command is to be executed.  For example, the following code creates a system
-font, sets the font to the current font, then draws some text with the
-font:</p>
-
-<pre>
-CL_Font font_tahoma(gc, "Tahoma", 16);
-gc.set_font(font_tahoma);
-gc.draw_text(10, 10, "Hello There", CL_Colord::lemonchiffon);
-</pre>
+command is to be executed.</p>
 
 <p>If the graphic context comes from a <span
 class="code">CL_DisplayWindow</span> object, it is normally written to an
@@ -73,22 +64,57 @@ while (ic.get_keyboard().get_keycode(CL_KEY_ESCAPE) == false)
 {
 	gc.clear(CL_Colord::smokewhite);
 	gc.set_map_mode(cl_map_2d_upper_left);
-	gc.set_font(font_tahoma);
 	gc.set_blend_mode(blend_transparent);
-	gc.draw_text(10, 10, "Hello There", CL_Colord::lemonchiffon);
+	font_tahoma.draw_text(gc, 10, 10, "Hello There", CL_Colord::lemonchiffon);
+	
 	window.flip();
-	CL_DisplayMessageQueue::process();
+	CL_KeepAlive::process();
 }
 </pre>
 
-<h3>Rendering Details</h3>
+<h3>High-level Rendering</h3>
 
-<p>The graphic context draws primitives, with each primitive being a point,
-line segment, polygon or a rectangle of pixels. The primitives are defined
-by a group of one or more vertices. A vertex defines a point, an endpoint of
-an edge, or a corner of a polygon where two edges meet. Additional data is
-associated with each vertex, such as colors, normals and texture
-coordinates.</p>
+<p>ClanLib provides a set of higher level classes to draw simple 2D graphics
+easilly:</p>
+
+<ul>
+<li>CL_Draw</li>
+<li>CL_Image</li>
+<li>CL_Sprite</li>
+<li>CL_Font</li>
+<li>CL_SpanLayout</li>
+</ul>
+
+<p>Using these classes are fairly straight forward. In the following loop we
+draw some text, show a simple image and render a gradient:</p>
+
+<pre>
+CL_Image image(gc, "image.png");
+CL_Font font(gc, "Tahoma", 16);
+while (ic.get_keyboard().get_keycode(CL_KEY_ESCAPE) == false)
+{
+	gc.clear(CL_Colord::smokewhite);
+	CL_Gradient color(CL_Colorf::mediumspringgreen, CL_Colorf::honeydew);
+	CL_Draw::gradient_fill(gc, 0.0f, 0.0f, 100.0f, 100.0f, color);
+	image.draw(gc, 10.0f, 10.0f);
+	font.draw_text(gc, 50.0f, 50.0f, "High level 2D drawing", CL_Colord::navy);
+	
+	window.flip();
+	CL_KeepAlive::process();
+}
+</pre>
+
+<p>For further information on each of these classes, see the overview
+documentation dedicated to them or check the reference documentation.</p>
+
+<h3>Low-level Rendering</h3>
+
+<p>The graphic context class itself draws primitives, with each primitive
+being a point, line segment, polygon or a rectangle of pixels. The
+primitives are defined by a group of one or more vertices. A vertex defines
+a point, an endpoint of an edge, or a corner of a polygon where two edges
+meet. Additional data is associated with each vertex, such as colors,
+normals and texture coordinates.</p>
 
 <p>For example, a single line drawn is described as one
 line-segment primitive using two vertices. The first vertex may have
@@ -96,17 +122,65 @@ position 10,10 using a red color, and the second vertex may have position
 100,100 using a green color. The line drawn will then go from 10,10 to
 100,100 and changing color from red to green along the line.</p>
 
-<p>In order to draw this line, the vertices are processed and the
-line-segment primitive executed through a series of steps, usually referered
-to as the processing pipeline. Roughly put the pipeline consists of three
-main steps:</p>
+<p>Data associated with a vertex is called a vertex attribute. In our line
+drawing example the two attributes are <i>position</i> and <i>color</i> and
+are assigned index 0 and 1 respectively. To draw the line we use the class <span
+class="code">CL_PrimitivesArray</span> to describe our vertex data and then
+we call <span class="code">draw_primitives</span> to render the line:</p>
 
-<ul>
-<li>Vertices are transformed and lit. Primitives are clipped.</li>
-<li>Primitives are rasterized. A <i>fragment</i> is produced for each pixel
-a primitive covers.</li>
-<li>The resulting fragments are blended with the frame buffer.</li>
-</ul>
+<pre>
+CL_Vec4f red_color(1.0f, 0.0f, 0.0f, 1.0f);
+CL_Vec4f green_color(0.0f, 1.0f, 0.0f, 1.0f);
+
+CL_Vec2i positions[] = { CL_Vec2i(10,10), CL_Vec2i(100,100) };
+CL_Vec4f colors[] = { red_color, green_color };
+
+CL_PrimitivesArray vertices(gc);
+vertices.set_attribute(0, positions);
+vertices.set_attribute(1, colors);
+
+gc.set_program(cl_program_color_only);
+gc.draw_primitives(cl_lines, 2, vertices);
+</pre>
+
+<p>The actual look and position of the line is determined by a <i>shader program</i>.
+A shader program consists of two individual shaders called a vertex shader
+and a fragment shader. Each shader is run at a different stage when
+rendering the line. Consider the following pseudo-code for how a line is rendered:</p>
+
+<pre>
+struct Vertex
+{
+	VertexAttribute attributes[max_attributes];
+};
+
+struct ShadedVertex
+{
+	Vec2 position;
+	VaryingVariable varyings[max_varyings];
+};
+
+void draw_line(Vertex v1, Vertex v2)
+{
+	ShadedVertex sv1 = vertex_shader(v1);
+	ShadedVertex sv2 = vertex_shader(v2);
+	foreach pixel covered by line (sv1.position,sv2.position)
+	{
+		VaryingVariable varyings[] = interpolate(pixel position, sv1, sv2);
+		Color shaded_pixel = fragment_shader(varyings);
+		framebuffer[pixel position] = blend_function(framebuffer_pixel, shaded_pixel);
+	}
+}
+</pre>
+
+<p>To do: Describe the process of rendering a primitive a lot better :)</p>
+
+
+
+<!--
+
+
+
 
 <p>The details of the first two steps can be either described by writing a
 shader program, or by using the fixed function pipeline. A shader program is
@@ -367,7 +441,7 @@ is.</p>
 <p>Finally, a logical operation is applied between the incoming fragment's
 color and the color in the frame buffer. The result of this operation
 becomes the new color in the frame buffer.</p>
-
+-->
 </div>
 
 </body>

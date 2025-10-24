@@ -54,3 +54,9 @@ CL_SetupGL::~CL_SetupGL()
 	if (cl_opengl_refcount == 0)
 		delete cl_opengl_target;
 }
+
+void CL_SetupGL::set_current()
+{
+	CL_MutexSection mutex_lock(&cl_opengl_mutex);
+	cl_opengl_target->set_current();
+}

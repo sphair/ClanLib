@@ -31,6 +31,7 @@
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_sprite.h"
+#include "API/Core/Text/string_help.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font Construction:
@@ -61,6 +62,18 @@ CL_FontProvider_Sprite *CL_Font_Sprite::get_provider() const
 void CL_Font_Sprite::set_font_metrics(const CL_FontMetrics &metrics)
 {
 	get_provider()->set_font_metrics(metrics);
+}
+
+void CL_Font_Sprite::draw_text(CL_GraphicContext &gc, float xpos, float ypos, float scale_x, float scale_y, const CL_StringRef &text, const CL_Colorf &color)
+{
+	CL_FontMetrics fm = get_font_metrics(gc);
+	float line_spacing = scale_y * ((float) (fm.get_height() + fm.get_external_leading()));
+	std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
+	for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+	{
+		get_provider()->draw_text(gc, xpos, ypos, scale_x, scale_y, lines[i], color);
+		ypos += line_spacing;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

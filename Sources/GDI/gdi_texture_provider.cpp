@@ -211,6 +211,10 @@ void CL_GDITextureProvider::set_mag_filter(CL_TextureFilter filter)
 	mag_filter = filter;
 }
 
+void CL_GDITextureProvider::set_max_anisotropy(float v)
+{
+}
+
 void CL_GDITextureProvider::set_depth_mode(CL_TextureDepthMode depth_mode)
 {
 }

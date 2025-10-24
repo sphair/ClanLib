@@ -130,7 +130,6 @@ public:
 private:
 	CL_SharedPtr<CL_Tab_Impl> impl;
 
-	friend class CL_GUIXMLLoaderVersion_1_0;
 /// \}
 };
 

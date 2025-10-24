@@ -83,11 +83,11 @@ public:
 	///
 	/// \return bool
 	bool empty() const { return CL_StringData<CharType, ReferenceClass, StdString>::empty(); }
-	const CharType *data() const { return CL_StringData<CharType, ReferenceClass, StdString>::data(); }
 
 	/// \brief Data
 	///
 	/// \return Char Type
+	const CharType *data() const { return CL_StringData<CharType, ReferenceClass, StdString>::data(); }
 	CharType *data() { return CL_StringData<CharType, ReferenceClass, StdString>::data(); }
 
 #endif

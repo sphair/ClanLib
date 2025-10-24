@@ -92,11 +92,11 @@ public:
 	/// \brief Returns the file source for this file system.
 	CL_VirtualFileSource *get_provider();
 
-	/// \brief Get the name of this file source
+	/// \brief Get the identifier of this file source
 	///
-	/// The exact format of this name depends on the implementation of the underlying filesystem and mounts
-	/// \return the name
-	CL_String get_name() const;
+	/// The exact format of this identifier depends on the implementation of the underlying filesystem and mounts
+	/// \return the identifier
+	CL_String get_identifier() const;
 
 /// \}
 /// \name Operations
@@ -151,8 +151,6 @@ private:
 	explicit CL_VirtualFileSystem(class CL_NullVFS null_fs);
 
 	CL_SharedPtr<CL_VirtualFileSystem_Impl> impl;
-
-	friend class CL_VirtualDirectory;
 
 	friend class CL_VirtualDirectory_Impl;
 /// \}

@@ -1,4 +1,4 @@
-/*
+﻿/*
 **  ClanLib SDK
 **  Copyright (c) 1997-2009 The ClanLib Team
 **
@@ -62,180 +62,160 @@ int App::start(const std::vector<CL_String> &args)
 
 	try
 	{
-			CL_DisplayWindowDescription win_desc;
-			win_desc.set_allow_resize(true);
-			win_desc.set_title("Font Example Application");
-			win_desc.set_size(CL_Size( 1000, 700 ), false);
+		CL_DisplayWindowDescription win_desc;
+		win_desc.set_allow_resize(true);
+		win_desc.set_title("Font Example Application");
+		win_desc.set_size(CL_Size( 1000, 700 ), false);
 
-			CL_DisplayWindow window(win_desc);
-			window_ptr = &window;
-			CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-			CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+		CL_DisplayWindow window(win_desc);
+		window_ptr = &window;
+		CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+		CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-			app_resources = CL_ResourceManager("resources.xml");
-			CL_ResourceManager gui_resources("../../Resources/GUIThemeLuna/resources.xml");
+		app_resources = CL_ResourceManager("resources.xml");
+		CL_ResourceManager gui_resources("../../Resources/GUIThemeLuna/resources.xml");
 
-			CL_VirtualFileSystem vfs("./");
-			CL_VirtualDirectory vdir = vfs.get_root_directory();
+		CL_GUIManager gui;
 
-			pb_font = CL_PNGProvider::load("clanfont.png", vdir);
+		CL_GUIWindowManagerTexture wm(window);
+		wm_ptr = &wm;
+		gui.set_window_manager(wm);
 
-			CL_GUIManager gui;
+		CL_GUIThemeDefault theme;
+		theme.set_resources(gui_resources);
+		gui.set_theme(theme); 
+		gui.set_css_document("theme.css");
 
-			CL_GUIWindowManagerTexture wm(window);
-			wm_ptr = &wm;
-			gui.set_window_manager(wm);
+		CL_GUITopLevelDescription gui_desc;
+		gui_desc.set_title("Options");
+		gui_desc.set_position(CL_Rect(10, 10, 250, 400), false);
+		CL_Window gui_window(&gui, gui_desc);
+		gui_window_ptr = &gui_window;
 
-			CL_GUIThemeDefault theme;
-			theme.set_resources(gui_resources);
-			gui.set_theme(theme); 
-			gui.set_css_document("theme.css");
+		int offset_x = 10;
+		int offset_y = 40;
+		int width = 200;
+		int height = 20;
+		const int gap = 26;
 
-			CL_GUITopLevelDescription gui_desc;
-			gui_desc.set_title("Options");
-			gui_desc.set_position(CL_Rect(10, 10, 250, 400), false);
-			CL_Window gui_window(&gui, gui_desc);
-			gui_window_ptr = &gui_window;
+		CL_PushButton button_class_system(&gui_window);
+		button_class_system.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_class_system.func_clicked().set(this, &App::on_button_clicked_class_system, &button_class_system);
+		button_class_system.set_text("Class: System");
+		offset_y += gap;
 
-			int offset_x = 10;
-			int offset_y = 40;
-			int width = 200;
-			int height = 20;
-			const int gap = 26;
+		CL_PushButton button_class_freetype(&gui_window);
+		button_class_freetype.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_class_freetype.func_clicked().set(this, &App::on_button_clicked_class_freetype, &button_class_freetype);
+		button_class_freetype.set_text("Class: Freetype");
+		offset_y += gap;
 
-			CL_PushButton button_class_system(&gui_window);
-			button_class_system.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_system.func_clicked().set(this, &App::on_button_clicked_class_system, &button_class_system);
-			button_class_system.set_text("Class: System");
-			offset_y += gap;
+		CL_PushButton button_class_vector(&gui_window);
+		button_class_vector.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
+		button_class_vector.set_text("Class: Vector");
+		offset_y += gap;
 
-			CL_PushButton button_class_freetype(&gui_window);
-			button_class_freetype.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_freetype.func_clicked().set(this, &App::on_button_clicked_class_freetype, &button_class_freetype);
-			button_class_freetype.set_text("Class: Freetype");
-			offset_y += gap;
+		CL_PushButton button_class_sprite(&gui_window);
+		button_class_sprite.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_class_sprite.func_clicked().set(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
+		button_class_sprite.set_text("Class: Sprite");
+		offset_y += gap;
 
-			CL_PushButton button_class_vector(&gui_window);
-			button_class_vector.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
-			button_class_vector.set_text("Class: Vector");
-			offset_y += gap;
+		CL_PushButton button_typeface_tahoma(&gui_window);
+		button_typeface_tahoma_ptr = &button_typeface_tahoma;
+		button_typeface_tahoma.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_typeface_tahoma.func_clicked().set(this, &App::on_button_clicked_typeface_tahoma, &button_typeface_tahoma);
+		button_typeface_tahoma.set_text("Typeface: Tahoma");
+		offset_y += gap;
 
-			CL_PushButton button_class_sprite(&gui_window);
-			button_class_sprite.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_class_sprite.func_clicked().set(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
-			button_class_sprite.set_text("Class: Sprite");
-			offset_y += gap;
+		CL_PushButton button_typeface_sans(&gui_window);
+		button_typeface_sans_ptr = &button_typeface_sans;
+		button_typeface_sans.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+		button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
+		button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
+		offset_y += gap;
 
-			CL_PushButton button_typeface_tahoma(&gui_window);
-			button_typeface_tahoma_ptr = &button_typeface_tahoma;
-			button_typeface_tahoma.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_typeface_tahoma.func_clicked().set(this, &App::on_button_clicked_typeface_tahoma, &button_typeface_tahoma);
-			button_typeface_tahoma.set_text("Typeface: Tahoma");
-			offset_y += gap;
+		CL_CheckBox checkbox1(&gui_window);
+		checkbox1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
+		checkbox1.func_state_changed().set(this, &App::on_checkbox_state_underline, &checkbox1);
+		checkbox1.set_text("Underline");
 
-			CL_PushButton button_typeface_sans(&gui_window);
-			button_typeface_sans_ptr = &button_typeface_sans;
-			button_typeface_sans.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-			button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
-			button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
-			offset_y += gap;
+		CL_CheckBox checkbox2(&gui_window);
+		checkbox2.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
+		checkbox2.func_state_changed().set(this, &App::on_checkbox_state_strikeout, &checkbox2);
+		checkbox2.set_text("Strikeout");
+		offset_y += gap;
 
-			CL_CheckBox checkbox1(&gui_window);
-			checkbox1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-			checkbox1.func_state_changed().set(this, &App::on_checkbox_state_underline, &checkbox1);
-			checkbox1.set_text("Underline");
+		CL_CheckBox checkbox3(&gui_window);
+		checkbox3.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
+		checkbox3.func_state_changed().set(this, &App::on_checkbox_state_italic, &checkbox3);
+		checkbox3.set_text("Italic");
 
-			CL_CheckBox checkbox2(&gui_window);
-			checkbox2.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-			checkbox2.func_state_changed().set(this, &App::on_checkbox_state_strikeout, &checkbox2);
-			checkbox2.set_text("Strikeout");
-			offset_y += gap;
+		CL_CheckBox checkbox4(&gui_window);
+		checkbox4.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
+		checkbox4.func_state_changed().set(this, &App::on_checkbox_state_antialias, &checkbox4);
+		checkbox4.set_text("Anti Alias");
+		offset_y += gap;
 
-			CL_CheckBox checkbox3(&gui_window);
-			checkbox3.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 80, offset_y + height));
-			checkbox3.func_state_changed().set(this, &App::on_checkbox_state_italic, &checkbox3);
-			checkbox3.set_text("Italic");
+		CL_PushButton button_weight_light(&gui_window);
+		button_weight_light.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
+		button_weight_light.func_clicked().set(this, &App::on_button_clicked_weight_light, &button_weight_light);
+		button_weight_light.set_text("Light");
+		CL_PushButton button_weight_normal(&gui_window);
+		button_weight_normal.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
+		button_weight_normal.func_clicked().set(this, &App::on_button_clicked_weight_normal, &button_weight_normal);
+		button_weight_normal.set_text("Normal");
+		CL_PushButton button_weight_bold(&gui_window);
+		button_weight_bold.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
+		button_weight_bold.func_clicked().set(this, &App::on_button_clicked_weight_bold, &button_weight_bold);
+		button_weight_bold.set_text("Bold");
+		offset_y += gap;
 
-			CL_CheckBox checkbox4(&gui_window);
-			checkbox4.set_geometry(CL_Rect(offset_x+100, offset_y, offset_x + 180, offset_y + height));
-			checkbox4.func_state_changed().set(this, &App::on_checkbox_state_antialias, &checkbox4);
-			checkbox4.set_text("Anti Alias");
-			offset_y += gap;
+		CL_PushButton button_size_16(&gui_window);
+		button_size_16.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
+		button_size_16.func_clicked().set(this, &App::on_button_clicked_size_16, &button_size_16);
+		button_size_16.set_text("Size 16");
+		CL_PushButton button_size_32(&gui_window);
+		button_size_32.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
+		button_size_32.func_clicked().set(this, &App::on_button_clicked_size_32, &button_size_32);
+		button_size_32.set_text("Size 32");
+		CL_PushButton button_size_64(&gui_window);
+		button_size_64.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
+		button_size_64.func_clicked().set(this, &App::on_button_clicked_size_64, &button_size_64);
+		button_size_64.set_text("Size 64");
+		offset_y += gap;
 
-			CL_PushButton button_weight_light(&gui_window);
-			button_weight_light.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-			button_weight_light.func_clicked().set(this, &App::on_button_clicked_weight_light, &button_weight_light);
-			button_weight_light.set_text("Light");
-			CL_PushButton button_weight_normal(&gui_window);
-			button_weight_normal.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-			button_weight_normal.func_clicked().set(this, &App::on_button_clicked_weight_normal, &button_weight_normal);
-			button_weight_normal.set_text("Normal");
-			CL_PushButton button_weight_bold(&gui_window);
-			button_weight_bold.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-			button_weight_bold.func_clicked().set(this, &App::on_button_clicked_weight_bold, &button_weight_bold);
-			button_weight_bold.set_text("Bold");
-			offset_y += gap;
+		font_text = "Ñ(The quick brown fox 0123456789)";
 
-			CL_PushButton button_size_16(&gui_window);
-			button_size_16.set_geometry(CL_Rect(offset_x, offset_y, offset_x + 60, offset_y + height));
-			button_size_16.func_clicked().set(this, &App::on_button_clicked_size_16, &button_size_16);
-			button_size_16.set_text("Size 16");
-			CL_PushButton button_size_32(&gui_window);
-			button_size_32.set_geometry(CL_Rect(offset_x+70, offset_y, offset_x + 130, offset_y + height));
-			button_size_32.func_clicked().set(this, &App::on_button_clicked_size_32, &button_size_32);
-			button_size_32.set_text("Size 32");
-			CL_PushButton button_size_64(&gui_window);
-			button_size_64.set_geometry(CL_Rect(offset_x+140, offset_y, offset_x + 200, offset_y + height));
-			button_size_64.func_clicked().set(this, &App::on_button_clicked_size_64, &button_size_64);
-			button_size_64.set_text("Size 64");
-			offset_y += gap;
+		CL_LineEdit lineedit1(&gui_window);
+		lineedit_text_ptr = &lineedit1;
+		lineedit1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
+		lineedit1.set_text(font_text); 
+		lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
 
-			font_text = "(The quick brown fox 0123456789)";
+		last_fps = 0.0f;
+		selected_fontclass = font_system;
+		font_desc.set_typeface_name("Microsoft Sans Serif");
+		font_desc.set_height(32);
+		font_desc.set_weight(400);
+		select_font();
 
-			CL_LineEdit lineedit1(&gui_window);
-			lineedit_text_ptr = &lineedit1;
-			lineedit1.set_geometry(CL_Rect(offset_x, offset_y, offset_x + width, offset_y + 30));
-			lineedit1.set_text(font_text); 
-			lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
+		CL_GraphicContext gc = window_ptr->get_gc();
+		small_font = CL_Font(gc, "Tahoma", 16);
 
-			last_fps = 0.0f;
-			selected_fontclass = font_system;
-			font_desc.set_typeface_name("Microsoft Sans Serif");
-			font_desc.set_height(32);
-			font_desc.set_weight(400);
-			select_font();
-
-			CL_GraphicContext gc = window_ptr->get_gc();
-			small_font = CL_Font(gc, "Tahoma", 16);
-
-			wm.func_repaint().set(this, &App::gui_repaint);
-			do
-			{
-				render();
-			}while(!gui.exec(false) && !quit);
-
-			small_font = CL_Font();
-			selected_font = CL_Font();
-
-	}
-	catch(CL_Exception& exception)
-	{
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
-
-		// Display the stack trace (if available)
-		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
+		wm.func_repaint().set(this, &App::gui_repaint);
+		do
 		{
-			CL_Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				CL_Console::write_line(stacktrace[cnt]);
-			}
-		}
+			render();
+		}while(!gui.exec(false) && !quit);
 
+		small_font = CL_Font();
+		selected_font = CL_Font();
+	}
+	catch(CL_Exception &exception)
+	{
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;
@@ -321,14 +301,25 @@ void App::draw_font_example()
 
 	CL_GraphicContext gc = window_ptr->get_gc();
 	
+	// Surrounding box
 	CL_Draw::fill(gc, CL_Rect(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height), CL_Colorf(0.0f, 0.0f, 0.0f));
+
+	// Draw the external leading line
+	int external_leading_offset = offset_y+font_metrics.get_external_leading() + font_metrics.get_descent();
+	CL_Draw::line(gc, offset_x, external_leading_offset, offset_x + font_size.width, external_leading_offset, CL_Colorf(0.5f, 0.5f, 0.0f));
+
+	// Draw the internal leading line
+	int internal_leading_offset = offset_y - font_metrics.get_ascent() + font_metrics.get_internal_leading();
+	CL_Draw::line(gc, offset_x, internal_leading_offset, offset_x + font_size.width, internal_leading_offset, CL_Colorf(0.5f, 0.5f, 0.0f));
+
+	// Draw outline to the bounding box
 	CL_Draw::line(gc, offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender, CL_Colorf(1.0f, 0.0f, 0.0f));
 	CL_Draw::line(gc, offset_x, offset_y+descender- font_size.height, offset_x + font_size.width, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
 	CL_Draw::line(gc, offset_x + font_size.width, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
 	CL_Draw::line(gc, offset_x, offset_y+descender, offset_x, offset_y+descender - font_size.height, CL_Colorf(1.0f, 0.0f, 0.0f));
 
+	// Base line
 	CL_Draw::line(gc, offset_x, offset_y, offset_x + font_size.width, offset_y, CL_Colorf(0.0f, 1.0f, 0.0f));
 
 	selected_font.draw_text(gc, offset_x, offset_y, font_text,  CL_Colorf::white);
 }
-

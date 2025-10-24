@@ -36,7 +36,7 @@
 #include "../Core/Text/string_types.h"
 #include <vector>
 
-class CL_CDDrive_Generic;
+class CL_CDDrive_Impl;
 
 /// \brief CD drive audio interface.
 ///
@@ -118,7 +118,7 @@ public:
 /// \{
 
 private:
-	CL_SharedPtr<CL_CDDrive_Generic> impl;
+	CL_SharedPtr<CL_CDDrive_Impl> impl;
 /// \}
 };
 

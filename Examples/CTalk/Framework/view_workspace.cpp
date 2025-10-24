@@ -11,6 +11,8 @@ ViewWorkspace::ViewWorkspace(CL_GUIComponent *parent)
 	func_resized().set(this, &ViewWorkspace::on_resized);
 	func_process_message().set(this, &ViewWorkspace::on_process_message);
 
+	tooltip.reset(new CL_ToolTip(get_gui_manager()));
+
 	CL_GraphicContext gc = get_gc();
 	part_background = CL_GUIThemePart(this);
 	part_tab = CL_GUIThemePart(this, "workspacetab");
@@ -69,6 +71,34 @@ void ViewWorkspace::show_view(int index)
 	request_repaint();
 }
 
+void ViewWorkspace::try_show_view(int index)
+{
+	if (index >= 0 && index < pages.size())
+		show_view(index);
+}
+
+void ViewWorkspace::next_view()
+{
+	if (!pages.empty())
+	{
+		int next = current_page_index+1;
+		if (next >= pages.size())
+			next = 0;
+		show_view(next);
+	}
+}
+
+void ViewWorkspace::previous_view()
+{
+	if (!pages.empty())
+	{
+		int prev = current_page_index-1;
+		if (prev < 0)
+			prev = pages.size()-1;
+		show_view(prev);
+	}
+}
+
 void ViewWorkspace::set_view_color(View *view, CL_Colorf &color)
 {
 	int page_index = find_view_index(view);
@@ -102,10 +132,10 @@ void ViewWorkspace::on_resized()
 CL_Rect ViewWorkspace::get_workspace_area()
 {
 	CL_Rect client_area = get_size();
-	client_area.top += part_tab.get_preferred_height()+5;
-	client_area.left += 6;
-	client_area.right -= 6;
-	client_area.bottom -= 6;
+	client_area.top += part_tab.get_preferred_height()+7;
+	client_area.left += 7;
+	client_area.right -= 7;
+	client_area.bottom -= 9;
 	return client_area;
 }
 
@@ -150,7 +180,7 @@ void ViewWorkspace::on_process_message(CL_GUIMessage &msg)
 		on_pointer_message(CL_GUIMessage_Pointer(msg));
 }
 
-void ViewWorkspace::on_input_message(const CL_GUIMessage_Input &msg)
+void ViewWorkspace::on_input_message(CL_GUIMessage_Input msg)
 {
 	CL_GraphicContext gc = get_gc();
 	CL_InputEvent input_event = msg.get_event();
@@ -174,35 +204,105 @@ void ViewWorkspace::on_input_message(const CL_GUIMessage_Input &msg)
 				break;
 			}
 		}
+		msg.set_consumed();
 	}
 	else if (input_event.type == CL_InputEvent::released && input_event.id == CL_MOUSE_LEFT)
 	{
+		msg.set_consumed();
 	}
 	else if (input_event.type == CL_InputEvent::pointer_moved)
 	{
 		bool new_hot_state = false;
 		CL_Point mouse_pos = input_event.mouse_pos;
+		bool no_match = true;
 		for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 		{
 			if (pages[page_index].position.contains(mouse_pos))
 			{
+				no_match = false;
 				CL_SpanLayout::HitTestResult result = pages[page_index].span.hit_test(gc, mouse_pos);
 				if (page_index == current_page_index && result.type == CL_SpanLayout::HitTestResult::inside && result.object_id == 0)
 				{
 					new_hot_state = true;
+					tooltip->set_text(cl_format("Close (Ctrl+F4)", (int)page_index+1));
+					tooltip->show_delayed(component_to_screen_coords(CL_Point(mouse_pos.x, mouse_pos.y+20)));
+				}
+				else
+				{
+					tooltip->set_text(cl_format("Switch to %2 (Alt+%1)", (int)page_index+1, pages[page_index].text));
+					tooltip->show_delayed(component_to_screen_coords(CL_Point(mouse_pos.x, mouse_pos.y+20)));
 				}
 			}
 		}
+		if (no_match)
+			tooltip->hide();
 		if (new_hot_state != hot)
 		{
 			hot = new_hot_state;
 			request_repaint();
+		}
+		msg.set_consumed();
+	}
+	else if (input_event.type == CL_InputEvent::pressed && input_event.ctrl)
+	{
+		switch (input_event.id)
+		{
+		case CL_KEY_TAB:
+			if (input_event.shift)
+				previous_view();
+			else
+				next_view();
+			msg.set_consumed();
+			break;
+		}
+	}
+	else if (input_event.type == CL_InputEvent::pressed && input_event.alt)
+	{
+		switch (input_event.id)
+		{
+		case CL_KEY_1:
+			try_show_view(0);
+			msg.set_consumed();
+			break;
+		case CL_KEY_2:
+			try_show_view(1);
+			msg.set_consumed();
+			break;
+		case CL_KEY_3:
+			try_show_view(2);
+			msg.set_consumed();
+			break;
+		case CL_KEY_4:
+			try_show_view(3);
+			msg.set_consumed();
+			break;
+		case CL_KEY_5:
+			try_show_view(4);
+			msg.set_consumed();
+			break;
+		case CL_KEY_6:
+			try_show_view(5);
+			msg.set_consumed();
+			break;
+		case CL_KEY_7:
+			try_show_view(6);
+			msg.set_consumed();
+			break;
+		case CL_KEY_8:
+			try_show_view(7);
+			msg.set_consumed();
+			break;
+		case CL_KEY_9:
+			try_show_view(8);
+			msg.set_consumed();
+			break;
 		}
 	}
 }
 
 void ViewWorkspace::on_pointer_message(const CL_GUIMessage_Pointer &msg)
 {
+	tooltip->hide();
 /*
 	if (msg.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
 	{

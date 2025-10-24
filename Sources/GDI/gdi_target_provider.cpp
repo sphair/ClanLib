@@ -44,12 +44,6 @@ CL_GDITargetProvider::~CL_GDITargetProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDITargetProvider Attributes:
 
-
-CL_DisplayMessageQueue_Provider *CL_GDITargetProvider::get_message_queue() const
-{
-	return &message_queue;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDITargetProvider Operations:
 
@@ -65,10 +59,4 @@ CL_DisplayWindowProvider *CL_GDITargetProvider::alloc_display_window()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GDITargetProvider Implementation:
-#ifdef WIN32
-CL_DisplayMessageQueue_Win32 CL_GDITargetProvider::message_queue;
-#else
-CL_DisplayMessageQueue_X11 CL_GDITargetProvider::message_queue;
-#endif
-
 

@@ -37,6 +37,7 @@
 #include "../Core/System/weakptr.h"
 #include "../Core/Signals/callback_1.h"
 #include "../Core/Signals/callback_2.h"
+#include "../Core/Signals/signal_v1.h"
 #include "../Core/Math/point.h"
 #include "accelerator_table.h"
 
@@ -115,10 +116,10 @@ public:
 /// \{
 public:
 	/// \brief bool func_filter_message(const CL_GUIMessage &message)
-	CL_Callback_1<bool, CL_GUIMessage &> &func_filter_message();
+	CL_Signal_v1<CL_GUIMessage &> &sig_filter_message();
 
-	/// \brief int func_exec_handler(CL_AcceleratorTable &accel_table)
-	CL_Callback_2<int, CL_AcceleratorTable &, bool> &func_exec_handler();
+	/// \brief int func_exec_handler(bool loop_until_complete)
+	CL_Callback_1<int, bool> &func_exec_handler();
 
 /// \}
 /// \name Operations
@@ -142,29 +143,13 @@ public:
 	/// \brief Sets the windows manager.
 	void set_window_manager(CL_GUIWindowManager &window_manager);
 
-	/// \brief Processes messages until exit_with_code is called.
-	int exec(CL_AcceleratorTable &table, bool loop_until_complete = true);
-
 	/// \brief Processes messages until exit_with_code is called
 	int exec(bool loop_until_complete = true);
 
 	/// \brief Processes all messages available
-	void process_messages(CL_AcceleratorTable &accel_table);
-
-	/// \brief Processes all messages available
-	void process_messages();
-
-	/// \brief Blocks (and process keep alive objects) until a message is available or the timeout occurs
 	///
-	/// Returns true if a message is available, false otherwise.
-	bool wait(int timeout = -1);
-
-	/// \brief Reads the next message but leaves it in the queue.
-	CL_GUIMessage peek_message(bool block);
-
-	/// \brief Reads the next message.
-	/** <p>If there is no next message available, this function blocks until it receives one.</p>*/
-	CL_GUIMessage get_message();
+	/// \param timeout = Timeout (ms). -1 = Wait forever
+	void process_messages(int timeout);
 
 	/// \brief Sends a GUI message to the message handler target for the message.
 	void dispatch_message(CL_GUIMessage message);
@@ -174,13 +159,6 @@ public:
 
 	/// \brief Clears the flag indicating exec() should exit its message pump loop.
 	void clear_exit_flag();
-
-	/// \brief Post GUI message onto the message queue.
-	/** <p>This function is thread safe.</p>*/
-	void post_message(const CL_GUIMessage &message);
-
-	/// \brief Send GUI message directly to the target.
-	void send_message(CL_GUIMessage &message);
 
 	/// \brief Set the mouse capture component.
 	void set_capture_component(CL_GUIComponent *component, bool state);
@@ -203,21 +181,17 @@ public:
 	/// \brief Redirect proximity events from tablet to the specified component.
 	void set_tablet_proximity_component(CL_GUIComponent *, bool state);
 
+	/// \brief Set the accelerator table.
+	void set_accelerator_table(const CL_AcceleratorTable &table);
+
 /// \}
 /// \name Implementation
 /// \{
 private:
-
-	/// \brief Process standard gui keys
-	///
-	/// \param message = GUIMessage
-	void process_standard_gui_keys(CL_GUIMessage &message);
 	CL_SharedPtr<CL_GUIManager_Impl> impl;
 
 	friend class CL_GUIComponent_Impl;
-
 	friend class CL_GUIThemePart;
-
 	friend class CL_GUIThemePart_Impl;
 /// \}
 };

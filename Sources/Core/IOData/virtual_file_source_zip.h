@@ -53,6 +53,7 @@ public:
 public:
 	CL_String get_path() const;
 
+	CL_String get_identifier() const;
 
 /// \}
 /// \name Operations
@@ -91,6 +92,9 @@ private:
 	unsigned int index;
 
 	CL_String directory_list_path;
+
+	static int zip_source_unique_id;
+
 /// \}
 };
 

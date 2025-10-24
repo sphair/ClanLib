@@ -32,7 +32,7 @@
 #include "echofilter_provider.h"
 #include <memory.h>
 
-CL_EchoFilter::CL_EchoFilter(int buffer_size, int shift_factor) : CL_SoundFilter( new CL_EchoFilterProvider(buffer_size, shift_factor))
+CL_EchoFilter::CL_EchoFilter(int buffer_size, float shift_factor) : CL_SoundFilter( new CL_EchoFilterProvider(buffer_size, shift_factor))
 {
 }
 

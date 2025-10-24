@@ -1,6 +1,61 @@
-I cThis file describes breaking changes between versions. 
+This file describes breaking changes between versions. 
 
-2.0.3
+2.1.0: Released 20 october 2009
+- IMPORTANT: Display: CL_Sprite animation delay now uses milliseconds integers,
+  instead of float seconds. There was a discrepancy between the documentation
+  and what it actually did. Previously, using floats, we lost accuracy. 
+  Now control of animation speed should now be 100% accurate. 
+  - CL_Sprite::update(int time_elapsed_ms) now refers to milliseconds
+  instead of seconds. If you previously did sprite.update(float), you now need
+  to feed it a number 1000 as large (or stop dividing CL_System::get_time() 
+  by 1000.0f when calculating delta time). If you don't use a time parameter
+  to sprite.update() it is calculated automatically as before. 
+
+- IMPORTANT: To solve some problems with co-hosting different versions of 
+  ClanLib, and to better support breaking changes in the future, we've changed
+  how ClanLib names its libraries under Unix. ClanLib now creates 
+  libclan21Core.so, libclan21Display.so (and so on), instead of naming it 
+  libclanCore.so and libclanDisplay.so. Every breaking release will increase
+  the 2.x.0 number. Every backward compatible release will get a 2.1.x version.
+
+- IMPORTANT: ClanSDL has moved out of the main package, as clanGDI is better 
+  and faster. ClanSDL is still available in the Contrib repository - read more 
+  about it on http://clanlib.org/development.html
+
+- Core: CL_Line::clip() function has moved to CL_LineSegment::clip(). It was 
+  placed in the wrong class in the last release. CL_Line is an line with an 
+  infinite length, thus requires a different clipping method.
+- GL and GL1: CL_GraphicContext get_pixeldata() has been fixed. The image is 
+  now no longer upside-down.
+- Sound: CL_SoundBuffer_Session::set_frequency() no longer returns a bool on 
+  failure. (It's now always successful).
+- Sound: CL_SoundFormat::sf_8bit_signed changed to sf_8bit_unsigned.
+- Sound: CL_EchoFilter "shift factor" paramter changed from int to float.
+- Sound: All sound filters now use floating point sounds (-1.0f to 1.0f) 
+  instead of integer (-32768 to 32767).
+- Core: CL_File no longer has a default access parameter in its constructor.
+  Add CL_File::access_read, CL_File::access_write or CL_File::access_read_write.
+- Core: CL_VirtualDirectory get_name() renamed to get_identifier().
+- Core: CL_VirtualFileSystem get_name() renamed to get_identifier().
+- Display: Changed tablet input device get_type() to return 
+  CL_InputDevice::tablet instead of CL_InputDevice::pointer. 
+- Display: Changed tablet buttons to use CL_KEY_TABLETN, (where N is 1-10) 
+  instead of CL_MOUSE_LEFT etc.
+
+2.0.4: Released 17 september 2009
+- IMPORTANT: Display: CL_DisplayMessageQueue has been removed. Use CL_KeepAlive::process() instead
+- Display: CL_FontDescription, "copy" renamed to "clone" (Like CL_Sprite)
+- Display: CL_Texture's copy_xxx_from functions CL_GraphicContext parameter is now not optional, and it has moved to the front of the function parameter list. (It was a bug with it being optional)
+- Display: CL_Font_Sprite incorrectly used the CL_FontMetrics (thus positions may be different)
+- GUI: CL_Window::func_close was removed. Use func_close() (from CL_GUIComponent), but note, it returns a bool (true = message consumed)
+  so you need to change your signature to bool on_close();
+- GUI: Moved 'temporary' window cache parameter from CL_GUIComponent ctor to CL_DisplayWindowDescription.
+- GUI: set_tab_order_controller and set_tab_order are gone, the order is now the component tree.
+- GUI: CL_PopupMenu's func_item_selected() and func_keyboard_event() has been removed. Use CL_PopupMenuItem's func_clicked() instead (returned from CL_PopupMenu::insert_item())
+- GUI: CL_Window::func_activation_lost and func_activation_gained was removed, use CL_GUIComponent::func_activated and func_deactivated instead
+- GUI: CL_GUIManager::exec() no longer takes an acceleratortable parameter. Use set_accelerator_table(const CL_AcceleratorTable &table) instead if you use accelerators.
+
+2.0.3: Released 15 july 2009
 - Display: CL_Font_Texture has been renamed to CL_Font_System
 - Display: CL_Font_Freetype has been changed to use CL_TextureGroup, therefore CL_GraphicContext is required by it's constructor
 - Display: CL_Font_Native has been removed (The pixel buffer based font)

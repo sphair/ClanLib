@@ -40,7 +40,13 @@ cases you will only need to use the basic options.</p>
 	id="id"&gt;
 
 	&lt;!-- Frame image loading: --&gt;
-	
+
+	&lt;image 
+		fileseq="filename.extension"  
+		start_index="start_index" 
+		skip_index="skip_index" 
+		leading_zeroes="leading_zeroes" /&gt;
+
 	&lt;image file="filename" /&gt;
 
 	&lt;image file="filename"&gt;
@@ -194,6 +200,30 @@ CL_Sprite::get_id().
   <i>Default value</i>: None, MUST BE PRESENT.
   </p>
 </li>
+<li>Attribute <b>fileseq</b>: A sequence of images (Optional).
+  <p>
+  <i>Valid values</i>: "filename.ext" where ext is any of the supported ClanLib image types (for example png, jpg, tga, pcx)<br>
+  <i>Default value</i>: None. For non-sequenced images, use the file attribute.
+  </p>
+</li>
+<li>Attribute <b>start_index</b>: The start index. (fileseq)
+  <p>
+  <i>Valid values</i>: "integer" - greater or equal to 0<br>
+  <i>Default value</i>: "0"
+  </p>
+</li>
+<li>Attribute <b>skip_index</b>: How many images to skip per iteration. (fileseq)
+  <p>
+  <i>Valid values</i>: "integer" - greater or equal to 1<br>
+  <i>Default value</i>: "1"
+  </p>
+</li>
+<li>Attribute <b>leading_zeroes</b>: Number of zeroes after the underscore. (fileseq)
+  <p>
+  <i>Valid values</i>: "integer" - greater or equal to 0<br>
+  <i>Default value</i>: "0"
+  </p>
+</li>
 </ul>
 
 <p><b>&lt;grid&gt;</b></p>
@@ -288,7 +318,7 @@ CL_Sprite::get_id().
   Value is in milliseconds.</p>
   <p>
   <i>Valid values</i>: integer<br>
-  <i>Default value</i>: 50
+  <i>Default value</i>: 60
   </p>
 </li>
 <li>Attribute <b>loop</b>: Loop the animation.

@@ -16,7 +16,7 @@ PreferencesViewer::PreferencesViewer(CL_GUIComponent *owner)
 	func_input_pressed().set(this, &PreferencesViewer::on_input_pressed);
 	func_input_released().set(this, &PreferencesViewer::on_input_released);
 	func_input_pointer_moved().set(this, &PreferencesViewer::on_input_pointer_moved);
-	func_close().set(this, &PreferencesViewer::on_cancel_clicked);
+	func_close().set(this, &PreferencesViewer::on_close);
 
 	part_background = CL_GUIThemePart(this);
 	part_label_area = CL_GUIThemePart(this, "labelarea");
@@ -148,4 +148,10 @@ void PreferencesViewer::on_ok_clicked()
 void PreferencesViewer::on_cancel_clicked()
 {
 	exit_with_code(0);
+}
+
+bool PreferencesViewer::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

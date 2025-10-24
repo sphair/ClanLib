@@ -137,7 +137,7 @@ public:
 	}
 
 	template<class UserData>
-	CL_Slot connect(void (*function)(), const UserData &user_data)
+	CL_Slot connect(void (*function)(UserData), const UserData &user_data)
 	{
 		clean_up();
 		CL_SharedPtr<CL_SlotCallback> callback(

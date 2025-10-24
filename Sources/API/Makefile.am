@@ -76,7 +76,6 @@ clanNetwork_includes = \
 clanGUI_includes = \
 	gui.h \
 	GUI/api_gui.h \
-	GUI/gui_consumed_keys.h \
 	GUI/setup_gui.h \
 	GUI/gui_message_activation_change.h \
 	GUI/gui_layout_corners.h \
@@ -133,6 +132,8 @@ clanGUI_includes = \
 	GUI/Components/listview_icon_list.h \
 	GUI/Components/toolbar_item.h \
 	GUI/Components/listview_icon.h \
+	GUI/Components/openfiledialog.h \
+	GUI/Components/savefiledialog.h \
 	GUI/Providers/gui_theme_provider.h \
 	GUI/Providers/gui_window_manager_provider.h \
 	GUI/Providers/gui_layout_provider.h
@@ -149,6 +150,7 @@ clanSound_includes = \
 	Sound/soundbuffer_session.h \
 	Sound/soundfilter.h \
 	Sound/soundformat.h \
+	Sound/sound_sse.h \
 	Sound/SoundProviders/soundprovider_factory.h \
 	Sound/SoundProviders/soundprovider_type.h \
 	Sound/SoundProviders/soundprovider_type_register.h \
@@ -159,8 +161,8 @@ clanSound_includes = \
 	Sound/cd_drive.h \
 	Sound/soundoutput.h \
 	Sound/soundoutput_description.h \
-	Sound/soundprovider.h \
-	Sound/soundprovider_session.h
+	Sound/SoundProviders/soundprovider.h \
+	Sound/SoundProviders/soundprovider_session.h
 
 clanCore_includes = \
 	core.h \
@@ -329,6 +331,7 @@ clanDisplay_includes = \
 	Display/api_display.h \
 	Display/display_target.h \
 	Display/display.h \
+	Display/screen_info.h \
 	Display/setup_display.h \
 	Display/2D/texture_group.h \
 	Display/2D/draw.h \
@@ -339,7 +342,6 @@ clanDisplay_includes = \
 	Display/2D/sprite_description.h \
 	Display/2D/subtexture.h \
 	Display/2D/color.h \
-	Display/2D/image.h \
 	Display/2D/span_layout.h \
 	Display/Collision/outline_accuracy.h \
 	Display/Collision/outline_provider_bitmap.h \
@@ -358,9 +360,11 @@ clanDisplay_includes = \
 	Display/ImageProviders/jpeg_decompressor.h \
 	Display/ImageProviders/provider_factory.h \
 	Display/ImageProviders/jpeg_compressor.h \
+	Display/Image/icon_set.h \
 	Display/Image/pixel_format.h \
 	Display/Image/palette.h \
 	Display/Image/pixel_buffer.h \
+	Display/Image/pixel_buffer_help.h \
 	Display/Image/pixel_format_type.h \
 	Display/Font/font_system.h \
 	Display/Font/font_sprite.h \
@@ -402,19 +406,16 @@ clanDisplay_includes = \
 	Display/TargetProviders/render_window_provider.h \
 	Display/TargetProviders/vertex_array_buffer_provider.h \
 	Display/TargetProviders/display_target_provider.h \
-	Display/TargetProviders/display_message_queue_provider.h \
 	Display/TargetProviders/texture_provider.h \
 	Display/TargetProviders/cursor_provider.h \
 	Display/Window/keys.h \
 	Display/Window/input_device.h \
-	Display/Window/display_window_message.h \
 	Display/Window/display_window.h \
 	Display/Window/input_context.h \
 	Display/Window/display_window_description.h \
 	Display/Window/input_event.h \
 	Display/Window/input_state.h \
 	Display/Window/cursor.h \
-	Display/Window/display_message_queue.h \
 	Display/Window/display_window_mode.h
 
 clanVorbis_includes = \
@@ -452,12 +453,6 @@ clanGDI_includes = \
 	GDI/gdi_target.h \
 	GDI/setup_gdi.h
 
-clanSDL_includes = \
-	sdl.h \
-	SDL/api_sdl.h \
-	SDL/sdl_target.h \
-	SDL/setup_sdl.h
-
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 
@@ -472,7 +467,6 @@ EXTRA_HEADERS = \
 	$(clanNetwork_includes) \
 	$(clanGUI_includes) \
 	$(clanGDI_includes) \
-	$(clanSDL_includes) \
 	$(clanSound_includes) \
 	$(clanVorbis_includes) \
 	$(clanDatabase_includes) \

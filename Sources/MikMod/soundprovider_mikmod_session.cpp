@@ -35,16 +35,19 @@
 #include "API/Core/System/autoptr.h"
 
 #include "soundprovider_mikmod_session.h"
-#include "soundprovider_mikmod_generic.h"
+#include "soundprovider_mikmod_impl.h"
 #include "module_reader.h"
+
+#include "API/Sound/sound_sse.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod_Session construction:
 
-CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod_Generic *data) :
-	data(data), num_samples(0), position(0), stream_eof(false)
+CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod &source) :
+	source(source), num_samples(0), position(0), stream_eof(false)
 {
-	CL_AutoPtr<CL_IODevice_Memory> input_autoptr(new CL_IODevice_Memory(data->buffer));
+	CL_AutoPtr<CL_IODevice_Memory> input_autoptr(new CL_IODevice_Memory(source.impl->buffer));
 	CL_IODevice_Memory *input = input_autoptr;
 
 	MREADER *reader = new_clanlib_reader((void *) input);
@@ -64,14 +67,14 @@ CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvide
 	delete_clanlib_reader(reader);
 
 	frequency = md_mixfreq;
-	format = (md_mode & DMODE_16BITS) ? sf_16bit_signed : sf_8bit_signed;
+	format = (md_mode & DMODE_16BITS) ? sf_16bit_signed : sf_8bit_unsigned;
 	num_channels = (md_mode&DMODE_STEREO) ? 2 : 1;
 }
 
 CL_SoundProvider_MikMod_Session::~CL_SoundProvider_MikMod_Session()
 {
 	Player_Stop();
-//	Player_Free(module); -- this crashes for some weird reason, help! -- mbn 23. april 2003
+	Player_Free(module);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -137,8 +140,9 @@ bool CL_SoundProvider_MikMod_Session::set_position(int pos)
 	return true;
 }
 
-int CL_SoundProvider_MikMod_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_MikMod_Session::get_data(float **channels, int data_requested)
 {
+
 	int total_written = 0;
 	int bytes_per_sample = (format == sf_16bit_signed) ? 2 : 1;
 	bytes_per_sample *= num_channels;
@@ -151,38 +155,33 @@ int CL_SoundProvider_MikMod_Session::get_data(void **data_ptr, int data_requeste
 
 		if (format == sf_16bit_signed)
 		{
-			short **channels = (short **) data_ptr;
-
+			short *src = (short *) buffer;
 			if (num_channels == 2)
 			{
-				short *src = (short *) buffer;
-				for (int i=0; i<written; i++)
-				{
-					channels[0][i+total_written] = *(src++);
-					channels[1][i+total_written] = *(src++);
-				}
+				float *temp_data_ptr[2];
+				temp_data_ptr[0] = channels[0] + total_written;
+				temp_data_ptr[1] = channels[1] + total_written;
+				CL_SoundSSE::unpack_16bit_stereo(src, written*2, temp_data_ptr);
 			}
 			else
 			{
-				memcpy(channels[0]+total_written, buffer, written*2);
+				CL_SoundSSE::unpack_16bit_mono(src, written*2, channels[0] + total_written);
 			}
 		}
-		else if (format == sf_8bit_signed)
+		else if (format == sf_8bit_unsigned)
 		{
-			char **channels = (char **) data_ptr;
-
+			unsigned char *src = (unsigned char *) buffer;
 			if (num_channels == 2)
 			{
-				char *src = (char *) buffer;
-				for (int i=0; i<written; i++)
-				{
-					channels[0][i+total_written] = *(src++);
-					channels[1][i+total_written] = *(src++);
-				}
+				float *temp_data_ptr[2];
+				temp_data_ptr[0] = channels[0] + total_written;
+				temp_data_ptr[1] = channels[1] + total_written;
+
+				CL_SoundSSE::unpack_8bit_stereo(src, written, temp_data_ptr);
 			}
 			else
 			{
-				memcpy(channels[0]+total_written, buffer, written);
+				CL_SoundSSE::unpack_8bit_mono(src, written, channels[0] + total_written);
 			}
 		}
 
@@ -204,6 +203,7 @@ int CL_SoundProvider_MikMod_Session::get_data(void **data_ptr, int data_requeste
 
 	if (num_samples < position) num_samples = position;
 	return total_written;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

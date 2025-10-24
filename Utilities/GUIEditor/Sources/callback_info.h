@@ -26,8 +26,7 @@
 **    Harry Storbacka
 */
 
-#ifndef header_callback_info
-#define header_callback_info
+#pragma once
 
 #include "callback_data.h"
 
@@ -51,5 +50,3 @@ private:
 
 	std::vector<CallbackData> callbacks;
 };
-
-#endif

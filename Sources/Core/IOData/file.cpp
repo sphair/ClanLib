@@ -44,6 +44,12 @@ CL_File::CL_File()
 }
 
 CL_File::CL_File(
+	const CL_String &filename)
+: CL_IODevice(new CL_IODeviceProvider_File(CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file), open_existing, access_read, share_all, 0))
+{
+}
+
+CL_File::CL_File(
 	const CL_String &filename,
 	OpenMode open_mode,
 	unsigned int access,
@@ -52,7 +58,6 @@ CL_File::CL_File(
 : CL_IODevice(new CL_IODeviceProvider_File(CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file), open_mode, access, share, flags))
 {
 }
-
 CL_File::CL_File(
 	const CL_String &filename,
 	OpenMode mode,
@@ -79,6 +84,13 @@ CL_SecurityDescriptor CL_File::get_permissions() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_File Operations:
+
+bool CL_File::open(
+	const CL_String &filename)
+{
+	CL_IODeviceProvider_File *provider = dynamic_cast<CL_IODeviceProvider_File*>(impl->provider);
+	return provider->open(CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file), open_existing, access_read, share_all, 0);
+}
 
 bool CL_File::open(
 	const CL_String &filename,

@@ -81,6 +81,14 @@ public:
 
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
+	void get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release);
+
+	CL_String get_renderer_string();
+
+	CL_String get_vendor_string();
+
+	std::vector<CL_String> get_extensions();
+
 /// \}
 /// \name Operations
 /// \{

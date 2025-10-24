@@ -67,15 +67,9 @@ void CL_OpenGLFrameBufferProvider::on_dispose()
 {
 	if (handles[0])
 	{
-		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
-		if (!opengl_contexts.empty())
+		if (CL_OpenGL::set_active())
 		{
-			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
-			if (gc_provider)
-			{
-				CL_OpenGL::set_active(gc_provider);
-				clDeleteFramebuffers(2, handles);
-			}
+			clDeleteFramebuffers(2, handles);
 		}
 	}
 }
@@ -97,7 +91,7 @@ CL_Size CL_OpenGLFrameBufferProvider::get_attachment_size(int buffer_id) const
 	return sizes[buffer_id];
 }
 
-std::vector<int> CL_OpenGLFrameBufferProvider::get_attachment_indexes() const
+const std::vector<int> &CL_OpenGLFrameBufferProvider::get_attachment_indexes() const
 {
 	return attachment_indexes;
 }

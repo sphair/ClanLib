@@ -29,10 +29,10 @@
 
 #pragma once
 
-#include "API/Sound/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
+#include "API/Vorbis/soundprovider_vorbis.h"
 #include "vorbis/codec.h"
 
-class CL_SoundProvider_Vorbis_Generic;
 class CL_IODevice;
 
 class CL_SoundProvider_Vorbis_Session : public CL_SoundProvider_Session
@@ -41,42 +41,30 @@ class CL_SoundProvider_Vorbis_Session : public CL_SoundProvider_Session
 /// \{
 
 public:
-	CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis_Generic *data);
-
+	CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis &source);
 	~CL_SoundProvider_Vorbis_Session();
-
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	virtual int get_num_samples() const;
-
-	virtual int get_frequency() const;
-
-	virtual CL_SoundFormat get_format() const;
-
-	virtual int get_num_channels() const;
-
-	virtual int get_position() const;
-
+	int get_num_samples() const;
+	int get_frequency() const;
+	CL_SoundFormat get_format() const;
+	int get_num_channels() const;
+	int get_position() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	virtual bool eof() const;
-
-	virtual void stop();
-
-	virtual bool play();
-
-	virtual bool set_position(int pos);
-
-	virtual int get_data(void **data_ptr, int data_requested);
-
+	bool eof() const;
+	void stop();
+	bool play();
+	bool set_position(int pos);
+	int get_data(float **data_ptr, int data_requested);
 
 /// \}
 /// \name Implementation
@@ -85,14 +73,10 @@ public:
 private:
 	void stream_data();
 
-	CL_SoundProvider_Vorbis_Generic *data;
-
+	CL_SoundProvider_Vorbis source;
 	int num_samples;
-
 	int position;
-
 	CL_IODevice *input;
-
 	bool stream_eof;
 
 	/// \brief Sync and verify incoming physical bitstream.

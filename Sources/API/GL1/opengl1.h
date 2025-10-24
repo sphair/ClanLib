@@ -84,6 +84,14 @@ public:
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
 	static void set_active(const CL_GL1GraphicContextProvider * const gc_provider);
+
+	/// \brief Sets the thread's OpenGL context to the first valid allocated one
+	///
+	/// If a valid OpenGL context is not found, then "no render context" is set.
+	///
+	/// \return true = Success. false = No OpenGL contexts could be found
+	static bool set_active();
+
 /// \}
 };
 

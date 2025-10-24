@@ -47,6 +47,7 @@ class CL_PixelFormat;
 class CL_TextureProvider;
 class CL_DataBuffer;
 class CL_Texture_Impl;
+class CL_SharedGCData_Impl;
 
 /// \brief Texture coordinate wrapping modes.
 ///
@@ -272,6 +273,11 @@ public:
 		CL_ResourceManager *resources,
 		CL_GraphicContext &gc);
 
+	/// \brief Constructs a texture from an implementation
+	///
+	/// \param impl = The implementation
+	CL_Texture(CL_SharedPtr<CL_Texture_Impl> &impl);
+
 	virtual ~CL_Texture();
 
 /// \}
@@ -380,6 +386,11 @@ public:
 	/// \return provider
 	CL_TextureProvider *get_provider() const;
 
+	/// \brief Get the implementation weakptr
+	///
+	/// This is used to assist is creating CL_Texture caches internally within clanlib
+	CL_WeakPtr<CL_Texture_Impl> get_impl() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -429,41 +440,41 @@ public:
 
 	/// \brief Copy image data from a graphic context.
 	void copy_image_from(
+		CL_GraphicContext &context,
 		int level,
-		CL_TextureFormat internal_format = cl_rgba,
-		CL_GraphicContext *gc = 0);
+		CL_TextureFormat internal_format = cl_rgba);
 
 	void copy_image_from(
+		CL_GraphicContext &context,
 		int x,
 		int y,
 		int width,
 		int height,
 		int level = 0,
-		CL_TextureFormat internal_format = cl_rgba,
-		CL_GraphicContext *gc = 0);
+		CL_TextureFormat internal_format = cl_rgba);
 
 	void copy_image_from(
+		CL_GraphicContext &context,
 		const CL_Rect &pos,
 		int level = 0,
-		CL_TextureFormat internal_format = cl_rgba,
-		CL_GraphicContext *gc = 0);
+		CL_TextureFormat internal_format = cl_rgba);
 
 	/// \brief Copy sub image data from a graphic context.
 	void copy_subimage_from(
+		CL_GraphicContext &context,
 		int offset_x,
 		int offset_y,
 		int x,
 		int y,
 		int width,
 		int height,
-		int level = 0,
-		CL_GraphicContext *gc = 0);
+		int level = 0);
 
 	void copy_subimage_from(
+		CL_GraphicContext &context,
 		const CL_Point &offset,
 		const CL_Rect &pos,
-		int level = 0,
-		CL_GraphicContext *gc = 0);
+		int level = 0);
 
 	/// \brief Set the minimum level of detail texture parameter.
 	void set_min_lod(float min_lod);
@@ -501,6 +512,9 @@ public:
 
 	/// \brief Set the magnification filter.
 	void set_mag_filter(CL_TextureFilter filter);
+
+	/// \brief Set the maximum degree of anisotropy.
+	void set_max_anisotropy(float max_anisotropy);
 
 	/// \brief Set the depth texture mode parameter.
 	void set_depth_mode(CL_TextureDepthMode depth_mode);

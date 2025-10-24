@@ -68,6 +68,11 @@ CL_InputDeviceProvider_LinuxJoystick::CL_InputDeviceProvider_LinuxJoystick(CL_X1
 
 CL_InputDeviceProvider_LinuxJoystick::~CL_InputDeviceProvider_LinuxJoystick()
 {
+	dispose();
+}
+
+void CL_InputDeviceProvider_LinuxJoystick::on_dispose()
+{
 	if (fd)
 	{
 		close(fd);
@@ -79,6 +84,7 @@ CL_InputDeviceProvider_LinuxJoystick::~CL_InputDeviceProvider_LinuxJoystick()
 
 int CL_InputDeviceProvider_LinuxJoystick::get_fd() const
 {
+	throw_if_disposed();
 	return fd;
 }
 
@@ -198,6 +204,8 @@ void CL_InputDeviceProvider_LinuxJoystick::process_event(struct js_event event) 
 
 void CL_InputDeviceProvider_LinuxJoystick::update_states() const
 {
+	throw_if_disposed();
+
 	struct js_event event;
 
 	while (read(fd, &event, sizeof(struct js_event)) != -1)

@@ -28,15 +28,18 @@
 
 #include "Sound/precomp.h"
 #include "soundprovider_wave_session.h"
-#include "soundprovider_wave_generic.h"
+#include "soundprovider_wave_impl.h"
 #include "API/Sound/soundformat.h"
+#include "API/Sound/sound_sse.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Wave_Session construction:
 
-CL_SoundProvider_Wave_Session::CL_SoundProvider_Wave_Session(CL_SoundProvider_Wave_Generic *data) :
-	data(data), position(0)
+CL_SoundProvider_Wave_Session::CL_SoundProvider_Wave_Session(CL_SoundProvider_Wave &source) :
+	source(source), position(0)
 {
+	frequency = source.impl->frequency;
+	num_samples = source.impl->num_samples;
 }
 
 CL_SoundProvider_Wave_Session::~CL_SoundProvider_Wave_Session()
@@ -48,22 +51,22 @@ CL_SoundProvider_Wave_Session::~CL_SoundProvider_Wave_Session()
 
 int CL_SoundProvider_Wave_Session::get_num_samples() const
 {
-	return data->num_samples;
+	return num_samples;
 }
 
 int CL_SoundProvider_Wave_Session::get_frequency() const
 {
-	return data->frequency;
+	return frequency;
 }
 
 CL_SoundFormat CL_SoundProvider_Wave_Session::get_format() const
 {
-	return data->format;
+	return source.impl->format;
 }
 
 int CL_SoundProvider_Wave_Session::get_num_channels() const
 {
-	return data->num_channels;
+	return source.impl->num_channels;
 }
 
 int CL_SoundProvider_Wave_Session::get_position() const
@@ -94,54 +97,43 @@ bool CL_SoundProvider_Wave_Session::set_position(int pos)
 	return true;
 }
 
-int CL_SoundProvider_Wave_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_Wave_Session::get_data(float **data_ptr, int data_requested)
 {
-	int num_samples = get_num_samples();
-	if (position + data_requested > num_samples)
-	{
-		data_requested = num_samples - position;
-		if (data_requested < 0) return 0;
-	}
+	int block_start = position;
+	int block_end = position + data_requested;
+	if (block_end > num_samples)
+		block_end = num_samples;
+	int retrieved = block_end-block_start;
 
-	if (data->format == sf_16bit_signed)
+	if (source.impl->format == sf_16bit_signed)
 	{
-		short **channels = (short **) data_ptr;
-
-		if (data->num_channels == 2)
+		if (source.impl->num_channels == 2)
 		{
-			short *src = (short *) data->data + position * 2;
-			for (int i=0; i<data_requested; i++)
-			{
-				channels[0][i] = *(src++);
-				channels[1][i] = *(src++);
-			}
+			short *src = ((short *) source.impl->data) + position * 2;
+			CL_SoundSSE::unpack_16bit_stereo(src, retrieved*2, data_ptr);
 		}
 		else
 		{
-			memcpy(channels[0], data->data+position*2, data_requested*2);
+			short *src = ((short *) source.impl->data) + position;
+			CL_SoundSSE::unpack_16bit_mono(src, retrieved, data_ptr[0]);
 		}
 	}
-	else if (data->format == sf_8bit_signed)
+	else
 	{
-		char **channels = (char **) data_ptr;
-
-		if (data->num_channels == 2)
+		if (source.impl->num_channels == 2)
 		{
-			char *src = (char *) data->data + position * 2;
-			for (int i=0; i<data_requested; i++)
-			{
-				channels[0][i] = *(src++);
-				channels[1][i] = *(src++);
-			}
+			unsigned char *src = ((unsigned char *) source.impl->data) + position * 2;
+			CL_SoundSSE::unpack_8bit_stereo(src, retrieved*2, data_ptr);
 		}
 		else
 		{
-			memcpy(channels[0], data->data+position, data_requested);
+			unsigned char *src = ((unsigned char *) source.impl->data) + position;
+			CL_SoundSSE::unpack_8bit_mono(src, retrieved, data_ptr[0]);
 		}
 	}
 
-	position += data_requested;
-	return data_requested;
+	position += retrieved;
+	return retrieved;
 }
 
 /////////////////////////////////////////////////////////////////////////////

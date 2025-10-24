@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclanNetwork.la
+lib_LTLIBRARIES = libclan21Network.la
 
-libclanNetwork_la_SOURCES = \
+libclan21Network_la_SOURCES = \
 precomp.cpp \
 IRC/dcc_download.cpp \
 IRC/dcc_download_generic.cpp \
@@ -39,16 +39,16 @@ Socket/udp_socket_impl.cpp \
 Socket/unix_socket.cpp
 
 if WIN32
-libclanNetwork_la_SOURCES += \
+libclan21Network_la_SOURCES += \
 Socket/event_provider_win32socket.cpp \
 Socket/win32_socket.cpp \
 setupnetwork_win32.cpp
 else
-libclanNetwork_la_SOURCES += \
+libclan21Network_la_SOURCES += \
 setupnetwork_unix.cpp
 endif
 
-libclanNetwork_la_LDFLAGS = \
+libclan21Network_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

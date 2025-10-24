@@ -74,6 +74,16 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 	font_small = CL_Font_System(gc, cl_text("Tahoma"), 16);
 	font_small.set_texture_group(font_texture_group);
 
+	CL_FontDescription font_desc;
+	font_desc.set_typeface_name("Tahoma");
+	font_desc.set_height(64);
+	font_desc.set_anti_alias(false);
+	font_large = CL_Font_System(gc, font_desc);
+	font_large.set_texture_group(font_texture_group);
+
+	font_desc.set_anti_alias(true);
+	font_large_antialias = CL_Font_System(gc, font_desc);
+	font_large_antialias.set_texture_group(font_texture_group);
 	wm.func_repaint().set(this, &GUI::wm_repaint);
 
 	panel.reset(new Panel(this) );
@@ -173,8 +183,22 @@ void GUI::write_display_image()
 		{
 			image_grid_normal.draw(gc, source_image_geometry, dest_geometry);
 		}
-
 	}
+
+	if (panel->is_font())
+	{
+		gc.mult_scale(scale, scale);
+
+		if (panel->is_antialias())
+		{
+			font_large_antialias.draw_text(gc, dest_geometry.left, dest_geometry.right, "a");
+		}
+		else
+		{
+			font_large.draw_text(gc, dest_geometry.left, dest_geometry.right, "a");
+		}
+	}
+
 	if (panel->is_sprite())
 	{
 		if (panel->is_outlined())

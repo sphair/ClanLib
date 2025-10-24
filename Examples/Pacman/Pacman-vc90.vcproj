@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Pacman"
 	ProjectGUID="{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}"
 	RootNamespace="Pacmanvc90"
@@ -368,6 +368,10 @@
 			</File>
 			<File
 				RelativePath=".\sources\fontblowup.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sources\framerate_counter.h"
 				>
 			</File>
 			<File

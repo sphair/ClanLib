@@ -31,12 +31,12 @@
 #include "Display/precomp.h"
 #include "font_provider_vector.h"
 
-#include "freetype_font.h"
-#include "freetype_font_provider.h"
+#include "FontEngine/font_engine_freetype.h"
 
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/Text/string_format.h"
@@ -45,24 +45,31 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_vector.h"
+#include "glyph_outline.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Vector Construction:
 
-CL_FontProvider_Vector::CL_FontProvider_Vector(const CL_FontDescription &desc) : ft_font(NULL)
+CL_FontProvider_Vector::CL_FontProvider_Vector() : font_engine(NULL)
 {
-	load_font(desc);
-}
-
-CL_FontProvider_Vector::CL_FontProvider_Vector(const CL_StringRef &typeface_name, int height) : ft_font(NULL)
-{
-	CL_FontDescription desc;
-	desc.set_typeface_name(typeface_name);
-	desc.set_height(height);
-	load_font(desc);
 }
 
 void CL_FontProvider_Vector::load_font(const CL_FontDescription &desc)
+{
+	CL_String path = CL_PathHelp::get_fullpath(desc.get_typeface_name(), CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(desc.get_typeface_name(), CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_IODevice file = vfs.get_root_directory().open_file_read(filename);
+	load_font(desc, file);
+}
+
+void CL_FontProvider_Vector::load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory)
+{
+	CL_IODevice file = directory.open_file_read(desc.get_typeface_name());
+	load_font(desc, file);
+}
+
+void CL_FontProvider_Vector::load_font(const CL_FontDescription &desc, CL_IODevice &io_dev)
 {
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();
@@ -73,38 +80,16 @@ void CL_FontProvider_Vector::load_font(const CL_FontDescription &desc)
 
 	size_height = height;
 
-	// Try opening the font file.
-	CL_IODevice io_dev;
-	try
-	{
-		io_dev = CL_File(desc.get_typeface_name(), CL_File::open_existing, CL_File::access_read);
-	}
-	catch(CL_Exception error)
-	{
-		throw CL_Exception(cl_format("Cannot open font file: \"./%1\"", desc.get_typeface_name()));
-	}
+	font_engine = new CL_FontEngine_Freetype(io_dev, height, average_width);
 
-        // Load font from the opened file.
-	CL_FreetypeFontProvider &provider = CL_FreetypeFontProvider::instance();
-
-	if (ft_font)
-	{
-		delete ft_font;
-	}
-
-	ft_font = provider.load_font(io_dev, height, average_width);
-
-	if (ft_font)
-	{
-		metrics = ft_font->get_font_metrics();
-	}
+	metrics = font_engine->get_metrics();
 }
 
 CL_FontProvider_Vector::~CL_FontProvider_Vector()
 {
-	if (ft_font)
+	if (font_engine)
 	{
-		delete ft_font;
+		delete font_engine;
 	}
 
 }
@@ -133,7 +118,7 @@ void CL_FontProvider_Vector::destroy()
 }
 
 
-void CL_FontProvider_Vector::draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color)
+void CL_FontProvider_Vector::draw_text(CL_GraphicContext &gc, float x, float y, const CL_StringRef &text, const CL_Colorf &color)
 {
 	if (text.length() == 0)
 		return;
@@ -217,7 +202,7 @@ void CL_FontProvider_Vector::get_glyphs(
 	{
 		if( char_cache.find(text[i]) == char_cache.end() )
 		{
-			CL_GlyphOutline *outline = ft_font->load_glyph_outline(text[i]);
+			CL_GlyphOutline *outline = font_engine->load_glyph_outline(text[i]);
 			outline->triangulate();
 			
 			char_cache[text[i]] = outline;
@@ -228,8 +213,8 @@ void CL_FontProvider_Vector::get_glyphs(
 		if( i < text.length() )
 		{
 			// PERFORMANCE TODO: Cache advance_x and kerning.
-			out_interspacing_x[i] = ft_font->get_advance_x( text[i] );
-			out_interspacing_x[i] += ft_font->get_kerning( text[i], text[i+1] );
+			out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
+			out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
 		}
 	}
 }

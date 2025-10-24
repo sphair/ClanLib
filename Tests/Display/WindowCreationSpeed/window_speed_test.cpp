@@ -108,7 +108,7 @@ int App::start(const std::vector<CL_String> &args)
 			small_font.draw_text(gc, 420, 220, cl_format("windows per second: %1", wps));
 
 			window.flip(1);
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 		small_font = CL_Font();
 	}

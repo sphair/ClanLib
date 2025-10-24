@@ -69,6 +69,14 @@ CL_InputDevice::~CL_InputDevice()
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDevice Attributes:
 
+CL_InputDeviceProvider *CL_InputDevice::get_provider() const
+{
+	if (impl.is_null())
+		return 0;
+	else
+		return impl->provider;
+}
+
 CL_String CL_InputDevice::get_name() const
 {
 	if (impl->provider)

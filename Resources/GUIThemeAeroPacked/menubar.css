@@ -16,6 +16,8 @@ menubar
 
 menubar item
 {
+    padding-left:8;
+    padding-right:8;
 	align:center;
 	vertical-align:center;
 }

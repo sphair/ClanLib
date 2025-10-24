@@ -109,26 +109,55 @@ CL_FontProvider *CL_Font::get_provider() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font Operations:
 
-void CL_Font::draw_text(CL_GraphicContext &gc, int dest_x, int dest_y, const CL_StringRef &text, const CL_Colorf &color)
+void CL_Font::draw_text(CL_GraphicContext &gc, float dest_x, float dest_y, const CL_StringRef &text, const CL_Colorf &color)
 {
 	if (!impl.is_null())
 	{
 		CL_FontMetrics fm = get_font_metrics(gc);
+		int line_spacing = fm.get_height() + fm.get_external_leading();
 		std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
 		for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
 		{
 			get_provider()->draw_text(gc, dest_x, dest_y, lines[i], color);
-			dest_y += fm.get_height() + fm.get_external_leading();
+			dest_y += line_spacing;
 		}
 	}
 }
 
+void CL_Font::draw_text(CL_GraphicContext &gc, int dest_x, int dest_y, const CL_StringRef &text, const CL_Colorf &color)
+{
+	draw_text(gc, (float) dest_x, (float) dest_y, text, color);
+}
+
+void CL_Font::draw_text(CL_GraphicContext &gc, const CL_Pointf &position, const CL_StringRef &text, const CL_Colorf &color)
+{
+	draw_text(gc, position.x, position.y, text, color);
+}
+
 CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 {
+	CL_Size total_size;
+
 	if (!impl.is_null())
-		return get_provider()->get_text_size(gc, text);
+	{
+		CL_FontMetrics fm = get_font_metrics(gc);
+		int line_spacing = fm.get_height() + fm.get_external_leading();
+		std::vector<CL_TempString> lines = CL_StringHelp::split_text(text, cl_text("\n"), false);
+		for (std::vector<CL_TempString>::size_type i=0; i<lines.size(); i++)
+		{
+			CL_Size line_size = get_provider()->get_text_size(gc, lines[i]);
+
+			if ((i+1) != lines.size())	// Do not add the line spacing on the last line
+				line_size.height += line_spacing;
+
+			if (total_size.width < line_size.width)	// Find the widest line
+				total_size.width = line_size.width;
+
+			total_size.height += line_size.height;
+		}
+	}
 	
-	return CL_Size(0,0);
+	return total_size;
 }
 
 CL_FontMetrics CL_Font::get_font_metrics(CL_GraphicContext &gc)

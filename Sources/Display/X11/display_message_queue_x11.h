@@ -29,12 +29,12 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_message_queue_provider.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/api_display.h"
 #include "API/Core/System/event_provider.h"
 #include <vector>
 #include <X11/Xlib.h>
+
+class CL_Event;
 
 class CL_SocketMessage_X11
 {
@@ -47,7 +47,7 @@ public:
 
 class CL_X11Window;
 
-class CL_DisplayMessageQueue_X11 : public CL_DisplayMessageQueue_Provider
+class CL_DisplayMessageQueue_X11
 {
 /// \name Construction
 /// \{
@@ -57,34 +57,33 @@ public:
 
 	~CL_DisplayMessageQueue_X11();
 
+	static CL_DisplayMessageQueue_X11 message_queue;
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	bool has_messages();
-
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	int wait(int count, CL_Event const * const * events, int timeout, bool wait_all);
-	CL_DisplayWindowMessage get_message();
-	CL_DisplayWindowMessage peek_message(bool block);
-	void dispatch_message(const CL_DisplayWindowMessage &message);
+	int wait(const std::vector<CL_Event> &events, int timeout);
 
 	void add_client(CL_X11Window *window);
 	void remove_client(CL_X11Window *window);
 
+	void set_mouse_capture(CL_X11Window *window, bool state);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	void process_message();
+
 	struct ThreadData
 	{
 		std::vector<CL_X11Window *> windows;
@@ -93,9 +92,8 @@ private:
 	CL_SharedPtr<ThreadData> get_thread_data();
 	bool has_internal_messages();
 	int msg_wait_for_multiple_objects(std::vector<CL_SocketMessage_X11> &event_handles, int timeout);
+	CL_X11Window *current_mouse_capture_window;
 
-	bool has_clan_event_peeked;
-	XEvent clan_event_peeked;
 /// \}
 };
 

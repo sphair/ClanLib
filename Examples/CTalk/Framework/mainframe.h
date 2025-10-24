@@ -43,13 +43,13 @@ private:
 	void arrange_buttons();
 	void flash_window(View *view);
 	void on_resized();
-	void on_close();
+	bool on_close();
 	void on_minimized();
-	void on_activation_gained();
+	bool on_activation_gained();
 
 	void on_view_close(View *view);
 	void on_connection_join(const IRCChannel &channel, IRCSession *session);
-	void on_connection_private_text(const IRCNick &nick, const IRCText &text, IRCSession *session);
+	void on_connection_text(const IRCEntity &room, const IRCNick &nick, const IRCText &text, IRCSession *session);
 	void on_notification_icon_activate();
 
 	static CL_GUITopLevelDescription get_window_description();

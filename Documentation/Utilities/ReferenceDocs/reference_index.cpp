@@ -7,7 +7,7 @@ void ReferenceIndex::load()
 
 void ReferenceIndex::save(const CL_StringRef &filename)
 {
-	CL_File index_file(filename, CL_File::create_always);
+	CL_File index_file(filename, CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"

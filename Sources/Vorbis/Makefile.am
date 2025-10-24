@@ -1,13 +1,13 @@
-lib_LTLIBRARIES = libclanVorbis.la
+lib_LTLIBRARIES = libclan21Vorbis.la
 
-libclanVorbis_la_SOURCES = \
+libclan21Vorbis_la_SOURCES = \
 	setupvorbis.cpp \
 	soundprovider_vorbis.cpp \
 	soundprovider_vorbis_session.cpp
 
-libclanVorbis_la_LIBADD = -logg -lvorbis
+libclan21Vorbis_la_LIBADD = -logg -lvorbis
 
-libclanVorbis_la_LDFLAGS = \
+libclan21Vorbis_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

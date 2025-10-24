@@ -1214,6 +1214,7 @@ enum CL_DisplayDefines
 	CL_RENDERER                     = 0x1F01,
 	CL_VERSION                      = 0x1F02,
 	CL_EXTENSIONS                   = 0x1F03,
+	CL_SHADING_LANGUAGE_VERSION     = 0x8B8C,
 
 	// TextureCoordName:
 
@@ -2122,7 +2123,13 @@ enum CL_DisplayDefines
 	CL_READ_FRAMEBUFFER                    = 0x8CA8,
 	CL_DRAW_FRAMEBUFFER                    = 0x8CA9,
 	CL_DRAW_FRAMEBUFFER_BINDING            = 0x8CA6, // alias CL_FRAMEBUFFER_BINDING
-	CL_READ_FRAMEBUFFER_BINDING            = 0x8CAA
+	CL_READ_FRAMEBUFFER_BINDING            = 0x8CAA,
+
+	// EXT_texture_filter_anisotropic:
+
+	CL_TEXTURE_MAX_ANISOTROPY              = 0x84FE,
+	CL_MAX_TEXTURE_MAX_ANISOTROPY          = 0x84FF
+
 };
 
 #endif

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="XML"
-	ProjectGUID="{62CF6497-659F-4FA4-88B0-AD8DED99CA8D}"
+	ProjectGUID="{21706F40-5BB2-4BCA-BB88-59ACD7251007}"
 	RootNamespace="XML"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"

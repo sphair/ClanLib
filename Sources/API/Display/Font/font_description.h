@@ -111,7 +111,8 @@ public:
 	/// \brief Returns true if set_anti_alias() was called. (Else, the anti-alias default setting depends on the implementation
 	bool get_anti_alias_set() const;
 
-	bool operator==(const CL_FontDescription &other);
+	/// \brief Returns true if the font is identical
+	bool operator==(const CL_FontDescription &other) const;
 
 /// \}
 /// \name Operations
@@ -122,7 +123,7 @@ public:
 	CL_FontDescription &operator =(const CL_FontDescription &copy);
 
 	// \brief Copy the entire font description (not just the implementation)
-	void copy(const CL_FontDescription &copy);
+	void clone(const CL_FontDescription &copy);
 
 	/// \brief Sets the typeface name
 	void set_typeface_name(const CL_String &name);

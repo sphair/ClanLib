@@ -28,8 +28,8 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/SoundProviders/soundprovider_recorder.h"
-#include "API/Sound/soundprovider_session.h"
-#include "soundprovider_recorder_generic.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
+#include "soundprovider_recorder_impl.h"
 #ifdef WIN32
 #include "Win32/soundprovider_recorder_directsound.h"
 #else
@@ -45,14 +45,13 @@
 // CL_SoundProvider_Recorder construction:
 
 CL_SoundProvider_Recorder::CL_SoundProvider_Recorder(
-	int frequency) : impl(new CL_SoundProvider_Recorder_Generic)
+	int frequency) : impl(new CL_SoundProvider_Recorder_Impl)
 {
 	impl->frequency = frequency;
 }
 
 CL_SoundProvider_Recorder::~CL_SoundProvider_Recorder()
 {
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////

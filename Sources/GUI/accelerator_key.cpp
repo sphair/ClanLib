@@ -113,6 +113,25 @@ bool CL_AcceleratorKey::is_null() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_AcceleratorKey Operations:
 
+void CL_AcceleratorKey::set_shift(bool value)
+{
+	impl->shift = value;
+}
+
+void CL_AcceleratorKey::set_alt(bool value)
+{
+	impl->alt = value;
+}
+
+void CL_AcceleratorKey::set_id(int value)
+{
+	impl->id = value;
+}
+
+void CL_AcceleratorKey::set_ctrl(bool value)
+{
+	impl->ctrl = value;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_AcceleratorKey Implementation:

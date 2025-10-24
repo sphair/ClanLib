@@ -115,7 +115,7 @@ CL_InputDeviceProvider_DirectInput::CL_InputDeviceProvider_DirectInput(
 
 CL_InputDeviceProvider_DirectInput::~CL_InputDeviceProvider_DirectInput()
 {
-	if (directinput_device) directinput_device->Release();
+	dispose();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,16 +123,19 @@ CL_InputDeviceProvider_DirectInput::~CL_InputDeviceProvider_DirectInput()
 
 int CL_InputDeviceProvider_DirectInput::get_x() const
 {
+	throw_if_disposed();
 	return 0;
 }
 
 int CL_InputDeviceProvider_DirectInput::get_y() const
 {
+	throw_if_disposed();
 	return 0;
 }
 
 bool CL_InputDeviceProvider_DirectInput::get_keycode(int keycode) const
 {
+	throw_if_disposed();
 	if (keycode < 0 || keycode >= 128) return false;
 
 	DIJOYSTATE2 joystate2;
@@ -144,11 +147,13 @@ bool CL_InputDeviceProvider_DirectInput::get_keycode(int keycode) const
 
 CL_String CL_InputDeviceProvider_DirectInput::get_key_name(int id) const
 {
+	throw_if_disposed();
 	return cl_format(cl_text("Joystick button %1"), id);
 }
 
 float CL_InputDeviceProvider_DirectInput::get_axis(int index) const
 {
+	throw_if_disposed();
 	DIJOYSTATE2 joystate2;
 	HRESULT result = directinput_device->GetDeviceState(sizeof(DIJOYSTATE2), &joystate2);
 	if (FAILED(result)) return 0;
@@ -269,16 +274,19 @@ float CL_InputDeviceProvider_DirectInput::get_axis(int index) const
 
 CL_String CL_InputDeviceProvider_DirectInput::get_name() const
 {
+	throw_if_disposed();
 	return device_instance.tszInstanceName;
 }
 
 CL_String CL_InputDeviceProvider_DirectInput::get_device_name() const
 {
+	throw_if_disposed();
 	return device_instance.tszInstanceName;
 }
 
 int CL_InputDeviceProvider_DirectInput::check_axis(DWORD dwOfs) const
 {
+	throw_if_disposed();
 	DIDEVICEOBJECTINSTANCE didoi;
 	HRESULT hr;
 
@@ -293,6 +301,7 @@ int CL_InputDeviceProvider_DirectInput::check_axis(DWORD dwOfs) const
 
 int CL_InputDeviceProvider_DirectInput::get_axis_count() const
 {
+	throw_if_disposed();
 	int count=0;
 
 	// Struct DIJOYSTATE contains maximums
@@ -317,6 +326,7 @@ int CL_InputDeviceProvider_DirectInput::get_axis_count() const
 
 int CL_InputDeviceProvider_DirectInput::get_button_count() const
 {
+	throw_if_disposed();
 	int count=0;
 
 	for ( int x = 0; x < 32; x++ )
@@ -331,11 +341,13 @@ int CL_InputDeviceProvider_DirectInput::get_button_count() const
 
 void CL_InputDeviceProvider_DirectInput::set_position(int x, int y)
 {
+	throw_if_disposed();
 		//TODO: Fixme
 }
 
 void CL_InputDeviceProvider_DirectInput::update()
 {
+	throw_if_disposed();
 	directinput_device->Poll();
 
 	// Get events:
@@ -689,6 +701,7 @@ void CL_InputDeviceProvider_DirectInput::update()
 
 bool CL_InputDeviceProvider_DirectInput::poll(bool peek_only)
 {
+	throw_if_disposed();
 	// peek_only is not supported, as WM_INPUT is used as the event trigger
 	update();
 	return false;
@@ -696,3 +709,9 @@ bool CL_InputDeviceProvider_DirectInput::poll(bool peek_only)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_DirectInput implementation:
+
+void CL_InputDeviceProvider_DirectInput::on_dispose()
+{
+	if (directinput_device)
+		directinput_device->Release();
+}

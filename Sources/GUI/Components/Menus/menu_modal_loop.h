@@ -29,9 +29,12 @@
 
 #pragma once
 
-#include "API/Core/Signals/callback_2.h"
+#include "API/Core/Signals/callback_1.h"
+#include "API/Core/Signals/slot.h"
 
+class CL_GUIManager;
 class CL_GUIComponent;
+class CL_GUIMessage;
 class CL_InputEvent;
 class CL_MenuBar;
 class CL_PopupMenu;
@@ -45,65 +48,32 @@ class CL_AcceleratorTable;
 class CL_MenuModalLoop
 {
 public:
-	CL_MenuModalLoop(CL_GUIComponent *owner, CL_PopupMenu menu, const CL_Point &pos);
-
-	CL_MenuModalLoop(CL_GUIComponent *owner, CL_MenuBar *menubar, int show_index);
-
+	CL_MenuModalLoop(CL_GUIManager manager);
 	~CL_MenuModalLoop();
 
-	/// Used for modal windows
-	void exec();
-
-	/// Start the menu loop for non modal windows
-	///
-	/// This object will destroy itself when required
-	void start();
+	void start(CL_GUIComponent *owner, CL_PopupMenu menu, const CL_Point &pos);
+	void start(CL_GUIComponent *owner, CL_MenuBar *menubar);
+	void end();
 
 private:
-	bool is_mouse_click_through(CL_GUIMessage_Input message_input);
+	void on_filter_message(CL_GUIMessage &message);
+	void on_filter_input_message(CL_GUIMessage_Input &message);
 
-	void process_message(CL_GUIMessage_Input message_input);
+	void on_popup_mouse_input(CL_PopupMenuWindow *popup, CL_InputEvent e);
+	void on_menubar_mouse_input(CL_InputEvent e);
+	void on_keyboard_input(CL_InputEvent e);
 
-	void process_menubar_mouse_message(CL_GUIMessage_Input message_input);
+	void create_popup_window(CL_PopupMenu menu, const CL_Point &pos);
+	void close_all_popup_windows();
+	void close_last_popup_window();
 
-	void menubar_on_mouse_pressed(CL_InputEvent input_event);
-
-	void menubar_on_mouse_moved(CL_InputEvent input_event);
-
-	void menubar_on_mouse_released(CL_InputEvent input_event);
-
-	void process_popup_mouse_message(CL_GUIMessage_Input message_input, CL_PopupMenuWindow *popup);
-
-	CL_Rect get_menubar_screen_rect();
-
-	CL_Rect get_popup_window_screen_rect(CL_PopupMenuWindow *popup_window);
-
-	void on_key_pressed(CL_InputEvent &input_event);
-
-	void on_key_released(CL_InputEvent &input_event);
-
-	void on_menubar_key_pressed(CL_InputEvent &input_event);
-
-	void on_menubar_key_released(CL_InputEvent &input_event);
-
-	void on_popupmenu_key_pressed(CL_InputEvent &input_event, CL_PopupMenuWindow *popup);
-
-	void on_popupmenu_key_released(CL_InputEvent &input_event, CL_PopupMenuWindow *popup);
-
-	int exec_handler(CL_AcceleratorTable &accel_table, bool loop_until_complete);
-
+	CL_PopupMenuWindow *find_popup_at(const CL_Point &pos);
+	bool is_above_menubar(const CL_Point &pos);
 	CL_GUIComponent *owner;
-
 	CL_MenuBar *menubar;
-
-	CL_PopupMenuWindow *popup_window;
-
-	int menubar_shown_menu_index;
-
-	bool destroy_self_flag;
-
-	CL_Callback_2<int, CL_AcceleratorTable &, bool> old_func_exec_handler;
-
+	std::vector<CL_PopupMenuWindow *> popup_windows;
+	bool running;
+	bool ignore_menubar_mouse_up;
+	CL_Slot slot_filter;
 };
-
 

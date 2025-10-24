@@ -292,6 +292,9 @@ void CL_Tab_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 void CL_Tab_Impl::on_style_changed()
 {
 	part_background = CL_GUIThemePart(tab);
+
+	// Hack to test if child component caches need to be invalidated when CL_GUIComponent::set_*_name is called.
+	tab_header->set_class_name(tab_header->get_class_name());
 }
 
 void CL_Tab_Impl::on_header_page_selected(CL_TabPage *tab_page)

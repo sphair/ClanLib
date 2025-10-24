@@ -43,7 +43,7 @@ public:
 
 	~CL_InputDeviceProvider_Win32Keyboard();
 
-	void destroy() { /* do not delete this here. Handled by CL_Win32Window. */ }
+	void destroy() { delete this; }
 
 
 /// \}
@@ -115,6 +115,8 @@ public:
 /// \{
 
 private:
+	void on_dispose();
+
 	CL_Signal_v1<const CL_InputEvent &> *sig_provider_event;
 
 	CL_Win32Window *window;

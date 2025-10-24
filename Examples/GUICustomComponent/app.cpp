@@ -52,6 +52,12 @@ int App::main(const std::vector<CL_String> &args)
 
 		CL_GUIWindowManagerTexture wm(display_window);
 
+		//  Note - If you are using the GL1 target, you will get a perfomance increase by enabling these 2 lines
+		//   It reduces the number of internal CL_FrameBuffer swaps. The GL1 target (OpenGL 1.3), performs this slowly
+		//   Setting the texture group here, lets the GUI Texture Window Manager know the optimum texture size of all root components
+		//CL_TextureGroup texture_group(display_window.get_gc(), CL_Size(1024, 1024));
+		//wm.set_texture_group(texture_group);
+
 		CL_GUIThemeDefault theme;
 		theme.set_resources(resources);
 
@@ -63,7 +69,7 @@ int App::main(const std::vector<CL_String> &args)
 		GameComponent game_component(viewport, &gui);
 
 		CL_Rect toolbar_rect = CL_Rect((viewport.right - 448) / 2, viewport.bottom - 56, (viewport.right - 448) / 2 + 448, viewport.bottom);
-		Toolbar toolbar(toolbar_rect, &gui);
+		Toolbar toolbar(toolbar_rect, &game_component);	// GameComponent is the "desktop" that the toolbar sits on, as an owner
 
 		CL_GraphicContext gc = display_window.get_gc();
 
@@ -77,9 +83,9 @@ int App::main(const std::vector<CL_String> &args)
 
 		gui.exec();
 	}
-	catch(CL_Exception& exception)
+	catch(CL_Exception &exception)
 	{
-		CL_Console::write_line("Exception caught: %1", exception.message);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;

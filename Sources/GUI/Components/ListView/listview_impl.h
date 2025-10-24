@@ -203,7 +203,6 @@ private:
 		CL_ListViewItem item,
 		int offset_x);
 
-	friend class CL_ListViewRenderer;
 };
 
 

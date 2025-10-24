@@ -25,13 +25,18 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
+
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 #pragma once
 
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Display/Render/texture.h"
+#include "../api_display.h"
+#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/Signals/signal_v0.h"
+#include "texture.h"
 #include <vector>
 #include <map>
 
@@ -101,3 +106,6 @@ private:
 
 	CL_SharedPtr<CL_SharedGCData_Impl> impl;
 };
+
+/// \}
+

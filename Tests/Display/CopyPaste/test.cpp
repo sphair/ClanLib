@@ -67,7 +67,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 		{
 			window.get_gc().clear(CL_Colorf::gray70);
 			window.flip();
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 			CL_System::sleep(50);
 		}*/
 
@@ -108,7 +108,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 				}
 
 				window.flip();
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 				CL_System::sleep(50);
 			}
 		}

@@ -36,37 +36,11 @@
 #include <list>
 #include <map>
 
-class CL_FreetypeFont;
+#include "glyph_cache.h"
+
 class CL_Colorf;
 
-class CL_Font_Freetype_Glyph
-{
-public:
-	CL_Font_Freetype_Glyph() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
-
-	/// \brief Glyph this pixel buffer refers to.
-	unsigned int glyph;
-
-	/// \brief True when the pixel buffer is empty
-	bool empty_buffer;
-
-	/// \brief The pixel buffer containing the glyph
-	CL_Subtexture subtexture;
-	CL_Texture texture;
-
-	/// \brief Offset to draw the font to buffer
-	/** For example:
-	    x = pos_x + pixelbuffer.offset.x
-	    y = pos_y + pixelbuffer.offset.y*/
-	CL_Point offset;
-
-	/// \brief Increment to draw the next glyph
-	/** For example:
-	    pos_x += pixelbuffer.increment.x;
-	    pos_y += pixelbuffer.increment.y;*/
-	CL_Point increment;
-};
-
+class CL_FontEngine_Freetype;
 
 class CL_FontProvider_Freetype : public CL_FontProvider
 {
@@ -78,24 +52,35 @@ public:
 	CL_FontProvider_Freetype(CL_GraphicContext &gc);
 	virtual ~CL_FontProvider_Freetype();
 
-
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-
-	CL_FreetypeFont *get_handle();
-
 	/// \brief Returns information about the current font.
-	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
 
+	/// \brief Get a glyph. Returns NULL if the glyph was not found
+	CL_Font_TextureGlyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	/// \brief Print text on gc.
+	void draw_text(CL_GraphicContext &gc, float xpos, float ypos, const CL_StringRef &text, const CL_Colorf &color);
+
+	/// \brief Calculate size of text string.
+	CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
+
+	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
+	void set_font_metrics(const CL_FontMetrics &metrics);
+
+	void set_texture_group(CL_TextureGroup &new_texture_group);
+
+	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
+
 	void load_font(const CL_FontDescription &desc);
 	void load_font(const CL_FontDescription &desc, CL_IODevice &file);
 	void load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
@@ -103,43 +88,16 @@ public:
 	/// \brief Destroys the font provider.
 	virtual void destroy();
 
-	/// \brief Print text on gc.
-	virtual void draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color);
-
-	/// \brief Calculate size of text string.
-	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
-
-	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
-
-	void set_texture_group(CL_TextureGroup &new_texture_group);
-
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	CL_Font_Freetype_Glyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
-
 	void free_font();
-	void insert_glyph(CL_GraphicContext &gc, int glyph);
-	void insert_glyph(CL_GraphicContext &gc, CL_FontPixelBuffer &pb);
-	CL_FontPixelBuffer get_font_glyph(CL_GraphicContext &gc, int glyph, bool anti_alias, const CL_Colorf &color);
 
-	std::vector<CL_Font_Freetype_Glyph* > glyph_list;
+	CL_FontEngine_Freetype *font_engine;
 
-	CL_FreetypeFont *handle;
-
-	// Contains the font height
-	int size_height;
-
-	// Contains the anti alias setting
-	bool anti_alias;
-
-	CL_TextureGroup texture_group;
-
-	CL_FontMetrics font_metrics;
+	CL_GlyphCache glyph_cache;
 
 /// \}
 };

@@ -54,6 +54,7 @@ public:
 public:
 	CL_String get_path() const;
 
+	CL_String get_identifier() const;
 
 /// \}
 /// \name Operations

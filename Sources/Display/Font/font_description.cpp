@@ -122,9 +122,15 @@ bool CL_FontDescription::get_anti_alias_set() const
 	return impl->anti_alias_set;
 }
 
-bool CL_FontDescription::operator==(const CL_FontDescription &other)
+bool CL_FontDescription::operator==(const CL_FontDescription &other) const
 {
-	return	impl->typeface_name == other.impl->typeface_name && 
+	if ( (impl->anti_alias_set) && (other.impl->anti_alias_set) )
+	{
+		if (impl->anti_alias != other.impl->anti_alias)
+			return false;
+	}
+
+	return impl->typeface_name == other.impl->typeface_name && 
 			impl->height == other.impl->height && 
 			impl->average_width == other.impl->average_width && 
 			impl->escapement == other.impl->escapement && 
@@ -133,9 +139,7 @@ bool CL_FontDescription::operator==(const CL_FontDescription &other)
 			impl->italic == other.impl->italic && 
 			impl->underline == other.impl->underline && 
 			impl->strikeout == other.impl->strikeout && 
-			impl->fixed_pitch == other.impl->fixed_pitch && 
-			impl->anti_alias == other.impl->anti_alias && 
-			impl->anti_alias_set == other.impl->anti_alias_set; 
+			impl->fixed_pitch == other.impl->fixed_pitch;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -147,7 +151,7 @@ CL_FontDescription &CL_FontDescription::operator =(const CL_FontDescription &cop
 	return *this;
 }
 
-void CL_FontDescription::copy(const CL_FontDescription &copy)
+void CL_FontDescription::clone(const CL_FontDescription &copy)
 {
 	if (this != &copy)
 	{

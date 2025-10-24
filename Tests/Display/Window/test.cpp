@@ -66,7 +66,6 @@ int TestApp::main(const std::vector<CL_String> &args)
 #endif
 		CL_Console::write_line("Directory: API/Display/Window");
 
-		test_timer();
 		test_display_window();
 		
 		CL_Console::write_line("All Tests Complete");

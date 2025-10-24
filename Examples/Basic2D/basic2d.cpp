@@ -4,14 +4,26 @@
 
 #include <cmath>
 
+// Choose the target renderer
+#define USE_OPENGL_2
+//#define USE_OPENGL_1
+//#define USE_SOFTWARE
+//#define USE_SDL
+
 #ifdef USE_SDL
 #include <ClanLib/sdl.h>
-#else
-#ifdef USE_GDI
-#include <ClanLib/gdi.h>
-#else
-#include <ClanLib/gl.h>
 #endif
+
+#ifdef USE_SOFTWARE
+#include <ClanLib/gdi.h>
+#endif
+
+#ifdef USE_OPENGL_1
+#include <ClanLib/gl1.h>
+#endif
+
+#ifdef USE_OPENGL_2
+#include <ClanLib/gl.h>
 #endif
 
 // This is the Application class (That is instantiated by the Program Class)
@@ -41,17 +53,21 @@ public:
 		CL_SetupDisplay setup_display;
 
 #ifdef USE_SDL
-		// Initilize the SDL drivers
 		CL_SetupSDL setup_sdl;
-#else
-#ifdef USE_GDI
-		// Initilize the GDI drivers
+#endif
+
+#ifdef USE_SOFTWARE
 		CL_SetupGDI setup_gdi;
-#else
-		// Initilize the OpenGL drivers
+#endif
+
+#ifdef USE_OPENGL_1
+		CL_SetupGL1 setup_gl1;
+#endif
+
+#ifdef USE_OPENGL_2
 		CL_SetupGL setup_gl;
 #endif
-#endif
+
 		// Start the Application
 		App app;
 		int retval = app.start(args);
@@ -66,9 +82,6 @@ CL_ClanApplication app(&Program::main);
 int App::start(const std::vector<CL_String> &args)
 {
 	quit = false;
-
-	// Create a console window for text-output if not available
-	CL_ConsoleWindow console("Console");
 
 	try
 	{
@@ -89,8 +102,8 @@ int App::start(const std::vector<CL_String> &args)
 		// Get the graphic context
 		CL_GraphicContext gc = window.get_gc();
 
-		// Load a sprite from a targa-file
-		CL_Sprite spr_logo(gc, "logo.tga");
+		// Load a sprite from a png-file
+		CL_Sprite spr_logo(gc, "logo.png");
 
 		float sin_count = 0.0f;
 		float ypos = 0.0f;
@@ -127,10 +140,7 @@ int App::start(const std::vector<CL_String> &args)
 			CL_Draw::fill(gc, CL_Rectf(240.0f, 140.0f, 440.0f, 340.0f), CL_Colorf(1.0f, 1.0f, 1.0f));
 
 			// Frame the rectangle with red lines
-			CL_Draw::line(gc, 240.0f, 140.0f, 440.0f, 140.0f, CL_Colorf(1.0f, 0.0f, 0.0f));
-			CL_Draw::line(gc, 240.0f, 340.0f, 440.0f, 340.0f, CL_Colorf(1.0f, 0.0f, 0.0f));
-			CL_Draw::line(gc, 240.0f, 140.0f, 240.0f, 340.0f, CL_Colorf(1.0f, 0.0f, 0.0f));
-			CL_Draw::line(gc, 440.0f, 140.0f, 440.0f, 340.0f, CL_Colorf(1.0f, 0.0f, 0.0f));
+			CL_Draw::box(gc, 240.0f, 140.0f, 440.0f, 340.0f, CL_Colorf(1.0f, 0.0f, 0.0f));
 
 			// Show a few alpha-blending moving rectangles that moves in circles
 			float x = cos(sin_count)*120.0f;
@@ -148,26 +158,14 @@ int App::start(const std::vector<CL_String> &args)
 			window.flip(1);
 
 			// This call processes user input and other events
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process(0);
 		}
 	}
-	catch(CL_Exception& exception)
+	catch(CL_Exception &exception)
 	{
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
-
-		// Display the stack trace (if available)
-		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			CL_Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				CL_Console::write_line(stacktrace[cnt]);
-			}
-		}
-
+		// Create a console window for text-output if not available
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;

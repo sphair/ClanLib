@@ -111,12 +111,12 @@ chatview
 	border-right: 1;
 	border-bottom: 1;
 }
-
+/*
 chatview.black
 {
     bg-image:ChatViewBlack;
 }
-
+*/
 listview.chatusers
 {
     bg-image:ChatUsers;
@@ -125,7 +125,7 @@ listview.chatusers
     bg-image-sizing-right: 0;
     bg-image-sizing-bottom: 0;
 }
-
+/*
 chatview.black listview.chatusers
 {
     bg-image:ChatUsersBlack;
@@ -146,8 +146,8 @@ chatview.black listview.chatusers cell
     bg-color:black;
     text-color: #ffffff;
 }
-
-lineedit.chatinput
+*/
+lineedit.chatinput,textedit.chatinput
 {
     bg-image:ChatInput;
     bg-image-sizing-left: 0;
@@ -159,18 +159,19 @@ lineedit.chatinput
     font-size: -13;
 }
 
+/*
 chatview.black lineedit.chatinput
 {
     bg-image:ChatInputBlack;
     text-color: #ffffff;
 }
-
+*/
 lineedit.chatinput selection
 {
     font-family: Verdana;
     font-size: -13;
 }
-
+/*
 chatview.black chat scrollbar scrollthumb.vertical
 {
     bg-image:ScrollbarBlackVertThumbNormal;
@@ -210,33 +211,41 @@ chatview.black listview listview_header columnheader
 {
     bg-image:ListviewBlackColumnHeaderNormal;
 }
-
-chat
+*/
+chat text
 {
 	border-left: 0;
 	border-top: 0;
-	border-right:0;
+	border-right: 0;
 	border-bottom: 0;
 	
     nick-border-color: #f2f2f2;
     timestamp-color: #6495ed;
     text-color: #000000;
     channel-color: #228b22;
-    system-color: #5f9ea0;
+    system-color: #2f6e70; /*#5f9ea0;*/
     nick-others-color: #000099;
     nick-color: #990000;
     url-color: #000080;
 }
 
-chatview.black chat
+chatview.black chat text
 {
+	border-left: 5;
+	border-top: 5;
+	border-right: 5;
+	border-bottom: 5;
 	bg-color:#000000;
-    bg-image:;
+    bg-image:ChatBlackText;
+    bg-image-sizing-left: 5;
+    bg-image-sizing-top: 5;
+    bg-image-sizing-right: 5;
+    bg-image-sizing-bottom: 5;
     nick-border-color:#121212;
     timestamp-color:#6495ed;
     text-color: #ffffff;
     channel-color: #228b22;
-    system-color: #5f9ea0;
+    system-color: #2f6e70; /*#5f9ea0;*/
     nick-others-color: #5c5cbb;
     nick-color: #d75959;
     url-color: #97fcff;
@@ -252,18 +261,18 @@ channeltopic
     
     font-family: Verdana;
     font-size: -11;
-	border-left:5;
+	border-left: 5;
 	border-top: 4;
-	border-right:5;
-	border-bottom: 4;
+	border-right: 5;
+	border-bottom: 5;
     text-color: #ffffff;
 }
-
+/*
 chatview.black channeltopic
 {
     bg-image:ChannelTopicBlack;
 }
-
+*/
 window.preferences
 {
 	bg-color:#ece9d8;
@@ -295,4 +304,88 @@ window.preferences pagearea
     bg-image-sizing-top: 75;
     bg-image-sizing-right: 215;
     bg-image-sizing-bottom: 8;
+}
+
+textedit
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	
+	border-top:3;
+	border-left:6;
+	border-right:16;
+	border-bottom:3;
+
+	text-color:black;
+}
+
+textedit:normal
+{
+	bg-image:LineEditNormal; 
+}
+
+textedit:hot
+{
+	bg-image:LineEditHot;
+}
+
+textedit:disabled
+{
+	bg-image:LineEditDisabled; 
+	text-color:gray;
+}
+
+textedit cursor
+{
+	preferred-width:1;
+
+	bg-color: black;
+
+	blink-time-on:1000;
+	blink-time-off:1000;
+	bg-image:;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+textedit cursor:blink_on
+{
+	bg-color: black;
+}
+
+textedit cursor:blink_off
+{
+	bg-color: white;
+}
+
+textedit selection
+{
+    text-color: white;
+	expand-top:-2;
+	expand-bottom:-1;
+	bg-image:;
+	bg-color: #316ac5;
+
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+textedit selection:disabled
+{
+	bg-image:;
+	bg-color: #7a96df;
+}
+
+textedit selection:unfocused
+{
+	bg-image:;
+	bg-color: #7a96df;
 }

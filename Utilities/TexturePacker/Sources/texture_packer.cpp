@@ -2,7 +2,7 @@
 #include "texture_packer.h"
 #include <iostream>
 
-TexturePacker::TexturePacker(CL_GraphicContext &gc) : gc(gc)
+TexturePacker::TexturePacker()
 {
 }
 
@@ -10,7 +10,7 @@ TexturePacker::~TexturePacker()
 {
 }
 
-void TexturePacker::load_resources(const CL_String &filename)
+void TexturePacker::load_resources(CL_GraphicContext &gc, const CL_String &filename)
 {
 	resources = CL_ResourceManager(filename);
 
@@ -21,22 +21,22 @@ void TexturePacker::load_resources(const CL_String &filename)
 		CL_String resource_id = (*resource_it);
 		CL_Resource resource = resources.get_resource(resource_id);
 
-		resource_items.push_back(load_resource(resource_id, resource, resources));
+		resource_items.push_back(load_resource(gc, resource_id, resource, resources));
 	}
 }
 
-ResourceItem *TexturePacker::load_resource(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
+ResourceItem *TexturePacker::load_resource(CL_GraphicContext &gc, CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
 	try
 	{
 		CL_String type = resource.get_type();
 		if(type == "sprite")
 		{
-			return load_sprite(resource_id, resource, resources);
+			return load_sprite(gc, resource_id, resource, resources);
 		}
 		else if(type == "image")
 		{
-			return load_image(resource_id, resource, resources);
+			return load_image(gc, resource_id, resource, resources);
 		}
 		else
 		{
@@ -51,7 +51,7 @@ ResourceItem *TexturePacker::load_resource(CL_String &resource_id, CL_Resource &
 	}
 }
 
-ResourceItem *TexturePacker::load_sprite(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
+ResourceItem *TexturePacker::load_sprite(CL_GraphicContext &gc, CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
 	CL_SpriteDescription desc(gc, resource_id, &resources);
 
@@ -66,7 +66,7 @@ ResourceItem *TexturePacker::load_sprite(CL_String &resource_id, CL_Resource &re
 	return item;
 }
 
-ResourceItem *TexturePacker::load_image(CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
+ResourceItem *TexturePacker::load_image(CL_GraphicContext &gc, CL_String &resource_id, CL_Resource &resource, CL_ResourceManager &resources)
 {
 	CL_SpriteDescription desc(gc, resource_id, &resources);
 
@@ -80,7 +80,7 @@ ResourceItem *TexturePacker::load_image(CL_String &resource_id, CL_Resource &res
 	return item;
 }
 
-CL_TextureGroup *TexturePacker::pack(const CL_Size &texture_size, int border_size)
+CL_TextureGroup *TexturePacker::pack(CL_GraphicContext &gc, const CL_Size &texture_size, int border_size)
 {
 	CL_TextureGroup *group = new CL_TextureGroup(gc, texture_size);
 
@@ -106,8 +106,9 @@ CL_TextureGroup *TexturePacker::pack(const CL_Size &texture_size, int border_siz
 
 				CL_Texture texture = frames[index].texture;
 				const CL_PixelBuffer &pb = texture.get_pixeldata();
-				CL_PixelBuffer new_pb;
-				add_border(pb, new_pb, border_size);
+				last_border_size = border_size;
+				if (last_border_size < 0) last_border_size= 0;
+				CL_PixelBuffer new_pb = CL_PixelBufferHelp::add_border(pb, border_size);
 				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb);
 			}
 		}
@@ -129,8 +130,9 @@ CL_TextureGroup *TexturePacker::pack(const CL_Size &texture_size, int border_siz
 
 				CL_Texture texture = frames[index].texture;
 				const CL_PixelBuffer &pb = texture.get_pixeldata();
-				CL_PixelBuffer new_pb;
-				add_border(pb, new_pb, border_size);
+				last_border_size = border_size;
+				if (last_border_size < 0) last_border_size = 0;
+				CL_PixelBuffer new_pb = CL_PixelBufferHelp::add_border(pb, border_size);
 				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb);
 			}
 		}
@@ -148,6 +150,8 @@ void TexturePacker::save_resources(const CL_String &filename)
 	std::map<CL_Texture, CL_String> generated_texture_filenames;
 	int generated_texture_index = 0;
 
+	CL_String images_pathname = CL_PathHelp::get_fullpath(filename);
+
 	// Loop through all resource items
 	std::vector<ResourceItem *> &items = get_resource_items();
 	std::vector<ResourceItem *>::size_type item_index, item_size;
@@ -156,18 +160,18 @@ void TexturePacker::save_resources(const CL_String &filename)
 	{
 		SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(items[item_index]);
 		if (sprite_item)
-			process_resource(sprite_item->resource, sprite_item->packed_sub_textures, generated_texture_filenames, generated_texture_index);
+			process_resource(sprite_item->resource, sprite_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
 
 		ImageResourceItem *image_item = dynamic_cast<ImageResourceItem *>(items[item_index]);
 		if (image_item)
-			process_resource(image_item->resource, image_item->packed_sub_textures, generated_texture_filenames, generated_texture_index);
+			process_resource(image_item->resource, image_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
 	}
 
 	// Save the entire resource DOM
 	resources.save(filename);
 }
 
-void TexturePacker::process_resource(CL_Resource &item_resource, std::vector<CL_Subtexture> &packed_sub_textures, std::map<CL_Texture, CL_String> &generated_texture_filenames, int &generated_texture_index)
+void TexturePacker::process_resource(CL_Resource &item_resource, std::vector<CL_Subtexture> &packed_sub_textures, std::map<CL_Texture, CL_String> &generated_texture_filenames, int &generated_texture_index, const CL_String &image_pathname )
 {
 	// Found a sprite resource, lets modify its content!
 	CL_Resource resource = item_resource;
@@ -203,7 +207,7 @@ void TexturePacker::process_resource(CL_Resource &item_resource, std::vector<CL_
 		{
 			// Texture not found, generate a filename and dump texture to disk
 			texture_filename = cl_format("texture%1.png", ++generated_texture_index);
-			CL_PNGProvider::save(texture.get_pixeldata(), texture_filename);
+			CL_PNGProvider::save(texture.get_pixeldata(), image_pathname + texture_filename);
 			generated_texture_filenames[texture] = texture_filename;
 		}
 		else
@@ -227,45 +231,3 @@ void TexturePacker::process_resource(CL_Resource &item_resource, std::vector<CL_
 	}
 }
 
-void TexturePacker::add_border(const CL_PixelBuffer &pb, CL_PixelBuffer &new_pb, int border_size)
-{
-	if (border_size <=0)
-	{
-		last_border_size = 0;
-		new_pb = pb;
-		return;
-	}
-	last_border_size = border_size;
-
-	int new_width = pb.get_width() + border_size*2;
-	int new_height = pb.get_height() + border_size*2;
-	new_pb = CL_PixelBuffer(new_width, new_height, new_width *4, CL_PixelFormat::rgba8888, NULL);
-
-	for (int ypos = 0; ypos < new_height; ypos++)
-	{
-		int real_ypos = ypos - border_size;
-		if (real_ypos < 0)
-			real_ypos = 0;
-
-		if (real_ypos >= pb.get_height())
-			real_ypos = pb.get_height()-1;
-
-		int *src_data = (int *) pb.get_data();
-		src_data += (pb.get_pitch() * real_ypos)/4;
-
-		int *dest_data = (int *) new_pb.get_data();
-		dest_data += (new_pb.get_pitch() * ypos)/4;
-
-		for (int xpos = 0; xpos < new_width; xpos++)
-		{
-			int real_xpos = xpos - border_size;
-			if (real_xpos < 0)
-				real_xpos = 0;
-
-			if (real_xpos >= pb.get_width())
-				real_xpos = pb.get_width()-1;
-
-			dest_data[xpos] = src_data[real_xpos];
-		}
-	}
-}

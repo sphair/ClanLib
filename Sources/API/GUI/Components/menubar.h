@@ -73,15 +73,6 @@ public:
 	/// \return Popup Menu
 	CL_PopupMenu get_menu(int index) const;
 
-	/// \brief Get the menu at the specific point (component coordinates).
-	int get_index(const CL_Point &p);
-
-	/// \brief Get menu rect
-	///
-	/// \param index = value
-	///
-	/// \return Rect
-	CL_Rect get_menu_rect(int index);
 
 /// \}
 /// \name Operations

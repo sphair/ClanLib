@@ -50,8 +50,8 @@ int main(int argc, char **argv)
 		DiceWarService service;
 		return service.main(argc, argv);
 	}
-	catch (CL_Exception& e)
+	catch (CL_Exception &e)
 	{
-		CL_Console::write_line("Unhandled exception: %1", e.message);
+		CL_Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
 	}
 }

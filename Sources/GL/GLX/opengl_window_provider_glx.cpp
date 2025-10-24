@@ -33,7 +33,6 @@
 #include "opengl_window_provider_glx.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/display.h"
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
@@ -105,7 +104,7 @@ namespace
 // CL_OpenGLWindowProvider_GLX Construction:
 
 CL_OpenGLWindowProvider_GLX::CL_OpenGLWindowProvider_GLX()
-: x11_window(&CL_OpenGLTargetProvider::message_queue),
+: x11_window(),
  opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), last_set_interval(-1)
 {
 	x11_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_GLX::on_window_resized);

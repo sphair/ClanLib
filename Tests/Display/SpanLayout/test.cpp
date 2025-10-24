@@ -107,7 +107,7 @@ public:
 				font1.draw_text(gc, 10, 300, result_text);
 
 				window.flip();
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 				CL_System::sleep(50);
 			}
 		}

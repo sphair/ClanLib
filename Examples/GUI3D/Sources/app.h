@@ -50,6 +50,7 @@ private:
 	void on_window_close();
 	void calculate_matrix();
 	void control_window();
+
 private:
 	bool quit;
 	CL_DisplayWindow window;

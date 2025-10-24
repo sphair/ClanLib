@@ -50,6 +50,8 @@
 
 #define DEFAULT_DSP "/dev/dsp"
 
+#include "API/Sound/sound_sse.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Recorder_OSS_Session construction:
 
@@ -133,7 +135,7 @@ int CL_SoundProvider_Recorder_OSS_Session::get_frequency() const
 
 CL_SoundFormat CL_SoundProvider_Recorder_OSS_Session::get_format() const
 {
-	return (CL_SoundFormat)format;
+	return sf_16bit_signed;
 }
 
 int CL_SoundProvider_Recorder_OSS_Session::get_num_channels() const
@@ -169,8 +171,9 @@ bool CL_SoundProvider_Recorder_OSS_Session::set_position(int pos)
 	return true;
 }
 
-int CL_SoundProvider_Recorder_OSS_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_Recorder_OSS_Session::get_data(float **data_ptr, int data_requested)
 {
+
 	int len;
 	audio_buf_info info;
 	// todo: read samples, and only travel position by amount read.
@@ -186,7 +189,11 @@ int CL_SoundProvider_Recorder_OSS_Session::get_data(void **data_ptr, int data_re
 	}
 	else
 	{
-		len = read(dev_dsp_fd, data_ptr[0], data_requested);
+		std::vector<char> buffer;
+		buffer.resize(data_requested);
+		len = read(dev_dsp_fd, &buffer[0], data_requested);
+		if (len>0)
+			CL_SoundSSE::unpack_16bit_mono((short *) &buffer[0], len/2, data_ptr[0]);
 	}
 
 	position += len;

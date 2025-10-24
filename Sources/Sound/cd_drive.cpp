@@ -28,7 +28,7 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/cd_drive.h"
-#include "cd_drive_generic.h"
+#include "cd_drive_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_CDDrive construction:

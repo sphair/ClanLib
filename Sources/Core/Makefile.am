@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclanCore.la
+lib_LTLIBRARIES = libclan21Core.la
 
-libclanCore_la_SOURCES = \
+libclan21Core_la_SOURCES = \
 core_iostream.cpp \
 CSS/css_document.cpp \
 CSS/css_document_impl.cpp \
@@ -140,14 +140,14 @@ XML/xpath_evaluator_impl.cpp \
 XML/xpath_object.cpp
 
 if WIN32
-libclanCore_la_SOURCES += \
+libclan21Core_la_SOURCES += \
 IOData/Win32/directory_scanner_win32.cpp \
 System/Win32/event_provider_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/service_win32.cpp \
 System/Win32/thread_win32.cpp
 else
-libclanCore_la_SOURCES += \
+libclan21Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
 System/Unix/init_linux.cpp \
@@ -156,9 +156,9 @@ System/Unix/thread_unix.cpp
 endif
 
 # FIXME: Hardcoding these here might not be a good idea
-libclanCore_la_LIBADD = @LIBPTHREAD@
+libclan21Core_la_LIBADD = @LIBPTHREAD@
 
-libclanCore_la_LDFLAGS = \
+libclan21Core_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

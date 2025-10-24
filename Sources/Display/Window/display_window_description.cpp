@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 	
 #include "Display/precomp.h"
@@ -116,12 +117,12 @@ CL_DisplayWindow CL_DisplayWindowDescription::get_owner() const
 	return impl->owner;
 }
 
-#ifdef WIN32
 bool CL_DisplayWindowDescription::is_layered() const
 {
 	return impl->layered;
 }
 
+#ifdef WIN32
 HWND CL_DisplayWindowDescription::get_handle() const
 {
 	return impl->handle;
@@ -143,6 +144,26 @@ bool CL_DisplayWindowDescription::has_caption() const
 	return impl->caption;
 }
 
+bool CL_DisplayWindowDescription::has_sysmenu() const
+{
+	return impl->sysmenu;
+}
+
+bool CL_DisplayWindowDescription::has_minimize_button() const
+{
+	return impl->minimize_button;
+}
+
+bool CL_DisplayWindowDescription::has_maximize_button() const
+{
+	return impl->maximize_button;
+}
+
+bool CL_DisplayWindowDescription::has_border() const
+{
+	return impl->border;
+}
+
 bool CL_DisplayWindowDescription::is_tool_window() const
 {
 	return impl->tool_window;
@@ -156,6 +177,11 @@ bool CL_DisplayWindowDescription::is_topmost() const
 bool CL_DisplayWindowDescription::is_visible() const
 {
 	return impl->visible;
+}
+
+bool CL_DisplayWindowDescription::get_using_gui_window_cache() const
+{
+	return impl->use_cached_window;
 }
 
 bool CL_DisplayWindowDescription::has_drop_shadow() const
@@ -200,6 +226,26 @@ CL_DisplayWindowDescription &CL_DisplayWindowDescription::operator =(const CL_Di
 void CL_DisplayWindowDescription::show_caption(bool value)
 {
 	impl->caption = value;
+}
+
+void CL_DisplayWindowDescription::show_sysmenu(bool value)
+{
+	impl->sysmenu = value;
+}
+
+void CL_DisplayWindowDescription::show_minimize_button(bool value)
+{
+	impl->minimize_button = value;
+}
+
+void CL_DisplayWindowDescription::show_maximize_button(bool value)
+{
+	impl->maximize_button = value;
+}
+
+void CL_DisplayWindowDescription::show_border(bool value)
+{
+	impl->border = value;
 }
 
 void CL_DisplayWindowDescription::set_decorations(bool value)
@@ -279,12 +325,12 @@ void CL_DisplayWindowDescription::set_tablet_context(bool create)
 	impl->create_tablet_context = create;
 }
 
-#ifdef WIN32
 void CL_DisplayWindowDescription::set_layered(bool layered)
 {
 	impl->layered = layered;
 }
 
+#ifdef WIN32
 void CL_DisplayWindowDescription::set_handle(HWND handle)
 {
 	impl->handle = handle;
@@ -304,6 +350,11 @@ void CL_DisplayWindowDescription::set_depth_size(int value)
 void CL_DisplayWindowDescription::set_stencil_size(int value)
 {
 	impl->stencil_size = value;
+}
+
+void CL_DisplayWindowDescription::set_using_gui_window_cache(bool value)
+{
+	impl->use_cached_window = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////

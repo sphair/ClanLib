@@ -50,7 +50,7 @@ CL_String DialogDocument::namespace_uri = cl_text("http://clanlib.org/xmlns/gui-
 void DialogDocument::load(const CL_StringRef &name)
 {
 	CL_DomDocument doc;
-	CL_File file = CL_File(name, CL_File::open_existing);
+	CL_File file = CL_File(name, CL_File::open_existing, CL_File::access_read);
 	doc.load(file);
 	if (doc.get_document_element().get_local_name() != cl_text("gui") || doc.get_document_element().get_namespace_uri() != namespace_uri)
 		throw CL_Exception(cl_format(cl_text("%1 is not a valid GUI Definition XML file"), name));
@@ -63,6 +63,6 @@ void DialogDocument::load(const CL_StringRef &name)
 void DialogDocument::save(const CL_StringRef &name)
 {
 	CL_File file;
-	file.open(name, CL_File::create_always);
+	file.open(name, CL_File::create_always, CL_File::access_write);
 	doc.save(file);
 }

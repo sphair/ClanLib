@@ -36,7 +36,6 @@
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
-#include "API/GUI/gui_consumed_keys.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/lineedit.h"
 #include "API/Core/Math/cl_math.h"
@@ -66,12 +65,7 @@ CL_LineEdit::CL_LineEdit(CL_GUIComponent *parent)
   impl(new CL_LineEdit_Impl)
 {
 	set_type_name(CssStr::LineEdit::type_name);
-
-	CL_GUIConsumedKeys consumed_keys;
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_arrows);
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_characters);
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_space);
-	set_consumed_keys(consumed_keys);
+	set_focus_policy(focus_local);
 
 	func_render().set(impl.get(), &CL_LineEdit_Impl::on_render);
 	func_process_message().set(impl.get(), &CL_LineEdit_Impl::on_process_message);
@@ -95,7 +89,7 @@ CL_LineEdit::~CL_LineEdit()
 
 bool CL_LineEdit::is_read_only() const
 {
-	return false;
+	return impl->readonly;
 }
 
 CL_LineEdit::Alignment CL_LineEdit::get_alignment() const
@@ -120,7 +114,7 @@ bool CL_LineEdit::is_password_mode() const
 
 int CL_LineEdit::get_max_length() const
 {
-	return -1;
+	return impl->max_length;
 }
 
 CL_StringRef CL_LineEdit::get_text() const
@@ -163,8 +157,7 @@ CL_Size CL_LineEdit::get_text_size()
 {
 	CL_GraphicContext &gc = get_gc();
 	CL_Font font = impl->part_component.get_font();
-	CL_Size text_size = font.get_text_size(gc, impl->text);
-	return text_size;
+	return impl->get_visual_text_size(gc, font);
 }
 
 CL_Size CL_LineEdit::get_text_size(const CL_String &str)
@@ -307,7 +300,7 @@ void CL_LineEdit::delete_selected_text()
 	if (sel_start > sel_end)
 		std::swap(sel_start, sel_end);
 
-	impl->text = impl->text.substr(0, sel_start) +  impl->text.substr(sel_end, impl->text.size());
+	impl->text = impl->text.substr(0, sel_start) + impl->text.substr(sel_end, impl->text.size());
 	impl->cursor_pos = sel_start;
 	clear_selection();
 	request_repaint();
@@ -327,7 +320,7 @@ void CL_LineEdit::resize_to_fit(int max_width)
 
 	CL_Rect g = get_geometry();
 	CL_Rect rect_content = impl->part_component.get_content_box(g);
-	CL_Size text_size = font.get_text_size(gc, impl->text);
+	CL_Size text_size = impl->get_visual_text_size(gc, font);
 	rect_content.set_size(CL_Size(text_size.width+1, rect_content.get_height()));
 
 	g.set_size(impl->part_component.get_render_box(rect_content).get_size());
@@ -354,11 +347,6 @@ CL_Callback_v1<CL_InputEvent> &CL_LineEdit::func_after_edit_changed()
 CL_Callback_v0 &CL_LineEdit::func_selection_changed()
 {
 	return impl->func_selection_changed;
-}
-
-CL_Callback_1<bool, CL_InputEvent> &CL_LineEdit::func_unhandled_event()
-{
-	return impl->func_unhandled_event;
 }
 
 CL_Callback_v0 &CL_LineEdit::func_focus_gained()
@@ -390,6 +378,19 @@ void CL_LineEdit::set_numeric_mode( bool enable, bool decimals)
 void CL_LineEdit::set_decimal_character( const CL_StringRef &decimal_char )
 {
 	impl->decimal_char = decimal_char;
+}
+
+void CL_LineEdit::set_cursor_drawing_enabled(bool enable)
+{
+	impl->cursor_drawing_enabled_when_parent_focused = enable;
+
+	if (!impl->readonly)
+		impl->timer.start(500);
+}
+
+void CL_LineEdit::set_select_all_on_focus_gain(bool enable)
+{
+	impl->select_all_on_focus_gain = enable;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -427,14 +428,41 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				}
 			}
 
-			cursor_blink_visible = true;
-			timer.start(500); // don't blink cursor when moving or typing.
+			if (!readonly)	// Do not flash cursor when readonly
+			{
+				cursor_blink_visible = true;
+				timer.start(500); // don't blink cursor when moving or typing.
+			}
 
 			if (e.type == CL_InputEvent::pressed) // || e.repeat_count > 1) 
 			{
 				if (e.id == CL_KEY_ENTER || e.id == CL_KEY_ESCAPE || e.id == CL_KEY_TAB)
 				{
 					// Do not consume these.
+					return;
+				}
+				else if (e.id == CL_KEY_A && e.ctrl)
+				{
+					// select all
+					selection_start = 0;
+					selection_length = text.size();
+					cursor_pos = selection_length;
+					update_text_clipping();
+					lineedit->request_repaint();
+					msg.set_consumed();
+				}
+				else if (e.id == CL_KEY_C && e.ctrl)
+				{
+					if(!password_mode)	// Do not allow copying the password to clipboard
+					{
+						CL_String str = lineedit->get_selection();
+						lineedit->get_gui_manager().set_clipboard_text(str);
+						msg.set_consumed();
+					}
+				}
+				else if (readonly)
+				{
+					// Do not consume messages on read only component (only allow CTRL-A and CTRL-C)
 					return;
 				}
 				else if (e.id == CL_KEY_LEFT)
@@ -450,11 +478,13 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				else if (e.id == CL_KEY_BACKSPACE)
 				{
 					backspace();
+					update_text_clipping();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_DELETE)
 				{
 					del();
+					update_text_clipping();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_HOME)
@@ -474,27 +504,11 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					selection_start = cursor_pos;
 					cursor_pos = text.size();
 					if (e.shift)
-						selection_length =  text.size() - selection_start;
+						selection_length = text.size() - selection_start;
 					else
 						lineedit->clear_selection();
 					update_text_clipping();
 					lineedit->request_repaint();
-					msg.set_consumed();
-				}
-				else if (e.id == CL_KEY_A && e.ctrl)
-				{
-					// select all
-					selection_start = 0;
-					selection_length = text.size();
-					cursor_pos = selection_length;
-					update_text_clipping();
-					lineedit->request_repaint();
-					msg.set_consumed();
-				}
-				else if (e.id == CL_KEY_C && e.ctrl)
-				{
-					CL_String str = lineedit->get_selection();
-					lineedit->get_gui_manager().set_clipboard_text(str);
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_X && e.ctrl)
@@ -502,6 +516,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					CL_String str = lineedit->get_selection();
 					lineedit->delete_selected_text();
 					lineedit->get_gui_manager().set_clipboard_text(str);
+					update_text_clipping();	
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_V && e.ctrl)
@@ -510,6 +525,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					lineedit->delete_selected_text();
 					insert_text(cursor_pos, str);
 					lineedit->set_cursor_pos(cursor_pos + str.length());
+					update_text_clipping();
 					msg.set_consumed();
 				}
 				else if (e.id == CL_KEY_SHIFT)
@@ -521,7 +537,7 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					}
 					msg.set_consumed();
 				}
-				else if (!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32))
+				else if (!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32) && (!e.alt && !e.ctrl) || (e.ctrl && e.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
 				{
 					lineedit->delete_selected_text();
 					lineedit->clear_selection();
@@ -567,25 +583,19 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					update_text_clipping();
 					msg.set_consumed();
 				}
-				else
-				{
-					if (!func_unhandled_event.is_null())
-					{
-						bool consumed = func_unhandled_event.invoke(e);
-						if (consumed)
-							msg.set_consumed();
-					}
-				}
 			}
 			else if (e.type == CL_InputEvent::released) 
 			{
 				// undo
 				if (e.ctrl && e.id == CL_KEY_Z) 
 				{
-					CL_String tmp = undo_info.undo_text;
-					undo_info.undo_text = lineedit->get_text();
-					lineedit->set_text(tmp);
-					msg.set_consumed();
+					if (!readonly)
+					{
+						CL_String tmp = undo_info.undo_text;
+						undo_info.undo_text = lineedit->get_text();
+						lineedit->set_text(tmp);
+						msg.set_consumed();
+					}
 				}
 			}
 
@@ -644,7 +654,8 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 					else 
 						mouse_moves_left = false;
 
-					scroll_timer.start(50, true);
+					if (!readonly)
+						scroll_timer.start(50, true);
 				}
 				else
 				{
@@ -656,12 +667,6 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 				msg.set_consumed();
 			}
 		}
-
-		if (!msg.is_consumed())
-		{
-			if (!func_unhandled_event.is_null())
-				func_unhandled_event.invoke(e);
-		}
 	}
 	else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
 	{
@@ -669,8 +674,18 @@ void CL_LineEdit_Impl::on_process_message(CL_GUIMessage &msg)
 
 		if (fmsg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
 		{
-			timer.start(500);
-			lineedit->select_all();
+			if (lineedit->get_focus_policy() == CL_GUIComponent::focus_parent)
+			{
+				lineedit->get_parent_component()->set_focus();
+				if (!readonly)
+					timer.start(500);
+				return;
+			}
+
+			if (!readonly)
+				timer.start(500);
+			if (select_all_on_focus_gain)
+				lineedit->select_all();
 			ignore_mouse_events = true;
 			part_selection.set_state(CssStr::unfocused, false);
 			cursor_pos = text.length();
@@ -724,9 +739,6 @@ void CL_LineEdit_Impl::create_parts()
 	part_component.set_state(CssStr::normal, enabled);
 	part_component.set_state(CssStr::disabled, !enabled);
 
-	content_rect = part_component.get_content_box(lineedit->get_geometry().get_size());
-	text_size = lineedit->get_text_size(cl_text("|"));
-
 	text_color = part_component.get_property(prop_text_color);
 
 	part_cursor.set_state(CssStr::normal, enabled);
@@ -734,6 +746,9 @@ void CL_LineEdit_Impl::create_parts()
 
 	part_selection.set_state(CssStr::normal, enabled);
 	part_selection.set_state(CssStr::disabled, !enabled);
+
+	on_resized();	//TODO: Is this required?
+
 }
 
 void CL_LineEdit_Impl::move(int steps, CL_InputEvent &e)
@@ -783,6 +798,11 @@ void CL_LineEdit_Impl::insert_text(int pos, const CL_StringRef &str)
 		undo_info.first_text_insert = false;
 	}
 
+	// checking if insert exceeds max length
+	if(text.length() + str.length() > max_length)
+	{
+		return;
+	}
 	text.insert(pos, str);
 
 	update_text_clipping();
@@ -856,7 +876,8 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 	while ((seek_end-seek_start) > 1)
 	{
-		CL_Size text_size = font.get_text_size(gc, text.substr(clip_start_offset, seek_center - clip_start_offset));
+		CL_Size text_size = get_visual_text_size(gc, font, clip_start_offset, seek_center - clip_start_offset);
+
 		if (text_size.width > mouse_x)
 			seek_end = seek_center;
 		else
@@ -864,7 +885,9 @@ int CL_LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 		seek_center = (seek_start+seek_end)/2;
 	}
 
-	if (seek_center == text.size()-1 && mouse_x > font.get_text_size(gc, text.substr(clip_start_offset, seek_center - clip_start_offset)).width)
+	CL_Size text_size = get_visual_text_size(gc, font, clip_start_offset, seek_center - clip_start_offset);
+
+	if (seek_center == text.size()-1 && mouse_x > text_size.width)
 		seek_center = text.size();
 
 	return seek_center;
@@ -875,7 +898,7 @@ void CL_LineEdit_Impl::update_text_clipping()
 	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
 
-	CL_Size text_size = lineedit->get_text_size(text.substr(clip_start_offset));
+	CL_Size text_size = get_visual_text_size(gc, font, clip_start_offset, text.size() - clip_start_offset);
 
 	if (cursor_pos < clip_start_offset)
 		clip_start_offset = cursor_pos;
@@ -899,7 +922,9 @@ void CL_LineEdit_Impl::update_text_clipping()
 		int midpoint = (search_lower + search_upper) / 2;
 		if (midpoint == search_lower || midpoint == search_upper)
 			break;
-		CL_Size midpoint_size = font.get_text_size(gc, text.substr(clip_start_offset, midpoint-clip_start_offset));
+
+		CL_Size midpoint_size = get_visual_text_size(gc, font, clip_start_offset, midpoint-clip_start_offset);
+
 		if (content_rect.right < midpoint_size.width)
 			search_upper = midpoint;
 		else
@@ -923,12 +948,25 @@ CL_Rect CL_LineEdit_Impl::get_cursor_rect()
 	int substr_end = cursor_pos - clip_start_offset;
 	if (substr_end < 0)
 		substr_end = 0;
-  	CL_Size text_size_before_cursor = font.get_text_size(gc, text.substr(clip_start_offset, substr_end));
+
+	CL_String clipped_text;
+
+	if ( password_mode )
+	{
+		// If we are in password mode, we gonna return the right characters
+		clipped_text = create_password(substr_end);
+	}
+	else
+	{
+		clipped_text = text.substr(clip_start_offset, substr_end);
+	}
+
+	CL_Size text_size_before_cursor = font.get_text_size(gc, clipped_text);
 
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
 	cursor_rect.right = cursor_rect.left + part_cursor.get_preferred_width();
 
-	cursor_rect.top = vertical_text_align.bottom - text_size.height;
+	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
 
 	return cursor_rect;
@@ -945,14 +983,14 @@ CL_Rect CL_LineEdit_Impl::get_selection_rect()
 	CL_Size text_size_before_selection = font.get_text_size(gc, txt_before);
 
 	// selection text:
-	font = part_component.get_font();
+	font = part_selection.get_font();
 	CL_TempString txt_selected = get_visible_selected_text();
 	CL_Size text_size_selection = font.get_text_size(gc, txt_selected);
 
 	CL_Rect selection_rect;
 	selection_rect.left = content_rect.left + text_size_before_selection.width;
 	selection_rect.right = selection_rect.left + text_size_selection.width;
-	selection_rect.top = vertical_text_align.bottom - text_size_selection.height;
+	selection_rect.top = vertical_text_align.top;
 	selection_rect.bottom = vertical_text_align.bottom;
 
 	return selection_rect;
@@ -1000,7 +1038,7 @@ void CL_LineEdit_Impl::on_timer_expired()
 
 void CL_LineEdit_Impl::on_resized()
 {
-	content_rect = part_component.get_content_box(lineedit->get_geometry().get_size());
+	content_rect = part_component.get_content_box(lineedit->get_size());
 
 	CL_GraphicContext &gc = lineedit->get_gc();
 	CL_Font font = part_component.get_font();
@@ -1021,6 +1059,11 @@ CL_TempString CL_LineEdit_Impl::get_visible_text_before_selection()
 		return CL_String();
 
 	int end = cl_min(sel_start, clip_end_offset);
+
+	// If we are in password mode, we gonna return the right characters
+	if ( password_mode )
+		return create_password(end-start);
+
 	return text.substr(start, end-start);
 }
 
@@ -1039,6 +1082,10 @@ CL_TempString CL_LineEdit_Impl::get_visible_selected_text()
 
 	if (start == end)
 		return CL_TempString();
+
+	// If we are in password mode, we gonna return the right characters
+	if ( password_mode )
+		return create_password(end-start);
 
 	return text.substr(start, end-start);
 }
@@ -1060,13 +1107,19 @@ CL_TempString CL_LineEdit_Impl::get_visible_text_after_selection()
 	if (sel_end <= 0)
 		return CL_String();
 	else
+	{
+		// If we are in password mode, we gonna return the right characters
+		if ( password_mode )
+			return create_password(end-start);
+
 		return text.substr(start, end-start);
+	}
 }
 
 void CL_LineEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect g = lineedit->get_geometry();
-	part_component.render_box(gc, g.get_size(), update_rect);
+	CL_Rect g = lineedit->get_size();
+	part_component.render_box(gc, g, update_rect);
 
 	CL_Font font = part_component.get_font();
 
@@ -1075,7 +1128,18 @@ void CL_LineEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	CL_TempString txt_after = get_visible_text_after_selection();
 
 	if (txt_before.empty() && txt_selected.empty() && txt_after.empty())
-		txt_after = text.substr(clip_start_offset, clip_end_offset-clip_start_offset);
+	{
+
+		// If we are in password mode, we gonna return the right characters
+		if ( password_mode )
+		{
+			txt_after = create_password(clip_end_offset-clip_start_offset);
+		}
+		else
+		{
+			txt_after = text.substr(clip_start_offset, clip_end_offset-clip_start_offset);
+		}
+	}
 
 	CL_Size size_before = font.get_text_size(gc, txt_before);
 	CL_Size size_selected = font.get_text_size(gc, txt_selected);
@@ -1083,24 +1147,34 @@ void CL_LineEdit_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	// Draw text before selection
 	if (!txt_before.empty())
 	{
-		part_component.render_text(gc, txt_before, content_rect, update_rect);
+		CL_Rect text_rect = content_rect;
+		text_rect.top = g.top;
+		text_rect.bottom = g.bottom;
+		part_component.render_text(gc, txt_before, text_rect, update_rect);
 	}
 	if (!txt_selected.empty())
 	{
 		// Draw selection box.
 		CL_Rect selection_rect = get_selection_rect();
 		part_selection.render_box(gc, selection_rect, update_rect);
-		part_selection.render_text(gc, txt_selected, selection_rect, update_rect);
+
+		CL_Rect text_rect = content_rect;
+		text_rect.left += (size_before.width);
+		text_rect.top = g.top;
+		text_rect.bottom = g.bottom;
+		part_selection.render_text(gc, txt_selected, text_rect, update_rect);
 	}
 	if (!txt_after.empty())
 	{
 		CL_Rect text_rect = content_rect;
 		text_rect.left += (size_before.width + size_selected.width);
+		text_rect.top = g.top;
+		text_rect.bottom = g.bottom;
 		part_component.render_text(gc, txt_after, text_rect, update_rect);
 	}
 
 	// draw cursor
-	if (lineedit->has_focus())
+	if (lineedit->has_focus() || (lineedit->get_focus_policy() == CL_GUIComponent::focus_parent && cursor_drawing_enabled_when_parent_focused))
 	{
 		if (cursor_blink_visible)
 		{
@@ -1141,3 +1215,19 @@ bool CL_LineEdit_Impl::input_mask_accepts_input(int cursor_pos, const CL_StringR
 	throw CL_Exception("CL_LineEdit_Impl::input_mask_accepts_input - not implemented!");
 	return true;
 }
+
+CL_String CL_LineEdit_Impl::create_password(CL_String::size_type num_letters) const
+{
+	return CL_String(num_letters, '*');
+}
+
+CL_Size CL_LineEdit_Impl::get_visual_text_size(CL_GraphicContext &gc, CL_Font &font, int pos, int npos) const
+{
+	return password_mode ? font.get_text_size(gc, create_password(npos)) : font.get_text_size(gc, text.substr(pos, npos));
+}
+
+CL_Size CL_LineEdit_Impl::get_visual_text_size(CL_GraphicContext &gc, CL_Font &font) const
+{
+	return password_mode ? font.get_text_size(gc, create_password(text.size())) : font.get_text_size(gc, text);
+}
+

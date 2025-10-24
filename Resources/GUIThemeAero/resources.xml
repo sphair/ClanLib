@@ -403,7 +403,37 @@
     <image file="Images\toolbar_background.png" />
   </image>
 
-  <!-- ******************************************************************* -->
+  <image name="Tooltip">
+    <image file="Images\tooltip.png" />
+  </image>
+
+  <image name="ComboBoxDropDownButtonNormal">
+    <image file="Images\combobox_dropdownbutton_normal.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonHot">
+    <image file="Images\combobox_dropdownbutton_hot.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonPressed">
+    <image file="Images\combobox_dropdownbutton_pressed.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonDisabled">
+    <image file="Images\combobox_dropdownbutton_disabled.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonNormalGlyph">
+    <image file="Images\combobox_dropdownbutton_normal_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonHotGlyph">
+    <image file="Images\combobox_dropdownbutton_hot_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonPressedGlyph">
+    <image file="Images\combobox_dropdownbutton_pressed_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonDisabledGlyph">
+    <image file="Images\combobox_dropdownbutton_disabled_glyph.png" />
+  </image>
+  
+  <!-- ************************************************************************* -->
+  <!-- *** Components still using old Luna theme - These needs to be updated *** -->
 
   <image name="ToolBarButtonNormal">
     <image file="Images\XP\toolbar_button_normal.png" />
@@ -446,13 +476,6 @@
   </image>
   <image name="ProgressBarHorzChunk">
     <image file="Images\XP\progressbar_horz_chunk2.png" />
-  </image>
-
-  <image name="ComboBoxPopupBg">
-    <image file="Images\XP\combobox_popup_bg.png" />
-  </image>
-  <image name="ComboBoxDownArrow">
-    <image file="Images\XP\combobox_down_arrow.png" />
   </image>
 
   <image name="Frame">

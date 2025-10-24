@@ -143,6 +143,9 @@ public:
 	/// \brief Returns the current height of the context.
 	int get_height() const;
 
+	/// \brief Returns the current size of the context.
+	CL_Size get_size() const;
+
 	/// \brief Returns the current clipping rectangle used on the graphic context.
 	CL_Rect get_cliprect() const;
 
@@ -395,9 +398,8 @@ private:
 	friend class CL_PrimitivesArray;
 	friend class CL_Sprite_Impl;
 	friend class CL_Image;
-	friend class CL_FontProvider_Texture;
+	friend class CL_GlyphCache;
 	friend class CL_Draw;
-	friend class CL_FontProvider_Freetype;
 /// \}
 };
 

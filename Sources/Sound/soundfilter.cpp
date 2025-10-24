@@ -81,7 +81,7 @@ CL_SoundFilterProvider *CL_SoundFilter::get_provider() const
 	return impl->provider;
 }
 
-void CL_SoundFilter::filter(int **sample_data, int num_samples, int channels)
+void CL_SoundFilter::filter(float **sample_data, int num_samples, int channels)
 {
 	impl->provider->filter(sample_data, num_samples, channels);
 }

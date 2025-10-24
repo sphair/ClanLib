@@ -118,7 +118,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precomp.h"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -176,7 +177,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Sources\application.h"
+				RelativePath=".\Sources\css_packer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\css_packer.h"
 				>
 			</File>
 			<File
@@ -197,6 +202,14 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
 						PrecompiledHeaderThrough="precomp.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
 			</File>
@@ -228,6 +241,66 @@
 				RelativePath=".\Sources\texturegroup_component.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Sources\view.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\view.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\view_workspace.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sources\view_workspace.h"
+				>
+			</File>
+			<Filter
+				Name="Views"
+				>
+				<File
+					RelativePath=".\Sources\Views\css_packer_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\css_packer_view.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\ico_creator_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\ico_creator_view.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\resource_viewer_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\resource_viewer_view.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\texture_packer_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\texture_packer_view.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\welcome_view.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sources\Views\welcome_view.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -239,7 +312,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Resources\GUIThemeDefault\resources.xml"
+				RelativePath=".\theme.css"
 				>
 			</File>
 		</Filter>

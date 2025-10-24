@@ -39,7 +39,7 @@
 // CL_PrimitivesArray Construction:
 
 CL_PrimitivesArray::CL_PrimitivesArray(CL_GraphicContext &gc)
-: impl(gc.impl->create_prim_array())
+: impl(gc.impl->create_prim_array(gc.impl))
 {
 }
 

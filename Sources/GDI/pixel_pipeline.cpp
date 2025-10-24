@@ -29,11 +29,13 @@
 #include "GDI/precomp.h"
 #include "API/Display/2D/color.h"
 #include "API/Core/Math/cl_math.h"
+#include "API/Core/Math/vec2.h"
 #include "pixel_pipeline.h"
-#include "software_fragment_shader.h"
 #include "draw_image.h"
 #include "gdi_frame_buffer_provider.h"
-#include "rasterizer.h"
+#include "pixel_triangle_renderer.h"
+#include "pixel_line_renderer.h"
+#include <emmintrin.h>
 
 CL_PixelPipeline::CL_PixelPipeline(const CL_Size &size)
 : modelview(CL_Mat4f::identity()), projection(CL_Mat4f::identity()),
@@ -62,7 +64,7 @@ CL_PixelPipeline::CL_PixelPipeline(const CL_Size &size)
 
 	colorbuffer0.set(primary_colorbuffer0);
 	clip_rect = CL_Rect(CL_Point(0,0), size);
-	clear(CL_Colorf(0.0f,0.0f,0.0f,0.0f));
+	clear(CL_Colorf(0.0f,0.0f,0.0f,0.0f), 0, 1);
 }
 
 CL_PixelPipeline::~CL_PixelPipeline()
@@ -180,29 +182,30 @@ void CL_PixelPipeline::reset_clip_rect()
 
 void CL_PixelPipeline::clear(const CL_Colorf &color)
 {
-	wait_for_workers();
-
-	int dest_buffer_width = colorbuffer0.size.width;
-	int dest_buffer_height = colorbuffer0.size.height;
-	unsigned int *dest_data = colorbuffer0.data;
-
-	CL_Color c = color;
-	unsigned int color8888 = (c.get_alpha() << 24) + (c.get_red() << 16) + (c.get_green() << 8) + c.get_blue();
-	unsigned int colortest = (c.get_alpha() << 24) + (c.get_alpha() << 16) + (c.get_alpha() << 8) + c.get_alpha();
-	if (color8888 == colortest)
+	for (int v=0; v<3; v++)
 	{
-		memset(dest_data, color8888, dest_buffer_width * dest_buffer_height);
-	}
-	else
-	{
-		unsigned int *dest_line = dest_data;
-		for (int y = 0; y < dest_buffer_height; y++)
+		while (current_writer_fragment == -1)
 		{
-			for (int x = 0; x < dest_buffer_width; x++)
-			{
-				dest_line[x] = color8888;
-			}
-			dest_line += dest_buffer_width;
+			current_writer_fragment = fragment_buffer.get_writer_fragment();
+			if (current_writer_fragment == -1)
+				wait_for_workers();
+		}
+
+		int fragment_vertices = get_fragment_vertices();
+		int fragment_offset = get_fragment_vertex_offset(current_writer_fragment);
+
+		vertices[fragment_offset+write_pos].varying[2] = color.r;
+		vertices[fragment_offset+write_pos].varying[3] = color.g;
+		vertices[fragment_offset+write_pos].varying[4] = color.b;
+		vertices[fragment_offset+write_pos].varying[5] = color.a;
+		vertices[fragment_offset+write_pos].program = type_clear;
+		write_pos++;
+
+		if (write_pos == fragment_vertices)
+		{
+			fragment_buffer.finish_writer_fragment(write_pos);
+			current_writer_fragment = -1;
+			write_pos = 0;
 		}
 	}
 }
@@ -246,7 +249,7 @@ void CL_PixelPipeline::draw_pixels(const CL_Rect &dest, const CL_PixelBufferRef 
 	}
 }
 
-void CL_PixelPipeline::draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[4], const CL_Vec2f texcoords[3], int sampler)
+void CL_PixelPipeline::draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler)
 {
 	for (int v=0; v<3; v++)
 	{
@@ -268,7 +271,7 @@ void CL_PixelPipeline::draw_triangle(const CL_Vec2f points[3], const CL_Vec4f pr
 		vertices[fragment_offset+write_pos].varying[4] = primcolor[v].b;
 		vertices[fragment_offset+write_pos].varying[5] = primcolor[v].a;
 		vertices[fragment_offset+write_pos].sampler = sampler;
-		vertices[fragment_offset+write_pos].sprite_program = false;
+		vertices[fragment_offset+write_pos].program = type_triangle;
 		write_pos++;
 
 		if (write_pos == fragment_vertices)
@@ -280,7 +283,7 @@ void CL_PixelPipeline::draw_triangle(const CL_Vec2f points[3], const CL_Vec4f pr
 	}
 }
 
-void CL_PixelPipeline::draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[4], const CL_Vec2f texcoords[3], int sampler)
+void CL_PixelPipeline::draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler)
 {
 	for (int v=0; v<3; v++)
 	{
@@ -302,7 +305,41 @@ void CL_PixelPipeline::draw_sprite(const CL_Vec2f points[3], const CL_Vec4f prim
 		vertices[fragment_offset+write_pos].varying[4] = primcolor[v].b;
 		vertices[fragment_offset+write_pos].varying[5] = primcolor[v].a;
 		vertices[fragment_offset+write_pos].sampler = sampler;
-		vertices[fragment_offset+write_pos].sprite_program = true;
+		vertices[fragment_offset+write_pos].program = type_sprite;
+		write_pos++;
+
+		if (write_pos == fragment_vertices)
+		{
+			fragment_buffer.finish_writer_fragment(write_pos);
+			current_writer_fragment = -1;
+			write_pos = 0;
+		}
+	}
+}
+
+void CL_PixelPipeline::draw_line(const CL_Vec2f points[2], const CL_Vec4f primcolor[2], const CL_Vec2f texcoords[2], int sampler)
+{
+	for (int v=0; v<2; v++)
+	{
+		while (current_writer_fragment == -1)
+		{
+			current_writer_fragment = fragment_buffer.get_writer_fragment();
+			if (current_writer_fragment == -1)
+				wait_for_workers();
+		}
+
+		int fragment_vertices = get_fragment_vertices();
+		int fragment_offset = get_fragment_vertex_offset(current_writer_fragment);
+
+		vertices[fragment_offset+write_pos].position = points[v];
+		vertices[fragment_offset+write_pos].varying[0] = texcoords[v].x;
+		vertices[fragment_offset+write_pos].varying[1] = texcoords[v].y;
+		vertices[fragment_offset+write_pos].varying[2] = primcolor[v].r;
+		vertices[fragment_offset+write_pos].varying[3] = primcolor[v].g;
+		vertices[fragment_offset+write_pos].varying[4] = primcolor[v].b;
+		vertices[fragment_offset+write_pos].varying[5] = primcolor[v].a;
+		vertices[fragment_offset+write_pos].sampler = sampler;
+		vertices[fragment_offset+write_pos].program = type_line;
 		write_pos++;
 
 		if (write_pos == fragment_vertices)
@@ -324,11 +361,7 @@ void CL_PixelPipeline::wait_for_workers()
 	}
 
 	if (active_cores == 1)
-	{
-		CL_Rasterizer rasterizer;
-		rasterizer.set_core(0, active_cores);
-		process_vertices(rasterizer, 0, active_cores);
-	}
+		process_vertices(0, active_cores);
 	
 	// Wait until all workers are done.
 	while (!fragment_buffer.readers_finished())
@@ -342,20 +375,17 @@ void CL_PixelPipeline::worker_main(int core)
 {
 //	SetThreadIdealProcessor(GetCurrentThread(), core);
 //	SetThreadAffinityMask(GetCurrentThread(), 1 << core);
-	CL_Rasterizer rasterizer;
-	rasterizer.set_core(core, active_cores);
-
 	while (true)
 	{
 		int wakeup_reason = CL_Event::wait(fragment_buffer.get_reader_event(core), event_stop);
 		if (wakeup_reason != 0)
 			break;
 		fragment_buffer.get_reader_event(core).reset();
-		process_vertices(rasterizer, core, active_cores);
+		process_vertices(core, active_cores);
 	}
 }
 
-void CL_PixelPipeline::process_vertices(CL_Rasterizer &rasterizer, int core, int num_cores)
+void CL_PixelPipeline::process_vertices(int core, int num_cores)
 {
 	while (true)
 	{
@@ -367,9 +397,9 @@ void CL_PixelPipeline::process_vertices(CL_Rasterizer &rasterizer, int core, int
 		int fragment_offset = get_fragment_vertex_offset(fragment);
 
 		int fragment_offset_end = fragment_offset + fragment_vertices;
-		for (int i = fragment_offset; i+2 < fragment_offset_end; i+=3)
+		for (int i = fragment_offset; i < fragment_offset_end;)	// Note, this used to be "i+2 < fragment_offset_end", but lines have only 2 vertices. So lets assume the input data is correct :)
 		{
-			if (vertices[i].sprite_program)
+			if (vertices[i].program == type_sprite)
 			{
 				CL_Rect dest(
 					vertices[i].position.x,
@@ -394,30 +424,51 @@ void CL_PixelPipeline::process_vertices(CL_Rasterizer &rasterizer, int core, int
 				{
 					fill_rect(dest, color, core, num_cores);
 				}
+				i+=3;
 			}
-			else
+			else if (vertices[i].program == type_clear)
 			{
-				rasterizer.set_colorbuffer0(colorbuffer0.data, colorbuffer0.size.width, colorbuffer0.size.height);
-				rasterizer.set_clip_rect(clip_rect);
+				CL_Colorf color(vertices[i].varying[2], vertices[i].varying[3], vertices[i].varying[4], vertices[i].varying[5]);
+				clear(color, core, num_cores);
+				i+=3;
+			}
+			else if (vertices[i].program == type_triangle)
+			{
+				float x[3] = { vertices[i].position.x, vertices[i+1].position.x, vertices[i+2].position.x };
+				float y[3] = { vertices[i].position.y, vertices[i+1].position.y, vertices[i+2].position.y };
+				float tx[3] = { vertices[i].varying[0], vertices[i+1].varying[0], vertices[i+2].varying[0] };
+				float ty[3] = { vertices[i].varying[1], vertices[i+1].varying[1], vertices[i+2].varying[1] };
+				float red[3] = { vertices[i].varying[2], vertices[i+1].varying[2], vertices[i+2].varying[2] };
+				float green[3] = { vertices[i].varying[3], vertices[i+1].varying[3], vertices[i+2].varying[3] };
+				float blue[3] = { vertices[i].varying[4], vertices[i+1].varying[4], vertices[i+2].varying[4] };
+				float alpha[3] = { vertices[i].varying[5], vertices[i+1].varying[5], vertices[i+2].varying[5] };
 
-				for (int j=0; j<3; j++)
-				{
-					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[0] = vertices[i+j].position.x;
-					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[1] = vertices[i+j].position.y;
-					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[2] = vertices[i+j].varying[0];
-					rasterizer.varyings[CL_Rasterizer::position_index][j].v_float[3] = vertices[i+j].varying[1];
-					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[0] = vertices[i+j].varying[2];
-					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[1] = vertices[i+j].varying[3];
-					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[2] = vertices[i+j].varying[4];
-					rasterizer.varyings[CL_Rasterizer::primcolor_index][j].v_float[3] = vertices[i+j].varying[5];
-				}
+				CL_PixelTriangleRenderer triangle_renderer;
+				triangle_renderer.set_clip_rect(clip_rect);
+				triangle_renderer.set_vertex_arrays(x,y,tx,ty,red,green,blue,alpha);
+				triangle_renderer.set_dest(colorbuffer0.data, colorbuffer0.size.width, colorbuffer0.size.height);
+				triangle_renderer.set_src(samplers[vertices[i].sampler].data, samplers[vertices[i].sampler].size.width, samplers[vertices[i].sampler].size.height);
+				triangle_renderer.set_core(core, num_cores);
+				triangle_renderer.render_triangle(0, 1, 2);
 
-				rasterizer.set_sampler0(samplers[vertices[i].sampler].data, samplers[vertices[i].sampler].size.width, samplers[vertices[i].sampler].size.height);
-				rasterizer.render_triangle();
+				i+=3;
+			}
+			else	// Must be type_line
+			{
+				CL_LineSegment2 line(
+					CL_Vec2i(vertices[i].position.x, vertices[i].position.y),
+					CL_Vec2i(vertices[i+1].position.x, vertices[i+1].position.y));
 
-				//Triangle t = triangulate(i, i+1, i+2, vertices[i].sampler);
-				//render_band(t.b1, core, num_cores);
-				//render_band(t.b2, core, num_cores);
+				CL_Colorf color(vertices[i].varying[2], vertices[i].varying[3], vertices[i].varying[4], vertices[i].varying[5]);
+
+				// Textured line is currently not supported - So ignore the samplers
+
+				CL_PixelLineRenderer line_renderer;
+				line_renderer.set_clip_rect(clip_rect);
+				line_renderer.set_dest(colorbuffer0.data, colorbuffer0.size.width, colorbuffer0.size.height);
+				line_renderer.set_core(core, num_cores);
+				line_renderer.draw_line(line, color);
+				i+=2;
 			}
 		}
 
@@ -433,6 +484,49 @@ int CL_PixelPipeline::find_first_line_for_core(int y_start, int core, int num_co
 	if (y < y_start)
 		y += num_cores;
 	return y;
+}
+
+void CL_PixelPipeline::clear(const CL_Colorf &color, int core, int num_cores)
+{
+	int dest_buffer_width = colorbuffer0.size.width;
+	int dest_buffer_height = colorbuffer0.size.height;
+	unsigned char *dest_data = (unsigned char *) colorbuffer0.data;
+
+	CL_Color c = color;
+	unsigned int color8888 = (c.get_alpha() << 24) + (c.get_red() << 16) + (c.get_green() << 8) + c.get_blue();
+	unsigned char *ptr_color8888 = (unsigned char *) &color8888;
+
+	for (int y = core; y < dest_buffer_height; y += num_cores)
+	{
+		unsigned char *line = dest_data + y * dest_buffer_width * 4;
+		unsigned int line_align = ((line) - ((unsigned char *) 0)) & 0xf; // A gcc safe way of obtaining an address
+		int pos = 0;
+		int length = dest_buffer_width*4;
+
+		// Write single bytes until we are byte aligned:
+		if (line_align)
+		{
+			int prefix_length = cl_min(length, (int) (16 - line_align));
+			for (; pos < prefix_length; pos++)
+				line[pos] = ptr_color8888[pos&0x3];
+		}
+
+		// Figure out how our 16 bytes should look like after we applied the alignment:
+		unsigned int b0 = ptr_color8888[(pos+0)&0x3];
+		unsigned int b1 = ptr_color8888[(pos+1)&0x3];
+		unsigned int b2 = ptr_color8888[(pos+2)&0x3];
+		unsigned int b3 = ptr_color8888[(pos+3)&0x3];
+		__m128i c_sse = _mm_set1_epi32((b3<<24)+(b2<<16)+(b1<<8)+b0);
+
+		// Fill 16 byte aligned:
+		int align_length = length-pos-15;
+		for (; pos < align_length; pos+=16)
+			_mm_stream_si128((__m128i*)(line+pos), c_sse);
+
+		// Fill remaining bytes:
+		for (; pos < length; pos++)
+			line[pos] = ptr_color8888[pos&0x3];
+	}
 }
 
 void CL_PixelPipeline::fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color, int core, int num_cores)
@@ -555,3 +649,4 @@ void CL_PixelPipeline::draw_image(const CL_Rect &dest, const CL_PixelBufferRef &
 		}
 	}
 }
+

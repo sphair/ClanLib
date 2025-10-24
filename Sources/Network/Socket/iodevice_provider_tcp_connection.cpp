@@ -171,7 +171,10 @@ int CL_IODeviceProvider_TCPConnection::receive(void *data, int len, bool receive
 		{
 			if (!read_event.wait(timeout))
 				throw CL_Exception(cl_text("Receive timed out"));
-			pos += socket.receive(d+pos, len-pos);
+			int received = socket.receive(d+pos, len-pos);
+			if (received == 0)
+				throw CL_Exception(cl_text("Unable to receive all data: connection closed by peer"));
+			pos += received;
 		}
 		return pos;
 	}

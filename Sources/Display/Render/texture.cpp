@@ -61,6 +61,7 @@ public:
 	wrap_mode_r(cl_wrap_clamp_to_edge),
 	min_filter(cl_filter_linear),
 	mag_filter(cl_filter_linear),
+	max_anisotropy(1.0f),
 	resident(0),
 	depth_mode(cl_depthmode_luminance),
 	compare_mode(cl_comparemode_none),
@@ -87,6 +88,7 @@ public:
 	CL_TextureWrapMode wrap_mode_r;
 	CL_TextureFilter min_filter;
 	CL_TextureFilter mag_filter;
+	float max_anisotropy;
 	bool resident;
 	CL_TextureDepthMode depth_mode;
 	CL_TextureCompareMode compare_mode;
@@ -207,6 +209,11 @@ CL_Texture::CL_Texture(
 	CL_VirtualDirectory directory = resource.get_manager().get_directory(resource);
 	*this = CL_Texture(gc, filename, directory);
 }
+
+CL_Texture::CL_Texture(CL_SharedPtr<CL_Texture_Impl> &impl) : impl(impl)
+{
+}
+
 
 CL_Texture::~CL_Texture()
 {
@@ -336,6 +343,11 @@ CL_TextureProvider *CL_Texture::get_provider() const
 		return impl->provider;
 }
 
+CL_WeakPtr<CL_Texture_Impl> CL_Texture::get_impl() const
+{
+	return CL_WeakPtr<CL_Texture_Impl>(impl);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_Texture Operations:
 
@@ -402,54 +414,54 @@ void CL_Texture::set_subimage(
 }
 
 void CL_Texture::copy_image_from(
+	CL_GraphicContext &context,
 	int level,
-	CL_TextureFormat internal_format,
-	CL_GraphicContext *gc)
+	CL_TextureFormat internal_format)
 {
-	impl->provider->copy_image_from(0,0,impl->width,impl->height,level,internal_format,gc->get_provider());
+	impl->provider->copy_image_from(0,0,impl->width,impl->height,level,internal_format,context.get_provider());
 }
 
 void CL_Texture::copy_image_from(
+	CL_GraphicContext &context,
 	int x,
 	int y,
 	int width,
 	int height,
 	int level,
-	CL_TextureFormat internal_format,
-	CL_GraphicContext *gc)
+	CL_TextureFormat internal_format)
 {
-	impl->provider->copy_image_from(x,y,width,height,level,internal_format,gc->get_provider());
+	impl->provider->copy_image_from(x,y,width,height,level,internal_format,context.get_provider());
 }
 	
 void CL_Texture::copy_image_from(
+	CL_GraphicContext &context,
 	const CL_Rect &pos,
 	int level,
-	CL_TextureFormat internal_format,
-	CL_GraphicContext *gc)
+	CL_TextureFormat internal_format)
 {
-	impl->provider->copy_image_from(pos.left,pos.top,pos.get_width(),pos.get_height(),level, internal_format,gc->get_provider());
+	impl->provider->copy_image_from(pos.left,pos.top,pos.get_width(),pos.get_height(),level, internal_format,context.get_provider());
 }
 
 void CL_Texture::copy_subimage_from(
+	CL_GraphicContext &context,
 	int offset_x,
 	int offset_y,
 	int x,
 	int y,
 	int width,
 	int height,
-	int level,
-	CL_GraphicContext *gc)
+	int level)
 {
-	impl->provider->copy_subimage_from(offset_x, offset_y, x, y, width, height, level, gc->get_provider() );
+	impl->provider->copy_subimage_from(offset_x, offset_y, x, y, width, height, level, context.get_provider() );
 }
 
 void CL_Texture::copy_subimage_from(
+	CL_GraphicContext &context,
 	const CL_Point &offset,
 	const CL_Rect &pos,
-	int level,
-	CL_GraphicContext *gc)
+	int level)
 {
-	impl->provider->copy_subimage_from(offset.x, offset.y, pos.left, pos.top, pos.get_width(), pos.get_height(), level, gc->get_provider() );
+	impl->provider->copy_subimage_from(offset.x, offset.y, pos.left, pos.top, pos.get_width(), pos.get_height(), level, context.get_provider() );
 }
 
 void CL_Texture::set_min_lod(float min_lod)
@@ -557,6 +569,15 @@ void CL_Texture::set_mag_filter(CL_TextureFilter mag_filter)
 	{
 		impl->provider->set_mag_filter(mag_filter);
 		impl->mag_filter = mag_filter;
+	}
+}
+
+void CL_Texture::set_max_anisotropy(float max_anisotropy)
+{
+	if( impl->max_anisotropy != max_anisotropy )
+	{
+		impl->provider->set_max_anisotropy(max_anisotropy);
+		impl->max_anisotropy = max_anisotropy;
 	}
 }
 

@@ -40,6 +40,7 @@ CL_InputContext_Impl::CL_InputContext_Impl()
 
 CL_InputContext_Impl::~CL_InputContext_Impl()
 {
+	dispose();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,8 @@ CL_Mutex CL_InputContext_Impl::mutex;
 
 void CL_InputContext_Impl::clear()
 {
+	throw_if_disposed();
+
 	keyboards.clear();
 	mice.clear();
 	joysticks.clear();
@@ -60,6 +63,8 @@ void CL_InputContext_Impl::clear()
 
 void CL_InputContext_Impl::add_keyboard(CL_InputDevice &keyboard)
 {
+	throw_if_disposed();
+
 	CL_MutexSection mutex_lock(&mutex);
 	keyboards.push_back(keyboard);
 	keyboard.impl->input_contexts.push_back(input_context);
@@ -67,6 +72,8 @@ void CL_InputContext_Impl::add_keyboard(CL_InputDevice &keyboard)
 
 void CL_InputContext_Impl::add_mouse(CL_InputDevice &mouse)
 {
+	throw_if_disposed();
+
 	CL_MutexSection mutex_lock(&mutex);
 	mice.push_back(mouse);
 	mouse.impl->input_contexts.push_back(input_context);
@@ -74,6 +81,8 @@ void CL_InputContext_Impl::add_mouse(CL_InputDevice &mouse)
 
 void CL_InputContext_Impl::add_joystick(CL_InputDevice &joystick)
 {
+	throw_if_disposed();
+
 	CL_MutexSection mutex_lock(&mutex);
 	joysticks.push_back(joystick);
 	joystick.impl->input_contexts.push_back(input_context);
@@ -81,6 +90,8 @@ void CL_InputContext_Impl::add_joystick(CL_InputDevice &joystick)
 
 void CL_InputContext_Impl::add_tablet(CL_InputDevice &tablet)
 {
+	throw_if_disposed();
+
 	CL_MutexSection mutex_lock(&mutex);
 	tablets.push_back(tablet);
 	tablet.impl->input_contexts.push_back(input_context);
@@ -88,6 +99,8 @@ void CL_InputContext_Impl::add_tablet(CL_InputDevice &tablet)
 
 void CL_InputContext_Impl::process_messages()
 {
+	throw_if_disposed();
+
 	std::vector< std::pair<CL_InputEvent, CL_WeakPtr<CL_InputDevice_Impl> > >::size_type pos, size;
 
 	// todo: process events from windowing system message queue
@@ -141,6 +154,8 @@ void CL_InputContext_Impl::received_event(
 	const CL_InputEvent &e,
 	CL_WeakPtr<CL_InputDevice_Impl> &input_device)
 {
+	throw_if_disposed();
+
 	events.push_back(
 		std::pair<CL_InputEvent, CL_WeakPtr<CL_InputDevice_Impl> >(
 			e,
@@ -149,6 +164,8 @@ void CL_InputContext_Impl::received_event(
 
 bool CL_InputContext_Impl::poll(bool peek_only)
 {
+	throw_if_disposed();
+
 	bool message_flag = false;
 
 	poll_device(peek_only, joysticks, message_flag);
@@ -161,6 +178,8 @@ bool CL_InputContext_Impl::poll(bool peek_only)
 
 void CL_InputContext_Impl::poll_device( bool peek_only, std::vector<CL_InputDevice> &device, bool &message_flag)
 {
+	throw_if_disposed();
+
 	std::vector< CL_InputDevice >::size_type pos, size;
 	size = device.size();
 	for (pos = 0; pos < size; pos++)
@@ -175,3 +194,10 @@ void CL_InputContext_Impl::poll_device( bool peek_only, std::vector<CL_InputDevi
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputContext_Impl implementation:
 
+void CL_InputContext_Impl::on_dispose()
+{
+	keyboards.clear();
+	mice.clear();
+	joysticks.clear();
+	tablets.clear();
+}

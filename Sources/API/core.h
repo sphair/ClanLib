@@ -34,8 +34,8 @@
 #pragma once
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(2,0,3)
-#define CL_VERSION_STRING "2.0.3"
+#define CL_CURRENT_VERSION	CL_VERSION(2,1,0)
+#define CL_VERSION_STRING "2.1.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)

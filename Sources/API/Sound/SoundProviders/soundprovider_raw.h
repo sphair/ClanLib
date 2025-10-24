@@ -32,9 +32,9 @@
 #pragma once
 
 #include "../api_sound.h"
-#include "../soundprovider.h"
+#include "soundprovider.h"
 
-class CL_SoundProvider_Raw_Generic;
+class CL_SoundProvider_Raw_Impl;
 
 /// \brief Sound provider in a raw PCM format (no header in file).
 ///
@@ -49,7 +49,7 @@ public:
 	///
 	/// \param sound_data Raw PCM data.
 	/// \param num_samples Number of samples to be read out of sound_data.
-	/// \param bytes_per_sample The size of a sample in bytes. This is 2 for 16 bit, and 1 for 8 bit.
+	/// \param bytes_per_sample The size of a sample in bytes. This is 2 for 16 bit (signed), and 1 for 8 bit (unsigned).
 	/// \param stereo True if sound is stereo (two channels).
 	/// \param frequency Playback frequency for sample data.
 	CL_SoundProvider_Raw(
@@ -80,7 +80,9 @@ public:
 /// \{
 
 private:
-	CL_SoundProvider_Raw_Generic *impl;
+	CL_SharedPtr<CL_SoundProvider_Raw_Impl> impl;
+
+	friend class CL_SoundProvider_Raw_Session;
 /// \}
 };
 

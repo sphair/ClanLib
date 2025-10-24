@@ -169,6 +169,9 @@ int CL_Event::wait(int count, CL_Event const * const * events, int timeout, bool
 			return index_events;
 	}
 
+	if (timeout == -1)		// Wait forever
+		timeout = 0x7FFFFFFF;
+
 	// Placing the timeval struct here allows linux systems to more
 	// correctly resume a select if it was awaken by a complex event.
 	// On non-linux unixes (those that do not update timeval), the

@@ -39,7 +39,7 @@
 class CL_SoundFilter;
 class CL_SoundBuffer;
 class CL_SoundOutput_Description;
-class CL_SoundOutput_Generic;
+class CL_SoundOutput_Impl;
 
 /// \brief SoundOutput interface in ClanLib.
 ///
@@ -123,13 +123,14 @@ private:
 
 	/// \brief Constructs a SoundOutput
 	///
-	/// \param CL_SoundOutput_Generic = Weak Ptr
-	CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Generic> impl);
+	/// \param CL_SoundOutput_Impl = Weak Ptr
+	CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl);
 
-	CL_SharedPtr<CL_SoundOutput_Generic> impl;
+	CL_SharedPtr<CL_SoundOutput_Impl> impl;
 
 	friend class CL_SoundBuffer;
 	friend class CL_Sound;
+	friend class CL_SoundBuffer_Session;
 /// \}
 };
 

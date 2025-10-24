@@ -90,8 +90,7 @@ void Client::exec()
 	lobby_view = new LobbyView(this);
 	lobby_model.reset(new LobbyModel());
 
-	CL_AcceleratorTable accel_table;
-	gui->get_gui()->exec(accel_table);
+	gui->get_gui()->exec();
 }
 
 void Client::on_connected()

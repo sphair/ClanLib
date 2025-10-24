@@ -36,12 +36,10 @@ public:
 	Manager(GUI *gui);
 
 	void run(CL_GraphicContext &gc);
-	bool is_3dmode();
 private:
 	void on_clicked_system(CL_PushButton *button);
 	void on_clicked_texture(CL_PushButton *button);
 	void on_statechanged_constant_repaint();
-	void on_statechanged_3d();
 	void on_theme_selected(CL_RadioButton *radiobutton);
 
 private:
@@ -50,7 +48,6 @@ private:
 	CL_PushButton *button_system;
 	CL_PushButton *button_texture;
 	CL_CheckBox *checkbox_constant_repaint;
-	CL_CheckBox *checkbox_3d;
 	CL_GroupBox *groupbox;
 
 	CL_RadioButton *radiobutton_aero;

@@ -80,10 +80,9 @@ int main(int argc, char** argv)
 		MyCommandLine args(argc, argv);
 		args.read_options();
 	} 
-	catch (CL_Exception& exception) 
+	catch(CL_Exception &exception)
 	{
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 	}
 
 	console.display_close_message();

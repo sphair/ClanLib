@@ -48,9 +48,9 @@ void Building::draw()
 	sprite->draw(gc, posX, posY);
 }
 
-bool Building::update(float timeElapsed)
+bool Building::update(int timeElapsed_ms)
 {
-	sprite->update(timeElapsed);
+	sprite->update(timeElapsed_ms);
 	return true;
 }
 

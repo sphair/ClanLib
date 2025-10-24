@@ -32,9 +32,9 @@
 #pragma once
 
 #include "../api_sound.h"
-#include "../soundprovider.h"
+#include "soundprovider.h"
 
-class CL_SoundProvider_Recorder_Generic;
+class CL_SoundProvider_Recorder_Impl;
 
 /// \brief Sound provider getting data from a recording device (microphone)
 ///
@@ -72,7 +72,7 @@ public:
 /// \{
 
 private:
-	CL_SoundProvider_Recorder_Generic *impl;
+	CL_SharedPtr<CL_SoundProvider_Recorder_Impl> impl;
 /// \}
 };
 

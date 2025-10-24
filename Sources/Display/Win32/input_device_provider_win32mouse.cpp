@@ -43,6 +43,7 @@ CL_InputDeviceProvider_Win32Mouse::CL_InputDeviceProvider_Win32Mouse(CL_Win32Win
 
 CL_InputDeviceProvider_Win32Mouse::~CL_InputDeviceProvider_Win32Mouse()
 {
+	dispose();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ CL_InputDeviceProvider_Win32Mouse::~CL_InputDeviceProvider_Win32Mouse()
 
 int CL_InputDeviceProvider_Win32Mouse::get_x() const
 {
+	throw_if_disposed();
 	POINT cursor_pos;
 	GetCursorPos(&cursor_pos);
 
@@ -61,6 +63,7 @@ int CL_InputDeviceProvider_Win32Mouse::get_x() const
 
 int CL_InputDeviceProvider_Win32Mouse::get_y() const
 {
+	throw_if_disposed();
 	POINT cursor_pos;
 	GetCursorPos(&cursor_pos);
 
@@ -72,12 +75,14 @@ int CL_InputDeviceProvider_Win32Mouse::get_y() const
 
 bool CL_InputDeviceProvider_Win32Mouse::get_keycode(int keycode) const
 {
+	throw_if_disposed();
 	if (keycode < 0 || keycode >= 32) return false;
 	return key_states[keycode];
 }
 
 CL_String CL_InputDeviceProvider_Win32Mouse::get_key_name(int id) const
 {
+	throw_if_disposed();
 	switch (id)
 	{
 	case 0: return cl_text("Mouse left");
@@ -92,26 +97,31 @@ CL_String CL_InputDeviceProvider_Win32Mouse::get_key_name(int id) const
 
 float CL_InputDeviceProvider_Win32Mouse::get_axis(int index) const
 {
+	throw_if_disposed();
 	return 0.0f;
 }
 
 CL_String CL_InputDeviceProvider_Win32Mouse::get_name() const
 {
+	throw_if_disposed();
 	return cl_text("System Mouse");
 }
 
 CL_String CL_InputDeviceProvider_Win32Mouse::get_device_name() const
 {
+	throw_if_disposed();
 	return cl_text("System Mouse");
 }
 
 int CL_InputDeviceProvider_Win32Mouse::get_axis_count() const
 {
+	throw_if_disposed();
 	return 0;
 }
 
 int CL_InputDeviceProvider_Win32Mouse::get_button_count() const
 {
+	throw_if_disposed();
 	return -1;
 }
 
@@ -120,6 +130,7 @@ int CL_InputDeviceProvider_Win32Mouse::get_button_count() const
 
 void CL_InputDeviceProvider_Win32Mouse::set_position(int x, int y)
 {
+	throw_if_disposed();
 	POINT pt;
 	pt.x = x;
 	pt.y = y;
@@ -130,3 +141,7 @@ void CL_InputDeviceProvider_Win32Mouse::set_position(int x, int y)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_Win32Mouse implementation:
+
+void CL_InputDeviceProvider_Win32Mouse::on_dispose()
+{
+}

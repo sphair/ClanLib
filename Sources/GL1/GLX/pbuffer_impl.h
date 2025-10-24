@@ -37,7 +37,6 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 
-#include <X11/extensions/xf86vmode.h>
 #include <X11/extensions/XInput.h>
 
 #include <GL/glx.h>

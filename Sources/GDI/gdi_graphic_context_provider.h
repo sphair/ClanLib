@@ -111,6 +111,8 @@ public:
 private:
 	void draw_triangle(int index1, int index2, int index3);
 	void draw_sprite(int index1, int index2, int index3);
+	void draw_line(int index1, int index2);
+
 
 	CL_GDIDisplayWindowProvider *window;
 	CL_PixelPipeline *pixel_canvas;

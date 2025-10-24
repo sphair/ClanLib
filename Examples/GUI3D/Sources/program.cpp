@@ -26,7 +26,6 @@
 **    Mark Page
 */
 
-
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
@@ -63,29 +62,14 @@ int Program::main(const std::vector<CL_String> &args)
 	{
 		retval = app.start(args);
 	}
-
-	catch(CL_Exception exception)
+	catch(CL_Exception &exception)
 	{
 		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console", 80, 100);
-
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
-
-		// Display the stack trace (if available)
-		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			CL_Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				CL_Console::write_line(stacktrace[cnt]);
-			}
-		}
-
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
-		retval = -1;
+
+		return -1;
 	}
 	return retval;
 }

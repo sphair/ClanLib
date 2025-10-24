@@ -33,9 +33,9 @@ int main(int argc, char **argv)
 		delete_specific_user(connection, id);
 		show_all_users(connection);
 	}
-	catch (CL_Exception e)
+	catch (CL_Exception &e)
 	{
-		CL_Console::write_line("Unhandled exception: %1", e.message);
+		CL_Console::write_line("Exception caught: " + e.get_message_and_stack_trace());
 	}
 }
 
@@ -47,10 +47,10 @@ void show_all_users(CL_SqliteConnection &connection)
 	CL_DBReader reader = connection.execute_reader(command);
 	while (reader.retrieve_row())
 	{
-		int userId = reader.get_column_int(0);
-		CL_String userName = reader.get_column_string(1);
+		int user_id = reader.get_column_int(0);
+		CL_String user_name = reader.get_column_string(1);
 
-		CL_Console::write_line("- Id: %1 Username: %2", userId, userName);
+		CL_Console::write_line("- Id: %1 Username: %2", user_id, user_name);
 	}
 	reader.close();
 
@@ -66,20 +66,20 @@ void show_specific_user(CL_SqliteConnection &connection, int user_id)
 	CL_DBReader reader = connection.execute_reader(command);
 	while (reader.retrieve_row())
 	{
-		int userId = reader.get_column_int(0);
-		CL_String userName = reader.get_column_string(1);
+		int user_id = reader.get_column_int(0);
+		CL_String user_name = reader.get_column_string(1);
 		CL_String password = reader.get_column_string(2);
-		CL_String realName = reader.get_column_string(3);
-		CL_DateTime createDate = reader.get_column_datetime(4);
-		CL_DateTime lastLoginDate = reader.get_column_datetime(5);
+		CL_String real_name = reader.get_column_string(3);
+		CL_DateTime create_date = reader.get_column_datetime(4);
+		CL_DateTime last_login_date = reader.get_column_datetime(5);
 
-		CL_Console::write_line("- User id: %1", userId);
-		CL_Console::write_line("- Username: %1", userName);
+		CL_Console::write_line("- User id: %1", user_id);
+		CL_Console::write_line("- Username: %1", user_name);
 		CL_Console::write_line("- Password: %1", password);
-		CL_Console::write_line("- Real name: %1", realName);
-		CL_Console::write_line("- Create date: %1", createDate.to_short_datetime_string());
-		if(!lastLoginDate.is_null())
-			CL_Console::write_line("- Last login date: %1", lastLoginDate.to_short_datetime_string());
+		CL_Console::write_line("- Real name: %1", real_name);
+		CL_Console::write_line("- Create date: %1", create_date.to_short_datetime_string());
+		if(!last_login_date.is_null())
+			CL_Console::write_line("- Last login date: %1", last_login_date.to_short_datetime_string());
 		else
 			CL_Console::write_line("- Last login date: NULL");
 	}
@@ -97,17 +97,16 @@ void show_specific_user_characters(CL_SqliteConnection &connection, int user_id)
 	CL_DBReader reader = connection.execute_reader(command);
 	while (reader.retrieve_row())
 	{
-		int characterId = reader.get_column_int(0);
-		CL_String characterName = reader.get_column_string(1);
-		CL_String userName = reader.get_column_string(2);
+		int character_id = reader.get_column_int(0);
+		CL_String character_name = reader.get_column_string(1);
+		CL_String user_name = reader.get_column_string(2);
 
-		CL_Console::write_line("- (Username %3) - Character id: %1 name: %2 ", characterId, characterName, userName);
+		CL_Console::write_line("- (Username %3) - Character id: %1 name: %2 ", character_id, character_name, user_name);
 	}
 	reader.close();
 
 	CL_Console::write_line(CL_String());
 }
-
 
 int create_new_user(CL_SqliteConnection &connection, CL_String user_name, CL_String password, CL_String real_name)
 {

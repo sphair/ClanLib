@@ -179,6 +179,9 @@ CL_OpenGLGraphicContextProvider::~CL_OpenGLGraphicContextProvider()
 	delete render_window;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// CL_OpenGLGraphicContextProvider Attributes:
+
 void CL_OpenGLGraphicContextProvider::check_opengl_version()
 {
 	int version_major = 0;
@@ -217,8 +220,50 @@ void CL_OpenGLGraphicContextProvider::get_opengl_version(int &version_major, int
 
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_OpenGLGraphicContextProvider Attributes:
+void CL_OpenGLGraphicContextProvider::get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release)
+{
+	CL_OpenGL::set_active(this);
+
+	CL_String version = (char*)clGetString(CL_SHADING_LANGUAGE_VERSION);
+
+	version_major = 0;
+	version_minor = 0;
+	version_release = 0;
+
+	std::vector<CL_TempString> split_version = CL_StringHelp::split_text(version, ".");
+	if(split_version.size() > 0)
+		version_major = CL_StringHelp::text_to_int(split_version[0]);
+	if(split_version.size() > 1)
+		version_minor = CL_StringHelp::text_to_int(split_version[1]);
+	if(split_version.size() > 2)
+		version_release = CL_StringHelp::text_to_int(split_version[2]);
+}
+
+
+CL_String CL_OpenGLGraphicContextProvider::get_renderer_string()
+{
+	CL_OpenGL::set_active(this);
+	CL_String renderer = (char*)clGetString(CL_RENDERER);
+	return renderer;
+}
+
+CL_String CL_OpenGLGraphicContextProvider::get_vendor_string()
+{
+	CL_OpenGL::set_active(this);
+	CL_String vendor = (char*)clGetString(CL_VENDOR);
+	return vendor;
+}
+
+std::vector<CL_String> CL_OpenGLGraphicContextProvider::get_extensions()
+{
+	CL_OpenGL::set_active(this);
+	CL_StringRef extension_string = (char*)clGetString(CL_EXTENSIONS);
+	std::vector<CL_TempString> tmp = CL_StringHelp::split_text(extension_string, " ");
+	std::vector<CL_String> extensions;
+	for (std::vector<CL_TempString>::size_type i=0; i<tmp.size(); i++)
+		extensions.push_back(tmp[i]);
+	return extensions;
+}
 
 int CL_OpenGLGraphicContextProvider::get_max_attributes()
 {
@@ -313,11 +358,13 @@ CL_PixelBuffer CL_OpenGLGraphicContextProvider::get_pixeldata(const CL_Rect& rec
 	{
 		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::abgr8888);
 		clReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
+		pbuf.flip_vertical();
 		return pbuf;
 	}
 
 	CL_PixelBuffer pbuf( get_width(), get_height(), get_width()*4, CL_PixelFormat::abgr8888);
 	clReadPixels(0, 0, get_width(), get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
+	pbuf.flip_vertical();
 	return pbuf;
 }
 
@@ -884,8 +931,7 @@ void CL_OpenGLGraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 	if (map_mode != cl_user_projection)
 	{
 		clLoadIdentity();
-		if( map_mode != cl_user_projection )
-			clTranslatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
+		clTranslatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 		clMultMatrixf(modelview);
 	}
 	else

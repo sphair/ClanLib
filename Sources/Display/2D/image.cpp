@@ -295,7 +295,7 @@ CL_Size CL_Image::get_size() const
 /////////////////////////////////////////////////////////////////////////////
 // CL_Image Operations:
 
-void CL_Image::draw(CL_GraphicContext &gc, float x, float y)
+void CL_Image::draw(CL_GraphicContext &gc, float x, float y) const
 {
 	CL_Rectf dest(
 		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
@@ -305,7 +305,12 @@ void CL_Image::draw(CL_GraphicContext &gc, float x, float y)
 	batcher->draw_image(gc, impl->texture_rect, dest, impl->color, impl->texture);
 }
 
-void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest)
+void CL_Image::draw(CL_GraphicContext &gc, int x, int y) const
+{
+	draw(gc, (float) x, (float) y);
+}
+
+void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest) const
 {
 	CL_Rectf new_src = src;
 	new_src.translate( impl->texture_rect.left, impl->texture_rect.top );
@@ -317,7 +322,7 @@ void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &
 	batcher->draw_image(gc, new_src, new_dest, impl->color, impl->texture);
 }
 
-void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
+void CL_Image::draw(CL_GraphicContext &gc, const CL_Rectf &dest) const
 {
 	CL_Rectf new_dest = dest;
 	new_dest.translate(impl->translated_hotspot);

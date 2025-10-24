@@ -151,6 +151,7 @@ public:
 /// \{
 
 public:
+	void set_select_all_on_focus_gain(bool enable);
 
 	/// \brief Select all
 	void select_all();
@@ -234,6 +235,9 @@ public:
 	/// \param decimal_char = String Ref
 	void set_decimal_character(const CL_StringRef &decimal_char);
 
+	/// \brief Set cursor drawing enabled/disabled.
+	void set_cursor_drawing_enabled(bool enable);
+
 /// \}
 /// \name Events
 /// \{
@@ -258,11 +262,6 @@ public:
 	///
 	/// \return Callback_v0
 	CL_Callback_v0 &func_enter_pressed();
-
-	/// \brief Callback invoked when a event not processed by lineedit occurs.
-	/** This includes keys such as Enter, Escape, UP and DOWN.
-      * The callback should return true if the event was processsed, else false. */
-	CL_Callback_1<bool, CL_InputEvent> &func_unhandled_event();
 
 /// \}
 /// \name Implementation

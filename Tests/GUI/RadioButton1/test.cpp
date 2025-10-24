@@ -14,7 +14,7 @@ public:
 		try
 		{
 			CL_ResourceManager resources;
-			resources.load("../../../Resources/GUIThemeLuna/resources.xml");
+			resources.load("../../../Resources/GUIThemeAero/resources.xml");
 
 			CL_GUIManager gui;
 
@@ -24,7 +24,7 @@ public:
 			CL_GUIThemeDefault theme;
 			theme.set_resources(resources);
 			gui.set_theme(theme);
-			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
+			gui.set_css_document("../../../Resources/GUIThemeAero/theme.css");
 
 			CL_DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
@@ -33,29 +33,49 @@ public:
 			CL_Window root(&gui, win_desc);
 			root.func_close().set(this, &App::on_close, &root);
 
-			CL_RadioButton radio1(&root);
-			radio1.set_geometry(CL_Rect(20, 20, 200, 30));
-			radio1.set_id_name("A1");
-			radio1.set_text("group A 1");
-			radio1.set_group_name("group A");
+			CL_RadioButton radioA1(&root);
+			radioA1.set_geometry(CL_RectPS(20, 20, 200, 17));
+			radioA1.set_text("Group A - 1");
+			radioA1.set_group_name("Group A");
+			radioA1.set_selected(true);
+			radioA1.set_focus(true);
 
-			CL_RadioButton radio2(&root);
-			radio2.set_geometry(CL_Rect(20, 40, 200, 50));
-			radio2.set_id_name("A2");
-			radio2.set_text("group A 2");
-			radio2.set_group_name("group A");
+			CL_RadioButton radioA2(&root);
+			radioA2.set_geometry(CL_RectPS(20, 40, 200, 17));
+ 			radioA2.set_text("Group A - 2");
+			radioA2.set_group_name("Group A");
 
-			CL_RadioButton radio3(&root);
-			radio3.set_geometry(CL_Rect(20, 160, 200, 170));
-			radio3.set_id_name("B1");
-			radio3.set_text("group B 1");
-			radio3.set_group_name("group B");
+			CL_RadioButton radioA3(&root);
+			radioA3.set_geometry(CL_RectPS(20, 60, 200, 17));
+			radioA3.set_text("Group A - 3");
+			radioA3.set_group_name("Group A");
 
-			CL_RadioButton radio4(&root);
-			radio4.set_geometry(CL_Rect(20, 180, 200, 190));
-			radio4.set_id_name("B2");
-			radio4.set_text("group B 2");
-			radio4.set_group_name("group B");
+
+			CL_RadioButton radioB1(&root);
+			radioB1.set_geometry(CL_RectPS(20, 160, 200, 17));
+			radioB1.set_text("Group B - 1");
+			radioB1.set_group_name("Group B");
+ 
+			CL_RadioButton radioB2(&root);
+			radioB2.set_geometry(CL_RectPS(20, 180, 200, 17));
+			radioB2.set_text("Group B - 2");
+			radioB2.set_group_name("Group B");
+
+
+			CL_RadioButton radioC1(&root);
+			radioC1.set_geometry(CL_RectPS(120, 160, 200, 17));
+			radioC1.set_text("Group C - 1");
+			radioC1.set_group_name("Group C");
+
+			CL_RadioButton radioC2(&root);
+			radioC2.set_geometry(CL_RectPS(120, 180, 200, 17));
+			radioC2.set_text("Group C - 2");
+			radioC2.set_group_name("Group C");
+
+			CL_RadioButton radioC3(&root);
+			radioC3.set_geometry(CL_RectPS(120, 200, 200, 17));
+			radioC3.set_text("Group C - 3");
+			radioC3.set_group_name("Group C");
 
 			gui.exec();
 		}
@@ -68,9 +88,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

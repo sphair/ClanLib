@@ -405,7 +405,7 @@ void CL_ResourceManager::destroy_resource(const CL_String &resource_id)
 
 void CL_ResourceManager::save(const CL_String &filename)
 {
-	CL_File file(filename, CL_File::create_always);
+	CL_File file(filename, CL_File::create_always, CL_File::access_read_write);
 	save(file);
 }
 

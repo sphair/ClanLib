@@ -9,6 +9,7 @@ Framework/application.o \
 Framework/mainframe.o \
 Framework/view_workspace.o \
 Framework/ribbon.o \
+Framework/crash_reporter.o \
 Document/irc_text.o \
 Document/irc_message.o \
 Document/irc_entity.o \

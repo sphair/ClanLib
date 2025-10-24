@@ -83,7 +83,7 @@ public:
 	float digitized_aspect_x;
 	float digitized_aspect_y;
 	bool italic;
-	bool underline;
+	bool underlined;
 	bool struck_out;
 	bool fixed_pitch;
 

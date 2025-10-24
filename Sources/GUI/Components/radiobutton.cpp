@@ -33,6 +33,7 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
@@ -64,11 +65,11 @@ public:
 	CL_Callback_v0 func_unselected;
 	CL_Callback_v1<CL_RadioButton*> func_group_selection_changed;
 	CL_String text;
-	CL_String group_name;
 	int id;
 
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_checker;
+	CL_GUIThemePart part_focus;
 	CL_GUIThemePartProperty prop_text_gap;
 	CL_GUIThemePartProperty prop_text_color;
 
@@ -83,6 +84,7 @@ CL_RadioButton::CL_RadioButton(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_RadioButton_Impl)
 {
 	set_type_name(CssStr::RadioButton::type_name);
+	set_focus_policy(focus_group);
 
 	impl->radio = this;
 	impl->prop_text_gap = CL_GUIThemePartProperty(CssStr::text_gap, cl_text("2"));
@@ -103,7 +105,7 @@ CL_RadioButton::~CL_RadioButton()
 /////////////////////////////////////////////////////////////////////////////
 // CL_RadioButton Attributes:
 
-CL_StringRef CL_RadioButton::get_text() const
+CL_String CL_RadioButton::get_text() const
 {
 	return impl->text;
 }
@@ -113,9 +115,9 @@ int CL_RadioButton::get_id() const
 	return impl->id;
 }
 
-CL_StringRef CL_RadioButton::get_group_name() const
+CL_String CL_RadioButton::get_group_name() const
 {
-	return impl->group_name;
+	return get_component_group_name();
 }
 
 bool CL_RadioButton::is_selected() const
@@ -144,12 +146,15 @@ void CL_RadioButton::set_selected(bool selected)
 	{
 		impl->part_checker.set_state(CssStr::checked, true);
 		impl->part_checker.set_state(CssStr::unchecked, false);
+		set_selected_in_component_group(true);
 	}
+
+	request_repaint();
 }
 
-void CL_RadioButton::set_group_name(const CL_StringRef &name)
+void CL_RadioButton::set_group_name(const CL_String &name)
 {
-	impl->group_name = name;
+	set_component_group_name(name);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -187,16 +192,17 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			part_checker.set_state(CssStr::pressed, true);
 			radio->request_repaint();
+			msg.set_consumed();
 		}
 		else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
 		{
 			if ((part_checker.get_state(CssStr::checked) == false))
 			{
 				CL_Callback_v1<CL_RadioButton*> cb = uncheck_radio_buttons(radio->get_parent_component());
+
 				part_checker.set_state(CssStr::pressed, false);
-				part_checker.set_state(CssStr::checked, true);
-				part_checker.set_state(CssStr::unchecked, false);
-				radio->request_repaint();
+				radio->set_selected(true);
+
 				if (!cb.is_null())
 					cb.invoke(radio);
 				if (!func_selected.is_null())
@@ -207,7 +213,86 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 				part_checker.set_state(CssStr::pressed, false);
 				radio->request_repaint();
 			}
+
+			radio->set_focus(true);
+			msg.set_consumed();
 		}
+		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_LEFT || e.id == CL_KEY_UP))
+		{
+			std::vector<CL_GUIComponent*> group = radio->get_parent_component()->get_child_component_group(radio->get_component_group_name());
+
+			// find previous visible & enabled radiobutton in the same group:
+			CL_GUIComponent *comp = radio->get_previous_sibling();
+			if (comp == 0)
+				comp = group.back();
+
+			while (comp != radio)
+			{
+				if (comp->is_visible() && comp->is_enabled() && comp->get_component_group_name() == radio->get_component_group_name())
+				{
+					CL_RadioButton *focus_comp = dynamic_cast<CL_RadioButton*>(comp);
+					if (focus_comp)
+					{
+						CL_Callback_v1<CL_RadioButton*> cb = uncheck_radio_buttons(radio->get_parent_component());
+						focus_comp->set_selected(true);
+						if (!cb.is_null())
+							cb.invoke(focus_comp);
+						if (!focus_comp->func_selected().is_null())
+							focus_comp->func_selected().invoke();
+						focus_comp->set_focus();
+						break;
+					}
+				}
+
+				if (!comp->get_previous_sibling() || comp->get_previous_sibling()->get_component_group_name() != radio->get_component_group_name())
+				{
+					// reach first item in group, loop around from the last:
+					comp = group.back();
+				}
+				else
+					comp = comp->get_previous_sibling();
+			}
+
+			msg.set_consumed();
+		}
+		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_RIGHT || e.id == CL_KEY_DOWN))
+		{
+			std::vector<CL_GUIComponent*> group = radio->get_parent_component()->get_child_component_group(radio->get_component_group_name());
+
+			// find next visible & enabled radiobutton in the same group:
+			CL_GUIComponent *comp = radio->get_next_sibling();
+			if (comp == 0 || comp->get_component_group_name() != radio->get_component_group_name())
+				comp = group.front();
+
+			while (comp != radio)
+			{
+				if (comp->is_visible() && comp->is_enabled() && comp->get_component_group_name() == radio->get_component_group_name())
+				{
+					CL_RadioButton *focus_comp = dynamic_cast<CL_RadioButton*>(comp);
+					if (focus_comp)
+					{
+						CL_Callback_v1<CL_RadioButton*> cb = uncheck_radio_buttons(radio->get_parent_component());
+						focus_comp->set_selected(true);
+						if (!cb.is_null())
+							cb.invoke(focus_comp);
+						if (!focus_comp->func_selected().is_null())
+							focus_comp->func_selected().invoke();
+						focus_comp->set_focus();
+						break;
+					}
+				}
+
+				if (!comp->get_previous_sibling() || comp->get_previous_sibling()->get_component_group_name() != radio->get_component_group_name())
+				{
+					// reach first item in group, loop around from the last:
+					comp = group.back();
+				}
+				else
+					comp = comp->get_next_sibling();
+			}
+			msg.set_consumed();
+		}
+
 	}
 	else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
 	{
@@ -223,15 +308,39 @@ void CL_RadioButton_Impl::on_process_message(CL_GUIMessage &msg)
 			radio->request_repaint();
 		}
 	}
+	else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
+	{
+		CL_GUIMessage_FocusChange focus_msg = msg;
+		if (focus_msg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
+		{
+			part_component.set_state(CssStr::focused, true);
+			if (!radio->is_selected())
+			{
+				CL_Callback_v1<CL_RadioButton*> cb = uncheck_radio_buttons(radio->get_parent_component());
+				radio->set_selected(true);
+				if (!cb.is_null())
+					cb.invoke(radio);
+				if (!func_selected.is_null())
+					func_selected.invoke();
+			}
+			radio->request_repaint();
+		}
+		else 
+		{
+			part_component.set_state(CssStr::focused, false);
+			radio->request_repaint();
+		}
+		msg.set_consumed();
+	}
 }
 
 void CL_RadioButton_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect rect = radio->get_geometry();
-	part_component.render_box(gc, rect.get_size(), update_rect);
+	CL_Rect rect = radio->get_size();
+	part_component.render_box(gc, rect, update_rect);
 
 	CL_Size pref_size = part_checker.get_preferred_size();
-	CL_Rect content_rect = part_component.get_content_box(rect.get_size());
+	CL_Rect content_rect = part_component.get_content_box(rect);
 	int ypos = content_rect.top + content_rect.get_height()/2 - pref_size.height/2;
 	CL_Rect checker_rect(content_rect.left, ypos, content_rect.left + pref_size.width, ypos + pref_size.height);
 	part_checker.render_box(gc, checker_rect, update_rect);
@@ -245,20 +354,28 @@ void CL_RadioButton_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update
 	text_rect.bottom = content_rect.bottom;
 
 	part_component.render_text(gc, text, text_rect, update_rect);
+
+	if (radio->has_focus())
+	{
+		CL_Size text_size = part_component.get_text_size(gc, text);
+		int focus_left = checker_rect.right + text_gap - 2; // todo: remove magic number hacks
+		CL_Rect focus_rect = CL_RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);
+		part_focus.render_box(gc, focus_rect, update_rect);
+	}
 }
 
 CL_Callback_v1<CL_RadioButton*> CL_RadioButton_Impl::uncheck_radio_buttons(CL_GUIComponent *parent)
 {
 	CL_Callback_v1<CL_RadioButton*> callback;
 
-	std::vector<CL_GUIComponent*> children = parent->get_child_components();
-	std::vector<CL_GUIComponent*>::iterator it;
-	for (it=children.begin(); it != children.end(); ++it)
+	std::vector<CL_GUIComponent*> group = parent->get_child_component_group(radio->get_group_name());
+
+	std::vector<CL_GUIComponent*>::size_type i;
+	for (i=0; i < group.size(); i++)
 	{
-		if ((*it)->has_child_components())
-			uncheck_radio_buttons(*it);
-		CL_RadioButton *rb = dynamic_cast<CL_RadioButton*>(*it);
-		if (rb && rb->get_group_name() == group_name)
+		CL_RadioButton *rb = dynamic_cast<CL_RadioButton*>(group[i]);
+
+		if (rb && rb->get_group_name() == radio->get_group_name())
 		{
 			if (callback.is_null() && !rb->func_group_selection_changed().is_null())
 			{
@@ -272,6 +389,7 @@ CL_Callback_v1<CL_RadioButton*> CL_RadioButton_Impl::uncheck_radio_buttons(CL_GU
 
 				rb->impl->part_checker.set_state(CssStr::checked, false);
 				rb->impl->part_checker.set_state(CssStr::unchecked, true);
+				rb->set_selected_in_component_group(false);
 				rb->request_repaint();
 			}
 		}
@@ -296,10 +414,14 @@ void CL_RadioButton_Impl::create_parts()
 	part_checker.set_state(CssStr::indeterminated, false);
 	part_checker.set_state(CssStr::unchecked, true);
 	part_checker.set_state(CssStr::disabled, false);
+
+	part_focus = CL_GUIThemePart(radio, CssStr::RadioButton::part_focus);
 }
 
 void CL_RadioButton_Impl::on_enablemode_changed()
 {
+	part_component.set_state(CssStr::disabled, !radio->is_enabled());
+	part_component.set_state(CssStr::normal, radio->is_enabled());
 	part_checker.set_state(CssStr::disabled, !radio->is_enabled());
 	part_checker.set_state(CssStr::normal, radio->is_enabled());
 

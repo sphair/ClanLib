@@ -44,12 +44,6 @@ CL_D3D9TargetProvider::~CL_D3D9TargetProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D9TargetProvider Attributes:
 
-
-CL_DisplayMessageQueue_Provider *CL_D3D9TargetProvider::get_message_queue() const
-{
-	return &message_queue;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D9TargetProvider Operations:
 
@@ -66,4 +60,3 @@ CL_DisplayWindowProvider *CL_D3D9TargetProvider::alloc_display_window()
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D9TargetProvider Implementation:
 
-CL_DisplayMessageQueue_Win32 CL_D3D9TargetProvider::message_queue;

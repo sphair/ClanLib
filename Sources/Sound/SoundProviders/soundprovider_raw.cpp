@@ -28,7 +28,7 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/SoundProviders/soundprovider_raw.h"
-#include "soundprovider_raw_generic.h"
+#include "soundprovider_raw_impl.h"
 #include "soundprovider_raw_session.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ CL_SoundProvider_Raw::CL_SoundProvider_Raw(
 	int num_samples,
 	int bytes_per_sample,
 	bool stereo,
-	int frequency) : impl(new CL_SoundProvider_Raw_Generic)
+	int frequency) : impl(new CL_SoundProvider_Raw_Impl)
 {
 	int data_size = num_samples * bytes_per_sample;
 	if (stereo) data_size *= 2;
@@ -54,8 +54,6 @@ CL_SoundProvider_Raw::CL_SoundProvider_Raw(
 
 CL_SoundProvider_Raw::~CL_SoundProvider_Raw()
 {
-	delete[] impl->sound_data;
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +61,7 @@ CL_SoundProvider_Raw::~CL_SoundProvider_Raw()
 
 CL_SoundProvider_Session *CL_SoundProvider_Raw::begin_session()
 {
-	return new CL_SoundProvider_Raw_Session(impl);
+	return new CL_SoundProvider_Raw_Session(*this);
 }
 
 void CL_SoundProvider_Raw::end_session(CL_SoundProvider_Session *session)

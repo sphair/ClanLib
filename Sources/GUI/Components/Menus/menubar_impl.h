@@ -47,18 +47,35 @@ public:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
 	void on_style_changed();
-
 	void create_parts();
+
+	void select_next();
+	void select_previous();
+	void select_item_at(const CL_Point &mouse_pos);
+
+	CL_Point get_submenu_screen_pos();
+
+	CL_Rect get_menu_item_rect(int index);
+
+	CL_PopupMenu get_selected_menu();
+
+	int get_selected_item_index();
+
+	void clear_selection();
 
 	CL_MenuBar *menubar;
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_item;
-	// CL_Colorf text_color;
 
 	std::vector<CL_TopMenu> menus;
-	CL_Font font;
 	int selected_index;
 	int hot_index;
+
+	int item_border_left;
+	int item_padding_left;
+	int item_padding_right;
+	int item_border_right;
+
 };
 
 

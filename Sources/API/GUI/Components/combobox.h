@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanGUI_Components clanGUI Components
@@ -49,9 +50,7 @@ class CL_API_GUI CL_ComboBox : public CL_GUIComponent
 {
 /// \name Construction
 /// \{
-
 public:
-
 	/// \brief Constructs a ComboBox
 	///
 	/// \param parent = GUIComponent
@@ -62,9 +61,7 @@ public:
 /// \}
 /// \name Attributes
 /// \{
-
 public:
-
 	/// \brief Is Editable
 	///
 	/// \return true = editable
@@ -95,9 +92,7 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
-
 	/// \brief Set editable
 	///
 	/// \param enable = bool
@@ -131,9 +126,7 @@ public:
 /// \}
 /// \name Events
 /// \{
-
 public:
-
 	/// \brief Func dropdown opened
 	///
 	/// \return Callback_v0
@@ -154,21 +147,19 @@ public:
 	/// \return Callback_v0
 	CL_Callback_v0 &func_after_edit_changed();
 
-	/// \brief Callback invoked when an event not processed by the contained lineedit nor the combobox occurs.
-	/** This includes keys such as Enter and Escape.
-	* The callback should return true if the event was processsed, else false. */
-	CL_Callback_1<bool, CL_InputEvent> &func_lineedit_unhandled_event();
-
-	CL_Callback_v1<CL_Rect> &func_display_popup();
-
+	/// \brief Func after item selected
+	///
+	/// \return Callback_v1<int>
 	CL_Callback_v1<int> &func_item_selected();
 
+	/// \brief Func after selection changed
+	///
+	/// \return Callback_v1<int>
 	CL_Callback_v1<int> &func_selection_changed();
 
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_ComboBox_Impl> impl;
 /// \}

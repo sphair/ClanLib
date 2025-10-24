@@ -59,6 +59,22 @@ public:
 	/// \param version_release = On Return: Release
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
+	/// \brief Get the opengl shading language version
+	///
+	/// \param version_major = On Return: Major
+	/// \param version_minor = On Return: Minor
+	/// \param version_release = On Return: Release
+	void get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release);
+
+	/// \brief Get the opengl renderer string
+	CL_String get_renderer_string();
+
+	/// \brief Get the opengl vendor string
+	CL_String get_vendor_string();
+
+	/// \brief Get the list of opengl extensions.
+	std::vector<CL_String> get_extensions();
+
 //!Operations
 public:
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context

@@ -32,14 +32,16 @@
 #include "API/Core/System/thread_local_storage.h"
 #include "API/Core/System/event_provider.h"
 #include "API/Core/System/event.h"
-#include "API/Display/Window/display_window_message.h"
+#include "API/Core/System/keep_alive.h"
 #include "display_message_queue_x11.h"
 #include "x11_window.h"
+
+CL_DisplayMessageQueue_X11 CL_DisplayMessageQueue_X11::message_queue;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_X11 construction:
 
-CL_DisplayMessageQueue_X11::CL_DisplayMessageQueue_X11() : has_clan_event_peeked(false)
+CL_DisplayMessageQueue_X11::CL_DisplayMessageQueue_X11() : current_mouse_capture_window(NULL)
 {
 }
 
@@ -53,36 +55,40 @@ CL_DisplayMessageQueue_X11::~CL_DisplayMessageQueue_X11()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_X11 operations:
-int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events, int timeout, bool wait_all)
+
+int CL_DisplayMessageQueue_X11::wait(const std::vector<CL_Event> &events, int timeout)
 {
-	int index_events;
 	int num_events = 0;
-	for (index_events = 0; index_events < count; index_events++)
+	for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 	{
-		bool flagged = events[index_events]->get_event_provider()->check_before_wait();
+		bool flagged = events[index_events].get_event_provider()->check_before_wait();
 		if (flagged)
 			return index_events;
-		num_events += events[index_events]->get_event_provider()->get_num_event_handles();
+		num_events += events[index_events].get_event_provider()->get_num_event_handles();
 	}
 
 	if (num_events == 0)
 	{
 		std::vector<CL_SocketMessage_X11> empty_handles;
 		int result = msg_wait_for_multiple_objects(empty_handles, timeout);
-		if (result == 0)
-			return -2;
-		else
-			return -1;
+		if (result == 0)	// X11 message found
+		{
+			process_message();
+			return events.size();
+
+		}
 	}
 	else
 	{
+
 		std::vector<CL_SocketMessage_X11> handles;
-		for (index_events = 0; index_events < count; index_events++)
+
+		for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 		{
-			int num_handles = events[index_events]->get_event_provider()->get_num_event_handles();
+			int num_handles = events[index_events].get_event_provider()->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
 			{
-				CL_EventProvider *provider = events[index_events]->get_event_provider();
+				CL_EventProvider *provider = events[index_events].get_event_provider();
 				if (provider == 0)
 					throw CL_Exception(cl_text("CL_EventProvider is a null pointer!"));
 
@@ -93,116 +99,42 @@ int CL_DisplayMessageQueue_X11::wait(int count, CL_Event const * const * events,
 				handles.push_back(msg);
 			}
 		}
+
 		while (true)
 		{
-			int result = msg_wait_for_multiple_objects(handles, timeout);
-			int index = 0;
-			if (result >= 0 && result < num_events+1)
-				index = result;
-			else
+			int index = msg_wait_for_multiple_objects(handles, timeout);
+			if (index < 0)
 				break;
 
 			if (index == num_events)
-				return -2;
-
-			for (index_events = 0; index_events < count; index_events++)
 			{
-				int num_handles = events[index_events]->get_event_provider()->get_num_event_handles();
-				if (index < (int) num_handles)
+				process_message();
+				return events.size();
+			}
+
+			for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
+			{
+				int num_handles = events[index_events].get_event_provider()->get_num_event_handles();
+				if (index < num_handles)
 				{
-					bool flagged = events[index_events]->get_event_provider()->check_after_wait((int) index);
+					bool flagged = events[index_events].get_event_provider()->check_after_wait(index);
 					if (flagged)
 						return index_events;
 					break;
 				}
-				index -= (int) num_handles;
+				index -= num_handles;
 			}
 		}
 
-		return -1;
 	}
-}
-
-CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::get_message()
-{
-	if (has_clan_event_peeked)
-	{
-		has_clan_event_peeked = false;
-		CL_DisplayWindowMessage clmsg;
-		CL_DataBuffer buffer(&clan_event_peeked, sizeof(clan_event_peeked));
-		clmsg.set_msg(cl_text("XEvent"), buffer);
-		return clmsg;			
-	}
-
-	XEvent clan_event;
-
-	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
-	std::vector<CL_X11Window *>::size_type index, size;
-	size = thread_data->windows.size();
-	for (index = 0; index < size; index++)
-	{
-		if (thread_data->windows[index]->get_message(clan_event))
-		{
-			CL_DisplayWindowMessage clmsg;
-			CL_DataBuffer buffer(&clan_event, sizeof(clan_event));
-			clmsg.set_msg(cl_text("XEvent"), buffer);
-			return clmsg;			
-		}
-	}
-	return CL_DisplayWindowMessage::null();
-}
-
-CL_DisplayWindowMessage CL_DisplayMessageQueue_X11::peek_message(bool block)
-{
-	if (has_clan_event_peeked)
-	{
-		CL_DisplayWindowMessage clmsg;
-		CL_DataBuffer buffer(&clan_event_peeked, sizeof(clan_event_peeked));
-		clmsg.set_msg(cl_text("XEvent"), buffer);
-		return clmsg;			
-	}
-
-	if (block)
-		wait(0, 0, -1, false);
-
-
-	XEvent clan_event;
-
-	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
-	std::vector<CL_X11Window *>::size_type index, size;
-	size = thread_data->windows.size();
-	for (index = 0; index < size; index++)
-	{
-		if (thread_data->windows[index]->get_message(clan_event))
-		{
-			clan_event_peeked = clan_event;	
-			has_clan_event_peeked = true;
-
-			CL_DisplayWindowMessage clmsg;
-			CL_DataBuffer buffer(&clan_event, sizeof(clan_event));
-			clmsg.set_msg(cl_text("XEvent"), buffer);
-			return clmsg;			
-		}
-	}
-	return CL_DisplayWindowMessage::null();
-}
-
-void CL_DisplayMessageQueue_X11::dispatch_message(const CL_DisplayWindowMessage &message)
-{
-	// TODO: Fix me for linux (use XSendEvent( disp, window, False, 0, &event ); somehow
-	//MSG msg = message.get_msg();
-	//TranslateMessage(&msg);
-	//DispatchMessage(&msg);
-
-	CL_SharedPtr<ThreadData> data = get_thread_data();
-	for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
-	{
-		data->windows[i]->get_ic().process_messages();
-	}
+	return -1;
 }
 
 void CL_DisplayMessageQueue_X11::add_client(CL_X11Window *window)
 {
+	// (Always set the message queue, because the display target may have changed)
+	CL_KeepAlive::func_event_wait().set(&message_queue, &CL_DisplayMessageQueue_X11::wait);
+
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
 	thread_data->windows.push_back(window);
 }
@@ -222,6 +154,20 @@ void CL_DisplayMessageQueue_X11::remove_client(CL_X11Window *window)
 	}
 }
 
+void CL_DisplayMessageQueue_X11::set_mouse_capture(CL_X11Window *window, bool state)
+{
+	if (state)
+	{
+		current_mouse_capture_window = window;
+	}
+	else
+	{
+		if (current_mouse_capture_window == window)
+			current_mouse_capture_window = NULL;
+	}
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_X11 implementation:
 
@@ -238,9 +184,9 @@ CL_SharedPtr<CL_DisplayMessageQueue_X11::ThreadData> CL_DisplayMessageQueue_X11:
 
 // event_handles: The handles
 // timeout: timeout in milliseconds. <0 = No timeout. 0 = Return straight away
-// Returns: 0 to count(-1) --> An event triggered
-// Returns: count -> A new message is available, but not the one that we are waiting for
-// Returns: -1 --> A message available (or timeout)
+// Returns: 0 to event_handles.size()-1 --> An event triggered
+// Returns: event_handles.size() -> A new message is available, but not the one that we are waiting for
+// Returns: -1 -->  timeout
 int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_SocketMessage_X11> &event_handles, int timeout)
 {
 	bool internal_message_found = has_internal_messages();
@@ -402,11 +348,6 @@ int CL_DisplayMessageQueue_X11::msg_wait_for_multiple_objects(std::vector<CL_Soc
 
 bool CL_DisplayMessageQueue_X11::has_internal_messages()
 {
-	if (has_clan_event_peeked)
-	{
-		return true;
-	}
-
 	bool message_flag = false;
 
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
@@ -422,5 +363,25 @@ bool CL_DisplayMessageQueue_X11::has_internal_messages()
 	return message_flag;
 }
 
+void CL_DisplayMessageQueue_X11::process_message()
+{
+	CL_SharedPtr<ThreadData> data = get_thread_data();
+	for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+	{
+		CL_X11Window *window = data->windows[i];
 
+		CL_X11Window *mouse_capture_window = current_mouse_capture_window;
+		if (mouse_capture_window == NULL)
+			mouse_capture_window = window;
+
+		window->get_message(mouse_capture_window);
+	}
+
+	// Process all input context messages (done seperately, because of the mouse_capture hack)
+	for (std::vector<CL_X11Window *>::size_type i = 0; i < data->windows.size(); i++)
+	{
+		CL_X11Window *window = data->windows[i];
+		window->get_ic().process_messages();
+	}
+}
 

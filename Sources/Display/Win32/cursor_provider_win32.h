@@ -46,7 +46,6 @@ class CL_API_DISPLAY CL_CursorProvider_Win32 : public CL_CursorProvider
 
 public:
 	CL_CursorProvider_Win32(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
-
 	~CL_CursorProvider_Win32();
 
 
@@ -72,17 +71,13 @@ public:
 /// \{
 
 private:
-	HCURSOR create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot) const;
-
-	CL_DataBuffer create_ico_file(const CL_PixelBufferRef &image) const;
-
-	CL_DataBuffer create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot) const;
-
-	CL_DataBuffer create_ani_file(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot) const;
-
-	CL_DataBuffer create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot) const;
-
-	void set_riff_header(char *data, const char *type, DWORD size) const;
+	static HCURSOR create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
+	static CL_DataBuffer create_ico_file(const CL_PixelBufferRef &image);
+	static CL_DataBuffer create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot);
+	static CL_DataBuffer create_ani_file(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot);
+	static CL_DataBuffer create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot);
+	static CL_DataBuffer create_ico_helper(const std::vector<CL_PixelBufferRef> &images, WORD type, const std::vector<CL_Point> &hotspots);
+	static void set_riff_header(char *data, const char *type, DWORD size);
 
 	struct ANIHeader
 	{

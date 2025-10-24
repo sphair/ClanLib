@@ -33,11 +33,11 @@
 #pragma once
 
 #include "../Core/IOData/virtual_directory.h"
-#include "../Sound/soundprovider.h"
+#include "../Sound/SoundProviders/soundprovider.h"
 #include <string>
 
 class CL_InputSourceProvider;
-class CL_SoundProvider_MikMod_Generic;
+class CL_SoundProvider_MikMod_Impl;
 
 /// \brief Module format (.mod, .s3m, .xm, etc) sound provider.
 ///
@@ -55,7 +55,15 @@ public:
 	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	CL_SoundProvider_MikMod(
 		const CL_String &filename,
-		CL_VirtualDirectory provider,
+		const CL_VirtualDirectory &provider,
+		bool stream = false);
+
+	CL_SoundProvider_MikMod(
+		const CL_String &fullname,
+		bool stream = false);
+
+	CL_SoundProvider_MikMod(
+		CL_IODevice &file,
 		bool stream = false);
 
 	virtual ~CL_SoundProvider_MikMod();
@@ -79,7 +87,9 @@ public:
 /// \{
 
 private:
-	CL_SoundProvider_MikMod_Generic *impl;
+	CL_SharedPtr<CL_SoundProvider_MikMod_Impl> impl;
+
+	friend class CL_SoundProvider_MikMod_Session;
 /// \}
 };
 

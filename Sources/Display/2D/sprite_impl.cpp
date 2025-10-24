@@ -57,17 +57,18 @@ CL_Sprite_Impl::CL_Sprite_Impl(CL_GraphicContext &gc) :
 	scale_x(1.0f),
 	scale_y(1.0f),
 	color(1.0f, 1.0f, 1.0f, 1.0f),
-	linear_filter(false),
+	linear_filter(true),
 	translation_hotspot(0,0),
 	rotation_hotspot(0,0),
 	translation_origin(origin_top_left),
 	rotation_origin(origin_center),
 	current_frame(0),
 	delta_frame(1),
-	update_time(0),
-	last_time(0),
+	update_time_ms(0),
+	last_time_ms(0),
 	id(0),
 	finished(false),
+	looping(false),
 	play_loop(true),
 	play_backward(false),
 	play_pingpong(false),
@@ -129,10 +130,11 @@ void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id
 		// <animation speed="integer" loop="[yes,no]" pingpong="[yes,no]" direction="[backward,forward]" on_finish="[blank,last_frame,first_frame]"/>
 		else if (tag_name == cl_text("animation"))
 		{
-			float delay = CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("speed"), cl_text("60"))) / 1000.0f;
+			int delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("speed"), cl_text("60")));
+
 			int frame_count = frames.size();
 			for(int i=0; i<frame_count; ++i)
-				get_frame(i)->delay = delay;
+				get_frame(i)->delay_ms = delay_ms;
 
 			play_loop = ((cur_element.get_attribute(cl_text("loop"), cl_text("yes"))) == cl_text("yes"));
 			play_pingpong = ((cur_element.get_attribute(cl_text("pingpong"), cl_text("no"))) == cl_text("yes"));
@@ -220,7 +222,7 @@ void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id
 		else if (tag_name == cl_text("frame"))
 		{
 			int nr = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("nr"), cl_text("0")));
-			float delay = CL_StringHelp::text_to_float(cur_element.get_attribute(cl_text("speed"), cl_text("60"))) / 1000.0f;
+
 			int yoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("y"), cl_text("0")));
 			int xoffset = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("x"), cl_text("0")));
 
@@ -230,7 +232,11 @@ void CL_Sprite_Impl::init(CL_GraphicContext &gc, const CL_StringRef &resource_id
 				throw CL_Exception(cl_text("Invalid sprite frame index specified"));
 			}
 
-			sptr->delay = delay;
+			if (cur_element.has_attribute(cl_text("speed"))) 
+			{
+				sptr->delay_ms = CL_StringHelp::text_to_int(cur_element.get_attribute(cl_text("speed"), cl_text("60")));
+			}
+
 			sptr->offset = CL_Point(xoffset, yoffset);
 		}
 
@@ -275,8 +281,8 @@ CL_Sprite_Impl &CL_Sprite_Impl::operator =(const CL_Sprite_Impl &copy)
 	rotation_origin = copy.rotation_origin;
 	current_frame = copy.current_frame;
 	delta_frame = copy.delta_frame;
-	update_time = copy.update_time;
-	last_time = copy.last_time;
+	update_time_ms = copy.update_time_ms;
+	last_time_ms = copy.last_time_ms;
 	id = copy.id;
 	finished = copy.finished;
 	play_loop = copy.play_loop;
@@ -353,7 +359,7 @@ void CL_Sprite_Impl::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_R
 	params1.dest_position[3].y = dest.bottom;
 	for (int i = 0; i < 4; i++)
 	{
-		params1.color[i] = CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f);
+		params1.color[i] = color;
 	}
 	params1.destZ = 1.0;
 	draw(gc, params1);
@@ -578,15 +584,15 @@ void CL_Sprite_Impl::draw_calcs_step2(
 	params1.destZ = params2.destZ;
 }
 
-float CL_Sprite_Impl::calc_time_elapsed()
+int CL_Sprite_Impl::calc_time_elapsed()
 {
 	// Calculate amount of time since last frame
-	float new_time = (float)CL_System::get_time();
-	if(last_time == 0)
-		last_time = new_time;
+	unsigned int new_time = CL_System::get_time();
+	if(last_time_ms == 0)
+		last_time_ms = new_time;
 
-	float delta_time = (new_time - last_time) / 1000.0f;
-	last_time = new_time;
+	int delta_time = new_time - last_time_ms;
+	last_time_ms = new_time;
 
 	return delta_time;
 }
@@ -685,7 +691,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 				SpriteFrame frame;
 				frame.position = subtexture.get_geometry();
 				frame.texture = subtexture.get_texture();
-				frame.delay = 0.05f;
+				frame.delay_ms = 60;
 				frame.offset = CL_Point(0, 0);
 				frames.push_back(frame);
 			}
@@ -706,7 +712,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 				SpriteFrame frame;
 				frame.position = CL_Rect(0, 0, width, height);
 				frame.texture = texture;
-				frame.delay = 0.05f;
+				frame.delay_ms = 60;
 				frame.offset = CL_Point(0, 0);
 				frames.push_back(frame);
 			}
@@ -716,7 +722,7 @@ void CL_Sprite_Impl::create_textures(CL_GraphicContext &gc, const CL_SpriteDescr
 			SpriteFrame frame;
 			frame.position = description_frame.rect;
 			frame.texture = description_frame.texture;
-			frame.delay = 0.05f;
+			frame.delay_ms = 60;
 			frame.offset = CL_Point(0, 0);
 			frames.push_back(frame);
 		}

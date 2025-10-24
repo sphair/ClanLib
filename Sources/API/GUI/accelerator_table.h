@@ -74,8 +74,7 @@ public:
 	void add_accelerator(const CL_AcceleratorKey &accel);
 
 	/// \brief Check if the message is an accelerator key and invoke relevant accelerator callback.
-	/** <p>Returns true if the message was processed.</p>*/
-	bool process_message(CL_GUIMessage &msg);
+	void process_message(CL_GUIMessage &msg);
 
 /// \}
 /// \name Implementation

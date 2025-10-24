@@ -49,7 +49,6 @@ class CL_API_GUI CL_PopupMenu
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_PopupMenu();
 
@@ -63,9 +62,7 @@ public:
 /// \}
 /// \name Attributes
 /// \{
-
 public:
-
 	/// \brief Is Null
 	///
 	/// \return true = null
@@ -93,7 +90,7 @@ public:
 	/// \brief Item count
 	///
 	/// \return int
-	int item_count() const;
+	int get_item_count() const;
 
 	/// \brief Get Minimum width
 	///
@@ -106,13 +103,16 @@ public:
 	virtual CL_Size get_preferred_size() const;
 
 /// \}
+/// \name Events
+/// \{
+public:
+	/// \brief bool func_close()
+	CL_Callback_v0 &func_close();
+
+/// \}
 /// \name Operations
 /// \{
-
 public:
-	/// Run the popup menu for modal dialog
-	void exec(CL_GUIComponent *parent, const CL_Point &pos);
-
 	/// Start the popup menu for dialog (not modal)
 	void start(CL_GUIComponent *parent, const CL_Point &pos);
 
@@ -159,17 +159,8 @@ public:
 	int find_item(const CL_StringRef &text, bool case_sensitive = false);
 
 /// \}
-/// \name Events
-/// \{
-
-	CL_Callback_v1<CL_PopupMenuItem> &func_item_selected();
-
-	CL_Callback_v1<CL_InputEvent> &func_keyboard_event();
-
-/// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_PopupMenu_Impl> impl;
 

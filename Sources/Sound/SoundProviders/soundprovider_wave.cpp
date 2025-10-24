@@ -29,11 +29,14 @@
 #include "Sound/precomp.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/logger.h"
-#include "soundprovider_wave_generic.h"
+#include "soundprovider_wave_impl.h"
 #include "soundprovider_wave_session.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -41,97 +44,35 @@
 
 CL_SoundProvider_Wave::CL_SoundProvider_Wave(
 	const CL_String &filename,
-	CL_VirtualDirectory virtual_directory,
-	bool stream) : impl(new CL_SoundProvider_Wave_Generic)
+	const CL_VirtualDirectory &virtual_directory,
+	bool stream) : impl(new CL_SoundProvider_Wave_Impl)
 {
-	impl->stream = stream;
+	CL_VirtualDirectory new_directory = virtual_directory;
+	CL_IODevice source = new_directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
+	impl->load(source);
+}
 
-	CL_IODevice source = virtual_directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_read);
-	source.set_little_endian_mode();
+CL_SoundProvider_Wave::CL_SoundProvider_Wave(
+	const CL_String &fullname, bool stream)
+: impl(new CL_SoundProvider_Wave_Impl)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	CL_VirtualDirectory dir = vfs.get_root_directory();
+	CL_IODevice input = dir.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
+	impl->load(input);
+}
 
-	// Check to see if this is really a .wav-file
-	char temp[12];
-	memset(temp, 0, 12);
-	source.read(temp, 4);
-	source.seek(4, CL_IODevice::seek_cur);
-	source.read(temp+4, 8);
-
-	cl_uint32 chunk_size = source.read_uint32();
-	if (chunk_size & 1) chunk_size++;	// Align RIFF pad byte
-
-	if (memcmp(temp, "RIFFWAVEfmt ", 12) != 0)
-	{
-		delete impl;
-		throw CL_Exception(cl_text("Invalid RIFF WAVE header!"));
-	}
-
-	CL_SoundProvider_Wave_Generic::WAVE_FORMAT format;
-	format.formatTag = source.read_int16();
-	format.nChannels = source.read_uint16();
-	format.nSamplesPerSec = source.read_uint32();
-	format.nAvgBytesPerSec = source.read_uint32();
-	format.nBlockAlign = source.read_uint16();
-
-	source.seek( chunk_size - 14, CL_IODevice::seek_cur );	// Already read 14 bytes, skip the rest
-
-	// Find "data" chunk
-	while(true)
-	{
-		source.read(temp, 4);
-		if (!memcmp(temp, "data", 4))
-		{
-			break;	// Found chunk
-		}
-		chunk_size = source.read_uint32();
-		if (chunk_size & 1) chunk_size++;	// Align RIFF pad byte
-
-		source.seek( chunk_size, CL_IODevice::seek_cur );
-	}
-
-	int data_size = source.read_uint32();
-	int bytes_per_sample = format.nAvgBytesPerSec / format.nSamplesPerSec;
-
-	impl->frequency = format.nSamplesPerSec;
-	impl->num_channels = format.nChannels;
-	impl->num_samples = data_size / bytes_per_sample;
-
-	if (bytes_per_sample / format.nChannels == 2) impl->format = sf_16bit_signed;
-	else if (bytes_per_sample / format.nChannels == 1) impl->format = sf_8bit_signed;
-	else
-	{
-		delete impl;
-		throw CL_Exception(
-			cl_format(
-				cl_text("Unsupported wave file format (channels=%1, bytes per sample=%2)"),
-				format.nChannels,
-				bytes_per_sample));
-	}
-
-	impl->data = new char[data_size];
-	source.read(impl->data, data_size);
-
-	// 8 bit wave is unsigned, while 16 bit wave is signed!
-	if (impl->format == sf_8bit_signed)
-	{
-		for (int i=0; i<data_size; i++)
-			((unsigned char *) impl->data)[i] -= 128;
-	}
-	else if (impl->format == sf_16bit_signed && CL_Endian::is_system_big())
-	{
-		unsigned char *data = (unsigned char *) impl->data;
-		for (int i=1; i<data_size; i+=2)
-		{
-			unsigned char tmp = data[i];
-			data[i] = data[i-1];
-			data[i-1] = tmp;
-		}
-	}
+CL_SoundProvider_Wave::CL_SoundProvider_Wave(
+	CL_IODevice &file, bool stream)
+: impl(new CL_SoundProvider_Wave_Impl)
+{
+	impl->load(file);
 }
 
 CL_SoundProvider_Wave::~CL_SoundProvider_Wave()
 {
-	delete[] impl->data;
-	delete impl;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -139,7 +80,7 @@ CL_SoundProvider_Wave::~CL_SoundProvider_Wave()
 
 CL_SoundProvider_Session *CL_SoundProvider_Wave::begin_session()
 {
-	return new CL_SoundProvider_Wave_Session(impl);
+	return new CL_SoundProvider_Wave_Session(*this);
 }
 
 void CL_SoundProvider_Wave::end_session(CL_SoundProvider_Session *session)
@@ -149,3 +90,64 @@ void CL_SoundProvider_Wave::end_session(CL_SoundProvider_Session *session)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Wave implementation:
+
+void CL_SoundProvider_Wave_Impl::load(CL_IODevice &source)
+{
+	source.set_little_endian_mode();
+
+	char chunk_id[4];
+	source.read(chunk_id, 4);
+	if (memcmp(chunk_id, "RIFF", 4))
+		throw CL_Exception(cl_text("Expected RIFF header!"));
+	cl_uint32 chunk_size = source.read_uint32();
+
+	char format_id[4];
+	source.read(format_id, 4);
+	if (memcmp(format_id, "WAVE", 4))
+		throw CL_Exception(cl_text("Expected WAVE header!"));
+
+	cl_uint32 subchunk_pos = source.get_position();
+	cl_uint32 subchunk1_size = find_subchunk("fmt ", source, subchunk_pos, chunk_size);
+
+	cl_uint16 audio_format = source.read_uint16();
+	num_channels = source.read_uint16();
+	frequency = source.read_uint32();
+	cl_uint32 byte_rate = source.read_uint32();
+	cl_uint16 block_align = source.read_uint16();
+	cl_uint16 bits_per_sample = source.read_uint16();
+
+	if (bits_per_sample == 16)
+		format = sf_16bit_signed;
+	else if (bits_per_sample == 8)
+		format = sf_8bit_unsigned;
+	else
+		throw CL_Exception(cl_text("Unsupported wave sample format"));
+
+	cl_uint32 subchunk2_size = find_subchunk("data", source, subchunk_pos, chunk_size);
+
+	data = new char[subchunk2_size];
+	source.read(data, subchunk2_size);
+
+	num_samples = subchunk2_size / block_align;
+}
+
+unsigned int CL_SoundProvider_Wave_Impl::find_subchunk(const char *chunk, CL_IODevice &source, unsigned int file_offset, unsigned int max_offset )
+{
+	char subchunk1_id[4];
+
+	max_offset -= 8;	// Each subchunk must contains at least name and size
+	while(file_offset < max_offset)
+	{
+		source.seek(file_offset);
+		source.read(subchunk1_id, 4);
+		cl_uint32 subchunk1_size = source.read_uint32();
+		if (!memcmp(subchunk1_id, chunk, 4))
+		{
+			// Found chunk
+			return subchunk1_size;
+		}
+		file_offset += subchunk1_size + 8;
+	}
+	throw CL_Exception(cl_text("Block not found!"));
+
+}

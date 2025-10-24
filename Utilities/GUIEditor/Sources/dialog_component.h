@@ -26,8 +26,7 @@
 **    Magnus Norddahl
 */
 
-#ifndef _header_dialog_component_
-#define _header_dialog_component_
+#pragma once
 
 class DialogDocument;
 class DialogContainer;
@@ -71,5 +70,3 @@ public:
 	CL_String name;
 	CL_String value;
 };
-
-#endif

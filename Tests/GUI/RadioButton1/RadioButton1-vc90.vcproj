@@ -22,7 +22,7 @@
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -183,18 +183,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath="..\..\..\Resources\GUIThemeDefault\radiobutton.css"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Resources\GUIThemeDefault\resources.xml"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Resources\GUIThemeDefault\theme.css"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"

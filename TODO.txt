@@ -1,13 +1,32 @@
 Remember when releasing:
-- Change configure.ac - AC_INIT(ClanLib, 2.0.x) and CLANLIB_MICRO_VERSION=x
+- Change configure.ac - AC_INIT(ClanLib, 2.x.y) and CLANLIB_MINOR_VERSION=x CLANLIB_MICRO_VERSION=y
 - Change API/Core.h - CL_VERSION_STRING and CL_CURRENT_VERSION
+- If changing the MINOR or MAJOR version: Also change each Makefile.am found inside the subdirectories of Sources
+
+- XML
+  - With a (xml) buffer with an ø in it, the following fails to tokenize correctly:
+	CL_IODevice_Memory iodevice_memory(buffer);
+	CL_DomDocument doc;
+	doc.load(iodevice_memory);
+    (used from a NetGameEvent, with a string argument with an ø)
+
+- Docs
+  - Overview: Add Display Target info
+  - Porting guide: CL_String::tokenize -> split
+  - Database: write about command.get_output_last_insert_rowid.
+  - Update the ReferenceDocs utility. You cannot distinguish between static member public functions and normal public functions
+
+- Strings and Core
+  - Should be possible to use strings without initializing clanCore first.
+
+- GUI Editor
+  - Finish property editor
 
 - Change windows to default use unicode:
-  - Modify configure app to make this default
-  - Change all tests/examples to use unicode
-
-- CL_DisplayMessageQueue::process() rename to CL_MessageQueue::process() ?
-  - Should other process_events functions be renamed to just process() ?
+  - Modify configure app to include by unicode default
+  - Change all tests/examples to use unicode 
+    Why? Just set the "Character Set" to "Use Multi-Byte Character Set" for UTF8
+    Maybe the Unicode configuration should be renamed UTF16 ?
 
 - GraphicContext::set_primitives_array() uses CL_PrimitivesArrayData
   Internally we use some standard settings as follows:
@@ -18,12 +37,11 @@ Remember when releasing:
         4: NORMAL (GL1 target only)
   Should be values be enum'ed somehow ?
 
-- CL_Texture API issue
-  The copy_image_from() functions contains "CL_GraphicContext *gc = 0"
-  First - gc must not be 0, as "gc->get_provider()" is used (in texture.cpp)
-  Second - Why is CL_GraphicContext required? 
-    For an unknown reason, it is used by the TextureStateTracker (instead of gc_provider from the constructor)
-  Third - Why is TextureStateTracker even required - No states change
+- Friends
+   Check all friends are friends for the correct reason.
+   For example, if we do:
+      CL_Service create_service( CL_Service service("service_name"); return service; )
+    This would crash, as CL_Service_Impl makes a local pointer copy of CL_Service, that may change.
 
 - GL1 Texture (NPOT)
    CL_GL1TextureProvider::set_subimage() copies the image edges into the unused part of the texture, so linear filtering works correctly
@@ -31,12 +49,7 @@ Remember when releasing:
    Also other GL1 set image functions should contain this fix.
 
 - ClanLib Linux Issues
-  Examples/Sound : Choosing "Choose New Sound", crashes in ClanGUI
-  Unicode build for CTalk
-
-- VFS Issues
-  CL_FontProvider_Vector is not VFS aware
-  JPEG - The saving assumes the i/o source is a file. This should be modified (like how png does it)
+  GUI Popup menus: CL_GUIWindowManagerProvider_System::create_window() and destroy_window() has a #ifdef WIN32 to removed cached windows - because it did not work
 
 X11 / Linux:
  - Implement icons - http://standards.freedesktop.org/wm-spec/wm-spec-1.3.html#id2507733
@@ -46,10 +59,10 @@ Disposable objects:
 - The gui cache should add itself to the disposable list, instead of using that signal thing it uses now
 
 - Texture Packer:
-  - Add UI to select which resource file to pack. 
-    (Currently hardcoded in MainWindow::load_resources())
+  - Finish CSS packer
 
 - GDI
+  - gc.clear() does not work when the clip rect is set. Should be modified to call: "CL_Draw::fill(gc, clip_rect, ...);" if clip rect is set
   - The output from Tests/Display/2D is different for OpenGL and GDI
   - The output from Tests/Display/Image1 is different for OpenGL and GDI
 
@@ -59,8 +72,8 @@ Disposable objects:
     Add pixel_canvas->set_projection(matrix);
 
 - GUI Component issues:
-  - Scrollbar buttons should use separate glyph part
-  - Window close/min/max/etc buttons should use separate glyph part
+  - Minor: Scrollbar buttons should use separate glyph part
+  - Minor: Window close/min/max/etc buttons should use separate glyph part
   - scrollbar trackarea and buttonarea overlap with 1 pixel
   - checkbox draw something wrong? (compare with vista screenshot, especially disabled)
   - slider - thumb size for horizontal is too small (compare to vertical)
@@ -68,11 +81,9 @@ Disposable objects:
   - lineedit - use readonly and focused gfx
   - lineedit - set states on parts (hot doesn't show)
   - checkbox support excluded and implicit
-  - button - support animated state?
   - lineedit - selecting with mouse when there is only one char is difficult
   - spin - disabled state is not shown visually
   - groupbox - no clickthrough  - progressbar - Does not work!
-  - ToolTip - No components use it at present, and the API is incomplete
   - Window - texture wm - clicking on window client area does not bring it to front
   - Tab - redo parts so we won't have to use header_border, and resizing of active tagpage part
   - Frame vs GroupBox - whats the difference - do we need both?
@@ -80,39 +91,19 @@ Disposable objects:
   - ToolBar: You cannot switch between horizontal and Vertical Toolbar
   - ToolBar: It uses CL_Sprite, not CL_Image
   - ToolBar: It would be nice to be able to attach a component to the toolbar, like CL_StatusBar
+  - Combobox: Line edit doesn't use hot state visually
 
-- GUI Modal Window
-  There currently is a inconsistancy in the way modal windows are handled (for example, CL_ComboBox_Impl::on_btn_arrow_clicked() )
-  The System WM, has its own modal loop
-  The Texture WM intercept the main gui loop via gui_manager.func_exec_handler().set(this, &CL_MenuModalLoop::exec_handler); 
-  Ideally, the System WM should use the Texture WM method - This gives the user control of external objects (network i/o  etc)
- 
 - GUI Render
   Issue: If a component alters the state during rendering (for example calls gc.set_texture(index, texture) ),
    currently there is no way to restore the previous texture
    Maybe, we could have: texture = gc.get_texture(index) - And texture.is_null() if it was not set.
    etc.
 
-- GUI Texture Manager
-  Since the GUI is now based on a single texture  (when the CL_TextureGroup has been set)
-   There are issues with setting the Stencil and Depth buffer
-   To be valid, they must be the same size as the texture (for the frame buffer object to work)
-   A quick fix, is to set the default CL_TextureGroup size to 0 by 0, which indirectly would force a single texture -
-   to be created for each window.
-
 - Add thread safety to CL_Logger:
   The three places the vector is accessed needs to be mutex locked 
   (add a static CL_Mutex to the class, CL_MutexSection the three places its used)
 - Logger: If you do "CL_ConsoleLogger logger; logger.enable();" it will have two instances
   of logging!
-
-- ClanSound
-   Adjust clanSound, so you that can set the frequency rate of an sample - Thus, make the Methane example sounds play correctly.
-	1) It only supports 2.0 sound (stuuuupid)
-	2) It was designed for DirectSound, then detached from that design. The effect is that it thinks in 'sound buffers' which is bit silly
-	3) It was designed back when .wav was king, but we kinda have .ogg and .mp3s now. The consequence of this is that our ogg sound provider sucks
-	4) The API itself was designed in the 0.6.x age of clanlib, which means it doesnt have Providers or anything like it
-
 
 - Modifying existing display window
   Is this function required: void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc) 
@@ -129,6 +120,6 @@ Disposable objects:
 	7) If we had fullscreen support, it would destroy the swap chain and create a fullscreen one
 	8) If the fullscreen window loses focus, we have to manually destroy the fullscreen swap chain and hide 
 
-- Folder structure
-  Projects/* Can this be moved into Setup?
 
+NICE TO HAVE
+- Tool in TexturePacker that loads an image, displays the collision outline, lets you change the detail level, and save .col file.

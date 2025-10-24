@@ -32,11 +32,11 @@
 
 #pragma once
 
-#include "../Sound/soundprovider.h"
+#include "../Sound/SoundProviders/soundprovider.h"
 #include "../Core/IOData/virtual_directory.h"
 
 class CL_InputSourceProvider;
-class CL_SoundProvider_Vorbis_Generic;
+class CL_SoundProvider_Vorbis_Impl;
 
 /// \brief Ogg Vorbis format sound provider.
 ///
@@ -54,7 +54,15 @@ public:
 	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	CL_SoundProvider_Vorbis(
 		const CL_String &filename,
-		CL_VirtualDirectory directory,
+		const CL_VirtualDirectory &directory,
+		bool stream = false);
+
+	CL_SoundProvider_Vorbis(
+		const CL_String &fullname,
+		bool stream = false);
+
+	CL_SoundProvider_Vorbis(
+		CL_IODevice &file,
 		bool stream = false);
 
 	virtual ~CL_SoundProvider_Vorbis();
@@ -78,7 +86,9 @@ public:
 /// \{
 
 private:
-	CL_SoundProvider_Vorbis_Generic *impl;
+	CL_SharedPtr<CL_SoundProvider_Vorbis_Impl> impl;
+
+	friend class CL_SoundProvider_Vorbis_Session;
 /// \}
 };
 

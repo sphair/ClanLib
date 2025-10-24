@@ -32,9 +32,11 @@
 #include "API/Core/System/event.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/System/thread_local_storage.h"
-#include "API/Display/Window/display_window_message.h"
+#include "API/Core/System/keep_alive.h"
 #include "display_message_queue_win32.h"
 #include "win32_window.h"
+
+CL_DisplayMessageQueue_Win32 CL_DisplayMessageQueue_Win32::message_queue;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_Win32 construction:
@@ -53,8 +55,10 @@ CL_DisplayMessageQueue_Win32::~CL_DisplayMessageQueue_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // CL_DisplayMessageQueue_Win32 operations:
 
-int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * events, int timeout, bool wait_all)
+int CL_DisplayMessageQueue_Win32::wait(const std::vector<CL_Event> &events, int timeout)
 {
+	bool wait_all = false;	// Only wait for first object to signal
+
 	// We have to start out by asking PeekMessage if there's a message available, because
 	// MsgWaitForMultipleObjectsEx was coded by spaghetti coders at Microsoft
 	// that couldn't be bothered to document their mess. It seems that there is an unspecified
@@ -68,19 +72,21 @@ int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * event
 	MSG msg;
 	BOOL message_available = PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE);
 	if (message_available)
-		return -2;
+	{
+		process_message();
+		return events.size();
+	}
 
 
 	DWORD timeout_win32 = (timeout == -1) ? INFINITE : timeout;
 
-	int index_events;
 	int num_events = 0;
-	for (index_events = 0; index_events < count; index_events++)
+	for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 	{
-		bool flagged = events[index_events]->get_event_provider()->check_before_wait();
+		bool flagged = events[index_events].get_event_provider()->check_before_wait();
 		if (flagged)
 			return index_events;
-		num_events += events[index_events]->get_event_provider()->get_num_event_handles();
+		num_events += events[index_events].get_event_provider()->get_num_event_handles();
 	}
 
 	if (num_events == 0)
@@ -88,21 +94,18 @@ int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * event
 		DWORD result = MsgWaitForMultipleObjectsEx(0, 0, timeout_win32, QS_ALLEVENTS|QS_SENDMESSAGE|QS_RAWINPUT, wait_all ? MWMO_WAITALL : 0);
 		if (result == WAIT_OBJECT_0)
 		{
-			return -2;
-		}
-		else
-		{
-			return -1;
+			process_message();
+			return events.size();
 		}
 	}
 	else
 	{
 		std::vector<HANDLE> handles;
-		for (index_events = 0; index_events < count; index_events++)
+		for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 		{
-			int num_handles = events[index_events]->get_event_provider()->get_num_event_handles();
+			int num_handles = events[index_events].get_event_provider()->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
-				handles.push_back(events[index_events]->get_event_provider()->get_event_handle(i));
+				handles.push_back(events[index_events].get_event_provider()->get_event_handle(i));
 		}
 		while (true)
 		{
@@ -124,15 +127,16 @@ int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * event
 
 			if (index == num_events)
 			{
-				return -2;
+				process_message();
+				return events.size();
 			}
 
-			for (index_events = 0; index_events < count; index_events++)
+			for (std::vector<CL_Event>::size_type index_events = 0; index_events < events.size(); ++index_events)
 			{
-				int num_handles = events[index_events]->get_event_provider()->get_num_event_handles();
+				int num_handles = events[index_events].get_event_provider()->get_num_event_handles();
 				if (index < (DWORD) num_handles)
 				{
-					bool flagged = events[index_events]->get_event_provider()->check_after_wait((int) index);
+					bool flagged = events[index_events].get_event_provider()->check_after_wait((int) index);
 					if (flagged)
 						return index_events;
 					break;
@@ -141,69 +145,18 @@ int CL_DisplayMessageQueue_Win32::wait(int count, CL_Event const * const * event
 			}
 		}
 
-		return -1;
 	}
-}
+	return -1;
 
-CL_DisplayWindowMessage CL_DisplayMessageQueue_Win32::get_message()
-{
-	MSG msg;
-	memset(&msg, 0, sizeof(MSG));
-	BOOL result = GetMessage(&msg, 0, 0, 0);
-	if (result == 0)
-	{
-		return CL_DisplayWindowMessage::null();
-	}
-	else
-	{
-		CL_DisplayWindowMessage clmsg;
-		CL_DataBuffer buffer(&msg, sizeof(msg));
-		clmsg.set_msg(cl_text("MSG"), buffer);
-		return clmsg;
-	}
-}
-
-CL_DisplayWindowMessage CL_DisplayMessageQueue_Win32::peek_message(bool block)
-{
-	if (block)
-		wait(0, 0, -1, false);
-	MSG msg;
-	memset(&msg, 0, sizeof(MSG));
-	BOOL result = PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE);
-	if (result == 0)
-	{
-		return CL_DisplayWindowMessage::null();
-	}
-	else
-	{
-		CL_DisplayWindowMessage clmsg;
-		CL_DataBuffer buffer(&msg, sizeof(msg));
-		clmsg.set_msg(cl_text("MSG"), buffer);
-		return clmsg;
-	}
-}
-
-void CL_DisplayMessageQueue_Win32::dispatch_message(const CL_DisplayWindowMessage &message)
-{
-	const CL_DataBuffer buffer = message.get_msg(cl_text("MSG"));
-	if (buffer.get_size() == sizeof(MSG) )
-	{
-		MSG msg;
-		memcpy(&msg, buffer.get_data(), sizeof(msg));
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	CL_SharedPtr<ThreadData> data = get_thread_data();
-	for (std::vector<CL_Win32Window *>::size_type i = 0; i < data->windows.size(); i++)
-	{
-		data->windows[i]->get_ic().process_messages();
-	}
 }
 
 void CL_DisplayMessageQueue_Win32::add_client(CL_Win32Window *window)
 {
+	// (Always set the message queue, because the display target may have changed)
+	CL_KeepAlive::func_event_wait().set(&message_queue, &CL_DisplayMessageQueue_Win32::wait);
+
 	CL_SharedPtr<ThreadData> thread_data = get_thread_data();
+
 	thread_data->windows.push_back(window);
 }
 
@@ -234,4 +187,29 @@ CL_SharedPtr<CL_DisplayMessageQueue_Win32::ThreadData> CL_DisplayMessageQueue_Wi
 		CL_ThreadLocalStorage::set_variable(cl_text("CL_DisplayMessageQueue_Win32::thread_data"), data);
 	}
 	return data;
+}
+
+void CL_DisplayMessageQueue_Win32::process_message()
+{
+	// We must use PeekMessage instead of GetMessage because GetMessage can
+	// block even when MsgWaitForMultipleObjects reported messages to be
+	// available.  This can happen because SendMessage between threads and
+	// internal system events are processed when GetMessage and PeekMessage
+	// are called and such messages are processed directly and not returned
+	// by PeekMessage/GetMessage.  A call to GetMessage may therefore block
+	// until a message intended for us arrives.
+	//
+	// PeekMessage+PM_REMOVE equals to a non-blocking GetMessage call.
+
+	MSG msg;
+	memset(&msg, 0, sizeof(MSG));
+	BOOL result = PeekMessage(&msg, 0, 0, 0, PM_REMOVE);
+	if (result)
+		DispatchMessage(&msg);
+	
+	CL_SharedPtr<ThreadData> data = get_thread_data();
+	for (std::vector<CL_Win32Window *>::size_type i = 0; i < data->windows.size(); i++)
+	{
+		data->windows[i]->get_ic().process_messages();
+	}
 }

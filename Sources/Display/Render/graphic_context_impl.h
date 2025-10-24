@@ -48,15 +48,16 @@ public:
 	void update_batcher_modelview();
 	void set_batcher(CL_GraphicContext &gc, CL_RenderBatcher *batcher);
 
-	CL_SharedPtr<CL_PrimitivesArray_Impl> create_prim_array();
-	void free_prim_array(CL_PrimitivesArray_Impl *prim_array);
+	CL_SharedPtr<CL_PrimitivesArray_Impl> create_prim_array(CL_SharedPtr<CL_GraphicContext_Impl> this_gc);
+	static void free_prim_array(CL_PrimitivesArray_Impl *prim_array);
 
 	CL_GraphicContextProvider *provider;
 	std::list<CL_Rect> cliprects;
-	std::list<CL_Mat4f> modelviews;
+	std::vector<CL_Mat4f> modelviews;
 	std::vector<CL_PrimitivesArray_Impl *> free_prim_arrays;
 	int max_attributes;
 	bool modelview_changed;
 	CL_RenderBatcher *active_batcher;
 	CL_SpriteRenderBatch sprite_batcher;
+	int modelview_index;
 };

@@ -7,7 +7,7 @@
 class Toolbar : public CL_GUIComponent
 {
 public:
-	Toolbar(const CL_Rect &position, CL_GUIManager* gui_manager);
+	Toolbar(const CL_Rect &position, CL_GUIComponent* owner);
 	virtual ~Toolbar();
 
 // Attributes

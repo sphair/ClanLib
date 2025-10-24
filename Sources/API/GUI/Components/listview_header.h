@@ -170,7 +170,6 @@ private:
 
 	CL_SharedPtr<CL_ListViewHeader_Impl> impl;
 
-	friend class CL_ListView;
 	friend class CL_ListView_Impl;
 /// \}
 };

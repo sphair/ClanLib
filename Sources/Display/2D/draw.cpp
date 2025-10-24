@@ -35,6 +35,9 @@
 #include "API/Display/Render/primitives_array.h"
 #include "API/Display/Render/pen.h"
 #include "Display/Render/graphic_context_impl.h"
+#include "API/Core/Math/line_segment.h"
+#include "API/Core/Math/quad.h"
+#include "API/Core/Math/triangle_math.h"
 #include "sprite_render_batch.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -81,6 +84,11 @@ void CL_Draw::line(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Point
 	line(gc, start.x, start.y, end.x, end.y, color);
 }
 
+void CL_Draw::line(CL_GraphicContext &gc, const CL_LineSegment2f &line_segment, const CL_Colorf &color)
+{
+	line(gc, line_segment.p.x, line_segment.p.y, line_segment.q.x, line_segment.q.y, color);
+}
+
 void CL_Draw::box(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Colorf &color)
 {
 	CL_Vec2f positions[4] =
@@ -113,24 +121,6 @@ void CL_Draw::fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2
 {
 	CL_SpriteRenderBatch *batcher = &gc.impl->sprite_batcher;
 	batcher->fill(gc, x1, y1, x2, y2, color);
-/*
-	CL_Vec2f positions[6] =
-	{
-		CL_Vec2f(x1, y1),
-		CL_Vec2f(x2, y1),
-		CL_Vec2f(x1, y2),
-		CL_Vec2f(x2, y1),
-		CL_Vec2f(x1, y2),
-		CL_Vec2f(x2, y2)
-	};
-
-	CL_PrimitivesArray prim_array(gc);
-	prim_array.set_attributes(0, positions);
-	prim_array.set_attribute(1, color);
-	gc.set_program_object(cl_program_color_only);
-	gc.draw_primitives(cl_triangles, 6, prim_array);
-	gc.reset_program_object();
-*/
 }
 
 void CL_Draw::fill(CL_GraphicContext &gc, const CL_Pointf &start, const CL_Pointf &end, const CL_Colorf &color)
@@ -176,6 +166,44 @@ void CL_Draw::texture(
 	gc.set_program_object(cl_program_single_texture);
 	gc.draw_primitives(cl_triangles, 6, prim_array);
 	gc.reset_program_object();
+}
+
+void CL_Draw::texture(
+	CL_GraphicContext &gc,
+	const CL_Texture &texture,
+	const CL_Quadf &quad,
+	const CL_Colorf &color,
+	const CL_Rectf &texture_unit1_coords)
+{
+	CL_Vec2f positions[6] =
+	{
+		CL_Vec2f(quad.p),
+		CL_Vec2f(quad.q),
+		CL_Vec2f(quad.s),
+		CL_Vec2f(quad.q),
+		CL_Vec2f(quad.s),
+		CL_Vec2f(quad.r)
+	};
+
+	CL_Vec2f tex1_coords[6] =
+	{
+		CL_Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
+		CL_Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		CL_Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		CL_Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		CL_Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		CL_Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
+	};
+
+	CL_PrimitivesArray prim_array(gc);
+	prim_array.set_attributes(0, positions);
+	prim_array.set_attribute(1, color);
+	prim_array.set_attributes(2, tex1_coords);
+	gc.set_texture(0, texture);
+	gc.set_program_object(cl_program_single_texture);
+	gc.draw_primitives(cl_triangles, 6, prim_array);
+	gc.reset_program_object();
+	gc.reset_texture(0);
 }
 
 void CL_Draw::gradient_fill(CL_GraphicContext &gc, float x1, float y1, float x2, float y2, const CL_Gradient &gradient)
@@ -324,3 +352,9 @@ void CL_Draw::triangle(CL_GraphicContext &gc, const CL_Pointf &a, const CL_Point
 	gc.draw_primitives(cl_triangles, 3, prim_array);
 	gc.reset_program_object();
 }
+
+void CL_Draw::triangle(CL_GraphicContext &gc,  const CL_Trianglef &dest_triangle, const CL_Colorf &color)
+{
+	triangle(gc, dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
+}
+

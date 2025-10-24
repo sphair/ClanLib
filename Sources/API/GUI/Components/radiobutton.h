@@ -62,7 +62,7 @@ public:
 	/// \brief Get Text
 	///
 	/// \return text
-	CL_StringRef get_text() const;
+	CL_String get_text() const;
 
 	/// \brief Get Id
 	///
@@ -77,7 +77,7 @@ public:
 	/// \brief Get Group name
 	///
 	/// \return group_name
-	CL_StringRef get_group_name() const;
+	CL_String get_group_name() const;
 
 /// \}
 /// \name Operations
@@ -102,7 +102,7 @@ public:
 	/// \brief Set group name
 	///
 	/// \param str = String Ref
-	void set_group_name(const CL_StringRef &str);
+	void set_group_name(const CL_String &str);
 
 /// \}
 /// \name Events
@@ -122,7 +122,6 @@ public:
 	/// \brief Callback invoked when any of the radio buttons in the group is selected.
 	/** The newly selected radio button is passed as parameter to the callback.*/
 	CL_Callback_v1<CL_RadioButton*> &func_group_selection_changed();
-
 /// \}
 /// \name Implementation
 /// \{

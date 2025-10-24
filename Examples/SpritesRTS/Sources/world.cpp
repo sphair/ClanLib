@@ -212,20 +212,20 @@ void World::run()
 		draw();
 
 		window.flip(1);
-		CL_DisplayMessageQueue::process();
+		CL_KeepAlive::process();
 	};
 }
 
 void World::update()
 {
-	float timeElapsed = calcTimeElapsed();
+	int timeElapsed_ms = calcTimeElapsed();
 	
 	// Update all gameobjects
 	std::list<GameObject *>::iterator it;
 	for(it = objects.begin(); it != objects.end(); )
 	{
 		// If update returns false, object should be deleted
-		if((*it)->update(timeElapsed) == false)
+		if((*it)->update(timeElapsed_ms) == false)
 		{
 			delete (*it);
 			it = objects.erase(it);
@@ -236,15 +236,15 @@ void World::update()
 }
 
 // Calculate amount of time since last frame
-float World::calcTimeElapsed()
+int World::calcTimeElapsed()
 {
-	static float lastTime = 0;
+	static unsigned int lastTime = 0;
 
-	float newTime = (float)CL_System::get_time();
+	unsigned int newTime = CL_System::get_time();
 	if(lastTime == 0)
 		lastTime = newTime;
 
-	float deltaTime = (newTime - lastTime) / 1000.0f;
+	int deltaTime = (newTime - lastTime);
 	lastTime = newTime;
 
 	return deltaTime;

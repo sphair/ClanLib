@@ -29,13 +29,13 @@
 #pragma once
 
 
-#include "API/Display/TargetProviders/display_message_queue_provider.h"
 #include "API/Display/api_display.h"
+#include "API/Core/System/event.h"
 #include <vector>
 
 class CL_Win32Window;
 
-class CL_API_DISPLAY CL_DisplayMessageQueue_Win32 : public CL_DisplayMessageQueue_Provider
+class CL_API_DISPLAY CL_DisplayMessageQueue_Win32
 {
 /// \name Construction
 /// \{
@@ -43,14 +43,13 @@ public:
 	CL_DisplayMessageQueue_Win32();
 	~CL_DisplayMessageQueue_Win32();
 
+	static CL_DisplayMessageQueue_Win32 message_queue;
+
 /// \}
 /// \name Operations
 /// \{
 public:
-	int wait(int count, CL_Event const * const * events, int timeout, bool wait_all);
-	CL_DisplayWindowMessage get_message();
-	CL_DisplayWindowMessage peek_message(bool block);
-	void dispatch_message(const CL_DisplayWindowMessage &message);
+	int wait(const std::vector<CL_Event> &events, int timeout);
 
 	void add_client(CL_Win32Window *window);
 	void remove_client(CL_Win32Window *window);
@@ -59,7 +58,9 @@ public:
  /// \name Implementation
  /// \{
 
- private:
+private:
+	void process_message();
+
 	struct ThreadData
 	{
 		ThreadData() : already_flagged(false) { }

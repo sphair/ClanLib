@@ -155,7 +155,7 @@ void ReferenceDocs::find_references()
 	while (scanner.next())
 	{
 		CL_String filename = scanner.get_pathname();
-		CL_File file(filename, CL_File::open_existing);
+		CL_File file(filename);
 		CL_DomDocument doc(file, true);
 		CL_DomElement doc_element = doc.get_document_element();
 		if (doc_element.get_tag_name() != "doxygen")
@@ -211,7 +211,7 @@ void ReferenceDocs::generate_classes()
 	while (scanner.next())
 	{
 		CL_String filename = scanner.get_pathname();
-		CL_File file(filename, CL_File::open_existing);
+		CL_File file(filename);
 		CL_DomDocument doc(file, true);
 		CL_DomElement doc_element = doc.get_document_element();
 		if (doc_element.get_tag_name() != "doxygen")
@@ -398,7 +398,7 @@ void ReferenceDocs::find_references()
 	while (scanner.next())
 	{
 		CL_String filename = scanner.get_pathname();
-		CL_File file(filename, CL_File::open_existing);
+		CL_File file(filename);
 		CL_DomDocument doc(file, true);
 		CL_DomElement doc_element = doc.get_document_element();
 		if (doc_element.get_tag_name() != "doxygen")
@@ -473,7 +473,7 @@ void ReferenceDocs::generate_classes()
 	while (scanner.next())
 	{
 		CL_String filename = scanner.get_pathname();
-		CL_File file(filename, CL_File::open_existing);
+		CL_File file(filename);
 		CL_DomDocument doc(file, true);
 		CL_DomElement doc_element = doc.get_document_element();
 		if (doc_element.get_tag_name() != "doxygen")
@@ -534,7 +534,8 @@ void ReferenceDocs::parse_compounddef(CL_DomElement compounddef)
 		}
 		else if ( (tag_name == "sectiondef") && (
 			(cur_element.get_attribute("kind") == "user-defined") ||
-			(cur_element.get_attribute("kind") == "public-func") ) )
+			(cur_element.get_attribute("kind") == "public-func") ||
+			(cur_element.get_attribute("kind") == "public-static-func") ) )
 		{
 			CL_String section = parse_sectiondef(class_name, cur_element);
 			sections.push_back(section);
@@ -587,7 +588,7 @@ void ReferenceDocs::parse_compounddef(CL_DomElement compounddef)
 	clan_group = refcl.groupName;
 	clan_section = refcl.subGroupName;
 
-	CL_File class_file(cl_format("reftest/%1.html", to_filename(class_name)), CL_File::create_always);
+	CL_File class_file(cl_format("reftest/%1.html", to_filename(class_name)), CL_File::create_always, CL_File::access_write);
 	CL_String html = cl_format(
 		"<!-- clanlib header begin -->\n"
 		"<HTML>\n"
@@ -901,7 +902,7 @@ CL_String ReferenceDocs::parse_memberdef_func(const CL_String &class_name, const
 		brief);
 
 
-	CL_File function_file(cl_format("reftest/%1", filename), CL_File::create_always);
+	CL_File function_file(cl_format("reftest/%1", filename), CL_File::create_always, CL_File::access_write);
 	CL_String html = cl_format(
 		"<!-- clanlib header begin -->"
 		"<HTML>"
@@ -1111,7 +1112,7 @@ CL_String ReferenceDocs::parse_memberdef_enum(const CL_String &class_name, const
 		brief);
 
 
-	CL_File function_file(cl_format("reftest/%1", filename), CL_File::create_always);
+	CL_File function_file(cl_format("reftest/%1", filename), CL_File::create_always, CL_File::access_write);
 	CL_String html = cl_format(
 		"<!-- clanlib header begin -->"
 		"<HTML>"
@@ -1363,7 +1364,7 @@ void ReferenceDocs::generate_groupedclasses()
 	int newtabevery = (lines/tabrows)+1;
 
 
-	CL_File modules_file("reftest/modules.html", CL_File::create_always);
+	CL_File modules_file("reftest/modules.html", CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"
@@ -1552,7 +1553,7 @@ void ReferenceDocs::generate_allclasses()
 	int newtabevery = (lines/tabrows)+1;
 
 
-	CL_File classes_file("reftest/classes.html", CL_File::create_always);
+	CL_File classes_file("reftest/classes.html", CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"
@@ -1674,7 +1675,7 @@ void ReferenceDocs::generate_allclasses()
 
 void ReferenceDocs::generate_indexedclasses()
 {
-	CL_File index_file("reftest/index.html", CL_File::create_always);
+	CL_File index_file("reftest/index.html", CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"

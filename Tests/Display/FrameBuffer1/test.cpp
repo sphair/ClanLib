@@ -139,7 +139,7 @@ int ExampleText::start(const std::vector<CL_String> &args)
 			window.flip(0);
 
 			// This call updates input and performs other "housekeeping" call this each frame
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 	}
 

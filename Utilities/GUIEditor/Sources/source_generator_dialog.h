@@ -26,16 +26,14 @@
 **    Harry Storbacka
 */
 
-#ifndef header_source_generator
-#define header_source_generator
+#pragma once
 
 class SourceGeneratorDialog : public CL_Window
 {
 //! Construction:
 public:
 	SourceGeneratorDialog(CL_GUIManager *gui_manager);
-	
-	virtual ~SourceGeneratorDialog() {};
+	virtual ~SourceGeneratorDialog() { }
 
 //! Attributes:
 public:
@@ -62,5 +60,3 @@ private:
 	CL_ComboBox *combo_h_filename;
 	CL_ComboBox *combo_cpp_filename;
 };
-
-#endif

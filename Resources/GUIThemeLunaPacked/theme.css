@@ -455,10 +455,10 @@ listview row_opener:closed
 
 listview selection
 {
-	border-top:-2;
-	border-left:-3;
-	border-right:-3;
-	border-bottom:-2;
+	selection-margin-left:3;
+	selection-margin-right:4;
+	selection-margin-top:1;
+	selection-margin-bottom:2;
 
 	bg-color:#316ac5;
 	text-color:#f2e3f2;
@@ -920,6 +920,16 @@ radiobutton checker:unchecked:disabled
 	bg-image:RadioButtonUncheckedDisabled; 
 }
 
+radiobutton focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+
 scrollbar 
 {
 	no-draw:true;
@@ -1302,6 +1312,16 @@ slider:disabled
 	text-color:darkgray;
 }
 
+slider focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+
 slider slidertrack.horizontal
 {
 	bg-image:SliderTrackNormal;
@@ -1565,6 +1585,16 @@ tabheader
 	preferred-height:20;
 }
 
+tabheader focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+}
+
 tabheader page
 {
 	bg-image-sizing-left:2;
@@ -1573,6 +1603,7 @@ tabheader page
 	bg-image-sizing-bottom:1;
 	padding-left:5;
 	padding-right:5;
+	align:center;
 	
 	preferred-width:45;
 	preferred-height:20;

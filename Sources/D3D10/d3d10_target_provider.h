@@ -47,8 +47,6 @@ public:
 /// \{
 
 public:
-	CL_DisplayMessageQueue_Provider *get_message_queue() const;
-
 
 /// \}
 /// \name Operations

@@ -383,6 +383,21 @@ public:
 	/// \brief Returns all the nodes matching the specified xpath expression using this node as the context node.
 	std::vector<CL_DomNode> select_nodes(const CL_DomString &xpath_expression) const;
 
+	/// \brief Returns the first node matching the specified xpath expression using this node as the context node.
+	CL_DomNode select_node(const CL_DomString &xpath_expression) const;
+
+	/// \brief Returns the first node value matching the specified xpath expression using this node as the context node.
+	CL_String select_string(const CL_DomString &xpath_expression) const;
+
+	/// \brief Returns the first node value (as integer) matching the specified xpath expression using this node as the context node.
+	int select_int(const CL_DomString &xpath_expression) const;
+
+	/// \brief Returns the first node value (as float) matching the specified xpath expression using this node as the context node.
+	float select_float(const CL_DomString &xpath_expression) const;
+
+	/// \brief Returns the first node value (as boolean) matching the specified xpath expression using this node as the context node.
+	bool select_bool(const CL_DomString &xpath_expression) const;
+
 /// \}
 /// \name Implementation
 /// \{

@@ -64,7 +64,10 @@ ServerListView::~ServerListView()
 
 void ServerListView::on_resized()
 {
-	server_list->set_geometry(CL_Rect(0, 0, get_width(), get_height()-30));
+	int button_height = 21;
+	int spacing = 7;
+
+	server_list->set_geometry(CL_Rect(0, 0, get_width(), get_height()-button_height-spacing));
 	button_connect->set_geometry(get_button_geometry(0,0));
 	button_add->set_geometry(get_button_geometry(1,1));
 	button_remove->set_geometry(get_button_geometry(2,1));
@@ -73,7 +76,13 @@ void ServerListView::on_resized()
 
 CL_Rect ServerListView::get_button_geometry(int index, int separators)
 {
-	return CL_Rect(4+70*index+separators*12, get_height()-26, 4+70*index+64+separators*12, get_height()-4);
+	int button_width = 75;
+	int button_height = 21;
+	int spacing = 7;
+	int x = (button_width+spacing)*index;
+	int y = get_height()-button_height;
+	return CL_Rect(CL_Point(x,y), CL_Size(button_width, button_height));
+	//return CL_Rect(4+70*index+separators*12, get_height()-26, 4+70*index+64+separators*12, get_height()-4);
 }
 
 void ServerListView::on_server_list_selection_changed(CL_ListViewSelection selection)

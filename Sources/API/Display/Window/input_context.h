@@ -128,6 +128,10 @@ public:
 
 private:
 	CL_SharedPtr<CL_InputContext_Impl> impl;
+
+	friend class CL_Win32Window;
+	friend class CL_X11Window;
+
 /// \}
 };
 

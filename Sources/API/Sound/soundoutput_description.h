@@ -33,7 +33,7 @@
 
 #include "api_sound.h"
 
-class CL_SoundOutput_Description_Generic;
+class CL_SoundOutput_Description_Impl;
 
 /// \brief Sound output description class.
 ///
@@ -84,7 +84,7 @@ public:
 /// \{
 
 private:
-	CL_SoundOutput_Description_Generic *impl;
+	CL_SoundOutput_Description_Impl *impl;
 /// \}
 };
 

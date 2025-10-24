@@ -44,6 +44,7 @@
 #include "API/Core/XML/dom_notation.h"
 #include "API/Core/XML/xpath_evaluator.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 #include "dom_node_generic.h"
 #include "dom_document_generic.h"
 #include "dom_tree_node.h"
@@ -736,6 +737,41 @@ std::vector<CL_DomNode> CL_DomNode::select_nodes(const CL_DomString &xpath_expre
 {
 	CL_XPathEvaluator evaluator;
 	return evaluator.evaluate(xpath_expression, *this).get_node_set();
+}
+
+CL_DomNode CL_DomNode::select_node(const CL_DomString &xpath_expression) const
+{
+	std::vector<CL_DomNode> nodes = select_nodes(xpath_expression);
+	if (nodes.empty())
+		throw CL_Exception(cl_format(cl_text("Xpath did not match any node: %1"), xpath_expression));
+	return nodes[0];
+}
+
+CL_String CL_DomNode::select_string(const CL_DomString &xpath_expression) const
+{
+	CL_DomNode node = select_node(xpath_expression);
+	if (node.is_element())
+		return node.to_element().get_text();
+	else
+		return node.get_node_value();
+}
+
+int CL_DomNode::select_int(const CL_DomString &xpath_expression) const
+{
+	CL_String v = select_string(xpath_expression);
+	return CL_StringHelp::text_to_int(v);
+}
+
+float CL_DomNode::select_float(const CL_DomString &xpath_expression) const
+{
+	CL_String v = select_string(xpath_expression);
+	return CL_StringHelp::text_to_float(v);
+}
+
+bool CL_DomNode::select_bool(const CL_DomString &xpath_expression) const
+{
+	CL_String v = select_string(xpath_expression);
+	return CL_StringHelp::text_to_bool(v);
 }
 
 /////////////////////////////////////////////////////////////////////////////

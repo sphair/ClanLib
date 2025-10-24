@@ -214,7 +214,7 @@ class CL_Quadf : public CL_Quadx<float>
 public:
 	CL_Quadf() : CL_Quadx<float>() {}
 	CL_Quadf(const CL_Vec2<float> &new_p, const CL_Vec2<float> &new_q, const CL_Vec2<float> &new_r, const CL_Vec2<float> &new_s) : CL_Quadx<float>(new_p, new_q, new_r, new_s) {}
-	CL_Quadf(const CL_Rect &rect) : CL_Quadx<float>(rect) {}
+	CL_Quadf(const CL_Rectf &rect) : CL_Quadx<float>(rect) {}
 	CL_Quadf(const CL_Quadx<float> &quad) : CL_Quadx<float>(quad) {}
 };
 
@@ -226,7 +226,7 @@ class CL_Quadd : public CL_Quadx<double>
 public:
 	CL_Quadd() : CL_Quadx<double>() {}
 	CL_Quadd(const CL_Vec2<double> &new_p, const CL_Vec2<double> &new_q, const CL_Vec2<double> &new_r, const CL_Vec2<double> &new_s) : CL_Quadx<double>(new_p, new_q, new_r, new_s) {}
-	CL_Quadd(const CL_Rect &rect) : CL_Quadx<double>(rect) {}
+	CL_Quadd(const CL_Rectd &rect) : CL_Quadx<double>(rect) {}
 	CL_Quadd(const CL_Quadx<double> &quad) : CL_Quadx<double>(quad) {}
 };
 

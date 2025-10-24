@@ -33,6 +33,7 @@
 
 #include "input_device_provider_win32tablet.h"
 #include "win32_window.h"
+#include "API/Display/Window/keys.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_Win32Tablet Construction:
@@ -66,24 +67,12 @@ CL_InputDeviceProvider_Win32Tablet::CL_InputDeviceProvider_Win32Tablet(CL_Win32W
 
 CL_InputDeviceProvider_Win32Tablet::~CL_InputDeviceProvider_Win32Tablet()
 {
-	if(wintab_dll && htab)
-	{
-		if (!WTClose(htab))
-		{
-			throw CL_Exception(cl_text("CL_InputDeviceProvider_Win32Tablet: Error closing tablet context"));
-		}
-	}
-
-	delete[] packet_queue;
-
-	if (wintab_dll)
-		FreeLibrary(wintab_dll);
+	dispose();
 }
 
 void CL_InputDeviceProvider_Win32Tablet::destroy()
 {
-	// The display window provider will delete the tablet provider.
-	// delete this;
+	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -316,8 +305,8 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		int keycode = LOWORD(pkt.pkButtons);
 		key_states[keycode] = true;
 		CL_InputEvent e;
-		
-		e.id           = keycode;
+
+		e.id           = keycode + CL_KEY_TABLET1;
 		e.type         = CL_InputEvent::pressed;
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = 0;
@@ -332,7 +321,7 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 		key_states[keycode] = false;
 		CL_InputEvent e;
 		
-		e.id           = keycode;
+		e.id           = keycode + CL_KEY_TABLET1;
 		e.type         = CL_InputEvent::released;
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = 0;
@@ -344,8 +333,8 @@ BOOL CL_InputDeviceProvider_Win32Tablet::process_packet(WPARAM wParam, LPARAM lP
 	else
 	{
 		CL_InputEvent e;
-				
-		e.id           = 2;
+		
+		e.id           = CL_InputEvent::z_axis; // TODO: support tilt, rotation.
 		e.type         = CL_InputEvent::axis_moved; // x,y as pointer movements
 		e.mouse_pos    = CL_Point(pkt.pkX - winfo.rcClient.left, pkt.pkY - winfo.rcClient.top);
 		e.axis_pos     = get_axis(2);
@@ -447,4 +436,20 @@ bool CL_InputDeviceProvider_Win32Tablet::load_wintab()
 bool CL_InputDeviceProvider_Win32Tablet::in_proximity() const
 {
 	return styuls_in_proximity;
+}
+
+void CL_InputDeviceProvider_Win32Tablet::on_dispose()
+{
+	if(wintab_dll && htab)
+	{
+		if (!WTClose(htab))
+		{
+			throw CL_Exception(cl_text("CL_InputDeviceProvider_Win32Tablet: Error closing tablet context"));
+		}
+	}
+
+	delete[] packet_queue;
+
+	if (wintab_dll)
+		FreeLibrary(wintab_dll);
 }

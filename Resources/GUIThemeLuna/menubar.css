@@ -11,6 +11,8 @@ menubar
 
 menubar item
 {
+    padding-left:8;
+    padding-right:8;
 	preferred-width:50;
 	preferred-height:24;
 	align:center;

@@ -32,7 +32,6 @@
 #include "opengl_window_provider_wgl.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/display.h"
 #include "API/Display/display_target.h"
 #include "API/Display/TargetProviders/render_window_provider.h"
@@ -100,7 +99,7 @@ namespace
 // CL_OpenGLWindowProvider_WGL Construction:
 
 CL_OpenGLWindowProvider_WGL::CL_OpenGLWindowProvider_WGL()
-: win32_window(&CL_OpenGLTargetProvider::message_queue),
+: win32_window(),
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), site(0), fullscreen(false)
 {
 	win32_window.func_on_resized().set(this, &CL_OpenGLWindowProvider_WGL::on_window_resized);
@@ -249,9 +248,6 @@ void CL_OpenGLWindowProvider_WGL::create(CL_DisplayWindowSite *new_site, const C
 	fullscreen = desc.is_fullscreen();
 
 	win32_window.create(site, desc);
-
-	if (desc.is_layered()) // TODO: Make the RGB value optional
-		SetLayeredWindowAttributes(win32_window.get_hwnd(), RGB(0,0,0), 0, LWA_COLORKEY);
 
 	if (!opengl_context)
 	{
@@ -413,28 +409,7 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 			CL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
-		CL_PixelFormat format = pixelbuffer.get_format();
-		BITMAPV5HEADER bmp_header;
-		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
-		bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
-		bmp_header.bV5Width = pixelbuffer.get_width();
-		bmp_header.bV5Height = pixelbuffer.get_height();
-		bmp_header.bV5Planes = 1;
-		bmp_header.bV5BitCount = 32;
-		bmp_header.bV5Compression = BI_BITFIELDS;
-		bmp_header.bV5RedMask = format.get_red_mask();
-		bmp_header.bV5GreenMask = format.get_green_mask();
-		bmp_header.bV5BlueMask = format.get_blue_mask();
-		bmp_header.bV5AlphaMask = format.get_alpha_mask();
-
-		HDC hdc = GetDC(win32_window.get_hwnd());
-
-		SetDIBitsToDevice(hdc, 0, 0,
-			width, height,
-			0,0,
-			0, height, pixelbuffer.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
-
- 		ReleaseDC(win32_window.get_hwnd(), hdc);
+		win32_window.update_layered(pixelbuffer, CL_Point(0, 0), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
 
 		if (blending)
 			clEnable(CL_BLEND);
@@ -500,8 +475,11 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 	if (shadow_window)
 	{
 		clReadBuffer(CL_BACK);
-		clRasterPos2i(rect.left, height - rect.bottom);
+		clRasterPos2i(0, 0);
 		clPixelZoom(1.0f, 1.0f);
+
+		// ** Currently update layered windows only supports full screen rect update **
+		rect = CL_Rect(0,0, width, height);
 
 		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::rgba8888);
 		clReadPixels(
@@ -511,30 +489,7 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 			CL_UNSIGNED_INT_8_8_8_8,
 			pixelbuffer.get_data());
 
-		CL_PixelFormat format = pixelbuffer.get_format();
-		BITMAPV5HEADER bmp_header;
-		memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
-		bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
-		bmp_header.bV5Width = pixelbuffer.get_width();
-		bmp_header.bV5Height = -pixelbuffer.get_height();
-		bmp_header.bV5Planes = 1;
-		bmp_header.bV5BitCount = 32;
-		bmp_header.bV5Compression = BI_BITFIELDS;
-		bmp_header.bV5RedMask = format.get_red_mask();
-		bmp_header.bV5GreenMask = format.get_green_mask();
-		bmp_header.bV5BlueMask = format.get_blue_mask();
-		bmp_header.bV5AlphaMask = format.get_alpha_mask();
-
-		HDC hdc = GetDC(win32_window.get_hwnd());
-
-		SetDIBitsToDevice(hdc,
-			rect.left, rect.top, 
-			rect.get_width(), rect.get_height(), 
-			0, pixelbuffer.get_height()-height, 
-			0, pixelbuffer.get_height(), pixelbuffer.get_data(), 
-			(BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
-
-		ReleaseDC(win32_window.get_hwnd(), hdc);
+		win32_window.update_layered(pixelbuffer, CL_Point(rect.left, rect.top), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f), 255, false);
 
 	}
 	else

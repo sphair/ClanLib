@@ -30,6 +30,7 @@
 #include "soundoutput_oss.h"
 #include <API/Core/System/exception.h>
 #include "API/Core/System/system.h"
+#include "API/Core/IOData/datatypes.h"
 #include "API/Core/Text/logger.h"
 #include <unistd.h>
 #include <fcntl.h>
@@ -53,7 +54,7 @@
 // CL_SoundOutput_OSS construction:
 
 CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
-	CL_SoundOutput_Generic(mixing_frequency, mixing_latency), dev_dsp_fd(-1), frag_size(0), has_sound(true)
+	CL_SoundOutput_Impl(mixing_frequency, mixing_latency), dev_dsp_fd(-1), frag_size(0), has_sound(true)
 {
 	dev_dsp_fd = open(DEFAULT_DSP, O_WRONLY|O_NONBLOCK);
 	if (dev_dsp_fd == -1)
@@ -154,9 +155,20 @@ int CL_SoundOutput_OSS::get_fragment_size()
 	return frag_size/4;
 }
 
-void CL_SoundOutput_OSS::write_fragment(short *data)
+void CL_SoundOutput_OSS::write_fragment(float *data)
 {
-	write(dev_dsp_fd, data, frag_size);
+
+	// OSS Cannot handle floats (why!)
+	std::vector<cl_int16> buffer;
+	buffer.resize(frag_size);
+	cl_int16 *bptr = &buffer[0];
+	for (int cnt=0; cnt<frag_size; cnt++)
+	{
+		*(bptr++) = (int) ( *(data++) * 32767.0f );
+	}
+	
+
+	write(dev_dsp_fd, &buffer[0], frag_size);
 }
 
 void CL_SoundOutput_OSS::wait()

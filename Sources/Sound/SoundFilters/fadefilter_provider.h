@@ -39,7 +39,7 @@ public:
 
 	void destroy();
 
-	void filter(int **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels);
 
 	float get_volume() const;
 	void set_volume(float new_volume);

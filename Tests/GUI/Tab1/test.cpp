@@ -68,8 +68,7 @@ public:
 			//tab_page_3->set_geometry(CL_Rect(CL_Point(0,0),CL_Size(230,300)));
 			//tab.add_page(cl_text("p3"), cl_text("p3"), &tab_page_3);
 
-			CL_AcceleratorTable at;
-			gui.exec(at);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -80,9 +79,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

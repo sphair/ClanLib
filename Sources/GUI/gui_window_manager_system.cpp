@@ -50,11 +50,6 @@ CL_GUIWindowManagerProvider_System *CL_GUIWindowManagerSystem::get_provider() co
 	return static_cast <CL_GUIWindowManagerProvider_System *> (CL_GUIWindowManager::get_provider());
 }
 
-CL_Callback_v0 &CL_GUIWindowManagerSystem::func_wait_for_message()
-{
-	return get_provider()->func_wait_for_message;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerSystem Operations:
 

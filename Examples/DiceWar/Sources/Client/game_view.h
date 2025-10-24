@@ -7,7 +7,7 @@ class Client;
 class MapArea;
 class GameTerrain;
 class GamePlayer;
-class Model3DS;
+class ModelCollada;
 class LightModel;
 class GameViewPlayerList;
 class GameViewBattle;
@@ -74,7 +74,7 @@ private:
 
 	CL_AutoPtr<GameTerrain> terrain;
 
-	CL_AutoPtr<Model3DS> army_model;
+	CL_AutoPtr<ModelCollada> army_model;
 
 	CL_AutoPtr<MapSelection> map_selection;
 

@@ -33,7 +33,7 @@ class App : public CL_ClanApplication
 //				spr1.draw(gc, CL_Rectf(0,0, 16,16), CL_Rectf(0,0,200,200));
 //				spr1.draw(gc, 0, 0);
 				window.flip(1);
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 
 				CL_System::sleep(10);
 			}

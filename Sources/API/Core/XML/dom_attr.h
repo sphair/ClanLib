@@ -127,7 +127,7 @@ public:
 /// \{
 
 private:
-	friend class CL_DomElement;
+
 /// \}
 };
 

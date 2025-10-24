@@ -38,6 +38,7 @@ class CL_SoundProvider;
 class CL_InputSourceProvider;
 class CL_SoundProviderType;
 class CL_VirtualDirectory;
+class CL_IODevice;
 
 /// \brief Sound Provider Factor class.
 ///
@@ -56,8 +57,7 @@ public:
 /// \{
 
 public:
-	/// \brief Loads an sample file from 'filename', using the provider
-	/// \brief identified by 'type'.
+	/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
 	/** <p>If the type is an empty string, it
 	    uses the extension of the filename to determine what type
 	    it is.</p>
@@ -66,8 +66,21 @@ public:
 	static CL_SoundProvider *load(
 		const CL_String &filename,
 		bool streamed,
-		const CL_String &type,
-		CL_VirtualDirectory directory);
+		const CL_VirtualDirectory &directory,
+		const CL_String &type = CL_String()
+		);
+
+	/// \brief Loads an sample file from 'filename', using the provider identified by 'type'.
+	static CL_SoundProvider *load(
+		const CL_String &fullname,
+		bool streamed,
+		const CL_String &type = CL_String());
+
+	/// \brief Loads an sample file from 'file', using the provider identified by 'type'.
+	static CL_SoundProvider *load(
+		CL_IODevice &file,
+		bool streamed,
+		const CL_String &type);
 /// \}
 };
 

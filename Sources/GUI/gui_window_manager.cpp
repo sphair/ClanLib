@@ -100,10 +100,9 @@ void CL_GUIWindowManager::set_site(CL_GUIWindowManagerSite *site)
 void CL_GUIWindowManager::create_window(
 	CL_GUITopLevelWindow *handle,
 	CL_GUITopLevelWindow *owner,
-	CL_GUITopLevelDescription description,
-	bool temporary)
+	CL_GUITopLevelDescription description)
 {
-	impl->provider->create_window(handle, owner, description, temporary);
+	impl->provider->create_window(handle, owner, description);
 }
 
 void CL_GUIWindowManager::destroy_window(CL_GUITopLevelWindow *handle)
@@ -201,21 +200,6 @@ bool CL_GUIWindowManager::is_maximized(CL_GUITopLevelWindow *handle) const
 	return impl->provider->is_maximized(handle);
 }
 
-bool CL_GUIWindowManager::has_message()
-{
-	return impl->provider->has_message();
-}
-
-void CL_GUIWindowManager::process_message()
-{
-	impl->provider->process_message();
-}
-
-void CL_GUIWindowManager::wait_for_message()
-{
-	impl->provider->wait_for_message();
-}
-
 void CL_GUIWindowManager::request_repaint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region)
 {
 	impl->provider->request_repaint(handle, update_region);
@@ -245,6 +229,18 @@ void CL_GUIWindowManager::reset_cliprect(CL_GUITopLevelWindow *handle, CL_Graphi
 {
 	impl->provider->reset_cliprect(handle, gc);
 }
+
+void CL_GUIWindowManager::push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)
+{
+	impl->provider->push_cliprect(handle, gc, rect);
+}
+
+void CL_GUIWindowManager::pop_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc)
+{
+	impl->provider->pop_cliprect(handle, gc);
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManager Implementation:

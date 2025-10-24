@@ -282,22 +282,15 @@ public:
 
 	/// \brief Flip back buffer to front, making changes visible on screen.
 	///
-	/// \param interval Specifies the minimum number of video frames that are displayed before a buffer swap will occur.
 	/// <p>The parameter interval specifies the minimum number of video frames
 	/// that are displayed before a buffer swap will occur.</p>
-	/// <p>A video frame period is the time required by the monitor to display a
-	/// full frame of video data.  In the case of an interlaced monitor,
-	/// this is typically the time required to display both the even and odd
-	/// fields of a frame of video data.  An interval set to a value of 2
-	/// means that the color buffers will be swapped at most every other video
-	/// frame.</p>
 	/// <p>If interval is set to a value of 0, buffer swaps are not synchronized
-	/// to a video frame.  The interval value is silently clamped to
-	/// the maximum implementation-dependent value supported before being
-	/// stored.</p>
+	/// to a video frame. </p>
 	/// <p>If interval is set to a value of -1 (the default), then it will use
 	/// the buffer swap used for previous flip. If its the first flip, it will
-	/// use the system default, which per default is 1.</p>
+	/// use the system default.</p>
+	///
+	/// \param interval = See note
 	void flip(int interval = -1);
 
 	/// \brief Shows the mouse cursor.
@@ -332,7 +325,6 @@ public:
 private:
 	CL_SharedPtr<CL_DisplayWindow_Impl> impl;
 
-	friend class CL_Display;
 /// \}
 };
 

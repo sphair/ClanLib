@@ -38,7 +38,7 @@ void ChannelTopic::set_topic(const CL_String &new_timestamp, const IRCText &new_
 	CL_Font font = part_background.get_font();
 	span_layout.clear();
 	span_layout.add_text(text.get_text(), font, CL_Colorf::black);
-	span_layout.add_text("  set by ", font, CL_Colorf::gray);
+	span_layout.add_text(" set by ", font, CL_Colorf::gray);
 	span_layout.add_text(new_author.get_name(), font, CL_Colorf::black);
 //	span_layout.add_text(" at ", font, CL_Colorf::gray);
 //	span_layout.add_text(timestamp, font, CL_Colorf::gray);

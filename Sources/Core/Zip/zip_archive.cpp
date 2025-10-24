@@ -55,7 +55,7 @@ CL_ZipArchive::CL_ZipArchive()
 CL_ZipArchive::CL_ZipArchive(const CL_StringRef &filename)
 : impl(new CL_ZipArchive_Impl)
 {
-	CL_IODevice input = CL_File(filename, CL_File::open_existing);
+	CL_IODevice input = CL_File(filename);
 	impl->input = input;
 	load(input);
 }
@@ -206,7 +206,7 @@ void CL_ZipArchive::save()
 
 void CL_ZipArchive::save(const CL_StringRef &filename)
 {
-	CL_File output(filename, CL_File::open_always);
+	CL_File output(filename, CL_File::open_always, CL_File::access_read_write);
 
 	std::vector<int> local_header_offsets;
 	std::vector<cl_uint32> crc32_codes;
@@ -221,7 +221,7 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 
 		CL_TempString input_filename = (*it).get_input_filename();
 		CL_TempString archive_filename = (*it).get_archive_filename();
-		CL_File input(input_filename, CL_File::open_existing);
+		CL_File input(input_filename);
 
 		CL_DataBuffer data(input.get_size());
 		input.read(data.get_data(), data.get_size());
@@ -257,7 +257,7 @@ void CL_ZipArchive::save(const CL_StringRef &filename)
 	{
 		CL_TempString input_filename = (*it).get_input_filename();
 		CL_TempString filename = (*it).get_archive_filename();
-		CL_File input(input_filename, CL_File::open_existing);
+		CL_File input(input_filename);
 
 		(*it).impl->record.version_made_by = 20;
 		(*it).impl->record.version_needed_to_extract = 20;

@@ -120,7 +120,7 @@ void App::on_btn_set_soundoutput_filters()
 
 	if (chk_echo_filter->is_checked())
 	{
-		last_soundoutput_echo_filter = CL_EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value());
+		last_soundoutput_echo_filter = CL_EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value_float());
 		sound_output.add_filter(last_soundoutput_echo_filter);
 	}
 
@@ -247,7 +247,7 @@ void App::set_soundbuffer_session_filters(SoundSession &sound_session)
 	{
 		if (chk_echo_filter->is_checked())
 		{
-			sound_session.echo_filter = CL_EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value());
+			sound_session.echo_filter = CL_EchoFilter(spin_filter_echo_buffer_size->get_value(), spin_filter_echo_shift_factor->get_value_float());
 			sound_session.session.add_filter(sound_session.echo_filter);
 		}
 

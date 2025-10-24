@@ -35,7 +35,6 @@
 #include "popupmenu_window.h"
 #include "menu_modal_loop.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenu Construction:
 
@@ -75,7 +74,7 @@ CL_PopupMenuItem CL_PopupMenu::get_item(int id)
 	return CL_PopupMenuItem();
 }
 
-CL_PopupMenuItem CL_PopupMenu::get_item_at(int index)
+CL_PopupMenuItem CL_PopupMenu::get_item_at(int index) 
 {
 	if (index < 0 || index >= (int)impl->items.size())
 		return CL_PopupMenuItem();
@@ -83,7 +82,7 @@ CL_PopupMenuItem CL_PopupMenu::get_item_at(int index)
 		return impl->items[index];
 }
 
-int CL_PopupMenu::item_count() const
+int CL_PopupMenu::get_item_count() const
 {
 	return (int) impl->items.size();
 }
@@ -93,31 +92,29 @@ CL_Size CL_PopupMenu::get_preferred_size() const
 	return CL_Size(100,100); // todo
 }
 
-
 CL_String CL_PopupMenu::get_class_name() const
 {
 	return impl->class_name;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_PopupMenu Operations:
+// CL_PopupMenu Events:
 
-void CL_PopupMenu::exec(CL_GUIComponent *parent, const CL_Point &pos)
+CL_Callback_v0 &CL_PopupMenu::func_close()
 {
-	if (item_count() == 0)
-		return;
-
-	CL_MenuModalLoop menu_modal_loop(parent, *this, pos);
-	menu_modal_loop.exec();
+	return impl->func_close;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// CL_PopupMenu Operations:
 
 void CL_PopupMenu::start(CL_GUIComponent *parent, const CL_Point &pos)
 {
-	if (item_count() == 0)
+	if (get_item_count() == 0)
 		return;
 
-	CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(parent, *this, pos);
-	menu_ptr->start();
+	CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(parent->get_gui_manager());
+	menu_ptr->start(parent, *this, pos);
 }
 
 CL_PopupMenuItem CL_PopupMenu::insert_item(const CL_StringRef &text, int id, int index)
@@ -171,7 +168,7 @@ int CL_PopupMenu::get_minimum_width() const
 
 int CL_PopupMenu::find_item(const CL_StringRef &text, bool case_sensitive)
 {
-	int size = item_count();
+	int size = get_item_count();
 	int index = 0;
 	int best_match_index = -1;
 	CL_String::size_type highest_match = 0;
@@ -218,19 +215,6 @@ int CL_PopupMenu::find_item(const CL_StringRef &text, bool case_sensitive)
 void CL_PopupMenu::set_class_name(const CL_StringRef &class_name)
 {
 	impl->class_name = class_name;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_PopupMenu Events:
-
-CL_Callback_v1<CL_PopupMenuItem> &CL_PopupMenu::func_item_selected()
-{
-	return impl->func_item_selected;
-}
-
-CL_Callback_v1<CL_InputEvent> &CL_PopupMenu::func_keyboard_event()
-{
-	return impl->func_keyboard_event;
 }
 
 /////////////////////////////////////////////////////////////////////////////

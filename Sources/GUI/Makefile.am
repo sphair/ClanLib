@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclanGUI.la
+lib_LTLIBRARIES = libclan21GUI.la
 
-libclanGUI_la_SOURCES = \
+libclan21GUI_la_SOURCES = \
 setup_gui.h \
 setup_gui.cpp \
 gui_font_cache.h \
@@ -11,7 +11,6 @@ gui_message_activation_change.cpp \
 gui_layout_corners.cpp \
 gui_layout.cpp \
 gui_component.cpp \
-gui_consumed_keys.cpp \
 gui_component_description.cpp \
 gui_component_impl.cpp \
 gui_manager.cpp \
@@ -102,13 +101,16 @@ Components/toolbar.cpp \
 Components/tooltip.cpp \
 Components/tab_header.cpp \
 Components/window.cpp \
+Components/openfiledialog.cpp \
+Components/savefiledialog.cpp \
+Components/filedialog_impl.h \
 gui_component_description_impl.h \
 gui_component_impl.h \
 gui_manager_impl.h \
 gui_theme_default_impl.h \
 precomp.h
 
-libclanGUI_la_LDFLAGS = \
+libclan21GUI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

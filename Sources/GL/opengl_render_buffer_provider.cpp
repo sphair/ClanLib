@@ -52,15 +52,9 @@ void CL_OpenGLRenderBufferProvider::on_dispose()
 {
 	if (handle)
 	{
-		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
-		if (!opengl_contexts.empty())
+		if (CL_OpenGL::set_active())
 		{
-			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
-			if (gc_provider)
-			{
-				CL_OpenGL::set_active(gc_provider);
-				clDeleteRenderbuffers(1, &handle);
-			}
+			clDeleteRenderbuffers(1, &handle);
 		}
 	}
 }
@@ -81,9 +75,14 @@ void CL_OpenGLRenderBufferProvider::create(int width, int height, CL_TextureForm
 	CLuint last_render_buffer = 0;
 	clGetIntegerv(CL_RENDERBUFFER_BINDING, (CLint *) &last_render_buffer);
 
+	CLint gl_internal_format;
+	CLenum gl_pixel_format;
+	CL_OpenGL::to_opengl_textureformat(internal_format, gl_internal_format, gl_pixel_format);
+
+
 	clGenRenderbuffers(1, &handle);
 	clBindRenderbuffer(CL_RENDERBUFFER, handle);
-	clRenderbufferStorage(CL_RENDERBUFFER, internal_format, width, height);
+	clRenderbufferStorage(CL_RENDERBUFFER, gl_pixel_format, width, height);
 
 	clBindRenderbuffer(CL_RENDERBUFFER, last_render_buffer);
 }

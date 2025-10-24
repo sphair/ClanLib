@@ -26,8 +26,7 @@
 **    Magnus Norddahl
 */
 
-#ifndef header_selected_object
-#define header_selected_object
+#pragma once
 
 class DialogComponent;
 
@@ -64,5 +63,3 @@ private:
 	Type type;
 	DialogComponent *component;
 };
-
-#endif

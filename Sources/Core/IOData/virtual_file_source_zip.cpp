@@ -31,6 +31,9 @@
 #include "virtual_file_source_zip.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/virtual_directory_listing_entry.h"
+#include "API/Core/Text/string_format.h"
+
+int CL_VirtualFileSource_Zip::zip_source_unique_id = 0;
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_VirtualFileSource_Zip Construction:
@@ -38,6 +41,7 @@
 CL_VirtualFileSource_Zip::CL_VirtualFileSource_Zip(const CL_ZipArchive &zip_archive)
 : zip_archive(zip_archive), index(0)
 {
+	zip_source_unique_id++;
 }
 
 CL_VirtualFileSource_Zip::~CL_VirtualFileSource_Zip()
@@ -50,6 +54,13 @@ CL_VirtualFileSource_Zip::~CL_VirtualFileSource_Zip()
 CL_String CL_VirtualFileSource_Zip::get_path() const
 {
 	return path;
+}
+
+CL_String CL_VirtualFileSource_Zip::get_identifier() const
+{
+	// Ideally we should identify from the archive source (checksum etc)
+	// I'm sure someone will implement it if it is required
+	return path + cl_format(cl_text("/%1"), zip_source_unique_id);
 }
 
 /////////////////////////////////////////////////////////////////////////////

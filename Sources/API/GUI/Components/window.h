@@ -48,7 +48,6 @@ class CL_API_GUI CL_Window : public CL_GUIComponent
 /// \name Construction
 /// \{
 public:
-
 	/// \brief Constructs a Window
 	///
 	/// \param owner = GUIComponent
@@ -62,26 +61,6 @@ public:
 	CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &description);
 
 	virtual ~CL_Window();
-
-/// \}
-/// \name Events
-/// \{
-public:
-
-	/// \brief Func close
-	///
-	/// \return Callback_v0
-	CL_Callback_v0 &func_close();
-
-	/// \brief Func activation gained
-	///
-	/// \return Callback_v0
-	CL_Callback_v0 &func_activation_gained();
-
-	/// \brief Func activation lost
-	///
-	/// \return Callback_v0
-	CL_Callback_v0 &func_activation_lost();
 
 /// \}
 /// \name Attributes
@@ -128,7 +107,6 @@ public:
 private:
 	CL_SharedPtr<CL_Window_Impl> impl;
 
-	friend class CL_Window_Impl;
 /// \}
 };
 /// \}

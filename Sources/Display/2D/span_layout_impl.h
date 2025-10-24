@@ -51,6 +51,7 @@ public:
 	void draw_layout(CL_GraphicContext &gc);
 	void set_position(const CL_Point &pos) { position = pos; }
 	CL_Size get_size() const;
+	std::vector<CL_Rect> get_rect_by_id(int id) const;
 	void set_align(CL_SpanAlign align);
 
 	CL_Size find_preferred_size(CL_GraphicContext &gc);
@@ -190,7 +191,6 @@ private:
 	void align_right(int max_width);
 	void draw_layout_image(CL_GraphicContext &gc, Line &line, LineSegment &segment, int x, int y);
 	void draw_layout_text(CL_GraphicContext &gc, Line &line, LineSegment &segment, int x, int y);
-
 	CL_String::size_type sel_start, sel_end;
 	CL_Colorf sel_foreground, sel_background;
 

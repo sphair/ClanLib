@@ -28,7 +28,6 @@
 
 #include "precomp.h"
 #include "source_generator_dialog.h"
-#include "system_dialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // SourceGenerator Construction:
@@ -73,14 +72,14 @@ CL_GUITopLevelDescription SourceGeneratorDialog::get_startup_description()
 
 void SourceGeneratorDialog::on_btn_browse_cpp()
 {
-	CL_TempString filename = SystemDialog::show_open_file_dialog();
-	combo_cpp_filename->set_text(filename);
+//	CL_TempString filename = show_open_file_dialog();
+//	combo_cpp_filename->set_text(filename);
 }
 
 void SourceGeneratorDialog::on_btn_browse_h()
 {
-	CL_TempString filename = SystemDialog::show_open_file_dialog();
-	combo_h_filename->set_text(filename);
+//	CL_TempString filename = show_open_file_dialog();
+//	combo_h_filename->set_text(filename);
 }
 
 void SourceGeneratorDialog::on_btn_generate()

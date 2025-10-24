@@ -10,7 +10,7 @@
 #include "game_view_end.h"
 #include "game_view_chat.h"
 #include "game_view_actionbar.h"
-#include "3D/model_3ds.h"
+#include "3D/model_collada.h"
 #include "3D/light_model.h"
 #include "3D/camera.h"
 #include "../Lib/map_area.h"
@@ -37,7 +37,7 @@ GameView::GameView(Client *client)
 	font_large = CL_Font(get_gc(), "Accidental Presidency", -40);
 
 	CL_GraphicContext gc = get_gc();
-	army_model.reset(new Model3DS(gc, "Resources/army_unit.3ds"));
+	army_model.reset(new ModelCollada(gc, "Resources/army_unit.dae"));
 
 	set_playing_state(false);
 	set_battle_state(false);
@@ -321,12 +321,13 @@ void GameView::render_map(CL_GraphicContext &gc)
 	gc.set_buffer_control(buffer_control);
 
 	LightModel light_model;
-	light_model.scene_ambient = CL_Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
-
 	LightSource light0;
-	light0.diffuse = CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	light0.set_position(modelview, CL_Vec4f(-5000.0f, 8000.0f, 5000.0f, 1.0f));
+	light0.constant_attenuation = 0.004f;
+	light0.position = get_modelview()*CL_Vec4f(-60.0f, 125.0f, 350.0f, 1.0f);
+	//light0.position = CL_Vec4f(-60.0f, 125.0f, 350.0f, 1.0f);
+	light_model.scene_ambient = CL_Vec4f(0.4f, 0.4f, 0.4f, 1.0f);
 	light_model.light_sources.push_back(light0);
+
 
 	gc.clear_depth(1.0f);
 

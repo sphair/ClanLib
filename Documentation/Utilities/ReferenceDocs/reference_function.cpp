@@ -18,7 +18,8 @@ void ReferenceFunction::load(CL_String member_name, CL_DomElement class_element)
 		CL_String tag_name = cur_element.get_tag_name();
 		if ( (tag_name == "sectiondef") && (
 			(cur_element.get_attribute("kind") == "user-defined") ||
-			(cur_element.get_attribute("kind") == "public-func") ) )
+			(cur_element.get_attribute("kind") == "public-func") ||
+			(cur_element.get_attribute("kind") == "public-static-func") ) )
 		{
 			parse_sectiondef(cur_element);
 		}
@@ -27,7 +28,7 @@ void ReferenceFunction::load(CL_String member_name, CL_DomElement class_element)
 
 void ReferenceFunction::save(const CL_StringRef &filename)
 {
-	CL_File function_file(filename, CL_File::create_always);
+	CL_File function_file(filename, CL_File::create_always, CL_File::access_write);
 
 
 	CL_String html = cl_format(

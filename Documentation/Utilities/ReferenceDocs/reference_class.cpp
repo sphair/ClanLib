@@ -17,7 +17,7 @@ void ReferenceClass::load(CL_DomElement element)
 
 void ReferenceClass::save(const CL_StringRef &filename)
 {
-	CL_File class_file(filename, CL_File::create_always);
+	CL_File class_file(filename, CL_File::create_always, CL_File::access_write);
 	CL_String html = cl_format(
 		"<!-- clanlib header begin -->\n"
 		"<HTML>\n"
@@ -229,7 +229,8 @@ void ReferenceClass::parse_compounddef(CL_DomElement compounddef)
 		}
 		else if ( (tag_name == "sectiondef") && (
 			(cur_element.get_attribute("kind") == "user-defined") ||
-			(cur_element.get_attribute("kind") == "public-func") ) )
+			(cur_element.get_attribute("kind") == "public-func") ||
+			(cur_element.get_attribute("kind") == "public-static-func") ) )
 		{
 			ReferenceClassGroup group = parse_sectiondef(cur_element);
 			groups.push_back(group);

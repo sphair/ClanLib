@@ -108,7 +108,6 @@ public:
 private:
 	CL_SharedPtr<CL_DBReader_Impl> impl;
 
-	friend class CL_DBConnection;
 /// \}
 };
 

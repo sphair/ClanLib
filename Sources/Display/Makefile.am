@@ -1,11 +1,11 @@
-lib_LTLIBRARIES = libclanDisplay.la
+lib_LTLIBRARIES = libclan21Display.la
 
 if WIN32
 else
-libclanDisplay_la_LIBADD = -lpng -ljpeg
+libclan21Display_la_LIBADD = -lpng -ljpeg
 endif
 
-libclanDisplay_la_SOURCES = \
+libclan21Display_la_SOURCES = \
 	2D/color.cpp \
 	2D/draw.cpp \
 	2D/image.cpp \
@@ -38,7 +38,9 @@ libclanDisplay_la_SOURCES = \
 	Collision/collision_outline.cpp \
 	Collision/resourcedata_collisionoutline.cpp \
 	Collision/resourcedata_collisionoutline.h \
+	Image/icon_set.cpp \
 	Image/pixel_buffer.cpp \
+	Image/pixel_buffer_help.cpp \
 	Image/pixel_buffer_impl.cpp \
 	Image/pixel_buffer_impl.h \
 	Image/pixel_format.cpp \
@@ -76,14 +78,15 @@ libclanDisplay_la_SOURCES = \
 	Font/font_sprite.cpp \
 	Font/font_system.cpp \
 	Font/font_vector.cpp \
-	Font/freetype_font.cpp \
-	Font/freetype_font.h \
-	Font/freetype_font_provider.cpp \
-	Font/freetype_font_provider.h \
 	Font/glyph_contour.cpp \
 	Font/glyph_contour.h \
 	Font/glyph_outline.cpp \
 	Font/glyph_outline.h \
+	Font/glyph_cache.cpp \
+	Font/glyph_cache.h \
+	Font/FontEngine/font_engine.h \
+	Font/FontEngine/font_engine_freetype.cpp \
+	Font/FontEngine/font_engine_freetype.h \
 	Render/blend_mode.cpp \
 	Render/buffer_control.cpp \
 	Render/element_array_buffer.cpp \
@@ -108,12 +111,10 @@ libclanDisplay_la_SOURCES = \
 	Render/primitives_array_builder.cpp \
 	Render/shared_gc_data.cpp \
 	Render/shared_gc_data.h \
-	Window/display_message_queue.cpp \
 	Window/display_window.cpp \
 	Window/display_window_description.cpp \
 	Window/display_window_description_impl.h \
 	Window/display_window_impl.h \
-	Window/display_window_message.cpp \
 	Window/input_context.cpp \
 	Window/input_context_impl.cpp \
 	Window/input_context_impl.h \
@@ -125,6 +126,7 @@ libclanDisplay_la_SOURCES = \
 	Window/display_window_mode.cpp \
 	display.cpp \
 	display_target.cpp \
+	screen_info.cpp \
 	precomp.cpp \
 	precomp.h \
 	setup_display.cpp \
@@ -136,23 +138,21 @@ libclanDisplay_la_SOURCES = \
 	X11/display_message_queue_x11.h \
 	X11/cursor_provider_x11.cpp \
 	X11/cursor_provider_x11.h \
-	X11/input_device_x11keyboard.h \
 	X11/input_device_provider_x11mouse.cpp \
 	X11/input_device_provider_x11mouse.h \
 	X11/input_device_provider_x11keyboard.cpp \
 	X11/input_device_provider_x11keyboard.h
 if LINUX_JOYSTICK
-libclanDisplay_la_SOURCES += \
+libclan21Display_la_SOURCES += \
 	X11/input_device_provider_linuxjoystick.cpp \
 	X11/input_device_provider_linuxjoystick.h
 endif
-libclanDisplay_la_SOURCES += \
+libclan21Display_la_SOURCES += \
 	X11/font_config.cpp \
-	X11/font_config.h \
-	X11/input_device_x11keyboard.cpp
+	X11/font_config.h
 
 # if WIN32
-# libclanDisplay_la_SOURCES += \
+# libclan21Display_la_SOURCES += \
 # Win32/dc_buffer.cpp \
 # Win32/dc_buffer_generic.cpp \
 # Win32/dc_buffer_generic.h \
@@ -166,7 +166,7 @@ libclanDisplay_la_SOURCES += \
 # Win32/input_device_win32mouse.h
 # endif
 
-libclanDisplay_la_LDFLAGS = \
+libclan21Display_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

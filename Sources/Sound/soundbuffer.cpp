@@ -38,8 +38,8 @@
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/path_help.h"
-#include "soundbuffer_generic.h"
-#include "soundbuffer_session_generic.h"
+#include "soundbuffer_impl.h"
+#include "soundbuffer_session_impl.h"
 #include "resourcetype_sample.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -54,41 +54,52 @@ CL_SoundBuffer::CL_SoundBuffer(
 	CL_ResourceManager *manager)
 {
 	CL_Resource resource = manager->get_resource(res_id);
-	resource_data_session = CL_ResourceDataSession(cl_text("sample"), resource);
+
+	CL_ResourceDataSession resource_data_session(cl_text("sample"), resource);
 	CL_SharedPtr<CL_ResourceData_Sample> data(resource.get_data(cl_text("sample")));
 	if (data.is_null())
 	{
 		data = CL_SharedPtr<CL_ResourceData_Sample>(new CL_ResourceData_Sample(resource));
 		resource.set_data(cl_text("sample"), data);
 	}
+
 	impl = data->soundbuffer->impl;
+	impl->resource_data_session = resource_data_session;
 }
 
 CL_SoundBuffer::CL_SoundBuffer(
-	CL_SoundProvider *provider,
-	bool delete_provider)
-: impl(new CL_SoundBuffer_Generic)
+	CL_SoundProvider *provider)
+: impl(new CL_SoundBuffer_Impl)
 {
 	impl->provider = provider;
-	impl->delete_provider = delete_provider;
 }
 
 CL_SoundBuffer::CL_SoundBuffer(
 	const CL_String &fullname,
 	bool streamed,
 	const CL_String &sound_format)
-: impl(new CL_SoundBuffer_Generic)
+: impl(new CL_SoundBuffer_Impl)
 {
-	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
-	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
-	CL_VirtualFileSystem vfs(path);
+	impl->provider = CL_SoundProviderFactory::load(fullname, streamed, sound_format);
+}
 
-	impl->provider = CL_SoundProviderFactory::load(
-		filename,
-		streamed,
-		sound_format,
-		vfs.get_root_directory());
-	impl->delete_provider = true;
+CL_SoundBuffer::CL_SoundBuffer(
+		const CL_String &filename,
+		bool streamed,
+		const CL_VirtualDirectory &directory,
+		const CL_String &type)
+: impl(new CL_SoundBuffer_Impl)
+{
+	impl->provider = CL_SoundProviderFactory::load(filename, streamed, directory, type);
+}
+
+CL_SoundBuffer::CL_SoundBuffer(
+		CL_IODevice &file,
+		bool streamed,
+		const CL_String &type)
+: impl(new CL_SoundBuffer_Impl)
+{
+	impl->provider = CL_SoundProviderFactory::load(file, streamed, type);
 }
 
 CL_SoundBuffer::CL_SoundBuffer(const CL_SoundBuffer &copy)
@@ -103,37 +114,31 @@ CL_SoundBuffer::~CL_SoundBuffer()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer attributes:
 
-CL_SoundProvider *CL_SoundBuffer::get_sound_provider() const
+CL_SoundProvider *CL_SoundBuffer::get_provider() const
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
+	if (impl.is_null())
+		return 0;
 	return impl->provider;
 }
 
+bool CL_SoundBuffer::is_null()
+{
+	return impl.is_null();
+}
+
+
 float CL_SoundBuffer::get_volume() const
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->volume;
 }
 
 float CL_SoundBuffer::get_pan() const
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
 	return impl->pan;
-}
-
-bool CL_SoundBuffer::is_playing() const
-{
-	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer operations:
-
-CL_SoundBuffer &CL_SoundBuffer::operator =(const CL_SoundBuffer &copy)
-{
-	impl = copy.impl;
-	return *this;
-}
 
 void CL_SoundBuffer::set_volume(float new_volume)
 {
@@ -166,11 +171,6 @@ void CL_SoundBuffer::remove_filter(CL_SoundFilter &filter)
 	}
 }
 
-void CL_SoundBuffer::stop()
-{
-	CL_MutexSection mutex_lock(&impl->mutex);
-}
-
 CL_SoundBuffer_Session CL_SoundBuffer::play(bool looping, CL_SoundOutput *output)
 {
 	CL_SoundBuffer_Session session = prepare(looping, output);
@@ -184,12 +184,7 @@ CL_SoundBuffer_Session CL_SoundBuffer::prepare(bool looping, CL_SoundOutput *out
 	if (output == 0) output = &current_output;
 
 	CL_MutexSection mutex_lock(&impl->mutex);
-	return CL_SoundBuffer_Session(
-		CL_SharedPtr<CL_SoundBuffer_Session_Generic>(
-			new CL_SoundBuffer_Session_Generic(
-				impl,
-				looping,
-				output->impl)));
+	return CL_SoundBuffer_Session(*this, looping, *output);
 }
 
 /////////////////////////////////////////////////////////////////////////////

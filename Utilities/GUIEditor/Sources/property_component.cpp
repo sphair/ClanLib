@@ -24,15 +24,396 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Magnus Norddahl
 */
 
 #include "precomp.h"
 #include "property_component.h"
+#include "property_item.h"
 #include "holder_component.h"
 #include "grid_component.h"
 #include "custom_component.h"
 #include "selection.h"
 #include "main_window.h"
+
+PropertyComponent::PropertyComponent(MainWindow *main_window)
+: CL_GUIComponent(main_window), main_window(main_window), name_column_width(75), active_item(0), active_component(0), scrollbar(0)
+{
+	set_type_name("property-component");
+	set_clip_children(true);
+	part_background = CL_GUIThemePart(this);
+	part_header = CL_GUIThemePart(this, "header");
+	part_header_name = CL_GUIThemePart(this, "header name");
+	part_header_value = CL_GUIThemePart(this, "header value");
+	part_row[0] = CL_GUIThemePart(this, "row");
+	part_row[1] = CL_GUIThemePart(this, "row");
+	part_row[1].set_state("alternate", true);
+	part_item_name = CL_GUIThemePart(this, "item name");
+	part_item_value = CL_GUIThemePart(this, "item value");
+
+	func_input_pressed().set(this, &PropertyComponent::on_input_pressed);
+	func_input_released().set(this, &PropertyComponent::on_input_released);
+	func_input_doubleclick().set(this, &PropertyComponent::on_input_doubleclick);
+	func_input_pointer_moved().set(this, &PropertyComponent::on_input_pointer_moved);
+	func_render().set(this, &PropertyComponent::on_render);
+
+	scrollbar = new CL_ScrollBar(this);
+	scrollbar->set_vertical();
+	scrollbar->set_visible(false);
+
+	edit_state.set_component(this);
+
+	slots.connect(main_window->get_selection()->sig_selection_changed(), this, &PropertyComponent::on_selection_changed);
+	slots.connect(get_gui_manager().sig_filter_message(), this, &PropertyComponent::on_filter_message);
+}
+
+PropertyComponent::~PropertyComponent()
+{
+	clear();
+}
+
+void PropertyComponent::clear()
+{
+	deactivate();
+	for (size_t i = 0; i < items.size(); i++)
+		delete items[i];
+	items.clear();
+	request_repaint();
+}
+
+void PropertyComponent::add_property(PropertyItem *item)
+{
+	item->property_component = this;
+	items.push_back(item);
+	request_repaint();
+}
+
+void PropertyComponent::on_selection_changed()
+{
+	clear();
+	std::vector<HolderComponent *> selection = main_window->get_selection()->get_selection();
+	if (!selection.empty())
+	{
+		HolderComponent *item = selection[0];
+		CL_GUIComponent *comp = item->get_first_child();
+
+		add_property(new PropertyItemHeader("Properties"));
+
+		CL_TempString type = comp->get_type_name();
+
+		if (type != cl_text("grid"))
+		{
+			CL_Size comp_size = comp->get_geometry().get_size();
+			bool enable_width = true;
+			bool enable_height = true;
+
+			HolderComponent *holder = dynamic_cast<HolderComponent*>(comp->get_parent_component());
+			if (holder)
+			{
+				CL_String equ_x = holder->get_position_equation_x();
+				CL_String equ_y = holder->get_position_equation_y();
+
+				if (equ_x.empty())
+					add_property(new PropertyItemLineEdit("x1", CL_StringHelp::int_to_text(holder->get_geometry().left)));
+				else
+					add_property(new PropertyItemLineEdit("x1", equ_x));
+
+				if (equ_y.empty())
+					add_property(new PropertyItemLineEdit("y1", CL_StringHelp::int_to_text(holder->get_geometry().top)));
+				else
+					add_property(new PropertyItemLineEdit("y1", equ_y));
+
+
+				CL_String equ_x2 = holder->get_position_equation_x2();
+				CL_String equ_y2 = holder->get_position_equation_y2();
+
+				add_property(new PropertyItemLineEdit("x2", equ_x2));
+				add_property(new PropertyItemLineEdit("y2", equ_y2));
+
+				if (!equ_x2.empty())
+					enable_width = false;
+				if (!equ_y2.empty())
+					enable_height = false;
+			}
+
+			add_property(new PropertyItemLineEdit("Width", CL_StringHelp::int_to_text(comp_size.width)));
+			add_property(new PropertyItemLineEdit("Height", CL_StringHelp::int_to_text(comp_size.height)));
+			// le_w->set_enabled(enable_width);
+			// le_h->set_enabled(enable_height);
+		}
+
+		if (type == cl_text("button"))
+		{
+			CL_PushButton *co = dynamic_cast<CL_PushButton*>(comp);
+			add_property(new PropertyItemLineEdit("Text", co->get_text()));
+		}
+		else if (type == cl_text("lineedit"))
+		{
+			CL_LineEdit *co = dynamic_cast<CL_LineEdit*>(comp);
+			add_property(new PropertyItemLineEdit("Text",co->get_text()));
+		}
+		else if (type == cl_text("checkbox"))
+		{
+			CL_CheckBox *co = dynamic_cast<CL_CheckBox*>(comp);
+			add_property(new PropertyItemLineEdit("Text", co->get_text()));
+		}
+		else if (type == cl_text("radiobutton"))
+		{
+			CL_RadioButton *co = dynamic_cast<CL_RadioButton*>(comp);
+			add_property(new PropertyItemLineEdit("Text", co->get_text()));
+			add_property(new PropertyItemLineEdit("Group Name", co->get_group_name()));
+		}
+		else if (type == cl_text("label"))
+		{
+			CL_Label *co = dynamic_cast<CL_Label*>(comp);
+			add_property(new PropertyItemLineEdit("Text", co->get_text()));
+		}
+		else if (type == cl_text("statusbar"))
+		{
+			CL_StatusBar *co = dynamic_cast<CL_StatusBar*>(comp);
+		}
+		else if (type == cl_text("frame"))
+		{
+			CL_Frame *co = dynamic_cast<CL_Frame*>(comp);
+			add_property(new PropertyItemLineEdit("Text", co->get_header_text()));
+		}
+		else if (type == cl_text("slider"))
+		{
+			CL_Slider *co = dynamic_cast<CL_Slider*>(comp);
+			add_property(new PropertyItemLineEdit("Min", CL_StringHelp::int_to_text(co->get_min())));
+			add_property(new PropertyItemLineEdit("Max", CL_StringHelp::int_to_text(co->get_max())));
+			add_property(new PropertyItemLineEdit("Tick Count", CL_StringHelp::int_to_text(co->get_tick_count())));
+			add_property(new PropertyItemLineEdit("Step Size", CL_StringHelp::int_to_text(co->get_page_step())));
+		}
+		else if (type == cl_text("grid"))
+		{
+			GridComponent *co = dynamic_cast<GridComponent*>(comp);
+			CL_Size s = co->get_dialog_size();
+			add_property(new PropertyItemLineEdit("Width", CL_StringHelp::int_to_text(s.width)));
+			add_property(new PropertyItemLineEdit("Height", CL_StringHelp::int_to_text(s.height)));
+		}
+		else if (type == cl_text("menubar"))
+		{
+		}
+		else if (type == cl_text("spin"))
+		{
+		}
+		else if (type == cl_text("statusbar"))
+		{
+		}
+		else if (type == cl_text("combobox"))
+		{
+		}
+		else if (type == cl_text("listview"))
+		{
+		}
+		else if (type == cl_text("tab"))
+		{
+			CL_Tab *tab = dynamic_cast<CL_Tab*>(comp);
+			int current_page = tab->get_current_page_index();
+			CL_TabPage *tab_page = tab->get_page(current_page);
+			add_property(new PropertyItemLineEdit("Page label", tab_page->get_label()));
+		}
+		else
+		{
+			add_property(new PropertyItemLineEdit("Type", comp->get_type_name()));
+		}
+
+		add_property(new PropertyItemLineEdit("#id", comp->get_id_name()));
+		add_property(new PropertyItemLineEdit(".class", comp->get_class_name()));
+/*
+		// Layout
+		if (type != cl_text("grid"))
+		{
+			add_anchor_radios();
+		}
+
+		// Other non-lineedit controls go here...
+		if (type == cl_text("tab"))
+		{
+			CL_Rect child_rect = get_child_rect(container);
+
+			CL_PushButton *add_tab = new CL_PushButton(container);
+			add_tab->set_geometry(CL_RectPS(child_rect.left, child_rect.bottom+10, 80,24));
+			add_tab->set_text(cl_text("Add tab"));
+
+			CL_PushButton *del_tab = new CL_PushButton(container);
+			del_tab->set_geometry(CL_RectPS(child_rect.left, child_rect.bottom+10+32, 80,24));
+			del_tab->set_text(cl_text("Delete tab"));
+
+			CL_Tab *tab = dynamic_cast<CL_Tab*>(comp);
+			add_tab->func_clicked().set(this, &PropertyComponent::on_add_tab, tab);
+			del_tab->func_clicked().set(this, &PropertyComponent::on_delete_tab, tab);
+		}
+
+		// Callback functions:
+		add_property(new PropertyItemHeader(type + cl_text(" Callbacks:")));
+		std::vector<CallbackData> callbacks = callback_info.get_callbacks(type);
+		std::vector<CallbackData>::iterator it_cb;
+		for (it_cb = callbacks.begin(); it_cb != callbacks.end(); ++it_cb)
+		{
+			CallbackData &cb = (*it_cb);
+			add_property(new PropertyItemLineEdit(cb.get_callback_name(), cb.get_handler_function_name()));
+		}
+
+		add_header(cl_text("Component Callbacks:"));
+		callbacks = callback_info.get_callbacks(cl_text("gui_component"));
+		for (it_cb = callbacks.begin(); it_cb != callbacks.end(); ++it_cb)
+		{
+			CallbackData &cb = (*it_cb);
+			add_property(new PropertyItemLineEdit(cb.get_callback_name(), cb.get_handler_function_name()));
+		}
+*/
+	}
+}
+
+bool PropertyComponent::on_input_pressed(const CL_InputEvent &input_event)
+{
+	return edit_state.on_input_pressed(input_event);
+}
+
+bool PropertyComponent::on_input_released(const CL_InputEvent &input_event)
+{
+	return edit_state.on_input_released(input_event);
+}
+
+bool PropertyComponent::on_input_doubleclick(const CL_InputEvent &input_event)
+{
+	return edit_state.on_input_doubleclick(input_event);
+}
+
+bool PropertyComponent::on_input_pointer_moved(const CL_InputEvent &input_event)
+{
+	return edit_state.on_input_pointer_moved(input_event);
+}
+
+void PropertyComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
+{
+	update_layout();
+	update_scrollbar_size(gc);
+
+	part_background.render_box(gc, get_size(), update_rect);
+	part_header.render_box(gc, header, update_rect);
+	part_header_name.render_box(gc, header_name, update_rect);
+	part_header_value.render_box(gc, header_value, update_rect);
+	part_header_name.render_text(gc, "Property", part_header_name.get_content_box(header_name), update_rect);
+	part_header_value.render_text(gc, "Value", part_header_value.get_content_box(header_value), update_rect);
+
+	value_boxes.clear();
+	int row_width = content.get_width(); // to do: account for shrink box
+	int y = body.top;
+	for (size_t i = scrollbar->get_position(); i < items.size() && y < body.bottom; i++)
+	{
+		int row_height = items[i]->get_inactive_height(gc, part_item_value, row_width-name_column_width);
+		if (row_height < part_item_name.get_preferred_height())
+			row_height = part_item_name.get_preferred_height();
+		CL_Rect row(body.left, y, body.right, y+row_height);
+		CL_Rect row_content = part_row[i%2].get_content_box(row);
+		CL_Rect name_box(row_content.left, row_content.top, row_content.left+name_column_width, row_content.bottom);
+		CL_Rect value_box(row_content.left+name_column_width, row_content.top, row_content.right, row_content.bottom);
+		part_row[i%2].render_box(gc, row, update_rect);
+		part_item_name.render_box(gc, name_box, update_rect);
+		part_item_name.render_text(gc, items[i]->name, part_item_name.get_content_box(name_box), update_rect);
+		part_item_value.render_box(gc, value_box, update_rect);
+		value_boxes.push_back(value_box);
+
+		if (items[i] != active_item || active_component == 0)
+			items[i]->render_inactive(gc, part_item_value, value_box, update_rect);
+		else
+			active_component->set_geometry(value_box);
+		y = row.bottom;
+	}
+}
+
+void PropertyComponent::deactivate()
+{
+	if (active_item)
+	{
+		active_item->deactivate(active_component);
+		active_item = 0;
+		active_component = 0;
+		request_repaint();
+	}
+}
+
+int PropertyComponent::hit_test(const CL_Point &pos) const
+{
+	for (size_t i = 0; i < value_boxes.size(); i++)
+	{
+		if (value_boxes[i].contains(pos))
+			return i;
+	}
+	return -1;
+}
+
+void PropertyComponent::activate_item(int index)
+{
+	if (items[index] != active_item)
+	{
+		deactivate();
+		active_item = items[index];
+		active_component = items[index]->activate();
+		if(active_component)
+			active_component->set_focus();
+		request_repaint();
+	}
+}
+
+void PropertyComponent::on_filter_message(CL_GUIMessage &message)
+{
+	if (active_component)
+	{
+		if (message.get_type() == CL_GUIMessage_Input::get_type_name())
+		{
+			CL_GUIMessage_Input input_message = message;
+			CL_InputEvent e = input_message.get_event();
+			if (e.type == CL_InputEvent::pressed && e.device.get_type() == CL_InputDevice::pointer)
+			{
+				if (active_component != message.get_target() && !active_component->is_ancestor_of(message.get_target()))
+					deactivate();
+			}
+		}
+	}
+}
+
+void PropertyComponent::update_layout()
+{
+	CL_Rect geometry = get_size();
+	content = part_background.get_content_box(geometry);
+	header = CL_Rect(content.left, content.top, content.right, content.top+part_header.get_preferred_height());
+	body = CL_Rect(content.left, header.bottom, content.right, content.bottom);
+	header_content = part_header.get_content_box(header);
+	header_name = CL_Rect(header_content.left, header_content.top, header_content.left+name_column_width, header_content.bottom);
+	header_value = CL_Rect(header_name.right, header_content.top, header_content.right, header_content.bottom);
+}
+
+void PropertyComponent::update_scrollbar_size(CL_GraphicContext &gc)
+{
+	int row_width = content.get_width(); // to do: account for shrink box
+	int y = content.bottom;
+	size_t i;
+	for (i = items.size(); i > 0 && y > content.top; i--)
+		y -= items[i-1]->get_inactive_height(gc, part_item_value, row_width-name_column_width);
+
+	int page_step = items.size() - i;
+	if (page_step > 0)
+	{
+		scrollbar->set_ranges(0, items.size()/*-page_step+1*/, 1, page_step);
+		scrollbar->set_visible(true);
+	}
+	else
+	{
+		scrollbar->set_ranges(0, 1, 1, 1);
+		scrollbar->set_visible(false);
+	}
+}
+
+CL_Rect PropertyComponent::get_header_resize_grabber() const
+{
+	return CL_Rect(header_name.right-3, header.top, header_name.right+2, header.bottom);
+}
+
+#ifdef OLD_CODE
 
 /////////////////////////////////////////////////////////////////////////////
 // PropertyComponent Construction:
@@ -44,6 +425,8 @@ PropertyComponent::PropertyComponent(MainWindow *main_window)
 	func_process_message().set(this, &PropertyComponent::on_process_message);
 	func_render().set(this, &PropertyComponent::on_render);
 	func_resized().set(this, &PropertyComponent::on_resized);
+
+	set_clip_children(true);
 
 	container = new CL_GUIComponent(this);
 	slots.connect(main_window->get_selection()->sig_selection_changed(), this, &PropertyComponent::on_selection_changed);
@@ -70,6 +453,7 @@ void PropertyComponent::on_selection_changed()
 		update_property_list(0);
 		selected_component = 0;
 		selected_holder = 0;
+		request_repaint();
 		return;
 	}
 
@@ -77,6 +461,7 @@ void PropertyComponent::on_selection_changed()
 	callback_info = selected_holder->get_callback_info();
 	selected_component = selected_holder->get_first_child();
 	update_property_list(selected_component);
+	request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -104,8 +489,6 @@ void PropertyComponent::on_process_message(CL_GUIMessage &msg)
 void PropertyComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
 	CL_Rect g = get_geometry().get_size();
-
-//	CL_Draw::box(gc, g, CL_Colorf::gray);
 }
 
 void PropertyComponent::on_resized()
@@ -134,8 +517,42 @@ void PropertyComponent::update_property_list(CL_GUIComponent *comp)
 	if (type != cl_text("grid"))
 	{
 		CL_Size comp_size = comp->get_geometry().get_size();
-		add_field(cl_text("Width"), CL_StringHelp::int_to_text(comp_size.width));
-		add_field(cl_text("Height"), CL_StringHelp::int_to_text(comp_size.height));
+		bool enable_width = true;
+		bool enable_height = true;
+
+		HolderComponent *holder = dynamic_cast<HolderComponent*>(comp->get_parent_component());
+		if (holder)
+		{
+			CL_String equ_x = holder->get_position_equation_x();
+			CL_String equ_y = holder->get_position_equation_y();
+
+			if (equ_x.empty())
+				add_field(cl_text("x1"), CL_StringHelp::int_to_text(holder->get_geometry().left));
+			else
+				add_field(cl_text("x1"), equ_x);
+
+			if (equ_y.empty())
+				add_field(cl_text("y1"), CL_StringHelp::int_to_text(holder->get_geometry().top));
+			else
+				add_field(cl_text("y1"), equ_y);
+
+
+			CL_String equ_x2 = holder->get_position_equation_x2();
+			CL_String equ_y2 = holder->get_position_equation_y2();
+
+			add_field(cl_text("x2"), equ_x2);
+			add_field(cl_text("y2"), equ_y2);
+
+			if (!equ_x2.empty())
+				enable_width = false;
+			if (!equ_y2.empty())
+				enable_height = false;
+		}
+
+		CL_LineEdit *le_w = add_field(cl_text("Width"), CL_StringHelp::int_to_text(comp_size.width));
+		CL_LineEdit *le_h = add_field(cl_text("Height"), CL_StringHelp::int_to_text(comp_size.height));
+		le_w->set_enabled(enable_width);
+		le_h->set_enabled(enable_height);
 	}
 
 	if (type == cl_text("button"))
@@ -184,7 +601,7 @@ void PropertyComponent::update_property_list(CL_GUIComponent *comp)
 	else if (type == cl_text("grid"))
 	{
 		GridComponent *co = dynamic_cast<GridComponent*>(comp);
-		CL_Size s = co->get_boundary().get_size();
+		CL_Size s = co->get_dialog_size();
 		add_field(cl_text("Width"), CL_StringHelp::int_to_text(s.width));
 		add_field(cl_text("Height"), CL_StringHelp::int_to_text(s.height));
 	}
@@ -353,15 +770,64 @@ void PropertyComponent::on_property_changed(CL_InputEvent event)
 	{
 		CL_Rect g = comp->get_geometry();
 
-		int new_width = CL_StringHelp::text_to_int(properties[cl_text("Width")]->get_text());
-		int new_height = CL_StringHelp::text_to_int(properties[cl_text("Height")]->get_text());
+		CL_String equ_x = properties[cl_text("x1")]->get_text();
+		CL_String equ_y = properties[cl_text("y1")]->get_text();
 
-		// set holder size first to avoid scaling of held component caused by
+		CL_String equ_x2 = properties[cl_text("x2")]->get_text();
+		CL_String equ_y2 = properties[cl_text("y2")]->get_text();
+
+		CL_Size parent_size(0,0);
 		HolderComponent *holder = dynamic_cast<HolderComponent*>(comp->get_parent_component());
 		if (holder)
 		{
+			CL_GUIComponent *parent_of_holder = holder->get_parent_component();
+			if (parent_of_holder) 
+			{
+				if (parent_of_holder->get_type_name() == cl_text("grid"))
+					parent_size = dialog_size;
+				else
+					parent_size = parent_of_holder->get_size();
+			}
+		}
+
+		CL_Vec2i new_pos = parse_position_equations(equ_x, equ_y, comp->get_size(), parent_size);
+
+		int new_width = comp->get_width();
+		if (!equ_x2.empty())
+		{
+			int x2 = parse_position_equation(equ_x2, comp->get_size(), parent_size);
+			new_width = x2-new_pos.x;
+			properties[cl_text("Width")]->set_enabled(false);
+			properties[cl_text("Width")]->set_text(new_width);
+		}
+		else
+		{
+			new_width = CL_StringHelp::text_to_int(properties[cl_text("Width")]->get_text());
+			properties[cl_text("Width")]->set_enabled(true);
+		}
+
+		int new_height = comp->get_height();
+		if (!equ_y2.empty())
+		{
+			int y2 = parse_position_equation(equ_y2, comp->get_size(), parent_size);
+			new_height = y2-new_pos.y;
+			properties[cl_text("Height")]->set_enabled(false);
+			properties[cl_text("Height")]->set_text(new_height);
+		}
+		else
+		{
+			new_height = CL_StringHelp::text_to_int(properties[cl_text("Height")]->get_text());
+			properties[cl_text("Height")]->set_enabled(true);
+		}
+
+
+		if (holder)
+		{
+			//holder->set_position_equations(equ_x, equ_y);
+			//holder->set_position_equations2(equ_x2, equ_y2);
 			CL_Rect hg = holder->get_geometry();
-			holder->set_geometry(CL_RectPS(hg.left, hg.top, new_width+8, new_height+8));
+			holder->set_geometry(CL_RectPS(new_pos.x, new_pos.y, new_width, new_height));
+			main_window->get_grid_component()->request_repaint();
 		}
 
 		comp->set_geometry(CL_RectPS(g.left, g.top, new_width, new_height));
@@ -387,7 +853,7 @@ void PropertyComponent::on_property_changed(CL_InputEvent event)
 	}
 }
 
-void PropertyComponent::add_field(const CL_StringRef &property_name, const CL_StringRef &value) 
+CL_LineEdit *PropertyComponent::add_field(const CL_StringRef &property_name, const CL_StringRef &value) 
 {
 	CL_Rect rect = get_child_rect(container);
 	int top = rect.bottom-1;
@@ -405,6 +871,7 @@ void PropertyComponent::add_field(const CL_StringRef &property_name, const CL_St
 	le->set_text(value);
 	le->func_after_edit_changed().set(this, &PropertyComponent::on_property_changed);
 	properties[property_name] = le;
+	return le;
 }
 
 void PropertyComponent::add_anchor_radios() 
@@ -590,4 +1057,95 @@ void PropertyComponent::add_header(const CL_StringRef &header)
 }
 
 
+CL_Vec2i PropertyComponent::parse_position_equations(const CL_String &equ_x, const CL_String &equ_y, const CL_Size &component_size, const CL_Size &parent_size)
+{
+	CL_Vec2i pos;
+	pos.x = parse_position_equation(equ_x, component_size, parent_size);
+	pos.y = parse_position_equation(equ_y, component_size, parent_size);
+	return pos;
+}
 
+int PropertyComponent::parse_position_equation(const CL_String &equation, const CL_Size &component_size, const CL_Size &parent_size)
+{
+	std::vector<CL_TempString> tokens = split_text_char(equation, cl_text("+-"));
+	std::vector<CL_TempString>::size_type i;
+	int sum = 0;
+	bool add_next = true;
+	for (i = 0; i < tokens.size(); i++)
+	{
+		int num = 0;
+		if (tokens[i] == cl_text("+"))
+		{
+			add_next = true;
+			continue;
+		}
+		else if (tokens[i] == cl_text("-"))
+		{
+			add_next = false;
+			continue;
+		}
+		else if (tokens[i] == cl_text("pw"))
+		{
+			num = parent_size.width;
+		}
+		else if (tokens[i] == cl_text("ph"))
+		{
+			num = parent_size.height;
+		}
+		else if (tokens[i] == cl_text("w"))
+		{
+			num = component_size.width;
+		}
+		else if (tokens[i] == cl_text("h"))
+		{
+			num = component_size.height;
+		}
+		else
+		{
+			num = CL_StringHelp::text_to_int(tokens[i]);
+		}
+
+		if (add_next)
+			sum += num;
+		else
+			sum -= num;
+	}
+
+	return sum;
+}
+
+std::vector<CL_TempString> PropertyComponent::split_text_char(
+	const CL_StringRef &text,
+	const CL_StringRef &split_string,
+	bool skip_empty)
+{
+	std::vector<CL_TempString> result;
+	CL_String::size_type end_pos = 0, begin_pos = 0;
+	while (true)
+	{
+		end_pos = text.find_first_of(split_string, begin_pos);
+		if (end_pos == CL_String::npos)
+		{
+			if (begin_pos != text.length())
+				result.push_back(text.substr(begin_pos));
+			break;
+		}
+		else
+		{
+			if (!skip_empty || begin_pos != end_pos)
+			{
+				result.push_back(text.substr(begin_pos, end_pos-begin_pos));
+				result.push_back(text.substr(end_pos, 1));
+			}
+
+			begin_pos = end_pos+1;
+		}
+	}
+	return result;
+}
+
+void PropertyComponent::set_dialog_size(const CL_Size &size)
+{
+	dialog_size = size;
+}
+#endif

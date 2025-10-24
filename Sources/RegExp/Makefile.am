@@ -1,11 +1,11 @@
-lib_LTLIBRARIES = libclanRegExp.la
+lib_LTLIBRARIES = libclan21RegExp.la
 
-libclanRegExp_la_SOURCES = \
+libclan21RegExp_la_SOURCES = \
 precomp.cpp \
 regexp.cpp \
 regexp_match.cpp
 
-libclanRegExp_la_LDFLAGS = \
+libclan21RegExp_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

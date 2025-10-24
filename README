@@ -8,6 +8,9 @@ Getting started
 Please read the INSTALL files for the platform/compiler you want to use.
 See INSTALL.win32, INSTALL.linux, INSTALL.whatever.
 
+If you are upgrading from an earlier version of ClanLib, read the UPGRADE.txt
+file for info on breaking changes.
+
 
 Documentation
 -------------

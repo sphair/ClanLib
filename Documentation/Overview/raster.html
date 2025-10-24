@@ -77,7 +77,7 @@ while (ic.get_keyboard().get_keycode(CL_KEY_ESCAPE) == false)
 {
 	gc.draw_pixels(0, 0, buffer);
 	window.flip();
-	CL_DisplayMessageQueue::process();
+	CL_KeepAlive::process();
 }
 </pre>
 

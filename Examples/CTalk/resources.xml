@@ -27,6 +27,9 @@
   <image name="ChatInputBlack">
     <image file="Resources/chatinput_black_background.png" />
   </image>
+  <image name="ChatBlackText">
+    <image file="Resources/chat_black_text.png" />
+  </image>
   <image name="ChannelTopic">
     <image file="Resources/channeltopic_background.png" />
   </image>

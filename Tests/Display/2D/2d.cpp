@@ -2,7 +2,7 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 
-#define USE_GDI_BECAUSE_IT_IS_COOL
+//#define USE_GDI_BECAUSE_IT_IS_COOL
 
 #ifdef USE_GDI_BECAUSE_IT_IS_COOL
 #include <ClanLib/gdi.h>
@@ -393,7 +393,7 @@ int App::start(const std::vector<CL_String> &args)
 			window.flip(1);
 
 			// This call processes user input and other events
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 		small_font = CL_Font();
 	}

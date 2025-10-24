@@ -91,11 +91,42 @@ public:
 public:
 
 	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param text = The text to draw
+	/// \param color = The text color
 	void draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
+
+	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(CL_GraphicContext &gc, float x, float y, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
+
+	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param position = Dest position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(CL_GraphicContext &gc, const CL_Pointf &position, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
 
 	/// \brief Calculate size of text string.
 	///
-	/// Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.
+	/// Multiline text (seperated by /n) is supported\n
+	/// \n
+	/// Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.\n
 	/// The width is the pixel width
 	CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
 
@@ -103,6 +134,8 @@ public:
 	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
 
 	/// \brief Get the character index at a specified point
+	///
+	/// Multiline text (seperated by /n) is supported
 	///
 	/// \param gc = The Graphic Context
 	/// \param text = The string

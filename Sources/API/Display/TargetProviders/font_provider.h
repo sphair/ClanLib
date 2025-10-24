@@ -69,12 +69,24 @@ public:
 	virtual void destroy() = 0;
 
 	/// \brief Print text on gc.
-	virtual void draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color) = 0;
+	///
+	/// Function does not need to support multiline text (CL_Font splits it)
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	virtual void draw_text(CL_GraphicContext &gc, float x, float y, const CL_StringRef &text, const CL_Colorf &color) = 0;
 
 	/// \brief Calculate size of text string.
+	///
+	/// Function does not need to support multiline text (CL_Font splits it)
 	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text) = 0;
 
 	/// \brief Get the character index at a specified point
+	///
+	/// Function should support multiline text (seperated by /n)
 	///
 	/// \param gc = The Graphic Context
 	/// \param text = The string

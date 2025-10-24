@@ -49,9 +49,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

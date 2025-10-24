@@ -1,6 +1,5 @@
 
-#ifndef header_precomp
-#define header_precomp
+#pragma once
 
 #include <ClanLib/core.h>
 #include <ClanLib/gui.h>
@@ -12,5 +11,3 @@
 #ifdef use_visual_leak_detector
 	#include <vld.h>
 #endif 
-
-#endif

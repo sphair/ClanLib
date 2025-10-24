@@ -1,9 +1,40 @@
 EXAMPLE_BIN=guieditor
-OBJF = application.o dialog_document.o component_type.o grid_component.o  precomp.o selection.o system_dialog.o view_border.o holder_component.o property_component.o  main.o  custom_component.o main_window.o dialog_container.o dialog_component.o source_generator_dialog.o callback_data.o callback_info.o
+OBJF = \
+./Sources/component_types.o \
+./Sources/property_component.o \
+./Sources/property_component_edit_state_none.o \
+./Sources/source_generator_dialog.o \
+./Sources/custom_component.o \
+./Sources/dialog_document.o \
+./Sources/view_border.o \
+./Sources/holder_component.o \
+./Sources/grid_edit_state_create_tool.o \
+./Sources/grid_edit_state_boundary_sizing.o \
+./Sources/dialog_component.o \
+./Sources/callback_data.o \
+./Sources/grid_edit_state_none.o \
+./Sources/application.o \
+./Sources/grid_edit_state.o \
+./Sources/grid_component.o \
+./Sources/property_component_edit_state_node_opener.o \
+./Sources/grid_edit_state_object_moving.o \
+./Sources/main_window.o \
+./Sources/grid_edit_state_net_selecting.o \
+./Sources/property_component_edit_state_header_sizing.o \
+./Sources/property_component_edit_state.o \
+./Sources/precomp.o \
+./Sources/tab_order_visualisation.o \
+./Sources/callback_info.o \
+./Sources/grid_edit_state_object_sizing.o \
+./Sources/dialog_container.o \
+./Sources/snapline.o \
+./Sources/selection.o \
+./Sources/property_component_edit_state_revert_button.o \
+./Sources/main.o
 
 LIBS=clanApp clanDisplay clanCore clanGL clanGUI
 
-EXTRA_LIBS=-L/usr/share/qt3/lib -lqt-mt
+#EXTRA_LIBS=-L/usr/share/qt3/lib -lqt-mt
 
 include ../../Examples/Makefile.conf
 

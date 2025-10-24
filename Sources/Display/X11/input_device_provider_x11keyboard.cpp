@@ -46,7 +46,13 @@ CL_InputDeviceProvider_X11Keyboard::CL_InputDeviceProvider_X11Keyboard(CL_X11Win
 
 CL_InputDeviceProvider_X11Keyboard::~CL_InputDeviceProvider_X11Keyboard()
 {
+	dispose();
 }
+
+void CL_InputDeviceProvider_X11Keyboard::on_dispose()
+{
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_X11Keyboard attributes:

@@ -38,7 +38,7 @@ class CL_FontProvider;
 class CL_Font_Sprite_Impl;
 class CL_FontProvider_Sprite;
 
-/// \brief Bitmap Font class.
+/// \brief Sprite Font class.
 ///
 /// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CL_Font_Sprite : public CL_Font
@@ -47,7 +47,7 @@ class CL_API_DISPLAY CL_Font_Sprite : public CL_Font
 /// \{
 
 public:
-	/// \brief Constructs a CL_Texture bitmap font.
+	/// \brief Constructs a sprite font.
 	CL_Font_Sprite();
 
 	/// \brief Constructs a Font Sprite
@@ -74,8 +74,23 @@ public:
 
 public:
 
-	/// \brief Set the font metrics for the bitmap font.
+	/// \brief Set the font metrics for the font.
 	void set_font_metrics(const CL_FontMetrics &metrics);
+
+	using CL_Font::draw_text;
+
+	/// \brief Draw scaled text
+	///
+	/// Multiline text (seperated by /n) is supported\n
+	//
+	/// \param gc = Graphic Context
+	/// \param xpos = X position
+	/// \param ypos = Y position
+	/// \param scale_x = X scale
+	/// \param scale_y = Y scale
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(CL_GraphicContext &gc, float xpos, float ypos, float scale_x, float scale_y, const CL_StringRef &text, const CL_Colorf &color = CL_Colorf::white);
 
 /// \}
 /// \name Implementation

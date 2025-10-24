@@ -32,7 +32,7 @@
 #include "API/Sound/soundfilter.h"
 #include "API/Sound/sound.h"
 #include "API/Core/System/thread.h"
-#include "soundoutput_generic.h"
+#include "soundoutput_impl.h"
 #ifdef WIN32
 #include "Win32/soundoutput_directsound.h"
 #else
@@ -66,11 +66,11 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 {
 
 #ifdef WIN32
-	CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
 #ifdef __APPLE__
-	CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_MacOSX(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
 #ifdef __linux__
@@ -78,7 +78,7 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 #ifdef HAVE_ALSA_ASOUNDLIB_H
 	// Try building ALSA
 
-	CL_SharedPtr<CL_SoundOutput_Generic> alsa_impl(new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	CL_SharedPtr<CL_SoundOutput_Impl> alsa_impl(new CL_SoundOutput_alsa(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	if ( ( (CL_SoundOutput_alsa *) (alsa_impl.get()))->handle)
 	{
 		impl = alsa_impl;
@@ -93,7 +93,7 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc)
 
 #endif
 	{
-		CL_SharedPtr<CL_SoundOutput_Generic> soundoutput_impl(new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+		CL_SharedPtr<CL_SoundOutput_Impl> soundoutput_impl(new CL_SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
 	}
 #endif
@@ -109,7 +109,7 @@ CL_SoundOutput::~CL_SoundOutput()
 {
 }
 
-CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Generic> impl)
+CL_SoundOutput::CL_SoundOutput(const CL_WeakPtr<CL_SoundOutput_Impl> impl)
 : impl(impl.to_sharedptr())
 {
 }

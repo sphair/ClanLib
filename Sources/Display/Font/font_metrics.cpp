@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "Display/precomp.h"
@@ -155,7 +156,7 @@ bool CL_FontMetrics::is_italic() const
 
 bool CL_FontMetrics::is_underlined() const
 {
-	return impl->underline;
+	return impl->underlined;
 }
 
 bool CL_FontMetrics::is_struck_out() const
@@ -170,6 +171,82 @@ bool CL_FontMetrics::is_fixed_pitch() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontMetrics Operations:
+
+void CL_FontMetrics::set_height(float value)
+{
+	impl->height = value;
+}
+
+void CL_FontMetrics::set_ascent(float value)
+{
+	impl->ascent = value;
+}
+
+void CL_FontMetrics::set_descent(float value)
+{
+	impl->descent = value;
+}
+
+void CL_FontMetrics::set_internal_leading(float value)
+{
+	impl->internal_leading = value;
+}
+
+void CL_FontMetrics::set_external_leading(float value)
+{
+	impl->external_leading = value;
+}
+
+void CL_FontMetrics::set_average_character_width(float value)
+{
+	impl->average_character_width = value;
+}
+
+void CL_FontMetrics::set_max_character_width(float value)
+{
+	impl->max_character_width = value;
+}
+
+void CL_FontMetrics::set_weight(float value)
+{
+	impl->weight = value;
+}
+
+void CL_FontMetrics::set_overhang(float value)
+{
+	impl->overhang = value;
+}
+
+void CL_FontMetrics::set_digitized_aspect_x(float value)
+{
+	impl->digitized_aspect_x = value;
+}
+
+void CL_FontMetrics::set_digitized_aspect_y(float value)
+{
+	impl->digitized_aspect_y = value;
+}
+
+void CL_FontMetrics::set_italic(bool value)
+{
+	impl->italic = value;
+}
+
+void CL_FontMetrics::set_underlined(bool value)
+{
+	impl->underlined = value;
+}
+
+void CL_FontMetrics::set_struck_out(bool value)
+{
+	impl->struck_out = value;
+}
+
+void CL_FontMetrics::set_fixed_pitch(bool value)
+{
+	impl->fixed_pitch = value;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontMetrics Implementation:

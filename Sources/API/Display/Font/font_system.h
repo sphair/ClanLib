@@ -41,7 +41,7 @@ class CL_FontProvider;
 class CL_Font_System_Impl;
 class CL_TextureGroup;
 
-class CL_FontProvider_Texture;
+class CL_FontProvider_System;
 
 /// \brief Bitmap Font Position class.
 ///
@@ -76,13 +76,13 @@ typedef struct _CL_Font_System_Position
 	int y_increment;
 } CL_Font_System_Position;
 
-/// \brief Bitmap Font Glyph class.
+/// \brief Font texture format (holds a pixel buffer containing a glyph)
 ///
 /// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-class CL_API_DISPLAY CL_Font_System_Glyph
+class CL_Font_TextureGlyph
 {
 public:
-	CL_Font_System_Glyph() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
+	CL_Font_TextureGlyph() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
 
 	/// \brief Glyph this pixel buffer refers to.
 	unsigned int glyph;
@@ -92,7 +92,9 @@ public:
 
 	/// \brief The pixel buffer containing the glyph
 	CL_Subtexture subtexture;
-	CL_Texture texture;
+
+	/// \brief Geometry of the glyph inside the subtexture (excluding the border)
+	CL_Rect geometry;
 
 	/// \brief Offset to draw the font to buffer
 	/** For example:
@@ -106,6 +108,9 @@ public:
 	    pos_y += pixelbuffer.increment.y;*/
 	CL_Point increment;
 };
+
+
+/// \}
 
 /// \brief Bitmap Font class.
 ///
@@ -141,10 +146,10 @@ public:
 public:
 
 	/// \brief Retrieves the font provider.
-	CL_FontProvider_Texture *get_provider() const;
+	CL_FontProvider_System *get_provider() const;
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	CL_Font_System_Glyph *get_glyph(CL_GraphicContext &gc, int glyph);
+	CL_Font_TextureGlyph *get_glyph(CL_GraphicContext &gc, int glyph);
 
 /// \}
 /// \name Operations

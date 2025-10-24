@@ -103,6 +103,38 @@ public:
 	CL_Sizex<Type> operator-(const CL_Sizex<Type> &s) const
 	{ return CL_Sizex<Type>(width - s.width, height - s.height); }
 
+	/// \brief Size += operator.
+	CL_Sizex<Type> &operator+=(const Type &s)
+	{ width += s; height += s; return *this; }
+
+	/// \brief Size -= operator.
+	CL_Sizex<Type> &operator-=(const Type &s)
+	{ width -= s; height -= s; return *this; }
+
+	/// \brief Size *= operator.
+	CL_Sizex<Type> &operator*=(const Type &s)
+	{ width *= s; height *= s; return *this; }
+
+	/// \brief Size /= operator.
+	CL_Sizex<Type> &operator/=(const Type &s)
+	{ width /= s; height /= s; return *this; }
+
+	/// \brief Size + operator.
+	CL_Sizex<Type> operator+(const Type &s) const
+	{ return CL_Sizex<Type>(width + s, height + s); }
+
+	/// \brief Size - operator.
+	CL_Sizex<Type> operator-(const Type &s) const
+	{ return CL_Sizex<Type>(width - s, height - s); }
+
+	/// \brief Size * operator.
+	CL_Sizex<Type> operator*(const Type &s) const
+	{ return CL_Sizex<Type>(width * s, height * s); }
+
+	/// \brief Size / operator.
+	CL_Sizex<Type> operator/(const Type &s) const
+	{ return CL_Sizex<Type>(width / s, height / s); }
+
 	/// \brief Size == Size operator (deep compare).
 	bool operator==(const CL_Sizex<Type> &s) const
 	{ return (width == s.width) && (height == s.height); }

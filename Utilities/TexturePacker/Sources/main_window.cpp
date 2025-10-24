@@ -1,33 +1,44 @@
 #include "precomp.h"
 #include "main_window.h"
-#include "application.h"
 #include "texture_packer.h"
 #include "sprite_component.h"
 #include "texturegroup_component.h"
+#include "view_workspace.h"
+#include "view.h"
+#include "Views/resource_viewer_view.h"
+#include "Views/welcome_view.h"
+#include "Views/texture_packer_view.h"
+#include "Views/css_packer_view.h"
+#include "Views/ico_creator_view.h"
+#include <algorithm>
 
-MainWindow::MainWindow(Application *application)
-: CL_Window(application->get_gui(), get_startup_description()),
-  application(application)
+MainWindow::MainWindow(CL_GUIManager *gui, CL_ResourceManager *resources)
+: CL_Window(gui, get_window_description()), resources(resources), workspace(0)
 {
-	set_id_name("editor");
+	set_id_name("mainwindow");
+
 	func_close().set(this, &MainWindow::on_close);
 	func_resized().set(this, &MainWindow::on_resized);
 
+	workspace = new ViewWorkspace(this);
+	workspace->cb_view_close.set(this, &MainWindow::on_view_close);
+
 	create_components();
+
+	create_welcome_view();
+	create_texture_packer_view();
+	create_css_packer_view();
+	create_resource_viewer_view();
+	create_ico_creator_view();
+
 	on_resized();
-
-	packer = new TexturePacker(get_gc());
-
-	load_resources();
 }
 
 MainWindow::~MainWindow()
 {
-	// We do not have to free the GUI components here because the CL_GUIComponent
-	// destructor deletes all child components.
 }
 
-CL_GUITopLevelDescription MainWindow::get_startup_description()
+CL_GUITopLevelDescription MainWindow::get_window_description()
 {
 	CL_GUITopLevelDescription desc;
 	desc.set_title(cl_text("ClanLib Texture Packer"));
@@ -36,213 +47,101 @@ CL_GUITopLevelDescription MainWindow::get_startup_description()
 	return desc;
 }
 
+void MainWindow::add_view(View *view)
+{
+	views.push_back(view);
+	workspace->add_view(view);
+	workspace->show_view(view);
+}
+
+void MainWindow::remove_view(View *view)
+{
+	workspace->remove_view(view);
+	int index = find_view_index(view);
+	delete views[index];
+	views.erase(views.begin() + index);
+}
+
+int MainWindow::find_view_index(View *view)
+{
+	int size = views.size();
+	for (int i=0; i<size; i++)
+	{
+		if (views[i] == view)
+		{
+			return i;
+		}
+	}
+	throw CL_Exception("View not found in collection");
+}
+
+void MainWindow::on_view_close(View *view)
+{
+	remove_view(view);
+}
+
+void MainWindow::create_welcome_view()
+{
+	View *view = new WelcomeView(workspace, this);
+	view->set_closable(false);
+	add_view(view);
+}
+
+void MainWindow::create_resource_viewer_view()
+{
+	add_view(new ResourceViewerView(workspace, this));
+}
+
+void MainWindow::create_texture_packer_view()
+{
+	add_view(new TexturePackerView(workspace, this));
+}
+
+void MainWindow::create_css_packer_view()
+{
+	add_view(new CssPackerView(workspace, this));
+}
+
+void MainWindow::create_ico_creator_view()
+{
+	add_view(new IcoCreatorView(workspace, this));
+}
+
 void MainWindow::create_components()
 {
-	tab = new CL_Tab(this);
+	menubar = new CL_MenuBar(this);
 
-	// TAB 1
-	tab_page_1 = tab->add_page("Resource viewer");
+	CL_PopupMenu menu_file;
 
-	resource_list = new CL_ListView(tab_page_1);
-	CL_ListViewColumnHeader col = resource_list->get_header()->append(resource_list->get_header()->create_column("Resource", "Resource"));
-	col.set_width(200);
-	resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
+	CL_PopupMenuItem item_new_resource_viewer = menu_file.insert_item("New resource viewer");
+	item_new_resource_viewer.func_clicked().set(this, &MainWindow::create_resource_viewer_view);
 
-	CL_ListViewIconList icon_list = resource_list->get_icon_list();
-	CL_ListViewIcon icon_disabled;
-	icon_disabled.set_sprite(CL_Sprite(get_gc(), "Resources/sweetie-16-em-cross.png"), listview_mode_details);
-	CL_ListViewIcon icon_enabled;
-	icon_enabled.set_sprite(CL_Sprite(get_gc(), "Resources/sweetie-16-em-check.png"), listview_mode_details);
-	icon_list.set_icon(1, icon_disabled);
-	icon_list.set_icon(2, icon_enabled);
+	CL_PopupMenuItem item_new_texture_packer = menu_file.insert_item("New texture packer");
+	item_new_texture_packer.func_clicked().set(this, &MainWindow::create_texture_packer_view);
+	
+	CL_PopupMenuItem item_new_css_packer = menu_file.insert_item("New CSS packer");
+	item_new_css_packer.func_clicked().set(this, &MainWindow::create_css_packer_view);
+	
+	CL_PopupMenuItem item_exit = menu_file.insert_item("Exit");
+	item_exit.func_clicked().set(this, &MainWindow::on_close2);
 
-	resource_list->func_selection_changed().set(this, &MainWindow::on_selection_changed);
-
-	sprite_component = new SpriteComponent(tab_page_1);
-
-	// TAB 2
-	tab_page_2 = tab->add_page("Texture packer");
-
-	radio_texture32 = new CL_RadioButton(tab_page_2);
-	radio_texture32->set_geometry(CL_Rect(10, 10, CL_Size(80, 21)));
-	radio_texture32->set_text("32x32");
-	radio_texture32->set_group_name("TextureSize");
-
-	radio_texture64 = new CL_RadioButton(tab_page_2);
-	radio_texture64->set_geometry(CL_Rect(80+10, 10, CL_Size(80, 21)));
-	radio_texture64->set_text("64x64");
-	radio_texture64->set_group_name("TextureSize");
-
-	radio_texture128 = new CL_RadioButton(tab_page_2);
-	radio_texture128->set_geometry(CL_Rect(80+80+10, 10, CL_Size(80, 21)));
-	radio_texture128->set_text("128x128");
-	radio_texture128->set_group_name("TextureSize");
-
-	radio_texture256 = new CL_RadioButton(tab_page_2);
-	radio_texture256->set_geometry(CL_Rect(80+80+80+10, 10, CL_Size(80, 21)));
-	radio_texture256->set_text("256x256");
-	radio_texture256->set_group_name("TextureSize");
-
-	radio_texture512 = new CL_RadioButton(tab_page_2);
-	radio_texture512->set_geometry(CL_Rect(80+80+80+80+10, 10, CL_Size(80, 21)));
-	radio_texture512->set_text("512x512");
-	radio_texture512->set_group_name("TextureSize");
-
-	radio_texture1024 = new CL_RadioButton(tab_page_2);
-	radio_texture1024->set_geometry(CL_Rect(80+80+80+80+80+10, 10, CL_Size(80, 21)));
-	radio_texture1024->set_text("1024x1024");
-	radio_texture1024->set_group_name("TextureSize");
-
-	radio_texture2048 = new CL_RadioButton(tab_page_2);
-	radio_texture2048->set_geometry(CL_Rect(80+80+80+80+80+80+10, 10, CL_Size(80, 21)));
-	radio_texture2048->set_text("2048x2048");
-	radio_texture2048->set_group_name("TextureSize");
-	radio_texture2048->set_selected(true);
-
-	radio_texture512x256 = new CL_RadioButton(tab_page_2);
-	radio_texture512x256->set_geometry(CL_Rect(80+80+80+80+80+80+80+10, 10, CL_Size(80, 21)));
-	radio_texture512x256->set_text("512x256");
-	radio_texture512x256->set_group_name("TextureSize");
-	radio_texture512x256->set_selected(true);
-
-	spin_border = new CL_Spin(tab_page_2);
-	spin_border->set_geometry(CL_Rect(650, 10, CL_Size(50, 21)));
-	spin_border->set_value(1);
-	spin_border->set_step_size(1);
-	spin_border->set_ranges(0, 8);
-	spin_border->set_floating_point_mode(false);
-
-	label_border = new CL_Label(tab_page_2);
-	label_border->set_geometry(CL_Rect(710, 10, CL_Size(100, 21)));
-	label_border->set_text("Pixel Border");
-
-	button_pack = new CL_PushButton(tab_page_2);
-	button_pack->set_text("Generate textures");
-	button_pack->func_clicked().set(this, &MainWindow::on_button_generate_textures);
-
-	button_save = new CL_PushButton(tab_page_2);
-	button_save->set_text("Save resourcefile");
-	button_save->func_clicked().set(this, &MainWindow::on_button_save_resources);
-
-	generation_result = new CL_Label(tab_page_2);
-
-	texturegroup_component = new TextureGroupComponent(tab_page_2);
+	menubar->add_menu("File", menu_file);
 }
 
-void MainWindow::on_button_save_resources()
+bool MainWindow::on_close()
 {
-	try
-	{
-		CL_String filename = "resources_new.xml";
-		packer->save_resources(filename);
-		generation_result->set_text(cl_format("Saved resources: %1", filename));
-	}
-	catch(CL_Exception error)
-	{
-		generation_result->set_text(cl_format("Save error: %1", error.message));
-	}
+	exit_with_code(0);
+	return true;
 }
 
-void MainWindow::on_button_generate_textures()
-{
-	CL_Size texture_size;
-	if(radio_texture32->is_selected())
-		texture_size = CL_Size(32, 23);
-	if(radio_texture64->is_selected())
-		texture_size = CL_Size(64, 64);
-	if(radio_texture128->is_selected())
-		texture_size = CL_Size(128, 128);
-	if(radio_texture256->is_selected())
-		texture_size = CL_Size(256, 256);
-	if(radio_texture512->is_selected())
-		texture_size = CL_Size(512, 512);
-	if(radio_texture512x256->is_selected())
-		texture_size = CL_Size(512, 256);
-	if(radio_texture1024->is_selected())
-		texture_size = CL_Size(1024, 1024);
-	if(radio_texture2048->is_selected())
-		texture_size = CL_Size(2048, 2048);
-
-	try
-	{
-		CL_TextureGroup *group = packer->pack(texture_size, spin_border->get_value());
-		texturegroup_component->set_texturegroup(group);
-		texturegroup_component->request_repaint();
-
-		generation_result->set_text(cl_format("Textures generated: %1", group->get_texture_count()));
-	}
-	catch(CL_Exception error)
-	{
-		generation_result->set_text(cl_format("Error: %1", error.message));
-	}
-}
-
-void MainWindow::on_selection_changed(CL_ListViewSelection selection)
-{
-	CL_UnknownSharedPtr ptr =  selection.get_first().get_item().get_userdata();
-	ResourceItem *resource_item = (ResourceItem *)ptr.get();
-	if(resource_item)
-		show_resource(resource_item);
-}
-
-void MainWindow::on_close()
+void MainWindow::on_close2()
 {
 	exit_with_code(0);
 }
-
 void MainWindow::on_resized()
 {
-	tab->set_geometry(CL_Rect(10, 10, get_width() - 10, get_height() - 10));
+	CL_Rect client_area = get_client_area();
 
-	resource_list->set_geometry(CL_Rect(10, 10, tab_page_1->get_width() - 10, 200));
-
-	sprite_component->set_geometry(CL_Rect(10, 210, tab_page_1->get_width() - 10, tab_page_1->get_height() - 10));
-
-	button_pack->set_geometry(CL_Rect(10, 40, CL_Size(120, 25)));
-	button_save->set_geometry(CL_Rect(tab_page_2->get_width() - 130, 40, CL_Size(120, 25)));
-	generation_result->set_geometry(CL_Rect(170, 44, tab_page_2->get_width() - 130, 60));
-	texturegroup_component->set_geometry(CL_Rect(10, 70, tab_page_2->get_width() - 10, tab_page_2->get_height() - 10));
-}
-
-void MainWindow::show_resource(ResourceItem *resource_item)
-{
-	SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(resource_item);
-	if(sprite_item)
-	{
-		sprite_component->set_sprite(&sprite_item->sprite);
-	}
-}
-
-void MainWindow::load_resources()
-{
-//	packer->load_resources("resources.xml");
-//	packer->load_resources("../../Resources/GUIThemeLuna/resources_sprites.xml");
-//	packer->load_resources("../../Resources/GUIThemeLuna/resources.xml");
-	packer->load_resources("../../Resources/GUIThemeAero/resources.xml");
-
-	std::vector<ResourceItem *> &items = packer->get_resource_items();
-	std::vector<ResourceItem *>::iterator it;
-	for(it = items.begin(); it != items.end(); ++it)
-	{
-		ResourceItem *resource_item = (ResourceItem *)(*it);
-
-		CL_ListViewItem item = resource_list->create_item();
-		item.set_column_text("Resource", resource_item->resource.get_name());
-
-		CL_SharedPtr<ResourceItem> userdata(resource_item);
-		item.set_userdata(userdata);
-
-		NotSupportedResourceItem *not_supported_item = dynamic_cast<NotSupportedResourceItem *>(resource_item);
-		if(not_supported_item)
-		{
-			item.set_icon(1);
-			item.set_column_text("Message", not_supported_item->error);
-		}
-		else
-		{
-			item.set_icon(2);
-		}
-
-		resource_list->get_document_item().append_child(item);
-	}
+	menubar->set_geometry(CL_Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
+	workspace->set_geometry(CL_Rect(client_area.left, client_area.top + 22, client_area.right, client_area.bottom));
 }

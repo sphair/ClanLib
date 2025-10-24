@@ -32,7 +32,7 @@
 
 #ifdef __linux__
 
-#include "../soundoutput_generic.h"
+#include "../soundoutput_impl.h"
 #ifdef HAVE_ALSA_ASOUNDLIB_H
 #include <alsa/asoundlib.h> 
 #endif
@@ -40,7 +40,7 @@
 #include <asoundlib.h>
 #endif
 
-class CL_SoundOutput_alsa : public CL_SoundOutput_Generic
+class CL_SoundOutput_alsa : public CL_SoundOutput_Impl
 {
 //! Construction:
 public:
@@ -67,7 +67,7 @@ public:
 	virtual int get_fragment_size();
 
 	//: Writes a fragment to the soundcard.
-	virtual void write_fragment(short *data);
+	virtual void write_fragment(float *data);
 
 	//: Waits until output source isn't full anymore.
 	virtual void wait();

@@ -60,6 +60,9 @@ I got 99 problems but a bitch ain't one:
 23# Preferences: add/edit/delete connections
 24# restore window on tray double click
 25# Text selection does not work on multiline text when the line contains a graphic (eg "*")
+26# IRC window does not open: Log into #clanlib using /nick my_user .Open up a new ctalk (keeping the old one open)
+    Connect to freenode. Type /nick my_user. (nick used error is shown). Type /nick my_user_234. 
+    Type /join #clanlib.  Notice the #clanlib window does not appear,  but you are connected in the other ctalk application
 
  1# not all characters can be typed in CL_LineEdit [FIXED]
  3# highlight tabs when text is written [FIXED]

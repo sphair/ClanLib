@@ -40,7 +40,7 @@
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Sound/soundbuffer.h"
-#include "API/Sound/soundprovider.h"
+#include "API/Sound/SoundProviders/soundprovider.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
 
@@ -60,12 +60,11 @@ CL_ResourceData_Sample::CL_ResourceData_Sample(class CL_Resource &resource)
 	provider = CL_SoundProviderFactory::load(
 		name,
 		streamed,
-		sound_format,
-		resource.get_manager().get_directory(resource));
+		resource.get_manager().get_directory(resource), sound_format);
 
 	if (provider)
 	{
-		soundbuffer = new CL_SoundBuffer(provider, true);
+		soundbuffer = new CL_SoundBuffer(provider);
 	}
 	else
 	{

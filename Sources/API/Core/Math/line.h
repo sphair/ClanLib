@@ -40,6 +40,9 @@ template<typename Type>
 class CL_Line3x;
 
 template<typename Type>
+class CL_Rectx;
+
+template<typename Type>
 class CL_Vec2;
 
 template<typename Type>
@@ -122,6 +125,12 @@ public:
 	/// \param point = The point
 	/// \return Value representing - left (>0), centre (=0), or right (<0)
 	Type point_right_of_line( CL_Vec2<Type> point ) const {return (q.x - p.x) * (point.y - p.y) - (point.x - p.x) * (q.y - p.y);}
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
 
 /// \}
 /// \name Operators

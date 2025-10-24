@@ -100,7 +100,7 @@ public:
 	/// \param fullname = full filename
 	void load(const CL_String &fullname);
 
-	/// \brief Save CSS document to an ouput source.
+	/// \brief Save CSS document to an output source.
 	void save(CL_IODevice &output);
 
 /// \}

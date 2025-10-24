@@ -47,7 +47,7 @@ class CL_API_SOUND CL_EchoFilter : public CL_SoundFilter
 
 public:
 	/// \brief Echo Filter Constructor
-	CL_EchoFilter(int buffer_size = 32*1024, int shift_factor = 2);
+	CL_EchoFilter(int buffer_size = 32*1024, float shift_factor = 2.0f);
 
 	/// \brief Echo Filter Destructor
 	virtual ~CL_EchoFilter();

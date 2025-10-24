@@ -97,7 +97,6 @@ public:
 private:
 	CL_SharedPtr<CL_GUIComponentDescription_Impl> impl;
 
-	friend class CL_GUIComponent;
 /// \}
 };
 

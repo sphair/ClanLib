@@ -38,9 +38,7 @@ public:
 	MenuBar(GUI *gui);
 
 private:
-	void on_item_selected(CL_PopupMenuItem item, CL_PopupMenu *popupmenu);
-	void on_keyboard_event(CL_InputEvent input_event, CL_PopupMenu *popupmenu);
-	CL_String decode_menu(CL_PopupMenu *menu);
+	void on_item_selected();
 
 	void on_clicked(CL_PushButton *pushbutton);
 	void on_checked_status_size_grip(CL_CheckBox *checkbox);
@@ -68,7 +66,6 @@ private:
 	CL_PopupMenu menu_submenu;
 
 	Info *info_item_selected;
-	Info *info_keyboard_event;
 
 	CL_StatusBar *statusbar1;
 

@@ -81,13 +81,13 @@ void CL_FadeFilterProvider::fade_to_volume(float volume, int duration)
 	speed = delta_volume / 22.05f / duration;
 }
 
-void CL_FadeFilterProvider::filter(int **sample_data, int num_samples, int channels)
+void CL_FadeFilterProvider::filter(float **sample_data, int num_samples, int channels)
 {
 	for (int i=0; i<num_samples; i++)
 	{
 		for (int j=0; j<channels; j++)
 		{
-			sample_data[j][i] = (int) (sample_data[j][i] * cur_volume);
+			sample_data[j][i] = (sample_data[j][i] * cur_volume);
 		}
 
 		// change volume for every second sample (because data is in stereo).

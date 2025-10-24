@@ -421,9 +421,10 @@ void App::set_slider_to_spin_float(CL_Slider *slider, CL_Spin *spin)
 	slider->set_position(new_value);
 }
 
-void App::on_close(CL_Window *win)
+bool App::on_close(CL_Window *win)
 {
 	win->exit_with_code(0);
+	return true;
 }
 
 

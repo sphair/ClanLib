@@ -47,13 +47,7 @@ public:
 	virtual int main(const std::vector<CL_String> &args);
 private:
 	void test_display_window(void);
-	void test_timer(void);
 	void fail(void);
-	void funx_timer_1();
-	void funx_timer_2();
-	void funx_timer_3();
-	void funx_timer_4();
-	void funx_timer_5();
-	void funx_timer_6();
+
 };
 

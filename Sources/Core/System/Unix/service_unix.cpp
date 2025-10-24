@@ -116,7 +116,7 @@ int CL_Service_Unix::run_daemon(std::vector<CL_String> args)
 {
 	try
 	{
-		CL_File file(args[2], CL_File::create_always);
+		CL_File file(args[2], CL_File::create_always, CL_File::access_read_write);
 
 		struct sigaction action;
 		memset(&action, 0, sizeof(struct sigaction));

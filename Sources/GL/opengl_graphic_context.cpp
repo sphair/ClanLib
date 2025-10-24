@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Mark Page
+**    Harry Storbacka
 */
 
 #include "GL/precomp.h"
@@ -70,6 +71,26 @@ CL_GraphicContext_GL::~CL_GraphicContext_GL()
 void CL_GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor, int &version_release)
 {
 	impl->provider->get_opengl_version(version_major, version_minor, version_release);
+}
+
+void CL_GraphicContext_GL::get_opengl_shading_language_version(int &version_major, int &version_minor, int &version_release)
+{
+	impl->provider->get_opengl_shading_language_version(version_major, version_minor, version_release);
+}
+
+CL_String CL_GraphicContext_GL::get_renderer_string()
+{
+	return impl->provider->get_renderer_string();
+}
+
+CL_String CL_GraphicContext_GL::get_vendor_string()
+{
+	return impl->provider->get_vendor_string();
+}
+
+std::vector<CL_String> CL_GraphicContext_GL::get_extensions()
+{
+	return impl->provider->get_extensions();
 }
 
 /////////////////////////////////////////////////////////////////////////////

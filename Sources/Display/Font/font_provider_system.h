@@ -36,20 +36,22 @@
 #include <list>
 #include <map>
 
-class CL_FreetypeFont;
+#include "glyph_cache.h"
+
+class CL_FontEngine_Freetype;
+class CL_FontEngine_Win32;
 class CL_Colorf;
 class CL_TextureGroup;
 
-class CL_FontProvider_Texture : public CL_FontProvider
+class CL_FontProvider_System : public CL_FontProvider
 {
 /// \name Construction
 /// \{
 
 public:
 
-	CL_FontProvider_Texture(CL_GraphicContext &gc);
-	virtual ~CL_FontProvider_Texture();
-
+	CL_FontProvider_System(CL_GraphicContext &gc);
+	virtual ~CL_FontProvider_System();
 
 /// \}
 /// \name Attributes
@@ -57,48 +59,24 @@ public:
 
 public:
 	/// \brief Returns information about the current font.
-	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
 
 	/// \brief Get a glyph. Returns NULL if the glyph was not found
-	CL_Font_System_Glyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
-
-#ifdef WIN32
-	HFONT get_handle();
-#else
-	CL_FreetypeFont *get_handle();
-#endif
-
+	CL_Font_TextureGlyph *get_glyph(CL_GraphicContext &gc, unsigned int glyph);
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Destroys the font provider.
-	virtual void destroy();
+	void insert_glyph(CL_GraphicContext &gc, CL_Font_System_Position &position, CL_PixelBuffer &pixel_buffer);
+	void insert_glyph(CL_GraphicContext &gc, const CL_StringRef &text);
 
 	/// \brief Print text on gc.
-	virtual void draw_text(CL_GraphicContext &gc, int xpos, int ypos, const CL_StringRef &text, const CL_Colorf &color);
+	void draw_text(CL_GraphicContext &gc, float xpos, float ypos, const CL_StringRef &text, const CL_Colorf &color);
 
 	/// \brief Calculate size of text string.
-	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
-
-	/// \brief Load a system font (for use by insert_glyph to load text from a system font)
-	void load_font( CL_GraphicContext &context, const CL_FontDescription &desc);
-
-	/// \brief Free the system font when it is no longer required
-	void free_font();
-
-	/// \brief Insert a glyph from a pixel buffer
-	/** param: gc = The graphic context
-	    param: position = The bitmap font position
-	    param: pixel_buffer = Pixel buffer containing the glyph.*/
-	void insert_glyph(CL_GraphicContext &gc, CL_Font_System_Position &position, CL_PixelBuffer &pixel_buffer);
-
-	/// \brief Insert glyphs from a text string (using to system font)
-	/** param: gc = The graphic context
-	    param: text = The text to use*/
-	void insert_glyph(CL_GraphicContext &gc, const CL_StringRef &text);
+	CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
 
 	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
 	void set_font_metrics(const CL_FontMetrics &metrics);
@@ -106,6 +84,15 @@ public:
 	void set_texture_group(CL_TextureGroup &new_texture_group);
 
 	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
+
+	/// \brief Destroys the font provider.
+	virtual void destroy();
+
+	/// \brief Load a system font (for use by insert_glyph to load text from a system font)
+	void load_font( CL_GraphicContext &context, const CL_FontDescription &desc);
+
+	/// \brief Free the system font when it is no longer required
+	void free_font();
 
 	static void register_font(const CL_StringRef &font_filename, const CL_StringRef &font_typeface);
 
@@ -125,38 +112,15 @@ private:
 	CL_FontDescription get_registered_font(const CL_FontDescription &desc);
 #endif
 
-	void insert_glyph(CL_GraphicContext &gc, int glyph);
-	void insert_glyph(CL_GraphicContext &gc, CL_FontPixelBuffer &pb);
-	CL_FontPixelBuffer get_font_glyph(CL_GraphicContext &gc, int glyph, bool anti_alias, const CL_Colorf &color);
-
-	/// \brief Set the font metrics from the OS font
-	void write_font_metrics(CL_GraphicContext &gc);
-
-	std::vector<CL_Font_System_Glyph* > glyph_list;
-
 #ifdef WIN32
-	HFONT handle;
+	CL_FontEngine_Win32 *font_engine;
 #else
-	CL_FreetypeFont *handle;
+	CL_FontEngine_Freetype *font_engine;
 #endif
-
-	// Contains the font height
-	int size_height;
-
-	// Contains the anti alias setting
-	bool anti_alias;
-
-	CL_TextureGroup texture_group;
-
-	CL_FontMetrics font_metrics;
 
 #ifndef WIN32
 	static std::map<CL_String /*font_typeface*/, CL_String /*font_filename*/ > font_register_cache;
 #endif
-
+	CL_GlyphCache glyph_cache;
 /// \}
 };
-
-
-
-

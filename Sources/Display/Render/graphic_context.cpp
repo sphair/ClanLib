@@ -105,6 +105,11 @@ int CL_GraphicContext::get_height() const
 	return impl->provider->get_height();
 }
 
+CL_Size CL_GraphicContext::get_size() const
+{
+	return CL_Size(impl->provider->get_width(), impl->provider->get_height());
+}
+
 CL_Rect CL_GraphicContext::get_cliprect() const
 {
 	if (!impl->cliprects.empty())
@@ -115,7 +120,7 @@ CL_Rect CL_GraphicContext::get_cliprect() const
 
 const CL_Mat4f &CL_GraphicContext::get_modelview() const
 {
-	return impl->modelviews.front();
+	return impl->modelviews[impl->modelview_index];
 }
 
 CL_Size CL_GraphicContext::get_max_texture_size() const
@@ -239,7 +244,7 @@ void CL_GraphicContext::draw_primitives(CL_PrimitivesType type, int num_vertices
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives(type, num_vertices, prim_array.impl);
@@ -256,7 +261,7 @@ void CL_GraphicContext::draw_primitives_array(CL_PrimitivesType type, int num_ve
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_array(type, 0, num_vertices);
@@ -267,7 +272,7 @@ void CL_GraphicContext::draw_primitives_array(CL_PrimitivesType type, int offset
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_array(type, offset, num_vertices);
@@ -278,7 +283,7 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_elements(type, count, indices);
@@ -289,7 +294,7 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_elements(type, count, indices);
@@ -300,7 +305,7 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_elements(type, count, indices);
@@ -311,7 +316,7 @@ void CL_GraphicContext::draw_primitives_elements(CL_PrimitivesType type, int cou
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_primitives_elements(type, count, elements_array.get_provider(), indices_type, offset);
@@ -328,7 +333,7 @@ void CL_GraphicContext::draw_pixels(float x, float y, const CL_PixelBufferRef &i
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_pixels(x, y, 1.0, 1.0, image, color);
@@ -339,7 +344,7 @@ void CL_GraphicContext::draw_pixels(float x, float y, float zoom_x, float zoom_y
 	impl->flush_batcher(*this);
 	if (impl->modelview_changed)
 	{
-		impl->provider->set_modelview(impl->modelviews.front());
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
 		impl->modelview_changed = false;
 	}
 	impl->provider->draw_pixels(x, y, zoom_x, zoom_y, image, color);
@@ -429,6 +434,13 @@ void CL_GraphicContext::reset_cliprect()
 void CL_GraphicContext::set_map_mode(CL_MapMode mode)
 {
 	impl->flush_batcher(*this);
+
+	if (impl->modelview_changed)
+	{
+		impl->provider->set_modelview(impl->modelviews[impl->modelview_index]);
+		impl->modelview_changed = false;
+	}
+
 	impl->provider->set_map_mode(mode);
 }
 
@@ -440,14 +452,14 @@ void CL_GraphicContext::set_projection(const CL_Mat4f &matrix)
 
 void CL_GraphicContext::set_modelview(const CL_Mat4f &matrix)
 {
-	impl->modelviews.front() = matrix;
+	impl->modelviews[impl->modelview_index] = matrix;
 	impl->modelview_changed = true;
 	impl->update_batcher_modelview();
 }
 
 void CL_GraphicContext::mult_modelview(const CL_Mat4f &matrix)
 {
-	impl->modelviews.front().multiply(matrix);
+	impl->modelviews[impl->modelview_index].multiply(matrix);
 	impl->modelview_changed = true;
 	impl->update_batcher_modelview();
 }
@@ -466,8 +478,8 @@ void CL_GraphicContext::reset_frame_buffer()
 
 void CL_GraphicContext::push_modelview()
 {
-	CL_Mat4f m = impl->modelviews.front();
-	impl->modelviews.push_front(m);
+	impl->modelviews.push_back(impl->modelviews[impl->modelview_index]);
+	impl->modelview_index++;
 }
 
 void CL_GraphicContext::set_translate(float x, float y, float z)
@@ -524,9 +536,19 @@ void CL_GraphicContext::push_scale(float x, float y, float z)
 
 void CL_GraphicContext::pop_modelview()
 {
-	impl->modelviews.pop_front();
+/*	impl->modelviews.pop_front();
 	if (impl->modelviews.empty())
 		impl->modelviews.push_front(CL_Mat4f::identity());
+*/
+	impl->modelviews.pop_back();
+	impl->modelview_index--;
+
+	if (impl->modelviews.empty())
+	{
+		impl->modelviews.push_back(CL_Mat4f::identity());
+		impl->modelview_index = 0;
+	}
+
 	impl->modelview_changed = true;
 	impl->update_batcher_modelview();
 }

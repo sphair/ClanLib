@@ -30,6 +30,7 @@
 #include "soundprovider_recorder_directsound.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/logger.h"
+#include "API/Sound/sound_sse.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DirectSoundRecorder_Session construction:
@@ -182,13 +183,14 @@ bool CL_SoundProvider_Recorder_DirectSound_Session::set_position(int pos)
 
 #define cl_min(a,b) ((a < b) ? a : b)
 
-int CL_SoundProvider_Recorder_DirectSound_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_Recorder_DirectSound_Session::get_data(float **data_ptr, int data_requested)
 {
+
 	CL_MutexSection mutex_section(&mutex);
 	int send_size = cl_min(data_requested*2, buffer_size);
 	if (send_size > 0)
 	{
-		memcpy(data_ptr[0], buffer, send_size);
+		CL_SoundSSE::unpack_16bit_mono((short *) buffer, send_size/2, data_ptr[0]);
 		buffer_size -= send_size;
 		if (buffer_size == 0)
 		{

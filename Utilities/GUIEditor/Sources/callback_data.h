@@ -26,8 +26,7 @@
 **    Harry Storbacka
 */
 
-#ifndef header_callback_data
-#define header_callback_data
+#pragma once
 
 class CallbackData_Impl;
 
@@ -43,35 +42,22 @@ public:
 //!Attributes:
 public:
 	CL_StringRef get_component_type() const;
-	
 	CL_StringRef get_callback_name() const;
-	
 	CL_StringRef get_param1() const;
-	
 	CL_StringRef get_param2() const;
-	
 	CL_StringRef get_return_type() const;
-	
 	CL_StringRef get_handler_function_name() const;
 	
 //!Operations:
 public:
 	void set_component_type(const CL_StringRef &str);
-	
 	void set_callback_name(const CL_StringRef &str);
-	
 	void set_param1(const CL_StringRef &str);
-	
 	void set_param2(const CL_StringRef &str);
-	
 	void set_return_type(const CL_StringRef &str);
-	
 	void set_handler_function_name(const CL_StringRef &str);
 	
 //!Implementation:
 private:
 	CL_SharedPtr<CallbackData_Impl> impl;
 };
-
-
-#endif

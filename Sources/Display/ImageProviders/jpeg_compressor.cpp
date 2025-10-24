@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #include "Display/precomp.h"
@@ -77,10 +78,11 @@ public:
 		jerr.emit_message = &on_emit_message;
 		jerr.output_message = &on_output_message;
 
+		jpeg_create_compress(&cinfo);
+
 		cinfo.err = &jerr;
 		cinfo.client_data = this;
 		cinfo.dest = &dest;
-		jpeg_create_compress(&cinfo);
 	}
 
 	~CL_JPEGCompressor_Impl()

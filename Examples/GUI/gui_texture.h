@@ -41,7 +41,6 @@
 #include "combobox.h"
 #include "manager.h"
 #include "listview.h"
-#include "panel3d.h"
 
 class GUI;
 
@@ -64,9 +63,6 @@ private:
 	void gui_repaint();
 	void set_projection_matrix();
 	float get_zpos_at_position(float xpos, float ypos);
-	void wm_input_intercept(CL_InputEvent &input_event, CL_InputState &input_state);
-	CL_Vec3f transform_point(const CL_Vec3d &src_point, const CL_Mat4d &matrix);
-	bool run3d();
 	void setup_shader();
 
 private:
@@ -89,33 +85,7 @@ private:
 	CL_AutoPtr<ComboBox> combobox;
 	CL_AutoPtr<Manager> manager;
 	CL_AutoPtr<ListView> listview;
-	CL_AutoPtr<Panel3D> panel3d;
 
-	float lens_zoom;
-	float lens_aspect;
-	float lens_near;
-	float lens_far;
-
-	CL_Mat4f projection_matrix;
-	CL_Mat4f modelview_matrix;
-	CL_Mat4f resultant_matrix;
-
-	CL_ProgramObject gui_shader;
-
-	float saved_x1;
-	float saved_x2;
-	float saved_y1;
-	float saved_y2;
-	float saved_z1;
-	float saved_z2;
-
-	bool active_3dmode;
-
-	float wobble_offset;
-	unsigned int last_time;
-
-	float current_zoffset;
-	bool shader_set;
 };
 
 

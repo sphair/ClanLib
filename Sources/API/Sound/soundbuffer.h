@@ -33,7 +33,6 @@
 
 #include "api_sound.h"
 #include "../Core/System/sharedptr.h"
-#include "../Core/Resources/resource_data_session.h"
 #include "soundbuffer_session.h"
 
 class CL_ResourceManager;
@@ -41,7 +40,9 @@ class CL_SoundOutput;
 class CL_SoundProvider;
 class CL_SoundBuffer_Session;
 class CL_SoundFilter;
-class CL_SoundBuffer_Generic;
+class CL_SoundBuffer_Impl;
+class CL_IODevice;
+class CL_VirtualDirectory;
 
 /// \brief Sample interface in ClanLib.
 ///
@@ -76,13 +77,23 @@ public:
 		CL_ResourceManager *manager);
 
 	CL_SoundBuffer(
-		CL_SoundProvider *provider,
-		bool delete_provider = false);
+		CL_SoundProvider *provider);
 
 	CL_SoundBuffer(
 		const CL_String &fullname,
 		bool streamed = false,
 		const CL_String &format = cl_text(""));
+
+	CL_SoundBuffer(
+		const CL_String &filename,
+		bool streamed,
+		const CL_VirtualDirectory &directory,
+		const CL_String &type = cl_text(""));
+
+	CL_SoundBuffer(
+		CL_IODevice &file,
+		bool streamed,
+		const CL_String &type);
 
 	/// \brief Constructs a SoundBuffer
 	///
@@ -97,7 +108,7 @@ public:
 
 public:
 	/// \brief Returns the sound provider to be used for playback.
-	CL_SoundProvider *get_sound_provider() const;
+	CL_SoundProvider *get_provider() const;
 
 	/// \brief Returns the start/default volume used when the buffer is played.
 	float get_volume() const;
@@ -105,16 +116,16 @@ public:
 	/// \brief Returns the default panning position when the buffer is played.
 	float get_pan() const;
 
-	/// \brief Returns true if an instance of this soundbuffer is playing
-	bool is_playing() const;
+	/// \brief Is Null
+	///
+	/// \return true = null
+	bool is_null();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Copy assignment operator.
-	CL_SoundBuffer &operator =(const CL_SoundBuffer &copy);
 
 	/// \brief Sets the volume of the sound buffer in a relative measure (0->1)
 	/** <p>A value of 0 will effectively mute the sound (although it will
@@ -137,9 +148,6 @@ public:
 	/// \brief Remove the sound filter from the sound buffer.
 	void remove_filter(CL_SoundFilter &filter);
 
-	/// \brief Stops any sessions playing this soundbuffer
-	void stop();
-
 	/// \brief Plays the soundbuffer on the specified soundcard.
 	///
 	/// \param output Sound output to be used - NULL means use the current selected sound output (CL_Sound::get_selected_output().
@@ -159,9 +167,7 @@ public:
 /// \{
 
 private:
-	CL_SharedPtr<CL_SoundBuffer_Generic> impl;
-
-	CL_ResourceDataSession resource_data_session;
+	CL_SharedPtr<CL_SoundBuffer_Impl> impl;
 /// \}
 };
 

@@ -27,8 +27,7 @@
 **    Harry Storbacka
 */
 
-#ifndef _header_dialog_document_
-#define _header_dialog_document_
+#pragma once
 
 class DialogComponent;
 class DialogContainer;
@@ -54,5 +53,3 @@ private:
 	friend class DialogComponent;
 	friend class DialogContainer;
 };
-
-#endif

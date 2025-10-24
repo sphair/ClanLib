@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include <map>
 
 #include "gl1_graphic_context_provider.h"
 
@@ -58,7 +59,7 @@ public:
 
 	CL_Size get_attachment_size(int buffer_id) const;
 
-	std::vector<int> get_attachment_indexes() const;
+	const std::vector<int> &get_attachment_indexes() const;
 
 
 /// \}
@@ -104,6 +105,8 @@ private:
 	void detach_all();
 
 	mutable bool pbuffer_changed;
+	
+	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1> texture_pbuffer_map;
 
 	CL_PBuffer_GL1 pbuffer;
 	CL_Texture selected_surface;

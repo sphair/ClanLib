@@ -84,7 +84,7 @@ public:
 				window.flip(1);
 
 				// This call updates input and performs other "housekeeping" call this each frame
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 			}
 
 			// Cleanup
@@ -92,23 +92,11 @@ public:
 			cutter = CL_Texture();
 			ground_back = CL_Texture();
 		}
-		catch(CL_Exception& exception)
+		catch(CL_Exception &exception)
 		{
-			CL_Console::write_line("Exception caught:");
-			CL_Console::write_line(exception.message);
-
-			// Display the stack trace (if available)
-			std::vector<CL_String> stacktrace = exception.get_stack_trace();
-			int size = stacktrace.size();
-			if (size > 0)
-			{
-				CL_Console::write_line("Stack Trace:");
-				for (int cnt=0; cnt < size; cnt++)
-				{
-					CL_Console::write_line(stacktrace[cnt]);
-				}
-			}
-
+			// Create a console window for text-output if not available
+			CL_ConsoleWindow console("Console", 80, 160);
+			CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 			console.display_close_message();
 
 			return -1;

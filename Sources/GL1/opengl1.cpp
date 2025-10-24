@@ -35,6 +35,7 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/TargetProviders/render_window_provider.h"
+#include "API/Display/Render/shared_gc_data.h"
 #include "gl1_graphic_context_provider.h"
 #include <map>
 
@@ -628,6 +629,27 @@ CL_GL1Functions *cl_gl1_setup_binds();
 void CL_GL1::set_active(CL_GraphicContext &gc)
 {
 	set_active(static_cast<const CL_GL1GraphicContextProvider *>(gc.get_provider()));
+}
+
+bool CL_GL1::set_active()
+{
+	if (cl_gl1_active_opengl_gc)	// If already active, we can exit now
+		return true;
+
+	std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
+	std::vector<CL_GraphicContextProvider*>::size_type count, size;
+	size = opengl_contexts.size();
+	for (count = 0; count < size; count++)
+	{
+		CL_GL1GraphicContextProvider *gc_provider = dynamic_cast<CL_GL1GraphicContextProvider*>(opengl_contexts[count]);
+		if (gc_provider)
+		{
+			CL_GL1::set_active(gc_provider);
+			return true;
+		}
+	}
+	set_active(NULL);
+	return false;
 }
 
 void CL_GL1::set_active(const CL_GL1GraphicContextProvider * const gc_provider)

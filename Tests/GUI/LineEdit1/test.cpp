@@ -36,7 +36,8 @@ public:
  			lineedit1 = new CL_LineEdit(&root);
 			lineedit1->set_geometry(CL_Rect(20, 20, 200, 40));
  			lineedit1->set_text("Random text, random text"); 
- 
+			lineedit1->set_geometry(CL_Rect(CL_Point(100,100), CL_Size(169, 21)));
+
 			CL_AcceleratorTable accel_table;
 			CL_AcceleratorKey key_ctrlP(CL_KEY_P, CL_KEY_CONTROL);
 			key_ctrlP.func_pressed().set(this, &App::on_accelerator);
@@ -47,9 +48,9 @@ public:
 			accel_table.add_accelerator(key_menuD);
 			accel_table.add_accelerator(key_ctrlP);
 
-			lineedit1->set_geometry(CL_Rect(CL_Point(100,100), CL_Size(169, 21)));
+			gui.set_accelerator_table(accel_table);
 
- 			gui.exec(accel_table);
+			gui.exec();
 
 			delete lineedit1; 
 		}
@@ -64,14 +65,17 @@ public:
 
 	CL_LineEdit *lineedit1;
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
+
 	void on_timer()
 	{
 		CL_Console::write_line("timer expired");
 	}
+
 	void on_accelerator(CL_GUIMessage mgs, CL_AcceleratorKey key)
 	{
 		if (key.get_id() == CL_KEY_D)

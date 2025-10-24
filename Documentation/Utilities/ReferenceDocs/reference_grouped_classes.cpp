@@ -21,7 +21,7 @@ void ReferenceGroupedClasses::load()
 
 void ReferenceGroupedClasses::save(const CL_StringRef &filename)
 {
-	CL_File modules_file(filename, CL_File::create_always);
+	CL_File modules_file(filename, CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"

@@ -74,11 +74,6 @@ public:
 
 	CL_Window *window;
 
-	CL_Callback_v0 func_close;
-	CL_Callback_v0 func_activation_gained;
-	CL_Callback_v0 func_activation_lost;
-	CL_Callback_v1<CL_Rect&> func_resize;
-
 	CL_String title;
 
 	CL_Font font;
@@ -113,7 +108,7 @@ CL_Window::CL_Window(CL_GUIComponent *owner, const CL_GUITopLevelDescription &de
 	impl->title = description.get_title();
 
 	if (owner->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
-		impl->draw_decorations = !description.get_decorations();
+		impl->draw_decorations = false;
 	else
 		impl->draw_decorations = description.get_decorations();
 
@@ -134,7 +129,7 @@ CL_Window::CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &de
 	impl->title = description.get_title();
 
 	if (manager->get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
-		impl->draw_decorations = !description.get_decorations();
+		impl->draw_decorations = false;
 	else
 		impl->draw_decorations = description.get_decorations();
 
@@ -150,24 +145,6 @@ CL_Window::CL_Window(CL_GUIManager *manager, const CL_GUITopLevelDescription &de
 
 CL_Window::~CL_Window()
 {
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CL_Window Events:
-
-CL_Callback_v0 &CL_Window::func_close()
-{
-	return impl->func_close;
-}
-
-CL_Callback_v0 & CL_Window::func_activation_gained()
-{
-	return impl->func_activation_gained;
-}
-
-CL_Callback_v0 & CL_Window::func_activation_lost()
-{
-	return impl->func_activation_lost;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -316,8 +293,8 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 				if(part_buttonclose.set_state(CssStr::pressed, false))
 				{
 					window->request_repaint();
-					if (!func_close.is_null())
-						func_close.invoke();
+					if (!window->func_close().is_null() && window->func_close().invoke())
+						msg.set_consumed();
 				}
 			}
 		}
@@ -337,8 +314,8 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 	}
 	else if (msg.is_type(CL_GUIMessage_Close::get_type_name()))
 	{
-		if (!func_close.is_null())
-			func_close.invoke();
+		if (!window->func_close().is_null() && window->func_close().invoke())
+			msg.set_consumed();
 	}
 	else if (msg.is_type(CL_GUIMessage_ActivationChange::get_type_name()))
 	{
@@ -346,14 +323,14 @@ void CL_Window_Impl::on_process_message(CL_GUIMessage &msg)
 		if (ac.get_activation_type() == CL_GUIMessage_ActivationChange::activation_gained)
 		{
 			window->CL_GUIComponent::impl->activated = true;
-			if (!func_activation_gained.is_null())
-				func_activation_gained.invoke();
+			if (!window->func_activated().is_null() && window->func_activated().invoke())
+				msg.set_consumed();
 		}
 		else if (ac.get_activation_type() == CL_GUIMessage_ActivationChange::activation_lost)
 		{
 			window->CL_GUIComponent::impl->activated = false;
-			if (!func_activation_lost.is_null())
-				func_activation_lost.invoke();
+			if (!window->func_deactivated().is_null() && window->func_deactivated().invoke())
+				msg.set_consumed();
 		}
 	}
 }

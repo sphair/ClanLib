@@ -59,7 +59,6 @@ public:
 	: listview_header(0), display_mode(listview_mode_details), text_height(0),
 	  visible(true), current_mouse_in_rect(0,0,0,0)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
 	}
 
 	void on_process_message(CL_GUIMessage &msg);
@@ -76,9 +75,7 @@ public:
 
 	CL_ListViewHeader *listview_header;
 	CL_Font font;
-	CL_Colorf text_color;
 	CL_GUIThemePart part_component;
-	CL_GUIThemePartProperty prop_text_color;
 	CL_ListViewDisplayMode display_mode;
 	int text_height;
 	bool visible;
@@ -340,11 +337,7 @@ void CL_ListViewHeader_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &upd
 		part.render_box(gc, crect, update_rect);
 		CL_Rect content_rect = part.get_content_box(crect);
 
-		font.draw_text(gc,
-			content_rect.left,
-			(content_rect.bottom - content_rect.top)/2 + text_height/2,
-			col.get_caption(),
-			text_color);
+		part.render_text(gc, col.get_caption(), content_rect, update_rect);
 
 		col = col.get_next_sibling();
 
@@ -391,7 +384,6 @@ void CL_ListViewHeader_Impl::create_parts()
 {
 	part_component = CL_GUIThemePart(listview_header);
 	font = part_component.get_font();
-	text_color = part_component.get_property(prop_text_color);
 }
 
 CL_ListViewColumnHeader CL_ListViewHeader_Impl::create_column(const CL_StringRef &column_id, const CL_StringRef &caption)

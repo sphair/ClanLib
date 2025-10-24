@@ -11,7 +11,7 @@ public:
 private:
 	void on_ok();
 	void on_cancel();
-	void on_close();
+	bool on_close();
 
 	static CL_GUITopLevelDescription get_description();
 

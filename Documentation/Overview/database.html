@@ -13,7 +13,181 @@
 <img src="gfx/overview.png"/>Database services
 </h2>
 
-<p>Not written yet. Why don't you do it? :-)</p>
+<p>Database access in ClanLib is basically handled through 4 classes:</p>
+
+<ul>
+<li>CL_DBConnection</li>
+<li>CL_DBCommand</li>
+<li>CL_DBReader</li>
+<li>CL_DBTransaction</li>
+</ul>
+
+<p>To use ClanLib Database API with the ClanSqlite provider, you need to include these in your application:</p>
+<pre>
+#include &lt;ClanLib/core.h&gt;
+#include &lt;ClanLib/database.h&gt;
+#include &lt;ClanLib/sqlite.h&gt;
+</pre>
+
+<p>Please note this overview will not learn you how SQL databases work in general, or how to write SQL statements. The purpose of this document is to describe how the ClanLib database API works. We assume you have general database knowledge before reading on.</p>
+
+<h3>Connecting to a database</h3>
+
+<p>To connect to a database, you use the <span class="code">CL_DBConnection</span> class. You need to use a provider specific implementation of it, since it depends on the target database system how to connect to it. ClanLib provides one provider currently, the Sqlite provider. Others might be added later, for instance MySQL or MS SQL Server.</p>
+
+<p>Since Sqlite is a file based database system, the connection only takes one parameter for connecting; a filename pointing to the database file.</p>
+
+<pre>
+CL_String database = "mydatabase.db";
+CL_SqliteConnection connection(database);
+</pre>
+
+<p>If something went wrong during this connection, it will throw an exception explaining why.</p>
+
+<h3>Creating SQL statements</h3>
+
+<p>To issue a SQL query to a connection, you use the <span class="code">CL_DBCommand</span> class. It is created using create_command on the connection object, and it takes a query string and a type. Type can be a sql statement (default) or a stored procedure. Sqlite only supports sql statements, but future providers might support both.</p>
+
+<pre>
+CL_DBCommand command = connection.create_command("SELECT UserId, UserName FROM Users");
+</pre>
+
+<p>A command can also set input parameters. If the command query string contains a ?x, it requires a corresponding parameter to be set. 
+
+<pre>
+CL_DBCommand command = connection.create_command("INSERT INTO Users (UserName, Password, RealName) VALUES (?1,?2,?3)");
+command.set_input_parameter_string(1, "joe");
+command.set_input_parameter_string(2, "secret");
+command.set_input_parameter_string(3, "Joe McCoe);
+
+CL_DBCommand command = connection.create_command("UPDATE Users SET RealName=?2 WHERE UserId=?1");
+command.set_input_parameter_int(1, user_id);
+command.set_input_parameter_string(2, "Joe");
+</pre>
+
+<p>The <span class="code">CL_DBCommand</span> class support strings, bools, int, doubles, DateTime and DataBuffer (binary) as parameters:</p>
+
+<pre>
+set_input_parameter_string(int index, const CL_StringRef &value);
+set_input_parameter_bool(int index, bool value);
+set_input_parameter_int(int index, int value);
+set_input_parameter_double(int index, double value);
+set_input_parameter_datetime(int index, const CL_DateTime &value);
+set_input_parameter_binary(int index, const CL_DataBuffer &value);
+</pre>
+
+<h3>Executing a command and reading back results</h3>
+
+<p>To execute a command, you call one of 4 execute methods on the connection object.
+
+<h4>execute_non_query</h4>
+
+<p>execute_non_query is used if you don't care about any returning values from the command.</p>
+
+<pre>
+CL_DBCommand command = connection.create_command("INSERT INTO Users (UserName, Password, RealName) VALUES (?1,?2,?3)");
+command.set_input_parameter_string(1, user_name);
+command.set_input_parameter_string(2, password);
+command.set_input_parameter_string(3, real_name);
+connection.execute_non_query(command);
+</pre>
+
+<h4>execute_scalar_string</h4>
+
+<p>execute_scalar_string is used if you have only one returning value. It returns the first column of the first row as a string.</p>
+
+<pre>
+CL_DBCommand command = connection.create_command("SELECT UserName FROM Users WHERE UserId=?1");
+command.set_input_parameter_int(1, user_id);
+CL_String user_name = connection.execute_scalar_string(command);
+</pre>
+
+<h4>execute_scalar_int</h4>
+
+<p>execute_scalar_int is used if you have only one returning value. It returns the first column of the first row as a integer.</p>
+
+<pre>
+CL_DBCommand command = connection.create_command("SELECT UserId FROM Players WHERE PlayerId=?1");
+command.set_input_parameter_int(1, player_id);
+int user_id = connection.execute_scalar_int(command);
+</pre>
+
+<h4>execute_reader</h4>
+
+<p>execute_reader is used if you have more than one returning value.</p>
+
+<pre>
+CL_DBCommand command = connection.create_command("SELECT UserId, UserName, CreateDate FROM Users WHERE UserId=?1");
+command.set_input_parameter_int(1, user_id);
+CL_DBReader reader = connection.execute_reader(command);
+while (reader.retrieve_row())
+{
+	int userId = reader.get_column_int(0);
+	CL_String user_name = reader.get_column_string(1);
+	CL_DateTime create_date = reader.get_column_datetime(2);
+}
+reader.close();
+</pre>
+
+<p>You can retrieve values as strings, bools, integers, doubles, datetimes or binaries:</p>
+<pre>
+CL_String get_column_string(int index) const;
+bool get_column_bool(int index) const;
+int get_column_int(int index) const;
+double get_column_double(int index) const;
+CL_DateTime get_column_datetime(int index) const;
+CL_DataBuffer get_column_binary(int index) const;
+</pre>
+
+<p>You can also query a reader about column count, column names, etc. Remember to close the reader when you are done with it.</p>
+
+<h3>Transactions</h3>
+
+<p>A transaction is a "sequence of operations performed as a single logical unit of work". It is a tool to make sure the entire operation you want to perform on the database is either completely executed, or not executed at all.</p>
+
+<pre>
+CL_DBTransaction transaction = connection.begin_transaction();
+CL_DBCommand command = connection.create_command("INSERT INTO Users (UserName) VALUES (?1)");
+command.set_input_parameter_string(1, user_name);
+connection.execute_non_query(command);
+transaction.commit();
+</pre>
+
+<p>You can either commit or rollback a transaction, depending on how the query statements were executed.</p>
+
+<h3>Schemas</h3>
+
+<p>A database require a database schema which describes tables, relationships, keys etc. This can be created using a set of <span class="code">CL_DBCommand</span> functions, usage of a gui toolkit that supports Sqlite, or use the <a href="http://www.sqlite.org/download.html">sqlite command line tool sqlite3.exe</a>.</p>
+
+<p>An example for a schema that sqlite3.exe can execute:</p>
+<pre>
+BEGIN TRANSACTION;
+
+CREATE TABLE Users (
+	UserId INTEGER PRIMARY KEY,
+	UserName TEXT NOT NULL,
+	Password TEXT NOT NULL,
+	RealName TEXT NOT NULL,
+	CreateDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+	LastLoginDate DATETIME DEFAULT NULL
+);
+
+CREATE TABLE Characters (
+	CharacterId INTEGER PRIMARY KEY,
+	UserId INTEGER NOT NULL,
+	Name TEXT NOT NULL
+);
+
+COMMIT;
+</pre>
+
+<h3>Complete example</h3>
+
+<p>See the SQL example in the ClanLib distribution for a complete example showing Create, Retrieve, Update and Delete operations.</p>
+
+<h3>Providers</h3>
+
+<p>The ClanLib database API is modelled after a provider pattern, making it is possible to add support for new database systems. If you want to look into this, you basically have to make provider-specific implementations of <span class="code">CL_DBConnection</span>, <span class="code">CL_DBCommandProvider</span>, <span class="code">CL_DBConnectionProvider</span>, <span class="code">CL_DBReaderProvider</span> and <span class="code">CL_DBTransactionProvider</span>. See the ClanSqlite implementation for an example of this.</p>
 
 </div>
 

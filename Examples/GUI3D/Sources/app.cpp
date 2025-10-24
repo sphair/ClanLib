@@ -184,7 +184,6 @@ void App::control_window()
 	float y_trans = ( (float) slider_1_ytranslation->component->get_position() * 1.0f) / (float) slider_1_xrotation->component->get_max();
 	float z_trans = ( (float) slider_1_ztranslation->component->get_position() * 6.0f) / (float) slider_1_xrotation->component->get_max();
 
-
 	window1->object_matrix.translate_self(x_trans - 0.5f, y_trans - 1.0f, z_trans);
 
 	float value = ( (float) slider_1_xrotation->component->get_position() * 360.0f) / (float) slider_1_xrotation->component->get_max();

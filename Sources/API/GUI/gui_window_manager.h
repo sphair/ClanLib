@@ -140,8 +140,7 @@ public:
 	void create_window(
 		CL_GUITopLevelWindow *handle,
 		CL_GUITopLevelWindow *owner,
-		CL_GUITopLevelDescription description,
-		bool temporary);
+		CL_GUITopLevelDescription description);
 
 	/// \brief Destroy window
 	///
@@ -236,6 +235,18 @@ public:
 	/// \param gc = Graphic Context
 	void reset_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc);
 
+	/// \brief Push cliprect
+	///
+	/// \param handle = GUITop Level Window
+	/// \param gc = Graphic Context
+	void push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect);
+
+	/// \brief Pop cliprect
+	///
+	/// \param handle = GUITop Level Window
+	/// \param gc = Graphic Context
+	void pop_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc);
+
 	/// \brief End paint
 	///
 	/// \param handle = GUITop Level Window
@@ -267,16 +278,8 @@ public:
 	/// \return bool
 	bool is_maximized(CL_GUITopLevelWindow *handle) const;
 
-	/// \brief Has message
-	///
-	/// \return bool
-	bool has_message();
-
 	/// \brief Process message
 	void process_message();
-
-	/// \brief Wait for message
-	void wait_for_message();
 
 	/// \brief Capture mouse
 	///
@@ -313,7 +316,8 @@ public:
 
 	/// \brief Final completion for painting all top level windows
 	void complete_painting();
-/// \}
+
+	/// \}
 /// \name Implementation
 /// \{
 

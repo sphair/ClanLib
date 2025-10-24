@@ -31,198 +31,49 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/logger.h"
 #include "Core/System/Win32/init_win32.h"
+#include <mmreg.h>
+
+// KSDATAFORMAT_SUBTYPE_IEEE_FLOAT is not available on some old headers
+#ifndef KSDATAFORMAT_SUBTYPE_IEEE_FLOAT
+struct __declspec(uuid("00000003-0000-0010-8000-00aa00389b71")) KSDATAFORMAT_SUBTYPE_IEEE_FLOAT_STRUCT;
+#define KSDATAFORMAT_SUBTYPE_IEEE_FLOAT __uuidof(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT_STRUCT)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_DirectSound construction:
 
 CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency, int mixing_latency)
-: CL_SoundOutput_Generic(mixing_frequency, mixing_latency), directsound(0),
-  soundbuffer(0), frag_size(0), buffer_size(0), bytes_per_sample(0),
-  sleep_event(0), notify(0), has_sound(true), last_write_pos(-1)
+: CL_SoundOutput_Impl(mixing_frequency, mixing_latency), directsound(0), soundbuffer(0),
+  frag_size(0), sleep_event(0), hwnd(0), notify(0), has_sound(true), last_write_pos(-1)
 {
-	HRESULT err;
-	err = DirectSoundCreate(NULL, &directsound, NULL);
-	if (FAILED(err))
+	try
 	{
-		cl_log_event("mixer", "Cannot get direct sound interface.");
+		create_directsound_object();
+		set_cooperative_level();
+		set_fragment_size();
+		create_sound_buffer();
+		verify_sound_buffer_capabilities();
+		clear_sound_buffer();
+		create_notify_event();
+		retrieve_notify_interface();
+		set_notify_positions();
+		play_sound_buffer();
+	}
+	catch (CL_Exception &e)
+	{
+		release_resources();
+		cl_log_event("mixer", e.message);
 		frag_size = mixing_frequency/2;
 		has_sound = false;
-		return;
-	}
-
-	// We need a hwnd for our directsound interface:
-	HWND hwnd = NULL;
-//	if (CL_Display::cards.size() > 0) hwnd = ((CL_DisplayCard_Win32Compatible *) CL_Display::cards[0])->get_hwnd();
-	if (hwnd == NULL)
-	{
-		WNDCLASS wndclass;
-
-		wndclass.style = 0;
-		wndclass.lpfnWndProc = DefWindowProc;
-		wndclass.cbClsExtra = 0;
-		wndclass.cbWndExtra = 0;
-		wndclass.hInstance = GetModuleHandle(0);
-		wndclass.hIcon = NULL;
-		wndclass.hCursor = LoadCursor (NULL,IDC_ARROW);
-		wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-		wndclass.lpszMenuName = TEXT("ClanSound");
-		wndclass.lpszClassName = TEXT("ClanSound");
-
-		RegisterClass(&wndclass);
-
-		hwnd = CreateWindow(
-			TEXT("ClanSound"),
-			TEXT("ClanSound"),
-			0, // WS_POPUP,
-			0,
-			0,
-			1,
-			1,
-			NULL,
-			NULL,
-			GetModuleHandle(0),
-			NULL);
-	}
-	if (hwnd == NULL)
-	{
-		cl_log_event("mixer", cl_text("Failed to create sound window."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	err = directsound->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Unable to set direct sound cooperative level to DSSCL_NORMAL."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	// Create mixing buffer.
-	WAVEFORMATEX format;
-	format.wFormatTag = WAVE_FORMAT_PCM; 
-	format.nChannels = 2;
-	format.nSamplesPerSec = mixing_frequency;
-	format.wBitsPerSample = 16;
-	format.nBlockAlign = format.wBitsPerSample * format.nChannels / 8; 
-	format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign; 
-	format.cbSize = 0;
-
-	bytes_per_sample = format.nBlockAlign;
-
-	frag_size = mixing_frequency * mixing_latency / 1000;
-	int num_fragments = 8;
-
-	DSBUFFERDESC desc;
-	desc.dwSize = sizeof(DSBUFFERDESC); 
-	desc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPOSITIONNOTIFY | DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2;
-
-	desc.dwBufferBytes = frag_size * bytes_per_sample * num_fragments;
-	desc.dwReserved = 0;
-	desc.lpwfxFormat = &format; 
-
-	err = directsound->CreateSoundBuffer(&desc, &soundbuffer, NULL);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Cannot get primary sound buffer."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	// Find size of buffer:
-
-	DSBCAPS caps;
-	memset(&caps, 0, sizeof(DSBCAPS));
-	caps.dwSize = sizeof(DSBCAPS);
-	
-	err = soundbuffer->GetCaps(&caps);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Could not retrieve direct sound buffer capabilities."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	buffer_size = caps.dwBufferBytes;
-	if (buffer_size != frag_size * bytes_per_sample * num_fragments)
-	{
-		cl_log_event("mixer", cl_text("Direct sound buffer size does not match our request."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-	
-	// Clear buffer at beginning (good for debugging):
-	DWORD size1, size2;
-	void *ptr1;
-	void *ptr2;
-	err = soundbuffer->Lock(0, buffer_size, &ptr1, &size1, &ptr2, &size2, 0);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Unable to lock direct sound buffer."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	memset(ptr1, 0, size1);
-	if (ptr2 != NULL)
-		memset(ptr2, 0, size2);
-
-	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Could not unlock direct sound buffer."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	// Setup some sleeping :)
-	sleep_event = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-	err = soundbuffer->QueryInterface(IID_IDirectSoundNotify, (void **) &notify);
-	if (FAILED(err)) // directsoundnotify doesnt exist on nt4 with dx3. No sound avail.
-	{
-		cl_log_event("mixer", cl_text("Direct sound buffer does not support needed IDirectSoundNotify interface."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
-	}
-
-	DSBPOSITIONNOTIFY *notify_pos = new DSBPOSITIONNOTIFY[num_fragments];
-	for (int i=0; i<num_fragments; i++)
-	{
-		notify_pos[i].dwOffset = i*frag_size*bytes_per_sample;
-		notify_pos[i].hEventNotify = sleep_event;
-	}
-	notify->SetNotificationPositions(num_fragments, notify_pos);
-	delete[] notify_pos;
-
-	start_mixer_thread();
-
-	err = soundbuffer->Play(0, 0, DSBPLAY_LOOPING);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", cl_text("Could not start sound buffer playback."));
-		frag_size = mixing_frequency/2;
-		has_sound = false;
-		return;
 	}
 }
-	
+
 CL_SoundOutput_DirectSound::~CL_SoundOutput_DirectSound()
 {
 	stop_mixer_thread();
-
-	if (notify) notify->Release();
-	if (soundbuffer) soundbuffer->Release();
-	if (directsound) directsound->Release();
-	if (sleep_event) CloseHandle(sleep_event);
+	if (soundbuffer)
+		soundbuffer->Stop();
+	release_resources();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -241,89 +92,239 @@ int CL_SoundOutput_DirectSound::get_fragment_size()
 	return frag_size;
 }
 
-void CL_SoundOutput_DirectSound::write_fragment(short *data)
+void CL_SoundOutput_DirectSound::write_fragment(float *data)
 {
-	if (!has_sound) return;
-	
-	HRESULT err;
-
-	DWORD play, write;
-	err = soundbuffer->GetCurrentPosition(&play, &write);
-	if (FAILED(err))
+	if (has_sound)
 	{
-		cl_log_event("mixer", "soundbuffer->GetCurrentPosition failed.");
-		return;
-	}
-
-	int frag_bytes = frag_size*bytes_per_sample;
-
-	int pos = (write / frag_bytes + 1) * frag_bytes;
-	if (pos >= buffer_size) pos -= buffer_size;
-
-	DWORD size1, size2;
-	void *ptr1 = NULL, *ptr2 = NULL;
-	err = soundbuffer->Lock(
-		pos,
-		frag_bytes,
-		(void **) &ptr1,
-		&size1,
-		(void **) &ptr2,
-		&size2,
-		0);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", "soundbuffer->Lock failed.");
-		return;
-	}
-/*
-	cl_log_event(
-		"debug", "#%1 play ptr: %2, write ptr: %3, pos: %4, size1: %5, size2: %6",
-		pos / frag_bytes, play, write, pos, size1, size2);
-*/
-	char *_data = (char *) data;
-	if (ptr1 != NULL) memcpy(ptr1, _data, size1);
-	if (ptr2 != NULL) memcpy(ptr2, _data+size1, size2);
-
-	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
-	if (FAILED(err))
-	{
-		cl_log_event("mixer", "soundbuffer->Unlock failed.");
-		return;
+		int write_pos = find_fragment_write_position();
+		write_to_sound_buffer(write_pos, data, frag_size);
 	}
 }
 
 void CL_SoundOutput_DirectSound::wait()
 {
-	if(!has_sound)
-	{
-		CL_System::sleep(100);
-		return;
-	}
-
-	int pos;
-	int frag_bytes = frag_size*bytes_per_sample;
-
-	do
+	if (has_sound)
 	{
 		WaitForSingleObject(sleep_event, INFINITE);
-
-		// Ensure that we can write a new fragment without
-		// overwriting the last one. WaitForSingleObject seems
-		// to return too early sometimes.
-		HRESULT err;
-		DWORD write;
-		err = soundbuffer->GetCurrentPosition(NULL, &write);
-		if (FAILED(err))
-			throw CL_Exception(cl_text("DSSOUNDBUFFER GetCurrentPosition failed"));
-
-		pos = (write / frag_bytes + 1) * frag_bytes;
-		if (pos >= buffer_size) pos -= buffer_size;
-
 		ResetEvent(sleep_event);
-	} while(pos == last_write_pos);
-
-	last_write_pos = pos;
+	}
+	else
+	{
+		CL_System::sleep(100);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_DirectSound implementation:
+
+int CL_SoundOutput_DirectSound::find_fragment_write_position()
+{
+	DWORD play = 0, write = 0;
+	HRESULT err = soundbuffer->GetCurrentPosition(&play, &write);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("IDirectSoundBuffer8::GetCurrentPosition failed"));
+
+	int fragment_index = ((play/get_bytes_per_sample() + frag_size + frag_size/2) / frag_size) % get_fragment_count();
+	return fragment_index * frag_size;
+}
+
+void CL_SoundOutput_DirectSound::write_to_sound_buffer(int write_pos, const float *data, int size)
+{
+	DWORD size1 = 0, size2 = 0;
+	void *ptr1 = 0, *ptr2 = 0;
+	HRESULT err = soundbuffer->Lock(write_pos*get_bytes_per_sample(), size*get_bytes_per_sample(), (void **) &ptr1, &size1, (void **) &ptr2, &size2, 0);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("IDirectSoundBuffer8::Lock failed"));
+
+	char *_data = (char *) data;
+	if (ptr1)
+		memcpy(ptr1, _data, size1);
+	if (ptr2)
+		memcpy(ptr2, _data+size1, size2);
+
+	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("IDirectSoundBuffer8::Unlock failed"));
+}
+
+void CL_SoundOutput_DirectSound::release_resources()
+{
+	if (notify)
+		notify->Release();
+	if (soundbuffer)
+		soundbuffer->Release();
+	if (directsound)
+		directsound->Release();
+	if (sleep_event)
+		CloseHandle(sleep_event);
+	if (hwnd)
+		DestroyWindow(hwnd);
+}
+
+void CL_SoundOutput_DirectSound::create_directsound_object()
+{
+	HRESULT err = DirectSoundCreate(0, &directsound, 0);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("DirectSoundCreate failed"));
+}
+
+void CL_SoundOutput_DirectSound::set_cooperative_level()
+{
+	// We need a hwnd for our directsound interface:
+	WNDCLASS wndclass;
+	wndclass.style = 0;
+	wndclass.lpfnWndProc = DefWindowProc;
+	wndclass.cbClsExtra = 0;
+	wndclass.cbWndExtra = 0;
+	wndclass.hInstance = GetModuleHandle(0);
+	wndclass.hIcon = NULL;
+	wndclass.hCursor = LoadCursor (NULL,IDC_ARROW);
+	wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wndclass.lpszMenuName = TEXT("ClanSound");
+	wndclass.lpszClassName = TEXT("ClanSound");
+	RegisterClass(&wndclass);
+
+	hwnd = CreateWindow(
+		TEXT("ClanSound"),
+		TEXT("ClanSound"),
+		0, // WS_POPUP,
+		0,
+		0,
+		1,
+		1,
+		NULL,
+		NULL,
+		GetModuleHandle(0),
+		NULL);
+	if (hwnd == 0)
+		throw CL_Exception(cl_text("CreateWindow failed for DirectSound object"));
+
+	HRESULT err = directsound->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("IDirectSound8::SetCooperativeLevel failed"));
+}
+
+void CL_SoundOutput_DirectSound::set_fragment_size()
+{
+	frag_size = mixing_frequency * mixing_latency / 1000;
+	frag_size = (frag_size + 3) & ~3;	// Force to be a multiple of 4
+}
+
+int CL_SoundOutput_DirectSound::get_fragment_count() const
+{
+	return 2;
+}
+
+int CL_SoundOutput_DirectSound::get_bytes_per_sample() const
+{
+	return 2 * sizeof(float);
+}
+
+int CL_SoundOutput_DirectSound::get_buffer_size() const
+{
+	return frag_size * get_bytes_per_sample() * get_fragment_count();
+}
+
+void CL_SoundOutput_DirectSound::create_sound_buffer()
+{
+	WAVEFORMATEXTENSIBLE wave_format;
+	wave_format.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+	wave_format.Format.nChannels = 2;
+	wave_format.Format.nSamplesPerSec = mixing_frequency;
+	wave_format.Format.nBlockAlign = get_bytes_per_sample();
+	wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
+	wave_format.Format.wBitsPerSample = sizeof(float)*8;
+	wave_format.Format.cbSize = 22;
+	wave_format.Samples.wValidBitsPerSample = wave_format.Format.wBitsPerSample;
+	wave_format.dwChannelMask = SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT;
+	wave_format.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
+
+	DSBUFFERDESC desc;
+	desc.dwSize = sizeof(DSBUFFERDESC); 
+	desc.dwFlags = DSBCAPS_CTRLPOSITIONNOTIFY | DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2;
+	desc.dwBufferBytes = get_buffer_size();
+	desc.dwReserved = 0;
+	desc.lpwfxFormat = &wave_format.Format; 
+	desc.guid3DAlgorithm = GUID_NULL;
+
+	HRESULT err = directsound->CreateSoundBuffer(&desc, &soundbuffer, NULL);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("IDirectSound8::CreateSoundBuffer failed"));
+}
+
+void CL_SoundOutput_DirectSound::verify_sound_buffer_capabilities()
+{
+	DSBCAPS caps;
+	memset(&caps, 0, sizeof(DSBCAPS));
+	caps.dwSize = sizeof(DSBCAPS);
+	
+	HRESULT err = soundbuffer->GetCaps(&caps);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("Could not retrieve direct sound buffer capabilities."));
+
+	if (caps.dwBufferBytes != get_buffer_size())
+		throw CL_Exception(cl_text("Direct sound buffer size does not match our request."));
+}
+
+void CL_SoundOutput_DirectSound::clear_sound_buffer()
+{
+	DWORD size1 = 0, size2 = 0;
+	void *ptr1 = 0;
+	void *ptr2 = 0;
+	HRESULT err = soundbuffer->Lock(0, get_buffer_size(), &ptr1, &size1, &ptr2, &size2, 0);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("Unable to lock DirectSound buffer."));
+
+	memset(ptr1, 0, size1);
+	if (ptr2)
+		memset(ptr2, 0, size2);
+
+	err = soundbuffer->Unlock(ptr1, size1, ptr2, size2);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("Could not unlock DirectSound buffer."));
+}
+
+void CL_SoundOutput_DirectSound::create_notify_event()
+{
+	// Setup some sleeping :)
+	sleep_event = CreateEvent(0, TRUE, FALSE, 0);
+	if (sleep_event == 0)
+		throw CL_Exception(cl_text("CreateEvent failed"));
+}
+
+void CL_SoundOutput_DirectSound::retrieve_notify_interface()
+{
+	HRESULT err = soundbuffer->QueryInterface(IID_IDirectSoundNotify, (void **) &notify);
+	if (FAILED(err))
+		throw CL_Exception(cl_text("Direct sound buffer does not support needed IDirectSoundNotify interface."));
+}
+
+void CL_SoundOutput_DirectSound::set_notify_positions()
+{
+	int num_fragments = get_fragment_count();
+	if (num_fragments > 0)
+	{
+		std::vector<DSBPOSITIONNOTIFY> notify_positions;
+		for (int i=0; i<num_fragments; i++)
+		{
+			DSBPOSITIONNOTIFY notify;
+			notify.dwOffset = i*frag_size*get_bytes_per_sample();
+			notify.hEventNotify = sleep_event;
+			notify_positions.push_back(notify);
+		}
+		HRESULT result = notify->SetNotificationPositions(num_fragments, &notify_positions[0]);
+		if (FAILED(result))
+			throw CL_Exception(cl_text("IDirecTsoundNotify::SetNotificationPositions failed"));
+	}
+}
+
+void CL_SoundOutput_DirectSound::play_sound_buffer()
+{
+	start_mixer_thread();
+	HRESULT err = soundbuffer->Play(0, 0, DSBPLAY_LOOPING);
+	if (FAILED(err))
+	{
+		stop_mixer_thread();
+		throw CL_Exception(cl_text("Could not start sound buffer playback"));
+	}
+}

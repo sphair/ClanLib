@@ -17,13 +17,17 @@ public:
 	int get_current_view_index() const;
 	void set_view_color(View *view, CL_Colorf &color);
 
+	void try_show_view(int index);
+	void next_view();
+	void previous_view();
+
 	CL_Callback_v1<View *> cb_view_close;
 
 private:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &clip_rect);
 	void on_resized();
 	void on_process_message(CL_GUIMessage &msg);
-	void on_input_message(const CL_GUIMessage_Input &msg);
+	void on_input_message(CL_GUIMessage_Input msg);
 	void on_pointer_message(const CL_GUIMessage_Pointer &msg);
 
 	void paint_tabs(CL_GraphicContext &gc, const CL_Rect &clip_rect);
@@ -48,4 +52,5 @@ private:
 	CL_GUIThemePart part_tab;
 	std::vector<ViewPage> pages;
 	int current_page_index;
+	std::auto_ptr<CL_ToolTip> tooltip;
 };

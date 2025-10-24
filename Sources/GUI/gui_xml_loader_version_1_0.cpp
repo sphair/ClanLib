@@ -39,6 +39,7 @@
 #include "API/GUI/Components/radiobutton.h"
 #include "API/GUI/Components/label.h"
 #include "API/GUI/Components/listview.h"
+#include "API/GUI/Components/progressbar.h"
 #include "API/GUI/Components/tab.h"
 #include "API/GUI/Components/tab_page.h"
 #include "API/GUI/Components/slider.h"
@@ -141,6 +142,11 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		else if (tag == cl_text("toolbar"))
 		{
 			CL_ToolBar *co = new CL_ToolBar(parent);
+			new_comp = co;
+		}
+		else if (tag == cl_text("progressbar"))
+		{
+			CL_ProgressBar *co = new CL_ProgressBar(parent);
 			new_comp = co;
 		}
 		else if (tag == cl_text("lineedit"))

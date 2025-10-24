@@ -1,57 +1,55 @@
 #include "precomp.h"
-#include "application.h"
 #include "main_window.h"
 
-int Program::main(const std::vector<CL_String> &args)
+class Application
 {
-	CL_SetupCore setup_core;
-	CL_SetupDisplay setup_display;
-	CL_SetupGL setup_gl;
-	//CL_SetupGL1 setup_gl;
-	//CL_SetupGDI setup_gdi;
-
-	CL_ConsoleWindow console("Console", 140, 2000);
-	CL_ConsoleLogger logger;
-
-	try
+public:
+	int main(const std::vector<CL_String> &args)
 	{
-		Application app;
-		app.run();
-	}
-	catch (CL_Exception e)
-	{
-#ifdef WIN32
-		MessageBox(0, e.message.c_str(), TEXT("Unhandled Exception"), MB_OK|MB_ICONERROR);
-#else
-		CL_Console::write_line("Unhandled exception: %1", e.message);
-#endif
-		console.display_close_message();
+		try
+		{
+			CL_ResourceManager local_resources("resources.xml");
+			CL_ResourceManager resources("../../Resources/GUIThemeAero/resources.xml");
+			local_resources.add_resources(resources);
+
+			CL_GUIThemeDefault theme;
+			theme.set_resources(local_resources);
+
+			CL_GUIWindowManagerSystem wm;
+
+			CL_GUIManager gui;
+			gui.set_window_manager(wm);
+			gui.set_theme(theme);
+			gui.set_css_document("theme.css");
+
+			MainWindow mainwindow(&gui, &resources);
+			gui.exec();
+		}
+		catch (CL_Exception &exception)
+		{
+			CL_ConsoleWindow console("Console", 160, 1000);
+			CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			console.display_close_message();
+		}
+
 		return 0;
 	}
+};
 
-	return 1;
-}
-
-Application::Application()
+class Program
 {
-	resources = CL_ResourceManager("../../Resources/GUIThemeAero/resources.xml");
-	theme = CL_SharedPtr<CL_GUITheme>(new CL_GUIThemeDefault);
-	theme->set_resources(resources);
-	window_manager = CL_SharedPtr<CL_GUIWindowManagerSystem>(new CL_GUIWindowManagerSystem);
-	gui = CL_SharedPtr<CL_GUIManager>(new CL_GUIManager);
-	gui->set_window_manager(*window_manager);
-	gui->set_theme(*theme);
-	gui->set_css_document("../../Resources/GUIThemeAero/theme.css");
-}
+public:
+	static int main(const std::vector<CL_String> &args)
+	{
+		CL_SetupCore setup_core;
+		CL_SetupDisplay setup_display;
+//		CL_SetupGDI setup_gdi;
+		CL_SetupGL setup_gl;
 
-Application::~Application()
-{
-}
-
-void Application::run()
-{
-	MainWindow main_window(this);
-	gui->exec();
-}
+		Application app;
+		return app.main(args);
+	}
+};
 
 CL_ClanApplication app(&Program::main);
+

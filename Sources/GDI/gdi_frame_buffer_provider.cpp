@@ -59,19 +59,20 @@ CL_Size CL_GDIFrameBufferProvider::get_attachment_size(int buffer_id) const
 	}
 }
 
-std::vector<int> CL_GDIFrameBufferProvider::get_attachment_indexes() const
+const std::vector<int> &CL_GDIFrameBufferProvider::get_attachment_indexes() const
 {
+ 	attachment_indexes.clear();
+
 	switch (colorbuffer0_type)
 	{
 	case type_render:
 	case type_texture:
 		{
-			std::vector<int> v;
-			v.push_back(0);
-			return v;
+			attachment_indexes.push_back(0);
+			return attachment_indexes;
 		}
 	default:
-		return std::vector<int>();
+		return attachment_indexes;
 	}
 }
 

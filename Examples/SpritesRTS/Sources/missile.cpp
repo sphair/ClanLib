@@ -71,9 +71,11 @@ void Missile::draw()
 	}
 }
 
-bool Missile::update(float timeElapsed)
+bool Missile::update(int timeElapsed_ms)
 {
-	sprite->update(timeElapsed);
+	sprite->update(timeElapsed_ms);
+
+	float timeElapsed = (float) timeElapsed_ms / 1000.0f;
 
 	if(exploding)
 	{
@@ -82,7 +84,7 @@ bool Missile::update(float timeElapsed)
 	}
 	else
 	{
-		move(speed * timeElapsed);
+		move(speed * timeElapsed_ms);
 
 		if(world->hitCheck(collisionMissile, owner))
 		{

@@ -45,6 +45,9 @@ class CL_Vec2;
 template<typename Type>
 class CL_Vec3;
 
+template<typename Type>
+class CL_Rectx;
+
 class CL_Angle;
 
 /// \brief 3D line segment
@@ -160,6 +163,20 @@ public:
 	///
 	/// \return The normal vector
 	CL_Vec2<Type> normal() const;
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+	/// \brief Clip this line to a rectangle
+	///
+	/// If clipping was not successful, this object is undefined
+	///
+	/// \param rect = Rectangle to clip to
+	/// \param clipped = On Return: true if the line could be clipped, false if line exists outside the rectangle
+	/// \return reference to this object
+	CL_LineSegment2x<Type> &clip(const CL_Rectx<Type> &rect, bool &clipped);
 
 /// \}
 /// \name Operators

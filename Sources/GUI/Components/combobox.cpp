@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    Kenneth Gangstoe
 */
 
 #include "GUI/precomp.h"
@@ -35,14 +36,16 @@
 #include "API/GUI/gui_theme.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_message_focus_change.h"
+#include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/combobox.h"
 #include "API/GUI/Components/lineedit.h"
 #include "API/GUI/Components/push_button.h"
-#include "API/GUI/Components/scrollbar.h"
+#include "API/GUI/Components/popupmenu_item.h"
+#include "API/GUI/Components/popupmenu.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/Window/keys.h"
-#include "Menus/popupmenu_window.h"
 #include "../gui_css_strings.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -59,12 +62,12 @@ public:
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
 	void on_style_changed();
-	void on_lineedit_clicked();
+	void on_lineedit_message(CL_GUIMessage &msg);
 	void on_btn_arrow_clicked();
 	void on_lineedit_text_edited(CL_InputEvent event);
-	void on_lineedit_unhandled_event(CL_InputEvent event);
+	bool on_lineedit_unhandled_event(CL_InputEvent event);
 	void on_popup_item_selected(CL_PopupMenuItem item);
-	void on_popup_keyboard_event(CL_InputEvent event);
+	void on_popup_menu_closed();
 
 	void create_components();
 
@@ -74,16 +77,15 @@ public:
 	CL_Callback_v0 func_after_edit_changed;
 	CL_Callback_v1<int> func_item_selected;
 	CL_Callback_v1<int> func_selection_changed;
-	CL_Callback_v1<CL_Rect> func_display_popup;
+	CL_Callback_1<bool, CL_InputEvent> func_lineedit_unhandled_event;
 
 	CL_ComboBox *component;
 	CL_LineEdit *lineedit;
-	CL_PopupMenuWindow *menu_window;
-	CL_ScrollBar *scrollbar;
-	CL_PushButton *btn_arrow;
 	CL_PopupMenu popup_menu;
 
 	CL_GUIThemePart part_component;
+	CL_GUIThemePart part_opener;
+	CL_GUIThemePart part_opener_glyph;
 
 	int dropdown_height_items;
 	bool editable;
@@ -91,6 +93,7 @@ public:
 	int button_width;
 	int item_height;
 	int minimum_width;
+	CL_Rect opener_rect;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -100,6 +103,7 @@ CL_ComboBox::CL_ComboBox(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_ComboBox_Impl)
 {
 	set_type_name(CssStr::ComboBox::type_name);
+	set_focus_policy(focus_local);
 	impl->component = this;
 	func_process_message().set(impl.get(), &CL_ComboBox_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_ComboBox_Impl::on_render);
@@ -147,9 +151,10 @@ CL_StringRef CL_ComboBox::get_item(int index) const
 /////////////////////////////////////////////////////////////////////////////
 // CL_ComboBox Operations:
 
-void CL_ComboBox::set_editable(bool enable)
+void CL_ComboBox::set_editable(bool editable)
 {
-	impl->editable = enable;
+	impl->editable = editable;
+	request_repaint();
 }
 
 void CL_ComboBox::set_dropdown_height(int height)
@@ -160,6 +165,8 @@ void CL_ComboBox::set_dropdown_height(int height)
 void CL_ComboBox::set_text(const CL_StringRef &text)
 {
 	impl->lineedit->set_text(text);
+	if (impl->lineedit->has_focus())
+		impl->lineedit->select_all();
 }
 
 void CL_ComboBox::set_selected_item(int index)
@@ -167,13 +174,31 @@ void CL_ComboBox::set_selected_item(int index)
 	impl->selected_item = index;
 	CL_StringRef str = get_item(index);
 	impl->lineedit->set_text(str);
+	if (impl->lineedit->has_focus() || has_focus())
+		impl->lineedit->select_all();
 }
 
-void CL_ComboBox::set_popup_menu( CL_PopupMenu &menu )
+void CL_ComboBox::set_popup_menu(CL_PopupMenu &menu)
 {
 	impl->popup_menu = menu;
-	menu.func_item_selected().set(impl.get(), &CL_ComboBox_Impl::on_popup_item_selected);
-	menu.func_keyboard_event().set(impl.get(), &CL_ComboBox_Impl::on_popup_keyboard_event);
+
+	menu.func_close().set(impl.get(), &CL_ComboBox_Impl::on_popup_menu_closed);
+
+	// Assumes the popup menu only has one level. If you want submenu's, feel free to extend this function :)
+	int max = menu.get_item_count();
+	for (int cnt=0; cnt < max; cnt++)
+	{
+		CL_PopupMenuItem item = menu.get_item_at(cnt);
+		if (!item.is_null())
+		{
+			item.func_clicked().set(impl.get(), &CL_ComboBox_Impl::on_popup_item_selected, item);
+		}
+	}
+}
+
+void CL_ComboBox::set_dropdown_minimum_width(int min_width)
+{
+	impl->minimum_width = min_width;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -209,41 +234,148 @@ CL_Callback_v1<int> & CL_ComboBox::func_item_selected()
 	return impl->func_item_selected;
 }
 
-CL_Callback_v1<CL_Rect> & CL_ComboBox::func_display_popup()
-{
-	return impl->func_display_popup;
-}
-
-void CL_ComboBox::set_dropdown_minimum_width( int min_width )
-{
-	impl->minimum_width = min_width;
-}
-
-CL_Callback_1<bool, CL_InputEvent> &CL_ComboBox::func_lineedit_unhandled_event()
-{
-	return impl->lineedit->func_unhandled_event();
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_ComboBox Implementation:
 
 void CL_ComboBox_Impl::on_process_message(CL_GUIMessage &msg)
 {
-}
+	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
+	{
+		CL_GUIMessage_Input input_msg = msg;
+		CL_InputEvent e = input_msg.get_event();
 
+		if (e.type == CL_InputEvent::pressed)
+		{
+			if (e.id == CL_MOUSE_LEFT)
+			{
+				bool in_rect = CL_Rect(component->get_size()).contains(e.mouse_pos);
+				bool in_opener_rect = opener_rect.contains(e.mouse_pos);
+
+				if (in_opener_rect)
+				{
+					part_opener.set_state(CssStr::pressed, true);
+					part_opener_glyph.set_state(CssStr::pressed, true);
+					on_btn_arrow_clicked();
+				}
+				else if (in_rect)
+				{
+					part_component.set_state(CssStr::pressed, true);
+					on_btn_arrow_clicked();
+				}
+
+				component->request_repaint();
+				msg.set_consumed();
+			}
+			if (e.id == CL_KEY_DOWN && popup_menu.get_item_count() > 0)
+			{
+				int old_selected_item = selected_item;
+				selected_item++;
+				if (selected_item >= popup_menu.get_item_count())
+					selected_item = popup_menu.get_item_count()-1;
+				if (selected_item != old_selected_item)
+				{
+					component->set_selected_item(selected_item);
+					func_item_selected.invoke(selected_item);
+				}
+				msg.set_consumed();
+			}
+			else if (e.id == CL_KEY_UP && popup_menu.get_item_count() > 0)
+			{
+				int old_selected_item = selected_item;
+				selected_item--;
+				if (selected_item < 0)
+					selected_item = 0;
+				if (selected_item != old_selected_item)
+				{
+					component->set_selected_item(selected_item);
+					func_item_selected.invoke(selected_item);
+				}
+				msg.set_consumed();
+			}
+			else if (editable && 
+				!msg.is_consumed() &&
+				e.id != CL_KEY_TAB && 
+				e.id != CL_KEY_ENTER && 
+				e.id != CL_KEY_ESCAPE &&
+				msg.get_data(cl_text("No Loop Hack")).is_null())
+			{
+				CL_GUIMessage_Input input_msg;
+				input_msg.set_target(lineedit);
+				input_msg.set_event(e);
+				input_msg.set_data(cl_text("No Loop Hack"), CL_SharedPtr<int>(new int(1337)));
+				component->get_gui_manager().dispatch_message(input_msg);
+				msg.set_consumed();
+			}
+		}
+		else if (e.type == CL_InputEvent::released)
+		{
+			part_component.set_state(CssStr::pressed, false);
+			part_opener.set_state(CssStr::pressed, false);
+			part_opener_glyph.set_state(CssStr::pressed, false);
+			component->request_repaint();
+		}
+		else if (e.type == CL_InputEvent::pointer_moved)
+		{
+			bool state_changed = false;
+			bool in_opener_rect = opener_rect.contains(e.mouse_pos);
+			state_changed |= part_opener.set_state(CssStr::hot, in_opener_rect);
+			state_changed |= part_opener_glyph.set_state(CssStr::hot, in_opener_rect);
+
+			if (state_changed)
+				component->request_repaint();
+		}
+	}
+	else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
+	{
+		CL_GUIMessage_Pointer pointer = msg;
+		if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_enter)
+		{
+			part_component.set_state(CssStr::hot, true);
+			component->request_repaint();
+		}
+		else
+		{
+			part_component.set_state(CssStr::hot, false);
+			part_opener.set_state(CssStr::hot, false);
+			part_opener_glyph.set_state(CssStr::hot, false);
+			component->request_repaint();
+		}
+	}
+	else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
+	{
+		CL_GUIMessage_FocusChange fmsg(msg);
+
+		if (fmsg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
+		{
+			lineedit->select_all();
+			lineedit->set_cursor_drawing_enabled(editable);
+		}
+		else if (fmsg.get_focus_type() == CL_GUIMessage_FocusChange::losing_focus)
+		{
+			lineedit->clear_selection();
+
+			fmsg.set_target(lineedit);
+			component->get_gui_manager().dispatch_message(fmsg);
+		}
+	}
+}
+	
 void CL_ComboBox_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_GUIThemePart part_component(component);
-	CL_Rect rect = component->get_geometry();
+	CL_Rect rect = component->get_size();
 	part_component.render_box(gc, rect, update_rect);
+	part_opener.render_box(gc, opener_rect, update_rect);
+	part_opener_glyph.render_box(gc, opener_rect, update_rect);
 }
 
 void CL_ComboBox_Impl::on_resized()
 {
-	CL_Rect g = component->get_geometry().get_size();
-	
-	btn_arrow->set_geometry(CL_Rect(g.right-g.get_height()+1, 1, g.right-1, g.bottom-1));
-	lineedit->set_geometry(g);
+	CL_Rect g = component->get_size();
+	CL_Rect content_rect = part_component.get_content_box(g);
+
+	int opener_width = part_opener.get_preferred_width();
+	opener_rect = CL_Rect(content_rect.right-opener_width, content_rect.top, content_rect.right, content_rect.bottom);
+	lineedit->set_geometry(CL_Rect(content_rect.top, content_rect.left, content_rect.right-opener_width,content_rect.bottom));
 }
 
 void CL_ComboBox_Impl::on_style_changed()
@@ -252,17 +384,28 @@ void CL_ComboBox_Impl::on_style_changed()
 
 void CL_ComboBox_Impl::create_components()
 {
-	lineedit = new CL_LineEdit(component);
-	btn_arrow = new CL_PushButton(component);
+	part_component = CL_GUIThemePart(component);
+	part_opener = CL_GUIThemePart(component, cl_text("opener"));
+	part_opener_glyph = CL_GUIThemePart(component, cl_text("opener_glyph"));
 
+	part_component.set_state(CssStr::normal, true);
+	part_opener.set_state(CssStr::normal, true);
+	part_opener_glyph.set_state(CssStr::normal, true);
+	part_component.set_state(CssStr::hot, false);
+	part_opener.set_state(CssStr::hot, false);
+	part_opener_glyph.set_state(CssStr::hot, false);
+	part_component.set_state(CssStr::pressed, false);
+	part_opener.set_state(CssStr::pressed, false);
+	part_opener_glyph.set_state(CssStr::pressed, false);
+
+	lineedit = new CL_LineEdit(component);
+	lineedit->set_focus_policy(CL_GUIComponent::focus_parent);
+	
 	CL_GraphicContext &gc = component->get_gc();
 	CL_ResourceManager resources = component->get_resources();
-	CL_Image icon(gc, cl_text("ComboBoxDownArrow"), &resources);
 
-	btn_arrow->set_icon(icon);
-	btn_arrow->func_clicked().set(this, &CL_ComboBox_Impl::on_btn_arrow_clicked);
 	lineedit->func_after_edit_changed().set(this, &CL_ComboBox_Impl::on_lineedit_text_edited);
-	lineedit->func_focus_gained().set(this, &CL_ComboBox_Impl::on_lineedit_clicked);
+	lineedit->func_filter_message().set(this, &CL_ComboBox_Impl::on_lineedit_message);
 }
 
 void CL_ComboBox_Impl::on_btn_arrow_clicked()
@@ -275,24 +418,20 @@ void CL_ComboBox_Impl::on_btn_arrow_clicked()
 	else
 		popup_menu.set_minimum_width(g.get_width());
 
-	//TODO: If this required, should be exec handling be handled by the main window manager
-	if (component->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
-	{
-		popup_menu.exec(component, g.get_bottom_left());
-		popup_menu.set_minimum_width(old_width);
-	}
-	else
-	{
-		popup_menu.start(component, g.get_bottom_left());
-	}
+	popup_menu.start(component, component->component_to_screen_coords(g.get_bottom_left()));
 }
 
 void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent event)
 {
+/*  What is this supposed to do?? - Harry 2009-07-29
+
 	CL_TempString text = lineedit->get_text();	
 	int index = popup_menu.find_item(text);
 	selected_item = index;
-	if (selected_item != -1 && event.id != CL_KEY_BACKSPACE && event.id != CL_KEY_DELETE)
+	if (selected_item != -1 && event.id != CL_KEY_BACKSPACE && 
+		event.id != CL_KEY_DELETE && 
+		event.id != CL_KEY_LEFT && 
+		event.id != CL_KEY_RIGHT)
 	{
 		CL_StringRef str = popup_menu.get_item_at(index).get_text();
 		CL_String old_lineedit_text = lineedit->get_text();
@@ -300,9 +439,21 @@ void CL_ComboBox_Impl::on_lineedit_text_edited(CL_InputEvent event)
 		lineedit->set_text(str);
 		lineedit->set_selection(old_lineedit_text.length(), selection_length);
 	}
-
+*/
 	if (!func_after_edit_changed.is_null())
 		func_after_edit_changed.invoke();
+}
+
+void CL_ComboBox_Impl::on_popup_menu_closed()
+{
+	part_component.set_state(CssStr::pressed, false);
+	part_opener.set_state(CssStr::pressed, false);
+	part_opener_glyph.set_state(CssStr::pressed, false);
+	part_component.set_state(CssStr::hot, false);
+	part_opener.set_state(CssStr::hot, false);
+	part_opener_glyph.set_state(CssStr::hot, false);
+
+	component->request_repaint();
 }
 
 void CL_ComboBox_Impl::on_popup_item_selected(CL_PopupMenuItem item)
@@ -312,28 +463,40 @@ void CL_ComboBox_Impl::on_popup_item_selected(CL_PopupMenuItem item)
 		selected_item = item.get_id();
 		component->set_text(item.get_text());
 
+		part_component.set_state(CssStr::pressed, false);
+		part_opener.set_state(CssStr::pressed, false);
+		part_opener_glyph.set_state(CssStr::pressed, false);
+
 		if (!func_item_selected.is_null())
 			func_item_selected.invoke(selected_item);
 	}
 }
 
-void CL_ComboBox_Impl::on_lineedit_clicked()
+void CL_ComboBox_Impl::on_lineedit_message(CL_GUIMessage &msg)
 {
-	on_btn_arrow_clicked();
-}
-
-void CL_ComboBox_Impl::on_lineedit_unhandled_event(CL_InputEvent event)
-{
-	if (event.id == CL_KEY_DOWN)
+	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
-		on_btn_arrow_clicked();
-	}
-}
+		CL_GUIMessage_Input input_msg = msg;
+		CL_InputEvent e = input_msg.get_event();
 
-void CL_ComboBox_Impl::on_popup_keyboard_event(CL_InputEvent event)
-{
-	CL_GUIMessage_Input input_msg;
-	input_msg.set_target(lineedit);
-	input_msg.set_event(event);
-	component->get_gui_manager().send_message(input_msg);
+		if (e.type == CL_InputEvent::pressed)
+		{
+			if (e.id == CL_MOUSE_LEFT)
+			{
+				bool in_rect = CL_Rect(component->get_size()).contains(e.mouse_pos);
+				if (in_rect)
+				{
+					part_component.set_state(CssStr::pressed, true);
+					if (editable)
+						lineedit->set_focus();
+					else
+						on_btn_arrow_clicked();
+
+					component->request_repaint();
+				}
+
+				msg.set_consumed();
+			}
+		}
+	}
 }

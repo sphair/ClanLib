@@ -56,6 +56,7 @@ public:
 		keyboard,
 		pointer,
 		joystick,
+		tablet,
 		unknown
 	};
 
@@ -88,6 +89,9 @@ public:
 /// \{
 
 public:
+	/// \brief Returns the provider for this input device
+	CL_InputDeviceProvider *get_provider() const;
+
 	/// \brief Returns the human readable name of the device (i.e. 'Microsoft Sidewinder 3D').
 	CL_String get_name() const;
 

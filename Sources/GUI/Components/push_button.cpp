@@ -37,7 +37,6 @@
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
-#include "API/GUI/gui_consumed_keys.h"
 #include "API/GUI/Components/push_button.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
@@ -92,11 +91,8 @@ CL_PushButton::CL_PushButton(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_PushButton_Impl)
 {
 	set_type_name(CssStr::PushButton::type_name);
-
-	CL_GUIConsumedKeys consumed_keys;
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_enter);
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_space);
-	set_consumed_keys(consumed_keys);
+	set_blocks_default_action(true);
+	set_focus_policy(focus_local);
 
 	func_process_message().set(impl.get(), &CL_PushButton_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_PushButton_Impl::on_render);
@@ -211,8 +207,8 @@ CL_Callback_v0 &CL_PushButton::func_clicked()
 void CL_PushButton_Impl::create_parts()
 {
 	part = CL_GUIThemePart(button);
-	part.set_state(CssStr::hot, false);
 	part.set_state(CssStr::normal, true);
+	part.set_state(CssStr::hot, false);
 	part.set_state(CssStr::pressed, false);
 	part.set_state(CssStr::defaulted, button->is_default());
 	part.set_state(CssStr::disabled, !button->is_enabled());
@@ -356,18 +352,18 @@ void CL_PushButton_Impl::update_default_state(bool focus_gained)
 	bool is_default = false;
 
 	if (focus_gained)
+	{
 		is_default = true;
+	}
 	else 
 	{
-		if (button->is_default())
-		{
-			CL_GUIComponent *focus_comp = button->get_gui_manager().get_focused_component();
+		is_default = button->is_default();
 
-			if (focus_comp)
-			{
-				bool consume_enter = focus_comp->get_consumed_keys().is_consumed(CL_GUIConsumedKeys::key_enter);
-				is_default = !consume_enter;
-			}
+		CL_GUIComponent *focus_comp = button->get_gui_manager().get_focused_component();
+		if (focus_comp && (focus_comp != button))
+		{
+			if (focus_comp->get_blocks_default_action())
+				is_default = false;
 		}
 	}
 

@@ -38,7 +38,7 @@
 /// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 enum CL_SoundFormat
 {
-	sf_8bit_signed,
+	sf_8bit_unsigned,
 	sf_16bit_signed
 };
 

@@ -94,6 +94,11 @@ namespace CssStr
 		const CL_StringRef part_icon_selection = cl_text("icon_selection");
 		const CL_StringRef part_mouse_selection = cl_text("mouse_selection");
 
+		const CL_StringRef part_selection_margin_left = cl_text("selection-margin-left");
+		const CL_StringRef part_selection_margin_right = cl_text("selection-margin-right");
+		const CL_StringRef part_selection_margin_bottom = cl_text("selection-margin-bottom");
+		const CL_StringRef part_selection_margin_top = cl_text("selection-margin-top");
+
 		namespace Header
 		{
 			const CL_StringRef type_name = cl_text("listview_header");
@@ -128,6 +133,7 @@ namespace CssStr
 	{
 		const CL_StringRef type_name = cl_text("radiobutton");
 		const CL_StringRef part_checker = cl_text("checker");
+		const CL_StringRef part_focus = cl_text("focus");
 	}
 
 	namespace ScrollBar
@@ -155,6 +161,7 @@ namespace CssStr
 		const CL_StringRef part_track_end_horizontal = cl_text("slidertrack_end.horizontal");
 */		const CL_StringRef part_thumb_vertical = cl_text("sliderthumb.vertical");
 		const CL_StringRef part_thumb_horizontal = cl_text("sliderthumb.horizontal");
+		const CL_StringRef part_focus = cl_text("focus");
 	}
 
 	namespace Tab
@@ -165,6 +172,7 @@ namespace CssStr
 		{
 			const CL_StringRef type_name = cl_text("tabheader");
 			const CL_StringRef part_page = cl_text("page");
+			const CL_StringRef part_focus = cl_text("focus");
 		}
 	}
 

@@ -35,12 +35,6 @@
 #include "GLX/opengl_window_provider_glx.h"
 #endif
 
-#ifdef WIN32
-CL_DisplayMessageQueue_Win32 CL_OpenGLTargetProvider::message_queue;
-#else
-CL_DisplayMessageQueue_X11 CL_OpenGLTargetProvider::message_queue;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLTargetProvider Construction:
 
@@ -54,12 +48,6 @@ CL_OpenGLTargetProvider::~CL_OpenGLTargetProvider()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLTargetProvider Attributes:
-
-
-CL_DisplayMessageQueue_Provider *CL_OpenGLTargetProvider::get_message_queue() const
-{
-	return &message_queue;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OpenGLTargetProvider Operations:

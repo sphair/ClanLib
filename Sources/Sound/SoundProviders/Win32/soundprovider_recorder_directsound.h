@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Sound/soundprovider.h"
-#include "API/Sound/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/mutex.h"
 #include <dsound.h>
@@ -78,7 +78,7 @@ public:
 
 	virtual bool set_position(int pos);
 
-	virtual int get_data(void **data_ptr, int data_requested);
+	virtual int get_data(float **data_ptr, int data_requested);
 
 
 /// \}

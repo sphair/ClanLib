@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclanGDI.la
+lib_LTLIBRARIES = libclan21GDI.la
 
-libclanGDI_la_SOURCES = \
+libclan21GDI_la_SOURCES = \
 fragment_buffer.cpp \
 fragment_buffer.h \
 gdi_display_window_provider.cpp \
@@ -36,15 +36,16 @@ draw_image.h \
 precomp.cpp \
 precomp.h \
 setup_gdi.cpp \
-software_fragment_shader.h \
-rasterizer.cpp \
-rasterizer.h \
+pixel_triangle_renderer.cpp \
+pixel_triangle_renderer.h \
+pixel_line_renderer.cpp \
+pixel_line_renderer.h \
 vertex_attribute_fetcher.h
 
-libclanGDI_la_LDFLAGS = \
+libclan21GDI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
-libclanGDI_la_CXXFLAGS=$(clanGDI_CXXFLAGS)
+libclan21GDI_la_CXXFLAGS=$(clanGDI_CXXFLAGS)
 
 # EOF #
 

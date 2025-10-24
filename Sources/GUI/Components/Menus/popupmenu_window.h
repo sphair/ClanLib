@@ -41,31 +41,51 @@ class CL_GUIManager;
 
 class CL_PopupMenuWindow : public CL_GUIComponent
 {
+// Construction:
 public:
-	CL_PopupMenuWindow(const CL_PopupMenu &menu, const CL_Point &position, CL_GUIComponent *owner, CL_GUIManager *manager);
+	CL_PopupMenuWindow(const CL_PopupMenu &menu, const CL_Point &position, CL_GUIComponent *owner);
 	~CL_PopupMenuWindow();
 
-	CL_PopupMenuWindow *get_owner_popup() const { return owner_popup; }
-	CL_PopupMenuWindow *get_child_popup() const { return child_popup; }
-	virtual CL_Size get_preferred_size() const;
-	CL_Rect get_item_rect(int index);
-	void set_clicked_item(CL_PopupMenuItem &item);
-	CL_PopupMenuItem get_clicked_item() { return clicked_item; }
-	CL_PopupMenuWindow *get_root_popup();
+// Attributes:
+public:
+	CL_PopupMenuItem get_selected_item();
 
+	int get_selected_item_index();
+
+	// Returns the position of the submenu of the currently selected item.
+	CL_Point get_submenu_screen_position();
+
+	virtual CL_Size get_preferred_size() const;
+
+// Operations:
+public:
+	void select_previous();
+
+	void select_next();
+
+	void select_item_at(CL_Point mouse_pos);
+
+	// Toggle checkable items and change selection in a radio button group.
+	void do_selected_item_special_action();
+
+	void set_item_pressed(bool pressed);
+
+// Implementation:
 private:
+	static CL_GUITopLevelDescription create_toplevel_description();
+
 	void create_parts();
-	void on_process_message(CL_GUIMessage &msg);
+
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
-	void set_owner_popup(CL_PopupMenuWindow *popup);
+	bool on_close();
+
+	CL_Rect get_item_rect(int index);
 
 	CL_Size calc_desired_size();
-	static CL_GUITopLevelDescription create_toplevel_description();
 
 	CL_PopupMenu menu;
 	int selected;
-	bool keyboard_selected;
-	bool mouse_pressed;
+	bool item_pressed;
 	int icon_column_width;
 	CL_Size icon_size;
 	CL_Size check_size;
@@ -80,8 +100,4 @@ private:
 	CL_GUIThemePart part_submenu_arrow;
 	CL_GUIThemePart part_menubar_joiner;
 	CL_GUIThemePartProperty prop_icon_column_width;
-
-	CL_PopupMenuWindow *child_popup;
-	CL_PopupMenuWindow *owner_popup;
-	CL_PopupMenuItem clicked_item;
 };

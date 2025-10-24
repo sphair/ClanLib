@@ -439,6 +439,54 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Framework\crash_reporter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\crash_reporter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\detect_hang.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_document.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_document.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_icon_mode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_icon_mode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_mode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_report_mode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Framework\listview_ex_report_mode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Framework\mainframe.cpp"
 				>
 			</File>

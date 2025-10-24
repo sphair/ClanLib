@@ -89,6 +89,8 @@ CL_CheckBox::CL_CheckBox(CL_GUIComponent *parent)
 {
 	set_type_name(CssStr::CheckBox::type_name);
 	impl->checkbox = this;
+	set_focus_policy(focus_local);
+
 	func_process_message().set(impl.get(), &CL_CheckBox_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_CheckBox_Impl::on_render);
 	func_style_changed().set(impl.get(), &CL_CheckBox_Impl::on_style_changed);
@@ -207,6 +209,9 @@ void CL_CheckBox_Impl::on_process_message(CL_GUIMessage &msg)
 			(e.id == CL_MOUSE_LEFT || e.id == CL_KEY_SPACE) &&
 			part_checker.get_state(CssStr::pressed))
 		{
+			if (checkbox->get_focus_policy() == CL_GUIComponent::focus_local)
+				checkbox->set_focus(true);
+
 			part_checker.set_state(CssStr::pressed, false);
 			if (part_checker.get_state(CssStr::checked))
 			{
@@ -324,8 +329,8 @@ void CL_CheckBox_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	part_component.render_text(gc, text, text_rect, update_rect);
 
 	CL_Size text_size = part_component.get_text_size(gc, text);
-	int focus_right = checker_rect.right + text_gap - 2;
-	CL_Rect focus_rect = CL_RectPS(focus_right, content_rect.top, text_size.width+4, content_rect.bottom);
+	int focus_left = checker_rect.right + text_gap - 2; // todo: remove magic number hacks
+	CL_Rect focus_rect = CL_RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);
 
 	if (checkbox->has_focus())
 		part_focus.render_box(gc, focus_rect, update_rect);

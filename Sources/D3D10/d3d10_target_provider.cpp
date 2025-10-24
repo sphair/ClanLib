@@ -44,12 +44,6 @@ CL_D3D10TargetProvider::~CL_D3D10TargetProvider()
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10TargetProvider Attributes:
 
-
-CL_DisplayMessageQueue_Provider *CL_D3D10TargetProvider::get_message_queue() const
-{
-	return 0;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_D3D10TargetProvider Operations:
 

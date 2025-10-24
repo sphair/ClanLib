@@ -249,6 +249,8 @@ public:
 		#ifdef DEBUG_SHAREDPTR
 			assert_list(prev);
 		#endif
+		if (weak_link == 2)
+			weak_link = 1;
 		if (prev == 0 && next == 0)
 			return true;
 

@@ -28,15 +28,18 @@
 
 #include "Sound/precomp.h"
 #include "soundprovider_raw_session.h"
-#include "soundprovider_raw_generic.h"
+#include "soundprovider_raw_impl.h"
 #include "API/Sound/soundformat.h"
+#include "API/Sound/sound_sse.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Raw_Session construction:
 
-CL_SoundProvider_Raw_Session::CL_SoundProvider_Raw_Session(CL_SoundProvider_Raw_Generic *data) :
-	data(data), position(0), reached_end(false)
+CL_SoundProvider_Raw_Session::CL_SoundProvider_Raw_Session(CL_SoundProvider_Raw &source) :
+	source(source), position(0), reached_end(false)
 {
+	frequency = source.impl->frequency;
+	num_samples = source.impl->num_samples;
 }
 
 CL_SoundProvider_Raw_Session::~CL_SoundProvider_Raw_Session()
@@ -48,20 +51,20 @@ CL_SoundProvider_Raw_Session::~CL_SoundProvider_Raw_Session()
 
 int CL_SoundProvider_Raw_Session::get_num_samples() const
 {
-	return data->num_samples;
+	return num_samples;
 }
 
 int CL_SoundProvider_Raw_Session::get_frequency() const
 {
-	return data->frequency;
+	return frequency;
 }
 
 CL_SoundFormat CL_SoundProvider_Raw_Session::get_format() const
 {
-	switch (data->bytes_per_sample)
+	switch (source.impl->bytes_per_sample)
 	{
 	case 1:
-		return sf_8bit_signed;
+		return sf_8bit_unsigned;
 
 	case 2:
 		return sf_16bit_signed;
@@ -73,7 +76,7 @@ CL_SoundFormat CL_SoundProvider_Raw_Session::get_format() const
 
 int CL_SoundProvider_Raw_Session::get_num_channels() const
 {
-	return (data->stereo) ? 2 : 1;
+	return (source.impl->stereo) ? 2 : 1;
 }
 
 int CL_SoundProvider_Raw_Session::get_position() const
@@ -86,7 +89,7 @@ int CL_SoundProvider_Raw_Session::get_position() const
 
 bool CL_SoundProvider_Raw_Session::eof() const
 {
-	return (position >= get_num_samples());
+	return (position >= num_samples);
 }
 
 void CL_SoundProvider_Raw_Session::stop()
@@ -104,49 +107,38 @@ bool CL_SoundProvider_Raw_Session::set_position(int pos)
 	return true;
 }
 
-int CL_SoundProvider_Raw_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_Raw_Session::get_data(float **data_ptr, int data_requested)
 {
-	int num_samples = get_num_samples();
 	if (position + data_requested > num_samples)
 	{
 		data_requested = num_samples - position;
 		if (data_requested < 0) return 0;
 	}
 
-	if (data->bytes_per_sample == 2)
+	if (source.impl->bytes_per_sample == 2)
 	{
-		short **channels = (short **) data_ptr;
-
-		if (data->stereo)
+		if (source.impl->stereo)
 		{
-			short *src = (short *) data->sound_data + position * 2;
-			for (int i=0; i<data_requested; i++)
-			{
-				channels[0][i] = *(src++);
-				channels[1][i] = *(src++);
-			}
+			short *src = (short *) source.impl->sound_data + position * source.impl->bytes_per_sample;
+			CL_SoundSSE::unpack_16bit_stereo(src, data_requested, data_ptr);
 		}
 		else
 		{
-			memcpy(channels[0], data->sound_data+position*data->bytes_per_sample, data_requested*data->bytes_per_sample);
+			short *src = (short *) source.impl->sound_data + position * source.impl->bytes_per_sample;
+			CL_SoundSSE::unpack_16bit_mono(src, data_requested, data_ptr[0]);
 		}
 	}
-	else if (data->bytes_per_sample == 1)
+	else if (source.impl->bytes_per_sample == 1)
 	{
-		char **channels = (char **) data_ptr;
-
-		if (data->stereo)
+		if (source.impl->stereo)
 		{
-			char *src = (char *) data->sound_data + position * 2;
-			for (int i=0; i<data_requested; i++)
-			{
-				channels[0][i] = *(src++);
-				channels[1][i] = *(src++);
-			}
+			unsigned char *src = (unsigned char *) source.impl->sound_data + position * source.impl->bytes_per_sample;
+			CL_SoundSSE::unpack_8bit_stereo(src, data_requested, data_ptr);
 		}
 		else
 		{
-			memcpy(channels[0], data->sound_data+position*data->bytes_per_sample, data_requested*data->bytes_per_sample);
+			unsigned char *src = (unsigned char *) source.impl->sound_data + position * source.impl->bytes_per_sample;
+			CL_SoundSSE::unpack_8bit_mono(src, data_requested, data_ptr[0]);
 		}
 	}
 

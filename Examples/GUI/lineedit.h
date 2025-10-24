@@ -44,7 +44,6 @@ private:
 	void on_focus_gained(CL_LineEdit *lineedit);
 	void on_focus_lost(CL_LineEdit *lineedit);
 	void on_enter_pressed(CL_LineEdit *lineedit);
-	bool on_unhandled_event(CL_InputEvent input_event, CL_LineEdit *lineedit);
 	void on_checked_disable(CL_CheckBox *checkbox);
 	void on_unchecked_disable(CL_CheckBox *checkbox);
 
@@ -90,5 +89,4 @@ private:
 	Info *info_focus_gained;
 	Info *info_focus_lost;
 	Info *info_enter_pressed;
-	Info *info_unhandled_event;
 };

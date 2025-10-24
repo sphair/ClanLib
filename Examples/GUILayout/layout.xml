@@ -1,0 +1,5 @@
+<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
+	<button class="" id="MyButton" text="Button" anchor_tl="0" anchor_br="0" dist_tl_x="98" dist_tl_y="29" dist_br_x="205" dist_br_y="71" geom="98,29,205,71"/>
+	<label class="" id="MyLabel" text="Push My Button" anchor_tl="0" anchor_br="0" dist_tl_x="70" dist_tl_y="123" dist_br_x="220" dist_br_y="149" geom="70,123,220,149"/>
+	<dialog width="320" height="200"/>
+</gui>

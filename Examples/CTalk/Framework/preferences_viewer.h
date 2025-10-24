@@ -21,6 +21,7 @@ private:
 	bool on_input_pointer_moved(const CL_InputEvent &input_event);
 	void on_ok_clicked();
 	void on_cancel_clicked();
+	bool on_close();
 
 	void render_label_area(CL_GraphicContext &gc, const CL_Rect &label_area, const CL_Rect &clip_rect);
 	void render_page_area(CL_GraphicContext &gc, const CL_Rect &page_area, const CL_Rect &clip_rect);

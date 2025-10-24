@@ -99,6 +99,19 @@ public:
 
 public:
 
+	/// \brief Set Shift
+	void set_shift(bool);
+
+	/// \brief Set Alt
+	void set_alt(bool);
+
+	/// \brief Set Ctrl
+	void set_ctrl(bool);
+
+	/// \brief Set Id
+	void set_id(int);
+
+
 /// \}
 /// \name Implementation
 /// \{

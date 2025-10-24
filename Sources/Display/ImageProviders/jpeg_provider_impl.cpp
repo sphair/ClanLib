@@ -122,6 +122,7 @@ void CL_JPEGProvider_Impl::init()
 	jpeg_create_decompress(&cinfo);
 	jpeg_InputSource_src(&cinfo, this);
 	jpeg_read_header(&cinfo, TRUE);
+	// cinfo.dct_method = JDCT_FLOAT; // Float is only faster with my SSE patch for libjpeg -- mbn 13. Sept 2009
 	jpeg_start_decompress(&cinfo);
 
 	row_stride = cinfo.output_width * cinfo.output_components;
@@ -143,11 +144,12 @@ void CL_JPEGProvider_Impl::init()
 		{
 			jpeg_read_scanlines(&cinfo, buffer, 1);
 		
-			for(unsigned int i=0; i < get_pitch(); i += 3)
+			unsigned char *outptr = image + pitch * (cinfo.output_scanline-1);
+			for(unsigned int i=0; i < pitch; i += 3)
 			{
-				image[pitch * (cinfo.output_scanline - 1) + i + 0] = buffer[0][i + 2];
-				image[pitch * (cinfo.output_scanline - 1) + i + 1] = buffer[0][i + 1];
-				image[pitch * (cinfo.output_scanline - 1) + i + 2] = buffer[0][i + 0];
+				outptr[i + 0] = buffer[0][i + 2];
+				outptr[i + 1] = buffer[0][i + 1];
+				outptr[i + 2] = buffer[0][i + 0];
 			}
 		}
 	}
@@ -158,12 +160,13 @@ void CL_JPEGProvider_Impl::init()
 		{
 			jpeg_read_scanlines(&cinfo, buffer, 1);
 			
+			unsigned char *outptr = image + pitch * (cinfo.output_scanline-1);
 			for(int i=0; i < width; i += 1)
 			{
-				image[pitch * (cinfo.output_scanline - 1) + 3*i + 0] = buffer[0][i];
-				image[pitch * (cinfo.output_scanline - 1) + 3*i + 1] = buffer[0][i];
-				image[pitch * (cinfo.output_scanline - 1) + 3*i + 2] = buffer[0][i];
-			}			
+				outptr[3*i + 0] = buffer[0][i];
+				outptr[3*i + 1] = buffer[0][i];
+				outptr[3*i + 2] = buffer[0][i];
+			}
 		}
 	}
 	else

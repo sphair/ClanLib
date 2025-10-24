@@ -150,7 +150,6 @@ private:
 
 	CL_SharedPtr<CL_ListViewColumnHeader_Impl> impl;
 
-	friend class CL_ListView;
 	friend class CL_ListView_Impl;
 	friend class CL_ListViewHeader;
 	friend class CL_ListViewHeader_Impl;

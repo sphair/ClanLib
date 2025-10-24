@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "menubar.h"
 #include "GUI.h"
 
@@ -49,56 +46,56 @@ MenuBar::MenuBar(GUI *gui) :
 	menubar1 = new CL_MenuBar(this);
 	menubar1->set_geometry(CL_Rect(client_area.left, client_area.top, client_area.right, client_area.top + 25));
 
-	menu_file.insert_item("New");
-	menu_file.insert_item("Open");
-	menu_file.insert_item("Save");
+	menu_file.insert_item("New").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_file.insert_item("Open").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_file.insert_item("Save").func_clicked().set(this, &MenuBar::on_item_selected);
 	CL_PopupMenuItem tux_item = menu_file.insert_item("Tux");
+	tux_item.func_clicked().set(this, &MenuBar::on_item_selected);
 	tux_item.set_icon(tux_image);
 
-	menu_file.insert_item("Exit");
+	menu_file.insert_item("Exit").func_clicked().set(this, &MenuBar::on_item_selected);
 	menubar1->add_menu("File", menu_file);
 
-	menu_edit.insert_item("Undo");
+	menu_edit.insert_item("Undo").func_clicked().set(this, &MenuBar::on_item_selected);
 	CL_PopupMenuItem redo_item = menu_edit.insert_item("Redo");
+	redo_item.func_clicked().set(this, &MenuBar::on_item_selected);
 	redo_item.set_enabled(false);
 	menu_edit.insert_separator();
-	menu_edit.insert_item("Cut");
-	menu_edit.insert_item("Copy");
+	menu_edit.insert_item("Cut").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_edit.insert_item("Copy").func_clicked().set(this, &MenuBar::on_item_selected);
 	menu_edit.insert_separator();
 	item_submenu = menu_edit.insert_item("Submenu");
+	item_submenu.func_clicked().set(this, &MenuBar::on_item_selected);
 	menu_edit.insert_separator();
-	menu_edit.insert_item("Paste");
-	menu_edit.insert_item("Delete");
+	menu_edit.insert_item("Paste").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_edit.insert_item("Delete").func_clicked().set(this, &MenuBar::on_item_selected);
 	menu_edit.insert_separator();
-	menu_edit.insert_item("Select All");
+	menu_edit.insert_item("Select All").func_clicked().set(this, &MenuBar::on_item_selected);
 
-	menu_submenu.insert_item("foo");
-	menu_submenu.insert_item("bar");
-	menu_submenu.insert_item("foobar");
+	menu_submenu.insert_item("foo").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_submenu.insert_item("bar").func_clicked().set(this, &MenuBar::on_item_selected);
+	menu_submenu.insert_item("foobar").func_clicked().set(this, &MenuBar::on_item_selected);
 	CL_PopupMenuItem check_item1 = menu_submenu.insert_item("Checkable 1");
+	check_item1.func_clicked().set(this, &MenuBar::on_item_selected);
 	check_item1.set_checkable(true);
 	check_item1.set_checked(true);
 	CL_PopupMenuItem check_item2 = menu_submenu.insert_item("Checkable 2");
+	check_item2.func_clicked().set(this, &MenuBar::on_item_selected);
 	check_item2.set_checkable(true);
 	check_item2.set_checked(false);
 	CL_PopupMenuItem check_item3 = menu_submenu.insert_item("Disabled Checkable 1");
+	check_item3.func_clicked().set(this, &MenuBar::on_item_selected);
 	check_item3.set_checkable(true);
 	check_item3.set_checked(true);
 	check_item3.set_enabled(false);
 	CL_PopupMenuItem check_item4 = menu_submenu.insert_item("Disabled Checkable 2");
+	check_item4.func_clicked().set(this, &MenuBar::on_item_selected);
 	check_item4.set_checkable(true);
 	check_item4.set_checked(false);
 	check_item4.set_enabled(false);
 	item_submenu.set_submenu(menu_submenu);
 
 	menubar1->add_menu("Edit", menu_edit);
-
-	menu_file.func_item_selected().set(this, &MenuBar::on_item_selected, &menu_file);
-	menu_file.func_keyboard_event().set(this, &MenuBar::on_keyboard_event, &menu_file);
-	menu_edit.func_item_selected().set(this, &MenuBar::on_item_selected, &menu_edit);
-	menu_edit.func_keyboard_event().set(this, &MenuBar::on_keyboard_event, &menu_edit);
-	menu_submenu.func_item_selected().set(this, &MenuBar::on_item_selected, &menu_submenu);
-	menu_submenu.func_keyboard_event().set(this, &MenuBar::on_keyboard_event, &menu_submenu);
 
 	int xoffset = client_area.left + 80;
 	int yoffset = client_area.top + 30;
@@ -108,8 +105,6 @@ MenuBar::MenuBar(GUI *gui) :
 	info_item_selected = new Info(gui, this);
 	info_item_selected->set(xoffset, yoffset, "Item Selected");
 	yoffset += gap;
-	info_keyboard_event = new Info(gui, this);
-	info_keyboard_event->set(xoffset, yoffset, "Keyboard Event");
 
 	statusbar1 = new CL_StatusBar(this);
 	int statusbar_height = statusbar1->get_preferred_height();
@@ -188,42 +183,10 @@ MenuBar::MenuBar(GUI *gui) :
 
 }
 
-void MenuBar::on_item_selected(CL_PopupMenuItem item, CL_PopupMenu *popupmenu)
+void MenuBar::on_item_selected()
 {
-	CL_String menu = decode_menu(popupmenu);
-	CL_String item_text;
-	if (item.is_null())
-	{
-		item_text = "NULL";
-	}
-	else
-	{
-		item_text = item.get_text();
-	}
-	CL_String string = cl_format(" (%1:%2)", menu, item_text);
-	info_item_selected->set_comment( string );
 	info_item_selected->activate();
 }
-
-void MenuBar::on_keyboard_event(CL_InputEvent input_event, CL_PopupMenu *popupmenu)
-{
-	CL_String menu = decode_menu(popupmenu);
-	CL_String string = cl_format(" (%1)", menu);
-	info_keyboard_event->set_comment( string );
-	info_keyboard_event->activate();
-}
-
-CL_String MenuBar::decode_menu(CL_PopupMenu *menu)
-{
-	if (menu == &menu_file)
-		return "File";
-	if (menu == &menu_edit)
-		return "Edit";
-	if (menu == &menu_submenu)
-		return "SubMenu";
-	return "Unknown";
-}
-
 
 void MenuBar::on_checked_status_size_grip(CL_CheckBox *checkbox)
 {

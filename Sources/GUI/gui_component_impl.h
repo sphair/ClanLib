@@ -29,11 +29,9 @@
 
 #pragma once
 
-
 #include "API/Core/System/weakptr.h"
 #include "API/Core/Signals/callback_2.h"
 #include "API/GUI/gui_component.h"
-#include "API/GUI/gui_consumed_keys.h"
 #include <vector>
 #include <map>
 #include "API/Core/Math/rect.h"
@@ -90,7 +88,9 @@ public:
 	CL_Callback_v0 func_style_changed;
 	CL_Callback_v0 func_enablemode_changed;
 	CL_Callback_v0 func_resized;
+	CL_Callback_v1<CL_GUIMessage &> func_filter_message;
 	CL_Callback_2<CL_GUIComponent*, CL_GUIComponent*, CL_String> func_create_custom_component;
+	CL_Callback_v1<bool> func_visibility_change;
 	CL_String type_name;
 	CL_String class_name;
 	CL_String id_name;
@@ -100,16 +100,14 @@ public:
 	bool visible;
 	bool activated;
 	bool click_through;
-	bool is_tab_order_controller;
-	int component_tab_index;
-	int tab_order_controller_current_index;
-	int tab_order_controller_last_index;
 	CL_Rect geometry;
 	mutable CL_String element_name;
 	bool default_handler;
 	bool cancel_handler;
-	CL_GUIConsumedKeys consumed_keys;
 	bool constant_repaint;
+	bool blocks_default_action_when_focused;
+	bool is_selected_in_group;
+	CL_String group_name;
 
 /// \}
 /// \name Operations

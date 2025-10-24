@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="GUIFont"
 	ProjectGUID="{B1BEBB08-625F-4899-906E-9E08D16E82F8}"
 	RootNamespace="GUIFont"

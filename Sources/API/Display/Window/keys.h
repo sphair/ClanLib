@@ -164,6 +164,18 @@
 #define CL_KEY_LMENU VK_LMENU
 #define CL_KEY_RMENU VK_RMENU
 
+// These tablet key defines can be changed if they conflict with something.
+#define CL_KEY_TABLET1 0x10001
+#define CL_KEY_TABLET2 0x10002 
+#define CL_KEY_TABLET3 0x10003
+#define CL_KEY_TABLET4 0x10004
+#define CL_KEY_TABLET5 0x10005
+#define CL_KEY_TABLET6 0x10006
+#define CL_KEY_TABLET7 0x10007
+#define CL_KEY_TABLET8 0x10008
+#define CL_KEY_TABLET9 0x10009
+#define CL_KEY_TABLET10 0x1000a
+
 #else
 #ifdef __APPLE__
 

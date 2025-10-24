@@ -35,8 +35,9 @@
 #include <map>
 #include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
+#include "API/Display/Window/input_device.h"
+#include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Display/Window/display_window.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Signals/callback_v0.h"
@@ -66,7 +67,7 @@ class CL_X11Window
 /// \{
 
 public:
-	CL_X11Window(CL_DisplayMessageQueue_X11 *message_queue);
+	CL_X11Window();
 
 	~CL_X11Window();
 
@@ -165,7 +166,8 @@ public:
 	/// \brief Capture/Release the mouse.
 	void capture_mouse(bool capture);
 
-	bool get_message(XEvent &clan_event);
+	// mouse_capture_window must always be valid - either pointing to this or another window
+	void get_message(CL_X11Window *mouse_capture_window);
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
@@ -216,6 +218,9 @@ private:
 
 	CL_Rect get_window_frame_size();
 
+	CL_InputDeviceProvider_X11Keyboard *get_keyboard() const;
+	CL_InputDeviceProvider_X11Mouse *get_mouse() const;
+
 	/// \brief Handle to X11 window.
 	Window window;
 
@@ -247,17 +252,12 @@ private:
 	Cursor hidden_cursor;
 	Pixmap cursor_bitmap;
 
-	CL_InputDeviceProvider_X11Keyboard *keyboard;
-
-	CL_InputDeviceProvider_X11Mouse *mouse;
+	CL_InputDevice keyboard, mouse;
+	std::vector<CL_InputDevice> joysticks;
 
 	CL_DisplayWindowSite *site;
 
-	CL_DisplayMessageQueue_X11 *message_queue;
-
 	CL_Callback_v0 callback_on_resized;
-
-	bool ignore_focus_events;
 
 	static CL_Rect frame_size;
 	static bool frame_size_set;

@@ -1,7 +1,7 @@
 #include "toolbar.h"
 
-Toolbar::Toolbar(const CL_Rect &position, CL_GUIManager* gui_manager)
-: CL_GUIComponent(gui_manager, get_toplevel_description(position)), selected_index(-1), clicked_index(-1)
+Toolbar::Toolbar(const CL_Rect &position, CL_GUIComponent* owner)
+: CL_GUIComponent(owner, get_toplevel_description(position)), selected_index(-1), clicked_index(-1)
 {
 	set_type_name("toolbar");
 

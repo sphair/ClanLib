@@ -349,7 +349,7 @@ int App::start(const std::vector<CL_String> &args)
 
 			// Update keyboard input and handle system events:
 			window.flip(1);
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 
 

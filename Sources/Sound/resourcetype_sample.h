@@ -51,6 +51,7 @@ public:
 
 public:
 	// Loaded soundbuffer for this resource.
+	// It is IMPORTANT that this is a pointer, else the CL_ResourceDataSession garbage collection will not work
 	CL_SoundBuffer *soundbuffer;
 
 

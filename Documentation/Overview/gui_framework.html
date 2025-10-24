@@ -270,7 +270,7 @@ while (!exit)
 	update_game_logic();
 	render_game(gc);
 	displaywindow.flip();
-	CL_DisplayMessageQueue::process();
+	CL_KeepAlive::process();
 }
 </pre>
 

@@ -67,6 +67,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <cstdlib>
+
 /////////////////////////////////////////////////////////////////////////////
 // Operations
 
@@ -269,7 +271,40 @@ CL_String CL_Directory::get_appdata(const CL_StringRef &company_name, const CL_S
 #elif defined(__APPLE__)
 	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_appdata on this platform."));
 #else
-	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_appdata on this platform."));
+	const char *home_dir = getenv("HOME");
+	if (home_dir == NULL)
+		throw CL_Exception(cl_text("Cannot object $HOME environment variable"));
+
+	if (!create_dirs_if_missing)
+	{
+		return cl_format("%1/.%2/%3/%4/", home_dir, company_name, application_name, version);
+	}
+
+	struct stat stFileInfo;
+	CL_String name( cl_format("%1/.%2", home_dir, company_name) );
+
+	if (stat(name.c_str(), &stFileInfo))
+	{
+		if (::mkdir(name.c_str(), 0755))
+			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
+	}
+
+	name = cl_format("%1/%2", name, application_name);
+	if (stat(name.c_str(), &stFileInfo))
+	{
+		if (::mkdir(name.c_str(), 0755))
+			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
+	}
+
+	name = cl_format("%1/%2", name, version);
+	if (stat(name.c_str(), &stFileInfo))
+	{
+		if (::mkdir(name.c_str(), 0755))
+			throw CL_Exception(cl_format("Cannot create %1 directory", name));	
+	}
+
+	name = cl_format("%1/", name);
+	return name;
 #endif
 }
 
@@ -299,7 +334,7 @@ CL_String CL_Directory::get_local_appdata(const CL_StringRef &company_name, cons
 #elif defined(__APPLE__)
 	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_local_appdata on this platform."));
 #else
-	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_local_appdata on this platform."));
+	return get_appdata(company_name, application_name, version, create_dirs_if_missing);
 #endif
 }
 
@@ -320,6 +355,7 @@ CL_String CL_Directory::get_resourcedata(const CL_StringRef &application_name)
 #elif defined(__APPLE__)
 	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_resourcedata on this platform."));
 #else
-	throw CL_Exception(cl_text("Congratulations, you got the task to implement CL_Directory::get_resourcedata on this platform."));
+	return cl_text("Resources");
 #endif
 }
+

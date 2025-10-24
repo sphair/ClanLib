@@ -29,6 +29,7 @@
 #include "Display/precomp.h"
 #include "cursor_provider_win32.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Core/IOData/iodevice_memory.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/sprite_description.h"
 #include "win32_window.h"
@@ -57,7 +58,7 @@ CL_CursorProvider_Win32::~CL_CursorProvider_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // CL_CursorProvider_Win32 Implementation:
 
-HCURSOR CL_CursorProvider_Win32::create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot) const
+HCURSOR CL_CursorProvider_Win32::create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot)
 {
 	if (sprite_description.get_frames().empty())
 		throw CL_Exception(cl_text("Cannot create cursor with no image frames"));
@@ -68,65 +69,77 @@ HCURSOR CL_CursorProvider_Win32::create_cursor(const CL_SpriteDescription &sprit
 	return (HCURSOR) icon;
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ico_file(const CL_PixelBufferRef &image) const
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_file(const CL_PixelBufferRef &image)
 {
 	return create_ico_helper(image, 1, CL_Point(0, 0));
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot) const
+CL_DataBuffer CL_CursorProvider_Win32::create_cur_file(const CL_PixelBufferRef &image, const CL_Point &hotspot)
 {
 	return create_ico_helper(image, 2, hotspot);
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot) const
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const CL_PixelBufferRef &image, WORD type, const CL_Point &hotspot)
 {
-	CL_PixelBuffer bmp_image = CL_Win32Window::create_bitmap_data(image);
-	int image_size = bmp_image.get_pitch() * bmp_image.get_height();
+	std::vector<CL_PixelBufferRef> images;
+	std::vector<CL_Point> hotspots;
+	images.push_back(image);
+	hotspots.push_back(hotspot);
+	return create_ico_helper(images, type, hotspots);
+}
 
-	BITMAPINFOHEADER bmp_header;
-	memset(&bmp_header, 0, sizeof(BITMAPINFOHEADER));
-	bmp_header.biSize = sizeof(BITMAPINFOHEADER);
-	bmp_header.biWidth = bmp_image.get_width();
-	bmp_header.biHeight = bmp_image.get_height() * 2; // why on earth do I have to multiply this by two??
-	bmp_header.biPlanes = 1;
-	bmp_header.biBitCount = 32;
-	bmp_header.biCompression = BI_RGB;
-	//bmp_header.biSizeImage = image_size;
+CL_DataBuffer CL_CursorProvider_Win32::create_ico_helper(const std::vector<CL_PixelBufferRef> &images, WORD type, const std::vector<CL_Point> &hotspots)
+{
+	CL_DataBuffer buf;
+	buf.set_capacity(32*1024);
+	CL_IODevice_Memory device(buf);
 
 	ICONHEADER header;
 	memset(&header, 0, sizeof(ICONHEADER));
 	header.idType = type;
-	header.idCount = 1;
+	header.idCount = images.size();
+	device.write(&header, sizeof(ICONHEADER));
 
-	IconDirectoryEntry entry;
-	memset(&entry, 0, sizeof(IconDirectoryEntry));
-	entry.bWidth = bmp_image.get_width();
-	entry.bHeight = bmp_image.get_height();
-	entry.bColorCount = 0;
-	entry.wPlanes = 1;
-	entry.wBitCount = 32;
-	entry.dwBytesInRes = sizeof(BITMAPINFOHEADER) + image_size;
-	entry.dwImageOffset = size_header + size_direntry;
-	if (type == 2)
+	std::vector<CL_PixelBuffer> bmp_images;
+	for (size_t i = 0; i < images.size(); i++)
+		bmp_images.push_back(CL_Win32Window::create_bitmap_data(images[i]));
+
+	for (size_t i = 0; i < bmp_images.size(); i++)
 	{
-		entry.XHotspot = hotspot.x;
-		entry.YHotspot = hotspot.y;
+		IconDirectoryEntry entry;
+		memset(&entry, 0, sizeof(IconDirectoryEntry));
+		entry.bWidth = bmp_images[i].get_width();
+		entry.bHeight = bmp_images[i].get_height();
+		entry.bColorCount = 0;
+		entry.wPlanes = 1;
+		entry.wBitCount = 32;
+		entry.dwBytesInRes = sizeof(BITMAPINFOHEADER) + bmp_images[i].get_pitch() * bmp_images[i].get_height();
+		entry.dwImageOffset = size_header + size_direntry*bmp_images.size();
+		if (type == 2)
+		{
+			entry.XHotspot = hotspots[i].x;
+			entry.YHotspot = hotspots[i].y;
+		}
 	}
 
-	CL_DataBuffer ico_file(size_header + size_direntry + sizeof(BITMAPINFOHEADER) + image_size);
-	char *d = ico_file.get_data();
-	memcpy(d, &header, size_header);
-	memcpy(d + size_header, &entry, size_direntry);
-	memcpy(d + size_header + size_direntry, &bmp_header, sizeof(BITMAPINFOHEADER));
-	char *p = (char *) bmp_image.get_data();
-	int h = bmp_image.get_height();
-	int pitch = (int) bmp_image.get_pitch();
-	for (int y = 0; y < h; y++)
-		memcpy(d + size_header + size_direntry + sizeof(BITMAPINFOHEADER) + y * pitch, p + (h-y-1)*pitch, pitch);
-	return ico_file;
+	for (size_t i = 0; i < bmp_images.size(); i++)
+	{
+		BITMAPINFOHEADER bmp_header;
+		memset(&bmp_header, 0, sizeof(BITMAPINFOHEADER));
+		bmp_header.biSize = sizeof(BITMAPINFOHEADER);
+		bmp_header.biWidth = bmp_images[i].get_width();
+		bmp_header.biHeight = -bmp_images[i].get_height() * 2; // why on earth do I have to multiply this by two??
+		bmp_header.biPlanes = 1;
+		bmp_header.biBitCount = 32;
+		bmp_header.biCompression = BI_RGB;
+		device.write(&bmp_header, sizeof(BITMAPINFOHEADER));
+		device.write(bmp_images[i].get_data(), bmp_images[i].get_pitch() * bmp_images[i].get_height());
+	}
+
+	return device.get_data();
 }
 
-CL_DataBuffer CL_CursorProvider_Win32::create_ani_file(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot) const
+CL_DataBuffer CL_CursorProvider_Win32::create_ani_file(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot)
 {
 /*
 	"RIFF" {Length of File}
@@ -221,7 +234,7 @@ CL_DataBuffer CL_CursorProvider_Win32::create_ani_file(const CL_SpriteDescriptio
 	return ani_file;
 }
 
-void CL_CursorProvider_Win32::set_riff_header(char *data, const char *type, DWORD size) const
+void CL_CursorProvider_Win32::set_riff_header(char *data, const char *type, DWORD size)
 {
 	memcpy(data, type, 4);
 	DWORD *s = (DWORD *) (data + 4);

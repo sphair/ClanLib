@@ -44,7 +44,7 @@ class="code">CL_NetGameServer::start(port)</span>.</p>
 
 <p><span class="code">CL_NetGameServer</span> is a <span
 class="code">CL_KeepAlive</span> based class, which means that during calls
-to <span class="code">CL_DisplayMessageQueue::process()</span> the class
+to <span class="code">CL_KeepAlive::process()</span> the class
 will emit those three signals for each client that has
 connected/disconnected since last call, and for each game event that arrived
 since last.</p>
@@ -54,7 +54,7 @@ the <span class="code">CL_NetGameServer</span> or <span
 class="code">CL_NetGameClient</span> objects directly to cause the signals
 to be emitted. Generally, in client applications the signals are processed automatically because the main render loop
 already calls the <span
-class="code">CL_DisplayMessageQueue::process()</span> function, but for
+class="code">CL_KeepAlive::process()</span> function, but for
 servers that to not use clanDisplay the <span
 class="code">process_events()</span> function can be called directly.</p>
 

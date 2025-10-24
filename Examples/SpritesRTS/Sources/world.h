@@ -38,7 +38,7 @@ private:
 	void draw();
 	void update();
 
-	float calcTimeElapsed();
+	int calcTimeElapsed();
 
 	void onKeyDown(const CL_InputEvent &key, const CL_InputState &state);
 	void onMouseDown(const CL_InputEvent &key, const CL_InputState &state);

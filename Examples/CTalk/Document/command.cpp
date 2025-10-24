@@ -523,10 +523,7 @@ void Command::execute_me(IRCSession *session, const IRCEntity &filter, std::vect
 		text += args[i];
 	}
 	session->send_text(filter, IRCText::from_ctcp_data("ACTION "+IRCText::from_text(text).to_raw()));
-	if (filter.is_channel())
-		session->cb_channel_action.invoke(filter, session->our_nickname, IRCText::from_text(text));
-//	else
-//		session->cb_private_action.invoke(filter, session->our_nickname, IRCText(text));
+	session->cb_action.invoke(filter, session->our_nickname, IRCText::from_text(text));
 }
 
 void Command::execute_finger(IRCSession *session, const IRCEntity &filter, std::vector<CL_TempString> &args)

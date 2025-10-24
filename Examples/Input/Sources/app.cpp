@@ -107,7 +107,7 @@ int App::start(const std::vector<CL_String> &args)
 
 		window.flip(1);
 
-		CL_DisplayMessageQueue::process();
+		CL_KeepAlive::process();
 	}
 
 	return 0;

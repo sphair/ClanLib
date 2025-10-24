@@ -205,10 +205,11 @@ void TankVehicle::fire(bool nuke)
 	}
 }
 
-bool TankVehicle::update(float timeElapsed)
+bool TankVehicle::update(int timeElapsed_ms)
 {
-	spriteBody->update(timeElapsed);
-	spriteTurret->update(timeElapsed);
+	spriteBody->update(timeElapsed_ms);
+	spriteTurret->update(timeElapsed_ms);
+	float timeElapsed = (float) timeElapsed_ms / 1000.0f;
 
 	if(spriteTurretShooting->is_finished() && spriteTurret == spriteTurretShooting)
 	{

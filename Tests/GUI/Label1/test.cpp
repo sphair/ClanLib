@@ -60,8 +60,7 @@ public:
 			label2.set_span(span);
 			label2.set_alignment(CL_Label::align_right);
 
-			CL_AcceleratorTable at;
-			gui.exec(at);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -72,9 +71,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

@@ -39,6 +39,7 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/Display/Window/display_window_description.h"
+#include "API/Display/Window/keys.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_state.h"
@@ -87,10 +88,32 @@ CL_GUIManager_Impl::~CL_GUIManager_Impl()
 
 CL_Font CL_GUIManager_Impl::get_registered_font(const CL_FontDescription &desc)
 {
+	// Perform exact matches
 	std::vector<NamedFontCacheEntry>::iterator it;
 	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
 	{
 		if ((*it).desc == desc)
+			return (*it).font;
+	}
+
+	CL_FontDescription desc_copy;
+	// Match font where the registered font details have not been set
+	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
+	{
+		desc_copy.clone(desc);
+		const CL_FontDescription &current_desc = (*it).desc;
+
+		// Copy the unset details
+		if (current_desc.get_height() == 0)
+			desc_copy.set_height(0);
+
+		if (current_desc.get_average_width() == 0)
+			desc_copy.set_average_width(0);
+
+		if (current_desc.get_weight() == 0)
+			desc_copy.set_weight(0);
+
+		if (current_desc == desc_copy)
 			return (*it).font;
 	}
 
@@ -100,7 +123,7 @@ CL_Font CL_GUIManager_Impl::get_registered_font(const CL_FontDescription &desc)
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIManager_Impl Operations:
 
-void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUIComponent *owner, CL_GUITopLevelDescription desc, bool temporary)
+void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUIComponent *owner, CL_GUITopLevelDescription desc)
 {
 	CL_GUITopLevelWindow *top_level_window = new CL_GUITopLevelWindow();
 	top_level_window->component = component;
@@ -129,7 +152,7 @@ void CL_GUIManager_Impl::add_component(CL_GUIComponent *component, CL_GUICompone
 
 	try
 	{
-		window_manager.create_window(top_level_window, owner_window, desc, temporary);
+		window_manager.create_window(top_level_window, owner_window, desc);
 	}
 	catch (CL_Exception e)
 	{
@@ -158,6 +181,34 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 		mouse_over_component = 0;
 
 	std::vector<CL_GUITopLevelWindow>::size_type index, size;
+
+	// Remove the components that this component owns
+	bool owner_component_deleted;
+	do
+	{
+		owner_component_deleted = false;
+		size = root_components.size();
+
+		for (index = 0; index < size; index++)
+		{
+			CL_GUITopLevelWindow *cur = root_components[index];
+
+			if (cur->owner)
+			{
+				if (cur->owner->impl == component_impl)
+				{
+					// Found owned component
+					delete (cur->component);
+
+					// Be VERY carefuly at this point, as this is a recursive function, and root_components will have changed
+					owner_component_deleted = true;
+					break;
+				}
+			}
+		}
+	}while(owner_component_deleted);
+
+	// Remove this component
 	size = root_components.size();
 	for (index = 0; index < size; index++)
 	{
@@ -176,20 +227,6 @@ void CL_GUIManager_Impl::remove_component(CL_GUIComponent_Impl *component_impl)
 			break;
 		}
 	}
-
-	// Remove all messages queued for this window:
-	CL_MutexSection mutex_lock(&message_queue_mutex);
-	std::vector<CL_GUIMessage>::iterator it_message_queue = message_queue.begin();
-	while (it_message_queue != message_queue.end())
-	{
-		CL_GUIMessage &message = *it_message_queue;
-		CL_GUIComponent *target = message.get_target();
-
-		if (target && target->impl.get() == component_impl)
-			it_message_queue = message_queue.erase(it_message_queue);
-		else
-			++it_message_queue;
-	}
 }
 
 void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
@@ -207,10 +244,15 @@ void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
 	{
 		if (toplevel_window->focused_component)
 		{
+			CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+
 			CL_GUIMessage_FocusChange message;
 			message.set_target(toplevel_window->focused_component);
 			message.set_focus_type(CL_GUIMessage_FocusChange::losing_focus);
-			send_message(message);
+			dispatch_message(message);
+
+			if (toplevel_window_alive.is_null())	// Top level window was destroyed
+				return;
 		}
 
 		toplevel_window->focused_component = component;
@@ -227,7 +269,7 @@ void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
 			CL_GUIMessage_FocusChange message;
 			message.set_target(toplevel_window->focused_component);
 			message.set_focus_type(CL_GUIMessage_FocusChange::gained_focus);
-			send_message(message);
+			dispatch_message(message);
 		}
 	}
 	else
@@ -239,6 +281,7 @@ void CL_GUIManager_Impl::gain_focus(CL_GUIComponent *component)
 
 void CL_GUIManager_Impl::loose_focus(CL_GUIComponent *component)
 {
+
 	CL_GUITopLevelWindow *toplevel_window = get_toplevel_window(component);
 	if (toplevel_window == NULL)
 		return;
@@ -252,10 +295,15 @@ void CL_GUIManager_Impl::loose_focus(CL_GUIComponent *component)
 	{
 		if (toplevel_window->focused_component)
 		{
+			CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+
 			CL_GUIMessage_FocusChange message;
 			message.set_target(toplevel_window->focused_component);
 			message.set_focus_type(CL_GUIMessage_FocusChange::losing_focus);
-			send_message(message);
+			dispatch_message(message);
+
+			if (toplevel_window_alive.is_null())	// Top level window was destroyed
+				return;
 		}
 
 		toplevel_window->focused_component = NULL;
@@ -331,21 +379,25 @@ const CL_GUIComponent *CL_GUIManager_Impl::get_owner_component(const CL_GUICompo
 	return 0;
 }
 
-void CL_GUIManager_Impl::post_message(const CL_GUIMessage &message)
-{
-	CL_MutexSection mutex_lock(&message_queue_mutex);
-	message_queue.push_back(message);
-}
-
 void CL_GUIManager_Impl::deliver_message(CL_GUIMessage &m)
 {
-	if (func_filter_message.is_null() || func_filter_message.invoke(m))
+	sig_filter_message.invoke(m);
+
+	if (!m.is_consumed())
 	{
 		CL_GUIComponent *target = m.get_target();
 		if (target)
 		{
-			if (!target->func_process_message().is_null())
-				target->func_process_message().invoke(m);
+			if (!target->func_filter_message().is_null())
+			{
+				target->func_filter_message().invoke(m);
+			}
+
+			if (!m.is_consumed())
+			{
+				if (!target->func_process_message().is_null())
+					target->func_process_message().invoke(m);
+			}
 
 			if (!m.is_consumed())
 			{
@@ -436,7 +488,7 @@ void CL_GUIManager_Impl::deliver_message(CL_GUIMessage &m)
 	}
 }
 
-void CL_GUIManager_Impl::send_message(CL_GUIMessage &message)
+void CL_GUIManager_Impl::dispatch_message(CL_GUIMessage &message)
 {
 	CL_GUIMessage m = message;
 	deliver_message(m);
@@ -456,8 +508,8 @@ void CL_GUIManager_Impl::send_message(CL_GUIMessage &message)
 			input.set_event(event);
 
 			m.set_target(m.get_target()->get_parent_component());
-
-			deliver_message(m);
+			if (m.get_target())
+				deliver_message(m);
 		}
 	}
 
@@ -479,25 +531,6 @@ CL_GUIComponent *CL_GUIManager_Impl::get_focus_component()
 	}
 
 	return 0;
-}
-
-void CL_GUIManager_Impl::check_for_new_messages()
-{
-	// Handle posted messages before looking for input messages.
-	CL_MutexSection mutex_lock(&message_queue_mutex);
-	if (!message_queue.empty())
-		return;
-	mutex_lock.unlock();
-
-	// Handle window manager messages:
-	while (window_manager.has_message())
-	{
-		window_manager.process_message();
-		mutex_lock.lock();
-		if (!message_queue.empty())
-			return;
-		mutex_lock.unlock();
-	}
 }
 
 std::vector<CL_CSSRuleSet> &CL_GUIManager_Impl::get_rulesets(const CL_StringRef &element_name) const
@@ -575,10 +608,16 @@ void CL_GUIManager_Impl::on_focus_lost(CL_GUITopLevelWindow *toplevel_window)
 {
 	if (toplevel_window->focused_component)
 	{
+		CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+
 		CL_GUIMessage_FocusChange message;
 		message.set_target(toplevel_window->focused_component);
 		message.set_focus_type(CL_GUIMessage_FocusChange::losing_focus);
-		post_message(message);
+		dispatch_message(message);
+
+		if (toplevel_window_alive.is_null())	// Top level window was destroyed
+			return;
+
 	}
 
 	// toplevel_window->focused_component = 0;
@@ -586,7 +625,7 @@ void CL_GUIManager_Impl::on_focus_lost(CL_GUITopLevelWindow *toplevel_window)
 	CL_GUIMessage_ActivationChange message;
 	message.set_target(toplevel_window->component);
 	message.set_activation_type(CL_GUIMessage_ActivationChange::activation_lost);
-	post_message(message);
+	dispatch_message(message);
 }
 
 void CL_GUIManager_Impl::on_focus_gained(CL_GUITopLevelWindow *toplevel_window)
@@ -596,16 +635,21 @@ void CL_GUIManager_Impl::on_focus_gained(CL_GUITopLevelWindow *toplevel_window)
 
 	if (toplevel_window->focused_component)
 	{
+		CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+
 		CL_GUIMessage_FocusChange message;
 		message.set_target(toplevel_window->focused_component);
 		message.set_focus_type(CL_GUIMessage_FocusChange::gained_focus);
-		post_message(message);
+		dispatch_message(message);
+
+		if (toplevel_window_alive.is_null())	// Top level window was destroyed
+			return;
 	}
 
 	CL_GUIMessage_ActivationChange message;
 	message.set_target(toplevel_window->component);
 	message.set_activation_type(CL_GUIMessage_ActivationChange::activation_gained);
-	post_message(message);
+	dispatch_message(message);
 }
 
 void CL_GUIManager_Impl::on_resize(CL_GUITopLevelWindow *toplevel_window, const CL_Size &new_size)
@@ -617,7 +661,7 @@ void CL_GUIManager_Impl::on_resize(CL_GUITopLevelWindow *toplevel_window, const 
 	CL_GUIMessage_Resize message;
 	message.set_target(component);
 	message.set_geometry(component->get_geometry());
-	post_message(message);
+	dispatch_message(message);
 }
 
 void CL_GUIManager_Impl::on_paint(CL_GUITopLevelWindow *toplevel_window, const CL_Rect &update_rect)
@@ -629,7 +673,7 @@ void CL_GUIManager_Impl::on_close(CL_GUITopLevelWindow *toplevel_window)
 {
 	CL_GUIMessage_Close message;
 	message.set_target(toplevel_window->component);
-	post_message(message);
+	dispatch_message(message);
 }
 
 void CL_GUIManager_Impl::on_input_received(
@@ -639,7 +683,8 @@ void CL_GUIManager_Impl::on_input_received(
 {
 	// Find target for input message:
 	CL_GUIComponent *target = 0;
-	if (input_event.device.get_type() == CL_InputDevice::pointer)
+	if (input_event.device.get_type() == CL_InputDevice::pointer ||
+		input_event.device.get_type() == CL_InputDevice::tablet)
 	{
 		target = mouse_capture_component;
 
@@ -673,7 +718,7 @@ void CL_GUIManager_Impl::on_input_received(
 				CL_GUIMessage_Pointer msg;
 				msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_leave);
 				msg.set_target(mouse_over_component);
-				post_message(msg);
+				dispatch_message(msg);
 			}
 			mouse_over_component = target;
 			if (mouse_over_component)
@@ -681,15 +726,22 @@ void CL_GUIManager_Impl::on_input_received(
 				CL_GUIMessage_Pointer msg;
 				msg.set_pointer_type(CL_GUIMessage_Pointer::pointer_enter);
 				msg.set_target(mouse_over_component);
-				post_message(msg);
+				dispatch_message(msg);
 			}
 		}
 
 		CL_GUIMessage_Input message;
 		message.set_target(target);
 		message.set_event(local_input_event);
-		post_message(message);
+		dispatch_message(message);
+
+		if (!message.is_consumed())
+			accel_table.process_message(message);
+
+		if (!message.is_consumed())
+			process_standard_gui_keys(message);
 	}
+
 }
 
 CL_GUIComponent *CL_GUIManager_Impl::get_cancel_component(CL_GUIComponent *comp)
@@ -751,3 +803,77 @@ void CL_GUIManager_Impl::on_gc_destruction_imminent()
 	// The last gc is about to be destroyed - release all resources that depend on gc.
 	font_cache = CL_GUIFontCache();
 }
+
+void CL_GUIManager_Impl::process_standard_gui_keys(CL_GUIMessage &message)
+{
+	if (message.is_type(CL_GUIMessage_Input::get_type_name()))
+	{
+		CL_GUIMessage_Input input = message;
+		CL_InputEvent e = input.get_event();
+
+		if (e.type == CL_InputEvent::pressed && 
+			(e.id == CL_KEY_TAB || e.id == CL_KEY_LEFT || e.id == CL_KEY_RIGHT || e.id == CL_KEY_UP || e.id == CL_KEY_DOWN))
+		{
+			CL_GUIComponent *focus_comp = input.get_target();
+
+			if (e.id == CL_KEY_TAB)
+			{
+				if (!e.shift)
+					focus_comp->focus_next();
+				else
+					focus_comp->focus_previous();
+			}
+			else if (e.id == CL_KEY_LEFT || e.id == CL_KEY_UP)
+			{
+				focus_comp->focus_next();
+			}
+			else if (e.id == CL_KEY_RIGHT || e.id == CL_KEY_DOWN)
+			{
+				focus_comp->focus_previous();
+			}
+		}
+		else if ((e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN) && e.type == CL_InputEvent::released)
+		{
+			CL_GUIComponent *comp = input.get_target();
+			if (comp)
+			{
+				CL_GUITopLevelWindow *win = get_toplevel_window(comp);
+				CL_GUIComponent *defaulted_component = get_default_component(win->component);
+
+				if (defaulted_component)
+				{
+					input.set_target(defaulted_component);
+					dispatch_message(input);
+				}
+			}
+		}
+		else if (e.id == CL_KEY_ESCAPE)
+		{
+			CL_GUIComponent *comp = input.get_target();
+			if (comp)
+			{
+				CL_GUITopLevelWindow *win = get_toplevel_window(comp);
+				CL_GUIComponent *cancel_comp = get_cancel_component(win->component);
+				if (cancel_comp)
+				{
+					input.set_target(cancel_comp);
+					dispatch_message(input);
+				}
+			}
+		}
+	}
+}
+
+
+CL_GUITopLevelWindow_Alive::CL_GUITopLevelWindow_Alive(CL_GUITopLevelWindow *window)
+{
+	if (window)
+		window_alive = window->alive;
+}
+
+bool CL_GUITopLevelWindow_Alive::is_null() const
+{
+	return window_alive.is_null();
+}
+
+

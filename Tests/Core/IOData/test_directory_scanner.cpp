@@ -68,7 +68,7 @@ void TestApp::test_directory_scanner(void)
 
 	// Create a test file
 	CL_String filename = cl_text("temporary_file.tmp");
-	CL_File output_file(filename, CL_File::create_always);
+	CL_File output_file(filename, CL_File::create_always, CL_File::access_write);
 	char buffer[123];
 	output_file.write(buffer, 123);
 	output_file.close();

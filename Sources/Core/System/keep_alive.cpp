@@ -35,9 +35,18 @@
 void cl_alloc_tls_keep_alive_slot();
 void cl_set_keep_alive_vector(std::vector<CL_KeepAliveObject *> *v);
 std::vector<CL_KeepAliveObject *> *cl_get_keep_alive_vector();
+CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > cl_keepalive_func_event_wait;
 
 void CL_KeepAlive::process(int timeout)
 {
+	// Get the objects to wait for
+	std::vector<CL_KeepAliveObject *> objects = get_objects();
+	std::vector<CL_Event> events;
+	for (std::vector<CL_KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
+	{
+		events.push_back(objects[i]->get_wakeup_event());
+	}
+		
 	int time_start = CL_System::get_time();
 	while (true)
 	{
@@ -46,22 +55,41 @@ void CL_KeepAlive::process(int timeout)
 		if (time_to_wait < 0)
 			time_to_wait = 0;
 
-		std::vector<CL_KeepAliveObject *> objects = get_objects();
-		std::vector<CL_Event> events;
-		for (std::vector<CL_KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
+		if (timeout < 0)	// Wait forever option
 		{
-			events.push_back(objects[i]->get_wakeup_event());
+			time_to_wait = -1;
 		}
 
-		int wakeup_reason = CL_Event::wait(events, timeout);
-		if (wakeup_reason >= 0)
-			objects[wakeup_reason]->process();
-		else if (wakeup_reason == -1)
-			break;
+		// Wait for the events
+		int wakeup_reason;
+		if (!cl_keepalive_func_event_wait.is_null())
+		{
+			wakeup_reason = cl_keepalive_func_event_wait.invoke(events, time_to_wait);
+		}
+		else
+		{
+			wakeup_reason = CL_Event::wait(events, time_to_wait);
+		}
 
-		if (time_to_wait == 0)
+		// Check for Timeout
+		if (wakeup_reason < 0)
+		{
 			break;
+		}
+
+		timeout = 0;	// Event found, reset the timeout
+
+		// Process the event
+		if (wakeup_reason < events.size())
+		{
+			objects[wakeup_reason]->process();
+		}
 	}
+}
+
+CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > &CL_KeepAlive::func_event_wait()
+{
+	return cl_keepalive_func_event_wait;
 }
 
 std::vector<CL_KeepAliveObject *> CL_KeepAlive::get_objects()

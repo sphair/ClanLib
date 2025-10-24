@@ -56,14 +56,15 @@ CL_ListViewRenderer::CL_ListViewRenderer(CL_ListView *listview)
 : listview(listview), gc(listview->get_gc()), display_mode(listview_mode_details),
   scroll_x(0), scroll_y(0), height_row(0)
 {
-	prop_border_left = CL_GUIThemePartProperty(cl_text("border-left"));
-	prop_border_right = CL_GUIThemePartProperty(cl_text("border-right"));
-	prop_border_top = CL_GUIThemePartProperty(cl_text("border-top"));
-	prop_border_bottom = CL_GUIThemePartProperty(cl_text("border-bottom"));
 	prop_icon_color = CL_GUIThemePartProperty(CssStr::icon_color, cl_text("white"));
 	prop_icon_color_selected = CL_GUIThemePartProperty(CssStr::icon_color_selected, cl_text("white"));
 	prop_icon_color_overlay = CL_GUIThemePartProperty(CssStr::icon_color_overlay, cl_text("white"));
 	prop_icon_color_selected_overlay = CL_GUIThemePartProperty(CssStr::icon_color_selected_overlay, cl_text("white"));
+
+	prop_selection_margin_left = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_left, cl_text("3"));
+	prop_selection_margin_right = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_right, cl_text("3"));
+	prop_selection_margin_top = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_top, cl_text("3"));
+	prop_selection_margin_bottom = CL_GUIThemePartProperty(CssStr::ListView::part_selection_margin_bottom, cl_text("3"));
 }
 
 CL_ListViewRenderer::~CL_ListViewRenderer()
@@ -165,7 +166,14 @@ void CL_ListViewRenderer::render(
 				{
 					part_selection.set_state(CssStr::unfocused, !listview->has_focus());
 
-					part_selection.render_box(gc, si.rect_text[i], update_rect);
+					CL_Rect selection_rect = si.rect_text[i];
+
+					selection_rect.top -= selection_margin.top;
+					selection_rect.left -= selection_margin.left;
+					selection_rect.right += selection_margin.right;
+					selection_rect.bottom += selection_margin.bottom;
+
+					part_selection.render_box(gc, selection_rect, update_rect);
 
 					if (display_mode == listview_mode_thumbnails)
 					{
@@ -226,11 +234,10 @@ void CL_ListViewRenderer::create_parts()
 
 	part_icon_selection = CL_GUIThemePart(listview, cl_text("icon_selection"));
 
-	// todo: selection size should be done better... somehow.
-	selection_border.left = part_selection.get_property_int(prop_border_left);
-	selection_border.right = part_selection.get_property_int(prop_border_right);
-	selection_border.top = part_selection.get_property_int(prop_border_top);
-	selection_border.bottom = part_selection.get_property_int(prop_border_bottom);
+	selection_margin.left = part_selection.get_property_int(prop_selection_margin_left);
+	selection_margin.right = part_selection.get_property_int(prop_selection_margin_right);
+	selection_margin.top = part_selection.get_property_int(prop_selection_margin_top);
+	selection_margin.bottom = part_selection.get_property_int(prop_selection_margin_bottom);
 
 	part_opener_closed.set_state(CssStr::closed, true);
 	part_opener_open.set_state(CssStr::open, true);

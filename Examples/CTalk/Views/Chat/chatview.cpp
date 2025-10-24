@@ -9,7 +9,7 @@
 #include "Framework/mainframe.h"
 
 ChatView::ChatView(IRCSession *session, const IRCEntity &filter, CL_GUIComponent *parent, MainFrame *mainframe)
-: View(parent, mainframe, get_view_caption(filter)), channel_topic(0), chat(0), inputbox(0), userlist(0), 
+: View(parent, mainframe, get_view_caption(session, filter)), channel_topic(0), chat(0), inputbox(0), userlist(0), 
   chat_input_history_index(0), next_chat_url_id(1),
   session(session), filter(filter), next_icon_index(1), regexp_url1("(http://.*?)([ \\r\\n\\t\"'>)]|$)")
 {
@@ -20,16 +20,18 @@ ChatView::ChatView(IRCSession *session, const IRCEntity &filter, CL_GUIComponent
 
 	channel_topic = new ChannelTopic(this);
 	chat = new Chat(this);
-	inputbox = new CL_LineEdit(this);
+	inputbox = new ChatLineEdit(this);
 	inputbox->set_class_name("chatinput");
 	userlist = new CL_ListView(this);
 	userlist->set_class_name("chatusers");
+	inputbox->set_select_all_on_focus_gain(false);
 	inputbox->set_focus();
 
 	CL_GraphicContext gc = get_gc();
 	icon_action = CL_Image(gc, "Resources/chat_icon_action.png");
 	icon_notice = CL_Image(gc, "Resources/chat_icon_notice.png");
 	icon_error = CL_Image(gc, "Resources/chat_icon_error.png");
+	icon_topic = CL_Image(gc, "Resources/chat_icon_topic.png");
 
 	icon_normal_index = add_listview_icon("Resources/user.png");
 	icon_operator_index = add_listview_icon("Resources/user_operator.png");
@@ -45,7 +47,8 @@ ChatView::ChatView(IRCSession *session, const IRCEntity &filter, CL_GUIComponent
 	}
 
 	func_resized().set(this, &ChatView::on_resize);
-	inputbox->func_unhandled_event().set(this, &ChatView::on_inputbox_unhandled_input);
+	func_visibility_change().set(this, &ChatView::on_visibility_change);
+	inputbox->func_filter_message().set(this, &ChatView::on_inputbox_filter_message);
 
 	userlist->func_key_pressed().set(this, &ChatView::on_userlist_key_pressed);
 	userlist->func_mouse_right_up().set(this, &ChatView::on_userlist_contextmenu);
@@ -58,12 +61,9 @@ ChatView::ChatView(IRCSession *session, const IRCEntity &filter, CL_GUIComponent
 	slots.connect(session->cb_user_parted, this, &ChatView::on_user_parted);
 	slots.connect(session->cb_user_quit, this, &ChatView::on_user_quit);
 
-	slots.connect(session->cb_channel_text, this, &ChatView::on_channel_text);
-	slots.connect(session->cb_channel_notice, this, &ChatView::on_channel_notice);
-	slots.connect(session->cb_channel_action, this, &ChatView::on_channel_action);
-	slots.connect(session->cb_private_text, this, &ChatView::on_private_text);
-	slots.connect(session->cb_private_notice, this, &ChatView::on_private_notice);
-	slots.connect(session->cb_private_action, this, &ChatView::on_private_action);
+	slots.connect(session->cb_text, this, &ChatView::on_text);
+	slots.connect(session->cb_notice, this, &ChatView::on_notice);
+	slots.connect(session->cb_action, this, &ChatView::on_action);
 	slots.connect(session->cb_system_text, this, &ChatView::on_system_text);
 	slots.connect(session->cb_error_text, this, &ChatView::on_error_text);
 	slots.connect(session->cb_channel_mode_change, this, &ChatView::on_channel_mode_change);
@@ -74,10 +74,10 @@ ChatView::ChatView(IRCSession *session, const IRCEntity &filter, CL_GUIComponent
 	on_resize();
 }
 
-CL_String ChatView::get_view_caption(const IRCEntity &filter)
+CL_String ChatView::get_view_caption(IRCSession *session, const IRCEntity &filter)
 {
 	if (filter.empty())
-		return "Status";
+		return session->get_connection_name();// "Status";
 	else if (filter.is_channel())
 		return "#"+CL_StringHelp::text_to_lower(filter.get_name());
 	else
@@ -93,15 +93,6 @@ int ChatView::add_listview_icon(const CL_String &filename)
 	CL_ListViewIconList icon_list = userlist->get_icon_list();
 	icon_list.set_icon(next_icon_index, icon);
 	return next_icon_index++;
-}
-
-void ChatView::add_private_text(const IRCNick &nick, const IRCText &text)
-{
-	if (get_filter() == nick)
-	{
-		add_line(nick, text, chat->get_color_text(), chat->get_color_nick_others());
-		get_mainframe()->flag_activity(this);
-	}
 }
 
 ChatView::~ChatView()
@@ -122,7 +113,7 @@ void ChatView::on_resize()
 	CL_Rect contentbox = part_background.get_content_box(get_size());
 
 	int topic_height = channel_topic->get_topic_height(contentbox.get_width());
-	int inputbox_height = 20;
+	int inputbox_height = 22;
 	int userlist_width = 150;
 
 	if (!get_filter().is_channel())
@@ -137,41 +128,47 @@ void ChatView::on_resize()
 	inputbox->set_geometry(CL_Rect(contentbox.left, contentbox.bottom-inputbox_height, contentbox.right, contentbox.bottom));
 }
 
-bool ChatView::on_inputbox_unhandled_input(CL_InputEvent input_event)
+void ChatView::on_inputbox_filter_message(CL_GUIMessage &message)
 {
-	if (input_event.id == CL_KEY_ENTER && input_event.type == CL_InputEvent::released) // should be CL_InputEvent::pressed, but lineedit is bugged?
+	if (message.get_type() == CL_GUIMessage_Input::get_type_name())
 	{
-		on_inputbox_return_pressed();
-		return true;
-	}
-	else if (input_event.id == CL_KEY_TAB && input_event.type == CL_InputEvent::released) // should be CL_InputEvent::pressed, but lineedit is bugged?
-	{
-		on_inputbox_tab_pressed();
-		return true;
-	}
-	else if (input_event.id == CL_KEY_UP && input_event.type == CL_InputEvent::pressed)
-	{
-		on_inputbox_up_pressed();
-		return true;
-	}
-	else if (input_event.id == CL_KEY_DOWN && input_event.type == CL_InputEvent::pressed)
-	{
-		on_inputbox_down_pressed();
-		return true;
-	}
-	else if (input_event.id == CL_KEY_PRIOR && input_event.type == CL_InputEvent::pressed)
-	{
-		chat->scroll_page_up();
-		return true;
-	}
-	else if (input_event.id == CL_KEY_NEXT && input_event.type == CL_InputEvent::pressed)
-	{
-		chat->scroll_page_down();
-		return true;
-	}
-	else
-	{
-		return false;
+		CL_InputEvent input_event = CL_GUIMessage_Input(message).get_event();
+		if (input_event.id == CL_KEY_ENTER)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				on_inputbox_return_pressed();
+			message.set_consumed();
+		}
+		else if (input_event.id == CL_KEY_TAB && !input_event.ctrl && !input_event.alt)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				on_inputbox_tab_pressed();
+			message.set_consumed();
+		}
+		else if (input_event.id == CL_KEY_UP)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				on_inputbox_up_pressed();
+			message.set_consumed();
+		}
+		else if (input_event.id == CL_KEY_DOWN)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				on_inputbox_down_pressed();
+			message.set_consumed();
+		}
+		else if (input_event.id == CL_KEY_PRIOR)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				chat->scroll_page_up();
+			message.set_consumed();
+		}
+		else if (input_event.id == CL_KEY_NEXT)
+		{
+			if (input_event.type == CL_InputEvent::pressed)
+				chat->scroll_page_down();
+			message.set_consumed();
+		}
 	}
 }
 
@@ -317,79 +314,58 @@ void ChatView::on_userlist_key_pressed(CL_InputEvent event)
 
 void ChatView::on_userlist_contextmenu(CL_Point pos)
 {
-	CL_PopupMenu menu;
-	menu.insert_item(L"Slap!", cmd_slap);
-	menu.insert_item(L"Open Conversation", cmd_open_conversation);
-	menu.func_item_selected().set(this, &ChatView::on_userlist_menu_command);
-	menu.exec(userlist, pos);
+	userlist_popup_menu = CL_PopupMenu();
+	userlist_popup_menu.insert_item(L"Slap!").func_clicked().set(this, &ChatView::on_userlist_slap);
+	userlist_popup_menu.insert_item(L"Open Conversation").func_clicked().set(this, &ChatView::on_userlist_open_conversation);
+	userlist_popup_menu.start(userlist, userlist->component_to_screen_coords(pos));
 }
 
-void ChatView::on_userlist_menu_command(CL_PopupMenuItem item)
+void ChatView::on_userlist_slap()
 {
 	CL_ListViewItem selected_item = userlist->get_selected_item();
 	if (!selected_item.is_null())
-	{
-		switch (item.get_id())
-		{
-		case cmd_slap:
-			Command::execute(session, filter, cl_format("/me slaps %1 around a bit with a large carambola fruit!", selected_item.get_column("nick").get_text()));
-			break;
-		case cmd_open_conversation:
-			get_mainframe()->open_conversation(IRCNick::from_text(selected_item.get_column("nick").get_text()), session);
-			break;
-		default:
-			break;
-		}
-	}
+		Command::execute(session, filter, cl_format("/me slaps %1 around a bit with a large carambola fruit!", selected_item.get_column("nick").get_text()));
 }
 
-void ChatView::on_channel_text(const IRCChannel &channel, const IRCNick &nick, const IRCText &text)
+void ChatView::on_userlist_open_conversation()
 {
-	if (get_filter() == channel)
+	CL_ListViewItem selected_item = userlist->get_selected_item();
+	if (!selected_item.is_null())
+		get_mainframe()->open_conversation(IRCNick::from_text(selected_item.get_column("nick").get_text()), session);
+}
+
+void ChatView::on_text(const IRCChannel &room, const IRCNick &nick, const IRCText &text)
+{
+	if (get_filter() == room)
 	{
 		add_line(nick, text, chat->get_color_text(), chat->get_color_nick_others());
 		get_mainframe()->flag_activity(this);
 	}
 }
 
-void ChatView::on_channel_notice(const IRCChannel &channel, const IRCNick &nick, const IRCText &text)
+void ChatView::on_notice(const IRCChannel &room, const IRCNick &nick, const IRCText &text)
 {
-	if (get_filter() == channel)
+	if (get_filter() == room)
 	{
 		add_notice_line(nick, text);
 		get_mainframe()->flag_activity(this);
 	}
 }
 
-void ChatView::on_channel_action(const IRCChannel &channel, const IRCNick &nick, const IRCText &text)
+void ChatView::on_action(const IRCChannel &room, const IRCNick &nick, const IRCText &text)
 {
-	if (get_filter() == channel)
+	if (get_filter() == room)
 	{
 		add_action_line(nick, text);
 		get_mainframe()->flag_activity(this);
 	}
 }
 
-void ChatView::on_private_text(const IRCNick &nick, const IRCText &text)
-{
-	add_private_text(nick, text);
-	get_mainframe()->flag_activity(this);
-}
-
-void ChatView::on_private_notice(const IRCNick &nick, const IRCText &text)
-{
-	if (is_active_view())
-	{
-		add_notice_line(nick, text);
-		get_mainframe()->flag_activity(this);
-	}
-}
-
-void ChatView::on_private_action(const IRCNick &nick, const IRCText &text)
+void ChatView::add_private_text(const IRCNick &nick, const IRCText &text)
 {
 	if (get_filter() == nick)
 	{
-		add_action_line(nick, text);
+		add_line(nick, text, chat->get_color_text(), chat->get_color_nick_others());
 		get_mainframe()->flag_activity(this);
 	}
 }
@@ -418,6 +394,13 @@ void ChatView::on_channel_topic_updated(const IRCChannel &channel)
 		IRCJoinedChannel status = session->get_channel_status(channel);
 		channel_topic->set_topic("Unknown time"/*status.topic_time*/, status.topic, status.topic_author);
 		on_resize();
+
+		CL_SpanLayout layout;
+		layout.add_image(icon_topic);
+		add_layout_text(layout, L" " + status.topic.get_text(), chat->get_color_channel());
+		add_layout_text(layout, " set by ", CL_Colorf::gray);
+		add_layout_text(layout, status.topic_author.get_name(), chat->get_color_channel());
+		chat->add_line(layout);
 	}
 }
 
@@ -442,7 +425,7 @@ void ChatView::on_channel_names_updated(const IRCChannel &channel)
 
 			userlist->get_document_item().append_child(item);
 		}
-		// userlist->sort();
+		sort_userlist();
 	}
 }
 
@@ -452,7 +435,7 @@ void ChatView::on_nick_changed(const IRCNick &old_nick, const IRCNick &new_nick)
 	if (!cur.is_null())
 	{
 		cur.set_column_text("nick", new_nick.get_name());
-		// userlist->sort();
+		sort_userlist();
 
 		add_line(IRCText::from_text(cl_format(L"%1 is now known as %2", old_nick.get_name(), new_nick.get_name())), chat->get_color_channel());
 	}
@@ -481,7 +464,7 @@ void ChatView::on_user_joined(const IRCChannel &channel, const IRCNick &nick)
 			item.set_icon(icon_normal_index);
 
 		userlist->get_document_item().append_child(item);
-		// userlist->sort();
+		sort_userlist();
 
 		add_line(IRCText::from_text(cl_format("%1 joined the channel", nick.get_name())), chat->get_color_channel());
 	}
@@ -514,6 +497,27 @@ void ChatView::on_user_quit(const IRCNick &nick, const IRCText &text)
 		else
 			add_line(IRCText::from_text(cl_format("%1 quit (%2)", nick.get_name(), text.get_text())), chat->get_color_channel());
 	}
+}
+
+void ChatView::sort_userlist()
+{
+/*
+	std::vector<ListViewItemSortPosition> positions;
+	CL_ListViewItem root = userlist->get_document_item();
+	for (CL_ListViewItem cur = root.get_first_child(); !cur.is_null(); cur = cur.get_next_sibling())
+	{
+		ListViewItemSortPosition p;
+		p.item = cur;
+		p.text = cur.get_column("nick").get_text();
+		positions.push_back(p);
+	}
+
+	std::stable_sort(positions.begin(), positions.end());
+
+	root.remove_children();
+	for (size_t i = 0; i < positions.size(); i++)
+		root.append_child(positions[i].item);
+*/
 }
 
 CL_ListViewItem ChatView::find_user_item(const IRCNick &nick)
@@ -657,4 +661,10 @@ bool ChatView::is_active_view()
 		else
 			return false;
 	}
+}
+
+void ChatView::on_visibility_change(bool new_visibility)
+{
+	if (new_visibility)
+		inputbox->set_focus();
 }

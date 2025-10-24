@@ -53,7 +53,10 @@ public:
 		access_read  = 1,
 
 		/// \brief Generic write access.
-		access_write = 2
+		access_write = 2,
+
+		/// \brief Generic read write access.
+		access_read_write = access_read | access_write
 	};
 
 	/// \brief File sharing flags.
@@ -108,22 +111,30 @@ public:
 	/// \brief Constructs a file object.
 	CL_File();
 
+	/// \brief Constructs a file object read only
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
+	CL_File(
+		const CL_String &filename);
+
 	/// \brief Constructs a file object.
-	/** CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called*/
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
 	CL_File(
 		const CL_String &filename,
-		OpenMode mode = open_existing,
-		unsigned int access = access_read | access_write,
+		OpenMode mode,
+		unsigned int access,
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 
 	/// \brief Constructs a file object.
-	/** CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called*/
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
 	CL_File(
 		const CL_String &filename,
 		OpenMode mode,
 		const CL_SecurityDescriptor &permissions,
-		unsigned int access = access_read | access_write,
+		unsigned int access,
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 
@@ -142,22 +153,30 @@ public:
 /// \{
 
 public:
-	/// \brief Opens a file.
-	/** CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called*/
+	/// \brief Opens a file read only.
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
+	bool open(
+		const CL_String &filename);
+
+	/// \brief Opens a file
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
 	bool open(
 		const CL_String &filename,
-		OpenMode mode = open_existing,
-		unsigned int access = access_read | access_write,
+		OpenMode mode,
+		unsigned int access,
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 
 	/// \brief Opens a file.
-	/** CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called*/
+	///
+	/// CL_PathHelp::normalize(filename, CL_PathHelp::path_type_file) is called
 	bool open(
 		const CL_String &filename,
 		OpenMode mode,
 		const CL_SecurityDescriptor &permissions,
-		unsigned int access = access_read | access_write,
+		unsigned int access,
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 

@@ -39,10 +39,10 @@ public:
 
 	void destroy();
 
-	void filter(int **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels);
 
 private:
-	int *buffer[2];
+	float *buffer[2];
 	int buffer_size;
 	int pos;
 };

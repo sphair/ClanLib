@@ -52,15 +52,42 @@ class CL_GUIComponent_Impl;
 class CL_InputEvent;
 class CL_InputState;
 class CL_Font;
+class CL_GUITopLevelWindow_Alive;
 
 class CL_GUITopLevelWindow
 {
 public:
+	CL_GUITopLevelWindow() : alive(new int) {}
+
 	CL_GUIComponent *component;
 	CL_GUIComponent *focused_component;
 	CL_GUIComponent *owner;
 	CL_GUIComponent *proximity_component;
 	std::vector<CL_Rect> update_regions;
+private:
+	CL_SharedPtr<int> alive;	// Shared Pointer, used to determine if this class is active
+	friend class CL_GUITopLevelWindow_Alive;
+};
+
+/// Helper class, used to determine when a top level window has been destroyed
+class CL_GUITopLevelWindow_Alive
+{
+/// \name Construction
+/// \{
+public:
+	/// \brief Creates a alive object
+	///
+	/// \param component = The component (NULL or a valid component)
+	CL_GUITopLevelWindow_Alive(CL_GUITopLevelWindow *window);
+
+public:
+	/// \brief Determines if the component is destroyed
+	///
+	/// \return true if destroyed
+	bool is_null() const;
+
+private:
+	CL_WeakPtr<int> window_alive;
 };
 
 class CL_GUIManager_Impl
@@ -90,10 +117,8 @@ public:
 	CL_Font get_registered_font(const CL_FontDescription &desc);
 
 	std::vector<CL_GUITopLevelWindow *> root_components;
-	std::vector<CL_GUIMessage> message_queue;
-	CL_Mutex message_queue_mutex;
-	CL_Callback_1<bool, CL_GUIMessage &> func_filter_message;
-	CL_Callback_2<int, CL_AcceleratorTable &, bool> func_exec_handler;
+	CL_Signal_v1<CL_GUIMessage &> sig_filter_message;
+	CL_Callback_1<int, bool> func_exec_handler;
 	CL_CSSDocument css_document;
 	CL_GUIComponent *mouse_capture_component;
 	CL_GUIComponent *mouse_over_component;
@@ -116,14 +141,12 @@ public:
 /// \name Operations
 /// \{
 public:
-	void add_component(CL_GUIComponent *component, CL_GUIComponent *owner, CL_GUITopLevelDescription desc, bool temporary);
+	void add_component(CL_GUIComponent *component, CL_GUIComponent *owner, CL_GUITopLevelDescription desc);
 	void remove_component(CL_GUIComponent_Impl *component_impl);
 	void gain_focus(CL_GUIComponent *component);
 	void loose_focus(CL_GUIComponent *component);
 	void set_enabled(CL_GUIComponent *component, bool enable);
-	void post_message(const CL_GUIMessage &message);
-	void send_message(CL_GUIMessage &message);
-	void check_for_new_messages();
+	void dispatch_message(CL_GUIMessage &message);
 
 	std::vector<CL_CSSRuleSet> &get_rulesets(const CL_StringRef &element_name) const;
 	void reset_rulesets();
@@ -133,6 +156,8 @@ public:
 	bool is_constant_repaint_enabled() const;
 	bool is_constant_repaint_enabled(CL_GUIComponent *component) const;
 	void invalidate_constant_repaint_components();
+
+	void process_standard_gui_keys(CL_GUIMessage &message);
 
 /// \}
 /// \name Implementation

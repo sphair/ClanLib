@@ -99,7 +99,7 @@ CL_DisplayWindow window(description);
 <p>The OS windowing system communicates with the application and its window
 by sending it messages via a message queue.  In order to process these
 messages, a ClanLib application needs to call <span
-class="code">CL_DisplayMessageQueue::process()</span>.  This function then
+class="code">CL_KeepAlive::process()</span>.  This function then
 reads and handles the messages, updating the input contexts and emiting
 signals when the window is resized and so on.</p>
 
@@ -118,8 +118,7 @@ while (ic.get_keyboard().get_keycode(CL_KEY_ESCAPE) == false)
 	draw_gfx(gc);
 	handle_input(ic);
 	window.flip();
-	if (CL_DisplayMessageQueue::has_message())
-		CL_DisplayMessageQueue::process();
+	CL_KeepAlive::process();
 	CL_System::sleep(10);
 }
 </pre>

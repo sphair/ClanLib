@@ -16,7 +16,7 @@ public:
 // Operations
 public:
 	virtual void draw() {};
-	virtual bool update(float timeElapsed) { return false; }
+	virtual bool update(int timeElapsed_ms) { return false; }
 	virtual bool hitCheck(CL_CollisionOutline *outline, GameObject *object) { return false; }
 	
 protected:

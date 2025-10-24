@@ -26,9 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
+#include "precomp.h"
 #include "app.h"
 #include "GUI.h"
 
@@ -41,15 +39,8 @@ int App::start(const std::vector<CL_String> &args)
 {
 	try
 	{
-		CL_DisplayWindowDescription win_desc;
-		win_desc.set_allow_resize(true);
-		win_desc.set_title("GUI Example Application");
-		win_desc.set_size(CL_Size( 1100, 900 ), false);
+		create_window();
 
-		CL_DisplayWindow window(win_desc);
-		window_ptr = &window;
-		CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-		CL_Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 		GUI gui(this);
 
@@ -59,26 +50,11 @@ int App::start(const std::vector<CL_String> &args)
 				break;
 		}
 	}
-	catch(CL_Exception exception)
+	catch(CL_Exception &exception)
 	{
 		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console", 80, 100);
-
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
-
-		// Display the stack trace (if available)
-		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		size_t size = stacktrace.size();
-		if (size > 0)
-		{
-			CL_Console::write_line("Stack Trace:");
-			for (size_t cnt=0; cnt < size; cnt++)
-			{
-				CL_Console::write_line(stacktrace[cnt]);
-			}
-		}
-
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;
@@ -99,4 +75,18 @@ void App::on_input_up(const CL_InputEvent &key, const CL_InputState &state)
 void App::on_window_close()
 {
 	quit = true;
+}
+
+void App::create_window()
+{
+	CL_DisplayWindowDescription win_desc;
+	win_desc.set_allow_resize(true);
+	win_desc.set_title("GUI Example Application");
+	win_desc.set_size(CL_Size( 1100, 900 ), false);
+
+	CL_DisplayWindow new_window = CL_DisplayWindow(win_desc);	// Don't destroy the window first, so the shared gc data is not lost
+	window = new_window;
+	window_ptr = &window;
+	slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 }

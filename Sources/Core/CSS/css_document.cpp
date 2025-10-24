@@ -188,7 +188,7 @@ void CL_CSSDocument::load(const CL_String &fullname)
 {
 	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
 	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
-	CL_IODevice file = CL_File(path + filename, CL_File::open_existing);
+	CL_IODevice file = CL_File(path + filename);
 	impl->load(path, file);
 }
 

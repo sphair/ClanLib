@@ -257,7 +257,13 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 		CL_GUIMessage_Input input_msg = msg;
 		CL_InputEvent e = input_msg.get_event();
 
-		if (mouse_mode == cl_mouse_mode_normal)
+		if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_RIGHT)
+		{
+			int index = find_item_at(e.mouse_pos);
+			if (!func_mouse_right_up.is_null())
+				func_mouse_right_up.invoke(e.mouse_pos, index);
+		}
+		else if (mouse_mode == cl_mouse_mode_normal)
 		{
 			int index = find_item_at(e.mouse_pos);
 			if (index == -1)
@@ -322,12 +328,6 @@ void CL_ToolBar_Impl::on_process_message(CL_GUIMessage &msg)
 				}
 			}
 		}
-		else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_RIGHT)
-		{
-			int index = find_item_at(e.mouse_pos);
-			if (!func_mouse_right_up.is_null())
-				func_mouse_right_up.invoke(e.mouse_pos, index);
-		}
 	}
 	else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
 	{
@@ -379,7 +379,7 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 			item.impl->icon.draw(gc, icon_pos);
 		}
 
-		toolbar->set_cliprect(gc, item_content);
+		toolbar->push_cliprect(gc, item_content);
 
 		font.draw_text(gc,
 			item_content.left + item.impl->text_pos.x + pressed_offset.x,
@@ -387,7 +387,7 @@ void CL_ToolBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 			item.impl->text,
 			text_color);
 
-		toolbar->reset_cliprect(gc);
+		toolbar->pop_cliprect(gc);
 	}
 }
 
@@ -476,7 +476,7 @@ void CL_ToolBar_Impl::update_layout()
 
 	if (horizontal)
 	{
-		int x = 0;
+		int x = component_content.left;
 		int center_y = item_content.get_center().y;
 		int item_size = part_item_normal.get_preferred_width();
 
@@ -493,9 +493,9 @@ void CL_ToolBar_Impl::update_layout()
 
 			if (layout == layout_left)
 			{
-				item.impl->icon_pos = CL_Rect(CL_Point(0, center_y-size_icon.height/2), size_icon);
+				item.impl->icon_pos = CL_Rect(CL_Point(0, center_y-size_icon.height/2-item_content.top), size_icon);
 				item_content.right = item_content.left + item.impl->icon_pos.get_width() + text_gap + text_size.width;
-				item.impl->text_pos = CL_Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(gc, font, item_content).baseline);
+				item.impl->text_pos = CL_Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(gc, font, item_content).baseline-item_content.top);
 			}
 			else if (layout == layout_center)
 			{
@@ -514,7 +514,7 @@ void CL_ToolBar_Impl::update_layout()
 	}
 	else
 	{
-		int y = 0;
+		int y = component_content.top;
 		int center_x = item_content.get_center().x;
 		int size_item = part_item_normal.get_preferred_height();
 

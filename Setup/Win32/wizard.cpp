@@ -121,11 +121,6 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
 			(LPBYTE) &include_x64, sizeof(DWORD));
 
-		DWORD include_sdl = (page_target.include_sdl ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeSDL"), 0, REG_DWORD,
-			(LPBYTE) &include_sdl, sizeof(DWORD));
-
 		DWORD include_gl1 = (page_target.include_gl1 ? 1 : 0);
 		RegSetValueEx(
 			hKey, TEXT("IncludeGL1"), 0, REG_DWORD,
@@ -134,7 +129,7 @@ BOOL Wizard::finish()
 		RegCloseKey(hKey);
 	}
 
-	Workspace workspace = create_workspace(page_target.include_sdl, page_target.include_gl1);
+	Workspace workspace = create_workspace(page_target.include_gl1);
 
 	if (page_target.target_version == 600)
 	{
@@ -162,7 +157,7 @@ BOOL Wizard::finish()
 /////////////////////////////////////////////////////////////////////////////
 // Workspace creation:
 
-Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_gl1)
+Workspace Wizard::create_workspace(bool include_target_gl1)
 {
 	Workspace workspace;
 	workspace.input_lib_dir = text_to_local8(page_system.path_input_lib);
@@ -274,15 +269,6 @@ Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_
 		libs_list_debug,
 		defines_list);
 
-	Project clanSDL(
-		"SDL",
-		"clanSDL",
-		"sdl.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug,
-		defines_list);
-
 	Project clanGL1(
 		"GL1",
 		"clanGL1",
@@ -292,7 +278,7 @@ Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_
 		libs_list_debug,
 		defines_list);
 
-	Project clanD3D9(
+/*	Project clanD3D9(
 		"D3D9",
 		"clanD3D9",
 		"d3d9.h",
@@ -309,7 +295,7 @@ Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_
 		libs_list_release,
 		libs_list_debug,
 		defines_list);
-
+*/
 	Project clanGDI(
 		"GDI",
 		"clanGDI",
@@ -357,12 +343,9 @@ Workspace Wizard::create_workspace(bool include_target_sdl, bool include_target_
 	workspace.projects.push_back(clanDisplay);
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
-	workspace.projects.push_back(clanD3D9);
-	workspace.projects.push_back(clanD3D10);
+//	workspace.projects.push_back(clanD3D9);
+//	workspace.projects.push_back(clanD3D10);
 	workspace.projects.push_back(clanGDI);
-
-	if (include_target_sdl)
-		workspace.projects.push_back(clanSDL);
 
 	if (include_target_gl1)
 		workspace.projects.push_back(clanGL1);

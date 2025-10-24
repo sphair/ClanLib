@@ -52,7 +52,7 @@ public:
 
 	~CL_InputDeviceProvider_X11Mouse();
 
-	void destroy() { /* do not delete this here. Handled by X11Window. */ }
+	void destroy() { delete this; }
 
 
 /// \}
@@ -127,6 +127,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	CL_Signal_v1<const CL_InputEvent &> *sig_provider_event;
 
 	bool key_states[32];

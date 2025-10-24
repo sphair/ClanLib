@@ -89,9 +89,6 @@ public:
 private:
 	CL_SharedPtr<CL_HTTPRequestHandler_Impl> impl;
 
-	friend class CL_HTTPServer;
-
-	friend class CL_HTTPServer_Impl;
 /// \}
 };
 

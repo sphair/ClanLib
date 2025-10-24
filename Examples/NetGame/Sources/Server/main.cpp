@@ -22,16 +22,10 @@ int main(int, char**)
 	catch (CL_Exception e)
 	{
 #ifdef WIN32
-		std::vector<CL_String> stack_trace = e.get_stack_trace();
-		CL_String text = e.message + "\r\n";
-		for (unsigned int i = 0; i < stack_trace.size(); i++)
-			text += cl_format("\r\n#%1 %2", i, stack_trace[i]);
-
-		MessageBox(0, text.c_str(), TEXT("Unhandled Exception"), MB_OK);
+		MessageBox(0, e.get_message_and_stack_trace().c_str(), TEXT("Unhandled Exception"), MB_OK);	
 #else
-		CL_Console::write_line("Unhandled exception: %1", e.message);
+		CL_Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
 #endif
-
 		return 1;
 	}
 }

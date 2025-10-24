@@ -129,8 +129,6 @@ protected:
 
 	CL_SharedPtr<CL_DomNamedNodeMap_Generic> impl;
 
-	friend class CL_DomDocument;
-
 	friend class CL_DomNode;
 /// \}
 };

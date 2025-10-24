@@ -63,6 +63,9 @@ in the framework.</p>
 <h3>Focus switching details</h3>
 
 <ul>
+	<li>Tab order is controlled by the component tree and the FocusPolicy
+	of the individual components. The focus moving order is depth-first iteration of
+	the component tree.</li>
 
 	<li>If a child component has focus and is about to be made hidden,
 	CL_GUIComponent::focus_next() is called before making it
@@ -72,14 +75,28 @@ in the framework.</p>
 	component after focus_next(), the focus component is set to
 	null</li>
 	
-	<li>If the current focus component is null, and a component with a
-	tab order index is made visible, then the component will get the
-	focus. Otherwise the focus will remain null</li>
+	<li>If the current focus component is null, and a component that accepts focus
+	is made visible, the shown component will get the focus. Otherwise the focus 
+	will remain null</li>
 	
 	<li>If &lt;tab&gt;, &lt;alt-tab&gt; or arrow keys reach the dialog
 	input handler, the messages are translated into focus_next() or
-	focus_previous() calls on the currently focused component</li>
-</ul>	
+	focus_previous() calls on the currently focused component.
+
+	<li>If FocusPolicy of the currently focused component is focus_group, all 
+	components with the same group-name -attribute will be skipped over</li>
+
+	<li>If FocusPolicy of the component to be focused is focus_group, the focus is
+	set on the selected component in the group. If no component in the group is set as selected,
+	normal focus changing rules apply.</li>
+	
+	<li>Focus indication (dashed line surrounding text) is drawn on the focused
+	component only after the keyboard has been used to navigate the dialog. Otherwise it
+	is not drawn.</li>
+	
+	<li>Focusable components receive focus on mouse clicks after keyboard 
+	navigation has been used.</li>
+</ul>
 
 <h3>Dialog input handler details</h3>
 <ul>

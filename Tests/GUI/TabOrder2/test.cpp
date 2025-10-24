@@ -32,22 +32,17 @@ public:
 			CL_Window window(&gui, win_desc);
 			window.func_close().set(this, &App::on_close, &window);
 			
-			window.set_tab_order_controller(true);
-			
 			CL_LineEdit lineedit(&window);
 			lineedit.set_geometry(CL_RectPS(300,300,100,21));
-			lineedit.set_tab_order(0);
 
 			CL_PushButton button(&window);
 			button.set_geometry(CL_RectPS(640-10-80-10-80, 480-10-21, 80, 21));
 			button.set_text("Ok");
-			button.set_tab_order(1);
 			button.set_default(true);
 			
 			CL_PushButton button2(&window);
 			button2.set_geometry(CL_RectPS(640-10-80, 480-10-21, 80, 21));
 			button2.set_text("Cancel");
-			button2.set_tab_order(2); 
 			
 			gui.exec();
 		}
@@ -66,11 +61,11 @@ public:
 		label->set_text("You clicked " + button->get_text());
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
-
 };
 
 // This is the Program class that is called by CL_ClanApplication

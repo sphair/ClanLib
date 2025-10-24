@@ -113,8 +113,8 @@ public:
 		/// \brief Draw offset
 		CL_Point offset;
 
-		/// \brief Animation delay
-		float delay;
+		/// \brief Animation delay (in milliseconds)
+		int delay_ms;
 	};
 
 /// \}
@@ -139,15 +139,16 @@ public:
 	CL_Origin translation_origin;
 	CL_Origin rotation_origin;
 
-	short current_frame;
-	short delta_frame;
+	int current_frame;
+	int delta_frame;
 
-	float update_time;
-	float last_time;
+	int update_time_ms;
+	unsigned int last_time_ms;
 
 	int id;
 
 	bool finished;
+	bool looping;
 	bool play_loop;
 	bool play_backward;
 	bool play_pingpong;
@@ -174,7 +175,7 @@ public:
 		return (finished == false || show_on_finish != CL_Sprite::show_blank) && frames.size() > 0;
 	}
 
-	float calc_time_elapsed();
+	int calc_time_elapsed();
 
 	void create_textures(CL_GraphicContext &gc, const CL_SpriteDescription &description);
 

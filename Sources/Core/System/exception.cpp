@@ -30,6 +30,7 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/System/system.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Exception Construction:
@@ -46,8 +47,9 @@ CL_Exception::CL_Exception(const CL_String &message) : message(message)
 
 const char* CL_Exception::what() const throw()
 {
-	CL_String8 message8 = CL_StringHelp::text_to_local8(message);
-	return message8.c_str();
+	// Note, buffer is mutable
+	buffer = CL_StringHelp::text_to_local8(message);
+	return buffer.c_str();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,6 +58,22 @@ const char* CL_Exception::what() const throw()
 std::vector<CL_String> CL_Exception::get_stack_trace()
 {
 	return CL_System::get_stack_frames_text(frames, num_frames);
+}
+
+CL_String CL_Exception::get_message_and_stack_trace()
+{
+	std::vector<CL_String> stack_trace = get_stack_trace();
+	CL_String text = message;
+	for (size_t i = 0; i < stack_trace.size(); i++)
+	{
+	#ifdef WIN32
+		text += cl_format(cl_text("\r\n#%1 %2"), (int)i, stack_trace[i]);
+	#else
+		text += cl_format(cl_text("\n#%1 %2"), (int)i, stack_trace[i]);
+	#endif
+	}
+
+	return text;
 }
 
 /////////////////////////////////////////////////////////////////////////////

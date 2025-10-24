@@ -30,9 +30,9 @@
 #include "API/Sound/soundoutput_description.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SoundOutput_Description_Generic:
+// CL_SoundOutput_Description_Impl:
 
-class CL_SoundOutput_Description_Generic
+class CL_SoundOutput_Description_Impl
 {
 //! Attributes:
 public:
@@ -44,13 +44,13 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Description construction:
 
-CL_SoundOutput_Description::CL_SoundOutput_Description() : impl(new CL_SoundOutput_Description_Generic)
+CL_SoundOutput_Description::CL_SoundOutput_Description() : impl(new CL_SoundOutput_Description_Impl)
 {
 	impl->mixing_frequency = 44100;
 	impl->mixing_latency = 50;
 }
 
-CL_SoundOutput_Description::CL_SoundOutput_Description(const CL_SoundOutput_Description &copy) : impl(new CL_SoundOutput_Description_Generic)
+CL_SoundOutput_Description::CL_SoundOutput_Description(const CL_SoundOutput_Description &copy) : impl(new CL_SoundOutput_Description_Impl)
 {
 	*impl = *copy.impl;
 }

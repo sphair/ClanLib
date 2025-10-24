@@ -47,7 +47,7 @@ public:
 	bool hitCheck(int x, int y);
 	
 	virtual void draw();
-	virtual bool update(float timeElapsed);
+	virtual bool update(int timeElapsed_ms);
 
 // Implementation:
 private:

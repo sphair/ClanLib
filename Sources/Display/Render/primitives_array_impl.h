@@ -39,8 +39,8 @@
 class CL_PrimitivesArray_Impl : public CL_PrimitivesArrayData
 {
 public:
-	CL_PrimitivesArray_Impl(int max_attributes)
-	: attributes_map(0), max_attributes(max_attributes)
+	CL_PrimitivesArray_Impl(int max_attributes, CL_WeakPtr<CL_GraphicContext_Impl> &gc)
+	: attributes_map(0), max_attributes(max_attributes), gc(gc)
 	{
 		num_attributes = 0;
 		attribute_indexes = new int[max_attributes];
@@ -84,6 +84,7 @@ public:
 
 	int *attributes_map;
 	int max_attributes;
+	CL_WeakPtr<CL_GraphicContext_Impl> gc;
 };
 
 

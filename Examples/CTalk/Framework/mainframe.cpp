@@ -15,7 +15,7 @@ MainFrame::MainFrame(CL_GUIManager *gui, CL_ResourceManager *resources)
 : CL_Window(gui, get_window_description()), resources(resources), document(0), workspace(0)
 {
 	CL_DisplayWindow dispwindow = get_display_window();
-	dispwindow.set_large_icon(CL_PNGProvider::load("carambola-32.png"));
+	dispwindow.set_large_icon(CL_PNGProvider::load("carambola-256.png"));
 	dispwindow.set_small_icon(CL_PNGProvider::load("carambola-16.png"));
 
 	slots.connect(dispwindow.sig_window_minimized(), this, &MainFrame::on_minimized);
@@ -28,7 +28,7 @@ MainFrame::MainFrame(CL_GUIManager *gui, CL_ResourceManager *resources)
 
 	func_resized().set(this, &MainFrame::on_resized);
 	func_close().set(this, &MainFrame::on_close);
-	func_activation_gained().set(this, &MainFrame::on_activation_gained);
+	func_activated().set(this, &MainFrame::on_activation_gained);
 
 	document.reset(new Document);
 
@@ -157,7 +157,7 @@ void MainFrame::flag_activity(View *view)
 void MainFrame::flash_window(View * view)
 {
 	CL_DisplayWindow dispwindow = get_display_window();
-	if(dispwindow.has_focus() == false || get_active_view() != view)
+	if (dispwindow.has_focus() == false)
 	{
 		#ifdef WIN32
 		HWND hwnd = dispwindow.get_hwnd();
@@ -202,15 +202,16 @@ void MainFrame::connect_to_server(XMLSettings &connection)
 
 	IRCSession *session = document->create_session(connection_name);
 	slots.connect(session->cb_joined, this, &MainFrame::on_connection_join, session);
-	slots.connect(session->cb_private_text, this, &MainFrame::on_connection_private_text, session);
+	slots.connect(session->cb_text, this, &MainFrame::on_connection_text, session);
 	session->set_perform_list(perform);
 	session->connect(server_name, "6667", nick, username, name);
 	add_view(IRCEntity(), session);
 }
 
-void MainFrame::on_close()
+bool MainFrame::on_close()
 {
 	exit_with_code(0);
+	return true;
 }
 
 void MainFrame::on_view_close(View *view)
@@ -235,9 +236,10 @@ void MainFrame::on_minimized()
 	set_visible(false);
 }
 
-void MainFrame::on_activation_gained()
+bool MainFrame::on_activation_gained()
 {
 	notification_icon.end_flash();
+	return true;
 }
 
 void MainFrame::on_connection_join(const IRCChannel &channel, IRCSession *session)
@@ -246,9 +248,9 @@ void MainFrame::on_connection_join(const IRCChannel &channel, IRCSession *sessio
 		add_view(channel, session);
 }
 
-void MainFrame::on_connection_private_text(const IRCNick &nick, const IRCText &text, IRCSession *session)
+void MainFrame::on_connection_text(const IRCEntity &room, const IRCNick &nick, const IRCText &text, IRCSession *session)
 {
-	if (find_view(nick) == 0 && !text.is_ctcp())
+	if (!room.is_channel() && find_view(nick) == 0 && !text.is_ctcp())
 	{
 		add_view(nick, session);
 		ChatView *view = find_view(nick);

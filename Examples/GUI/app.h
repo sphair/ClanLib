@@ -41,8 +41,11 @@ public:
 private:
 	void on_input_up(const CL_InputEvent &key, const CL_InputState &state);
 	void on_window_close();
-
+	void create_window();
 private:
 	bool quit;
+	CL_Slot slot_quit;
+	CL_Slot slot_input_up;
+	CL_DisplayWindow window;
 	CL_DisplayWindow *window_ptr;
 };

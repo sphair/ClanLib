@@ -66,6 +66,7 @@ CL_ListView::CL_ListView(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_ListView_Impl)
 {
 	set_type_name(cl_text("listview"));
+	set_focus_policy(focus_local);
 	impl->listview = this;
 
 	impl->renderer = new CL_ListViewRenderer(this);
@@ -302,11 +303,26 @@ void CL_ListView_Impl::on_process_message(CL_GUIMessage &msg)
 	{
 		CL_GUIMessage_Input input = msg;
 		CL_InputEvent input_event = input.get_event();
+
 		if (input_event.type == CL_InputEvent::pointer_moved)
+		{
 			on_mouse_move(input, input_event);
+		}
 		else if (input_event.type == CL_InputEvent::pressed && input_event.id == CL_MOUSE_LEFT)
 		{
 			on_mouse_lbutton_down(input, input_event);
+			msg.set_consumed();
+		}
+		else if (input_event.type == CL_InputEvent::pressed && input_event.id == CL_MOUSE_WHEEL_UP)
+		{
+			scrollbar->set_position(scrollbar->get_position()-scrollbar->get_line_step());
+			on_scroll();
+			msg.set_consumed();
+		}
+		else if (input_event.type == CL_InputEvent::pressed && input_event.id == CL_MOUSE_WHEEL_DOWN)
+		{
+			scrollbar->set_position(scrollbar->get_position() + scrollbar->get_line_step());
+			on_scroll();
 			msg.set_consumed();
 		}
 		else if (input_event.type == CL_InputEvent::released && input_event.id == CL_MOUSE_LEFT)
@@ -377,8 +393,8 @@ bool CL_ListView_Impl::on_keyboard_pressed(CL_InputEvent &event)
 		// Ensure we have a selected item.
 		if (selection.get_first().is_null())
 		{
-			CL_ListViewItem list_view = document_item.get_first_child();
-			listview->set_selected(list_view, true);
+			CL_ListViewItem item = document_item.get_first_child();
+			listview->set_selected(item, true);
 		}
 
 		CL_ListViewSelectedItem sel = selection.get_last();
@@ -476,6 +492,62 @@ bool CL_ListView_Impl::on_keyboard_pressed(CL_InputEvent &event)
 				edit_item(*it);
 		}
 
+	}
+	else if (event.type == CL_InputEvent::pressed && event.id == CL_KEY_HOME)
+	{
+		scrollbar->set_position(scrollbar->get_min());
+		on_scroll();
+		std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+		if (!show_items.empty())
+			listview->set_selected(show_items[0].item, true);
+	}
+	else if (event.type == CL_InputEvent::pressed && event.id == CL_KEY_END)
+	{
+		scrollbar->set_position(scrollbar->get_max());
+		on_scroll();
+		std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+		if (!show_items.empty())
+			listview->set_selected(show_items.back().item, true);
+	}
+	else if (event.type == CL_InputEvent::pressed && event.id == CL_KEY_PRIOR)
+	{
+		// PageUp - selects the first item of the visible items if another item is selected.
+		// If first item already selected, do a page up.
+
+		std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+		if (show_items.size() > 1)
+		{
+			if (selection.get_first().get_item() != show_items[0].item)
+				listview->set_selected(show_items[0].item, true);
+			else
+			{
+				scrollbar->set_position(scrollbar->get_position()-scrollbar->get_page_step());
+				on_scroll();
+				std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+				if (!show_items.empty())
+					listview->set_selected(show_items[0].item, true);
+			}
+		}
+	}
+	else if (event.type == CL_InputEvent::pressed && event.id == CL_KEY_NEXT)
+	{
+		// PageDown - selects the last item of the visible items if last item is selected.
+		// If last item is already selected, do a page down.
+		
+		std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+		if (show_items.size() > 1)
+		{
+			if (selection.get_first().get_item() != show_items.back().item)
+				listview->set_selected(show_items.back().item, true);
+			else
+			{
+				scrollbar->set_position(scrollbar->get_position() + scrollbar->get_page_step());
+				on_scroll();
+				std::vector<ListViewShownItem> show_items = layout->get_shown_items();
+				if (!show_items.empty())
+					listview->set_selected(show_items.back().item, true);
+			}
+		}
 	}
 	else
 	{
@@ -666,14 +738,14 @@ void CL_ListView_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_re
 	part_component.render_box(gc, rect.get_size(), update_rect);
 	part_columns_bg.render_box(gc, rect_columns, update_rect);
 
-	listview->set_cliprect(gc, rect_columns_content);
+	listview->push_cliprect(gc, rect_columns_content);
 
 	std::vector<ListViewShownItem> &items = layout->get_shown_items();
 	std::vector<ListViewColumn> &columns = layout->get_columns();
 	std::vector<ListViewRow> &rows = layout->get_rows();
 	renderer->render(columns, rows, items, update_rect);
 
-	listview->reset_cliprect(gc);
+	listview->pop_cliprect(gc);
 }
 
 void CL_ListView_Impl::create_components()
@@ -758,6 +830,7 @@ void CL_ListView_Impl::update_scrollbar()
 	int total_height = layout->get_total_size().height;
 	bool visible = total_height > rect_columns_content.get_height();
 	scrollbar->calculate_ranges(rect_columns_content.get_height(), total_height);
+	scrollbar->set_line_step(layout->get_row_height());
 	scrollbar->set_visible(visible);
 	if (visible == false)
 		layout->set_scroll_offset(CL_Point(0, 0));

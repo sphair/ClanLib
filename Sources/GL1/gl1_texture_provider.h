@@ -131,6 +131,7 @@ public:
 
 	void set_min_filter(CL_TextureFilter filter);
 	void set_mag_filter(CL_TextureFilter filter);
+	void set_max_anisotropy(float v);
 	void set_depth_mode(CL_TextureDepthMode depth_mode);
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);
 
@@ -158,7 +159,6 @@ private:
 	CLenum to_enum(CL_TextureCompareMode mode);
 	CLenum to_enum(CL_TextureDepthMode mode);
 
-	CL_GL1GraphicContextProvider *gc_provider;
 	int width, height, depth;
 	int pot_width, pot_height, pot_depth;
 	float pot_ratio_width, pot_ratio_height, pot_ratio_depth;

@@ -95,7 +95,7 @@ void CL_DCCDownload_Generic::thread_main()
 			
 			int total_read = 0;
 
-			CL_File outputfile(filename, CL_File::create_always);
+			CL_File outputfile(filename, CL_File::create_always, CL_File::access_read_write);
 			char buffer[64*1024];
 			while (true)
 			{

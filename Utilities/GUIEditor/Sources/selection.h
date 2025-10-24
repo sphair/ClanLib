@@ -26,8 +26,7 @@
 **    Harry Storbacka
 */
 
-#ifndef header_gui_editor_selection
-#define header_gui_editor_selection
+#pragma once
 
 #include "selected_object.h"
 
@@ -43,15 +42,12 @@ public:
 //! Attributes:
 public:
 	bool empty();
-
 	std::vector<HolderComponent*> get_selection();
 
 //! Operations:
 public:
 	void add_holder(HolderComponent *holder);
-
 	void clear();
-
 	void remove_holder(HolderComponent *holder);
 
 //! Events:
@@ -63,5 +59,3 @@ private:
 	std::vector<HolderComponent*> selected_holders;
 	CL_Signal_v0 signal_selection_changed;
 };
-
-#endif

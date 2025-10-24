@@ -31,6 +31,7 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
@@ -49,9 +50,8 @@
 class CL_TabHeader_Impl
 {
 public:
-	CL_TabHeader_Impl() : first_tab_x_offset(0)
+	CL_TabHeader_Impl() : first_tab_x_offset(0), selected_page(-1)
 	{
-		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
 		prop_first_tab_x_offset = CL_GUIThemePartProperty(CssStr::first_tab_x_offset, cl_text("0"));
 	}
 
@@ -72,14 +72,14 @@ public:
 	void update_handle_rects();
 
 	CL_GUIThemePart part_background;
-	CL_GUIThemePartProperty prop_text_color;
 	CL_GUIThemePartProperty prop_first_tab_x_offset;
+	CL_GUIThemePart part_focus;
 	std::vector<Handle> tabs;
 	CL_Callback_v1<CL_TabPage*> func_page_selected;
 	CL_TabHeader *component;
 	CL_Colorf text_color;
-	CL_Font font;
 	int first_tab_x_offset;
+	int selected_page;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,7 @@ CL_TabHeader::CL_TabHeader(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_TabHeader_Impl)
 {
 	set_type_name(CssStr::Tab::Header::type_name);
+	set_focus_policy(focus_local);
 	impl->component = this;
 	func_process_message().set(impl.get(), &CL_TabHeader_Impl::on_process_message);
 	func_render().set(impl.get(), &CL_TabHeader_Impl::on_render);
@@ -146,10 +147,10 @@ void CL_TabHeader_Impl::update_handle_rects()
 	{
 		int tab_width = tabs[i].part.get_preferred_width();
 
-		int text_size = font.get_text_size(gc, tabs[i].label).width;
+		int text_size = tabs[i].part.get_text_size(gc, tabs[i].label).width;
 
 		// Apply padding-left, padding-right css values:
-		CL_Rect render_rect = tabs[i].part.get_render_box(font.get_text_size(gc, tabs[i].label));
+		CL_Rect render_rect = tabs[i].part.get_render_box(tabs[i].part.get_text_size(gc, tabs[i].label));
 
 		if (render_rect.get_width() > tab_width)
 		{
@@ -238,6 +239,7 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 							func_page_selected.invoke((*it).tab_page);
 					}
 				}
+				msg.set_consumed();
 			}
 			else if (e.type == CL_InputEvent::pointer_moved)
 			{
@@ -252,14 +254,51 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 						(*it).part.set_state(CssStr::hot, true);
 						(*it).part.set_state(CssStr::normal, false);
 						component->request_repaint();
+						msg.set_consumed();
 					}
 					else if ((*it).part.get_state(CssStr::hot))
 					{
 						(*it).part.set_state(CssStr::hot, false);
 						(*it).part.set_state(CssStr::normal, true);						
 						component->request_repaint();
+						msg.set_consumed();
 					}
 				}
+			}
+			else if (e.type == CL_InputEvent::pressed && e.id == CL_KEY_LEFT)
+			{
+				int next_page = selected_page - 1;
+				if (next_page < 0)
+					next_page = tabs.size()-1;
+
+				unselect_all();
+				select_page(next_page);
+
+				if (!func_page_selected.is_null())
+					func_page_selected.invoke(tabs[next_page].tab_page);
+
+				component->select_page(next_page);
+				msg.set_consumed();
+			}
+			else if (e.type == CL_InputEvent::pressed && e.id == CL_KEY_RIGHT)
+			{
+				int next_page = selected_page + 1;
+				if (next_page >= tabs.size())
+					next_page = 0;
+
+				unselect_all();
+				select_page(next_page);
+
+				if (!func_page_selected.is_null())
+					func_page_selected.invoke(tabs[next_page].tab_page);
+
+				component->request_repaint();
+				msg.set_consumed();
+			}
+			else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_UP || e.id == CL_KEY_DOWN))
+			{
+				// block focus switching with up/down when in tab header.
+				msg.set_consumed();
 			}
 		}
 		else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
@@ -276,39 +315,55 @@ void CL_TabHeader_Impl::on_process_message(CL_GUIMessage &msg)
 				component->request_repaint();
 			}
 		}
-
+		else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
+		{
+			CL_GUIMessage_FocusChange focus_msg = msg;
+			if (focus_msg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
+			{
+				part_background.set_state(CssStr::focused, true);
+				component->request_repaint();
+			}
+			else 
+			{
+				part_background.set_state(CssStr::focused, false);
+				component->request_repaint();
+			}
+			msg.set_consumed();
+		}
 	}
 }
 
 void CL_TabHeader_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_GUIThemePart part_component(component);
 	CL_Rect rect = component->get_geometry();
-	part_component.render_box(gc, rect, update_rect);
+	part_background.render_box(gc, rect, update_rect);
 
-	std::vector<Handle>::iterator it;
-	for (it = tabs.begin(); it != tabs.end(); ++it)
+	std::vector<Handle>::size_type i;
+	for (i = 0; i < tabs.size(); i++)
 	{
-		(*it).part.render_box(gc, (*it).rect, update_rect);
+		Handle &handle = tabs[i];
+		handle.part.render_box(gc, handle.rect, update_rect);
 
-		CL_Rect rect_handle_content = (*it).part.get_content_box((*it).rect);
+		CL_Rect rect_handle_content = handle.part.get_content_box(handle.rect);
 
-		CL_Size text_size = font.get_text_size(gc, (*it).label);
-		font.draw_text(gc,
-			rect_handle_content.left + rect_handle_content.get_width()/2 - text_size.width/2,
-			rect_handle_content.top + rect_handle_content.get_height()/2 + text_size.height/2 - 2,
-			(*it).label, text_color);
+		CL_Size text_size = handle.part.get_text_size(gc, handle.label);
+		handle.part.render_text(gc, handle.label, rect_handle_content, update_rect);
+
+		if (component->has_focus() && i == selected_page)
+		{
+			CL_Rect focus_rect = handle.rect;
+			focus_rect.shrink(2,2,2,2);
+			part_focus.render_box(gc, focus_rect, update_rect);
+		}
 	}
 }
 
 void CL_TabHeader_Impl::on_style_changed()
 {
 	part_background = CL_GUIThemePart(component);
+	part_focus = CL_GUIThemePart(component, CssStr::Tab::Header::part_focus);
 
-	text_color = part_background.get_property(prop_text_color);
 	first_tab_x_offset = part_background.get_property_int(prop_first_tab_x_offset);
-
-	font = part_background.get_font();
 }
 
 void CL_TabHeader_Impl::unselect_all()
@@ -322,8 +377,10 @@ void CL_TabHeader_Impl::unselect_all()
 	}
 }
 
-void CL_TabHeader_Impl::select_page( int index )
+void CL_TabHeader_Impl::select_page(int index)
 {
+	selected_page = index;
+
 	std::vector<Handle>::size_type i;
 	for (i = 0; i < tabs.size(); ++i)
 	{

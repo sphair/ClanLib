@@ -210,8 +210,8 @@ void TestApp::test_display_window(void)
 	CL_Console::write_line("   Function: CL_String get_clipboard_text() const");
 	window_1.set_clipboard_text(cl_text("Hello World"));
 
-//NOTE: This test will not work on linux, as the CL_DisplayMessageQueue::process() needs operating during is_clipboard_text_available()
-	CL_DisplayMessageQueue::process();
+//NOTE: This test will not work on linux, as the CL_KeepAlive::process() needs operating during is_clipboard_text_available()
+	CL_KeepAlive::process();
 	if (!window_2.is_clipboard_text_available()) fail();
 	CL_String text = window_2.get_clipboard_text();
 

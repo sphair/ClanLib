@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "combobox.h"
 #include "GUI.h"
 
@@ -47,7 +44,7 @@ ComboBox::ComboBox(GUI *gui) :
 	menu.insert_item("Item D");
 
 	combobox1 = new CL_ComboBox(this);
-	combobox1->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 10, CL_Size(128, 22)));
+	combobox1->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 10, CL_Size(128, 21)));
 	combobox1->set_text("Combo Box");
 	combobox1->set_editable(false);
 	combobox1->set_dropdown_height(128);
@@ -59,8 +56,6 @@ ComboBox::ComboBox(GUI *gui) :
 	combobox1->func_dropdown_closed().set(this, &ComboBox::on_dropdown_closed, combobox1);
 	combobox1->func_before_edit_changed().set(this, &ComboBox::on_before_edit_changed, combobox1);
 	combobox1->func_after_edit_changed().set(this, &ComboBox::on_after_edit_changed, combobox1);
-	combobox1->func_lineedit_unhandled_event().set(this, &ComboBox::on_lineedit_unhandled_event, combobox1);
-	combobox1->func_display_popup().set(this, &ComboBox::on_display_popup, combobox1);
 	combobox1->func_item_selected().set(this, &ComboBox::on_item_selected, combobox1);
 	combobox1->func_selection_changed().set(this, &ComboBox::on_selection_changed, combobox1);
 
@@ -80,12 +75,6 @@ ComboBox::ComboBox(GUI *gui) :
 	yoffset += gap;
 	info_after_edit_changed = new Info(gui, this);
 	info_after_edit_changed->set(xoffset, yoffset, "After Edit Changed");
-	yoffset += gap;
-	info_lineedit_unhandled_event = new Info(gui, this);
-	info_lineedit_unhandled_event->set(xoffset, yoffset, "Unhandled Event");
-	yoffset += gap;
-	info_display_popup = new Info(gui, this);
-	info_display_popup->set(xoffset, yoffset, "Display Popup");
 	yoffset += gap;
 	info_item_selected = new Info(gui, this);
 	info_item_selected->set(xoffset, yoffset, "Item Selected");
@@ -130,20 +119,6 @@ void ComboBox::on_before_edit_changed(CL_ComboBox *combobox)
 void ComboBox::on_after_edit_changed(CL_ComboBox *combobox)
 {
 	info_after_edit_changed->activate();
-}
-
-bool ComboBox::on_lineedit_unhandled_event(CL_InputEvent input_event, CL_ComboBox *combobox)
-{
-	info_lineedit_unhandled_event->activate();
-	return false;
-}
-
-void ComboBox::on_display_popup(CL_Rect rect, CL_ComboBox *combobox)
-{
-	CL_String string = cl_format(" (%1,%2 :%3,%4)", rect.left, rect.get_width(), rect.get_height());
-	info_display_popup->set_comment( string );
-
-	info_display_popup->activate();
 }
 
 void ComboBox::on_item_selected(int value, CL_ComboBox *combobox)

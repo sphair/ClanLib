@@ -34,11 +34,6 @@ CL_ClanApplication app(&Program::main);
 
 int Application::main(const std::vector<CL_String> &args)
 {
-	#ifdef _DEBUG
-	// Create a console window for text-output if not available
-	CL_ConsoleWindow console("ClanLib RTS Demo", 80, 1000); // 1000 allows a y-scrollbar to be present
-	#endif
-	
 	try
 	{		
 		// Create a window
@@ -57,26 +52,14 @@ int Application::main(const std::vector<CL_String> &args)
 		// Run the main loop
 		world.run();
 	}
-	catch (CL_Exception& exception)
+	catch(CL_Exception &exception)
 	{
-		CL_Console::write_line("Exception caught:");
-		CL_Console::write_line(exception.message);
-
-		// Display the stack trace (if available)
-		std::vector<CL_String> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			CL_Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				CL_Console::write_line(stacktrace[cnt]);
-			}
-		}
-
-		#ifdef _DEBUG
+		// Create a console window for text-output if not available
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
-		#endif
+
+		return -1;
 	}
 
 	return 0;

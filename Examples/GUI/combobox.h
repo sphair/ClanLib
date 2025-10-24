@@ -42,8 +42,6 @@ private:
 	void on_dropdown_closed(CL_ComboBox *combobox);
 	void on_before_edit_changed(CL_ComboBox *combobox);
 	void on_after_edit_changed(CL_ComboBox *combobox);
-	bool on_lineedit_unhandled_event(CL_InputEvent input_event, CL_ComboBox *combobox);
-	void on_display_popup(CL_Rect rect, CL_ComboBox *combobox);
 	void on_item_selected(int value, CL_ComboBox *combobox);
 	void on_selection_changed(int value, CL_ComboBox *combobox);
 
@@ -68,10 +66,6 @@ private:
 	Info *info_dropdown_closed;
 	Info *info_before_edit_changed;
 	Info *info_after_edit_changed;
-	Info *info_lineedit_unhandled_event;
-	Info *info_display_popup;
 	Info *info_item_selected;
 	Info *info_selection_changed;
-
 };
-

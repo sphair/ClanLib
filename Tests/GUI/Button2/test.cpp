@@ -76,8 +76,7 @@ public:
 			label->set_geometry(CL_Rect(10, 160, 330, 180));
 			label->set_text("Click the buttons");
 
-			CL_AcceleratorTable accel_table;
-			gui.exec(accel_table);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -93,9 +92,10 @@ public:
 		label->set_text("You clicked " + button->get_text());
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

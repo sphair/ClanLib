@@ -2,6 +2,8 @@
 #include "precomp.h"
 #include "application.h"
 #include "mainframe.h"
+#include "crash_reporter.h"
+#include "detect_hang.h"
 #include <iostream>
 #include <ClanLib/gdi.h>
 
@@ -13,6 +15,13 @@ public:
 	{
 		// Initialize ClanLib base components
 		CL_SetupCore setup_core;
+
+		#ifndef _DEBUG
+		CL_String appdata_dir = CL_Directory::get_appdata("ClanLib", "Carambola", "1.0");
+		CrashReporter crash_reporter(appdata_dir);
+		#endif
+
+		DetectHang detect_hang;
 
 		// Initialize the ClanLib display component
 		CL_SetupDisplay setup_display;
@@ -60,8 +69,11 @@ Application *Application::instance = 0;
 
 int Application::main(const std::vector<CL_String> &args)
 {
+	// In release mode we prefer to crash with a dump file
+#ifdef _DEBUG
 	try
 	{
+#endif
 		CL_ResourceManager local_resources("resources.xml");
 		CL_ResourceManager resources("../../Resources/GUIThemeAero/resources.xml");
 		local_resources.add_resources(resources);
@@ -75,19 +87,18 @@ int Application::main(const std::vector<CL_String> &args)
 
 		MainFrame mainframe(&gui, &resources);
 		gui.exec();
+#ifdef _DEBUG
 	}
-	catch (CL_Exception& exception)
+	catch(CL_Exception &exception)
 	{
-		// Create a console window for text output if not available
-		CL_ConsoleWindow console("Console");
-		CL_Console::write_line(exception.message);
-		std::vector<CL_String> trace = exception.get_stack_trace();
-		for (std::vector<CL_String>::size_type i = 0; i < trace.size(); i++)
-			CL_Console::write_line(trace[i]);
-
-		// Display console close message and wait for a key
+		// Create a console window for text-output if not available
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
+
+		return -1;
 	}
+#endif
 
 	return 0;
 }

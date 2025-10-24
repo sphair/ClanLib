@@ -110,3 +110,6 @@ public:
 	virtual void component_destroyed(CL_GUIComponent *component) = 0;
 /// \}
 };
+
+/// \}
+

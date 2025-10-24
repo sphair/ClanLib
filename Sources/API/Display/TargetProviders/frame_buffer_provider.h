@@ -63,7 +63,7 @@ public:
 	/// \return Size
 	virtual CL_Size get_attachment_size(int buffer_id) const = 0;
 
-	virtual std::vector<int> get_attachment_indexes() const = 0;
+	virtual const std::vector<int> &get_attachment_indexes() const = 0;
 
 /// \}
 /// \name Operations

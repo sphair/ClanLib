@@ -84,6 +84,11 @@ CL_Size CL_SpanLayout::get_size() const
 	return impl->get_size();
 }
 
+std::vector<CL_Rect> CL_SpanLayout::get_rect_by_id(int id) const
+{
+	return impl->get_rect_by_id(id);
+}
+
 void CL_SpanLayout::set_align(CL_SpanAlign align)
 {
 	impl->set_align(align);

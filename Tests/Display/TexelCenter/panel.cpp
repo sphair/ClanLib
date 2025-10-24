@@ -37,7 +37,7 @@ Panel::Panel(GUI *gui) : gui(gui)
 {
 	CL_GUITopLevelDescription window_desc;
 	window_desc.set_title("Information");
-	window_desc.set_position(CL_Rect(10, 20, CL_Size(280, 300)), false);
+	window_desc.set_position(CL_Rect(10, 20, CL_Size(300, 300)), false);
 	window = new CL_Window(&gui->get_gui(), window_desc);
 	window->set_draggable(true);
 
@@ -51,29 +51,36 @@ Panel::Panel(GUI *gui) : gui(gui)
 	radiobutton_sprite->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_sprite);
 
 	radiobutton_image = new CL_RadioButton(window);
-	radiobutton_image->set_geometry(CL_Rect(105, yoffset, CL_Size(64, 32)));
+	radiobutton_image->set_geometry(CL_Rect(85, yoffset, CL_Size(64, 32)));
 	radiobutton_image->set_text("CL_Image");
 	radiobutton_image->set_selected(false);
 	radiobutton_image->set_group_name("ImageType");
 	radiobutton_image->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_image);
 
 	radiobutton_texture = new CL_RadioButton(window);
-	radiobutton_texture->set_geometry(CL_Rect(195, yoffset, CL_Size(64, 32)));
+	radiobutton_texture->set_geometry(CL_Rect(155, yoffset, CL_Size(76, 32)));
 	radiobutton_texture->set_text("CL_Texture");
 	radiobutton_texture->set_selected(false);
 	radiobutton_texture->set_group_name("ImageType");
 	radiobutton_texture->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_texture);
 
+	radiobutton_font = new CL_RadioButton(window);
+	radiobutton_font->set_geometry(CL_Rect(235, yoffset, CL_Size(64, 32)));
+	radiobutton_font->set_text("CL_Font");
+	radiobutton_font->set_selected(false);
+	radiobutton_font->set_group_name("ImageType");
+	radiobutton_font->func_selected().set(this, &Panel::on_imagetype_selected, radiobutton_font);
+
 	yoffset += 30;
 
 	radiobutton_linear = new CL_RadioButton(window);
-	radiobutton_linear->set_geometry(CL_Rect(15, yoffset, CL_Size(64, 32)));
+	radiobutton_linear->set_geometry(CL_Rect(15, yoffset, CL_Size(80, 32)));
 	radiobutton_linear->set_text("cl_filter_linear");
 	radiobutton_linear->set_selected(true);
 	radiobutton_linear->set_group_name("FilterType");
 
 	radiobutton_nearest = new CL_RadioButton(window);
-	radiobutton_nearest->set_geometry(CL_Rect(105, yoffset, CL_Size(64, 32)));
+	radiobutton_nearest->set_geometry(CL_Rect(105, yoffset, CL_Size(100, 32)));
 	radiobutton_nearest->set_text("cl_filter_nearest");
 	radiobutton_nearest->set_selected(false);
 	radiobutton_nearest->set_group_name("FilterType");
@@ -83,6 +90,11 @@ Panel::Panel(GUI *gui) : gui(gui)
 	checkbox_outline = new CL_CheckBox(window);
 	checkbox_outline->set_geometry(CL_Rect(15, yoffset, CL_Size(150, 15)));
 	checkbox_outline->set_text("Outline Source Image");
+
+	checkbox_antialias = new CL_CheckBox(window);
+	checkbox_antialias->set_geometry(CL_Rect(155, yoffset, CL_Size(100, 15)));
+	checkbox_antialias->set_text("AntiAlias Font");
+	checkbox_antialias->set_enabled(false);
 
 	yoffset += 40;
 
@@ -222,6 +234,11 @@ bool Panel::is_image()
 	return radiobutton_image->is_selected();
 }
 
+bool Panel::is_font()
+{
+	return radiobutton_font->is_selected();
+}
+
 bool Panel::is_texture()
 {
 	return radiobutton_texture->is_selected();
@@ -240,6 +257,11 @@ bool Panel::is_nearest()
 bool Panel::is_outlined()
 {
 	return checkbox_outline->is_checked();
+}
+
+bool Panel::is_antialias()
+{
+	return checkbox_antialias->is_checked();
 }
 
 void Panel::on_slider_changed(CL_Slider *slider)
@@ -344,6 +366,8 @@ void Panel::on_imagetype_selected(CL_RadioButton *radiobutton)
 		radiobutton_nearest->set_enabled(true);
 		slider_texture_translate->set_enabled(false);;
 		spin_texture_translate->set_enabled(false);;
+		checkbox_outline->set_enabled(true);
+		checkbox_antialias->set_enabled(false);
 	}
 
 	if (radiobutton == radiobutton_texture)
@@ -352,7 +376,9 @@ void Panel::on_imagetype_selected(CL_RadioButton *radiobutton)
 		radiobutton_nearest->set_enabled(true);
 		slider_texture_translate->set_enabled(true);
 		spin_texture_translate->set_enabled(true);
-}
+		checkbox_outline->set_enabled(true);
+		checkbox_antialias->set_enabled(false);
+	}
 
 	if (radiobutton == radiobutton_image)
 	{
@@ -360,6 +386,17 @@ void Panel::on_imagetype_selected(CL_RadioButton *radiobutton)
 		radiobutton_nearest->set_enabled(false);
 		slider_texture_translate->set_enabled(false);;
 		spin_texture_translate->set_enabled(false);;
+		checkbox_outline->set_enabled(true);
+		checkbox_antialias->set_enabled(false);
 	}
 
+	if (radiobutton == radiobutton_font)
+	{
+		radiobutton_linear->set_enabled(false);
+		radiobutton_nearest->set_enabled(false);
+		slider_texture_translate->set_enabled(false);;
+		spin_texture_translate->set_enabled(false);;
+		checkbox_outline->set_enabled(false);
+		checkbox_antialias->set_enabled(true);
+	}
 }

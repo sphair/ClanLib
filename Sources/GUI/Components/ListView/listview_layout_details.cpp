@@ -178,11 +178,12 @@ std::vector<ListViewShownItem> &CL_ListViewLayoutDetails::get_shown_items()
 	row_counter = 0;
 
 	CL_Font font = part_cell.get_font();
+	max_rows_visible = rect_view.get_height() / height_row;
 
 	CL_ListViewItem child = root_item.get_first_child();
 	while (child.is_item())
 	{
-		if (shown_items.size() == (max_rows_visible+3))
+		if (shown_items.size() == max_rows_visible)
 			break;
 
 		update_shown_items_rows(font, child);
@@ -312,9 +313,7 @@ CL_Rect CL_ListViewLayoutDetails::get_lineedit_rect(CL_ListViewItem &item, const
 
 void CL_ListViewLayoutDetails::update_shown_items_rows(CL_Font &font, CL_ListViewItem item)
 {
-	max_rows_visible = rect_view.get_height() / height_row;
-
-	if (row_draw_y_pos + height_row < 0)
+	if (row_draw_y_pos + height_row <= rect_view.top)
 	{
 		row_draw_y_pos += height_row;
 		row_counter++;
@@ -325,6 +324,9 @@ void CL_ListViewLayoutDetails::update_shown_items_rows(CL_Font &font, CL_ListVie
 			CL_ListViewItem it = item.get_first_child();
 			while (it.is_item())
 			{
+				if (shown_items.size() == max_rows_visible)
+					break;
+
 				update_shown_items_rows(font, it);
 				it = it.get_next_sibling();
 			}
@@ -400,6 +402,9 @@ void CL_ListViewLayoutDetails::update_shown_items_rows(CL_Font &font, CL_ListVie
 		CL_ListViewItem it = item.get_first_child();
 		while (it.is_item())
 		{
+			if (shown_items.size() == max_rows_visible)
+				break;
+
 			update_shown_items_rows(font, it);
 			it = it.get_next_sibling();
 		}

@@ -29,7 +29,7 @@ public:
 	void setAngle(float angle);
 	
 	virtual void draw();
-	virtual bool update(float timeElapsed);
+	virtual bool update(int timeElapsed_ms);
 	virtual bool hitCheck(CL_CollisionOutline *outline, GameObject *other);
 
 // Implementation:

@@ -46,7 +46,7 @@
 // CL_GDIDisplayWindowProvider Construction:
 
 CL_GDIDisplayWindowProvider::CL_GDIDisplayWindowProvider()
-: window(&CL_GDITargetProvider::message_queue), site(0)
+: window(), site(0)
 {
 	window.func_on_resized().set(this, &CL_GDIDisplayWindowProvider::on_window_resized);
 }

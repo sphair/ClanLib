@@ -26,8 +26,19 @@ popupmenu icon
 
 popupmenu label
 {
+	preferred-width:70;
+	preferred-height:20;
 	padding-left:2;
 	bg-image:;
+}
+
+popupmenu label:selected
+{
+}
+
+popupmenu label:disabled
+{
+    text-color:gray;    
 }
 
 popupmenu accel_label
@@ -50,13 +61,6 @@ popupmenu row:selected
 	border-bottom:1;	
 	padding-left:2;
 	border-color:#316ac5;
-}
-
-popupmenu label:selected
-{
-	preferred-width:70;
-	preferred-height:20;
-	bg-image:;
 }
 
 popupmenu separator

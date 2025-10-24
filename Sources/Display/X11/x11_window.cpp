@@ -33,7 +33,6 @@
 #include "API/Core/Math/point.h"
 #include "API/Core/Text/logger.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/display.h"
 #include "API/Display/display_target.h"
@@ -51,21 +50,32 @@
 #include "display_message_queue_x11.h"
 #include <X11/Xatom.h>
 #include <cstdio>
+#include "../Window/input_context_impl.h"
 
-
-CL_X11Window::CL_X11Window(CL_DisplayMessageQueue_X11 *message_queue)
-: window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), message_queue(message_queue), fullscreen(false),
+CL_X11Window::CL_X11Window()
+: window(0), window_last_focus(0), cmap(0), allow_resize(false), bpp(0), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
-  keyboard(0), mouse(0), site(0), ignore_focus_events(false), clipboard(this)
+  site(0), clipboard(this)
 {
-	keyboard = new CL_InputDeviceProvider_X11Keyboard(this);
-	mouse = new CL_InputDeviceProvider_X11Mouse(this);
-	message_queue->add_client(this);
+	keyboard = CL_InputDevice(new CL_InputDeviceProvider_X11Keyboard(this));
+	mouse = CL_InputDevice(new CL_InputDeviceProvider_X11Mouse(this));
+
+	CL_DisplayMessageQueue_X11::message_queue.add_client(this);
 }
 
 CL_X11Window::~CL_X11Window()
 {
-	message_queue->remove_client(this);
+	CL_DisplayMessageQueue_X11::message_queue.remove_client(this);
+	CL_DisplayMessageQueue_X11::message_queue.set_mouse_capture(this, false);
+
+	if (!ic.impl.is_null())
+		ic.impl->dispose();
+
+	get_keyboard()->dispose();
+	get_mouse()->dispose();
+
+	for (size_t i = 0; i < joysticks.size(); i++)
+		joysticks[i].get_provider()->dispose();
 
 	close_window();
 
@@ -74,9 +84,6 @@ CL_X11Window::~CL_X11Window()
 		XCloseDisplay(disp);
 		disp = 0;
 	}
-
-	if (keyboard) delete keyboard;
-	if (mouse) delete mouse;
 }
 
 CL_Rect CL_X11Window::get_geometry() const
@@ -210,12 +217,6 @@ void CL_X11Window::set_title(const CL_StringRef &new_title)
 void CL_X11Window::set_position(const CL_Rect &pos, bool client_area)
 {
 	int result;
-
-	if (!window_has_caption)
-	{
-		//TODO: Resize does not work on windows without a caption - May need to temporary enable it ... this is silly though!
-		return;
-	}
 
 	// Clear hints - to allow repositioning
 	XSizeHints *size_hints = XAllocSizeHints();
@@ -405,7 +406,7 @@ void CL_X11Window::bring_to_front()
 
 void CL_X11Window::capture_mouse(bool capture)
 {
-	// Not required?
+	CL_DisplayMessageQueue_X11::message_queue.set_mouse_capture(this, capture);
 }
 
 void CL_X11Window::clear_structurenotify_events()
@@ -457,7 +458,6 @@ void CL_X11Window::close_window()
 	current_window_events.clear();
 
 	bool focus = false;
-	ic.clear();
 
 	if(window)
 	{
@@ -584,20 +584,14 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 	}
 
 	Window parent = RootWindow(disp, current_screen);
-	ignore_focus_events = false;
+
 
 	if (!desc.get_owner().is_null())
 	{
 		// This is not required. When enabled (with a parent window) popup windows would be created, with an incorrect style
 		//parent = provider_glx->get_window();
-			
-		if (!desc.has_caption())	// Support for popup window, as the parent window will loose input focus, for compatibility with Microsoft Windows platform, we ignore the first focus event
-		{
-			ignore_focus_events = true;
-		}
 
-		CL_Rect rect = get_screen_position();
-
+		CL_Rect rect = desc.get_owner().get_geometry();
 		if (win_x == -1 && win_y == -1)
 		{
 			win_x = rect.get_width()/2 - win_width/2;
@@ -746,12 +740,10 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, int screen_bpp, const 
 
 }
 
-bool CL_X11Window::get_message(XEvent &clan_event)
+void CL_X11Window::get_message(CL_X11Window *mouse_capture_window)
 {
 	XEvent event;
 	CL_Rect *rect;
-	CL_DisplayWindowMessage message;
-	bool clan_event_set = false;
 
 	ic.poll(false);		// Check input devices
 
@@ -816,34 +808,55 @@ bool CL_X11Window::get_message(XEvent &clan_event)
 			case FocusIn:
 				if (site)
 					site->sig_got_focus->invoke();
+
 				break;
 			case FocusOut:
 				if (site)
 				{
 					if (!has_focus())	// For an unknown reason, FocusOut is called when clicking on title bar of window
 					{
-						if (ignore_focus_events)
-						{
-							ignore_focus_events = false;
-						}else
-						{
-							site->sig_lost_focus->invoke();
-						}
+						site->sig_lost_focus->invoke();
 					}
 				}
 				break;
 			case KeyRelease:
 			case KeyPress:
-				keyboard->received_keyboard_input(event.xkey);
+				if (get_keyboard())
+					get_keyboard()->received_keyboard_input(event.xkey);
 				break;
 			//case KeymapNotify:
 			//	break;
 			case ButtonPress:
 			case ButtonRelease:
-				mouse->received_mouse_input(event.xbutton);
+				if (mouse_capture_window->get_mouse())
+				{
+					if (this != mouse_capture_window)
+					{
+						CL_Rect this_scr = get_screen_position();
+						CL_Rect capture_scr = mouse_capture_window->get_screen_position();
+	
+						event.xbutton.x += this_scr.left - capture_scr.left;
+						event.xbutton.y += this_scr.top - capture_scr.top;
+					}
+					
+					mouse_capture_window->get_mouse()->received_mouse_input(event.xbutton);
+				}
 				break;
 			case MotionNotify:
-				mouse->received_mouse_move(event.xmotion);
+				if (mouse_capture_window->get_mouse())
+				{
+
+					if (this != mouse_capture_window)
+					{
+						CL_Rect this_scr = get_screen_position();
+						CL_Rect capture_scr = mouse_capture_window->get_screen_position();
+	
+						event.xmotion.x += this_scr.left - capture_scr.left;
+						event.xmotion.y += this_scr.top - capture_scr.top;
+					}
+					
+					mouse_capture_window->get_mouse()->received_mouse_move(event.xmotion);
+				}
 				break;
 
 			case SelectionClear:	// New clipboard selection owner
@@ -862,12 +875,7 @@ bool CL_X11Window::get_message(XEvent &clan_event)
 		default:
 			break;
 		}
-
-		clan_event = event;
-		clan_event_set = true;
 	}
-
-	return clan_event_set;
 }
 
 // This is called for each window by CL_DisplayMessageQueue_X11 to check for messages
@@ -890,6 +898,10 @@ bool CL_X11Window::has_messages()
 
 void CL_X11Window::setup_joysticks()
 {
+	for (size_t i = 0; i < joysticks.size(); i++)
+		joysticks[i].get_provider()->dispose();
+	joysticks.clear();
+
 #ifdef HAVE_LINUX_JOYSTICK_H
 
 	char pathname[128];
@@ -915,6 +927,7 @@ void CL_X11Window::setup_joysticks()
 			{
 				CL_InputDeviceProvider_LinuxJoystick *joystick_provider = new CL_InputDeviceProvider_LinuxJoystick(this, cl_text(pathname));
 				CL_InputDevice device(joystick_provider);
+				joysticks.push_back(device);
 				ic.add_joystick(device);
 
 				CL_SocketMessage_X11 joystick_connection;
@@ -1175,12 +1188,23 @@ void CL_X11Window::set_maximum_size( int width, int height, bool client_area)
 
 void CL_X11Window::get_keyboard_modifiers(bool &key_shift, bool &key_alt, bool &key_ctrl) const
 {
-	return keyboard->get_keyboard_modifiers(key_shift, key_alt, key_ctrl);
+	if (!get_keyboard())
+	{
+		key_shift = false;
+		key_alt = false;
+		key_ctrl = false;
+		return;
+	}
+	return get_keyboard()->get_keyboard_modifiers(key_shift, key_alt, key_ctrl);
 }
 
 CL_Point CL_X11Window::get_mouse_position() const
 {
-	return mouse->get_position();
+	if (!get_mouse())
+	{
+		return CL_Point();
+	}
+	return get_mouse()->get_position();
 }
 
 // Important: Use XFree() on the returned pointer (if not NULL)
@@ -1222,4 +1246,15 @@ void CL_X11Window::set_small_icon(const CL_PixelBuffer &image)
 {
 
 }
+
+CL_InputDeviceProvider_X11Keyboard *CL_X11Window::get_keyboard() const
+{
+	return static_cast<CL_InputDeviceProvider_X11Keyboard *>(keyboard.get_provider());
+}
+
+CL_InputDeviceProvider_X11Mouse *CL_X11Window::get_mouse() const
+{
+	return static_cast<CL_InputDeviceProvider_X11Mouse *>(mouse.get_provider());
+}
+
 

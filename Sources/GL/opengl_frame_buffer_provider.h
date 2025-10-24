@@ -56,7 +56,7 @@ public:
 
 	CL_Size get_attachment_size(int buffer_id) const;
 
-	std::vector<int> get_attachment_indexes() const;
+	const std::vector<int> &get_attachment_indexes() const;
 
 
 /// \}

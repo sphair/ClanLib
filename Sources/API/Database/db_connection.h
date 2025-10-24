@@ -90,7 +90,7 @@ public:
 /// \{
 private:
 	CL_SharedPtr<CL_DBConnection_Impl> impl;
-	friend class CL_DBCommand;
+
 /// \}
 };
 

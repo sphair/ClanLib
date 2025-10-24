@@ -133,6 +133,8 @@ public:
 
 	void set_mag_filter(CL_TextureFilter filter);
 
+	void set_max_anisotropy(float v);
+
 	void set_depth_mode(CL_TextureDepthMode depth_mode);
 
 	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);

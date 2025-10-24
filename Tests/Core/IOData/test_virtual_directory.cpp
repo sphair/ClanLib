@@ -49,13 +49,17 @@ public:
 	}
 
 	//: Initiate directory listing.
-	virtual bool initialize_directory_listing(const CL_String &path) {return false;}
+	virtual bool initialize_directory_listing(const CL_String &path) { return false; }
 
 	//: Update directory listing item.
-	virtual bool next_file(CL_VirtualDirectoryListingEntry &entry) {return false;}
+	virtual bool next_file(CL_VirtualDirectoryListingEntry &entry) { return false; }
 
 	//: Return the path of this file source.
-	virtual CL_String get_path() const {return path;}
+	virtual CL_String get_path() const { return path; }
+
+	//: Get the identifier of this file source
+	virtual CL_String get_identifier() const { return path; }
+
 private:
 	CL_String path;
 public:

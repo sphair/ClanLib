@@ -285,15 +285,17 @@ void CL_GUIThemePart::render_box(CL_GraphicContext &gc, const CL_Rect &rect, con
 
 CL_GUIThemePart::VerticalTextPosition CL_GUIThemePart::get_vertical_text_align(CL_GraphicContext &gc, CL_Font &font, const CL_Rect &content_rect)
 {
-	CL_FontMetrics metrics = font.get_font_metrics(gc);
-	float center_text_height = metrics.get_ascent()-metrics.get_internal_leading();
+	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
 
-	float tmp_top = content_rect.top + floor(content_rect.get_height()/2.0f - center_text_height/2.0f - metrics.get_internal_leading());
+	CL_FontMetrics metrics = font.get_font_metrics(gc);
+	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
+	float content_height = content_rect.get_height();
+	float baseline = (content_height + align_height) / 2.0f;
 
 	VerticalTextPosition result;
-	result.top = metrics.get_ascent();
-	result.baseline = tmp_top + metrics.get_ascent();
-	result.bottom = tmp_top + metrics.get_height();
+	result.baseline = baseline + content_rect.top;
+	result.top = result.baseline - metrics.get_ascent();
+	result.bottom = result.baseline + metrics.get_descent();
 	return result;
 }
 

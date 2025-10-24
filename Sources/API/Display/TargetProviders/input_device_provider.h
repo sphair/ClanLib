@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
 */
 
 /// \addtogroup clanDisplay_Input clanDisplay Input
@@ -33,6 +34,7 @@
 
 #include "../api_display.h"
 #include "../Window/input_device.h"
+#include "../../Core/System/disposable_object.h"
 #include "../../Core/System/sharedptr.h"
 #include "../../Core/Text/string_types.h"
 #include "../../Core/Signals/signal_v1.h"
@@ -40,7 +42,7 @@
 /// \brief Interface for implementing a CL_InputDevice source.
 ///
 /// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
-class CL_API_DISPLAY CL_InputDeviceProvider
+class CL_API_DISPLAY CL_InputDeviceProvider : public CL_DisposableObject
 {
 /// \name Construction
 /// \{

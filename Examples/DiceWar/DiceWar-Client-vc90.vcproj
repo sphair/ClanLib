@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="DiceWar-Client"
 	ProjectGUID="{E40CA023-9C41-441B-8354-7803E63AB758}"
 	RootNamespace="DiceWarClientvc90"
@@ -230,23 +230,15 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\Client\3D\lib3ds_help.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Sources\Client\3D\lib3ds_help.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Sources\Client\3D\light_model.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\Client\3D\model_3ds.cpp"
+					RelativePath=".\Sources\Client\3D\model_collada.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Sources\Client\3D\model_3ds.h"
+					RelativePath=".\Sources\Client\3D\model_collada.h"
 					>
 				</File>
 				<File
@@ -463,6 +455,122 @@
 				</File>
 				<File
 					RelativePath=".\Sources\Client\login_view.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Collada"
+				>
+				<File
+					RelativePath="..\Object3D\Collada\collada.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_color_texture.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_color_texture.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_float_param.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_float_param.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_texture.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_effect_texture.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_geometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_geometry.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_image.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_image.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_input_shared.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_input_shared.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_input_unshared.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_input_unshared.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_material.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_material.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_mesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_mesh.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_source.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_source.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_triangles.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_triangles.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_vertices.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Object3D\Collada\collada_vertices.h"
 					>
 				</File>
 			</Filter>

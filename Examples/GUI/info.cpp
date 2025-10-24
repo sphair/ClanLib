@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "info.h"
 #include "GUI.h"
 
@@ -96,7 +93,7 @@ void Info::draw(CL_GraphicContext &gc)
 		set_constant_repaint(false);
 	}
 
-	font.draw_text(gc, draw_xpos + 16, draw_ypos, text_to_draw, CL_Colorf::white);
+	//font.draw_text(gc, draw_xpos + 16, draw_ypos, text_to_draw, CL_Colorf::white);
 	font.draw_text(gc, draw_xpos + 16-1, draw_ypos-1, text_to_draw, color);
 }
 

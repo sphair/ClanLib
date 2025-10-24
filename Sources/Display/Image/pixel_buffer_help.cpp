@@ -1,0 +1,87 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Mark Page
+*/
+
+#include "Display/precomp.h"
+#include "API/Display/Image/pixel_buffer_help.h"
+
+CL_PixelBuffer CL_PixelBufferHelp::add_border(const CL_PixelBufferRef &pb, int border_size)
+{
+	if (border_size <=0)
+	{
+		return CL_PixelBuffer(pb);
+	}
+
+	int old_width = pb.get_width();
+	int old_height = pb.get_height();
+
+	int new_width = old_width + border_size*2;
+	int new_height = old_height + border_size*2;
+
+	// Convert pixel buffer if in an unsupported format
+	CL_PixelBuffer work_buffer;
+	CL_PixelBufferRef work_pb = pb;
+	if (work_pb.get_format().get_depth() != 32)
+	{
+		work_buffer = pb.to_format(CL_PixelFormat::rgba8888);
+		work_pb = work_buffer;
+	}
+
+	CL_PixelBuffer new_pb(new_width, new_height, new_width *4, work_pb.get_format(), NULL);
+
+	int old_pitch = work_pb.get_pitch();
+	int new_pitch = new_pb.get_pitch();
+
+	for (int ypos = 0; ypos < new_height; ypos++)
+	{
+		int real_ypos = ypos - border_size;
+		if (real_ypos < 0)
+			real_ypos = 0;
+
+		if (real_ypos >= old_height)
+			real_ypos = old_height-1;
+
+		int *src_data = (int *) work_pb.get_data();
+		src_data += (old_pitch * real_ypos)/4;
+
+		int *dest_data = (int *) new_pb.get_data();
+		dest_data += (new_pitch * ypos)/4;
+
+		for (int xpos = 0; xpos < new_width; xpos++)
+		{
+			int real_xpos = xpos - border_size;
+			if (real_xpos < 0)
+				real_xpos = 0;
+
+			if (real_xpos >= old_width)
+				real_xpos = old_width-1;
+
+			dest_data[xpos] = src_data[real_xpos];
+		}
+	}
+	return new_pb;
+}

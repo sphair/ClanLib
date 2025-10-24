@@ -292,7 +292,8 @@ void CL_ListViewItem::remove_children()
 	impl->first_child = null_impl;
 	impl->last_child = null_impl;
 
-	impl->func_item_deleted.invoke(CL_ListViewItem());
+	if (!impl->func_item_deleted.is_null())
+		impl->func_item_deleted.invoke(CL_ListViewItem());
 }
 
 void CL_ListViewItem::set_column_text(const CL_StringRef &column_id, const CL_StringRef &text)

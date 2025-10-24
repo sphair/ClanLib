@@ -43,7 +43,7 @@
 // CL_SoundOutput_alsa construction:
 
 CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
-	CL_SoundOutput_Generic(mixing_frequency, mixing_latency), frames_in_buffer(4096),
+	CL_SoundOutput_Impl(mixing_frequency, mixing_latency), frames_in_buffer(4096),
 	frames_in_period(1024)
 {
 	int rc;
@@ -60,7 +60,7 @@ CL_SoundOutput_alsa::CL_SoundOutput_alsa(int mixing_frequency, int mixing_latenc
 	snd_pcm_hw_params_alloca(&hwparams);
 	snd_pcm_hw_params_any(handle, hwparams);
 	snd_pcm_hw_params_set_access(handle, hwparams, SND_PCM_ACCESS_RW_INTERLEAVED);
-	snd_pcm_hw_params_set_format(handle, hwparams, SND_PCM_FORMAT_S16);
+	snd_pcm_hw_params_set_format(handle, hwparams, SND_PCM_FORMAT_FLOAT);
 	snd_pcm_hw_params_set_channels(handle, hwparams, 2);
 	snd_pcm_hw_params_set_rate_near(handle, hwparams,
 				(unsigned int *)&this->mixing_frequency, 0);
@@ -123,7 +123,7 @@ int CL_SoundOutput_alsa::get_fragment_size()
 	return frames_in_period;
 }
 
-void CL_SoundOutput_alsa::write_fragment(short *data)
+void CL_SoundOutput_alsa::write_fragment(float *data)
 {
 	snd_pcm_sframes_t rc;
 

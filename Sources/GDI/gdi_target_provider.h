@@ -31,12 +31,6 @@
 
 #include "API/Display/TargetProviders/display_target_provider.h"
 
-#ifdef WIN32
-#include "Display/Win32/display_message_queue_win32.h"
-#else
-#include "Display/X11/display_message_queue_x11.h"
-#endif
-
 class CL_GDITargetProvider : public CL_DisplayTargetProvider
 {
 /// \name Construction
@@ -53,8 +47,6 @@ public:
 /// \{
 
 public:
-	CL_DisplayMessageQueue_Provider *get_message_queue() const;
-
 
 /// \}
 /// \name Operations
@@ -71,11 +63,6 @@ public:
 /// \{
 
 private:
-#ifdef WIN32
-	static CL_DisplayMessageQueue_Win32 message_queue;
-#else
-	static CL_DisplayMessageQueue_X11 message_queue;
-#endif
 	friend class CL_GDIDisplayWindowProvider;
 /// \}
 };

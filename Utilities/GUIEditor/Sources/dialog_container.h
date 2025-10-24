@@ -26,8 +26,7 @@
 **    Magnus Norddahl
 */
 
-#ifndef _header_dialog_container_
-#define _header_dialog_container_
+#pragma once
 
 class DialogDocument;
 class DialogComponent;
@@ -53,5 +52,3 @@ private:
 	friend class DialogDocument;
 	friend class DialogComponent;
 };
-
-#endif

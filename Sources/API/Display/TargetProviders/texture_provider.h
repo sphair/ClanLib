@@ -163,6 +163,9 @@ public:
 	/// \brief Set the magnification filter.
 	virtual void set_mag_filter(CL_TextureFilter filter) = 0;
 
+	/// \brief Set the maximum degree of anisotropy.
+	virtual void set_max_anisotropy(float v) = 0;
+
 	/// \brief Set the depth texture mode parameter.
 	virtual void set_depth_mode(CL_TextureDepthMode depth_mode) = 0;
 

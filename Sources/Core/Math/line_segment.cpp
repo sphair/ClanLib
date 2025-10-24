@@ -34,6 +34,7 @@
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/angle.h"
 #include "API/Core/Math/cl_math.h"
+#include "API/Core/Math/rect.h"
 
 template<typename Type>
 CL_Vec2<Type> CL_LineSegment2x<Type>::normal() const
@@ -312,6 +313,91 @@ int CL_LineSegment3x<int>::point_distance(const CL_Vec3i &point, CL_Vec3i &dest_
 	dest_intercept = intercept;
 
 	return (int) (sqrt( (float) length) + 0.5f);
+}
+
+
+#define CL_LINECLIP_TOP 1
+#define CL_LINECLIP_RIGHT 2
+#define CL_LINECLIP_BOTTOM 4
+#define CL_LINECLIP_LEFT 8
+
+#define CL_CREATE_REGION_CODE(point_x, point_y, region_code) \
+	region_code = 0; \
+	if (point_y < rect.top) region_code = CL_LINECLIP_TOP; \
+	else if (point_y > rect.bottom) region_code = CL_LINECLIP_BOTTOM; \
+	if (point_x > rect.right) region_code |= CL_LINECLIP_RIGHT; \
+	else if (point_x < rect.left) region_code |= CL_LINECLIP_LEFT;
+
+template<typename Type>
+CL_LineSegment2x<Type> &CL_LineSegment2x<Type>::clip(const CL_Rectx<Type> &rect, bool &clipped)
+{
+	// Implementing the Cohen-Sutherland line clip algorithm
+
+	int region_code_p = 0;
+	int region_code_q = 0;
+
+	CL_CREATE_REGION_CODE(p.x, p.y, region_code_p);
+	CL_CREATE_REGION_CODE(q.x, q.y, region_code_q);
+
+	while(true)
+	{
+		if ( ! (region_code_p | region_code_q) )	// All inside
+		{
+			clipped = true;
+			break;
+		}
+		if ( region_code_p & region_code_q )	// Regions outside the rect
+		{
+			clipped = false;
+			break;
+		}
+
+		// Calculate the line segment to clip from an outside point to an intersection with clip edge
+		Type x, y;
+
+		// At least one endpoint is outside the clip rectangle; pick it.
+		int region_code_out = region_code_p ? region_code_p: region_code_q;
+
+		// Now find the intersection point;
+		// use formulas y = y0 + slope * (x - x0), x = x0 + (1/slope)* (y - y0)
+		if (region_code_out & CL_LINECLIP_TOP)			// point is above the clip rectangle
+		{
+			x = p.x + (q.x - p.x) * (rect.top - p.y)/(q.y - p.y);
+			y = rect.top;
+		}
+		else if (region_code_out & CL_LINECLIP_BOTTOM)	// point is below the clip rectangle
+		{
+			x = p.x + (q.x - p.x) * (rect.bottom - p.y)/(q.y - p.y);
+			y = rect.bottom;
+		}
+		else if (region_code_out & CL_LINECLIP_RIGHT)	// point is to the right of clip rectangle
+		{
+			y = p.y + (q.y - p.y) * (rect.right - p.x)/(q.x - p.x);
+			x = rect.right;
+		}
+		else if (region_code_out & CL_LINECLIP_LEFT)	// point is to the left of clip rectangle
+		{
+			y = p.y + (q.y - p.y) * (rect.left - p.x)/(q.x - p.x);
+			x = rect.left;
+		}
+
+		// Move outside point to intersection point to clip and get ready for next pass.
+		if (region_code_out == region_code_p)
+		{
+			p.x = x;
+			p.y = y;
+			CL_CREATE_REGION_CODE(x, y, region_code_p);
+		}
+		else 
+		{
+			q.x = x;
+			q.y = y;
+			CL_CREATE_REGION_CODE(x, y, region_code_q);
+		}
+
+	}
+
+	return *this;
 }
 
 // Explicit instantiate the versions we use:

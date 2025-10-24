@@ -153,7 +153,7 @@ CL_VirtualFileSource *CL_VirtualFileSystem::get_provider()
 	return impl->provider;
 }
 
-CL_String CL_VirtualFileSystem::get_name() const
+CL_String CL_VirtualFileSystem::get_identifier() const
 {
 	CL_String internal_name = cl_text("/");
 
@@ -163,11 +163,11 @@ CL_String CL_VirtualFileSystem::get_name() const
 	for (index = 0; index < size; index++)
 	{
 		internal_name += impl->mounts[index].first;
-		internal_name += impl->mounts[index].second.get_name();
+		internal_name += impl->mounts[index].second.get_identifier();
 	}
 
 	if (impl->provider)
-		internal_name = internal_name + impl->provider->get_path();
+		internal_name = internal_name + impl->provider->get_identifier();
 
 	return internal_name;
 }

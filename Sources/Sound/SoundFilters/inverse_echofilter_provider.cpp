@@ -40,11 +40,11 @@ CL_InverseEchoFilterProvider::CL_InverseEchoFilterProvider(int new_buffer_size) 
 {
 	pos = 0;
 
-	buffer[0] = new int[buffer_size];
-	memset(buffer[0], 0, sizeof(int)*buffer_size);
+	buffer[0] = new float[buffer_size];
+	memset(buffer[0], 0, sizeof(float)*buffer_size);
 
-	buffer[1] = new int[buffer_size];
-	memset(buffer[1], 0, sizeof(int)*buffer_size);
+	buffer[1] = new float[buffer_size];
+	memset(buffer[1], 0, sizeof(float)*buffer_size);
 }
 
 CL_InverseEchoFilterProvider::~CL_InverseEchoFilterProvider()
@@ -58,7 +58,7 @@ void CL_InverseEchoFilterProvider::destroy()
 	delete this;
 }
 
-void CL_InverseEchoFilterProvider::filter(int **sample_data, int num_samples, int channels)
+void CL_InverseEchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
 {
 	int start_pos = pos;
 
@@ -66,7 +66,7 @@ void CL_InverseEchoFilterProvider::filter(int **sample_data, int num_samples, in
 	{
 		if (c == channels) break;
 
-		int *work_buffer = buffer[c];
+		float *work_buffer = buffer[c];
 
 		pos = start_pos;
 

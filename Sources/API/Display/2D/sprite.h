@@ -157,8 +157,11 @@ public:
 	/// \brief Returns number of frames in animation.
 	int get_frame_count() const;
 
-	/// \brief Returns the delay of a frame. 0 is first frame.
-	float get_frame_delay(int frame) const;
+	/// \brief Returns the delay of a frame.
+	///
+	/// \param frame = The frame. 0 is first frame.
+	/// \return The delay in milliseconds
+	int get_frame_delay(int frame) const;
 
 	/// \brief Returns the translation offset of a frame. 0 is first frame.
 	CL_Point get_frame_offset(int frame) const;
@@ -171,6 +174,9 @@ public:
 
 	/// \brief Return the height of the current frame, shortcut for 'get_frame_size(get_current_frame()).height'
 	int get_height() const;
+
+	/// \brief Return the size of the current frame, shortcut for 'get_frame_size(get_current_frame())'
+	CL_Size get_size() const;
 
 	/// \brief Returns the attached id (if exists).
 	int get_id() const;
@@ -192,6 +198,10 @@ public:
 	/** <p> When an animation is finished, it will no longer show, unless ShowLastFrame is set
 	    to anything other than show_blank </p>*/
 	bool is_finished() const;
+
+	/// \brief Returns true if animation has looped in the last update cycle
+	bool is_looping() const;
+
 /// \}
 
 /// \name Operators
@@ -243,6 +253,11 @@ public:
 
 	void draw(
 		CL_GraphicContext &gc,
+		int x,
+		int y);
+
+	void draw(
+		CL_GraphicContext &gc,
 		const CL_Rectf &src,
 		const CL_Rectf &dest);
 
@@ -251,9 +266,10 @@ public:
 		const CL_Rectf &dest);
 
 	/// \brief Call this function to update the animation.
-	/** Returns the time elapsed parameter, the automatic calculated one if you used 0.
-	    \param time_elapsed milliseconds since last update. Use 0 for automatic time calculation.*/
-	float update(float time_elapsed = 0);
+	///
+	/// \param time_elapsed_ms = Time elapsed in milliseconds. Use -1 for automatic time calculation
+	/// \return time_elapsed milliseconds since last update
+	int update(int time_elapsed_ms = -1);
 
 	/// \brief Set absolute rotation angle.
 	void set_angle(CL_Angle angle);
@@ -307,10 +323,15 @@ public:
 	void set_frame(unsigned int frame);
 
 	/// \brief Sets the delay for all frames.
-	void set_delay(float delay);
+	///
+	/// \param delay_ms = Delay in milliseconds
+	void set_delay(int delay_ms);
 
-	/// \brief Sets the delay of a specific frame. 0 is first frame.
-	void set_frame_delay(int frame, float delay);
+	/// \brief Sets the delay of a specific frame. 
+	///
+	/// \param frame = Frame number. 0 is first frame.
+	/// \param delay_ms = Delay in milliseconds
+	void set_frame_delay(int frame, int delay_ms);
 
 	/// \brief Sets the translate offset of a specific frame. 0 is first frame.
 	void set_frame_offset(int frame, CL_Point offset);

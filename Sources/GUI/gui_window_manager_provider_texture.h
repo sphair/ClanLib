@@ -57,7 +57,7 @@ class CL_GUIWindowManagerTextureWindow;
 class CL_GUITopLevelWindowTexture
 {
 public:
-	CL_GUITopLevelWindowTexture(CL_GUITopLevelWindow *window) : window(window), enabled(true), visible(true), dirty(true) { }
+	CL_GUITopLevelWindowTexture(CL_GUITopLevelWindow *window) : window(window), enabled(true), visible(true), dirty(true), owner_window(NULL) { }
 
 	CL_GUITopLevelWindow *window;	// The window that this texture belongs to
 	CL_Subtexture subtexture;
@@ -67,6 +67,10 @@ public:
 	bool enabled;
 	bool visible;
 	bool dirty;
+
+	CL_GUITopLevelWindowTexture *owner_window;
+	std::vector<CL_GUITopLevelWindowTexture *> child_windows_zorder;	// Beginning is at the top
+
 	std::vector<CL_Rect> update_region_list;		// Only valid when "dirty" is set to true
 };
 
@@ -95,7 +99,7 @@ public:
 
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowTexture *> window_map;
 
-	std::vector<CL_GUITopLevelWindowTexture *> z_order;
+	std::vector<CL_GUITopLevelWindowTexture *> root_window_z_order;	// Beginning is at the top
 
 	CL_Callback_v0 func_repaint;
 
@@ -133,6 +137,7 @@ public:
 	void on_displaywindow_window_close();
 
 	void on_input(const CL_InputEvent &event, const CL_InputState &input_state);
+	void on_input_mouse_up(const CL_InputEvent &event, const CL_InputState &input_state);
 	void on_input_mouse_down(const CL_InputEvent &event, const CL_InputState &input_state);
 	void on_input_mouse_move(const CL_InputEvent &event, const CL_InputState &input_state);
 
@@ -146,8 +151,7 @@ public:
 	void create_window(
 		CL_GUITopLevelWindow *handle,
 		CL_GUITopLevelWindow *owner,
-		CL_GUITopLevelDescription description,
-		bool temporary);
+		CL_GUITopLevelDescription description);
 
 	void destroy_window(CL_GUITopLevelWindow *handle);
 	void enable_window(CL_GUITopLevelWindow *handle, bool enable);
@@ -162,14 +166,13 @@ public:
 	CL_GraphicContext begin_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 	void set_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect);
 	void reset_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc);
+	void push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect);
+	void pop_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc);
 	void end_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 	void request_repaint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region);
 	void bring_to_front(CL_GUITopLevelWindow *handle);
 	bool is_minimized(CL_GUITopLevelWindow *handle) const;
 	bool is_maximized(CL_GUITopLevelWindow *handle) const;
-	bool has_message();
-	void process_message();
-	void wait_for_message();
 	void capture_mouse(CL_GUITopLevelWindow *handle, bool state);
 	CL_DisplayWindow get_display_window(CL_GUITopLevelWindow *handle) const;
 	void set_cursor(CL_GUITopLevelWindow *handle, const CL_Cursor &cursor);
@@ -193,7 +196,11 @@ public:
 /// \{
 private:
 	CL_GUITopLevelWindow *get_window_at_point(const CL_Point &point);
+	CL_GUITopLevelWindow *get_window_at_point(const CL_Point &point, const std::vector<CL_GUITopLevelWindowTexture *> &z_order);
 
+	CL_GUITopLevelWindowTexture *get_window_texture(CL_GUITopLevelWindow *handle);
+	void get_all_windows_zorder(bool only_visible, std::vector<CL_GUIWindowManagerTextureWindow> &windows_dest_list, const std::vector<CL_GUITopLevelWindowTexture *> &z_order) const;
+	void draw_all_windows(CL_GraphicContext &gc, std::vector<CL_GUITopLevelWindowTexture *> &z_order);
 	void invoke_input_received(CL_GUITopLevelWindow *window, const CL_InputEvent &input_event, const CL_InputState &input_state);
 
 /// \}

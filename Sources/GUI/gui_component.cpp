@@ -74,13 +74,13 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *parent)
 	}
 }
 
-CL_GUIComponent::CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary)
+CL_GUIComponent::CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description)
 : impl(CL_GUIComponent_Impl::create_from_manager(manager))
 {
 	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
-	impl->gui_manager->add_component(this, 0, description, temporary);
+	impl->gui_manager->add_component(this, 0, description);
 	impl->type_name = cl_text("component");
 	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
 	request_repaint();
@@ -92,7 +92,7 @@ CL_GUIComponent::CL_GUIComponent(CL_GUIComponent *owner, CL_GUITopLevelDescripti
 	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
-	impl->gui_manager->add_component(this, owner, description, false);
+	impl->gui_manager->add_component(this, owner, description);
 	impl->type_name = cl_text("component");
 	impl->geometry = impl->gui_manager->window_manager.get_geometry(impl->gui_manager->get_toplevel_window(this), true);
 	request_repaint();
@@ -148,11 +148,6 @@ CL_Size CL_GUIComponent::get_size() const
 	return impl->geometry.get_size();
 }
 
-bool CL_GUIComponent::is_clickthrough() const
-{
-	return impl->click_through;
-}
-
 CL_StringRef CL_GUIComponent::get_type_name() const
 {
 	return impl->type_name;
@@ -196,12 +191,22 @@ bool CL_GUIComponent::has_focus() const
 
 CL_GUIComponent::FocusPolicy CL_GUIComponent::get_focus_policy() const
 {
-	return focus_refuse;
+	return impl->focus_policy;
 }
 
-CL_GUIConsumedKeys CL_GUIComponent::get_consumed_keys() const
+CL_StringRef CL_GUIComponent::get_component_group_name() const
 {
-	return impl->consumed_keys;
+	return impl->group_name;
+}
+
+bool CL_GUIComponent::is_selected_in_group() const
+{
+	return impl->is_selected_in_group;
+}
+
+bool CL_GUIComponent::get_blocks_default_action() const
+{
+	return impl->blocks_default_action_when_focused;
 }
 
 CL_ResourceManager CL_GUIComponent::get_resources() const
@@ -250,7 +255,43 @@ std::vector<CL_GUIComponent *> CL_GUIComponent::get_child_components() const
 	}
 	return children;
 }
-	
+
+std::vector<CL_GUIComponent*> CL_GUIComponent::get_child_component_group(const CL_String &group_name) const
+{
+	std::vector<CL_GUIComponent *> group;
+	CL_GUIComponent *cur_child = impl->first_child;
+	while (cur_child)
+	{
+		if (cur_child->get_component_group_name() == group_name)
+		{
+			group.push_back(cur_child);
+		}
+		cur_child = cur_child->get_next_sibling();
+	}
+	return group;
+}
+
+CL_GUIComponent *CL_GUIComponent::get_group_selected_component()
+{
+	CL_GUIComponent *parent = get_parent_component();
+
+	if (parent)
+	{
+		std::vector<CL_GUIComponent*> group = parent->get_child_component_group(get_component_group_name());
+		std::vector<CL_GUIComponent*>::size_type i;
+		for (i = 0; i < group.size(); i++)
+		{
+			if (group[i]->is_selected_in_group())
+			{
+				return group[i];
+			}
+		}
+	}
+
+	return 0;
+}
+
+
 const CL_GUIComponent *CL_GUIComponent::get_first_child() const
 {
 	return impl->first_child;
@@ -284,6 +325,34 @@ CL_GUIComponent *CL_GUIComponent::get_previous_sibling()
 const CL_GUIComponent *CL_GUIComponent::get_next_sibling() const
 {
 	return impl->next_sibling;
+}
+
+bool CL_GUIComponent::is_descendant_of(CL_GUIComponent *component)
+{
+	if(impl->parent == 0)
+		return false;
+
+	if(impl->parent == component)
+		return true;
+
+	return impl->parent->is_descendant_of(component);
+}
+
+bool CL_GUIComponent::is_ancestor_of(CL_GUIComponent *component)
+{
+	CL_GUIComponent *cur_child = impl->first_child;
+	while (cur_child)
+	{
+		if(cur_child == component)
+			return true;
+
+		if(cur_child->is_ancestor_of(component))
+			return true;
+
+		cur_child = cur_child->get_next_sibling();
+	}
+
+	return false;
 }
 
 CL_GUIComponent *CL_GUIComponent::get_next_sibling()
@@ -356,7 +425,7 @@ bool CL_GUIComponent::is_active() const
 
 CL_GUIComponent *CL_GUIComponent::get_component_at(const CL_Point &point)
 {
-	if (is_visible() == false || is_clickthrough())
+	if (is_visible() == false)
 	{
 		return 0;
 	}
@@ -459,9 +528,9 @@ CL_GUIComponent *CL_GUIComponent::get_top_level_component()
 {
 	CL_GUIComponent *parent = this;
 
-	while( true )
+	while (true)
 	{
-		if( parent->get_parent_component() )
+		if (parent->get_parent_component())
 			parent = parent->get_parent_component();
 		else 
 			break;
@@ -474,9 +543,9 @@ const CL_GUIComponent *CL_GUIComponent::get_top_level_component() const
 {
 	const CL_GUIComponent *parent = this;
 
-	while( true )
+	while (true)
 	{
-		if( parent->get_parent_component() )
+		if (parent->get_parent_component())
 			parent = parent->get_parent_component();
 		else 
 			break;
@@ -522,16 +591,6 @@ CL_DisplayWindow CL_GUIComponent::get_display_window() const
 	return impl->gui_manager->window_manager.get_display_window(toplevel);
 }
 
-bool CL_GUIComponent::is_tab_order_controller() const
-{
-	return impl->is_tab_order_controller;
-}
-
-int CL_GUIComponent::get_tab_order() const
-{
-	return impl->component_tab_index;
-}
-
 bool CL_GUIComponent::get_constant_repaint() const
 {
 	return impl->constant_repaint;
@@ -570,6 +629,11 @@ CL_Callback_0<bool> &CL_GUIComponent::func_focus_lost()
 	return impl->func_focus_lost;
 }
 
+CL_Callback_v1<CL_GUIMessage&> &CL_GUIComponent::func_filter_message()
+{
+	return impl->func_filter_message;
+}
+
 CL_Callback_0<bool> &CL_GUIComponent::func_focus_gained()
 {
 	return impl->func_focus_gained;
@@ -585,29 +649,34 @@ CL_Callback_0<bool> &CL_GUIComponent::func_pointer_exit()
 	return impl->func_pointer_exit;
 }
 
-CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input()
+CL_Callback_1<bool, const CL_InputEvent &> &CL_GUIComponent::func_input()
 {
 	return impl->func_input;
 }
 
-CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_pressed()
+CL_Callback_1<bool, const CL_InputEvent &> &CL_GUIComponent::func_input_pressed()
 {
 	return impl->func_input_pressed;
 }
 
-CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_released()
+CL_Callback_1<bool, const CL_InputEvent &> &CL_GUIComponent::func_input_released()
 {
 	return impl->func_input_released;
 }
 
-CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_doubleclick()
+CL_Callback_1<bool, const CL_InputEvent &> &CL_GUIComponent::func_input_doubleclick()
 {
 	return impl->func_input_doubleclick;
 }
 
-CL_Callback_1<bool, const CL_InputEvent &> CL_GUIComponent::func_input_pointer_moved()
+CL_Callback_1<bool, const CL_InputEvent &> &CL_GUIComponent::func_input_pointer_moved()
 {
 	return impl->func_input_pointer_moved;
+}
+
+CL_Callback_v1<bool> &CL_GUIComponent::func_visibility_change()
+{
+	return impl->func_visibility_change;
 }
 
 CL_Callback_v0 &CL_GUIComponent::func_style_changed()
@@ -663,7 +732,7 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 	{
 		if (impl->clip_children)
 		{
-			set_cliprect(gc, get_size());
+			push_cliprect(gc, get_size());
 		}
 
 		CL_GUIComponent *cur = impl->first_child;
@@ -686,7 +755,7 @@ void CL_GUIComponent::render(CL_GraphicContext &gc, const CL_Rect &clip_rect, bo
 
 		if (impl->clip_children)
 		{
-			reset_cliprect(gc);
+			pop_cliprect(gc);
 		}
 	}
 }
@@ -712,21 +781,10 @@ int CL_GUIComponent::exec()
 	CL_GUIComponent *owner_component = get_owner_component();
 	if (owner_component)
 		owner_component->get_top_level_component()->set_enabled(false);
-	CL_AcceleratorTable accel_table;
-	get_gui_manager().exec(accel_table);
+	get_gui_manager().exec();
 	if (owner_component)
 		owner_component->get_top_level_component()->set_enabled(true);
 	return get_gui_manager().get_exit_code();
-}
-
-void CL_GUIComponent::post_message(const CL_GUIMessage &message)
-{
-	get_gui_manager().post_message(message);
-}
-
-void CL_GUIComponent::send_message(CL_GUIMessage &message)
-{
-	get_gui_manager().send_message(message);
 }
 
 void CL_GUIComponent::exit_with_code(int exit_code)
@@ -809,7 +867,11 @@ void CL_GUIComponent::set_enabled(bool enable)
 void CL_GUIComponent::set_visible(bool visible, bool activate_root_win)
 {
 	if (visible != impl->visible)
+	{
 		request_repaint();
+		if (!impl->func_visibility_change.is_null())
+			impl->func_visibility_change.invoke(visible);
+	}
 
 	impl->visible = visible;
 	if (impl->parent == 0)
@@ -834,6 +896,12 @@ void CL_GUIComponent::set_focus(bool enable)
 void CL_GUIComponent::set_focus_policy(FocusPolicy policy)
 {
 	impl->focus_policy = policy;
+}
+
+
+void CL_GUIComponent::set_component_group_name(const CL_StringRef &str)
+{
+	impl->group_name = str;
 }
 
 CL_GUIComponent *CL_GUIComponent::get_named_item(const CL_StringRef &id)
@@ -935,6 +1003,21 @@ void CL_GUIComponent::reset_cliprect(CL_GraphicContext &gc)
 	impl->gui_manager_impl->window_manager.reset_cliprect(window, gc);
 }
 
+void CL_GUIComponent::push_cliprect(CL_GraphicContext &gc, const CL_Rect &rect)
+{
+	CL_Rect windcliprect = component_to_window_coords(rect);
+	CL_GUIComponent *toplevel = get_top_level_component();
+	CL_GUITopLevelWindow *window = impl->gui_manager_impl->get_toplevel_window(toplevel);
+	impl->gui_manager_impl->window_manager.push_cliprect(window, gc, windcliprect);
+}
+
+void CL_GUIComponent::pop_cliprect(CL_GraphicContext &gc)
+{
+	CL_GUIComponent *toplevel = get_top_level_component();
+	CL_GUITopLevelWindow *window = impl->gui_manager_impl->get_toplevel_window(toplevel);
+	impl->gui_manager_impl->window_manager.pop_cliprect(window, gc);
+}
+
 void CL_GUIComponent::delete_child_components()
 {
 	while (impl->last_child)
@@ -1005,179 +1088,157 @@ void CL_GUIComponent::set_cursor(CL_StandardCursor type)
 	impl->gui_manager->window_manager.set_cursor(toplevel, type);
 }
 
-void CL_GUIComponent::set_clickthrough(bool enabled)
-{
-	impl->click_through = enabled;
-}
-
 void CL_GUIComponent::set_clip_children(bool clip)
 {
 	impl->clip_children = clip;
 }
 
-void CL_GUIComponent::set_tab_order_controller(bool enabled)
-{
-	impl->is_tab_order_controller = enabled;
-}
-
-void CL_GUIComponent::set_tab_order(int index)
-{
-	CL_GUIComponent *tab_controller = get_tab_order_controller();
-	if (tab_controller == 0)
-		throw CL_Exception(cl_text("CL_GUIComponent must have a parent set as tab order controller before calling set_tab_order()"));
-
-	if (index > tab_controller->impl->tab_order_controller_last_index)
-		tab_controller->impl->tab_order_controller_last_index = index;
-
-	impl->component_tab_index = index;
-}
-
-CL_GUIComponent *CL_GUIComponent::get_tab_order_controller()
-{
-	CL_GUIComponent *test = this;
-	while (test != 0)
-	{
-		if (test->is_tab_order_controller())
-			return test;
-		test = test->get_parent_component();
-	}
-
-	return 0;
-}
-
 void CL_GUIComponent::focus_next()
 {
-	if (is_tab_order_controller())
-	{
-		impl->tab_order_controller_current_index++;
-		CL_GUIComponent *next = get_tab_order_component(impl->tab_order_controller_current_index);
+	CL_GUIComponent *c = this;
 
-		if (next)
+	// Skip over components in the same group:
+	if (get_focus_policy() == focus_group)
+	{
+		while (c->impl->next_sibling && c->get_component_group_name() == this->get_component_group_name())
 		{
-			if (next->is_enabled())
-                next->set_focus();
-			else
-			{
-				int start_index = impl->tab_order_controller_current_index;
-				int search_index = start_index + 1;
-				while (search_index  != start_index)
-				{
-					next = get_tab_order_component(search_index);
-					if (next && next->is_enabled())
-					{
-						next->set_focus();
-						impl->tab_order_controller_current_index = next->get_tab_order();
-						break;
-					}
-					search_index++;
-					if (search_index > impl->tab_order_controller_last_index)
-						search_index = 0;
-				}
-			}
-		}
-		else if (impl->tab_order_controller_current_index > impl->tab_order_controller_last_index )
-		{
-			// back to the start
-			CL_GUIComponent *first = get_tab_order_component(0);
-			if (first)
-			{
-				first->set_focus();
-				impl->tab_order_controller_current_index = 0;
-			}
+			c = c->impl->next_sibling;
 		}
 	}
 	else
-	{
-	    CL_GUIComponent *tab_order_controller = get_tab_order_controller();
+		c = c->get_next_component_in_tree();
 
-		if (tab_order_controller)
-			tab_order_controller->focus_next();
+	while (c != this)
+	{
+		if ((c->get_focus_policy() == focus_local || c->get_focus_policy() == focus_group) && c->is_visible() && c->is_enabled())
+		{
+			if (c->get_focus_policy() == focus_group)
+			{
+				CL_GUIComponent *selected_comp = c->get_group_selected_component();
+				if (selected_comp)
+				{
+					selected_comp->set_focus(true);
+				}
+				else
+				{
+					c->set_focus(true);
+				}
+			}
+			else
+			{
+				c->set_focus(true);
+			}
+
+			break;
+		}
+
+		c = c->get_next_component_in_tree();
 	}
 }
 
 void CL_GUIComponent::focus_previous()
 {
-	if (is_tab_order_controller())
-	{
-		impl->tab_order_controller_current_index--;
-		CL_GUIComponent *prev = get_tab_order_component(impl->tab_order_controller_current_index);
+	CL_GUIComponent *c = this;
 
-		if (prev)
+	// Skip over components in the same group:
+	if (get_focus_policy() == focus_group)
+	{
+		while (c->impl->prev_sibling && c->get_component_group_name() == this->get_component_group_name())
 		{
-			if (prev->is_enabled())
-				prev->set_focus();
-			else
-			{
-				int start_index = impl->tab_order_controller_current_index;
-				int search_index = start_index - 1;
-				while (search_index  != start_index)
-				{
-					prev = get_tab_order_component(search_index);
-					if (prev && prev->is_enabled())
-					{
-						prev->set_focus();
-						impl->tab_order_controller_current_index = prev->get_tab_order();
-						break;
-					}
-					search_index--;
-					if (search_index < 0)
-						search_index = impl->tab_order_controller_last_index;
-				}
-			}
-		}
-		else if (impl->tab_order_controller_current_index < 0 && impl->tab_order_controller_last_index != -1) 
-		{
-			// go to last item
-			CL_GUIComponent *last = get_tab_order_component(impl->tab_order_controller_last_index);
-			if (last)
-			{
-				last->set_focus();
-				impl->tab_order_controller_current_index = impl->tab_order_controller_last_index;
-			}
+			c = c->impl->prev_sibling;
 		}
 	}
 	else
+		c = c->get_previous_component_in_tree();
+
+	while (c != this)
 	{
-		CL_GUIComponent *tab_order_controller = get_tab_order_controller();
-
-		if (tab_order_controller)
-			tab_order_controller->focus_previous();
-	}
-}
-
-CL_GUIComponent *CL_GUIComponent::get_tab_order_component(int index, CL_GUIComponent *comp)
-{
-	if (comp == 0 && !is_tab_order_controller())
-	{
-		CL_GUIComponent *tab_controller = get_tab_order_controller();
-		if (tab_controller)
-			return tab_controller->get_tab_order_component(index);
-		else
-			return 0;
-	}
-
-	if (comp == 0 && is_tab_order_controller())
-		comp = this;
-
-	CL_GUIComponent *child = comp->get_first_child();
-
-	while (child != 0)
-	{
-		if (child->get_tab_order() == index)
-			return child;
-
-		if (child->has_child_components())
+		if ((c->get_focus_policy() == focus_local || c->get_focus_policy() == focus_group) && c->is_visible() && c->is_enabled())
 		{
-			CL_GUIComponent *test = child->get_tab_order_component(index, child);
-			if (test != 0)
-				return test;
+			if (c->get_focus_policy() == focus_group)
+			{
+				CL_GUIComponent *selected_comp = c->get_group_selected_component();
+				if (selected_comp)
+				{
+					selected_comp->set_focus(true);
+				}
+				else
+				{
+					c->set_focus(true);
+				}
+			}
+			else
+			{
+				c->set_focus(true);
+			}
+
+			break;
 		}
-		
-		child = child->get_next_sibling();
+
+		c = c->get_previous_component_in_tree();
+	}
+}	
+
+CL_GUIComponent *CL_GUIComponent::get_next_component_in_tree()
+{
+	if (has_child_components())
+		return get_first_child();
+
+	if (impl->next_sibling)
+		return impl->next_sibling;
+
+	CL_GUIComponent *parent = impl->parent;
+	while (parent)
+	{
+		if (parent->get_next_sibling())
+			return parent->get_next_sibling();
+		parent = parent->get_parent_component();
 	}
 
-	return 0;
+	// Reached end of tree. Return first item.
+	return get_top_level_component();
 }
+
+
+CL_GUIComponent *CL_GUIComponent::get_previous_component_in_tree()
+{
+	if (impl->prev_sibling)
+	{
+		// return last grand-child of sibling.
+		if (impl->prev_sibling->has_child_components())
+		{
+			CL_GUIComponent *last = impl->prev_sibling->impl->last_child;
+			while (last->has_child_components())
+			{
+				last = last->get_last_child();
+			}
+			return last;
+		}
+		else
+		{
+			// sibling has no children, return sibling.
+			return impl->prev_sibling;
+		}
+	}
+
+	// no previous sibling, return parent.
+	if (impl->parent)
+		return impl->parent;
+
+	// No parent, must be top-level component. Find last child.
+	CL_GUIComponent *last = impl->last_child;
+
+    // No child, must be a lonely top-level component.
+    if(last == 0)
+        return this;
+
+	while (last->has_child_components())
+	{
+		last = last->get_last_child();
+	}
+	return last;
+}
+
 
 void CL_GUIComponent::set_default(bool value)
 {
@@ -1190,14 +1251,19 @@ void CL_GUIComponent::set_cancel(bool value)
 	impl->cancel_handler = value; 
 }
 
-void CL_GUIComponent::set_consumed_keys(CL_GUIConsumedKeys &keys)
+void CL_GUIComponent::set_blocks_default_action(bool block)
 {
-	impl->consumed_keys = keys;
+	impl->blocks_default_action_when_focused = block;
 }
 
 void CL_GUIComponent::set_constant_repaint(bool enable)
 {
 	impl->constant_repaint = enable;
+}
+
+void CL_GUIComponent::set_selected_in_component_group(bool selected)
+{
+	impl->is_selected_in_group = selected;
 }
 
 /////////////////////////////////////////////////////////////////////////////

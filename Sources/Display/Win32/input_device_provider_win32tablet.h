@@ -68,7 +68,7 @@ public:
 
 public:
 	/// \brief Returns the input device type.
-	CL_InputDevice::Type get_type() const { return CL_InputDevice::pointer; }
+	CL_InputDevice::Type get_type() const { return CL_InputDevice::tablet; }
 
 	/// \brief Returns the x position of the device.
 	int get_x() const;
@@ -140,6 +140,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 
 	bool init_tablet();
 

@@ -155,7 +155,7 @@ public:
 				dump_fps();
 
 				window.flip(1);
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 			}
 
 			return 0;

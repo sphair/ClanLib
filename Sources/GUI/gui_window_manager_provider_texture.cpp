@@ -38,10 +38,9 @@
 #include "API/Display/Window/input_device.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_state.h"
+#include "API/Display/Window/keys.h"
 #include "API/Display/2D/draw.h"
 #include "API/Display/2D/image.h"
-#include "API/Display/Window/display_message_queue.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/Render/blend_mode.h"
 #include "gui_manager_impl.h"
 #include <algorithm>
@@ -57,7 +56,7 @@ CL_GUIWindowManagerProvider_Texture::CL_GUIWindowManagerProvider_Texture(CL_Disp
 	slots.connect(display_window.sig_window_close(), this, &CL_GUIWindowManagerProvider_Texture::on_displaywindow_window_close);
 
 	CL_InputContext& ic = display_window.get_ic();
-	slots.connect(ic.get_mouse().sig_key_up(), this, &CL_GUIWindowManagerProvider_Texture::on_input);
+	slots.connect(ic.get_mouse().sig_key_up(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_up);
 	slots.connect(ic.get_mouse().sig_key_down(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_down);
 	slots.connect(ic.get_mouse().sig_pointer_move(), this, &CL_GUIWindowManagerProvider_Texture::on_input_mouse_move);
 
@@ -91,17 +90,10 @@ std::vector<CL_GUIWindowManagerTextureWindow> CL_GUIWindowManagerProvider_Textur
 {
 	std::vector<CL_GUIWindowManagerTextureWindow> windows;
 
-	std::vector<CL_GUITopLevelWindowTexture *>::size_type index, size;
-	size = z_order.size();
-	for (index = size; index > 0; index--)
-	{
-		CL_GUITopLevelWindowTexture *toplevel_window = z_order[index-1];
-		if ( (only_visible == false) || (toplevel_window->visible) )
-			windows.push_back(CL_GUIWindowManagerTextureWindow(toplevel_window->window, toplevel_window->subtexture, toplevel_window->geometry));
-	}
-
+	get_all_windows_zorder(only_visible, windows, root_window_z_order);
 	return windows;
 }
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerProvider_Texture Operations:
 
@@ -129,17 +121,7 @@ void CL_GUIWindowManagerProvider_Texture::update_paint()
 
 void CL_GUIWindowManagerProvider_Texture::draw_windows(CL_GraphicContext &gc)
 {
-	std::vector<CL_GUITopLevelWindowTexture *>::size_type index, size;
-	size = z_order.size();
-	for (index = size; index > 0; index--)
-	{
-		CL_GUITopLevelWindowTexture *toplevel_window = z_order[index-1];
-		if (toplevel_window->visible)
-		{
-			CL_Image image(gc, toplevel_window->subtexture);
-			image.draw(gc, toplevel_window->geometry.left,  toplevel_window->geometry.top);
-		}
-	}
+	draw_all_windows(gc, root_window_z_order);
 }
 
 void CL_GUIWindowManagerProvider_Texture::default_repaint()
@@ -183,10 +165,29 @@ void CL_GUIWindowManagerProvider_Texture::on_input_mouse_move(const CL_InputEven
 	if (!func_input_intercept.is_null())
 				func_input_intercept.invoke(new_input_event, new_input_state);
 
-	CL_GUITopLevelWindow *toplevel_window;
+	bool capture_mouse_flag = false;
 	if (capture_mouse_window)
 	{
+		// Only capture when left mouse is pressed 
 		//(see win32 mouse capture for behaviour http://msdn.microsoft.com/en-us/library/ms646262.aspx )
+// ** Disabled - It seems multiple windows in the same app act differently to microsoft docs **
+//		if (get_display_window(capture_mouse_window).get_ic().get_mouse().get_keycode(CL_MOUSE_LEFT))
+		{
+			capture_mouse_flag = true;
+		}
+	}
+
+
+	CL_GUITopLevelWindow *toplevel_window;
+	if (capture_mouse_flag)
+	{
+		// From MSDN:
+		//   "Only the foreground window can capture the mouse. 
+		//    When a background window attempts to do so, the window receives messages
+		//    only for mouse events that occur when the cursor hot spot is within
+		//    the visible portion of the window."
+// ** Disabled - It seems multiple windows in the same app act differently to microsoft docs **
+//		toplevel_window = get_captured_window_at_point(new_input_event.mouse_pos, capture_mouse_window);
 		toplevel_window = capture_mouse_window;
 	}
 	else
@@ -198,6 +199,26 @@ void CL_GUIWindowManagerProvider_Texture::on_input_mouse_move(const CL_InputEven
 		invoke_input_received(toplevel_window, new_input_event, new_input_state);
 }
 
+void CL_GUIWindowManagerProvider_Texture::on_input_mouse_up(const CL_InputEvent &input_event, const CL_InputState &input_state)
+{
+	// It seems multiple windows in the same app act differently for window SetCapture()
+	if (!capture_mouse_window)
+	{
+		// Process MouseUp as normal input event when capture mouse is not used
+		on_input(input_event, input_state);
+		return;
+	}
+
+	CL_InputEvent new_input_event = input_event;
+	CL_InputState new_input_state = input_state;
+
+	if (!func_input_intercept.is_null())
+		func_input_intercept.invoke(new_input_event, new_input_state);
+
+	invoke_input_received(capture_mouse_window, new_input_event, new_input_state);
+
+
+}
 void CL_GUIWindowManagerProvider_Texture::on_input_mouse_down(const CL_InputEvent &input_event, const CL_InputState &input_state)
 {
 	CL_InputEvent new_input_event = input_event;
@@ -206,46 +227,58 @@ void CL_GUIWindowManagerProvider_Texture::on_input_mouse_down(const CL_InputEven
 	if (!func_input_intercept.is_null())
 		func_input_intercept.invoke(new_input_event, new_input_state);
 
-	CL_GUITopLevelWindow *toplevel_window;
+	// It seems multiple windows in the same app act differently for window SetCapture()
 	if (capture_mouse_window)
 	{
-		toplevel_window = capture_mouse_window;
+		invoke_input_received(capture_mouse_window, new_input_event, new_input_state);
+		return;
 	}
-	else
-	{
-		toplevel_window = get_window_at_point(new_input_event.mouse_pos);
-	}
+
+	CL_GUITopLevelWindow *toplevel_window;
+	toplevel_window = get_window_at_point(new_input_event.mouse_pos);
 
 	if (toplevel_window)
+		bring_to_front(toplevel_window);
+
+	// Send focus lost events
+	if (toplevel_window)
 	{
-		bool focus_change = false;
-		if (activated_window)
-		{
-			if (toplevel_window != activated_window)
-			{
-				focus_change = true;
-			}
-		}
-		else
-		{
-			focus_change = true;
-		}
-		if (focus_change)
+		if (toplevel_window != activated_window)
 		{
 			// Change of focus required
+			// From: http://msdn.microsoft.com/en-us/library/ms646274(VS.85).aspx - deactivation occurs before activation
+
 			if (activated_window)
 			{
-				if (activated_window->focused_component)
-				{
-					activated_window->focused_component->set_focus(false);
-				}
+				CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+
+				site->func_focus_lost->invoke(activated_window);
+
+				if (toplevel_window_alive.is_null())
+					toplevel_window = get_window_at_point(new_input_event.mouse_pos);
 			}
-
-			activated_window = toplevel_window;
 		}
+	}
 
+	// Send focus gained events
+	if (toplevel_window)
+	{
+		if (toplevel_window != activated_window)
+		{
+			activated_window = toplevel_window;
+			CL_GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
+			site->func_focus_gained->invoke(activated_window);
+			if (toplevel_window_alive.is_null())
+				toplevel_window = get_window_at_point(new_input_event.mouse_pos);
+		}
+	}
+
+	// Send mouse click event to toplevel window
+	if (toplevel_window)
+	{
 		invoke_input_received(toplevel_window, new_input_event, new_input_state);
 	}
+
 }
 
 void CL_GUIWindowManagerProvider_Texture::clear_frame_buffer(CL_GUITopLevelWindowTexture *toplevel_window )
@@ -301,11 +334,37 @@ void CL_GUIWindowManagerProvider_Texture::setup_frame_buffer(CL_GUITopLevelWindo
 
 void CL_GUIWindowManagerProvider_Texture::bring_to_front(CL_GUITopLevelWindow *handle)
 {
-	CL_GUITopLevelWindowTexture *texture = window_map[handle];
+	CL_GUITopLevelWindowTexture *texture = get_window_texture(handle);
 	if(texture)
 	{
-		z_order.erase(std::find(z_order.begin(), z_order.end(), texture));
-		z_order.insert(z_order.begin(), texture);
+		// Get root texture
+		CL_GUITopLevelWindowTexture *root_texture = texture;
+		while (root_texture->owner_window)
+		{
+			root_texture = root_texture->owner_window;
+		}
+
+		// Check root window order
+		if (root_window_z_order[0] != root_texture)
+		{
+			std::vector<CL_GUITopLevelWindowTexture *>::iterator it;
+			it = std::find(root_window_z_order.begin(), root_window_z_order.end(), root_texture);
+			root_window_z_order.erase(it);
+			root_window_z_order.insert(root_window_z_order.begin(), root_texture);
+		}
+
+		// Check owner window order
+		if (texture->owner_window)
+		{
+			std::vector<CL_GUITopLevelWindowTexture *> &z_order = texture->owner_window->child_windows_zorder;
+			if (z_order[0] != texture)
+			{
+				std::vector<CL_GUITopLevelWindowTexture *>::iterator it;
+				it = std::find(z_order.begin(), z_order.end(), texture);
+				z_order.erase(it);
+				z_order.insert(z_order.begin(), texture);
+			}
+		}
 	}
 }
 
@@ -317,17 +376,17 @@ void CL_GUIWindowManagerProvider_Texture::set_site(CL_GUIWindowManagerSite *new_
 void CL_GUIWindowManagerProvider_Texture::create_window(
 	CL_GUITopLevelWindow *handle,
 	CL_GUITopLevelWindow *owner,
-	CL_GUITopLevelDescription description,
-	bool temporary)
+	CL_GUITopLevelDescription description)
 {
 	// Create the texture group, if it has not already been set
 	CL_GraphicContext &gc = display_window.get_gc();
 	if (texture_group.is_null())
 	{
 		//Set the texture group size to 0. This will force the texture group to use a single texture
-		//for each GUI Window. This was done this way for 2 reasons.
+		//for each GUI Window. This was done this way for 3 reasons.
 		//1) This class cannot predict the optimum texture size - It may be too small or too large (wasting GPU RAM)
 		//2) It ensures the boundary of the window equals the boundary of the texture, so the OpenGL pixel blending on scaled/rotated images work.
+		//3) Depth buffer and Stencil buffer size must match the CL_Texture size.
 		//If you want multiple windows in a single texture - Use set_texture_group()
 		CL_Size initial_texture_size = CL_Size(0, 0);
 		texture_group = CL_TextureGroup(gc, initial_texture_size);
@@ -352,7 +411,19 @@ void CL_GUIWindowManagerProvider_Texture::create_window(
 	}
 
 	window_map[handle] = toplevel_window;
-	z_order.insert(z_order.begin(), toplevel_window);
+
+	if (owner)
+	{
+		// Attach to owner
+		toplevel_window->owner_window = get_window_texture(owner);
+		toplevel_window->owner_window->child_windows_zorder.insert(toplevel_window->owner_window->child_windows_zorder.begin(), toplevel_window);
+	}
+	else
+	{
+		// Attach to root
+		root_window_z_order.insert(root_window_z_order.begin(), toplevel_window);
+	}
+
 	activated_window = handle;
 
 	clear_frame_buffer(toplevel_window);
@@ -369,7 +440,21 @@ void CL_GUIWindowManagerProvider_Texture::create_window(
 
 void CL_GUIWindowManagerProvider_Texture::destroy_window(CL_GUITopLevelWindow *handle)
 {
-	CL_GUITopLevelWindowTexture *toplevel_window = window_map[handle];
+	capture_mouse(handle, false);	// Ensure the destroyed window has not captured the mouse
+
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
+
+	if (toplevel_window->owner_window)
+	{
+		// Detach from owner
+		toplevel_window->owner_window->child_windows_zorder.erase(std::find(toplevel_window->owner_window->child_windows_zorder.begin(), toplevel_window->owner_window->child_windows_zorder.end(), toplevel_window));
+	}
+	else
+	{
+		// Detach from root
+		root_window_z_order.erase(std::find(root_window_z_order.begin(), root_window_z_order.end(), toplevel_window));
+	}
+
 	texture_group.remove(toplevel_window->subtexture);
 
 	if (handle == activated_window)	// Ensure that the destroyed window is not in focus
@@ -377,16 +462,14 @@ void CL_GUIWindowManagerProvider_Texture::destroy_window(CL_GUITopLevelWindow *h
 		activated_window = NULL;
 	}
 
-	capture_mouse(handle, false);	// Ensure the destroyed window has not captured the mouse
-
-	z_order.erase(std::find(z_order.begin(), z_order.end(), toplevel_window));
 	delete toplevel_window;
 	window_map.erase(window_map.find(handle));
 }
 
 void CL_GUIWindowManagerProvider_Texture::enable_window(CL_GUITopLevelWindow *handle, bool enable)
 {
-	window_map[handle]->enabled = enable;
+	CL_GUITopLevelWindowTexture *window_texture = get_window_texture(handle);
+	window_texture->enabled = enable;
 }
 
 bool CL_GUIWindowManagerProvider_Texture::has_focus(CL_GUITopLevelWindow *handle) const
@@ -396,7 +479,7 @@ bool CL_GUIWindowManagerProvider_Texture::has_focus(CL_GUITopLevelWindow *handle
 
 void CL_GUIWindowManagerProvider_Texture::set_visible(CL_GUITopLevelWindow *handle, bool visible, bool activate)
 {
-	CL_GUITopLevelWindowTexture *toplevel_window = window_map[handle];
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
 	toplevel_window->visible = visible;
 	if (activate)
 		activated_window = handle;
@@ -407,7 +490,7 @@ void CL_GUIWindowManagerProvider_Texture::set_geometry(CL_GUITopLevelWindow *han
 	// to-do: convert client area rect to window area rect, if needed.
 
 	CL_GraphicContext &gc = display_window.get_gc();
-	CL_GUITopLevelWindowTexture *toplevel_window = window_map[handle];
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
 
 	if ((toplevel_window->geometry.get_width() == geometry.get_width()) &&
 		(toplevel_window->geometry.get_height() == geometry.get_height()) )
@@ -472,7 +555,8 @@ CL_InputContext& CL_GUIWindowManagerProvider_Texture::get_ic(CL_GUITopLevelWindo
 CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region)
 {
 	CL_GraphicContext &gc = display_window.get_gc();
-	CL_GUITopLevelWindowTexture *toplevel_window = window_map[handle];
+
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
 
 	setup_frame_buffer(toplevel_window);
 
@@ -490,10 +574,14 @@ CL_GraphicContext CL_GUIWindowManagerProvider_Texture::begin_paint(CL_GUITopLeve
 
 	CL_Rect subtexture_geometry = toplevel_window->subtexture.get_geometry();
 
-	// TODO: Is gc.set_cliprect() required - Should the components clip instead?
 	CL_Rect clip_rect = update_region;
 	clip_rect.translate(subtexture_geometry.left, subtexture_geometry.top);
+	clip_rect.overlap(subtexture_geometry);
+
+	// TODO: CL_Draw::fill() is slightly slower than gc.clear() - but it works with a cliprect on the GDI target
+	CL_Draw::fill(gc, clip_rect, CL_Colorf::transparent);
 	gc.set_cliprect(clip_rect);
+	//gc.clear(CL_Colorf::transparent);
 
 	// Translate model view matrix to the texture position
 	gc.push_modelview();
@@ -559,22 +647,6 @@ bool CL_GUIWindowManagerProvider_Texture::is_maximized(CL_GUITopLevelWindow *han
 	return false;
 }
 
-bool CL_GUIWindowManagerProvider_Texture::has_message()
-{
-	return CL_DisplayMessageQueue::wait(0);
-}
-
-void CL_GUIWindowManagerProvider_Texture::process_message()
-{
-	CL_DisplayWindowMessage message = CL_DisplayMessageQueue::get_message();
-	CL_DisplayMessageQueue::dispatch_message(message);
-}
-
-void CL_GUIWindowManagerProvider_Texture::wait_for_message()
-{
-	CL_DisplayMessageQueue::wait();
-}
-
 void CL_GUIWindowManagerProvider_Texture::request_repaint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region)
 {
 	// Only invalidate when a valid rect was given
@@ -583,7 +655,7 @@ void CL_GUIWindowManagerProvider_Texture::request_repaint(CL_GUITopLevelWindow *
 		return;
 	}
 
-	CL_GUITopLevelWindowTexture *wptr = window_map[handle];
+	CL_GUITopLevelWindowTexture *wptr = get_window_texture(handle);
 	if (wptr->dirty)
 	{
 		// If the update region is already set, then check to see if it is a seperate rect or if it
@@ -670,10 +742,11 @@ void CL_GUIWindowManagerProvider_Texture::complete_painting()
 
 void CL_GUIWindowManagerProvider_Texture::set_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)
 {
-	CL_GUITopLevelWindowTexture *toplevel_window = window_map[handle];
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
 	CL_Rect subtexture_geometry = toplevel_window->subtexture.get_geometry();
 	CL_Rect cliprect = rect;
 	cliprect.translate(subtexture_geometry.left, subtexture_geometry.top);
+	cliprect.overlap(subtexture_geometry);
 	gc.set_cliprect(cliprect);
 }
 
@@ -682,10 +755,31 @@ void CL_GUIWindowManagerProvider_Texture::reset_cliprect(CL_GUITopLevelWindow *h
 	gc.pop_cliprect();
 }
 
+void CL_GUIWindowManagerProvider_Texture::push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)
+{
+	CL_GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
+	CL_Rect subtexture_geometry = toplevel_window->subtexture.get_geometry();
+	CL_Rect cliprect = rect;
+	cliprect.translate(subtexture_geometry.left, subtexture_geometry.top);
+	cliprect.overlap(subtexture_geometry);
+	gc.push_cliprect(cliprect);
+}
+
+void CL_GUIWindowManagerProvider_Texture::pop_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc)
+{
+	gc.pop_cliprect();
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerProvider_Texture Implementation:
 
 CL_GUITopLevelWindow *CL_GUIWindowManagerProvider_Texture::get_window_at_point(const CL_Point &point)
+{
+	return get_window_at_point(point, root_window_z_order);
+}
+
+CL_GUITopLevelWindow *CL_GUIWindowManagerProvider_Texture::get_window_at_point(const CL_Point &point, const std::vector<CL_GUITopLevelWindowTexture *> &z_order)
 {
 	std::vector<CL_GUITopLevelWindowTexture *>::size_type index, size;
 	size = z_order.size();
@@ -694,6 +788,11 @@ CL_GUITopLevelWindow *CL_GUIWindowManagerProvider_Texture::get_window_at_point(c
 		CL_GUITopLevelWindowTexture *toplevel_window_texture = z_order[index];
 		if (toplevel_window_texture->visible)
 		{
+			// Check children first
+			CL_GUITopLevelWindow *child_window = get_window_at_point(point, toplevel_window_texture->child_windows_zorder);
+			if (child_window)
+				return child_window;
+
 			if (toplevel_window_texture->geometry.contains(point))
 			{
 				return toplevel_window_texture->window;
@@ -705,9 +804,55 @@ CL_GUITopLevelWindow *CL_GUIWindowManagerProvider_Texture::get_window_at_point(c
 
 void CL_GUIWindowManagerProvider_Texture::invoke_input_received(CL_GUITopLevelWindow *window, const CL_InputEvent &input_event, const CL_InputState &input_state)
 {
-	CL_GUITopLevelWindowTexture *texture_window = window_map[window];
+	CL_GUITopLevelWindowTexture *texture_window = get_window_texture(window);
 	CL_InputEvent inp_event = input_event;
 	inp_event.mouse_pos.x -= texture_window->geometry.left;
 	inp_event.mouse_pos.y -= texture_window->geometry.top;
 	site->func_input_received->invoke(window, inp_event, input_state);
+}
+
+CL_GUITopLevelWindowTexture *CL_GUIWindowManagerProvider_Texture::get_window_texture(CL_GUITopLevelWindow *handle)
+{
+	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowTexture *>::iterator it;
+	it = window_map.find(handle);
+	if (it == window_map.end())
+		throw CL_Exception(cl_text("Invalid GUI Top Level Window requested"));
+	return it->second;
+}
+
+// Used by get_windows() to get child windows z order
+void CL_GUIWindowManagerProvider_Texture::get_all_windows_zorder(bool only_visible, std::vector<CL_GUIWindowManagerTextureWindow> &windows_dest_list, const std::vector<CL_GUITopLevelWindowTexture *> &z_order) const
+{
+	std::vector<CL_GUITopLevelWindowTexture *>::size_type index, size;
+	size = z_order.size();
+	for (index = size; index > 0; index--)
+	{
+		CL_GUITopLevelWindowTexture *toplevel_window = z_order[index-1];
+		if ( (only_visible == false) || (toplevel_window->visible) )
+		{
+			windows_dest_list.push_back(CL_GUIWindowManagerTextureWindow(toplevel_window->window, toplevel_window->subtexture, toplevel_window->geometry));
+
+			// Get all children
+			get_all_windows_zorder(only_visible, windows_dest_list, toplevel_window->child_windows_zorder);
+		}
+	}
+}
+
+
+void CL_GUIWindowManagerProvider_Texture::draw_all_windows(CL_GraphicContext &gc, std::vector<CL_GUITopLevelWindowTexture *> &z_order)
+{
+	std::vector<CL_GUITopLevelWindowTexture *>::size_type index, size;
+	size = z_order.size();
+	for (index = size; index > 0; index--)
+	{
+		CL_GUITopLevelWindowTexture *toplevel_window = z_order[index-1];
+		if (toplevel_window->visible)
+		{
+			CL_Image image(gc, toplevel_window->subtexture);
+			image.draw(gc, toplevel_window->geometry.left,  toplevel_window->geometry.top);
+
+			// Draw all children
+			draw_all_windows(gc, toplevel_window->child_windows_zorder);
+		}
+	}
 }

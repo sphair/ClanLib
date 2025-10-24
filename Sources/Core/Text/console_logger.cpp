@@ -85,7 +85,11 @@ void CL_ConsoleLogger::log(const CL_StringRef &type, const CL_StringRef &text)
 	// Tue Nov 16 11:34:15 2004 UTC
 	CL_DateTime cur_time = CL_DateTime::get_current_utc_time();
 
+#ifdef WIN32
 	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n"));
+#else
+	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n"));
+#endif
 	format.set_arg(1, days[cur_time.get_day_of_week()]);
 	format.set_arg(2, months[cur_time.get_month()]);
 	format.set_arg(3, cur_time.get_day());

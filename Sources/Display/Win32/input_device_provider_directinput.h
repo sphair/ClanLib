@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #pragma once
@@ -116,6 +117,8 @@ public:
 /// \{
 
 private:
+	void on_dispose();
+
 	int check_axis(DWORD dwOfs) const;
 
 	CL_Signal_v1<const CL_InputEvent &> *sig_provider_event;

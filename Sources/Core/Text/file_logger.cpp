@@ -38,7 +38,7 @@
 
 CL_FileLogger::CL_FileLogger(const CL_StringRef &filename) : file(0)
 {
-	file = new CL_File(filename, CL_File::open_always);
+	file = new CL_File(filename, CL_File::open_always, CL_File::access_read_write);
 }
 
 CL_FileLogger::~CL_FileLogger()
@@ -84,7 +84,11 @@ void CL_FileLogger::log(const CL_StringRef &type, const CL_StringRef &text)
 	// Tue Nov 16 11:34:15 CET 2004
 	CL_DateTime cur_time = CL_DateTime::get_current_utc_time();
 
+#ifdef WIN32
 	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n"));
+#else
+	CL_TempStringFormat format(cl_text("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n"));
+#endif
 	format.set_arg(1, days[cur_time.get_day_of_week()]);
 	format.set_arg(2, months[cur_time.get_month()]);
 	format.set_arg(3, cur_time.get_day());

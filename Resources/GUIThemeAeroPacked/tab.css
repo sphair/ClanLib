@@ -25,6 +25,16 @@ tabheader
 	preferred-height:20;
 }
 
+tabheader focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+}
+
 tabheader page
 {
 	bg-image-sizing-left:2;
@@ -33,6 +43,7 @@ tabheader page
 	bg-image-sizing-bottom:1;
 	padding-left:5;
 	padding-right:5;
+	align:center;
 	
 	preferred-width:45;
 	preferred-height:20;

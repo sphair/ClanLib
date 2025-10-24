@@ -37,7 +37,8 @@
 class CL_SoundCard;
 class CL_SoundFilter;
 class CL_SoundBuffer;
-class CL_SoundBuffer_Session_Generic;
+class CL_SoundBuffer_Session_Impl;
+class CL_SoundOutput;
 
 /// \brief CL_SoundBuffer_Session provides control over a playing soundeffect.
 ///
@@ -123,9 +124,7 @@ public:
 	/// \brief Sets the frequency of the session.
 	///
 	/// \param new_freq New frequency of session.
-	///
-	/// \return Returns true, if the operation completed succesfully.
-	bool set_frequency(int new_freq);
+	void set_frequency(int new_freq);
 
 	/// \brief Sets the volume of the session in a relative measure (0->1)
 	/** <p>A value of 0 will effectively mute the sound (although it will
@@ -166,15 +165,11 @@ public:
 /// \{
 
 private:
-
-	/// \brief Constructs a SoundBuffer Session
-	///
-	/// \param CL_SoundBuffer_Session_Generic = Shared Ptr
-	CL_SoundBuffer_Session(const CL_SharedPtr<CL_SoundBuffer_Session_Generic> &impl);
-
-	CL_SharedPtr<CL_SoundBuffer_Session_Generic> impl;
+	CL_SoundBuffer_Session(CL_SoundBuffer &soundbuffer, bool looping, CL_SoundOutput &output);
+	CL_SharedPtr<CL_SoundBuffer_Session_Impl> impl;
 
 	friend class CL_SoundBuffer;
+	friend class CL_SoundOutput_Impl;
 /// \}
 };
 

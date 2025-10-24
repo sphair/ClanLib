@@ -461,7 +461,29 @@ void CL_PixelBuffer::set_colorkey(bool enabled, unsigned int colorkey)
 
 void CL_PixelBuffer::draw_pixel(int x, int y, const CL_Colorf &color)
 {
-	//TODO: Implement me!
+	throw CL_Exception(cl_text("CL_PixelBuffer::draw_pixel is not implemented"));
+}
+
+void CL_PixelBuffer::flip_vertical()
+{
+	if ( (impl->width == 0) || (impl->height <= 1) )
+		return;
+
+	unsigned int pitch = impl->pitch;
+	std::vector<unsigned char> line_buffer;
+	line_buffer.resize(pitch);
+
+	int num_lines = (impl->height - 1) / 2;
+
+	int start_offset = 0;
+	int end_offset = (impl->height - 1) * pitch;
+
+	for (int cnt=0; cnt < num_lines; cnt++, start_offset+=pitch, end_offset-=pitch)
+	{
+		memcpy(&line_buffer[0], &impl->data[start_offset], pitch);
+		memcpy(&impl->data[start_offset], &impl->data[end_offset], pitch);
+		memcpy(&impl->data[end_offset], &line_buffer[0], pitch);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

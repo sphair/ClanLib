@@ -111,9 +111,6 @@ public:
 private:
 	CL_SharedPtr<CL_Event_Impl> impl;
 
-#ifdef WIN32
-	friend class CL_DisplayMessageQueue_Win32;
-#endif
 /// \}
 };
 

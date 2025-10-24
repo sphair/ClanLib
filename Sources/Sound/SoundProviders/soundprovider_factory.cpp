@@ -38,6 +38,7 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/IOData/virtual_file_system.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProviderFactory attributes:
@@ -50,15 +51,15 @@ std::map<CL_String, CL_SoundProviderType *> CL_SoundProviderFactory::types;
 CL_SoundProvider *CL_SoundProviderFactory::load(
 	const CL_String &filename,
 	bool streamed,
-	const CL_String &type,
-	CL_VirtualDirectory directory)
+	const CL_VirtualDirectory &directory,
+	const CL_String &type)
 {
 	if (!type.empty())
 	{
 		if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown sound provider type ") + type);
 
 		CL_SoundProviderType *factory = types[type];
-		return factory->load(filename, directory, streamed);
+		return factory->load(filename, streamed, directory);
 	}
 
 	// Determine file extension and use it to lookup type.
@@ -68,5 +69,27 @@ CL_SoundProvider *CL_SoundProviderFactory::load(
 	if (types.find(ext) == types.end()) throw CL_Exception(CL_String(cl_text("Unknown sound provider type ")) + ext);
 
 	CL_SoundProviderType *factory = types[ext];
-	return factory->load(filename, directory, streamed);
+	return factory->load(filename, streamed, directory);
+}
+
+CL_SoundProvider *CL_SoundProviderFactory::load(
+	const CL_String &fullname,
+	bool streamed,
+	const CL_String &type)
+{
+	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
+	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
+	CL_VirtualFileSystem vfs(path);
+	return CL_SoundProviderFactory::load(filename, streamed, vfs.get_root_directory(), type);
+}
+
+CL_SoundProvider *CL_SoundProviderFactory::load(
+	CL_IODevice &file,
+	bool streamed,
+	const CL_String &type)
+{
+	if (types.find(type) == types.end()) throw CL_Exception(cl_text("Unknown sound provider type ") + type);
+
+	CL_SoundProviderType *factory = types[type];
+	return factory->load(file, streamed);
 }

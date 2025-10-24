@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 /// \addtogroup clanDisplay_Font clanDisplay Font
@@ -51,18 +52,18 @@ public:
 
 	CL_FontMetrics(
 		float height,
-		float ascent=0.0,
-		float descent=0.0,
-		float internal_leading=0.0,
-		float external_leading=0.0,
-		float average_character_width=0.0,
-		float max_character_width=0.0,
-		float weight=0.0,
-		float overhang=0.0,
-		float digitized_aspect_x=0.0,
-		float digitized_aspect_y=0.0,
+		float ascent=0.0f,
+		float descent=0.0f,
+		float internal_leading=0.0f,
+		float external_leading=0.0f,
+		float average_character_width=0.0f,
+		float max_character_width=0.0f,
+		float weight=0.0f,
+		float overhang=0.0f,
+		float digitized_aspect_x=0.0f,
+		float digitized_aspect_y=0.0f,
 		bool italic=false,
-		bool underline=false,
+		bool underlined=false,
 		bool struck_out=false,
 		bool fixed_pitch=false
 	);
@@ -139,6 +140,82 @@ public:
 
 public:
 
+	/// \brief Set the height of the font.
+	///
+	/// \param value = The height
+	void set_height(float value);
+
+	/// \brief Set the font ascender.
+	///
+	/// \param value = The ascent
+	void set_ascent(float value);
+
+	/// \brief Set the font descender.
+	///
+	/// \param value = The descent
+	void set_descent(float value);
+
+	/// \brief Set the amount of leading (space) inside the bounds set by the set_height() function.
+	///
+	/// \param value = The internal_leading
+	void set_internal_leading(float value);
+
+	/// \brief Set the amount of extra leading (space) that the application adds between rows.
+	///
+	/// \param value = The external_leading
+	void set_external_leading(float value);
+
+	/// \brief Set the average width of characters in the font.
+	///
+	/// \param value = The average_character_width
+	void set_average_character_width(float value);
+
+	/// \brief Set the width of the widest character in the font.
+	///
+	/// \param value = The max_character_width
+	void set_max_character_width(float value);
+
+	/// \brief Set the weight of the font.
+	///
+	/// \param value = The weight
+	void set_weight(float value);
+
+	/// \brief Set the extra width per string that may be added to some synthesized fonts.
+	///
+	/// \param value = The overhang
+	void set_overhang(float value);
+
+	/// \brief Set the horizontal aspect of the device for which the font was designed.
+	///
+	/// \param value = The digitized_aspect_x
+	void set_digitized_aspect_x(float value);
+
+	/// \brief Set the vertical aspect of the device for which the font was designed.
+	///
+	/// \param value = The digitized_aspect_y
+	void set_digitized_aspect_y(float value);
+
+	/// \brief Set if the font is italic.
+	///
+	/// \param value = true if italic
+	void set_italic(bool value);
+
+	/// \brief Set if the font is underlined.
+	///
+	/// \param value = true if underlined
+	void set_underlined(bool value);
+
+	/// \brief Set if the font is struck out.
+	///
+	/// \param value = true if struck_out
+	void set_struck_out(bool value);
+
+	/// \brief Set if the font is a mono space font.
+	///
+	/// \param value = true if fixed_pitch
+	void set_fixed_pitch(bool value);
+
+
 /// \}
 /// \name Implementation
 /// \{
@@ -149,3 +226,4 @@ private:
 };
 
 /// \}
+

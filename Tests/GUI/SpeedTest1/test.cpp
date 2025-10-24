@@ -87,15 +87,7 @@ public:
 
 			while (!gui.get_exit_flag())
 			{
-				while (true)
-				{
-					CL_GUIMessage message = gui.peek_message(false);
-					if (message.is_null())
-						break;
-					message = gui.get_message();
-					gui.dispatch_message(message);
-				}
-
+				gui.process_messages(0);
 				window.request_repaint();
 			}
 
@@ -110,9 +102,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

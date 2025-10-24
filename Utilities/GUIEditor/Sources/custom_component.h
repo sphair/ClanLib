@@ -26,8 +26,7 @@
 **    Harry Storbacka
 */
 
-#ifndef header_custom_component
-#define header_custom_component
+#pragma once
 
 class CustomComponent_Impl;
 
@@ -37,7 +36,7 @@ class CustomComponent : public CL_GUIComponent
 public:
 	CustomComponent(CL_GUIComponent *parent);
 	
-	virtual ~CustomComponent() {};
+	virtual ~CustomComponent() {}
 
 //! Attributes:
 public:
@@ -52,5 +51,3 @@ public:
 private:
 	CL_SharedPtr<CustomComponent_Impl> impl;
 };
-
-#endif

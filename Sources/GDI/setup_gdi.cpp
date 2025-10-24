@@ -54,3 +54,10 @@ CL_SetupGDI::~CL_SetupGDI()
 	if (cl_gdi_refcount == 0)
 		delete cl_gdi_target;
 }
+
+void CL_SetupGDI::set_current()
+{
+	CL_MutexSection mutex_lock(&cl_gdi_mutex);
+	cl_gdi_target->set_current();
+}
+

@@ -1,0 +1,82 @@
+@import "../../Resources/GUIThemeAero/theme.css";
+
+tab
+{
+    bg-image:;
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+tabheader
+{
+}
+
+tabpage
+{
+	bg-image:;	
+	border-left:0;
+	border-right:0;
+	border-top:0;
+	border-bottom:0;
+}
+
+ribbon
+{
+    bg-image:Ribbon;
+    preferred-width: 271;
+/*    preferred-height: 117;*/
+    preferred-height: 95;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 50;
+    bg-image-sizing-bottom: 8;
+    font-family: Arial;
+    font-size: -11;
+}
+
+ribbontab
+{
+    bg-image:RibbonTab;
+    preferred-width: 40;
+    preferred-height: 23;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-bottom: 8;
+}
+
+ribbonsection
+{
+    bg-image:RibbonSection;
+    preferred-width: 70;
+    preferred-height: 87;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 24;
+    bg-image-sizing-bottom: 16;
+}
+
+workspace
+{
+    bg-image:Workspace;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 54;
+    bg-image-sizing-bottom: 8;
+    font-family: Arial;
+    font-size: -11;
+}
+
+workspacetab
+{
+    bg-image:WorkspaceTab;
+    preferred-width: 40;
+    preferred-height: 27;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-bottom: 8;
+}
+

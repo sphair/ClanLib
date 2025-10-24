@@ -74,9 +74,9 @@ public:
 			hash = CL_HashFunctions::sha1(CL_StringHelp::text_to_utf8(key));
 		}
 
-		CL_StringRef key;
+		CL_String key;
 		CL_String8 hash;
-		CL_StringRef value;
+		CL_String value;
 	};
 
 	mutable std::vector<PropertyCacheEntry> properties_cache;

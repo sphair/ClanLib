@@ -249,8 +249,7 @@ void World::run(CL_DisplayWindow &window)
 
 		if (map->get_eggs_left() == 0) break; // level completed
 
-		if (CL_DisplayMessageQueue::has_messages())
-			CL_DisplayMessageQueue::process();
+		CL_KeepAlive::process();
 	}
 
 	CL_Console::write_line("Frames per second: %1", frameratecounter.get_framerate());

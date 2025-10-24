@@ -124,6 +124,7 @@ public:
 /// \{
 
 private:
+	void on_dispose();
 	void process_event(struct js_event event) const;
 	void update_states() const;
 

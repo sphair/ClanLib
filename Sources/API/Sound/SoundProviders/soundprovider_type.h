@@ -61,8 +61,11 @@ public:
 	/// \brief Called to load with this sound provider type.
 	virtual CL_SoundProvider *load(
 		const CL_String &filename,
-		CL_VirtualDirectory directory,
-		bool streamed) = 0;
+		bool streamed,
+		const CL_VirtualDirectory &directory) = 0;
+
+	virtual CL_SoundProvider *load(
+		CL_IODevice &file, bool streamed)=0;
 
 /// \}
 /// \name Implementation

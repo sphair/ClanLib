@@ -34,7 +34,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput accessors:
 
-static CL_WeakPtr<CL_SoundOutput_Generic> cl_current_output;
+static CL_WeakPtr<CL_SoundOutput_Impl> cl_current_output;
 
 const CL_String8 &CL_Sound::get_name()
 {

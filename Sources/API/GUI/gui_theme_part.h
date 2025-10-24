@@ -161,7 +161,6 @@ public:
 private:
 	CL_SharedPtr<CL_GUIThemePart_Impl> impl;
 
-	friend class CL_GUIThemePartProperty;
 	friend class CL_GUIThemePartProperty_Impl;
 /// \}
 };

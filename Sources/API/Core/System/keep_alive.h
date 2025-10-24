@@ -30,6 +30,7 @@
 
 
 #include "../api_core.h"
+#include "../Signals/callback_2.h"
 
 class CL_Event;
 class CL_KeepAliveObject;
@@ -41,7 +42,20 @@ class CL_API_CORE CL_KeepAlive
 {
 public:
 	/// \brief Processes and dispatches keep alive events until the specified timeout period has passed
+	///
+	/// \param timeout = Timeout (ms). -1 = Wait forever
 	static void process(int timeout = 0);
+
+	/// \brief Function that polls the events
+	///
+	/// If this is not set, CL_Event::wait() is used.
+	///
+	/// \param events = The event objects to wait for
+	/// \param timeout = Timeout (ms). -1 = Wait forever
+	/// \return The event that triggered an event.\n
+	///         -1 = Timeout
+	///			events.size() = An external event was triggered
+	static CL_Callback_2<int /*retval*/, const std::vector<CL_Event> &/*events*/, int /*timeout */ > &func_event_wait();
 
 	/// \brief Returns all the current keep alive objects available for this thread
 	static std::vector<CL_KeepAliveObject *> get_objects();

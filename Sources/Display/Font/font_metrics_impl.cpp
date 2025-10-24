@@ -45,7 +45,7 @@ CL_FontMetrics_Impl::CL_FontMetrics_Impl(
 	float digitized_aspect_x,
 	float digitized_aspect_y,		
 	bool italic,
-	bool underline,
+	bool underlined,
 	bool struck_out,
 	bool fixed_pitch
 ) :
@@ -61,7 +61,7 @@ CL_FontMetrics_Impl::CL_FontMetrics_Impl(
 	digitized_aspect_x(digitized_aspect_x),
 	digitized_aspect_y(digitized_aspect_y),		
 	italic(italic),
-	underline(underline),
+	underlined(underlined),
 	struck_out(struck_out),
 	fixed_pitch(fixed_pitch)
 {

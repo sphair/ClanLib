@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #include "Display/precomp.h"
@@ -40,6 +41,7 @@ CL_InputDeviceProvider_Win32Keyboard::CL_InputDeviceProvider_Win32Keyboard(CL_Wi
 
 CL_InputDeviceProvider_Win32Keyboard::~CL_InputDeviceProvider_Win32Keyboard()
 {
+	dispose();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -47,6 +49,8 @@ CL_InputDeviceProvider_Win32Keyboard::~CL_InputDeviceProvider_Win32Keyboard()
 
 bool CL_InputDeviceProvider_Win32Keyboard::get_keycode(int keycode) const
 {
+	throw_if_disposed();
+
 	// Ignore all key events when we don't have focus
 	if (!window->has_focus())
 		return false;
@@ -56,6 +60,8 @@ bool CL_InputDeviceProvider_Win32Keyboard::get_keycode(int keycode) const
 
 CL_String CL_InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) const
 {
+	throw_if_disposed();
+
 	TCHAR name[1024];
 	UINT scancode = MapVirtualKey(virtual_key, 0);
 	int length = GetKeyNameText(scancode << 16, name, 1024);
@@ -64,26 +70,31 @@ CL_String CL_InputDeviceProvider_Win32Keyboard::get_key_name(int virtual_key) co
 
 float CL_InputDeviceProvider_Win32Keyboard::get_axis(int index) const
 {
+	throw_if_disposed();
 	return 0.0f;
 }
 
 CL_String CL_InputDeviceProvider_Win32Keyboard::get_name() const
 {
+	throw_if_disposed();
 	return cl_text("System Keyboard");
 }
 
 CL_String CL_InputDeviceProvider_Win32Keyboard::get_device_name() const
 {
+	throw_if_disposed();
 	return cl_text("System Keyboard");
 }
 
 int CL_InputDeviceProvider_Win32Keyboard::get_axis_count() const
 {
+	throw_if_disposed();
 	return 0;
 }
 
 int CL_InputDeviceProvider_Win32Keyboard::get_button_count() const
 {
+	throw_if_disposed();
 	return -1;
 }
 
@@ -92,3 +103,8 @@ int CL_InputDeviceProvider_Win32Keyboard::get_button_count() const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDeviceProvider_Win32Keyboard implementation:
+
+
+void CL_InputDeviceProvider_Win32Keyboard::on_dispose()
+{
+}

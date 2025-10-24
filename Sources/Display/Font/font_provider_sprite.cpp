@@ -29,7 +29,6 @@
 
 #include "Display/precomp.h"
 #include "font_provider_sprite.h"
-
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"
@@ -49,6 +48,7 @@
 
 CL_FontProvider_Sprite::CL_FontProvider_Sprite( CL_GraphicContext &gc, const CL_StringRef &resource_id, CL_ResourceManager *resources )
 {
+
 	CL_Resource resource = resources->get_resource(resource_id);
 	CL_String type = resource.get_element().get_tag_name();
 	
@@ -73,6 +73,54 @@ CL_FontProvider_Sprite::CL_FontProvider_Sprite( CL_GraphicContext &gc, const CL_
 		bool monospace = CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("monospace"), cl_text("false")));
 
 		setup_glyphs(gc, letters, spacelen, monospace);
+
+		// Modify the default font metrics, if specified
+
+		if (bitmap_element.has_attribute(cl_text("height"))) 
+			font_metrics.set_height(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("height"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("ascent"))) 
+			font_metrics.set_ascent(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("ascent"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("descent"))) 
+			font_metrics.set_descent(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("descent"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("internal_leading"))) 
+			font_metrics.set_internal_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("internal_leading"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("external_leading"))) 
+			font_metrics.set_external_leading(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("external_leading"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("average_character_width"))) 
+			font_metrics.set_average_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("average_character_width"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("max_character_width"))) 
+			font_metrics.set_max_character_width(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("max_character_width"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("weight"))) 
+			font_metrics.set_weight(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("weight"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("overhang"))) 
+			font_metrics.set_overhang(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("overhang"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("digitized_aspect_x"))) 
+			font_metrics.set_digitized_aspect_x(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("digitized_aspect_x"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("digitized_aspect_y"))) 
+			font_metrics.set_digitized_aspect_y(CL_StringHelp::text_to_float(bitmap_element.get_attribute(cl_text("digitized_aspect_y"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("italic"))) 
+			font_metrics.set_italic(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("italic"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("underlined"))) 
+			font_metrics.set_underlined(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("underlined"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("struck_out"))) 
+			font_metrics.set_struck_out(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("struck_out"), cl_text("0"))));
+
+		if (bitmap_element.has_attribute(cl_text("fixed_pitch"))) 
+			font_metrics.set_fixed_pitch(CL_StringHelp::text_to_bool(bitmap_element.get_attribute(cl_text("fixed_pitch"), cl_text("0"))));
+
 	}
 	else
 	{
@@ -88,6 +136,11 @@ CL_FontProvider_Sprite::~CL_FontProvider_Sprite()
 // CL_FontProvider_Sprite Attributes:
 
 CL_FontMetrics CL_FontProvider_Sprite::get_font_metrics(CL_GraphicContext &gc)
+{
+	return font_metrics;
+}
+
+CL_FontMetrics CL_FontProvider_Sprite::get_metrics()
 {
 	return font_metrics;
 }
@@ -127,6 +180,12 @@ CL_Size CL_FontProvider_Sprite::get_text_size(CL_GraphicContext &gc, const CL_St
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_FontProvider_Sprite Operations:
+
+CL_FontPixelBuffer CL_FontProvider_Sprite::get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color)
+{
+	// Not supported
+	return CL_FontPixelBuffer();
+}
 
 int CL_FontProvider_Sprite::get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point)
 {
@@ -183,13 +242,10 @@ void CL_FontProvider_Sprite::destroy()
 	delete this;
 }
 
-void CL_FontProvider_Sprite::draw_text(CL_GraphicContext &gc, int xpos, int ypos, const CL_StringRef &text, const CL_Colorf &color) 
+void CL_FontProvider_Sprite::draw_text(CL_GraphicContext &gc, float xpos, float ypos, const CL_StringRef &text, const CL_Colorf &color) 
 {
 	CL_String::size_type string_length = text.length();
-	if (string_length==0)
-	{
-		return;
-	}
+	float ascent = font_metrics.get_ascent();
 
 	// Scan the string
 	for (CL_String::size_type p = 0; p < string_length; p++)
@@ -198,12 +254,41 @@ void CL_FontProvider_Sprite::draw_text(CL_GraphicContext &gc, int xpos, int ypos
 		if (gptr)
 		{
 			spr_glyphs.set_frame(gptr->sprite_index);
-			spr_glyphs.draw(gc, xpos, ypos);
+			spr_glyphs.set_color(color);
+			spr_glyphs.draw(gc, xpos, ypos - ascent);
 			xpos += spr_glyphs.get_frame_size(gptr->sprite_index).width;
 		}
 		else
 		{
 			xpos += spacelen;
+		}
+	}
+}
+
+void CL_FontProvider_Sprite::draw_text(CL_GraphicContext &gc, float xpos, float ypos, float scale_x, float scale_y, const CL_StringRef &text, const CL_Colorf &color)
+{
+	CL_String::size_type string_length = text.length();
+
+	float f_spacelen = spacelen;
+	float ascent = font_metrics.get_ascent() * scale_x;
+
+	// Scan the string
+	for (CL_String::size_type p = 0; p < string_length; p++)
+	{
+		CL_Font_Sprite_Glyph *gptr = get_glyph(text[p]);
+		if (gptr)
+		{
+			spr_glyphs.set_frame(gptr->sprite_index);
+			CL_Size frame_size = spr_glyphs.get_frame_size(gptr->sprite_index);
+			float dest_width = scale_x * frame_size.width;
+			float dest_height = scale_y * frame_size.height;
+			spr_glyphs.set_color(color);
+			spr_glyphs.draw(gc, CL_Rectf(xpos, ypos - ascent, CL_Sizef(dest_width, dest_height)));
+			xpos += dest_width;
+		}
+		else
+		{
+			xpos += f_spacelen;
 		}
 	}
 }
@@ -304,9 +389,44 @@ void CL_FontProvider_Sprite::setup_glyphs( CL_GraphicContext &gc, const CL_Strin
 		glyph_list.push_back(font_glyph);
 	}
 
+	float average_character_width=0.0f;
+	float max_character_width=0.0f;
+
+	if (monospace)
+	{
+		average_character_width = fixed_width;
+		max_character_width = fixed_width;
+	}
+	else
+	{
+		for (int i=0; i < length; ++i)
+		{
+			int glyph_width = spr_glyphs.get_frame_size(i).width;
+			average_character_width += glyph_width;
+			if (glyph_width > max_character_width)
+				max_character_width = glyph_width;
+		}
+		if (length)
+			average_character_width /= length;
+
+	}
+
 	font_metrics = CL_FontMetrics(
-		height,0, 0, 0,0,0,0,0, 0,0,
-		false, false, false, false);
+		height,		// height
+		height,		// ascent
+		0,			// descent
+		0,			// internal_leading
+		0,			// external_leading
+		average_character_width, // average_character_width
+		max_character_width, // max_character_width
+		400.0f,		// weight
+		0.0f,		// overhang
+		96.0f,		// digitized_aspect_x
+		96.0f,		// digitized_aspect_y
+		false,		// italic
+		false,		// underline
+		false,		// struck_out
+		false);		// fixed_pitch
 }
 
 CL_Font_Sprite_Glyph *CL_FontProvider_Sprite::get_glyph(unsigned int glyph)

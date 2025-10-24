@@ -319,6 +319,9 @@ public:
 	/// \brief Draw a pixel at (x, y) using the specified color.
 	void draw_pixel(int x, int y, const CL_Colorf &color);
 
+	/// \brief Flip the entire image vertically (turn it upside down)
+	void flip_vertical();
+
 /// \}
 /// \name Implementation
 /// \{

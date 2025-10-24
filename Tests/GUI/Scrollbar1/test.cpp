@@ -92,9 +92,10 @@ public:
 		scrollbar1->request_repaint();
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

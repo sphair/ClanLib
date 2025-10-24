@@ -189,6 +189,12 @@ public:
 	/// \return size
 	CL_Size get_size() const;
 
+	/// \brief Get Rect By Id
+	///
+	/// \return rect
+	std::vector<CL_Rect> get_rect_by_id(int id) const;
+
+
 	/// \brief Hit test
 	///
 	/// \param gc = Graphic Context

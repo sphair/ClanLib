@@ -1,7 +1,7 @@
 #include <ClanLib/core.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
-#include <ClanLib/gdi.h>
+#include <ClanLib/gl.h>
 
 // This is the Application class (That is instantiated by the Program Class)
 class App
@@ -30,7 +30,7 @@ public:
 		CL_SetupDisplay setup_display;
 
 		// Initilize the OpenGL drivers
-		CL_SetupGDI setup_gl;
+		CL_SetupGL setup_gl;
 
 		// Start the Application
 		App app;
@@ -71,18 +71,21 @@ int App::start(const std::vector<CL_String> &args)
 		// Run until someone presses escape
 		while (!quit)
 		{
+			gc.set_map_mode(CL_MapMode(cl_map_2d_upper_left));
 			gc.clear(CL_Colorf::red);
 
 			font1.draw_text(gc, 25, 25, "ClanLib: Phear the Power!");
 			
 			font2.draw_text(gc, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
 
+			font2.draw_text(gc, 10.0f, 200.0f, 2.0f, 2.0f, "Hello World\nMy Message");
+
 			// Flip the display, showing on the screen what we have drawed
 			// since last call to flip()
 			window.flip(1);
 
 			// This call processes user input and other events
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 	}
 	catch(CL_Exception& exception)

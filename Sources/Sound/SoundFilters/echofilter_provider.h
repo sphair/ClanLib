@@ -34,17 +34,17 @@
 class CL_EchoFilterProvider : public CL_SoundFilterProvider
 {
 public:
-	CL_EchoFilterProvider(int buffer_size, int shift_factor);
+	CL_EchoFilterProvider(int buffer_size, float shift_factor);
 	~CL_EchoFilterProvider();
 
 	void destroy();
 
-	void filter(int **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels);
 
 private:
 	int buffer_size;
-	int *buffer[2];
-	int shift_factor;
+	float *buffer[2];
+	float shift_factor;
 	int pos;
 };
 

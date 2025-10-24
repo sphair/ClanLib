@@ -81,6 +81,8 @@ private:
 
 	CL_Font_System font;
 	CL_Font_System font_small;
+	CL_Font_System font_large;
+	CL_Font_System font_large_antialias;
 
 	CL_TextureGroup font_texture_group;
 

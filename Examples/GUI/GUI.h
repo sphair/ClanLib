@@ -55,13 +55,13 @@ public:
 
 	bool run();
 
-	CL_DisplayWindow *get_window() { return window_ptr; }
+	CL_DisplayWindow *get_window();
 	App *get_app() { return app; }
 	CL_Font &get_font() { return font; }
 	CL_GUIManager &get_gui_manager() { return gui_manager; }
 	CL_ResourceManager &get_resources_internal() { return resources_internal; }
 
-	ManagerType get_manager() {return current_manager;}
+	ManagerType get_manager() {return actual_manager;}
 	void set_manager(ManagerType manager) {current_manager = manager;}
 
 	void set_constant_repaint(bool enable);
@@ -83,8 +83,8 @@ private:
 	CL_GUIManager gui_manager;
 	CL_ResourceManager resources_internal;
 	App *app;
-	CL_DisplayWindow *window_ptr;
 	CL_Font font;
+	CL_Font fps_font;
 	CL_AutoPtr<GUI_Texture> gui_texture;
 	CL_AutoPtr<GUI_System> gui_system;
 
@@ -92,6 +92,7 @@ private:
 	gui_theme current_theme;
 
 	ManagerType current_manager;
+	ManagerType actual_manager;		// Used to detect if the manager has changed
 };
 
 

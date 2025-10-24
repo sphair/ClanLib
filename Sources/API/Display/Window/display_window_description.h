@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanDisplay_Window clanDisplay Window
@@ -49,7 +50,6 @@ class CL_API_DISPLAY CL_DisplayWindowDescription
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a window description with default values.
 	CL_DisplayWindowDescription();
@@ -64,7 +64,6 @@ public:
 	CL_DisplayWindowDescription(const CL_Rect &position, bool client_area);
 
 	/// \brief Constructs a DisplayWindowDescription
-	///
 	/// \param copy = Display Window Description
 	CL_DisplayWindowDescription(const CL_DisplayWindowDescription &copy);
 
@@ -73,7 +72,6 @@ public:
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns the window title stored in the description.
 	const CL_String &get_title() const;
@@ -107,16 +105,28 @@ public:
 	    This value is also known as the vertical refresh rate.</p> */
 	int get_refresh_rate() const;
 
-#ifdef WIN32
-	/// \brief Windows 2000/XP only. Returns true if window is layered.
+	/// \brief Returns true if window is layered (black is transparent)
 	bool is_layered() const;
 
+#ifdef WIN32
 	/// \brief Windows only. Returns the window handle to be used for the window.
 	HWND get_handle() const;
 #endif
 
 	/// \brief Returns true if a title bar is shown.
 	bool has_caption() const;
+
+	/// \brief Returns true if the window has a window menu on its title bar.
+	bool has_sysmenu() const;
+
+	/// \brief Returns true if the window has a minimize button.
+	bool has_minimize_button() const;
+
+	/// \brief Returns true if the window has a maximize button.
+	bool has_maximize_button() const;
+
+	/// \brief Returns true if the window has a border.
+	bool has_border() const;
 
 	/// \brief Returns true if the window is a tool window.
 	bool is_tool_window() const;
@@ -126,6 +136,10 @@ public:
 
 	/// \brief Returns true if the window should be placed above all non-topmost windows.
 	bool is_topmost() const;
+
+	/// \brief Returns true if window from the window cache should be used. (GUI Only)
+	/** <p>This setting is ignored unless the GUI and CL_GUIWindowManagerSystem are used.</p> */
+	bool get_using_gui_window_cache() const;
 
 	/// \brief Returns true if the window is drawn with a drop shadow effect.
 	bool has_drop_shadow() const;
@@ -148,13 +162,24 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
 public:
 	/// \brief Copy assignment operator.
 	CL_DisplayWindowDescription &operator =(const CL_DisplayWindowDescription &copy);
 
 	/// \brief Controls if a title bar is shown or not.
 	void show_caption(bool value = true);
+
+	/// \brief Sets if the window has a window menu on its title bar.
+	void show_sysmenu(bool value = true);
+
+	/// \brief Sets if the window has a minimize button.
+	void show_minimize_button(bool value = true);
+
+	/// \brief Sets if the window has a maximize button.
+	void show_maximize_button(bool value = true);
+
+	/// \brief Sets if the window has a border.
+	void show_border(bool value = true);
 
 	/// \brief Sets if windows should have decorations.
 	void set_decorations(bool decorations);
@@ -178,7 +203,6 @@ public:
 	void set_title(const CL_String &title);
 
 	/// \brief Sets the size of the window (including window frame).
-	///
 	/// \param size = Window size
 	/// \param client_area = false = include the window frame. true = exclude the window frame
 	void set_size(const CL_Size &size, bool client_area);
@@ -211,10 +235,16 @@ public:
 	/// \brief Sets to true if a tablet input context should be created for this window.
 	void set_tablet_context(bool create);
 
-#ifdef WIN32
-	/// \brief Windows 2000/XP only. Creates a layered window (complex shaped window).
+	/// \brief Uses a window from the window cache (GUI Only). 
+	/** <p>Creating a window in Windows XP is slow (about 100 ms). Use cached 
+		windows for menus and dialogs to avoid sluggish operation in XP. 
+		This setting is ignored unless the GUI and CL_GUIWindowManagerSystem are used.</p>*/
+	void set_using_gui_window_cache(bool value);
+
+	/// \brief Creates a layered window (complex shaped window) (black is transparent).
 	void set_layered(bool layered);
 
+#ifdef WIN32
 	/// \brief Windows only.  Use an existing window handle for the window.
 	void set_handle(HWND handle);
 #endif
@@ -235,7 +265,6 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
 	CL_SharedPtr<CL_DisplayWindowDescription_Impl> impl;
 /// \}

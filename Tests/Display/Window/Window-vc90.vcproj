@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Window1"
 	ProjectGUID="{BAB9F701-4F2D-4D08-A3ED-02F84BD63AB2}"
 	TargetFrameworkVersion="131072"
@@ -210,10 +210,6 @@
 		</File>
 		<File
 			RelativePath="test_displaywindow.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\timer.cpp"
 			>
 		</File>
 		<File

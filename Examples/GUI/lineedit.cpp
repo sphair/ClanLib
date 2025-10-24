@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "lineedit.h"
 #include "GUI.h"
 
@@ -51,7 +48,6 @@ LineEdit::LineEdit(GUI *gui) :
 	lineedit1->func_focus_gained().set(this, &LineEdit::on_focus_gained, lineedit1);
 	lineedit1->func_focus_lost().set(this, &LineEdit::on_focus_lost, lineedit1);
 	lineedit1->func_enter_pressed().set(this, &LineEdit::on_enter_pressed, lineedit1);
-	lineedit1->func_unhandled_event().set(this, &LineEdit::on_unhandled_event, lineedit1);
 
 	int xoffset = client_area.left + 96;
 	int yoffset = client_area.top + 40;
@@ -74,9 +70,6 @@ LineEdit::LineEdit(GUI *gui) :
 	yoffset += gap;
 	info_enter_pressed = new Info(gui, this);
 	info_enter_pressed->set(xoffset, yoffset, "Enter Pressed");
-	yoffset += gap;
-	info_unhandled_event = new Info(gui, this);
-	info_unhandled_event->set(xoffset, yoffset, "Unhandled Event");
 	yoffset += gap;
 
 	xoffset = client_area.left + 1;
@@ -159,7 +152,7 @@ LineEdit::LineEdit(GUI *gui) :
 	menu_settext.insert_item("Select: None");
 
 	combo_settext = new CL_ComboBox(this);
-	combo_settext->set_geometry(CL_Rect(xoffset, yoffset, CL_Size(140, 20)));
+	combo_settext->set_geometry(CL_Rect(xoffset, yoffset, CL_Size(130, 20)));
 	combo_settext->set_editable(false);
 	combo_settext->set_dropdown_height(128);
 	combo_settext->set_dropdown_minimum_width(64);
@@ -196,12 +189,6 @@ void LineEdit::on_focus_lost(CL_LineEdit *lineedit)
 void LineEdit::on_enter_pressed(CL_LineEdit *lineedit)
 {
 	info_enter_pressed->activate();
-}
-
-bool LineEdit::on_unhandled_event(CL_InputEvent input_event, CL_LineEdit *lineedit)
-{
-	info_unhandled_event->activate();
-	return false;
 }
 
 void LineEdit::on_checked_disable(CL_CheckBox *checkbox)

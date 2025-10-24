@@ -23,7 +23,7 @@
 <img src="gfx/overview.png"/>GNU C++ on Linux
 </h2>
 
-<p>Installing using Ubuntu (7.10 (Gutsy Gibbon) to Ubuntu 8.10 (Intrepid Ibex))</p>
+<p>Installing using Ubuntu (9.04)</p>
 
 <p>Use the "Synaptic Package Manager", or overwise, ensure that the latest versions of these programs exist:</p>
 
@@ -47,7 +47,10 @@
 	libjpeg62-dev
 	libfreetype6  (unless compiled manually)
 	libfreetype6-dev (unless compiled manually)
+	x11proto-xf86vidmode-dev (to enable XF86 VidMode)
+	libxxf86vm-dev (to enable XF86 VidMode)
 	libfontconfig1-dev
+	libxi-dev
 	libgl1-mesa-dev
 	libice-dev
 	libsm-dev
@@ -61,20 +64,11 @@
 	x11proto-input-dev
 	x11proto-kb-dev
 	x11proto-xext-dev
-	xlibmesa-gl-dev
 	xtrans-dev</pre>
 
-<li>ClanGL:</li>
-<pre>	libxi-dev
-	libxxf86misc-dev
-	libxxf86vm-dev
-	x11proto-xf86misc-dev
-	x11proto-xf86vidmode-dev</pre>
 <li>ClanSDL:</li>
-<pre>	libsdl1.2debian
-	libsdl1.2-dev
-	libsdl-gfx1.2-4
-	libsdl-gfx1.2-dev</pre>
+<pre>This package has moved into a seperate clanSDL package.</pre>
+
 <li>ClanSound:</li>
 <pre>	libasound2-dev  (for alsa)</pre>
 <li>ClanMikmod:</li>

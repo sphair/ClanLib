@@ -56,11 +56,20 @@ public:
 	/// \brief Called to load static with this sound provider type.
 	virtual CL_SoundProvider *load(
 		const CL_String &filename,
-		CL_VirtualDirectory directory,
-		bool stream)
+		bool stream,
+		const CL_VirtualDirectory &directory)
 	{
 		return new SoundProviderClass(filename, directory, stream);
 	}
+
+	/// \brief Called to load static with this sound provider type.
+	virtual CL_SoundProvider *load(
+		CL_IODevice &file,
+		bool stream)
+	{
+		return new SoundProviderClass(file, stream);
+	}
+
 /// \}
 };
 

@@ -82,7 +82,6 @@ public:
 private:
 	CL_SharedPtr<CL_TabPage_Impl> impl;
 	friend class CL_Tab;
-	friend class CL_Tab_Impl;
 /// \}
 };
 

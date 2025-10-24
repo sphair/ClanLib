@@ -172,6 +172,7 @@ public:
 
 	virtual int peek(void *data, int len)
 	{
+		impl->connection.get_read_event().wait(15000);
 		if (http10)
 			return impl->connection.peek(data, len);
 
@@ -611,6 +612,8 @@ int CL_HTTPClientConnection_Impl::read_status(CL_String8 &out_status_text)
 	out_status_text.clear();
 	while (out_status_text.length() < 1024)
 	{
+		connection.get_read_event().wait(15000);
+
 		char buffer[1024];
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
@@ -645,6 +648,8 @@ bool CL_HTTPClientConnection_Impl::read_line(CL_String8 &out_line)
 	out_line.clear();
 	while (out_line.length() < 1024)
 	{
+		connection.get_read_event().wait(15000);
+
 		char buffer[1024];
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)
@@ -671,6 +676,8 @@ bool CL_HTTPClientConnection_Impl::read_lines(CL_String8 &out_header_lines)
 	out_header_lines.clear();
 	while (out_header_lines.length() < 32*1024)
 	{
+		connection.get_read_event().wait(15000);
+
 		char buffer[1024];
 		int bytes_read = connection.peek(buffer, 1024);
 		if (bytes_read <= 0)

@@ -34,7 +34,7 @@
 #pragma once
 #endif
 
-#include "API/Sound/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
 
 class CL_SoundProvider_Recorder_OSS_Session : public CL_SoundProvider_Session
 {
@@ -76,7 +76,7 @@ public:
 
 	virtual bool set_position(int pos);
 
-	virtual int get_data(void **data_ptr, int data_requested);
+	virtual int get_data(float **data_ptr, int data_requested);
 
 
 /// \}

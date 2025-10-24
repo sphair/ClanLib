@@ -110,12 +110,12 @@ CL_VirtualDirectoryListing CL_VirtualDirectory::get_directory_listing()
 	return CL_VirtualDirectoryListing(get_file_system().get_provider(), get_file_system().get_provider()->get_path() + get_path());
 }
 
-CL_String CL_VirtualDirectory::get_name() const
+CL_String CL_VirtualDirectory::get_identifier() const
 {
 	CL_String internal_name;
 
 	if (!impl->file_system.is_null())
-		internal_name = impl->file_system.get_name();
+		internal_name = impl->file_system.get_identifier();
 
 	return internal_name + impl->base_path;
 }

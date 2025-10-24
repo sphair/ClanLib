@@ -271,7 +271,7 @@ void ObjectPolygon::Draw(CL_GraphicContext &gc, CL_Texture &texture_image)
 	prim_array.set_attributes(4, normals);
 	gc.set_primitives_array(prim_array);
 
-	gc.draw_primitives_array(cl_polygon, m_NumVertex);
+	gc.draw_primitives_array(cl_quads, m_NumVertex);
 
 	gc.reset_texture(0);
 

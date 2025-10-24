@@ -33,11 +33,13 @@
 #include "API/Display/Window/input_device.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_state.h"
+#include "API/Core/System/disposable_object.h"
+
 
 class CL_InputEvent;
 
 /// \brief Input events interface.
-class CL_InputContext_Impl
+class CL_InputContext_Impl : public CL_DisposableObject
 {
 /// \name Construction
 /// \{
@@ -107,6 +109,8 @@ public:
 /// \{
 
 private:
+	void on_dispose();
+
 	/// \brief Update a specific device
 	///
 	/// \param peek_only Treat as a request to see if an event would occur
@@ -116,6 +120,7 @@ private:
 
 	std::vector< std::pair<CL_InputEvent, CL_WeakPtr<CL_InputDevice_Impl> > > events;
 /// \}
+
 };
 
 

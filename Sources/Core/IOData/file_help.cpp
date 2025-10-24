@@ -51,15 +51,15 @@ void CL_FileHelp::copy_file(const CL_String &from, const CL_String &to, bool cop
 	{
 		try
 		{
-			CL_File input_file(to, CL_File::open_existing);
+			CL_File input_file(to);
 			throw CL_Exception(cl_text("Destination file already exists"));
 		}
 		catch (CL_Exception error) {
 		}
 	}
 
-	CL_File input_file(from, CL_File::open_existing);
-	CL_File output_file(to, CL_File::create_always);
+	CL_File input_file(from);
+	CL_File output_file(to, CL_File::create_always, CL_File::access_read_write);
 	char buffer[16*1024];
 	while (true)
 	{

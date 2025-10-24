@@ -26,10 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
-
+#include "precomp.h"
 #include "manager.h"
 #include "GUI.h"
 
@@ -45,7 +42,7 @@ Manager::Manager(GUI *gui) :
 	groupbox->set_geometry(CL_Rect(client_area.left + 5, client_area.top + 5, client_area.right - 5, client_area.bottom - 5));
 
 	button_system = new CL_PushButton(this);
-	button_system->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 10, CL_Size(128, 40)));
+	button_system->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 10, CL_Size(128, 20)));
 	button_system->set_text("System");
 	button_system->func_clicked().set(this, &Manager::on_clicked_system, button_system);
 
@@ -53,7 +50,7 @@ Manager::Manager(GUI *gui) :
 		button_system->set_enabled(false);
 
 	button_texture = new CL_PushButton(this);
-	button_texture->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 60, CL_Size(128, 40)));
+	button_texture->set_geometry(CL_Rect(client_area.left + 11, client_area.top + 40, CL_Size(128, 20)));
 	button_texture->set_text("Texture");
 	button_texture->func_clicked().set(this, &Manager::on_clicked_texture, button_texture);
 
@@ -73,7 +70,7 @@ Manager::Manager(GUI *gui) :
 	radiobutton_aero->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
 	radiobutton_aero->set_text("Aero");
 	radiobutton_aero->set_selected(gui->get_theme() == GUI::theme_aero);
-	radiobutton_aero->set_group_name("Main Group");
+	radiobutton_aero->set_group_name("Theme");
 	radiobutton_aero->func_selected().set(this, &Manager::on_theme_selected, radiobutton_aero);
 	yoffset += ygap;
 
@@ -81,7 +78,7 @@ Manager::Manager(GUI *gui) :
 	radiobutton_aero_packed->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
 	radiobutton_aero_packed->set_text("Aero Packed");
 	radiobutton_aero_packed->set_selected(gui->get_theme() == GUI::theme_aero_packed);
-	radiobutton_aero_packed->set_group_name("Main Group");
+	radiobutton_aero_packed->set_group_name("Theme");
 	radiobutton_aero_packed->func_selected().set(this, &Manager::on_theme_selected, radiobutton_aero_packed);
 	yoffset += ygap;
 
@@ -89,7 +86,7 @@ Manager::Manager(GUI *gui) :
 	radiobutton_luna->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
 	radiobutton_luna->set_text("Luna");
 	radiobutton_luna->set_selected(gui->get_theme() == GUI::theme_luna);
-	radiobutton_luna->set_group_name("Main Group");
+	radiobutton_luna->set_group_name("Theme");
 	radiobutton_luna->func_selected().set(this, &Manager::on_theme_selected, radiobutton_luna);
 	yoffset += ygap;
 
@@ -97,21 +94,9 @@ Manager::Manager(GUI *gui) :
 	radiobutton_luna_packed->set_geometry(CL_Rect(xoffset, yoffset , CL_Size(64, 24)));
 	radiobutton_luna_packed->set_text("Luna Packed");
 	radiobutton_luna_packed->set_selected(gui->get_theme() == GUI::theme_luna_packed);
-	radiobutton_luna_packed->set_group_name("Main Group");
+	radiobutton_luna_packed->set_group_name("Theme");
 	radiobutton_luna_packed->func_selected().set(this, &Manager::on_theme_selected, radiobutton_luna_packed);
 	yoffset += ygap;
-
-	checkbox_3d = new CL_CheckBox(this);
-	checkbox_3d->set_geometry(CL_Rect(xoffset+ 10, yoffset, CL_Size(128, 40)));
-	checkbox_3d->set_text("3D Texture");
-	if (gui->get_manager() == manager_system)
-		checkbox_3d->set_enabled(false);
-
-}
-
-bool Manager::is_3dmode()
-{
-	return checkbox_3d->is_checked();
 }
 
 void Manager::run(CL_GraphicContext &gc)

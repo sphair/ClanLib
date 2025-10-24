@@ -111,18 +111,18 @@ private:
 	CL_GUIThemePart part_opener_open;
 	CL_GUIThemePart part_opener_closed;
 	CL_GUIThemePart part_icon_selection;
-	CL_GUIThemePartProperty prop_border_left;
-	CL_GUIThemePartProperty prop_border_right;
-	CL_GUIThemePartProperty prop_border_top;
-	CL_GUIThemePartProperty prop_border_bottom;
 	CL_GUIThemePartProperty prop_icon_color;
 	CL_GUIThemePartProperty prop_icon_color_selected;
 	CL_GUIThemePartProperty prop_icon_color_overlay;
 	CL_GUIThemePartProperty prop_icon_color_selected_overlay;
+	CL_GUIThemePartProperty prop_selection_margin_left;
+	CL_GUIThemePartProperty prop_selection_margin_right;
+	CL_GUIThemePartProperty prop_selection_margin_top;
+	CL_GUIThemePartProperty prop_selection_margin_bottom;
 	CL_ListViewDisplayMode display_mode;
 	CL_ListViewHeader *header;
 	CL_Rect rect_view;
-	CL_Rect selection_border;
+	CL_Rect selection_margin;
 	CL_Colorf color_icon;
 	CL_Colorf color_icon_selected;
 	CL_Colorf color_icon_overlay;
@@ -133,7 +133,6 @@ private:
 	int scroll_y;
 	int height_row;
 
-	friend class CL_ListView_Impl;
 /// \}
 };
 

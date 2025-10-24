@@ -26,9 +26,7 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
+#include "precomp.h"
 #include "gui_system.h"
 #include "GUI.h"
 #include "app.h"

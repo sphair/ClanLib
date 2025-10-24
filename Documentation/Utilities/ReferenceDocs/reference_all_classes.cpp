@@ -8,7 +8,7 @@ void ReferenceAllClasses::load()
 
 void ReferenceAllClasses::save(const CL_StringRef &filename)
 {
-	CL_File classes_file(filename, CL_File::create_always);
+	CL_File classes_file(filename, CL_File::create_always, CL_File::access_write);
 	CL_String html =
 		"<!-- clanlib header begin -->"
 		"<HTML>"

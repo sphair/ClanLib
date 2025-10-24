@@ -65,6 +65,7 @@ public:
 
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_progress;
+	CL_GUIThemePart part_chunk;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,11 +74,13 @@ public:
 CL_ProgressBar::CL_ProgressBar(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_ProgressBar_Impl)
 {
+	set_type_name(CssStr::ProgressBar::type_name);
+
 	impl->progressbar = this;
 	impl->part_component = CL_GUIThemePart(this);
 	impl->part_progress = CL_GUIThemePart(this, cl_text("progress"));
+	impl->part_chunk = CL_GUIThemePart(this, cl_text("chunk"));
 
-	set_type_name(CssStr::ProgressBar::type_name);
 	impl->part_component.set_state(CssStr::normal, true);
 
 	func_process_message().set(impl.get(), &CL_ProgressBar_Impl::on_process_message);
@@ -129,6 +132,7 @@ void CL_ProgressBar::set_min(int progress_min)
 	impl->progress_min = progress_min;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::set_max(int progress_max)
@@ -136,6 +140,7 @@ void CL_ProgressBar::set_max(int progress_max)
 	impl->progress_max = progress_max;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::set_range(int progress_min, int progress_max)
@@ -144,11 +149,13 @@ void CL_ProgressBar::set_range(int progress_min, int progress_max)
 	impl->progress_max = progress_max;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::set_step_size(int size)
 {
 	impl->step_size = size;
+	request_repaint();
 }
 
 void CL_ProgressBar::set_position(int pos)
@@ -156,6 +163,7 @@ void CL_ProgressBar::set_position(int pos)
 	impl->position = pos;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::advance_position(int pos)
@@ -163,6 +171,7 @@ void CL_ProgressBar::advance_position(int pos)
 	impl->position += pos;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::step_position()
@@ -170,11 +179,13 @@ void CL_ProgressBar::step_position()
 	impl->position += impl->step_size;
 
 	impl->check_range();
+	request_repaint();
 }
 
 void CL_ProgressBar::set_marquee_mode(bool enable)
 {
 	impl->marquee_mode = enable;
+	request_repaint();
 }
 
 void CL_ProgressBar::set_marquee_animation_speed(int milliseconds)
@@ -199,7 +210,7 @@ void CL_ProgressBar_Impl::on_process_message(CL_GUIMessage &msg)
 
 void CL_ProgressBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	CL_Rect rect = progressbar->get_geometry();
+	CL_Rect rect = progressbar->get_size();
 	part_component.render_box(gc, rect, update_rect);
 
 	if (progress_max >= progress_min && 

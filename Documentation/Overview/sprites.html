@@ -53,8 +53,8 @@ object from it.</p>
 <pre>
 	CL_ResourceManager resources("resources.xml");
 
-	CL_Sprite sprite1("my_simple_sprite", resources);
-	CL_Sprite sprite2("my_advanced_sprite", resources);
+	CL_Sprite sprite1(gc, "my_simple_sprite", &amp;resources);
+	CL_Sprite sprite2(gc, "my_advanced_sprite", &amp;resources);
 </pre>
 
 <h4>Creating sprites manually</h4>
@@ -68,22 +68,22 @@ the frames to be used in the sprite.</p>
 
 <pre>
 	CL_SpriteDescription desc_simple;
-	desc_simple.add_frame(CL_TargaProvider::load("image_single1.tga"), true);
-	desc_simple.add_frame(CL_TargaProvider::load("image_single2.tga"), true);
-	desc_simple.add_frame(CL_TargaProvider::load("image_single2.tga"), true);
+	desc_simple.add_frame(CL_ImageProviderFactory::load("image_single1.tga"));
+	desc_simple.add_frame(CL_ImageProviderFactory::load("image_single2.tga"));
+	desc_simple.add_frame(CL_ImageProviderFactory::load("image_single2.tga"));
 
 	CL_SpriteDescription desc_advanced;
-	desc_advanced.add_frame(CL_TargaProvider::load("image1.tga"), true);
-	desc_advanced.add_gridclipped_frames(CL_TargaProvider::load("gridframes.tga"), 0, 0, 32, 32, 10, 2, 0, 0, true);
-	desc_advanced.add_alphaclipped_frames(CL_TargaProvider::load("alphaframes.tga"), 0, 0, 0.05f, true);
-	desc_advanced.add_frame(CL_TargaProvider::load("image2.tga"), true);
-	desc_advanced.add_gridclipped_frames(CL_TargaProvider::load("image3.tga"), 0, 0, 32, 32, 1, 1, 0, 0, true);
+	desc_advanced.add_frame(CL_ImageProviderFactory::load("image1.tga"));
+	desc_advanced.add_gridclipped_frames(CL_ImageProviderFactory::load("gridframes.tga"), 0, 0, 32, 32, 10, 2, 0, 0);
+	desc_advanced.add_alphaclipped_frames(CL_ImageProviderFactory::load("alphaframes.tga"), 0, 0, 0.05f);
+	desc_advanced.add_frame(CL_ImageProviderFactory::load("image2.tga"));
+	desc_advanced.add_gridclipped_frames(CL_ImageProviderFactory::load("image3.tga"), 0, 0, 32, 32, 1, 1, 0, 0);
 
-	CL_Sprite sprite1(desc_simple);
-	CL_Sprite sprite2(desc_advanced);
+	CL_Sprite sprite1(gc, desc_simple);
+	CL_Sprite sprite2(gc, desc_advanced);
 
 	sprite2.set_alpha(0.5f);
-	sprite2.set_base_angle(90.0f);
+	sprite2.set_base_angle(CL_Angle::from_degrees(90.0f));
 	sprite2.set_frame_delay(20, 100);
 	sprite2.set_frame_offset(20, CL_Point(1, 1));
 </pre>
@@ -100,11 +100,11 @@ creates the exact same setup, only now using code instead of a resourcefile.</p>
 	sprite2.update();
 
 	// Rotate sprite
-	sprite1.rotate(0.5f);
+	sprite1.rotate(CL_Angle::from_degrees(0.5f));
 
 	// Draw sprites
-	sprite1.draw(10, 10);
-	sprite2.draw(100, 100);
+	sprite1.draw(gc, 10, 10);
+	sprite2.draw(gc, 100, 100);
 </pre>
 
 <h4>Changing look of a sprite</h4>
@@ -126,8 +126,8 @@ class Man
 
 void Man::init()
 {
-	sprite_man_walk = CL_Sprite("man_walk", resources);
-	sprite_man_still = CL_Sprite("man_still", resources);
+	sprite_man_walk = CL_Sprite(gc, "man_walk", resources);
+	sprite_man_still = CL_Sprite(gc, "man_still", resources);
 
 	set_walking(true);
 }
@@ -143,9 +143,9 @@ void Man::set_walking(bool walking)
 void Man::draw()
 {
 	sprite_man.update();
-	sprite_man.rotate(1.0f);
+	sprite_man.rotate(CL_Angle::from_degrees(1.0f));
 
-	sprite_man.draw(x, y);
+	sprite_man.draw(gc, x, y);
 }
 </pre>
 

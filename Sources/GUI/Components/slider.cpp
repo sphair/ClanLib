@@ -35,6 +35,7 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
+#include "API/GUI/gui_message_focus_change.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -116,6 +117,7 @@ public:
 	CL_GUIThemePart part_component;
 	CL_GUIThemePart part_track;
 	CL_GUIThemePart part_thumb;
+	CL_GUIThemePart part_focus;
 
 	CL_Timer mouse_down_timer;
 
@@ -136,6 +138,7 @@ CL_Slider::CL_Slider(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_Slider_Impl)
 {
 	set_type_name(CssStr::Slider::type_name);
+	set_focus_policy(focus_local);
 	impl->slider = this;
 	impl->vertical = false;
 	impl->position = 0;
@@ -295,19 +298,67 @@ void CL_Slider_Impl::on_process_message(CL_GUIMessage &msg)
 	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
 	{
 		CL_GUIMessage_Input input = msg;
-		CL_InputEvent input_event = input.get_event();
-		if (input_event.type == CL_InputEvent::pointer_moved)
-			on_mouse_move(input, input_event);
-		else if (input_event.type == CL_InputEvent::pressed && input_event.id == CL_MOUSE_LEFT)
-			on_mouse_lbutton_down(input, input_event);
-		else if (input_event.type == CL_InputEvent::released && input_event.id == CL_MOUSE_LEFT)
-			on_mouse_lbutton_up(input, input_event);
+		CL_InputEvent e = input.get_event();
+		if (e.type == CL_InputEvent::pointer_moved)
+		{
+			on_mouse_move(input, e);
+			msg.set_consumed();
+		}
+		else if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
+		{
+			on_mouse_lbutton_down(input, e);
+			msg.set_consumed();
+		}
+		else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
+		{
+			on_mouse_lbutton_up(input, e);
+			msg.set_consumed();
+		}
+		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_LEFT || e.id == CL_KEY_UP))
+		{
+			slider->set_position(position - page_step);
+			if (!func_value_changed.is_null())
+				func_value_changed.invoke();
+			if (!func_slider_decrement.is_null())
+				func_slider_decrement.invoke();
+			if (!func_slider_moved.is_null())
+				func_slider_moved.invoke();
+
+			msg.set_consumed();
+		}
+		else if (e.type == CL_InputEvent::pressed && (e.id == CL_KEY_RIGHT || e.id == CL_KEY_DOWN))
+		{
+			slider->set_position(position + page_step);
+
+			if (!func_value_changed.is_null())
+				func_value_changed.invoke();
+			if (!func_slider_increment.is_null())
+				func_slider_increment.invoke();
+			if (!func_slider_moved.is_null())
+				func_slider_moved.invoke();
+			msg.set_consumed();
+		}
 	}
 	else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
 	{
 		CL_GUIMessage_Pointer pointer = msg;
 		if (pointer.get_pointer_type() == CL_GUIMessage_Pointer::pointer_leave)
 			on_mouse_leave();
+	}
+	else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
+	{
+		CL_GUIMessage_FocusChange focus_msg = msg;
+		if (focus_msg.get_focus_type() == CL_GUIMessage_FocusChange::gained_focus)
+		{
+			part_component.set_state(CssStr::focused, true);
+			slider->request_repaint();
+		}
+		else 
+		{
+			part_component.set_state(CssStr::focused, false);
+			slider->request_repaint();
+		}
+		msg.set_consumed();
 	}
 }
 
@@ -319,6 +370,7 @@ void CL_Slider_Impl::on_mouse_move(CL_GUIMessage_Input &input, CL_InputEvent &in
 	part_track.set_state(CssStr::hot, true);
 	part_component.set_state(CssStr::normal, false);
 	part_track.set_state(CssStr::normal, false);
+	part_focus.set_state(CssStr::focused, false);
 
 	if (mouse_down_mode != mouse_down_thumb_drag)
 	{
@@ -439,7 +491,11 @@ void CL_Slider_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect
 	part_track.render_box(gc, rect_track, update_rect);
 	part_thumb.render_box(gc, rect_thumb, update_rect);
 	
-	CL_Rect content_rect = part_component.get_content_box(rect.get_size());
+	if (slider->has_focus())
+	{
+		CL_Rect content_rect = part_component.get_content_box(rect.get_size());
+		part_focus.render_box(gc, content_rect, update_rect);
+	}
 }
 
 void CL_Slider_Impl::create_parts()
@@ -448,12 +504,14 @@ void CL_Slider_Impl::create_parts()
 	part_component = CL_GUIThemePart(slider);
 	part_track = CL_GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
 	part_thumb = CL_GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
+	part_focus = CL_GUIThemePart(slider, CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();
 
 	part_component.set_state(CssStr::normal, enabled);
 	part_track.set_state(CssStr::normal, enabled);
 	part_thumb.set_state(CssStr::normal, enabled);
+	part_focus.set_state(CssStr::normal, true);
 
 	part_component.set_state(CssStr::disabled, !enabled);
 	part_track.set_state(CssStr::disabled, !enabled);

@@ -232,6 +232,30 @@ public:
 
 	/// \brief Returns the next sibling node that is an element node
 	CL_DomElement get_next_sibling_element() const;
+
+	/// \brief Returns the integer value of the attribute node with the given tag name
+	int get_attribute_int(const CL_DomString &name, int default_value = 0) const;
+
+	/// \brief Returns the integer value of the attribute node with the given local name and namespace
+	int get_attribute_int_ns(const CL_DomString &namespace_uri, const CL_DomString &local_name, int default_value = 0) const;
+
+	/// \brief Returns the boolean value of the attribute node with the given tag name
+	bool get_attribute_bool(const CL_DomString &name, bool default_value = false) const;
+
+	/// \brief Returns the boolean value of the attribute node with the given local name and namespace
+	bool get_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &local_name, bool default_value = false) const;
+
+	/// \brief Sets the attribute node with the specified tag name to the given integer value
+	void set_attribute_int(const CL_DomString &name, int value);
+
+	/// \brief Sets the attribute node with the specified qualified name and namespace to the given integer value
+	void set_attribute_int_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, int value);
+
+	/// \brief Sets the attribute node with the specified tag name to the given boolean value
+	void set_attribute_bool(const CL_DomString &name, bool value);
+
+	/// \brief Sets the attribute node with the specified qualified name and namespace to the given boolean value
+	void set_attribute_bool_ns(const CL_DomString &namespace_uri, const CL_DomString &qualified_name, bool value);
 /// \}
 };
 

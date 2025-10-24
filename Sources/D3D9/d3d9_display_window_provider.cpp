@@ -39,7 +39,7 @@
 // CL_D3D9DisplayWindowProvider Construction:
 
 CL_D3D9DisplayWindowProvider::CL_D3D9DisplayWindowProvider()
-: win32_window(&CL_D3D9TargetProvider::message_queue), site(0)
+: win32_window(), site(0)
 {
 	win32_window.func_on_resized().set(this, &CL_D3D9DisplayWindowProvider::on_window_resized);
 }

@@ -55,3 +55,13 @@ radiobutton checker:unchecked:disabled
 {
 	bg-image:RadioButtonUncheckedDisabled; 
 }
+
+radiobutton focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 

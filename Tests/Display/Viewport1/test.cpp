@@ -37,7 +37,7 @@ public:
 				}
 
 				window.flip(1);
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 
 				CL_System::sleep(10);
 			}

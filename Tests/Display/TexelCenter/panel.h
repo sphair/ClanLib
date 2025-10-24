@@ -37,10 +37,12 @@ public:
 
 	bool is_sprite();
 	bool is_image();
+	bool is_font();
 	bool is_texture();
 	bool is_linear();
 	bool is_nearest();
 	bool is_outlined();
+	bool is_antialias();
 	float get_scale();
 	float get_rotation();
 	float get_translate();
@@ -59,11 +61,13 @@ private:
 	CL_RadioButton *radiobutton_sprite;
 	CL_RadioButton *radiobutton_image;
 	CL_RadioButton *radiobutton_texture;
+	CL_RadioButton *radiobutton_font;
 
 	CL_RadioButton *radiobutton_linear;
 	CL_RadioButton *radiobutton_nearest;
 
 	CL_CheckBox *checkbox_outline;
+	CL_CheckBox *checkbox_antialias;
 
 	CL_Slider *slider_scale;
 	CL_Spin *spin_scale;

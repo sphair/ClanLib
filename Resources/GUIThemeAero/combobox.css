@@ -1,7 +1,3 @@
-
-
-
-
 combobox lineedit
 {
 	bg-image-sizing-left:2;
@@ -19,69 +15,62 @@ combobox lineedit
 	text-color-selected:white;
 }
 
-
-popupmenu.combobox
+combobox opener
 {
-	bg-image:ComboBoxPopupBg;
-
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
-	bg-image-sizing:stretch; 
-
-	border-top:3;
-	border-left:1;
-	border-right:2;
-	border-bottom:3;
+	preferred-width:17;
+	preferred-height:21;
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
 }
 
-popupmenu.combobox row
+combobox opener:normal
 {
-	preferred-width:100;
-	preferred-height:18;
-	bg-image:;
+	bg-image:ComboBoxDropDownButtonNormal; 
 }
 
-popupmenu.combobox row:selected
+combobox opener:hot
 {
-	preferred-width:100;
-	preferred-height:18;
-	bg-image:;
-	bg-color:#D3D3D3;
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
-	border-color:#4B4B6F;
+	bg-image:ComboBoxDropDownButtonHot; 
 }
 
-
-popupmenu.combobox icon
+combobox opener:pressed
 {
-	preferred-width:16;
-	preferred-height:16;
-	bg-image:;
+	bg-image:ComboBoxDropDownButtonPressed; 
 }
 
-popupmenu.combobox icon:selected
+combobox opener:disabled
 {
-	preferred-width:16;
-	preferred-height:16;
-	bg-image:;
+	bg-image:ComboBoxDropDownButtonDisabled; 
 }
 
-popupmenu.combobox label
+combobox opener_glyph
 {
-	preferred-width:70;
-	preferred-height:18;
-	bg-image:;
+	bg-image-sizing:center; 
+	align:center;
+	vertical-align:center;
 }
 
-popupmenu.combobox label:selected
+combobox opener_glyph:normal
 {
-	preferred-width:70;
-	preferred-height:18;
-	bg-image:;
+	bg-image:ComboBoxDropDownButtonNormalGlyph; 
 }
 
+combobox opener_glyph:hot
+{
+	bg-image:ComboBoxDropDownButtonHotGlyph; 
+}
+
+combobox opener_glyph:pressed
+{
+	bg-image:ComboBoxDropDownButtonPressedGlyph; 
+}
+
+combobox opener_glyph:disabled
+{
+	bg-image:ComboBoxDropDownButtonDisabledGlyph; 
+}

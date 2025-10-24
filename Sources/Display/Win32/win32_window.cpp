@@ -35,9 +35,9 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "API/Display/Window/display_window_description.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/display.h"
+#include "API/Display/2D/color.h"
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/keys.h"
@@ -51,6 +51,7 @@
 #include "input_device_provider_directinput.h"
 #include "display_message_queue_win32.h"
 #include "cursor_provider_win32.h"
+#include "../Window/input_context_impl.h"
 
 // #define fun_and_games_with_vista
 
@@ -66,27 +67,32 @@
 #define BROKEN_DINPUT
 #endif
 
-CL_Win32Window::CL_Win32Window(CL_DisplayMessageQueue_Win32 *message_queue)
+CL_Win32Window::CL_Win32Window()
 : hwnd(0), destroy_hwnd(true), current_cursor(0), large_icon(0), small_icon(0), cursor_set(false), cursor_hidden(false), site(0),
-  directinput(0), keyboard(0), mouse(0), message_queue(message_queue),
+  directinput(0),
   minimum_size(0,0), maximum_size(0xffff, 0xffff), layered(false)
 {
 	memset(&paintstruct, 0, sizeof(PAINTSTRUCT));
-	keyboard = new CL_InputDeviceProvider_Win32Keyboard(this);
-	mouse = new CL_InputDeviceProvider_Win32Mouse(this);
+	keyboard = CL_InputDevice(new CL_InputDeviceProvider_Win32Keyboard(this));
+	mouse = CL_InputDevice(new CL_InputDeviceProvider_Win32Mouse(this));
 
 	create_direct_input();
-	message_queue->add_client(this);
+	CL_DisplayMessageQueue_Win32::message_queue.add_client(this);
 
 	register_clipboard_formats();
 }
 
 CL_Win32Window::~CL_Win32Window()
 {
-	message_queue->remove_client(this);
-	ic.clear();
-	delete keyboard;
-	delete mouse;
+	CL_DisplayMessageQueue_Win32::message_queue.remove_client(this);
+	if (!ic.impl.is_null())
+		ic.impl->dispose();
+	get_keyboard()->dispose();
+	get_mouse()->dispose();
+
+	for (size_t i = 0; i < joysticks.size(); i++)
+		joysticks[i].get_provider()->dispose();
+
 	destroy_direct_input();
 	if (destroy_hwnd && hwnd)
 		DestroyWindow(hwnd);
@@ -127,8 +133,7 @@ bool CL_Win32Window::is_maximized() const
 
 bool CL_Win32Window::is_visible() const
 {
-	//TODO: Fixme
-	return true;
+	return IsWindowVisible(hwnd) != 0;
 }
 
 void CL_Win32Window::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
@@ -473,7 +478,7 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 
 	case WM_INPUT:
 		received_joystick_input();
-		return TRUE;
+		return 0;
 
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
@@ -489,11 +494,11 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 	case WM_XBUTTONUP:
 	case WM_XBUTTONDBLCLK:
 		received_mouse_input(msg, wparam, lparam);
-		return TRUE;
+		return 0;
 
 	case WM_MOUSEMOVE:
 		received_mouse_move(msg, wparam, lparam);
-		return TRUE;
+		return 0;
 
 	case WM_SIZING:
 		if (site)
@@ -579,14 +584,14 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 			if (LOWORD(wparam) == WA_INACTIVE)
 			{
 				site->sig_lost_focus->invoke();
-				if (!tablet.is_null())
-					tablet->set_enabled(false);
+				if (get_tablet())
+					get_tablet()->set_enabled(false);
 			}
 			else
 			{
 				site->sig_got_focus->invoke();
-				if (!tablet.is_null())
-					tablet->set_enabled(true);
+				if (get_tablet())
+					get_tablet()->set_enabled(true);
 			}
 		}
 		return 0;
@@ -623,13 +628,13 @@ LRESULT CL_Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lp
 		return 0;
 
 	case WT_PACKET:
-		if (!tablet.is_null())
-			return tablet->process_packet(lparam, wparam);
+		if (get_tablet())
+			return get_tablet()->process_packet(lparam, wparam);
 		return FALSE;
 
 	case WT_PROXIMITY:
-		if (!tablet.is_null())
-			return tablet->process_proximity(lparam, wparam);
+		if (get_tablet())
+			return get_tablet()->process_proximity(lparam, wparam);
 		return FALSE;
 
 /*
@@ -665,127 +670,12 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 	}
 	else
 	{
-		static bool first_call = true;
-		if (first_call)
-		{
-			WNDCLASS wndclass;
-			memset(&wndclass, 0, sizeof(WNDCLASS));
-			wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS; // 0; 
-			wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
-			wndclass.cbClsExtra = 0;
-			wndclass.cbWndExtra = 0;
-			wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
-			wndclass.hIcon = 0;
-			wndclass.hCursor = 0;
-			wndclass.hbrBackground = 0;
-			wndclass.lpszMenuName = TEXT("ClanApplication");
-			wndclass.lpszClassName = TEXT("ClanApplication");
-			RegisterClass(&wndclass);
+		register_window_class();
 
-			memset(&wndclass, 0, sizeof(WNDCLASS));
+		DWORD style = 0, ex_style = 0;
+		get_styles_from_description(desc, style, ex_style);
 
-			// *** DropShadow has problems on WindowsXP
-			// *** It can be fixed on NVIDIA cards, but not on ATI Cards (Yet!)
-			// ... but we can not call "GLubyte *vendor=glGetString(GL_VENDOR);"
-			// ... as the target may be DirectX
-			bool winxp_flag = true;
-			OSVERSIONINFOEX osvi;
-			BOOL bOsVersionInfoEx;
-
-			ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-			if( (bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) )
-			{
-				if (osvi.dwMajorVersion > 5 )
-				{
-					winxp_flag = false;
-				}
-			}
-
-			wndclass.style = CS_HREDRAW | CS_VREDRAW;
-			if (!winxp_flag)
-			{
-				wndclass.style |= CS_DROPSHADOW;
-			}
-
-			wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
-			wndclass.cbClsExtra = 0;
-			wndclass.cbWndExtra = 0;
-			wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
-			wndclass.hIcon = 0;
-			wndclass.hCursor = 0;
-			wndclass.hbrBackground = 0;
-			wndclass.lpszMenuName = TEXT("ClanApplicationDS");
-			wndclass.lpszClassName = TEXT("ClanApplicationDS");
-			RegisterClass(&wndclass);
-
-			first_call = false;
-		}
-
-		int x = desc.get_position().left;
-		int y = desc.get_position().top;
-		int width = desc.get_size().width;
-		int height = desc.get_size().height;
-
-		bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
-
-		if (desc.is_fullscreen())
-		{
-			x = 0;
-			y = 0;
-			width = GetSystemMetrics(SM_CXSCREEN);
-			height = GetSystemMetrics(SM_CYSCREEN);
-		}
-		else if (desc.get_position().left == -1 && desc.get_position().top == -1)
-		{
-			int scr_width = GetSystemMetrics(SM_CXSCREEN);
-			int scr_height = GetSystemMetrics(SM_CYSCREEN);
-
-			x = scr_width/2 - width/2;
-			y = scr_height/2 - height/2;
-		}
-
-		int style = 0;
-		int ex_style = 0;
-
-		if (desc.is_fullscreen())
-		{
-			style = WS_POPUP;
-		}
-		else if (desc.get_allow_resize())
-		{
-			style = WS_SIZEBOX;
-			if (desc.has_caption())
-				style |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU  | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-			else
-				style |= WS_POPUP;
-		}
-		else
-		{
-			if (desc.has_caption())
-				style |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU  | WS_MINIMIZEBOX;
-			else
-				style |= WS_POPUP;
-		}
-
-		if (desc.is_layered())
-		{
-			layered = true;
-			ex_style |= WS_EX_LAYERED;
-		}
-		else
-		{
-			layered = false;
-		}
-
-		if (desc.is_tool_window())
-			ex_style |= WS_EX_TOOLWINDOW;
-
-		// get size of window with decorations to pass to CreateWindow
-		RECT window_rect = { x, y, x+width, y+height };
-		if (clientSize)
-			AdjustWindowRectEx( &window_rect, style, FALSE, ex_style );
+		RECT window_rect = get_window_geometry_from_description(desc, style, ex_style);
 
 		HWND parent = 0;
 		if (!desc.get_owner().is_null())
@@ -810,8 +700,7 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 
 		if (desc.is_fullscreen())
 		{
-			// Make always on top
-			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE);
+			SetWindowPos(hwnd, HWND_TOP, window_rect.left, window_rect.top, window_rect.right - window_rect.left, window_rect.bottom - window_rect.top, SWP_NOACTIVATE);
 		}
 
 		if (desc.is_topmost())
@@ -820,108 +709,19 @@ void CL_Win32Window::create_new_window(const CL_DisplayWindowDescription &desc)
 		if (desc.is_visible())
 			ShowWindow(hwnd, SW_SHOW);
 
-		#ifndef HID_USAGE_PAGE_GENERIC
-		#define HID_USAGE_PAGE_GENERIC		((USHORT) 0x01)
-		#endif
-
-		#ifndef HID_USAGE_GENERIC_JOYSTICK
-		#define HID_USAGE_GENERIC_JOYSTICK	((USHORT) 0x04)
-		#endif
-
-		#ifndef HID_USAGE_GENERIC_GAMEPAD
-		#define HID_USAGE_GENERIC_GAMEPAD	((USHORT) 0x05)
-		#endif
-
-		#ifndef RIDEV_INPUTSINK
-		#define RIDEV_INPUTSINK	(0x100)
-		#endif
-
-		//TODO: It may be required to register the gamepad as well as the joystick?
-		RAWINPUTDEVICE Rid[1];
-		Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
-		Rid[0].usUsage = HID_USAGE_GENERIC_JOYSTICK; 
-		Rid[0].dwFlags = 0;//RIDEV_INPUTSINK;   
-		Rid[0].hwndTarget = hwnd;
-		RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+	//	if (desc.is_layered()) // TODO: Make the RGB value optional
+	//		SetLayeredWindowAttributes(hwnd, RGB(0,0,0), 0, LWA_COLORKEY);
 
 	}
 
-	// Connect input context to new window:
-
-	ic.clear();
-	ic.add_keyboard(keyboard);
-	ic.add_mouse(mouse);
-
-	// Go looking for joysticks:
-	if (directinput)
-	{
-		HRESULT result = directinput->EnumDevices(
-			DI8DEVCLASS_GAMECTRL,
-			&CL_Win32Window::enum_devices_callback,
-			this,
-			DIEDFL_ATTACHEDONLY);
-		if (FAILED(result))
-		{
-			cl_log_event("debug", "Unable to enumerate direct input devices");
-		}
-	}
-
-	if (desc.get_tablet_context())
-		setup_tablet();
+	connect_window_input(desc);
 }
 
 void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc)
 {
-	bool clientSize = false;	// false = Size includes the window frame. true = Size is the drawable size. TODO: Make this optional
-
-	int x = desc.get_position().left;
-	int y = desc.get_position().top;
-	int width = desc.get_size().width;
-	int height = desc.get_size().height;
-
-	if (desc.is_fullscreen())
-	{
-		x = 0;
-		y = 0;
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
-	}
-	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
-	{
-		int scr_width = GetSystemMetrics(SM_CXSCREEN);
-		int scr_height = GetSystemMetrics(SM_CYSCREEN);
-		x = scr_width/2 - width/2;
-		y =	scr_height/2 - height/2;
-	}
-
-	int style = 0;
-	int ex_style = 0;
-	if (desc.is_fullscreen())
-	{
-		style = WS_POPUP;
-	}
-	else if (desc.get_allow_resize())
-	{
-		style = WS_POPUP | WS_SYSMENU | WS_SIZEBOX;
-		if (desc.has_caption())
-			style |= WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX;
-	}
-	else
-	{
-		style = WS_POPUP;
-		if (desc.has_caption())
-			style |= WS_CAPTION | WS_SYSMENU  | WS_MINIMIZEBOX;
-	}
-
-	if (desc.is_layered())
-		ex_style |= WS_EX_LAYERED;
-	if (desc.is_tool_window())
-		ex_style |= WS_EX_TOOLWINDOW;
-
-	// get size of window with decorations to pass to CreateWindow
-	RECT window_rect = { x, y, x+width, y+height };
-	if (clientSize)
-		AdjustWindowRectEx( &window_rect, style, FALSE, ex_style );
+	DWORD style = 0, ex_style = 0;
+	get_styles_from_description(desc, style, ex_style);
+	RECT window_rect = get_window_geometry_from_description(desc, style, ex_style);
 
 	SetWindowLong(hwnd, GWL_STYLE, style);
 	SetWindowLong(hwnd, GWL_EXSTYLE, ex_style);
@@ -929,7 +729,7 @@ void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc)
 	if (desc.is_fullscreen())
 	{
 		// Make always on top
-		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, width, height, SWP_NOACTIVATE|SWP_FRAMECHANGED);
+		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, desc.get_size().width, desc.get_size().height, SWP_NOACTIVATE|SWP_FRAMECHANGED);
 	}
 	else
 	{
@@ -944,10 +744,7 @@ void CL_Win32Window::modify_window(const CL_DisplayWindowDescription &desc)
 			SWP_NOACTIVATE|SWP_FRAMECHANGED);
 	}
 
-	if (desc.is_visible())
-		ShowWindow(hwnd, SW_SHOW);
-	else
-		ShowWindow(hwnd, SW_HIDE);
+	ShowWindow(hwnd, desc.is_visible() ? SW_SHOW : SW_HIDE);
 	RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE);
 }
 
@@ -1009,25 +806,28 @@ void CL_Win32Window::received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lpa
 		repeat_count[key_id] = -1;
 	}
 
-	unsigned char keys_down[256];
-	GetKeyboardState(keys_down);
+	if (keydown)
+	{
+		unsigned char keys_down[256];
+		GetKeyboardState(keys_down);
 
-	// Figure out what character sequence this maps to:
-	WCHAR buf[16];
-	int result = ToUnicode(
-		(UINT) key_id,
-		scancode,
-		keys_down,
-		buf,
-		16,
-		0);
-	if (result > 0)
-		key.str = CL_StringHelp::ucs2_to_text(CL_String16(buf, result));
+		// Figure out what character sequence this maps to:
+		WCHAR buf[16];
+		int result = ToUnicode(
+			(UINT) key_id,
+			scancode,
+			keys_down,
+			buf,
+			16,
+			0);
+		if (result > 0)
+			key.str = CL_StringHelp::ucs2_to_text(CL_String16(buf, result));
+	}
 
 	set_modifier_keys(key);
 
 	// Emit message:
-	keyboard->sig_provider_event->invoke(key);
+	get_keyboard()->sig_provider_event->invoke(key);
 }
 
 void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -1068,9 +868,9 @@ void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam
 
 		// Emit message:
 		if (id >= 0 && id < 32)
-			mouse->key_states[id] = true;
+			get_mouse()->key_states[id] = true;
 
-		mouse->sig_provider_event->invoke(key);
+		get_mouse()->sig_provider_event->invoke(key);
 	}
 
 	if (down)
@@ -1079,9 +879,9 @@ void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam
 
 		// Emit message:
 		if (id >= 0 && id < 32)
-			mouse->key_states[id] = true;
+			get_mouse()->key_states[id] = true;
 
-		mouse->sig_provider_event->invoke(key);
+		get_mouse()->sig_provider_event->invoke(key);
 	}
 
 	// It is possible for 2 events to be called when the wheelmouse is used
@@ -1091,9 +891,9 @@ void CL_Win32Window::received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam
 
 		// Emit message:
 		if (id >= 0 && id < 32)
-			mouse->key_states[id] = false;
+			get_mouse()->key_states[id] = false;
 
-		mouse->sig_provider_event->invoke(key);	
+		get_mouse()->sig_provider_event->invoke(key);	
 	}
 }
 
@@ -1117,7 +917,7 @@ void CL_Win32Window::received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam)
 		set_modifier_keys(key);
 
 		// Fire off signal
-		mouse->sig_provider_event->invoke(key);
+		get_mouse()->sig_provider_event->invoke(key);
 	}
 
 	if (!cursor_set && !cursor_hidden)
@@ -1140,14 +940,13 @@ void CL_Win32Window::received_joystick_input()
 
 void CL_Win32Window::setup_tablet()
 {
-	CL_SharedPtr<CL_InputDeviceProvider_Win32Tablet> tab(new CL_InputDeviceProvider_Win32Tablet(this));
+	if (get_tablet())
+		get_tablet()->dispose();
 
-	if (tab->device_present())
-	{
-		CL_InputDevice input_dev_tablet(tab);
-		ic.add_tablet(input_dev_tablet);
-		tablet = tab; 
-	}
+	tablet = CL_InputDevice(new CL_InputDeviceProvider_Win32Tablet(this));
+
+	if (get_tablet()->device_present())
+		ic.add_tablet(tablet);
 }
 
 BOOL CL_Win32Window::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
@@ -1156,6 +955,7 @@ BOOL CL_Win32Window::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvR
 	try
 	{
 		CL_InputDevice device(new CL_InputDeviceProvider_DirectInput(self, lpddi));
+		self->joysticks.push_back(device);
 		self->ic.add_joystick(device);
 	}
 	catch (CL_Exception error)
@@ -1527,7 +1327,9 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 
 			CL_PixelBuffer image;
 			if (data->bV5Compression == BI_RGB)
-				image = get_argb8888_from_dib(data, size);
+				image = get_argb8888_from_rgb_dib(data, size);
+			else if (data->bV5Compression == BI_BITFIELDS)
+				image = get_argb8888_from_bitfields_dib(data, size);
 
 			GlobalUnlock(handle);
 			CloseClipboard();
@@ -1539,7 +1341,7 @@ CL_PixelBuffer CL_Win32Window::get_clipboard_image() const
 	return CL_PixelBuffer();
 }
 
-CL_PixelBuffer CL_Win32Window::get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+CL_PixelBuffer CL_Win32Window::get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
 {
 	size_t offsetBitmapBits = bitmapInfo->bV5Size + bitmapInfo->bV5ClrUsed * sizeof(RGBQUAD);
 	char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
@@ -1577,6 +1379,17 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo,
 	if (scanlines != abs(bitmapInfo->bV5Height))
 		throw CL_Exception("GetDIBits failed");
 
+	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
+	cl_uint8 *data = (cl_uint8 *)bitmap_data.get_data();
+	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
+	{
+		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
+		{
+			data[y*pitch + x*4 + 3] = 255;
+		}
+	}
+
+
 	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), pitch, CL_PixelFormat::argb8888, bitmap_data.get_data());
 
 	ReleaseDC(0, hdc);
@@ -1586,6 +1399,71 @@ CL_PixelBuffer CL_Win32Window::get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo,
 
 	return pixelbuffer;
 }
+
+
+CL_PixelBuffer CL_Win32Window::get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const
+{
+	size_t offsetBitmapBits = bitmapInfo->bV5Size + 3 * sizeof(DWORD);
+	char *bitmapBits = reinterpret_cast<char*>(bitmapInfo)+offsetBitmapBits;
+	size_t bitmapBitsSize = bitmapInfo->bV5SizeImage;
+	if (bitmapInfo->bV5Compression == BI_BITFIELDS) // BI_RGB
+	{
+		size_t pitch = (bitmapInfo->bV5BitCount * bitmapInfo->bV5Width + 31) / 32;
+		pitch *= 4;
+		bitmapBitsSize = pitch * abs(bitmapInfo->bV5Height);
+	}
+
+	if (offsetBitmapBits + bitmapBitsSize > size)
+		throw CL_Exception(cl_text("Out of bounds in get_rgba8888_from_dib!"));
+
+	// Ask GDI to do the hard work and convert it to rgba8888:
+	HDC hdc = GetDC(0);
+
+	void *bits2 = 0;
+	HBITMAP bitmap = CreateDIBSection(hdc, (BITMAPINFO*)bitmapInfo, DIB_RGB_COLORS, &bits2, 0, 0);
+	memcpy(bits2, bitmapBits, bitmapBitsSize);
+
+	BITMAPV5HEADER rgbBitmapInfo;
+	memset(&rgbBitmapInfo, 0, sizeof(BITMAPV5HEADER));
+	rgbBitmapInfo.bV5Size = sizeof(BITMAPV5HEADER);
+	rgbBitmapInfo.bV5Width = bitmapInfo->bV5Width;
+	rgbBitmapInfo.bV5Height = bitmapInfo->bV5Height;
+	rgbBitmapInfo.bV5Planes = 1;
+	rgbBitmapInfo.bV5BitCount = 32;
+	rgbBitmapInfo.bV5Compression = BI_BITFIELDS;
+	rgbBitmapInfo.bV5RedMask   = 0xff000000;
+	rgbBitmapInfo.bV5GreenMask = 0x00ff0000;
+	rgbBitmapInfo.bV5BlueMask  = 0x0000ff00;
+	rgbBitmapInfo.bV5AlphaMask = 0x000000ff;
+	size_t pitch = rgbBitmapInfo.bV5Width*4;
+	rgbBitmapInfo.bV5SizeImage = abs(rgbBitmapInfo.bV5Height) * pitch;
+	CL_DataBuffer bitmap_data(pitch * abs(rgbBitmapInfo.bV5Height));
+	int scanlines = GetDIBits(hdc, bitmap, 0, abs(bitmapInfo->bV5Height), bitmap_data.get_data(), (LPBITMAPINFO) &rgbBitmapInfo, DIB_RGB_COLORS);
+	if (scanlines != abs(bitmapInfo->bV5Height))
+		throw CL_Exception("GetDIBits failed");
+
+	// GetDIBits above sets the alpha channel to 0 - need to convert it to 255.
+	cl_uint8 *data = (cl_uint8 *)bitmap_data.get_data();
+	for (int y=0; y<abs(bitmapInfo->bV5Height); y++)
+	{
+		for (int x=0; x<abs(bitmapInfo->bV5Width); x++)
+		{
+			data[y*pitch + x*4 + 3] = 255;
+		}
+	}
+
+
+	CL_PixelBuffer pixelbuffer(rgbBitmapInfo.bV5Width, abs(rgbBitmapInfo.bV5Height), pitch, CL_PixelFormat::argb8888, bitmap_data.get_data());
+
+	ReleaseDC(0, hdc);
+
+	if (bitmapInfo->bV5Height > 0)
+		flip_pixelbuffer_vertical(pixelbuffer);
+
+	return pixelbuffer;
+}
+
+
 
 void CL_Win32Window::flip_pixelbuffer_vertical(CL_PixelBuffer &pbuf) const
 {
@@ -1645,4 +1523,278 @@ void CL_Win32Window::set_modifier_keys(CL_InputEvent &key)
 	key.alt = (GetKeyState(VK_MENU) & 0xfe) != 0;
 	key.shift = (GetKeyState(VK_SHIFT) & 0xfe) != 0;
 	key.ctrl = (GetKeyState(VK_CONTROL) & 0xfe) != 0;
+}
+
+CL_InputDeviceProvider_Win32Keyboard *CL_Win32Window::get_keyboard()
+{
+	return static_cast<CL_InputDeviceProvider_Win32Keyboard *>(keyboard.get_provider());
+}
+
+CL_InputDeviceProvider_Win32Mouse *CL_Win32Window::get_mouse()
+{
+	return static_cast<CL_InputDeviceProvider_Win32Mouse *>(mouse.get_provider());
+}
+
+CL_InputDeviceProvider_Win32Tablet *CL_Win32Window::get_tablet()
+{
+	return static_cast<CL_InputDeviceProvider_Win32Tablet *>(tablet.get_provider());
+}
+
+void CL_Win32Window::register_window_class()
+{
+	static bool first_call = true;
+	if (first_call)
+	{
+		WNDCLASS wndclass;
+		memset(&wndclass, 0, sizeof(WNDCLASS));
+		wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS; // 0; 
+		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
+		wndclass.cbClsExtra = 0;
+		wndclass.cbWndExtra = 0;
+		wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
+		wndclass.hIcon = 0;
+		wndclass.hCursor = 0;
+		wndclass.hbrBackground = 0;
+		wndclass.lpszMenuName = 0;//TEXT("ClanApplication");
+		wndclass.lpszClassName = TEXT("ClanApplication");
+		RegisterClass(&wndclass);
+
+		memset(&wndclass, 0, sizeof(WNDCLASS));
+
+		// *** DropShadow has problems on WindowsXP
+		// *** It can be fixed on NVIDIA cards, but not on ATI Cards (Yet!)
+		// ... but we can not call "GLubyte *vendor=glGetString(GL_VENDOR);"
+		// ... as the target may be DirectX
+		bool winxp_flag = true;
+		OSVERSIONINFOEX osvi;
+		BOOL bOsVersionInfoEx;
+
+		ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+		if( (bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) )
+		{
+			if (osvi.dwMajorVersion > 5 )
+			{
+				winxp_flag = false;
+			}
+		}
+
+		wndclass.style = CS_HREDRAW | CS_VREDRAW;
+		if (!winxp_flag)
+		{
+			wndclass.style |= CS_DROPSHADOW;
+		}
+
+		wndclass.lpfnWndProc = (WNDPROC) CL_Win32Window::static_window_proc;
+		wndclass.cbClsExtra = 0;
+		wndclass.cbWndExtra = 0;
+		wndclass.hInstance = (HINSTANCE) GetModuleHandle(0);
+		wndclass.hIcon = 0;
+		wndclass.hCursor = 0;
+		wndclass.hbrBackground = 0;
+		wndclass.lpszMenuName = 0;//TEXT("ClanApplicationDS");
+		wndclass.lpszClassName = TEXT("ClanApplicationDS");
+		RegisterClass(&wndclass);
+
+		first_call = false;
+	}
+}
+
+void CL_Win32Window::connect_window_input(const CL_DisplayWindowDescription &desc)
+{
+	// Connect input context to new window:
+
+	// See http://msdn.microsoft.com/en-us/library/ms789918.aspx
+
+	#ifndef HID_USAGE_PAGE_GENERIC
+	#define HID_USAGE_PAGE_GENERIC		((USHORT) 0x01)
+	#endif
+
+	#ifndef HID_USAGE_GENERIC_JOYSTICK
+	#define HID_USAGE_GENERIC_JOYSTICK	((USHORT) 0x04)
+	#endif
+
+	#ifndef HID_USAGE_GENERIC_GAMEPAD
+	#define HID_USAGE_GENERIC_GAMEPAD	((USHORT) 0x05)
+	#endif
+
+	#ifndef RIDEV_INPUTSINK
+	#define RIDEV_INPUTSINK	(0x100)
+	#endif
+
+	// NOTE: During developing this, I noticed that changing an of these options require
+	// you to go into control panel / Game controllers - Else the device is not detected!
+	// Maybe it is bacause we never clear RegisterRawInputDevices() on exit?
+
+	// Treat joystick and gamepad as the same thing
+	RAWINPUTDEVICE Rid[2];
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
+	Rid[0].usUsage = HID_USAGE_GENERIC_JOYSTICK; 
+	Rid[0].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[0].hwndTarget = hwnd;
+	Rid[1].usUsagePage = HID_USAGE_PAGE_GENERIC; 
+	Rid[1].usUsage = HID_USAGE_GENERIC_GAMEPAD; 
+	Rid[1].dwFlags = 0;//RIDEV_INPUTSINK;   
+	Rid[1].hwndTarget = hwnd;
+	BOOL result = RegisterRawInputDevices(Rid, 2, sizeof(RAWINPUTDEVICE));
+
+
+	ic.clear();
+	ic.add_keyboard(keyboard);
+	ic.add_mouse(mouse);
+
+	for (size_t i = 0; i < joysticks.size(); i++)
+		joysticks[i].get_provider()->dispose();
+	joysticks.clear();
+
+	// Go looking for joysticks:
+	if (directinput)
+	{
+		HRESULT result = directinput->EnumDevices(
+			DI8DEVCLASS_GAMECTRL,
+			&CL_Win32Window::enum_devices_callback,
+			this,
+			DIEDFL_ATTACHEDONLY);
+		if (FAILED(result))
+		{
+			cl_log_event("debug", "Unable to enumerate direct input devices");
+		}
+	}
+
+	if (desc.get_tablet_context())
+		setup_tablet();
+}
+
+void CL_Win32Window::get_styles_from_description(const CL_DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style)
+{
+	style = 0;
+	ex_style = 0;
+
+	if (desc.is_fullscreen() || !desc.get_decorations() || !desc.has_caption())
+		style |= WS_POPUP;
+
+	if (desc.get_allow_resize() && !desc.is_fullscreen())
+		style |= WS_SIZEBOX;
+
+	if (desc.has_caption() && desc.get_decorations())
+	{
+		style |= WS_CAPTION;
+		if (desc.has_sysmenu())
+			style |= WS_SYSMENU;
+		if (desc.has_minimize_button())
+			style |= WS_MINIMIZEBOX;
+		if (desc.has_maximize_button())
+			style |= WS_MAXIMIZEBOX;
+	}
+
+	if (desc.is_layered())
+	{
+		layered = true;
+		ex_style |= WS_EX_LAYERED;
+	}
+	else
+	{
+		layered = false;
+	}
+
+	if (desc.is_tool_window())
+		ex_style |= WS_EX_TOOLWINDOW;
+}
+
+RECT CL_Win32Window::get_window_geometry_from_description(const CL_DisplayWindowDescription &desc, DWORD style, DWORD ex_style)
+{
+	int x = desc.get_position().left;
+	int y = desc.get_position().top;
+	int width = desc.get_size().width;
+	int height = desc.get_size().height;
+
+	bool clientSize = desc.get_position_client_area();	// false = Size includes the window frame. true = Size is the drawable size.
+
+	if (desc.is_fullscreen())
+	{
+		clientSize = false;
+		x = 0;
+		y = 0;
+		width = GetSystemMetrics(SM_CXSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);
+	}
+	else if (desc.get_position().left == -1 && desc.get_position().top == -1)
+	{
+		int scr_width = GetSystemMetrics(SM_CXSCREEN);
+		int scr_height = GetSystemMetrics(SM_CYSCREEN);
+
+		x = scr_width/2 - width/2;
+		y = scr_height/2 - height/2;
+	}
+
+	// get size of window with decorations to pass to CreateWindow
+	RECT window_rect = { x, y, x+width, y+height };
+	if (clientSize)
+		AdjustWindowRectEx( &window_rect, style, FALSE, ex_style );
+	return window_rect;
+}
+
+void CL_Win32Window::update_layered(CL_PixelBuffer &image, const CL_Point &dest_offset, const CL_Colorf &colorkey, int window_alpha, bool use_colorkey)
+{
+	// Note that the APIs use pre-multiplied alpha, which means that the red,
+	// green and blue channel values in the bitmap must be pre-multiplied with
+	// the alpha channel value. For example, if the alpha channel value is x,
+	// the red, green and blue channels must be multiplied by x and divided by
+	// 0xff prior to the call.
+	int w = image.get_width();
+	int h = image.get_height();
+	cl_uint32 *p = (cl_uint32 *) image.get_data();
+	for (int y = 0; y < h; y++)
+	{
+		int index = y * w;
+		cl_uint32 *line = p + index;
+		for (int x = 0; x < w; x++)
+		{
+			// Reading RGBA
+			cl_uint32 r = ((line[x] >> 24) & 0xff);
+			cl_uint32 g = ((line[x] >> 16) & 0xff);
+			cl_uint32 b = ((line[x] >> 8) & 0xff);
+			cl_uint32 a = (line[x] & 0xff);
+
+			r = r * a / 255;
+			g = g * a / 255;
+			b = b * a / 255;
+
+			// Writing ARGB
+			line[x] = (a << 24) + (r << 16) + (g << 8) + b;
+		}
+	}
+
+	BITMAPV5HEADER bmp_header;
+	memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
+	bmp_header.bV5Size = sizeof(BITMAPV5HEADER);
+	bmp_header.bV5Width = image.get_width();
+	bmp_header.bV5Height = image.get_height();
+	bmp_header.bV5Planes = 1;
+	bmp_header.bV5BitCount = 32;
+	bmp_header.bV5Compression = BI_RGB;
+
+	HDC hdc = GetDC(hwnd);
+	HDC bitmap_dc = CreateCompatibleDC(hdc);
+	HBITMAP bitmap = CreateDIBitmap(hdc, (BITMAPINFOHEADER *) &bmp_header, CBM_INIT, image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
+	HGDIOBJ old_bitmap = SelectObject(bitmap_dc, bitmap);
+
+	SIZE size = { image.get_width(), image.get_height() };
+	POINT point = { 0, 0 };
+	COLORREF rgb_colorkey = RGB(colorkey.get_red(), colorkey.get_green(), colorkey.get_blue());
+	BLENDFUNCTION blend;
+	memset(&blend, 0, sizeof(BLENDFUNCTION));
+	blend.BlendOp = AC_SRC_OVER;
+	blend.SourceConstantAlpha = (BYTE) window_alpha;
+	blend.AlphaFormat = AC_SRC_ALPHA;
+	if (use_colorkey)
+		UpdateLayeredWindow(hwnd, 0, 0, &size, bitmap_dc, &point, rgb_colorkey, &blend, ULW_COLORKEY);
+	else
+		UpdateLayeredWindow(hwnd, 0, 0, &size, bitmap_dc, &point, rgb_colorkey, &blend, ULW_ALPHA);
+
+	SelectObject(bitmap_dc, old_bitmap);
+	DeleteObject(bitmap);
+	DeleteDC(bitmap_dc);
+	ReleaseDC(hwnd, hdc);
 }

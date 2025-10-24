@@ -26,77 +26,84 @@
 **    Harry Storbacka
 */
 
-#ifndef header_grid_component
-#define header_grid_component
+#pragma once
+
+#include "grid_edit_state.h"
 
 class MainWindow;
 class PropertyComponent;
 class HolderComponent;
+class SnapLine;
 
-class CL_API_GUI GridComponent : public CL_GUIComponent
+class GridComponent : public CL_GUIComponent
 {
 //! Construction:
 public:
 	GridComponent(CL_GUIComponent *parent, MainWindow *main_window);
-	
-	virtual ~GridComponent() {};
+	virtual ~GridComponent() { }
 
 //! Attributes:
 public:
-	CL_Rect get_boundary();
+	CL_Size get_dialog_size();
 
-	static bool is_grid_or_child_of_grid(CL_GUIComponent *comp);
+	const std::vector<HolderComponent*> &get_holders() const;
+	std::vector<SnapLine> get_snaplines() const;
+
+	CL_Vec2i snap(HolderComponent *holder, const std::vector<SnapLine> &source_snaplines, const CL_Rect &source_rect);
 
 //! Operations:
 public:
-	void on_add_component(int id);
-
+	HolderComponent *on_add_component(int id, const CL_Vec2i &pos);
 	void remove_holder(HolderComponent *holder);
 
 	void load(const CL_StringRef &str);
-
 	void save(const CL_StringRef &str);
-	
 	void set_boundary_size(const CL_Size &size);
 
 //! Events:
 public:
+	CL_Callback_v0 func_boundary_resized;
 
 //! Implementation:
 private:
-	void on_process_message(CL_GUIMessage &msg);
+	bool on_input_pressed(const CL_InputEvent &input_event);
+	bool on_input_released(const CL_InputEvent &input_event);
+	bool on_input_doubleclick(const CL_InputEvent &input_event);
+	bool on_input_pointer_moved(const CL_InputEvent &input_event);
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
-	bool on_filter_message(CL_GUIMessage &msg);
-	void on_filter_mouse_left_down(CL_GUIMessage &msg, CL_InputEvent &e);
-	void on_filter_mouse_left_up(CL_GUIMessage &msg, CL_InputEvent &e);
-	void on_filter_mouse_move(CL_InputEvent &e);
+	void on_render_overlay(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_resized();
+
+	CL_Rect holder_to_grid_coords(HolderComponent *holder, const CL_Rect &rect);
+	CL_Point holder_to_grid_coords(HolderComponent *holder, const CL_Point &point);
+	CL_Rect grid_to_holder_coords(HolderComponent *holder, const CL_Rect &rect);
+	CL_Point grid_to_holder_coords(HolderComponent *holder, const CL_Point &point);
+
+	CL_Rect get_boundary_grabber_se() const;
+	CL_Rect get_boundary_grabber_s() const;
+	CL_Rect get_boundary_grabber_e() const;
+
 	CL_Rect load_geometry(CL_DomElement &e);
-	void load_listview(CL_DomElement &e, CL_ListView *lv);
-	CL_GUIComponent *get_holder_parent(CL_GUIComponent *comp);
-	void on_tab_page_resized(CL_TabPage *page);
+
 	CL_DomElement to_element(CL_DomDocument &doc);
-	void render_grid(CL_GraphicContext &gc, const CL_Rect &update_rect);
-	void on_mouse_left_tab_order(CL_GUIComponent *holder);
-	void clear_tab_order_indexes();
+	HolderComponent *find_holder_at(const CL_Point &pos);
+	bool deliver_input_to_tab(const CL_InputEvent &e);
 
 	void load(CL_DomElement &element, CL_GUIComponent *parent);
 
 	MainWindow *main_window;
+	CL_GUIComponent *component_container;
+	CL_GUIComponent *component_overlay;
 	std::vector<HolderComponent*> holders;
 
-	CL_GUIComponent *selected_holder;
 	CL_Rect boundary;
-	bool resizing;
-	bool moving_boundary;
 
-	std::map<int, int> new_component_count;
-	int tab_page_count;
+	GridEditState edit_state;
 
-	CL_Rect grid_rect;
-	std::vector<CL_Vec2i> grid_points;
-
-	CL_Cursor default_cursor;
+	friend class GridEditStateNone;
+	friend class GridEditStateBoundarySizing;
+	friend class GridEditStateNetSelecting;
+	friend class GridEditStateObjectMoving;
+	friend class GridEditStateObjectSizing;
+	friend class GridEditStateCreateTool;
 };
-
-#endif

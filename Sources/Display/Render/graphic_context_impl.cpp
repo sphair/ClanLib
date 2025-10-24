@@ -33,9 +33,9 @@
 #include "API/Display/Render/shared_gc_data.h"
 
 CL_GraphicContext_Impl::CL_GraphicContext_Impl(CL_GraphicContextProvider *provider)
-: provider(provider), max_attributes(0), modelview_changed(false), active_batcher(0)
+: provider(provider), max_attributes(0), modelview_changed(false), active_batcher(0), modelview_index(0)
 {
-	modelviews.push_front(CL_Mat4f::identity());
+	modelviews.push_back(CL_Mat4f::identity());
 	max_attributes = provider->get_max_attributes();
 	CL_SharedGCData::add_ref();
 }
@@ -54,7 +54,7 @@ CL_GraphicContext_Impl::~CL_GraphicContext_Impl()
 
 }
 
-CL_SharedPtr<CL_PrimitivesArray_Impl> CL_GraphicContext_Impl::create_prim_array()
+CL_SharedPtr<CL_PrimitivesArray_Impl> CL_GraphicContext_Impl::create_prim_array(CL_SharedPtr<CL_GraphicContext_Impl> this_gc)
 {
 	CL_PrimitivesArray_Impl *prim_array_impl = 0;
 	if (!free_prim_arrays.empty())
@@ -67,14 +67,23 @@ CL_SharedPtr<CL_PrimitivesArray_Impl> CL_GraphicContext_Impl::create_prim_array(
 	}
 	else
 	{
-		prim_array_impl = new CL_PrimitivesArray_Impl(max_attributes);
+		CL_WeakPtr<CL_GraphicContext_Impl> this_weakptr(this_gc);
+		prim_array_impl = new CL_PrimitivesArray_Impl(max_attributes, this_weakptr );
 	}
-	return CL_SharedPtr<CL_PrimitivesArray_Impl>(prim_array_impl, this, &CL_GraphicContext_Impl::free_prim_array, 0);
+	return CL_SharedPtr<CL_PrimitivesArray_Impl>(prim_array_impl, &CL_GraphicContext_Impl::free_prim_array, 0);
 }
 
 void CL_GraphicContext_Impl::free_prim_array(CL_PrimitivesArray_Impl *prim_array)
 {
-	free_prim_arrays.push_back(prim_array);
+	// If the graphic context has been destroyed, then simply delete the prim_array
+	if (prim_array->gc.is_invalid_weak_link())
+	{
+		delete prim_array;
+	}
+	else
+	{
+		prim_array->gc->free_prim_arrays.push_back(prim_array);
+	}
 }
 
 void CL_GraphicContext_Impl::flush_batcher(CL_GraphicContext &gc)
@@ -90,7 +99,7 @@ void CL_GraphicContext_Impl::flush_batcher(CL_GraphicContext &gc)
 void CL_GraphicContext_Impl::update_batcher_modelview()
 {
 	if (active_batcher)
-		active_batcher->modelview_changed(modelviews.front());
+		active_batcher->modelview_changed(modelviews[modelview_index]);
 }
 
 void CL_GraphicContext_Impl::set_batcher(CL_GraphicContext &gc, CL_RenderBatcher *batcher)
@@ -100,6 +109,6 @@ void CL_GraphicContext_Impl::set_batcher(CL_GraphicContext &gc, CL_RenderBatcher
 		flush_batcher(gc);
 		active_batcher = batcher;
 		if (active_batcher)
-			active_batcher->modelview_changed(modelviews.front());
+			active_batcher->modelview_changed(modelviews[modelview_index]);
 	}
 }

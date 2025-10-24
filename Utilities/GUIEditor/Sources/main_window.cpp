@@ -1,35 +1,62 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2009 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Harry Storbacka
+*/
 
 #include "precomp.h"
 #include "main_window.h"
 #include "application.h"
 #include "grid_component.h"
 #include "property_component.h"
-#include "property_component_tab_order.h"
 #include "view_border.h"
-#include "system_dialog.h"
+#include "component_types.h"
 #include "component_type.h"
 #include "dialog_document.h"
 #include "source_generator_dialog.h"
+#include "holder_component.h"
 
 enum MainToolbarID { main_toolbar_new, main_toolbar_open, main_toolbar_save };
 
 MainWindow::MainWindow(Application *application)
 : CL_Window(application->get_gui(), get_startup_description()),
-  application(application), document(0), grid_component(0), property_component(0)
+  application(application), document(0), grid_component(0), property_component(0), selected_tool(1337)
 {
 	set_id_name("editor");
 	func_close().set(this, &MainWindow::on_close);
 	func_resized().set(this, &MainWindow::on_resized);
+	func_process_message().set(this, &MainWindow::on_process_messages);
 
 	document = new DialogDocument;
 	create_components();
-	populate_menubar();
+//	populate_menubar();
 	populate_main_toolbar();
-	populate_mode_toolbar();
 	populate_tools_toolbar();
-	update_child_positions();
 
-	grid_component->set_focus();
+	create_new_document();
+	update_child_positions();
 }
 
 MainWindow::~MainWindow()
@@ -45,24 +72,19 @@ CL_GUITopLevelDescription MainWindow::get_startup_description()
 	CL_GUITopLevelDescription desc;
 	desc.set_title(cl_text("ClanLib GUI Editor"));
 	desc.set_allow_resize(true);
-	desc.set_position(CL_Rect(200, 200, 1024, 768), false);
+	desc.set_position(CL_Rect(200, 200, 1100, 768), false);
 	return desc;
 }
 
 void MainWindow::create_components()
 {
-	menubar = new CL_MenuBar(this);
+//	menubar = new CL_MenuBar(this);
 	toolbar_main = new CL_ToolBar(this);
 	toolbar_tools = new CL_ToolBar(this);
-	toolbar_mode = new CL_ToolBar(this);
 	statusbar = new CL_StatusBar(this);
 	statusbar->set_status_text(cl_text("Ready"));
 	view_border = new ViewBorder(this);
-	grid_component = new GridComponent(view_border, this);
-	grid_component->set_tab_order_controller(true);
 	property_component = new PropertyComponent(this);
-	property_component_tab_order = new PropertyComponentTabOrder(this);
-	property_component_tab_order->set_visible(false);
 
 	toolbar_tools->set_id_name(cl_text("tools"));
 	toolbar_tools->set_single_selection(true);
@@ -71,33 +93,33 @@ void MainWindow::create_components()
 void MainWindow::populate_menubar()
 {
 	CL_PopupMenu menu_file;
-	menu_file.insert_item(cl_text("New"));
-	menu_file.insert_item(cl_text("Open"));
-	menu_file.insert_item(cl_text("Save"));
-	menu_file.insert_item(cl_text("Exit"));
+	menu_file.insert_item(cl_text("New")).set_enabled(false);
+	menu_file.insert_item(cl_text("Open")).set_enabled(false);
+	menu_file.insert_item(cl_text("Save")).set_enabled(false);
+	menu_file.insert_item(cl_text("Exit")).set_enabled(false);
 	menubar->add_menu(cl_text("File"), menu_file);
 
 	CL_PopupMenu menu_edit;
-	menu_edit.insert_item(cl_text("Undo"));
-	menu_edit.insert_item(cl_text("Redo"));
-	menu_edit.insert_item(cl_text("Cut"));
-	menu_edit.insert_item(cl_text("Copy"));
-	menu_edit.insert_item(cl_text("Paste"));
-	menu_edit.insert_item(cl_text("Delete"));
-	menu_edit.insert_item(cl_text("Select All"));
+	menu_edit.insert_item(cl_text("Undo")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Redo")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Cut")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Copy")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Paste")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Delete")).set_enabled(false);
+	menu_edit.insert_item(cl_text("Select All")).set_enabled(false);
 	menubar->add_menu(cl_text("Edit"), menu_edit);
 /*
 	CL_PopupMenu menu_view;
 	menubar->add_menu(cl_text("View"), menu_view);
 */
-	CL_PopupMenu menu_tools;
+/*	CL_PopupMenu menu_tools;
 	menu_tools.insert_item(cl_text("Options"));
 	CL_PopupMenuItem pmi_source_generator = menu_tools.insert_item("Source Generator...");
 	pmi_source_generator.func_clicked().set(this, &MainWindow::on_menu_source_generator);
-	menubar->add_menu(cl_text("Tools"), menu_tools);
+	menubar->add_menu(cl_text("Tools"), menu_tools);*/
 
 	CL_PopupMenu menu_help;
-	menu_help.insert_item(cl_text("About GUI Editor"));
+	menu_help.insert_item(cl_text("About GUI Editor")).set_enabled(false);
 	menubar->add_menu(cl_text("Help"), menu_help);
 }
 
@@ -113,7 +135,7 @@ void MainWindow::populate_tools_toolbar()
 	for (std::vector<ComponentType *>::size_type index = 0; index < types.size(); index++)
 	{
 		CL_Sprite sprite(get_gc(), types[index]->icon);
-		tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
+		CL_ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
 		tbi.set_toggling(true);
 	}
 }
@@ -126,26 +148,10 @@ void MainWindow::populate_main_toolbar()
 	toolbar_main->insert_item(CL_Sprite(get_gc(), cl_text("save_16x16.png")), 0, cl_text("Save As"), main_toolbar_save);
 }
 
-void MainWindow::populate_mode_toolbar()
-{
-	toolbar_mode->func_item_clicked().set(this, &MainWindow::on_mode_toolbar_clicked);
-	toolbar_mode->insert_item(CL_Sprite(get_gc(), cl_text("gfx/editor_mode_position.png")), 0, cl_text("Pos"), edit_mode_position);
-	toolbar_mode->insert_item(CL_Sprite(get_gc(), cl_text("gfx/editor_mode_taborder.png")), 0, cl_text("Tab"), edit_mode_taborder);
-
-	toolbar_mode->set_single_selection(true);
-
-	int count = toolbar_mode->get_item_count();
-	for (int i=0; i<count; ++i)
-	{
-		toolbar_mode->get_item(i).set_toggling(true);
-	}
-
-	toolbar_mode->get_item_by_id(edit_mode_position).set_pressed(true);
-}
-
-void MainWindow::on_close()
+bool MainWindow::on_close()
 {
 	exit_with_code(0);
+	return true;
 }
 
 void MainWindow::on_resized()
@@ -155,7 +161,7 @@ void MainWindow::on_resized()
 
 void MainWindow::on_tool_selected(CL_ToolBarItem item)
 {
-	grid_component->on_add_component(item.get_id());
+	selected_tool = item.get_id();
 }
 
 void MainWindow::update_child_positions()
@@ -163,14 +169,29 @@ void MainWindow::update_child_positions()
 	CL_Rect client_area = get_client_area();
 	CL_Size size = client_area.get_size();
 
-	menubar->set_geometry(CL_Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
-	toolbar_main->set_geometry(CL_Rect(client_area.left, client_area.top + 22, client_area.left+int(size.width*0.5), client_area.top+22+26));
-	toolbar_mode->set_geometry(CL_Rect(client_area.left+int(size.width*0.5), client_area.top + 22, client_area.right, client_area.top+22+26));
-	toolbar_tools->set_geometry(CL_Rect(client_area.left, client_area.top+22+26, client_area.left+24*5, client_area.bottom-24));
+//	menubar->set_geometry(CL_Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
+	toolbar_main->set_geometry(CL_Rect(client_area.left, client_area.top /*+ 22*/, client_area.right, client_area.top/*+22*/+31));
+	toolbar_tools->set_geometry(CL_Rect(client_area.left, client_area.top/*+22*/+31, client_area.left+24*5, client_area.bottom-24));
 	statusbar->set_geometry(CL_Rect(client_area.left, client_area.bottom-24, client_area.right, client_area.bottom));
-	property_component->set_geometry(CL_Rect(client_area.right-200, client_area.top+22+26, client_area.right, client_area.bottom-24));
-	property_component_tab_order->set_geometry(property_component->get_geometry());
-	view_border->set_geometry(CL_Rect(client_area.left+24*5, client_area.top+22+26, client_area.right-200, client_area.bottom-24));
+	property_component->set_geometry(CL_Rect(client_area.right-200, client_area.top/*+22*/+31, client_area.right, client_area.bottom-24));
+	view_border->set_geometry(CL_Rect(client_area.left+24*5, client_area.top/*+22*/+31, client_area.right-200, client_area.bottom-24));
+	view_border->on_resized();
+}
+
+void MainWindow::create_new_document()
+{
+	selection.clear();
+	property_component->clear();
+
+	delete document;
+	document = new DialogDocument;
+
+	delete grid_component;
+	grid_component = new GridComponent(view_border, this);
+
+	grid_component->func_boundary_resized.set(this, &MainWindow::on_grid_resized);
+	grid_component->set_boundary_size(CL_Size(320,200));
+	property_component->set_dialog_size(CL_Size(320,200));
 }
 
 void MainWindow::on_main_toolbar_clicked(CL_ToolBarItem item)
@@ -180,30 +201,51 @@ void MainWindow::on_main_toolbar_clicked(CL_ToolBarItem item)
 	switch(item.get_id())
 	{
 	case main_toolbar_new:
-		selection.clear();
-		property_component->clear();
-		delete document;
-		document = new DialogDocument;
-		delete grid_component;
-		grid_component = new GridComponent(view_border, this);
+		create_new_document();
 		update_child_positions();
 		break;
 
 	case main_toolbar_open:
-		filename = SystemDialog::show_open_file_dialog();
-		if (filename.empty())
-			return;
-//		document->load(filename);
-		grid_component->load(filename);
+		filename = show_open_file_dialog();
+		if (!filename.empty())
+		{
+	//		document->load(filename);
+			load(filename);
+		}
 		break;
 
 	case main_toolbar_save:
-		filename = SystemDialog::show_save_file_dialog();
-		if (filename.empty())
-			return;
-//		document->save(filename);
-		grid_component->save(filename);
+		filename = show_save_file_dialog();
+		if (!filename.empty())
+		{
+	//		document->save(filename);
+			grid_component->save(filename);
+		}
 	}
+}
+
+CL_String MainWindow::show_open_file_dialog()
+{
+	CL_OpenFileDialog dlg(this);
+	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
+	dlg.add_filter("All files", "*.*");
+	dlg.set_initial_directory(CL_System::get_exe_path());
+	if(dlg.show())
+		return dlg.get_filename();
+	else
+		return CL_String();
+}
+
+CL_String MainWindow::show_save_file_dialog()
+{
+	CL_SaveFileDialog dlg(this);
+	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
+	dlg.add_filter("All files", "*.*");
+	dlg.set_initial_directory(CL_System::get_exe_path());
+	if(dlg.show())
+		return dlg.get_filename();
+	else
+		return CL_String();
 }
 
 void MainWindow::on_menu_source_generator()
@@ -225,17 +267,93 @@ void MainWindow::on_mode_toolbar_clicked( CL_ToolBarItem item )
 	switch (editor_mode)
 	{
 		case edit_mode_position:
-			property_component_tab_order->set_visible(false);
 			property_component->set_visible(true);
 			break;
-		case edit_mode_taborder:
-			property_component_tab_order->set_visible(true);
-			property_component->set_visible(false);
+		default:
 			break;
 	}
 }
 
 void MainWindow::load(const CL_StringRef &filename)
 {
+	create_new_document();
 	grid_component->load(filename);
+	property_component->set_dialog_size(grid_component->get_dialog_size());
+	update_child_positions();
+}
+
+void MainWindow::on_grid_resized()
+{
+	property_component->set_dialog_size(grid_component->get_dialog_size());
+}
+
+void MainWindow::on_process_messages(CL_GUIMessage &msg)
+{
+	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
+	{
+		CL_GUIMessage_Input input_msg = msg;
+		CL_InputEvent e = input_msg.get_event();
+
+		if (e.type == CL_InputEvent::pressed)
+		{
+			if (e.id == CL_KEY_PRIOR)
+			{
+				if (selection.empty() && grid_component->get_first_child())
+				{
+					HolderComponent *holder = dynamic_cast<HolderComponent*>(grid_component->get_first_child());
+					selection.add_holder(holder);
+				}
+				else
+				{
+					HolderComponent *holder = selection.get_selection().front();
+					if (holder->get_previous_sibling() || grid_component->get_last_child())
+					{
+						selection.clear();
+						HolderComponent *sibling = dynamic_cast<HolderComponent*>(holder->get_previous_sibling());
+						if (sibling == 0)
+							sibling = dynamic_cast<HolderComponent*>(grid_component->get_last_child());
+						selection.add_holder(sibling);
+					}
+				}
+				grid_component->request_repaint();
+			}
+			else if (e.id == CL_KEY_NEXT)
+			{
+				if (selection.empty() && grid_component->get_first_child())
+				{
+					HolderComponent *holder = dynamic_cast<HolderComponent*>(grid_component->get_first_child());
+					selection.add_holder(holder);
+				}
+				else
+				{
+					HolderComponent *holder = selection.get_selection().front();
+					if (holder->get_next_sibling() || grid_component->get_first_child())
+					{
+						selection.clear();
+						HolderComponent *sibling = dynamic_cast<HolderComponent*>(holder->get_next_sibling());
+						if (sibling == 0)
+							sibling = dynamic_cast<HolderComponent*>(grid_component->get_first_child());
+						selection.add_holder(sibling);
+					}
+				}
+				grid_component->request_repaint();
+			}
+			else if (e.id == CL_KEY_F1)
+			{
+				toolbar_tools->get_item_by_id(1337).set_pressed(true);
+			}
+		}
+	}
+	if (msg.is_type(CL_GUIMessage_Close::get_type_name()))
+	{
+		exit_with_code(0);
+	}
+}
+
+void MainWindow::use_select_tool()
+{
+	toolbar_tools->get_item_by_id(selected_tool).set_pressed(false);
+	selected_tool = 1337;
+	toolbar_tools->get_item_by_id(1337).set_pressed(true);
+	toolbar_tools->request_repaint();
 }

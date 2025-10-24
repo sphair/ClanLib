@@ -35,6 +35,8 @@
 #include <dinput.h>
 #include "API/Display/api_display.h"
 #include "API/Display/Window/input_context.h"
+#include "API/Display/Window/input_device.h"
+#include "API/Display/TargetProviders/input_device_provider.h"
 #include "API/Core/System/sharedptr.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/rect.h"
@@ -55,11 +57,12 @@ class CL_PixelBuffer;
 class CL_DataBuffer;
 class CL_CursorProvider_Win32;
 class CL_InputEvent;
+class CL_Colorf;
 
 class CL_API_DISPLAY CL_Win32Window
 {
 public:
-	CL_Win32Window(CL_DisplayMessageQueue_Win32 *message_queue);
+	CL_Win32Window();
 	~CL_Win32Window();
 
 public:
@@ -125,6 +128,8 @@ public:
 
 	void set_modifier_keys(CL_InputEvent &key);
 
+	void update_layered(CL_PixelBuffer &image, const CL_Point &dest_offset, const CL_Colorf &colorkey, int window_alpha, bool use_colorkey);
+
 private:
 	void create_direct_input();
 	void destroy_direct_input();
@@ -142,6 +147,11 @@ private:
 	/// \brief Updates the already created window to new window description.
 	void modify_window(const CL_DisplayWindowDescription &desc);
 
+	void get_styles_from_description( const CL_DisplayWindowDescription &desc, DWORD &style, DWORD &ex_style  );
+	RECT get_window_geometry_from_description( const CL_DisplayWindowDescription &desc, DWORD style, DWORD ex_style );
+	void connect_window_input( const CL_DisplayWindowDescription &desc );
+	void register_window_class();
+
 	void received_keyboard_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_input(UINT msg, WPARAM wparam, LPARAM lparam);
 	void received_mouse_move(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -152,11 +162,17 @@ private:
 	static BOOL CALLBACK enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef);
 
 	CL_PixelBuffer get_argb8888_from_png(cl_uint8 *data, size_t size) const;
-	CL_PixelBuffer get_argb8888_from_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+	CL_PixelBuffer get_argb8888_from_rgb_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+	CL_PixelBuffer get_argb8888_from_bitfields_dib(BITMAPV5HEADER *bitmapInfo, size_t size) const;
+
 	void flip_pixelbuffer_vertical(CL_PixelBuffer &pbuf) const;
 	void add_png_to_clipboard(const CL_PixelBuffer &image);
 	void add_dib_to_clipboard(const CL_PixelBuffer &image);
 	void register_clipboard_formats();
+
+	CL_InputDeviceProvider_Win32Keyboard *get_keyboard();
+	CL_InputDeviceProvider_Win32Mouse *get_mouse();
+	CL_InputDeviceProvider_Win32Tablet *get_tablet();
 
 	HWND hwnd;
 	bool destroy_hwnd;
@@ -166,10 +182,8 @@ private:
 	bool cursor_set, cursor_hidden;
 	CL_DisplayWindowSite *site;
 	LPDIRECTINPUT8 directinput;
-	CL_InputDeviceProvider_Win32Keyboard *keyboard;
-	CL_InputDeviceProvider_Win32Mouse *mouse;
-	CL_SharedPtr<CL_InputDeviceProvider_Win32Tablet> tablet;
-	CL_DisplayMessageQueue_Win32 *message_queue;
+	CL_InputDevice keyboard, mouse, tablet;
+	std::vector<CL_InputDevice> joysticks;
 	CL_Point mouse_pos;
 	std::map<int,int> repeat_count;
 	CL_Callback_v0 callback_on_resized;
@@ -182,7 +196,4 @@ private:
 	CL_String class_name;
 
 	friend class CL_InputDeviceProvider_DirectInput;
-	friend class CL_InputDeviceProvider_Win32Keyboard;
-	friend class CL_InputDeviceProvider_Win32Mouse;
-	friend class CL_InputDeviceProvider_Win32Tablet;
 };

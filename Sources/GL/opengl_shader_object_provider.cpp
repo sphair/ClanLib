@@ -106,15 +106,9 @@ void CL_OpenGLShaderObjectProvider::on_dispose()
 {
 	if (handle)
 	{
-		std::vector<CL_GraphicContextProvider*> &opengl_contexts = CL_SharedGCData::get_gc_providers();
-		if (!opengl_contexts.empty())
+		if (CL_OpenGL::set_active())
 		{
-			CL_OpenGLGraphicContextProvider *gc_provider = dynamic_cast<CL_OpenGLGraphicContextProvider*>(opengl_contexts[0]);
-			if (gc_provider)
-			{
-				CL_OpenGL::set_active(gc_provider);
-				clDeleteShader(handle);
-			}
+			clDeleteShader(handle);
 		}
 	}
 }

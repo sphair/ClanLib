@@ -177,7 +177,7 @@ int CL_CSSDocument_Impl::load_import(unsigned char *data, int pos, int length, c
 	CL_TempString inc_fullname = path + import_text;
 	CL_TempString inc_path = CL_PathHelp::get_fullpath(inc_fullname, CL_PathHelp::path_type_file);
 
-	CL_IODevice iodevice = CL_File(inc_fullname, CL_File::open_existing);
+	CL_IODevice iodevice = CL_File(inc_fullname);
 		
 	load(inc_path, iodevice);
 

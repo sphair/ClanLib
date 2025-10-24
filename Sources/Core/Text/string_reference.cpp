@@ -60,7 +60,7 @@ CL_StringReference<CharType, StdString>::CL_StringReference()
 
 template<typename CharType, typename StdString>
 CL_StringReference<CharType, StdString>::CL_StringReference(const StdString &source)
-: null_terminated(false), temporary(true)
+: null_terminated(false), temporary(false)
 {
 	this->data_length = source.length();
 	this->data_ptr = (CharType *) source.data();

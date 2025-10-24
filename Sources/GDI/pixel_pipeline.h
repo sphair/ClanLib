@@ -30,14 +30,13 @@
 
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/mat4.h"
+#include "API/Core/Math/line_segment.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/Signals/slot.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/frame_buffer.h"
 #include "fragment_buffer.h"
-
-class CL_Rasterizer;
 
 class CL_PixelPipeline
 {
@@ -58,8 +57,9 @@ public:
 
 	void clear(const CL_Colorf &color);
 	void draw_pixels(const CL_Rect &dest, const CL_PixelBufferRef &image, const CL_Colorf &primary_color);
-	void draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[4], const CL_Vec2f texcoords[3], int sampler);
-	void draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[4], const CL_Vec2f texcoords[3], int sampler);
+	void draw_triangle(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler);
+	void draw_sprite(const CL_Vec2f points[3], const CL_Vec4f primcolor[3], const CL_Vec2f texcoords[3], int sampler);
+	void draw_line(const CL_Vec2f points[2], const CL_Vec4f primcolor[2], const CL_Vec2f texcoords[2], int sampler);
 
 	const CL_Mat4f &get_modelview() const { return modelview; }
 	const CL_Mat4f &get_projection() const { return projection; }
@@ -112,12 +112,20 @@ private:
 	CL_FrameBuffer framebuffer;
 	CL_Slot slot_framebuffer_modified;
 
+	enum ProgramType
+	{
+		type_triangle,
+		type_sprite,
+		type_clear,
+		type_line,
+	};
+
 	struct ShadedVertex
 	{
 		CL_Vec2f position;
 		float varying[num_varying];
 		unsigned char sampler;
-		bool sprite_program;
+		ProgramType program;
 	};
 
 	enum { max_shaded_vertices = 3*1024*FragmentBuffer::num_fragments, max_cores = 32 };
@@ -134,11 +142,12 @@ private:
 	void wait_for_workers();
 	void worker_main(int core);
 
-	void process_vertices(CL_Rasterizer &rasterizer, int core, int num_cores);
+	void process_vertices(int core, int num_cores);
 
 	int find_first_line_for_core(int y_start, int core, int num_cores);
 
 	void fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color, int core, int num_cores);
+	void clear(const CL_Colorf &color, int core, int num_cores);
 	void draw_image(const CL_Rect &dest, const CL_PixelBufferRef &image, const CL_Rect &src, const CL_Colorf &primary_color, int core=0, int num_cores=1);
 
 	void modified_framebuffer();

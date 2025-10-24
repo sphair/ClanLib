@@ -57,8 +57,7 @@ public:
 			CustomComponent comp3(CL_Rect(87, 200, 600, 300), &gui, CL_Colorf::blue);
 //			CustomComponent comp3(CL_Rect(88, 200, 600, 300), &gui, CL_Colorf::blue);
 
-			CL_AcceleratorTable accel_table;
-			gui.exec(accel_table);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{

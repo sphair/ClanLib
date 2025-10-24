@@ -59,17 +59,45 @@ CL_Font_Vector::CL_Font_Vector()
 {
 }
 
-CL_Font_Vector::CL_Font_Vector(
-	const CL_StringRef &typeface_name, int height) : CL_Font( new CL_FontProvider_Vector(typeface_name, height))
+CL_Font_Vector::CL_Font_Vector( const CL_StringRef &typeface_name, int height) : CL_Font( new CL_FontProvider_Vector())
 {
-
+	CL_FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(height);
+	get_provider()->load_font(desc);
 }
 
-CL_Font_Vector::CL_Font_Vector(
-	const CL_FontDescription &desc) : CL_Font( new CL_FontProvider_Vector(desc))
+CL_Font_Vector::CL_Font_Vector( const CL_StringRef &typeface_name, int height, CL_IODevice &file) : CL_Font( new CL_FontProvider_Vector())
 {
-
+	CL_FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(height);
+	get_provider()->load_font(desc, file);
 }
+
+CL_Font_Vector::CL_Font_Vector( const CL_StringRef &typeface_name, int height, const CL_VirtualDirectory &directory) : CL_Font( new CL_FontProvider_Vector())
+{
+	CL_FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(height);
+	get_provider()->load_font(desc, directory);
+}
+
+CL_Font_Vector::CL_Font_Vector( const CL_FontDescription &desc) : CL_Font( new CL_FontProvider_Vector())
+{
+	get_provider()->load_font(desc);
+}
+
+CL_Font_Vector::CL_Font_Vector( const CL_FontDescription &desc, CL_IODevice &file) : CL_Font( new CL_FontProvider_Vector())
+{
+	get_provider()->load_font(desc, file);
+}
+
+CL_Font_Vector::CL_Font_Vector( const CL_FontDescription &desc, const CL_VirtualDirectory &directory) : CL_Font( new CL_FontProvider_Vector())
+{
+	get_provider()->load_font(desc, directory);
+}
+
 CL_Font_Vector::~CL_Font_Vector()
 {
 

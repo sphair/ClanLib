@@ -40,6 +40,11 @@ Selection::Selection()
 /////////////////////////////////////////////////////////////////////////////
 // Selection Attributes:
 
+bool Selection::empty()
+{
+	return selected_holders.empty();
+}
+
 std::vector<HolderComponent*> Selection::get_selection()
 {
 	return selected_holders;
@@ -56,11 +61,6 @@ void Selection::add_holder(HolderComponent *holder)
 
 void Selection::clear()
 {
-	std::vector<HolderComponent*>::iterator it;
-	for (it = selected_holders.begin(); it != selected_holders.end(); ++it)
-	{
-		(*it)->set_selected(false);
-	}
 	selected_holders.clear();
 	signal_selection_changed.invoke();
 }

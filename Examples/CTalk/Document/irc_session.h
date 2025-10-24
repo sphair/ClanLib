@@ -65,12 +65,9 @@ public:
 	CL_Signal_v3<const IRCChannel &, const IRCNick &, const IRCText &> cb_user_parted;
 	CL_Signal_v2<const IRCNick &, const IRCText &> cb_user_quit;
 
-	CL_Signal_v3<const IRCChannel &, const IRCNick &, const IRCText &> cb_channel_text;
-	CL_Signal_v3<const IRCChannel &, const IRCNick &, const IRCText &> cb_channel_notice;
-	CL_Signal_v3<const IRCChannel &, const IRCNick &, const IRCText &> cb_channel_action;
-	CL_Signal_v2<const IRCNick &, const IRCText &> cb_private_text;
-	CL_Signal_v2<const IRCNick &, const IRCText &> cb_private_notice;
-	CL_Signal_v2<const IRCNick &, const IRCText &> cb_private_action;
+	CL_Signal_v3<const IRCEntity &, const IRCNick &, const IRCText &> cb_text;
+	CL_Signal_v3<const IRCEntity &, const IRCNick &, const IRCText &> cb_notice;
+	CL_Signal_v3<const IRCEntity &, const IRCNick &, const IRCText &> cb_action;
 	CL_Signal_v1<const IRCText &> cb_error_text;
 	CL_Signal_v1<const IRCText &> cb_system_text;
 

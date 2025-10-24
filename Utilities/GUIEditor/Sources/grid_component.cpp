@@ -24,145 +24,79 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 #include "precomp.h"
 #include "grid_component.h"
 #include "custom_component.h"
 #include "holder_component.h"
-#include "component_type.h"
+#include "component_types.h"
 #include "main_window.h"
 #include "selection.h"
+#include "snapline.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // GridComponent Construction:
 
 GridComponent::GridComponent(CL_GUIComponent *parent, MainWindow *main_window)
-: CL_GUIComponent(parent), main_window(main_window), selected_holder(0),
-  boundary(0,0,320,200), resizing(false), moving_boundary(false),
-  tab_page_count(0)
+: CL_GUIComponent(parent), main_window(main_window), component_container(0),
+  component_overlay(0), boundary(0,0,320,200)
 {
 	set_type_name(cl_text("grid"));
-	func_process_message().set(this, &GridComponent::on_process_message);
+	func_input_pressed().set(this, &GridComponent::on_input_pressed);
+	func_input_released().set(this, &GridComponent::on_input_released);
+	func_input_doubleclick().set(this, &GridComponent::on_input_doubleclick);
+	func_input_pointer_moved().set(this, &GridComponent::on_input_pointer_moved);
 	func_render().set(this, &GridComponent::on_render);
 	func_resized().set(this, &GridComponent::on_resized);
 
-	if (get_holder_parent(this) == 0)
-	{
-		// The first grid component sets up filtering by default.
-		get_gui_manager().func_filter_message().set(this, &GridComponent::on_filter_message);
-	}
+	edit_state.set_grid_component(this);
 
-	CL_SpriteDescription desc;
-/*
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0001.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0002.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0003.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0004.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0005.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0006.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0007.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0008.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0009.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0010.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0011.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0012.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0013.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0014.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0015.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0016.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0017.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0018.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0019.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0020.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0021.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0022.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0023.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0024.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0025.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0026.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0027.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0028.tga"));
-	desc.add_frame(CL_TargaProvider::load("images/manwalk_0029.tga"));
-	for (unsigned int i=0; i<desc.get_frames().size(); i++)
-		desc.set_frame_delay(i, 0.01);
-*/
-	desc.add_frame(CL_PNGProvider::load("gfx/pointer.png"));
-
-//	default_cursor = CL_Cursor(get_display_window(), desc, CL_Point(7, 2));
-//	set_cursor(default_cursor);
+	component_container = new CL_GUIComponent(this);
+	component_overlay = new CL_GUIComponent(this);
+	component_overlay->func_render().set(this, &GridComponent::on_render_overlay);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // GridComponent Attributes:
 
-CL_Rect GridComponent::get_boundary()
+CL_Size GridComponent::get_dialog_size()
 {
-	return boundary;
+	return boundary.get_size();
+}
+
+const std::vector<HolderComponent*> &GridComponent::get_holders() const
+{
+	return holders;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // GridComponent Operations:
 
-void GridComponent::on_add_component(int id)
+HolderComponent *GridComponent::on_add_component(int id, const CL_Vec2i &pos)
 {
-	// HACK: Don't try to create non-creatable components like the Select tool
-	if(id == 1337)
-		return;
+	HolderComponent *holder = new HolderComponent(component_container);
 
-	HolderComponent *holder = new HolderComponent(this);
-	CL_GUIComponent *new_component = ComponentTypes::create_component(id, holder);
+	CL_GUIComponent *new_component = ComponentTypes::create_component(id, holder->get_container());
 
-	if (new_component_count.find(id) == new_component_count.end())
-		new_component_count[id] = 1;
-
-	new_component->set_id_name(cl_format(cl_text("%1%2"), new_component->get_type_name(), new_component_count[id]++));
-
-	CL_TempString type = new_component->get_type_name();
-
-	if (type == cl_text("slider"))
-	{
-		CL_Slider *sl = (CL_Slider *) new_component;
-		sl->set_ranges(0, 100, 10, 10);
-	}
-	else if (type == cl_text("checkbox"))
-	{
-		CL_CheckBox *checkbox = (CL_CheckBox *) new_component;
-		checkbox->set_text("Checkbox");
-	}
-	else if (type == cl_text("frame"))
-	{
-		CL_Frame *frame = (CL_Frame *) new_component;
-		frame->set_header_text("Frame");
-	}
-	else if (type == cl_text("scrollbar"))
-	{
-		CL_ScrollBar *sb = (CL_ScrollBar *) new_component;
-		sb->set_ranges(0, 100, 2, 10);
-	}
-	else if (type == cl_text("tab"))
-	{
-		CL_Tab *tab = (CL_Tab *) new_component;
-		CL_TabPage *page1 = tab->add_page(cl_text("Page 1"));
-		page1->func_resized().set(this, &GridComponent::on_tab_page_resized, page1);
-		page1->set_id_name(cl_format(cl_text("%1%2"), page1->get_type_name(), tab_page_count++));
-	}
-
+	holder->set_geometry(CL_Rect(pos, new_component->get_size()));
 	holders.push_back(holder);
 
-	holder->set_geometry(CL_Rect(8-4, 8-4, 8+80+4, 8+21+4));
-	new_component->set_geometry(CL_RectPS(4,4, 80,21));
+	return holder;
 }
 
 void GridComponent::load(const CL_StringRef &fullname)
 {
 	CL_DomDocument doc;
-	CL_File file = CL_File(fullname, CL_File::open_existing);
+	CL_File file = CL_File(fullname, CL_File::open_existing, CL_File::access_read);
 	doc.load(file);
 
 	CL_DomElement element_components = doc.get_document_element();
 
-	load(element_components, this);
+	load(element_components, component_container);
+
+	request_repaint();
 }
 
 void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
@@ -229,7 +163,7 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 		else if (tag == cl_text("listview"))
 		{
 			CL_ListView *co = new CL_ListView(holder);
-			load_listview(e, co);
+//			load_listview(e, co);
 			new_comp = co;
 		}
 		else if (tag == cl_text("tab"))
@@ -288,7 +222,7 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			boundary.right = w;
 			boundary.bottom = h;
 		}
-		else // unknow component... create CustomComponent.
+		else // unknown component... create CustomComponent.
 		{
 			CustomComponent *co = new CustomComponent(holder);
 			co->set_type_name(tag);
@@ -305,6 +239,12 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_tl_y")));
 			int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_x")));
 			int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute(cl_text("dist_br_y")));
+			CL_String pos_equation_x = e.get_attribute(cl_text("eq-x"), cl_text(""));
+			CL_String pos_equation_y = e.get_attribute(cl_text("eq-y"), cl_text(""));
+			CL_String pos_equation_x2 = e.get_attribute(cl_text("eq-x2"), cl_text(""));
+			CL_String pos_equation_y2 = e.get_attribute(cl_text("eq-y2"), cl_text(""));
+			holder->set_position_equations(pos_equation_x, pos_equation_y);
+			holder->set_position_equations2(pos_equation_x2, pos_equation_y2);
 			CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_tl")));
 			CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute(cl_text("anchor_br")));
 
@@ -318,10 +258,8 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 			CL_Rect holder_g = load_geometry(e);
 			CL_Size comp_size = holder_g.get_size();
 
-			holder_g.expand(4,4,4,4);
 			holder->set_geometry(holder_g);
-			CL_Rect comp_g(CL_Point(4,4), CL_Size(comp_size.width, comp_size.height));
-			new_comp->set_geometry(comp_g);
+			new_comp->set_geometry(comp_size);
 		}
 
 		e = e.get_next_sibling().to_element();
@@ -337,7 +275,7 @@ void GridComponent::save(const CL_StringRef &fullname)
 	
 	doc.append_child(element_gui);
 
-	CL_GUIComponent *comp = get_first_child();
+	CL_GUIComponent *comp = component_container->get_first_child();
 	while (comp != 0)
 	{
 		if (comp->get_type_name() == cl_text("holder"))
@@ -357,7 +295,7 @@ void GridComponent::save(const CL_StringRef &fullname)
 	element_gui.append_child(element);
 
 	CL_File file;
-	file.open(fullname, CL_File::create_always);
+	file.open(fullname, CL_File::create_always, CL_File::access_write);
 	doc.save(file);
 }
 
@@ -368,9 +306,8 @@ void GridComponent::remove_holder(HolderComponent *holder)
 	{
 		if ((*it) == holder)
 		{
+			main_window->get_selection()->remove_holder(holder);
 			it = holders.erase(it);
-			if (selected_holder = holder)
-				selected_holder = 0;
 			break;
 		}
 	}
@@ -380,6 +317,7 @@ void GridComponent::set_boundary_size(const CL_Size &size)
 {
 	boundary.right = size.width;
 	boundary.bottom = size.height;
+	request_repaint();
 }
 
 CL_DomElement GridComponent::to_element(CL_DomDocument &doc)
@@ -393,92 +331,84 @@ CL_DomElement GridComponent::to_element(CL_DomDocument &doc)
 /////////////////////////////////////////////////////////////////////////////
 // GridComponent Implementation:
 
-void GridComponent::on_process_message(CL_GUIMessage &msg)
+CL_Rect GridComponent::get_boundary_grabber_se() const
 {
-	if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
+	return CL_Rect(CL_Point(boundary.right-3, boundary.bottom-3), CL_Size(6, 6));
+}
+
+CL_Rect GridComponent::get_boundary_grabber_s() const
+{
+	return CL_Rect(CL_Point(0, boundary.bottom-3), CL_Size(get_boundary_grabber_se().left, 6));
+}
+
+CL_Rect GridComponent::get_boundary_grabber_e() const
+{
+	return CL_Rect(CL_Point(boundary.right-3, 0), CL_Size(6, get_boundary_grabber_se().top));
+}
+
+HolderComponent *GridComponent::find_holder_at(const CL_Point &pos)
+{
+	CL_GUIComponent *child = component_container->get_component_at(pos);
+	if (child && child != component_container)
 	{
-		CL_GUIMessage_Input input_msg = msg;
-		CL_InputEvent e = input_msg.get_event();
-
-		bool cursor_set = false;
-
-		if (e.type == CL_InputEvent::pressed || e.type == CL_InputEvent::pointer_moved)
-		{
-			CL_Rect boundary_outer = boundary;
-			CL_Rect boundary_inner = boundary;
-			boundary_outer.expand(3,3,3,3); 
-			boundary_inner.shrink(3,3,3,3); 
-
-			CL_Rect boundary_resize(boundary.right-8, boundary.bottom-8, boundary.right, boundary.bottom);
-
-			if (boundary_outer.contains(e.mouse_pos) && !boundary_inner.contains(e.mouse_pos))
-			{
-				if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
-				{
-					msg.set_consumed();
-					capture_mouse(true);
-					moving_boundary = true;
-				}
-				else
-				{
-					msg.set_consumed();
-//					set_cursor(cl_cursor_size_nwse);
-					cursor_set = true;
-				}
-			}
-			else if (boundary_resize.contains(e.mouse_pos))
-			{
-				if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
-				{
-					msg.set_consumed();
-					capture_mouse(true);
-					resizing = true;
-				}
-				else
-				{
-					msg.set_consumed();
-//					set_cursor(cl_cursor_size_nwse);
-					cursor_set = true;
-				}
-			}
-			else
-			{
-				if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
-				{
-					msg.set_consumed();
-					main_window->get_selection()->clear();
-				}
-			}
-		}
-		if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
-		{
-			msg.set_consumed();
-			capture_mouse(false);
-			resizing = false;
-			moving_boundary = false;
-		}
-		else if (e.type == CL_InputEvent::pointer_moved)
-		{
-			if (resizing)
-			{
-				msg.set_consumed();
-//				set_cursor(cl_cursor_size_nwse);
-				cursor_set = true;
-				boundary.right = (e.mouse_pos.x / 8) * 8;
-				boundary.bottom = (e.mouse_pos.y / 8) * 8;
-				if (boundary.right < 8) boundary.right = 8; 
-				if (boundary.bottom < 8) boundary.bottom = 8; 
-				request_repaint();
-			}
-		}
-
-//		if (!cursor_set)
-//			set_cursor(default_cursor);
+		while (child && !dynamic_cast<HolderComponent*>(child))
+			child = child->get_parent_component();
+		return child ? dynamic_cast<HolderComponent*>(child) : 0;
 	}
+	else
+	{
+		return 0;
+	}
+}
+
+bool GridComponent::deliver_input_to_tab(const CL_InputEvent &e)
+{
+	CL_GUIComponent *child = component_container->get_component_at(e.mouse_pos);
+	if (child && child->get_type_name() == cl_text("tabheader"))
+	{
+		CL_InputEvent e_child = e;
+		e_child.mouse_pos = child->window_to_component_coords(component_to_window_coords(e.mouse_pos));
+		CL_GUIMessage_Input msg;
+		msg.set_event(e_child);
+		msg.set_target(child);
+		get_gui_manager().dispatch_message(msg);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool GridComponent::on_input_pressed(const CL_InputEvent &e)
+{
+	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
+		return true;
+	return edit_state.on_input_pressed(e);
+}
+
+bool GridComponent::on_input_released(const CL_InputEvent &e)
+{
+	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
+		return true;
+	return edit_state.on_input_released(e);
+}
+
+bool GridComponent::on_input_doubleclick(const CL_InputEvent &e)
+{
+	if (e.id == CL_MOUSE_LEFT && deliver_input_to_tab(e))
+		return true;
+	return edit_state.on_input_doubleclick(e);
+}
+
+bool GridComponent::on_input_pointer_moved(const CL_InputEvent &e)
+{
+	return edit_state.on_input_pointer_moved(e);
 }
 
 void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
+	set_cliprect(gc, get_size());
 	CL_Rect g = get_geometry().get_size();
 
 	bool tab_parent = (get_parent_component()->get_type_name() == cl_text("tabpage"));
@@ -493,44 +423,60 @@ void GridComponent::on_render(CL_GraphicContext &gc, const CL_Rect &update_rect)
 		CL_Draw::fill(gc, boundary, CL_Colorf::lightgrey/*CL_Colorf("E0DFE3")*/);
 	}
 
-	render_grid(gc, update_rect);
-
 	if (!tab_parent)
 	{
 		CL_Draw::line(gc, (float)boundary.left, (float)boundary.bottom, (float)boundary.right, (float)boundary.bottom, CL_Colorf::black);
 		CL_Draw::line(gc, (float)boundary.right, (float)boundary.top, (float)boundary.right, (float)boundary.bottom, CL_Colorf::black);
-		CL_Rect boundary_resize(boundary.right-5, boundary.bottom-5, boundary.right, boundary.bottom);
-		CL_Draw::fill(gc, boundary_resize, CL_Colorf::darkslategray);
+		// CL_Draw::fill(gc, get_boundary_grabber_se(), CL_Colorf::darkslategray);
 	}
+	reset_cliprect(gc);
 }
 
-void GridComponent::render_grid(CL_GraphicContext &gc, const CL_Rect &update_rect)
+void GridComponent::on_render_overlay(CL_GraphicContext &gc, const CL_Rect &update_rect)
 {
-	int grid_width = boundary.get_width() / 8;
-	int grid_height = boundary.get_height() / 8;
-	if (grid_rect != boundary)
+	set_cliprect(gc, get_size());
+	std::vector<HolderComponent *> selection = main_window->get_selection()->get_selection();
+	for (size_t i = 0; i < selection.size(); i++)
 	{
-		grid_points.resize(grid_width * grid_height, CL_Vec2i(0,0));
-		for (int y = 0; y < grid_height; y++)
+		CL_Rect pos = window_to_component_coords(selection[i]->component_to_window_coords(selection[i]->get_size()));
+		CL_Rect grabbers[8] =
 		{
-			for (int x = 0; x < grid_width; x++)
-			{
-				grid_points[x+y*grid_width] = CL_Vec2i(boundary.left + x * 8, boundary.top + y * 8);
-			}
-		}
-		grid_rect = boundary;
+			selection[i]->get_grabber_e(),
+			selection[i]->get_grabber_se(),
+			selection[i]->get_grabber_s(),
+			selection[i]->get_grabber_sw(),
+			selection[i]->get_grabber_w(),
+			selection[i]->get_grabber_nw(),
+			selection[i]->get_grabber_n(),
+			selection[i]->get_grabber_ne()
+		};
 
-	}
-	CL_PrimitivesArray grid_array(gc);
-	grid_array.set_attributes(0, &grid_points[0]);
-	grid_array.set_attribute(1, CL_Colorf::gray);
-	gc.set_program_object(cl_program_color_only);
-	gc.draw_primitives(cl_points, (int) grid_points.size(), grid_array);
-	gc.reset_program_object();
+		for (int j=0; j<8; j++)
+			grabbers[j] = window_to_component_coords(selection[i]->component_to_window_coords(grabbers[j]));
+
+		pos.expand(4,4,3,3);
+		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f, 0.25f));
+
+		for (int j=0; j<8; j++)
+		{
+			CL_Draw::fill(gc, grabbers[j], CL_Colorf::white);
+			CL_Draw::box(gc, grabbers[j], CL_Colorf::black);
+		}
+
+		/*		CL_Draw::box(gc, pos, CL_Colorf::cornflowerblue);
+		pos.expand(1,1,1,1);
+		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 149.0f/255.0f, 237.0f/255.0f, 0.25f));
+		pos.shrink(2,2,2,2);
+		CL_Draw::box(gc, pos, CL_Colorf(100.0f/255.0f, 149.0f/255.0f, 237.0f/255.0f, 0.25f));
+*/	}
+
+	reset_cliprect(gc);
 }
 
 void GridComponent::on_resized()
 {
+	component_container->set_geometry(get_size());
+	component_overlay->set_geometry(get_size());
 }
 
 CL_Rect GridComponent::load_geometry(CL_DomElement &e)
@@ -547,202 +493,54 @@ CL_Rect GridComponent::load_geometry(CL_DomElement &e)
 	return r;
 }
 
-void GridComponent::load_listview(CL_DomElement &e, CL_ListView *lv)
+CL_Rect GridComponent::holder_to_grid_coords(HolderComponent *holder, const CL_Rect &rect)
 {
+	return window_to_component_coords(holder->component_to_window_coords(rect));
 }
 
-CL_GUIComponent *GridComponent::get_holder_parent(CL_GUIComponent *comp)
+CL_Point GridComponent::holder_to_grid_coords(HolderComponent *holder, const CL_Point &point)
 {
-	CL_GUIComponent *parent = comp->get_parent_component();
+	return window_to_component_coords(holder->component_to_window_coords(point));
+}
 
-	while (parent != 0)
+CL_Rect GridComponent::grid_to_holder_coords(HolderComponent *holder, const CL_Rect &rect)
+{
+	return component_to_window_coords(holder->window_to_component_coords(rect));
+}
+
+CL_Point GridComponent::grid_to_holder_coords(HolderComponent *holder, const CL_Point &point)
+{
+	return component_to_window_coords(holder->window_to_component_coords(point));
+}
+
+std::vector<SnapLine> GridComponent::get_snaplines() const
+{
+	CL_Size size = get_size();
+	std::vector<SnapLine> snaplines;
+	int margin = 11;
+	snaplines.push_back(SnapLine(SnapLine::Top, boundary.top+margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Bottom, boundary.bottom-margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Left, boundary.left+margin, SnapLine::Low));
+	snaplines.push_back(SnapLine(SnapLine::Right, boundary.right-margin, SnapLine::Low));
+	return snaplines;
+}
+
+CL_Vec2i GridComponent::snap(HolderComponent *holder, const std::vector<SnapLine> &source_snaplines, const CL_Rect &source_rect)
+{
+	std::vector<SnapLine::SnapLineTarget> targets;
+
+	// Add all other components
+	std::vector<HolderComponent*> holders = get_holders();
+	for (size_t holder_index = 0; holder_index < holders.size(); holder_index++)
 	{
-		if (parent->get_type_name() == cl_text("holder"))
-		{
-			return parent;
-		}
-		parent = parent->get_parent_component();
+		HolderComponent *target_holder = holders[holder_index];
+
+		if(target_holder != holder)
+			targets.push_back(SnapLine::SnapLineTarget(target_holder->get_geometry(), target_holder->get_snaplines()));
 	}
 
-	return 0;
+	// Add GridComponent itself
+	targets.push_back(SnapLine::SnapLineTarget(get_dialog_size(), get_snaplines()));
+
+	return SnapLine::snap(source_rect, source_snaplines, targets);
 }
-
-void GridComponent::on_tab_page_resized(CL_TabPage *page)
-{
-}
-
-bool GridComponent::on_filter_message(CL_GUIMessage &msg)
-{
-	CL_GUIComponent *comp = msg.get_target();
-	if (comp == 0)
-		return true;
-
-	if (comp->get_type_name() == cl_text("tabheader")) // Allow clicking on tab header to change tab page.
-		return true;
-
-	if (!GridComponent::is_grid_or_child_of_grid(comp)) // Clicked the grid or a holder (only immediate child type of grid).
-		return true;
-
-	CL_GUIComponent *parent = comp->get_parent_component();
-
-	CL_GUIComponent *holder_parent = get_holder_parent(comp);
-
-	if (holder_parent && (comp->get_type_name() != cl_text("holder")))
-	{
-		if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
-		{
-			CL_GUIMessage_Input input_msg = msg;
-			CL_InputEvent e = input_msg.get_event();
-
-			//: Convert to window coordinates.
-			e.mouse_pos = comp->component_to_window_coords(e.mouse_pos);
-			input_msg.set_event(e);
-
-			if (e.type == CL_InputEvent::pressed && e.id == CL_MOUSE_LEFT)
-			{
-				on_filter_mouse_left_down(input_msg, e);
-			}
-			else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
-			{
-				on_filter_mouse_left_up(input_msg, e);
-			}
-			else if (e.type == CL_InputEvent::pointer_moved)
-			{
-				HolderComponent *holder = dynamic_cast<HolderComponent*>(holder_parent);
-				holder->on_process_message(input_msg);
-			}
-			msg.set_consumed();
-		}
-		else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
-		{
-			HolderComponent *holder = dynamic_cast<HolderComponent*>(holder_parent);
-			holder->on_process_message(msg);
-			msg.set_consumed();
-		}
-
-		return false;
-	}
-	else if (comp->get_type_name() == cl_text("holder"))
-	{
-		if (msg.is_type(CL_GUIMessage_Input::get_type_name()))
-		{
-			CL_GUIMessage_Input input_msg = msg;
-			CL_InputEvent e = input_msg.get_event();
-
-			//: Convert to window coordinates.
-			e.mouse_pos = comp->component_to_window_coords(e.mouse_pos);
-			input_msg.set_event(e);
-
-			HolderComponent *holder = dynamic_cast<HolderComponent*>(comp);
-			holder->on_process_message(input_msg);
-
-			if (e.type == CL_InputEvent::pressed && e.id == CL_KEY_DELETE)
-			{
-				if (holder->marked_for_delete())
-				{
-					if (selected_holder == holder)
-						selected_holder = 0;
-
-					std::vector<HolderComponent*>::iterator it;
-					for (it = holders.begin(); it!=holders.end(); ++it)
-					{
-						if ((*it) == holder)
-						{
-							it = holders.erase(it);
-							break;
-						}
-					}
-					main_window->get_selection()->remove_holder(holder);
-					delete holder;
-					request_repaint();
-					return false;
-				}
-			}
-			else if (e.type == CL_InputEvent::pointer_moved)
-			{
-			}
-
-			msg.set_consumed();
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
-void GridComponent::on_filter_mouse_left_down(CL_GUIMessage &msg, CL_InputEvent &e)
-{
-	CL_GUIComponent *comp = msg.get_target();
-	CL_GUIComponent *holder_parent = get_holder_parent(comp);
-
-	if (main_window->get_editor_mode() == edit_mode_taborder)
-	{
-		on_mouse_left_tab_order(holder_parent);
-		return;
-	}
-
-	if (!e.shift)
-	{
-		main_window->get_selection()->clear();
-	}
-
-	HolderComponent *holder = dynamic_cast<HolderComponent*>(holder_parent);
-	holder->set_selected(true);
-	holder->set_focus();
-	main_window->get_selection()->add_holder(holder);
-
-	holder->on_process_message(msg);
-
-	request_repaint();
-}
-
-void GridComponent::on_filter_mouse_left_up(CL_GUIMessage &msg, CL_InputEvent &e)
-{
-/*	CL_GUIComponent *comp = msg.get_target();
-	CL_GUIComponent *holder_parent = get_holder_parent(comp);
-
-	HolderComponent *holder = dynamic_cast<HolderComponent*>(holder_parent);
-*/
-}
-
-void GridComponent::on_mouse_left_tab_order(CL_GUIComponent *holder)
-{
-	if (holder == 0)
-	{
-		clear_tab_order_indexes();
-	}
-
-	CL_GUIComponent *comp = holder->get_first_child();
-
-	if (comp == 0)
-		return;
-
-	
-}
-
-void GridComponent::clear_tab_order_indexes()
-{
-	// todo
-}
-
-bool GridComponent::is_grid_or_child_of_grid(CL_GUIComponent *comp)
-{
-	if (comp->get_type_name() == cl_text("grid"))
-		return true;
-
-	while (comp != 0)
-	{
-		if (comp->get_type_name() == cl_text("grid"))
-			return true;
-
-		comp = comp->get_parent_component();
-	}
-
-	return false;
-}
-
-
-
-
-

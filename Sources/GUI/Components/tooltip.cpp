@@ -36,6 +36,9 @@
 #include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tooltip.h"
+#include "API/GUI/gui_message_focus_change.h"
+#include "API/GUI/gui_message_activation_change.h"
+#include "API/GUI/gui_message_pointer.h"
 #include "API/Display/Font/font.h"
 #include "API/Core/System/timer.h"
 #include "../gui_css_strings.h"
@@ -50,6 +53,7 @@ public:
 	void on_process_message(CL_GUIMessage &msg);
 	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
 	void on_show_delayed();
+	void on_filter_message(CL_GUIMessage &message);
 
 	CL_ToolTip *tooltip;
 	CL_Timer timer_show_delayed;
@@ -58,6 +62,7 @@ public:
 	CL_Colorf text_color;
 	CL_GUIThemePart part_component;
 	CL_GUIThemePartProperty prop_text_color;
+	CL_Slot slot_filter_message;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -78,6 +83,7 @@ CL_ToolTip::CL_ToolTip(CL_GUIManager manager)
 	impl->text_color = impl->part_component.get_property(impl->prop_text_color);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &CL_ToolTip_Impl::on_show_delayed);
+	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &CL_ToolTip_Impl::on_filter_message);
 }
 
 CL_ToolTip::~CL_ToolTip()
@@ -140,6 +146,8 @@ CL_GUITopLevelDescription CL_ToolTip_Impl::create_description()
 	desc.set_topmost(true);
 	desc.set_decorations(false);
 	desc.set_drop_shadow(true);
+	desc.set_tool_window(true);
+	desc.show_caption(false);
 	return desc;
 }
 
@@ -167,4 +175,14 @@ void CL_ToolTip_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 void CL_ToolTip_Impl::on_show_delayed()
 {
 	tooltip->set_visible(true, false);
+}
+
+void CL_ToolTip_Impl::on_filter_message(CL_GUIMessage &message)
+{
+	if (message.get_type() == CL_GUIMessage_FocusChange::get_type_name() ||
+		message.get_type() == CL_GUIMessage_ActivationChange::get_type_name() ||
+		message.get_type() == CL_GUIMessage_Pointer::get_type_name())
+	{
+		tooltip->hide();
+	}
 }

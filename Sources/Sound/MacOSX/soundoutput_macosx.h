@@ -70,7 +70,7 @@ public:
 	virtual int get_fragment_size();
 
 	/// \brief Writes a fragment to the soundcard.
-	virtual void write_fragment(short *data);
+	virtual void write_fragment(float *data);
 
 	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();

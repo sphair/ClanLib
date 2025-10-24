@@ -35,6 +35,7 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/gui_theme_part.h"
+#include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/menubar.h"
 #include "API/GUI/Components/popupmenu.h"
@@ -79,47 +80,6 @@ CL_PopupMenu CL_MenuBar::get_menu(int index) const
 	return impl->menus[index].menu;
 }
 
-int CL_MenuBar::get_index(const CL_Point &p)
-{
-	std::vector<CL_TopMenu>::size_type index;
-	for (index = 0; index < impl->menus.size(); index++)
-	{
-		CL_Rect r = get_menu_rect(index);
-		r.top = 0;
-		r.bottom = get_geometry().bottom;
-		if (r.contains(p))
-		{
-			return index;
-		}
-	}
-	return -1;
-}
-
-CL_Rect CL_MenuBar::get_menu_rect(int our_index)
-{
-	CL_Rect rect(CL_Point(0,0), get_geometry().get_size());
-	CL_Rect component_content = impl->part_component.get_content_box(rect);
-	
-	int x = 4;
-	CL_GraphicContext &gc = get_gc();
-	std::vector<CL_TopMenu>::size_type index;
-	for (index = 0; index < impl->menus.size(); index++)
-	{
-		CL_TopMenu &topmenu = impl->menus[index];
-
-		CL_Rect item_content = impl->part_item.get_content_box(component_content);
-		item_content.left += x;
-		item_content.right = item_content.left + 8 + impl->font.get_text_size(gc, topmenu.name).width + 8;
-
-		CL_Rect item_render = impl->part_item.get_render_box(item_content);
-		if (index == our_index)
-			return item_render;
-
-		x = item_render.right;
-	}
-	return CL_Rect(0,0,0,0);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_MenuBar Operations:
 
@@ -158,63 +118,39 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 		{
 			msg.set_consumed();
 			CL_GraphicContext &gc = menubar->get_gc();
-			CL_Rect rect(CL_Point(0,0), menubar->get_geometry().get_size());
-			CL_Rect component_content = part_component.get_content_box(rect);
-			int x = 4;
 
 			std::vector<CL_TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
 			{
 				CL_TopMenu &topmenu = menus[index];
 
-				CL_Rect item_content = part_item.get_content_box(component_content);
-				item_content.left += x;
-				item_content.right = item_content.left + 8 + font.get_text_size(gc, topmenu.name).width + 8;
+				CL_Rect item_rect = get_menu_item_rect(index);
 
-				CL_Rect item_render = part_item.get_render_box(item_content);
-				if (item_render.contains(e.mouse_pos))
+				if (item_rect.contains(e.mouse_pos))
 				{
 					selected_index = index;
 					hot_index = -1;
 					menubar->request_repaint();
 
-					//TODO: If this required, should be exec handling be handled by the main window manager
-					if (menubar->get_gui_manager().get_window_manager().get_window_manager_type() == CL_GUIWindowManager::cl_wm_type_system)
-					{
-						CL_MenuModalLoop menu_modal_loop(menubar, menubar, index);
-						menu_modal_loop.exec();
-					}
-					else
-					{
-						CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(menubar, menubar, index);
-						menu_ptr->start();
-						return;
-					}
-					break;
+					CL_MenuModalLoop *menu_ptr = new CL_MenuModalLoop(menubar->get_gui_manager());
+					menu_ptr->start(menubar, menubar);
+					return;
 				}
-
-				x = item_render.right;
 			}
 		}
 		else if (e.type == CL_InputEvent::pointer_moved )
 		{
 			msg.set_consumed();
 			CL_GraphicContext &gc = menubar->get_gc();
-			CL_Rect rect(CL_Point(0,0), menubar->get_geometry().get_size());
-			CL_Rect component_content = part_component.get_content_box(rect);
-			int x = 4;
 
 			std::vector<CL_TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
 			{
 				CL_TopMenu &topmenu = menus[index];
 
-				CL_Rect item_content = part_item.get_content_box(component_content);
-				item_content.left += x;
-				item_content.right = item_content.left + 8 + font.get_text_size(gc, topmenu.name).width + 8;
+				CL_Rect item_rect = get_menu_item_rect(index);
 
-				CL_Rect item_render = part_item.get_render_box(item_content);
-				if (item_render.contains(e.mouse_pos))
+				if (item_rect.contains(e.mouse_pos))
 				{
 					if (selected_index != index && index != hot_index)
 					{
@@ -223,8 +159,6 @@ void CL_MenuBar_Impl::on_process_message(CL_GUIMessage &msg)
 					}
 					break;
 				}
-
-				x = item_render.right;
 			}
 		}
 	}
@@ -245,34 +179,23 @@ void CL_MenuBar_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_rec
 	CL_Rect rect(CL_Point(0,0), menubar->get_geometry().get_size());
 	part_component.render_box(gc, rect, update_rect);
 
-	CL_Rect component_content = part_component.get_content_box(rect);
-
-	int x = 4;
 	std::vector<CL_TopMenu>::size_type index;
 	for (index = 0; index < menus.size(); index++)
 	{
 		CL_TopMenu &topmenu = menus[index];
 
-		topmenu.menu.impl->joiner_width = 8 + font.get_text_size(gc, topmenu.name).width + 8;
-
 		part_item.set_state(CssStr::selected, index == selected_index);
 		part_item.set_state(CssStr::hot, (index != selected_index) && (index == hot_index));
 
-		CL_Rect item_content = part_item.get_content_box(component_content);
-		item_content.left += x;
-		item_content.right = item_content.left + 8 + font.get_text_size(gc, topmenu.name).width + 8;
-		CL_Rect item_render = part_item.get_render_box(item_content);
-		part_item.render_box(gc, item_render, update_rect);
+		CL_Rect item_rect = get_menu_item_rect(index);
+		CL_Rect item_content = part_item.get_content_box(item_rect);
+		part_item.render_box(gc, item_rect, update_rect);
 		part_item.render_text(gc, topmenu.name, item_content, update_rect);
-		// font.draw_text(gc, item_content.left+8, item_content.top+18, topmenu.name, text_color);
-
-		x = item_render.right;
 	}
 }
 
 void CL_MenuBar_Impl::on_resized()
 {
-
 }
 
 void CL_MenuBar_Impl::on_style_changed()
@@ -285,6 +208,98 @@ void CL_MenuBar_Impl::create_parts()
 	part_component = CL_GUIThemePart(menubar);
 	part_item = CL_GUIThemePart(menubar, cl_text("item"));
 
-	font = part_component.get_font();
-	// text_color = part_component.get_property(CssStr::text_color, cl_text("black"));
+	CL_GUIThemePartProperty prop_bl(cl_text("border-left"), cl_text("0"));
+	CL_GUIThemePartProperty prop_pl(cl_text("padding-left"), cl_text("0"));
+	CL_GUIThemePartProperty prop_br(cl_text("border-right"), cl_text("0"));
+	CL_GUIThemePartProperty prop_pr(cl_text("padding-right"), cl_text("0"));
+
+	item_border_left = part_item.get_property_int(prop_bl);
+	item_padding_left = part_item.get_property_int(prop_pl);
+	item_padding_right = part_item.get_property_int(prop_br);
+	item_border_right = part_item.get_property_int(prop_pr);
+}
+
+void CL_MenuBar_Impl::select_item_at(const CL_Point &mouse_pos)
+{
+	std::vector<CL_TopMenu>::size_type index;
+	for (index = 0; index < menus.size(); index++)
+	{
+		CL_Rect r = get_menu_item_rect(index);
+		r.top = 0;
+		r.bottom = menubar->get_geometry().bottom;
+		if (r.contains(mouse_pos))
+		{
+			selected_index = index;
+			menubar->request_repaint();
+			return;
+		}
+	}
+
+	// Selection isn't changed if the mouse is on the menubar but not on an item.
+}
+
+void CL_MenuBar_Impl::select_next()
+{
+	selected_index++;
+	if (selected_index >= menus.size())
+		selected_index = 0;
+	menubar->request_repaint();
+}
+
+void CL_MenuBar_Impl::select_previous()
+{
+	selected_index--;
+	if (selected_index < 0)
+		selected_index = menus.size()-1;
+	menubar->request_repaint();
+}
+
+void CL_MenuBar_Impl::clear_selection()
+{
+	selected_index = -1;
+	menubar->request_repaint();
+}
+
+CL_Point CL_MenuBar_Impl::get_submenu_screen_pos()
+{
+	CL_Rect rect = get_menu_item_rect(selected_index);
+	return menubar->component_to_screen_coords(rect.get_bottom_left());
+}
+
+CL_Rect CL_MenuBar_Impl::get_menu_item_rect(int our_index)
+{
+	CL_Rect menubar_rect = menubar->get_size();
+	CL_Rect menubar_content_rect = part_component.get_content_box(menubar_rect);
+
+	int x = 0;
+	CL_GraphicContext &gc = menubar->get_gc();
+	std::vector<CL_TopMenu>::size_type index;
+	for (index = 0; index < menus.size(); index++)
+	{
+		CL_TopMenu &topmenu = menus[index];
+
+		CL_Rect item_rect = menubar_content_rect;
+		item_rect.left = x;
+		int text_width = part_item.get_text_size(gc, topmenu.name).width;
+		item_rect.right = x + item_border_left + item_padding_left + text_width + item_padding_right + item_border_right;
+
+		if (index == our_index)
+			return item_rect;
+
+		x = item_rect.right;
+	}
+	return CL_Rect(0,0,0,0);
+}
+
+CL_PopupMenu CL_MenuBar_Impl::get_selected_menu()
+{
+	if (selected_index >= 0  && selected_index < menus.size())
+		return menus[selected_index].menu;
+
+	return CL_PopupMenu();
+}
+
+int CL_MenuBar_Impl::get_selected_item_index()
+{
+	return selected_index;
 }

@@ -49,12 +49,7 @@ void Server::exec(CL_Event &stop_event)
 	}
 	catch (CL_Exception e)
 	{
-		std::vector<CL_String> stackTrace = e.get_stack_trace();
-		CL_String text = e.message;
-		for (size_t i = 0; i < stackTrace.size(); i++)
-			text += cl_format("\r\n#%1 %2", (int) i, stackTrace[i]);
-
-		cl_log_event("Exception", text);
+		cl_log_event("Exception", e.get_message_and_stack_trace());
 	}
 }
 

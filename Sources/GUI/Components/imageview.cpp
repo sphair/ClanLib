@@ -156,9 +156,9 @@ void CL_ImageView_Impl::on_render(CL_GraphicContext &gc, const CL_Rect &update_r
 			pos.x -= sprite.get_width()/2;
 			pos.y -= sprite.get_height()/2;
 
-			image->set_cliprect(gc, content);
+			image->push_cliprect(gc, content);
 			sprite.draw(gc, (float)pos.x, (float)pos.y);
-			image->reset_cliprect(gc);
+			image->pop_cliprect(gc);
 		}
 	}
 }

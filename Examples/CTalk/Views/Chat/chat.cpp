@@ -12,6 +12,7 @@ Chat::Chat(CL_GUIComponent *parent)
 
 	set_type_name("chat");
 	part_background = CL_GUIThemePart(this);
+	part_text = CL_GUIThemePart(this, "text");
 
 	scroll = new CL_ScrollBar(this);
 	scroll->set_vertical();
@@ -102,15 +103,18 @@ void Chat::on_render(CL_GraphicContext &gc, const CL_Rect &clip_rect)
 	part_background.render_box(gc, get_size(), clip_rect);
 
 	CL_Rect content_box = part_background.get_content_box(get_size());
-//242
-//	CL_Draw::fill(gc, (float)content_box.left, (float)content_box.top, (float)content_box.left+get_prefix_width(), (float)content_box.bottom, CL_Colorf(0.95f,0.95f,0.95f));
-	CL_Colorf c(part_background.get_property(CL_GUIThemePartProperty("nick-border-color", "#f2f2f2")));
+	content_box.right -= scroll->get_width();
+
+	part_text.render_box(gc, content_box, clip_rect);
+	content_box = part_text.get_content_box(content_box);
+
+	CL_Colorf c(part_text.get_property(CL_GUIThemePartProperty("nick-border-color", "#f2f2f2")));
 	CL_Draw::fill(gc, (float)content_box.left, (float)content_box.top, (float)content_box.left+get_prefix_width(), (float)content_box.bottom, c);
 
-	content_box.right -= scroll->get_width();
+	content_box.right -= 5;
 	content_box.left += 5;
-	content_box.top += 2;
-	content_box.bottom -= 2;
+	content_box.top += 5;
+	content_box.bottom -= 5;
 
 	set_cliprect(gc, content_box);
 
@@ -157,8 +161,11 @@ Chat::TextPosition Chat::hit_test(const CL_Point &pos)
 	CL_GraphicContext gc = get_gc();
 	CL_Rect content_box = part_background.get_content_box(get_size());
 	content_box.right -= scroll->get_width();
-	content_box.top += 2;
-	content_box.bottom -= 2;
+	content_box = part_text.get_content_box(content_box);
+	content_box.left += 5;
+	content_box.right -= 5;
+	content_box.top += 5;
+	content_box.bottom -= 5;
 
 	int y = content_box.bottom;
 	int skip_lines = scroll->get_max()-(scroll->get_position()+1);
@@ -236,7 +243,6 @@ void Chat::layout_line(CL_GraphicContext & gc, ChatLine * line, CL_Rect &client_
 		if (!line->timestamp.empty())
 		{
 			line->column1.add_text(line->timestamp, font_fixed, CL_Colorf::darkgoldenrod);
-			line->column1.add_text("  ", font_fixed, CL_Colorf::slategray);
 		}
 		if (!line->nick.empty())
 		{
@@ -246,7 +252,7 @@ void Chat::layout_line(CL_GraphicContext & gc, ChatLine * line, CL_Rect &client_
 		int t = line->column1.find_preferred_size(gc).width;
 		column1_width = cl_max(column1_width, t);
 		int column2_width = line->column2.find_preferred_size(gc).width;
-		int column12_width = column1_width + column2_width + 5;
+		int column12_width = column1_width + column2_width + 25;
 		if (column12_width > prefix_width)
 		{
 			prefix_width = column12_width;
@@ -412,50 +418,80 @@ void Chat::copy_to_clipboard()
 	{
 		if (line >= selection.start.line && line <= selection.end.line)
 		{
-			int start_offset = offset_for_line_column(line, 2, selection.start);
-			int end_offset = offset_for_line_column(line, 2, selection.end);
 			if (!text.empty())
 				text += "\r\n";
-			text.append((*it)->column3.get_combined_text().substr(start_offset, end_offset-start_offset));
+
+			append_column_text(line, 0, *it, "[", "] ", text);
+			append_column_text(line, 1, *it, "<", "> ", text);
+			append_column_text(line, 2, *it, "", "", text);
+
+//			int start_offset = offset_for_line_column(line, 2, selection.start);
+//			int end_offset = offset_for_line_column(line, 2, selection.end);
+//			text.append((*it)->column3.get_combined_text().substr(start_offset, end_offset-start_offset));
 		}
 	}
 	if (!text.empty())
 		get_display_window().set_clipboard_text(text);
 }
 
+void Chat::append_column_text(int line, int column, ChatLine * chatline, CL_String prefix, CL_String postfix, CL_String &out_text)
+{
+	int start_offset = offset_for_line_column(line, column, selection.start);
+	int end_offset = offset_for_line_column(line, column, selection.end);
+	if (start_offset != end_offset)
+	{
+		CL_String column_text;
+		if (column == 0)
+			column_text = chatline->column1.get_combined_text();
+		else if (column == 1)
+			column_text = chatline->column2.get_combined_text();
+		else if (column == 2)
+			column_text = chatline->column3.get_combined_text();
+
+		if (!column_text.empty())
+		{
+			if (start_offset == 0)
+				out_text.append(prefix);
+			out_text.append(column_text.substr(start_offset, end_offset-start_offset));
+			if (end_offset >= (int)column_text.length())
+				out_text.append(postfix);
+		}
+	}
+}
+
 CL_Colorf Chat::get_color_text()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("text-color", "#000000"))); // black
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("text-color", "#000000"))); // black
 }
 
 CL_Colorf Chat::get_color_channel()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("channel-color", "#228b22"))); // forestgreen
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("channel-color", "#228b22"))); // forestgreen
 }
 
 CL_Colorf Chat::get_color_system()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("system-color", "#5f9ea0"))); // cadetblue
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("system-color", "#5f9ea0"))); // cadetblue
 }
 
 CL_Colorf Chat::get_color_nick_others()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("nick-others-color", "#000099")));
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("nick-others-color", "#000099")));
 }
 
 CL_Colorf Chat::get_color_nick()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("nick-color", "#990000")));
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("nick-color", "#990000")));
 }
 
 CL_Colorf Chat::get_color_timestamp()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("timestamp-color", "#6495ed"))); // darkgoldenrod
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("timestamp-color", "#6495ed"))); // darkgoldenrod
 }
 
 CL_Colorf Chat::get_color_url()
 {
-	return CL_Colorf(part_background.get_property(CL_GUIThemePartProperty("url-color", "#000080"))); // navy
+	return CL_Colorf(part_text.get_property(CL_GUIThemePartProperty("url-color", "#000080"))); // navy
 }
 
 void Chat::scroll_page_up()

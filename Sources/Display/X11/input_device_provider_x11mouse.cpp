@@ -45,6 +45,11 @@ CL_InputDeviceProvider_X11Mouse::CL_InputDeviceProvider_X11Mouse(CL_X11Window *w
 
 CL_InputDeviceProvider_X11Mouse::~CL_InputDeviceProvider_X11Mouse()
 {
+	dispose();
+}
+
+void CL_InputDeviceProvider_X11Mouse::on_dispose()
+{
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -183,6 +188,8 @@ void CL_InputDeviceProvider_X11Mouse::received_mouse_input(XButtonEvent &event)
 		key.type = CL_InputEvent::released;
 		key_states[id] = 0;
 	}
+
+	window->get_keyboard_modifiers(key.shift, key.alt, key.ctrl);
 
 	// Emit message:
 	sig_provider_event->invoke(key);

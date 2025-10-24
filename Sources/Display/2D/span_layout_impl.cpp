@@ -54,6 +54,29 @@ void CL_SpanLayout_Impl::clear()
 	lines.clear();
 }
 
+std::vector<CL_Rect> CL_SpanLayout_Impl::get_rect_by_id(int id) const
+{
+	std::vector<CL_Rect> segment_rects;
+
+	int x = position.x;
+	int y = position.y;
+	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
+	{
+		const Line &line = lines[line_index];
+		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
+		{
+			const LineSegment &segment = line.segments[segment_index];
+			if (segment.id == id)
+			{
+				segment_rects.push_back(CL_Rect(x + segment.x_position, y, segment.width, y+line.height));
+			}
+		}
+		y += line.height;
+	}
+
+	return segment_rects;
+}
+
 void CL_SpanLayout_Impl::draw_layout(CL_GraphicContext &gc)
 {
 	int x = position.x;
@@ -422,7 +445,6 @@ void CL_SpanLayout_Impl::layout_lines(CL_GraphicContext & gc, int max_width)
 		else
 			layout_block(current_line, max_width, blocks, block_index);
 	}
-	current_line.cur_line.width = current_line.x_position;
 	next_line(current_line);
 }
 
@@ -572,7 +594,6 @@ void CL_SpanLayout_Impl::layout_text(CL_GraphicContext & gc, std::vector<TextBlo
 			}
 			else
 			{
-				current_line.cur_line.width = current_line.x_position;
 				next_line(current_line);
 				place_line_segments(current_line, text_size_result);
 			}
@@ -586,6 +607,26 @@ void CL_SpanLayout_Impl::layout_text(CL_GraphicContext & gc, std::vector<TextBlo
 
 void CL_SpanLayout_Impl::next_line(CurrentLine &current_line)
 {
+	current_line.cur_line.width = current_line.x_position;
+	for (std::vector<LineSegment>::reverse_iterator it = current_line.cur_line.segments.rbegin(); it != current_line.cur_line.segments.rend(); ++it)
+	{
+		LineSegment &segment = *it;
+		if (segment.type == object_text)
+		{
+			CL_StringRef s = text.substr(segment.start, segment.end-segment.start);
+			if (s.find_first_not_of(cl_text(" \t\r\n")) != CL_StringRef::npos)
+			{
+				current_line.cur_line.width = segment.x_position + segment.width;
+				break;
+			}
+		}
+		else
+		{
+			current_line.cur_line.width = segment.x_position + segment.width;
+			break;
+		}
+	}
+
 	int height = current_line.cur_line.height;
 	lines.push_back(current_line.cur_line);
 	current_line.cur_line = Line();

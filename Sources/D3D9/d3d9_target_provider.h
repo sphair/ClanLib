@@ -30,7 +30,6 @@
 
 
 #include "API/Display/TargetProviders/display_target_provider.h"
-#include "Display/Win32/display_message_queue_win32.h"
 
 class CL_D3D9TargetProvider : public CL_DisplayTargetProvider
 {
@@ -48,8 +47,6 @@ public:
 /// \{
 
 public:
-	CL_DisplayMessageQueue_Provider *get_message_queue() const;
-
 
 /// \}
 /// \name Operations
@@ -66,7 +63,6 @@ public:
 /// \{
 
 private:
-	static CL_DisplayMessageQueue_Win32 message_queue;
 	friend class CL_D3D9DisplayWindowProvider;
 /// \}
 };

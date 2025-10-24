@@ -36,7 +36,6 @@
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/GUI/gui_consumed_keys.h"
 #include "API/GUI/Components/spin.h"
 #include "API/GUI/Components/lineedit.h"
 #include "API/Core/Text/string_help.h"
@@ -79,7 +78,9 @@ public:
 	void create_components();
 	
 	void clamp_value();
-
+	void update_lineedit();
+	void decrement_value();
+	void increment_value();
 	CL_Spin *component;
 	CL_LineEdit *lineedit;
 	
@@ -112,11 +113,6 @@ public:
 CL_Spin::CL_Spin(CL_GUIComponent *parent)
 : CL_GUIComponent(parent), impl(new CL_Spin_Impl)
 {
-	CL_GUIConsumedKeys consumed_keys;
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_arrows);
-	consumed_keys.set_consumed(CL_GUIConsumedKeys::key_characters);
-	set_consumed_keys(consumed_keys);
-
 	set_type_name(CssStr::Spin::type_name);
 	impl->component = this;
 	func_process_message().set(impl.get(), &CL_Spin_Impl::on_process_message);
@@ -176,13 +172,15 @@ void CL_Spin::set_value(int value)
 {
 	impl->value_i = value;
 	impl->clamp_value();
-	impl->lineedit->set_text(value);
+	impl->update_lineedit();
 }
 
 void CL_Spin::set_ranges(int minv, int maxv)
 {
 	impl->min_value_i = minv;
 	impl->max_value_i = maxv;
+	impl->clamp_value();
+	impl->update_lineedit();
 }
 
 void CL_Spin::set_step_size(int step_size)
@@ -194,13 +192,15 @@ void CL_Spin::set_value_float(float value)
 {
 	impl->value_d = value;
 	impl->clamp_value();
-	impl->lineedit->set_text(CL_StringHelp::float_to_text(value,impl->num_decimal_places));
+	impl->update_lineedit();
 }
 
 void CL_Spin::set_ranges_float(float minv, float maxv)
 {
 	impl->min_value_d = minv;
 	impl->max_value_d = maxv;
+	impl->clamp_value();
+	impl->update_lineedit();
 }
 
 void CL_Spin::set_step_size_float(float step_size)
@@ -248,34 +248,18 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 				part_arrow_down.set_state(CssStr::pressed, down_pressed);
 				part_arrow_up.set_state(CssStr::pressed, up_pressed);
 
-				if (floating_point_mode)
-				{
-					if (up_pressed)
-						value_d += step_size_d;
-					if (down_pressed)
-						value_d -= step_size_d;
-				}
-				else
-				{
-					if (up_pressed)
-						value_i += step_size_i;
-					if (down_pressed)
-						value_i -= step_size_i;
-				}
-
-				clamp_value();
-
 				if (up_pressed || down_pressed)
 				{
-					if (floating_point_mode)
-						lineedit->set_text(CL_StringHelp::float_to_text(value_d, num_decimal_places));
-					else
-						lineedit->set_text(value_i);
+					if (up_pressed)
+						increment_value();
+					else if (down_pressed)
+						decrement_value();
 
 					if (!func_value_changed.is_null())
 						func_value_changed.invoke();
 					component->request_repaint();
 				}
+				msg.set_consumed();
 			}
 			else if (e.type == CL_InputEvent::released && e.id == CL_MOUSE_LEFT)
 			{
@@ -285,6 +269,17 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 				part_arrow_up.set_state(CssStr::pressed, false);
 				part_component.set_state(CssStr::pressed, false);
 				component->request_repaint();
+				msg.set_consumed();
+			}
+			else if (e.type == CL_InputEvent::pressed && e.id == CL_KEY_UP)
+			{
+				increment_value();
+				msg.set_consumed();
+			}
+			else if (e.type == CL_InputEvent::pressed && e.id == CL_KEY_DOWN)
+			{
+				decrement_value();
+				msg.set_consumed();
 			}
 			else if (e.type == CL_InputEvent::pointer_moved)
 			{
@@ -303,6 +298,7 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 					part_arrow_up.set_state(CssStr::hot, new_hot_state_arrow_up);
 					component->request_repaint();
 				}
+				msg.set_consumed();
 			}
 		}
 		else if (msg.is_type(CL_GUIMessage_Pointer::get_type_name()))
@@ -329,6 +325,7 @@ void CL_Spin_Impl::on_process_message(CL_GUIMessage &msg)
 
 				component->request_repaint();
 			}
+			msg.set_consumed();
 		}
 		else if (msg.is_type(CL_GUIMessage_FocusChange::get_type_name()))
 		{
@@ -442,14 +439,6 @@ void CL_Spin_Impl::clamp_value()
 	if (value_i < min_value_i) { changed=true; value_i = min_value_i; }
 	if (value_d > max_value_d) { changed=true; value_d = max_value_d; }
 	if (value_d < min_value_d) { changed=true; value_d = min_value_d; }
-
-	if (changed)
-	{
-		if (floating_point_mode)
-			lineedit->set_text(value_d);
-		else
-			lineedit->set_text(value_i);
-	}
 }
 
 void CL_Spin_Impl::on_enablemode_changed()
@@ -471,4 +460,34 @@ void CL_Spin_Impl::on_enablemode_changed()
 	lineedit->set_enabled(enabled);
 
 	component->request_repaint();
+}
+
+void CL_Spin_Impl::increment_value()
+{
+	if (floating_point_mode)
+		value_d += step_size_d;
+	else
+		value_i += step_size_i;
+
+	clamp_value();
+	update_lineedit();
+}
+
+void CL_Spin_Impl::decrement_value()
+{
+	if (floating_point_mode)
+		value_d -= step_size_d;
+	else
+		value_i -= step_size_i;
+
+	clamp_value();
+	update_lineedit();
+}
+
+void CL_Spin_Impl::update_lineedit()
+{
+	if (floating_point_mode)
+		lineedit->set_text(CL_StringHelp::float_to_text(value_d, num_decimal_places));
+	else
+		lineedit->set_text(value_i);
 }

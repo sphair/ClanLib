@@ -7,8 +7,6 @@
 
 int App::start(const std::vector<CL_String> &args)
 {
-	CL_ConsoleWindow console("Console", 80, 500);
-
 	try
 	{
 		CL_OpenGLWindowDescription description;
@@ -87,12 +85,13 @@ int App::start(const std::vector<CL_String> &args)
 
 			CL_System::sleep(10);
 
-			CL_DisplayMessageQueue::process();
+			CL_KeepAlive::process();
 		}
 	}
-	catch (CL_Exception e)
+	catch (CL_Exception &e)
 	{
-		CL_Console::write_line(e.message);
+		CL_ConsoleWindow console("Console", 80, 160);
+		CL_Console::write_line("Exception caught: " + e.get_message_and_stack_trace());
 		console.display_close_message();
 		return -1;
 	}

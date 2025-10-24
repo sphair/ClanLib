@@ -258,6 +258,24 @@ void CL_GDIGraphicContextProvider::draw_primitives_array(CL_PrimitivesType type,
 				draw_triangle(i+0, i+1, i+2);
 		}
 	}
+	else if (type == cl_lines)
+	{
+		int end_vertices = offset+num_vertices;
+
+		for (int i = offset; i+1 < end_vertices; i+=2)
+			draw_line(i+0, i+1);
+	}
+	else if (type == cl_line_loop)
+	{
+		int end_vertices = offset+num_vertices;
+		int i;
+		
+		for (i = offset; i < end_vertices-1; i++)
+		{
+			draw_line(i, i+1);
+		}
+		draw_line(i, offset);
+	}
 }
 
 void CL_GDIGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices)
@@ -274,6 +292,21 @@ void CL_GDIGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType ty
 			for (int i = 0; i+2 < count; i+=3)
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
+	}
+	else if (type == cl_lines)
+	{
+			for (int i = 0; i+1 < count; i+=2)
+				draw_line(indices[i], indices[i+1]);
+	}
+	else if (type == cl_line_loop)
+	{
+		int i;
+		
+		for (i = 0; i < count-1; i++)
+		{
+			draw_line(indices[i], indices[i+1]);
+		}
+		draw_line(indices[i], indices[0]);
 	}
 }
 
@@ -292,6 +325,21 @@ void CL_GDIGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType ty
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
 	}
+	else if (type == cl_lines)
+	{
+		for (int i = 0; i+1 < count; i+=2)
+			draw_line(indices[i], indices[i+1]);
+	}
+	else if (type == cl_line_loop)
+	{
+		int i;
+		
+		for (i = 0; i < count-1; i++)
+		{
+			draw_line(indices[i], indices[i+1]);
+		}
+		draw_line(indices[i], indices[0]);
+	}
 }
 
 void CL_GDIGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices)
@@ -308,6 +356,21 @@ void CL_GDIGraphicContextProvider::draw_primitives_elements(CL_PrimitivesType ty
 			for (int i = 0; i+2 < count; i+=3)
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
+	}
+	else if (type == cl_lines)
+	{
+		for (int i = 0; i+1 < count; i+=2)
+			draw_line(indices[i], indices[i+1]);
+	}
+	else if (type == cl_line_loop)
+	{
+		int i;
+		
+		for (i = 0; i < count-1; i++)
+		{
+			draw_line(indices[i], indices[i+1]);
+		}
+		draw_line(indices[i], indices[0]);
 	}
 }
 
@@ -433,5 +496,53 @@ void CL_GDIGraphicContextProvider::draw_sprite(int index1, int index2, int index
 	for (int v=0; v<3; v++)
 		screen_pos[v] = pixel_canvas->transform(pos[v]);
 
-	pixel_canvas->draw_sprite(screen_pos, primary_color, tex_coords, sampler_index.x);
+	// Check for non-rotated sprite
+	if (   ( (int) screen_pos[0].y == (int) (screen_pos[1].y) )
+		&& ( (int) screen_pos[0].x == (int) (screen_pos[2].x) ) )
+	{
+		pixel_canvas->draw_sprite(screen_pos, primary_color, tex_coords, sampler_index.x);
+	}
+	else
+	{
+		// Rotated Sprite.
+		pixel_canvas->draw_triangle(screen_pos, primary_color, tex_coords, sampler_index.x);
+		CL_Vec2f alt_screen_pos[3];
+		alt_screen_pos[0] = screen_pos[1];
+		alt_screen_pos[1].x = screen_pos[1].x + (screen_pos[2].x - screen_pos[0].x);
+		alt_screen_pos[1].y = screen_pos[1].y + (screen_pos[2].y - screen_pos[0].y);
+		alt_screen_pos[2] = screen_pos[2];
+
+		CL_Vec2f alt_tex_coords[3];
+		alt_tex_coords[0] = tex_coords[1];
+		alt_tex_coords[1].x = tex_coords[1].x + (tex_coords[2].x - tex_coords[0].x);
+		alt_tex_coords[1].y = tex_coords[1].y + (tex_coords[2].y - tex_coords[0].y);
+		alt_tex_coords[2] = tex_coords[2];
+
+		pixel_canvas->draw_triangle(alt_screen_pos, primary_color, alt_tex_coords, sampler_index.x);
+	}
+}
+
+void CL_GDIGraphicContextProvider::draw_line(int index1, int index2)
+{
+	static CL_Vec4f default_pos(0.0f, 0.0f, 1.0f, 1.0f);
+	static CL_Vec4f default_color(1.0f, 1.0f, 1.0f, 1.0f);
+	static CL_Vec4f default_tex_coord(0.0f, 0.0f, 0.0f, 0.0f);
+	static CL_Vec4f default_sampler(0.0f, 0.0f, 0.0f, 0.0f);
+
+	int indexes[2] = { index1, index2 };
+	CL_Vec4f pos[2];
+	CL_Vec4f primary_color[2];
+	CL_Vec2f tex_coords[2];
+	CL_Vec1f sampler_index;
+
+	pos_fetcher->fetch(pos, indexes, 2, default_pos);
+	color_fetcher->fetch(primary_color, indexes, 2, default_color);
+	tex_fetcher->fetch(tex_coords, indexes, 2, default_tex_coord);
+	tex_index_fetcher->fetch(&sampler_index, indexes, 1, default_sampler);
+
+	CL_Vec2f screen_pos[2];
+	for (int v=0; v<2; v++)
+		screen_pos[v] = pixel_canvas->transform(pos[v]);
+
+	pixel_canvas->draw_line(screen_pos, primary_color, tex_coords, sampler_index.x);
 }

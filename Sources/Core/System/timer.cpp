@@ -73,7 +73,6 @@ public:
 		{
 			delete it->second;
 		}
-
 	}
 
 	void start(int timer_id, unsigned int new_timeout, bool repeat)
@@ -168,7 +167,6 @@ public:
 	}
 
 private:
-
 	CL_Timer_Object &get_timer_object(int timer_id)
 	{
 		// Find existing timer
@@ -182,7 +180,6 @@ private:
 		timer_objects[timer_id] = object;
 		return *object;
 	}
-
 
 	void timer_main()
 	{
@@ -271,7 +268,6 @@ public:
 			delete timer_thread;
 			timer_thread = NULL;
 		}
-
 	}
 
 	void start(unsigned int new_timeout, bool repeat)
@@ -296,7 +292,6 @@ public:
 	}
 
 private:
-
 	static CL_Timer_Thread *timer_thread;
 	static int timer_thread_instance_count;
 	static CL_Mutex timer_thread_mutex;

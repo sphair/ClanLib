@@ -35,8 +35,6 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/input_device.h"
-#include "API/Display/Window/display_message_queue.h"
-#include "API/Display/Window/display_window_message.h"
 #include "API/GUI/gui_window_manager_system.h"
 #include "API/Display/Render/blend_mode.h"
 
@@ -114,8 +112,7 @@ void CL_GUIWindowManagerProvider_System::set_site(CL_GUIWindowManagerSite *new_s
 void CL_GUIWindowManagerProvider_System::create_window(
 	CL_GUITopLevelWindow *handle,
 	CL_GUITopLevelWindow *owner,
-	CL_GUITopLevelDescription description,
-	bool temporary)
+	CL_GUITopLevelDescription description)
 {
 	CL_GUITopLevelWindowSystem *owner_window = 0;
 	if (owner)
@@ -126,7 +123,8 @@ void CL_GUIWindowManagerProvider_System::create_window(
 
 	CL_GUITopLevelWindowSystem *top_level_window;
 
-	if (temporary)
+#ifdef WIN32	// Cached windows do not work on Linux
+	if (description.get_using_gui_window_cache())
 	{
 		used_cached_windows++;
 
@@ -143,6 +141,7 @@ void CL_GUIWindowManagerProvider_System::create_window(
 		}
 	}
 	else
+#endif
 	{
 		top_level_window = new CL_GUITopLevelWindowSystem;
 		top_level_window->window = CL_DisplayWindow(description);
@@ -181,6 +180,7 @@ void CL_GUIWindowManagerProvider_System::destroy_window(CL_GUITopLevelWindow *ha
 	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowSystem *>::iterator it = window_map.find(handle);
 
 	bool cached = false;
+#ifdef WIN32	// Cached windows do not work on Linux
 	for (std::vector<CL_GUITopLevelWindowSystem *>::size_type i = 0; i < cached_windows.size(); i++)
 	{
 		if ((*it).second == cached_windows[i])
@@ -191,7 +191,7 @@ void CL_GUIWindowManagerProvider_System::destroy_window(CL_GUITopLevelWindow *ha
 			break;
 		}
 	}
-
+#endif
 	if (cached == false)
 		delete window_map[handle];
 
@@ -403,25 +403,6 @@ bool CL_GUIWindowManagerProvider_System::is_maximized(CL_GUITopLevelWindow *hand
 	return false;
 }
 
-bool CL_GUIWindowManagerProvider_System::has_message()
-{
-	return CL_DisplayMessageQueue::wait(0);
-}
-
-void CL_GUIWindowManagerProvider_System::process_message()
-{
-	CL_DisplayWindowMessage message = CL_DisplayMessageQueue::get_message();
-	CL_DisplayMessageQueue::dispatch_message(message);
-}
-
-void CL_GUIWindowManagerProvider_System::wait_for_message()
-{
-	if (func_wait_for_message.is_null())
-		CL_DisplayMessageQueue::wait();
-	else
-		func_wait_for_message.invoke();
-}
-
 void CL_GUIWindowManagerProvider_System::request_repaint(CL_GUITopLevelWindow *handle, const CL_Rect &update_region)
 {
 	window_map[handle]->window.request_repaint(update_region);
@@ -450,6 +431,16 @@ void CL_GUIWindowManagerProvider_System::set_cliprect(CL_GUITopLevelWindow *hand
 void CL_GUIWindowManagerProvider_System::reset_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc)
 {
 	gc.reset_cliprect();
+}
+
+void CL_GUIWindowManagerProvider_System::push_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)
+{
+	gc.push_cliprect(rect);
+}
+
+void CL_GUIWindowManagerProvider_System::pop_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc)
+{
+	gc.pop_cliprect();
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -26,13 +26,11 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
+#include "precomp.h"
 #include "GUI.h"
 #include "app.h"
 
-GUI::GUI(App *app) : app(app), window_ptr(app->get_window())
+GUI::GUI(App *app) : app(app)
 {
 //	current_theme = new_theme = theme_aero_packed;
 	current_theme = new_theme = theme_aero;
@@ -42,8 +40,9 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window())
 
 	resources_internal = CL_ResourceManager("resources.xml");
 
-	CL_GraphicContext gc = window_ptr->get_gc();
+	CL_GraphicContext gc = app->get_window()->get_gc();
 	font = CL_Font(gc, "Tahoma", 16);
+	fps_font = CL_Font(gc, "Tahoma", 24);
 
 	reset_manager();
 }
@@ -66,15 +65,17 @@ bool GUI::run()
 
 	gui_manager.exec(false);
 
-	CL_GraphicContext gc = window_ptr->get_gc();
+	CL_GraphicContext gc = app->get_window()->get_gc();
 
 	gc.set_map_mode(CL_MapMode(cl_map_2d_upper_left));
-	CL_Draw::gradient_fill(gc, window_ptr->get_viewport(), CL_Gradient(CL_Colorf(0.4f, 0.4f, 0.4f, 1.0f), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
+
+	CL_Draw::gradient_fill(gc, app->get_window()->get_viewport(), CL_Gradient(CL_Colorf(0.4f, 0.4f, 0.4f, 1.0f), CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
 
 	run_manager();
 
 	CL_String fps = cl_format("FPS: %1", last_fps);
-	font.draw_text(gc, gc.get_width() - 100, 24, fps, CL_Colorf::white);
+	fps_font.draw_text(gc, gc.get_width() - 100 - 2, 24 - 2, fps, CL_Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	fps_font.draw_text(gc, gc.get_width() - 100, 24, fps, CL_Colorf::white);
 
 	fps_count++;
 	int time = CL_System::get_time();
@@ -87,7 +88,7 @@ bool GUI::run()
 		fps_count = 0;
 	}
 
-	window_ptr->flip(0);
+	app->get_window()->flip(0);
 
 	return true;
 }
@@ -96,10 +97,7 @@ void GUI::check_manager_change()
 {
 	if (current_theme == new_theme)
 	{
-		if (gui_texture.get() && (current_manager == manager_texture))
-			return;
-
-		if (gui_system.get() && (current_manager == manager_system))
+		if (actual_manager == current_manager)
 			return;
 	}
 
@@ -109,13 +107,14 @@ void GUI::check_manager_change()
 void GUI::reset_manager()
 {
 	current_theme = new_theme;
-
-	window_ptr->set_cursor(cl_cursor_wait);
+	actual_manager = current_manager;
+	app->get_window()->set_cursor(cl_cursor_wait);
 
 	if (current_manager == manager_texture)
 	{
 		gui_system.reset();
 		gui_texture.reset();
+
 		gui_texture.reset(new GUI_Texture(this) );
 	}
 
@@ -123,9 +122,10 @@ void GUI::reset_manager()
 	{
 		gui_system.reset();
 		gui_texture.reset();
+
 		gui_system.reset(new GUI_System(this) );
 	}
-	window_ptr->set_cursor(cl_cursor_arrow);
+	app->get_window()->set_cursor(cl_cursor_arrow);
 
 }
 
@@ -184,3 +184,9 @@ const char *GUI::get_resources_location()
 
 	return "../../Resources/GUIThemeLuna/resources.xml";
 }
+
+CL_DisplayWindow *GUI::get_window()
+{
+	return app->get_window();
+}
+

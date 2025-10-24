@@ -53,6 +53,11 @@ CL_String CL_VirtualFileSource_File::get_path() const
 	return path;
 }
 
+CL_String CL_VirtualFileSource_File::get_identifier() const
+{
+	return path;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_VirtualFileSource_File Operations:
 

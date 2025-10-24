@@ -39,9 +39,8 @@
 CL_GUIComponent_Impl::CL_GUIComponent_Impl(const CL_SharedPtr<CL_GUIManager_Impl> &init_gui_manager, CL_GUIComponent *parent_or_owner, bool toplevel)
 : gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(CL_GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
-  visible(true), activated(false), click_through(false), is_tab_order_controller(false), 
-  component_tab_index(-1), tab_order_controller_current_index(-1), tab_order_controller_last_index(-1),
-  default_handler(false), cancel_handler(false), constant_repaint(false)
+  visible(true), activated(false), default_handler(false), cancel_handler(false),
+  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false)
 {
 	gui_manager_impl = gui_manager.get();
 
@@ -94,6 +93,7 @@ CL_GUIComponent_Impl::~CL_GUIComponent_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIComponent_Impl Attributes:
 
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIComponent_Impl Operations:
 
@@ -106,6 +106,10 @@ void CL_GUIComponent_Impl::set_geometry(CL_Rect new_geometry, bool client_area)
 		new_geometry = gui_manager->window_manager.get_geometry(handle, true);
 	}
 
+	// repaint parent at old geometry
+	if (component->get_parent_component())
+		component->get_parent_component()->request_repaint(geometry);
+
 	// Check for resize
 	if ((geometry.get_width() != new_geometry.get_width()) || (geometry.get_height() != new_geometry.get_height()) )
 	{
@@ -115,6 +119,7 @@ void CL_GUIComponent_Impl::set_geometry(CL_Rect new_geometry, bool client_area)
 	else
 	{
 		geometry = new_geometry;
+		component->request_repaint();
 	}
 }
 

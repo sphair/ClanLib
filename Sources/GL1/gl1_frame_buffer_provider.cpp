@@ -89,9 +89,9 @@ CL_Size CL_GL1FrameBufferProvider::get_attachment_size(int buffer_id) const
 	return selected_surface.get_size();
 }
 
-std::vector<int> CL_GL1FrameBufferProvider::get_attachment_indexes() const
+const std::vector<int> &CL_GL1FrameBufferProvider::get_attachment_indexes() const
 {
-	std::vector<int> empty;
+	static std::vector<int> empty;
 	return empty;
 }
 
@@ -130,7 +130,8 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_R
 
 void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, int level, int zoffset)
 {
-	detach_all();
+	if(!pbuffer.is_null())
+		sync_texture();
 
 	if (texture.is_null())
 	{
@@ -144,12 +145,42 @@ void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_T
 	}
 
 	CL_Size surface_size = texture_provider->get_surface_size();
-	pbuffer = gc_provider->create_pbuffer(surface_size);
+
+	// Find existing pbuffer
+	CL_WeakPtr<CL_Texture_Impl> texture_impl(texture.get_impl());
+	std::map< CL_WeakPtr<CL_Texture_Impl>, CL_PBuffer_GL1>::iterator texture_it = texture_pbuffer_map.find(texture_impl);
+	if (texture_it == texture_pbuffer_map.end())
+	{
+		// Not found, create a new entry
+		pbuffer = gc_provider->create_pbuffer(surface_size);
+		texture_pbuffer_map[texture_impl] = pbuffer;
+	}
+	else
+	{
+		// Used cached pbuffer
+		pbuffer = texture_it->second;
+	}
 
 	selected_texture_provider = texture_provider;
 	selected_surface = texture;
 
 	sync_pbuffer();
+
+	// Purge the cache from unused pbuffers. Maybe we could reuse them instead? But for this to occur, the user would be recreating CL_Textures anyway (which is slow). This added complexity is not required (at the moment)
+	for (texture_it = texture_pbuffer_map.begin(); texture_it != texture_pbuffer_map.end();)
+	{
+		if (texture_it->first.is_null())
+		{
+			// This "texture_it = texture_pbuffer_map.erase(texture_it);" works on visual studio,
+			// but MSDN says This return type does not conform to the C++ standard. So do it a different way, so GCC does not complain
+			texture_pbuffer_map.erase(texture_it);
+			texture_it = texture_pbuffer_map.begin();
+		}
+		else
+		{
+			++texture_it;
+		}
+	}
 }
 
 void CL_GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)

@@ -59,10 +59,10 @@ listview row_opener:closed
 
 listview selection
 {
-	border-top:-2;
-	border-left:-3;
-	border-right:-3;
-	border-bottom:-2;
+	selection-margin-left:3;
+	selection-margin-right:4;
+	selection-margin-top:1;
+	selection-margin-bottom:2;
 
 	bg-color:#316ac5;
 	text-color:#f2e3f2;

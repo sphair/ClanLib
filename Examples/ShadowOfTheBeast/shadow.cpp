@@ -11,9 +11,6 @@ class App
 public:
 	virtual int main(const std::vector<CL_String> &args)
 	{
-		// Create a console window for text-output if not available
-		CL_ConsoleWindow console("Console");
-
 		try
 		{	
 			CL_DisplayWindowDescription desc;
@@ -122,13 +119,13 @@ public:
 				window.flip(1);
 
 				// Update keyboard input and handle system events:
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 			}
 		}
 		catch(CL_Exception& exception)
 		{
-			CL_Console::write_line("Exception caught:");
-			CL_Console::write_line(exception.message);
+			CL_ConsoleWindow console("Console", 80, 160);
+			CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 			console.display_close_message();
 
 			return -1;

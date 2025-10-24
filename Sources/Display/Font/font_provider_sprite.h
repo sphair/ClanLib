@@ -34,6 +34,7 @@
 #include "API/Display/2D/sprite.h"
 #include <list>
 #include <map>
+#include "FontEngine/font_engine.h"
 
 class CL_Colorf;
 
@@ -50,7 +51,7 @@ public:
 };
 
 
-class CL_FontProvider_Sprite : public CL_FontProvider
+class CL_FontProvider_Sprite : public CL_FontProvider, private CL_FontEngine
 {
 /// \name Construction
 /// \{
@@ -68,6 +69,9 @@ public:
 public:
 	/// \brief Returns information about the current font.
 	virtual CL_FontMetrics get_font_metrics(CL_GraphicContext &gc);
+	CL_FontMetrics get_metrics();
+
+	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias, const CL_Colorf &color);
 
 /// \}
 /// \name Operations
@@ -78,7 +82,10 @@ public:
 	virtual void destroy();
 
 	/// \brief Print text on gc.
-	virtual void draw_text(CL_GraphicContext &gc, int xpos, int ypos, const CL_StringRef &text, const CL_Colorf &color);
+	virtual void draw_text(CL_GraphicContext &gc, float xpos, float ypos, const CL_StringRef &text, const CL_Colorf &color);
+
+	/// \brief Draw scaled text
+	void draw_text(CL_GraphicContext &gc, float xpos, float ypos, float scale_x, float scale_y, const CL_StringRef &text, const CL_Colorf &color);
 
 	/// \brief Calculate size of text string.
 	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);

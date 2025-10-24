@@ -44,6 +44,7 @@ class CL_GlyphPrimitivesArray;
 class CL_GlyphPrimitivesArrayOutline;
 class CL_GlyphOutline;
 
+class CL_FontEngine_Freetype;
 
 class CL_FontProvider_Vector : public CL_FontProvider
 {
@@ -52,9 +53,7 @@ class CL_FontProvider_Vector : public CL_FontProvider
 
 public:
 
-	CL_FontProvider_Vector( const CL_StringRef &typeface_name, int height);
-
-	CL_FontProvider_Vector( const CL_FontDescription &desc);
+	CL_FontProvider_Vector();
 
 	virtual ~CL_FontProvider_Vector();
 
@@ -77,7 +76,7 @@ public:
 	virtual void destroy();
 
 	/// \brief Print text on gc.
-	virtual void draw_text(CL_GraphicContext &gc, int x, int y, const CL_StringRef &text, const CL_Colorf &color);
+	virtual void draw_text(CL_GraphicContext &gc, float x, float y, const CL_StringRef &text, const CL_Colorf &color);
 
 	/// \brief Calculate size of text string.
 	virtual CL_Size get_text_size(CL_GraphicContext &gc, const CL_StringRef &text);
@@ -109,18 +108,21 @@ public:
 
 	int get_character_index(CL_GraphicContext &gc, const CL_String &text, const CL_Point &point);
 
+	void load_font(const CL_FontDescription &desc);
+	void load_font(const CL_FontDescription &desc, CL_IODevice &file);
+	void load_font(const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
+
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	void load_font(const CL_FontDescription &desc);
 
 	std::map<int, CL_GlyphOutline*> char_cache;
 
 	CL_FontMetrics metrics;
 
-	CL_FreetypeFont *ft_font;
+	CL_FontEngine_Freetype *font_engine;
 
 	int size_height;
 

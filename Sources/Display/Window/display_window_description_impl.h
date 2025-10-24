@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Kenneth Gangstoe
 */
 
 #pragma once
@@ -38,7 +39,6 @@ class CL_DisplayWindowDescription_Impl
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_DisplayWindowDescription_Impl()
 	{
@@ -49,6 +49,10 @@ public:
 		caption = true;
 		topmost = false;
 		visible = true;
+		minimize_button = true;
+		maximize_button = true;
+		border = false;
+		sysmenu = true;
 		drop_shadow = false;
 		tool_window = false;
 		fullscreen = false;
@@ -57,27 +61,30 @@ public:
 		refresh_rate = 0;
 		bpp = 0;
 		create_tablet_context = false;
-		#ifdef WIN32
 		layered = false;
+		#ifdef WIN32
 		handle = 0;
 		#endif
 		depth_size = 0;
 		stencil_size = 0;
+		use_cached_window = false;
 	}
 
 	virtual ~CL_DisplayWindowDescription_Impl() { return; }
 
-
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	CL_String title;
 	CL_Rect position;
 	bool position_client_area;
 	bool decorations;
 	bool caption;
+	bool minimize_button;
+	bool maximize_button;
+	bool sysmenu;
+	bool border;
 	bool topmost;
 	bool visible;
 	bool drop_shadow;
@@ -89,8 +96,9 @@ public:
 	int refresh_rate;
 	CL_DisplayWindow owner;
 	bool create_tablet_context;
-#ifdef WIN32
+	bool use_cached_window;
 	bool layered;
+#ifdef WIN32
 	HWND handle;
 #endif
 	std::map<CL_String, CL_UnknownSharedPtr> data_objects;
@@ -98,5 +106,3 @@ public:
 	int stencil_size;
 /// \}
 };
-
-

@@ -27,64 +27,67 @@
 
 #pragma once
 
-#include "../soundoutput_generic.h"
+#include "../soundoutput_impl.h"
 
-class CL_SoundOutput_DirectSound : public CL_SoundOutput_Generic
+class CL_SoundOutput_DirectSound : public CL_SoundOutput_Impl
 {
 /// \name Construction
 /// \{
-
 public:
 	CL_SoundOutput_DirectSound(int mixing_frequency, int mixing_latency = 50);
-
 	~CL_SoundOutput_DirectSound();
-
-
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
 	LPDIRECTSOUND directsound;
-
 	LPDIRECTSOUNDBUFFER soundbuffer;
-
-	int frag_size, buffer_size, bytes_per_sample;
-
+	int frag_size;
 	HANDLE sleep_event;
-
+	HWND hwnd;
 	LPDIRECTSOUNDNOTIFY notify;
-
 	bool has_sound;
-
 	int last_write_pos;
-
-
 /// \}
+
 /// \name Operations
 /// \{
-
 public:
-	/// \brief Called when we have no samples to play - and wants to tell the soundcard
+	/// \brief Called when we have no samples to play - and wants to tell the sound card
 	/// \brief about this possible event.
 	virtual void silence();
 
-	/// \brief Returns the buffer size used by device (returned as num [stereo] samples).
+	/// \brief Returns the buffer size used by device (returned as number of [stereo] samples).
 	virtual int get_fragment_size();
 
-	/// \brief Writes a fragment to the soundcard.
-	virtual void write_fragment(short *data);
+	/// \brief Writes a fragment to the sound card.
+	virtual void write_fragment(float *data);
 
 	/// \brief Waits until output source isn't full anymore.
 	virtual void wait();
-
-
 /// \}
+
 /// \name Implementation
 /// \{
-
 private:
-/// \}
+	void release_resources();
+	void create_directsound_object();
+	void set_cooperative_level();
+	void set_fragment_size();
+	int get_fragment_count() const;
+	int get_bytes_per_sample() const;
+	int get_buffer_size() const;
+	void create_sound_buffer();
+	void verify_sound_buffer_capabilities();
+	void clear_sound_buffer();
+	void create_notify_event();
+	void retrieve_notify_interface();
+	void set_notify_positions();
+	void play_sound_buffer();
+	int find_fragment_write_position();
+	void write_to_sound_buffer(int write_pos, const float *data, int size);
+	/// \}
 };
 
 

@@ -37,7 +37,6 @@
 #include "../../Core/Text/string_types.h"
 
 class CL_DisplayWindowProvider;
-class CL_DisplayMessageQueue_Provider;
 
 /// \brief Interface for implementing a CL_DisplayTarget target.
 ///
@@ -55,8 +54,6 @@ public:
 /// \{
 
 public:
-	/// \brief Return a pointer to the message queue shared by all CL_DisplayWindow's.
-	virtual CL_DisplayMessageQueue_Provider *get_message_queue() const = 0;
 
 /// \}
 /// \name Operations

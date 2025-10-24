@@ -82,11 +82,9 @@ int Application::main(const std::vector<CL_String> &args)
 		// Enter the amazing pacman world
 		world.run(window);
 	}
-	catch(CL_Exception& exception)
+	catch(CL_Exception &exception)
 	{
-		CL_Console::write_line(exception.message);
-		console.display_close_message();
-		return -1;
+		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 	}
 	
 	console.display_close_message();

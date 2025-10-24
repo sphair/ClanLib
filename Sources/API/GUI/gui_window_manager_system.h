@@ -57,8 +57,6 @@ public:
 	/// \brief Retrieves the provider.
 	CL_GUIWindowManagerProvider_System *get_provider() const;
 
-	/// \brief void func_wait_for_message()
-	CL_Callback_v0 &func_wait_for_message();
 /// \}
 
 /// \name Operations

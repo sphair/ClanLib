@@ -53,6 +53,13 @@ CL_DisplayWindow::CL_DisplayWindow(
 	description.set_title(title);
 	description.set_size(CL_Size(width, height), false);
 	description.set_fullscreen(start_fullscreen);
+
+	if (start_fullscreen)
+	{
+		description.set_decorations(false);
+		description.show_caption(false);
+	}
+
 	description.set_allow_resize(allow_resize);
 	description.set_flipping_buffers(flipping_buffers);
 

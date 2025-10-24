@@ -41,7 +41,7 @@ CL_Font_System::CL_Font_System()
 }
 
 CL_Font_System::CL_Font_System(
-	CL_GraphicContext &context, const CL_StringRef &typeface_name, int height) : CL_Font( new CL_FontProvider_Texture(context))
+	CL_GraphicContext &context, const CL_StringRef &typeface_name, int height) : CL_Font( new CL_FontProvider_System(context))
 {
 	CL_FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -50,7 +50,7 @@ CL_Font_System::CL_Font_System(
 }
 
 CL_Font_System::CL_Font_System(
-	CL_GraphicContext &context, const CL_FontDescription &desc) : CL_Font( new CL_FontProvider_Texture(context))
+	CL_GraphicContext &context, const CL_FontDescription &desc) : CL_Font( new CL_FontProvider_System(context))
 {
 	load_font(context, desc);
 }
@@ -63,12 +63,12 @@ CL_Font_System::~CL_Font_System()
 /////////////////////////////////////////////////////////////////////////////
 // CL_Font_System Attributes:
 
-CL_FontProvider_Texture *CL_Font_System::get_provider() const
+CL_FontProvider_System *CL_Font_System::get_provider() const
 {
-	return static_cast <CL_FontProvider_Texture *> (CL_Font::get_provider());
+	return static_cast <CL_FontProvider_System *> (CL_Font::get_provider());
 }
 
-CL_Font_System_Glyph *CL_Font_System::get_glyph(CL_GraphicContext &gc, int glyph)
+CL_Font_TextureGlyph *CL_Font_System::get_glyph(CL_GraphicContext &gc, int glyph)
 {
 	return (get_provider()->get_glyph(gc, glyph));
 }
@@ -108,7 +108,7 @@ void CL_Font_System::set_font_metrics(const CL_FontMetrics &metrics)
 
 void CL_Font_System::register_font(const CL_StringRef &font_filename, const CL_StringRef &font_typeface)
 {
-	CL_FontProvider_Texture::register_font(font_filename, font_typeface);
+	CL_FontProvider_System::register_font(font_filename, font_typeface);
 }
 
 /////////////////////////////////////////////////////////////////////////////

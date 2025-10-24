@@ -81,11 +81,11 @@ public:
 	/** This is only available if CL_VirtualFileSystem was set. If not, use CL_DirectoryScanner() instead.*/
 	CL_VirtualDirectoryListing get_directory_listing();
 
-	/// \brief Get the name of this directory
+	/// \brief Get the identifier of this directory
 	///
-	/// The exact format of this name depends on the implementation of the underlying filesystem and mounts
-	/// \return the name
-	CL_String get_name() const;
+	/// The exact format of this identifier depends on the implementation of the underlying filesystem and mounts
+	/// \return the identifier
+	CL_String get_identifier() const;
 
 /// \}
 /// \name Operations

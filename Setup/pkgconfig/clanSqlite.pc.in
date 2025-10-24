@@ -9,7 +9,7 @@ Name: clanSqlite
 Description: Sqlite support for ClanLib
 Version: @VERSION@
 Requires: clanDatabase-@LT_RELEASE@ = @VERSION@
-Libs:   -L${libdir} -lclanSqlite @extra_LIBS_clanSqlite@
+Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@Sqlite @extra_LIBS_clanSqlite@
 Cflags: -I${includedir} @extra_CFLAGS_clanSqlite@
 
 # EOF #

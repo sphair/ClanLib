@@ -3,4 +3,25 @@
   <image name="MainMenuBg">
     <image file="editor_bg.png" />
   </image>
+  <image name="ViewBorder">
+    <image file="gfx/viewborder.png" />
+  </image>
+  <image name="PropertyComponent">
+    <image file="gfx/propertycomponent.png" />
+  </image>
+  <image name="ToolbarHorz">
+    <image file="gfx/toolbar_horz.png" />
+  </image>
+  <image name="ToolbarHorzItemHot">
+    <image file="gfx/toolbar_horz_item_hot.png" />
+  </image>
+  <image name="ToolbarVertItemHot">
+    <image file="gfx/toolbar_vert_item_hot.png" />
+  </image>
+  <image name="ToolbarVertItemSelected">
+    <image file="gfx/toolbar_vert_item_selected.png" />
+  </image>
+  <image name="StatusbarComponent">
+    <image file="gfx/statusbarcomponent.png" />
+  </image>
 </resources>

@@ -53,11 +53,11 @@ private:
 
 	struct SharedTextureMap
 	{
-		SharedTextureMap(CL_String key, const CL_Texture &texture) : key(key), texture(texture)
+		SharedTextureMap(CL_String key, const CL_Texture &texture) : key(key), texture_impl(texture.get_impl())
 		{
 		}
 		CL_String key;
-		CL_Texture texture;
+		CL_WeakPtr<CL_Texture_Impl> texture_impl;
 	};
 	std::vector<SharedTextureMap> textures;
 

@@ -98,7 +98,7 @@ public:
 	    which modifies the sample data accordingly to the function of the
 	    filter.</p>
 	    <p>The format of the sample data is always 16 bit stereo. </p>*/
-	void filter(int **sample_data, int num_samples, int channels);
+	void filter(float **sample_data, int num_samples, int channels);
 
 /// \}
 /// \name Implementation

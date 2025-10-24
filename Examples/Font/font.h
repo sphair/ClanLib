@@ -92,7 +92,6 @@ private:
 	CL_Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
-	CL_PixelBuffer pb_font;
 	CL_ResourceManager app_resources;
 };
 

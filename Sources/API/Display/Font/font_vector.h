@@ -109,19 +109,45 @@ class CL_API_DISPLAY CL_Font_Vector : public CL_Font
 /// \{
 
 public:
-	/// \brief Creates a vector font.
+/// \brief Constructs vector font.
 	CL_Font_Vector();
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	CL_Font_Vector( const CL_StringRef &typeface_name, int height );
+	CL_Font_Vector( const CL_StringRef &typeface_name, int height);
+
+	/// \brief Constructs a Font Vector
+	///
+	/// \param typeface_name = String Ref
+	/// \param height = value
+	/// \param file = IODevice
+	CL_Font_Vector( const CL_StringRef &typeface_name, int height, CL_IODevice &file);
+
+	/// \brief Constructs a Font Vector
+	///
+	/// \param typeface_name = String Ref
+	/// \param height = value
+	/// \param directory = Virtual Directory
+	CL_Font_Vector( const CL_StringRef &typeface_name, int height, const CL_VirtualDirectory &directory);
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param desc = Font Description
-	CL_Font_Vector(const CL_FontDescription &desc);
+	CL_Font_Vector( const CL_FontDescription &desc);
+
+	/// \brief Constructs a Font Vector
+	///
+	/// \param desc = Font Description
+	/// \param file = IODevice
+	CL_Font_Vector( const CL_FontDescription &desc, CL_IODevice &file);
+
+	/// \brief Constructs a Font Vector
+	///
+	/// \param desc = Font Description
+	/// \param directory = Virtual Directory
+	CL_Font_Vector( const CL_FontDescription &desc, const CL_VirtualDirectory &directory);
 
 	~CL_Font_Vector();
 

@@ -287,11 +287,13 @@ CL_PixelBuffer CL_GL1GraphicContextProvider::get_pixeldata(const CL_Rect& rect) 
 	{
 		CL_PixelBuffer pbuf(rect.get_width(), rect.get_height(), rect.get_width()*4, CL_PixelFormat::abgr8888);
 		cl1ReadPixels(rect.left, rect.top, rect.get_width(), rect.get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
+		pbuf.flip_vertical();
 		return pbuf;
 	}
 
 	CL_PixelBuffer pbuf( get_width(), get_height(), get_width()*4, CL_PixelFormat::abgr8888);
 	cl1ReadPixels(0, 0, get_width(), get_height(), CL_RGBA, CL_UNSIGNED_BYTE, pbuf.get_data());
+	pbuf.flip_vertical();
 	return pbuf;
 }
 
@@ -1264,8 +1266,7 @@ void CL_GL1GraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 	if (map_mode != cl_user_projection)
 	{
 		cl1LoadIdentity();
-		if( map_mode != cl_user_projection )
-			cl1Translatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
+		cl1Translatef(cl_pixelcenter_constant, cl_pixelcenter_constant, 0.0);
 		cl1MultMatrixf(modelview);
 	}
 	else

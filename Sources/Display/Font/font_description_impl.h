@@ -36,8 +36,8 @@ class CL_FontDescription_Impl
 public:
 	CL_FontDescription_Impl()
 	{
-		typeface_name = cl_text("tahoma");
-		height = 32;
+		//typeface_name = cl_text("tahoma");
+		height = 0;
 		average_width = 0;
 		escapement = 0.0f;
 		orientation = 0.0f;

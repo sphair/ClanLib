@@ -5,11 +5,13 @@ class SpriteComponent;
 class ResourceItem;
 class TexturePacker;
 class TextureGroupComponent;
+class View;
+class ViewWorkspace;
 
 class MainWindow : public CL_Window
 {
 public:
-	MainWindow(Application *application);
+	MainWindow(CL_GUIManager *gui, CL_ResourceManager *resources);
 	~MainWindow();
 
 // Attributes:
@@ -17,52 +19,34 @@ public:
 
 // Operations:
 public:
+	void add_view(View *view);
+	void remove_view(View *view);
 
 // Implementation:
 private:
-	CL_GUITopLevelDescription get_startup_description();
+	CL_GUITopLevelDescription get_window_description();
 
 	void create_components();
 
-	void on_close();
-	void on_resized();
+	void create_welcome_view();
+	void create_resource_viewer_view();
+	void create_texture_packer_view();
+	void create_css_packer_view();
+	void create_ico_creator_view();
 
-	void load_resources();
-	void show_resource(ResourceItem *resource_item);
+	int find_view_index(View *view);
+
+	bool on_close();
+	void on_close2();
+	void on_resized();
+	void on_view_close(View *view);
 
 	Application *application;
 
-	TexturePacker *packer;
+	std::vector<View *> views;
+	ViewWorkspace *workspace;
 
-	CL_Tab *tab;
-	CL_TabPage *tab_page_1;
-	CL_TabPage *tab_page_2;
+	CL_ResourceManager *resources;
 
-	// Tab 1
-	void on_selection_changed(CL_ListViewSelection selection);
-
-	CL_ListView *resource_list;
-	SpriteComponent *sprite_component;
-
-	// Tab 2
-	void on_button_generate_textures();
-	void on_button_save_resources();
-
-	CL_PushButton *button_pack;
-	CL_PushButton *button_save;
-	CL_Spin *spin_border;
-	CL_Label *label_border;
-
-	CL_RadioButton *radio_texture32;
-	CL_RadioButton *radio_texture64;
-	CL_RadioButton *radio_texture128;
-	CL_RadioButton *radio_texture256;
-	CL_RadioButton *radio_texture512;
-	CL_RadioButton *radio_texture512x256;
-	CL_RadioButton *radio_texture1024;
-	CL_RadioButton *radio_texture2048;
-
-	CL_Label *generation_result;
-
-	TextureGroupComponent *texturegroup_component;
+	CL_MenuBar *menubar;
 };

@@ -24,7 +24,7 @@ public:
 	void move(float length);
 	
 	virtual void draw();
-	virtual bool update(float timeElapsed);
+	virtual bool update(int timeElapsed_ms);
 
 // Implementation:
 private:

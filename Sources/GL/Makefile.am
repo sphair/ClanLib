@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclanGL.la
+lib_LTLIBRARIES = libclan21GL.la
 
-libclanGL_la_SOURCES = \
+libclan21GL_la_SOURCES = \
 	opengl_window_description_impl.h \
 	opengl_graphic_context_provider.h \
 	opengl_target_provider.h \
@@ -32,17 +32,17 @@ libclanGL_la_SOURCES = \
 	opengl_render_buffer_provider.h
 
 if WIN32
-	libclanGL_la_SOURCES += \
+	libclan21GL_la_SOURCES += \
 	WGL/opengl_creation_helper.cpp \
 	WGL/opengl_window_provider_wgl.cpp \
 	WGL/opengl_creation_helper.h \
 	WGL/opengl_window_provider_wgl.h
 else
-libclanGL_la_SOURCES += \
+libclan21GL_la_SOURCES += \
 	GLX/opengl_window_provider_glx.cpp \
 	GLX/opengl_window_provider_glx.h
 
-libclanGL_la_LIBADD = -lXxf86vm -lXi -lGL 
+libclan21GL_la_LIBADD = -lXi -lGL 
 endif
 
 # EXTRA_DIST = \
@@ -50,7 +50,7 @@ endif
 # WGL/displaycard_opengl_win32.h   \
 # WGL/setupgl_win32.cpp
 
-libclanGL_la_LDFLAGS = \
+libclan21GL_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE)
 
 # EOF #

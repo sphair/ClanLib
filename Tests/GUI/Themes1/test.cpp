@@ -64,9 +64,7 @@ public:
 			checkbox1.set_geometry(CL_Rect(0, 150, 160, 165).translate(client_area_pos));
 			checkbox1.set_text("CheckBox 1");
 
-			CL_AcceleratorTable table;
-
-			gui.exec(table);
+			gui.exec();
 		}
 		catch (CL_Exception e)
 		{
@@ -78,9 +76,10 @@ public:
 		return 0;
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}
 };
 

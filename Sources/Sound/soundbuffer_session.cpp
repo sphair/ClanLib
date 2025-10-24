@@ -28,10 +28,10 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/soundbuffer_session.h"
-#include "API/Sound/soundprovider_session.h"
+#include "API/Sound/SoundProviders/soundprovider_session.h"
 #include "API/Sound/soundfilter.h"
-#include "soundbuffer_session_generic.h"
-#include "soundoutput_generic.h"
+#include "soundbuffer_session_impl.h"
+#include "soundoutput_impl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer_Session construction:
@@ -44,13 +44,16 @@ CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_SoundBuffer_Session &cop
 {
 }
 
-CL_SoundBuffer_Session::CL_SoundBuffer_Session(const CL_SharedPtr<CL_SoundBuffer_Session_Generic> &impl) : impl(impl)
+CL_SoundBuffer_Session::CL_SoundBuffer_Session(CL_SoundBuffer &soundbuffer, bool looping, CL_SoundOutput &output)
+: impl(new CL_SoundBuffer_Session_Impl(soundbuffer, looping, output))
 {
 }
 
 CL_SoundBuffer_Session::~CL_SoundBuffer_Session()
 {
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer_Session attributes:
@@ -78,8 +81,7 @@ int CL_SoundBuffer_Session::get_length() const
 
 int CL_SoundBuffer_Session::get_frequency() const
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
-	return impl->provider_session->get_frequency();
+	return impl->frequency;
 }
 
 float CL_SoundBuffer_Session::get_volume() const
@@ -125,22 +127,18 @@ bool CL_SoundBuffer_Session::set_position_relative(float new_pos)
 	return set_position((int) (new_pos * length));
 }
 
-bool CL_SoundBuffer_Session::set_frequency(int new_freq)
-{
-	CL_MutexSection mutex_lock(&impl->mutex);
-//	if (!impl->provider_session->set_frequency(new_freq)) return false;
-	return true;
-}
-
 void CL_SoundBuffer_Session::set_volume(float new_volume)
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->volume = new_volume;
+}
+
+void CL_SoundBuffer_Session::set_frequency(int new_frequency)
+{
+	impl->frequency = new_frequency;
 }
 
 void CL_SoundBuffer_Session::set_pan(float new_pan)
 {
-	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->pan = new_pan;
 }
 
@@ -151,9 +149,8 @@ void CL_SoundBuffer_Session::play()
 	if (impl->provider_session->play())
 	{
 		impl->playing = true;
-		CL_SharedPtr<CL_SoundOutput_Generic> output = impl->output;
 		mutex_lock.unlock();
-		output->play_session(impl);
+		impl->output.impl->play_session(*this);
 	}
 }
 
@@ -161,9 +158,8 @@ void CL_SoundBuffer_Session::stop()
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
 	if (!impl->playing) return;
-	CL_SharedPtr<CL_SoundOutput_Generic> output = impl->output;
 	mutex_lock.unlock();
-	output->stop_session(impl);
+	impl->output.impl->stop_session(*this);
 	mutex_lock.lock();
 	impl->playing = false;
 	impl->provider_session->stop();

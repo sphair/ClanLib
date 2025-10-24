@@ -31,17 +31,15 @@
 #include "echofilter_provider.h"
 #include <memory.h>
 
-CL_EchoFilterProvider::CL_EchoFilterProvider(int new_buffer_size, int new_shift_factor) : buffer_size(new_buffer_size), shift_factor(new_shift_factor)
+CL_EchoFilterProvider::CL_EchoFilterProvider(int new_buffer_size, float new_shift_factor) : buffer_size(new_buffer_size), shift_factor(new_shift_factor)
 {
-	buffer_size = buffer_size;
-	shift_factor = shift_factor;
 	pos = 0;
 
-	buffer[0] = new int[buffer_size];
-	memset(buffer[0], 0, sizeof(int)*buffer_size);
+	buffer[0] = new float[buffer_size];
+	memset(buffer[0], 0, sizeof(float)*buffer_size);
 
-	buffer[1] = new int[buffer_size];
-	memset(buffer[1], 0, sizeof(int)*buffer_size);
+	buffer[1] = new float[buffer_size];
+	memset(buffer[1], 0, sizeof(float)*buffer_size);
 }
 
 CL_EchoFilterProvider::~CL_EchoFilterProvider()
@@ -55,7 +53,7 @@ void CL_EchoFilterProvider::destroy()
 	delete this;
 }
 
-void CL_EchoFilterProvider::filter(int **sample_data, int num_samples, int channels)
+void CL_EchoFilterProvider::filter(float **sample_data, int num_samples, int channels)
 {
 	int start_pos = pos;
 
@@ -63,8 +61,8 @@ void CL_EchoFilterProvider::filter(int **sample_data, int num_samples, int chann
 	{
 		if (c == channels) break;
 
-		int *data = sample_data[c];
-		int *work_buffer = buffer[c];
+		float *data = sample_data[c];
+		float *work_buffer = buffer[c];
 
 		pos = start_pos;
 

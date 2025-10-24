@@ -187,11 +187,11 @@ int CL_Sprite::get_frame_count() const
 	return impl->frames.size();
 }
 
-float CL_Sprite::get_frame_delay(int frameno) const
+int CL_Sprite::get_frame_delay(int frameno) const
 {
 	const CL_Sprite_Impl::SpriteFrame *frame = impl->get_frame(frameno);
 	if(frame)
-		return frame->delay;
+		return frame->delay_ms;
 	else
 		return 0;
 }
@@ -224,6 +224,11 @@ int CL_Sprite::get_height() const
 	return impl->get_frame(impl->current_frame)->position.get_height();
 }
 
+CL_Size CL_Sprite::get_size() const
+{
+	return impl->get_frame(impl->current_frame)->position.get_size();
+}
+
 int CL_Sprite::get_id() const
 {
 	return impl->id;
@@ -252,6 +257,11 @@ CL_Sprite::ShowOnFinish CL_Sprite::get_show_on_finish() const
 bool CL_Sprite::is_finished() const
 {
 	return impl->finished;
+}
+
+bool CL_Sprite::is_looping() const
+{
+	return impl->looping;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -308,6 +318,12 @@ void CL_Sprite::draw(CL_GraphicContext &gc, float x, float y)
 		impl->draw(gc, x, y);
 }
 
+void CL_Sprite::draw(CL_GraphicContext &gc, int x, int y)
+{
+	if(impl->is_visible())
+		impl->draw(gc, (float) x, (float) y);
+}
+
 void CL_Sprite::draw(CL_GraphicContext &gc, const CL_Rectf &src, const CL_Rectf &dest)
 {
 	if(impl->is_visible())
@@ -320,22 +336,28 @@ void CL_Sprite::draw(CL_GraphicContext &gc, const CL_Rectf &dest)
 		impl->draw(gc, dest);
 }
 
-float CL_Sprite::update(float time_elapsed)
+int CL_Sprite::update(int time_elapsed)
 {
-	if(time_elapsed == 0)
+	impl->looping = false;
+
+	if(time_elapsed == -1)
 		time_elapsed = impl->calc_time_elapsed();
 
 	int total_frames = impl->frames.size();
-	if(total_frames < 2 || impl->finished)
-		return time_elapsed;
+
+	//we still want to know when a 1 frame 'anim' loops, based on the timer -mrfun
+	//if(total_frames < 2 || impl->finished)
+	//	return time_elapsed; 
+	// but we need to stop when animation is finished -gpmfuchs
+	if (impl->finished) return time_elapsed;
 
 	CL_Sprite_Impl::SpriteFrame *frame = &impl->frames[impl->current_frame];
 
-	impl->update_time += time_elapsed;
+	impl->update_time_ms += time_elapsed;
 
-	while(impl->update_time > frame->delay)
+	while(impl->update_time_ms > frame->delay_ms)
 	{
-		impl->update_time -= frame->delay;
+		impl->update_time_ms -= frame->delay_ms;
 		impl->current_frame += impl->delta_frame;
 
 		// Beginning or end of loop ?
@@ -355,12 +377,19 @@ float CL_Sprite::update(float time_elapsed)
 			{
 				impl->delta_frame = -impl->delta_frame;	// Change direction
 				if(impl->delta_frame > 0)
+				{
 					impl->current_frame = 1;
+					//during a ping pong, we only count when we re-start in the forward direction as a loop
+					impl->looping = true;
+				}
 				else
 					impl->current_frame = total_frames - 2;
 			}
 			else // Restart
+			{
 				impl->current_frame = impl->play_backward ? total_frames - 1 : 0;
+				impl->looping = true;
+			}
 		}
 	}
 
@@ -516,18 +545,18 @@ void CL_Sprite::set_frame(unsigned int frame)
 		impl->current_frame = frame;
 }
 
-void CL_Sprite::set_delay(float delay)
+void CL_Sprite::set_delay(int delay_ms)
 {
 	std::vector<CL_Sprite_Impl::SpriteFrame>::size_type size = impl->frames.size();
 	for (int cnt = 0; cnt < size; cnt++)
-		impl->frames[cnt].delay = delay;
+		impl->frames[cnt].delay_ms = delay_ms;
 }
 
-void CL_Sprite::set_frame_delay(int frameno, float delay)
+void CL_Sprite::set_frame_delay(int frameno, int delay_ms)
 {
 	CL_Sprite_Impl::SpriteFrame *frame = impl->get_frame(frameno);
 	if(frame)
-		frame->delay = delay;
+		frame->delay_ms = delay_ms;
 }
 
 void CL_Sprite::set_frame_offset(int frameno, CL_Point offset)
@@ -555,8 +584,8 @@ void CL_Sprite::finish()
 
 void CL_Sprite::restart()
 {
-	impl->update_time = 0;
-	impl->last_time = 0;
+	impl->update_time_ms = 0;
+	impl->last_time_ms = 0;
 	impl->finished = false;
 	impl->current_frame = impl->play_backward ? impl->frames.size() - 1 : 0;
 	impl->delta_frame = impl->play_backward ? -1 : 1;

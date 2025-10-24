@@ -26,23 +26,16 @@
 **    Mark Page
 */
 
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gui.h>
+#include "precomp.h"
 #include "gui_texture.h"
 #include "GUI.h"
 #include "app.h"
 
 GUI_Texture::GUI_Texture(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_window()), wm(*window_ptr)
 {
-	active_3dmode = false;
-	shader_set = false;
-
 	CL_GUIManager *gui_manager = &gui->get_gui_manager();
 
 	gui_manager->set_window_manager(wm);
-
-	wm.func_input_intercept().set(this, &GUI_Texture::wm_input_intercept);
 
 	// Use a texture group to store all the gui textures
 	CL_GraphicContext gc = window_ptr->get_gc();
@@ -79,20 +72,6 @@ GUI_Texture::~GUI_Texture()
 
 bool GUI_Texture::run()
 {
-	if (manager.get())
-	{
-		if (manager->is_3dmode())
-		{
-			return run3d();
-		}
-	}
-
-	if (active_3dmode)
-	{
-		panel3d.reset();
-		active_3dmode = false;
-	}
-
 	CL_GraphicContext gc = window_ptr->get_gc();
 	
 	std::vector<CL_GUIWindowManagerTextureWindow> windows = wm.get_windows();

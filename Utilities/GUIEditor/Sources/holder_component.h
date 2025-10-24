@@ -26,47 +26,79 @@
 **    Harry Storbacka
 */
 
-#ifndef header_holder_component
-#define header_holder_component
+#pragma once
 
-class HolderComponent_Impl;
+#include "callback_info.h"
+#include "snapline.h"
+
 class CallbackInfo;
+class GridComponent;
 
-class CL_API_GUI HolderComponent : public CL_GUIComponent
+class HolderComponent : public CL_GUIComponent
 {
 //! Construction:
 public:
 	HolderComponent(CL_GUIComponent *parent);
-	
-	virtual ~HolderComponent() {};
 
 //! Attributes:
 public:
-	bool marked_for_delete();
-
 	CL_ComponentAnchorPoint get_anchor_tl();
-
 	CL_ComponentAnchorPoint get_anchor_br();
-
 	CallbackInfo get_callback_info();
+	CL_String get_position_equation_x() const;
+	CL_String get_position_equation_y() const;
+	CL_String get_position_equation_x2() const;
+	CL_String get_position_equation_y2() const;
+
+	CL_GUIComponent *get_container();
+
+	CL_Rect get_grabber_w() const;
+	CL_Rect get_grabber_nw() const;
+	CL_Rect get_grabber_n() const;
+	CL_Rect get_grabber_ne() const;
+	CL_Rect get_grabber_e() const;
+	CL_Rect get_grabber_se() const;
+	CL_Rect get_grabber_s() const;
+	CL_Rect get_grabber_sw() const;
+
+	std::vector<SnapLine> get_snaplines() const;
 
 //! Operations:
 public:
-	void on_process_message(CL_GUIMessage &msg);
-
 	void set_selected(bool value);
-
 	CL_DomElement to_element(CL_DomDocument &doc);
-
 	void set_anchor_tl(CL_ComponentAnchorPoint);
 	void set_anchor_br(CL_ComponentAnchorPoint);
+	void set_position_equations(const CL_String &str_x, const CL_String &str_y);
+	void set_position_equations2(const CL_String &str_x, const CL_String &str_y);
 
 //! Events:
 public:
 
 //! Implementation:
 private:
-	CL_SharedPtr<HolderComponent_Impl> impl;
-};
+	void on_render(CL_GraphicContext &gc, const CL_Rect &update_rect);
+	void on_resized();
 
-#endif
+	void save_geometry(CL_DomElement &e, CL_GUIComponent *comp);
+	void save_anchors(CL_DomElement &e, CL_GUIComponent *comp);
+	void save_listview(CL_DomElement &e, CL_ListView *lv);
+
+	CL_Point get_dist(CL_ComponentAnchorPoint ap, CL_Point p, CL_Rect boundary);
+	CL_Rect convert_coordinates(CL_GUIComponent *from, CL_GUIComponent *to);
+	CL_GUIComponent *get_toplevel_component();
+	CL_GUIComponent *get_tab_or_frame_parent(CL_GUIComponent *comp);
+
+	CL_Font font;
+	CL_String pos_equation_x;
+	CL_String pos_equation_y;
+	CL_String pos_equation_x2;
+	CL_String pos_equation_y2;
+
+	CL_ComponentAnchorPoint anchor_tl;
+	CL_ComponentAnchorPoint anchor_br;
+
+	GridComponent *parent_grid;
+
+	CallbackInfo callback_info;
+};

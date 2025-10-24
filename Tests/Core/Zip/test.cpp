@@ -68,7 +68,7 @@ int TestApp::main(const std::vector<CL_String> &args)
 
 void TestApp::run_test()
 {
-	CL_File file("ZipWriter.zip", CL_File::create_always);
+	CL_File file("ZipWriter.zip", CL_File::create_always, CL_File::access_write);
 	CL_ZipWriter zip_writer(file);
 	zip_writer.begin_file("file1.txt", true);
 	zip_writer.write_file_data("12345678\r\n", 10);

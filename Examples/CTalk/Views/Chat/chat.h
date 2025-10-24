@@ -60,6 +60,8 @@ private:
 	TextPosition hit_test_line_column(CL_GraphicContext &gc, int line, int column, CL_SpanLayout &span_layout, const CL_Point &pos);
 	static int offset_for_line_column(int line_index, int column, const TextPosition &pos);
 
+	void append_column_text(int line, int column, ChatLine * chatline, CL_String prefix, CL_String postfix, CL_String &out_text);
+
 	CL_String create_timestamp();
 	void layout_line(CL_GraphicContext & gc, ChatLine *line, CL_Rect &client_area, int line_index);
 	std::pair<int,int> get_selection_for_line(int line_index, int column);
@@ -74,6 +76,7 @@ private:
 	std::list<ChatLine *> lines;
 	CL_SlotContainer slots;
 	CL_GUIThemePart part_background;
+	CL_GUIThemePart part_text;
 	Selection selection;
 
 	int prefix_width, column1_width;

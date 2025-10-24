@@ -57,8 +57,7 @@ public:
 
 			gc.clear();
 
-			CL_AcceleratorTable accel_table;
-			gui.exec(accel_table);
+			gui.exec();
 		} 
 		catch (CL_Exception e)
 		{
@@ -170,9 +169,10 @@ public:
 		}
 	}
 
-	void on_close(CL_Window *win)
+	bool on_close(CL_Window *win)
 	{
 		win->exit_with_code(0);
+		return true;
 	}  
 
 	void print_tree(CL_ListViewItem item)

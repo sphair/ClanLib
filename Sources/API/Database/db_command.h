@@ -104,7 +104,6 @@ public:
 private:
 	CL_SharedPtr<CL_DBCommand_Impl> impl;
 
-	friend class CL_DBConnection;
 /// \}
 };
 

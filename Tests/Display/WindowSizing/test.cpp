@@ -58,7 +58,7 @@ public:
 				gc.clear(CL_Colorf::gray70);
 
 				window.flip();
-				CL_DisplayMessageQueue::process();
+				CL_KeepAlive::process();
 				CL_System::sleep(50);
 			}
 		}

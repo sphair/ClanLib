@@ -78,8 +78,7 @@ public:
 	///
 	/// \param manager = GUIManager
 	/// \param description = GUITop Level Description
-	/// \param temporary = bool
-	CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description, bool temporary=false);
+	CL_GUIComponent(CL_GUIManager *manager, CL_GUITopLevelDescription description);
 
 	/// \brief Constructs a GUIComponent
 	///
@@ -134,14 +133,21 @@ public:
 	{
 		focus_refuse,
 		focus_local,
+		focus_group,
 		focus_parent
 	};
 
 	/// \brief Returns the focus policy of the component.
 	FocusPolicy get_focus_policy() const;
 
-	/// \brief Returns the keys the component consumes as an OR'ed integer. Bit values from ConsumedKeys enum.
-	CL_GUIConsumedKeys get_consumed_keys() const;
+	/// \brief Returns the name of the component group, or an empty string if no group name has been set.
+	CL_StringRef get_component_group_name() const;
+
+	/// \brief Returns true if the component is the selected item in a group of components where FocusPolicy is focus_group.
+	bool is_selected_in_group() const;
+
+	/// \brief Returns true if this component, when focused, blocks the default action of its parent dialog.
+	bool get_blocks_default_action() const;
 
 	/// \brief Returns the resource manager for the GUI resources.
 	CL_ResourceManager get_resources() const;
@@ -171,7 +177,7 @@ public:
 	CL_GUIComponent *get_owner_component();
 
 	/// \brief Returns a list of the child components.
-	std::vector<CL_GUIComponent *> get_child_components() const;
+	std::vector<CL_GUIComponent*> get_child_components() const;
 
 	/// \brief Returns the first child component.
 	const CL_GUIComponent *get_first_child() const;
@@ -184,10 +190,22 @@ public:
 	/// \brief Returns the last child component.
 	const CL_GUIComponent *get_last_child() const;
 
+	/// \brief Returns the next component in the component tree, or 'this', if none found.
+	CL_GUIComponent *get_next_component_in_tree();
+
+	/// \brief Returns the previous component in the component tree, or 'this', if none found.
+	CL_GUIComponent *get_previous_component_in_tree();
+
 	/// \brief Get Last child
 	///
 	/// \return last_child
 	CL_GUIComponent *get_last_child();
+
+	/// \brief Returns a list of child components belonging to the specified group.
+	std::vector<CL_GUIComponent*> get_child_component_group(const CL_String &group_name) const;
+
+	/// \brief Returns the selected item in a component group of which this component is a member.
+	CL_GUIComponent *get_group_selected_component();
 
 	/// \brief Find child component with the specified component ID name.
 	CL_GUIComponent *get_named_item(const CL_StringRef &id);
@@ -211,6 +229,16 @@ public:
 	/// \return next_sibling
 	CL_GUIComponent *get_next_sibling();
 
+	/// \brief Checks if this component is a descendant of target component.
+	///
+	/// \return true if target component is descendant, false otherwise.
+	bool is_descendant_of(CL_GUIComponent *component);
+
+	/// \brief Checks if this component is the ancestor of target component.
+	///
+	/// \return true if target component is ancestor, false otherwise.
+	bool is_ancestor_of(CL_GUIComponent *component);
+
 	/// \brief Returns the top level component this CL_GUIComponent is a child of.
 	const CL_GUIComponent *get_top_level_component() const;
 
@@ -228,22 +256,11 @@ public:
 	/// \brief Return true if the component, and all its parents are enabled.
 	bool is_enabled() const;
 
-	/// \brief Return true if the component is in click through mode.
-	bool is_clickthrough() const;
-
 	/// \brief Return true if the component, and all its parents are visible.
 	bool is_visible() const;
 
 	/// \brief Returns true if the component is active.
 	bool is_active() const;
-
-	/// \brief Returns true if this component manages the tab order focus of its children.
-	bool is_tab_order_controller() const;
-
-	/// \brief Get position of component in tab order loop.
-	/** <p>The index of the first component is 0.
-	    The index of a component not in the loop is -1</p>*/
-	int get_tab_order() const;
 
 	/// \brief Return the component under 'point', in local viewport coordinates.
 	CL_GUIComponent *get_component_at(const CL_Point &point);
@@ -321,20 +338,26 @@ public:
 	/// \brief bool func_pointer_exit()
 	CL_Callback_0<bool> &func_pointer_exit();
 
+	/// \brief Lets a component filter the messages intended for another component. Consumed messages will not reach the original target component.
+	CL_Callback_v1<CL_GUIMessage&> &func_filter_message();
+
 	/// \brief bool func_input(const CL_InputEvent &input_event)
-	CL_Callback_1<bool, const CL_InputEvent &> func_input();
+	CL_Callback_1<bool, const CL_InputEvent &> &func_input();
 
 	/// \brief bool func_input_pressed(const CL_InputEvent &input_event)
-	CL_Callback_1<bool, const CL_InputEvent &> func_input_pressed();
+	CL_Callback_1<bool, const CL_InputEvent &> &func_input_pressed();
 
 	/// \brief bool func_input_released(const CL_InputEvent &input_event)
-	CL_Callback_1<bool, const CL_InputEvent &> func_input_released();
+	CL_Callback_1<bool, const CL_InputEvent &> &func_input_released();
 
 	/// \brief bool func_input_doubleclick(const CL_InputEvent &input_event)
-	CL_Callback_1<bool, const CL_InputEvent &> func_input_doubleclick();
+	CL_Callback_1<bool, const CL_InputEvent &> &func_input_doubleclick();
 
 	/// \brief bool func_input_pointer_moved(const CL_InputEvent &input_event)
-	CL_Callback_1<bool, const CL_InputEvent &> func_input_pointer_moved();
+	CL_Callback_1<bool, const CL_InputEvent &> &func_input_pointer_moved();
+
+	/// \brief bool func_visibility_change()
+	CL_Callback_v1<bool> &func_visibility_change();
 
 	/// \brief void func_style_changed()
 	CL_Callback_v0 &func_style_changed();
@@ -379,13 +402,6 @@ public:
 	    exit with the given exit code.</p>*/
 	void exit_with_code(int exit_code);
 
-	/// \brief Post GUI message onto the message queue.
-	/** <p>This function is thread safe.</p>*/
-	void post_message(const CL_GUIMessage &message);
-
-	/// \brief Send GUI message directly to the target.
-	void send_message(CL_GUIMessage &message);
-
 	/// \brief Set component position and size.
 	void set_geometry(CL_Rect geometry);
 
@@ -403,9 +419,6 @@ public:
 
 	/// \brief Sets the component as enabled or disabled.
 	void set_enabled(bool enable = true);
-
-	/// \brief Sets the component to not receive mouse events, but let the underlying components handle them.
-	void set_clickthrough(bool enabled = true);
 
 	/// \brief Sets the components children to be clipped to the parent component when drawn. 
 	void set_clip_children(bool clip = true);
@@ -429,6 +442,14 @@ public:
 
 	/// \brief Sets the focus policy of the component.
 	void set_focus_policy(FocusPolicy policy);
+
+	/// \brief Set group name
+	///
+	/// \param str = String Ref
+	void set_component_group_name(const CL_StringRef &str);
+
+	/// \brief Set to true if this component is the selected item in a group of components where FocusPolicy is focus_group.
+	void set_selected_in_component_group(bool selected);
 
 	/// \brief Create child components from a GUI definition file.
 	void create_components(const CL_DomDocument &gui_xml);
@@ -463,6 +484,12 @@ public:
 	/// \brief Reset the clipping rectangle.
 	void reset_cliprect(CL_GraphicContext &gc);
 
+	/// \brief Push a clipping rectangle.
+	void push_cliprect(CL_GraphicContext &gc, const CL_Rect &rect);
+
+	/// \brief Pop a clipping rectangle.
+	void pop_cliprect(CL_GraphicContext &gc);
+
 	/// \brief Deletes all child components.
 	void delete_child_components();
 
@@ -480,25 +507,11 @@ public:
 	/// \param CL_StandardCursor = enum
 	void set_cursor(enum CL_StandardCursor type);
 
-	/// \brief Makes this component handle focus switching of its child components when the tab key is pressed.
-	void set_tab_order_controller(bool enabled);
-
-	/// \brief Sets the position of the component in the tab order loop. Indexes must be sequential for proper operation.
-	void set_tab_order(int index);
-
 	/// \brief Set focus to the next component in tab order.
 	void focus_next();
 
 	/// \brief Set focus to the previous component in tab order.
 	void focus_previous();
-
-	/// \brief Returns 'this' or the parent component that has been set to a tab order controller.
-	/** <p>Returns null if no parent handles tab order.</p>*/
-	CL_GUIComponent *get_tab_order_controller();
-
-	/// \brief Returns the child component with the requested tab order index.
-	/** <p>Searches for the tab order controller of 'this' component if no 'comp' parameter specified.*/
-	CL_GUIComponent *get_tab_order_component(int index, CL_GUIComponent *comp=0);
 
 	/// \brief When set to true, this component will receive unhandled enter/return keypress messages.
 	/** <p>If multiple components are set as 'default' handlers, the first child with the property will receive the keypress message.</p>*/
@@ -508,10 +521,8 @@ public:
 	/** <p>If multiple components are set as 'cancel' handlers, the first child with the property will receive the keypress message.</p>*/
 	void set_cancel(bool value);
 
-	/// \brief Set consumed keys
-	///
-	/// \param keys = GUIConsumed Keys
-	void set_consumed_keys(CL_GUIConsumedKeys &keys);
+	/// \brief Set to true if this component, when focused, blocks the default action of the parent dialog.
+	void set_blocks_default_action(bool block);
 
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
@@ -532,13 +543,9 @@ private:
 	CL_GraphicContext dummy_gc;
 	CL_InputContext dummy_ic;
 
-	friend class CL_GUIManager;
-
 	friend class CL_GUIManager_Impl;
 
 	friend class CL_GUIComponent_Impl;
-
-	friend class CL_GUIThemePart;
 
 	friend class CL_Window;
 

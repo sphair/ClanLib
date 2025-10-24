@@ -29,10 +29,8 @@
 
 #pragma once
 
-
 #include "API/GUI/Components/popupmenu.h"
 #include "API/Display/Image/pixel_buffer.h"
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_PopupMenu_Impl Class:
@@ -42,14 +40,11 @@ class CL_PopupMenu_Impl
 public:
 	CL_PopupMenu_Impl() : next_id(0), minimum_width(-1), maximum_height(-1), joiner_width(0) { }
 
-	CL_Callback_v1<CL_PopupMenuItem> func_item_selected;
-	CL_Callback_v1<CL_InputEvent> func_keyboard_event;
 	std::vector<CL_PopupMenuItem> items;
 	int next_id;
 	int minimum_width;
 	int maximum_height;
 	CL_String class_name;
 	int joiner_width;
+	CL_Callback_v0 func_close;
 };
-
-

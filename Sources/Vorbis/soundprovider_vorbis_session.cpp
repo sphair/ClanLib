@@ -29,7 +29,7 @@
 
 #include "Sound/precomp.h"
 #include "soundprovider_vorbis_session.h"
-#include "soundprovider_vorbis_generic.h"
+#include "soundprovider_vorbis_impl.h"
 #include "API/Sound/soundformat.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/iodevice_memory.h"
@@ -38,10 +38,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Vorbis_Session construction:
 
-CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis_Generic *data) :
-	data(data), num_samples(0), position(0), input(0), stream_eof(false)
+CL_SoundProvider_Vorbis_Session::CL_SoundProvider_Vorbis_Session(CL_SoundProvider_Vorbis &source) :
+	source(source), num_samples(0), position(0), input(0), stream_eof(false)
 {
-	input = new CL_IODevice_Memory(data->buffer);
+	input = new CL_IODevice_Memory(source.impl->buffer);
 
 	ogg_sync_init(&oy); /* Now we can read pages */
 
@@ -239,7 +239,7 @@ bool CL_SoundProvider_Vorbis_Session::set_position(int pos)
 	return true;
 }
 
-int CL_SoundProvider_Vorbis_Session::get_data(void **data_ptr, int data_requested)
+int CL_SoundProvider_Vorbis_Session::get_data(float **channels, int data_requested)
 {
 	int data_left = data_requested;
 	while (!eof() && data_left > 0)
@@ -256,16 +256,9 @@ int CL_SoundProvider_Vorbis_Session::get_data(void **data_ptr, int data_requeste
 		if (samples > data_left) samples = data_left;
 
 		int buffer_pos = data_requested-data_left;
-		short **buffers = (short **) data_ptr;
 		for (int j=0; j<vi.channels; j++)
 		{
-			for (int i=0; i<samples; i++)
-			{
-				int s = (int) (pcm[j][i] * 32767);
-				if (s < -32767) s = -32767;
-				else if (s > 32767) s = 32767;
-				buffers[j][i+buffer_pos] = (short) s;
-			}
+			memcpy(channels[j]+buffer_pos, pcm[j], samples*sizeof(float));
 		}
 
 		vorbis_synthesis_read(&vd, samples);

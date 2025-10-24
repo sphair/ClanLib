@@ -172,16 +172,21 @@ public:
 	void draw(
 		CL_GraphicContext &gc,
 		float x,
-		float y);
+		float y) const;
+
+	void draw(
+		CL_GraphicContext &gc,
+		int x,
+		int y) const;
 
 	void draw(
 		CL_GraphicContext &gc,
 		const CL_Rectf &src,
-		const CL_Rectf &dest);
+		const CL_Rectf &dest) const;
 
 	void draw(
 		CL_GraphicContext &gc,
-		const CL_Rectf &dest);
+		const CL_Rectf &dest) const;
 
 	/// \brief Set scale for x and y directions individually.
 	/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/

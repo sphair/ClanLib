@@ -50,7 +50,9 @@ public:
 		clip_start_offset(0),
 		clip_end_offset(0),
 		decimal_char(cl_text(".")),
-		ignore_mouse_events(false)
+		ignore_mouse_events(false),
+		cursor_drawing_enabled_when_parent_focused(false),
+		select_all_on_focus_gain(true)
 	{
 		prop_text_color = CL_GUIThemePartProperty(CssStr::text_color, cl_text("black"));
 	}
@@ -73,7 +75,6 @@ public:
 
 	CL_Callback_v1<CL_InputEvent> func_before_edit_changed;
 	CL_Callback_v1<CL_InputEvent> func_after_edit_changed;
-	CL_Callback_1<bool,CL_InputEvent> func_unhandled_event; // callback should return true if the event was processsed, else false.
 	CL_Callback_v0 func_selection_changed;
 	CL_Callback_v0 func_focus_gained;
 	CL_Callback_v0 func_focus_lost;
@@ -97,6 +98,7 @@ public:
 	CL_Colorf text_color;
 	CL_String input_mask;
 	CL_String decimal_char;
+	bool cursor_drawing_enabled_when_parent_focused;
 
 	static CL_String break_characters;
 
@@ -105,7 +107,6 @@ public:
 	CL_GUIThemePart part_cursor;
 	CL_GUIThemePartProperty prop_text_color;
 	CL_Rect content_rect;
-	CL_Size text_size;
 
 	void move(int steps, CL_InputEvent &e);
 	void insert_text(int pos, const CL_StringRef &str);
@@ -117,6 +118,9 @@ public:
 	CL_TempString get_visible_text_before_selection();
 	CL_TempString get_visible_text_after_selection();
 	CL_TempString get_visible_selected_text();
+	CL_String create_password(CL_String::size_type num_letters) const;
+	CL_Size get_visual_text_size(CL_GraphicContext &gc, CL_Font &font, int pos, int npos) const;
+	CL_Size get_visual_text_size(CL_GraphicContext &gc, CL_Font &font) const;
 	CL_Rect get_cursor_rect();
 	CL_Rect get_selection_rect();
 	bool input_mask_accepts_input(int cursor_pos, const CL_StringRef &str);
@@ -144,6 +148,8 @@ public:
 		bool first_erase;
 		bool first_text_insert;
 	} undo_info;
+
+	bool select_all_on_focus_gain;
 };
 
 
