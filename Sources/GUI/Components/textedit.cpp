@@ -399,7 +399,7 @@ void CL_TextEdit_Impl::on_process_message(CL_GUIMessage &msg)
 
 		if (e.device.get_type() == CL_InputDevice::keyboard)
 		{
-			if (e.type == CL_InputEvent::pressed &&
+			if (!readonly && e.type == CL_InputEvent::pressed &&
 				(e.id == CL_KEY_ENTER || e.id == CL_KEY_RETURN || e.id == CL_KEY_NUMPAD_ENTER))
 			{
 				if (!func_enter_pressed.is_null())

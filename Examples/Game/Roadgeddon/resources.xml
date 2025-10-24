@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+     <sprite name="error" base_angle="0">
+		<image file="Gfx/error.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+    
+   
+     <sprite name="Map1" base_angle="0">
+		<image file="Gfx/Map1.png" />
+		<translation origin="bottom_left"/>
+		<rotation origin="bottom_left"/>
+	</sprite>
+    
+    <sprite name="Background1" base_angle="0">
+		<image file="Gfx/Background1.png" />
+		<translation origin="bottom_left"/>
+		<rotation origin="bottom_left"/>
+	</sprite>
+    
+    <sprite name="Background2" base_angle="0">
+		<image file="Gfx/Background2.png" />
+		<translation origin="bottom_left"/>
+		<rotation origin="bottom_left"/>
+	</sprite>
+     
+    //____________________________________________________________________________________
+    //                                                                         S O U N D S
+    
+     <sample name="Music1" file="Sound/SongTest.ogg"/>
+     <sample name="Explosion1" file="Sound/explosion1.wav"/>
+     <sample name="Explosion2" file="Sound/explosion2.wav"/>
+     <sample name="Hurt1" file="Sound/hurt1.wav"/>
+     <sample name="Hurt2" file="Sound/hurt2.wav"/>
+     <sample name="Powerup1" file="Sound/powerup1.wav"/>
+     <sample name="Shoot1" file="Sound/shoot1.wav"/>
+    //____________________________________________________________________________________
+    //                                                                       B U L L E T S
+    <sprite name="Bullet1" base_angle="0">
+		<image file="Gfx/bullet1.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+    <sprite name="Bullet2" base_angle="0">
+		<image file="Gfx/bullet2.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+     <sprite name="Rocket" base_angle="0">
+		<image file="Gfx/rocket.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+    
+     //____________________________________________________________________________________
+    //                                                                            E N E M Y 
+    <sprite name="Enemy1" base_angle="0">
+        <image file="Gfx/Enemy1_frame1.png" />
+        <image file="Gfx/Enemy1_frame2.png" />
+        <image file="Gfx/Enemy1_frame3.png" />
+        <image file="Gfx/Enemy1_frame4.png" />
+        <translation origin="center"/>
+        <rotation origin="center"/>
+        <animation pingpong="no" loop="true" speed="30"/>
+    </sprite>
+  
+    //____________________________________________________________________________________
+    //                                                                         P L A Y E R
+    
+  
+      <sprite name="Car1" base_angle="0">
+		<image file="Gfx/Car1.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+	</sprite>
+     <sprite name="Turret1" base_angle="0">
+		<image file="Gfx/turret1.png" />
+		<translation origin="center" x="6"/>
+		<rotation origin="center" x="6"/>
+	</sprite>
+     <sprite name="Turret1Base" base_angle="0">
+		<image file="Gfx/turret1base.png" />
+		<translation origin="bottom_left"/>
+		<rotation origin="bottom_left"/>
+	</sprite>
+   
+    
+    
+    
+    
+</resources>

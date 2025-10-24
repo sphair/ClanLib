@@ -156,6 +156,8 @@ public:
 	~CL_TextureStateTracker();
 
 private:
+	GLuint texture_type;
+
 	GLboolean last_is_enabled_texture1d;
 	GLboolean last_is_enabled_texture2d;
 	GLboolean last_is_enabled_texture3d;

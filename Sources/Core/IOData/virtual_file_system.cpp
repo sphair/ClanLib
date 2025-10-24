@@ -272,9 +272,10 @@ void CL_VirtualFileSystem::unmount(const CL_String &mount_point)
 bool CL_VirtualFileSystem::has_directory(const CL_String &directory)
 {
 	CL_VirtualDirectoryListing list = get_directory_listing(CL_PathHelp::get_basepath(directory, CL_PathHelp::path_type_virtual));
+	CL_String dir_name = CL_PathHelp::get_filename(CL_PathHelp::remove_trailing_slash(directory));
 	while (list.next())
 	{
-		if (directory == list.get_filename() && list.is_directory())
+		if (dir_name == list.get_filename() && list.is_directory())
 			return true;
 	}
 
@@ -284,9 +285,10 @@ bool CL_VirtualFileSystem::has_directory(const CL_String &directory)
 bool CL_VirtualFileSystem::has_file(const CL_String &filename)
 {
 	CL_VirtualDirectoryListing list = get_directory_listing(CL_PathHelp::get_basepath(filename, CL_PathHelp::path_type_virtual));
+	CL_String fil_name = CL_PathHelp::get_filename(filename);
 	while (list.next())
 	{
-		if (filename == list.get_filename() && !list.is_directory())
+		if (fil_name == list.get_filename() && !list.is_directory())
 			return true;
 	}
 

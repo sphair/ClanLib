@@ -105,7 +105,7 @@ void CL_GUILayoutProvider_Corners::set_preferred_size(const CL_Size &size)
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUILayoutProvider_Corners Implementation:
 
-CL_Point CL_GUILayoutProvider_Corners::get_point(CL_ComponentAnchorPoint ap, int dist_x, int dist_y)
+CL_Point CL_GUILayoutProvider_Corners::get_point(const CL_Rect &rect, CL_ComponentAnchorPoint ap, int dist_x, int dist_y)
 {
 	if (ap == cl_anchor_top_left)
 	{
@@ -127,4 +127,10 @@ CL_Point CL_GUILayoutProvider_Corners::get_point(CL_ComponentAnchorPoint ap, int
 	// ap == cl_anchor_relative
 	return CL_Point(rect.get_width()*dist_x, rect.get_height()*dist_y);
 }
+
+CL_Point CL_GUILayoutProvider_Corners::get_point(CL_ComponentAnchorPoint ap, int dist_x, int dist_y)
+{
+	return get_point(rect, ap, dist_x, dist_y);
+}
+
 

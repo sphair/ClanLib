@@ -457,6 +457,11 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 		glReadBuffer(GL_FRONT);
 
 		CL_PixelBuffer pixelbuffer(width, height, cl_rgba8);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+
 		glReadPixels(
 			0, 0,
 			width, height,
@@ -485,6 +490,10 @@ void CL_OpenGLWindowProvider_WGL::flip(int interval)
 			glReadBuffer(GL_FRONT);
 
 			CL_PixelBuffer pixelbuffer(width, height, cl_r8);
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 			glReadPixels(
 				0, 0,
 				width, height,
@@ -527,6 +536,10 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 		rect = CL_Rect(0,0, width, height);
 
 		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 		glReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
@@ -584,6 +597,10 @@ void CL_OpenGLWindowProvider_WGL::update(const CL_Rect &_rect)
 			rect = CL_Rect(0,0, width, height);
 
 			CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_r8);
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 			glReadPixels(
 				rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,

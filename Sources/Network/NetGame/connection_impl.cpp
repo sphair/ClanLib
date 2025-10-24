@@ -43,6 +43,7 @@ void CL_NetGameConnection_Impl::start(CL_NetGameConnection *xbase, CL_NetGameCon
 	base = xbase;
 	site = xsite;
 	connection = xconnection;
+	socket_name = connection.get_remote_name();
 	is_connected = true;
 	thread.start(this, &CL_NetGameConnection_Impl::connection_main);
 }
@@ -105,6 +106,11 @@ void CL_NetGameConnection_Impl::disconnect()
 	message.type = Message::type_disconnect;
 	send_queue.push_back(message);
 	queue_event.set();
+}
+
+CL_SocketName CL_NetGameConnection_Impl::get_remote_name() const
+{
+	return socket_name;
 }
 
 void CL_NetGameConnection_Impl::connection_main()

@@ -122,6 +122,7 @@ public:
 public:
 	void set_geometry(CL_Rect new_geometry, bool client_area);
 	void geometry_updated();
+	void invoke_enablemode_changed();
 
 /// \}
 /// \name Implementation

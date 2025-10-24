@@ -70,3 +70,7 @@ void CL_NetGameConnection::disconnect()
 	impl->disconnect();
 }
 
+CL_SocketName CL_NetGameConnection::get_remote_name() const
+{
+	return impl->get_remote_name();
+}

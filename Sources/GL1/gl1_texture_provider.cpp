@@ -265,13 +265,13 @@ CL_PixelBuffer CL_GL1TextureProvider::get_pixeldata(CL_TextureFormat sized_forma
 	if (supported)
 	{
 		CL_PixelBuffer buffer(width, height, sized_format);
-		glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
+		cl1GetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
 		return buffer;
 	}
 	else
 	{
 		CL_PixelBuffer buffer(width, height, cl_abgr8);
-		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
+		cl1GetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 		return buffer.to_format(sized_format);
 	}
 }

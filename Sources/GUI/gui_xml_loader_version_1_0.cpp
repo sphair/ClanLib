@@ -32,6 +32,7 @@
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 
 #include "API/GUI/Components/push_button.h"
 #include "API/GUI/Components/checkbox.h"
@@ -53,6 +54,7 @@
 #include "API/GUI/Components/spin.h"
 #include "API/GUI/Components/scrollbar.h"
 #include "API/GUI/Components/imageview.h"
+#include "API/GUI/Components/window.h"
 
 #include "gui_xml_loader_version_1_0.h"
 #include "Layout/gui_layout_provider_corners.h"
@@ -84,9 +86,20 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomDocument &doc)
 	CL_DomElement doc_element = doc.get_document_element();
 	load(doc_element, component);
 
-	layout.set_preferred_size(CL_Size(dialog_width, dialog_height));
-	CL_Rect win_geom = component->get_window_geometry();
-	component->set_geometry(CL_Rect(win_geom.left, win_geom.top, win_geom.left + dialog_width, win_geom.top + dialog_height)); // set client area to specified size.
+	if (dialog_width != 0 || dialog_height != 0)
+	{
+		if (!layout.is_null())
+			layout.set_preferred_size(CL_Size(dialog_width, dialog_height));
+		CL_Rect win_geom = component->get_window_geometry();
+		component->set_geometry(CL_Rect(win_geom.left, win_geom.top, win_geom.left + dialog_width, win_geom.top + dialog_height)); // set client area to specified size.
+	}
+
+	if (dialog_title != "")
+	{
+		CL_Window *win = dynamic_cast<CL_Window*>(component);
+		if (win)
+			win->set_title(dialog_title);
+	}
 }
 
 void CL_GUIXMLLoaderVersion_1_0::set_create_custom_callback(CL_Callback_2<CL_GUIComponent*, CL_GUIComponent*, CL_String> *callback)
@@ -96,7 +109,6 @@ void CL_GUIXMLLoaderVersion_1_0::set_create_custom_callback(CL_Callback_2<CL_GUI
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIXMLLoaderVersion_1_0 Implementation:
-
 
 void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *parent)
 {
@@ -155,6 +167,8 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 			CL_LineEdit *co = new CL_LineEdit(parent);
 			if (e.has_attribute("text"))
 				co->set_text(e.get_attribute("text"));
+			if (e.has_attribute("password_mode"))
+				co->set_password_mode(e.get_attribute_bool("password_mode", false));
 			new_comp = co;
 		}
 		else if (tag == "textedit")
@@ -258,6 +272,8 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 		{
 			dialog_width = CL_StringHelp::text_to_int(e.get_attribute("width"));
 			dialog_height = CL_StringHelp::text_to_int(e.get_attribute("height"));
+			if (e.has_attribute("title"))
+				dialog_title = e.get_attribute("title");
 		}
 		else // unknown tag... try create a custom_component
 		{
@@ -271,18 +287,42 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 
 		if (new_comp)
 		{
+			if (!e.has_attribute("id"))
+				throw CL_Exception(cl_format("CL_GUIXMLLoaderVersion_1_0 need the field id for the component \"%1\"", tag));
 			new_comp->set_id_name(e.get_attribute("id"));
+
 			new_comp->set_class_name(e.get_attribute("class"));
 			new_comp->set_enabled(e.get_attribute_bool("enabled", true));
 
-			CL_String str = e.get_attribute("geom");
-			std::vector<CL_String> split = CL_StringHelp::split_text(str, ",");
+			//Position
+			int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
+			int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
+			int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute("dist_br_x"));
+			int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute("dist_br_y"));
+			//Anchor
+			CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_tl"));
+			CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_br"));
 
 			CL_Rect g;
-			g.left = CL_StringHelp::text_to_int(split[0]);
-			g.top = CL_StringHelp::text_to_int(split[1]);
-			g.right = CL_StringHelp::text_to_int(split[2]);
-			g.bottom = CL_StringHelp::text_to_int(split[3]);
+			if (e.has_attribute("geom")) //Load geometry from the old geom attribute
+			{
+				CL_String str = e.get_attribute("geom");
+				std::vector<CL_String> split = CL_StringHelp::split_text(str, ",");
+
+				g.left = CL_StringHelp::text_to_int(split[0]);
+				g.top = CL_StringHelp::text_to_int(split[1]);
+				g.right = CL_StringHelp::text_to_int(split[2]);
+				g.bottom = CL_StringHelp::text_to_int(split[3]);
+			}
+			else //Use the fields dist_*
+			{
+				CL_Point tl = CL_GUILayoutProvider_Corners::get_point(parent->get_geometry(), ap_tl, dist_tl_x, dist_tl_y);
+				CL_Point rb = CL_GUILayoutProvider_Corners::get_point(parent->get_geometry(), ap_br, dist_tl_x, dist_tl_y);
+				g.left= tl.x;
+				g.top = tl.y;
+				g.right = rb.x;
+				g.bottom = rb.y;
+			}
 			new_comp->set_geometry(g);
 
 			CL_GUILayout parent_layout = parent->get_layout();
@@ -290,17 +330,9 @@ void CL_GUIXMLLoaderVersion_1_0::load(CL_DomElement &element, CL_GUIComponent *p
 			{
 				parent_layout.get_provider();
 				CL_GUILayoutProvider_Corners *corner_provider_layout = dynamic_cast<CL_GUILayoutProvider_Corners*>(parent_layout.get_provider());
-				if (corner_provider_layout)
-				{
-					int dist_tl_x = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
-					int dist_tl_y = CL_StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
-					int dist_rb_x = CL_StringHelp::text_to_int(e.get_attribute("dist_br_x"));
-					int dist_rb_y = CL_StringHelp::text_to_int(e.get_attribute("dist_br_y"));
-					CL_ComponentAnchorPoint ap_tl = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_tl"));
-					CL_ComponentAnchorPoint ap_br = (CL_ComponentAnchorPoint)CL_StringHelp::text_to_int(e.get_attribute("anchor_br"));
 
+				if (corner_provider_layout)
 					corner_provider_layout->add_component(new_comp, ap_tl, dist_tl_x, dist_tl_y, ap_br, dist_rb_x, dist_rb_y);
-				}
 			}
 		}
 

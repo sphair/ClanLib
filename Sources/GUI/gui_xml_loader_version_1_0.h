@@ -87,6 +87,7 @@ private:
 
 	int dialog_width;
 	int dialog_height;
+	CL_String dialog_title;
 
 /// \}
 };

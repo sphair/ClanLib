@@ -152,6 +152,19 @@ void CL_GUIComponent_Impl::geometry_updated()
 	component->request_repaint();
 }
 
+void CL_GUIComponent_Impl::invoke_enablemode_changed()
+{
+	if (!func_enablemode_changed.is_null())
+		func_enablemode_changed.invoke();
+
+	CL_GUIComponent *cur = first_child;
+	while (cur)
+	{
+		cur->impl->invoke_enablemode_changed();
+		cur = cur->get_next_sibling();
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIComponent_Impl Implementation:
 

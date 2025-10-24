@@ -80,6 +80,8 @@ public:
 
 	void remove_component(CL_GUIComponent *component);
 
+	static CL_Point get_point(const CL_Rect &rect, CL_ComponentAnchorPoint ap, int dist_x, int dist_y);
+
 /// \}
 /// \name Implementation
 /// \{

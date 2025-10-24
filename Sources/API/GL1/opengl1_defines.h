@@ -1324,8 +1324,8 @@ enum CL_DisplayDefines
 	// ARB_shader_objects:
 
 	GL_PROGRAM_OBJECT                      = 0x8B40,
-	GL_TYPE                                = 0x8B4E,
-	GL_SUBTYPE                             = 0x8B4F,
+	//GL_TYPE                                = 0x8B4E,
+	//GL_SUBTYPE                             = 0x8B4F,
 #endif
 #ifndef GL_DELETE_STATUS 
 	GL_DELETE_STATUS                       = 0x8B80,
@@ -1340,8 +1340,8 @@ enum CL_DisplayDefines
 	GL_ACTIVE_UNIFORM_MAX_LENGTH           = 0x8B87,
 	GL_SHADER_SOURCE_LENGTH                = 0x8B88,
 	GL_CURRENT_PROGRAM                     = 0x8B8D,
-	GL_OBJECT_TYPE                         = GL_TYPE,
-	GL_OBJECT_SUBTYPE                      = GL_SUBTYPE,
+	//GL_OBJECT_TYPE                         = GL_TYPE,
+	//GL_OBJECT_SUBTYPE                      = GL_SUBTYPE,
 	GL_OBJECT_DELETE_STATUS                = GL_DELETE_STATUS,
 	GL_OBJECT_COMPILE_STATUS               = GL_COMPILE_STATUS,
 	GL_OBJECT_LINK_STATUS                  = GL_LINK_STATUS,

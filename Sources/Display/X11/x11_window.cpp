@@ -1622,12 +1622,44 @@ const std::vector<CL_SocketMessage_X11> &CL_X11Window::get_window_socket_message
 
 void CL_X11Window::set_large_icon(const CL_PixelBuffer &image)
 {
+	unsigned int size = (image.get_width() * image.get_height()) + 2; // header is 2 ints
+	unsigned long* data = (unsigned long*)malloc(size * sizeof(unsigned long));
 
+	// set header
+	data[0] = image.get_width();
+	data[1] = image.get_height();
+
+	// icon data is expected as ARGB
+	CL_PixelBuffer transformed_image = image.to_format(cl_argb8);
+
+	// on 64bit systems, the destination buffer is 64 bit per pixel
+	// thus, we have to copy each pixel individually (no memcpy)
+	for (int y = 0; y < image.get_height(); ++y) {
+		const uint32_t* src = (const uint32_t*)transformed_image.get_line(y);
+		unsigned long* dst = &data[2 + (y * image.get_width())];
+		for (int x = 0; x < image.get_width(); ++x) {
+			dst[x] = src[x];
+		}
+	}
+
+	// set icon geometry
+	unsigned long* geom = (unsigned long*)malloc(4 * sizeof(unsigned long));
+	geom[0] = geom[1] = 0; // x, y
+	geom[2] = image.get_width();
+	geom[3] = image.get_height();
+
+	Atom propertyGeom = XInternAtom(display, "_NET_WM_ICON_GEOMETRY", 0);
+	XChangeProperty(display, window, propertyGeom, XA_CARDINAL, 32, PropModeReplace, (unsigned char*)geom, 4);
+
+	// set icon data
+	Atom property = XInternAtom(display, "_NET_WM_ICON", 0);
+	XChangeProperty(display, window, property, XA_CARDINAL, 32, PropModeReplace,
+		(unsigned char*)data, size);
 }
 
 void CL_X11Window::set_small_icon(const CL_PixelBuffer &image)
 {
-
+	set_large_icon(image);
 }
 
 CL_InputDeviceProvider_X11Keyboard *CL_X11Window::get_keyboard() const

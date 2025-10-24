@@ -31,24 +31,18 @@
 
 class CL_NetGameConnection_Impl
 {
-
 public:
 	CL_NetGameConnection_Impl();
+	~CL_NetGameConnection_Impl();
 	void start(CL_NetGameConnection *base, CL_NetGameConnectionSite *site, const CL_TCPConnection &connection);
 	void start(CL_NetGameConnection *base, CL_NetGameConnectionSite *site, const CL_SocketName &socket_name);
-
-	~CL_NetGameConnection_Impl();
-
 	void set_data(const CL_StringRef &name, void *data);
-
 	void *get_data(const CL_StringRef &name) const;
-
 	void send_event(const CL_NetGameEvent &game_event);
-
 	void disconnect();
+	CL_SocketName get_remote_name() const;
 
 private:
-
 	void connection_main();
 
 private:

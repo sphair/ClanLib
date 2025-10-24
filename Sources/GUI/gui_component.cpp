@@ -883,10 +883,7 @@ void CL_GUIComponent::set_enabled(bool enable)
 	if (impl->enabled != enable)
 	{
 		impl->enabled = enable;
-
-		if (!impl->func_enablemode_changed.is_null())
-			impl->func_enablemode_changed.invoke();
-
+		impl->invoke_enablemode_changed();
 		if (impl->parent == 0)
 			impl->gui_manager.lock()->set_enabled(this, enable);
 	}

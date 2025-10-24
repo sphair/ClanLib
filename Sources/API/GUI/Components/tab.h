@@ -102,6 +102,13 @@ public:
 	int get_page_count() const;
 
 /// \}
+/// \name Events
+/// \{
+public:
+	/// \brief void func_page_selected(CL_Page *tab_page)
+	CL_Callback_v1<CL_TabPage*> &func_page_selected();
+
+/// \}
 /// \name Operations
 /// \{
 

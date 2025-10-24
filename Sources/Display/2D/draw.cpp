@@ -268,10 +268,7 @@ void CL_Draw::gradient_circle(CL_GraphicContext &gc, const CL_Pointf &center, co
 	float offset_x = 0;
 	float offset_y = 0;
 
-	if(radius < 4)
-		radius = 4;
-
-	float rotationcount = (radius - 3);
+	float rotationcount = cl_max(5, (radius - 3));
 	float halfpi = 1.5707963267948966192313216916398f;
 	float turn = halfpi / rotationcount;
 

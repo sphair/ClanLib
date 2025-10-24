@@ -119,7 +119,7 @@ void CL_StringFormat::set_arg(int index, const CL_StringRef &text)
 		return;
 		
 	ArgPosition pos = args[index];
-	if (pos.length == 0)
+	if (pos.length == -1)
 		return;
 		
 	int delta_size = ((int) text.length()) - pos.length;

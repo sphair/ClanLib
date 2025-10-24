@@ -421,6 +421,10 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 		cl1PixelZoom(1.0f, 1.0f);
 
 		CL_PixelBuffer pixelbuffer(width, height, cl_rgba8);
+		cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
 		cl1ReadPixels(
 			0, 0,
 			width, height,
@@ -455,10 +459,14 @@ void CL_GL1WindowProvider_WGL::flip(int interval)
 			int width = get_viewport().get_width();
 			int height = get_viewport().get_height();
 
-			glReadBuffer(GL_FRONT);
+			cl1ReadBuffer(GL_FRONT);
 
 			CL_PixelBuffer pixelbuffer(width, height, cl_r8);
-			glReadPixels(
+			cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
+			cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
+			cl1ReadPixels(
 				0, 0,
 				width, height,
 				GL_ALPHA,
@@ -516,6 +524,10 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 		rect = CL_Rect(0,0, width, height);
 
 		CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_rgba8);
+		cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
+		cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
 		cl1ReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
@@ -548,14 +560,18 @@ void CL_GL1WindowProvider_WGL::update(const CL_Rect &_rect)
 
 		if (dwm_layered)
 		{
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_FRONT);
+			cl1DrawBuffer(GL_BACK);
+			cl1ReadBuffer(GL_FRONT);
 
 			// ** Currently update layered windows only supports full screen rect update **
 			rect = CL_Rect(0,0, width, height);
 
 			CL_PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), cl_r8);
-			glReadPixels(
+			cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
+			cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
+			cl1ReadPixels(
 				rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,
 				GL_ALPHA,

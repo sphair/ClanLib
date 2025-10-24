@@ -815,7 +815,7 @@ GLenum CL_OpenGLTextureProvider::to_enum(CL_CompareFunction func)
 
 /////////////////////////////////////////////////////////////////////////////
 
-CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handle)
+CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handle) : texture_type(texture_type)
 {    
 	CL_OpenGL::set_active();
 
@@ -832,13 +832,10 @@ CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handl
 		last_is_enabled_texture3d = glIsEnabled(GL_TEXTURE_3D);
 		last_is_enabled_texture_cube_map = glIsEnabled(GL_TEXTURE_CUBE_MAP);
 	}
-	glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
-	glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
-	glGetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
-	glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 
 	if (texture_type == GL_TEXTURE_1D)
 	{
+		glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
 		if (CL_OpenGL::get_opengl_version_major() < 3)
 		{
 			glDisable(GL_TEXTURE_2D);
@@ -851,6 +848,7 @@ CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handl
 
 	if (texture_type == GL_TEXTURE_2D)
 	{
+		glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
 		if (CL_OpenGL::get_opengl_version_major() < 3)
 		{
 			glDisable(GL_TEXTURE_1D);
@@ -863,6 +861,7 @@ CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handl
 
 	if (texture_type == GL_TEXTURE_3D)
 	{
+		glGetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
 		if (CL_OpenGL::get_opengl_version_major() < 3)
 		{
 			glDisable(GL_TEXTURE_1D);
@@ -875,6 +874,7 @@ CL_TextureStateTracker::CL_TextureStateTracker(GLuint texture_type, GLuint handl
 
 	if (texture_type == GL_TEXTURE_CUBE_MAP)
 	{
+		glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 		if (CL_OpenGL::get_opengl_version_major() < 3)
 		{
 			glDisable(GL_TEXTURE_1D);
@@ -901,9 +901,25 @@ CL_TextureStateTracker::~CL_TextureStateTracker()
 		if(last_is_enabled_texture_cube_map) glEnable(GL_TEXTURE_CUBE_MAP); else glDisable(GL_TEXTURE_CUBE_MAP);
 	}
 
-	if (last_is_enabled_texture1d) glBindTexture(GL_TEXTURE_1D, last_bound_texture1d);
-	if (last_is_enabled_texture2d) glBindTexture(GL_TEXTURE_2D, last_bound_texture2d);
-	if (last_is_enabled_texture3d) glBindTexture(GL_TEXTURE_3D, last_bound_texture3d);
-	if (last_is_enabled_texture_cube_map) glBindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
+	if (texture_type == GL_TEXTURE_1D)
+	{
+		glBindTexture(GL_TEXTURE_1D, last_bound_texture1d);
+	}
+
+	if (texture_type == GL_TEXTURE_2D)
+	{
+		glBindTexture(GL_TEXTURE_2D, last_bound_texture2d);
+	}
+
+	if (texture_type == GL_TEXTURE_3D)
+	{
+		glBindTexture(GL_TEXTURE_3D, last_bound_texture3d);
+	}
+
+	if (texture_type == GL_TEXTURE_CUBE_MAP)
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
+	}
+
 #endif
 }

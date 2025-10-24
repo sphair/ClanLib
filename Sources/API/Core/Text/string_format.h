@@ -135,7 +135,7 @@ private:
 
 	struct ArgPosition
 	{
-		ArgPosition() : start(0), length(0) { }
+		ArgPosition() : start(0), length(-1) { }
 		ArgPosition(int s, int l) : start(s), length(l) {}
 		int start;
 		int length;

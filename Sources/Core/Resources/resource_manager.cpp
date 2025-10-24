@@ -109,7 +109,15 @@ bool CL_ResourceManager::resource_exists(const CL_String &resource_id) const
 {
 	std::map<CL_String, CL_Resource>::const_iterator it;
 	it = impl->resources.find(resource_id);
-	return (it != impl->resources.end());
+	if (it != impl->resources.end())
+		return true;
+
+	for (std::vector<CL_ResourceManager>::const_iterator it = impl->additional_resources.begin();
+		it != impl->additional_resources.end();
+		++it)
+		if ((*it).resource_exists(resource_id))
+			return true;
+	return false;
 }
 
 std::vector<CL_String> CL_ResourceManager::get_section_names() const

@@ -197,7 +197,7 @@ void ColorWheel::create_colorwheel(const CL_Pointf &center, float radius)
 
 		CL_Vec4f color_center(work_color_center.r, work_color_center.g, work_color_center.b, work_color_center.a);
 		CL_Vec4f color_src(work_color_src.r, work_color_src.g, work_color_src.b, work_color_src.a);
-		CL_Vec4f color_dest(work_color_src.r, work_color_src.g, work_color_src.b, work_color_src.a);
+		CL_Vec4f color_dest(work_color_dest.r, work_color_dest.g, work_color_dest.b, work_color_dest.a);
 
 		colorwheel_colors[triangle_offset + 0] = color_center;
 		colorwheel_colors[triangle_offset + 1] = color_src;

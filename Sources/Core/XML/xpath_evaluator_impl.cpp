@@ -162,13 +162,14 @@ CL_XPathEvaluateResult CL_XPathEvaluator_Impl::evaluate(
 
 			cur_token = read_token(expression, end_token);
 			CL_XPathToken next_token = read_token(expression, cur_token);
-			if (next_token.type == CL_XPathToken::type_axis_name ||
+			if (!filtered_nodes.empty() &&
+				(next_token.type == CL_XPathToken::type_axis_name ||
 				next_token.type == CL_XPathToken::type_name_test ||
 				next_token.type == CL_XPathToken::type_node_type ||
 				next_token.type == CL_XPathToken::type_at_sign ||
 				next_token.type == CL_XPathToken::type_dot ||
 				next_token.type == CL_XPathToken::type_double_dot ||
-				(next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash))
+				(next_token.type == CL_XPathToken::type_operator && next_token.value.oper == CL_XPathToken::operator_double_slash)))
 			{
 				cur_token = read_location_steps(expression, next_token, filtered_nodes, 0, operand_stack);
 			}

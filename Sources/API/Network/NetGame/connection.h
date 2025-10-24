@@ -31,8 +31,9 @@
 
 #pragma once
 
+#include <vector>
 #include "../api_network.h"
-
+#include "../../Core/Text/string_types.h"
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
 #include "../Socket/socket_name.h" // TODO: Remove
@@ -78,6 +79,11 @@ public:
 
 	/// \brief Disconnects a client
 	void disconnect();
+
+	/// \brief Get Remote name
+	///
+	/// \return remote_name
+	CL_SocketName get_remote_name() const;
 
 private:
 	/// \brief Disallow copy constructors
