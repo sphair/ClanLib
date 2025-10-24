@@ -1,9 +1,9 @@
 combobox lineedit
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:8;
+	bg-image-sizing-bottom:8;
 	bg-image-sizing:stretch; 
 	
 	border-top:3;
@@ -11,17 +11,18 @@ combobox lineedit
 	border-right:18;
 	border-bottom:7;
 
-	text-color:black;
+	text-color:white;
 }
 
 popupmenu.combobox
 {
-	bg-image:ComboBoxPopupBg;
+/*	bg-image:ComboBoxPopupBg; */
+	bg-image:; 
 
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:8;
+	bg-image-sizing-bottom:8;
 	bg-image-sizing:stretch; 
 
 	border-top:3;

@@ -30,6 +30,22 @@
 #include "example.h"
 #include "shader.h"
 
+#if defined(_MSC_VER)
+	#if !defined(_DEBUG)
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt.lib")
+		#endif
+	#else
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt-debug.lib")
+		#endif
+	#endif
+#endif
+
 // The start of the Application
 int App::start(const std::vector<CL_String> &args)
 {
@@ -42,6 +58,14 @@ int App::start(const std::vector<CL_String> &args)
 	desc.set_depth_size(16);
 
 	CL_DisplayWindow window(desc);
+
+#ifdef _DEBUG
+	//struct aiLogStream stream;
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	//aiAttachLogStream(&stream);
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+	//aiAttachLogStream(&stream);
+#endif
 
 	// Connect the Window close event
 	CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -84,6 +108,8 @@ int App::start(const std::vector<CL_String> &args)
 	light_distant.set_diffuse_intensity(CL_Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 	light_distant.set_position(CL_Vec4f(0.0f, -2.0f, 30.0f, 0.0f).normalize3());
 	gc_gl1.set_light(0, light_distant);
+
+	cl1Enable(GL_NORMALIZE);
 #endif
 
 #ifdef USE_OPENGL_2
@@ -91,12 +117,20 @@ int App::start(const std::vector<CL_String> &args)
 #endif
 
 	// Create the objects
-	Model scene_model;
-	std::vector<CL_Collada_Image> library_images;
-	create_objects_without_texture(scene_model, library_images);
 
-	Model scene_model2;
-	create_objects(scene_model2, library_images);
+	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
+
+	const struct aiScene* scene_teapot = aiImportFile("../Clan3D/Resources/teapot.dae",aiProcessPreset_TargetRealtime_MaxQuality);
+	if (!scene_teapot)
+		throw CL_Exception("Cannot load the teapot model");
+
+	const struct aiScene* scene_clanlib = aiImportFile("../Clan3D/Resources/clanlib.dae",aiProcessPreset_TargetRealtime_MaxQuality);
+	if (!scene_clanlib)
+		throw CL_Exception("Cannot load the clanlib model");
+
+	const struct aiScene* scene_tuxball = aiImportFile("../Clan3D/Resources/tux_ball.dae",aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs);
+	if (!scene_tuxball)
+		throw CL_Exception("Cannot load the tux ball model");
 
 	// Load the texture
 	CL_Texture tux(gc, "../Clan3D/Resources/tux.png");
@@ -106,7 +140,7 @@ int App::start(const std::vector<CL_String> &args)
 	while (!quit)
 	{
 
-		CL_Mat4f perp = CL_Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 100000.0f);
+		CL_Mat4f perp = CL_Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
 		gc.set_projection(perp);
 
 		gc.clear(CL_Colorf::black);
@@ -116,64 +150,49 @@ int App::start(const std::vector<CL_String> &args)
 		if (angle >= 360.0f)
 			angle -= 360.0f;
 
-		// Draw object_positions_1
-		CL_PrimitivesArray prim_array(gc);
-        
 
-		gc.push_modelview();
+#ifdef USE_OPENGL_2
+        shader.Set(gc);
+        shader.Use(gc);
+#else
+        gc.set_program_object(cl_program_color_only);
+#endif
+
+		CL_PrimitivesArray prim_array(gc);
+
 		gc.set_modelview(CL_Mat4f::identity());
 		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
 		gc.mult_translate(0.0f, 0.0f, 2.0f);
 		gc.mult_rotate(CL_Angle(angle, cl_degrees), 0.0f, 1.0f, 0.0f, false);
 
-#ifdef USE_OPENGL_2
-        shader.Set(gc);
-        shader.Use(gc);
-#endif
-#ifdef USE_OPENGL_2
-        prim_array.set_attributes(0, &scene_model.object_positions[0]);
-        prim_array.set_attributes(1, &scene_model.object_normals[0]);
-        prim_array.set_attribute(2, CL_Colorf::white);
-#endif
-#ifdef USE_OPENGL_1
-        prim_array.set_attributes(0, &scene_model.object_positions[0]);
-        prim_array.set_attribute(1, CL_Colorf::white);
-        prim_array.set_attributes(4, &scene_model.object_normals[0]);
-#endif
-		gc.draw_primitives(cl_triangles, scene_model.object_positions.size(), prim_array);
-
+		gc.push_modelview();
+		recursive_render(gc, scene_teapot, scene_teapot->mRootNode, false);
 		gc.pop_modelview();
 
-		// Draw object_positions_2
 		gc.push_modelview();
-		gc.set_modelview(CL_Mat4f::identity());
-		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
-		gc.mult_translate(0.7f, 0.5f, 2.0f);
-		gc.mult_rotate(CL_Angle(angle * 4.0f, cl_degrees), 0.0f, 1.0f, 0.0f, false);
+		gc.mult_scale(0.5f, 0.5f, 0.5f);
+		gc.mult_translate(0.0f, -0.5f, 0.0f);
+		recursive_render(gc, scene_clanlib, scene_clanlib->mRootNode, false);
+		gc.pop_modelview();
 
-		gc.set_texture(0, tux);
 #ifdef USE_OPENGL_2
-        gc.reset_program_object();
         shader.Set(gc, 0);
         shader.Use(gc);
-        prim_array.set_attributes(0, &scene_model2.object_positions[0]);
-        prim_array.set_attributes(1, &scene_model2.object_normals[0]);
-        prim_array.set_attribute(2, CL_Colorf::white);
-        prim_array.set_attributes(3, &scene_model2.object_texcoords[0]);
-#endif
-#ifdef USE_OPENGL_1
+#else
         gc.set_program_object(cl_program_single_texture);
-        prim_array.set_attributes(0, &scene_model2.object_positions[0]);
-        prim_array.set_attribute(1, CL_Colorf::white);
-        prim_array.set_attributes(2, &scene_model2.object_texcoords[0]);
-        prim_array.set_attributes(4, &scene_model2.object_normals[0]);
 #endif
-        gc.draw_primitives(cl_triangles, scene_model2.object_positions.size(), prim_array);
-        gc.reset_texture(0);
-        gc.reset_program_object();
 
-		gc.pop_modelview();
+		gc.set_texture(0, tux);
+ 		gc.set_modelview(CL_Mat4f::identity());
+		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
+		gc.mult_translate(0.7f, 0.5f, 2.0f);
+		gc.mult_scale(0.05f, 0.05f, 0.05f);
+		gc.mult_rotate(CL_Angle(angle * 4.0f, cl_degrees), 0.0f, 1.0f, 0.0f, false);
+		recursive_render(gc, scene_tuxball, scene_tuxball->mRootNode, true);
+		gc.reset_texture(0);
 
+		gc.reset_program_object();
+		
 		// Flip the display, showing on the screen what we have drawed
 		// since last call to flip()
 		window.flip(1);
@@ -182,7 +201,83 @@ int App::start(const std::vector<CL_String> &args)
 		CL_KeepAlive::process();
 	}
 
+	aiReleaseImport(scene_tuxball);
+	aiReleaseImport(scene_clanlib);
+	aiReleaseImport(scene_teapot);
+	aiDetachAllLogStreams();
+
 	return 0;
+}
+
+void App::recursive_render(CL_GraphicContext &gc, const struct aiScene *sc, const struct aiNode* nd, bool use_texture_coords)
+{
+	int i;
+	unsigned int n = 0, t;
+	struct aiMatrix4x4 m = nd->mTransformation;
+
+	// update transform
+	aiTransposeMatrix4(&m);
+	gc.push_modelview();
+	gc.mult_modelview((float*)&m);
+
+	// draw all meshes assigned to this node
+	for (; n < nd->mNumMeshes; ++n)
+	{
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+
+		if (mesh->mNormals == NULL)
+			throw CL_Exception("This example expects normals to be set");
+
+		std::vector<CL_Vec3f> normals;
+		std::vector<CL_Vec3f> vertices;
+		std::vector<CL_Vec3f> tex_coords;
+
+		normals.reserve(mesh->mNumFaces * 3);
+		vertices.reserve(mesh->mNumFaces * 3);
+
+		if (use_texture_coords)
+		{
+			if (mesh->mTextureCoords == NULL || mesh->mTextureCoords[0] == NULL)
+				throw CL_Exception("This example expects texcoords to be set for this object");
+			tex_coords.reserve(mesh->mNumFaces * 3);
+		}
+
+		for (t = 0; t < mesh->mNumFaces; ++t)
+		{
+			const struct aiFace* face = &mesh->mFaces[t];
+
+			if (face->mNumIndices != 3)
+					throw CL_Exception("This example only supports triangles");
+
+			for(i = 0; i < face->mNumIndices; i++)
+			{
+				int index = face->mIndices[i];
+				normals.push_back(&mesh->mNormals[index].x);
+				vertices.push_back( &mesh->mVertices[index].x);
+				if (use_texture_coords)
+					tex_coords.push_back( &mesh->mTextureCoords[0][index].x);
+			}
+		}
+
+		if (!vertices.empty())
+		{
+			CL_PrimitivesArray prim_array(gc);
+			prim_array.set_attributes(cl_attrib_position, &vertices[0]);
+			prim_array.set_attribute(cl_attrib_color, CL_Colorf::white);
+			prim_array.set_attributes(cl_attrib_normal, &normals[0]);
+			if (use_texture_coords)
+				prim_array.set_attributes(cl_attrib_texture_position, &tex_coords[0]);
+			gc.draw_primitives(cl_triangles, vertices.size(), prim_array);
+		}
+	}
+
+	// draw all children
+	for (n = 0; n < nd->mNumChildren; ++n)
+	{
+		recursive_render(gc, sc, nd->mChildren[n], use_texture_coords);
+	}
+
+	gc.pop_modelview();
 }
 
 // A key was pressed
@@ -200,102 +295,3 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::create_objects_without_texture(Model &model, std::vector<CL_Collada_Image> &library_images)
-{
-		CL_File file;
-		CL_DomDocument doc;
-		CL_Collada object;
-
-		file = CL_File("../Clan3D/Resources/clanlib.dae");
-		doc = CL_DomDocument(file);
-		object = CL_Collada(doc, library_images);
-
-		CL_Vec3f logo_scale(0.5f, 0.5f, 0.5f);
-		CL_Vec3f logo_translate(0.0f, -0.5f, 0.0f);
-		CL_Angle logo_smooth_threshold(0.0f, cl_degrees);
-		insert_object(object, "Mesh_Object",   logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_2", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_3", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_4", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_5", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_6", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-		insert_object(object, "Mesh_Object_7", logo_scale, logo_translate, model, library_images, logo_smooth_threshold);
-
-		file = CL_File("../Clan3D/Resources/teapot.dae");
-		doc = CL_DomDocument(file);
-		object = CL_Collada(doc, library_images);
-		insert_object(object, "Mesh_Object", CL_Vec3f(1.0f, 1.0f, 1.0f), CL_Vec3f(0.0f, 0.0f, 0.0f), model, library_images, CL_Angle(89.53f, cl_degrees));
-}
-
-void App::create_objects(Model &model, std::vector<CL_Collada_Image> &library_images)
-{
-		CL_File file;
-		CL_DomDocument doc;
-
-		file = CL_File("../Clan3D/Resources/tux_ball.dae");
-		doc = CL_DomDocument(file);
-		CL_Collada tuxball_object(doc, library_images);
-
-		insert_object(tuxball_object, "Mesh_Object", CL_Vec3f(0.05f, 0.05f, 0.05f), CL_Vec3f(0.0f, 0.0f, 0.0f), model, library_images, CL_Angle(89.53f, cl_degrees));
-}
-
-void App::insert_object(CL_Collada &object, const CL_String &geometry_name, const CL_Vec3f &object_scale, const CL_Vec3f &object_translation, Model &model, std::vector<CL_Collada_Image> &library_images, const CL_Angle &smooth_threshold)
-{
-		CL_Collada_Geometry &geometry = object.get_geometry(geometry_name);
-		CL_Collada_Mesh &mesh = geometry.get_mesh();
-
-		unsigned int dest_positions_offset = model.object_positions.size();
-		unsigned int dest_texcoords_offset = model.object_texcoords.size();
-		unsigned int dest_normals_offset = model.object_normals.size();
-
-		int vertex_count_positions = mesh.get_triangle_count("VERTEX") * 3;
-		if (!vertex_count_positions)
-			return;		// Return now, if not vertices were found - maybe throw an exception instead?
-
-		int vertex_count_texcoord = mesh.get_triangle_count("TEXCOORD") * 3;
-
-		model.object_positions.resize(dest_positions_offset + vertex_count_positions);
-		model.object_texcoords.resize(dest_texcoords_offset + vertex_count_texcoord);
-		model.object_normals.resize(dest_normals_offset + vertex_count_positions);
-
-		mesh.create_vertices(&model.object_positions[dest_positions_offset], 0, "VERTEX", model.positions_surface_list);
-		mesh.create_vertices_normal(&model.object_normals[dest_normals_offset], 0, "VERTEX", smooth_threshold);
-
-		if (vertex_count_texcoord)
-		{
-			mesh.create_vertices(&model.object_texcoords[dest_texcoords_offset], 0, "TEXCOORD", model.texcoord_surface_list);
-			// Invert uvmap positions for clanlib
-			invert_uvmap(&model.object_texcoords[dest_texcoords_offset], vertex_count_texcoord);
-		}
-
-		scale_points(&model.object_positions[dest_positions_offset], vertex_count_positions, object_scale);
-		translate_points(&model.object_positions[dest_positions_offset], vertex_count_positions, object_translation);
-}
-
-void App::scale_points(CL_Vec3f *points_ptr, int size, const CL_Vec3f &object_scale)
-{
-	for (; size > 0; --size, points_ptr++)
-	{
-		points_ptr->x *= object_scale.x;
-		points_ptr->y *= object_scale.y;
-		points_ptr->z *= object_scale.z;
-	}
-}
-
-void App::invert_uvmap(CL_Vec2f *points_ptr, int size)
-{
-	for (; size > 0; --size, points_ptr++)
-	{
-		points_ptr->y = 1.0f - points_ptr->y;
-	}
-}
-
-void App::translate_points(CL_Vec3f *points_ptr, int size, const CL_Vec3f &object_translation)
-{
-	for (; size > 0; --size, points_ptr++)
-	{
-		points_ptr->x += object_translation.x;
-		points_ptr->y += object_translation.y;
-		points_ptr->z += object_translation.z;
-	}
-}

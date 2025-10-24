@@ -35,6 +35,23 @@
 #include "framerate_counter.h"
 #include "options.h"
 
+#if defined(_MSC_VER)
+	#if !defined(_DEBUG)
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt.lib")
+		#endif
+	#else
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt-debug.lib")
+		#endif
+	#endif
+#endif
+
+
 // The start of the Application
 int App::start(const std::vector<CL_String> &args)
 {
@@ -48,6 +65,15 @@ int App::start(const std::vector<CL_String> &args)
 	desc.set_depth_size(16);
 
 	CL_DisplayWindow window(desc);
+
+#ifdef _DEBUG
+	//struct aiLogStream stream;
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	//aiAttachLogStream(&stream);
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+	//aiAttachLogStream(&stream);
+#endif
+	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
 
 	// Connect the Window close event
 	CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -144,6 +170,7 @@ int App::start(const std::vector<CL_String> &args)
 		// This call processes user input and other events
 		CL_KeepAlive::process();
 	}
+	aiDetachAllLogStreams();
 
 	return 0;
 }
@@ -189,17 +216,15 @@ void App::render(CL_GraphicContext &gc)
 
 void App::create_scene(CL_GraphicContext &gc)
 {
-	std::vector<CL_Collada_Image> library_images;
-
-	Model model_landscape("../Shadow/Resources/land.dae", library_images);
+	Model model_landscape(gc, "../Shadow/Resources/land.dae", false);
 	model_landscape.SetMaterial(64.0f,	// Shiny
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f));	// Specular
 
-	Model model_cone("Resources/cone.dae", library_images);
+	Model model_cone(gc, "Resources/cone.dae", true);
 
-	Model model_teapot("../Clan3D/Resources/teapot.dae", library_images);
+	Model model_teapot(gc, "../Clan3D/Resources/teapot.dae", true);
 	model_teapot.SetMaterial(64.0f,	// Shiny
 			CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
@@ -238,12 +263,9 @@ void App::create_scene(CL_GraphicContext &gc)
 	object_teapot->rotation_z = CL_Angle(2.7f, cl_degrees);
 	object_teapot->scale = CL_Vec3f(30.0f, 30.0f, 30.0f);
 
-
-
-	scene.gs->LoadImages(gc, library_images);
+	scene.gs->LoadImages(gc);
 
 }
-
 
 void App::update_light(CL_GraphicContext &gc, Options *options)
 {

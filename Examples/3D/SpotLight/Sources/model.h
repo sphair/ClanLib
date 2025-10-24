@@ -37,8 +37,7 @@ class Model
 {
 public:
 	Model();
-	Model(const char *filename, std::vector<CL_Collada_Image> &library_images);
-	Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
+	Model(CL_GraphicContext &gc, const char *filename, bool we_do_not_want_texures_on_this_object);
 
 	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix);
 	bool is_null();

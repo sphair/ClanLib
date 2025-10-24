@@ -82,6 +82,8 @@ public:
 /// \{
 public:
 	/// \brief Convert the quaternion to a rotation matrix
+	///
+	/// This function assumes that the quarternion is normalized.
 	CL_Mat4<Type> to_matrix() const;
 
 	/// \brief Get the quaternion magnitude
@@ -126,6 +128,15 @@ public:
 	///
 	/// \return reference to this object
 	CL_Quaternionx<Type> &inverse();
+
+	/// \brief Rotates vector by this quaternion.
+	///
+	/// \param v = Vertex to rotate
+	///
+	/// \return rotated vector
+	CL_Vec3<Type> rotate_vector(const CL_Vec3<Type> &v);
+
+	CL_Vec4<Type> rotate_vector(const CL_Vec4<Type> &v);
 
 /// \}
 /// \name Operators

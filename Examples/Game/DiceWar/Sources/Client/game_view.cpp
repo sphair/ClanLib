@@ -10,10 +10,11 @@
 #include "game_view_end.h"
 #include "game_view_chat.h"
 #include "game_view_actionbar.h"
-#include "3D/model_collada.h"
+#include "3D/model_assimp.h"
 #include "3D/light_model.h"
 #include "3D/camera.h"
 #include "../Lib/map_area.h"
+#include "../Lib/net_events_game.h"
 
 GameView::GameView(Client *client)
 : CL_GUIComponent(client->get_gui(), get_toplevel_description()), 
@@ -37,7 +38,7 @@ GameView::GameView(Client *client)
 	font_large = CL_Font(get_gc(), "Accidental Presidency", -40);
 
 	CL_GraphicContext gc = get_gc();
-	army_model.reset(new ModelCollada(gc, "Resources/army_unit.dae"));
+	army_model.reset(new ModelAssimp(gc, "Resources/army_unit.3ds"));
 
 	set_playing_state(false);
 	set_battle_state(false);
@@ -136,7 +137,7 @@ void GameView::battle_over()
 {
 	set_battle_state(false);
 
-	client->get_network_client()->send_event(CL_NetGameEvent("game-battle-view-over"));
+	client->get_network_client()->send_event(CL_NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER));
 }
 
 void GameView::set_battle_state(bool in_battle)

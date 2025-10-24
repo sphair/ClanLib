@@ -35,6 +35,23 @@
 #include "framerate_counter.h"
 #include "options.h"
 
+#if defined(_MSC_VER)
+	#if !defined(_DEBUG)
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt.lib")
+		#endif
+	#else
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt-debug.lib")
+		#endif
+	#endif
+#endif
+
+
 // The start of the Application
 int App::start(const std::vector<CL_String> &args)
 {
@@ -48,6 +65,15 @@ int App::start(const std::vector<CL_String> &args)
 	desc.set_depth_size(16);
 
 	CL_DisplayWindow window(desc);
+
+#ifdef _DEBUG
+	//struct aiLogStream stream;
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	//aiAttachLogStream(&stream);
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+	//aiAttachLogStream(&stream);
+#endif
+	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
 
 	// Connect the Window close event
 	CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -166,7 +192,7 @@ int App::start(const std::vector<CL_String> &args)
 
 		CL_KeepAlive::process();
 	}
-
+	aiDetachAllLogStreams();
 	return 0;
 }
 
@@ -212,12 +238,11 @@ void App::render(CL_GraphicContext &gc)
 
 void App::create_scene(CL_GraphicContext &gc)
 {
-	std::vector<CL_Collada_Image> library_images;
 
-	model_teapot = Model("../Clan3D/Resources/teapot.dae", library_images);
-	Model model_ring_a("Resources/ring.dae", library_images);
-	Model model_ring_b("Resources/ring.dae", library_images);
-	Model model_ring_c("Resources/ring.dae", library_images);
+	model_teapot = Model(gc, "../Clan3D/Resources/teapot.dae");
+	Model model_ring_a(gc, "Resources/ring.dae");
+	Model model_ring_b(gc, "Resources/ring.dae");
+	Model model_ring_c(gc, "Resources/ring.dae");
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = CL_Vec3f(0.0f, 18.0f, -25.0f);
@@ -239,17 +264,18 @@ void App::create_scene(CL_GraphicContext &gc)
 	rotation_euler_a = new SceneObject(scene, scene.base);
 	rotation_euler_a->position = teapot_euler->position;
 	ring = new SceneObject(scene, rotation_euler_a);
-	ring->rotation_y = CL_Angle(90.0f, cl_degrees);
+	ring->rotation_y = CL_Angle(-90.0f, cl_degrees);
 	ring->model = model_ring_a;
 
 	rotation_euler_b = new SceneObject(scene, rotation_euler_a);
 	ring = new SceneObject(scene, rotation_euler_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = CL_Angle(-90.0f, cl_degrees);
+	ring->rotation_x = CL_Angle(90.0f, cl_degrees);
 
 	rotation_euler_c = new SceneObject(scene, rotation_euler_b);
 	ring = new SceneObject(scene, rotation_euler_c);
 	ring->model = model_ring_c;
+	ring->rotation_x = CL_Angle(180.0f, cl_degrees);
 	ring->rotation_z = CL_Angle(90.0f, cl_degrees);
 
 	// Set right target angle teapot
@@ -261,17 +287,18 @@ void App::create_scene(CL_GraphicContext &gc)
 	rotation_target_a = new SceneObject(scene, scene.base);
 	rotation_target_a->position = teapot_target->position;
 	ring = new SceneObject(scene, rotation_target_a);
-	ring->rotation_y = CL_Angle(90.0f, cl_degrees);
+	ring->rotation_y = CL_Angle(-90.0f, cl_degrees);
 	ring->model = model_ring_a;
 
 	rotation_target_b = new SceneObject(scene, rotation_target_a);
 	ring = new SceneObject(scene, rotation_target_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = CL_Angle(-90.0f, cl_degrees);
+	ring->rotation_x = CL_Angle(90.0f, cl_degrees);
 
 	rotation_target_c = new SceneObject(scene, rotation_target_b);
 	ring = new SceneObject(scene, rotation_target_c);
 	ring->model = model_ring_c;
+	ring->rotation_x = CL_Angle(180.0f, cl_degrees);
 	ring->rotation_z = CL_Angle(90.0f, cl_degrees);
 
 	// Set ring colours
@@ -294,7 +321,7 @@ void App::create_scene(CL_GraphicContext &gc)
 			CL_Vec4f(0.0f, 1.0f, 0.0f, 1.0f),	// material_ambient
 			CL_Vec4f(0.0f, 1.0f, 0.0f, 1.0f)	//material_specular
 			);
-	scene.gs->LoadImages(gc, library_images);
+	scene.gs->LoadImages(gc);
 
 }
 

@@ -94,6 +94,7 @@ public:
 	CL_Vec3(const CL_Vec3<int> &copy);
 
 	CL_Vec3(const Type &p1, const Type &p2 = 0, const Type &p3 = 0) : x(p1), y(p2), z(p3) { }
+	CL_Vec3(const Type *array_xyz) : x(array_xyz[0]), y(array_xyz[1]), z(array_xyz[2]) { }
 
 	/// \brief Normalizes a vector
 	///

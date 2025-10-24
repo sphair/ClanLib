@@ -240,7 +240,54 @@ void CL_X11Window::show_system_cursor()
 
 void CL_X11Window::set_cursor(CL_StandardCursor type)
 {
-	//TODO:
+	if (system_cursor)
+	{
+		XFreeCursor(disp, system_cursor);
+		system_cursor = 0;
+	}
+	unsigned int index = XC_left_ptr;
+	switch (type)
+	{
+		case cl_cursor_arrow:
+			index = XC_left_ptr;
+			break;
+		case cl_cursor_appstarting:
+			index = XC_watch;
+			break;
+		case cl_cursor_cross:
+			index = XC_cross;
+			break;
+		case cl_cursor_hand:	
+			index = XC_hand2;
+			break;
+		case cl_cursor_ibeam:
+			index = XC_xterm;
+			break;
+		case cl_cursor_size_all:	
+			index = XC_fleur;
+			break;
+		case cl_cursor_size_ns:
+			index = XC_double_arrow;
+			break;
+		case cl_cursor_size_we:
+			index = XC_sb_h_double_arrow;
+			break;
+		case cl_cursor_uparrow:
+			index = XC_sb_up_arrow;
+			break;
+		case cl_cursor_wait:
+			index = XC_watch;
+			break;
+		case cl_cursor_no:
+			index = XC_X_cursor;
+			break;
+		case cl_cursor_size_nesw:
+		case cl_cursor_size_nwse:
+		default:
+			break;
+	}
+	system_cursor = XCreateFontCursor(disp, index);
+	XDefineCursor(disp, window, system_cursor);
 }
 
 void CL_X11Window::hide_system_cursor()

@@ -35,6 +35,23 @@
 #include "framerate_counter.h"
 #include "options.h"
 
+#if defined(_MSC_VER)
+	#if !defined(_DEBUG)
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt.lib")
+		#endif
+	#else
+		#if defined(_DLL)
+			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+		#else
+			#pragma comment(lib, "assimp-static-mt-debug.lib")
+		#endif
+	#endif
+#endif
+
+
 // The start of the Application
 int App::start(const std::vector<CL_String> &args)
 {
@@ -48,6 +65,15 @@ int App::start(const std::vector<CL_String> &args)
 	desc.set_depth_size(16);
 
 	CL_DisplayWindow window(desc);
+
+#ifdef _DEBUG
+	//struct aiLogStream stream;
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	//aiAttachLogStream(&stream);
+	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+	//aiAttachLogStream(&stream);
+#endif
+	aiSetImportPropertyFloat(AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
 
 	// Connect the Window close event
 	CL_Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -153,6 +179,8 @@ int App::start(const std::vector<CL_String> &args)
 		CL_KeepAlive::process();
 	}
 
+	aiDetachAllLogStreams();
+
 	return 0;
 }
 
@@ -200,19 +228,15 @@ void App::render(CL_GraphicContext &gc)
 
 void App::create_scene(CL_GraphicContext &gc)
 {
-	std::vector<CL_Collada_Image> library_images;
-
-	Model model_cone("../SpotLight/Resources/cone.dae", library_images);
-	Model model_teapot("../Clan3D/Resources/teapot.dae", library_images, true);
-
+	Model model_teapot(gc, "../Clan3D/Resources/teapot.dae", true);
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = CL_Vec3f(-20.0f, 40.0f, -60.0f);
 	camera->rotation_x = CL_Angle(20.0f, cl_degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
-	light_distant->model = model_cone;
-	light_distant->position = CL_Vec3f(0.0f, 32.0f, 20.0f);
+	//light_distant->model = model_cone;
+	//light_distant->position = CL_Vec3f(0.0f, 32.0f, 20.0f);
 	//  Note, these are updated by the options
 	light_distant->rotation_y = CL_Angle(45.0f, cl_degrees);
 	light_distant->rotation_x = CL_Angle(35.0f, cl_degrees);
@@ -222,7 +246,7 @@ void App::create_scene(CL_GraphicContext &gc)
 	teapot->position = CL_Vec3f(-2.5f, 0.0f, 20.0f);
 	teapot->scale = CL_Vec3f(50.0f, 50.0f, 50.0f);
 
-	scene.gs->LoadImages(gc, library_images);
+	scene.gs->LoadImages(gc);
 
 }
 

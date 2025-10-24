@@ -37,10 +37,9 @@ GraphicStore::~GraphicStore()
 {
 }
 
-void GraphicStore::LoadImages( CL_GraphicContext &gc, std::vector<CL_Collada_Image> &library_images )
+void GraphicStore::LoadImages( CL_GraphicContext &gc )
 {
 	// Load the texture
-	// TODO: Use library_images get the filename
 	texture_brick = CL_Texture(gc, "../Shadow/Resources/brick.png");
 	texture_brick.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
 

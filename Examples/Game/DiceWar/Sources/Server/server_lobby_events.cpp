@@ -8,17 +8,18 @@
 #include "server_lobby_game.h"
 #include "server_lobby_game_player_collection.h"
 #include "server_game.h"
+#include "../Lib/net_events_lobby.h"
 
 ServerLobbyEvents::ServerLobbyEvents(Server *server, ServerLobbyModel *lobby_model)
 : server(server), lobby_model(lobby_model)
 {
-	lobby_events.func_event("lobby-create-game").set(this, &ServerLobbyEvents::on_event_create_game);
-	lobby_events.func_event("lobby-change-game-settings").set(this, &ServerLobbyEvents::on_event_change_game_settings);
-	lobby_events.func_event("lobby-get-available-games").set(this, &ServerLobbyEvents::on_event_get_available_games);
-	lobby_events.func_event("lobby-join-game").set(this, &ServerLobbyEvents::on_event_join_game);
-	lobby_events.func_event("lobby-leave-game").set(this, &ServerLobbyEvents::on_event_leave_game);
-	lobby_events.func_event("lobby-start-game").set(this, &ServerLobbyEvents::on_event_start_game);
-	lobby_events.func_event("lobby-add-message").set(this, &ServerLobbyEvents::on_event_add_lobby_message);
+	lobby_events.func_event(CTS_LOBBY_CREATE_GAME).set(this, &ServerLobbyEvents::on_event_create_game);
+	lobby_events.func_event(CTS_LOBBY_CHANGE_GAME_SETTINGS).set(this, &ServerLobbyEvents::on_event_change_game_settings);
+	lobby_events.func_event(CTS_LOBBY_GET_AVAILABLE_GAMES).set(this, &ServerLobbyEvents::on_event_get_available_games);
+	lobby_events.func_event(CTS_LOBBY_JOIN_GAME).set(this, &ServerLobbyEvents::on_event_join_game);
+	lobby_events.func_event(CTS_LOBBY_LEAVE_GAME).set(this, &ServerLobbyEvents::on_event_leave_game);
+	lobby_events.func_event(CTS_LOBBY_START_GAME).set(this, &ServerLobbyEvents::on_event_start_game);
+	lobby_events.func_event(CTS_LOBBY_ADD_MESSAGE).set(this, &ServerLobbyEvents::on_event_add_lobby_message);
 }
 
 ServerLobbyEvents::~ServerLobbyEvents()
@@ -47,7 +48,7 @@ void ServerLobbyEvents::on_event_change_game_settings(const CL_NetGameEvent &e, 
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent("lobby-error-message", "You do not own a game"));
+		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "You do not own a game"));
 	}
 }
 
@@ -63,7 +64,7 @@ void ServerLobbyEvents::on_event_join_game(const CL_NetGameEvent &e, ServerLobby
 	if(lobby_game)
 		lobby_game->get_player_collection()->add_player(player);
 	else
-		player->send_event(CL_NetGameEvent("lobby-error-message", "Game not found"));
+		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Game not found"));
 }
 
 void ServerLobbyEvents::on_event_leave_game(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
@@ -75,7 +76,7 @@ void ServerLobbyEvents::on_event_leave_game(const CL_NetGameEvent &e, ServerLobb
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent("lobby-error-message", "Not joined any game"));
+		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
 	}
 }
 
@@ -91,12 +92,12 @@ void ServerLobbyEvents::on_event_start_game(const CL_NetGameEvent &e, ServerLobb
 		}
 		else
 		{
-			player->send_event(CL_NetGameEvent("lobby-error-message", "Can not start a game without owning it"));
+			player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Can not start a game without owning it"));
 		}
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent("lobby-error-message", "Not joined any game"));
+		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
 	}
 }
 
@@ -104,5 +105,5 @@ void ServerLobbyEvents::on_event_add_lobby_message(const CL_NetGameEvent &e, Ser
 {
 	CL_String message = e.get_argument(0);
 	if(message.length() > 0)
-		server->get_network_server()->send_event(CL_NetGameEvent("lobby-player-message", lobby_player->player->id, message));
+		server->get_network_server()->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_MESSAGE, lobby_player->player->id, message));
 }

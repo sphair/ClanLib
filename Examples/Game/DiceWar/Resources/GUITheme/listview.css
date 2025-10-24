@@ -3,17 +3,18 @@
 
 listview_header
 {
-	preferred-height: 33;
-	text-color: #7FE6EF;
-	font-weight: bold;
-	font-size: 20;
-	font-family: VeraBd;
+	preferred-height: 33; 
 }
 
 listview_header columnheader
 {
 	border-left:0;
 	border-right:0;
+
+	text-color: #7FE6EF;
+	font-weight: bold;
+	font-size: 20;
+	font-family: VeraBd;
 }
 
 /* LISTVIEW */
@@ -26,32 +27,30 @@ listview column
 {
 }
 
-listview selection
-{
-	bg-color: gray20;
-	text-color: white;
-}
-
 listview columns_bg
 {
 }
 
 listview cell
 {
-	text-color:white;
-
 	preferred-height:27;
 
+	text-color:white;
 	font-weight: bold;
 	font-size: 20;
 	font-family: VeraBd;
 }
 
-listview cell:details:normal
+listview cell:details:hot
 {
-	opener-icon-gap:0;
-	icon-text-gap:0;
-	icon-offset-y:0;
-	icon-width:0;
-	icon-height:0;
+	text-color:yellow;
+}
+
+listview selection
+{
+	bg-color:darkgrey;
+	
+	font-weight: bold;
+	font-size: 20;
+	font-family: VeraBd;
 }

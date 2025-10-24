@@ -1,3 +1,4 @@
+
 /*
 **  ClanLib SDK
 **  Copyright (c) 1997-2011 The ClanLib Team
@@ -28,26 +29,9 @@
 
 #pragma once
 
-class CL_Collada_Input_Shared_Impl;
-class CL_Collada_Source;
-class CL_Collada_Vertices;
-
-class CL_Collada_Input_Shared
+// This is the Program class that is called by CL_ClanApplication
+class Program
 {
 public:
-	CL_Collada_Input_Shared();
-	CL_Collada_Input_Shared(CL_DomElement &input_element, std::vector<CL_Collada_Source> &sources, CL_Collada_Vertices &vertices);
-
-	CL_String &get_semantic();
-	const CL_String &get_semantic() const;
-	CL_Collada_Source &get_source();
-
-	unsigned int get_offset();
-	unsigned int get_set();
-
-private:
-	CL_SharedPtr<CL_Collada_Input_Shared_Impl> impl;
-
+	static int main(const std::vector<CL_String> &args);
 };
-
-

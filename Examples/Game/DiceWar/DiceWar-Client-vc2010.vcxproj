@@ -96,7 +96,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Sources\Client\3D\camera.cpp" />
-    <ClCompile Include="Sources\Client\3D\model_collada.cpp" />
+    <ClCompile Include="Sources\Client\3D\model_assimp.cpp" />
     <ClCompile Include="Sources\Client\3D\orientation.cpp" />
     <ClCompile Include="Sources\Client\3D\position.cpp" />
     <ClCompile Include="Sources\Client\game_events.cpp" />
@@ -122,20 +122,6 @@
     <ClCompile Include="Sources\Client\lobby_view_create_game.cpp" />
     <ClCompile Include="Sources\Client\login_events.cpp" />
     <ClCompile Include="Sources\Client\login_view.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_effect.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_effect_color_texture.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_effect_float_param.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_effect_texture.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_geometry.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_image.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_input_shared.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_input_unshared.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_material.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_mesh.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_source.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_triangles.cpp" />
-    <ClCompile Include="..\..\3D\Clan3D\Collada\collada_vertices.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Client\client.h" />
@@ -143,7 +129,7 @@
     <ClInclude Include="Sources\Client\precomp.h" />
     <ClInclude Include="Sources\Client\3D\camera.h" />
     <ClInclude Include="Sources\Client\3D\light_model.h" />
-    <ClInclude Include="Sources\Client\3D\model_collada.h" />
+    <ClInclude Include="Sources\Client\3D\model_assimp.h" />
     <ClInclude Include="Sources\Client\3D\orientation.h" />
     <ClInclude Include="Sources\Client\3D\plane_equation.h" />
     <ClInclude Include="Sources\Client\3D\position.h" />
@@ -170,20 +156,6 @@
     <ClInclude Include="Sources\Client\lobby_view_create_game.h" />
     <ClInclude Include="Sources\Client\login_events.h" />
     <ClInclude Include="Sources\Client\login_view.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_effect.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_effect_color_texture.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_effect_float_param.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_effect_texture.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_geometry.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_image.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_input_shared.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_input_unshared.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_material.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_mesh.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_source.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_triangles.h" />
-    <ClInclude Include="..\..\3D\Clan3D\Collada\collada_vertices.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GUITheme\combobox.css" />

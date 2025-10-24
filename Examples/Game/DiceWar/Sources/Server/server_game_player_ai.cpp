@@ -6,6 +6,7 @@
 #include "server_game.h"
 #include "../Lib/map.h"
 #include "../Lib/map_area.h"
+#include "../Lib/net_events_game.h"
 
 #include <stdlib.h>	// For rand()
 
@@ -15,10 +16,10 @@
 ServerGamePlayerAI::ServerGamePlayerAI(Server *server, ServerGame *game, ServerPlayer *player)
 : ServerGamePlayer(player), server(server), game(game)
 {
-	game_events.func_event("game-player-turn-started").set(this, &ServerGamePlayerAI::on_event_player_turn_started);
-	game_events.func_event("game-attacked-area").set(this, &ServerGamePlayerAI::on_event_attacked_area);
-	game_events.func_event("game-attack-done").set(this, &ServerGamePlayerAI::on_event_attack_done);
-	game_events.func_event("game-invalid-attack").set(this, &ServerGamePlayerAI::on_event_invalid_attack);
+	game_events.func_event(STC_GAME_PLAYER_TURN_STARTED).set(this, &ServerGamePlayerAI::on_event_player_turn_started);
+	game_events.func_event(STC_GAME_ATTACKED_AREA).set(this, &ServerGamePlayerAI::on_event_attacked_area);
+	game_events.func_event(STC_GAME_ATTACK_DONE).set(this, &ServerGamePlayerAI::on_event_attack_done);
+	game_events.func_event(STC_GAME_INVALID_ATTACK).set(this, &ServerGamePlayerAI::on_event_invalid_attack);
 }
 
 // This function is called whenever we are supposed to send an event to this player.
@@ -45,15 +46,15 @@ void ServerGamePlayerAI::on_event_attacked_area(const CL_NetGameEvent &e)
 {
 	// Notify server we are finished with our game battle 
 	// (we don't have a view so we're instantly finished)
-	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent("game-battle-view-over").to_string());
-	server->handle_event(player, CL_NetGameEvent("game-battle-view-over"));
+	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER).to_string());
+	server->handle_event(player, CL_NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER));
 }
 
 void ServerGamePlayerAI::on_event_invalid_attack(const CL_NetGameEvent &e)
 {
 	// Oops, we screwed up something with our planning - lets bail out
-	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent("game-end-turn").to_string());
-	server->handle_event(player, CL_NetGameEvent("game-end-turn"));
+	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent(CTS_GAME_END_TURN).to_string());
+	server->handle_event(player, CL_NetGameEvent(CTS_GAME_END_TURN));
 }
 
 void ServerGamePlayerAI::on_event_attack_done(const CL_NetGameEvent &e)
@@ -101,8 +102,8 @@ void ServerGamePlayerAI::perform_next_attack()
 
 					if(should_attack)
 					{
-						cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent("game-attack-area", area->id, target_area->id).to_string());
-						server->handle_event(player, CL_NetGameEvent("game-attack-area", area->id, target_area->id));
+						cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent(CTS_GAME_ATTACK_AREA, area->id, target_area->id).to_string());
+						server->handle_event(player, CL_NetGameEvent(CTS_GAME_ATTACK_AREA, area->id, target_area->id));
 						return;
 					}
 				}
@@ -110,6 +111,6 @@ void ServerGamePlayerAI::perform_next_attack()
 		}
 	}
 	
-	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent("game-end-turn").to_string());
-	server->handle_event(player, CL_NetGameEvent("game-end-turn"));
+	cl_log_event("AI", "AI sent event: %1", CL_NetGameEvent(CTS_GAME_END_TURN).to_string());
+	server->handle_event(player, CL_NetGameEvent(CTS_GAME_END_TURN));
 }

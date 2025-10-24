@@ -8,6 +8,7 @@
 #include "server_lobby_game.h"
 #include "server_game.h"
 #include "server.h"
+#include "../Lib/net_events_lobby.h"
 #include <algorithm>
 
 ServerLobbyGameCollection::ServerLobbyGameCollection(Server *server)
@@ -27,7 +28,7 @@ void ServerLobbyGameCollection::remove_empty_games()
 		ServerLobbyGame *lobby_game = (*it);
 		if(lobby_game->get_player_collection()->get_count() == 0)
 		{
-			server->get_network_server()->send_event(CL_NetGameEvent("lobby-game-removed", lobby_game->get_id()));
+			server->get_network_server()->send_event(CL_NetGameEvent(STC_LOBBY_GAME_REMOVED, lobby_game->get_id()));
 
 			it = lobby_games.erase(it);
 
@@ -44,7 +45,7 @@ ServerLobbyGame *ServerLobbyGameCollection::create_lobby_game(ServerLobbyPlayer 
 {
 	if (owner->current_game)
 	{
-		owner->send_event(CL_NetGameEvent("lobby-error-message", "Cannot create game when already joined a game"));
+		owner->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Cannot create game when already joined a game"));
 		return 0;
 	}
 
@@ -58,7 +59,7 @@ ServerLobbyGame *ServerLobbyGameCollection::create_lobby_game(ServerLobbyPlayer 
 	lobby_games.push_back(lobby_game);
 
 	owner->send_event(
-		CL_NetGameEvent("lobby-game-created", lobby_game->get_id(), lobby_game->get_name(), lobby_game->get_map_name(), lobby_game->get_max_players()));
+		CL_NetGameEvent(STC_LOBBY_GAME_CREATED, lobby_game->get_id(), lobby_game->get_name(), lobby_game->get_map_name(), lobby_game->get_max_players()));
 	lobby_game->send_game_info();
 
 	// Add lobby_player to game
@@ -100,7 +101,7 @@ void ServerLobbyGameCollection::send_available_lobby_games(ServerLobbyPlayer *de
 	}
 	else
 	{
-		destination_player->send_event(CL_NetGameEvent("lobby-no-games-available"));
+		destination_player->send_event(CL_NetGameEvent(STC_LOBBY_NO_GAMES_AVAILABLE));
 	}
 }
 

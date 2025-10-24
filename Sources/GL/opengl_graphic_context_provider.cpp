@@ -1206,11 +1206,9 @@ void CL_OpenGLGraphicContextProvider::set_projection(const CL_Mat4f &matrix)
 
 void CL_OpenGLGraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 {
-	CL_Mat4f matrix_copy(matrix);
-
-	if (modelview != matrix_copy)
+	if (modelview != matrix)
 	{
-		modelview = matrix_copy;
+		modelview = matrix;
 		modelview_projection_matrix_valid = false;
 		normal_matrix_valid = false;
 		set_current_program_object_matricies();

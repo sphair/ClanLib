@@ -35,30 +35,26 @@ class Model_Impl
 public:
 	Model_Impl();
 
-	void Load(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
-	void Load(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images);
+	void Load(CL_GraphicContext &gc, const char *filename, bool we_do_not_want_texures_on_this_object);
 
 	void Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool is_draw_shadow);
 	void SetMaterial(float new_material_shininess, const CL_Vec4f &new_material_emission, const CL_Vec4f &new_material_ambient, const CL_Vec4f &new_material_specular);
 
 private:
-	void invert_uvmap(CL_Vec2f *points_ptr, int size);
-	void insert_object(CL_Collada &object, const CL_String &geometry_name, std::vector<CL_Collada_Image> &library_images, const CL_Angle &smooth_threshold);
+	int count_vertices(const struct aiScene* sc, const struct aiNode* nd);
+	void insert_vbo(int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
 
-	std::vector<CL_Collada_Triangles> positions_surface_list;
-	std::vector<CL_Vec3f> object_positions;
-	std::vector<CL_Vec3f> object_normals;
+	CL_VertexArrayBuffer vbo_positions;
+	CL_VertexArrayBuffer vbo_normals;
+	CL_VertexArrayBuffer vbo_texcoords;
+	int vbo_size;
 
-	std::vector<CL_Collada_Triangles> texcoord_surface_list;
-	std::vector<CL_Vec2f> object_texcoords;
-
-	ShaderDepth *shader_depth_ptr;
+	bool generate_texture_coords;
 
 	float material_shininess;
 	CL_Vec4f material_emission;
 	CL_Vec4f material_ambient;
 	CL_Vec4f material_specular;
-
 };
 
 
@@ -66,14 +62,9 @@ Model::Model()
 {
 }
 
-Model::Model(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images): impl(new Model_Impl())
+Model::Model(CL_GraphicContext &gc, const char *filename, bool we_do_not_want_texures_on_this_object): impl(new Model_Impl())
 {
-	impl->Load(filename, geometry_name, library_images);
-}
-
-Model::Model(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images): impl(new Model_Impl())
-{
-	impl->Load(doc, geometry_name, library_images);
+	impl->Load(gc, filename, we_do_not_want_texures_on_this_object);
 }
 
 bool Model::is_null()
@@ -88,6 +79,8 @@ void Model::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelv
 
 Model_Impl::Model_Impl()
 {
+	vbo_size = 0;
+	generate_texture_coords = true;
 	material_shininess = 64.0f;
 	material_emission = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	material_ambient =  CL_Vec4f(0.9f, 0.2f, 0.2f, 1.0f);
@@ -108,60 +101,126 @@ void Model_Impl::SetMaterial(float new_material_shininess, const CL_Vec4f &new_m
 	material_specular = new_material_specular;
 }
 
-void Model_Impl::Load(const char *filename, const char *geometry_name, std::vector<CL_Collada_Image> &library_images)
+void Model_Impl::Load(CL_GraphicContext &gc, const char *filename, bool we_do_not_want_texures_on_this_object)
 {
-	CL_File file;
-	CL_DomDocument doc;
+	generate_texture_coords = !we_do_not_want_texures_on_this_object;
 
-	file = CL_File(filename);
-	doc = CL_DomDocument(file);
+	const struct aiScene* scene = aiImportFile(filename,aiProcessPreset_TargetRealtime_MaxQuality);
+	if (!scene)
+		throw CL_Exception("Cannot load a model");
 
-	Load(doc, geometry_name, library_images);
-}
-
-void Model_Impl::Load(CL_DomDocument &doc, const char *geometry_name, std::vector<CL_Collada_Image> &library_images)
-{
-	CL_Collada object;
-	object = CL_Collada(doc, library_images);
-	insert_object(object, geometry_name, library_images, CL_Angle(89.53f, cl_degrees));
-}
-
-void Model_Impl::insert_object(CL_Collada &object, const CL_String &geometry_name, std::vector<CL_Collada_Image> &library_images, const CL_Angle &smooth_threshold)
-{
-	CL_Collada_Geometry &geometry = object.get_geometry(geometry_name);
-	CL_Collada_Mesh &mesh = geometry.get_mesh();
-
-	unsigned int dest_positions_offset = object_positions.size();
-	unsigned int dest_texcoords_offset = object_texcoords.size();
-	unsigned int dest_normals_offset = object_normals.size();
-
-	int vertex_count_positions = mesh.get_triangle_count("VERTEX") * 3;
-	if (!vertex_count_positions)
-		return;		// Return now, if not vertices were found - maybe throw an exception instead?
-
-	int vertex_count_texcoord = mesh.get_triangle_count("TEXCOORD") * 3;
-
-	object_positions.resize(dest_positions_offset + vertex_count_positions);
-	object_texcoords.resize(dest_texcoords_offset + vertex_count_texcoord);
-	object_normals.resize(dest_normals_offset + vertex_count_positions);
-
-	mesh.create_vertices(&object_positions[dest_positions_offset], 0, "VERTEX", positions_surface_list);
-	mesh.create_vertices_normal(&object_normals[dest_normals_offset], 0, "VERTEX", smooth_threshold);
-
-	if (vertex_count_texcoord)
+	try
 	{
-		mesh.create_vertices(&object_texcoords[dest_texcoords_offset], 0, "TEXCOORD", texcoord_surface_list);
-		// Invert uvmap positions for clanlib
-		invert_uvmap(&object_texcoords[dest_texcoords_offset], vertex_count_texcoord);
+		vbo_size = count_vertices(scene, scene->mRootNode);
+		if (!vbo_size)
+			throw CL_Exception("No vertices found in the model");
+	
+		vbo_positions = CL_VertexArrayBuffer(gc, vbo_size * sizeof(CL_Vec3f), cl_usage_static_draw);
+		vbo_normals = CL_VertexArrayBuffer(gc, vbo_size * sizeof(CL_Vec3f), cl_usage_static_draw);
+		if (generate_texture_coords)
+			vbo_texcoords = CL_VertexArrayBuffer(gc, vbo_size * sizeof(CL_Vec2f), cl_usage_static_draw);
+		insert_vbo(0, scene, scene->mRootNode);
+	}catch(...)
+	{
+		aiReleaseImport(scene);
+		throw;
 	}
+
+	aiReleaseImport(scene);
 }
 
-void Model_Impl::invert_uvmap(CL_Vec2f *points_ptr, int size)
+int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd)
 {
-	for (; size > 0; --size, points_ptr++)
+	int vertex_count = 0;
+	unsigned int n = 0, t;
+
+	// All meshes assigned to this node
+	for (; n < nd->mNumMeshes; ++n)
 	{
-		points_ptr->y = 1.0f - points_ptr->y;
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+		int num_vertex = mesh->mNumFaces * 3;
+		if (!num_vertex)
+			continue;
+
+		if (mesh->mTextureCoords == NULL || mesh->mTextureCoords[0] == NULL)
+			generate_texture_coords = false;
+
+		vertex_count += num_vertex;
+		for (t = 0; t < mesh->mNumFaces; ++t)
+		{
+			if (mesh->mFaces[t].mNumIndices != 3)
+					throw CL_Exception("This example only supports triangles");
+		}
 	}
+
+	// All children
+	for (n = 0; n < nd->mNumChildren; ++n)
+	{
+		vertex_count += count_vertices(sc, nd->mChildren[n]);
+	}
+
+	return vertex_count;
+}
+
+void Model_Impl::insert_vbo(int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
+{
+	int i;
+	unsigned int n = 0, t;
+
+	bool use_texcoords = !vbo_texcoords.is_null();
+
+	// All meshes assigned to this node
+	for (; n < nd->mNumMeshes; ++n)
+	{
+		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+		int num_vertex = mesh->mNumFaces * 3;
+		if (!num_vertex)
+			continue;
+
+		std::vector<CL_Vec3f> normals;
+		std::vector<CL_Vec3f> vertices;
+		std::vector<CL_Vec2f> tex_coords;
+
+		normals.reserve(num_vertex);
+		vertices.reserve(num_vertex);
+
+		if (use_texcoords)
+		{
+			if (mesh->mTextureCoords == NULL || mesh->mTextureCoords[0] == NULL)
+				throw CL_Exception("This example expects texcoords to be set for this object");
+			tex_coords.reserve(num_vertex);
+		}
+
+		for (t = 0; t < mesh->mNumFaces; ++t)
+		{
+			const struct aiFace* face = &mesh->mFaces[t];
+			if (face->mNumIndices != 3)
+					throw CL_Exception("This example only supports triangles");
+
+			for(i = 0; i < face->mNumIndices; i++)
+			{
+				int index = face->mIndices[i];
+				normals.push_back(&mesh->mNormals[index].x);
+				vertices.push_back( &mesh->mVertices[index].x);
+				if (use_texcoords)
+					tex_coords.push_back( &mesh->mTextureCoords[0][index].x);
+			}
+		}
+
+		vbo_positions.upload_data(vertex_count * sizeof(CL_Vec3f), &vertices[0], num_vertex * sizeof(CL_Vec3f));
+		vbo_normals.upload_data(vertex_count * sizeof(CL_Vec3f), &normals[0], num_vertex * sizeof(CL_Vec3f));
+		if (use_texcoords)
+			vbo_texcoords.upload_data(vertex_count * sizeof(CL_Vec2f), &tex_coords[0], num_vertex * sizeof(CL_Vec2f));
+
+		vertex_count += num_vertex;
+	}
+
+	// All children
+	for (n = 0; n < nd->mNumChildren; ++n)
+	{
+		insert_vbo(vertex_count, sc, nd->mChildren[n]);
+	}
+
 }
 
 void Model_Impl::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &modelview_matrix, bool is_draw_shadow)
@@ -170,19 +229,19 @@ void Model_Impl::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &m
 
 	CL_PrimitivesArray prim_array(gc);
 
-	prim_array.set_attributes(0, &object_positions[0]);
-	prim_array.set_attributes(1, &object_normals[0]);
+	prim_array.set_attributes(0, vbo_positions, 3, cl_type_float, (void *) 0);
+	prim_array.set_attributes(1, vbo_normals, 3, cl_type_float, (void *) 0);
 
 	if (is_draw_shadow)
 	{
 		gs->shader_depth.Use(gc);
-		gc.draw_primitives(cl_triangles, object_positions.size(), prim_array);
+		gc.draw_primitives(cl_triangles, vbo_size, prim_array);
 	}
 	else
 	{
-		if (object_texcoords.size())
+		if (!vbo_texcoords.is_null())
 		{
-			prim_array.set_attributes(2, &object_texcoords[0]);
+			prim_array.set_attributes(2, vbo_texcoords, 2, cl_type_float, (void *) 0);
 			gs->shader_texture.SetShadowMatrix(gs->shadow_matrix);
 			gc.set_texture(0, gs->texture_brick);
 			gc.set_texture(1, gs->texture_shadow);
@@ -195,12 +254,9 @@ void Model_Impl::Draw(CL_GraphicContext &gc, GraphicStore *gs, const CL_Mat4f &m
 			gs->shader_color.Use(gc);
 		}
 
-		gc.draw_primitives(cl_triangles, object_positions.size(), prim_array);
+		gc.draw_primitives(cl_triangles, vbo_size, prim_array);
 
-		if (object_texcoords.size())
-		{
-			gc.reset_texture(0);
-			gc.reset_texture(1);
-		}
+		gc.reset_texture(0);
+		gc.reset_texture(1);
 	}
 }

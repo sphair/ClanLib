@@ -90,6 +90,7 @@ public:
 	CL_Vec4(const CL_Vec2<Type> &copy) { x = copy.x; y = copy.y; z = 0; w = 0; }
 	CL_Vec4(const CL_Vec3<Type> &copy) { x = copy.x; y = copy.y; z = copy.z; w = 0; }
 	CL_Vec4(const Type &p1, const Type &p2 = 0, const Type &p3 = 0, const Type &p4 = 0) : x(p1), y(p2), z(p3), w(p4) { }
+	CL_Vec4(const Type *array_xyzw) : x(array_xyzw[0]), y(array_xyzw[1]), z(array_xyzw[2]), w(array_xyzw[3]) { }
 
 	/// \brief Normalizes a vector (not taking into account the w ordinate)
 	///

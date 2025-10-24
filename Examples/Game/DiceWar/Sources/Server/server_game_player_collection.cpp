@@ -4,6 +4,7 @@
 #include "server_player.h"
 #include "server_game_player.h"
 #include "server_game_player_collection.h"
+#include "../Lib/net_events_game.h"
 #include <algorithm>
 
 ServerGamePlayerCollection::ServerGamePlayerCollection(Server *server, ServerGame *game)
@@ -40,7 +41,7 @@ void ServerGamePlayerCollection::remove_player(ServerGamePlayer *game_player)
 	it = find(players.begin(), players.end(), game_player); 
 	if (it != players.end())
 	{
-		server->get_network_server()->send_event(CL_NetGameEvent("game-player-left-game", game_player->player->id));
+		server->get_network_server()->send_event(CL_NetGameEvent(STC_GAME_PLAYER_LEFT_GAME, game_player->player->id));
 
 		players.erase(it);
 		
@@ -81,6 +82,6 @@ void ServerGamePlayerCollection::transfer_players()
 	for (it = players.begin(); it != players.end(); ++it)
 	{
 		ServerGamePlayer *game_player = (*it);
-		send_event(CL_NetGameEvent("game-player-joined-game", game_player->player->id, game_player->player->name, game_player->visual_id));
+		send_event(CL_NetGameEvent(STC_GAME_PLAYER_JOINED_GAME, game_player->player->id, game_player->player->name, game_player->visual_id));
 	}
 }

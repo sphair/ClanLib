@@ -177,7 +177,7 @@ void CL_InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &even
 			break;
 	}
 
-	if (event.state & Mod3Mask)	// Num Lock pressed
+	if (event.state & Mod2Mask)	// Num Lock pressed
 	{
 		switch (key_symbol)
 		{

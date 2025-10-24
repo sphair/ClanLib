@@ -7,26 +7,27 @@
 #include "client.h"
 #include "game_model.h"
 #include "../Lib/map_area.h"
+#include "../Lib/net_events_game.h"
 
 GameEvents::GameEvents(Client *client)
 : client(client)
 {
-	game_events.func_event("game-is-starting").set(this, &GameEvents::on_event_game_is_starting);
-	game_events.func_event("game-load-map").set(this, &GameEvents::on_event_game_load_map);
-	game_events.func_event("game-player-joined-game").set(this, &GameEvents::on_event_player_joined_game);
-	game_events.func_event("game-player-left-game").set(this, &GameEvents::on_event_player_left_game);
-	game_events.func_event("game-set-maparea-ownership").set(this, &GameEvents::on_event_set_maparea_ownership);
-	game_events.func_event("game-set-maparea-army-strength").set(this, &GameEvents::on_event_set_maparea_army_strength);
-	game_events.func_event("game-has-started").set(this, &GameEvents::on_event_game_has_started);
-	game_events.func_event("game-invalid-attack").set(this, &GameEvents::on_event_invalid_attack);
-	game_events.func_event("game-attacked-area").set(this, &GameEvents::on_event_attacked_area);
-	game_events.func_event("game-attack-dice-result").set(this, &GameEvents::on_event_attack_dice_result);
-	game_events.func_event("game-defense-dice-result").set(this, &GameEvents::on_event_defense_dice_result);
-	game_events.func_event("game-player-turn-started").set(this, &GameEvents::on_event_player_turn_started);
-	game_events.func_event("game-over").set(this, &GameEvents::on_event_game_over);
-	game_events.func_event("game-attack-done").set(this, &GameEvents::on_event_game_attack_done);
-	game_events.func_event("game-player-message").set(this, &GameEvents::on_event_game_player_message);
-	game_events.func_event("game-system-message").set(this, &GameEvents::on_event_game_system_message);
+	game_events.func_event(STC_GAME_IS_STARTING).set(this, &GameEvents::on_event_game_is_starting);
+	game_events.func_event(STC_GAME_LOAD_MAP).set(this, &GameEvents::on_event_game_load_map);
+	game_events.func_event(STC_GAME_PLAYER_JOINED_GAME).set(this, &GameEvents::on_event_player_joined_game);
+	game_events.func_event(STC_GAME_PLAYER_LEFT_GAME).set(this, &GameEvents::on_event_player_left_game);
+	game_events.func_event(STC_GAME_SET_MAPAREA_OWNERSHIP).set(this, &GameEvents::on_event_set_maparea_ownership);
+	game_events.func_event(STC_GAME_SET_MAPAREA_ARMY_STRENGTH).set(this, &GameEvents::on_event_set_maparea_army_strength);
+	game_events.func_event(STC_GAME_HAS_STARTED).set(this, &GameEvents::on_event_game_has_started);
+	game_events.func_event(STC_GAME_INVALID_ATTACK).set(this, &GameEvents::on_event_invalid_attack);
+	game_events.func_event(STC_GAME_ATTACKED_AREA).set(this, &GameEvents::on_event_attacked_area);
+	game_events.func_event(STC_GAME_ATTACK_DICE_RESULT).set(this, &GameEvents::on_event_attack_dice_result);
+	game_events.func_event(STC_GAME_DEFENSE_DICE_RESULT).set(this, &GameEvents::on_event_defense_dice_result);
+	game_events.func_event(STC_GAME_PLAYER_TURN_STARTED).set(this, &GameEvents::on_event_player_turn_started);
+	game_events.func_event(STC_GAME_OVER).set(this, &GameEvents::on_event_game_over);
+	game_events.func_event(STC_GAME_ATTACK_DONE).set(this, &GameEvents::on_event_game_attack_done);
+	game_events.func_event(STC_GAME_PLAYER_MESSAGE).set(this, &GameEvents::on_event_game_player_message);
+	game_events.func_event(STC_GAME_SYSTEM_MESSAGE).set(this, &GameEvents::on_event_game_system_message);
 }
 
 GameEvents::~GameEvents()

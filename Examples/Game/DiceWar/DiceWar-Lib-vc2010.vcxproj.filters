@@ -27,5 +27,14 @@
     <ClInclude Include="Sources\Lib\precomp.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Lib\net_events_game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lib\net_events_lobby.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lib\net_events_login.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

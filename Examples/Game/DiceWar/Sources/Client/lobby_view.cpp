@@ -5,6 +5,7 @@
 #include "lobby_player.h"
 #include "lobby_game.h"
 #include "lobby_view_create_game.h"
+#include "../Lib/net_events_lobby.h"
 
 LobbyView::LobbyView(Client *client)
 : CL_GUIComponent(client->get_gui(), get_toplevel_description()), client(client)
@@ -59,6 +60,8 @@ void LobbyView::create_frame_games()
 	listview_games->get_header()->append(game_map_header);
 	listview_games->get_header()->append(game_status_header);
 	listview_games->func_selection_changed().set(this, &LobbyView::on_listview_games_selection_changed);
+	listview_games->show_detail_icon(false);
+	listview_games->show_detail_opener(false);
 
 	button_create_game = new CL_PushButton(frame_games);
 	button_create_game->set_geometry(CL_RectPS(29, 310, 200, 41));
@@ -75,13 +78,15 @@ void LobbyView::create_frame_games()
 void LobbyView::create_frame_players()
 {
 	frame_players = new CL_Frame(this);
-	frame_players->set_geometry(CL_Rect(766, 110, 1000, 483));
+	frame_players->set_geometry(CL_Rect(766, 110, CL_Size(234, 373)));
 
 	listview_players = new CL_ListView(frame_players);
-	listview_players->set_geometry(CL_Rect(24, 8, 205, 350));
+	listview_players->set_geometry(CL_Rect(16, 8, CL_Size(234-16*2, 373-8*2)));
 	CL_ListViewColumnHeader player_name_header = listview_players->get_header()->create_column("name", "Connected players");
 	listview_players->get_header()->append(player_name_header);
 	listview_players->set_select_whole_row(true);
+	listview_players->show_detail_icon(false);
+	listview_players->show_detail_opener(false);
 }
 
 void LobbyView::create_frame_chat()
@@ -94,6 +99,8 @@ void LobbyView::create_frame_chat()
 	
 	CL_ListViewColumnHeader chat_message_header = listview_chat->get_header()->create_column("message", "Message");
 	listview_chat->get_header()->append(chat_message_header);
+	listview_chat->show_detail_icon(false);
+	listview_chat->show_detail_opener(false);
 //	listview_chat->set_display_mode(listview_mode_list);
 //	chat_message_header.set_visible(false);
 
@@ -119,7 +126,9 @@ void LobbyView::on_gui_message(CL_GUIMessage &message)
 
 void LobbyView::on_render(CL_GraphicContext &gc, const CL_Rect &clip_rect)
 {
+	// TODO: Move this to css
 	sprite_background.draw(gc, CL_Rect(0, 0, get_width(), get_height()));
+//	gc.clear(CL_Colorf::lightgray);
 }
 
 void LobbyView::on_quit_clicked()
@@ -152,7 +161,7 @@ void LobbyView::on_listview_games_selection_changed(CL_ListViewSelection selecti
 
 void LobbyView::on_lineedit_chat_enter_pressed()
 {
-	client->get_network_client()->send_event(CL_NetGameEvent("lobby-add-message", lineedit_chat->get_text()));
+	client->get_network_client()->send_event(CL_NetGameEvent(CTS_LOBBY_ADD_MESSAGE, lineedit_chat->get_text()));
 	lineedit_chat->set_text("");
 }
 

@@ -2,11 +2,12 @@
 #include "precomp.h"
 #include "server_login_events.h"
 #include "server.h"
+#include "../Lib/net_events_login.h"
 
 ServerLoginEvents::ServerLoginEvents(Server *server)
 : server(server)
 {
-	login_events.func_event("login").set(this, &ServerLoginEvents::on_event_login);
+	login_events.func_event(CTS_LOGIN).set(this, &ServerLoginEvents::on_event_login);
 }
 
 ServerLoginEvents::~ServerLoginEvents()

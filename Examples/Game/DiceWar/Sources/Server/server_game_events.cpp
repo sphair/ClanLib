@@ -5,14 +5,15 @@
 #include "server_game_events.h"
 #include "server_game_player.h"
 #include "server_player.h"
+#include "../Lib/net_events_game.h"
 
 ServerGameEvents::ServerGameEvents(Server *server)
 : server(server)
 {
-	game_events.func_event("game-attack-area").set(this, &ServerGameEvents::on_event_attack_area);
-	game_events.func_event("game-end-turn").set(this, &ServerGameEvents::on_event_end_turn);
-	game_events.func_event("game-battle-view-over").set(this, &ServerGameEvents::on_event_battle_view_over);
-	game_events.func_event("game-add-message").set(this, &ServerGameEvents::on_event_game_add_message);
+	game_events.func_event(CTS_GAME_ATTACK_AREA).set(this, &ServerGameEvents::on_event_attack_area);
+	game_events.func_event(CTS_GAME_END_TURN).set(this, &ServerGameEvents::on_event_end_turn);
+	game_events.func_event(CTS_GAME_BATTLE_VIEW_OVER).set(this, &ServerGameEvents::on_event_battle_view_over);
+	game_events.func_event(CTS_GAME_ADD_MESSAGE).set(this, &ServerGameEvents::on_event_game_add_message);
 }
 
 ServerGameEvents::~ServerGameEvents()
@@ -41,5 +42,5 @@ void ServerGameEvents::on_event_game_add_message(const CL_NetGameEvent &e, Serve
 {
 	CL_String message = e.get_argument(0);
 	if(message.length() > 0)
-		server->get_network_server()->send_event(CL_NetGameEvent("game-player-message", game_player->player->id, message));
+		server->get_network_server()->send_event(CL_NetGameEvent(STC_GAME_PLAYER_MESSAGE, game_player->player->id, message));
 }

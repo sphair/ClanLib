@@ -6,6 +6,5 @@
 
 This program demonstrates how to create standard 3d objects using ClanLib, using OpenGl 1.x methods (no shaders).
 
-
 See the documentation at www.clanlib.org for further information.
 

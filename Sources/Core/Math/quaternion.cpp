@@ -258,6 +258,20 @@ CL_Quaternionx<Type> CL_Quaternionx<Type>::slerp(const CL_Quaternionx<Type> &qua
 	return quaternion;
 }
 
+template<typename Type>
+CL_Vec3<Type> CL_Quaternionx<Type>::rotate_vector(const CL_Vec3<Type> &v)
+{
+	CL_Vec3<Type> q3(x, y, z);
+	return v + CL_Vec3<Type>::cross(q3, CL_Vec3<Type>::cross(q3, v) + v * w) * ((Type) 2.0);
+}
+
+template<typename Type>
+CL_Vec4<Type> CL_Quaternionx<Type>::rotate_vector(const CL_Vec4<Type> &v)
+{
+	CL_Vec3<Type> rot = rotate_vector((CL_Vec3<Type>)v);
+	return CL_Vec4<Type>(rot.x, rot.y, rot.z, v.w);
+}
+
 // Explicit instantiate the versions we use:
 
 template class CL_Quaternionx<float>;

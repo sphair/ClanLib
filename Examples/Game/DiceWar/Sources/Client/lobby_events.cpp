@@ -7,21 +7,22 @@
 #include "lobby_view.h"
 #include "lobby_player_collection.h"
 #include "lobby_game_collection.h"
+#include "../Lib/net_events_lobby.h"
 
 LobbyEvents::LobbyEvents(Client *client)
 : client(client)
 {
-	lobby_events.func_event("lobby-player-logged-in").set(this, &LobbyEvents::on_event_player_logged_in);
-	lobby_events.func_event("lobby-player-logged-out").set(this, &LobbyEvents::on_event_player_logged_out);
-	lobby_events.func_event("lobby-game-created").set(this, &LobbyEvents::on_event_game_created);
-	lobby_events.func_event("lobby-game-removed").set(this, &LobbyEvents::on_event_game_removed);
-	lobby_events.func_event("lobby-game-info").set(this, &LobbyEvents::on_event_game_info);
-	lobby_events.func_event("lobby-no-games-available").set(this, &LobbyEvents::on_event_no_games_available);
-	lobby_events.func_event("lobby-player-joined-game").set(this, &LobbyEvents::on_event_player_joined_game);
-	lobby_events.func_event("lobby-player-left-game").set(this, &LobbyEvents::on_event_player_left_game);
-	lobby_events.func_event("lobby-game-started").set(this, &LobbyEvents::on_event_game_started);
-	lobby_events.func_event("lobby-player-message").set(this, &LobbyEvents::on_event_player_message);
-	lobby_events.func_event("lobby-error-message").set(this, &LobbyEvents::on_event_error_message);
+	lobby_events.func_event(STC_LOBBY_PLAYER_LOGGED_IN).set(this, &LobbyEvents::on_event_player_logged_in);
+	lobby_events.func_event(STC_LOBBY_PLAYER_LOGGED_OUT).set(this, &LobbyEvents::on_event_player_logged_out);
+	lobby_events.func_event(STC_LOBBY_GAME_CREATED).set(this, &LobbyEvents::on_event_game_created);
+	lobby_events.func_event(STC_LOBBY_GAME_REMOVED).set(this, &LobbyEvents::on_event_game_removed);
+	lobby_events.func_event(STC_LOBBY_GAME_INFO).set(this, &LobbyEvents::on_event_game_info);
+	lobby_events.func_event(STC_LOBBY_NO_GAMES_AVAILABLE).set(this, &LobbyEvents::on_event_no_games_available);
+	lobby_events.func_event(STC_LOBBY_PLAYER_JOINED_GAME).set(this, &LobbyEvents::on_event_player_joined_game);
+	lobby_events.func_event(STC_LOBBY_PLAYER_LEFT_GAME).set(this, &LobbyEvents::on_event_player_left_game);
+	lobby_events.func_event(STC_LOBBY_GAME_STARTED).set(this, &LobbyEvents::on_event_game_started);
+	lobby_events.func_event(STC_LOBBY_PLAYER_MESSAGE).set(this, &LobbyEvents::on_event_player_message);
+	lobby_events.func_event(STC_LOBBY_ERROR_MESSAGE).set(this, &LobbyEvents::on_event_error_message);
 
 	player_collection.reset(new LobbyPlayerCollection());
 	game_collection.reset(new LobbyGameCollection());

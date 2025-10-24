@@ -89,6 +89,7 @@ public:
 	CL_Vec2(const CL_Vec3<Type> &copy) { x = copy.x; y = copy.y;}
 	CL_Vec2(const CL_Vec4<Type> &copy) { x = copy.x; y = copy.y;}
 	CL_Vec2(const Type &p1, const Type &p2 = 0) : x(p1), y(p2) { }
+	CL_Vec2(const Type *array_xy) : x(array_xy[0]), y(array_xy[1]) { }
 	CL_Vec2(const CL_Pointx<int> &point);
 	CL_Vec2(const CL_Pointx<float> &point);
 	CL_Vec2(const CL_Pointx<double> &point);

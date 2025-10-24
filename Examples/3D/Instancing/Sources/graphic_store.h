@@ -38,7 +38,7 @@ public:
 	GraphicStore(CL_GraphicContext &gc);
 	~GraphicStore();
 
-	void LoadImages( CL_GraphicContext &gc, std::vector<CL_Collada_Image> &library_images );
+	void LoadImages( CL_GraphicContext &gc );
 
 public:
 	ShaderColor shader_color;

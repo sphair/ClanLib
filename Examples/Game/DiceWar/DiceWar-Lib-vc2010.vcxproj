@@ -81,6 +81,9 @@
   <ItemGroup>
     <ClInclude Include="Sources\Lib\map.h" />
     <ClInclude Include="Sources\Lib\map_area.h" />
+    <ClInclude Include="Sources\Lib\net_events_game.h" />
+    <ClInclude Include="Sources\Lib\net_events_lobby.h" />
+    <ClInclude Include="Sources\Lib\net_events_login.h" />
     <ClInclude Include="Sources\Lib\precomp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -8,6 +8,7 @@
 #include "server_game.h"
 #include "server_game_player.h"
 #include "server.h"
+#include "../Lib/net_events_lobby.h"
 #include <algorithm>
 
 ServerLobbyPlayerCollection::ServerLobbyPlayerCollection(Server *server)
@@ -26,7 +27,7 @@ ServerLobbyPlayer *ServerLobbyPlayerCollection::create_player(ServerPlayer *play
 
 	player->lobby_player = lobby_player;
 
-	server->get_network_server()->send_event(CL_NetGameEvent("lobby-player-logged-in", player->id, player_name));
+	server->get_network_server()->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_LOGGED_IN, player->id, player_name));
 	send_available_players(lobby_player);
 
 	return lobby_player;
@@ -67,7 +68,7 @@ void ServerLobbyPlayerCollection::remove_player(ServerPlayer *player)
 			player->lobby_player = 0;
 		}
 
-		server->get_network_server()->send_event(CL_NetGameEvent("lobby-player-logged-out", player->id));
+		server->get_network_server()->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_LOGGED_OUT, player->id));
 	}
 }
 
@@ -76,7 +77,7 @@ void ServerLobbyPlayerCollection::send_available_players(ServerLobbyPlayer *lobb
 	for(unsigned i = 0; i < players.size(); ++i)
 	{
 		if(players[i]->player->id != lobby_player->player->id)		
-			lobby_player->send_event(CL_NetGameEvent("lobby-player-logged-in", players[i]->player->id, players[i]->player->name));
+			lobby_player->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_LOGGED_IN, players[i]->player->id, players[i]->player->name));
 	}
 }
 

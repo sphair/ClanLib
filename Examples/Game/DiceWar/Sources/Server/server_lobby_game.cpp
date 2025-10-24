@@ -5,6 +5,7 @@
 #include "server_lobby_game_player_collection.h"
 #include "server_lobby_player.h"
 #include "server_player.h"
+#include "../Lib/net_events_lobby.h"
 
 ServerLobbyGame::ServerLobbyGame(Server *server, ServerLobbyPlayer *owner, int id)
 : server(server), id(id), max_players(6), state(lobby)
@@ -27,17 +28,17 @@ void ServerLobbyGame::set_state(State state)
 	this->state = state;
 
 	if(state == playing)
-		server->get_network_server()->send_event(CL_NetGameEvent("lobby-game-started", id));
+		server->get_network_server()->send_event(CL_NetGameEvent(STC_LOBBY_GAME_STARTED, id));
 }
 
 void ServerLobbyGame::send_game_info()
 {
 	server->get_network_server()->send_event(
-		CL_NetGameEvent("lobby-game-info", get_id(), get_name(), get_map_name(), get_max_players(), get_state()));
+		CL_NetGameEvent(STC_LOBBY_GAME_INFO, get_id(), get_name(), get_map_name(), get_max_players(), get_state()));
 }
 
 void ServerLobbyGame::send_game_info(ServerLobbyPlayer *destination_player)
 {
 	destination_player->send_event(
-		CL_NetGameEvent("lobby-game-info", get_id(), get_name(), get_map_name(), get_max_players(), get_state()));
+		CL_NetGameEvent(STC_LOBBY_GAME_INFO, get_id(), get_name(), get_map_name(), get_max_players(), get_state()));
 }

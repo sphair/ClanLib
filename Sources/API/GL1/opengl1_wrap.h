@@ -659,6 +659,9 @@ public:
 	typedef BOOL (CL_GL1FUNC *ptr_wglQueryPbufferARB)(HPBUFFERARB hPbuffer, int iAttribute, int *piValue);
 #endif
 
+	typedef void (CL_GL1FUNC *ptr_glBlendFuncSeparate)(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
+
+
 /// \}
 
 /// \name Functions
@@ -1935,6 +1938,10 @@ public:
 	ptr_wglDestroyPbufferARB wglDestroyPbufferARB;
 	ptr_wglQueryPbufferARB wglQueryPbufferARB;
 #endif
+
+	/// \brief OpenGL 1.4, loaded as an extension. Required to make ClanLib usable for certain blending operations
+	ptr_glBlendFuncSeparate blendFuncSeparate;
+
 /// \}
 };
 

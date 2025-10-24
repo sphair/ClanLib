@@ -4,6 +4,7 @@
 #include "game_view.h"
 #include "game_player.h"
 #include "client.h"
+#include "../Lib/net_events_game.h"
 
 GameViewChat::GameViewChat(GameView *view, Client *client)
 : CL_GUIComponent(view), client(client)
@@ -43,6 +44,6 @@ void GameViewChat::add_system_message(const CL_String &message)
 
 void GameViewChat::on_lineedit_chat_enter_pressed()
 {
-	client->get_network_client()->send_event(CL_NetGameEvent("game-add-message", lineedit_chat->get_text()));
+	client->get_network_client()->send_event(CL_NetGameEvent(CTS_GAME_ADD_MESSAGE, lineedit_chat->get_text()));
 	lineedit_chat->set_text("");
 }

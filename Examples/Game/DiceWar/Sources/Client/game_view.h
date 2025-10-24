@@ -7,7 +7,7 @@ class Client;
 class MapArea;
 class GameTerrain;
 class GamePlayer;
-class ModelCollada;
+class ModelAssimp;
 class LightModel;
 class GameViewPlayerList;
 class GameViewBattle;
@@ -74,7 +74,7 @@ private:
 
 	std::auto_ptr<GameTerrain> terrain;
 
-	std::auto_ptr<ModelCollada> army_model;
+	std::auto_ptr<ModelAssimp> army_model;
 
 	std::auto_ptr<MapSelection> map_selection;
 

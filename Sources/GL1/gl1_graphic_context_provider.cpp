@@ -1287,13 +1287,10 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 		break;
 	case cl_map_2d_upper_left:
 		set_active();
-		cl1Viewport(0, 0, width, height);
-		cl1MatrixMode(GL_PROJECTION);
-		cl1LoadIdentity();
-		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, (float)height, 0.0f));
-		cl1MatrixMode(GL_MODELVIEW);
-		cl1LoadIdentity();
-		cl1MultMatrixf(modelview);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
+		set_projection(CL_Mat4f::ortho_2d(0.0f, (float)width, (float)height, 0.0f));
+		set_modelview(CL_Mat4f::identity());
+
 		if (cl1IsEnabled(GL_SCISSOR_TEST))
 			cl1Scissor(
 				last_clip_rect.left,
@@ -1303,13 +1300,9 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 		break;
 	case cl_map_2d_lower_left:
 		set_active();
-		cl1Viewport(0, 0, width, height);
-		cl1MatrixMode(GL_PROJECTION);
-		cl1LoadIdentity();
-		cl1MultMatrixf(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
-		cl1MatrixMode(GL_MODELVIEW);
-		cl1LoadIdentity();
-		cl1MultMatrixf(modelview);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
+		set_projection(CL_Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height));
+		set_modelview(CL_Mat4f::identity());
 		if (cl1IsEnabled(GL_SCISSOR_TEST))
 			cl1Scissor(
 				last_clip_rect.left,
@@ -1320,7 +1313,7 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 
 	case cl_user_projection:
 		set_active();
-		cl1Viewport(0, 0, width, height);
+		set_viewport(CL_Rectf(0.0f, 0.0f, width, height));
 		if (cl1IsEnabled(GL_SCISSOR_TEST))
 			cl1Scissor(
 				last_clip_rect.left,
@@ -1333,23 +1326,20 @@ void CL_GL1GraphicContextProvider::on_window_resized()
 
 void CL_GL1GraphicContextProvider::set_viewport(const CL_Rectf &viewport)
 {
-	if (map_mode == cl_user_projection)
-	{
-		int height = get_height();
-		set_active();
-		cl1Viewport(
-			GLsizei(viewport.left),
-			GLsizei(height - viewport.bottom),
-			GLsizei(viewport.right - viewport.left),
-			GLsizei(viewport.bottom - viewport.top));
-	}
+	int height = get_height();
+	set_active();
+	cl1Viewport(
+		GLsizei(viewport.left),
+		GLsizei(height - viewport.bottom),
+		GLsizei(viewport.right - viewport.left),
+		GLsizei(viewport.bottom - viewport.top));
 }
 
 void CL_GL1GraphicContextProvider::set_projection(const CL_Mat4f &matrix)
 {
-	projection = matrix;
-	if (map_mode == cl_user_projection)
+	if (projection != matrix)
 	{
+		projection = matrix;
 		set_active();
 		cl1MatrixMode(GL_PROJECTION);
 		cl1LoadMatrixf(projection.matrix);
@@ -1358,16 +1348,11 @@ void CL_GL1GraphicContextProvider::set_projection(const CL_Mat4f &matrix)
 
 void CL_GL1GraphicContextProvider::set_modelview(const CL_Mat4f &matrix)
 {
-	modelview = matrix;
-	set_active();
-	cl1MatrixMode(GL_MODELVIEW);
-	if (map_mode != cl_user_projection)
+	if (modelview != matrix)
 	{
-		cl1LoadIdentity();
-		cl1MultMatrixf(modelview);
-	}
-	else
-	{
+		modelview = matrix;
+		set_active();
+		cl1MatrixMode(GL_MODELVIEW);
 		cl1LoadMatrixf(modelview);
 	}
 }
@@ -1403,10 +1388,20 @@ void CL_GL1GraphicContextProvider::set_blend_mode(const CL_BlendMode &mode)
 	}
 	else
 	{
-		// TODO: Fixme !
-		//throw CL_Exception("BlendFuncSeparate is not supported for OpenGL 1.3");
-		if (cl1BlendFunc)
-			cl1BlendFunc(to_enum(mode.get_blend_function_src()), to_enum(mode.get_blend_function_dest()));
+		if (cl1BlendFuncSeparate)
+		{
+			cl1BlendFuncSeparate( 
+				to_enum(mode.get_blend_function_src()),
+				to_enum(mode.get_blend_function_dest()),
+				to_enum(mode.get_blend_function_src_alpha()),
+				to_enum(mode.get_blend_function_dest_alpha()) );
+		}
+		else
+		{
+			//throw CL_Exception("BlendFuncSeparate is not supported for OpenGL 1.3");
+			if (cl1BlendFunc)
+				cl1BlendFunc(to_enum(mode.get_blend_function_src()), to_enum(mode.get_blend_function_dest()));
+		}
 	}
 }
 

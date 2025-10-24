@@ -6,20 +6,6 @@ OBJF = \
 	Sources/Lib/map.o
 	
 OBJF += \
-	../../3D/Clan3D/Collada/collada_effect_float_param.o \
-	../../3D/Clan3D/Collada/collada_material.o \
-	../../3D/Clan3D/Collada/collada.o \
-	../../3D/Clan3D/Collada/collada_image.o \
-	../../3D/Clan3D/Collada/collada_source.o \
-	../../3D/Clan3D/Collada/collada_input_shared.o \
-	../../3D/Clan3D/Collada/collada_input_unshared.o \
-	../../3D/Clan3D/Collada/collada_vertices.o \
-	../../3D/Clan3D/Collada/collada_effect_texture.o \
-	../../3D/Clan3D/Collada/collada_triangles.o \
-	../../3D/Clan3D/Collada/collada_geometry.o \
-	../../3D/Clan3D/Collada/collada_effect.o \
-	../../3D/Clan3D/Collada/collada_mesh.o \
-	../../3D/Clan3D/Collada/collada_effect_color_texture.o \
 	Sources/Client/game_terrain.o \
 	Sources/Client/game_view_chat.o \
 	Sources/Client/lobby_player_collection.o \
@@ -40,7 +26,7 @@ OBJF += \
 	Sources/Client/game_view_actionbar.o \
 	Sources/Client/lobby_events.o \
 	Sources/Client/3D/camera.o \
-	Sources/Client/3D/model_collada.o \
+	Sources/Client/3D/model_assimp.o \
 	Sources/Client/3D/orientation.o \
 	Sources/Client/3D/position.o \
 	Sources/Client/game_events.o \
@@ -53,6 +39,7 @@ OBJF += \
 	Sources/Client/main_client.o
 
 LIBS=clanCore clanNetwork clanDisplay clanGL clanGUI
+EXTRA_LIBS=-lassimp
 
 CXXFLAGS += -I Sources/Client
 

@@ -8,11 +8,8 @@
 
 #include <cstdlib>
 
-#include "../../Clan3D/Collada/collada.h"
-#include "../../Clan3D/Collada/collada_geometry.h"
-#include "../../Clan3D/Collada/collada_mesh.h"
-#include "../../Clan3D/Collada/collada_triangles.h"
-#include "../../Clan3D/Collada/collada_source.h"
-#include "../../Clan3D/Collada/collada_input_shared.h"
-#include "../../Clan3D/Collada/collada_image.h"
+#include "assimp/assimp.h"
+#include "assimp/aiPostProcess.h"
+#include "assimp/aiScene.h"
+#include "assimp/aiConfig.h"
 

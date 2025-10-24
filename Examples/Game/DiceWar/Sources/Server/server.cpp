@@ -7,7 +7,7 @@
 #include "server_lobby_model.h"
 #include "server_game_events.h"
 #include "server_game_player.h"
-
+#include "../Lib/net_events_login.h"
 //#include "server_test.h"
 
 Server::Server()
@@ -84,13 +84,13 @@ void Server::login(ServerPlayer *player, CL_String player_name)
 	{
 		player->id = next_player_id++;
 		player->name = player_name;
-		player->send_event(CL_NetGameEvent("login-successful", player->id));
+		player->send_event(CL_NetGameEvent(STC_LOGIN_SUCCESSFUL, player->id));
 
 		lobby_model->players.create_player(player, player_name);
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent("login-failed", "Already logged in"));
+		player->send_event(CL_NetGameEvent(STC_LOGIN_FAILED, "Already logged in"));
 	}
 }
 

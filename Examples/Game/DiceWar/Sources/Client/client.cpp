@@ -11,6 +11,9 @@
 #include "game_view.h"
 #include "game_model.h"
 #include "../Lib/map_area.h"
+#include "../Lib/net_events_lobby.h"
+#include "../Lib/net_events_game.h"
+#include "../Lib/net_events_login.h"
 
 Client::Client()
 : state(not_logged_in), game_view(0), lobby_view(0)
@@ -35,34 +38,35 @@ CL_GUIManager *Client::get_gui()
 	return gui->get_gui();
 }
 
+// TODO: These network sending functions wasnt the best ideas
 void Client::request_create_game()
 {
-	network_client.send_event(CL_NetGameEvent("lobby-create-game"));
+	network_client.send_event(CL_NetGameEvent(CTS_LOBBY_CREATE_GAME));
 }
 
 void Client::request_join_game(int game_id)
 {
-	network_client.send_event(CL_NetGameEvent("lobby-join-game", game_id));
+	network_client.send_event(CL_NetGameEvent(CTS_LOBBY_JOIN_GAME, game_id));
 }
 
 void Client::request_start_game()
 {
-	network_client.send_event(CL_NetGameEvent("lobby-start-game"));
+	network_client.send_event(CL_NetGameEvent(CTS_LOBBY_START_GAME));
 }
 
 void Client::request_leave_game()
 {
-	network_client.send_event(CL_NetGameEvent("lobby-leave-game"));
+	network_client.send_event(CL_NetGameEvent(CTS_LOBBY_LEAVE_GAME));
 }
 
 void Client::request_attack_area(int map_area_from_id, int map_area_to_id)
 {
-	network_client.send_event(CL_NetGameEvent("game-attack-area", map_area_from_id, map_area_to_id));
+	network_client.send_event(CL_NetGameEvent(CTS_GAME_ATTACK_AREA, map_area_from_id, map_area_to_id));
 }
 
 void Client::request_end_turn()
 {
-	network_client.send_event(CL_NetGameEvent("game-end-turn"));
+	network_client.send_event(CL_NetGameEvent(CTS_GAME_END_TURN));
 }
 
 void Client::exec()
@@ -95,7 +99,7 @@ void Client::exec()
 
 void Client::on_connected()
 {
-	network_client.send_event(CL_NetGameEvent("login", player_nick));
+	network_client.send_event(CL_NetGameEvent(CTS_LOGIN, player_nick));
 }
 
 void Client::on_disconnected()

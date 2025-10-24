@@ -14,9 +14,13 @@ To build dicewar_client:
 To build dicewar_server:
 	make -f MakeServer
 
+To easily start the server, add a -debug command parameter when running it.
+
 Models:
 http://www.3dtotal.com//ffa/meshes_v2/low_poly/rendb01/model_main.htm#
 
+To get an overview of the network events between server and clients,
+check out Sources\Lib\net_events_*.h files.
 
 TODO
 ----------------------------------------------------------

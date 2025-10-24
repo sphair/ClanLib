@@ -7,6 +7,7 @@
 #include "server_game_player.h"
 #include "server_game_player_ai.h"
 #include "../Lib/map_area.h"
+#include "../Lib/net_events_game.h"
 #include <algorithm>
 
 ServerGame::ServerGame(Server *server, int id, int max_players)
@@ -48,7 +49,7 @@ bool ServerGame::start()
 
 	if(initialize_map(map_name))
 	{
-		players->send_event(CL_NetGameEvent("game-is-starting"));
+		players->send_event(CL_NetGameEvent(STC_GAME_IS_STARTING));
 		players->transfer_players();
 		transfer_map();
 		start_first_turn();
@@ -107,15 +108,15 @@ bool ServerGame::initialize_map(CL_String map_name)
 
 void ServerGame::transfer_map()
 {
-	players->send_event(CL_NetGameEvent("game-load-map", map.get_mapname()));
+	players->send_event(CL_NetGameEvent(STC_GAME_LOAD_MAP, map.get_mapname()));
 
 	// Send out map info to clients
 	for(unsigned int i = 0; i < map.areas_size(); ++i)
 	{
 		MapArea *map_area = map.get_area(i);
 
-		players->send_event(CL_NetGameEvent("game-set-maparea-ownership", map_area->id, map_area->player_id));
-		players->send_event(CL_NetGameEvent("game-set-maparea-army-strength", map_area->id, map_area->army_strength));
+		players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_OWNERSHIP, map_area->id, map_area->player_id));
+		players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, map_area->id, map_area->army_strength));
 	}
 }
 
@@ -137,7 +138,7 @@ void ServerGame::attack_area(ServerGamePlayer *game_player, int map_area_from_id
 			}
 
 			// Send attacked area network event
-			players->send_event(CL_NetGameEvent("game-attacked-area", attack_area->id, defense_area->id));
+			players->send_event(CL_NetGameEvent(STC_GAME_ATTACKED_AREA, attack_area->id, defense_area->id));
 
 			// Calculate attack dices
 			std::vector<int> dice_attack_result(8, 0);
@@ -149,7 +150,7 @@ void ServerGame::attack_area(ServerGamePlayer *game_player, int map_area_from_id
 			}
 
 			// Send attack dice result network event
-			CL_NetGameEvent attack_event("game-attack-dice-result"); 
+			CL_NetGameEvent attack_event(STC_GAME_ATTACK_DICE_RESULT); 
 			for(int i = 0; i < 8; ++i)
 				attack_event.add_argument(dice_attack_result[i]);
 			players->send_event(attack_event);
@@ -164,7 +165,7 @@ void ServerGame::attack_area(ServerGamePlayer *game_player, int map_area_from_id
 			}
 
 			// Send defense dice result network event
-			CL_NetGameEvent defense_event("game-defense-dice-result"); 
+			CL_NetGameEvent defense_event(STC_GAME_DEFENSE_DICE_RESULT); 
 			for(int i = 0; i < 8; ++i)
 				defense_event.add_argument(dice_defense_result[i]);
 			players->send_event(defense_event);
@@ -175,26 +176,26 @@ void ServerGame::attack_area(ServerGamePlayer *game_player, int map_area_from_id
 				// Claim area
 				defense_area->player_id = attack_area->player_id;
 
-				players->send_event(CL_NetGameEvent("game-set-maparea-ownership", defense_area->id, attack_area->player_id));
+				players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_OWNERSHIP, defense_area->id, attack_area->player_id));
 
 				// Move troops
 				defense_area->army_strength = attack_area->army_strength - 1;
 				attack_area->army_strength = 1;
 
-				players->send_event(CL_NetGameEvent("game-set-maparea-army-strength", defense_area->id, defense_area->army_strength));
-				players->send_event(CL_NetGameEvent("game-set-maparea-army-strength", attack_area->id, attack_area->army_strength));
+				players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, defense_area->id, defense_area->army_strength));
+				players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, attack_area->id, attack_area->army_strength));
 			}
 			else // Defender won
 			{
 				// Reduce attacker to bare minimum
 				attack_area->army_strength = 1;
 
-				players->send_event(CL_NetGameEvent("game-set-maparea-army-strength", attack_area->id, attack_area->army_strength));
+				players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, attack_area->id, attack_area->army_strength));
 			}
 		}
 		else
 		{
-			game_player->send_event(CL_NetGameEvent("game-invalid-attack"));
+			game_player->send_event(CL_NetGameEvent(STC_GAME_INVALID_ATTACK));
 		}
 	}
 }
@@ -212,15 +213,15 @@ void ServerGame::battle_view_over(ServerGamePlayer *player)
 			return;
 	}
 
-	active_player->send_event(CL_NetGameEvent("game-attack-done"));
+	active_player->send_event(CL_NetGameEvent(STC_GAME_ATTACK_DONE));
 }
 
 void ServerGame::start_first_turn()
 {
-	players->send_event(CL_NetGameEvent("game-has-started"));
+	players->send_event(CL_NetGameEvent(STC_GAME_HAS_STARTED));
 
 	active_player = players->get_players().front();
-	players->send_event(CL_NetGameEvent("game-player-turn-started", active_player->player->id));
+	players->send_event(CL_NetGameEvent(STC_GAME_PLAYER_TURN_STARTED, active_player->player->id));
 }
 
 void ServerGame::end_turn(ServerGamePlayer *game_player)
@@ -248,7 +249,7 @@ void ServerGame::end_turn(ServerGamePlayer *game_player)
 				if(full_round_completed && current_turn == max_turns)
 				{
 					active_player = 0;
-					players->send_event(CL_NetGameEvent("game-over", "No winner", cl_format("You have played %1 turns.", max_turns)));
+					players->send_event(CL_NetGameEvent(STC_GAME_OVER, "No winner", cl_format("You have played %1 turns.", max_turns)));
 				}
 				else
 				{
@@ -258,7 +259,7 @@ void ServerGame::end_turn(ServerGamePlayer *game_player)
 					}
 
 					active_player = *it;
-					players->send_event(CL_NetGameEvent("game-player-turn-started", active_player->player->id));
+					players->send_event(CL_NetGameEvent(STC_GAME_PLAYER_TURN_STARTED, active_player->player->id));
 				}
 			}
 			else
@@ -313,7 +314,7 @@ void ServerGame::place_reinforcements(int reinforcement_count, ServerGamePlayer 
 
 				if(send_events)
 				{
-					players->send_event(CL_NetGameEvent("game-set-maparea-army-strength", map_area->id, map_area->army_strength));
+					players->send_event(CL_NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, map_area->id, map_area->army_strength));
 
 					cl_log_event("gameplay", "Reinforcing area %1 for player %2", map_area->id, game_player->player->name);
 				}
@@ -364,7 +365,7 @@ bool ServerGame::check_for_winner()
 	// We have a winner!
 	active_player = 0;
 	ServerGamePlayer *server_player = players->get_player(player_id);
-	players->send_event(CL_NetGameEvent("game-over", "Winner!", cl_format("%1 won!", server_player->player->name)));
+	players->send_event(CL_NetGameEvent(STC_GAME_OVER, "Winner!", cl_format("%1 won!", server_player->player->name)));
 
 	return true;
 }

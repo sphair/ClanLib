@@ -1435,5 +1435,13 @@ CL_GL1Functions *cl_gl1_setup_binds()
 	functions->wglQueryPbufferARB = (CL_GL1Functions::ptr_wglQueryPbufferARB) CL_GL1::get_proc_address("wglQueryPbufferARB");
 #endif
 
+	// OpenGL 1.4, loaded as an extension. Required to make ClanLib usable for certain blending operations
+	functions->blendFuncSeparate = (CL_GL1Functions::ptr_glBlendFuncSeparate) CL_GL1::get_proc_address("glBlendFuncSeparate");
+	if (!functions->blendFuncSeparate)
+	{
+		functions->blendFuncSeparate = (CL_GL1Functions::ptr_glBlendFuncSeparate) CL_GL1::get_proc_address("glBlendFuncSeparateEXT");
+	}
+
+
 	return functions;
 }

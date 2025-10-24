@@ -37,7 +37,7 @@ GraphicStore::~GraphicStore()
 {
 }
 
-void GraphicStore::LoadImages( CL_GraphicContext &gc, std::vector<CL_Collada_Image> &library_images )
+void GraphicStore::LoadImages( CL_GraphicContext &gc )
 {
 
 }

@@ -682,6 +682,17 @@ public:
 
 	/// \brief Constructs a color.
 	///
+	/// Color components are specified in the range 0 to 1.\n
+	/// An alpha value of 0 means complete transparency, while 1 means completely opaque (solid).
+	///
+	/// \param array_rgba = Red,Green,Blue,Alpha color component.
+	CL_Colord(const double *array_rgba)
+		: r(array_rgba[0]), g(array_rgba[1]), b(array_rgba[2]), a(array_rgba[3])
+	{
+	}
+
+	/// \brief Constructs a color.
+	///
 	/// Color components are specified in the range 0 to 255.\n
 	/// An alpha value of 0 means complete transparency, while 255 means completely opaque (solid).
 	///
@@ -1273,6 +1284,17 @@ public:
 	/// \param a = Alpha (transparency) color component.
 	CL_Colorf(float r, float g, float b, float a = 1.0f)
 		: r(r), g(g), b(b), a(a)
+	{
+	}
+
+	/// \brief Constructs a color.
+	///
+	/// Color components are specified in the range 0 to 1.\n
+	/// An alpha value of 0 means complete transparency, while 1 means completely opaque (solid).
+	///
+	/// \param array_rgba = Red,Green,Blue,Alpha color component.
+	CL_Colorf(const float *array_rgba)
+		: r(array_rgba[0]), g(array_rgba[1]), b(array_rgba[2]), a(array_rgba[3])
 	{
 	}
 

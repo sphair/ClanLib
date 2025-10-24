@@ -67,13 +67,15 @@
     <image-file file="dialog_background.png" />
   </image>
   <image name="ComboBoxPopupBg">
-    <image-file file="combobox_popup_bg.png" />
+<!--    <image-file file="combobox_popup_bg.png" />-->
+    <image-file file="component_background.png" />
   </image>
   <image name="ComboBoxDownArrow">
     <image-file file="combobox_down_arrow.png" />
   </image>
   <image name="PopupMenu">
-    <image-file file="popupmenu.png" />
+<!--    <image-file file="popupmenu.png" />-->
+    <image-file file="component_background.png" />
   </image>
   <image name="PopupMenuSelected">
     <image-file file="popupmenu_selected.png" />

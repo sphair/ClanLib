@@ -129,9 +129,11 @@ Shader::Shader(CL_GraphicContext &gc)
 	program_object = CL_ProgramObject(gc);
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
-	program_object.bind_attribute_location(0, "InPosition");
-	program_object.bind_attribute_location(1, "InNormal");
-	program_object.bind_attribute_location(2, "InMaterialAmbient");
+
+	program_object.bind_attribute_location(cl_attrib_position, "InPosition");
+	program_object.bind_attribute_location(cl_attrib_normal, "InNormal");
+	program_object.bind_attribute_location(cl_attrib_color, "InMaterialAmbient");
+	program_object.bind_attribute_location(cl_attrib_texture_position, "InTextureCoords");
 	if (!program_object.link())
 	{
 		throw CL_Exception(cl_format("Unable to link program object: %1", program_object.get_info_log()));
@@ -139,7 +141,6 @@ Shader::Shader(CL_GraphicContext &gc)
 
 	material_shininess = 64.0f;
 	material_emission = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	//material_ambient =  CL_Vec4f(0.9f, 0.2f, 0.2f, 1.0f);
 	material_specular = CL_Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 
 	light_position = CL_Vec4f(0.0f, 0.0f, 1.0f, 0.0f);
@@ -157,11 +158,13 @@ void Shader::Set(CL_GraphicContext &gc, int textureID)
 			program_object.set_uniform1i("Texture", textureID);
 		}
         else
+		{
         	program_object.set_uniform1i("HasTexture", 0);
+		}
+
 		program_object.set_uniform1f("MaterialShininess", material_shininess);
 		program_object.set_uniform4f("MaterialEmission", material_emission);
 		program_object.set_uniform4f("MaterialSpecular", material_specular);
-		//program_object.set_uniform4f("MaterialAmbient", material_ambient);
 		program_object.set_uniform4f("LightPosition", light_position);
 		CL_Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
 		light_halfvector += light_position;

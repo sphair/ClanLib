@@ -140,20 +140,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Clan3D\Collada\collada.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_effect.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_effect_color_texture.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_effect_float_param.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_effect_texture.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_geometry.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_image.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_input_shared.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_input_unshared.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_material.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_mesh.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_source.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_triangles.cpp" />
-    <ClCompile Include="..\Clan3D\Collada\collada_vertices.cpp" />
     <ClCompile Include="Sources\example.cpp" />
     <ClCompile Include="Sources\graphic_store.cpp" />
     <ClCompile Include="Sources\instanced_object.cpp" />
@@ -170,20 +156,6 @@
     <ClCompile Include="Sources\shader_texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Clan3D\Collada\collada.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_effect.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_effect_color_texture.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_effect_float_param.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_effect_texture.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_geometry.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_image.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_input_shared.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_input_unshared.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_material.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_mesh.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_source.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_triangles.h" />
-    <ClInclude Include="..\Clan3D\Collada\collada_vertices.h" />
     <ClInclude Include="Sources\example.h" />
     <ClInclude Include="Sources\framerate_counter.h" />
     <ClInclude Include="Sources\graphic_store.h" />
