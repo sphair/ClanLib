@@ -49,7 +49,8 @@ public:
 	{
 		deferred,
 		immediate,
-		exclusive
+		exclusive,
+		default_transaction
 	};
 
 	/// \brief Constructs a database transaction

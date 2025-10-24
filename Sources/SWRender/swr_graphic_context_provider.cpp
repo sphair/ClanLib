@@ -265,6 +265,13 @@ void CL_SWRenderGraphicContextProvider::draw_primitives_array(CL_PrimitivesType 
 		for (int i = offset; i+1 < end_vertices; i+=2)
 			draw_line(i+0, i+1);
 	}
+    else if (type == cl_line_strip)
+    {
+		int end_vertices = offset+num_vertices;
+
+		for (int i = offset; i < end_vertices-1; i++)
+			draw_line(i, i+1);
+    }
 	else if (type == cl_line_loop)
 	{
 		int end_vertices = offset+num_vertices;
@@ -302,6 +309,11 @@ void CL_SWRenderGraphicContextProvider::draw_primitives_elements(CL_PrimitivesTy
 			for (int i = 0; i+1 < count; i+=2)
 				draw_line(indices[i], indices[i+1]);
 	}
+    else if (type == cl_line_strip)
+    {
+		for (int i = 0; i < count-1; i++)
+			draw_line(indices[i], indices[i+1]);
+    }
 	else if (type == cl_line_loop)
 	{
 		int i;
@@ -334,6 +346,11 @@ void CL_SWRenderGraphicContextProvider::draw_primitives_elements(CL_PrimitivesTy
 		for (int i = 0; i+1 < count; i+=2)
 			draw_line(indices[i], indices[i+1]);
 	}
+    else if (type == cl_line_strip)
+    {
+		for (int i = 0; i < count-1; i++)
+			draw_line(indices[i], indices[i+1]);
+    }
 	else if (type == cl_line_loop)
 	{
 		int i;
@@ -366,6 +383,11 @@ void CL_SWRenderGraphicContextProvider::draw_primitives_elements(CL_PrimitivesTy
 		for (int i = 0; i+1 < count; i+=2)
 			draw_line(indices[i], indices[i+1]);
 	}
+    else if (type == cl_line_strip)
+    {
+		for (int i = 0; i < count-1; i++)
+			draw_line(indices[i], indices[i+1]);
+    }
 	else if (type == cl_line_loop)
 	{
 		int i;

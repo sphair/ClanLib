@@ -44,6 +44,7 @@ CL_SqliteTransactionProvider::CL_SqliteTransactionProvider(CL_SqliteConnectionPr
 	CL_String text;
 	switch (type)
 	{
+	case CL_DBTransaction::default_transaction:
 	case CL_DBTransaction::deferred:
 		text = "BEGIN DEFERRED TRANSACTION";
 		break;

@@ -56,7 +56,7 @@ CL_InputDeviceProvider_LinuxJoystick::CL_InputDeviceProvider_LinuxJoystick(CL_X1
 	ioctl(fd, JSIOCGBUTTONS, &number_of_buttons );
 	ioctl(fd, JSIOCGAXES,    &number_of_axes );
   
-	char name_cstr[256];
+	char name_cstr[256] = {'\0'};
 	if (ioctl(fd, JSIOCGNAME(sizeof(name_cstr)), name_cstr) < 0)
 		strncpy(name_cstr, "Unknown", sizeof(name_cstr));
 
