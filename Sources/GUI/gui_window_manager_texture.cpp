@@ -37,6 +37,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManagerTexture Construction:
 
+CL_GUIWindowManagerTexture::CL_GUIWindowManagerTexture()
+{
+}
+
 CL_GUIWindowManagerTexture::CL_GUIWindowManagerTexture(CL_DisplayWindow display_window) 
 : CL_GUIWindowManager(new CL_GUIWindowManagerProvider_Texture(display_window))
 {

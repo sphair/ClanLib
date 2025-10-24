@@ -214,11 +214,12 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Creates a new additional graphic context.
-	/** <p>This function creates a new graphic context which shares objects
-	    with the current graphic context.  Since a GC cannot be safely accessed
-	    from multiple threads simultaneously, this function allows the
-	    application to create a graphic context for the worker threads.</p>*/
+	/// \brief Creates a new additional graphic context (DO NOT USE, This function is broken, and will be removed in the future)
+	///
+	/// <p>This function creates a new graphic context which shares objects
+	///    with the current graphic context.  Since a GC cannot be safely accessed
+	///    from multiple threads simultaneously, this function allows the
+	///    application to create a graphic context for the worker threads.</p>
 	CL_GraphicContext create_worker_gc();
 
 	/// \brief Return the content of the draw buffer into a pixel buffer.

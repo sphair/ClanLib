@@ -31,6 +31,7 @@
 #include "API/Database/db_connection.h"
 #include "API/Core/System/datetime.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Database/db_value.h"
 #include "db_connection_impl.h"
 #include "db_reader_impl.h"
 
@@ -68,6 +69,16 @@ int CL_DBReader::get_name_index(const CL_StringRef &name) const
 	return impl->provider->get_name_index(name);
 }
 
+CL_DBValue CL_DBReader::get_column_value(int index) const
+{
+	return CL_DBValue(*this, index);
+}
+
+CL_DBValue CL_DBReader::get_column_value(const CL_StringRef &name) const
+{
+	return CL_DBValue(*this, name);
+}
+
 CL_String CL_DBReader::get_column_string(int index) const
 {
 	return impl->provider->get_column_string(index);
@@ -98,10 +109,41 @@ CL_DataBuffer CL_DBReader::get_column_binary(int index) const
 	return impl->provider->get_column_binary(index);
 }
 
+CL_String CL_DBReader::get_column_string(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_string(get_name_index(column_name));
+}
+
+bool CL_DBReader::get_column_bool(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_bool(get_name_index(column_name));
+}
+
+int CL_DBReader::get_column_int(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_int(get_name_index(column_name));
+}
+
+double CL_DBReader::get_column_double(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_double(get_name_index(column_name));
+}
+
+CL_DateTime CL_DBReader::get_column_datetime(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_datetime(get_name_index(column_name));
+}
+
+CL_DataBuffer CL_DBReader::get_column_binary(const CL_StringRef &column_name) const
+{
+	return impl->provider->get_column_binary(get_name_index(column_name));
+}
+
 CL_DBReaderProvider *CL_DBReader::get_provider()
 {
 	return impl->provider;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_DBReader Operations:

@@ -29,7 +29,7 @@
 #pragma once
 
 #include "Core/precomp.h"
-
+#include "API/Core/System/mutex.h"
 #include "API/Core/System/thread_local_storage.h"
 
 // This class controls the destruction order of clanCore global variables

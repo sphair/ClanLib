@@ -50,13 +50,13 @@
 // CL_DomDocument construction:
 
 CL_DomDocument::CL_DomDocument()
-: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic))
 {
 	impl->owner_document = impl;
 }
 
 CL_DomDocument::CL_DomDocument(CL_IODevice &input, bool eat_whitespace)
-: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic))
 {
 	impl->owner_document = impl;
 	load(input, eat_whitespace);
@@ -66,7 +66,7 @@ CL_DomDocument::CL_DomDocument(
 	const CL_DomString &namespace_uri,
 	const CL_DomString &qualified_name,
 	const CL_DomDocumentType &document_type)
-: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic, (CL_Mutex *) 0))
+: CL_DomNode(CL_SharedPtr<CL_DomNode_Generic>(new CL_DomDocument_Generic))
 {
 	impl->owner_document = impl;
 	CL_DomElement element = create_element(qualified_name);

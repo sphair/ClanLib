@@ -95,8 +95,7 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item(const CL_DomString &name) const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 		cur_index = cur_attribute->next_sibling;
 		cur_attribute = cur_attribute->get_next_sibling(doc_impl);
@@ -128,8 +127,7 @@ CL_DomNode CL_DomNamedNodeMap::get_named_item_ns(
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 
 		}
 		cur_index = cur_attribute->next_sibling;
@@ -276,8 +274,7 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item(const CL_DomString &name)
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 		last_index = cur_index;
 		cur_index = cur_attribute->next_sibling;
@@ -322,8 +319,7 @@ CL_DomNode CL_DomNamedNodeMap::remove_named_item_ns(
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 		last_index = cur_index;
 		cur_index = cur_attribute->next_sibling;
@@ -351,8 +347,7 @@ CL_DomNode CL_DomNamedNodeMap::item(unsigned long index) const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
  		}
 		pos++;
 		cur_index = cur_attribute->next_sibling;

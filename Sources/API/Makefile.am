@@ -457,6 +457,7 @@ clanDatabase_includes = \
 	Database/db_connection_provider.h \
 	Database/db_reader.h \
 	Database/db_reader_provider.h \
+	Database/db_value.h \
 	Database/db_transaction.h \
 	Database/db_transaction_provider.h
 

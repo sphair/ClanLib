@@ -219,6 +219,14 @@ void GridComponent::load(CL_DomElement &element, CL_GUIComponent *parent)
 					CL_DomElement frame_child = e.get_first_child().to_element();
 					load(e, co);
 				}
+				else if (tag == "combobox")
+				{
+					CL_ComboBox *co = dynamic_cast<CL_ComboBox*>(new_comp);
+				}
+				else if (tag == "spin")
+				{
+					CL_Spin *co = dynamic_cast<CL_Spin*>(new_comp);
+				}
 				else
 				{
 					CustomComponent *co = dynamic_cast<CustomComponent*>(new_comp);

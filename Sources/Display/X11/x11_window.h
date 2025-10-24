@@ -234,10 +234,6 @@ private:
 	/// \brief Handle to X11 window.
 	Window window;
 
-	Window window_last_focus;
-
-	int window_last_revert_return;
-
 	Colormap cmap;
 
 	CL_String title;

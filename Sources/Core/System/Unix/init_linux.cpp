@@ -74,9 +74,14 @@ void deinit_system()
 
 unsigned int CL_System::get_time()
 {
+	return (unsigned int) (get_microseconds() / 1000);
+}
+
+cl_uint64 CL_System::get_microseconds()
+{
 	timeval tv;
 	gettimeofday(&tv, NULL);
-	return (long) tv.tv_sec*(long) 1000 + (long) tv.tv_usec/(long) 1000;
+	return (cl_uint64) tv.tv_sec*(cl_uint64) 1000000 + (cl_uint64) tv.tv_usec;
 }
 
 CL_String CL_System::get_exe_path()

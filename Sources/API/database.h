@@ -39,6 +39,7 @@
 #include "Database/db_connection.h"
 #include "Database/db_transaction.h"
 #include "Database/db_reader.h"
+#include "Database/db_value.h"
 #include "Database/db_command_provider.h"
 #include "Database/db_connection_provider.h"
 #include "Database/db_transaction_provider.h"

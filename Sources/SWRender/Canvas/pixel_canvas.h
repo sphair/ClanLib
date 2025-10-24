@@ -35,6 +35,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/frame_buffer.h"
 #include "API/Display/Render/blend_mode.h"
+#include <memory>
 
 class CL_PixelPipeline;
 class CL_PixelCommand;

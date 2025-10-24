@@ -30,6 +30,7 @@
 
 #include "api_csslayout.h"
 #include "css_layout_user_data.h"
+#include <memory>
 
 class CL_CSSLayoutText;
 class CL_CSSLayoutElement;

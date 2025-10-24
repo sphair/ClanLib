@@ -27,6 +27,7 @@
 */
 
 #include "GL/precomp.h"
+#include "API/Core/System/mutex.h"
 #include "API/GL/setup_gl.h"
 #include "API/GL/opengl_target.h"
 

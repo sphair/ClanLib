@@ -32,6 +32,7 @@
 #include "API/GL1/opengl1.h"
 #include "API/GL1/opengl1_wrap.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/System/mutex.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/texture.h"

@@ -163,8 +163,8 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 	flip_timer_set = false;
 
 	refresh_rate = description.get_refresh_rate();
-	if (!refresh_rate)	// Default the refresh rate to 60 if not defined
-		refresh_rate = 60;
+	if (!refresh_rate)	// Default the refresh rate to 100 if not defined
+		refresh_rate = 100;
 	swap_interval = description.get_swap_interval();
 
 #ifdef WIN32

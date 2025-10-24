@@ -35,6 +35,7 @@
 #include "API/Core/System/datetime.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
+#include <memory>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SqliteConnectionProvider Construction:

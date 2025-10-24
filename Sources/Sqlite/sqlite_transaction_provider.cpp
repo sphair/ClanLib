@@ -33,6 +33,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
 #include "sqlite3.h"
+#include <memory>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SqliteTransactionProvider Construction:

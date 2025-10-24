@@ -764,8 +764,43 @@ void CL_GUIWindowManagerProvider_Texture::complete_painting()
 void CL_GUIWindowManagerProvider_Texture::process()
 {
 	setup_painting();
+	invalidate_constant_repaint_components();
 	update();
 	finalise_painting();
+}
+
+bool CL_GUIWindowManagerProvider_Texture::is_constant_repaint_enabled(CL_GUIComponent *component) const
+{
+	if (component->get_constant_repaint())
+	{
+		return true;
+	}
+	else
+	{
+		std::vector<CL_GUIComponent *> components = component->get_child_components();
+		for (std::vector<CL_GUIComponent *>::size_type i = 0; i < components.size(); i++)
+		{
+			if (is_constant_repaint_enabled(components[i]))
+				return true;
+		}
+		return false;
+	}
+}
+
+void CL_GUIWindowManagerProvider_Texture::invalidate_constant_repaint_components()
+{
+	std::map<CL_GUITopLevelWindow *, CL_GUITopLevelWindowTexture *>::iterator it;
+	for (it = window_map.begin(); it != window_map.end(); ++it)
+	{
+		CL_GUIComponent *component = it->first->component;
+		if (component)
+		{
+			if (is_constant_repaint_enabled(component))
+			{
+				component->request_repaint();
+			}
+		}
+	}
 }
 
 void CL_GUIWindowManagerProvider_Texture::set_cliprect(CL_GUITopLevelWindow *handle, CL_GraphicContext &gc, const CL_Rect &rect)

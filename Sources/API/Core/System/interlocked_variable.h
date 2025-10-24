@@ -34,7 +34,9 @@
 #include "../api_core.h"
 #include "system.h"
 
-#ifndef WIN32
+#ifdef WIN32
+#include <windows.h>
+#else
 #include "../IOData/datatypes.h"
 #endif
 

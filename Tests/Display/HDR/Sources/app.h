@@ -42,10 +42,11 @@ private:
 	void on_window_close();
 
 private:
-	CL_Image create_rgb8(CL_GraphicContext &gc, const CL_Size &image_size, float dynamic_range_start, float dynamic_range_end);
-	CL_Image create_rgb32f(CL_GraphicContext &gc, const CL_Size &image_size, float dynamic_range_start, float dynamic_range_end);
-	void draw_image(CL_GraphicContext &gc, CL_Image &image, float xpos, float ypos, float &offset_x);
+	void draw_texture(CL_GraphicContext &gc, const CL_Rectf &rect, const CL_Colorf &color, const CL_Rectf &texture_unit1_coords);
+	CL_Texture create_rgb32f(CL_GraphicContext &gc, const CL_Size &image_size, float dynamic_range_start, float dynamic_range_end);
+	void draw_image(CL_GraphicContext &gc, CL_Texture &image, float xpos, float ypos, CL_ProgramObject &program_object, CL_Vec4f &draw_color_offset);
 	bool quit;
 
 	float time_delta;
+	CL_Vec4f color_offset;
 };

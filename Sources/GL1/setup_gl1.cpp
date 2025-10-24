@@ -29,6 +29,7 @@
 #include "GL1/precomp.h"
 #include "API/GL1/setup_gl1.h"
 #include "API/GL1/opengl1_target.h"
+#include "API/Core/System/mutex.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SetupGL1 Construction:

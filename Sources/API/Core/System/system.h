@@ -36,6 +36,7 @@
 
 #include "../api_core.h"
 #include "../Text/string_types.h"
+#include "../IOData/datatypes.h"
 #include <vector>
 
 /// (Internal ClanLib Class)
@@ -58,6 +59,9 @@ class CL_API_CORE CL_System
 public:
 	/// \brief Get the current time (since system boot), in milliseconds.
 	static unsigned int get_time();
+
+	/// \brief Get the current time microseconds.
+	static cl_uint64 get_microseconds();
 
     enum CL_CPU_ExtensionX86 { mmx, mmx_ex, _3d_now, _3d_now_ex, sse, sse2, sse3, ssse3, sse4_a, sse4_1, sse4_2, sse5 };
     enum CL_CPU_ExtensionPPC { altivec };
@@ -91,7 +95,17 @@ public:
 	static std::vector<CL_String> get_stack_frames_text(void **frames, int num_frames);
 
 	/// \brief Sleep for 'millis' milliseconds.
+	///
+	/// It is possible for this function to sleep for more than millis, depending on the OS scheduler.
+	/// If you require a more accurate sleep, consider pause.
 	static void sleep(int millis);
+
+	/// \brief Pause for 'millis' milliseconds.
+	///
+	/// This function acts as sleep, but the function "may" perform a spinlock on some operating systems
+	/// to give a more accurate pause. This may have a side effect of causing 100% cpu usage.
+	/// If you do not require an accurate pause, use sleep instead.
+	static void pause(int millis);
 
 	/// \brief Returns the full dirname of the executable that started this
 	/// \brief process (aka argv[0])

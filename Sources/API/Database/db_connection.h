@@ -70,6 +70,41 @@ public:
 	/// \brief Create database command.
 	CL_DBCommand create_command(const CL_StringRef &text, CL_DBCommand::Type type = CL_DBCommand::sql_statement);
 
+	/// \brief Create database command with 1 input argument.
+	template <class Arg1>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).get_result(); }
+
+	/// \brief Create database command with 2 input arguments.
+	template <class Arg1, class Arg2>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).get_result(); }
+
+	/// \brief Create database command with 3 input arguments.
+	template <class Arg1, class Arg2, class Arg3>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).set_arg(arg3).get_result(); }
+
+	/// \brief Create database command with 4 input arguments.
+	template <class Arg1, class Arg2, class Arg3, class Arg4>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).set_arg(arg3).set_arg(arg4).get_result(); }
+
+	/// \brief Create database command with 5 input arguments.
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).set_arg(arg3).set_arg(arg4).set_arg(arg5).get_result(); }
+
+	/// \brief Create database command with 6 input arguments.
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).set_arg(arg3).set_arg(arg4).set_arg(arg5).set_arg(arg6).get_result(); }
+
+	/// \brief Create database command with 7 input arguments.
+	template <class Arg1, class Arg2, class Arg3, class Arg4, class Arg5, class Arg6, class Arg7>
+	CL_DBCommand create_command(const CL_StringRef &format, Arg1 arg1, Arg2 arg2, Arg3 arg3, Arg4 arg4, Arg5 arg5, Arg6 arg6, Arg7 arg7, CL_DBCommand::Type type = CL_DBCommand::sql_statement)
+	{ return begin_arg(format, type).set_arg(arg1).set_arg(arg2).set_arg(arg3).set_arg(arg4).set_arg(arg5).set_arg(arg6).set_arg(arg7).get_result(); }
+
 	/// \brief Begin a transaction.
 	CL_DBTransaction begin_transaction(CL_DBTransaction::Type type = CL_DBTransaction::deferred);
 
@@ -89,6 +124,75 @@ public:
 /// \name Implementation
 /// \{
 private:
+	class DBArg
+	{
+	public:
+		DBArg(CL_DBConnection &db, const CL_StringRef &format, CL_DBCommand::Type type) : cmd(db.create_command(format, type)), i(1){}
+
+		DBArg &set_arg(const CL_StringRef &arg)
+		{
+			cmd.set_input_parameter_string(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(const char *arg)
+		{
+			cmd.set_input_parameter_string(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(bool arg)
+		{
+			cmd.set_input_parameter_bool(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(int arg)
+		{
+			cmd.set_input_parameter_int(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(double arg)
+		{
+			cmd.set_input_parameter_double(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(const CL_DateTime &arg)
+		{
+			cmd.set_input_parameter_datetime(i, arg);
+			i++;
+			return *this;
+		}
+
+		DBArg &set_arg(const CL_DataBuffer &arg)
+		{
+			cmd.set_input_parameter_binary(i, arg);
+			i++;
+			return *this;
+		}
+
+		CL_DBCommand get_result() const
+		{
+			return cmd;
+		}
+
+	private:
+		CL_DBCommand cmd;
+		int i;
+	};
+
+	DBArg begin_arg(const CL_StringRef &format, CL_DBCommand::Type type)
+	{
+		return DBArg(*this, format, type);
+	}
+
 	CL_SharedPtr<CL_DBConnection_Impl> impl;
 
 /// \}

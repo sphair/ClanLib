@@ -104,5 +104,78 @@ void CL_DBCommand::set_input_parameter_binary(int index, const CL_DataBuffer &va
 	impl->provider->set_input_parameter_binary(index, value);
 }
 
+template<>
+void CL_DBCommand::set_input_parameter<int>(int index, int value)
+{
+	set_input_parameter_int(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_String &>(int index, const CL_String &value)
+{
+	set_input_parameter_string(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<bool>(int index, bool value)
+{
+	set_input_parameter_bool(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<double>(int index, double value)
+{
+	set_input_parameter_double(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_DateTime &>(int index, const CL_DateTime &value)
+{
+	set_input_parameter_datetime(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_DataBuffer &>(int index,  const CL_DataBuffer &value)
+{
+	set_input_parameter_binary(index, value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<int>(const CL_StringRef &name, int value)
+{
+	set_input_parameter_int(get_input_parameter_column(name), value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_String &>(const CL_StringRef &name, const CL_String &value)
+{
+	set_input_parameter_string(get_input_parameter_column(name), value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<bool>(const CL_StringRef &name, bool value)
+{
+	set_input_parameter_bool(get_input_parameter_column(name), value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<double>(const CL_StringRef &name, double value)
+{
+	set_input_parameter_double(get_input_parameter_column(name), value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_DateTime &>(const CL_StringRef &name, const CL_DateTime &value)
+{
+	set_input_parameter_datetime(get_input_parameter_column(name), value);
+}
+
+template<>
+void CL_DBCommand::set_input_parameter<const CL_DataBuffer &>(const CL_StringRef &name,  const CL_DataBuffer &value)
+{
+	set_input_parameter_binary(get_input_parameter_column(name), value);
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_DBCommand Implementation:

@@ -34,6 +34,7 @@
 #include "api_swrender.h"
 #include "../Core/System/sharedptr.h"
 #include "../Display/Render/graphic_context.h"
+#include <memory>
 
 class CL_PixelCommand;
 class CL_PixelPipeline;

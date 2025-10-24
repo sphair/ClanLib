@@ -27,6 +27,7 @@
 */
 
 #include "SWRender/precomp.h"
+#include "API/Core/System/mutex.h"
 #include "API/SWRender/setup_swrender.h"
 #include "API/SWRender/swr_target.h"
 

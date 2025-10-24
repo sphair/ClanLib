@@ -72,8 +72,7 @@ CL_DomNode::CL_DomNode(CL_DomDocument doc, unsigned short node_type)
 	CL_DomDocument_Generic *doc_impl = static_cast<CL_DomDocument_Generic *>(doc.impl.get());
 	impl = CL_SharedPtr<CL_DomNode_Generic>(
 		doc_impl->allocate_dom_node(),
-		doc_impl, &CL_DomDocument_Generic::free_dom_node,
-		0);
+		doc_impl, &CL_DomDocument_Generic::free_dom_node);
 
 	impl->node_index = doc_impl->allocate_tree_node();
 	CL_DomTreeNode *tree_node = impl->get_tree_node();
@@ -220,8 +219,7 @@ CL_DomNode CL_DomNode::get_parent_node() const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 	}
 	return CL_DomNode();
@@ -252,8 +250,7 @@ CL_DomNode CL_DomNode::get_first_child() const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 	}
 	return CL_DomNode();
@@ -272,8 +269,7 @@ CL_DomNode CL_DomNode::get_last_child() const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 	}
 	return CL_DomNode();
@@ -292,8 +288,7 @@ CL_DomNode CL_DomNode::get_previous_sibling() const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 	}
 	return CL_DomNode();
@@ -312,8 +307,7 @@ CL_DomNode CL_DomNode::get_next_sibling() const
 			return CL_DomNode(
 				CL_SharedPtr<CL_DomNode_Generic>(
 					dom_node,
-					doc_impl, &CL_DomDocument_Generic::free_dom_node,
-					0));
+					doc_impl, &CL_DomDocument_Generic::free_dom_node));
 		}
 	}
 	return CL_DomNode();
@@ -329,8 +323,7 @@ CL_DomNamedNodeMap CL_DomNode::get_attributes() const
 		return CL_DomNamedNodeMap(
 			CL_SharedPtr<CL_DomNamedNodeMap_Generic>(
 				map,
-				doc_impl, &CL_DomDocument_Generic::free_named_node_map,
-				0));
+				doc_impl, &CL_DomDocument_Generic::free_named_node_map));
 	}
 	return CL_DomNamedNodeMap();
 }

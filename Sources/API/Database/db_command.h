@@ -97,6 +97,15 @@ public:
 
 	/// \brief Sets the specified input parameter index from a CL_DataBuffer value
 	void set_input_parameter_binary(int index, const CL_DataBuffer &value);
+
+	/// \brief Sets the specified input parameter index from a value
+	template<class ValueType>
+	void set_input_parameter(int index, ValueType value);
+
+	/// \brief Sets the specified input parameter name from a value
+	template<class ValueType>
+	void set_input_parameter(const CL_StringRef &name, ValueType value);
+
 /// \}
 
 /// \name Implementation

@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <memory>
+
 class CL_CSSLayoutUserData;
 
 class CL_CSSBoxNode

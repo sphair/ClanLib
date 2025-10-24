@@ -54,6 +54,10 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // CL_GUIWindowManager Construction:
 
+CL_GUIWindowManager::CL_GUIWindowManager()
+{
+}
+
 CL_GUIWindowManager::CL_GUIWindowManager(CL_GUIWindowManagerProvider *provider)
 : impl(new CL_GUIWindowManager_Impl)
 {

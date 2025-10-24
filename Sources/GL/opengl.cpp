@@ -32,6 +32,7 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/System/mutex.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Render/graphic_context.h"

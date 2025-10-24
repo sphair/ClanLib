@@ -33,6 +33,7 @@
 
 #include "api_database.h"
 
+class CL_DBValue;
 class CL_DateTime;
 class CL_DataBuffer;
 class CL_DBConnection;
@@ -70,6 +71,12 @@ public:
 	/// \brief Returns the index of the specified column name
 	int get_name_index(const CL_StringRef &name) const;
 
+	/// \brief Retrieves the value of the specified column
+	CL_DBValue get_column_value(int index) const;
+
+	/// \brief Retrieves the value of the specified column name
+	CL_DBValue get_column_value(const CL_StringRef &name) const;
+
 	/// \brief Retrieves the value of the specified column as a string
 	CL_String get_column_string(int index) const;
 	
@@ -87,6 +94,24 @@ public:
 	
 	/// \brief Retrieves the value of the specified column as a CL_DataBuffer
 	CL_DataBuffer get_column_binary(int index) const;
+
+	/// \brief Retrieves the value of the specified column as a string
+	CL_String get_column_string(const CL_StringRef &column_name) const;
+
+	/// \brief Retrieves the value of the specified column as a boolean
+	bool get_column_bool(const CL_StringRef &column_name) const;
+
+	/// \brief Retrieves the value of the specified column as an integer
+	int get_column_int(const CL_StringRef &column_name) const;
+
+	/// \brief Retrieves the value of the specified column as a double
+	double get_column_double(const CL_StringRef &column_name) const;
+
+	/// \brief Retrieves the value of the specified column as a CL_DateTime
+	CL_DateTime get_column_datetime(const CL_StringRef &column_name) const;
+
+	/// \brief Retrieves the value of the specified column as a CL_DataBuffer
+	CL_DataBuffer get_column_binary(const CL_StringRef &column_name) const;
 
 	/// \brief Returns the provider interface for this reader
 	CL_DBReaderProvider *get_provider();

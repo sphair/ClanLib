@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TexturePacker", "Utilities\TexturePacker\TexturePacker-vc2008.vcproj", "{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiEditor", "Utilities\GUIEditor\GuiEditor-vc2008.vcproj", "{5C1AAF8C-7FF0-447E-B01D-AED0A0B2849F}"
@@ -100,6 +100,18 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ColorWheel1", "Examples\Display_Render\ColorWheel\ColorWheel-vc2008.vcproj", "{BAB64109-DBA5-439B-A821-5AFF2D121133}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Particle", "Examples\Display\Particle\Particle-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6ACA57423A2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gaussian", "Examples\Display_Shaders\Gaussian\Gaussian-vc2008.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418D9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bloom", "Examples\Display_Shaders\Bloom\Bloom-vc2008.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418DA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NightVision", "Examples\Display_Shaders\NightVision\NightVision-vc2008.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shockwave", "Examples\Display_Shaders\Shockwave\Shockwave-vc2008.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418AA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Timing", "Examples\Display\Timing\Timing-vc2008.vcproj", "{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Thread", "Examples\Display\Thread\Thread-vc2008.vcproj", "{C40C2488-5052-4581-A9A5-392CC19418BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -395,6 +407,42 @@ Global
 		{4E27E943-27C7-4F00-A431-B6ACA57423A2}.Release|Win32.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6ACA57423A2}.Release|Win32.Build.0 = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6ACA57423A2}.Release|x64.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Debug|x64.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418D9}.Release|x64.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Debug|x64.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DA}.Release|x64.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Debug|x64.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418DB}.Release|x64.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Debug|x64.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418AA}.Release|x64.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA23EAFE4}.Release|x64.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Debug|Win32.Build.0 = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Debug|x64.ActiveCfg = Debug|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Release|Win32.ActiveCfg = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Release|Win32.Build.0 = Release|Win32
+		{C40C2488-5052-4581-A9A5-392CC19418BA}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

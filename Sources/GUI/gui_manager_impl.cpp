@@ -597,8 +597,6 @@ void CL_GUIManager_Impl::invalidate_constant_repaint_components()
 		{
 			CL_GUITopLevelWindow *cur = root_components[i];
 			cur->component->request_repaint();
-//			CL_Rect geometry = cur->component->get_geometry();
-//			cur->component->paint(CL_Rect(CL_Point(0,0), geometry.get_size()));
 		}
 	}
 }

@@ -193,7 +193,8 @@ private:
 	void get_all_windows_zorder(bool only_visible, std::vector<CL_GUIWindowManagerTextureWindow> &windows_dest_list, const std::vector<CL_GUITopLevelWindowTexture *> &z_order) const;
 	void draw_all_windows(CL_GraphicContext &gc, std::vector<CL_GUITopLevelWindowTexture *> &z_order);
 	void invoke_input_received(CL_GUITopLevelWindow *window, const CL_InputEvent &input_event, const CL_InputState &input_state);
-
+	void invalidate_constant_repaint_components();
+	bool is_constant_repaint_enabled(CL_GUIComponent *component) const;
 /// \}
 };
 

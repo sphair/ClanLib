@@ -257,7 +257,7 @@ CL_SharedPtr<CL_CSSLayoutNode_Impl> CL_CSSLayout_Impl::alloc_node_impl() const
 		node_impl = free_node_impls.back();
 		free_node_impls.pop_back();
 	}
-	return CL_SharedPtr<CL_CSSLayoutNode_Impl>(node_impl, (CL_CSSLayout_Impl*)this, &CL_CSSLayout_Impl::free_node_impl, 0);
+	return CL_SharedPtr<CL_CSSLayoutNode_Impl>(node_impl, (CL_CSSLayout_Impl*)this, &CL_CSSLayout_Impl::free_node_impl);
 }
 
 void CL_CSSLayout_Impl::free_node_impl(CL_CSSLayoutNode_Impl *node_impl)

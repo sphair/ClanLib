@@ -100,6 +100,10 @@ public:
 /// \name Construction
 /// \{
 public:
+
+	/// \brief Constructs a null instance.
+	CL_GUIWindowManager();
+
 	/// \brief Constructs a window manager
 	///
 	/// \param provider = The theme provider

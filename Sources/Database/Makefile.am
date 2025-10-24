@@ -5,6 +5,7 @@ precomp.cpp \
 db_command.cpp \
 db_connection.cpp \
 db_reader.cpp \
+db_value.cpp \
 db_transaction.cpp
 
 libclan22Database_la_LDFLAGS = \

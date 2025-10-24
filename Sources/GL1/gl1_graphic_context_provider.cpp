@@ -348,6 +348,7 @@ CL_PixelBufferProvider *CL_GL1GraphicContextProvider::alloc_pixel_buffer()
 CL_PixelBuffer CL_GL1GraphicContextProvider::get_pixeldata(const CL_Rect& rect) const
 {
 	set_active();
+	if (!framebuffer_bound) cl1ReadBuffer(CL_BACK);
 
 	if( rect.left != rect.right )
 	{

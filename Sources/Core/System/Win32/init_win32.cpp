@@ -52,18 +52,26 @@
 
 unsigned int CL_System::get_time()
 {
-	static LARGE_INTEGER perf_frequency, perf_counter;
+	return (unsigned int) (get_microseconds() / 1000);
+}
+
+cl_uint64 CL_System::get_microseconds()
+{
+	static LARGE_INTEGER perf_counter;
+	static double perf_frequency;
 	static bool first_time = true;
 
 	if (first_time)
 	{
-		QueryPerformanceFrequency(&perf_frequency);
-		perf_frequency.QuadPart /= 1000;
+		LARGE_INTEGER perf_frequency_int64;
+		QueryPerformanceFrequency(&perf_frequency_int64);
+		perf_frequency = (double) perf_frequency_int64.QuadPart;
 		first_time = false;
 	}
 
 	QueryPerformanceCounter(&perf_counter);
-	return (unsigned int) (perf_counter.QuadPart / perf_frequency.QuadPart);
+	double quad_part = (double) perf_counter.QuadPart;
+	return (cl_uint64) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
 }
 
 CL_String CL_System::get_exe_path()

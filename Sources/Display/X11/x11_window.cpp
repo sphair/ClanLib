@@ -55,7 +55,7 @@
 #include <dlfcn.h>
 
 CL_X11Window::CL_X11Window()
-: window(0), window_last_focus(0), cmap(0), allow_resize(false), fullscreen(false),
+: window(0), cmap(0), allow_resize(false), fullscreen(false),
   disp(0), system_cursor(0), hidden_cursor(0), cursor_bitmap(0), 
   site(0), clipboard(this), dlopen_lib_handle(NULL), size_hints(NULL)
 {
@@ -313,15 +313,8 @@ void CL_X11Window::set_size(int width, int height, bool client_area)
 
 void CL_X11Window::set_enabled(bool enable)
 {
-	if (enable)
-	{
-		if (!has_focus())
-			XSetInputFocus(disp, window, RevertToNone, CurrentTime);
-	}else
-	{
-		if (has_focus())
-			XSetInputFocus(disp, window_last_focus, window_last_revert_return, CurrentTime);
-	}
+	// Window's version of set_enabled() calls EnableWindow() which tells the windows API that the window can have input focus if desired. 
+	// If you do require it for linux, changing the masks: KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask might work
 }
 
 void CL_X11Window::minimize()
@@ -458,11 +451,6 @@ void CL_X11Window::close_window()
 		cmap = 0;
 	}
 
-	if (focus && window_last_focus)
-	{
-//TODO: How to return the focus to the previous window - Checking that it is still valid ?
-//		XSetInputFocus(disp, window_last_focus, window_last_revert_return, CurrentTime);
-	}
 }
 
 void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindowDescription &desc)
@@ -475,8 +463,6 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindow
 	screen_connection.type = CL_EventProvider::type_fd_read;
 	screen_connection.handle = ConnectionNumber(disp);
 	current_window_events.push_back(screen_connection);
-
-	XGetInputFocus(disp, &window_last_focus, &window_last_revert_return);
 
 	// create a color map
 	cmap = XCreateColormap( disp, RootWindow(disp,  current_screen), visual->visual, AllocNone);
@@ -729,8 +715,7 @@ void CL_X11Window::create_new_window(XVisualInfo *visual, const CL_DisplayWindow
 	// make window visible:
 	if (desc.is_visible())
 	{
-		show(true);
-		set_enabled(true);
+		show(false);
 	}
 
 	if (desc.is_fullscreen()) set_fullscreen();

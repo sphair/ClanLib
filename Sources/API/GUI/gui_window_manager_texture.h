@@ -52,6 +52,9 @@ class CL_API_GUI CL_GUIWindowManagerTexture : public CL_GUIWindowManager
 /// \{
 public:
 
+	/// \brief Constructs a null instance.
+	CL_GUIWindowManagerTexture();
+
 	/// \brief Constructs a GUIWindowManagerTexture
 	///
 	/// \param display_window = Display Window

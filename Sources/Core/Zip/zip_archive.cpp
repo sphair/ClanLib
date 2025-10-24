@@ -33,6 +33,7 @@
 #include "API/Core/IOData/iodevice_memory.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/System/mutex.h"
 #include "zip_archive_impl.h"
 #include "zip_file_header.h"
 #include "zip_64_end_of_central_directory_record.h"

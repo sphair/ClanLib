@@ -33,6 +33,7 @@
 #include "API/Display/Font/font.h"
 #include "vertex_attribute_fetcher.h"
 #include <map>
+#include <memory>
 
 class CL_PixelCanvas;
 class CL_PixelCommand;
