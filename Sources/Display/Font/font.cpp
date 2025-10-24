@@ -147,6 +147,9 @@ CL_Size CL_Font::get_text_size(CL_GraphicContext &gc, const CL_StringRef &text)
 		{
 			CL_Size line_size = get_provider()->get_text_size(gc, lines[i]);
 
+			if ((line_size.width == 0) && (line_size.height == 0) && (lines.size() > 1)) // blank line
+				line_size.height = fm.get_descent() + fm.get_ascent(); 
+
 			if ((i+1) != lines.size())	// Do not add the line spacing on the last line
 				line_size.height += line_spacing;
 

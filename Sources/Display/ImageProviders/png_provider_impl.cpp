@@ -40,13 +40,6 @@
 #include <cstdlib>
 #endif
 
-/*
-	Known Bugs:
-
-	- this provider might not work with 16bit PNG's 
-	- this provider might not work with some grayscale PNG's (don't remember which one)
-*/
-
 /////////////////////////////////////////////////////////////////////////////
 // CL_PNGProvider_Impl construction:
 
@@ -113,31 +106,33 @@ void CL_PNGProvider_Impl::init()
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
 		throw CL_Exception("Unable to create PNG info struct");
-	}   
-	// Note, we must not use png_ptr->jmpbuff, as if libpng is compiled using a different compiler, unexpected results will occur
-	if (setjmp(jmpbuf))
+	}
+
+	try
+	{
+		if (input_source.is_null())
+			input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
+
+		// tell libpng from whom it get the fileData
+		png_set_read_fn(png_ptr, this, &CL_PNGProvider_Impl::pngread_file);
+
+		// reading the header infos and actually read data ...
+		read_data();
+
+		// remove our data_provider from libpng
+		png_set_read_fn(png_ptr,NULL,NULL);
+
+	}
+	catch (CL_Exception error)
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
-		throw CL_Exception(png_error);
-	}  
-
-	if (input_source.is_null())
-		input_source = directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
-
-	// tell libpng from whom it get the fileData
-	png_set_read_fn(png_ptr, this, &CL_PNGProvider_Impl::pngread_file);
-
-	// reading the header infos and actually read data ...
-	read_data();
-
-	// remove our data_provider from libpng
-	png_set_read_fn(png_ptr,NULL,NULL);
+		throw error;
+	}	
 
 	// free memory ...
 	png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
 
 	input_source = CL_IODevice();
-
 
 	// this could be integrated better, but I'm too tired, so I just hack CL_TargaProvider
 	// support into it. -- mbn 21. feb 2002
@@ -160,22 +155,11 @@ void CL_PNGProvider_Impl::deinit()
 
 void CL_PNGProvider_Impl::pngread_error_handler(png_structp png_ptr, png_const_charp msg)
 {
-	CL_PNGProvider_Impl *instance = (CL_PNGProvider_Impl *) png_get_error_ptr(png_ptr);
-	if (instance == NULL)
-	{
-		// Very serious error, abort
-#ifdef WIN32
-		DebugBreak();
-#else
-		fprintf(stderr, "Internal error - PNG\n");
-		fflush(stderr);
-#endif
-		exit(1);
-	}
 
-	instance->png_error = cl_format("PNG read failed: %1", CL_StringHelp::local8_to_text(msg) );
+//	CL_PNGProvider_Impl *instance = (CL_PNGProvider_Impl *) png_get_error_ptr(png_ptr);
+//	if (instance) { ... }
 
-	longjmp(instance->jmpbuf, 1);
+	throw CL_Exception(cl_format("PNG read failed: %1", CL_StringHelp::local8_to_text(msg) ));
 }
 
 void CL_PNGProvider_Impl::pngread_file(

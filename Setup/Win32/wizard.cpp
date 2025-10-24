@@ -120,17 +120,12 @@ BOOL Wizard::finish()
 			hKey, TEXT("IncludeX64"), 0, REG_DWORD,
 			(LPBYTE) &include_x64, sizeof(DWORD));
 
-		DWORD include_gl1 = (page_target.include_gl1 ? 1 : 0);
-		RegSetValueEx(
-			hKey, TEXT("IncludeGL1"), 0, REG_DWORD,
-			(LPBYTE) &include_gl1, sizeof(DWORD));
-
 		RegCloseKey(hKey);
 	}
 
-	Workspace workspace = create_workspace(page_target.include_gl1);
+	Workspace workspace = create_workspace();
 
-	if(page_target.target_version == 800 || page_target.target_version == 900)
+	if(page_target.target_version == 900)
 	{
 		WorkspaceGenerator_MSVC8 generator8;
 		generator8.set_target_version(page_target.target_version);
@@ -153,7 +148,7 @@ BOOL Wizard::finish()
 /////////////////////////////////////////////////////////////////////////////
 // Workspace creation:
 
-Workspace Wizard::create_workspace(bool include_target_gl1)
+Workspace Wizard::create_workspace()
 {
 	Workspace workspace;
 	workspace.input_lib_dir = text_to_local8(page_system.path_input_lib);
@@ -166,10 +161,6 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 	std::list<std::string> libs_list_release;
 	std::list<std::string> libs_list_debug;
 	std::list<std::string> defines_list;
-
-	defines_list.push_back("USE_OPENGL");
-	defines_list.push_back("USE_NETWORK");
-	defines_list.push_back("USE_CLANSOUND");
 	
 	defines_list.push_back("DIRECTINPUT_VERSION=0x0800");
 	defines_list.push_back("WINVER=0x0501");
@@ -197,15 +188,6 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 		"Sqlite",
 		"clanSqlite",
 		"sqlite.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug,
-		defines_list);
-
-	Project clanMySQL(
-		"MySQL",
-		"clanMySQL",
-		"mysql.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug,
@@ -341,7 +323,6 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 	workspace.projects.push_back(clanCore);
 	workspace.projects.push_back(clanDatabase);
 	workspace.projects.push_back(clanSqlite);
-//	workspace.projects.push_back(clanMySQL);
 	workspace.projects.push_back(clanRegExp);
 	workspace.projects.push_back(clanApp);
 	workspace.projects.push_back(clanNetwork);
@@ -352,9 +333,7 @@ Workspace Wizard::create_workspace(bool include_target_gl1)
 //	workspace.projects.push_back(clanD3D10);
 	workspace.projects.push_back(clanSWRender);
 	workspace.projects.push_back(clanCSSLayout);
-
-	if (include_target_gl1)
-		workspace.projects.push_back(clanGL1);
+	workspace.projects.push_back(clanGL1);
 
 	workspace.projects.push_back(clanGUI);
 	workspace.projects.push_back(clanVorbis);

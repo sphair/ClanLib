@@ -31,7 +31,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include "jpeg_provider_impl.h"
-#include <csetjmp>
 #include <jerror.h>
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_format.h"

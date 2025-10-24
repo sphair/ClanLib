@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{8592b5d1-a574-4f1f-9731-a33c9f286cad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{81ed4f4b-fa7d-4ade-b0fe-9d7e0ec53a9e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test_cl08.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="makefile">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="resources.xml">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="speed_results.txt" />
+  </ItemGroup>
+</Project>

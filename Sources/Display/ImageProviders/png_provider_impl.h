@@ -142,9 +142,6 @@ private:
 
 	png_infop end_info;
 
-	jmp_buf jmpbuf;
-
-	CL_String png_error;
 /// \}
 };
 

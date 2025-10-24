@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Rebecca Palmer
 */
 
 #include "Display/precomp.h"
@@ -37,11 +38,16 @@ class CL_PrimitivesArrayBlock
 public:
 	CL_PrimitivesArrayBlock(const CL_PrimitivesArrayData *vertex_declaration)
 	{
-		memset(&array_data, 0, sizeof(CL_PrimitivesArrayBlock));
 		array_data.attributes = new CL_PrimitivesArrayData::VertexData[vertex_declaration->num_attributes];
+		array_data.attribute_indexes = new int[vertex_declaration->num_attributes];
+		array_data.normalize_attributes = new bool[vertex_declaration->num_attributes];
 		array_data.num_attributes = vertex_declaration->num_attributes;
 		for (int i = 0; i < vertex_declaration->num_attributes; i++)
+		{
 			array_data.attributes[i] = alloc_vertex_data(vertex_declaration->attributes[i].size, vertex_declaration->attributes[i].type);
+			array_data.attribute_indexes[i] = vertex_declaration->attribute_indexes[i];
+			array_data.normalize_attributes[i] = vertex_declaration->normalize_attributes[i];
+		}
 	}
 
 	~CL_PrimitivesArrayBlock()
@@ -49,12 +55,17 @@ public:
 		for (int i = 0; i < array_data.num_attributes; i++)
 			free_vertex_data(array_data.attributes[i]);
 		delete[] array_data.attributes;
+		delete[] array_data.attribute_indexes;
+		delete[] array_data.normalize_attributes;
 	}
 
 	void copy_data(int offset, int offset_source, const CL_PrimitivesArrayData *source, int vertex_count)
 	{
+		if (array_data.num_attributes != source->num_attributes)
+			throw CL_Exception("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration");
+			
 		for (int i = 0; i < source->num_attributes; i++)
-			if (array_data.attribute_indexes[i] != source->attribute_indexes[i])
+			if ((array_data.attribute_indexes[i] != source->attribute_indexes[i]) || (array_data.normalize_attributes[i] != source->normalize_attributes[i]))
 				throw CL_Exception("All primitives arrays passed to CL_PrimitivesArrayBuilder must use same vertex declaration");
 
 		for (int i = 0; i < source->num_attributes; i++)
@@ -63,13 +74,14 @@ public:
 
 	CL_PrimitivesArrayData *get_array_data() { return &array_data; }
 
-	enum { total_vertices = 1024 };
+	enum { total_vertices = 1020 };//Needs to be a multiple of the number of vertices per primitive, so one is not cut in half by the block boundary
 
 private:
 	CL_PrimitivesArrayData::VertexData alloc_vertex_data(int size, CL_VertexAttributeDataType type)
 	{
 		CL_PrimitivesArrayData::VertexData data;
 		data.size = size;
+		data.type = type;
 		data.stride = 0;
 		data.array_provider = 0;
 		data.single_value = false;
@@ -121,7 +133,7 @@ private:
 
 		char *d = (char *) dest.data;
 
-		if (!source.single_value)
+		if (source.single_value)
 		{
 			for (int i = 0; i < vertex_count; i++)
 				memcpy(d + data_length * (offset + i), source.value_ubyte, data_length);

@@ -95,25 +95,38 @@ void WorkspaceGenerator_MSVC8::write(const Workspace &workspace)
 void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 {
 	std::list<Project>::const_iterator it;
-
-	OutputWriter writer("ClanLib.sln");
-
-	if(target_version == 800)
+	
+	std::string sln_filename;
+	std::string vcproj_filename;
+	if(target_version == 900)
 	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 9.00");
-		writer.write_line(0, "# Visual Studio 2005");
+		sln_filename = "ClanLib.sln";
+		vcproj_filename = ".vcproj";
 	}
 	else
 	{
+		sln_filename = "ClanLib.sln";
+		vcproj_filename = ".vcxproj";
+	}
+
+	OutputWriter writer(sln_filename);
+
+	if(target_version == 900)
+	{
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 10.00");
 		writer.write_line(0, "# Visual Studio 2008");
+	}
+	else
+	{
+		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
+		writer.write_line(0, "# Visual C++ Express 2010");
 	}
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
 	{
 		const Project &project = *it;
 		std::string project_guid = get_project_guid(project.name);
-		std::string project_filename = "Projects\\" + project.libname + ".vcproj";
+		std::string project_filename = "Projects\\" + project.libname + vcproj_filename;
 
 		writer.write_line(0, "Project(\"{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}\") = \"" + project.name + "\", \"" + project_filename + "\", \"" + project_guid + "\"");
 		writer.write_line(0, "EndProject");
@@ -172,7 +185,7 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 
 void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 {
-	MSVC8_PropertySheet propertysheet;
+	MSVC8_PropertySheet propertysheet(target_version);
 	propertysheet.name = "External Directories";
 
 	MSVC8_VCCLCompilerTool *tool_compiler = new MSVC8_VCCLCompilerTool;
@@ -186,7 +199,19 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	tool_linker->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
 	tool_librarian->additional_library_directories = workspace.input_lib_dir + "\\$(PlatformName)$(ConfigurationName)";
 
-	std::string propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.vsprops";
+	propertysheet.input_include_dir_vs100 = workspace.input_include_dir;
+	propertysheet.input_lib_dir_vs100 = workspace.input_lib_dir;
+
+	std::string propertysheet_filename;
+	if(target_version == 900)
+	{
+		propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.vsprops";
+	}
+	else
+	{
+		propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.props";
+	}
+
 	OutputWriter writer(propertysheet_filename.c_str());
 	propertysheet.write(writer, 0);
 }
@@ -277,9 +302,26 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 
 	generate_source_files(vc80proj, project);
 
-	std::string project_filename = "Projects\\" + project.libname + ".vcproj";
+	std::string vcproj_filename;
+	if(target_version == 900)
+	{
+		vcproj_filename = ".vcproj";
+	}
+	else
+	{
+		vcproj_filename = ".vcxproj";
+	}
+
+	std::string project_filename = "Projects\\" + project.libname + vcproj_filename;
 	OutputWriter writer(project_filename.c_str());
 	vc80proj.write(writer, 0);
+
+	if(target_version >= 1000)
+	{
+		std::string filters_filename = "Projects\\" + project.libname + ".vcxproj.filters";
+		OutputWriter writer_filters(filters_filename.c_str());
+		vc80proj.write_filters(writer_filters, 0);	}
+
 
 	write_install_batch_file(workspace, project);
 }
@@ -509,6 +551,8 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	SharedConfig shared;
 	shared.config = new MSVC8_Configuration;
 	shared.config->name = std::string(config.name) + "|" + platform;
+	shared.config->name_without_platform = std::string(config.name);
+	shared.config->name_without_config = platform;
 	if (config.dll)
 		shared.config->configuration_type = "2";
 	shared.config->inherited_property_sheets =
@@ -518,6 +562,13 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 		"Sheets\\DirectXVersion.vsprops;"
 		"Sheets\\LocalIncludes.vsprops;"
 		"Sheets\\MultiprocessorBuilding.vsprops;";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\BuildDirectory.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\WindowsVersion.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DirectXVersion.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\LocalIncludes.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MultiprocessorBuilding.props");
 
 	if (config.unicode)
 		shared.config->character_set.set("1");
@@ -541,6 +592,7 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	shared.tool_post_build->command_line.set("call install_clan" + project_name + ".bat &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(TargetName).pdb&quot; &quot;$(PlatformName)&quot;");
 
 	shared.config->tools.push_back(shared.tool_compiler);
+	shared.config->tool_compiler_vs100 = shared.tool_compiler;
 	if (config.dll)
 		shared.config->tools.push_back(shared.tool_linker);
 	else
@@ -561,6 +613,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mt_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTDebugRuntime.vsprops;"
 		"Sheets\\DebugBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDebugRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
@@ -577,6 +635,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mt_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTReleaseRuntime.vsprops;"
 		"Sheets\\ReleaseBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTReleaseRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
@@ -593,6 +657,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_mtdll_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTDLLDebugRuntime.vsprops;"
 		"Sheets\\DebugBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
@@ -609,6 +679,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_mtdll_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTDLLReleaseRuntime.vsprops;"
 		"Sheets\\ReleaseBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_librarian->output_file.set(make_output_filename(config, false, platform, project_name));
 	return shared.config;
 }
@@ -625,6 +701,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_debug_dll_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTDLLDebugRuntime.vsprops;"
 		"Sheets\\DebugBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLDebugRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DebugBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_compiler->preprocessor_definitions = "CL_API_DLL;CL_" + make_upper(project_name) + "_EXPORT";
 	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
@@ -643,6 +725,12 @@ MSVC8_Configuration *WorkspaceGenerator_MSVC8::create_release_dll_config(
 		"Sheets\\" + platform + "Platform.vsprops;"
 		"Sheets\\MTDLLReleaseRuntime.vsprops;"
 		"Sheets\\ReleaseBuild.vsprops";
+
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\" + platform + "Platform.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MTDLLReleaseRuntime.props");
+	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ReleaseBuild.props");
+	shared.config->target_name_vs100 = make_target_name(config, platform, project_name);
+
 	shared.tool_compiler->preprocessor_definitions = "CL_API_DLL;CL_" + make_upper(project_name) + "_EXPORT";
 	shared.tool_linker->output_file.set(make_output_filename(config, true, platform, project_name));
 	return shared.config;
@@ -677,6 +765,30 @@ std::string WorkspaceGenerator_MSVC8::make_output_filename(
 	return output_file;
 }
 
+std::string WorkspaceGenerator_MSVC8::make_target_name(
+	const ConfigurationType &config,
+	const std::string &platform,
+	const std::string &project_name)
+{
+	std::string output_file = "clan$(ProjectName)";
+	if (config.dll)
+	{
+		output_file += "-dll";
+	}
+	else if (config.runtime_type != runtime_static_debug && config.runtime_type != runtime_static_release)
+	{
+		output_file += "-static-mtdll";
+	}
+	else
+	{
+		output_file += "-static-mt";
+	}
+
+	if (config.runtime_type == runtime_static_debug || config.runtime_type == runtime_dll_debug)
+		output_file += "-debug";
+
+	return output_file;
+}
 void WorkspaceGenerator_MSVC8::generate_source_files(MSVC8_Project &vcproj, const Project &project)
 {
 	std::string chop_str = "Sources\\";
@@ -896,7 +1008,7 @@ void OutputWriter::write_line(int indent, const std::string &line)
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_PropertySheet class:
 
-MSVC8_PropertySheet::MSVC8_PropertySheet()
+MSVC8_PropertySheet::MSVC8_PropertySheet(int target_version) : target_version(target_version)
 {
 }
 
@@ -913,15 +1025,37 @@ void MSVC8_PropertySheet::write(OutputWriter &output, int indent)
 {
 	std::vector<MSVC8_Tool *>::size_type index;
 
-	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
-	output.write_line(indent, "<VisualStudioPropertySheet");
-	output.write_line(indent+1, "ProjectType=\"Visual C++\"");
-	output.write_line(indent+1, "Version=\"8.00\"");
-	output.write_line(indent+1, "Name=\""+ name +"\"");
-	output.write_line(indent+1, ">");
-	for (index = 0; index < tools.size(); index++)
-		tools[index]->write(output, indent+1);
-	output.write_line(indent, "</VisualStudioPropertySheet>");
+	if(target_version == 900)
+	{
+		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
+		output.write_line(indent, "<VisualStudioPropertySheet");
+		output.write_line(indent+1, "ProjectType=\"Visual C++\"");
+		output.write_line(indent+1, "Version=\"8.00\"");
+		output.write_line(indent+1, "Name=\""+ name +"\"");
+		output.write_line(indent+1, ">");
+		for (index = 0; index < tools.size(); index++)
+			tools[index]->write(output, indent+1);
+		output.write_line(indent, "</VisualStudioPropertySheet>");
+	}
+	else
+	{
+		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+		output.write_line(indent, "  <PropertyGroup>");
+		output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
+		output.write_line(indent, "    <_PropertySheetDisplayName>External Directories</_PropertySheetDisplayName>");
+		output.write_line(indent, "  </PropertyGroup>");
+		output.write_line(indent, "  <ItemDefinitionGroup>");
+		output.write_line(indent, "    <ClCompile>");
+		output.write_line(indent, "      <AdditionalIncludeDirectories>" + input_include_dir_vs100 + ";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>");
+		output.write_line(indent, "    </ClCompile>");
+		output.write_line(indent, "    <Lib>");
+		output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
+		output.write_line(indent, "    </Lib>");
+		output.write_line(indent, "  </ItemDefinitionGroup>");
+		output.write_line(indent, "</Project>");
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -948,41 +1082,156 @@ MSVC8_Project::~MSVC8_Project()
 void MSVC8_Project::write(OutputWriter &output, int indent) const
 {
 	std::vector<std::string>::size_type index;
-	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
-	output.write_line(indent, "<VisualStudioProject");
-	output.write_line(indent+1, "ProjectType=\"Visual C++\"");
+	std::vector<std::string>::size_type index2;
 
-	if(target_version == 800)
-		output.write_line(indent+1, "Version=\"8,00\"");
-	else
+	if(target_version == 900)
+	{
+		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
+		output.write_line(indent, "<VisualStudioProject");
+		output.write_line(indent+1, "ProjectType=\"Visual C++\"");
+
 		output.write_line(indent+1, "Version=\"9,00\"");
 
-	output.write_line(indent+1, "Name=\"" + name + "\"");
-	output.write_line(indent+1, "ProjectGUID=\"" + project_guid + "\"");
-	output.write_line(indent+1, ">");
-	output.write_line(indent+1, "<Platforms>");
-	for (index = 0; index < platforms.size(); index++)
-		output.write_line(indent+2, "<Platform Name=\"" + platforms[index] + "\" />");
-	output.write_line(indent+1, "</Platforms>");
-	output.write_line(indent+1, "<ToolFiles />");
-	output.write_line(indent+1, "<Configurations>");
-	for (index = 0; index < configurations.size(); index++)
-		configurations[index]->write(output, indent+2);
-	output.write_line(indent+1, "</Configurations>");
-	output.write_line(indent+1, "<References />");
-	output.write_line(indent+1, "<Files>");
+		output.write_line(indent+1, "Name=\"" + name + "\"");
+		output.write_line(indent+1, "ProjectGUID=\"" + project_guid + "\"");
+		output.write_line(indent+1, ">");
+		output.write_line(indent+1, "<Platforms>");
+		for (index = 0; index < platforms.size(); index++)
+			output.write_line(indent+2, "<Platform Name=\"" + platforms[index] + "\" />");
+		output.write_line(indent+1, "</Platforms>");
+		output.write_line(indent+1, "<ToolFiles />");
+		output.write_line(indent+1, "<Configurations>");
+		for (index = 0; index < configurations.size(); index++)
+			configurations[index]->write(output, indent+2);
+		output.write_line(indent+1, "</Configurations>");
+		output.write_line(indent+1, "<References />");
+		output.write_line(indent+1, "<Files>");
+		for (index = 0; index < files.size(); index++)
+			files[index]->write(output, indent+2);
+		output.write_line(indent+1, "</Files>");
+		output.write_line(indent+1, "<Globals />");
+		output.write_line(indent, "</VisualStudioProject>");
+	}
+	else
+	{
+		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+  		output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
+		
+		for (index = 0; index < configurations.size(); index++)
+		{
+  			output.write_line(indent, "    <ProjectConfiguration Include=\"" + configurations[index]->name + "\">");
+			output.write_line(indent, "      <Configuration>" + configurations[index]->name_without_platform + "</Configuration>");
+			output.write_line(indent, "      <Platform>" + configurations[index]->name_without_config + "</Platform>");
+  			output.write_line(indent, "    </ProjectConfiguration>");
+		}
+
+  		output.write_line(indent, "  </ItemGroup>");
+  		output.write_line(indent, "  <PropertyGroup Label=\"Globals\">");
+  		output.write_line(indent, "    <ProjectName>" + name + "</ProjectName>");
+  		output.write_line(indent, "    <ProjectGuid>" + project_guid + "</ProjectGuid>");
+  		output.write_line(indent, "  </PropertyGroup>");
+
+  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />");
+
+		for (index = 0; index < configurations.size(); index++)
+		{
+	  		output.write_line(indent, "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"Configuration\">");
+			output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
+			output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
+			output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
+			output.write_line(indent, "  </PropertyGroup>");
+		}
+
+  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.props\" />");
+  		output.write_line(indent, "  <ImportGroup Label=\"ExtensionSettings\">");
+  		output.write_line(indent, "  </ImportGroup>");
+
+		for (index = 0; index < configurations.size(); index++)
+		{
+	 		output.write_line(indent, "  <ImportGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"PropertySheets\">");
+			output.write_line(indent, "    <Import Project=\"$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />");
+
+			for (index2 = 0; index2 < configurations[index]->inherited_property_sheets_vs100.size(); index2++)
+			{	
+				output.write_line(indent, "    <Import Project=\"" + configurations[index]->inherited_property_sheets_vs100[index2] + "\" />");
+			}
+			output.write_line(indent, "  </ImportGroup>");
+		}
+
+  		output.write_line(indent, "    <PropertyGroup Label=\"UserMacros\" />");
+
+		for (index = 0; index < configurations.size(); index++)
+		{
+	  		output.write_line(indent, "  <PropertyGroup>");
+			output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
+			output.write_line(indent, "    <TargetName Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">" + configurations[index]->target_name_vs100 + "</TargetName>");
+			output.write_line(indent, "  </PropertyGroup>");
+		}
+
+		for (index = 0; index < configurations.size(); index++)
+		{
+			output.write_line(indent, "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
+
+			MSVC8_VCCLCompilerTool *tool_compiler = configurations[index]->tool_compiler_vs100;
+			if (tool_compiler)
+			{
+				if (tool_compiler->use_precompiled_header.get() == "2")
+				{
+  					output.write_line(indent, "    <ClCompile>");
+  					output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
+					output.write_line(indent, "      <PrecompiledHeaderFile>" + tool_compiler->precompiled_header_through.get() + "</PrecompiledHeaderFile>");
+  					output.write_line(indent, "    </ClCompile>");
+				}
+
+			}
+
+  			output.write_line(indent, "    <Lib>");
+  			output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + ".lib</OutputFile>");
+  			output.write_line(indent, "    </Lib>");
+  			output.write_line(indent, "    <PostBuildEvent>");
+  			output.write_line(indent, "      <Message>Installing library and API headers...</Message>");
+  			output.write_line(indent, "      <Command>call install_clan" + name + ".bat \"$(TargetPath)\" \"$(TargetDir)$(TargetName).pdb\" \"$(TargetName).pdb\" \"$(Platform)\"</Command>");
+  			output.write_line(indent, "    </PostBuildEvent>");
+  			output.write_line(indent, "  </ItemDefinitionGroup>");
+		}
+
+		for (index = 0; index < files.size(); index++)
+			files[index]->write_vs100(output, indent+1, configurations);
+
+  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.targets\" />");
+  		output.write_line(indent, "  <ImportGroup Label=\"ExtensionTargets\">");
+  		output.write_line(indent, "  </ImportGroup>");
+  		output.write_line(indent, "</Project>");
+
+	}
+}
+
+void MSVC8_Project::write_filters(OutputWriter &output, int indent) const
+{
+	std::vector<std::string>::size_type index;
+
+	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	output.write_line(indent, "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+	output.write_line(indent, "  <ItemGroup>");
+
 	for (index = 0; index < files.size(); index++)
-		files[index]->write(output, indent+2);
-	output.write_line(indent+1, "</Files>");
-	output.write_line(indent+1, "<Globals />");
-	output.write_line(indent, "</VisualStudioProject>");
+		files[index]->write_filter_name_vs100(output, indent, "");
+
+	output.write_line(indent, " </ItemGroup>");
+
+	for (index = 0; index < files.size(); index++)
+		files[index]->write_filter_files_vs100(output, indent+1, "");
+
+	output.write_line(indent, "</Project>");
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_Configuration class:
 
 MSVC8_Configuration::MSVC8_Configuration()
-: configuration_type("4"), use_of_mfc("0"), atl_minimizes_c_runtime_library_usage("false")
+: configuration_type("4"), use_of_mfc("0"), atl_minimizes_c_runtime_library_usage("false"), tool_compiler_vs100(NULL)
 {
 }
 
@@ -1187,6 +1436,82 @@ void MSVC8_Filter::write(OutputWriter &output, int indent) const
 	output.write_line(indent, "</Filter>");
 }
 
+void MSVC8_Filter::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+	std::string new_filter;
+	if (parent.length())
+	{
+		new_filter = parent + "\\" + name;
+	}
+	else
+	{
+		new_filter = name;
+	}
+
+	output.write_line(indent, "    <Filter Include=\"" + new_filter + "\">");
+
+	// Create a new GUID:
+	unsigned char *projectGUID = 0;
+	GUID guid;
+	UuidCreate(&guid);
+	UuidToStringA(&guid, &projectGUID);
+	_strupr((char *) projectGUID);
+	std::string returnGUID = std::string("{") + ((char *) projectGUID) + std::string("}");
+	RpcStringFreeA(&projectGUID);
+
+	output.write_line(indent, "      <UniqueIdentifier>" + returnGUID + "</UniqueIdentifier>");
+	output.write_line(indent, "    </Filter>");
+
+	std::vector<MSVC8_FileItem *>::size_type index;
+	for (index = 0; index < files.size(); index++)
+	{
+		files[index]->write_filter_name_vs100(output, indent, new_filter);
+	}
+}
+
+void MSVC8_Filter::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
+{
+	std::vector<MSVC8_FileItem *>::size_type index;
+
+	// It appears VS 100 places all files in the same ItemGroup
+
+	if (indent <= 1)
+		output.write_line(indent, "<ItemGroup>");
+
+	for (index = 0; index < files.size(); index++)
+		files[index]->write_vs100(output, 2, configurations);
+
+	if (indent <= 1)
+		output.write_line(indent, "</ItemGroup>");
+
+}
+
+void MSVC8_Filter::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+	std::vector<MSVC8_FileItem *>::size_type index;
+
+	std::string new_filter;
+	if (parent.length())
+	{
+		new_filter = parent + "\\" + name;
+	}
+	else
+	{
+		new_filter = name;
+	}
+
+	// It appears VS 100 places all files in the same ItemGroup
+
+	if (indent <= 1)
+		output.write_line(indent, "    <ItemGroup>");
+
+	for (index = 0; index < files.size(); index++)
+		files[index]->write_filter_files_vs100(output, 2, new_filter);
+
+	if (indent <= 1)
+		output.write_line(indent, "    </ItemGroup>");
+
+}
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_File class:
 
@@ -1218,6 +1543,82 @@ void MSVC8_File::write(OutputWriter &output, int indent) const
 	output.write_line(indent, "</File>");
 }
 
+void MSVC8_File::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+	std::vector<MSVC8_FileConfiguration *>::size_type index;
+	for (index = 0; index < file_configurations.size(); index++)
+	{
+		file_configurations[index]->write_filter_name_vs100(output, indent, parent);
+	}
+}
+
+void MSVC8_File::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
+{
+	if ( (relative_path.substr(relative_path.size()-2) == ".h") || (relative_path.substr(relative_path.size()-2) == ".H") )
+	{
+	   	output.write_line(indent, "<ClInclude Include=\"" + relative_path + "\" />");
+	}
+	else
+	{
+
+		if (relative_path.substr(relative_path.size()-11) == "precomp.cpp")
+		{
+		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\">");
+
+			std::vector<std::string>::size_type index;
+
+			for (index = 0; index < configurations.size(); index++)
+			{
+	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">Create</PrecompiledHeader>");
+			}
+
+		   	output.write_line(indent, "</ClCompile>");
+		}
+		else if (relative_path.substr(relative_path.size()-2) == ".c")
+		{
+		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\">");
+
+			std::vector<std::string>::size_type index;
+
+			for (index = 0; index < configurations.size(); index++)
+			{
+	  			output.write_line(indent, "  <PrecompiledHeader Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
+	  			output.write_line(indent, "  </PrecompiledHeader>");
+			}
+
+		   	output.write_line(indent, "</ClCompile>");
+		}
+		else
+		{
+		   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" />");
+		}
+	}
+
+	std::vector<MSVC8_FileConfiguration *>::size_type index;
+	for (index = 0; index < file_configurations.size(); index++)
+		file_configurations[index]->write_vs100(output, indent+1, configurations);
+}
+
+void MSVC8_File::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+	if (relative_path.substr(relative_path.size()-2) == ".h")
+	{
+	   	output.write_line(indent, "<ClInclude Include=\"" + relative_path + "\" >");
+		output.write_line(indent, "<Filter>" + parent + "</Filter>");
+	   	output.write_line(indent, "</ClInclude>");
+	}
+	else
+	{
+	   	output.write_line(indent, "<ClCompile Include=\"" + relative_path + "\" >");
+		output.write_line(indent, "<Filter>" + parent + "</Filter>");
+		output.write_line(indent, "</ClCompile>");
+	}
+
+	std::vector<MSVC8_FileConfiguration *>::size_type index;
+	for (index = 0; index < file_configurations.size(); index++)
+		file_configurations[index]->write_filter_files_vs100(output, indent, parent);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // MSVC8_FileConfiguration class:
 
@@ -1243,90 +1644,14 @@ void MSVC8_FileConfiguration::write(OutputWriter &output, int indent) const
 	output.write_line(indent, "</FileConfiguration>");
 }
 
-/*
+void MSVC8_FileConfiguration::write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const
+{
+}
 
-<?xml version="1.0" encoding="Windows-1252"?>
-<VisualStudioProject
-	ProjectType="Visual C++"
-	Version="8,00"
-	Name="clanCore"
-	ProjectGUID="{656C3A81-F1BD-4F50-B1A3-E61BBD10375F}">
-	<Platforms>
-		<Platform Name="Win32" />
-		<Platform Name="x64" />
-	</Platforms>
-	<ToolFiles />
-	<Configurations>
-		<Configuration
-			Name="Static lib, MT Static Unicode Debug|Win32"
-			OutputDirectory=".\../Debug"
-			IntermediateDirectory=".\../Debug/clanCore-static-mt-uc"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false">
+void MSVC8_FileConfiguration::write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+}
 
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories=".,C:\Development\Personal\Include"
-				PreprocessorDefinitions="DEBUG,UNICODE,_UNICODE,WIN32,_WINDOWS,USE_OPENGL,USE_NETWORK,USE_CLANSOUND,DIRECTINPUT_VERSION=0x0800,WINVER=0x0501,_WIN32_WINNT=0x0501"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="Core\precomp.h"
-				PrecompiledHeaderFile=".\../Debug/clanCore-static-mt-uc/clanCore.pch"
-				AssemblerListingLocation=".\../Debug/clanCore-static-mt-uc/"
-				ObjectFile=".\../Debug/clanCore-static-mt-uc/"
-				ProgramDataBaseFileName="C:\Development\Personal\Lib\clanCore-static-mt-uc-debug.pdb"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
-				DebugInformationFormat="3"
-				CompileAs="0" />
-
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033" />
-
-			<Tool
-				Name="VCLibrarianTool"
-				AdditionalOptions=""
-				OutputFile="C:\Development\Personal\Lib\clanCore-static-mt-uc-debug.lib"
-				SuppressStartupBanner="true" />
-
-			<Tool
-				Name="VCPostBuildEventTool"
-				Description="Installing library and API headers..."
-				CommandLine="call install_clanCore.bat" />
-		</Configuration>
-		...
-	</Configurations>
-	<References />
-	<Files>
-		<Filter Name="API">
-			<File RelativePath="API\core.h" />
-			<Filter Name="Core">
-				<File RelativePath="API\Core\api_core.h" />
-			</Filter>
-			...
-		</Filter>
-		<Filter Name="Core files">
-			<File RelativePath="Core\core_iostream.cpp" />
-			<File RelativePath="Core\precomp.cpp">
-				<FileConfiguration Name="Static lib, MT Static Unicode Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1" />
-				</FileConfiguration>
-				...
-			</File>
-			<File RelativePath="Core\precomp.h" />
-			...
-		</Filter>
-	</Files>
-	<Globals />
-</VisualStudioProject>
-
-*/
+void MSVC8_FileConfiguration::write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const
+{
+}

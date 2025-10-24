@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ComponentTypes">
+      <UniqueIdentifier>{3782a549-26d5-4e86-ac49-259229789bcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ComponentTypes\PropertyItems">
+      <UniqueIdentifier>{ff2120f6-193b-4983-8974-5d22554d8902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ComponentTypes\PropertyItems\Popups">
+      <UniqueIdentifier>{b29d9190-61b4-43ce-9e42-a3ac735e6463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GridComponent">
+      <UniqueIdentifier>{e3a1a488-7b2c-4c29-9788-9091649a1284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GridComponent\EditState">
+      <UniqueIdentifier>{aa8b3ee4-56ea-4eec-a297-4b53049c7e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainWindow">
+      <UniqueIdentifier>{81f718f9-6949-48c8-ad96-75bd095d7723}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Selection">
+      <UniqueIdentifier>{d5224ee5-b924-434f-8ba1-8c2a06992f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PropertyComponent">
+      <UniqueIdentifier>{8b86df03-ae9e-4efc-9cfa-5a0b551f94f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PropertyComponent\EditState">
+      <UniqueIdentifier>{c20586be-2108-4748-a2aa-1f8de13833e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Theme">
+      <UniqueIdentifier>{bef1d790-0cbf-41cd-a298-beb13d827bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Dialogs">
+      <UniqueIdentifier>{36739083-a76a-4944-bb2a-99eeb22d933f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ComponentTypes\component_types.cpp">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ComponentTypes\custom_component.cpp">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ComponentTypes\PropertyItems\Popups\anchor_popup.cpp">
+      <Filter>Source Files\ComponentTypes\PropertyItems\Popups</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ComponentTypes\PropertyItems\Popups\line_edit_popup.cpp">
+      <Filter>Source Files\ComponentTypes\PropertyItems\Popups</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\grid_component.cpp">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\grid_object.cpp">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\snapline.cpp">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_boundary_sizing.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_create_tool.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_net_selecting.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_none.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_object_moving.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GridComponent\EditState\grid_edit_state_object_sizing.cpp">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MainWindow\application.cpp">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MainWindow\edit_columns_window.cpp">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MainWindow\main.cpp">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MainWindow\main_window.cpp">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MainWindow\view_border.cpp">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Selection\selection.cpp">
+      <Filter>Source Files\Selection</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\property_component.cpp">
+      <Filter>Source Files\PropertyComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\property_item_popup.cpp">
+      <Filter>Source Files\PropertyComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\EditState\property_component_edit_state.cpp">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\EditState\property_component_edit_state_header_sizing.cpp">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\EditState\property_component_edit_state_node_opener.cpp">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\EditState\property_component_edit_state_none.cpp">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PropertyComponent\EditState\property_component_edit_state_revert_button.cpp">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\button_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\checkbox_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\component_type_template.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\component_types.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\custom_component.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\frame_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\label_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\listview_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\radio_button_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\scrollbar_horz_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\scrollbar_vert_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\slider_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\tab_component_type.h">
+      <Filter>Source Files\ComponentTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_anchor.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_checkbox.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_class_name.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_enabled.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_group_name.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_header.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_id_name.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_line_edit.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_max.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_min.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_page_label.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_position.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_step_size.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_text.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_tick_count.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\property_item_type_name.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\Popups\anchor_popup.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems\Popups</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ComponentTypes\PropertyItems\Popups\line_edit_popup.h">
+      <Filter>Source Files\ComponentTypes\PropertyItems\Popups</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\grid_component.h">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\grid_object.h">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\snapline.h">
+      <Filter>Source Files\GridComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_boundary_sizing.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_create_tool.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_handler.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_net_selecting.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_none.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_object_moving.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GridComponent\EditState\grid_edit_state_object_sizing.h">
+      <Filter>Source Files\GridComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MainWindow\application.h">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MainWindow\edit_columns_window.h">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MainWindow\main_window.h">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MainWindow\view_border.h">
+      <Filter>Source Files\MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Selection\selection.h">
+      <Filter>Source Files\Selection</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\property_component.h">
+      <Filter>Source Files\PropertyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\property_item.h">
+      <Filter>Source Files\PropertyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\property_item_popup.h">
+      <Filter>Source Files\PropertyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state_handler.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state_header_sizing.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state_node_opener.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state_none.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\PropertyComponent\EditState\property_component_edit_state_revert_button.h">
+      <Filter>Source Files\PropertyComponent\EditState</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources.xml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="theme.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\checkbox.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\combobox.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\frame.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\label.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\lineedit.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\listview.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\menubar.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\popupmenu.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\pushbutton.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\radiobutton.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\resources.xml">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\scrollbar.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\slider.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\statusbar.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\tab.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\tabpage.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\theme.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\toolbar.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="..\..\Resources\GUIThemeDefault\window.css">
+      <Filter>Resource Files\Theme</Filter>
+    </None>
+    <None Include="Dialogs\edit_columns.gui">
+      <Filter>Resource Files\Dialogs</Filter>
+    </None>
+    <None Include="Dialogs\options.gui">
+      <Filter>Resource Files\Dialogs</Filter>
+    </None>
+    <None Include="Dialogs\source_generator.gui">
+      <Filter>Resource Files\Dialogs</Filter>
+    </None>
+    <None Include="todo.txt" />
+  </ItemGroup>
+</Project>

@@ -123,6 +123,12 @@ private:
 		bool make_dll_name,
 		const std::string &platform,
 		const std::string &project_name);
+
+	std::string make_target_name(
+		const ConfigurationType &config,
+		const std::string &platform,
+		const std::string &project_name);
+
 	std::string make_upper(const std::string &s);
 
 	int target_version;
@@ -149,11 +155,14 @@ public:
 class MSVC8_PropertySheet
 {
 public:
-	MSVC8_PropertySheet();
+	MSVC8_PropertySheet(int target_version);
 	~MSVC8_PropertySheet();
 
 	std::string name;
 	std::vector<MSVC8_Tool *> tools;
+	std::string input_include_dir_vs100;
+	std::string input_lib_dir_vs100;
+	int target_version;
 
 	void write(OutputWriter &output, int indent);
 };
@@ -174,6 +183,7 @@ public:
 	std::vector<MSVC8_FileItem *> files;
 
 	void write(OutputWriter &output, int indent) const;
+	void write_filters(OutputWriter &output, int indent) const;
 };
 
 class MSVC8_Setting
@@ -201,15 +211,21 @@ public:
 	~MSVC8_Configuration();
 
 	std::string name;
+	std::string name_without_platform;
+	std::string name_without_config;
 	MSVC8_Setting output_directory;
 	MSVC8_Setting intermediate_directory;
 	std::string configuration_type;
 	std::string inherited_property_sheets;
+	std::vector<std::string> inherited_property_sheets_vs100;
+	std::string target_name_vs100;
+
 	std::string use_of_mfc;
 	std::string atl_minimizes_c_runtime_library_usage;
 	MSVC8_Setting character_set;
 
 	std::vector<MSVC8_Tool *> tools;
+	MSVC8_VCCLCompilerTool *tool_compiler_vs100;
 
 	void write(OutputWriter &output, int indent) const;
 };
@@ -303,6 +319,9 @@ public:
 	virtual ~MSVC8_FileItem();
 
 	virtual void write(OutputWriter &output, int indent) const = 0;
+	virtual void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const = 0;
+	virtual void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const = 0;
+	virtual void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const = 0;
 };
 
 class MSVC8_Filter : public MSVC8_FileItem
@@ -315,6 +334,9 @@ public:
 	std::vector<MSVC8_FileItem *> files;
 
 	void write(OutputWriter &output, int indent) const;
+	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;
+	void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const;
+	void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const;
 };
 
 class MSVC8_File : public MSVC8_FileItem
@@ -327,6 +349,9 @@ public:
 	std::vector<MSVC8_FileConfiguration *> file_configurations;
 
 	void write(OutputWriter &output, int indent) const;
+	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;
+	void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const;
+	void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const;
 };
 
 class MSVC8_FileConfiguration
@@ -339,6 +364,9 @@ public:
 	std::vector<MSVC8_Tool *> tools;
 
 	void write(OutputWriter &output, int indent) const;
+	void write_vs100(OutputWriter &output, int indent, const std::vector<MSVC8_Configuration *> &configurations) const;
+	void write_filter_name_vs100(OutputWriter &output, int indent, const std::string &parent) const;
+	void write_filter_files_vs100(OutputWriter &output, int indent, const std::string &parent) const;
 };
 
 #endif

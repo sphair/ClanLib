@@ -41,7 +41,7 @@ class Workspace;
 class Wizard
 {
 private:
-	Workspace create_workspace(bool include_target_gl1);
+	Workspace create_workspace();
 
 public:
 	Wizard();

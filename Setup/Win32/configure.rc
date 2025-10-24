@@ -143,15 +143,12 @@ CAPTION "ClanLib Setup Wizard"
 FONT 8, "Tahoma", 400, 0, 0x0
 BEGIN
     LTEXT           "Select the development environment to generate project files for:",IDC_STATIC,7,7,303,8
-    CONTROL         "Visual C++ .NET 200&5 (8.0)",IDC_RADIO_VC80,"Button",BS_AUTORADIOBUTTON,16,19,105,10
     CONTROL         "Visual C++ .NET 200&8 (9.0)",IDC_RADIO_VC90,"Button",BS_AUTORADIOBUTTON,16,34,105,10
-    CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,16,48,105,10
+    CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON,16,48,105,10
     CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,76,173,10
     CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,63,225,10
-    CONTROL         "Include OpenGL V1.x Target",IDC_CHECK_INCLUDE_GL1,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,90,173,10
 END
 
 

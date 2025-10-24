@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{2d319c88-6411-441c-98a3-b27d7c3e9b22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Resources\GUIThemeDefault\resources.xml">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="..\..\..\Resources\GUIThemeDefault\scrollbar_horizontal.css">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="..\..\..\Resources\GUIThemeDefault\scrollbar_vertical.css">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+</Project>

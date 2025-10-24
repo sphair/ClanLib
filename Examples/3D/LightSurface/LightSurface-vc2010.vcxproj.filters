@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Collada">
+      <UniqueIdentifier>{09b96b19-d0c3-4cfc-8b32-70b26f31fe91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{b1cd532f-d24b-4a3a-adb3-f522cb6e649a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Clan3D\Collada\collada.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_effect.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_effect_color_texture.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_effect_float_param.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_effect_texture.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_geometry.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_image.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_input_shared.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_input_unshared.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_material.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_mesh.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_source.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_triangles.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Clan3D\Collada\collada_vertices.cpp">
+      <Filter>Collada</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\example.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\graphic_store.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\model.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\options.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\precomp.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\program.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\scene_object.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\shader_color.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Clan3D\Collada\collada.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_effect.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_effect_color_texture.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_effect_float_param.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_effect_texture.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_geometry.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_image.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_input_shared.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_input_unshared.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_material.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_mesh.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_source.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_triangles.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Clan3D\Collada\collada_vertices.h">
+      <Filter>Collada</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\example.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\framerate_counter.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\graphic_store.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\model.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\options.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\precomp.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\program.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\scene_object.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader_color.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" />
+  </ItemGroup>
+</Project>

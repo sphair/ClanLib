@@ -41,19 +41,14 @@
 #define IDC_COMPILERTARGET3             1019
 #define IDC_OUTPUT_LIB_BROWSE64         1019
 #define IDC_COMPILERTARGET4             1020
-#define IDC_RADIO_VC60                  1021
-#define IDC_RADIO_VC70                  1022
-#define IDC_RADIO_VC71                  1023
-#define IDC_RADIO_VC80                  1024
-#define IDC_CHECK_INCLUDE_UNICODE       1025
-#define IDC_CHECK_INCLUDE_MTDLL         1026
-#define IDC_CHECK3                      1027
-#define IDC_CHECK_INCLUDE_DLL           1027
-#define IDC_RADIO_VC90                  1028
-#define IDC_CHECK_INCLUDE_NONUNICODE    1029
-#define IDC_CHECK_INCLUDE_X64           1030
-#define IDC_CHECK_INCLUDE_GL1           1031
-#define IDC_RADIO_VC100                 1032
+#define IDC_CHECK_INCLUDE_UNICODE       1021
+#define IDC_CHECK_INCLUDE_MTDLL         1022
+#define IDC_CHECK3                      1023
+#define IDC_CHECK_INCLUDE_DLL           1024
+#define IDC_RADIO_VC90                  1025
+#define IDC_CHECK_INCLUDE_NONUNICODE    1026
+#define IDC_CHECK_INCLUDE_X64           1027
+#define IDC_RADIO_VC100                 1028
 
 // Next default values for new objects
 // 

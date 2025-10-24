@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RadioButton1", "RadioButton1-vc2008.vcproj", "{62BE6238-B6B7-4FC0-8306-EDC14CC970DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62BE6238-B6B7-4FC0-8306-EDC14CC970DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{62BE6238-B6B7-4FC0-8306-EDC14CC970DB}.Debug|Win32.Build.0 = Debug|Win32
+		{62BE6238-B6B7-4FC0-8306-EDC14CC970DB}.Release|Win32.ActiveCfg = Release|Win32
+		{62BE6238-B6B7-4FC0-8306-EDC14CC970DB}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -82,8 +82,6 @@ int DemoUserCollision::run(CL_DisplayWindow &window)
 	cflight_surface.set_color( CL_Color(255,255,255,220) );
 	cflight_surface.set_alignment(origin_center);
 
-
-	char str[32];
 	quit = false;
 	show_menu = true;
 
