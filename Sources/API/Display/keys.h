@@ -67,6 +67,22 @@
 #  define CL_KEY_NONCONVERT VK_NONCONVERT
 #endif
 
+#if _MSC_VER < 1300
+//1300 = VC7, defines here for VC6 and smaller
+#define VK_OEM_PLUS 0xBB
+#define VK_OEM_MINUS 0xBD
+#define VK_OEM_COMMA 0xBC
+#define VK_OEM_PERIOD 0xBE
+#define VK_OEM_1 0xBA
+#define VK_OEM_2 0xBF
+#define VK_OEM_3 0xC0
+#define VK_OEM_4 0xDB
+#define VK_OEM_5 0xDC
+#define VK_OEM_6 0xDD
+#define VK_OEM_7 0xDE
+#define VK_OEM_8 0xDF
+#endif
+
 #define CL_KEY_SPACE VK_SPACE
 #define CL_KEY_PRIOR VK_PRIOR
 #define CL_KEY_NEXT VK_NEXT
@@ -118,9 +134,18 @@
 #define CL_KEY_X 'X'
 #define CL_KEY_Y 'Y'
 #define CL_KEY_Z 'Z'
+#define CL_KEY_SUBTRACT VK_OEM_MINUS
+#define CL_KEY_EQUALS VK_OEM_PLUS
 #define CL_KEY_LWIN VK_LWIN
 #define CL_KEY_RWIN VK_RWIN
 #define CL_KEY_APPS VK_APPS
+#define CL_KEY_PERIOD VK_OEM_PERIOD
+#define CL_KEY_QUOTE			VK_OEM_7 // (may be US only)
+#define CL_KEY_SEMICOLON		VK_OEM_1 // (may be US only)
+#define CL_KEY_COMMA			VK_OEM_COMMA
+#define CL_KEY_DIVIDE VK_OEM_2 // the / key (may be US only)
+#define CL_KEY_GRAVE VK_OEM_3  //unshifted tilde (may be US only)
+
 #define CL_KEY_NUMPAD0 VK_NUMPAD0
 #define CL_KEY_NUMPAD1 VK_NUMPAD1
 #define CL_KEY_NUMPAD2 VK_NUMPAD2
@@ -131,12 +156,14 @@
 #define CL_KEY_NUMPAD7 VK_NUMPAD7
 #define CL_KEY_NUMPAD8 VK_NUMPAD8
 #define CL_KEY_NUMPAD9 VK_NUMPAD9
-#define CL_KEY_MULTIPLY VK_MULTIPLY
-#define CL_KEY_ADD VK_ADD
-#define CL_KEY_SEPARATOR VK_SEPARATOR
-#define CL_KEY_SUBTRACT VK_SUBTRACT
-#define CL_KEY_DECIMAL VK_DECIMAL
-#define CL_KEY_DIVIDE VK_DIVIDE
+#define CL_KEY_NUMPAD_MULTIPLY VK_MULTIPLY
+#define CL_KEY_NUMPAD_ADD VK_ADD
+#define CL_KEY_NUMPAD_ENTER VK_SEPARATOR
+#define CL_KEY_NUMPAD_SUBTRACT VK_SUBTRACT
+#define CL_KEY_NUMPAD_DECIMAL VK_DECIMAL
+#define CL_KEY_NUMPAD_DIVIDE VK_DIVIDE
+#define CL_KEY_NUMPAD_EQUALS VK_SEPARATOR
+
 #define CL_KEY_F1 VK_F1
 #define CL_KEY_F2 VK_F2
 #define CL_KEY_F3 VK_F3
@@ -169,7 +196,15 @@
 #define CL_KEY_RCONTROL VK_RCONTROL
 #define CL_KEY_LMENU VK_LMENU
 #define CL_KEY_RMENU VK_RMENU
-#define CL_KEY_GRAVE VK_OEM_3  //unshifted tilde - at least on US keyboards - verify?
+
+
+#ifndef VK_CLOSE_BRACKET
+	#define VK_CLOSE_BRACKET 0xDD
+	#define VK_OPEN_BRACKET 0xDB
+#endif
+
+#define CL_KEY_LEFT_BRACKET VK_OPEN_BRACKET
+#define CL_KEY_RIGHT_BRACKET VK_CLOSE_BRACKET
 
 #else
 #ifdef __APPLE__
@@ -330,6 +365,8 @@
 #define CL_KEY_EQUALS			137
 #define CL_KEY_CAPSLOCK			138
 #define CL_KEY_COMMAND			139
+#define CL_KEY_LEFT_BRACKET 140
+#define CL_KEY_RIGHT_BRACKET 141
 
 // remappings:
 #define CL_KEY_NUMPAD_0			CL_KEY_NUMPAD0
@@ -435,12 +472,12 @@
 #define CL_KEY_NUMPAD7 XK_KP_7
 #define CL_KEY_NUMPAD8 XK_KP_8
 #define CL_KEY_NUMPAD9 XK_KP_9
-#define CL_KEY_MULTIPLY XK_KP_Multiply
-#define CL_KEY_ADD XK_KP_Add
-#define CL_KEY_SEPARATOR XK_KP_Separator
-#define CL_KEY_SUBTRACT XK_KP_Subtract
-#define CL_KEY_DECIMAL XK_KP_Decimal
-#define CL_KEY_DIVIDE XK_KP_Divide
+#define CL_KEY_NUMPAD_MULTIPLY XK_KP_Multiply
+#define CL_KEY_NUMPAD_ADD XK_KP_Add
+#define CL_KEY_NUMPAD_SEPARATOR XK_KP_Separator
+#define CL_KEY_NUMPAD_SUBTRACT XK_KP_Subtract
+#define CL_KEY_NUMPAD_DECIMAL XK_KP_Decimal
+#define CL_KEY_NUMPAD_DIVIDE XK_KP_Divide
 #define CL_KEY_F1 XK_F1
 #define CL_KEY_F2 XK_F2
 #define CL_KEY_F3 XK_F3
@@ -474,6 +511,18 @@
 #define CL_KEY_LMENU XK_Meta_L
 #define CL_KEY_RMENU XK_Meta_R
 #define CL_KEY_GRAVE XK_grave
+#define CL_KEY_SUBTRACT XK_minus
+#define CL_KEY_EQUALS XK_equal
+#define CL_KEY_SEMICOLON XK_semicolon
+#define CL_KEY_QUOTE XK_apostrophe
+#define CL_KEY_COMMA XK_comma
+#define CL_KEY_PERIOD XK_period
+#define CL_KEY_DIVIDE XK_slash
+
+#define CL_KEY_LEFT_BRACKET XK_bracketleft
+#define CL_KEY_RIGHT_BRACKET XK_bracketright
+
+
 #endif
 #endif
 

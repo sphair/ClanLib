@@ -64,6 +64,9 @@ void CL_StyleManager_Silver::connect_styles(
 	else if (type == "inputbox")
 		component->set_style(new CL_InputBox_Silver((CL_InputBox *) component, this));
 
+	else if (type == "richedit")
+		component->set_style(new CL_RichEdit_Silver((CL_RichEdit *) component, this));
+
 	else if (type == "menu")
 		component->set_style(new CL_Menu_Silver((CL_Menu *) component, this));
 

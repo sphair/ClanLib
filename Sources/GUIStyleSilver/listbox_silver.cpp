@@ -48,6 +48,7 @@ CL_ListBox_Silver::CL_ListBox_Silver(
 {
 	resources = style->get_resources();
 	font = new CL_Font("ListBox/font", resources);
+	font->set_color( CL_Color::black );
 
 	// Create a vertical scrollbar
 	scrollbar = new CL_ScrollBar(false, listbox);

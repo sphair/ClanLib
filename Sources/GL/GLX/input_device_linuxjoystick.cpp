@@ -33,6 +33,7 @@
 #include <linux/joystick.h>
 #include <iostream>
 #include <errno.h>
+#include <cstring>
 
 #include "API/Core/Math/point.h"
 #include "API/Core/System/clanstring.h"

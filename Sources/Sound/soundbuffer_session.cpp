@@ -33,6 +33,7 @@
 #include "API/Sound/soundfilter.h"
 #include "soundbuffer_session_generic.h"
 #include "soundoutput_generic.h"
+#include <cmath>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundBuffer_Session construction:
@@ -96,6 +97,12 @@ float CL_SoundBuffer_Session::get_pan() const
 	return impl->pan;
 }
 
+float CL_SoundBuffer_Session::get_speedfactor() const
+{
+	CL_MutexSection mutex_lock(&impl->mutex);
+	return impl->speedfactor;
+}
+
 bool CL_SoundBuffer_Session::is_playing()
 {
 	if (!impl) return false;
@@ -142,6 +149,12 @@ void CL_SoundBuffer_Session::set_pan(float new_pan)
 	impl->pan = new_pan;
 }
 
+void CL_SoundBuffer_Session::set_speedfactor(float new_speedfactor)
+{
+	CL_MutexSection mutex_lock(&impl->mutex);
+	impl->speedfactor = fabs(new_speedfactor);
+}
+
 void CL_SoundBuffer_Session::play()
 {
 	CL_MutexSection mutex_lock(&impl->mutex);
@@ -180,6 +193,21 @@ void CL_SoundBuffer_Session::add_filter(CL_SoundFilter *filter, bool delete_filt
 	CL_MutexSection mutex_lock(&impl->mutex);
 	impl->filters.push_back(filter);
 	impl->delete_filters.push_back(delete_filter);
+}
+
+
+void CL_SoundBuffer_Session::remove_all_filters()
+{
+	if (!impl) return;
+
+	CL_MutexSection mutex_lock(&impl->mutex);
+	for (std::vector<CL_SoundFilter *>::size_type i=0; i<impl->filters.size(); i++)
+	{
+		if (impl->delete_filters[i]) delete impl->filters[i];
+	}
+
+	impl->filters.clear();
+	impl->delete_filters.clear();
 }
 
 void CL_SoundBuffer_Session::remove_filter(CL_SoundFilter *filter)

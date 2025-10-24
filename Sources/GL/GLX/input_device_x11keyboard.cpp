@@ -28,6 +28,7 @@
 */
 
 #include <cstdio>
+#include <cstring>
 #include "API/Display/input_device.h"
 #include "API/Display/input_event.h"
 #include "API/Display/keys.h"
@@ -121,6 +122,13 @@ void CL_InputDevice_X11Keyboard::on_xevent(XEvent &event)
 	// Figure out what key it was:
 	KeySym sym = XLookupKeysym(&event.xkey, 0);
 
+	if (sym == NoSymbol)
+	{
+		//we have no idea what it is, probably the numpad = on an apple keyboard or something like that.
+		//Better to not send a message, otherwise it might look like a mouse message but with bad mouse coordinates
+		//if the app is sharing the handler its mouse stuff. -SAR
+		return;
+	}
 	// set state of modifier keys
 	bool key_state = false;
 	if (event.type == KeyPress)

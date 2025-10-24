@@ -101,6 +101,9 @@ public:
 	//- and 1 means the soundeffect is only playing in the right speaker.</p>
 	float get_pan() const;
 
+	//: Returns the current speedfactor.
+	float get_speedfactor() const;
+
 	//: Returns true if the session is playing
 	bool is_playing();
 
@@ -139,6 +142,10 @@ public:
 	//return: Returns true if the operation completed sucecsfully.
 	void set_pan(float new_pan);
 
+	//: Sets the speedfactor of the session.
+	//param new_speedfactor: New speedfactor of session.
+	void set_speedfactor(float new_speedfactor);
+
 	//: Starts playback of the session.
 	void play();
 
@@ -154,11 +161,14 @@ public:
 	
 	//: Adds the sound filter to the session. See CL_SoundFilter for details.
 	//param filter: Sound filter to pass sound through.
-	//param delete_filter: If true, the filter will be deleted when the session is destroyed
+	//param delete_filter: If true, the filter will be deleted when removed or the session is destroyed
 	void add_filter(CL_SoundFilter *filter, bool delete_filter = false);
 
 	//: Remove the sound filter from the session. See CL_SoundFilter for details.
 	void remove_filter(CL_SoundFilter *filter);
+
+	//: Removes all filters from the session.
+	void remove_all_filters();
 
 //! Implementation:
 private:

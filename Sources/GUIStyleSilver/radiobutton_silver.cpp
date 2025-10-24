@@ -50,7 +50,9 @@ CL_RadioButton_Silver::CL_RadioButton_Silver(
 	sur_unchecked = new CL_Surface("RadioButton/surface_unchecked", resources);
 	sur_checked_disabled = new CL_Surface("RadioButton/surface_checked_disabled", resources);
 	sur_unchecked_disabled = new CL_Surface("RadioButton/surface_unchecked_disabled", resources);
+
 	font = new CL_Font("RadioButton/font", resources);
+	font->set_color( CL_Color::black );
 
 	slot_paint = radiobutton->sig_paint().connect_virtual(
 		this, &CL_RadioButton_Silver::on_paint);

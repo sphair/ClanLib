@@ -35,6 +35,7 @@
 #include "API/Sound/soundprovider.h"
 #include "API/Sound/soundprovider_session.h"
 #include "API/Core/System/cl_assert.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 //! Construction:
@@ -45,7 +46,7 @@ CL_SoundBuffer_Session_Generic::CL_SoundBuffer_Session_Generic(
 	CL_SoundOutput_Generic *output)
 :
 	soundbuffer(soundbuffer), provider_session(0), output(output), volume(1.0f),
-	pan(0.0f), looping(looping), playing(false)
+	pan(0.0f), looping(looping), playing(false), speedfactor(1.0f)
 {
 	volume = soundbuffer->volume;
 	pan = soundbuffer->pan;
@@ -97,7 +98,7 @@ bool CL_SoundBuffer_Session_Generic::mix_to(int **sample_data, int **temp_data, 
 	// This is done by copying data from the temporary session buffers (buffer_data) to
 	// the temporary mixing buffers (temp_data), and if buffer_data is exhausted, calling
 	// get_data() to fill it with new data from the soundprovider session object.
-	double speed = provider_session->get_frequency() / double(output->mixing_frequency);
+	double speed = (provider_session->get_frequency() / double(output->mixing_frequency)) * double(speedfactor);
 	for (int i = 0; i < num_samples; i++)
 	{
 		if (buffer_position < buffer_samples_written)

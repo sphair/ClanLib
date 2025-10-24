@@ -40,6 +40,7 @@
 #include "API/GL/opengl_state.h"
 #include "graphic_context_opengl.h"
 #include "API/GL/opengl_wrap.h"
+#include <cstring>
 
 // Using 0.38 for the texture matrix instead of 0.375 - reduces some slight smooth (rounding errors?)
 #define cl_pixelcenter_constant 0.38
@@ -875,7 +876,7 @@ void CL_GLStateChecker::enable_stencil_write(bool enabled, bool visible, double 
 		clStencilFunc(stencil_func_write, stencil_write_ref, 255);
 		clStencilOp(stencil_op_fail, CL_KEEP, stencil_op_pass); // CL_KEEP: action for stencil-pass & z-fail
 		clEnable(CL_ALPHA_TEST);
-		clAlphaFunc(CL_GEQUAL, alpha_limit);
+		clAlphaFunc(CL_GEQUAL, CLclampf(alpha_limit));
 	}
 	else
 	{

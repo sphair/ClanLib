@@ -55,6 +55,9 @@ CL_MenuItem_Silver::CL_MenuItem_Silver(
 	font = new CL_Font("MenuItem/font", resources);
 	font_disabled = new CL_Font("MenuItem/font_disabled", resources);
 
+	font->set_color( CL_Color::black );
+	font_disabled->set_color( CL_Color::gray );
+
 	slot_paint = menu_item->sig_paint().connect(
 		this, &CL_MenuItem_Silver::on_paint);
 	slot_get_preferred_size = menu_item->sig_get_preferred_size().connect(
@@ -152,4 +155,5 @@ void CL_MenuItem_Silver::set_icon(CL_Surface *sur, bool del_surface)
 	sur_icon = sur;
 	delete_sur_icon = del_surface;
 }
+
 

@@ -120,6 +120,13 @@ std::string CL_InputDevice_Generic::keyid_to_string(int keycode) const
 	case CL_KEY_X: return "x";
 	case CL_KEY_Y: return "y";
 	case CL_KEY_Z: return "z";
+	case CL_KEY_SUBTRACT: return "subtract";
+	case CL_KEY_EQUALS: return "equals"; 
+	case CL_KEY_COMMA: return "comma";
+	case CL_KEY_PERIOD: return "period";
+	case CL_KEY_DIVIDE: return "divide";
+	case CL_KEY_SEMICOLON: return "semicolon";
+	case CL_KEY_QUOTE: return "quote";
 	case CL_KEY_LWIN: return "lwin";
 	case CL_KEY_RWIN: return "rwin";
 	case CL_KEY_NUMPAD0: return "numpad0";
@@ -132,14 +139,12 @@ std::string CL_InputDevice_Generic::keyid_to_string(int keycode) const
 	case CL_KEY_NUMPAD7: return "numpad7";
 	case CL_KEY_NUMPAD8: return "numpad8";
 	case CL_KEY_NUMPAD9: return "numpad9";
-	case CL_KEY_MULTIPLY: return "multiply";
-	case CL_KEY_ADD: return "add";
-#ifndef __APPLE__
-	case CL_KEY_SEPARATOR: return "separator";
-#endif
-	case CL_KEY_SUBTRACT: return "subtract";
-	case CL_KEY_DECIMAL: return "decimal";
-	case CL_KEY_DIVIDE: return "divide";
+	case CL_KEY_NUMPAD_MULTIPLY: return "numpad_multiply";
+	case CL_KEY_NUMPAD_ADD: return "numpad_add";
+	//case CL_KEY_NUMPAD_ENTER: return "numpad_enter"; //some complications to get windows to report numkey enter, don't want to mess with it now - SAR
+	case CL_KEY_NUMPAD_SUBTRACT: return "numpad_subtract";
+	case CL_KEY_NUMPAD_DECIMAL: return "numpad_decimal";
+	case CL_KEY_NUMPAD_DIVIDE: return "numpad_divide";
 	case CL_KEY_F1: return "f1";
 	case CL_KEY_F2: return "f2";
 	case CL_KEY_F3: return "f3";
@@ -172,6 +177,10 @@ std::string CL_InputDevice_Generic::keyid_to_string(int keycode) const
 	case CL_KEY_RCONTROL: return "rcontrol";
 	case CL_KEY_LMENU: return "lmenu";
 	case CL_KEY_RMENU: return "rmenu";
+	case CL_KEY_LEFT_BRACKET: return "lbracket";
+	case CL_KEY_RIGHT_BRACKET: return "rbracket";
+
+
 	default:
 		return CL_String::format("key_%1", keycode);
 	}
@@ -255,6 +264,12 @@ int CL_InputDevice_Generic::string_to_keyid(const std::string &str) const
 		string_to_id["x"] = CL_KEY_X;
 		string_to_id["y"] = CL_KEY_Y;
 		string_to_id["z"] = CL_KEY_Z;
+		string_to_id["subtract"] = CL_KEY_SUBTRACT;
+		string_to_id["equals"] = CL_KEY_EQUALS;
+		string_to_id["comma"] = CL_KEY_COMMA;
+		string_to_id["period"] = CL_KEY_PERIOD;
+		string_to_id["semicolon"] = CL_KEY_SEMICOLON;
+		string_to_id["quote"] = CL_KEY_QUOTE;
 		string_to_id["lwin"] = CL_KEY_LWIN;
 		string_to_id["rwin"] = CL_KEY_RWIN;
 		string_to_id["numpad0"] = CL_KEY_NUMPAD0;
@@ -267,12 +282,12 @@ int CL_InputDevice_Generic::string_to_keyid(const std::string &str) const
 		string_to_id["numpad7"] = CL_KEY_NUMPAD7;
 		string_to_id["numpad8"] = CL_KEY_NUMPAD8;
 		string_to_id["numpad9"] = CL_KEY_NUMPAD9;
-		string_to_id["multiply"] = CL_KEY_MULTIPLY;
-		string_to_id["add"] = CL_KEY_ADD;
-		string_to_id["separator"] = CL_KEY_SEPARATOR;
-		string_to_id["subtract"] = CL_KEY_SUBTRACT;
-		string_to_id["decimal"] = CL_KEY_DECIMAL;
-		string_to_id["divide"] = CL_KEY_DIVIDE;
+		string_to_id["numpad_multiply"] = CL_KEY_NUMPAD_MULTIPLY;
+		string_to_id["numpad_add"] = CL_KEY_NUMPAD_ADD;
+		//string_to_id["numpad_enter"] = CL_KEY_NUMPAD_ENTER;
+		string_to_id["numpad_subtract"] = CL_KEY_NUMPAD_SUBTRACT;
+		string_to_id["numpad_decimal"] = CL_KEY_NUMPAD_DECIMAL;
+		string_to_id["numpad_divide"] = CL_KEY_NUMPAD_DIVIDE;
 		string_to_id["f1"] = CL_KEY_F1;
 		string_to_id["f2"] = CL_KEY_F2;
 		string_to_id["f3"] = CL_KEY_F3;
@@ -305,6 +320,8 @@ int CL_InputDevice_Generic::string_to_keyid(const std::string &str) const
 		string_to_id["rcontrol"] = CL_KEY_RCONTROL;
 		string_to_id["lmenu"] = CL_KEY_LMENU;
 		string_to_id["rmenu"] = CL_KEY_RMENU;
+		string_to_id["lbracket"] = CL_KEY_LEFT_BRACKET;
+		string_to_id["rbracket"] = CL_KEY_RIGHT_BRACKET;
 	}
 
 	return string_to_id[str];

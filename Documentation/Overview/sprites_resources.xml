@@ -264,18 +264,6 @@ CL_Sprite::get_id().
 <p><b>&lt;animation&gt;</b></p>
 
 <ul>
-<li>Attribute <b>play_options</b>: Sets the playback options for the animation.
-  <p>pingpong/nopingpong: Set it to pingpong if you want the animation to play back to start once it has reached
-  the end of the animation.<br>
-  loop/noloop: Set it to loop if you want the animation to loop after it has reached end of 
-  of the animation.<br>
-  forward/backward: Set it to backwards if you want the animation to play backwards - starts at
-  last frame, and plays forward to first frame.</p>
-  <p>
-  <i>Valid values</i>: nopingpong, pingpong, noloop, loop, backward, forward - any of the options<br>
-  <i>Default value</i>: (nopingpong, loop, forward)
-  </p>
-</li>
 <li>Attribute <b>speed</b>: Default frame delay.
   <p>This sets the delay between each frame. You can override separate frames using frameX_speed (see below).
   Value is in milliseconds.</p>
@@ -284,7 +272,27 @@ CL_Sprite::get_id().
   <i>Default value</i>: 50
   </p>
 </li>
-<li>Attribute <b>show_on_finish</b>: What to show when animation is finished.
+<li>Attribute <b>loop</b>: Loop the animation.
+  <p>Set it to loop if you want the animation to loop after it has reached end of 
+  of the animation.</p>
+  <p>
+  <i>Valid values</i>: "yes, no" - Enable or disable looping.<br>
+  <i>Default value</i>: "yes"
+  </p>
+</li>
+<li>Attribute <b>pingpong</b>: Pingpong the animation.
+  <p>Set it to pingpong if you want the animation to play back to start once it has reached
+  the end of the animation.</p>
+  <i>Valid values</i>: "yes, no" - Enable or disable pingpong.<br>
+  <i>Default value</i>: "no"
+</li>
+<li>Attribute <b>direction</b>: Direction of animation.
+  <p>Set it to backwards if you want the animation to play backwards - starts at
+  last frame, and plays forward to first frame.</p>
+  <i>Valid values</i>: "backward, forward" - Play the animation backwards or forwards.<br>
+  <i>Default value</i>: "forward"
+</li>
+<li>Attribute <b>on_finish</b>: What to show when animation is finished.
   <p>Specify what is shown when the animation is finished. Blank shows nothing,
   last_frame shows last frame in animation, first_frame shows first frame in animation.
   If you use looping, this option has no effect.</p>

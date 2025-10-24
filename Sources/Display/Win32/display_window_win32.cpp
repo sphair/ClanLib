@@ -870,6 +870,12 @@ void CL_DisplayWindow_Win32::received_mouse_input(UINT uMsg, WPARAM wParam, LPAR
 		key.type = CL_InputEvent::pressed;
 		if (dbl)
 		{
+			//if we set the repeat_count first here, it would confuse some gui items like the
+			//listbox, as it's it accepts normal and double click events in the same
+			//callback
+
+			mouse.sig_key_down()(key);
+		
 			key.repeat_count = 2;
 			mouse.sig_key_dblclk()(key);
 		}

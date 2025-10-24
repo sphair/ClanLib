@@ -27,6 +27,7 @@
 **    (if your name is missing here, please add it)
 */
 
+#include <cstring>
 #include "Core/precomp.h"
 #include "inputsource_zip_fileentry.h"
 #include "zip_file_entry_generic.h"

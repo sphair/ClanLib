@@ -30,6 +30,7 @@
 #include "Display/display_precomp.h"
 #include "API/Display/Providers/provider_type_register.h"
 #include "API/Display/Providers/pcx_provider.h"
+#include "API/Display/Providers/bmp_provider.h"
 #include "API/Display/Providers/targa_provider.h"
 #include "API/Display/Providers/jpeg_provider.h"
 #include "API/Display/Providers/png_provider.h"
@@ -46,6 +47,7 @@ static int init_count = 0;
 static CL_Slot slot_resource_added;
 
 static CL_ProviderType_Register<CL_PCXProvider> *pcx_provider = NULL;
+static CL_ProviderType_Register<CL_BMPProvider> *bmp_provider = NULL;
 static CL_ProviderType_Register<CL_TargaProvider> *tga_provider = NULL;
 static CL_ProviderType_Register<CL_TargaProvider> *targa_provider = NULL;
 static CL_ProviderType_Register<CL_JPEGProvider> *jpeg_provider = NULL;
@@ -82,6 +84,7 @@ void CL_SetupDisplay::init(bool register_resources_only)
 	slot_resource_added = CL_ResourceManager::sig_resource_added().connect(&clandisplay_resource_added);
 
 	pcx_provider   = new CL_ProviderType_Register<CL_PCXProvider>("pcx");
+	bmp_provider   = new CL_ProviderType_Register<CL_BMPProvider>("bmp");
 	tga_provider   = new CL_ProviderType_Register<CL_TargaProvider>("tga");
 	targa_provider = new CL_ProviderType_Register<CL_TargaProvider>("targa");
 	jpeg_provider  = new CL_ProviderType_Register<CL_JPEGProvider>("jpeg");
@@ -98,6 +101,9 @@ void CL_SetupDisplay::deinit()
 
 	delete pcx_provider;
 	pcx_provider = NULL;
+
+	delete bmp_provider;
+	bmp_provider = NULL;
 
 	delete tga_provider;
 	tga_provider = NULL;

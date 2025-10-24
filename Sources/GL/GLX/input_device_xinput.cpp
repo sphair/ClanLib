@@ -28,6 +28,7 @@
 */
 
 #include <iostream>
+#include <cstring>
 #include "API/Core/System/log.h"
 #include "API/Display/input_device.h"
 #include "API/Display/input_event.h"

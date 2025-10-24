@@ -69,10 +69,10 @@ void CL_DisplayWindow_Generic::release_ref()
 void CL_DisplayWindow_Generic::do_flip(int interval)
 {
 	CL_InputDevice &mouse = get_ic()->get_mouse();
-	if (!cursor.is_null())
+	if (cursor_visible && !cursor.is_null())
 	{
 		cursor.update();
-		cursor.draw(mouse.get_x(), mouse.get_y(), get_gc());
+		cursor.draw(float(mouse.get_x()), float(mouse.get_y()), get_gc());
 	}
 	flip(interval);
 }

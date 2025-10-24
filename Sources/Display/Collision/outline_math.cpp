@@ -45,7 +45,7 @@ void CL_OutlineMath::minimum_enclosing_sub_circle(
 	int real_i_indx = smalldisc.end % points.size();
 	// Get first disc (between the first two points)
 	smalldisc.position = CL_LineMath::midpoint(points[smalldisc.start], points[real_i_indx]);
-	smalldisc.radius   = points[smalldisc.start].distance(points[real_i_indx]) / 2.0;
+	smalldisc.radius   = points[smalldisc.start].distance(points[real_i_indx]) / 2.0f;
 	while(smalldisc.end < points.size())
 	{
 		// Add next one
@@ -73,7 +73,7 @@ void CL_OutlineMath::minimum_enclosing_sub_circle_with_1point(
 	int real_i_indx = smalldisc.end % points.size();
 	// Get first disc (between the first point and `points[i]`)
 	smalldisc.position = CL_LineMath::midpoint(points[smalldisc.start], points[real_i_indx]);
-	smalldisc.radius   = points[smalldisc.start].distance(points[real_i_indx]) / 2.0;
+	smalldisc.radius   = points[smalldisc.start].distance(points[real_i_indx]) / 2.0f;
 	//for(int j = smalldisc.start; j < smalldisc.end; j++)
 	for(unsigned int j = smalldisc.start+1; j < smalldisc.end; j++)
 	{
@@ -97,7 +97,7 @@ void CL_OutlineMath::minimum_enclosing_sub_circle_with_2points(
 
 	// Get first disc (between `points[j]` and `points[i]`)
 	smalldisc.position = CL_LineMath::midpoint(points[real_j_indx], points[real_i_indx]);
-	smalldisc.radius   = points[real_j_indx].distance(points[real_i_indx]) / 2.0;
+	smalldisc.radius   = points[real_j_indx].distance(points[real_i_indx]) / 2.0f;
 	for(unsigned int k = smalldisc.start; k < j; k++)
 	{
 		if(k == smalldisc.end || k == j)
@@ -111,9 +111,10 @@ void CL_OutlineMath::minimum_enclosing_sub_circle_with_2points(
 			tmp_disc.radius = smalldisc.radius;
 			CL_PointSetMath::minimum_disc_with_3points(tmp_disc, points, real_i_indx, j, real_k_indx);
 			smalldisc.position = tmp_disc.position;
-			smalldisc.radius = tmp_disc.radius;
+			smalldisc.radius = float(tmp_disc.radius);
 		}
 	}
 }
+
 
 

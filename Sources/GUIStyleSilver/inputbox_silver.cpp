@@ -29,11 +29,18 @@
 
 #include "API/Display/font.h"
 #include "API/Display/display.h"
+#include "API/Display/keys.h"
 #include "API/Core/System/system.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/GUI/gui_manager.h"
+#include "API/GUI/inputbox_stylebase.h"
 #include "API/GUIStyleSilver/inputbox_silver.h"
 #include "API/GUIStyleSilver/stylemanager_silver.h"
+#include <cstring>
+
+#pragma warning ( push, 1 )
+#pragma warning ( disable: 4244 ) // conversion from 'int' to 'float', possible loss of data
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Construction:
@@ -43,19 +50,11 @@ CL_InputBox_Silver::CL_InputBox_Silver(
 	CL_StyleManager_Silver *style)
 : 
 	CL_ComponentStyle(inputbox),
-	inputbox(inputbox),
-	style(style)
+	CL_InputBox_StyleBase(inputbox, style->get_resources(), "InputBox/font", 3)
 {
-	resources = style->get_resources();
-	
-	font = new CL_Font("InputBox/font", resources);
-	font_disabled = new CL_Font("InputBox/font_disabled", resources);
-
-	show_cursor = false;
-	character_offset = 0;
-	cursor_blink_time = CL_System::get_time();
-
-	set_border_size(3);
+	font_disabled = new CL_Font("InputBox/font_disabled", style->get_resources());
+	if (font_disabled)
+		font_disabled->set_color( CL_Color::gray );
 
 	slot_paint = inputbox->sig_paint().connect(
 		this, &CL_InputBox_Silver::on_paint);
@@ -67,7 +66,6 @@ CL_InputBox_Silver::CL_InputBox_Silver(
 
 CL_InputBox_Silver::~CL_InputBox_Silver()
 {
-	delete font;
 	delete font_disabled;
 }
 
@@ -126,26 +124,23 @@ void CL_InputBox_Silver::on_paint()
 	}
 
 	// For easy reference, put inputfield-text into local variable
-	const char *text = inputbox->get_text().c_str();
+	std::string const & text = inputbox->get_text();
 
 	// Calculate offset for vertical centering
 	int vert_center = (inputbox->get_height () - font->get_height ()) / 2;
 
 	// Calculate scroll offset
-	int character_offset = 0;
-	int pixel_offset = 0;
-	int text_width = (int) inputbox->in_password_mode() ? font->get_width('*')*strlen(text) : font->get_width(text);
-	if (text_width > width - border_size * 2)
+	int drawing_text_width = 0;
+	int draw_to = draw_from;
+
+	while (draw_to < text.length())
 	{
-		while (
-			text_width >= width - border_size * 2 &&
-			character_offset + 1 < inputbox->get_cursor_position())
-		{
-			int w = inputbox->in_password_mode() ? font->get_width('*') : font->get_width(text[character_offset]);
-			character_offset++;
-			pixel_offset += w;
-			text_width -= w;
-		}
+		int w = get_chars_width( draw_to, draw_to );
+		if (drawing_text_width + w > width - border_size * 2)
+			break;
+
+		drawing_text_width += w;
+		draw_to ++;
 	}
 
 	// Display marked text, if any
@@ -156,52 +151,44 @@ void CL_InputBox_Silver::on_paint()
 			int start = inputbox->get_selection_start();
 			int end = start + inputbox->get_selection_length();
 
-			int mark_x1 = 0, mark_x2 = 0;
+			if (start < draw_from) start = draw_from;
+			if (end   > draw_to  ) end   = draw_to;
 
-			int i;
-			if (inputbox->in_password_mode())
-			{
-				int w = font->get_width('*');
-
-				if (start > 0)
-					mark_x1 += start*w;
-
-				if (end > start)
-					mark_x2 += (end-start)*w;
-			}
-			else
-			{
-				for(i = 0; i < start; i++)
-					mark_x1 += font->get_width(text[i]);
-
-				for(i = start; i < end; i++)
-					mark_x2 += font->get_width(text[i]);
-			}
+			int mark_x1 = get_chars_width( draw_from, start-1 );
+			int mark_x2 = get_chars_width( draw_from, end-1 );
 
 			CL_Display::fill_rect(
 				CL_Rect(
 					inputbox->get_screen_x()+border_size + mark_x1 - 1,
 					inputbox->get_screen_y() + vert_center,
-					inputbox->get_screen_x()+border_size + mark_x1 + mark_x2,
+					inputbox->get_screen_x()+border_size + mark_x2,
 					inputbox->get_screen_y() + font->get_height() + vert_center),
 				CL_Color(204, 208, 232));
 		}
 	}
 
 	// Display text
-	if(inputbox->is_enabled() == false)
+	int xx = inputbox->get_screen_x()+border_size;
+	int yy = inputbox->get_screen_y()+vert_center;
+
+	int draw_count = draw_to - draw_from;
+
+	if (draw_from >= 0 && draw_count > 0)
 	{
-		if (inputbox->in_password_mode())
-			font_disabled->draw(inputbox->get_screen_x()+border_size, inputbox->get_screen_y()+vert_center, std::string(strlen(text+character_offset), '*'));
+		if(inputbox->is_enabled() == false)
+		{
+			if (inputbox->in_password_mode())
+				font_disabled->draw(xx, yy, std::string( draw_count, '*' ) );
+			else
+				font_disabled->draw(xx, yy, text.substr( draw_from, draw_count ) );
+		}
 		else
-			font_disabled->draw(inputbox->get_screen_x()+border_size, inputbox->get_screen_y()+vert_center, &text[character_offset]);
-	}
-	else
-	{
-		if (inputbox->in_password_mode())
-			font->draw(inputbox->get_screen_x()+border_size, inputbox->get_screen_y()+vert_center, std::string(strlen(text+character_offset), '*'));
-		else
-			font->draw(inputbox->get_screen_x()+border_size, inputbox->get_screen_y()+vert_center, &text[character_offset]);
+		{
+			if (inputbox->in_password_mode())
+				font->draw(xx, yy, std::string( draw_count, '*' ) );
+			else
+				font->draw(xx, yy, text.substr( draw_from, draw_count ) );
+		}
 	}
 
 	// Show blinking cursor
@@ -209,20 +196,25 @@ void CL_InputBox_Silver::on_paint()
 	{
 		if (show_cursor)
 		{
-			int cursor_x = border_size - pixel_offset;
+			int cursor_pos = inputbox->get_cursor_position();
+			int cursor_x = border_size + get_chars_width( draw_from, cursor_pos - 1 );
 
-			if (inputbox->in_password_mode())
-				cursor_x += inputbox->get_cursor_position() * font->get_width('*');
-			else
-				for(int i = 0; i < inputbox->get_cursor_position(); i++)
-					cursor_x += font->get_width(text[i]);
-			
+			int xx = inputbox->get_screen_x() + cursor_x;
+			int y1 = inputbox->get_screen_y() + vert_center;
+			int y2 = inputbox->get_screen_y() + vert_center + font->get_height() - 1;
 			CL_Display::draw_line(
-				inputbox->get_screen_x() + cursor_x,
-				inputbox->get_screen_y() + vert_center,
-				inputbox->get_screen_x() + cursor_x,
-				inputbox->get_screen_y() + vert_center + font->get_height() - 1,
-				CL_Color::black);
+				xx-1, y1, xx-1, y2,
+				CL_Color::black );
+			CL_Display::draw_line(
+				xx-2, y1-1, xx+1, y1-1,
+				CL_Color::black );
+			CL_Display::draw_line(
+				xx-2, y2, xx+1, y2,
+				CL_Color::black );
+
+			//char buf[400];
+			//sprintf( buf, "%d", cursor_pos );
+			//font->draw( CL_Rect( xx, y1-15, xx+100, y1 ), buf );
 		}
 
 		unsigned int cur_time = CL_System::get_time();
@@ -251,3 +243,6 @@ void CL_InputBox_Silver::on_get_preferred_size(CL_Size &size)
 	size.width = position.get_width();
 	size.height = position.get_height();
 }
+
+#pragma warning ( pop )
+

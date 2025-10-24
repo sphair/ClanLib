@@ -8,7 +8,7 @@ inputbox_silver.cpp  radiobutton_silver.cpp  window_silver.cpp \
 button_silver.h    label_silver.h	   scrollbar_silver.h \
 checkbox_silver.h  listbox_silver.h	   frame_silver.h \
 image_silver.h     progressbar_silver.h  window_silver.h \
-inputbox_silver.h  radiobutton_silver.h \
+inputbox_silver.h  radiobutton_silver.h richedit_silver.cpp \
 menu_silver.cpp      menu_node_silver.cpp	menu_item_silver.cpp \
 treeitem_silver.cpp	treeview_silver.cpp \
 treeitem_silver.h	treeview_silver.h

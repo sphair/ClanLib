@@ -120,12 +120,13 @@ CL_ListItem *CL_ListBox_Generic::get_item(int index) const
 
 int CL_ListBox_Generic::get_item(const CL_Point &pt)
 {
-	//TODO:  Should also check X at some point
-
 	int index = (int)(pt.y / item_height + scroll_offset);
 
 	if(index < 0 || index >= (int)items.size()) return -1;
 
+	//also check the x
+
+	if (!listbox->get_children_rect().is_inside(pt)) return -1;
 	return index;
 }
 
@@ -345,7 +346,10 @@ void CL_ListBox_Generic::on_mouse_down(const CL_InputEvent &key)
 			return;
 
 		if(multi_selection)
+		{
+			if (key.repeat_count != 2)
 			items[index]->selected = !items[index]->selected;
+		}
 		else
 		{
 			std::vector<CL_ListItem *>::iterator it;

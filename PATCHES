@@ -1,6 +1,5 @@
-Due to the modest volume of patches we get on the mailing list and
-because all recent patches that have come in are rather hairy, here
-is a summary of how to create patches for ClanLib.
+Due to the modest volume of patches we get and because all recent patches that
+have come in are rather hairy, here is a summary of how to create patches for ClanLib.
 
 Diffing
 ===================================
@@ -14,8 +13,8 @@ your ClanLib directory (or trunk), and select TortoiseSVN->Create Patch.
 
 Submitting
 ===================================
-Please submit patches to our devel mailing-list:
-clanlib-devel@lists.sourceforge.net
+Please submit patches to our Developer Chat section on the forums:
+http://www.rtsoft.com/forums/forumdisplay.php?f=16
 
 Describing
 ===================================

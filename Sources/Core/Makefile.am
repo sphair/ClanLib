@@ -72,6 +72,7 @@ System/Generic/timer_generic.cpp \
 System/Generic/log.cpp \
 System/Generic/call_stack.cpp \
 System/Generic/crash_reporter.cpp \
+System/Generic/clipboard.cpp \
 XML/dom_attr.cpp \
 XML/dom_cdata_section.cpp \
 XML/dom_character_data.cpp \

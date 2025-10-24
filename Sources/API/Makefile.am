@@ -115,10 +115,14 @@ clanGUI_includes = \
 	GUI/component_style.h \
 	GUI/inputbox.h \
 	GUI/inputdialog.h \
+	GUI/inputbox_stylebase.h \
 	GUI/menu.h \
 	GUI/menu_node.h \
 	GUI/menu_item.h \
+	GUI/richedit.h \
+	GUI/richedit_paragraph.h \
 	GUI/deck.h
+
 
 clanGUIStyleBoring_includes = \
         guistyleboring.h \
@@ -156,6 +160,7 @@ clanGUIStyleSilver_includes = \
 	GUIStyleSilver/stylemanager_silver.h \
 	GUIStyleSilver/treeitem_silver.h \
 	GUIStyleSilver/treeview_silver.h \
+	GUIStyleSilver/richedit_silver.h \
 	GUIStyleSilver/window_silver.h
 
 clanSound_includes = \
@@ -231,6 +236,7 @@ clanCore_includes = \
 	Core/System/crash_reporter.h \
 	Core/System/call_stack.h \
 	Core/System/clanstring.h \
+	Core/System/clipboard.h \
 	Core/System/setupcore.h \
 	Core/System/error.h \
 	Core/System/timer.h \
@@ -307,6 +313,7 @@ clanDisplay_includes = \
 	Display/Providers/provider_type.h \
 	Display/Providers/dc_buffer.h \
 	Display/Providers/pcx_provider.h \
+	Display/Providers/bmp_provider.h \
 	Display/Providers/png_provider.h \
 	Display/Providers/provider_factory.h \
 	Display/Providers/provider_type_register.h \

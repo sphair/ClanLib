@@ -35,6 +35,7 @@
 #include "API/Core/IOData/inputsource.h"
 #include "API/Core/IOData/inputsource_provider.h"
 #include "API/Core/System/error.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod_Session construction:

@@ -53,6 +53,11 @@ CL_InputDevice::~CL_InputDevice()
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputDevice attributes:
 
+int CL_InputDevice::get_id() const
+{
+	return impl->id;
+}
+
 CL_InputDevice::Type CL_InputDevice::get_type() const
 {
 	return impl->type;

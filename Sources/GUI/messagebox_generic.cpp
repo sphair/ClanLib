@@ -60,6 +60,7 @@ CL_MessageBox_Generic::CL_MessageBox_Generic(
 {
 	CL_ResourceManager * resources = messagebox->get_style_manager()->get_resources();
 	font = new CL_Font("MessageBox/font", resources);
+	font->set_color( CL_Color::black );
 
 	bool is_fixed_size_buttons = CL_Boolean("MessageBox/fixed_size_buttons", resources, false);
 	int min_button_width = CL_Integer("MessageBox/min_button_width", resources, 80);
@@ -349,4 +350,5 @@ void CL_MessageBox_Generic::on_end_paint()
 
 	font->draw(text_rect, text);
 }
+
 

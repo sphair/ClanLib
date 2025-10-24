@@ -48,6 +48,7 @@
 #endif
 
 #include "../GUI/inputbox.h"
+#include "../GUI/inputbox_stylebase.h"
 #include "../GUI/component_style.h"
 
 class CL_Font;
@@ -56,7 +57,9 @@ class CL_StyleManager_Silver;
 //: InputBox default style.
 //- !group=GUI/Style: Silver!
 //- !header=guistylesilver.h!
-class CL_API_GUISTYLESILVER CL_InputBox_Silver : public CL_ComponentStyle
+class CL_API_GUISTYLESILVER CL_InputBox_Silver 
+	: public CL_ComponentStyle
+	, public CL_InputBox_StyleBase
 {
 //! Construction:
 public:
@@ -83,21 +86,7 @@ private:
 	CL_Slot slot_get_preferred_size;
 	void on_get_preferred_size(CL_Size &size);
 
-	CL_InputBox *inputbox;
-
-	CL_StyleManager_Silver *style;
-	CL_ResourceManager *resources;
-	CL_Font *font;
 	CL_Font *font_disabled;
-
-	int character_offset;
-
-	bool show_cursor;
-	unsigned int cursor_blink_time;
-
-	int border_size;
-	
-//	int get_mouse_position(int x, int y);
 };
 
 #endif

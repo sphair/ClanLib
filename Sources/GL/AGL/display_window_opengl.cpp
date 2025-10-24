@@ -15,7 +15,7 @@
 **     in a product, an acknowledgment in the product documentation would be
 **     appreciated but is not required.
 **  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
+**     misrepresented as being theset_ original software.
 **  3. This notice may not be removed or altered from any source distribution.
 **
 **  Note: Some of the libraries ClanLib may link to may have additional
@@ -402,7 +402,11 @@ void CL_DisplayWindow_OpenGL::flip(int interval)
 void CL_DisplayWindow_OpenGL::set_fullscreen(int width, int height, int bpp, int refresh_rate)
 {
 	if(fullscreen)
-		return;
+	{
+		//we just want to update the size, this will do that for us..
+		set_size(width, height);
+		set_windowed();
+	}
 
 	CGCaptureAllDisplays();
 	
@@ -418,12 +422,13 @@ void CL_DisplayWindow_OpenGL::set_fullscreen(int width, int height, int bpp, int
 	//After toggling to the fullscreen context, nothing is going draw unless
 	//we reapply the GL states/properties -mrfun 6-2-2006
 	CL_GLStateChecker::from_gc(get_gc())->reinitialize_asap();
+
 }
 
 void CL_DisplayWindow_OpenGL::set_windowed()
 {
-	if(!fullscreen)
-		return;
+	//if(!fullscreen)
+	//	return;
 
 	if (context == fs_context)
 	{
@@ -561,10 +566,10 @@ int CL_DisplayWindow_OpenGL::clkey_to_keycode(int clkey)
 	case CL_KEY_SUBTRACT:		return 27;
 	case CL_KEY_8:				return 28;
 	case CL_KEY_0:				return 29;
-	// case CL_KEY_UMLAU:		return 30; // key next to key next to P  ??
+	case CL_KEY_RIGHT_BRACKET:	return 30;
 	case CL_KEY_O:				return 31;
 	case CL_KEY_U:				return 32;
-	// case CL_KEY_AA:			return 33; // key next to P  ??
+	case CL_KEY_LEFT_BRACKET:	return 33;
 	case CL_KEY_I:				return 34;
 	case CL_KEY_P:				return 35;
 	case CL_KEY_ENTER:			return 36;
@@ -609,8 +614,12 @@ int CL_DisplayWindow_OpenGL::clkey_to_keycode(int clkey)
 	case CL_KEY_F3:				return 99;
 	case CL_KEY_F8:				return 100;
 	case CL_KEY_F9:				return 101;
+	case CL_KEY_F13:			return 105;
+	case CL_KEY_F14:			return 107;
 	case CL_KEY_F10:			return 109;
 	case CL_KEY_F12:			return 111;
+	case CL_KEY_F15:			return 113;
+	case CL_KEY_HELP:			return 114;
 	case CL_KEY_HOME:			return 115;
 	case CL_KEY_PAGE_UP:		return 116;
 	case CL_KEY_DELETE:			return 117;
@@ -675,10 +684,10 @@ int CL_DisplayWindow_OpenGL::keycode_to_clkey(int keycode)
 	case 27:		return CL_KEY_SUBTRACT;
 	case 28:		return CL_KEY_8;
 	case 29:		return CL_KEY_0;
-	// case 30:		return CL_KEY_UMLAU; // key next to key next to P  ??
+	case 30:		return CL_KEY_RIGHT_BRACKET;
 	case 31:		return CL_KEY_O;
 	case 32:		return CL_KEY_U;
-	// case 33:		return CL_KEY_AA; // key next to P  ??
+	case 33:		return CL_KEY_LEFT_BRACKET;
 	case 34:		return CL_KEY_I;
 	case 35:		return CL_KEY_P;
 	case 36:		return CL_KEY_ENTER;
@@ -719,10 +728,15 @@ int CL_DisplayWindow_OpenGL::keycode_to_clkey(int keycode)
 	case 99:		return CL_KEY_F3;
 	case 100:		return CL_KEY_F8;
 	case 101:		return CL_KEY_F9;
+	case 105:		return CL_KEY_F13;
+	case 107:		return CL_KEY_F14;
 	case 109:		return CL_KEY_F10;
 	case 111:		return CL_KEY_F12;
+	case 113:		return CL_KEY_F15;
+	case 114:		return CL_KEY_HELP;
 	case 115:		return CL_KEY_HOME;
 	case 116:		return CL_KEY_PAGE_UP;
+	case 117: 		return CL_KEY_DELETE;
 	case 118:		return CL_KEY_F4;
 	case 119:		return CL_KEY_END;
 	case 120:		return CL_KEY_F2;
@@ -732,6 +746,7 @@ int CL_DisplayWindow_OpenGL::keycode_to_clkey(int keycode)
 	case 124:		return CL_KEY_RIGHT;
 	case 125:		return CL_KEY_DOWN;
 	case 126:		return CL_KEY_UP;
+	
 	default:		return keycode + 0x10000;
 	}
 }
@@ -880,10 +895,27 @@ OSStatus CL_DisplayWindow_OpenGL::on_window_event(EventHandlerCallRef call_ref, 
 		{
 		case kEventMouseDown:
 			self->mouse_states[event.id] = true;
-			event.type = CL_InputEvent::pressed;
-			self->mouse.sig_key_down().call(event);
-			return noErr;
 			
+			int repeat_count;
+
+			GetEventParameter(event_ref, kEventParamClickCount, typeUInt32, 0, sizeof(UInt32), 0, &repeat_count);
+			event.type = CL_InputEvent::pressed;
+			if (repeat_count == 2)
+			{
+				//we need to issue a normal mouse click too, for compatibility with older clanlibs we
+				//ask it to pretend it's non-repeater, in case they are using the same callback for double clicks too
+				self->mouse.sig_key_down().call(event);
+
+				event.repeat_count = repeat_count;
+				self->mouse.sig_key_dblclk().call(event);
+			} else
+			{
+				event.repeat_count = repeat_count;
+				self->mouse.sig_key_down().call(event);
+			}
+			return noErr;
+	
+		
 		case kEventMouseUp:
 			self->mouse_states[event.id] = false;
 			event.type = CL_InputEvent::released;

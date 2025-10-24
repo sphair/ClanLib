@@ -50,8 +50,6 @@ public:
 
 	int frag_size;
 
-	bool has_sound;
-
 //! Operations:
 public:
 	//: Called when we have no samples to play - and wants to tell the soundcard

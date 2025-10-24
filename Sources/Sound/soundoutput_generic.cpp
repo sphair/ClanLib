@@ -32,12 +32,13 @@
 #include "soundbuffer_session_generic.h"
 #include "API/Core/System/threadfunc_v0.h"
 #include "API/Sound/soundfilter.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput_Generic construction:
 
 CL_SoundOutput_Generic::CL_SoundOutput_Generic(int mixing_frequency) :
-	mixing_frequency(mixing_frequency), volume(1.0f), pan(0.0f), mix_buffer_size(0), ref_count(0)
+	mixing_frequency(mixing_frequency), volume(1.0f), pan(0.0f), mix_buffer_size(0), has_sound(true), ref_count(0)
 {
 	mix_buffers[0] = 0;
 	mix_buffers[1] = 0;

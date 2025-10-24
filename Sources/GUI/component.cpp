@@ -35,6 +35,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "component_generic.h"
 #include "component_manager_generic.h"
+#include "API/Core/System/cl_assert.h"
 #include <vector>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -276,7 +277,13 @@ const std::list<CL_Component *> &CL_Component::get_children() const
 CL_Rect CL_Component::get_children_rect() const
 {
 	CL_Rect rect(0, 0, 0, 0);
-	
+
+	if (impl->clipping)
+	{
+		//we clip our children, so their rect can't be larger than ours, fixes selection problem in treeview -SAR April 27th 2007
+		return get_position();
+	}
+
 	for (
 		std::list<CL_Component *>::iterator it = impl->children.begin();
 		it != impl->children.end();
@@ -686,6 +693,7 @@ void CL_Component::quit()
 
 void CL_Component::close()
 {
+	cl_assert(!is_modal() && "Use quit, not close() on modal dialogs!  Otherwise the parent member gets nulled, causing problems with focus when the children are deleted later");
 	impl->sig_close();
 	update();
 }

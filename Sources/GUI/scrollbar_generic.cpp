@@ -56,7 +56,7 @@ CL_ScrollBar_Generic::CL_ScrollBar_Generic(
 	fixed_length(false),
 	dragging(false),
 	scrollbar(self),
-	capture_last_offset(0),
+	capture_pos(0, 0),
 	timer_scroll(250)
 {
 	vertical = !orientation;
@@ -235,10 +235,10 @@ void CL_ScrollBar_Generic::on_mouse_down(const CL_InputEvent &key)
 			{
 				dragging = true;
 				scrollbar->get_client_area()->capture_mouse();
-				if(vertical) 
-					capture_last_offset = (int) key.mouse_pos.y;
-				else
-					capture_last_offset = (int) key.mouse_pos.x;
+
+				capture_pos = key.mouse_pos;
+				capture_slider = rect_slider;
+
 				sig_slider_pressed();
 			}
 			else
@@ -304,23 +304,20 @@ void CL_ScrollBar_Generic::on_mouse_move(const CL_InputEvent &key)
 	if(dragging == false)
 		return;
 
+	CL_Point delta = key.mouse_pos - capture_pos;
+
 	if(vertical)
 	{
-//		key.mouse_pos.y -= client_area->get_position().y1;
-
-		int delta = key.mouse_pos.y - capture_last_offset;
-
 		int scrollbar_length = scrollbar->get_client_area()->get_height();
 		int slider_length = rect_slider.get_height();
 
-		rect_slider.top += delta;
+		rect_slider = capture_slider;
+		rect_slider.top += delta.y;
 
 		if(rect_slider.top < 0)
 			rect_slider.top = 0;
 		else if(rect_slider.top + slider_length > scrollbar_length)
 			rect_slider.top = scrollbar_length - slider_length;
-		else
-			capture_last_offset = key.mouse_pos.y;
 
 		rect_slider.bottom = rect_slider.top + slider_length;
 
@@ -330,20 +327,16 @@ void CL_ScrollBar_Generic::on_mouse_move(const CL_InputEvent &key)
 	} 
 	else
 	{
-//		key.mouse_pos.x -= client_area->get_position().x1;
-
-		int delta = key.mouse_pos.x - capture_last_offset;
-
 		int scrollbar_length = scrollbar->get_client_area()->get_width();
 		int slider_length = rect_slider.get_width();
 
-		rect_slider.left += delta;
+		rect_slider = capture_slider;
+		rect_slider.left += delta.x;
 
 		if(rect_slider.left < 0)
 			rect_slider.left = 0;
 		else if(rect_slider.left + slider_length > scrollbar_length)
 			rect_slider.left = scrollbar_length - slider_length;
-		else capture_last_offset = key.mouse_pos.x;
 
 		rect_slider.right = rect_slider.left + slider_length;
 

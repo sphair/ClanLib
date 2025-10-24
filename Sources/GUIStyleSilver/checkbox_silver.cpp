@@ -98,6 +98,8 @@ void CL_CheckBox_Silver::set_font(CL_Font *_font, bool _delete_font)
 	if(delete_font && font)
 		delete font;
 	font = _font;
+	if (font)
+		font->set_color( CL_Color::black );
 	delete_font = _delete_font;
 }
 
@@ -106,6 +108,8 @@ void CL_CheckBox_Silver::set_font_disabled(CL_Font *_font, bool _delete_font)
 	if(delete_font_disabled && font_disabled)
 		delete font_disabled;
 	font_disabled = _font;
+	if (font_disabled)
+		font_disabled->set_color( CL_Color::gray );
 	delete_font_disabled = _delete_font;
 }
 
@@ -199,7 +203,7 @@ void CL_CheckBox_Silver::on_paint(CL_SlotParent_v0 &super)
 			show_font = font;
 	}
 
-	show_surface->draw(checkbox->get_screen_x(), checkbox->get_screen_y());
+	show_surface->draw((float)checkbox->get_screen_x(), (float)checkbox->get_screen_y());
 
 	if (checkbox->get_text().length() > 0)
 		show_font->draw(checkbox->get_screen_x() + 4 + show_surface->get_width(), checkbox->get_screen_y(), checkbox->get_text());

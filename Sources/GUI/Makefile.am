@@ -17,8 +17,13 @@ component_generic.h \
 stylemanager.cpp \
 scrollbar_generic.cpp \
 inputbox_generic.cpp \
+inputbox_stylebase.cpp \
 inputdialog.cpp \
 inputdialog_generic.cpp \
+richedit.cpp \
+richedit_generic.cpp \
+richedit_generic.h \
+richedit_paragraph.cpp \
 label.cpp \
 precomp.h \
 gui_manager_generic.h \

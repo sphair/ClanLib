@@ -71,7 +71,7 @@ CL_Sprite::CL_Sprite(const std::string &resource_id, CL_ResourceManager *manager
 	}
 }
 
-CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_texture)
+CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_texture, unsigned int min_width, unsigned int min_height)
 : impl(new CL_Sprite_Generic)
 {
 	if (pack_texture && CL_DisplayTarget::current()->enable_packer())
@@ -82,7 +82,7 @@ CL_Sprite::CL_Sprite(const CL_SpriteDescription &spritedescription, bool pack_te
 
 		// Pack frames into textures
 		CL_SpritePacker packer(spritedescription);
-		if(packer.pack(max_surface_size.width, max_surface_size.height) == false)
+		if(packer.pack(max_surface_size.width, max_surface_size.height, min_width, min_height) == false)
 			throw CL_Error("Couldn't pack all frames into textures");
 
 		// Fetch texture, description-frame and packed-frame lists
@@ -446,6 +446,18 @@ CL_Surface CL_Sprite::get_frame_surface(int frameno) const
 		return CL_Surface();
 }
 
+CL_Surface CL_Sprite::get_frame_surface(int frameno, CL_Rect &surface_rect) const
+{
+	CL_Sprite_Generic::SpriteFrame *frame = impl->get_frame(frameno);
+	if (frame)
+	{
+		surface_rect = frame->position;
+		return frame->surface;
+	}
+	else
+		return CL_Surface();
+}
+
 CL_PixelBuffer CL_Sprite::get_frame_pixeldata(int frameno) const
 {
 	CL_Sprite_Generic::SpriteFrame *frame = impl->get_frame(frameno);
@@ -456,6 +468,7 @@ CL_PixelBuffer CL_Sprite::get_frame_pixeldata(int frameno) const
 		int h = get_height();
 		// Make sure dimensions are the same as this sprite.
 		// pb will always be larger than, or equal to the sprite's size
+		
 		if (w != pb.get_width() || h != pb.get_height())
 		{
 			int p = pb.get_pitch();
@@ -463,9 +476,12 @@ CL_PixelBuffer CL_Sprite::get_frame_pixeldata(int frameno) const
 			CL_PixelBuffer new_pb(w, h, p, pb.get_format());
 			unsigned char *src_bytes = (unsigned char*) pb.get_data();
 			unsigned char *dest_bytes = (unsigned char*) new_pb.get_data();
+
+			src_bytes += frame->position.top * p; //move down to where it really starts if applicable
+
 			for (int y = 0; y < h; y++)
 				for (int x = 0; x < w * bytes_per_pixel; x++)
-					dest_bytes[y * p + x] = src_bytes[y * p + x];
+					dest_bytes[y * p + x] = src_bytes[y*p + x + (frame->position.left * bytes_per_pixel)];
 			return new_pb;
 		}
 		else
@@ -804,8 +820,10 @@ float CL_Sprite::update(float time_elapsed)
 		time_elapsed = impl->calc_time_elapsed();
 
 	int total_frames = impl->frames.size();
-	if(total_frames < 2 || impl->finished)
-		return time_elapsed;
+	
+	//we still want to know when a 1 frame 'anim' loops, based on the timer -mrfun
+	//if(total_frames < 2 || impl->finished)
+	//	return time_elapsed; 
 
 	CL_Sprite_Generic::SpriteFrame *frame = &impl->frames[impl->current_frame];
 

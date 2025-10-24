@@ -48,6 +48,7 @@ CL_TreeView_Silver::CL_TreeView_Silver(
 {
 	CL_ResourceManager *resources = style->get_resources();
 	font = new CL_Font("TreeView/font", resources);
+	font->set_color( CL_Color::black );
 
 	CL_Component *client_area = treeview->get_client_area();
 	client_area->set_clipping(true);

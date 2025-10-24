@@ -32,6 +32,7 @@
 #include "netstream_generic.h"
 #include "netsession_generic.h"
 #include "netcomputer_generic.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetStream construction:

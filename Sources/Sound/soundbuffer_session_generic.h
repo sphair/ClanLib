@@ -66,11 +66,13 @@ public:
 	float volume;
 	
 	float pan;
-	
+
 	bool looping;
 	
 	bool playing;
 	
+	float speedfactor;
+
 	std::vector<CL_SoundFilter *> filters;
 	
 	std::vector<bool> delete_filters;

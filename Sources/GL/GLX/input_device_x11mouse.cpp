@@ -195,9 +195,15 @@ void CL_InputDevice_X11Mouse::received_mouse_input(XEvent &e)
 	key.device    = owner->mouse;
 	key.mouse_pos = mouse_pos;
 	key.repeat_count = repeat_count;
+
 	// Emit message:
-	if(repeat_count > 1)
+	if(repeat_count == 2)
 	{
+		key.repeat_count = 1; //we need to issue a normal mouse click too, for compatibility with older clanlibs we
+		//ask it to pretend it's non-repeater, in case they are using the same callback for double clicks too
+		owner->mouse.sig_key_down().call(key);
+
+		key.repeat_count = repeat_count;
 		owner->mouse.sig_key_dblclk().call(key);
 	}
 	else if (down)

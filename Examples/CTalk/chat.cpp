@@ -78,7 +78,11 @@ void Chat::add_line(const std::string &nick, const std::string &text, const CL_C
 	{
 		scroll->set_max_value(scroll->get_max_value()+1);
 		if (scroll->get_value() == scroll->get_max_value()-1) scroll->set_value(scroll->get_max_value());
+	
+		//signal that we want to be repainted
+		update();
 	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

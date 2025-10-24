@@ -24,11 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Hans de Goede
 **    (if your name is missing here, please add it)
 */
 
 #include <cstdio>
 #include <errno.h>
+#include <cstring>
 
 #include "display_window_opengl.h"
 #include "input_device_linuxjoystick.h"
@@ -65,18 +67,15 @@ int CL_DisplayWindow_OpenGL::disp_ref_count = 0;
 CL_DisplayWindow_OpenGL::CL_DisplayWindow_OpenGL() :
 	left_ctrl_down(false), left_alt_down(false), left_shift_down(false),
 	right_ctrl_down(false), right_alt_down(false), right_shift_down(false),
-	fullscreen(false), fullscreen_width(0), fullscreen_height(0),
-	saved_position(0, 0, 0, 0),
 	context(0),
-	window(0)
+	window(None), wm_window(None), fs_window(None), width(0), height(0),
+	old_x(-1), old_y(-1)
 {
 	gc = CL_GraphicContext(new CL_GraphicContext_OpenGL(this));
 }
 
 CL_DisplayWindow_OpenGL::~CL_DisplayWindow_OpenGL()
 {
-	if(fullscreen)
-		set_windowed();
 	destroy_window();
 }
 
@@ -85,23 +84,17 @@ CL_DisplayWindow_OpenGL::~CL_DisplayWindow_OpenGL()
 
 int CL_DisplayWindow_OpenGL::get_width() const
 {
-	XWindowAttributes attr;
-	XGetWindowAttributes(disp, window, &attr);
-
-	return attr.width;
+	return width;
 }
 
 int CL_DisplayWindow_OpenGL::get_height() const
 {
-	XWindowAttributes attr;
-	XGetWindowAttributes(disp, window, &attr);
-
-	return attr.height;
+	return height;
 }
 
 bool CL_DisplayWindow_OpenGL::is_fullscreen() const
 {
-	return fullscreen;
+	return fs_window != None;
 }
 
 bool CL_DisplayWindow_OpenGL::has_focus() const
@@ -151,11 +144,9 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 	const CL_OpenGLWindowDescription_Generic *gl_desc = 0;
 	gl_desc = dynamic_cast<const CL_OpenGLWindowDescription_Generic*>(desc.impl.get());
 
-	fullscreen_width  = desc.get_size().width;
-	fullscreen_height = desc.get_size().height;
-
-	XVisualInfo *vi;
-	Colormap cmap;
+	width  = desc.get_size().width;
+	height = desc.get_size().height;
+	allow_resize = desc.get_allow_resize();
 
 	if (disp == 0)
 	{
@@ -230,7 +221,7 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 	
 	if (vi == NULL)
 	{
-		vi = glXChooseVisual(disp, window, gl_attribs_single);
+		vi = glXChooseVisual(disp, DefaultScreen(disp), gl_attribs_single);
 		printf("Requested visual not supported by your OpenGL implementation. Falling back on singlebuffered Visual!\n");
 	}
 
@@ -240,12 +231,13 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 	if( share_context == NULL )
 		share_context = context;
 
-	glXGetConfig(disp, vi, GLX_BUFFER_SIZE, &glx_bpp);
-
 	// create a color map
 	cmap = XCreateColormap( disp, RootWindow(disp, vi->screen), vi->visual, AllocNone);
 
+	XSetWindowAttributes attributes;
+
 	attributes.colormap = cmap;
+	attributes.background_pixel = XBlackPixel(disp, vi->screen);
 	attributes.border_pixel = 0;
 	attributes.override_redirect = False;
 
@@ -258,18 +250,20 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 		ButtonReleaseMask |
 		StructureNotifyMask |
 		PointerMotionMask |
-		EnterWindowMask |
-		LeaveWindowMask |
+		PropertyChangeMask |
+		KeymapStateMask |
 		FocusChangeMask;
 
-	window = XCreateWindow(disp, RootWindow(disp, vi->screen),
-		0, 0, desc.get_size().width, desc.get_size().height, 0, vi->depth, InputOutput, vi->visual,
-		CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
+	wm_window = XCreateWindow(disp, RootWindow(disp, vi->screen),
+		0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
+		CWBackPixel | CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
 	
-	XSelectInput(disp, window,
-		FocusChangeMask | KeyPressMask | KeyReleaseMask
-		| PropertyChangeMask | StructureNotifyMask |
-		KeymapStateMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);
+	window = XCreateWindow(disp, wm_window,
+		0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
+		CWBackPixel | CWBorderPixel | CWColormap | CWOverrideRedirect | CWEventMask, &attributes);
+	
+	// Map the real / drawing window it won't appear untill the parent does
+	XMapWindow(disp, window);
 
 	// set title of window:
 	set_title(desc.get_title());
@@ -277,24 +271,24 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 	// setup size hints:
 	XSizeHints size_hints;
 	memset(&size_hints, 0, sizeof(XSizeHints));
-	size_hints.width       = desc.get_size().width;
-	size_hints.height      = desc.get_size().height;
-	size_hints.base_width  = desc.get_size().width;
-	size_hints.base_height = desc.get_size().height;
-	size_hints.min_width   = size_hints.width;
-	size_hints.min_height  = size_hints.height;
-	size_hints.max_width   = size_hints.width;
-	size_hints.max_height  = size_hints.height;
+	size_hints.width       = width;
+	size_hints.height      = height;
+	size_hints.base_width  = width;
+	size_hints.base_height = height;
+	size_hints.min_width   = width;
+	size_hints.min_height  = height;
+	size_hints.max_width   = width;
+	size_hints.max_height  = height;
 	size_hints.flags       = PSize|PBaseSize;
-	if (!desc.get_allow_resize()) size_hints.flags |= PMinSize | PMaxSize;
-	XSetWMNormalHints(disp, window, &size_hints);
+	if (!allow_resize) size_hints.flags |= PMinSize | PMaxSize;
+	XSetWMNormalHints(disp, wm_window, &size_hints);
 
 	// handle wm_delete_events if in windowed mode:
 	Atom wm_delete = XInternAtom(disp, "WM_DELETE_WINDOW", True);
-	XSetWMProtocols(disp, window, &wm_delete, 1);
+	XSetWMProtocols(disp, wm_window, &wm_delete, 1);
 
-	// make window visible:
-	XMapRaised(disp, window);
+	// make the managed window visible (and thus the real one too):
+	XMapRaised(disp, wm_window);
 
 	if (!glXIsDirect(disp, context))
 		printf("No hardware acceleration available. I hope you got a really fast machine..\n");
@@ -327,7 +321,7 @@ void CL_DisplayWindow_OpenGL::create_window(const CL_DisplayWindowDescription &d
 	hidden_cursor = XCreatePixmapCursor(disp, cursor_bitmap, cursor_bitmap, &black_color, &black_color, 0,0 );
 	
 	if (desc.is_fullscreen())
-		set_fullscreen(desc.get_size().width, desc.get_size().height, desc.get_bpp(), desc.get_refresh_rate());
+		set_fullscreen(width, height, desc.get_bpp(), desc.get_refresh_rate());
 }
 
 void
@@ -476,7 +470,8 @@ CL_DisplayWindow_OpenGL::setup_xinput()
 
 void CL_DisplayWindow_OpenGL::destroy_window()
 {
-	set_windowed();
+	if(fs_window != None)
+		set_windowed();
 
 	if (context)
 	{
@@ -493,8 +488,16 @@ void CL_DisplayWindow_OpenGL::destroy_window()
 	mouse = CL_InputDevice();
 	get_ic()->clear();
 
-	if (window) XDestroyWindow(disp, window);
-	window = 0;
+	if (window != None)
+	{
+		XDestroyWindow(disp, window);
+		window = None;
+	}
+	if (wm_window != None)
+	{
+		XDestroyWindow(disp, wm_window);
+		wm_window = None;
+	}
 	
 	if (disp_ref_count > 0)
 	{
@@ -502,7 +505,7 @@ void CL_DisplayWindow_OpenGL::destroy_window()
 		if (disp_ref_count == 0)
 		{
 			XCloseDisplay(disp);
-			disp = 0;
+			disp = NULL;
 		}
 	}
 }
@@ -530,180 +533,234 @@ void CL_DisplayWindow_OpenGL::flip(int interval)
 	glXSwapBuffers(disp, window);
 }
 
+/* qsort comparison function for sorting the modes */
+static int cmpmodes(const void *va, const void *vb)
+{
+	const XF86VidModeModeInfo *a = *(const XF86VidModeModeInfo **)va;
+	const XF86VidModeModeInfo *b = *(const XF86VidModeModeInfo **)vb;
+	if ( a->hdisplay == b->hdisplay )
+		return b->vdisplay - a->vdisplay;  
+	else
+		return b->hdisplay - a->hdisplay;
+}
+
+void CL_DisplayWindow_OpenGL::set_resolution(void)
+{
+	int i, dotclock, mode_count, fs_width, fs_height;
+	XF86VidModeModeInfo **modes;
+	XF86VidModeModeLine current_mode;
+
+	current_mode.privsize = 0;
+	XF86VidModeGetModeLine(disp, vi->screen, &dotclock, &current_mode);
+	if (!XF86VidModeGetAllModeLines(disp, 0, &mode_count, &modes))
+		mode_count = 0;
+
+	/* Search for an exact matching video mode.  */
+	for (i = 0; i < mode_count; i++) {
+		if ((modes[i]->hdisplay == width) && 
+		    (modes[i]->vdisplay == height))
+			break;
+	}
+
+	/* Search for a non exact match (smallest bigger res). */
+	if (i == mode_count) {
+		int best_width = 0, best_height = 0;
+		qsort(modes, mode_count, sizeof(void *), cmpmodes);
+		for (i = mode_count-1; i > 0; i--) {
+			if ( ! best_width ) {
+				if ( (modes[i]->hdisplay >= width) &&
+				     (modes[i]->vdisplay >= height) ) {
+					best_width = modes[i]->hdisplay;
+					best_height = modes[i]->vdisplay;
+				}
+			} else {
+				if ( (modes[i]->hdisplay != best_width) ||
+				     (modes[i]->vdisplay != best_height) ) {
+					i++;
+					break;
+				}
+			}
+		}
+	}
+
+	/* Switch video mode */
+	if (i >= 0)
+	{
+		if ((modes[i]->hdisplay != current_mode.hdisplay) ||
+		    (modes[i]->vdisplay != current_mode.vdisplay))
+		{
+			if (old_x == -1 && old_y == -1)
+			{
+				XF86VidModeModeLine *l =
+					(XF86VidModeModeLine *)((char *)
+						&old_mode +
+						sizeof(old_mode.dotclock));
+				*l = current_mode;
+				old_mode.dotclock = dotclock;
+				XF86VidModeGetViewPort(disp, vi->screen,
+					&old_x, &old_y);
+			}
+			XF86VidModeSwitchToMode(disp, vi->screen,
+				modes[i]);
+		}
+		fs_width  = modes[i]->hdisplay;
+		fs_height = modes[i]->vdisplay;
+	}
+	else
+	{
+		fs_width  = DisplayWidth(disp, vi->screen);
+		fs_height = DisplayHeight(disp, vi->screen);
+	}
+
+	/* center window */
+	XMoveWindow(disp, window, (fs_width - width) / 2,
+		(fs_height - height) / 2);
+
+	/* Lock mode switching.  */
+	XF86VidModeLockModeSwitch(disp, vi->screen, True);
+	       
+	/* Set viewport. */
+	XF86VidModeSetViewPort(disp, vi->screen, 0, 0);
+
+	/* clean up */
+	if (current_mode.privsize)
+	  XFree(current_mode.c_private);
+
+	if (mode_count)
+	{
+	  for (i = 0; i < mode_count; i++)
+	    if (modes[i]->privsize)
+	      XFree(modes[i]->c_private);
+	  XFree(modes);
+	}
+}
+
 void CL_DisplayWindow_OpenGL::set_fullscreen(int width, int height, int bpp, int refresh_rate)
 {
-	if(fullscreen)
-		return;
-
-	// Vid-mode Switching
-	XF86VidModeModeLine cur_mode;
-
-	XF86VidModeGetModeLine(disp, 0, &dotclock, &cur_mode);
-
-	old_mode.dotclock   = dotclock;
-	old_mode.hdisplay   = cur_mode.hdisplay;
-	old_mode.hsyncstart = cur_mode.hsyncstart;
-	old_mode.hsyncend   = cur_mode.hsyncend;
-	old_mode.htotal     = cur_mode.htotal;
-	old_mode.vdisplay   = cur_mode.vdisplay;
-	old_mode.vsyncstart = cur_mode.vsyncstart;
-	old_mode.vsyncend   = cur_mode.vsyncend;
-	old_mode.vtotal     = cur_mode.vtotal;
-	old_mode.flags      = cur_mode.flags;
-	old_mode.privsize   = 0;
-
-	int num_modes;
-	XF86VidModeModeInfo **modes;
-	XF86VidModeGetAllModeLines(disp, 0, &num_modes, &modes);
-
-	std::list<XF86VidModeModeInfo *> usable_modes;
-	for(int i = 0; i < num_modes; i++)
-	{
-		if(modes[i]->hdisplay == width && modes[i]->vdisplay == height)
-		{
-			CL_Log::log("debug", "Useable fullscreen mode found: %1x%2", width, height);
-			usable_modes.push_back(modes[i]);
-		}
-	}
-	
-	if (usable_modes.empty())
-	{
-		CL_Log::log("debug", "No useable fullscreen modes available!");
-	}
-	else 
-	{	
-		if(!width)
-			width = get_width();
-
-		if(!height)
-			height = get_height();
-	
-		if(!bpp)
-			bpp = glx_bpp;
-
-		//Hide Window
-		if (0)
-		{  // FIXME: allow_override doesn't play together with
-			// GrabPointer, not sure what is wrong but it simply doesn't
-			// work.
-			//
-			// The code outside the 'if(0)' as it is now, works mostly,
-			// however it doesn't work when the window or a part of it is
-			// outside of the screen, since the window isn't moved
-			// fullscreen will only show half the window, shouldn't be a
-			// problem for most of the time, but will be tricky if the
-			// window has equal size as the desktop.
-
-			// Move the window into the right position, this must happen
-			// BEFORE we remove control from the window manager
-			XMoveResizeWindow(disp, window, 0, 0, width, height);
-
-			// Move the mouse and switch moves
-			XWarpPointer(disp, None, None, 0, 0, 0, 0, width/2, height/2);
-
-			XUnmapWindow(disp, window);
-			{ // Wait for window to disapear
-				XEvent event;
-				do {
-					XMaskEvent(disp, StructureNotifyMask, &event);
-				} while ( (event.type != UnmapNotify) || (event.xunmap.event != window) );
-			}
-			// Turn off WM control
-			attributes.override_redirect = True;
-			XChangeWindowAttributes(disp, window, CWBorderPixel | CWColormap | CWOverrideRedirect, &attributes);
-
-			// Re-appear window
-			XMapRaised(disp, window);
-		}
-
-		// Get input focus
-		//XSetInputFocus(disp,window, RevertToNone, CurrentTime);
-		while (1) 
-		{
-			int result = XGrabPointer(disp, window, True, 0, 
-											  GrabModeAsync, GrabModeAsync, window, None, CurrentTime);
-			if ( result == GrabSuccess ) {
-				break;
-			}
-			CL_System::sleep(100);
-		}
-
-		XF86VidModeGetViewPort(disp, DefaultScreen(disp), &old_x, &old_y);
-
-		XF86VidModeSwitchToMode(disp, 0, *(usable_modes.begin()));
-		Window child_window;
-		int x, y;
-		// Get the windows absolute position (aka relative to
-		// the root window)
-		XTranslateCoordinates(disp, window, DefaultRootWindow(disp), 
-									 0, 0, &x, &y, &child_window);
-	
-		XF86VidModeSetViewPort(disp, DefaultScreen(disp), x, y);
+	if(!width)
+		width = this->width;
+	if(!height)
+		height = this->height;
 		
-		XSync(disp, True);
-
-		fullscreen = true;
+	set_size(width, height);
+	
+	if(fs_window != None)
+	{
+		set_resolution();
+		return;
 	}
+
+	/* Create the fullscreen window */
+	XSetWindowAttributes attributes;
+	XEvent event;
+
+	attributes.override_redirect = True;
+	attributes.background_pixel = XBlackPixel(disp, vi->screen);
+	attributes.border_pixel = XBlackPixel(disp, vi->screen);
+	attributes.event_mask = StructureNotifyMask;
+	attributes.colormap = cmap;
+
+	fs_window = XCreateWindow(disp, RootWindow(disp, vi->screen),
+	                             0, 0,
+	                             DisplayWidth(disp, vi->screen),
+	                             DisplayHeight(disp, vi->screen), 0,
+	                             vi->depth, InputOutput,
+	                             vi->visual, CWOverrideRedirect |
+	                             CWBackPixel | CWColormap | CWBorderPixel |
+	                             CWEventMask, &attributes);
+
+	/* Map the fullscreen window */
+	XMapRaised(disp, fs_window);
+	/* wait until we are mapped. (shamelessly borrowed from SDL) */
+	do {
+	  XMaskEvent(disp, StructureNotifyMask, &event); 
+	} while ( (event.type != MapNotify) || 
+	          (event.xmap.event != fs_window) );
+	/* Make sure we got to the top of the window stack */
+	XRaiseWindow(disp, fs_window);
+	
+	/* Reparent the real window */
+	XReparentWindow(disp, window, fs_window, 0, 0);
+
+	// Get input focus
+	//XSetInputFocus(disp,window, RevertToNone, CurrentTime);
+	while (1) 
+	{
+		int result = XGrabPointer(disp, window, True, 0, 
+										  GrabModeAsync, GrabModeAsync, window, None, CurrentTime);
+		if ( result == GrabSuccess ) {
+			break;
+		}
+		CL_System::sleep(100);
+	}
+
+	set_resolution();
 }
 
 void CL_DisplayWindow_OpenGL::set_windowed()
 {
-	if(!fullscreen)
+	if(fs_window == None)
 		return;
-
-	if (0)
-	{ // FIXME: See FIXME in set_fullscreen
-		// Hide window
-		XUnmapWindow(disp, window);
-		XSync(disp, True);
-
-		// Turn on WM control 
-		attributes.override_redirect = False;
-		XChangeWindowAttributes(disp, window, CWBorderPixel | CWColormap | CWOverrideRedirect, &attributes);
-
-		XMoveResizeWindow(disp, window, 0, 0, fullscreen_width, fullscreen_height);
-
-		XMapRaised(disp, window);
-		XSync(disp, True);
-	}
-
-	fullscreen = false;
 
 	// Only restore mode if we ever switched mode.
 	if (old_x != -1 || old_y != -1)
 	{
-		XF86VidModeSwitchToMode(disp, 0, &old_mode);
-		XF86VidModeSetViewPort(disp, 0, old_x, old_y);
+		XF86VidModeSwitchToMode(disp, vi->screen, &old_mode);
+		XF86VidModeSetViewPort(disp, vi->screen, old_x, old_y);
+		old_x = old_y = -1;
 	}
 
 	XUngrabPointer(disp, CurrentTime);
 
-	XSync(disp, True);
+	/* Reparent the real window! */
+	XReparentWindow(disp, window, wm_window, 0, 0);
+	XUnmapWindow(disp, fs_window);
+	XDestroyWindow(disp, fs_window);
+	fs_window = None;
 }
 
 void CL_DisplayWindow_OpenGL::set_title(const std::string &title)
 {
-	XSetStandardProperties(disp, window, title.c_str(), title.c_str(), None, NULL, 0, NULL);
+	XSetStandardProperties(disp, wm_window, title.c_str(), title.c_str(), None, NULL, 0, NULL);
 }
 
 void CL_DisplayWindow_OpenGL::set_position(const CL_Rect &pos)
 {
 	set_position(pos.left, pos.top);
-	XResizeWindow(disp, window, pos.get_width(), pos.get_height());
 	set_size(pos.get_width(), pos.get_height());
 }
 
 void CL_DisplayWindow_OpenGL::set_position(int x, int y)
 {
-	XMoveWindow(disp, window, x, y);
+	XMoveWindow(disp, wm_window, x, y);
 }
 
 void CL_DisplayWindow_OpenGL::set_size(int width, int height)
 {
-	fullscreen_width = width;
-	fullscreen_height = height;
+	if((width == this->width) && (height == this->height))
+		return;
 
-	sig_resize(width, height);
+	// in order to resize a non resizable window we must change the hints
+	// as the window manager won't allow the resize otherwise.
+	if (!allow_resize)
+	{
+		XSizeHints size_hints;
+		memset(&size_hints, 0, sizeof(XSizeHints));
+		size_hints.width       = width;
+		size_hints.height      = height;
+		size_hints.base_width  = width;
+		size_hints.base_height = height;
+		size_hints.min_width   = width;
+		size_hints.min_height  = height;
+		size_hints.max_width   = width;
+		size_hints.max_height  = height;
+		size_hints.flags       = PSize|PBaseSize|PMinSize|PMaxSize;
+		XSetWMNormalHints(disp, wm_window, &size_hints);
+	}
+	XResizeWindow(disp, wm_window, width, height);
+	XResizeWindow(disp, window, width, height);
+	this->width  = width;
+	this->height = height;
 }
 
 void CL_DisplayWindow_OpenGL::set_buffer_count(int flipping_buffers)
@@ -772,7 +829,16 @@ void CL_DisplayWindow_OpenGL::keep_alive()
 				#ifdef DEBUG
 					CL_Log::log("debug", "ConfigureNotify Event received");
 				#endif
-				set_size(event.xconfigure.width,event.xconfigure.height);
+				if (event.xconfigure.window == wm_window &&
+				    (event.xconfigure.width  != width ||
+				     event.xconfigure.height != height))
+				{
+					width  = event.xconfigure.width;
+					height = event.xconfigure.height;
+					XResizeWindow(disp, window, width,
+						 height);
+					sig_resize(event.xconfigure.width, event.xconfigure.height);
+				}
 				break;
 			case ClientMessage:
 				#ifdef DEBUG
@@ -813,7 +879,8 @@ void CL_DisplayWindow_OpenGL::keep_alive()
 					if( next_event.type == KeyPress &&
 						next_event.xkey.window == event.xkey.window &&
 						next_event.xkey.keycode == event.xkey.keycode &&
-						next_event.xkey.time == event.xkey.time )
+						(next_event.xkey.time == event.xkey.time ||
+						next_event.xkey.time-1 == event.xkey.time) )
 					{
 						// Do not report anything for this event
 						break;

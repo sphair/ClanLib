@@ -36,6 +36,7 @@
 #include "API/Core/System/log.h"
 #include "soundprovider_wave_generic.h"
 #include "soundprovider_wave_session.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Wave construction:

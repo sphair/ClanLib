@@ -59,7 +59,7 @@ class CL_FunctionSlot_v1 : public CL_Slot_v1<PARAM1>
 public:
 	typedef void (*Callback)(PARAM1);
 
-	//: Funtion Slot V1 constructor
+	//: Function Slot V1 constructor
 	CL_FunctionSlot_v1(Callback callback) : callback(callback) { return; }
 
 	//: Call
@@ -68,6 +68,28 @@ public:
 private:
 	Callback callback;
 };
+
+//: User Data Function Slot V1 class
+//- !group=Signal/System!
+//- !header=signals.h!
+template <class PARAM1, class UserData>
+class CL_UserDataFunctionSlot_v1 : public CL_Slot_v1<PARAM1>
+{
+public:
+	typedef void (*Callback)(PARAM1, UserData);
+
+	//: Funtion Slot V1 constructor
+	CL_UserDataFunctionSlot_v1(Callback callback, UserData user_data) : callback(callback), user_data(user_data)  { return; }
+
+	//: Call
+	virtual void call(PARAM1 param1) { callback(param1, user_data); }
+
+private:
+	Callback callback;
+	UserData user_data;
+};
+
+
 
 //: FunctorSlot V1 Class
 //- !group=Signal/System!
@@ -78,7 +100,7 @@ class CL_FunctorSlot_v1 : public CL_Slot_v1<PARAM1>
 public:
 	//: FunctorSlot V1 Constructor
 	CL_FunctorSlot_v1(const Functor &functor)
-	: functor(functor) { return; }
+		: functor(functor) { return; }
 
 	//: Call
 	virtual void call(PARAM1 param1) { functor(param1); }
@@ -98,7 +120,7 @@ public:
 
 	//: Method Slot V1 constructor
 	CL_MethodSlot_v1(CallbackClass *cb_class, Callback callback)
-	: cb_class(cb_class), callback(callback) { return; }
+		: cb_class(cb_class), callback(callback) { return; }
 
 	//: Call
 	virtual void call(PARAM1 param1) { (cb_class->*callback)(param1); }
@@ -119,7 +141,7 @@ public:
 
 	//: User Data Method Slot V1 constructor
 	CL_UserDataMethodSlot_v1(CallbackClass *cb_class, Callback callback, UserData user_data)
-	: cb_class(cb_class), callback(callback), user_data(user_data) { return; }
+		: cb_class(cb_class), callback(callback), user_data(user_data) { return; }
 
 	//: Call
 	virtual void call(PARAM1 param1) { (cb_class->*callback)(param1, user_data); }

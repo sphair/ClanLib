@@ -83,6 +83,9 @@ CL_Button_Silver::CL_Button_Silver(
 		this, &CL_Button_Silver::on_paint);
 	slot_get_preferred_size = button->sig_get_preferred_size().connect(
 		this, &CL_Button_Silver::on_get_preferred_size);
+
+	if (font)
+		font->set_color( CL_Color::black );
 }
 
 CL_Button_Silver::~CL_Button_Silver()
@@ -109,6 +112,8 @@ void CL_Button_Silver::set_font(CL_Font *_font, bool _delete_font)
 	if(delete_font && font)
 		delete font;
 	font = _font;
+	if (font)
+		font->set_color( CL_Color::black );
 	delete_font = _delete_font;
 }
 
@@ -117,6 +122,7 @@ void CL_Button_Silver::set_font_disabled(CL_Font *_font, bool _delete_font)
 	if(delete_font_disabled && font_disabled)
 		delete font_disabled;
 	font_disabled = _font;
+	font_disabled->set_color( CL_Color::gray );
 	delete_font_disabled = _delete_font;
 }
 
@@ -171,7 +177,10 @@ void CL_Button_Silver::on_set_options(const CL_DomElement &options)
 	if (options.has_attribute("surface_highlighted"))
 		set_surface_highlighted(new CL_Surface(options.get_attribute("surface_highlighted"), resources), true);
 	if (options.has_attribute("font"))
+	{
 		set_font(new CL_Font(options.get_attribute("font"), resources), true);
+		font->set_color( CL_Color::black );
+	}
 	if (options.has_attribute("font_disabled"))
 		set_font_disabled(new CL_Font(options.get_attribute("font_disabled"), resources), true);
 }

@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Kenneth Gangstø
+**    Kenneth Gangstoe
 **    (if your name is missing here, please add it)
 */
 

@@ -154,7 +154,7 @@ void World::run(CL_DisplayWindow &window)
 			for (
 				it = objects.begin();
 				it != objects.end();
-				it++)
+				)
 			{
 				if ((*it)->turn(turn_time) == false)
 				{
@@ -162,6 +162,8 @@ void World::run(CL_DisplayWindow &window)
 					delete (*it);
 					it = objects.erase(it);
 				}
+				else
+					++it;
 			}
 			
 			time_elapsed2 -= 0.05f;
@@ -196,13 +198,15 @@ void World::run(CL_DisplayWindow &window)
 			for (
 				std::list<FontBlowUp*>::iterator it = blowups.begin();
 				it != blowups.end();
-				it++)
+				)
 			{
 				if ((*it)->show(time_elapsed) == false)
 				{
 					delete *it;
 					it = blowups.erase(it);
 				}
+				else
+					++it;
 			}
 		}
 */

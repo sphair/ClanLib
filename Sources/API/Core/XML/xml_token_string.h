@@ -39,6 +39,7 @@
 
 #include <string>
 #include <algorithm>
+#include <cstring>
 
 //: String class for XML Tokens.
 //- !group=Core/XML!

@@ -52,6 +52,9 @@ Providers/jpeg_provider_generic.h \
 Providers/pcx_provider.cpp \
 Providers/pcx_provider_generic.cpp \
 Providers/pcx_provider_generic.h \
+Providers/bmp_provider.cpp \
+Providers/bmp_provider_generic.cpp \
+Providers/bmp_provider_generic.h \
 Providers/png_provider.cpp \
 Providers/png_provider_generic.h \
 Providers/png_provider_generic.cpp \

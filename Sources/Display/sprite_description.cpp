@@ -35,6 +35,7 @@
 #include "API/Core/Resources/resource_manager.h"
 #include "sprite_description_generic.h"
 #include "resourcedata_sprite_description.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SpriteDescription construction:

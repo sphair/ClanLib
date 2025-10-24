@@ -74,6 +74,7 @@
 #include "Display/text_styler.h"
 #include "Display/Providers/jpeg_provider.h"
 #include "Display/Providers/pcx_provider.h"
+#include "Display/Providers/bmp_provider.h"
 #include "Display/Providers/png_provider.h"
 #include "Display/Providers/targa_provider.h"
 #include "Display/Providers/provider_factory.h"

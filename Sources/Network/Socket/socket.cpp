@@ -41,6 +41,7 @@
 #include <net/if.h>    // needed for struct ifreq and struct ifconf
 #define INVALID_SOCKET -1
 #endif
+#include <cstring>
 
 #include "socket_generic.h"
 #include "API/Core/System/error.h"

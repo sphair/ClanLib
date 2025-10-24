@@ -4,28 +4,26 @@
 #include "stylemanager_zz.h"
 #include "inputbox_zz.h"
 
+#pragma warning ( push, 1 )
+#pragma warning ( disable: 4244 ) // conversion from 'int' to 'float', possible loss of data
+
+
 CL_InputBox_ZZ::CL_InputBox_ZZ(
 	CL_InputBox *inputbox,
 	CL_StyleManager_ZZ *style)
 :   
-    CL_ComponentStyle(inputbox), inputbox(inputbox),
+    CL_ComponentStyle(inputbox),
+	CL_InputBox_StyleBase(inputbox, style->get_resources(), "InputBox/font", 3),
     first_paint(false)
 {
-	this->style = style;
+	//this->style = style;
+	//resources = style->get_resources();
 
-	resources = style->get_resources();
-	font = new CL_Font("InputBox/font", resources);
-
-	show_cursor = false;
-	character_offset = 0;
-	cursor_blink_time = CL_System::get_time();
-	
 	slots.connect(inputbox->sig_paint(), this, &CL_InputBox_ZZ::on_paint);
 }
 
 CL_InputBox_ZZ::~CL_InputBox_ZZ()
 {
-	delete font;
 }
 
 void CL_InputBox_ZZ::on_paint()
@@ -59,7 +57,8 @@ void CL_InputBox_ZZ::on_paint_input()
     // correction to width_offset for font
 
 	// For easy reference, put inputfield-text into local variable
-	const char *text = inputbox->get_text().c_str();
+	std::string const & text = inputbox->get_text();
+	int width = inputbox->get_width();
 
 	int pixel_y_offset = 4;
 
@@ -67,23 +66,19 @@ void CL_InputBox_ZZ::on_paint_input()
     font->set_width_offset(0);
 
 	// Calculate scroll offset
-	int character_offset = 0;
-	int pixel_offset = 0;
+	int drawing_text_width = 0;
+	int draw_to = draw_from;
 
-    int const BORDER_SIZE = 6;
+	const int BORDER_SIZE = 6;
 
-	int width = (int)font->get_width(text);
-	if (width > inputbox->get_width() - BORDER_SIZE * 2)
+	while (draw_to < text.length())
 	{
-		while (
-			width >= inputbox->get_width() - BORDER_SIZE * 2 &&
-			character_offset + 1 < inputbox->get_cursor_position())
-		{
-			int w = font->get_width(text[character_offset]);
-			character_offset++;
-			pixel_offset += w;
-			width -= w;
-		}
+		int w = get_chars_width( draw_to, draw_to );
+		if (drawing_text_width + w > width - BORDER_SIZE * 2)
+			break;
+
+		drawing_text_width += w;
+		draw_to ++;
 	}
 
 	// Display marked text, if any
@@ -92,36 +87,36 @@ void CL_InputBox_ZZ::on_paint_input()
 		int start = inputbox->get_selection_start();
 		int end = start + inputbox->get_selection_length();
 
-		int mark_x1 = 0, mark_x2 = 0;
+		if (start < draw_from) start = draw_from;
+		if (end   > draw_to  ) end   = draw_to;
 
-		int i;
-		for(i = 0; i < start; i++)
-			mark_x1 += font->get_width(text[i]);// + font->get_width_offset();
-
-		for(i = start; i < end; i++)
-			mark_x2 += font->get_width(text[i]);
+		int mark_x1 = get_chars_width( draw_from, start-1 );
+		int mark_x2 = get_chars_width( draw_from, end-1 );
 
 		CL_Display::fill_rect(
 			CL_Rect(inputbox->get_screen_x() + BORDER_SIZE + mark_x1 - 1,
 					inputbox->get_screen_y() + pixel_y_offset,
-					inputbox->get_screen_x() + BORDER_SIZE + mark_x1 + mark_x2,
+					inputbox->get_screen_x() + BORDER_SIZE + mark_x2,
 					inputbox->get_screen_y() + pixel_y_offset + font->get_height() + 1),
 			CL_Color(150, 180, 150, static_cast<unsigned int>(0.5f * 255)));
 	}
 
 	// Display text
-    font->draw(inputbox->get_screen_x() + BORDER_SIZE,
-		inputbox->get_screen_y() + pixel_y_offset, &text[character_offset]);
+	int draw_count = draw_to - draw_from;
+
+	if (draw_from >= 0 && draw_count > 0)
+	{
+		font->draw(inputbox->get_screen_x() + BORDER_SIZE,
+			inputbox->get_screen_y() + pixel_y_offset, text.substr( draw_from, draw_count ));
+	}
 
 	// Show blinking cursor
 	if(inputbox->has_focus()) 
 	{
 		if (show_cursor)
 		{
-			int cursor_x = BORDER_SIZE - pixel_offset;
-
-			for(int i = 0; i < inputbox->get_cursor_position(); i++)
-				cursor_x += font->get_width(text[i]);
+			int cursor_pos = inputbox->get_cursor_position();
+			int cursor_x = border_size + get_chars_width( draw_from, cursor_pos - 1 );
 				
 			//style->
             CL_Display::draw_line(
@@ -140,3 +135,6 @@ void CL_InputBox_ZZ::on_paint_input()
 	}
     font->set_width_offset(font_width_offset);
 }
+
+
+#pragma warning ( pop )

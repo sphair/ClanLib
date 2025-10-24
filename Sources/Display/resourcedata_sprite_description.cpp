@@ -108,8 +108,29 @@ void CL_ResourceData_SpriteDescription::add_images(CL_SpriteDescription &desc, C
 
 		CL_DomElement cur_element = cur_node.to_element();
 		
+		
 		if (cur_element.get_tag_name() == "image")
+
 		{
+			bool colorkey_active = false;
+
+			CL_Color transparent_color;
+
+			if (cur_element.has_attribute("transparent_color"))
+			{
+				std::vector<std::string> color_strings = CL_String::tokenize(cur_element.get_attribute("transparent_color"), ",");
+				if (color_strings.size() < 3)
+				{
+					throw CL_Error("the transparent_color tag should specify an RGB color like this: 255,255,255");
+				}
+					unsigned char r = atoi(color_strings[0].c_str());
+					unsigned char g = atoi(color_strings[1].c_str());
+					unsigned char b = atoi(color_strings[2].c_str());
+					colorkey_active = true;
+					transparent_color = CL_Color(r,g,b);
+			}
+
+			
 			//check for the special tag that designates a sequence
 			if (cur_element.has_attribute("fileseq"))
 			{
@@ -144,6 +165,8 @@ void CL_ResourceData_SpriteDescription::add_images(CL_SpriteDescription &desc, C
 					}
 					catch (CL_Error e)
 					{
+						if (!i) continue; //it might start at frame 1 instead of 0, let's give it another chance
+						
 						if (desc.get_frames().empty())
 						{
 							//must have been an error, pass it down
@@ -152,6 +175,7 @@ void CL_ResourceData_SpriteDescription::add_images(CL_SpriteDescription &desc, C
 						//can't find anymore pics I guess
 						return;
 					}
+					if (colorkey_active) image.set_colorkey(true, transparent_color.color);
 					desc.add_frame(image);
 				}
 			}
@@ -159,6 +183,8 @@ void CL_ResourceData_SpriteDescription::add_images(CL_SpriteDescription &desc, C
 			std::string image_name = cur_element.get_attribute("file");
 			
 			CL_PixelBuffer image = load_image(image_name);
+
+			if (colorkey_active) image.set_colorkey(true, transparent_color.color);
 
 			CL_DomNode cur_child ( cur_element.get_first_child() );
 			if( cur_child.is_null() ) 

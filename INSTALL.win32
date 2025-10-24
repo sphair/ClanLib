@@ -19,15 +19,15 @@ If you have downloaded the binaries, you can skip section 3 and 4.
 
 1. Getting started
 ---------------------------------------------------------------------------
-You need Microsoft Developer Studio 6.0 or 7.x/200x (.NET) with MFC
-installed to follow this installation guide (see INSTALL.borland for
-Borland specific instructions). The instructions here are mostly based
-on VC 6.0, but you will be able to easily find the same options in VC 7.0.
+Microsoft Developer Studio 7.x or 8.x is the recommended versions
+to use with ClanLib. Visual Studio Express will also work, but it requires
+a bit more manual configuration for each ClanLib project. 
+Microsoft Developer Studio 6.0 might also work, but we don't provide
+precompiled binaries for external libraries for that.
 
-Go to http://clanlib.org/download.html and download at least the zlib,
-libjpeg and libpng multithreaded libraries. If you need more
+Go to http://clanlib.org/download.html and download the precompiled binaries,
+at least libjpeg and libpng multithreaded libraries. If you need more
 functionality in ClanLib, you can download those other libraries you need.
-(Check out the handy Windows External Libraries section!)
 
 Install these libraries in a directory - remember which one, because you
 need to enter that information in the next section.
@@ -43,6 +43,11 @@ VS.Net Express, then you will HAVE to do this.
 The Microsoft Platform SDK is available at:
 http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 
+Windows builds of ClanLib use DirectX's DirectInput8 for input, so you'll
+also need to install a recent version (8+) of the DirectX SDK.
+
+DirectX SDK Downloads
+http://msdn.microsoft.com/directx/sdk/
 
 2. Preparing installation
 ---------------------------------------------------------------------------
@@ -104,8 +109,8 @@ Yes to convert the file to your MSVC version if prompted.
 
 4. Compiling ClanLib
 ---------------------------------------------------------------------------
-After loading the ClanLib workspace, the project view will show many different
-projects; clanApp, clanCore, clanDisplay etc...
+After loading the ClanLib workspace, the project view will show many 
+different projects; clanApp, clanCore, clanDisplay etc...
 
 Start with making clanCore the active project, if its not active already.
 You do this by right-clicking it, and select 'Set as Active Project'.
@@ -178,6 +183,10 @@ Example:
 	If you include <ClanLib/core.h> then depending on whether you are
 	building release or debug binaries the clanCore.lib or clanCored.lib
 	library will be automatically linked into your executable. 
+
+If you use Visual Studio Express, you need to include some additional libraries,
+user32.lib gdi32.lib and ole32.lib. Put them in the Additional Dependencies
+under the Linker setting in your project settings.
 
 
 7. Creating a workspace for your application
@@ -263,7 +272,8 @@ public:
 
 8. Problems ?
 ---------------------------------------------------------------------------
-Please read the FAQ on http://clanlib.org for common errors and explanations!
+Please read the FAQ on http://clanlib.org for common errors and explanations,
+or ask in the Forums.
 
 
 --

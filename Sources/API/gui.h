@@ -61,6 +61,8 @@
 #include "GUI/frame.h"
 #include "GUI/image.h"
 #include "GUI/inputbox.h"
+#include "GUI/richedit.h"
+#include "GUI/richedit_paragraph.h"
 #include "GUI/label.h"
 #include "GUI/listbox.h"
 #include "GUI/listitem.h"

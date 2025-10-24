@@ -47,6 +47,7 @@
 #endif
 #include "graphic_context_opengl.h"
 #include "surface_target_opengl.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Canvas_OpenGL construction:
@@ -95,6 +96,11 @@ CL_Canvas_OpenGL::CL_Canvas_OpenGL()
 
 CL_Canvas_OpenGL::~CL_Canvas_OpenGL()
 {
+	if (selected_surface)
+	{
+		sync_texture();
+		selected_surface->selected_canvas = 0;
+	}
 	delete gc;
 
 	CL_OpenGLState state(CL_Display::get_current_window()->get_gc());

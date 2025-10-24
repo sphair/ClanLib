@@ -45,7 +45,7 @@
 // CL_SoundOutput_OSS construction:
 
 CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
-	CL_SoundOutput_Generic(mixing_frequency), dev_dsp_fd(-1), frag_size(0), has_sound(true)
+	CL_SoundOutput_Generic(mixing_frequency), dev_dsp_fd(-1), frag_size(0)
 {
 	dev_dsp_fd = open("/dev/dsp", O_WRONLY|O_NONBLOCK);
 	if (dev_dsp_fd == -1)
@@ -111,7 +111,7 @@ CL_SoundOutput_OSS::CL_SoundOutput_OSS(int mixing_frequency) :
 	
 CL_SoundOutput_OSS::~CL_SoundOutput_OSS()
 {
-	stop_mixer_thread();
+	if (has_sound) stop_mixer_thread();
 }
 
 /////////////////////////////////////////////////////////////////////////////

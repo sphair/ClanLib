@@ -59,16 +59,16 @@ public:
 	typedef CL_Slot_v0 *Slot;
 	typedef std::list<Slot>::iterator SlotIterator;
 
-//! Construction:
+	//! Construction:
 public:
-	
+
 	//: Slot Parent V0 Constructor
 	CL_SlotParent_v0(const SlotIterator &pos, const SlotIterator &end)
-	: pos(pos), end(end)
+		: pos(pos), end(end)
 	{
 	}
 
-//! Operations:
+	//! Operations:
 public:
 	//: Operator
 	void operator() ()
@@ -85,7 +85,7 @@ public:
 		}
 	}
 
-//! Implementation:
+	//! Implementation:
 private:
 	SlotIterator pos, end;
 };
@@ -101,7 +101,7 @@ public:
 
 	//: FunctionSlot V0 Constructor
 	CL_FunctionSlot_v0(Callback callback, VirtualCallback virtual_callback)
-	: callback(callback), virtual_callback(virtual_callback) { return; }
+		: callback(callback), virtual_callback(virtual_callback) { return; }
 
 	//: Call
 	virtual void call(CL_SlotParent_v0 &super)
@@ -115,6 +115,26 @@ private:
 	VirtualCallback virtual_callback;
 };
 
+//: User Data Function Slot V0 class
+//- !group=Signal/System!
+//- !header=signals.h!
+template <class UserData>
+class CL_UserDataFunctionSlot_v0 : public CL_Slot_v0
+{
+public:
+	typedef void (*Callback)(UserData);
+
+	//: Function Slot V0 constructor
+	CL_UserDataFunctionSlot_v0(Callback callback, UserData user_data) : callback(callback), user_data(user_data)  { return; }
+
+	//: Call
+	virtual void call(CL_SlotParent_v0 &super) { callback(user_data); }
+
+private:
+	Callback callback;
+	UserData user_data;
+};
+
 //: FunctorSlot V0 Class
 //- !group=Signal/System!
 //- !header=signals.h!
@@ -124,7 +144,7 @@ class CL_FunctorSlot_v0 : public CL_Slot_v0
 public:
 	//: FunctorSlot V0 Constructor
 	CL_FunctorSlot_v0(const Functor &functor)
-	: functor(functor) { return; }
+		: functor(functor) { return; }
 
 	//: Call
 	virtual void call(CL_SlotParent_v0 &super)
@@ -146,7 +166,7 @@ class CL_FunctorVirtualSlot_v0 : public CL_Slot_v0
 public:
 	//: FunctorVirtualSlot V0 Constructor
 	CL_FunctorVirtualSlot_v0(const Functor &functor)
-	: functor(functor) { return; }
+		: functor(functor) { return; }
 
 	//: Call
 	virtual void call(CL_SlotParent_v0 &super)
@@ -170,7 +190,7 @@ public:
 
 	//: Method Slot V0 Constructor
 	CL_MethodSlot_v0(CallbackClass *cb_class, Callback callback, VirtualCallback virtual_callback)
-	: cb_class(cb_class), callback(callback), virtual_callback(virtual_callback) { return; }
+		: cb_class(cb_class), callback(callback), virtual_callback(virtual_callback) { return; }
 
 	//: Call
 	virtual void call(CL_SlotParent_v0 &super)
@@ -197,7 +217,7 @@ public:
 
 	//: User Data Methane Slot V0 Constructor
 	CL_UserDataMethodSlot_v0(CallbackClass *cb_class, Callback callback, VirtualCallback virtual_callback, UserData user_data)
-	: cb_class(cb_class), callback(callback), virtual_callback(virtual_callback), user_data(user_data) { return; }
+		: cb_class(cb_class), callback(callback), virtual_callback(virtual_callback), user_data(user_data) { return; }
 
 	//: Call
 	virtual void call(CL_SlotParent_v0 &super)

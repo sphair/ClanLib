@@ -33,6 +33,7 @@
 #endif
 #include <fnmatch.h>
 #include <unistd.h>
+#include <cstring>
 #include "directory_scanner_unix.h"
 
 CL_DirectoryScanner_Unix::CL_DirectoryScanner_Unix ()

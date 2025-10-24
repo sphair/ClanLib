@@ -32,6 +32,7 @@
 #ifdef WIN32
 #include <direct.h>
 #endif
+#include <cstring>
 #include <API/Core/IOData/inputsource_file.h>
 
 CL_InputSource_File::CL_InputSource_File(const std::string &_filename)

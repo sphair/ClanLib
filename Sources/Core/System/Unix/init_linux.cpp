@@ -38,6 +38,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include "implementation.h"
 #include "init_linux.h"
 // note: this cannot be replaced by <ctime>! (timeval needs to be defined)

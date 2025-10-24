@@ -35,6 +35,7 @@
 #endif
 
 #include <list>
+#include <cstring>
 #include "API/Core/IOData/inputsource.h"
 #include "API/Core/IOData/outputsource.h"
 

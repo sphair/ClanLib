@@ -78,7 +78,10 @@ void ChatView::on_inputbox_return_pressed()
 
 		if (args[0] == "/nick")
 		{
-			// void send_nick(const std::string &nick, int hopcount = -1);
+			if (args.size() > 1)
+			{
+				connection->send_nick(args[1]); 
+			}
 		}
 		else if (args[0] == "/oper")
 		{
@@ -339,7 +342,7 @@ void ChatView::on_inputbox_return_pressed()
 		{
 			if (args.size() == 1)
 			{
-				connection->send_admin();
+				connection->send_admin("");
 			}
 			else if (args.size() == 2)
 			{
@@ -589,7 +592,8 @@ void ChatView::on_inputbox_return_pressed()
 
 void ChatView::on_inputbox_changed(const std::string &text)
 {
-	connection->send_type_packet(chat->get_filter(), text);
+	//why was this sending a packet on every keystroke?  No need.  --mrfun Sep 22 2006
+	//connection->send_type_packet(chat->get_filter(), text);
 }
 
 void ChatView::on_userlist_activated(int item_id)

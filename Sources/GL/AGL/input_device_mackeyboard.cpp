@@ -162,8 +162,16 @@ std::string CL_InputDevice_MacKeyboard::get_key_name(int virtual_key) const
 bool CL_InputDevice_MacKeyboard::get_keycode(int clkey) const
 {
 	// Ignore all key events when we don't have focus
-	if(!owner->has_focus())
+	if(!owner->has_focus())	
 		return false;
+ 
+	//a few special cases for keys that are not handled below
+	switch (clkey)
+	{
+	case CL_KEY_COMMAND:
+		return (GetCurrentKeyModifiers() & cmdKey) != 0;
+		break;
+	}
 
 	int code = CL_DisplayWindow_OpenGL::clkey_to_keycode(clkey);
 	if (code < 0 || code >= 128)

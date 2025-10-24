@@ -32,6 +32,7 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/Core/System/error.h"
 #include "API/Core/IOData/cl_endian.h"
+#include "API/core.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -49,6 +50,8 @@
 #include <GL/glx.h>
 #endif
 #endif
+
+std::vector<std::string> CL_OpenGL::m_ignored_gl_extension;
 
 CL_ProcAddress *CL_OpenGL::get_proc_address(const std::string& function_name)
 {
@@ -208,6 +211,9 @@ bool CL_OpenGL::from_opengl_pixelformat(CLenum format, CLenum type, CL_PixelForm
 
 bool CL_OpenGL::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, CLenum &type)
 {
+	//Using CL_ABGR requires a GL extension to use it, we'll do a one time test to see if it's available or not
+	static const bool bHasEXT_abgr = extension_exists("GL_EXT_abgr");
+
 	// indexed modes and colorkey requires special conversion to alpha and
 	// therefore no OpenGL mode has a direct conversion format
 	if (pf.has_colorkey() || pf.get_type() == pixelformat_index)
@@ -256,6 +262,7 @@ bool CL_OpenGL::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, 
 
 		if (rm && gm && bm && am)
 		{
+			
 			// the bit number must be 8, 16 or 32 for component
 			// they all must have the same number of bits
 			if ((!(rmb == 8 || rmb == 16 || rmb == 32)) ||
@@ -271,7 +278,7 @@ bool CL_OpenGL::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, 
 
 			if (!big && rms == 0*bits && gms == 1*bits && bms == 2*bits && ams == 3*bits)
 				format = CL_RGBA;
-			else if (!big && ams == 0*bits && bms == 1*bits && gms == 2*bits && rms == 3*bits)
+			else if (!big && ams == 0*bits && bms == 1*bits && gms == 2*bits && rms == 3*bits && bHasEXT_abgr)
 				format = CL_ABGR;
 			else if (big && rms == 3*bits && gms == 2*bits && bms == 1*bits && ams == 0*bits)
 				format = CL_RGBA;
@@ -349,4 +356,62 @@ bool CL_OpenGL::to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, 
 		return false;
 
 	return true;
+}
+
+bool CL_OpenGL::extension_exists( const char * extension_name )
+{
+	/*
+	** Search for extName in the extensions string.  Use of strstr()
+	** is not sufficient because extension names can be prefixes of
+	** other extension names.  Could use strtok() but the constant
+	** string returned by glGetString can be in read-only memory.
+	*/
+	char *p = (char *) glGetString(GL_EXTENSIONS);
+
+	if (!p)
+	{
+		cl_assert(!"setup_binds() hasn't been run, load something onto a GL surface first before trying to call this.");
+		return false;
+	}
+
+	//is it on our ignore list?
+
+	for (unsigned int i=0; i < m_ignored_gl_extension.size(); i++)
+	{
+		if (m_ignored_gl_extension.at(i) == extension_name) return false;
+	}
+	char *end;
+	int extNameLen;
+
+	extNameLen = strlen(extension_name);
+	end = p + strlen(p);
+
+	while (p < end) 
+	{
+		int n = strcspn(p, " ");
+		if ((extNameLen == n) && (strncmp(extension_name, p, n) == 0)) 
+		{
+			return true;
+		}
+		p += (n + 1);
+	}
+
+	return false;
+}
+
+
+void CL_OpenGL::ignore_extension(const std::string &extension_name)
+{
+
+#ifdef DEBUG
+	char *p = (char *) glGetString(GL_EXTENSIONS);
+
+	if (p)
+	{
+		cl_assert(!"ignore_extension should be used earlier,  before OGL has been initialized.");
+	}
+
+#endif
+	
+	m_ignored_gl_extension.push_back(extension_name);
 }

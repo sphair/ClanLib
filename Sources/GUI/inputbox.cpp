@@ -143,6 +143,36 @@ bool CL_InputBox::is_edited() const
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// Added by AlexeyKharkov:
+
+void CL_InputBox::on_input_down(const CL_InputEvent &key)
+{
+	impl->on_input_down(key);
+}
+void CL_InputBox::on_input_up(const CL_InputEvent &key)
+{
+	impl->on_input_up(key);
+}
+
+void CL_InputBox::on_mouse_Ldown( int mouse_pos )
+{
+	impl->on_mouse_Ldown( mouse_pos );
+}
+void CL_InputBox::on_mouse_Lup( int mouse_pos )
+{
+	impl->on_mouse_Lup( mouse_pos );
+}
+void CL_InputBox::on_mouse_move( int mouse_pos )
+{
+	impl->on_mouse_move( mouse_pos );
+}
+
+void CL_InputBox::on_lost_focus()
+{
+	impl->on_lost_focus();
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // Operations:
 
 void CL_InputBox::set_text(const std::string &text)

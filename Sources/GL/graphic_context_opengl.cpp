@@ -45,6 +45,7 @@
 #else
 #include "GLX/display_window_opengl.h"
 #endif
+#include <cstring>
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -430,10 +431,10 @@ void CL_GraphicContext_OpenGL::draw_triangles(
 
 	if( params->single_color )
 	{
-		state.color[0] = params->single_color->get_red()/255.0;
-		state.color[1] = params->single_color->get_green()/255.0;
-		state.color[2] = params->single_color->get_blue()/255.0;
-		state.color[3] = params->single_color->get_alpha()/255.0;
+		state.color[0] = params->single_color->get_red() / 255.0f;
+		state.color[1] = params->single_color->get_green() / 255.0f;
+		state.color[2] = params->single_color->get_blue() / 255.0f;
+		state.color[3] = params->single_color->get_alpha() / 255.0f;
 	}
 
 	state.blendfunc[0] = blend_src_alpha;

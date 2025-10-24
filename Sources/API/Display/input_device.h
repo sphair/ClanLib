@@ -91,6 +91,9 @@ public:
 	//: Return the hardware id/device for this device (i.e. /dev/input/js0)
 	std::string get_device_name() const;
 
+	//: Returns the input device id.
+	int get_id() const;
+
 	//: Returns the input device type.
 	Type get_type() const;
 
@@ -162,7 +165,6 @@ public:
 public:
 	CL_InputDevice(CL_InputDevice_Generic *impl);
 
-private:
 	CL_InputDevice_Generic *impl;
 };
 

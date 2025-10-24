@@ -180,7 +180,7 @@ private:
 
 	CLsizei state_vertex_pointer_stride;
 
-	CLvoid *state_vertex_pointer;
+	void *state_vertex_pointer;
 
 	CLint state_color_pointer_size;
 
@@ -188,7 +188,7 @@ private:
 
 	CLsizei state_color_pointer_stride;
 
-	CLvoid *state_color_pointer;
+	void *state_color_pointer;
 
 	CLint state_texcoord_pointer_size;
 
@@ -196,7 +196,7 @@ private:
 
 	CLsizei state_texcoord_pointer_stride;
 
-	CLvoid *state_texcoord_pointer;
+	void *state_texcoord_pointer;
 
 	CLboolean state_vertex_array;
 

@@ -34,6 +34,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <errno.h>
+#include <cstring>
 
 #include "API/Core/System/error.h"
 #include "API/Core/System/clanstring.h"

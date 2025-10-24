@@ -58,20 +58,17 @@ CL_KeyBinding::CL_KeyBinding(const CL_KeyBinding &copy)
 
 bool CL_KeyBinding::operator ==(const CL_KeyBinding &other) const
 {
-	// TODO: Check if inputdevices also match
-	return other.get_keycode() == get_keycode();
+	return ((other.get_device().impl == get_device().impl) && (other.get_keycode() == get_keycode()));
 }
 
 bool CL_KeyBinding::operator <(const CL_KeyBinding &other) const
 {
-	// TODO: Check if inputdevices also match
-	return other.get_keycode() < get_keycode();
+	return ((other.get_device().impl == get_device().impl) && (other.get_keycode() < get_keycode()));
 }
 
 bool CL_KeyBinding::operator >(const CL_KeyBinding &other) const
 {
-	// TODO: Check if inputdevices also match
-	return other.get_keycode() > get_keycode();
+	return ((other.get_device().impl == get_device().impl) && (other.get_keycode() > get_keycode()));
 }
 
 CL_InputDevice &CL_KeyBinding::get_device() const

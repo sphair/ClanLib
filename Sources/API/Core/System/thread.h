@@ -129,6 +129,10 @@ public:
 	CL_Thread(const CL_Thread &copy);
 
 	CL_Thread();
+
+	inline bool is_initialized() {
+		return impl != 0;
+	}
 	
 	//: Destructor.
 	~CL_Thread();
@@ -138,6 +142,9 @@ public:
 	//: Returns the thread ID of the calling thread.
 	static CL_ThreadId get_current_id();
 	
+	//: Returns the thread ID of this thread.
+	unsigned int get_thread_id() const;
+
 //! Operations:
 public:
 	//: Copy assignement operator.

@@ -38,12 +38,15 @@ else
 libclanSound_la_SOURCES += \
 Unix/soundoutput_oss.cpp \
 Unix/soundoutput_oss.h \
+Unix/soundoutput_alsa.cpp \
+Unix/soundoutput_alsa.h \
 SoundProviders/Unix/soundprovider_recorder_oss.cpp \
 SoundProviders/Unix/soundprovider_recorder_oss.h
 endif
 
 libclanSound_la_LDFLAGS = \
   -release $(LT_RELEASE) \
-  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+  -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+  -lasound
 
 # EOF #

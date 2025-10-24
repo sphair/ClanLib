@@ -50,6 +50,7 @@
 #include "GUIStyleSilver/inputbox_silver.h"
 #include "GUIStyleSilver/label_silver.h"
 #include "GUIStyleSilver/listbox_silver.h"
+#include "GUIStyleSilver/richedit_silver.h"
 #include "GUIStyleSilver/progressbar_silver.h"
 #include "GUIStyleSilver/radiobutton_silver.h"
 #include "GUIStyleSilver/scrollbar_silver.h"

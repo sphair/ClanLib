@@ -115,9 +115,11 @@ void CL_NetSession_Generic::start_listen(const std::string &port)
 {
 	accept_shutdown_trigger.reset();
 	accept_tcp_socket = CL_Socket(CL_Socket::tcp);
-	accept_tcp_socket.set_nonblocking(false);
+	accept_tcp_socket.set_nonblocking();
+	accept_tcp_socket.set_nodelay();
 	accept_tcp_socket.bind(CL_IPAddress(port));
 	accept_udp_socket = CL_Socket(CL_Socket::udp);
+	accept_udp_socket.set_nodelay();
 	accept_udp_socket.bind(CL_IPAddress(port));
 
 	accept_tcp_socket.listen(5);
@@ -302,6 +304,8 @@ void CL_NetSession_Generic::accept_thread()
 				// Incoming TCP connection:
 
 				CL_Socket sock = accept_tcp_socket.accept();
+				sock.set_nonblocking();
+				sock.set_nodelay();
 				CL_MutexSection mutex_section(&mutex);
 
 				CL_NetComputer_Generic *comp = 
@@ -338,6 +342,8 @@ void CL_NetSession_Generic::accept_thread()
 		}
 
 		accept_tcp_socket = CL_Socket(CL_Socket::tcp);
+		accept_tcp_socket.set_nonblocking();
+		accept_tcp_socket.set_nodelay();
 	}
 	catch (CL_Error err)
 	{
@@ -400,6 +406,7 @@ void CL_NetSession_Generic::udp_thread()
 		}
 
 		accept_udp_socket = CL_Socket(CL_Socket::udp);
+		accept_udp_socket.set_nodelay();
 	}
 	catch (CL_Error err)
 	{

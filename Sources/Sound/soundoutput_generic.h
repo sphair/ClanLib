@@ -83,6 +83,8 @@ public:
 
 	short *stereo_buffer;
 
+	bool has_sound;
+
 //! Operations:
 public:
 	void add_ref();

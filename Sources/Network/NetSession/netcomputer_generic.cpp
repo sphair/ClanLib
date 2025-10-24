@@ -37,6 +37,7 @@
 #include "API/Core/System/error.h"
 #include "API/Core/IOData/outputsource_memory.h"
 #include <cstdio>
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetComputer_Generic construction:
@@ -50,6 +51,7 @@ CL_NetComputer_Generic::CL_NetComputer_Generic(
 	send_pos(0), ref(0), async_boot(false), async_port(""), channel_id_counter(0), shutdown(false),
 	server(server), server_port(server_port)
 {
+	tcp_sock.set_nodelay();
 	address = tcp_sock.get_dest_address();
 	netsession->new_connections.push(CL_NetComputer(this));
 
@@ -64,6 +66,7 @@ CL_NetComputer_Generic::CL_NetComputer_Generic(const std::string &hostname, cons
 	ref(0), async_boot(true), async_hostname(hostname), async_port(port),
 	channel_id_counter(0), shutdown(false), server(false)
 {
+	tcp_sock.set_nodelay();
 	netsession->new_connections.push(CL_NetComputer(this));
 
 	thread = CL_Thread(new CL_ThreadFunc_Runnable_v0<CL_NetComputer_Generic>(this, &CL_NetComputer_Generic::worker_thread), true);
@@ -82,6 +85,12 @@ int CL_NetComputer_Generic::get_ref() const
 {
 	return ref;
 }
+
+CL_Thread const & CL_NetComputer_Generic::get_thread_handle() const
+{
+	return thread;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetComputer_Generic operations:

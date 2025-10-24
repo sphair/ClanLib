@@ -37,7 +37,8 @@
 #endif
 
 #include "socket_generic.h"
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include "API/Core/System/clanstring.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -283,6 +284,15 @@ void CL_Socket_Generic::disconnect()
 	if(sock != -1)
 	{
 		#ifdef WIN32
+		
+		//the code below causes a one minute deadlock when closing a socket - (might be only sockets 
+		//that are not bound yet, this happens with the copy constructor when initializing
+		//in CTalk.  Maybe we should set a flag for when a socket is actually bound?  And even in that case,
+		//build a blocking thread to do this so we can return right away?
+		//Let's keep it disabled for now, Magnus has said he has a fix coming in 0.9 that we can backport.
+		//-mrfun Sept 22 2006
+		
+		/*
 		// Must stop and wait for all send data to be sent (thanks Microsoft):
 		HANDLE event_object = WSACreateEvent();
 		if (event_object != WSA_INVALID_EVENT)
@@ -291,6 +301,7 @@ void CL_Socket_Generic::disconnect()
 				WSAWaitForMultipleEvents(1, &event_object, FALSE, 60*1000, FALSE);
 			WSACloseEvent(event_object);
 		}
+		*/
 		closesocket(sock);
 		#else
 		close(sock);

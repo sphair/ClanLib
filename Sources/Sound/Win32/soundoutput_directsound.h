@@ -56,8 +56,6 @@ public:
 
 	LPDIRECTSOUNDNOTIFY notify;
 	
-	bool has_sound;
-
 	int last_write_pos;
 
 //! Operations:

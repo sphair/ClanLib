@@ -56,6 +56,9 @@ CL_Window_Silver::CL_Window_Silver(
 	font = new CL_Font("Window/font", resources);
 	font_disabled = new CL_Font("Window/font_disabled", resources);
 	
+	font->set_color( CL_Color::black );
+	font_disabled->set_color( CL_Color::gray );
+
 	// Make the window movable by dragging titlebar
 	move_handler = new CL_ComponentMoveHandler(window);
 

@@ -10,6 +10,10 @@
 #include "scrollbar_zz.h"
 #include "label_zz.h"
 
+#pragma warning ( push, 1 )
+#pragma warning ( disable: 4244 ) // conversion from 'int' to 'float', possible loss of data
+
+
 // Construction:
 
 CL_StyleManager_ZZ::CL_StyleManager_ZZ(CL_ResourceManager *resources)
@@ -178,3 +182,5 @@ void CL_StyleManager_ZZ::fill_rounded_rect(CL_Rect const & rc, CL_Color const & 
         CL_Display::draw_line(rc.right - 1 - 5, rc.top + 6 - 5, rc.right - 1 - 5, rc.bottom - 6 - 1 + 5, clr);
     }
 }
+
+#pragma warning ( pop )

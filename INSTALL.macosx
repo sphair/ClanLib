@@ -15,6 +15,8 @@ Building ClanLib on Mac OS X
 The ClanLib Xcode project file was created with Xcode 1.5, so download and
 install that (or something newer) before continuing.
 
+NOTE: Xcode v2.2 projects are now also included as "Clanlib_Xcode_v2x.xcodeproj"
+
 In order to build ClanLib, you need to locate a few dependencies.
 The required frameworks depend upon which ClanLib modules you will build.
 You will most likely require at least libjpeg and libpng as ClanDisplay
@@ -170,7 +172,7 @@ My try/catch doesn't seem to be able to catch CL_Error throws, instead I just ge
 A:
 
 Due to changes to default visibility attributes in gcc 4.0 it is necessary
-to make the following changes to your XCode 2.2+ projects (ClanLib and your app's):
+to make the following changes to the XCode 1.5 project after upgrading it to v2.2+ (ClanLib and your app's):
 
 Look for "Symbols Hidden By Default" and set it to unchecked.  If it's
 already unchecked, check it and uncheck it anyway, so it will override
@@ -178,6 +180,8 @@ whatever the default is.
 
 That may be all that is needed, but perhaps you need Inline Functions Hidden
 unchecked as well, not sure, something to try if you have any problems.
+
+(these settings have already been applied to the ClanLib Xcode 2.2 projects)
 
 7. Problems?
 ---------------------------------------------------------------------------

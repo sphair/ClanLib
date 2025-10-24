@@ -76,6 +76,9 @@ public:
 
 //! Attributes:
 public:
+	//: True if the sound system has been properly initialized
+	bool has_sound() const;
+	
 	//: Name of the output device.
 	const std::string &get_name() const;
 

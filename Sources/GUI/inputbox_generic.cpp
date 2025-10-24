@@ -33,7 +33,77 @@
 #include "API/Display/keys.h"
 #include "API/Core/System/clanstring.h"
 #include "API/Core/System/error.h"
+#include "API/Core/System/clipboard.h"
 
+// --------------------------------------------------------------------------------- CL_InputUndo
+void CL_InputUndo::addString( std::string const & str, int cursor_pos )
+{
+	addUndo( str, cursor_pos, OneUndo::UNDO_TEXT_ADDED );
+}
+
+void CL_InputUndo::removeString( std::string const & str, int cursor_pos )
+{
+	addUndo( str, cursor_pos, OneUndo::UNDO_TEXT_REMOVED );
+}
+
+void CL_InputUndo::addUndo( std::string const & str, int cursor_pos, OneUndo::UNDO_TYPE undo_type )
+{
+	if (str.length() > 100000) // no undo for such a big strings
+	{
+		undo_array.clear();
+		cur_pos = 0;
+		return;
+	}
+
+	if (cur_pos < (int)undo_array.size())
+		undo_array.erase( undo_array.begin() + cur_pos, undo_array.end() );
+
+	undo_array.push_back( OneUndo( undo_type, str, cursor_pos ) );
+	cur_pos ++;
+}
+
+int CL_InputUndo::doUndo( std::string & text )
+{
+	if (!canUndo()) return -1;
+
+	cur_pos --;
+	OneUndo const & u = undo_array[cur_pos];
+
+	switch (u.undo_type)
+	{
+	case OneUndo::UNDO_TEXT_ADDED:
+		text.erase( u.cursor_pos, u.str.length() );
+		break;
+	case OneUndo::UNDO_TEXT_REMOVED:
+		text.insert( u.cursor_pos, u.str );
+		break;
+	}
+
+	return u.cursor_pos;
+}
+
+int CL_InputUndo::doRedo( std::string & text )
+{
+	if (!canRedo()) return NULL;
+
+	OneUndo const & u = undo_array[cur_pos];
+
+	switch (u.undo_type)
+	{
+	case OneUndo::UNDO_TEXT_ADDED:
+		text.insert( u.cursor_pos, u.str );
+		break;
+	case OneUndo::UNDO_TEXT_REMOVED:
+		text.erase( u.cursor_pos, u.str.length() );
+		break;
+	}
+
+	cur_pos ++;
+	return u.cursor_pos;
+}
+
+
+// --------------------------------------------------------------------------------- 
 CL_InputBox_Generic::CL_InputBox_Generic(
 	CL_InputBox *self, 
 	const std::string &text,
@@ -45,6 +115,7 @@ CL_InputBox_Generic::CL_InputBox_Generic(
 {
 	ctrl_down = false;
 	shift_down = false;
+	command_down = false; //mac thing
 
 	selecting = false;
 	mouse_selecting = false;
@@ -57,12 +128,14 @@ CL_InputBox_Generic::CL_InputBox_Generic(
 
 	slot_set_options = inputbox->sig_set_options().connect(
 		this, &CL_InputBox_Generic::on_set_options);
-	slot_input_down = inputbox->sig_input_down().connect(
-		this, &CL_InputBox_Generic::on_input_down);
-	slot_input_up = inputbox->sig_input_up().connect(
-		this, &CL_InputBox_Generic::on_input_up);
-	slot_mouse_move = inputbox->sig_mouse_move().connect(
-		this, &CL_InputBox_Generic::on_mouse_move);
+	slot_lost_focus = inputbox->sig_lost_focus().connect(
+		this, &CL_InputBox_Generic::on_lost_focus);
+}
+
+void CL_InputBox_Generic::on_lost_focus()
+{
+	ctrl_down = false;
+	shift_down = false;
 }
 
 void CL_InputBox_Generic::on_set_options(const CL_DomElement &options)
@@ -79,23 +152,11 @@ void CL_InputBox_Generic::on_set_options(const CL_DomElement &options)
 
 void CL_InputBox_Generic::on_input_down(const CL_InputEvent &key)
 {
-	// Start selecting with mouse?
-	if(key.id == CL_MOUSE_LEFT)
-	{
-		cursor_position = text.size();
-		selecting = false;
-		selection_start = -1;
-		selection_end = -1;
-//		cursor_position = get_mouse_position(key.x, key.y);
-/*		mouse_selecting = true;
-		selecting = true;
-		selection_start = cursor_position;
-		inputbox->capture_mouse();
-*/		return;
-	}
-
 	// Keyboard?
 	if(key.device.get_type() != CL_InputDevice::keyboard)
+		return;
+
+	if (check_control(key))
 		return;
 
 	switch (key.id)
@@ -116,16 +177,22 @@ void CL_InputBox_Generic::on_input_down(const CL_InputEvent &key)
 		break;
 	case CL_KEY_LEFT:
 		check_selection();	
-//		if (ctrl_down)
-//			word_left();
-//		else
+		if (ctrl_down)
+		{
+			int steps = find_previous_break_character(cursor_position - 1) - cursor_position;
+			move_cursor( steps, selecting );
+		}
+		else
 			move_cursor(-1, selecting);
 		break;
 	case CL_KEY_RIGHT:
 		check_selection();	
-//		if (ctrl_down)
-//			word_right();
-//		else
+		if (ctrl_down)
+		{
+			int steps = find_next_break_character(cursor_position) - cursor_position;
+			move_cursor( steps, selecting );
+		}
+		else
 			move_cursor(1, selecting);
 		break;
 	case CL_KEY_RETURN:
@@ -138,24 +205,70 @@ void CL_InputBox_Generic::on_input_down(const CL_InputEvent &key)
 	case CL_KEY_SHIFT:
 		shift_down = true;
 		break;
+#ifdef __APPLE__
+	case CL_KEY_COMMAND:
+		command_down = true;
+		break;
+#endif
+
 	default:
-		if (!read_only)update_text(key);
+		if (!read_only)
+			insert_text(key.str);
 		break;
 	}
 }
 
+bool CL_InputBox_Generic::check_control(const CL_InputEvent &key)
+{
+	if (shift_down)
+	{
+		switch (key.id)
+		{
+		case CL_KEY_INSERT:
+			clipboard_paste();
+			return true;
+		case CL_KEY_DELETE:
+			clipboard_cut();
+			return true;
+		}
+	}
+
+	if (ctrl_down || command_down)
+	{
+		switch (key.id)
+		{
+		case 'C':
+		case CL_KEY_INSERT:
+			clipboard_copy();
+			return true;
+		case 'V':
+			if (!read_only)
+				clipboard_paste();
+			return true;
+		case 'X':
+			if (!read_only)
+				clipboard_cut();
+			return true;
+		case 'A':
+			select_all();
+			return true;
+		case 'Z':
+			do_undo();
+			return true;
+		case 'Y':
+			do_redo();
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CL_InputBox_Generic::on_input_up(const CL_InputEvent &key)
 {
-	// End mouse-selecting
-	if(key.id == CL_MOUSE_LEFT)
-	{
-/*		cursor_position = get_mouse_position(key.x, key.y);
-		if (mouse_selecting && cursor_position == selection_start)
-			selecting = false;
-		mouse_selecting = false;
-		inputbox->release_mouse();
-*/		return;
-	}
+	// Keyboard?
+	if(key.device.get_type() != CL_InputDevice::keyboard)
+		return;
 
 	switch (key.id)
 	{
@@ -165,13 +278,53 @@ void CL_InputBox_Generic::on_input_up(const CL_InputEvent &key)
 	case CL_KEY_SHIFT:
 		shift_down = false;
 		break;
+#ifdef __APPLE__
+	case CL_KEY_COMMAND:
+		command_down = false;
+		break;
+#endif
 	}
 }
 
-void CL_InputBox_Generic::on_mouse_move(const CL_InputEvent &key)
+std::string CL_InputBox_Generic::break_characters = " :;,.-!?'`\"";
+
+int CL_InputBox_Generic::find_next_break_character(int search_start) const
 {
-	if (mouse_selecting)
-		set_cursor_position(get_mouse_position(key.mouse_pos.x, key.mouse_pos.y));
+	// skip all breaks
+	size_t i = search_start;
+	for (; i<text.length(); ++i)
+	{
+		if ( break_characters.find( text[i] ) == -1 )
+			break;
+	}
+	// find the first non-break symbol
+	for (; i<text.length(); ++i)
+	{
+		if ( break_characters.find( text[i] ) != -1 )
+			return i;
+	}
+	return text.length();
+}
+
+int CL_InputBox_Generic::find_previous_break_character(int search_start) const
+{
+	if (search_start <= 1)
+		return 0;
+
+	// skip all breaks
+	size_t i = search_start;
+	for (; i>=0; --i)
+	{
+		if ( break_characters.find( text[i] ) == -1 )
+			break;
+	}
+	// find the first non-break symbol
+	for (; i>=0; --i)
+	{
+		if ( break_characters.find( text[i] ) != -1 )
+			return i + 1;
+	}
+	return 0;
 }
 
 void CL_InputBox_Generic::check_selection()
@@ -194,14 +347,63 @@ void CL_InputBox_Generic::check_selection()
 
 void CL_InputBox_Generic::set_text(const std::string &new_text)
 {
-	// TODO: Check against max_length
+	input_undo.removeString( text, 0 );
+	input_undo.addString( new_text, 0 );
 
 	text = new_text;
 	selecting = false;
 	selection_start = -1;
 	selection_end = -1;
-	cursor_position = text.size();
+	cursor_position = text.length();
+
+	set_max_length( max_length ); // Check against max_length
 }
+
+void CL_InputBox_Generic::insert_text( const std::string &str )
+{
+	if (max_length != 0  &&  (int)text.length() >= max_length  &&  !selecting)
+		return;
+
+	if (str.length() == 0)
+		return;
+
+	bool changed = false;
+	std::string str_to_insert;
+
+	for(unsigned int i=0; i<str.length(); ++i)
+	{
+		unsigned char ch = str[i];
+		if (ch > 31)
+		{
+			bool accept = true;
+			sig_validate_character((char&)ch, accept);
+			if (accept)
+			{
+				if (changed == false)
+				{
+					cut();
+					changed = true;
+				}
+			
+				str_to_insert += ch;
+				if (max_length != 0  &&  (int)text.length() + (int)str_to_insert.length() >= max_length)
+					break;
+			}
+		}
+	}
+	
+	if(changed)
+	{
+		input_undo.addString( str_to_insert, cursor_position );
+
+		text.insert( cursor_position, str_to_insert );
+		cursor_position += str_to_insert.length();
+
+		sig_changed(text);
+		sig_activity();
+	}
+}
+
 
 std::string CL_InputBox_Generic::get_marked_text() const
 {
@@ -212,32 +414,36 @@ std::string CL_InputBox_Generic::get_marked_text() const
 	}
 	else
 	{
-		return text.substr(selection_start, selection_end - selection_start);
+		return text.substr( get_selection_start(), get_selection_length() );
 	}
-
-	//throw CL_Error("CL_InputBox_Generic::get_marked_text() is not implemented");
 }
 
 void CL_InputBox_Generic::set_max_length(int length)
 {
-	max_length = length;
-	int text_size = text.size();
+	if (length < 0)
+		return;
 
-	if (text_size > max_length && max_length != 0)
-		text.erase(max_length, text.size());
+	max_length = length;
+
+	if (max_length != 0  &&  (int)text.length() > max_length)
+	{
+		// do NOT undo in this case!
+		text.erase(max_length, text.length());
+		if (cursor_position > (int)text.length())
+			cursor_position = text.length();
+	}
 }
 
 void CL_InputBox_Generic::select_all()
 {
 	// Added by E.R. Ylvisaker on 11/19/05
-	if (text.size() > 0)
+	if (text.length() > 0)
 	{
 		selecting = true;
 		selection_start = 0;
-		selection_end = text.size();
+		selection_end = text.length();
+		cursor_position = text.length();
 	}
-	
-	//throw CL_Error("CL_InputBox_Generic::select_all() is not implemented");
 }
 
 void CL_InputBox_Generic::deselect()
@@ -246,15 +452,14 @@ void CL_InputBox_Generic::deselect()
 	selecting = false;
 	selection_start = -1;
 	selection_end = -1;
-
-//	throw CL_Error("CL_InputBox_Generic::deselect() is not implemented");
 }
 
 void CL_InputBox_Generic::set_selection(int start, int length)
 {
 	// Added by E.R. Ylvisaker on 11/19/05
 	if (start < 0) start = 0;
-	if (start + length > (signed) text.size()) length = text.size() - start;
+	if (start + length > (int)text.length())
+		length = text.length() - start;
 
 	if (length > 0)
 	{
@@ -270,14 +475,11 @@ void CL_InputBox_Generic::set_selection(int start, int length)
 
 		if (selection_start < 0)
 			selection_start = 0;
-
 	}
 	else
 	{
 		selecting = false;
 	}
-
-	//throw CL_Error("CL_InputBox_Generic::set_selection() is not implemented");
 }
 
 void CL_InputBox_Generic::set_cursor_position(int pos)
@@ -287,16 +489,18 @@ void CL_InputBox_Generic::set_cursor_position(int pos)
 		cursor_position = 0;
 	if(cursor_position > max_length - 1 && max_length != 0)
 		cursor_position = max_length - 1;
-	if(cursor_position > (signed) text.size())
-		cursor_position = text.size();
+	if(cursor_position > (int)text.length())
+		cursor_position = text.length();
 }
 
 void CL_InputBox_Generic::del()
 {
 	if (selecting)
 		cut();
-	else if (cursor_position < (int)text.size())
+	else if (cursor_position < (int)text.length())
 	{
+		input_undo.removeString( text.substr( cursor_position, 1 ), cursor_position );
+
 		text.erase(cursor_position, 1);
 		sig_changed(text);
 	}
@@ -310,8 +514,10 @@ void CL_InputBox_Generic::backspace()
 		cut();
 	else if (cursor_position > 0)
 	{
-		text.erase(cursor_position - 1, 1);
 		cursor_position--;
+		input_undo.removeString( text.substr( cursor_position, 1 ), cursor_position );
+
+		text.erase(cursor_position, 1);
 		sig_changed(text);
 	}
 
@@ -323,7 +529,7 @@ void CL_InputBox_Generic::home(bool mark)
 	if(mark)
 	{
 		selecting = true;
-		selection_start = cursor_position;
+		//selection_start = cursor_position;
 		selection_end = 0;
 	}
 
@@ -337,11 +543,11 @@ void CL_InputBox_Generic::end(bool mark)
 	if(mark)
 	{
 		selecting = true;
-		selection_start = cursor_position;
-		selection_end = text.size();
+		//selection_start = cursor_position;
+		selection_end = text.length();
 	}
 
-	cursor_position = text.size();
+	cursor_position = text.length();
 
 	sig_activity();
 }
@@ -352,9 +558,9 @@ void CL_InputBox_Generic::move_cursor(int delta, bool mark)
 
 	// Check bounds
 	if (cursor_position < 0) cursor_position = 0;
-	if (cursor_position > (int)text.size()) cursor_position = (int)text.size();
+	if (cursor_position > (int)text.length()) cursor_position = (int)text.length();
 
-	if(mark)
+	if (mark)
 		selection_end = cursor_position;
 
 	sig_activity();
@@ -380,87 +586,96 @@ void CL_InputBox_Generic::move_cursor_word(int delta, bool mark)
 
 void CL_InputBox_Generic::cut()
 {
-	if(selecting) 
+	if (selecting)
 	{
 		int start = get_selection_start();
 		int end = get_selection_length();
+
+		input_undo.removeString( text.substr( start, end ), start );
+
 		text.erase(start, end);
 		cursor_position = start;
 
 		selecting = false;
 		selection_start = selection_end = -1;
 
-		if (cursor_position > (int)text.size())
-			cursor_position = (int)text.size();
+		if (cursor_position > (int)text.length())
+			cursor_position = (int)text.length();
 
 		sig_changed(text);
 	}
 }
 
-int CL_InputBox_Generic::get_selection_start()
+int CL_InputBox_Generic::get_selection_start() const
 {
-	if(selection_start < selection_end)
-		return selection_start;
-	else
-		return selection_end;
+	return (selection_start < selection_end ? selection_start : selection_end);
 }
 
-int CL_InputBox_Generic::get_selection_length()
+int CL_InputBox_Generic::get_selection_length() const
 {
 	return abs(selection_start - selection_end);
 }
 
-void CL_InputBox_Generic::update_text(CL_InputEvent key)
+void CL_InputBox_Generic::on_mouse_Ldown( int mouse_pos )
 {
-	if (!key.str.empty())
+	cursor_position = mouse_pos;
+	mouse_selecting = true;
+	selecting = true;
+	selection_start = mouse_pos;
+	selection_end = mouse_pos;
+	inputbox->capture_mouse();
+}
+
+void CL_InputBox_Generic::on_mouse_Lup( int mouse_pos )
+{
+	if (mouse_selecting && mouse_pos == selection_start)
+		selecting = false;
+	mouse_selecting = false;
+	inputbox->release_mouse();
+}
+
+void CL_InputBox_Generic::on_mouse_move( int mouse_pos )
+{
+	if (mouse_selecting)
 	{
-		bool changed = false;
-		for(unsigned int i=0; i<key.str.length(); ++i)
-		{
-			if (key.str[i] > 31)
-			{
-				char character = key.str[i];
-				bool accept = true;
-				sig_validate_character(character, accept);
-				if (accept)
-				{
-					if(changed == false)
-					{
-						cut();
-						changed = true;
-					}
-				
-					text.insert(text.begin() + cursor_position, character);
-					cursor_position++;
-				}
-			}
-		}
-		
-		if(changed)
-		{
-			sig_changed(text);
-			sig_activity();
-		}
+		set_cursor_position( mouse_pos );
+		selection_end = mouse_pos;
 	}
 }
 
-int CL_InputBox_Generic::get_mouse_position(int x, int y)
+// --------------------------------------------------------------------------- clipboard
+void CL_InputBox_Generic::clipboard_copy()
 {
-/*	int delta_x = x - X_TEXTOFFSET;
-	unsigned int i;
-	for (i = 0; i < text.size(); i++)
-	{
-		char buf[2];
-		buf[0] = text[i];
-		buf[1] = 0;
-		int w = fnt_inputbox->get_text_width(buf);
-		delta_x -= w;
-		if (delta_x <= -w/2)
-		{
-				return i + last_offset;
-		}
-	}
-	return i;
-*/
-	return text.size() - 1;
+	// prepare the text to copy
+	std::string str = (get_selection_length() == 0) 
+		?	text
+		:	get_marked_text();
+
+	CL_Clipboard::set_text(str);
+}
+
+void CL_InputBox_Generic::clipboard_paste()
+{
+	cut();
+
+	std::string s = CL_Clipboard::get_text();
+	insert_text(s);
+}
+
+void CL_InputBox_Generic::clipboard_cut()
+{
+	clipboard_copy();
+	cut();
+}
+
+void CL_InputBox_Generic::do_undo()
+{
+	if ( input_undo.canUndo() )
+		cursor_position = input_undo.doUndo( text );
+}
+
+void CL_InputBox_Generic::do_redo()
+{
+	if ( input_undo.canRedo() )
+		cursor_position = input_undo.doRedo( text );
 }

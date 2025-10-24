@@ -48,6 +48,7 @@ CL_TreeItem_Silver::CL_TreeItem_Silver(
 {
 	CL_ResourceManager *resources = style->get_resources();
 	font = new CL_Font("TreeViewItem/font", resources);
+	font->set_color( CL_Color::black );
 		
 	slot_paint = item->sig_paint().connect(
 		this, &CL_TreeItem_Silver::on_paint);

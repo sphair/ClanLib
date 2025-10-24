@@ -5,6 +5,10 @@
 #include "stylemanager_zz.h"
 #include <ClanLib/gui.h>
 
+#pragma warning ( push, 1 )
+#pragma warning ( disable: 4244 ) // conversion from 'int' to 'float', possible loss of data
+
+
 CL_Button_ZZ::CL_Button_ZZ(
 	CL_Button *button,
 	CL_StyleManager_ZZ *style,
@@ -346,3 +350,5 @@ void CL_Button_ZZ::on_set_options(const CL_DomElement &options)
         }
     }
 }
+
+#pragma warning ( pop )

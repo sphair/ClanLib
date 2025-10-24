@@ -115,7 +115,8 @@ private:
 	CL_ScrollBar *scrollbar;
 
 	bool mouse_captured;
-	int capture_last_offset;
+	CL_Point capture_pos;
+	CL_Rect capture_slider;
 
 	CL_Timer timer_scroll;
 	int scroll_delta;

@@ -38,6 +38,7 @@
 #endif
 
 #include <fcntl.h>
+#include <cstring>
 
 #ifdef WIN32
 	#define OPENFLAGS O_RDONLY|O_BINARY

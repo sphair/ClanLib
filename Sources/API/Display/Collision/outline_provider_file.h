@@ -49,6 +49,7 @@
 #endif
 
 #include "outline_provider.h"
+#include <string>
 
 class CL_OutlineProviderFile_Generic;
 class CL_InputSourceProvider;

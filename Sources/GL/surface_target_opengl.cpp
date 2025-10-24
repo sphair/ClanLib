@@ -73,8 +73,44 @@ CL_Surface_Target_OpenGL::CL_Surface_Target_OpenGL(
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = provider.get_format().get_alpha_mask() || provider.get_format().has_colorkey();
 
-	CLint internal_format = needs_alpha ? CL_RGBA : CL_RGB;
-	CLenum format = needs_alpha ? CL_RGBA : CL_RGB;
+	CLint internal_format;
+	CLenum format;
+	CLenum type;
+
+	// we must get the format and type correct here, since they must match
+	// the ones passed to clTexSubImage2D() when the actual upload happens!
+	bool conv_needed = !CL_OpenGL::to_opengl_pixelformat(provider.get_format(), format, type);
+
+	// also check for the pitch (OpenGL can only skip pixels, not bytes)
+	if (!conv_needed)
+	{
+		const int bytesPerPixel = (provider.get_format().get_depth() + 7) / 8;
+		if (provider.get_pitch() % bytesPerPixel != 0)
+			conv_needed = true;
+	}
+
+	// and determine the actual formats and type
+	if (!conv_needed)
+	{
+		// type and format have been set by to_opengl_pixelformat()
+		switch (format)
+		{
+			case CL_RED:
+			case CL_GREEN:
+			case CL_BLUE:
+			case CL_ALPHA:
+				internal_format = 1;
+				break;
+			default:
+				internal_format = needs_alpha ? CL_RGBA : CL_RGB;
+		}
+	}
+	else
+	{
+		internal_format = needs_alpha ? CL_RGBA : CL_RGB;
+		format = needs_alpha ? CL_RGBA : CL_RGB;
+		type = CL_UNSIGNED_BYTE;
+	}
 
 	// Upload to OpenGL:
 	clGenTextures(1, &handle);
@@ -88,8 +124,8 @@ CL_Surface_Target_OpenGL::CL_Surface_Target_OpenGL(
 		texture_size.width,       // width
 		texture_size.height,      // height
 		0,                        // border
-		format,                   // format (it really doesn't matter since nothing is uploaded)
-		CL_UNSIGNED_BYTE,         // type (it really doesn't matter since nothing is uploaded)
+		format,                   // format
+		type,                     // type
 		0);                       // texels (0 to avoid uploading)
 
 	set_pixeldata(CL_Point(0, 0), CL_Rect(0, 0, provider.get_width(), provider.get_height()), provider);
@@ -122,8 +158,36 @@ CL_Surface_Target_OpenGL::CL_Surface_Target_OpenGL(
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = pf.get_alpha_mask() || pf.has_colorkey();
 
-	CLint internal_format = needs_alpha ? CL_RGBA : CL_RGB;
-	CLenum format = needs_alpha ? CL_RGBA : CL_RGB;
+	CLint internal_format;
+	CLenum format;
+	CLenum type;
+
+	// we must get the format and type correct here, since they must match
+	// the ones passed to clTexSubImage2D() when the actual upload happens!
+	bool conv_needed = !CL_OpenGL::to_opengl_pixelformat(pf, format, type);
+
+	// and determine the actual formats and type
+	if (!conv_needed)
+	{
+		// type and format have been set by to_opengl_pixelformat()
+		switch (format)
+		{
+			case CL_RED:
+			case CL_GREEN:
+			case CL_BLUE:
+			case CL_ALPHA:
+				internal_format = 1;
+				break;
+			default:
+				internal_format = needs_alpha ? CL_RGBA : CL_RGB;
+		}
+	}
+	else
+	{
+		internal_format = needs_alpha ? CL_RGBA : CL_RGB;
+		format = needs_alpha ? CL_RGBA : CL_RGB;
+		type = CL_UNSIGNED_BYTE;
+	}
 
 	// Upload to OpenGL:
 	clGenTextures(1, &handle);
@@ -137,8 +201,8 @@ CL_Surface_Target_OpenGL::CL_Surface_Target_OpenGL(
 		texture_size.width,       // width
 		texture_size.height,      // height
 		0,                        // border
-		format,                   // format (it really doesn't matter since nothing is uploaded)
-		CL_UNSIGNED_BYTE,         // type (it really doesn't matter since nothing is uploaded)
+		format,                   // format
+		type,                     // type
 		0);                       // texels (0 to avoid uploading)
 
 	clTexParameteri(CL_TEXTURE_2D, CL_TEXTURE_MIN_FILTER, CL_LINEAR);

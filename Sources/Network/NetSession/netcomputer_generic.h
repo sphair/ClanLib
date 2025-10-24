@@ -74,6 +74,8 @@ public:
 	//: Return current reference count.
 	int get_ref() const;
 
+	CL_Thread const & get_thread_handle() const;
+
 	//: TCP socket connection to the network computer.
 	CL_Socket tcp_sock;
 

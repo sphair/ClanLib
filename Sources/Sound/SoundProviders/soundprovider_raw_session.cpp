@@ -31,6 +31,7 @@
 #include "soundprovider_raw_session.h"
 #include "soundprovider_raw_generic.h"
 #include "API/Sound/soundformat.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_Raw_Session construction:

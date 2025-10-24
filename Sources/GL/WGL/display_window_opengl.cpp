@@ -221,8 +221,8 @@ void CL_DisplayWindow_OpenGL::destroy_window()
 	{
 		wglMakeCurrent(0, 0);
 		wglDeleteContext(context);
-		context = 0;
 		opengl_contexts.remove(context);
+		context = 0;
 	}
 
 	if (layered_bitmap)
@@ -249,8 +249,8 @@ bool CL_DisplayWindow_OpenGL::received_event(UINT uMsg, WPARAM wParam, LPARAM lP
 		{
 			wglMakeCurrent(0, 0);
 			wglDeleteContext(context);
-			context = 0;
 			opengl_contexts.remove(context);
+			context = 0;
 		}
 		break;
 	}

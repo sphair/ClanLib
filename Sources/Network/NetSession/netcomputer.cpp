@@ -30,6 +30,7 @@
 #include "API/Core/System/error.h"
 #include "API/Network/NetSession/netcomputer.h"
 #include "API/Network/NetSession/netsession.h"
+#include "API/Core/System/thread.h"
 #include "netcomputer_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -99,6 +100,11 @@ bool CL_NetComputer::operator < (const CL_NetComputer &other_instance) const
 bool CL_NetComputer::operator > (const CL_NetComputer &other_instance) const
 {
 	return (impl > other_instance.impl);
+}
+
+CL_Thread const & CL_NetComputer::get_thread_handle() const
+{
+	return impl->get_thread_handle();
 }
 
 /////////////////////////////////////////////////////////////////////////////

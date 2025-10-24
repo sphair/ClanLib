@@ -33,6 +33,7 @@
 #include "API/Core/System/error.h"
 #include "API/Core/System/crash_reporter.h"
 #include "thread_win32.h"
+#include "API/Core/System/cl_assert.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_Thread_Helper win32 implementation:
@@ -135,6 +136,8 @@ CL_Thread &CL_Thread::operator =(const CL_Thread &copy)
 
 void CL_Thread::start()
 {
+	cl_assert(impl != NULL);
+
 	impl->thread_handle = CreateThread(
 		NULL,
 		0,
@@ -149,6 +152,8 @@ void CL_Thread::start()
 
 void CL_Thread::terminate()
 {
+	cl_assert(impl != NULL);
+
 	TerminateThread(impl->thread_handle, 0);
 	CloseHandle(impl->thread_handle);
 	impl->thread_handle = NULL;
@@ -156,6 +161,8 @@ void CL_Thread::terminate()
 
 void CL_Thread::wait()
 {
+	cl_assert(impl != NULL);
+
 	if (impl->thread_handle == NULL) return;
 
 	WaitForSingleObject(impl->thread_handle, INFINITE);
@@ -165,6 +172,8 @@ void CL_Thread::wait()
 
 void CL_Thread::set_priority(EThreadPriority priority)
 {
+	cl_assert(impl != NULL);
+
 	if (impl->thread_handle == NULL) return;
 
 	int prio = THREAD_PRIORITY_NORMAL;
@@ -187,6 +196,12 @@ CL_ThreadId CL_Thread::get_current_id()
 {
 	return CL_ThreadId();
 }
+
+unsigned int CL_Thread::get_thread_id() const
+{
+	return impl->thread_id;
+}
+
 
 CL_ThreadId::CL_ThreadId()
 :impl(new CL_ThreadId_Generic)

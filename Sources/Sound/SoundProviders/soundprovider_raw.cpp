@@ -27,6 +27,7 @@
 **    (if your name is missing here, please add it)
 */
 
+#include <cstring>
 #include "Sound/precomp.h"
 #include "API/Sound/SoundProviders/soundprovider_raw.h"
 #include "soundprovider_raw_generic.h"

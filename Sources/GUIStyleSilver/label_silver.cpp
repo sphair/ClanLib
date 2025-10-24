@@ -47,6 +47,7 @@ CL_Label_Silver::CL_Label_Silver(
 	resources = style->get_resources();
 	
 	font = new CL_Font("Label/font", resources);
+	font->set_color( CL_Color::black );
 	
 	slot_paint = label->sig_paint().connect(
 		this, &CL_Label_Silver::on_paint);

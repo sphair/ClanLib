@@ -56,6 +56,9 @@ public:
 
 //! Attributes:
 public:
+	//: The input device id.
+	int id;
+
 	//: The input device type.
 	CL_InputDevice::Type type;
 

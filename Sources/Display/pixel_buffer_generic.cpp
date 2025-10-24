@@ -179,6 +179,16 @@ void CL_PixelBuffer_Generic::convert(void* in_buffer, const CL_PixelFormat& in_p
 						out_pixel |= (in_b >> (32 - out_b_bits)) << out_b_shift;
 					if (out_a_bits)
 						out_pixel |= (in_a >> (32 - out_a_bits)) << out_a_shift;
+				
+					//at this point we need to do one more colorkey check, otherwise it will fail when the input is
+					//a different format than the output --mrfun Nov 10 2006
+
+					if (in_has_ck && (in_ck == out_pixel))
+					{
+						//should be transparent
+						out_pixel = 0;
+					}
+				
 				}
 
 				memcpy(out_p2, &out_pixel, out_bpp);
@@ -206,15 +216,12 @@ void CL_PixelBuffer_Generic::convert_pal(void* in_buffer, const CL_PixelFormat& 
 	const int out_g_bits = CL_PixelFormat::get_mask_bits(out_pf.get_green_mask());
 	const int out_b_bits = CL_PixelFormat::get_mask_bits(out_pf.get_blue_mask());
 	const int out_a_bits = CL_PixelFormat::get_mask_bits(out_pf.get_alpha_mask());
+	const bool big = CL_Endian::is_system_big();
 
 	const bool in_has_ck = in_pf.has_colorkey();
 	unsigned int in_ck = 0;
 	if (in_has_ck)
 		in_ck = in_pf.get_colorkey();
-	const bool out_has_ck = out_pf.has_colorkey();
-	unsigned int out_ck = 0;
-	if (out_has_ck)
-		out_ck = out_pf.get_colorkey();
 	
 	for (int y = 0; y < size.height; y++, in_p += in_pitch, out_p += out_pitch)
 	{
@@ -222,10 +229,9 @@ void CL_PixelBuffer_Generic::convert_pal(void* in_buffer, const CL_PixelFormat& 
 		char* out_p2 = out_p;
 		for (int x = 0; x < size.width; x++, in_p2 += in_bpp, out_p2 += out_bpp)
 		{
-			unsigned int in_pixel = 0;
-			memcpy(&in_pixel, in_p2, in_bpp);
-			SWAP_IF_BIG(in_pixel);
-
+			//I took out the SWAP_IF_BIG/memset, this will always be a single byte - mrfun
+			unsigned int in_pixel = (unsigned char)*in_p2;
+			
 			// decode
 			unsigned int in_r = 0, in_g = 0, in_b = 0, in_a = 0xffffffff;
 			in_r = in_pal.colors[in_pixel].get_red();
@@ -250,31 +256,12 @@ void CL_PixelBuffer_Generic::convert_pal(void* in_buffer, const CL_PixelFormat& 
 				in_a <<= 32 - 8;
 
 			unsigned int out_pixel;
-			bool encode;
-			if (!out_a_bits && (in_a == 0) && out_has_ck)
+			
+			if (in_has_ck && (in_pal.colors[in_pixel].color == in_ck))
 			{
-				out_pixel = out_ck;
-				encode = false;
-			}
-			else if (in_has_ck && (in_pixel == in_ck))
-			{
-				if (out_has_ck)
-				{
-					out_pixel = out_ck;
-					encode = false;
-				}
-				else
-				{
-					in_a = 0;
-					encode = true;
-				}
+				in_a = 0;
 			}	
-			else
-				encode = true;
-
-			// encode
-			if (encode)
-			{
+	
 				out_pixel = 0;
 				if (out_r_bits)
 					out_pixel |= (in_r >> (32 - out_r_bits)) << out_r_shift;
@@ -284,9 +271,17 @@ void CL_PixelBuffer_Generic::convert_pal(void* in_buffer, const CL_PixelFormat& 
 					out_pixel |= (in_b >> (32 - out_b_bits)) << out_b_shift;
 				if (out_a_bits)
 					out_pixel |= (in_a >> (32 - out_a_bits)) << out_a_shift;
-			}
+			
+				//this fixes a bug on big endian when converting 8 bit to 24 bit, the
+				//garbage alpha was copied instead of a color -mrfun
+				if (big && out_bpp == 3)
+				{
+					memcpy(out_p2, ((char*)&out_pixel)+1, out_bpp);
+				} else
+				{
+					memcpy(out_p2, &out_pixel, out_bpp);
+				}
 
-			memcpy(out_p2, &out_pixel, out_bpp);
 		}
 	}
 }

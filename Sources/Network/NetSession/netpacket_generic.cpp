@@ -28,7 +28,7 @@
 */
 
 #include "netpacket_generic.h"
-#include <string.h>
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_NetPacket_Generic construction:

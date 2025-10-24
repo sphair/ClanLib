@@ -27,6 +27,7 @@
 **    (if your name is missing here, please add it)
 */
 
+#include <cstring>
 #include "Core/precomp.h"
 
 #include "API/Core/System/cl_assert.h"

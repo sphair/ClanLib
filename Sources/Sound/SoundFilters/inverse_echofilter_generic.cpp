@@ -35,6 +35,7 @@
 
 #include "inverse_echofilter_generic.h"
 #include <memory>
+#include <cstring>
 #ifdef BORLAND
 #include <memory.h>
 #endif

@@ -1282,7 +1282,7 @@ void WorkspaceGenerator_MSVC6::generate_source_files(std::ofstream &dsp, const P
 
 		cur_path = new_path;
 
-		add_file(dsp, file);
+		add_file(dsp, file, project);
 	}
 
 	for (itCur = cur_path.begin(); itCur != cur_path.end(); itCur++) end_group(dsp);
@@ -1319,7 +1319,7 @@ void WorkspaceGenerator_MSVC6::end_group(std::ofstream &dsp)
 	dsp << "# End Group" << std::endl;
 }
 
-void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &filename)
+void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &filename, const Project &project)
 {
 	dsp << "# Begin Source File" << std::endl;
 	dsp << std::endl;
@@ -1328,6 +1328,10 @@ void WorkspaceGenerator_MSVC6::add_file(std::ofstream &dsp, const std::string &f
 	if (filename.find("precomp.cpp") != std::string::npos)
 	{
 		std::string filename_header = filename.substr(0, filename.length()-4) + ".h";
+		std::string::size_type pos = filename_header.find_last_of("/\\");
+		if (project.name == "GUI")
+			filename_header = filename_header.substr(pos+1);
+
 		dsp << "# ADD CPP /Yc\"" << filename_header << "\"" << std::endl;
 	}
 

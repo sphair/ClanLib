@@ -29,6 +29,7 @@
 
 #include "Core/precomp.h"
 
+#include <cstring>
 #include <pthread.h>
 #include "API/Core/System/cl_assert.h"
 #include "API/Core/System/log.h"
@@ -123,6 +124,8 @@ CL_Thread &CL_Thread::operator =(const CL_Thread &copy)
 
 void CL_Thread::start()
 {
+	cl_assert((impl != NULL));
+
 	if (impl->running) return;
 
 	cl_assert(
@@ -148,18 +151,24 @@ void *CL_Thread_Generic::run_init(void *_self)
 
 void CL_Thread::terminate()
 {
+	cl_assert(impl != NULL);
+
 	if (impl->running) pthread_cancel(impl->thread);
 	impl->running = false;
 }
 
 void CL_Thread::wait()
 {
+	cl_assert(impl != NULL);
+
 	if (impl->running) pthread_join(impl->thread, NULL);
 	impl->running = false;
 }
 
 void CL_Thread::set_priority(EThreadPriority priority)
 {
+	cl_assert(impl != NULL);
+
 #ifdef __APPLE__
 	struct sched_param param;
 	memset(&param, 0, sizeof(struct sched_param));

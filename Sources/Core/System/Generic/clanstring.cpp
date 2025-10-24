@@ -33,8 +33,9 @@
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Display/color.h"
 
-#include <ctype.h>                                                          
+#include <ctype.h>
 #include <stdio.h>
+#include <cstring>
 
 #ifdef WIN32
 #define snprintf _snprintf
@@ -87,7 +88,7 @@ void CL_String::arg(std::string &format, const std::string &arg, int num)
 	char number[10];
 	std::string num_string = "%";
 	
-	memset(number, 10, 0);
+	memset(number, 0, 10);
 	snprintf(number, 10, "%d", num);
 	
 	num_string += number;
@@ -112,7 +113,7 @@ void CL_String::arg(std::string &format, int number, int num)
 {
 	char arg[10];
 	
-	memset(arg, 10, 0);
+	memset(arg, 0, 10);
 	snprintf(arg, 10, "%d", number);
 	
 	CL_String::arg(format, arg, num);
@@ -122,7 +123,7 @@ void CL_String::arg(std::string &format, float number, int num)
 {
 	char arg[32];
 
-	memset(arg, 32, 0);
+	memset(arg, 0, 32);
 	snprintf(arg, 32, "%f", number);
 	
 	CL_String::arg(format, arg, num);
@@ -132,7 +133,7 @@ void CL_String::arg(std::string &format, double number, int num)
 {
 	char arg[32];
 	
-	memset(arg, 32, 0);
+	memset(arg, 0, 32);
 	snprintf(arg, 32, "%#f", number);
 	
 	CL_String::arg(format, arg, num);
@@ -141,7 +142,7 @@ void CL_String::arg(std::string &format, double number, int num)
 std::string CL_String::from_int(int value)
 {
 	char str[32];
-	memset(str, 32, 0);
+	memset(str, 0, 32);
 	snprintf(str, 32, "%d", value);
 	return std::string(str);
 }
@@ -149,7 +150,7 @@ std::string CL_String::from_int(int value)
 std::string CL_String::from_float(float value)
 {
 	char str[32];
-	memset(str, 32, 0);
+	memset(str, 0, 32);
 	snprintf(str, 32, "%f", value);
 	return std::string(str);
 }
@@ -157,7 +158,7 @@ std::string CL_String::from_float(float value)
 std::string CL_String::from_double(double value)
 {
 	char str[32];
-	memset(str, 32, 0);
+	memset(str, 0, 32);
 	snprintf(str, 32, "%#f", value);
 	return std::string(str);
 }

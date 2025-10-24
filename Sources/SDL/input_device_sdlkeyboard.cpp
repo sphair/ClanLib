@@ -147,11 +147,13 @@ std::string CL_InputDevice_SDLKeyboard::get_key_name(int virtual_key) const
 		clanlib_to_sdl_keys[CL_KEY_NUMPAD7] = SDLK_KP7;
 		clanlib_to_sdl_keys[CL_KEY_NUMPAD8] = SDLK_KP8;
 		clanlib_to_sdl_keys[CL_KEY_NUMPAD9] = SDLK_KP9;
+#ifdef __APPLE__
 		clanlib_to_sdl_keys[CL_KEY_DECIMAL] = SDLK_KP_PERIOD;
-		clanlib_to_sdl_keys[CL_KEY_DIVIDE] = SDLK_KP_DIVIDE;
 		clanlib_to_sdl_keys[CL_KEY_MULTIPLY] = SDLK_KP_MULTIPLY;
-		clanlib_to_sdl_keys[CL_KEY_SUBTRACT] = SDLK_KP_MINUS;
 		clanlib_to_sdl_keys[CL_KEY_ADD] = SDLK_KP_PLUS;
+#endif
+		clanlib_to_sdl_keys[CL_KEY_DIVIDE] = SDLK_KP_DIVIDE;
+		clanlib_to_sdl_keys[CL_KEY_SUBTRACT] = SDLK_KP_MINUS;
 		clanlib_to_sdl_keys[CL_KEY_UP] = SDLK_UP;
 		clanlib_to_sdl_keys[CL_KEY_DOWN] = SDLK_DOWN;
 		clanlib_to_sdl_keys[CL_KEY_RIGHT] = SDLK_RIGHT;
@@ -630,11 +632,13 @@ void CL_InputDevice_SDLKeyboard::handle_keyboard_event(SDL_Event& event)
 		sdl_to_clanlib_keys[SDLK_KP7] = CL_KEY_NUMPAD7;
 		sdl_to_clanlib_keys[SDLK_KP8] = CL_KEY_NUMPAD8;
 		sdl_to_clanlib_keys[SDLK_KP9] = CL_KEY_NUMPAD9;
+#ifdef __APPLE__
 		sdl_to_clanlib_keys[SDLK_KP_PERIOD] = CL_KEY_DECIMAL;
-		sdl_to_clanlib_keys[SDLK_KP_DIVIDE] = CL_KEY_DIVIDE;
 		sdl_to_clanlib_keys[SDLK_KP_MULTIPLY] = CL_KEY_MULTIPLY;
-		sdl_to_clanlib_keys[SDLK_KP_MINUS] = CL_KEY_SUBTRACT;
 		sdl_to_clanlib_keys[SDLK_KP_PLUS] = CL_KEY_ADD;
+#endif
+		sdl_to_clanlib_keys[SDLK_KP_DIVIDE] = CL_KEY_DIVIDE;
+		sdl_to_clanlib_keys[SDLK_KP_MINUS] = CL_KEY_SUBTRACT;
 		sdl_to_clanlib_keys[SDLK_KP_ENTER] = 0;
 		sdl_to_clanlib_keys[SDLK_KP_EQUALS] = 0;
 		sdl_to_clanlib_keys[SDLK_UP] = CL_KEY_UP;

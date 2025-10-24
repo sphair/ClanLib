@@ -42,6 +42,7 @@
 #endif
 
 #include <map>
+#include <cstring>
 
 #define cl_pixelcenter_constant 0.375
 
@@ -400,7 +401,7 @@ void CL_OpenGLState_Generic::load()
 	clStencilFunc(state_stencil_func, state_stencil_ref, state_stencil_value_mask);
 	clStencilOp(state_stencil_fail,state_stencil_pass_depth_fail,state_stencil_pass_depth_pass);
 	if (state_alpha_test) clEnable(CL_ALPHA_TEST); else clDisable(CL_ALPHA_TEST);
-	clAlphaFunc(state_alpha_test_func, state_alpha_test_ref);
+	clAlphaFunc(state_alpha_test_func, CLclampf(state_alpha_test_ref));
 	clColorMask(state_color_write_mask[0],state_color_write_mask[1],state_color_write_mask[2],state_color_write_mask[3]);
 
 	clPolygonMode(CL_FRONT_AND_BACK, state_polygon_mode[1]);

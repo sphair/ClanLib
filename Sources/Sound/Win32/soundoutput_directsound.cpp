@@ -41,7 +41,7 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 	CL_SoundOutput_Generic(mixing_frequency),
 	directsound(0), soundbuffer(0),
 	frag_size(0), buffer_size(0), bytes_per_sample(0),
-	sleep_event(0), notify(0), has_sound(true), last_write_pos(-1)
+	sleep_event(0), notify(0), last_write_pos(-1)
 {
 	HRESULT err;
 	err = DirectSoundCreate(NULL, &directsound, NULL);
@@ -105,7 +105,9 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 
 	bytes_per_sample = format.nBlockAlign;
 
-	frag_size = 2048;
+	frag_size = 3072;  //changed from 2048 to fix buffer overrun problems that happen with some drivers,
+	//including an Audigy2 under Vista64 -SAR 2-13-2008
+	
 	int num_fragments = 8;
 
 	DSBUFFERDESC desc;
@@ -173,7 +175,7 @@ CL_SoundOutput_DirectSound::CL_SoundOutput_DirectSound(int mixing_frequency) :
 	
 CL_SoundOutput_DirectSound::~CL_SoundOutput_DirectSound()
 {
-	stop_mixer_thread();
+	if (has_sound) stop_mixer_thread();
 
 	if (notify) notify->Release();
 	if (soundbuffer) soundbuffer->Release();

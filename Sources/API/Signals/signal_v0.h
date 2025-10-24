@@ -162,6 +162,16 @@ public:
 		return connect(new CL_FunctionSlot_v0(callback, 0));
 	}
 
+
+	//: Connect callback function with user data slot.
+	template <class UserData>
+	CL_Slot connect(
+		void (*callback)(UserData),
+		UserData user_data)
+	{
+		return connect(new CL_UserDataFunctionSlot_v0<UserData>(callback, user_data));
+	}
+
 	//: Connect virtual callback function slot.
 	CL_Slot connect_virtual(void (*virtual_callback)(CL_SlotParent_v0 &))
 	{

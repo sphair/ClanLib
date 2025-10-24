@@ -84,6 +84,11 @@ void CL_FadeFilter::fade_to_volume(float new_volume, int duration)
 
 void CL_FadeFilter::filter(int **sample_data, int num_samples, int channels)
 {
+	if (impl->speed == 0 && impl->cur_volume == 1)
+	{
+		return; //no reason to waste processor power here, we've already faded to our target
+	}
+
 	float &cur_volume = impl->cur_volume;
 	float &new_volume = impl->new_volume;
 	float &speed = impl->speed;

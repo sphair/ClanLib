@@ -51,6 +51,7 @@
 #include "netsession.h"
 
 class CL_NetComputer_Generic;
+class CL_Thread;
 
 //: Class representing a computer in a network game.
 //- !group=Network/NetSessions!
@@ -91,6 +92,9 @@ public:
 	//: Returns true if the other netcomputer is greater.
 	//- <p>This is used for sorting purposes (eg. if you use a std::map<CL_NetComputer, Player>).</p>
 	bool operator > (const CL_NetComputer &other_instance) const;
+
+	//: Thread handle for this netcomputer (used for NetComputers' differentiation)
+	CL_Thread const & get_thread_handle() const;
 
 //! Operations:
 public:

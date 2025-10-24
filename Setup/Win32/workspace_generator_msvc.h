@@ -105,7 +105,7 @@ private:
 	void end_group(std::ofstream &dsp);
 	// Writes the 'end_group' text of a project file.
 
-	void add_file(std::ofstream &dsp, const std::string &filename);
+	void add_file(std::ofstream &dsp, const std::string &filename, const Project &project);
 	// Adds a file to a group.
 
 	void generate_source_files(std::ofstream &dsp, const Project &project);

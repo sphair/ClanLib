@@ -40,6 +40,7 @@
 #ifdef __APPLE__
 #include "MacOSX/soundoutput_macosx.h"
 #else
+#include "Unix/soundoutput_alsa.h"
 #include "Unix/soundoutput_oss.h"
 #endif
 #endif
@@ -66,6 +67,15 @@ CL_SoundOutput::CL_SoundOutput(const CL_SoundOutput_Description &desc) : impl(0)
 #ifdef __APPLE__
 	impl = new CL_SoundOutput_MacOSX(desc.get_mixing_frequency());
 #else
+#ifdef __linux__
+	CL_SoundOutput_alsa *alsa_impl;
+	alsa_impl = new CL_SoundOutput_alsa(desc.get_mixing_frequency());
+	if (alsa_impl->handle)
+		impl = alsa_impl;
+	else
+		delete alsa_impl;
+	if (!impl)
+#endif
 	impl = new CL_SoundOutput_OSS(desc.get_mixing_frequency());
 #endif
 #endif
@@ -86,6 +96,12 @@ CL_SoundOutput::~CL_SoundOutput()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundOutput attributes:
+
+bool CL_SoundOutput::has_sound() const
+{
+	if (impl) return impl->has_sound;
+	return false;
+}
 
 const std::string &CL_SoundOutput::get_name() const
 {

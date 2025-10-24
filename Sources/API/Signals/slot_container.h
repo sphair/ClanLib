@@ -62,12 +62,39 @@ class CL_SlotContainer
 {
 public:
 //! Operations:
-	//: Connect a slot to a CL_Signal_v0 signal.
+	//: Connect a slot to a function CL_Signal_v0 signal.
 	template<class SigClass>
 	void connect(SigClass &sig, void (*func)())
 	{
 		slots.push_back(sig.connect(func));
 	}
+
+	//: Connect a slot to a function CL_Signal_v0 signal with a user data parameter
+	//: passed along.
+	template<class SigClass, class UserData>
+	void connect(SigClass &sig, void (*func)(UserData), UserData user_data)
+	{
+		slots.push_back(sig.connect(func, user_data));
+	}
+
+	//: Connect a slot to a function CL_Signal_v1 signal.
+	template<class SigClass, class Param1>
+	void connect(SigClass &sig, void(func)(Param1))
+	{
+		slots.push_back(sig.connect(func));
+	}
+
+	//NOTE: I added support for a user_data parm for global functions for only what I needed, most of the other permutations needed are still missing.
+	//To add more, you need to edit the signal_v* and slot_v* to add function-user-data versions. -SAR  2-13-2008
+
+	//: Connect a slot to a function CL_Signal_v1 signal with an user data parameter
+	//: passed along.
+	template<class SigClass, class Param1, class UserData>
+	void connect(SigClass &sig, void(*func)(Param1, UserData), UserData user_data)
+	{
+		slots.push_back(sig.connect(func, user_data));
+	}
+
 
 	//: Connect a slot to a CL_Signal_v0 signal.
 	template<class SigClass, class Class>
@@ -76,7 +103,7 @@ public:
 		slots.push_back(sig.connect(self, func));
 	}
 
-	//: Connect a slot to a CL_Signal_v0 signal with an user data parameter
+	//: Connect a slot to a CL_Signal_v0 signal with a user data parameter
 	//: passed along.
 	template<class SigClass, class Class, class UserData>
 	void connect(SigClass &sig, Class *self, void(Class::*func)(UserData), UserData user_data)

@@ -37,6 +37,59 @@
 #include "API/GUI/inputbox.h"
 #include <string>
 
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+// --------------------------------------------------------------------------------- CL_InputUndo
+struct OneUndo
+{
+	std::string str;
+	int cursor_pos;
+	enum UNDO_TYPE
+	{
+		UNDO_TEXT_ADDED,
+		UNDO_TEXT_REMOVED,
+	} undo_type;
+	bool redo;
+
+	OneUndo( UNDO_TYPE undo_type, std::string const & str, int cursor_old_pos )
+		: undo_type(undo_type), str(str), cursor_pos(cursor_old_pos)
+	{}
+};
+
+class CL_InputUndo
+{
+public:
+	CL_InputUndo()
+		: cur_pos(0)
+	{}
+	~CL_InputUndo()
+	{}
+
+	bool canUndo() { return cur_pos > 0; }
+	bool canRedo() { return cur_pos < (int)undo_array.size(); }
+
+	void addString( std::string const & str, int cursor_pos );
+	void removeString( std::string const & str, int cursor_pos );
+
+	int doUndo( std::string & text );
+	int doRedo( std::string & text );
+
+private:
+	void addUndo( std::string const & str, int cursor_pos, OneUndo::UNDO_TYPE undo_type );
+
+private:
+	std::vector<OneUndo> undo_array;
+	int cur_pos;
+};
+
+
+// -----------------------------------------------------------------------------------
 class CL_InputBox_Generic
 {
 public:
@@ -66,16 +119,20 @@ public:
 	CL_Signal_v2<char &, bool &> sig_validate_character;
 
 	CL_Slot slot_set_options;
-	CL_Slot slot_input_down;
-	CL_Slot slot_input_up;
-	CL_Slot slot_mouse_move;
+	CL_Slot slot_lost_focus;
 
+	void on_lost_focus();
 	void on_set_options(const CL_DomElement &options);
 	void on_input_down(const CL_InputEvent &key);
 	void on_input_up(const CL_InputEvent &key);
-	void on_mouse_move(const CL_InputEvent &key);
+	//void on_mouse_move(const CL_InputEvent &key);
+
+	void on_mouse_Ldown( int mouse_pos );
+	void on_mouse_Lup( int mouse_pos );
+	void on_mouse_move( int mouse_pos );
 
 	void set_text(const std::string &text);
+	void insert_text(const std::string &text);
 	std::string get_marked_text() const;
 	void set_max_length(int length);
 	void select_all();
@@ -89,8 +146,11 @@ public:
 	void move_cursor_word(int delta, bool mark);
 	void home(bool mark);
 	void end(bool mark);
-	int get_selection_start();
-	int get_selection_length();
+	int get_selection_start() const;
+	int get_selection_length() const;
+
+	void do_undo();
+	void do_redo();
 
 private:
 	bool selecting;
@@ -100,11 +160,24 @@ private:
 
 	bool ctrl_down;
 	bool shift_down;
+	bool command_down;
 
+	static std::string break_characters;
+
+private:
 	void check_selection();
+	bool check_control(const CL_InputEvent &key);
 
-	void update_text(CL_InputEvent key);
-	int get_mouse_position(int x, int y);
+	int find_next_break_character(int search_start) const;
+	int find_previous_break_character(int search_start) const;
+
+	// clipboard
+	void clipboard_copy();
+	void clipboard_paste();
+	void clipboard_cut();
+
+	// undo manager
+	CL_InputUndo input_undo;
 };
 
 #endif

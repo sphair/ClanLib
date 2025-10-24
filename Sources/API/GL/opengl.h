@@ -48,6 +48,7 @@
 #endif
 
 #include <string>
+#include <vector>
 #include <utility>
 #include "../Display/pixel_format.h"
 
@@ -93,11 +94,11 @@ typedef double CLclampd;
 typedef void CLvoid;
 typedef char CLchar;
 #if defined(_WIN64)
-typedef __int64 GLintptr;
-typedef __int64 GLsizeiptr
+typedef __int64 CLintptr;
+typedef __int64 CLsizeiptr
 #elif defined(__ia64__) || defined(__x86_64__)
-typedef long int GLintptr;
-typedef long int GLsizeiptr;
+typedef long int CLintptr;
+typedef long int CLsizeiptr;
 #else
 typedef int CLsizeiptr;
 typedef int CLintptr;
@@ -126,6 +127,19 @@ public:
 	//- <p>The function returns false if pixelformat color depth is not convertible to 
 	//- OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>
 	static bool to_opengl_pixelformat(const CL_PixelFormat &pf, CLenum &format, CLenum &type);
+
+	//: Ignore OpenGL extensions by name, causing ClanLib to not attempt to use them
+	//- <p>Due to buggy OpenGL drivers it may be useful to pretend that certain extensions don't exist, causes
+	//- ClanLib to work around them.  The only extension this would apply to right now is GL_EXT_abgr.  extension_exists()
+	//- will always return false when an extension is specified here.</p> Note: You must call this BEFORE initting openGL.
+	static void ignore_extension( const std::string &extension_name);
+
+	//: Test to see if a certain OGL Extension is present or not.  It's slow, don't call it in a main loop.
+	static bool extension_exists( const char * extension_name);
+
+private:
+
+	static std::vector<std::string> m_ignored_gl_extension;
 };
 
 #endif

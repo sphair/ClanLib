@@ -41,8 +41,8 @@
 #endif
 
 #define CL_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CL_CURRENT_VERSION	CL_VERSION(0,8,0)
-#define CL_VERSION_STRING "0.8.0"
+#define CL_CURRENT_VERSION	CL_VERSION(0,8,1)
+#define CL_VERSION_STRING "0.8.1"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
@@ -70,6 +70,7 @@
 #include "Core/System/event_trigger.h"
 #include "Core/System/console_window.h"
 #include "Core/System/log.h"
+#include "Core/System/clipboard.h"
 #include "Core/System/cl_library.h"
 #include "Core/System/crash_reporter.h"
 #include "Core/System/call_stack.h"
@@ -142,6 +143,9 @@
 #include "Core/XML/dom_text.h"
 
 #if defined (_MSC_VER)
+#if !defined (_MT)
+#error Your application is set to link with the single threaded version of the run-time library. Go to project settings, in the C++ section, and change it from single threaded to multithreaded.
+#endif
 #if !defined (_DEBUG)
 #pragma comment(lib, "clanCore-static-mt.lib")
 #pragma comment(lib, "zlib-static-mt.lib")

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+
+	<!-- sprites -->
+	<sprite name="img1">
+		<image file="img/100.jpg"><alpha /></image>
+	</sprite>
+	<sprite name="img2">
+		<image file="img/01.jpg"><alpha /></image>
+	</sprite>
+	<sprite name="img3">
+		<image file="img/02.jpg"><alpha /></image>
+	</sprite>
+
+</resources>
+
+
+

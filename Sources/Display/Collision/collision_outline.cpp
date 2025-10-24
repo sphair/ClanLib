@@ -297,7 +297,7 @@ void CL_CollisionOutline::draw(
 		{
 			const CL_Pointf &p1 = impl->contours[i].points[s];
 			const CL_Pointf &p2 = impl->contours[i].points[(s+1) % numpoints];
-			gc->draw_line( int(x + p1.x+0.5f), int(y + p1.y+0.5f), int(x + p2.x+0.5f), int(y + p2.y+0.5f), color);
+			gc->draw_line( x + p1.x+0.5f, y + p1.y+0.5f, x + p2.x+0.5f, y + p2.y+0.5f, color);
 		}
 		// Add points (as oposite color)
 		// TODO: This did not work with SDL, the draw_pixel fails
@@ -330,13 +330,13 @@ void CL_CollisionOutline::draw_sub_circles(
 			float numsegments = 16;
 			for(float e = 0; e < numsegments; e++)
 			{
-				float offx1 = cos(M_PI * 2.0 * (e / numsegments))*radius;
-				float offy1 = sin(M_PI * 2.0 * (e / numsegments))*radius;
-				float offx2 = cos(M_PI * 2.0 * ((e+1) / numsegments))*radius;
-				float offy2 = sin(M_PI * 2.0 * ((e+1) / numsegments))*radius;
+				float offx1 = cos(float(M_PI) * 2.0f * (e / numsegments))*radius;
+				float offy1 = sin(float(M_PI) * 2.0f * (e / numsegments))*radius;
+				float offx2 = cos(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
+				float offy2 = sin(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
 				CL_Pointf p1(x + center.x + offx1, y + center.y + offy1);
 				CL_Pointf p2(x + center.x + offx2, y + center.y + offy2);
-				gc->draw_line( int(p1.x+0.5f), int(p1.y+0.5f), int(p2.x+0.5f), int(p2.y+0.5f), color);
+				gc->draw_line( p1.x+0.5f, p1.y+0.5f, p2.x+0.5f, p2.y+0.5f, color);
 			}
 		}
 	}
@@ -353,17 +353,17 @@ void CL_CollisionOutline::draw_smallest_enclosing_disc(
 
 	// Draw the smallest enclosing disc
 	CL_Pointf center = impl->minimum_enclosing_disc.position;
-	float radius     = impl->minimum_enclosing_disc.radius;
+	float radius     = float(impl->minimum_enclosing_disc.radius);
 	float numsegments = 24; // To make it visible if the outline has only one contour, and the contour only has one sub-circle
 	for(float e = 0; e < numsegments; e++)
 	{
-		float offx1 = cos(M_PI * 2.0 * (e / numsegments))*radius;
-		float offy1 = sin(M_PI * 2.0 * (e / numsegments))*radius;
-		float offx2 = cos(M_PI * 2.0 * ((e+1) / numsegments))*radius;
-		float offy2 = sin(M_PI * 2.0 * ((e+1) / numsegments))*radius;
+		float offx1 = cos(float(M_PI) * 2.0f * (e / numsegments))*radius;
+		float offy1 = sin(float(M_PI) * 2.0f * (e / numsegments))*radius;
+		float offx2 = cos(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
+		float offy2 = sin(float(M_PI) * 2.0f * ((e+1) / numsegments))*radius;
 		CL_Pointf p1(x + center.x + offx1, y + center.y + offy1);
 		CL_Pointf p2(x + center.x + offx2, y + center.y + offy2);
-		gc->draw_line( int(p1.x+0.5f), int(p1.y+0.5f), int(p2.x+0.5f), int(p2.y+0.5f), color);
+		gc->draw_line( p1.x+0.5f, p1.y+0.5f, p2.x+0.5f, p2.y+0.5f, color);
 	}
 }
 
@@ -453,8 +453,8 @@ void CL_CollisionOutline::set_alignment( CL_Origin origin, float x, float y )
 	{
 		float fix_x = 0, fix_y = 0;
 
-		float width = impl->width/2;
-		float height = impl->height/2;
+		float width = float(impl->width)/2;
+		float height = float(impl->height)/2;
 
 		switch( old_origin )
 		{
@@ -516,8 +516,8 @@ void CL_CollisionOutline::set_alignment( CL_Origin origin, float x, float y )
 	{
 		float fix_x = 0, fix_y = 0;
 
-		float width = impl->width/2;
-		float height = impl->height/2;
+		float width = float(impl->width)/2;
+		float height = float(impl->height)/2;
 
 		switch( origin )
 		{
@@ -585,8 +585,8 @@ void CL_CollisionOutline::set_rotation_hotspot( CL_Origin origin, float x, float
 	// set new origin offset.
 	if( origin != origin_center )
 	{
-		float width = impl->width/2;
-		float height = impl->height/2;
+		float width = float(impl->width)/2;
+		float height = float(impl->height)/2;
 
 		switch( origin )
 		{
@@ -643,4 +643,5 @@ void CL_CollisionOutline::set_rotation_hotspot( CL_Origin origin, float x, float
 
 	impl->calculate_radius();
 }
+
 

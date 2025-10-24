@@ -31,6 +31,7 @@
 #include "API/Network/NetSession/netpacket.h"
 #include "outputsource_netpacket_generic.h"
 #include "netpacket_generic.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_OutputSource_NetPacket construction:

@@ -55,3 +55,14 @@
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif
+
+#if _MSC_VER < 1300
+//1300 = VC7, defines here for VC6 and smaller
+#ifndef SetWindowLongPtr
+#define SetWindowLongPtr SetWindowLong
+#endif
+#ifndef GetWindowLongPtr
+#define GetWindowLongPtr GetWindowLong
+#endif
+#endif
+

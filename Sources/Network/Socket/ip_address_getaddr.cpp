@@ -33,6 +33,7 @@
 #include "API/Core/System/error.h"
 #include "API/Core/System/mutex.h"
 #include "API/Network/Socket/socket.h"
+#include <cstring>
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_IPAddress construction:

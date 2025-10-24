@@ -85,6 +85,16 @@ public:
 	//: InputBox Destructor
 	virtual ~CL_InputBox();
 
+	// added by AlexeyKharkov
+	void on_input_down(const CL_InputEvent &key);
+	void on_input_up(const CL_InputEvent &key);
+
+	void on_mouse_Ldown( int mouse_pos );
+	void on_mouse_Lup( int mouse_pos );
+	void on_mouse_move( int mouse_pos );
+
+	void on_lost_focus();
+
 //! Attributes:
 public:
 	//: Returns the inputfield text.

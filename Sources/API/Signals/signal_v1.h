@@ -182,6 +182,15 @@ public:
 		return connect(new CL_FunctionSlot_v1<PARAM1>(callback));
 	}
 
+	//: Connect callback function with user data slot.
+	template <class UserData>
+	CL_Slot connect(
+		void (*callback)(PARAM1, UserData),
+		UserData user_data)
+	{
+		return connect(new CL_UserDataFunctionSlot_v1<PARAM1, UserData>(callback, user_data));
+	}
+
 	//: Connect functor slot.
 	template<class Functor>
 	CL_Slot connect_functor(const Functor &functor)

@@ -489,7 +489,7 @@ void CL_CollisionOutline_Generic::save(const std::string &filename, CL_OutputSou
 	// y-pos of enclosing disc
 	output_source->write_float32(minimum_enclosing_disc.position.y);
 	// radius of enclosing disc
-	output_source->write_float32(minimum_enclosing_disc.radius);
+	output_source->write_float32(float(minimum_enclosing_disc.radius));
 	
 	// number of contours
 	output_source->write_uint32(contours.size());

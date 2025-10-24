@@ -29,6 +29,7 @@
 
 #include "Display/display_precomp.h"
 #include "input_context_generic.h"
+#include "input_device_generic.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_InputContext_Generic construction:
@@ -69,16 +70,19 @@ void CL_InputContext_Generic::clear()
 
 void CL_InputContext_Generic::add_keyboard(const CL_InputDevice &keyboard)
 {
+	keyboard.impl->id = joysticks.size();
 	keyboards.push_back(keyboard);
 }
 
 void CL_InputContext_Generic::add_mouse(const CL_InputDevice &mouse)
 {
+	mouse.impl->id = joysticks.size();
 	mice.push_back(mouse);
 }
 
 void CL_InputContext_Generic::add_joystick(const CL_InputDevice &joystick)
 {
+	joystick.impl->id = joysticks.size();
 	joysticks.push_back(joystick);
 }
 

@@ -1,9 +1,18 @@
 ClanLib ChangeLog
 -----------------
+Version 0.8.1: Released March 2008
+
+- MacOS: XCode 2.X projects added
+- MacOS: Can now change resolutions on the fly
+- GUI: CL_InputBox improved, supports system-wide cut-and-paste under MacOS and Windows
+- GUI: RichEdit class added, currently only a very basic html style viewer
+- Global: CL_Clipboard added
+- ClanDisplay: .bmp loading support added
+- ClanSound: ALSA support added
+- Loads of bugs fixed
+
 Version 0.8.0: Released August 5th 2006
 
-  Majors:
-  
   Minors:
   - ClanGUI: Misc mem leaks fixed
   - Global: Compiles under gcc 4.1 without errors

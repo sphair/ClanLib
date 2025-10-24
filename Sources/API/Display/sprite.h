@@ -86,7 +86,7 @@ public:
 		const std::string &resource_id,
 		CL_ResourceManager *manager);
 
-	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture = true);
+	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture = true, unsigned int min_width = 16, unsigned int min_height = 16);
 
 	CL_Sprite(const CL_Sprite &sprite);
 
@@ -156,6 +156,10 @@ public:
 	//: Returns the surface of a frame. 0 is first frame.
 	//- <p> Returns an empty surface if frame is invalid. </p>
 	CL_Surface get_frame_surface(int frame) const;
+
+	//: Returns the surface of a frame and its position. 0 is first frame.
+	//- <p> Returns an empty surface if frame is invalid. </p>
+	CL_Surface get_frame_surface(int frame, CL_Rect &surface_rect) const;
 
 	//: Returns a CL_PixelBuffer with the same dimensions
 	//: as this sprite.

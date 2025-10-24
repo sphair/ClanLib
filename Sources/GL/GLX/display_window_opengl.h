@@ -195,20 +195,9 @@ private:
 
 	//: X Event handler for the window
 	void on_xevent(XEvent &event);
-
-	//: True if currently in full screen mode.
-	bool fullscreen;
-
-	//: Width and height, if in full screen mode.
-	int fullscreen_width, fullscreen_height;
-
-	//: Bits per pixel in the openGL Context.
-	//: May not correspond to bit depth on screen
-	int glx_bpp;
-
-	//: Saved position of window when going fullscreen. This is the
-	//: position the window receives when leaving fullscreen again.
-	CL_Rect saved_position;
+	
+	//: Change resolution for fullscreen mode
+	void set_resolution();
 
 	// OpenGL compatible gc.
 	CL_GraphicContext gc;
@@ -221,19 +210,39 @@ private:
 
 	static int disp_ref_count;
 
-	//: Handle to X11 window.
+	// We use 3 windows:
+	// -fs_window (for fullscreen)
+	// -wm_window (window managed)
+	// -window    (the real window)
+	// 2 of which will be created in create_window: wm_window and window.
+	// The fullscreen window gets (re)created when needed, because reusing
+	// it causes trouble.
+	// The real window uses wm_window as parent initially and will be
+	// reparened to the (freshly created) fullscreen window when requested
+	// and reparented back again when going back to windowed mode.
+	// Idea / concept of 3 windows borrowed from SDL. But somehow SDL
+	// manages to reuse the fullscreen window too.
 	Window window;
-
-	//: Attributes used to create window.
-	XSetWindowAttributes attributes;
+	Window wm_window;
+	Window fs_window;
 	
+	// width and height of the drawing window as specified by
+	// the caller, or as reported after a resize by the windowmanager
+	int width;
+	int height;
+
 	//: Whether we have window focus or not
 	bool focus;
+	
+	//: Is resizing allowed?
+	bool allow_resize;
 
 	//: Attributes to switch between windowed and fullscreen
 	int dotclock;
 	XF86VidModeModeInfo old_mode;
 	int old_x, old_y;
+	XVisualInfo *vi;
+	Colormap cmap;
 
 	//: X Event slot
 	CL_Slot slot_xevent;
