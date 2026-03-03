@@ -153,17 +153,27 @@ namespace clan
 
 		wchar_t text[2] = { static_cast<wchar_t>(glyph), 0 };
 		WORD indices[2] = { 0 };
-		GetGlyphIndicesW(screen_dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+		DWORD result = GetGlyphIndicesW(screen_dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+		if (result == GDI_ERROR || indices[0] == 0xffff)
+		{
+			SelectObject(screen_dc, old_font);
+			ReleaseDC(0, screen_dc);
+			FontPixelBuffer font_buffer;
+			font_buffer.glyph = glyph;
+			return font_buffer;
+		}
 
 		MAT2 matrix = { 0 };
 		matrix.eM11.value = 1;
 		matrix.eM22.value = 1;
-		DWORD result = GetGlyphOutline(screen_dc, indices[0], GGO_GRAY8_BITMAP | GGO_GLYPH_INDEX, &glyph_metrics, 0, 0, &matrix);
+		result = GetGlyphOutline(screen_dc, indices[0], GGO_GRAY8_BITMAP | GGO_GLYPH_INDEX, &glyph_metrics, 0, 0, &matrix);
 		SelectObject(screen_dc, old_font);
 		if (result == GDI_ERROR)
 		{
 			ReleaseDC(0, screen_dc);
-			return get_empty_font_glyph(glyph);
+			FontPixelBuffer font_buffer;
+			font_buffer.glyph = glyph;
+			return font_buffer;
 		}
 
 		Size bitmap_size(glyph_metrics.gmBlackBoxX + 6, glyph_metrics.gmBlackBoxY);
@@ -241,6 +251,11 @@ namespace clan
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_GRAY8_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
+			if (glyph_bitmap.is_null())
+			{
+				return get_empty_font_glyph(glyph);
+			}
+
 			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, TextureFormat::rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 3) / 4 * 4;
@@ -276,7 +291,9 @@ namespace clan
 		}
 		else
 		{
-			return get_empty_font_glyph(glyph);
+			FontPixelBuffer font_buffer;
+			font_buffer.glyph = glyph;
+			return font_buffer;
 		}
 	}
 
@@ -289,6 +306,11 @@ namespace clan
 		matrix.eM22.value = 1;
 		if (try_load_glyph_bitmap(glyph, GGO_BITMAP, matrix, glyph_bitmap, glyph_metrics))
 		{
+			if (glyph_bitmap.is_null())
+			{
+				return get_empty_font_glyph(glyph);
+			}
+
 			PixelBuffer pixelbuffer(glyph_metrics.gmBlackBoxX, glyph_metrics.gmBlackBoxY, TextureFormat::rgba8);
 
 			DWORD s_pitch = (glyph_metrics.gmBlackBoxX + 31) / 32 * 4;
@@ -323,7 +345,9 @@ namespace clan
 		}
 		else
 		{
-			return get_empty_font_glyph(glyph);
+			FontPixelBuffer font_buffer;
+			font_buffer.glyph = glyph;
+			return font_buffer;
 		}
 	}
 
@@ -334,10 +358,16 @@ namespace clan
 
 		wchar_t text[2] = { static_cast<wchar_t>(glyph), 0 };
 		WORD indices[2] = { 0 };
-		GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+		DWORD glyph_result = GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+		if (glyph_result == GDI_ERROR || indices[0] == 0xffff)
+		{
+			SelectObject(dc, old_font);
+			ReleaseDC(0, dc);
+			return false;
+		}
 		format |= GGO_GLYPH_INDEX;
 
-		bool result = false;
+		bool result = true;
 		DWORD bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, 0, 0, &matrix);
 		if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 		{
@@ -346,7 +376,6 @@ namespace clan
 			if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 			{
 				glyph_bitmap = buffer;
-				result = true;
 			}
 		}
 
@@ -454,26 +483,28 @@ namespace clan
 		HDC dc = GetDC(0);
 		HGDIOBJ old_font = SelectObject(dc, handle);
 
+		DataBuffer glyph_buffer;
 		wchar_t text[2];
 		text[0] = glyph_index;
 		text[1] = 0;
 		WORD indices[2] = { 0 };
-		GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+		DWORD result = GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
 		glyph_index = indices[0];
-		int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
-
-		DataBuffer glyph_buffer;
-		DWORD result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, 0, 0, &matrix);
-		if (result_size != 0 && result_size != GDI_ERROR)
+		if (result != GDI_ERROR && glyph_index != 0xffff)
 		{
-			DataBuffer buffer(result_size);
-			result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+			int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
+
+			DWORD result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, 0, 0, &matrix);
 			if (result_size != 0 && result_size != GDI_ERROR)
 			{
-				glyph_buffer = buffer;
+				DataBuffer buffer(result_size);
+				result_size = GetGlyphOutline(dc, glyph_index, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+				if (result_size != 0 && result_size != GDI_ERROR)
+				{
+					glyph_buffer = buffer;
+				}
 			}
 		}
-
 		SelectObject(dc, old_font);
 		ReleaseDC(0, dc);
 
