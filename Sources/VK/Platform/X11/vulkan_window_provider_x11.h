@@ -29,8 +29,8 @@
 
 #pragma once
 
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_xlib.h>
+// volk.h sets VK_USE_PLATFORM_XLIB_KHR and includes vulkan_xlib.h automatically.
+#include "API/VK/volk.h"
 
 #include <memory>
 #include <vector>
@@ -63,9 +63,9 @@ namespace clan
 
 		bool has_focus()	const override { return x11_window.has_focus(); }
 		bool is_fullscreen() const override { return x11_window.is_fullscreen(); }
-		bool is_minimized() const override { return x11_window.is_minimized(); }
-		bool is_maximized() const override { return x11_window.is_maximized(); }
-		bool is_visible()   const override { return x11_window.is_visible(); }
+		bool is_minimized()  const override { return x11_window.is_minimized(); }
+		bool is_maximized()  const override { return x11_window.is_maximized(); }
+		bool is_visible()	const override { return x11_window.is_visible(); }
 		bool is_clipboard_text_available()  const override { return x11_window.is_clipboard_text_available(); }
 		bool is_clipboard_image_available() const override { return x11_window.is_clipboard_image_available(); }
 
@@ -125,10 +125,10 @@ namespace clan
 		void flip(int interval) override;
 
 		// ---- VulkanWindowProviderBase interface overrides -------------------
-		VulkanDevice   *get_vulkan_device()			const override { return vk_device.get(); }
+		VulkanDevice   *get_vulkan_device()		const override { return vk_device.get(); }
 		VkRenderPass	get_render_pass()			const override { return render_pass; }
-		VkFramebuffer   get_current_framebuffer()	const override;
-		VkCommandBuffer get_current_command_buffer()	const override;
+		VkFramebuffer   get_current_framebuffer()	const override { return swapchain_framebuffers[current_image_index]; }
+		VkCommandBuffer get_current_command_buffer()  const override { return command_buffers[current_image_index]; }
 		uint32_t		get_current_image_index()	const override { return current_image_index; }
 		VkImage		get_swapchain_image(uint32_t i) const override { return swapchain_images[i]; }
 		VkExtent2D	get_swapchain_extent()		const override { return swapchain_extent; }
@@ -136,26 +136,20 @@ namespace clan
 		ProcAddress	*get_proc_address(const std::string &function_name) const override;
 
 		uint32_t		get_current_frame()  const override { return static_cast<uint32_t>(current_frame); }
-		bool			begin_frame()	override;
-		bool			is_frame_begun()   const override { return frame_begun; }
+		bool			begin_frame()		override;
+		bool			is_frame_begun()	const override { return frame_begun; }
 
 		void end_frame();
 
 	private:
+		// ---- Platform-specific hook implementations -------------------------
+		void create_surface()					override;
+		void create_swapchain(int swap_interval) override;
+
 		void on_window_resized();
 		bool on_clicked(XButtonEvent &event);
 
-		void create_surface();
-		void create_swapchain(int swap_interval);
-		void create_render_pass();
-		void create_depth_resources();
-		void create_framebuffers();
-		void create_command_buffers();
-		void create_sync_objects();
-		void recreate_swapchain();
-		void cleanup_swapchain();
-
-		static VkPresentModeKHR choose_present_mode(
+		static VkPresentModeKHR  choose_present_mode(
 			const std::vector<VkPresentModeKHR> &modes, int swap_interval);
 		static VkSurfaceFormatKHR choose_surface_format(
 			const std::vector<VkSurfaceFormatKHR> &formats, bool want_alpha);
@@ -165,35 +159,8 @@ namespace clan
 		std::unique_ptr<VulkanDevice> vk_device;
 		VulkanContextDescription	vk_desc;
 
-		VkSurfaceKHR				surface			= VK_NULL_HANDLE;
-		VkSwapchainKHR				swapchain			= VK_NULL_HANDLE;
-		VkRenderPass				render_pass		= VK_NULL_HANDLE;
-		VkFormat					swapchain_image_format = VK_FORMAT_UNDEFINED;
-		VkExtent2D					swapchain_extent	= {};
-
-		std::vector<VkImage>		swapchain_images;
-		std::vector<VkImageView>	swapchain_image_views;
-		std::vector<VkFramebuffer>	swapchain_framebuffers;
-		std::vector<VkCommandBuffer>  command_buffers;
-
-		VkImage					depth_image		= VK_NULL_HANDLE;
-		VkDeviceMemory				depth_image_memory	= VK_NULL_HANDLE;
-		VkImageView				depth_image_view	= VK_NULL_HANDLE;
-
-		std::vector<VkSemaphore>	image_available_semaphores;
-		std::vector<VkSemaphore>	render_finished_semaphores;
-		std::vector<VkFence>		in_flight_fences;
-		std::vector<VkFence>		images_in_flight;
-		size_t						current_frame		= 0;
-		uint32_t					current_image_index   = 0;
-
-		int						current_swap_interval = -1;
-
-		bool						framebuffer_resized   = false;
-		bool						frame_begun		= false;
-
-		GraphicContext				gc;
-		DisplayWindowSite			*site				= nullptr;
+		GraphicContext	gc;
+		DisplayWindowSite   *site = nullptr;
 	};
 
 } // namespace clan

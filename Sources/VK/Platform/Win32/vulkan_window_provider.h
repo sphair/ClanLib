@@ -35,8 +35,8 @@
 #include "Display/Platform/Win32/win32_window.h"
 #include "API/VK/vulkan_context_description.h"
 #include "VK/vulkan_window_provider_base.h"
-#include <vulkan/vulkan.h>
-#include <vulkan/vulkan_win32.h>
+// volk.h sets VK_USE_PLATFORM_WIN32_KHR and includes vulkan_win32.h automatically.
+#include "API/VK/volk.h"
 #include <vector>
 #include <memory>
 
@@ -71,7 +71,7 @@ namespace clan
 			return h;
 		}
 
-		GraphicContext   &get_gc()			override { return gc; }
+		GraphicContext   &get_gc()		override { return gc; }
 		InputDevice	&get_keyboard()		override { return win32_window.get_keyboard(); }
 		InputDevice	&get_mouse()		override { return win32_window.get_mouse(); }
 		std::vector<InputDevice> &get_game_controllers() override { return win32_window.get_game_controllers(); }
@@ -118,10 +118,10 @@ namespace clan
 		void extend_frame_into_client_area(int left, int top, int right, int bottom) override;
 
 		// ---- VulkanWindowProviderBase interface overrides ----
-		VulkanDevice	*get_vulkan_device()			const override { return vk_device.get(); }
-		VkRenderPass		get_render_pass()			const override { return render_pass; }
-		VkFramebuffer	get_current_framebuffer()	const override;
-		VkCommandBuffer	get_current_command_buffer()	const override;
+		VulkanDevice	*get_vulkan_device()		const override { return vk_device.get(); }
+		VkRenderPass		get_render_pass()		const override { return render_pass; }
+		VkFramebuffer	get_current_framebuffer()	const override { return swapchain_framebuffers[current_image_index]; }
+		VkCommandBuffer	get_current_command_buffer()	const override { return command_buffers[current_image_index]; }
 		uint32_t			get_current_image_index()	const override { return current_image_index; }
 		VkImage			get_swapchain_image(uint32_t i) const override { return swapchain_images[i]; }
 		VkExtent2D		get_swapchain_extent()		const override { return swapchain_extent; }
@@ -138,17 +138,9 @@ namespace clan
 		void end_frame();
 
 	private:
-		void create_surface();
-		void create_swapchain(int swap_interval);
-		void create_image_views();
-		void create_render_pass();
-		void create_depth_resources();
-		void create_framebuffers();
-		void create_sync_objects();
-		void create_command_buffers();
-
-		void recreate_swapchain();
-		void cleanup_swapchain();
+		// ---- Platform-specific hook implementations -------------------------
+		void create_surface()					override;
+		void create_swapchain(int swap_interval) override;
 
 		void on_window_resized();
 
@@ -160,38 +152,11 @@ namespace clan
 		Win32Window	win32_window;
 		GraphicContext  gc;
 		DisplayWindowSite *site	= nullptr;
-		bool			fullscreen   = false;
-		HWND			shadow_hwnd  = nullptr;
-		bool			shadow_window = false;
+		bool		fullscreen   = false;
+		HWND		shadow_hwnd  = nullptr;
+		bool		shadow_window = false;
 
 		std::unique_ptr<VulkanDevice> vk_device;
-		VkSurfaceKHR   surface		= VK_NULL_HANDLE;
-		VkSwapchainKHR swapchain		= VK_NULL_HANDLE;
-		VkRenderPass   render_pass	= VK_NULL_HANDLE;
-
-		VkFormat   swapchain_image_format = VK_FORMAT_UNDEFINED;
-		VkExtent2D swapchain_extent{};
-
-		std::vector<VkImage>	swapchain_images;
-		std::vector<VkImageView>   swapchain_image_views;
-		std::vector<VkFramebuffer> swapchain_framebuffers;
-
-		VkImage		depth_image		= VK_NULL_HANDLE;
-		VkDeviceMemory depth_image_memory = VK_NULL_HANDLE;
-		VkImageView	depth_image_view   = VK_NULL_HANDLE;
-
-		std::vector<VkSemaphore> image_available_semaphores;
-		std::vector<VkSemaphore> render_finished_semaphores;
-		std::vector<VkFence>	in_flight_fences;
-		std::vector<VkFence>	images_in_flight;
-
-		std::vector<VkCommandBuffer> command_buffers;
-
-		uint32_t current_frame	= 0;
-		uint32_t current_image_index = 0;
-		bool	framebuffer_resized = false;
-		bool	frame_begun		= false;
-		int	current_swap_interval = 1;
 
 		VulkanContextDescription vk_desc;
 	};

@@ -136,10 +136,10 @@ void VulkanGraphicContextProvider::on_dispose()
 
 	// Destroy the dummy texture resources
 	VkDevice dev_d = vk_device->get_device();
-	if (dummy_sampler      != VK_NULL_HANDLE) { vkDestroySampler(dev_d, dummy_sampler, nullptr);          dummy_sampler      = VK_NULL_HANDLE; }
-	if (dummy_image_view   != VK_NULL_HANDLE) { vkDestroyImageView(dev_d, dummy_image_view, nullptr);     dummy_image_view   = VK_NULL_HANDLE; }
-	if (dummy_image        != VK_NULL_HANDLE) { vkDestroyImage(dev_d, dummy_image, nullptr);              dummy_image        = VK_NULL_HANDLE; }
-	if (dummy_image_memory != VK_NULL_HANDLE) { vkFreeMemory(dev_d, dummy_image_memory, nullptr);         dummy_image_memory = VK_NULL_HANDLE; }
+	if (dummy_sampler	!= VK_NULL_HANDLE) { vkDestroySampler(dev_d, dummy_sampler, nullptr);		dummy_sampler	= VK_NULL_HANDLE; }
+	if (dummy_image_view   != VK_NULL_HANDLE) { vkDestroyImageView(dev_d, dummy_image_view, nullptr);	dummy_image_view   = VK_NULL_HANDLE; }
+	if (dummy_image		!= VK_NULL_HANDLE) { vkDestroyImage(dev_d, dummy_image, nullptr);			dummy_image		= VK_NULL_HANDLE; }
+	if (dummy_image_memory != VK_NULL_HANDLE) { vkFreeMemory(dev_d, dummy_image_memory, nullptr);		dummy_image_memory = VK_NULL_HANDLE; }
 
 	SharedGCData::remove_provider(this);
 }
@@ -364,15 +364,15 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 
 	// --- 1x1 RGBA8 image ---
 	VkImageCreateInfo img_ci{};
-	img_ci.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-	img_ci.imageType     = VK_IMAGE_TYPE_2D;
-	img_ci.format        = VK_FORMAT_R8G8B8A8_UNORM;
-	img_ci.extent        = { 1, 1, 1 };
-	img_ci.mipLevels     = 1;
+	img_ci.sType		= VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	img_ci.imageType	= VK_IMAGE_TYPE_2D;
+	img_ci.format		= VK_FORMAT_R8G8B8A8_UNORM;
+	img_ci.extent		= { 1, 1, 1 };
+	img_ci.mipLevels	= 1;
 	img_ci.arrayLayers   = 1;
-	img_ci.samples       = VK_SAMPLE_COUNT_1_BIT;
-	img_ci.tiling        = VK_IMAGE_TILING_OPTIMAL;
-	img_ci.usage         = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	img_ci.samples	= VK_SAMPLE_COUNT_1_BIT;
+	img_ci.tiling		= VK_IMAGE_TILING_OPTIMAL;
+	img_ci.usage		= VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 	img_ci.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
 	img_ci.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
@@ -383,7 +383,7 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 	vkGetImageMemoryRequirements(dev, dummy_image, &mem_req);
 
 	VkMemoryAllocateInfo alloc_ci{};
-	alloc_ci.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	alloc_ci.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	alloc_ci.allocationSize  = mem_req.size;
 	alloc_ci.memoryTypeIndex = vk_device->find_memory_type(
 		mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
@@ -391,36 +391,52 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 	if (vkAllocateMemory(dev, &alloc_ci, nullptr, &dummy_image_memory) != VK_SUCCESS)
 		throw Exception("Failed to allocate Vulkan dummy texture memory");
 
-	vkBindImageMemory(dev, dummy_image, dummy_image_memory, 0);
+	if (vkBindImageMemory(dev, dummy_image, dummy_image_memory, 0) != VK_SUCCESS)
+		throw Exception("Failed to bind Vulkan dummy texture image memory");
 
 	// --- Upload 1×1 white pixel via staging buffer ---
 	{
 		const uint8_t white_pixel[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
 
-		VkBuffer       stg_buf{};
+		VkBuffer	stg_buf{};
 		VkDeviceMemory stg_mem{};
 
 		VkBufferCreateInfo stg_ci{};
-		stg_ci.sType       = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stg_ci.size        = 4;
-		stg_ci.usage       = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		stg_ci.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		stg_ci.size		= 4;
+		stg_ci.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stg_ci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		vkCreateBuffer(dev, &stg_ci, nullptr, &stg_buf);
+		if (vkCreateBuffer(dev, &stg_ci, nullptr, &stg_buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan dummy texture staging buffer");
 
 		VkMemoryRequirements stg_req{};
 		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
 
 		VkMemoryAllocateInfo stg_alloc{};
-		stg_alloc.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		stg_alloc.allocationSize  = stg_req.size;
 		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
 			stg_req.memoryTypeBits,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem);
-		vkBindBufferMemory(dev, stg_buf, stg_mem, 0);
+		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to allocate Vulkan dummy texture staging memory");
+		}
+		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to bind Vulkan dummy texture staging buffer memory");
+		}
 
 		void *mapped = nullptr;
-		vkMapMemory(dev, stg_mem, 0, 4, 0, &mapped);
+		if (vkMapMemory(dev, stg_mem, 0, 4, 0, &mapped) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to map Vulkan dummy texture staging memory");
+		}
 		std::memcpy(mapped, white_pixel, 4);
 		vkUnmapMemory(dev, stg_mem);
 
@@ -428,28 +444,28 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 
 		// UNDEFINED -> TRANSFER_DST_OPTIMAL
 		VkImageMemoryBarrier barrier{};
-		barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.oldLayout                       = VK_IMAGE_LAYOUT_UNDEFINED;
-		barrier.newLayout                       = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-		barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-		barrier.image                           = dummy_image;
-		barrier.subresourceRange                = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
-		barrier.srcAccessMask                   = 0;
-		barrier.dstAccessMask                   = VK_ACCESS_TRANSFER_WRITE_BIT;
+		barrier.sType						= VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.oldLayout					= VK_IMAGE_LAYOUT_UNDEFINED;
+		barrier.newLayout					= VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+		barrier.srcQueueFamilyIndex			= VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex			= VK_QUEUE_FAMILY_IGNORED;
+		barrier.image						= dummy_image;
+		barrier.subresourceRange				= { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+		barrier.srcAccessMask				= 0;
+		barrier.dstAccessMask				= VK_ACCESS_TRANSFER_WRITE_BIT;
 		vkCmdPipelineBarrier(cmd,
 			VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
 			0, 0, nullptr, 0, nullptr, 1, &barrier);
 
 		VkBufferImageCopy region{};
 		region.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-		region.imageExtent      = { 1, 1, 1 };
+		region.imageExtent	= { 1, 1, 1 };
 		vkCmdCopyBufferToImage(cmd, stg_buf, dummy_image,
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
 		// TRANSFER_DST_OPTIMAL -> SHADER_READ_ONLY_OPTIMAL
-		barrier.oldLayout     = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-		barrier.newLayout     = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		barrier.oldLayout	= VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+		barrier.newLayout	= VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 		vkCmdPipelineBarrier(cmd,
@@ -464,25 +480,25 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 
 	// --- Image view ---
 	VkImageViewCreateInfo view_ci{};
-	view_ci.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-	view_ci.image                           = dummy_image;
-	view_ci.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-	view_ci.format                          = VK_FORMAT_R8G8B8A8_UNORM;
-	view_ci.subresourceRange                = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+	view_ci.sType						= VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	view_ci.image						= dummy_image;
+	view_ci.viewType						= VK_IMAGE_VIEW_TYPE_2D;
+	view_ci.format						= VK_FORMAT_R8G8B8A8_UNORM;
+	view_ci.subresourceRange				= { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
 
 	if (vkCreateImageView(dev, &view_ci, nullptr, &dummy_image_view) != VK_SUCCESS)
 		throw Exception("Failed to create Vulkan dummy texture image view");
 
 	// --- Sampler (nearest, clamp-to-edge) ---
 	VkSamplerCreateInfo sampler_ci{};
-	sampler_ci.sType        = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-	sampler_ci.magFilter    = VK_FILTER_NEAREST;
-	sampler_ci.minFilter    = VK_FILTER_NEAREST;
+	sampler_ci.sType		= VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	sampler_ci.magFilter	= VK_FILTER_NEAREST;
+	sampler_ci.minFilter	= VK_FILTER_NEAREST;
 	sampler_ci.mipmapMode   = VK_SAMPLER_MIPMAP_MODE_NEAREST;
 	sampler_ci.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	sampler_ci.addressModeV = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 	sampler_ci.addressModeW = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-	sampler_ci.maxLod       = VK_LOD_CLAMP_NONE;
+	sampler_ci.maxLod	= VK_LOD_CLAMP_NONE;
 	sampler_ci.borderColor  = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
 
 	if (vkCreateSampler(dev, &sampler_ci, nullptr, &dummy_sampler) != VK_SUCCESS)
@@ -491,7 +507,8 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 
 void VulkanGraphicContextProvider::reset_descriptor_pool(uint32_t frame_index)
 {
-	vkResetDescriptorPool(vk_device->get_device(), descriptor_pools[frame_index], 0);
+	if (vkResetDescriptorPool(vk_device->get_device(), descriptor_pools[frame_index], 0) != VK_SUCCESS)
+		throw Exception("Failed to reset Vulkan descriptor pool");
 	current_descriptor_set = VK_NULL_HANDLE;
 }
 
@@ -727,7 +744,8 @@ PixelBuffer VulkanGraphicContextProvider::get_pixeldata(const Rect &rect,
 		ci.size		= bytes;
 		ci.usage	= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 		ci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		vkCreateBuffer(dev, &ci, nullptr, &buf);
+		if (vkCreateBuffer(dev, &ci, nullptr, &buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan pixel readback buffer");
 
 		VkMemoryRequirements mr{};
 		vkGetBufferMemoryRequirements(dev, buf, &mr);
@@ -737,8 +755,17 @@ PixelBuffer VulkanGraphicContextProvider::get_pixeldata(const Rect &rect,
 		ai.memoryTypeIndex = vk_device->find_memory_type(
 			mr.memoryTypeBits,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		vkAllocateMemory(dev, &ai, nullptr, &mem);
-		vkBindBufferMemory(dev, buf, mem, 0);
+		if (vkAllocateMemory(dev, &ai, nullptr, &mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, buf, nullptr);
+			throw Exception("Failed to allocate Vulkan pixel readback memory");
+		}
+		if (vkBindBufferMemory(dev, buf, mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, mem, nullptr);
+			vkDestroyBuffer(dev, buf, nullptr);
+			throw Exception("Failed to bind Vulkan pixel readback buffer memory");
+		}
 	}
 
 	VkCommandBuffer one_shot = vk_device->begin_single_time_commands();
@@ -778,7 +805,12 @@ PixelBuffer VulkanGraphicContextProvider::get_pixeldata(const Rect &rect,
 	vk_device->end_single_time_commands(one_shot);
 
 	void *mapped = nullptr;
-	vkMapMemory(dev, mem, 0, bytes, 0, &mapped);
+	if (vkMapMemory(dev, mem, 0, bytes, 0, &mapped) != VK_SUCCESS)
+	{
+		vkDestroyBuffer(dev, buf, nullptr);
+		vkFreeMemory(dev, mem, nullptr);
+		throw Exception("Failed to map Vulkan pixel readback memory");
+	}
 
 	PixelBuffer result(w, h, TextureFormat::rgba8);
 	const uint8_t *src = static_cast<const uint8_t *>(mapped);
@@ -1543,7 +1575,7 @@ void VulkanGraphicContextProvider::flush_descriptors(VkCommandBuffer cmd,
 	// Unbound slots receive the dummy 1×1 white texture so that:
 	//   (a) strict drivers do not report VK_ERROR_DEVICE_LOST on submit, and
 	//   (b) the sprite shader's default: case (texindex >= 16 = "no texture") still
-	//       produces white * vertex_colour = vertex_colour, matching GL3 behaviour.
+	//	produces white * vertex_colour = vertex_colour, matching GL3 behaviour.
 	static constexpr int SPRITE_TEXTURE_SLOTS = 16;
 
 	for (int i = 0; i < MAX_TEXTURES; i++)
@@ -1555,18 +1587,18 @@ void VulkanGraphicContextProvider::flush_descriptors(VkCommandBuffer cmd,
 		// For slots beyond the sprite range (16..MAX_TEXTURES-1), skip if unbound
 		// and rely on VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT as before.
 		bool needs_dummy = (i < SPRITE_TEXTURE_SLOTS) &&
-		                   (!tex || tex->get_image_view() == VK_NULL_HANDLE);
+						(!tex || tex->get_image_view() == VK_NULL_HANDLE);
 
 		if (needs_dummy)
 		{
 			img_infos[i] = { dummy_sampler, dummy_image_view,
-			                 VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+							VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
 		}
 		else
 		{
 			if (!tex || tex->get_image_view() == VK_NULL_HANDLE) continue;
 			img_infos[i] = { tex->get_sampler(), tex->get_image_view(),
-			                 VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
+							VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL };
 		}
 
 		VkWriteDescriptorSet w{};

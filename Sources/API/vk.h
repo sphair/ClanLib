@@ -36,6 +36,7 @@
 #pragma managed(push, off)
 #endif
 
+#include "VK/volk.h"
 #include "VK/vulkan_target.h"
 #include "VK/setup_vulkan.h"
 #include "VK/vulkan_context_description.h"

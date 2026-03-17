@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "API/VK/volk.h"
 #include "API/Display/TargetProviders/occlusion_query_provider.h"
 
 namespace clan

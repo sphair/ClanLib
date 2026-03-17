@@ -40,9 +40,6 @@
 #  include <windows.h>
 #endif
 
-// ---- Vulkan (core only – platform surfaces included per-file) ----
-#include <vulkan/vulkan.h>
-
 // ---- Standard library ----
 #include <vector>
 #include <string>

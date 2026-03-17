@@ -157,7 +157,8 @@ namespace clan
 		if (vkAllocateMemory(vk_device->get_device(), &alloc_info, nullptr, &image_memory) != VK_SUCCESS)
 			throw Exception("Failed to allocate Vulkan texture memory");
 
-		vkBindImageMemory(vk_device->get_device(), image, image_memory, 0);
+		if (vkBindImageMemory(vk_device->get_device(), image, image_memory, 0) != VK_SUCCESS)
+			throw Exception("Failed to bind Vulkan texture image memory");
 		current_layout = VK_IMAGE_LAYOUT_UNDEFINED;
 
 		create_image_view();
@@ -205,7 +206,8 @@ namespace clan
 		stg_info.size		= total_bytes;
 		stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf);
+		if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan texture upload staging buffer");
 
 		VkMemoryRequirements stg_req{};
 		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
@@ -215,11 +217,25 @@ namespace clan
 		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
 			stg_req.memoryTypeBits,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem);
-		vkBindBufferMemory(dev, stg_buf, stg_mem, 0);
+		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to allocate Vulkan texture upload staging memory");
+		}
+		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to bind Vulkan texture upload staging memory");
+		}
 
 		void *mapped = nullptr;
-		vkMapMemory(dev, stg_mem, 0, total_bytes, 0, &mapped);
+		if (vkMapMemory(dev, stg_mem, 0, total_bytes, 0, &mapped) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to map Vulkan texture upload staging memory");
+		}
 		std::memcpy(mapped, flipped.data(), total_bytes);
 		vkUnmapMemory(dev, stg_mem);
 
@@ -295,7 +311,8 @@ namespace clan
 		stg_info.size		= bytes;
 		stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 		stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf);
+		if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan texture readback staging buffer");
 
 		VkMemoryRequirements stg_req{};
 		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
@@ -305,8 +322,17 @@ namespace clan
 		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
 			stg_req.memoryTypeBits,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem);
-		vkBindBufferMemory(dev, stg_buf, stg_mem, 0);
+		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to allocate Vulkan texture readback staging memory");
+		}
+		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to bind Vulkan texture readback staging memory");
+		}
 
 		VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 
@@ -350,7 +376,12 @@ namespace clan
 		vk_device->end_single_time_commands(cmd);
 
 		void *mapped = nullptr;
-		vkMapMemory(dev, stg_mem, 0, bytes, 0, &mapped);
+		if (vkMapMemory(dev, stg_mem, 0, bytes, 0, &mapped) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			vkFreeMemory(dev, stg_mem, nullptr);
+			throw Exception("Failed to map Vulkan texture readback staging memory");
+		}
 		PixelBuffer result(mip_w, mip_h, TextureFormat::rgba8);
 		// Flip back to bottom-up (GL convention) for callers expecting y_bottom_up
 		const uint8_t *src_ptr = static_cast<const uint8_t *>(mapped);

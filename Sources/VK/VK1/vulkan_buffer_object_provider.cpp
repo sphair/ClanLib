@@ -98,7 +98,8 @@ namespace clan
 		if (vkAllocateMemory(dev, &alloc_info, nullptr, &device_memory) != VK_SUCCESS)
 			throw Exception("Failed to allocate Vulkan buffer memory");
 
-		vkBindBufferMemory(dev, buffer, device_memory, 0);
+		if (vkBindBufferMemory(dev, buffer, device_memory, 0) != VK_SUCCESS)
+			throw Exception("Failed to bind Vulkan buffer memory");
 
 		if (data && size > 0)
 		{
@@ -113,7 +114,8 @@ namespace clan
 				stg_info.size		= size;
 				stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 				stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-				vkCreateBuffer(dev, &stg_info, nullptr, &staging_buf);
+				if (vkCreateBuffer(dev, &stg_info, nullptr, &staging_buf) != VK_SUCCESS)
+					throw Exception("Failed to create Vulkan buffer staging buffer");
 
 				VkMemoryRequirements stg_req{};
 				vkGetBufferMemoryRequirements(dev, staging_buf, &stg_req);
@@ -124,11 +126,25 @@ namespace clan
 				stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
 					stg_req.memoryTypeBits,
 					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-				vkAllocateMemory(dev, &stg_alloc, nullptr, &staging_mem);
-				vkBindBufferMemory(dev, staging_buf, staging_mem, 0);
+				if (vkAllocateMemory(dev, &stg_alloc, nullptr, &staging_mem) != VK_SUCCESS)
+				{
+					vkDestroyBuffer(dev, staging_buf, nullptr);
+					throw Exception("Failed to allocate Vulkan buffer staging memory");
+				}
+				if (vkBindBufferMemory(dev, staging_buf, staging_mem, 0) != VK_SUCCESS)
+				{
+					vkFreeMemory(dev, staging_mem, nullptr);
+					vkDestroyBuffer(dev, staging_buf, nullptr);
+					throw Exception("Failed to bind Vulkan buffer staging memory");
+				}
 
 				void *mapped = nullptr;
-				vkMapMemory(dev, staging_mem, 0, size, 0, &mapped);
+				if (vkMapMemory(dev, staging_mem, 0, size, 0, &mapped) != VK_SUCCESS)
+				{
+					vkFreeMemory(dev, staging_mem, nullptr);
+					vkDestroyBuffer(dev, staging_buf, nullptr);
+					throw Exception("Failed to map Vulkan buffer staging memory");
+				}
 				std::memcpy(mapped, data, size);
 				vkUnmapMemory(dev, staging_mem);
 
@@ -143,7 +159,8 @@ namespace clan
 			else
 			{
 				void *mapped = nullptr;
-				vkMapMemory(dev, device_memory, 0, size, 0, &mapped);
+				if (vkMapMemory(dev, device_memory, 0, size, 0, &mapped) != VK_SUCCESS)
+					throw Exception("Failed to map Vulkan buffer memory for upload");
 				std::memcpy(mapped, data, size);
 				vkUnmapMemory(dev, device_memory);
 			}
@@ -154,7 +171,8 @@ namespace clan
 	{
 		throw_if_disposed();
 		lock_gc = gc;
-		vkMapMemory(vk_device->get_device(), device_memory, 0, buffer_size, 0, &mapped_ptr);
+		if (vkMapMemory(vk_device->get_device(), device_memory, 0, buffer_size, 0, &mapped_ptr) != VK_SUCCESS)
+			throw Exception("Failed to map Vulkan buffer memory for lock");
 	}
 
 	void VulkanBufferObjectProvider::unlock()
@@ -187,7 +205,8 @@ namespace clan
 		if (host_visible)
 		{
 			void *mapped = nullptr;
-			vkMapMemory(vk_device->get_device(), device_memory, offset, size, 0, &mapped);
+			if (vkMapMemory(vk_device->get_device(), device_memory, offset, size, 0, &mapped) != VK_SUCCESS)
+				throw Exception("Failed to map Vulkan buffer memory for upload_data");
 			std::memcpy(mapped, data, size);
 
 			// If memory is not HOST_COHERENT we must flush the range manually.
@@ -198,7 +217,8 @@ namespace clan
 				flush_range.memory = device_memory;
 				flush_range.offset = offset;
 				flush_range.size   = size;
-				vkFlushMappedMemoryRanges(vk_device->get_device(), 1, &flush_range);
+				if (vkFlushMappedMemoryRanges(vk_device->get_device(), 1, &flush_range) != VK_SUCCESS)
+					throw Exception("Failed to flush Vulkan mapped memory range");
 			}
 			vkUnmapMemory(vk_device->get_device(), device_memory);
 		}
@@ -215,7 +235,8 @@ namespace clan
 			stg_info.size		= size;
 			stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 			stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf);
+			if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
+				throw Exception("Failed to create Vulkan upload_data staging buffer");
 
 			VkMemoryRequirements stg_req{};
 			vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
@@ -226,11 +247,25 @@ namespace clan
 			stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
 				stg_req.memoryTypeBits,
 				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-			vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem);
-			vkBindBufferMemory(dev, stg_buf, stg_mem, 0);
+			if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+			{
+				vkDestroyBuffer(dev, stg_buf, nullptr);
+				throw Exception("Failed to allocate Vulkan upload_data staging memory");
+			}
+			if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+			{
+				vkFreeMemory(dev, stg_mem, nullptr);
+				vkDestroyBuffer(dev, stg_buf, nullptr);
+				throw Exception("Failed to bind Vulkan upload_data staging memory");
+			}
 
 			void *mapped = nullptr;
-			vkMapMemory(dev, stg_mem, 0, size, 0, &mapped);
+			if (vkMapMemory(dev, stg_mem, 0, size, 0, &mapped) != VK_SUCCESS)
+			{
+				vkFreeMemory(dev, stg_mem, nullptr);
+				vkDestroyBuffer(dev, stg_buf, nullptr);
+				throw Exception("Failed to map Vulkan upload_data staging memory");
+			}
 			std::memcpy(mapped, data, size);
 			vkUnmapMemory(dev, stg_mem);
 
