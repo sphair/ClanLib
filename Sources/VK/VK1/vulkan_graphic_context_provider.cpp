@@ -37,6 +37,7 @@
 #endif
 
 #include "VK/vulkan_device.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include "VK/VK1/vulkan_texture_provider.h"
 #include "VK/VK1/vulkan_program_object_provider.h"
 #include "VK/VK1/vulkan_shader_object_provider.h"
@@ -138,8 +139,12 @@ void VulkanGraphicContextProvider::on_dispose()
 	VkDevice dev_d = vk_device->get_device();
 	if (dummy_sampler	!= VK_NULL_HANDLE) { vkDestroySampler(dev_d, dummy_sampler, nullptr);		dummy_sampler	= VK_NULL_HANDLE; }
 	if (dummy_image_view   != VK_NULL_HANDLE) { vkDestroyImageView(dev_d, dummy_image_view, nullptr);	dummy_image_view   = VK_NULL_HANDLE; }
-	if (dummy_image		!= VK_NULL_HANDLE) { vkDestroyImage(dev_d, dummy_image, nullptr);			dummy_image		= VK_NULL_HANDLE; }
-	if (dummy_image_memory != VK_NULL_HANDLE) { vkFreeMemory(dev_d, dummy_image_memory, nullptr);		dummy_image_memory = VK_NULL_HANDLE; }
+	if (dummy_image != VK_NULL_HANDLE)
+	{
+		vmaDestroyImage(vk_device->get_allocator(), dummy_image, dummy_image_alloc);
+		dummy_image	= VK_NULL_HANDLE;
+		dummy_image_alloc = VK_NULL_HANDLE;
+	}
 
 	SharedGCData::remove_provider(this);
 }
@@ -376,69 +381,35 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 	img_ci.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
 	img_ci.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-	if (vkCreateImage(dev, &img_ci, nullptr, &dummy_image) != VK_SUCCESS)
-		throw Exception("Failed to create Vulkan dummy texture image");
-
-	VkMemoryRequirements mem_req{};
-	vkGetImageMemoryRequirements(dev, dummy_image, &mem_req);
-
-	VkMemoryAllocateInfo alloc_ci{};
-	alloc_ci.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	alloc_ci.allocationSize  = mem_req.size;
-	alloc_ci.memoryTypeIndex = vk_device->find_memory_type(
-		mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-	if (vkAllocateMemory(dev, &alloc_ci, nullptr, &dummy_image_memory) != VK_SUCCESS)
-		throw Exception("Failed to allocate Vulkan dummy texture memory");
-
-	if (vkBindImageMemory(dev, dummy_image, dummy_image_memory, 0) != VK_SUCCESS)
-		throw Exception("Failed to bind Vulkan dummy texture image memory");
+	VmaAllocationCreateInfo dummy_alloc_ci{};
+	dummy_alloc_ci.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+	if (vmaCreateImage(vk_device->get_allocator(), &img_ci, &dummy_alloc_ci,
+					&dummy_image, &dummy_image_alloc, nullptr) != VK_SUCCESS)
+		throw Exception("Failed to create Vulkan dummy texture image via VMA");
 
 	// --- Upload 1×1 white pixel via staging buffer ---
 	{
 		const uint8_t white_pixel[4] = { 0xFF, 0xFF, 0xFF, 0xFF };
 
 		VkBuffer	stg_buf{};
-		VkDeviceMemory stg_mem{};
+		VmaAllocation stg_alloc{};
 
 		VkBufferCreateInfo stg_ci{};
 		stg_ci.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		stg_ci.size		= 4;
 		stg_ci.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stg_ci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		if (vkCreateBuffer(dev, &stg_ci, nullptr, &stg_buf) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan dummy texture staging buffer");
 
-		VkMemoryRequirements stg_req{};
-		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
+		VmaAllocationCreateInfo stg_vma_ci{};
+		stg_vma_ci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
+		stg_vma_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
-		VkMemoryAllocateInfo stg_alloc{};
-		stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		stg_alloc.allocationSize  = stg_req.size;
-		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
-			stg_req.memoryTypeBits,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
-		{
-			vkDestroyBuffer(dev, stg_buf, nullptr);
-			throw Exception("Failed to allocate Vulkan dummy texture staging memory");
-		}
-		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
-		{
-			vkFreeMemory(dev, stg_mem, nullptr);
-			vkDestroyBuffer(dev, stg_buf, nullptr);
-			throw Exception("Failed to bind Vulkan dummy texture staging buffer memory");
-		}
+		VmaAllocationInfo stg_info_out{};
+		if (vmaCreateBuffer(vk_device->get_allocator(), &stg_ci, &stg_vma_ci,
+							&stg_buf, &stg_alloc, &stg_info_out) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan dummy texture staging buffer via VMA");
 
-		void *mapped = nullptr;
-		if (vkMapMemory(dev, stg_mem, 0, 4, 0, &mapped) != VK_SUCCESS)
-		{
-			vkFreeMemory(dev, stg_mem, nullptr);
-			vkDestroyBuffer(dev, stg_buf, nullptr);
-			throw Exception("Failed to map Vulkan dummy texture staging memory");
-		}
-		std::memcpy(mapped, white_pixel, 4);
-		vkUnmapMemory(dev, stg_mem);
+		std::memcpy(stg_info_out.pMappedData, white_pixel, 4);
 
 		VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 
@@ -474,8 +445,7 @@ void VulkanGraphicContextProvider::create_dummy_texture()
 
 		vk_device->end_single_time_commands(cmd);
 
-		vkDestroyBuffer(dev, stg_buf, nullptr);
-		vkFreeMemory(dev, stg_mem, nullptr);
+		vmaDestroyBuffer(vk_device->get_allocator(), stg_buf, stg_alloc);
 	}
 
 	// --- Image view ---
@@ -737,35 +707,23 @@ PixelBuffer VulkanGraphicContextProvider::get_pixeldata(const Rect &rect,
 	VkDevice	dev   = vk_device->get_device();
 	VkDeviceSize bytes = static_cast<VkDeviceSize>(w) * h * 4;
 
-	VkBuffer buf{}; VkDeviceMemory mem{};
+	VkBuffer	buf{};
+	VmaAllocation buf_alloc{};
+	VmaAllocationInfo buf_alloc_info{};
 	{
 		VkBufferCreateInfo ci{};
 		ci.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		ci.size		= bytes;
 		ci.usage	= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 		ci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		if (vkCreateBuffer(dev, &ci, nullptr, &buf) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan pixel readback buffer");
 
-		VkMemoryRequirements mr{};
-		vkGetBufferMemoryRequirements(dev, buf, &mr);
-		VkMemoryAllocateInfo ai{};
-		ai.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		ai.allocationSize  = mr.size;
-		ai.memoryTypeIndex = vk_device->find_memory_type(
-			mr.memoryTypeBits,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		if (vkAllocateMemory(dev, &ai, nullptr, &mem) != VK_SUCCESS)
-		{
-			vkDestroyBuffer(dev, buf, nullptr);
-			throw Exception("Failed to allocate Vulkan pixel readback memory");
-		}
-		if (vkBindBufferMemory(dev, buf, mem, 0) != VK_SUCCESS)
-		{
-			vkFreeMemory(dev, mem, nullptr);
-			vkDestroyBuffer(dev, buf, nullptr);
-			throw Exception("Failed to bind Vulkan pixel readback buffer memory");
-		}
+		VmaAllocationCreateInfo rb_alloc_ci{};
+		rb_alloc_ci.usage = VMA_MEMORY_USAGE_GPU_TO_CPU;
+		rb_alloc_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+
+		if (vmaCreateBuffer(vk_device->get_allocator(), &ci, &rb_alloc_ci,
+							&buf, &buf_alloc, &buf_alloc_info) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan pixel readback buffer via VMA");
 	}
 
 	VkCommandBuffer one_shot = vk_device->begin_single_time_commands();
@@ -804,24 +762,18 @@ PixelBuffer VulkanGraphicContextProvider::get_pixeldata(const Rect &rect,
 
 	vk_device->end_single_time_commands(one_shot);
 
-	void *mapped = nullptr;
-	if (vkMapMemory(dev, mem, 0, bytes, 0, &mapped) != VK_SUCCESS)
-	{
-		vkDestroyBuffer(dev, buf, nullptr);
-		vkFreeMemory(dev, mem, nullptr);
-		throw Exception("Failed to map Vulkan pixel readback memory");
-	}
+	// GPU_TO_CPU with MAPPED_BIT: invalidate so the CPU sees the GPU's writes,
+	// then read directly from the persistently-mapped pointer.
+	vmaInvalidateAllocation(vk_device->get_allocator(), buf_alloc, 0, VK_WHOLE_SIZE);
 
 	PixelBuffer result(w, h, TextureFormat::rgba8);
-	const uint8_t *src = static_cast<const uint8_t *>(mapped);
+	const uint8_t *src_pixels = static_cast<const uint8_t *>(buf_alloc_info.pMappedData);
 	for (int row = 0; row < h; row++)
 	{
 		std::memcpy(result.get_data<uint8_t>() + (h - 1 - row) * result.get_pitch(),
-					src + row * w * 4, static_cast<size_t>(w * 4));
+					src_pixels + row * w * 4, static_cast<size_t>(w * 4));
 	}
-	vkUnmapMemory(dev, mem);
-	vkDestroyBuffer(dev, buf, nullptr);
-	vkFreeMemory(dev, mem, nullptr);
+	vmaDestroyBuffer(vk_device->get_allocator(), buf, buf_alloc);
 
 	return (texture_format != TextureFormat::rgba8) ? result.to_format(texture_format)
 													: result;

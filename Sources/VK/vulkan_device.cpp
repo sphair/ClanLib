@@ -29,6 +29,7 @@
 
 #include "VK/precomp.h"
 #include "VK/vulkan_device.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include "API/VK/vulkan_context_description.h"
 #include "VK/vulkan_context_description_impl.h"
 #include "API/Core/Text/logger.h"
@@ -58,10 +59,16 @@ namespace clan
 		pick_physical_device();
 		create_logical_device(desc);
 		create_command_pool();
+		create_vma_allocator();
 	}
 
 	VulkanDevice::~VulkanDevice()
 	{
+		if (vma_allocator != VK_NULL_HANDLE)
+		{
+			vmaDestroyAllocator(vma_allocator);
+			vma_allocator = VK_NULL_HANDLE;
+		}
 		if (command_pool != VK_NULL_HANDLE)
 			vkDestroyCommandPool(device, command_pool, nullptr);
 		if (device != VK_NULL_HANDLE)
@@ -274,6 +281,24 @@ namespace clan
 
 		if (vkCreateCommandPool(device, &pool_info, nullptr, &command_pool) != VK_SUCCESS)
 			throw Exception("Failed to create Vulkan command pool");
+	}
+
+	// -------------------------------------------------------------------------
+	void VulkanDevice::create_vma_allocator()
+	{
+		// VMA requires us to supply function pointers because we use volk
+		// (VK_NO_PROTOTYPES) rather than static Vulkan linkage.
+		VmaVulkanFunctions vma_funcs = make_vma_vulkan_functions();
+
+		VmaAllocatorCreateInfo ai{};
+		ai.vulkanApiVersion  = VK_API_VERSION_1_2;
+		ai.instance		= instance;
+		ai.physicalDevice	= physical_device;
+		ai.device			= device;
+		ai.pVulkanFunctions  = &vma_funcs;
+
+		if (vmaCreateAllocator(&ai, &vma_allocator) != VK_SUCCESS)
+			throw Exception("Failed to create VMA allocator");
 	}
 
 	// -------------------------------------------------------------------------

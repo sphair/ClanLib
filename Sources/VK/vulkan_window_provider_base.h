@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/volk.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -114,7 +114,7 @@ namespace clan
 		std::vector<VkCommandBuffer>	command_buffers;
 
 		VkImage			depth_image		= VK_NULL_HANDLE;
-		VkDeviceMemory		depth_image_memory	= VK_NULL_HANDLE;
+		VmaAllocation		depth_image_memory	= VK_NULL_HANDLE;
 		VkImageView		depth_image_view	= VK_NULL_HANDLE;
 
 		std::vector<VkSemaphore>	image_available_semaphores;

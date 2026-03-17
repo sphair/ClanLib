@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/volk.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
 
@@ -72,7 +72,6 @@ namespace clan
 
 		// Vulkan-specific helpers used by texture / GC providers
 		VkBuffer get_buffer()  const { return buffer;  }
-		VkDeviceMemory get_memory() const { return memory; }
 		VkDeviceSize get_bytes() const { return allocated_bytes; }
 
 	private:
@@ -81,7 +80,7 @@ namespace clan
 
 		VulkanDevice  *vk_device	= nullptr;
 		VkBuffer	buffer	= VK_NULL_HANDLE;
-		VkDeviceMemory memory	= VK_NULL_HANDLE;
+		VmaAllocation  allocation  = VK_NULL_HANDLE;
 		void		*mapped_ptr   = nullptr;
 		Size		buf_size;
 		VkDeviceSize   allocated_bytes = 0;

@@ -27,26 +27,12 @@
 **	Mark Page
 */
 
-#pragma once
+#include "VK/precomp.h"
 
-#include <vector>
-#include <string>
+// This translation unit is the ONLY place where VMA_IMPLEMENTATION is defined.
+// All other files that need VmaAllocator types include vk_mem_alloc_config.h
+// WITHOUT defining VMA_IMPLEMENTATION.
 
-namespace clan
-{
-	class VulkanContextDescription_Impl
-	{
-	public:
-		VulkanContextDescription_Impl()
-			: debug_flag(false)
-			, sampler_anisotropy(true)
-			, fill_mode_non_solid(false)
-		{}
-
-		bool debug_flag;
-		bool sampler_anisotropy;
-		bool fill_mode_non_solid;
-		std::vector<std::string> instance_extensions;
-		std::vector<std::string> device_extensions;
-	};
-}
+// VMA configuration (static=0, dynamic=1) must come before vk_mem_alloc.h
+#define VMA_IMPLEMENTATION
+#include "API/VK/vk_mem_alloc_config.h"

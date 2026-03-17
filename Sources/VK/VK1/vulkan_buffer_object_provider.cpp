@@ -27,7 +27,6 @@
 **	Mark Page
 */
 
-
 #include "VK/precomp.h"
 #include "VK/VK1/vulkan_buffer_object_provider.h"
 #include "VK/VK1/vulkan_graphic_context_provider.h"
@@ -52,11 +51,9 @@ namespace clan
 	{
 		if (buffer != VK_NULL_HANDLE && vk_device)
 		{
-			VkDevice dev = vk_device->get_device();
-			vkDestroyBuffer(dev, buffer, nullptr);
-			vkFreeMemory(dev, device_memory, nullptr);
-			buffer		= VK_NULL_HANDLE;
-			device_memory = VK_NULL_HANDLE;
+			vmaDestroyBuffer(vk_device->get_allocator(), buffer, allocation);
+			buffer	= VK_NULL_HANDLE;
+			allocation = VK_NULL_HANDLE;
 		}
 	}
 
@@ -71,8 +68,6 @@ namespace clan
 		usage_flags  = uflags;
 		memory_props = mprops;
 
-		VkDevice dev = vk_device->get_device();
-
 		// If data is provided for a DEVICE_LOCAL buffer we need an upload path
 		// via a staging buffer.  For HOST_VISIBLE we can map directly.
 		bool needs_staging = (mprops & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) &&
@@ -84,85 +79,58 @@ namespace clan
 		buf_info.usage	= uflags | (needs_staging ? VK_BUFFER_USAGE_TRANSFER_DST_BIT : 0);
 		buf_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		if (vkCreateBuffer(dev, &buf_info, nullptr, &buffer) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan buffer");
+		VmaAllocationCreateInfo alloc_ci{};
+		alloc_ci.requiredFlags = mprops;
+		if (mprops & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+			alloc_ci.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		else
+			alloc_ci.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
-		VkMemoryRequirements mem_req{};
-		vkGetBufferMemoryRequirements(dev, buffer, &mem_req);
-
-		VkMemoryAllocateInfo alloc_info{};
-		alloc_info.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		alloc_info.allocationSize  = mem_req.size;
-		alloc_info.memoryTypeIndex = vk_device->find_memory_type(mem_req.memoryTypeBits, mprops);
-
-		if (vkAllocateMemory(dev, &alloc_info, nullptr, &device_memory) != VK_SUCCESS)
-			throw Exception("Failed to allocate Vulkan buffer memory");
-
-		if (vkBindBufferMemory(dev, buffer, device_memory, 0) != VK_SUCCESS)
-			throw Exception("Failed to bind Vulkan buffer memory");
+		if (vmaCreateBuffer(vk_device->get_allocator(), &buf_info, &alloc_ci,
+							&buffer, &allocation, nullptr) != VK_SUCCESS)
+			throw Exception("Failed to create/allocate Vulkan buffer via VMA");
 
 		if (data && size > 0)
 		{
 			if (needs_staging)
 			{
-				// Upload via temporary HOST_VISIBLE staging buffer
+				// Upload via temporary HOST_VISIBLE staging buffer using
+				// VMA_MEMORY_USAGE_CPU_ONLY (always HOST_VISIBLE|HOST_COHERENT).
 				VkBuffer	staging_buf{};
-				VkDeviceMemory staging_mem{};
+				VmaAllocation staging_alloc{};
 
 				VkBufferCreateInfo stg_info{};
 				stg_info.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 				stg_info.size		= size;
 				stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 				stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-				if (vkCreateBuffer(dev, &stg_info, nullptr, &staging_buf) != VK_SUCCESS)
-					throw Exception("Failed to create Vulkan buffer staging buffer");
 
-				VkMemoryRequirements stg_req{};
-				vkGetBufferMemoryRequirements(dev, staging_buf, &stg_req);
+				VmaAllocationCreateInfo stg_ci{};
+				stg_ci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
+				stg_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
-				VkMemoryAllocateInfo stg_alloc{};
-				stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-				stg_alloc.allocationSize  = stg_req.size;
-				stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
-					stg_req.memoryTypeBits,
-					VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-				if (vkAllocateMemory(dev, &stg_alloc, nullptr, &staging_mem) != VK_SUCCESS)
-				{
-					vkDestroyBuffer(dev, staging_buf, nullptr);
-					throw Exception("Failed to allocate Vulkan buffer staging memory");
-				}
-				if (vkBindBufferMemory(dev, staging_buf, staging_mem, 0) != VK_SUCCESS)
-				{
-					vkFreeMemory(dev, staging_mem, nullptr);
-					vkDestroyBuffer(dev, staging_buf, nullptr);
-					throw Exception("Failed to bind Vulkan buffer staging memory");
-				}
+				VmaAllocationInfo stg_info_out{};
+				if (vmaCreateBuffer(vk_device->get_allocator(), &stg_info, &stg_ci,
+									&staging_buf, &staging_alloc, &stg_info_out) != VK_SUCCESS)
+					throw Exception("Failed to create Vulkan staging buffer via VMA");
 
-				void *mapped = nullptr;
-				if (vkMapMemory(dev, staging_mem, 0, size, 0, &mapped) != VK_SUCCESS)
-				{
-					vkFreeMemory(dev, staging_mem, nullptr);
-					vkDestroyBuffer(dev, staging_buf, nullptr);
-					throw Exception("Failed to map Vulkan buffer staging memory");
-				}
-				std::memcpy(mapped, data, size);
-				vkUnmapMemory(dev, staging_mem);
+				// pMappedData is valid because of VMA_ALLOCATION_CREATE_MAPPED_BIT.
+				std::memcpy(stg_info_out.pMappedData, data, size);
 
 				VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 				VkBufferCopy copy_region{ 0, 0, static_cast<VkDeviceSize>(size) };
 				vkCmdCopyBuffer(cmd, staging_buf, buffer, 1, &copy_region);
 				vk_device->end_single_time_commands(cmd);
 
-				vkDestroyBuffer(dev, staging_buf, nullptr);
-				vkFreeMemory(dev, staging_mem, nullptr);
+				vmaDestroyBuffer(vk_device->get_allocator(), staging_buf, staging_alloc);
 			}
 			else
 			{
 				void *mapped = nullptr;
-				if (vkMapMemory(dev, device_memory, 0, size, 0, &mapped) != VK_SUCCESS)
-					throw Exception("Failed to map Vulkan buffer memory for upload");
+				if (vmaMapMemory(vk_device->get_allocator(), allocation, &mapped) != VK_SUCCESS)
+					throw Exception("Failed to map Vulkan buffer memory for initial upload");
 				std::memcpy(mapped, data, size);
-				vkUnmapMemory(dev, device_memory);
+				vmaUnmapMemory(vk_device->get_allocator(), allocation);
 			}
 		}
 	}
@@ -171,14 +139,14 @@ namespace clan
 	{
 		throw_if_disposed();
 		lock_gc = gc;
-		if (vkMapMemory(vk_device->get_device(), device_memory, 0, buffer_size, 0, &mapped_ptr) != VK_SUCCESS)
+		if (vmaMapMemory(vk_device->get_allocator(), allocation, &mapped_ptr) != VK_SUCCESS)
 			throw Exception("Failed to map Vulkan buffer memory for lock");
 	}
 
 	void VulkanBufferObjectProvider::unlock()
 	{
 		throw_if_disposed();
-		vkUnmapMemory(vk_device->get_device(), device_memory);
+		vmaUnmapMemory(vk_device->get_allocator(), allocation);
 		mapped_ptr = nullptr;
 		lock_gc	= GraphicContext();
 	}
@@ -205,78 +173,46 @@ namespace clan
 		if (host_visible)
 		{
 			void *mapped = nullptr;
-			if (vkMapMemory(vk_device->get_device(), device_memory, offset, size, 0, &mapped) != VK_SUCCESS)
+			if (vmaMapMemory(vk_device->get_allocator(), allocation, &mapped) != VK_SUCCESS)
 				throw Exception("Failed to map Vulkan buffer memory for upload_data");
-			std::memcpy(mapped, data, size);
+			std::memcpy(static_cast<uint8_t *>(mapped) + offset, data, size);
 
-			// If memory is not HOST_COHERENT we must flush the range manually.
+			// If not HOST_COHERENT, flush the written range explicitly.
 			if (!(memory_props & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT))
-			{
-				VkMappedMemoryRange flush_range{};
-				flush_range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-				flush_range.memory = device_memory;
-				flush_range.offset = offset;
-				flush_range.size   = size;
-				if (vkFlushMappedMemoryRanges(vk_device->get_device(), 1, &flush_range) != VK_SUCCESS)
-					throw Exception("Failed to flush Vulkan mapped memory range");
-			}
-			vkUnmapMemory(vk_device->get_device(), device_memory);
+				vmaFlushAllocation(vk_device->get_allocator(), allocation, offset, size);
+
+			vmaUnmapMemory(vk_device->get_allocator(), allocation);
 		}
 		else
 		{
 			// DEVICE_LOCAL: must go through a staging buffer + copy command + fence.
-			VkDevice dev = vk_device->get_device();
-
 			VkBuffer	stg_buf{};
-			VkDeviceMemory stg_mem{};
+			VmaAllocation stg_alloc{};
 
 			VkBufferCreateInfo stg_info{};
 			stg_info.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 			stg_info.size		= size;
 			stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 			stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
-				throw Exception("Failed to create Vulkan upload_data staging buffer");
 
-			VkMemoryRequirements stg_req{};
-			vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
+			VmaAllocationCreateInfo stg_ci{};
+			stg_ci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
+			stg_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
-			VkMemoryAllocateInfo stg_alloc{};
-			stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-			stg_alloc.allocationSize  = stg_req.size;
-			stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
-				stg_req.memoryTypeBits,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-			if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
-			{
-				vkDestroyBuffer(dev, stg_buf, nullptr);
-				throw Exception("Failed to allocate Vulkan upload_data staging memory");
-			}
-			if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
-			{
-				vkFreeMemory(dev, stg_mem, nullptr);
-				vkDestroyBuffer(dev, stg_buf, nullptr);
-				throw Exception("Failed to bind Vulkan upload_data staging memory");
-			}
+			VmaAllocationInfo stg_alloc_info{};
+			if (vmaCreateBuffer(vk_device->get_allocator(), &stg_info, &stg_ci,
+								&stg_buf, &stg_alloc, &stg_alloc_info) != VK_SUCCESS)
+				throw Exception("Failed to create upload_data staging buffer via VMA");
 
-			void *mapped = nullptr;
-			if (vkMapMemory(dev, stg_mem, 0, size, 0, &mapped) != VK_SUCCESS)
-			{
-				vkFreeMemory(dev, stg_mem, nullptr);
-				vkDestroyBuffer(dev, stg_buf, nullptr);
-				throw Exception("Failed to map Vulkan upload_data staging memory");
-			}
-			std::memcpy(mapped, data, size);
-			vkUnmapMemory(dev, stg_mem);
+			std::memcpy(stg_alloc_info.pMappedData, data, size);
 
-			// Issue copy + wait (equivalent to the glFenceSync + glClientWaitSync pattern)
 			VkCommandBuffer cmd = vk_device->begin_single_time_commands();
-			VkBufferCopy copy_region{ 0, static_cast<VkDeviceSize>(offset), static_cast<VkDeviceSize>(size) };
+			VkBufferCopy copy_region{ 0, static_cast<VkDeviceSize>(offset),
+									static_cast<VkDeviceSize>(size) };
 			vkCmdCopyBuffer(cmd, stg_buf, buffer, 1, &copy_region);
 			vk_device->end_single_time_commands(cmd);  // waits via vkQueueWaitIdle
 
-			vkDestroyBuffer(dev, stg_buf, nullptr);
-			vkFreeMemory(dev, stg_mem, nullptr);
+			vmaDestroyBuffer(vk_device->get_allocator(), stg_buf, stg_alloc);
 		}
 	}
 

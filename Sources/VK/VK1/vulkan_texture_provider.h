@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/volk.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include "API/Display/TargetProviders/texture_provider.h"
 #include "API/Core/System/disposable_object.h"
 
@@ -117,7 +117,7 @@ namespace clan
 
 		VulkanDevice   *vk_device	= nullptr;
 		VkImage		image		= VK_NULL_HANDLE;
-		VkDeviceMemory  image_memory  = VK_NULL_HANDLE;
+		VmaAllocation   image_memory  = VK_NULL_HANDLE;
 		VkImageView	image_view	= VK_NULL_HANDLE;
 		VkSampler	sampler	= VK_NULL_HANDLE;
 		VkFormat		vk_format	= VK_FORMAT_UNDEFINED;

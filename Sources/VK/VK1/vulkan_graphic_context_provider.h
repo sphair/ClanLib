@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/volk.h"
+#include "API/VK/vk_mem_alloc_config.h"
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -427,7 +427,7 @@ namespace clan
 		// descriptor set is fully populated and passes strict driver validation
 		// without requiring VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT.
 		VkImage		dummy_image		= VK_NULL_HANDLE;
-		VkDeviceMemory dummy_image_memory = VK_NULL_HANDLE;
+		VmaAllocation  dummy_image_alloc  = VK_NULL_HANDLE;
 		VkImageView	dummy_image_view   = VK_NULL_HANDLE;
 		VkSampler	dummy_sampler	= VK_NULL_HANDLE;
 	};
