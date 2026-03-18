@@ -33,6 +33,12 @@
 #include "VK/vulkan_context_description_impl.h"
 #include "API/Core/Text/logger.h"
 
+#ifdef WIN32
+#include <vulkan/vulkan_win32.h>
+#else
+#include <vulkan/vulkan_xlib.h>
+#endif
+
 #include <set>
 #include <algorithm>
 #include <stdexcept>
@@ -68,9 +74,9 @@ namespace clan
 			vkDestroyDevice(device, nullptr);
 		if (validation_enabled && debug_messenger != VK_NULL_HANDLE)
 		{
-			// volk loaded vkDestroyDebugUtilsMessengerEXT via volkLoadInstance().
-			if (vkDestroyDebugUtilsMessengerEXT)
-				vkDestroyDebugUtilsMessengerEXT(instance, debug_messenger, nullptr);
+			auto fn = (PFN_vkDestroyDebugUtilsMessengerEXT)
+				vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+			if (fn) fn(instance, debug_messenger, nullptr);
 		}
 		if (instance != VK_NULL_HANDLE)
 			vkDestroyInstance(instance, nullptr);
@@ -79,12 +85,6 @@ namespace clan
 	// -------------------------------------------------------------------------
 	void VulkanDevice::create_instance(const VulkanContextDescription &desc)
 	{
-		// Dynamically load the Vulkan loader library and resolve pre-instance
-		// entry points.  This must happen before any vk* call is made.
-		if (volkInitialize() != VK_SUCCESS)
-			throw Exception("Failed to load Vulkan loader library (volkInitialize). "
-							"Ensure the Vulkan runtime is installed.");
-
 		if (validation_enabled && !check_validation_layer_support())
 			throw Exception("Vulkan validation layers requested but not available");
 
@@ -124,12 +124,6 @@ namespace clan
 
 		if (vkCreateInstance(&create_info, nullptr, &instance) != VK_SUCCESS)
 			throw Exception("Failed to create Vulkan instance");
-
-		// Populate all instance-level function pointers via volk.
-		// This must be called immediately after vkCreateInstance so that
-		// every subsequent vk* call resolves through the loaded ICD rather
-		// than a stale or null pointer.
-		volkLoadInstance(instance);
 	}
 
 	// -------------------------------------------------------------------------
@@ -146,10 +140,9 @@ namespace clan
 			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 		create_info.pfnUserCallback = debug_callback;
 
-		// volk loaded vkCreateDebugUtilsMessengerEXT via volkLoadInstance().
-		// Call it directly; no manual vkGetInstanceProcAddr lookup needed.
-		if (!vkCreateDebugUtilsMessengerEXT ||
-			vkCreateDebugUtilsMessengerEXT(instance, &create_info, nullptr, &debug_messenger) != VK_SUCCESS)
+		auto fn = (PFN_vkCreateDebugUtilsMessengerEXT)
+			vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+		if (!fn || fn(instance, &create_info, nullptr, &debug_messenger) != VK_SUCCESS)
 			throw Exception("Failed to set up Vulkan debug messenger");
 	}
 
@@ -157,14 +150,12 @@ namespace clan
 	void VulkanDevice::pick_physical_device()
 	{
 		uint32_t device_count = 0;
-		if (vkEnumeratePhysicalDevices(instance, &device_count, nullptr) != VK_SUCCESS)
-			throw Exception("Failed to enumerate Vulkan physical devices");
+		vkEnumeratePhysicalDevices(instance, &device_count, nullptr);
 		if (device_count == 0)
 			throw Exception("No Vulkan-capable GPU found");
 
 		std::vector<VkPhysicalDevice> devices(device_count);
-		if (vkEnumeratePhysicalDevices(instance, &device_count, devices.data()) != VK_SUCCESS)
-			throw Exception("Failed to retrieve Vulkan physical devices");
+		vkEnumeratePhysicalDevices(instance, &device_count, devices.data());
 
 		int best_score = -1;
 		for (auto &dev : devices)
@@ -254,12 +245,6 @@ namespace clan
 		if (vkCreateDevice(physical_device, &create_info, nullptr, &device) != VK_SUCCESS)
 			throw Exception("Failed to create Vulkan logical device");
 
-		// Load all device-level function pointers directly from the driver.
-		// This bypasses the loader dispatch table, eliminating one level of
-		// indirection on every Vulkan call and enabling correct extension
-		// entry points for the specific driver/ICD that was selected.
-		volkLoadDevice(device);
-
 		vkGetDeviceQueue(device, graphics_family_index, 0, &graphics_queue);
 		vkGetDeviceQueue(device, present_family_index,  0, &present_queue);
 	}
@@ -285,8 +270,7 @@ namespace clan
 		for (uint32_t i = 0; i < qf_count; i++)
 		{
 			VkBool32 supports_present = VK_FALSE;
-			if (vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &supports_present) != VK_SUCCESS)
-				throw Exception("Failed to query Vulkan surface present support");
+			vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &supports_present);
 			if (supports_present)
 			{
 				present_family_index = i;
@@ -307,40 +291,26 @@ namespace clan
 		alloc_info.commandBufferCount = 1;
 
 		VkCommandBuffer cmd;
-		if (vkAllocateCommandBuffers(device, &alloc_info, &cmd) != VK_SUCCESS)
-			throw Exception("Failed to allocate Vulkan single-time command buffer");
+		vkAllocateCommandBuffers(device, &alloc_info, &cmd);
 
 		VkCommandBufferBeginInfo begin_info{};
 		begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		if (vkBeginCommandBuffer(cmd, &begin_info) != VK_SUCCESS)
-		{
-			vkFreeCommandBuffers(device, command_pool, 1, &cmd);
-			throw Exception("Failed to begin Vulkan single-time command buffer");
-		}
+		vkBeginCommandBuffer(cmd, &begin_info);
 		return cmd;
 	}
 
 	void VulkanDevice::end_single_time_commands(VkCommandBuffer cmd)
 	{
-		if (vkEndCommandBuffer(cmd) != VK_SUCCESS)
-		{
-			vkFreeCommandBuffers(device, command_pool, 1, &cmd);
-			throw Exception("Failed to end Vulkan single-time command buffer");
-		}
+		vkEndCommandBuffer(cmd);
 
 		VkSubmitInfo submit_info{};
 		submit_info.sType			= VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submit_info.commandBufferCount = 1;
 		submit_info.pCommandBuffers	= &cmd;
 
-		if (vkQueueSubmit(graphics_queue, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS)
-		{
-			vkFreeCommandBuffers(device, command_pool, 1, &cmd);
-			throw Exception("Failed to submit Vulkan single-time command buffer");
-		}
-		if (vkQueueWaitIdle(graphics_queue) != VK_SUCCESS)
-			throw Exception("Failed to wait for Vulkan graphics queue idle");
+		vkQueueSubmit(graphics_queue, 1, &submit_info, VK_NULL_HANDLE);
+		vkQueueWaitIdle(graphics_queue);
 		vkFreeCommandBuffers(device, command_pool, 1, &cmd);
 	}
 
@@ -382,11 +352,9 @@ namespace clan
 	bool VulkanDevice::check_validation_layer_support() const
 	{
 		uint32_t count = 0;
-		if (vkEnumerateInstanceLayerProperties(&count, nullptr) != VK_SUCCESS)
-			return false;
+		vkEnumerateInstanceLayerProperties(&count, nullptr);
 		std::vector<VkLayerProperties> available(count);
-		if (vkEnumerateInstanceLayerProperties(&count, available.data()) != VK_SUCCESS)
-			return false;
+		vkEnumerateInstanceLayerProperties(&count, available.data());
 
 		for (const char *layer : validation_layers)
 		{
@@ -408,11 +376,9 @@ namespace clan
 
 		// Check required extensions
 		uint32_t ext_count = 0;
-		if (vkEnumerateDeviceExtensionProperties(dev, nullptr, &ext_count, nullptr) != VK_SUCCESS)
-			return -1;
+		vkEnumerateDeviceExtensionProperties(dev, nullptr, &ext_count, nullptr);
 		std::vector<VkExtensionProperties> avail_exts(ext_count);
-		if (vkEnumerateDeviceExtensionProperties(dev, nullptr, &ext_count, avail_exts.data()) != VK_SUCCESS)
-			return -1;
+		vkEnumerateDeviceExtensionProperties(dev, nullptr, &ext_count, avail_exts.data());
 
 		for (const char *req : required_device_extensions)
 		{

@@ -113,8 +113,7 @@ namespace clan
 		if (vkAllocateMemory(dev, &alloc_info, nullptr, &image_memory) != VK_SUCCESS)
 			throw Exception("Failed to allocate Vulkan render buffer memory");
 
-		if (vkBindImageMemory(dev, image, image_memory, 0) != VK_SUCCESS)
-			throw Exception("Failed to bind Vulkan render buffer image memory");
+		vkBindImageMemory(dev, image, image_memory, 0);
 
 		VkImageAspectFlags aspect = is_depth
 			? (VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT)

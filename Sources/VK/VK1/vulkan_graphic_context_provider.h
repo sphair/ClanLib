@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/volk.h"
+#include <vulkan/vulkan.h>
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -426,10 +426,10 @@ namespace clan
 		// texture binding slot (0..15) that has no real texture bound so that the
 		// descriptor set is fully populated and passes strict driver validation
 		// without requiring VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT.
-		VkImage		dummy_image		= VK_NULL_HANDLE;
+		VkImage        dummy_image        = VK_NULL_HANDLE;
 		VkDeviceMemory dummy_image_memory = VK_NULL_HANDLE;
-		VkImageView	dummy_image_view   = VK_NULL_HANDLE;
-		VkSampler	dummy_sampler	= VK_NULL_HANDLE;
+		VkImageView    dummy_image_view   = VK_NULL_HANDLE;
+		VkSampler      dummy_sampler      = VK_NULL_HANDLE;
 	};
 
 } // namespace clan

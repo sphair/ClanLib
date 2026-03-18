@@ -88,8 +88,7 @@ void VulkanPixelBufferProvider::ensure_buffer(VkDeviceSize bytes)
 	if (vkAllocateMemory(dev, &ai, nullptr, &memory) != VK_SUCCESS)
 		throw Exception("VulkanPixelBufferProvider: vkAllocateMemory failed");
 
-	if (vkBindBufferMemory(dev, buffer, memory, 0) != VK_SUCCESS)
-		throw Exception("VulkanPixelBufferProvider: vkBindBufferMemory failed");
+	vkBindBufferMemory(dev, buffer, memory, 0);
 	allocated_bytes = mr.size;
 }
 
@@ -128,8 +127,7 @@ void VulkanPixelBufferProvider::create(const void *data, const Size &size,
 	{
 		// Upload initial data (replaces glBufferData with non-null pointer)
 		void *mapped = nullptr;
-		if (vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped) != VK_SUCCESS)
-			throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during create");
+		vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped);
 		std::memcpy(mapped, data, static_cast<size_t>(bytes));
 		vkUnmapMemory(vk_device->get_device(), memory);
 	}
@@ -142,8 +140,7 @@ void VulkanPixelBufferProvider::create(const void *data, const Size &size,
 void VulkanPixelBufferProvider::lock(GraphicContext & /*gc*/, BufferAccess /*access*/)
 {
 	if (mapped_ptr || buffer == VK_NULL_HANDLE) return;
-	if (vkMapMemory(vk_device->get_device(), memory, 0, allocated_bytes, 0, &mapped_ptr) != VK_SUCCESS)
-		throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during lock");
+	vkMapMemory(vk_device->get_device(), memory, 0, allocated_bytes, 0, &mapped_ptr);
 }
 
 void VulkanPixelBufferProvider::unlock()
@@ -205,8 +202,7 @@ void VulkanPixelBufferProvider::upload_data(GraphicContext & /*gc*/,
 						dest_rect.get_height() * bpp;
 
 	void *mapped = nullptr;
-	if (vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped) != VK_SUCCESS)
-		throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during upload_data");
+	vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped);
 	std::memcpy(mapped, data, static_cast<size_t>(bytes));
 	vkUnmapMemory(vk_device->get_device(), memory);
 }
