@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/vk_mem_alloc_config.h"
+#include "API/VK/volk.h"
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -80,10 +80,6 @@ namespace clan
 
 		VkCommandPool get_command_pool() const { return command_pool; }
 
-		/// Return the VMA allocator.  All buffer/image memory allocations must
-		/// go through this rather than calling vkAllocateMemory directly.
-		VmaAllocator get_allocator() const { return vma_allocator; }
-
 		// ---- Surface support (called after first window creates its surface) ----
 		/// Re-query present queue family once we have a real surface.
 		void init_present_queue(VkSurfaceKHR surface);
@@ -94,7 +90,6 @@ namespace clan
 		void pick_physical_device();
 		void create_logical_device(const VulkanContextDescription &desc);
 		void create_command_pool();
-		void create_vma_allocator();
 
 		bool check_validation_layer_support() const;
 		bool is_device_suitable(VkPhysicalDevice dev) const;
@@ -113,7 +108,6 @@ namespace clan
 		VkQueue				graphics_queue	= VK_NULL_HANDLE;
 		VkQueue				present_queue	= VK_NULL_HANDLE;
 		VkCommandPool			command_pool		= VK_NULL_HANDLE;
-		VmaAllocator			vma_allocator		= VK_NULL_HANDLE;
 
 		uint32_t graphics_family_index = UINT32_MAX;
 		uint32_t present_family_index  = UINT32_MAX;

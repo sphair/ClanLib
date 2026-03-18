@@ -37,7 +37,6 @@
 #endif
 
 #include "VK/volk.h"
-#include "VK/vk_mem_alloc_config.h"
 #include "VK/vulkan_target.h"
 #include "VK/setup_vulkan.h"
 #include "VK/vulkan_context_description.h"

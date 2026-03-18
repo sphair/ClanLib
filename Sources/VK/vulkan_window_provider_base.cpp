@@ -29,7 +29,6 @@
 
 #include "VK/precomp.h"
 #include "VK/vulkan_window_provider_base.h"
-#include "API/VK/vk_mem_alloc_config.h"
 #include "VK/vulkan_device.h"
 #include "VK/VK1/vulkan_graphic_context_provider.h"
 #include "API/Display/Render/graphic_context.h"
@@ -157,11 +156,23 @@ void VulkanWindowProviderBase::create_depth_resources()
 	image_info.samples	= VK_SAMPLE_COUNT_1_BIT;
 	image_info.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
 
-	VmaAllocationCreateInfo depth_alloc_ci{};
-	depth_alloc_ci.usage = VMA_MEMORY_USAGE_GPU_ONLY;
-	if (vmaCreateImage(dev->get_allocator(), &image_info, &depth_alloc_ci,
-					&depth_image, &depth_image_memory, nullptr) != VK_SUCCESS)
-		throw Exception("Failed to create depth image via VMA");
+	if (vkCreateImage(vk_dev, &image_info, nullptr, &depth_image) != VK_SUCCESS)
+		throw Exception("Failed to create depth image");
+
+	VkMemoryRequirements mem_req{};
+	vkGetImageMemoryRequirements(vk_dev, depth_image, &mem_req);
+
+	VkMemoryAllocateInfo alloc_info{};
+	alloc_info.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	alloc_info.allocationSize  = mem_req.size;
+	alloc_info.memoryTypeIndex = dev->find_memory_type(
+		mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+	if (vkAllocateMemory(vk_dev, &alloc_info, nullptr, &depth_image_memory) != VK_SUCCESS)
+		throw Exception("Failed to allocate depth image memory");
+
+	if (vkBindImageMemory(vk_dev, depth_image, depth_image_memory, 0) != VK_SUCCESS)
+		throw Exception("Failed to bind depth image memory");
 
 	VkImageViewCreateInfo view_info{};
 	view_info.sType						= VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -264,12 +275,8 @@ void VulkanWindowProviderBase::cleanup_swapchain()
 	VkDevice	vk_dev = dev->get_device();
 
 	if (depth_image_view   != VK_NULL_HANDLE) { vkDestroyImageView(vk_dev, depth_image_view,   nullptr); depth_image_view   = VK_NULL_HANDLE; }
-	if (depth_image != VK_NULL_HANDLE)
-	{
-		vmaDestroyImage(dev->get_allocator(), depth_image, depth_image_memory);
-		depth_image		= VK_NULL_HANDLE;
-		depth_image_memory = VK_NULL_HANDLE;
-	}
+	if (depth_image		!= VK_NULL_HANDLE) { vkDestroyImage	(vk_dev, depth_image,		nullptr); depth_image		= VK_NULL_HANDLE; }
+	if (depth_image_memory != VK_NULL_HANDLE) { vkFreeMemory	(vk_dev, depth_image_memory,  nullptr); depth_image_memory = VK_NULL_HANDLE; }
 
 	for (auto &fb : swapchain_framebuffers) vkDestroyFramebuffer(vk_dev, fb, nullptr);
 	swapchain_framebuffers.clear();

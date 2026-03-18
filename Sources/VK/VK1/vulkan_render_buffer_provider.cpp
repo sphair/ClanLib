@@ -49,18 +49,9 @@ namespace clan
 	{
 		if (!vk_device) return;
 		VkDevice dev = vk_device->get_device();
-		if (image_view != VK_NULL_HANDLE)
-		{
-			vkDestroyImageView(dev, image_view, nullptr);
-			image_view = VK_NULL_HANDLE;
-		}
-		if (image != VK_NULL_HANDLE)
-		{
-			// vmaDestroyImage destroys both the VkImage and frees the allocation.
-			vmaDestroyImage(vk_device->get_allocator(), image, allocation);
-			image	= VK_NULL_HANDLE;
-			allocation = VK_NULL_HANDLE;
-		}
+		if (image_view  != VK_NULL_HANDLE) { vkDestroyImageView(dev, image_view, nullptr);  image_view = VK_NULL_HANDLE; }
+		if (image	!= VK_NULL_HANDLE) { vkDestroyImage(dev, image, nullptr);			image = VK_NULL_HANDLE; }
+		if (image_memory!= VK_NULL_HANDLE) { vkFreeMemory(dev, image_memory, nullptr);	image_memory = VK_NULL_HANDLE; }
 	}
 
 	void VulkanRenderBufferProvider::create(int width, int height,
@@ -71,8 +62,10 @@ namespace clan
 		if (!vk_device)
 			throw Exception("VulkanRenderBufferProvider::create() called without a device — call set_device() first");
 
+		// Store dimensions so get_size() works after create()
 		rb_width  = width;
 		rb_height = height;
+
 		vk_format = to_vk_format(texture_format);
 
 		VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
@@ -104,19 +97,28 @@ namespace clan
 		img_info.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
 		img_info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-		VmaAllocationCreateInfo alloc_ci{};
-		alloc_ci.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		VkDevice dev = vk_device->get_device();
+		if (vkCreateImage(dev, &img_info, nullptr, &image) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan render buffer image");
 
-		if (vmaCreateImage(vk_device->get_allocator(), &img_info, &alloc_ci,
-						&image, &allocation, nullptr) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan render buffer image via VMA");
+		VkMemoryRequirements mem_req{};
+		vkGetImageMemoryRequirements(dev, image, &mem_req);
+
+		VkMemoryAllocateInfo alloc_info{};
+		alloc_info.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		alloc_info.allocationSize  = mem_req.size;
+		alloc_info.memoryTypeIndex = vk_device->find_memory_type(
+			mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+		if (vkAllocateMemory(dev, &alloc_info, nullptr, &image_memory) != VK_SUCCESS)
+			throw Exception("Failed to allocate Vulkan render buffer memory");
+
+		if (vkBindImageMemory(dev, image, image_memory, 0) != VK_SUCCESS)
+			throw Exception("Failed to bind Vulkan render buffer image memory");
 
 		VkImageAspectFlags aspect = is_depth
 			? (VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT)
 			: VK_IMAGE_ASPECT_COLOR_BIT;
-		// Pure depth-only formats don't have a stencil aspect.
-		if (vk_format == VK_FORMAT_D32_SFLOAT)
-			aspect = VK_IMAGE_ASPECT_DEPTH_BIT;
 
 		VkImageViewCreateInfo view_info{};
 		view_info.sType						= VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -129,7 +131,7 @@ namespace clan
 		view_info.subresourceRange.baseArrayLayer = 0;
 		view_info.subresourceRange.layerCount	= 1;
 
-		if (vkCreateImageView(vk_device->get_device(), &view_info, nullptr, &image_view) != VK_SUCCESS)
+		if (vkCreateImageView(dev, &view_info, nullptr, &image_view) != VK_SUCCESS)
 			throw Exception("Failed to create Vulkan render buffer image view");
 	}
 
@@ -139,10 +141,10 @@ namespace clan
 		{
 		case TextureFormat::rgba8:			return VK_FORMAT_R8G8B8A8_UNORM;
 		case TextureFormat::bgra8:			return VK_FORMAT_B8G8R8A8_UNORM;
-		case TextureFormat::rgba16f:			return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case TextureFormat::rgba32f:			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case TextureFormat::depth24_stencil8:   return VK_FORMAT_D24_UNORM_S8_UINT;
-		case TextureFormat::depth_component32f: return VK_FORMAT_D32_SFLOAT;
+		case TextureFormat::rgba16f:		return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case TextureFormat::rgba32f:		return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case TextureFormat::depth24_stencil8: return VK_FORMAT_D24_UNORM_S8_UINT;
+		case TextureFormat::depth_component32f:		return VK_FORMAT_D32_SFLOAT;
 		default:
 			throw Exception("VulkanRenderBufferProvider: unsupported TextureFormat");
 		}

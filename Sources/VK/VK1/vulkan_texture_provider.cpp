@@ -96,14 +96,12 @@ namespace clan
 		if (!vk_device) return;
 		VkDevice dev = vk_device->get_device();
 
-		if (sampler	!= VK_NULL_HANDLE) { vkDestroySampler(dev, sampler, nullptr);	sampler	= VK_NULL_HANDLE; }
-		if (image_view  != VK_NULL_HANDLE) { vkDestroyImageView(dev, image_view, nullptr); image_view  = VK_NULL_HANDLE; }
-		if (owns_image && image != VK_NULL_HANDLE)
+		if (sampler	!= VK_NULL_HANDLE) { vkDestroySampler(dev, sampler, nullptr);		sampler = VK_NULL_HANDLE; }
+		if (image_view   != VK_NULL_HANDLE) { vkDestroyImageView(dev, image_view, nullptr);	image_view = VK_NULL_HANDLE; }
+		if (owns_image)
 		{
-			// vmaDestroyImage destroys VkImage and frees the VmaAllocation together.
-			vmaDestroyImage(vk_device->get_allocator(), image, image_memory);
-			image		= VK_NULL_HANDLE;
-			image_memory = VK_NULL_HANDLE;
+			if (image		!= VK_NULL_HANDLE) { vkDestroyImage(dev, image, nullptr);		image = VK_NULL_HANDLE; }
+			if (image_memory != VK_NULL_HANDLE) { vkFreeMemory(dev, image_memory, nullptr);	image_memory = VK_NULL_HANDLE; }
 		}
 	}
 
@@ -144,13 +142,23 @@ namespace clan
 		if (view_type == VK_IMAGE_VIEW_TYPE_CUBE)
 			img_info.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
-		VmaAllocationCreateInfo alloc_ci{};
-		alloc_ci.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+		if (vkCreateImage(vk_device->get_device(), &img_info, nullptr, &image) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan texture image");
 
-		if (vmaCreateImage(vk_device->get_allocator(), &img_info, &alloc_ci,
-						&image, &image_memory, nullptr) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan texture image via VMA");
+		VkMemoryRequirements mem_req{};
+		vkGetImageMemoryRequirements(vk_device->get_device(), image, &mem_req);
 
+		VkMemoryAllocateInfo alloc_info{};
+		alloc_info.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		alloc_info.allocationSize  = mem_req.size;
+		alloc_info.memoryTypeIndex = vk_device->find_memory_type(
+			mem_req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+		if (vkAllocateMemory(vk_device->get_device(), &alloc_info, nullptr, &image_memory) != VK_SUCCESS)
+			throw Exception("Failed to allocate Vulkan texture memory");
+
+		if (vkBindImageMemory(vk_device->get_device(), image, image_memory, 0) != VK_SUCCESS)
+			throw Exception("Failed to bind Vulkan texture image memory");
 		current_layout = VK_IMAGE_LAYOUT_UNDEFINED;
 
 		create_image_view();
@@ -169,44 +177,67 @@ namespace clan
 		// Convert pixel data to RGBA8 for simplicity (mirror of GL3 fallback)
 		PixelBuffer converted = src.to_format(TextureFormat::rgba8);
 
-		int copy_width	= src_rect.get_width();
-		int copy_height	= src_rect.get_height();
+		int copy_width  = src_rect.get_width();
+		int copy_height = src_rect.get_height();
 		int bytes_per_pixel = 4; // rgba8
-		int row_bytes	= copy_width * bytes_per_pixel;
-		int total_bytes	= row_bytes * copy_height;
+		int row_bytes   = copy_width * bytes_per_pixel;
+		int total_bytes = row_bytes * copy_height;
 
-		// Flip vertically (GL y_bottom_up -> Vulkan y_top_down)
+		// Flip vertically (GL y_bottom_up → Vulkan y_top_down)
 		std::vector<uint8_t> flipped(total_bytes);
 		const uint8_t *src_data = converted.get_data<uint8_t>() +
 								src_rect.top * converted.get_pitch() +
 								src_rect.left * bytes_per_pixel;
 		for (int row = 0; row < copy_height; row++)
 		{
-			const uint8_t *src_row = src_data + row * converted.get_pitch();
-			uint8_t	*dst_row = flipped.data() + (copy_height - 1 - row) * row_bytes;
+			const uint8_t *src_row  = src_data  + row * converted.get_pitch();
+			uint8_t	*dst_row  = flipped.data() + (copy_height - 1 - row) * row_bytes;
 			std::memcpy(dst_row, src_row, row_bytes);
 		}
 
-		// Upload via staging buffer (VMA CPU_ONLY, persistently mapped).
+		// Upload via staging buffer
+		VkDevice dev = vk_device->get_device();
+
 		VkBuffer	stg_buf{};
-		VmaAllocation stg_alloc{};
+		VkDeviceMemory stg_mem{};
 
 		VkBufferCreateInfo stg_info{};
 		stg_info.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		stg_info.size		= total_bytes;
 		stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan texture upload staging buffer");
 
-		VmaAllocationCreateInfo stg_ci{};
-		stg_ci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
-		stg_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		VkMemoryRequirements stg_req{};
+		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
+		VkMemoryAllocateInfo stg_alloc{};
+		stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		stg_alloc.allocationSize  = stg_req.size;
+		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
+			stg_req.memoryTypeBits,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to allocate Vulkan texture upload staging memory");
+		}
+		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to bind Vulkan texture upload staging memory");
+		}
 
-		VmaAllocationInfo stg_info_out{};
-		if (vmaCreateBuffer(vk_device->get_allocator(), &stg_info, &stg_ci,
-							&stg_buf, &stg_alloc, &stg_info_out) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan texture upload staging buffer via VMA");
-
-		std::memcpy(stg_info_out.pMappedData, flipped.data(), total_bytes);
+		void *mapped = nullptr;
+		if (vkMapMemory(dev, stg_mem, 0, total_bytes, 0, &mapped) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to map Vulkan texture upload staging memory");
+		}
+		std::memcpy(mapped, flipped.data(), total_bytes);
+		vkUnmapMemory(dev, stg_mem);
 
 		VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 
@@ -255,7 +286,8 @@ namespace clan
 
 		vk_device->end_single_time_commands(cmd);
 
-		vmaDestroyBuffer(vk_device->get_allocator(), stg_buf, stg_alloc);
+		vkDestroyBuffer(dev, stg_buf, nullptr);
+		vkFreeMemory(dev, stg_mem, nullptr);
 	}
 
 	// ---- get_pixeldata() – replaces glGetTexImage ----
@@ -269,23 +301,38 @@ namespace clan
 		int mip_h = std::max(height >> level, 1);
 		int bytes = mip_w * mip_h * 4; // readback as RGBA8
 
+		VkDevice dev = vk_device->get_device();
+
 		VkBuffer	stg_buf{};
-		VmaAllocation stg_alloc{};
+		VkDeviceMemory stg_mem{};
 
 		VkBufferCreateInfo stg_info{};
 		stg_info.sType	= VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		stg_info.size		= bytes;
 		stg_info.usage	= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 		stg_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		if (vkCreateBuffer(dev, &stg_info, nullptr, &stg_buf) != VK_SUCCESS)
+			throw Exception("Failed to create Vulkan texture readback staging buffer");
 
-		VmaAllocationCreateInfo stg_ci{};
-		stg_ci.usage = VMA_MEMORY_USAGE_GPU_TO_CPU;
-		stg_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
-
-		VmaAllocationInfo stg_info_out{};
-		if (vmaCreateBuffer(vk_device->get_allocator(), &stg_info, &stg_ci,
-							&stg_buf, &stg_alloc, &stg_info_out) != VK_SUCCESS)
-			throw Exception("Failed to create Vulkan texture readback staging buffer via VMA");
+		VkMemoryRequirements stg_req{};
+		vkGetBufferMemoryRequirements(dev, stg_buf, &stg_req);
+		VkMemoryAllocateInfo stg_alloc{};
+		stg_alloc.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		stg_alloc.allocationSize  = stg_req.size;
+		stg_alloc.memoryTypeIndex = vk_device->find_memory_type(
+			stg_req.memoryTypeBits,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+		if (vkAllocateMemory(dev, &stg_alloc, nullptr, &stg_mem) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to allocate Vulkan texture readback staging memory");
+		}
+		if (vkBindBufferMemory(dev, stg_buf, stg_mem, 0) != VK_SUCCESS)
+		{
+			vkFreeMemory(dev, stg_mem, nullptr);
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			throw Exception("Failed to bind Vulkan texture readback staging memory");
+		}
 
 		VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 
@@ -316,7 +363,7 @@ namespace clan
 		region.imageExtent					= { (uint32_t)mip_w, (uint32_t)mip_h, 1 };
 		vkCmdCopyImageToBuffer(cmd, image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, stg_buf, 1, &region);
 
-		// Transition back to SHADER_READ_ONLY
+		// Transition back
 		barrier.oldLayout	= VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
 		barrier.newLayout	= VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
@@ -328,21 +375,25 @@ namespace clan
 
 		vk_device->end_single_time_commands(cmd);
 
-		// The GPU_TO_CPU memory is readable via the persistently-mapped pointer.
-		// Invalidate before reading to ensure CPU sees the latest GPU writes.
-		vmaInvalidateAllocation(vk_device->get_allocator(), stg_alloc, 0, VK_WHOLE_SIZE);
-
+		void *mapped = nullptr;
+		if (vkMapMemory(dev, stg_mem, 0, bytes, 0, &mapped) != VK_SUCCESS)
+		{
+			vkDestroyBuffer(dev, stg_buf, nullptr);
+			vkFreeMemory(dev, stg_mem, nullptr);
+			throw Exception("Failed to map Vulkan texture readback staging memory");
+		}
 		PixelBuffer result(mip_w, mip_h, TextureFormat::rgba8);
-		const uint8_t *src_ptr = static_cast<const uint8_t *>(stg_info_out.pMappedData);
 		// Flip back to bottom-up (GL convention) for callers expecting y_bottom_up
+		const uint8_t *src_ptr = static_cast<const uint8_t *>(mapped);
 		for (int row = 0; row < mip_h; row++)
 		{
 			const uint8_t *src_row = src_ptr + row * mip_w * 4;
-			uint8_t	*dst_row = result.get_data<uint8_t>() + (mip_h - 1 - row) * result.get_pitch();
+			uint8_t *dst_row = result.get_data<uint8_t>() + (mip_h - 1 - row) * result.get_pitch();
 			std::memcpy(dst_row, src_row, mip_w * 4);
 		}
-
-		vmaDestroyBuffer(vk_device->get_allocator(), stg_buf, stg_alloc);
+		vkUnmapMemory(dev, stg_mem);
+		vkDestroyBuffer(dev, stg_buf, nullptr);
+		vkFreeMemory(dev, stg_mem, nullptr);
 
 		if (texture_format != TextureFormat::rgba8)
 			return result.to_format(texture_format);
@@ -356,6 +407,9 @@ namespace clan
 		VkCommandBuffer cmd = vk_device->begin_single_time_commands();
 
 		// Transition level 0 from its current layout to TRANSFER_SRC_OPTIMAL.
+		// After create() or copy_from() the image is in SHADER_READ_ONLY_OPTIMAL,
+		// not TRANSFER_DST_OPTIMAL, so we cannot assume the loop's first barrier
+		// will see the right oldLayout.  We handle level 0 explicitly here.
 		{
 			VkImageMemoryBarrier b0{};
 			b0.sType						= VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -382,6 +436,7 @@ namespace clan
 
 		for (int i = 1; i < mip_levels; i++)
 		{
+			// Transition destination level i to TRANSFER_DST_OPTIMAL before blitting into it
 			VkImageMemoryBarrier barrier{};
 			barrier.sType						= VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 			barrier.image						= image;
@@ -419,6 +474,8 @@ namespace clan
 				image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 				1, &blit, VK_FILTER_LINEAR);
 
+			// Transition level i from TRANSFER_DST to TRANSFER_SRC so the next
+			// iteration can blit from it, then at the end transition to SHADER_READ_ONLY.
 			barrier.subresourceRange.baseMipLevel = i;
 			barrier.oldLayout	= VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 			barrier.newLayout	= VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
@@ -434,6 +491,7 @@ namespace clan
 		}
 
 		// Transition all levels from TRANSFER_SRC_OPTIMAL to SHADER_READ_ONLY_OPTIMAL
+		// in a single barrier covering the whole mip chain.
 		{
 			VkImageMemoryBarrier final_barrier{};
 			final_barrier.sType						= VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -459,7 +517,9 @@ namespace clan
 		current_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	}
 
-	// ---- Sampler state setters ----
+	// ---- Sampler state setters – each rebuilds the VkSampler ----
+	// Unlike GL where glTexParameter() took effect immediately on the bound texture,
+	// Vulkan requires a VkSampler to be explicitly created.
 
 	void VulkanTextureProvider::set_min_lod(double v)	{ min_lod_val  = (float)v;  rebuild_sampler(); }
 	void VulkanTextureProvider::set_max_lod(double v)	{ max_lod_val  = (float)v;  rebuild_sampler(); }
@@ -478,7 +538,7 @@ namespace clan
 	{
 		min_filter_vk = to_vk_filter(f);
 		mipmap_mode   = (f == TextureFilter::nearest || f == TextureFilter::nearest_mipmap_nearest)
-					? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
+						? VK_SAMPLER_MIPMAP_MODE_NEAREST : VK_SAMPLER_MIPMAP_MODE_LINEAR;
 		rebuild_sampler();
 	}
 
@@ -516,8 +576,8 @@ namespace clan
 	}
 
 	void VulkanTextureProvider::copy_subimage_from(int ox, int oy, int x, int y,
-												int w, int h, int level,
-												GraphicContextProvider *gc)
+													int w, int h, int level,
+													GraphicContextProvider *gc)
 	{
 		// TODO: vkCmdCopyImage subregion.
 		throw Exception("VulkanTextureProvider::copy_subimage_from() not yet implemented");
@@ -563,6 +623,7 @@ namespace clan
 		}
 
 		VkImageAspectFlags aspect = VK_IMAGE_ASPECT_COLOR_BIT;
+		// For depth/stencil formats adjust the aspect
 		if (vk_format == VK_FORMAT_D24_UNORM_S8_UINT || vk_format == VK_FORMAT_D32_SFLOAT_S8_UINT)
 			aspect = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 		else if (vk_format == VK_FORMAT_D32_SFLOAT)
@@ -629,15 +690,15 @@ namespace clan
 	{
 		switch (fmt)
 		{
-		case TextureFormat::rgba8:			return VK_FORMAT_R8G8B8A8_UNORM;
-		case TextureFormat::bgra8:			return VK_FORMAT_B8G8R8A8_UNORM;
+		case TextureFormat::rgba8:		return VK_FORMAT_R8G8B8A8_UNORM;
+		case TextureFormat::bgra8:		return VK_FORMAT_B8G8R8A8_UNORM;
 		case TextureFormat::rgb8:			return VK_FORMAT_R8G8B8_UNORM;
-		case TextureFormat::r8:				return VK_FORMAT_R8_UNORM;
-		case TextureFormat::rg8:				return VK_FORMAT_R8G8_UNORM;
-		case TextureFormat::rgba16f:			return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case TextureFormat::rgba32f:			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case TextureFormat::depth24_stencil8:   return VK_FORMAT_D24_UNORM_S8_UINT;
-		case TextureFormat::depth_component32f: return VK_FORMAT_D32_SFLOAT;
+		case TextureFormat::r8:			return VK_FORMAT_R8_UNORM;
+		case TextureFormat::rg8:			return VK_FORMAT_R8G8_UNORM;
+		case TextureFormat::rgba16f:		return VK_FORMAT_R16G16B16A16_SFLOAT;
+		case TextureFormat::rgba32f:		return VK_FORMAT_R32G32B32A32_SFLOAT;
+		case TextureFormat::depth24_stencil8:return VK_FORMAT_D24_UNORM_S8_UINT;
+		case TextureFormat::depth_component32f:		return VK_FORMAT_D32_SFLOAT;
 		default:
 			throw Exception("VulkanTextureProvider: unsupported TextureFormat");
 		}
@@ -660,10 +721,10 @@ namespace clan
 	{
 		switch (m)
 		{
-		case TextureWrapMode::clamp_to_edge:	return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		case TextureWrapMode::clamp_to_edge:   return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 		case TextureWrapMode::repeat:		return VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		case TextureWrapMode::mirrored_repeat:  return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
-		default:								return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+		case TextureWrapMode::mirrored_repeat: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+		default:							return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
 		}
 	}
 

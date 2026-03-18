@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/vk_mem_alloc_config.h"
+#include "API/VK/volk.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
 
@@ -54,10 +54,10 @@ namespace clan
 		void set_device(VulkanDevice *device) { vk_device = device; }
 
 		VkImage	get_image()	const { return image; }
-		VkImageView get_image_view() const { return image_view; }
+		VkImageView   get_image_view() const { return image_view; }
 		VkFormat	get_format()	const { return vk_format; }
 
-		/// Returns the size of this render buffer (width x height in pixels).
+		/// Returns the size of this render buffer (width × height in pixels).
 		/// Used by VulkanFrameBufferProvider::attach_color(int, RenderBuffer) to
 		/// record fb_width / fb_height when a render buffer is attached.
 		Size get_size() const { return Size(rb_width, rb_height); }
@@ -69,8 +69,8 @@ namespace clan
 
 		VulkanDevice   *vk_device	= nullptr;
 		VkImage		image		= VK_NULL_HANDLE;
-		VmaAllocation   allocation   = VK_NULL_HANDLE;
-		VkImageView	image_view   = VK_NULL_HANDLE;
+		VkDeviceMemory  image_memory  = VK_NULL_HANDLE;
+		VkImageView	image_view	= VK_NULL_HANDLE;
 		VkFormat		vk_format	= VK_FORMAT_UNDEFINED;
 		int			rb_width	= 0;
 		int			rb_height	= 0;

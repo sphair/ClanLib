@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/VK/vk_mem_alloc_config.h"
+#include "API/VK/volk.h"
 #include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Core/System/disposable_object.h"
@@ -38,7 +38,7 @@ namespace clan
 {
 	class VulkanDevice;
 
-	/// \brief Vulkan buffer + VMA allocation
+	/// \brief Vulkan buffer + device memory
 	class VulkanBufferObjectProvider : public DisposableObject
 	{
 	public:
@@ -57,8 +57,9 @@ namespace clan
 					VkBufferUsageFlags usage_flags,
 					VkMemoryPropertyFlags memory_props);
 
-		VkBuffer get_buffer() const { return buffer; }
-		int	get_size()   const { return buffer_size; }
+		VkBuffer	get_buffer()		const { return buffer; }
+		VkDeviceMemory get_device_memory() const { return device_memory; }
+		int			get_size()		const { return buffer_size; }
 
 		/// Map the buffer for CPU access.  Requires HOST_VISIBLE memory.
 		void  lock(GraphicContext &gc, BufferAccess access);
@@ -79,15 +80,15 @@ namespace clan
 	private:
 		void on_dispose() override;
 
-		VulkanDevice	*vk_device	= nullptr;
-		VkBuffer		buffer	= VK_NULL_HANDLE;
-		VmaAllocation	allocation   = VK_NULL_HANDLE;
-		int			buffer_size  = 0;
+		VulkanDevice   *vk_device	= nullptr;
+		VkBuffer		buffer		= VK_NULL_HANDLE;
+		VkDeviceMemory  device_memory = VK_NULL_HANDLE;
+		int			buffer_size   = 0;
 
-		void			*mapped_ptr   = nullptr;
-		GraphicContext   lock_gc;
+		void		*mapped_ptr	= nullptr;
+		GraphicContext  lock_gc;
 
-		VkBufferUsageFlags	usage_flags   = 0;
-		VkMemoryPropertyFlags memory_props  = 0;
+		VkBufferUsageFlags   usage_flags   = 0;
+		VkMemoryPropertyFlags memory_props = 0;
 	};
 }

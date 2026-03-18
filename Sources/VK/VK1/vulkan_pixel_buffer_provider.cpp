@@ -39,12 +39,14 @@ VulkanPixelBufferProvider::~VulkanPixelBufferProvider() { dispose(); }
 
 void VulkanPixelBufferProvider::on_dispose()
 {
-	unlock();  // unmap if still mapped
-	if (vk_device && buffer != VK_NULL_HANDLE)
+	unlock();   // unmap if still mapped
+	if (vk_device)
 	{
-		vmaDestroyBuffer(vk_device->get_allocator(), buffer, allocation);
-		buffer	= VK_NULL_HANDLE;
-		allocation = VK_NULL_HANDLE;
+		VkDevice dev = vk_device->get_device();
+		if (buffer != VK_NULL_HANDLE)
+		{ vkDestroyBuffer(dev, buffer, nullptr); buffer = VK_NULL_HANDLE; }
+		if (memory != VK_NULL_HANDLE)
+		{ vkFreeMemory(dev, memory, nullptr);  memory = VK_NULL_HANDLE; }
 	}
 }
 
@@ -56,18 +58,11 @@ void VulkanPixelBufferProvider::ensure_buffer(VkDeviceSize bytes)
 {
 	if (bytes <= allocated_bytes && buffer != VK_NULL_HANDLE) return;
 
-	// Destroy old resources first (unlock mapped pointer if needed).
-	if (mapped_ptr)
-	{
-		vmaUnmapMemory(vk_device->get_allocator(), allocation);
-		mapped_ptr = nullptr;
-	}
-	if (buffer != VK_NULL_HANDLE)
-	{
-		vmaDestroyBuffer(vk_device->get_allocator(), buffer, allocation);
-		buffer	= VK_NULL_HANDLE;
-		allocation = VK_NULL_HANDLE;
-	}
+	// Destroy old resources
+	VkDevice dev = vk_device->get_device();
+	if (mapped_ptr) { vkUnmapMemory(dev, memory); mapped_ptr = nullptr; }
+	if (buffer != VK_NULL_HANDLE) { vkDestroyBuffer(dev, buffer, nullptr); buffer = VK_NULL_HANDLE; }
+	if (memory != VK_NULL_HANDLE) { vkFreeMemory(dev, memory, nullptr);   memory = VK_NULL_HANDLE; }
 
 	// GL_PIXEL_PACK_BUFFER (read-back) and GL_PIXEL_UNPACK_BUFFER (upload) both
 	// need TRANSFER_SRC and TRANSFER_DST so one object covers either direction.
@@ -77,22 +72,25 @@ void VulkanPixelBufferProvider::ensure_buffer(VkDeviceSize bytes)
 	ci.usage	= VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 	ci.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-	// CPU_TO_GPU covers both upload (write) and read-back (read) with HOST_VISIBLE.
-	// We use VMA_MEMORY_USAGE_CPU_ONLY to guarantee HOST_VISIBLE | HOST_COHERENT,
-	// which removes the need for explicit flushes/invalidates.
-	VmaAllocationCreateInfo alloc_ci{};
-	alloc_ci.usage = VMA_MEMORY_USAGE_CPU_ONLY;
-	alloc_ci.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+	if (vkCreateBuffer(dev, &ci, nullptr, &buffer) != VK_SUCCESS)
+		throw Exception("VulkanPixelBufferProvider: vkCreateBuffer failed");
 
-	VmaAllocationInfo alloc_info{};
-	if (vmaCreateBuffer(vk_device->get_allocator(), &ci, &alloc_ci,
-						&buffer, &allocation, &alloc_info) != VK_SUCCESS)
-		throw Exception("VulkanPixelBufferProvider: vmaCreateBuffer failed");
+	VkMemoryRequirements mr{};
+	vkGetBufferMemoryRequirements(dev, buffer, &mr);
 
-	// Store the persistent mapped pointer. CPU_ONLY memory is always
-	// HOST_VISIBLE|HOST_COHERENT so we do not need explicit flushes.
-	mapped_ptr	= alloc_info.pMappedData;
-	allocated_bytes = bytes;
+	VkMemoryAllocateInfo ai{};
+	ai.sType		= VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	ai.allocationSize  = mr.size;
+	ai.memoryTypeIndex = vk_device->find_memory_type(
+		mr.memoryTypeBits,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+	if (vkAllocateMemory(dev, &ai, nullptr, &memory) != VK_SUCCESS)
+		throw Exception("VulkanPixelBufferProvider: vkAllocateMemory failed");
+
+	if (vkBindBufferMemory(dev, buffer, memory, 0) != VK_SUCCESS)
+		throw Exception("VulkanPixelBufferProvider: vkBindBufferMemory failed");
+	allocated_bytes = mr.size;
 }
 
 // =============================================================================
@@ -100,24 +98,25 @@ void VulkanPixelBufferProvider::ensure_buffer(VkDeviceSize bytes)
 // =============================================================================
 
 void VulkanPixelBufferProvider::create(const void *data, const Size &size,
-									PixelBufferDirection /*direction*/,
-									TextureFormat format,
-									BufferUsage /*usage*/)
+										PixelBufferDirection /*direction*/,
+										TextureFormat format,
+										BufferUsage /*usage*/)
 {
 	buf_size   = size;
 	tex_format = format;
 
+	// Determine bytes per pixel from the format
 	int bpp = 4; // default rgba8
 	switch (format)
 	{
 	case TextureFormat::rgba8:
-	case TextureFormat::bgra8:  bpp = 4;  break;
+	case TextureFormat::bgra8: bpp = 4; break;
 	case TextureFormat::rgb8:
-	case TextureFormat::bgr8:   bpp = 3;  break;
-	case TextureFormat::rg8:	bpp = 2;  break;
-	case TextureFormat::r8:	bpp = 1;  break;
+	case TextureFormat::bgr8:  bpp = 3; break;
+	case TextureFormat::rg8:   bpp = 2; break;
+	case TextureFormat::r8:	bpp = 1; break;
 	case TextureFormat::rgba16f:
-	case TextureFormat::rgba16: bpp = 8;  break;
+	case TextureFormat::rgba16: bpp = 8; break;
 	case TextureFormat::rgba32f: bpp = 16; break;
 	default: bpp = 4; break;
 	}
@@ -126,7 +125,14 @@ void VulkanPixelBufferProvider::create(const void *data, const Size &size,
 	ensure_buffer(bytes);
 
 	if (data)
-		std::memcpy(mapped_ptr, data, static_cast<size_t>(bytes));
+	{
+		// Upload initial data (replaces glBufferData with non-null pointer)
+		void *mapped = nullptr;
+		if (vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped) != VK_SUCCESS)
+			throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during create");
+		std::memcpy(mapped, data, static_cast<size_t>(bytes));
+		vkUnmapMemory(vk_device->get_device(), memory);
+	}
 }
 
 // =============================================================================
@@ -135,34 +141,37 @@ void VulkanPixelBufferProvider::create(const void *data, const Size &size,
 
 void VulkanPixelBufferProvider::lock(GraphicContext & /*gc*/, BufferAccess /*access*/)
 {
-	// The buffer was created with VMA_ALLOCATION_CREATE_MAPPED_BIT, so
-	// mapped_ptr is already valid.  lock()/unlock() are effectively no-ops here
-	// but we keep the interface consistent with other providers.
-	if (buffer == VK_NULL_HANDLE)
-		throw Exception("VulkanPixelBufferProvider: buffer not created — call create() first");
+	if (mapped_ptr || buffer == VK_NULL_HANDLE) return;
+	if (vkMapMemory(vk_device->get_device(), memory, 0, allocated_bytes, 0, &mapped_ptr) != VK_SUCCESS)
+		throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during lock");
 }
 
 void VulkanPixelBufferProvider::unlock()
 {
-	// Nothing to do — persistent mapping stays active until the buffer is destroyed.
+	if (!mapped_ptr || memory == VK_NULL_HANDLE) return;
+	vkUnmapMemory(vk_device->get_device(), memory);
+	mapped_ptr = nullptr;
 }
 
 void *VulkanPixelBufferProvider::get_data()
 {
+	// Caller must have called lock() first
 	return mapped_ptr;
 }
 
 int VulkanPixelBufferProvider::get_pitch() const
 {
+	// Vulkan staging buffers are tightly packed — no row padding.
+	// pitch = width * bytes_per_pixel
 	int bpp = 4;
 	switch (tex_format)
 	{
 	case TextureFormat::rgba8:
-	case TextureFormat::bgra8:  bpp = 4;  break;
+	case TextureFormat::bgra8: bpp = 4; break;
 	case TextureFormat::rgb8:
-	case TextureFormat::bgr8:   bpp = 3;  break;
-	case TextureFormat::rg8:	bpp = 2;  break;
-	case TextureFormat::r8:	bpp = 1;  break;
+	case TextureFormat::bgr8:  bpp = 3; break;
+	case TextureFormat::rg8:   bpp = 2; break;
+	case TextureFormat::r8:	bpp = 1; break;
 	case TextureFormat::rgba16f: bpp = 8; break;
 	case TextureFormat::rgba32f: bpp = 16; break;
 	default: bpp = 4; break;
@@ -184,10 +193,10 @@ void VulkanPixelBufferProvider::upload_data(GraphicContext & /*gc*/,
 	switch (tex_format)
 	{
 	case TextureFormat::rgba8:
-	case TextureFormat::bgra8:  bpp = 4; break;
+	case TextureFormat::bgra8: bpp = 4; break;
 	case TextureFormat::rgb8:
-	case TextureFormat::bgr8:   bpp = 3; break;
-	case TextureFormat::rg8:	bpp = 2; break;
+	case TextureFormat::bgr8:  bpp = 3; break;
+	case TextureFormat::rg8:   bpp = 2; break;
 	case TextureFormat::r8:	bpp = 1; break;
 	default: bpp = 4; break;
 	}
@@ -195,8 +204,11 @@ void VulkanPixelBufferProvider::upload_data(GraphicContext & /*gc*/,
 	VkDeviceSize bytes = static_cast<VkDeviceSize>(dest_rect.get_width()) *
 						dest_rect.get_height() * bpp;
 
-	// The persistently-mapped pointer is always valid for CPU_ONLY memory.
-	std::memcpy(mapped_ptr, data, static_cast<size_t>(bytes));
+	void *mapped = nullptr;
+	if (vkMapMemory(vk_device->get_device(), memory, 0, bytes, 0, &mapped) != VK_SUCCESS)
+		throw Exception("VulkanPixelBufferProvider: vkMapMemory failed during upload_data");
+	std::memcpy(mapped, data, static_cast<size_t>(bytes));
+	vkUnmapMemory(vk_device->get_device(), memory);
 }
 
 } // namespace clan
