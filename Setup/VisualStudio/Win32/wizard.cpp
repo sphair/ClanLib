@@ -353,17 +353,6 @@ Workspace Wizard::create_workspace(bool target_android)
 			libs_list_debug, ignore_list, exclude_list);
 
 		workspace.projects.push_back(clanD3D);
-
-		Project clanVK(
-			"VK",
-			"clanVK",
-			"vk.h",
-			libs_list_shared,
-			libs_list_release,
-			libs_list_debug, ignore_list, exclude_list);
-
-		workspace.projects.push_back(clanVK);
-
 	}
 
 
