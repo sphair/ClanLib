@@ -371,7 +371,7 @@ namespace clan
 		}
 
 		{	// Make window full-screen if requested.
-			if (atoms["_NET_WM_STATE"] == None && atoms["_NET_WM_STATE_FULLSCREEN"])
+			if (atoms["_NET_WM_STATE"] == None || atoms["_NET_WM_STATE_FULLSCREEN"] == None)
 			{
 				fullscreen = false;
 				log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
@@ -392,7 +392,7 @@ namespace clan
 
 		auto new_client_area = desc.get_position_client_area() // supplied position is at ? client area : window area;
 			? Rect::xywh(win_x, win_y, win_width, win_height)
-			: Rect::xywh(win_x + frame_extents.left, win_y + frame_extents.right, win_width, win_height)
+			: Rect::xywh(win_x + frame_extents.left, win_y + frame_extents.top, win_width, win_height)
 			;
 
 		process_window_resize(new_client_area);
@@ -412,7 +412,7 @@ namespace clan
 
 	void X11Window::toggle_fullscreen()
 	{
-		if (atoms["_NET_WM_STATE"] == None && atoms["_NET_WM_STATE_FULLSCREEN"])
+		if (atoms["_NET_WM_STATE"] == None || atoms["_NET_WM_STATE_FULLSCREEN"] == None)
 		{
 			log_event("debug", "clan::X11Window: Fullscreen not supported by WM.");
 			return;
@@ -422,11 +422,6 @@ namespace clan
 
 		if (fullscreen)
 		{
-
-			bool was_mapped = is_window_mapped;
-			if (was_mapped)
-				unmap_window();
-
 			int disp_xpos_px = 0;
 			int disp_ypos_px = 0;
 			int disp_width_px = XDisplayWidth(handle.display, handle.screen);
@@ -449,28 +444,14 @@ namespace clan
 
 			set_position(clan::Rect(disp_xpos_px,disp_ypos_px, disp_width_px, disp_height_px), false);
 
-			Atom state = atoms["_NET_WM_STATE_FULLSCREEN"];
-			XChangeProperty(handle.display, handle.window, atoms["_NET_WM_STATE"], XA_ATOM, 32, PropModeReplace, (unsigned char *)&state, 1);
-
-			if (was_mapped)
-				map_window();
+			atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_ADD, "_NET_WM_STATE_FULLSCREEN", "");
+			XFlush(handle.display);
 
 		}
 		else
 		{
-			XEvent event;
-			memset(&event, 0, sizeof(event));
-			event.xclient.type = ClientMessage;
-			event.xclient.window = handle.window;
-			event.xclient.message_type = atoms["_NET_WM_STATE"];
-			event.xclient.format = 32;
-			event.xclient.data.l[0] = _NET_WM_STATE_REMOVE;
-			event.xclient.data.l[1] = atoms["_NET_WM_STATE_FULLSCREEN"];
-			event.xclient.data.l[2] = 0;
-			event.xclient.data.l[3] = None;
-
-			// Send the event to the root window
-			XSendEvent(handle.display, DefaultRootWindow(handle.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
+			atoms.modify_net_wm_state(handle.window, _NET_WM_STATE_REMOVE, "_NET_WM_STATE_FULLSCREEN", "");
+			XFlush(handle.display);
 
 			set_position(initial_position, false);
 		}
@@ -674,7 +655,7 @@ namespace clan
 	{
 		XWindowAttributes attr;
 		XGetWindowAttributes(handle.display, handle.window, &attr);
-		if (attr.map_state == IsViewable) return false;
+		if (attr.map_state != IsViewable) return false;
 		return true;
 	}
 
@@ -1043,6 +1024,8 @@ namespace clan
 		int ypos;
 		// Get parent window's translation coordinates to root window.
 		XTranslateCoordinates(handle.display, parent, root, attr.x, attr.y, &xpos, &ypos, &child);
+
+		XUnlockDisplay(handle.display);
 
 		return Rect::xywh(xpos, ypos, attr.width, attr.height);
 	}

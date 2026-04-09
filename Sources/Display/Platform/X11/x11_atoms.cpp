@@ -162,10 +162,16 @@ namespace clan
 		xevent.xclient.window = window;
 		xevent.xclient.message_type = _NET_WM_STATE;
 		xevent.xclient.format = 32;
-		xevent.xclient.data.l[0] =
+		xevent.xclient.data.l[0] = action;
 		xevent.xclient.data.l[1] = (*this)[atom1];
-		xevent.xclient.data.l[2] = (*this)[atom2];
-		xevent.xclient.data.l[3] = 0; // or 2
+		// atom2 is optional — guard the lookup so an empty or absent key
+		// does not trigger the assert in operator[] and correctly sends 0
+		// (None) in data.l[2], meaning "no second state atom".
+		{
+			auto iter = _map_.find(atom2);
+			xevent.xclient.data.l[2] = (iter != _map_.end()) ? iter->second : 0;
+		}
+		xevent.xclient.data.l[3] = 0;
 
 		Status ret = XSendEvent(
 			_display_, DefaultRootWindow(_display_), False,
